@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 51 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 55 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,31 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"achware.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acevents.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
 end_include
 
 begin_define
@@ -241,6 +217,8 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Unload the SCI interrupt handler  */
+name|Status
+operator|=
 name|AcpiEvRemoveSciHandler
 argument_list|()
 expr_stmt|;
@@ -275,6 +253,9 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
+name|UINT32
+name|Value
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"AcpiEnableEvent"
@@ -294,7 +275,7 @@ if|if
 condition|(
 name|Event
 operator|>
-name|ACPI_NUM_FIXED_EVENTS
+name|ACPI_EVENT_MAX
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -304,7 +285,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*          * Enable the requested fixed event (by writing a one to the          * enable register bit)          */
-name|AcpiHwBitRegisterWrite
+name|Status
+operator|=
+name|AcpiSetRegister
 argument_list|(
 name|AcpiGbl_FixedEventInfo
 index|[
@@ -318,12 +301,24 @@ argument_list|,
 name|ACPI_MTX_LOCK
 argument_list|)
 expr_stmt|;
-comment|/* Make sure that the hardware responded */
 if|if
 condition|(
-literal|1
-operator|!=
-name|AcpiHwBitRegisterRead
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Make sure that the hardware responded */
+name|Status
+operator|=
+name|AcpiGetRegister
 argument_list|(
 name|AcpiGbl_FixedEventInfo
 index|[
@@ -332,8 +327,31 @@ index|]
 operator|.
 name|EnableRegisterId
 argument_list|,
+operator|&
+name|Value
+argument_list|,
 name|ACPI_MTX_LOCK
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Value
+operator|!=
+literal|1
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -378,11 +396,27 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Enable the requested GPE number */
+name|Status
+operator|=
 name|AcpiHwEnableGpe
 argument_list|(
 name|Event
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|Flags
@@ -434,6 +468,9 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
+name|UINT32
+name|Value
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"AcpiDisableEvent"
@@ -453,7 +490,7 @@ if|if
 condition|(
 name|Event
 operator|>
-name|ACPI_NUM_FIXED_EVENTS
+name|ACPI_EVENT_MAX
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -463,7 +500,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*          * Disable the requested fixed event (by writing a zero to the          * enable register bit)          */
-name|AcpiHwBitRegisterWrite
+name|Status
+operator|=
+name|AcpiSetRegister
 argument_list|(
 name|AcpiGbl_FixedEventInfo
 index|[
@@ -479,9 +518,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|!=
-name|AcpiHwBitRegisterRead
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
+name|AcpiGetRegister
 argument_list|(
 name|AcpiGbl_FixedEventInfo
 index|[
@@ -490,8 +541,31 @@ index|]
 operator|.
 name|EnableRegisterId
 argument_list|,
+operator|&
+name|Value
+argument_list|,
 name|ACPI_MTX_LOCK
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Value
+operator|!=
+literal|0
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -551,6 +625,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|Status
+operator|=
 name|AcpiHwDisableGpe
 argument_list|(
 name|Event
@@ -611,7 +687,7 @@ if|if
 condition|(
 name|Event
 operator|>
-name|ACPI_NUM_FIXED_EVENTS
+name|ACPI_EVENT_MAX
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -621,7 +697,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*          * Clear the requested fixed event (By writing a one to the          * status register bit)          */
-name|AcpiHwBitRegisterWrite
+name|Status
+operator|=
+name|AcpiSetRegister
 argument_list|(
 name|AcpiGbl_FixedEventInfo
 index|[
@@ -656,6 +734,8 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
+name|Status
+operator|=
 name|AcpiHwClearGpe
 argument_list|(
 name|Event
@@ -731,7 +811,7 @@ if|if
 condition|(
 name|Event
 operator|>
-name|ACPI_NUM_FIXED_EVENTS
+name|ACPI_EVENT_MAX
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -741,10 +821,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get the status of the requested fixed event */
-operator|*
-name|EventStatus
+name|Status
 operator|=
-name|AcpiHwBitRegisterRead
+name|AcpiGetRegister
 argument_list|(
 name|AcpiGbl_FixedEventInfo
 index|[
@@ -752,6 +831,8 @@ name|Event
 index|]
 operator|.
 name|StatusRegisterId
+argument_list|,
+name|EventStatus
 argument_list|,
 name|ACPI_MTX_LOCK
 argument_list|)
@@ -778,6 +859,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Obtain status on the requested GPE number */
+name|Status
+operator|=
 name|AcpiHwGetGpeStatus
 argument_list|(
 name|Event

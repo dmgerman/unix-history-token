@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 115 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 118 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
 end_include
 
 begin_define
@@ -81,15 +75,13 @@ block|{
 name|UINT32
 name|Access
 decl_stmt|;
-name|UINT32
-name|Length
-decl_stmt|;
 name|UINT8
 name|ByteAlignment
 decl_stmt|;
 name|UINT8
 name|BitLength
 decl_stmt|;
+comment|/*    UINT32                  Length; */
 name|ACPI_FUNCTION_NAME
 argument_list|(
 literal|"ExDecodeFieldAccess"
@@ -102,14 +94,6 @@ name|FieldFlags
 operator|&
 name|AML_FIELD_ACCESS_TYPE_MASK
 operator|)
-expr_stmt|;
-name|Length
-operator|=
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|BitLength
 expr_stmt|;
 switch|switch
 condition|(
@@ -132,7 +116,7 @@ directive|if
 literal|0
 comment|/*          * TBD: optimize          *          * Any attempt to optimize the access size to the size of the field          * must take into consideration the length of the region and take          * care that an access to the field will not attempt to access          * beyond the end of the region.          */
 comment|/* Use the length to set the access type */
-block|if (Length<= 8)         {             BitLength = 8;         }         else if (Length<= 16)         {             BitLength = 16;         }         else if (Length<= 32)         {             BitLength = 32;         }         else if (Length<= 64)         {             BitLength = 64;         }         else         {
+block|Length = ObjDesc->CommonField.BitLength;          if (Length<= 8)         {             BitLength = 8;         }         else if (Length<= 16)         {             BitLength = 16;         }         else if (Length<= 32)         {             BitLength = 32;         }         else if (Length<= 64)         {             BitLength = 64;         }         else         {
 comment|/* Larger than Qword - just use byte-size chunks */
 block|BitLength = 8;         }
 endif|#
@@ -207,7 +191,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Unknown field access type %x\n"
+literal|"Unknown field access type %X\n"
 operator|,
 name|Access
 operator|)
@@ -221,11 +205,10 @@ return|;
 block|}
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|ACPI_TYPE_BUFFER_FIELD
 condition|)
@@ -979,6 +962,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+comment|/* No other types should get here */
+break|break;
 block|}
 comment|/*      * Store the constructed descriptor (ObjDesc) into the parent Node,      * preserving the current type of that NamedObj.      */
 name|Status
@@ -1010,18 +996,13 @@ name|Info
 operator|->
 name|FieldNode
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-operator|(
 name|Info
 operator|->
 name|FieldNode
 operator|->
 name|Name
-operator|)
+operator|.
+name|Ascii
 operator|,
 name|ObjDesc
 operator|)

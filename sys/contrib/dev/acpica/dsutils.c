@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 89 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 93 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -126,6 +126,8 @@ condition|(
 operator|!
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 condition|)
 block|{
@@ -142,9 +144,13 @@ name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 expr_stmt|;
 if|if
@@ -188,9 +194,13 @@ switch|switch
 condition|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 condition|)
 block|{
 case|case
@@ -238,6 +248,10 @@ goto|goto
 name|ResultUsed
 goto|;
 block|}
+break|break;
+default|default:
+comment|/* Ignore other control opcodes */
+break|break;
 block|}
 comment|/* The general control opcode returns no result */
 goto|goto
@@ -258,9 +272,13 @@ condition|(
 operator|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_REGION_OP
 operator|)
@@ -268,9 +286,13 @@ operator|||
 operator|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_DATA_REGION_OP
 operator|)
@@ -278,9 +300,13 @@ operator|||
 operator|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_PACKAGE_OP
 operator|)
@@ -288,9 +314,13 @@ operator|||
 operator|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_VAR_PACKAGE_OP
 operator|)
@@ -298,9 +328,13 @@ operator|||
 operator|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_BUFFER_OP
 operator|)
@@ -308,9 +342,13 @@ operator|||
 operator|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_INT_EVAL_SUBTREE_OP
 operator|)
@@ -343,16 +381,22 @@ name|AcpiPsGetOpcodeName
 argument_list|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 operator|,
 name|Op
@@ -377,16 +421,22 @@ name|AcpiPsGetOpcodeName
 argument_list|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 operator|,
 name|Op
@@ -530,6 +580,9 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
+name|ACPI_STATUS
+name|Status2
+decl_stmt|;
 name|NATIVE_CHAR
 modifier|*
 name|NameString
@@ -573,7 +626,9 @@ condition|(
 operator|(
 name|Arg
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_INT_NAMEPATH_OP
 operator|)
@@ -581,6 +636,8 @@ operator|&&
 operator|(
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -607,6 +664,8 @@ name|ACPI_TYPE_ANY
 argument_list|,
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Buffer
@@ -638,6 +697,8 @@ name|ParentOp
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Parent
 expr_stmt|;
 name|OpInfo
@@ -646,7 +707,9 @@ name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|ParentOp
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 expr_stmt|;
 if|if
@@ -662,7 +725,9 @@ operator|&&
 operator|(
 name|ParentOp
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|!=
 name|AML_INT_METHODCALL_OP
 operator|)
@@ -670,7 +735,9 @@ operator|&&
 operator|(
 name|ParentOp
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|!=
 name|AML_REGION_OP
 operator|)
@@ -678,7 +745,9 @@ operator|&&
 operator|(
 name|ParentOp
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|!=
 name|AML_INT_NAMEPATH_OP
 operator|)
@@ -718,13 +787,13 @@ name|ACPI_NS_DONT_OPEN_SCOPE
 argument_list|,
 name|WalkState
 argument_list|,
-operator|(
+name|ACPI_CAST_INDIRECT_PTR
+argument_list|(
 name|ACPI_NAMESPACE_NODE
-operator|*
-operator|*
-operator|)
+argument_list|,
 operator|&
 name|ObjDesc
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*          * The only case where we pass through (ignore) a NOT_FOUND          * error is for the CondRefOf opcode.          */
@@ -739,7 +808,9 @@ if|if
 condition|(
 name|ParentOp
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_COND_REF_OF_OP
 condition|)
@@ -747,11 +818,12 @@ block|{
 comment|/*                  * For the Conditional Reference op, it's OK if                  * the name is not found;  We just need a way to                  * indicate this to the interpreter, set the                  * object to the root                  */
 name|ObjDesc
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_OPERAND_OBJECT
-operator|*
-operator|)
+argument_list|,
 name|AcpiGbl_RootNode
+argument_list|)
 expr_stmt|;
 name|Status
 operator|=
@@ -769,6 +841,8 @@ name|Name
 operator|=
 name|NULL
 expr_stmt|;
+name|Status2
+operator|=
 name|AcpiNsExternalizeName
 argument_list|(
 name|ACPI_UINT32_MAX
@@ -781,6 +855,14 @@ operator|&
 name|Name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status2
+argument_list|)
+condition|)
+block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -797,6 +879,7 @@ argument_list|(
 name|Name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Free the namestring created above */
@@ -862,12 +945,14 @@ if|if
 condition|(
 name|Arg
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_INT_NAMEPATH_OP
 condition|)
 block|{
-comment|/*              * If the name is null, this means that this is an              * optional result parameter that was not specified              * in the original ASL.  Create an Reference for a              * placeholder              */
+comment|/*              * If the name is null, this means that this is an              * optional result parameter that was not specified              * in the original ASL.  Create a Zero Constant for a              * placeholder.  (Store to a constant is a Noop.)              */
 name|Opcode
 operator|=
 name|AML_ZERO_OP
@@ -891,7 +976,9 @@ name|Opcode
 operator|=
 name|Arg
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 expr_stmt|;
 block|}
 comment|/* Get the object type of the argument */
@@ -1188,6 +1275,8 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 name|ArgCount
@@ -1202,6 +1291,9 @@ expr_stmt|;
 name|Cleanup
 label|:
 comment|/*      * We must undo everything done above; meaning that we must      * pop everything off of the operand stack and delete those      * objects      */
+operator|(
+name|void
+operator|)
 name|AcpiDsObjStackPopAndDelete
 argument_list|(
 name|ArgCount

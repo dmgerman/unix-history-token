@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsmem24 - Memory resource descriptors  *              $Revision: 17 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsmem24 - Memory resource descriptors  *              $Revision: 20 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|ACPI_RESOURCE
+name|void
 operator|*
 operator|)
 operator|*
@@ -125,6 +125,9 @@ expr_stmt|;
 operator|*
 name|BytesConsumed
 operator|=
+operator|(
+name|ACPI_SIZE
+operator|)
 name|Temp16
 operator|+
 literal|3
@@ -250,6 +253,9 @@ name|OutputStruct
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|StructSize
 expr_stmt|;
 comment|/*      * Return the final size of the structure      */
@@ -497,7 +503,7 @@ modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|ACPI_RESOURCE
+name|void
 operator|*
 operator|)
 operator|*
@@ -546,6 +552,9 @@ expr_stmt|;
 operator|*
 name|BytesConsumed
 operator|=
+operator|(
+name|ACPI_SIZE
+operator|)
 name|Temp16
 operator|+
 literal|3
@@ -656,6 +665,9 @@ name|OutputStruct
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|StructSize
 expr_stmt|;
 comment|/*      * Return the final size of the structure      */
@@ -709,7 +721,7 @@ modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|ACPI_RESOURCE
+name|void
 operator|*
 operator|)
 operator|*
@@ -758,6 +770,9 @@ expr_stmt|;
 operator|*
 name|BytesConsumed
 operator|=
+operator|(
+name|ACPI_SIZE
+operator|)
 name|Temp16
 operator|+
 literal|3
@@ -829,6 +844,9 @@ name|OutputStruct
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|StructSize
 expr_stmt|;
 comment|/*      * Return the final size of the structure      */

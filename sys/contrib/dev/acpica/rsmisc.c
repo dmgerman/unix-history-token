@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsmisc - Miscellaneous resource descriptors  *              $Revision: 20 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsmisc - Miscellaneous resource descriptors  *              $Revision: 24 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|ACPI_RESOURCE
+name|void
 operator|*
 operator|)
 operator|*
@@ -240,7 +240,7 @@ modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|ACPI_RESOURCE
+name|void
 operator|*
 operator|)
 operator|*
@@ -303,6 +303,9 @@ comment|/* Calculate bytes consumed */
 operator|*
 name|BytesConsumed
 operator|=
+operator|(
+name|ACPI_SIZE
+operator|)
 name|Temp16
 operator|+
 literal|3
@@ -332,6 +335,9 @@ comment|/* Calculate bytes consumed */
 operator|*
 name|BytesConsumed
 operator|=
+operator|(
+name|ACPI_SIZE
+operator|)
 name|Temp16
 operator|+
 literal|1
@@ -404,6 +410,9 @@ name|OutputStruct
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|StructSize
 expr_stmt|;
 comment|/*      * Return the final size of the structure      */
@@ -526,6 +535,9 @@ literal|0x70
 expr_stmt|;
 name|Temp8
 operator||=
+operator|(
+name|UINT8
+operator|)
 name|LinkedList
 operator|->
 name|Data
@@ -645,7 +657,7 @@ modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|ACPI_RESOURCE
+name|void
 operator|*
 operator|)
 operator|*
@@ -738,7 +750,7 @@ condition|)
 block|{
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_AML_ERROR
+name|AE_AML_BAD_RESOURCE_VALUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -774,7 +786,7 @@ condition|)
 block|{
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_AML_ERROR
+name|AE_AML_BAD_RESOURCE_VALUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -807,6 +819,9 @@ name|OutputStruct
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|StructSize
 expr_stmt|;
 comment|/*      * Return the final size of the structure      */
@@ -854,7 +869,7 @@ modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|ACPI_RESOURCE
+name|void
 operator|*
 operator|)
 operator|*
@@ -888,6 +903,9 @@ name|OutputStruct
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|StructSize
 expr_stmt|;
 comment|/*      * Return the final size of the structure      */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 43 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 47 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -137,9 +137,12 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"WalkNamespace failed! %x\n"
+literal|"WalkNamespace failed! %s\n"
 operator|,
+name|AcpiFormatException
+argument_list|(
 name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -149,7 +152,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OK
 operator|,
-literal|"\n Initialized %d/%d Regions %d/%d Fields %d/%d Buffers %d/%d Packages (%d nodes)\n"
+literal|"\nInitialized %hd/%hd Regions %hd/%hd Fields %hd/%hd Buffers %hd/%hd Packages (%hd nodes)\n"
 operator|,
 name|Info
 operator|.
@@ -194,7 +197,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"%d Control Methods found\n"
+literal|"%hd Control Methods found\n"
 operator|,
 name|Info
 operator|.
@@ -207,7 +210,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"%d Op Regions found\n"
+literal|"%hd Op Regions found\n"
 operator|,
 name|Info
 operator|.
@@ -307,9 +310,12 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"WalkNamespace failed! %x\n"
+literal|"WalkNamespace failed! %s\n"
 operator|,
+name|AcpiFormatException
+argument_list|(
 name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -319,7 +325,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OK
 operator|,
-literal|"\n%d Devices found containing: %d _STA, %d _INI methods\n"
+literal|"\n%hd Devices found containing: %hd _STA, %hd _INI methods\n"
 operator|,
 name|Info
 operator|.
@@ -592,6 +598,9 @@ name|ObjDesc
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+comment|/* No other types can get here */
+break|break;
 block|}
 if|if
 condition|(
@@ -617,14 +626,11 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Could not execute arguments for [%4.4s] (%s), %s\n"
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -898,24 +904,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|AE_NOT_FOUND
-operator|==
-name|Status
-condition|)
-block|{
-comment|/* No _INI means device requires no initialization */
-name|Status
-operator|=
-name|AE_OK
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
 name|ACPI_FAILURE
 argument_list|(
 name|Status
 argument_list|)
+condition|)
+block|{
+comment|/* No _INI (AE_NOT_FOUND) means device requires no initialization */
+if|if
+condition|(
+name|Status
+operator|!=
+name|AE_NOT_FOUND
 condition|)
 block|{
 comment|/* Ignore error and move on to next device */
@@ -955,6 +955,11 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|Status
+operator|=
+name|AE_OK
+expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* Count of successful INIs */
@@ -964,9 +969,25 @@ name|Num_INI
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|AcpiGbl_InitHandler
+condition|)
+block|{
+comment|/* External initialization handler is present, call it */
+name|Status
+operator|=
+name|AcpiGbl_InitHandler
+argument_list|(
+name|ObjHandle
+argument_list|,
+name|ACPI_INIT_DEVICE_INI
+argument_list|)
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_OK
+name|Status
 argument_list|)
 expr_stmt|;
 block|}

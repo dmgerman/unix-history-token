@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 62 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 66 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -244,7 +244,9 @@ operator|&&
 operator|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_INT_NAMEDFIELD_OP
 operator|)
@@ -267,8 +269,6 @@ block|}
 comment|/* We are only interested in opcodes that have an associated name */
 if|if
 condition|(
-name|WalkState
-operator|->
 name|Op
 condition|)
 block|{
@@ -302,6 +302,8 @@ if|if
 condition|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 condition|)
 block|{
@@ -341,7 +343,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"State=%p Op=%p Type=%x\n"
+literal|"State=%p Op=%p Type=%X\n"
 operator|,
 name|WalkState
 operator|,
@@ -420,14 +422,10 @@ return|;
 block|}
 block|}
 comment|/* Initialize */
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Name
 operator|=
 name|Node
@@ -439,6 +437,8 @@ expr_stmt|;
 comment|/*      * Put the Node in the "op" object that the parser uses, so we      * can get it again quickly when this scope is closed      */
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 operator|=
 name|Node
@@ -488,6 +488,11 @@ name|Op
 decl_stmt|;
 name|ACPI_OBJECT_TYPE
 name|ObjectType
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
@@ -579,6 +584,8 @@ operator|==
 name|AML_INDEX_FIELD_OP
 condition|)
 block|{
+name|Status
+operator|=
 name|AcpiDsInitFieldObjects
 argument_list|(
 name|Op
@@ -589,7 +596,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|AE_OK
+name|Status
 operator|)
 return|;
 block|}
@@ -597,32 +604,27 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_REGION_OP
 condition|)
 block|{
-comment|/*Status = */
+name|Status
+operator|=
 name|AcpiExCreateRegion
 argument_list|(
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Data
 argument_list|,
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Length
 argument_list|,
 call|(
@@ -632,11 +634,15 @@ argument_list|(
 operator|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
 operator|)
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer
@@ -645,12 +651,28 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 block|}
 if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_NAME_OP
 condition|)
@@ -660,6 +682,8 @@ if|if
 condition|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
@@ -673,12 +697,16 @@ argument_list|(
 operator|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
 operator|)
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 operator|)
 operator|->
@@ -686,6 +714,8 @@ name|ObjectType
 expr_stmt|;
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 operator|->
 name|Type
@@ -722,6 +752,8 @@ name|Op
 operator|)
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiDsScopeStackPop
 argument_list|(
 name|WalkState
@@ -730,7 +762,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|AE_OK
+name|Status
 operator|)
 return|;
 block|}
@@ -771,12 +803,6 @@ decl_stmt|;
 name|NATIVE_CHAR
 modifier|*
 name|BufferPtr
-decl_stmt|;
-name|void
-modifier|*
-name|Original
-init|=
-name|NULL
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
@@ -866,6 +892,8 @@ name|BufferPtr
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -894,14 +922,10 @@ name|NATIVE_CHAR
 operator|*
 operator|)
 operator|&
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Name
 expr_stmt|;
 block|}
@@ -934,7 +958,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"State=%p Op=%p Type=%x\n"
+literal|"State=%p Op=%p Type=%X\n"
 operator|,
 name|WalkState
 operator|,
@@ -1012,25 +1036,25 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* All other opcodes */
 if|if
 condition|(
 name|Op
 operator|&&
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 condition|)
 block|{
-name|Original
-operator|=
-name|Op
-operator|->
-name|Node
-expr_stmt|;
+comment|/* This op/node was previously entered into the namespace */
 name|Node
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 expr_stmt|;
 if|if
@@ -1136,14 +1160,15 @@ operator|)
 return|;
 block|}
 comment|/* Initialize the new op */
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
+if|if
+condition|(
+name|Node
+condition|)
+block|{
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Name
 operator|=
 name|Node
@@ -1152,59 +1177,28 @@ name|Name
 operator|.
 name|Integer
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|OutOp
+condition|)
+block|{
 operator|*
 name|OutOp
 operator|=
 name|Op
 expr_stmt|;
 block|}
+block|}
 comment|/*          * Put the Node in the "op" object that the parser uses, so we          * can get it again quickly when this scope is closed          */
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 operator|=
 name|Node
 expr_stmt|;
-if|if
-condition|(
-name|Original
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"old %p new %p\n"
-operator|,
-name|Original
-operator|,
-name|Node
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Original
-operator|!=
-name|Node
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"Lookup match error: old %p new %p\n"
-operator|,
-name|Original
-operator|,
-name|Node
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 block|}
 return|return
 operator|(
@@ -1309,7 +1303,9 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_SCOPE_OP
 condition|)
@@ -1329,14 +1325,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Name
 operator|==
 name|ACPI_UINT16_MAX
@@ -1375,6 +1367,8 @@ name|Node
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 expr_stmt|;
 comment|/*      * Put the Node on the object stack (Contains the ACPI Name of      * this object)      */
@@ -1422,11 +1416,27 @@ name|Op
 operator|)
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiDsScopeStackPop
 argument_list|(
 name|WalkState
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 block|}
 comment|/*      * Named operations are as follows:      *      * AML_ALIAS      * AML_BANKFIELD      * AML_CREATEBITFIELD      * AML_CREATEBYTEFIELD      * AML_CREATEDWORDFIELD      * AML_CREATEFIELD      * AML_CREATEQWORDFIELD      * AML_CREATEWORDFIELD      * AML_DATA_REGION      * AML_DEVICE      * AML_EVENT      * AML_FIELD      * AML_INDEXFIELD      * AML_METHOD      * AML_METHODCALL      * AML_MUTEX      * AML_NAME      * AML_NAMEDFIELD      * AML_OPREGION      * AML_POWERRES      * AML_PROCESSOR      * AML_SCOPE      * AML_THERMALZONE      */
 name|ACPI_DEBUG_PRINT
@@ -1440,7 +1450,9 @@ name|AcpiPsGetOpcodeName
 argument_list|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 operator|,
 name|WalkState
@@ -1456,6 +1468,8 @@ name|Arg
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
@@ -1490,7 +1504,9 @@ switch|switch
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 condition|)
 block|{
 case|case
@@ -1507,6 +1523,8 @@ name|ACPI_HANDLE
 operator|)
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Node
 argument_list|,
 name|WalkState
@@ -1524,6 +1542,8 @@ name|Op
 argument_list|,
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Node
 argument_list|,
 name|WalkState
@@ -1541,11 +1561,16 @@ name|Op
 argument_list|,
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Node
 argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+comment|/* All NAMED_FIELD opcodes must be handled above */
 break|break;
 block|}
 break|break;
@@ -1577,7 +1602,9 @@ switch|switch
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 condition|)
 block|{
 case|case
@@ -1701,7 +1728,9 @@ switch|switch
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 condition|)
 block|{
 case|case
@@ -1757,24 +1786,16 @@ name|Status
 operator|=
 name|AcpiExCreateMethod
 argument_list|(
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Data
 argument_list|,
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Length
 argument_list|,
 name|WalkState
@@ -1837,6 +1858,9 @@ name|Op
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+comment|/* All NAMED_COMPLEX opcodes must be handled above */
+break|break;
 block|}
 break|break;
 case|case
@@ -1873,6 +1897,8 @@ name|ScopeInfo
 argument_list|,
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -1919,6 +1945,8 @@ block|}
 comment|/* We could put the returned object (Node) on the object stack for later, but              * for now, we will put it in the "op" object that the parser uses, so we              * can get it again at the end of this scope              */
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 operator|=
 name|NewNode

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 121 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 125 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -148,6 +148,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Handle both ACPI 1.0 and ACPI 2.0 Integer widths  * If we are running a method that exists in a 32-bit ACPI table.  * Use only 32 bits of the Integer for conversion.  */
+end_comment
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|UINT8
+name|AcpiGbl_IntegerBitWidth
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|UINT8
+name|AcpiGbl_IntegerByteWidth
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Since there may be multiple SSDTs and PSDTS, a single pointer is not  * sufficient; Therefore, there isn't one!  */
 end_comment
 
@@ -214,6 +232,13 @@ begin_decl_stmt
 name|ACPI_EXTERN
 name|ACPI_OBJECT_NOTIFY_HANDLER
 name|AcpiGbl_SysNotify
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_INIT_HANDLER
+name|AcpiGbl_InitHandler
 decl_stmt|;
 end_decl_stmt
 
@@ -367,6 +392,17 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|ACPI_OPCODE_INFO
+name|AcpiGbl_AmlOpInfo
+index|[
+name|AML_NUM_OPCODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*****************************************************************************  *  * Namespace globals  *  ****************************************************************************/
 end_comment
@@ -515,7 +551,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_decl_stmt
-name|ACPI_EXTERN
+specifier|extern
 name|ACPI_BIT_REGISTER_INFO
 name|AcpiGbl_BitRegisterInfo
 index|[
@@ -639,14 +675,14 @@ name|ENABLE_DEBUGGER
 end_ifdef
 
 begin_decl_stmt
-name|ACPI_EXTERN
+specifier|extern
 name|BOOLEAN
 name|AcpiGbl_MethodExecuting
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|ACPI_EXTERN
+specifier|extern
 name|BOOLEAN
 name|AcpiGbl_DbTerminateThreads
 decl_stmt|;
@@ -664,21 +700,6 @@ name|ACPI_EXTERN
 name|NATIVE_CHAR
 modifier|*
 name|optarg
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|UINT8
-modifier|*
-name|AmlStart
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|UINT32
-name|AmlLength
 decl_stmt|;
 end_decl_stmt
 

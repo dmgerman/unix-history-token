@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 96 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 104 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20020403
+value|0x20020611
 end_define
 
 begin_comment
@@ -170,54 +170,6 @@ end_define
 begin_comment
 comment|/******************************************************************************  *  * Configuration of subsystem behavior  *  *****************************************************************************/
 end_comment
-
-begin_comment
-comment|/*  * Debugger threading model  * Use single threaded if the entire subsystem is contained in an application  * Use multiple threaded when the subsystem is running in the kernel.  *  * By default the model is single threaded if ACPI_APPLICATION is set,  * multi-threaded if ACPI_APPLICATION is not set.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEBUGGER_SINGLE_THREADED
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEBUGGER_MULTI_THREADED
-value|1
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_APPLICATION
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DEBUGGER_THREADING
-value|DEBUGGER_SINGLE_THREADED
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DEBUGGER_THREADING
-value|DEBUGGER_MULTI_THREADED
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Should the subystem abort the loading of an ACPI table if the  * table checksum is incorrect?  */

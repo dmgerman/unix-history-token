@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 90 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 94 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -74,6 +74,7 @@ comment|/*  * Dispatch table for opcode classes  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|ACPI_EXECUTE_OP
 name|AcpiGbl_OpTypeDispatch
 index|[]
@@ -287,11 +288,10 @@ block|}
 comment|/*      * Result of predicate evaluation currently must      * be a number      */
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|ACPI_TYPE_INTEGER
 condition|)
@@ -307,11 +307,10 @@ name|ObjDesc
 operator|,
 name|WalkState
 operator|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -327,8 +326,6 @@ comment|/* Truncate the predicate to 32-bits if necessary */
 name|AcpiExTruncateFor32bitTable
 argument_list|(
 name|ObjDesc
-argument_list|,
-name|WalkState
 argument_list|)
 expr_stmt|;
 comment|/*      * Save the result of the predicate evaluation on      * the control stack      */
@@ -513,22 +510,26 @@ name|Op
 expr_stmt|;
 name|WalkState
 operator|->
+name|Opcode
+operator|=
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+expr_stmt|;
+name|WalkState
+operator|->
 name|OpInfo
 operator|=
 name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
-expr_stmt|;
-name|WalkState
-operator|->
-name|Opcode
-operator|=
-name|Op
-operator|->
-name|Opcode
 expr_stmt|;
 if|if
 condition|(
@@ -562,11 +563,27 @@ name|Op
 operator|)
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiDsScopeStackPop
 argument_list|(
 name|WalkState
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -665,7 +682,9 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_INT_NAMEPATH_OP
 condition|)
@@ -742,7 +761,9 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_REGION_OP
 condition|)
@@ -868,7 +889,9 @@ literal|"Unknown opcode %X\n"
 operator|,
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|)
 argument_list|)
 expr_stmt|;
@@ -882,6 +905,8 @@ name|FirstArg
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
@@ -1162,6 +1187,18 @@ argument_list|,
 name|Op
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+break|break;
+block|}
+name|Status
+operator|=
 name|AcpiDsResultStackPop
 argument_list|(
 name|WalkState
@@ -1193,6 +1230,8 @@ name|NextOp
 operator|=
 name|NextOp
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 comment|/*              * Get the method's arguments and put them on the operand stack              */
@@ -1303,9 +1342,13 @@ switch|switch
 condition|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 condition|)
 block|{
 case|case
@@ -1325,8 +1368,12 @@ operator|*
 operator|)
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|->
+name|Common
+operator|.
 name|Node
 expr_stmt|;
 name|WalkState
@@ -1343,12 +1390,18 @@ name|WalkState
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|->
+name|Common
+operator|.
 name|Node
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 argument_list|)
 expr_stmt|;
@@ -1363,6 +1416,7 @@ block|{
 break|break;
 block|}
 comment|/* Fall through */
+comment|/*lint -fallthrough */
 case|case
 name|AML_INT_EVAL_SUBTREE_OP
 case|:
@@ -1378,8 +1432,12 @@ name|AcpiNsGetAttachedObject
 argument_list|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|->
+name|Common
+operator|.
 name|Node
 argument_list|)
 argument_list|)
@@ -1458,7 +1516,9 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_REGION_OP
 condition|)
@@ -1554,7 +1614,9 @@ name|OpType
 operator|,
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|,
 name|Op
 operator|)
@@ -1573,8 +1635,6 @@ argument_list|(
 name|WalkState
 operator|->
 name|ResultObj
-argument_list|,
-name|WalkState
 argument_list|)
 expr_stmt|;
 comment|/*      * Check if we just completed the evaluation of a      * conditional predicate      */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 48 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 53 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acdispat.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acinterp.h"
 end_include
 
@@ -47,18 +41,6 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acevents.h"
 end_include
 
 begin_define
@@ -116,6 +98,46 @@ block|}
 if|if
 condition|(
 name|TypeNeeded
+operator|==
+name|INTERNAL_TYPE_REFERENCE
+condition|)
+block|{
+comment|/*          * Allow the AML "Constant" opcodes (Zero, One, etc.) to be reference          * objects and thus allow them to be targets.  (As per the ACPI          * specification, a store to a constant is a noop.)          */
+if|if
+condition|(
+operator|(
+name|ThisType
+operator|==
+name|ACPI_TYPE_INTEGER
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|(
+name|ACPI_OPERAND_OBJECT
+operator|*
+operator|)
+name|Object
+operator|)
+operator|->
+name|Common
+operator|.
+name|Flags
+operator|&
+name|AOPOBJ_AML_CONSTANT
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+block|}
+if|if
+condition|(
+name|TypeNeeded
 operator|!=
 name|ThisType
 condition|)
@@ -156,7 +178,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveOperands  *  * PARAMETERS:  Opcode              - Opcode being interpreted  *              StackPtr            - Pointer to the operand stack to be  *                                    resolved  *              WalkState           - Current stateu  *  * RETURN:      Status  *  * DESCRIPTION: Convert multiple input operands to the types required by the  *              target operator.  *  *      Each nibble (actually 5 bits)  in ArgTypes represents one required  *      operand and indicates the required Type:  *  *      The corresponding operand will be converted to the required type if  *      possible, otherwise we abort with an exception.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveOperands  *  * PARAMETERS:  Opcode              - Opcode being interpreted  *              StackPtr            - Pointer to the operand stack to be  *                                    resolved  *              WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Convert multiple input operands to the types required by the  *              target operator.  *  *      Each 5-bit group in ArgTypes represents one required  *      operand and indicates the required Type. The corresponding operand   *      will be converted to the required type if possible, otherwise we   *      abort with an exception.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -351,16 +373,15 @@ name|Type
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 case|:
 comment|/* ACPI internal object */
 name|ObjectType
 operator|=
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 expr_stmt|;
 comment|/* Check for bad ACPI_OBJECT_TYPE */
 if|if
@@ -432,15 +453,6 @@ name|Opcode
 condition|)
 block|{
 case|case
-name|AML_ZERO_OP
-case|:
-case|case
-name|AML_ONE_OP
-case|:
-case|case
-name|AML_ONES_OP
-case|:
-case|case
 name|AML_DEBUG_OP
 case|:
 case|case
@@ -454,9 +466,6 @@ name|AML_ARG_OP
 case|:
 case|case
 name|AML_LOCAL_OP
-case|:
-case|case
-name|AML_REVISION_OP
 case|:
 name|ACPI_DEBUG_ONLY_MEMBERS
 argument_list|(
@@ -481,7 +490,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Reference Opcode: Unknown [%02x]\n"
+literal|"Unknown Reference Opcode %X\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -554,7 +563,7 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 operator|==
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 operator|)
 operator|&&
 operator|(
@@ -573,6 +582,7 @@ name|NextOperand
 goto|;
 block|}
 comment|/* Else not a string - fall through to the normal Reference case below */
+comment|/*lint -fallthrough */
 case|case
 name|ARGI_REFERENCE
 case|:
@@ -688,14 +698,11 @@ name|AML_STORE_OP
 operator|)
 operator|&&
 operator|(
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 operator|*
 name|StackPtr
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|INTERNAL_TYPE_REFERENCE
 operator|)
@@ -718,6 +725,9 @@ goto|goto
 name|NextOperand
 goto|;
 block|}
+break|break;
+default|default:
+comment|/* All cases covered above */
 break|break;
 block|}
 comment|/*          * Resolve this object to a value          */
@@ -847,16 +857,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|*
 name|StackPtr
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|,
 operator|*
@@ -917,16 +921,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|*
 name|StackPtr
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|,
 operator|*
@@ -991,16 +989,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|*
 name|StackPtr
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|,
 operator|*
@@ -1029,14 +1021,11 @@ case|:
 comment|/* Need an operand of type INTEGER, STRING or BUFFER */
 switch|switch
 condition|(
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 operator|*
 name|StackPtr
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -1058,16 +1047,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|*
 name|StackPtr
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|,
 operator|*
@@ -1090,14 +1073,11 @@ case|:
 comment|/*              * ARGI_DATAOBJECT is only used by the SizeOf operator.              * Need a buffer, string, package, or Node reference.              *              * The only reference allowed here is a direct reference to              * a namespace node.              */
 if|if
 condition|(
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 operator|*
 name|StackPtr
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|INTERNAL_TYPE_REFERENCE
 condition|)
@@ -1201,14 +1181,11 @@ block|}
 comment|/* Need a buffer, string, package */
 switch|switch
 condition|(
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 operator|*
 name|StackPtr
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -1230,16 +1207,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Needed [Buf/Str/Pkg], found [%s] %p\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|*
 name|StackPtr
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|,
 operator|*
@@ -1262,14 +1233,11 @@ case|:
 comment|/* Need a buffer or package or (ACPI 2.0) String */
 switch|switch
 condition|(
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 operator|*
 name|StackPtr
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -1291,16 +1259,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Needed [Buf/Str/Pkg], found [%s] %p\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|*
 name|StackPtr
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|,
 operator|*
@@ -1343,14 +1305,11 @@ name|AcpiExCheckObjectType
 argument_list|(
 name|TypeNeeded
 argument_list|,
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 operator|*
 name|StackPtr
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 argument_list|,
 operator|*
 name|StackPtr

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstorob - AML Interpreter object store support, store to object  *              $Revision: 42 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstorob - AML Interpreter object store support, store to object  *              $Revision: 44 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,37 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acdispat.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
 end_include
 
 begin_define
@@ -406,6 +376,9 @@ name|Pointer
 operator|=
 name|ACPI_MEM_ALLOCATE
 argument_list|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|Length
 operator|+
 literal|1

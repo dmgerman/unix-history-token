@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 91 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 103 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -40,13 +40,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acinterp.h"
+file|"acnamesp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acnamesp.h"
+file|"acinterp.h"
 end_include
 
 begin_define
@@ -103,28 +103,10 @@ operator|*
 operator|)
 name|Context
 decl_stmt|;
-name|UINT8
-name|TableRevision
-decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
 literal|"DsInitOneObject"
 argument_list|)
-expr_stmt|;
-name|Info
-operator|->
-name|ObjectCount
-operator|++
-expr_stmt|;
-name|TableRevision
-operator|=
-name|Info
-operator|->
-name|TableDesc
-operator|->
-name|Pointer
-operator|->
-name|Revision
 expr_stmt|;
 comment|/*      * We are only interested in objects owned by the table that      * was just loaded      */
 if|if
@@ -152,6 +134,11 @@ name|AE_OK
 operator|)
 return|;
 block|}
+name|Info
+operator|->
+name|ObjectCount
+operator|++
+expr_stmt|;
 comment|/* And even then, we are only interested in a few object types */
 name|Type
 operator|=
@@ -168,11 +155,50 @@ block|{
 case|case
 name|ACPI_TYPE_REGION
 case|:
+name|Status
+operator|=
 name|AcpiDsInitializeRegion
 argument_list|(
 name|ObjHandle
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Region %p [%4.4s] - Init failure, %s\n"
+operator|,
+name|ObjHandle
+operator|,
+operator|(
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|ObjHandle
+operator|)
+operator|->
+name|Name
+operator|.
+name|Ascii
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|Info
 operator|->
 name|OpRegionCount
@@ -207,10 +233,16 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Set the execution data width (32 or 64) based upon the          * revision number of the parent ACPI table.          */
+comment|/*          * Set the execution data width (32 or 64) based upon the          * revision number of the parent ACPI table.          * TBD: This is really for possible future support of integer width          * on a per-table basis. Currently, we just use a global for the width.          */
 if|if
 condition|(
-name|TableRevision
+name|Info
+operator|->
+name|TableDesc
+operator|->
+name|Pointer
+operator|->
+name|Revision
 operator|==
 literal|1
 condition|)
@@ -254,11 +286,6 @@ operator|,
 name|ObjHandle
 operator|,
 operator|(
-name|char
-operator|*
-operator|)
-operator|&
-operator|(
 operator|(
 name|ACPI_NAMESPACE_NODE
 operator|*
@@ -267,6 +294,8 @@ name|ObjHandle
 operator|)
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|AcpiFormatException
 argument_list|(
@@ -300,6 +329,15 @@ name|Method
 operator|.
 name|OwningId
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_TYPE_DEVICE
+case|:
+name|Info
+operator|->
+name|DeviceCount
+operator|++
 expr_stmt|;
 break|break;
 default|default:
@@ -380,6 +418,12 @@ literal|0
 expr_stmt|;
 name|Info
 operator|.
+name|DeviceCount
+operator|=
+literal|0
+expr_stmt|;
+name|Info
+operator|.
 name|TableDesc
 operator|=
 name|TableDesc
@@ -416,9 +460,12 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"WalkNamespace failed! %x\n"
+literal|"WalkNamespace failed, %s\n"
 operator|,
+name|AcpiFormatException
+argument_list|(
 name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -428,28 +475,29 @@ argument_list|(
 operator|(
 name|ACPI_DB_OK
 operator|,
-literal|"\n%d Control Methods found and parsed (%d nodes total)\n"
+literal|"\nTable [%4.4s] - %hd Objects with %hd Devices %hd Methods %hd Regions\n"
 operator|,
-name|Info
-operator|.
-name|MethodCount
+name|TableDesc
+operator|->
+name|Pointer
+operator|->
+name|Signature
 operator|,
 name|Info
 operator|.
 name|ObjectCount
-operator|)
-argument_list|)
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_DISPATCH
 operator|,
-literal|"%d Control Methods found\n"
+name|Info
+operator|.
+name|DeviceCount
 operator|,
 name|Info
 operator|.
 name|MethodCount
+operator|,
+name|Info
+operator|.
+name|OpRegionCount
 operator|)
 argument_list|)
 expr_stmt|;
@@ -458,7 +506,11 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"%d Op Regions found\n"
+literal|"%hd Methods, %hd Regions\n"
+operator|,
+name|Info
+operator|.
+name|MethodCount
 operator|,
 name|Info
 operator|.
@@ -508,7 +560,12 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
-name|ACPI_FUNCTION_NAME
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"DsInitObjectFromOp"
 argument_list|)
@@ -535,20 +592,19 @@ name|AML_CLASS_UNKNOWN
 condition|)
 block|{
 comment|/* Unknown opcode */
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_TYPE
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Perform per-object initialization */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -578,14 +634,10 @@ name|Buffer
 operator|.
 name|AmlStart
 operator|=
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Data
 expr_stmt|;
 name|ObjDesc
@@ -594,14 +646,10 @@ name|Buffer
 operator|.
 name|AmlLength
 operator|=
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Length
 expr_stmt|;
 break|break;
@@ -632,14 +680,10 @@ name|Package
 operator|.
 name|AmlStart
 operator|=
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Data
 expr_stmt|;
 name|ObjDesc
@@ -648,19 +692,115 @@ name|Package
 operator|.
 name|AmlLength
 operator|=
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Length
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_INTEGER
+case|:
+switch|switch
+condition|(
+name|OpInfo
+operator|->
+name|Type
+condition|)
+block|{
+case|case
+name|AML_TYPE_CONSTANT
+case|:
+comment|/*              * Resolve AML Constants here - AND ONLY HERE!              * All constants are integers.              * We mark the integer with a flag that indicates that it started life              * as a constant -- so that stores to constants will perform as expected (noop).              * (ZeroOp is used as a placeholder for optional target operands.)              */
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|Flags
+operator|=
+name|AOPOBJ_AML_CONSTANT
+expr_stmt|;
+switch|switch
+condition|(
+name|Opcode
+condition|)
+block|{
+case|case
+name|AML_ZERO_OP
+case|:
+name|ObjDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|AML_ONE_OP
+case|:
+name|ObjDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|AML_ONES_OP
+case|:
+name|ObjDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|=
+name|ACPI_INTEGER_MAX
+expr_stmt|;
+comment|/* Truncate value if we are executing from a 32-bit ACPI table */
+name|AcpiExTruncateFor32bitTable
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AML_REVISION_OP
+case|:
+name|ObjDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|=
+name|ACPI_CA_SUPPORT_LEVEL
+expr_stmt|;
+break|break;
+default|default:
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Unknown constant opcode %X\n"
+operator|,
+name|Opcode
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_AML_OPERAND_TYPE
+expr_stmt|;
+break|break;
+block|}
+break|break;
+case|case
+name|AML_TYPE_LITERAL
 case|:
 name|ObjDesc
 operator|->
@@ -670,10 +810,33 @@ name|Value
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer
 expr_stmt|;
+break|break;
+default|default:
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Unknown Integer type %X\n"
+operator|,
+name|OpInfo
+operator|->
+name|Type
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_AML_OPERAND_TYPE
+expr_stmt|;
+break|break;
+block|}
 break|break;
 case|case
 name|ACPI_TYPE_STRING
@@ -686,6 +849,8 @@ name|Pointer
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -700,6 +865,8 @@ name|ACPI_STRLEN
 argument_list|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -776,12 +943,14 @@ name|AML_ARG_OP
 expr_stmt|;
 break|break;
 default|default:
-comment|/* Constants, Literals, etc.. */
+comment|/* Other literals, etc.. */
 if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_INT_NAMEPATH_OP
 condition|)
@@ -795,6 +964,8 @@ name|Node
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 expr_stmt|;
 block|}
@@ -815,23 +986,26 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Unimplemented data type: %x\n"
+literal|"Unimplemented data type: %X\n"
 operator|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
+name|AE_AML_OPERAND_TYPE
+expr_stmt|;
 break|break;
 block|}
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -877,17 +1051,21 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_INT_NAMEPATH_OP
 condition|)
 block|{
-comment|/*          * This is an object reference.  If this name was          * previously looked up in the namespace, it was stored in this op.          * Otherwise, go ahead and look it up now          */
+comment|/*          * This is an named object reference.  If this name was          * previously looked up in the namespace, it was stored in this op.          * Otherwise, go ahead and look it up now          */
 if|if
 condition|(
 operator|!
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 condition|)
 block|{
@@ -901,6 +1079,8 @@ name|ScopeInfo
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -924,6 +1104,8 @@ operator|&
 operator|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 operator|)
 argument_list|)
@@ -947,12 +1129,16 @@ name|Name
 operator|=
 name|NULL
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiNsExternalizeName
 argument_list|(
 name|ACPI_UINT32_MAX
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -965,7 +1151,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Name
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
 condition|)
 block|{
 name|ACPI_REPORT_WARNING
@@ -977,6 +1166,8 @@ name|Name
 operator|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|AmlOffset
 operator|)
 argument_list|)
@@ -996,12 +1187,16 @@ literal|"Reference %s at AML %X not found\n"
 operator|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
 operator|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|AmlOffset
 operator|)
 argument_list|)
@@ -1034,7 +1229,9 @@ name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 operator|)
 operator|->
@@ -1063,7 +1260,9 @@ name|Op
 argument_list|,
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|,
 operator|&
 name|ObjDesc
@@ -1102,7 +1301,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsBuildInternalBufferObj  *  * PARAMETERS:  Op              - Parser object to be translated  *              ObjDescPtr      - Where the ACPI internal object is returned  *  * RETURN:      Status  *  * DESCRIPTION: Translate a parser Op package object to the equivalent  *              namespace object  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsBuildInternalBufferObj  *  * PARAMETERS:  WalkState       - Current walk state  *              Op              - Parser object to be translated  *              BufferLength    - Length of the buffer  *              ObjDescPtr      - Where the ACPI internal object is returned  *  * RETURN:      Status  *  * DESCRIPTION: Translate a parser Op package object to the equivalent  *              namespace object  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -1134,7 +1333,7 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
-name|ACPI_PARSE2_OBJECT
+name|ACPI_PARSE_OBJECT
 modifier|*
 name|ByteList
 decl_stmt|;
@@ -1193,6 +1392,8 @@ name|Arg
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
@@ -1200,12 +1401,10 @@ expr_stmt|;
 comment|/* skip first arg */
 name|ByteList
 operator|=
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Arg
 operator|->
+name|Named
+operator|.
 name|Next
 expr_stmt|;
 if|if
@@ -1217,7 +1416,9 @@ if|if
 condition|(
 name|ByteList
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|!=
 name|AML_INT_BYTELIST_OP
 condition|)
@@ -1231,7 +1432,9 @@ literal|"Expecting bytelist, got AML opcode %X in op %p\n"
 operator|,
 name|ByteList
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|,
 name|ByteList
 operator|)
@@ -1252,6 +1455,8 @@ name|ByteListLength
 operator|=
 name|ByteList
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer32
@@ -1367,6 +1572,8 @@ name|Pointer
 argument_list|,
 name|ByteList
 operator|->
+name|Named
+operator|.
 name|Data
 argument_list|,
 name|ByteListLength
@@ -1383,6 +1590,8 @@ name|AOPOBJ_DATA_VALID
 expr_stmt|;
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 operator|=
 operator|(
@@ -1400,7 +1609,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsBuildInternalPackageObj  *  * PARAMETERS:  Op              - Parser object to be translated  *              ObjDescPtr      - Where the ACPI internal object is returned  *  * RETURN:      Status  *  * DESCRIPTION: Translate a parser Op package object to the equivalent  *              namespace object  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsBuildInternalPackageObj  *  * PARAMETERS:  WalkState       - Current walk state  *              Op              - Parser object to be translated  *              PackageLength   - Number of elements in the package  *              ObjDescPtr      - Where the ACPI internal object is returned  *  * RETURN:      Status  *  * DESCRIPTION: Translate a parser Op package object to the equivalent  *              namespace object  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -1459,6 +1668,8 @@ name|Parent
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 expr_stmt|;
 while|while
@@ -1466,7 +1677,9 @@ condition|(
 operator|(
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_PACKAGE_OP
 operator|)
@@ -1474,7 +1687,9 @@ operator|||
 operator|(
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_VAR_PACKAGE_OP
 operator|)
@@ -1484,6 +1699,8 @@ name|Parent
 operator|=
 name|Parent
 operator|->
+name|Common
+operator|.
 name|Parent
 expr_stmt|;
 block|}
@@ -1533,6 +1750,8 @@ name|Node
 operator|=
 name|Parent
 operator|->
+name|Common
+operator|.
 name|Node
 expr_stmt|;
 block|}
@@ -1553,6 +1772,8 @@ name|Arg
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
@@ -1561,6 +1782,8 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 while|while
@@ -1575,6 +1798,8 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 block|}
@@ -1605,6 +1830,9 @@ operator|=
 name|ACPI_MEM_CALLOCATE
 argument_list|(
 operator|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|ObjDesc
 operator|->
 name|Package
@@ -1651,6 +1879,8 @@ name|Arg
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
@@ -1659,6 +1889,8 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 while|while
@@ -1670,7 +1902,9 @@ if|if
 condition|(
 name|Arg
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_INT_RETURN_VALUE_OP
 condition|)
@@ -1685,13 +1919,16 @@ index|[
 name|i
 index|]
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_OPERAND_OBJECT
-operator|*
-operator|)
+argument_list|,
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Node
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1723,6 +1960,8 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 block|}
@@ -1736,6 +1975,8 @@ name|AOPOBJ_DATA_VALID
 expr_stmt|;
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 operator|=
 operator|(
@@ -1753,7 +1994,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsCreateNode  *  * PARAMETERS:  Op              - Parser object to be translated  *              ObjDescPtr      - Where the ACPI internal object is returned  *  * RETURN:      Status  *  * DESCRIPTION:  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsCreateNode  *  * PARAMETERS:  WalkState       - Current walk state  *              Node            - NS Node to be initialized  *              Op              - Parser object to be translated  *  * RETURN:      Status  *  * DESCRIPTION: Create the object to be associated with a namespace node  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -1807,6 +2048,8 @@ condition|(
 operator|!
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
@@ -1828,6 +2071,8 @@ name|WalkState
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
@@ -1855,11 +2100,10 @@ name|Node
 operator|->
 name|Type
 operator|=
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 expr_stmt|;
 comment|/* Attach obj to node */
 name|Status

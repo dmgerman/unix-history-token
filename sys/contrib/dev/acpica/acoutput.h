@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *       $Revision: 86 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *       $Revision: 87 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -381,6 +381,45 @@ value|0x0F000000 | ACPI_LV_VERBOSITY2
 end_define
 
 begin_comment
+comment|/* Exceptionally verbose output -- also used in the global "DebugLevel"  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_AML_DISASSEMBLE
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_VERBOSE_INFO
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_FULL_TABLES
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_EVENTS
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LV_VERBOSE
+value|0xF0000000
+end_define
+
+begin_comment
 comment|/*  * Debug level macros that are used in the DEBUG_PRINT macros  */
 end_comment
 
@@ -595,46 +634,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DB_ALL
-value|ACPI_DEBUG_LEVEL (0x0FFFFF80)
-end_define
-
-begin_comment
-comment|/* Exceptionally verbose output -- also used in the global "DebugLevel"  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_DB_AML_DISASSEMBLE
-value|0x10000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DB_VERBOSE_INFO
-value|0x20000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DB_FULL_TABLES
-value|0x40000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DB_EVENTS
-value|0x80000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DB_VERBOSE
-value|0xF0000000
+value|ACPI_DEBUG_LEVEL (ACPI_LV_ALL)
 end_define
 
 begin_comment

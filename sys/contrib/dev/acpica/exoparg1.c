@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 135 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 139 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -421,7 +421,7 @@ name|Opcode
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Create a return object of type Integer for most opcodes */
+comment|/* Examine the AML opcode */
 switch|switch
 condition|(
 name|WalkState
@@ -447,6 +447,7 @@ case|:
 case|case
 name|AML_COND_REF_OF_OP
 case|:
+comment|/* Create a return object of type Integer for these opcodes */
 name|ReturnDesc
 operator|=
 name|AcpiUtCreateInternalObject
@@ -468,9 +469,6 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-break|break;
-block|}
-comment|/* Examine the AML opcode */
 switch|switch
 condition|(
 name|WalkState
@@ -518,7 +516,7 @@ name|Integer
 operator|.
 name|Value
 expr_stmt|;
-comment|/*          * Acpi specification describes Integer type as a little          * endian unsigned value, so this boundary condition is valid.          */
+comment|/*              * Acpi specification describes Integer type as a little              * endian unsigned value, so this boundary condition is valid.              */
 for|for
 control|(
 name|Temp32
@@ -576,7 +574,7 @@ name|Integer
 operator|.
 name|Value
 expr_stmt|;
-comment|/*          * The Acpi specification describes Integer type as a little          * endian unsigned value, so this boundary condition is valid.          */
+comment|/*              * The Acpi specification describes Integer type as a little              * endian unsigned value, so this boundary condition is valid.              */
 for|for
 control|(
 name|Temp32
@@ -632,7 +630,7 @@ case|case
 name|AML_FROM_BCD_OP
 case|:
 comment|/* FromBcd (BCDValue, Result)  */
-comment|/*          * The 64-bit ACPI integer can hold 16 4-bit BCD integers          */
+comment|/*              * The 64-bit ACPI integer can hold 16 4-bit BCD integers              */
 name|ReturnDesc
 operator|->
 name|Integer
@@ -861,6 +859,9 @@ name|j
 operator|++
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|AcpiUtShortDivide
 argument_list|(
 operator|&
@@ -910,7 +911,7 @@ case|case
 name|AML_COND_REF_OF_OP
 case|:
 comment|/* CondRefOf (SourceObject, Result)  */
-comment|/*          * This op is a little strange because the internal return value is          * different than the return value stored in the result descriptor          * (There are really two return values)          */
+comment|/*              * This op is a little strange because the internal return value is              * different than the return value stored in the result descriptor              * (There are really two return values)              */
 if|if
 condition|(
 operator|(
@@ -925,7 +926,7 @@ operator|==
 name|AcpiGbl_RootNode
 condition|)
 block|{
-comment|/*              * This means that the object does not exist in the namespace,              * return FALSE              */
+comment|/*                  * This means that the object does not exist in the namespace,                  * return FALSE                  */
 name|ReturnDesc
 operator|->
 name|Integer
@@ -934,7 +935,7 @@ name|Value
 operator|=
 literal|0
 expr_stmt|;
-comment|/*              * Must delete the result descriptor since there is no reference              * being returned              */
+comment|/*                  * Must delete the result descriptor since there is no reference                  * being returned                  */
 name|AcpiUtRemoveReference
 argument_list|(
 name|Operand
@@ -1001,6 +1002,11 @@ expr_stmt|;
 goto|goto
 name|Cleanup
 goto|;
+default|default:
+comment|/* No other opcodes get here */
+break|break;
+block|}
+break|break;
 case|case
 name|AML_STORE_OP
 case|:
@@ -1405,7 +1411,7 @@ literal|0
 index|]
 argument_list|)
 operator|==
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 condition|)
 block|{
 comment|/* Internal reference object - prevent deletion */
@@ -1511,16 +1517,15 @@ case|:
 comment|/* ObjectType (SourceObject) */
 if|if
 condition|(
-name|INTERNAL_TYPE_REFERENCE
-operator|==
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|Operand
 index|[
 literal|0
 index|]
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
+operator|==
+name|INTERNAL_TYPE_REFERENCE
 condition|)
 block|{
 comment|/*              * Not a Name -- an indirect name pointer would have              * been converted to a direct name pointer in ResolveOperands              */
@@ -1536,24 +1541,6 @@ operator|.
 name|Opcode
 condition|)
 block|{
-case|case
-name|AML_ZERO_OP
-case|:
-case|case
-name|AML_ONE_OP
-case|:
-case|case
-name|AML_ONES_OP
-case|:
-case|case
-name|AML_REVISION_OP
-case|:
-comment|/* Constants are of type Integer */
-name|Type
-operator|=
-name|ACPI_TYPE_INTEGER
-expr_stmt|;
-break|break;
 case|case
 name|AML_DEBUG_OP
 case|:
@@ -1588,7 +1575,8 @@ block|{
 comment|/*                      * The main object is a package, we want to get the type                      * of the individual package element that is referenced by                      * the index.                      */
 name|Type
 operator|=
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 operator|*
 operator|(
 name|Operand
@@ -1600,11 +1588,7 @@ name|Reference
 operator|.
 name|Where
 operator|)
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -1644,7 +1628,7 @@ default|default:
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AcpiExOpcode_1A_0T_1R/TypeOp: Internal error - Unknown Reference subtype %X\n"
+literal|"AcpiExOpcode_1A_0T_1R/TypeOp: Unknown Reference subtype %X\n"
 operator|,
 name|Operand
 index|[
@@ -1702,6 +1686,10 @@ name|Type
 operator|=
 name|ACPI_TYPE_FIELD_UNIT
 expr_stmt|;
+break|break;
+default|default:
+comment|/* No change to Type required */
+break|break;
 block|}
 block|}
 comment|/* Allocate a descriptor to hold the type. */
@@ -1790,11 +1778,10 @@ block|{
 comment|/*              * Type is guaranteed to be a buffer, string, or package at this              * point (even if the original operand was an object reference, it              * will be resolved and typechecked during operand resolution.)              */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|TempDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -1841,13 +1828,9 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"SizeOf, Not Buf/Str/Pkg - found type %s\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|TempDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -1976,6 +1959,8 @@ case|case
 name|AML_ARG_OP
 case|:
 comment|/* Set Operand[0] to the value of the local/arg */
+name|Status
+operator|=
 name|AcpiDsMethodDataGetValue
 argument_list|(
 name|Operand
@@ -2002,6 +1987,18 @@ operator|&
 name|TempDesc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|Cleanup
+goto|;
+block|}
 comment|/*                      * Delete our reference to the input object and                      * point to the object just retrieved                      */
 name|AcpiUtRemoveReference
 argument_list|(
@@ -2051,13 +2048,13 @@ name|Node
 argument_list|,
 name|ACPI_NS_SEARCH_PARENT
 argument_list|,
-operator|(
+name|ACPI_CAST_INDIRECT_PTR
+argument_list|(
 name|ACPI_NAMESPACE_NODE
-operator|*
-operator|*
-operator|)
+argument_list|,
 operator|&
 name|ReturnDesc
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2076,13 +2073,13 @@ name|Status
 operator|=
 name|AcpiExResolveNodeToValue
 argument_list|(
-operator|(
+name|ACPI_CAST_INDIRECT_PTR
+argument_list|(
 name|ACPI_NAMESPACE_NODE
-operator|*
-operator|*
-operator|)
+argument_list|,
 operator|&
 name|ReturnDesc
+argument_list|)
 argument_list|,
 name|WalkState
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 128 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 134 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -37,12 +37,6 @@ directive|include
 file|"acinterp.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -58,12 +52,12 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInstallDefaultAddressSpaceHandlers  *  * PARAMETERS:  *  * RETURN:      Status  *  * DESCRIPTION: Installs the core subsystem address space handlers.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInitAddressSpaces  *  * PARAMETERS:  *  * RETURN:      Status  *  * DESCRIPTION: Installs the core subsystem address space handlers.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiEvInstallDefaultAddressSpaceHandlers
+name|AcpiEvInitAddressSpaces
 parameter_list|(
 name|void
 parameter_list|)
@@ -73,7 +67,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvInstallDefaultAddressSpaceHandlers"
+literal|"EvInitAddressSpaces"
 argument_list|)
 expr_stmt|;
 comment|/*      * All address spaces (PCI Config, EC, SMBus) are scope dependent      * and registration must occur for a specific device.  In the case      * system memory and IO address spaces there is currently no device      * associated with the address space.  For these we use the root.      * We install the default PCI config space handler at the root so      * that this space is immediately available even though the we have      * not enumerated all the PCI Root Buses yet.  This is to conform      * to the ACPI specification which states that the PCI config      * space must be always available -- even though we are nowhere      * near ready to find the PCI root buses at this point.      *      * NOTE: We ignore AE_ALREADY_EXISTS because this means that a handler      * has already been installed (via AcpiInstallAddressSpaceHandler)      */
@@ -481,13 +475,16 @@ parameter_list|,
 name|UINT32
 name|BitWidth
 parameter_list|,
-name|ACPI_INTEGER
+name|void
 modifier|*
 name|Value
 parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
+decl_stmt|;
+name|ACPI_STATUS
+name|Status2
 decl_stmt|;
 name|ACPI_ADR_SPACE_HANDLER
 name|Handler
@@ -654,9 +651,25 @@ name|RegionContext
 argument_list|)
 expr_stmt|;
 comment|/* Re-enter the interpreter */
+name|Status2
+operator|=
 name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status2
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status2
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*          *  Init routine may fail          */
 if|if
 condition|(
@@ -842,9 +855,25 @@ operator|)
 condition|)
 block|{
 comment|/*          * We just returned from a non-default handler, we must re-enter the          * interpreter          */
+name|Status2
+operator|=
 name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status2
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status2
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|return_ACPI_STATUS
 argument_list|(
@@ -855,12 +884,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvDisassociateRegionFromHandler  *  * PARAMETERS:  RegionObj       - Region Object  *              AcpiNsIsLocked  - Namespace Region Already Locked?  *  * RETURN:      None  *  * DESCRIPTION: Break the association between the handler and the region  *              this is a two way association.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvDetachRegion  *  * PARAMETERS:  RegionObj       - Region Object  *              AcpiNsIsLocked  - Namespace Region Already Locked?  *  * RETURN:      None  *  * DESCRIPTION: Break the association between the handler and the region  *              this is a two way association.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiEvDisassociateRegionFromHandler
+name|AcpiEvDetachRegion
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -899,7 +928,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvDisassociateRegionFromHandler"
+literal|"EvDetachRegion"
 argument_list|)
 expr_stmt|;
 name|RegionObj2
@@ -915,7 +944,8 @@ operator|!
 name|RegionObj2
 condition|)
 block|{
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 name|RegionContext
 operator|=
@@ -1032,6 +1062,8 @@ expr_stmt|;
 block|}
 block|}
 comment|/*              *  Now stop region accesses by executing the _REG method              */
+name|Status
+operator|=
 name|AcpiEvExecuteRegMethod
 argument_list|(
 name|RegionObj
@@ -1039,6 +1071,38 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"%s from region _REG, [%s]\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|,
+name|AcpiUtGetRegionName
+argument_list|(
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|SpaceId
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|AcpiNsIsLocked
@@ -1186,12 +1250,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAssociateRegionAndHandler  *  * PARAMETERS:  HandlerObj      - Handler Object  *              RegionObj       - Region Object  *              AcpiNsIsLocked  - Namespace Region Already Locked?  *  * RETURN:      None  *  * DESCRIPTION: Create the association between the handler and the region  *              this is a two way association.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAttachRegion  *  * PARAMETERS:  HandlerObj      - Handler Object  *              RegionObj       - Region Object  *              AcpiNsIsLocked  - Namespace Region Already Locked?  *  * RETURN:      None  *  * DESCRIPTION: Create the association between the handler and the region  *              this is a two way association.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiEvAssociateRegionAndHandler
+name|AcpiEvAttachRegion
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1208,9 +1272,12 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_STATUS
+name|Status2
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvAssociateRegionAndHandler"
+literal|"EvAttachRegion"
 argument_list|)
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
@@ -1271,11 +1338,27 @@ condition|(
 name|AcpiNsIsLocked
 condition|)
 block|{
+name|Status2
+operator|=
 name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status2
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status2
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|Status
 operator|=
@@ -1291,14 +1374,27 @@ condition|(
 name|AcpiNsIsLocked
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+name|Status2
+operator|=
 name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status2
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status2
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|return_ACPI_STATUS
 argument_list|(
@@ -1453,11 +1549,10 @@ block|}
 comment|/*      *  Devices are handled different than regions      */
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|ACPI_TYPE_DEVICE
 condition|)
@@ -1565,7 +1660,7 @@ operator|)
 return|;
 block|}
 comment|/*      *  Now we have a region and it is for the handler's address      *  space type.      *      *  First disconnect region for any previous handler (if any)      */
-name|AcpiEvDisassociateRegionFromHandler
+name|AcpiEvDetachRegion
 argument_list|(
 name|ObjDesc
 argument_list|,
@@ -1575,7 +1670,7 @@ expr_stmt|;
 comment|/*      *  Then connect the region to the new handler      */
 name|Status
 operator|=
-name|AcpiEvAssociateRegionAndHandler
+name|AcpiEvAttachRegion
 argument_list|(
 name|HandlerObj
 argument_list|,

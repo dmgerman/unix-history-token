@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 89 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 92 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
 end_include
 
 begin_include
@@ -52,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acdispat.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"actables.h"
 end_include
 
@@ -76,7 +64,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateAlias  *  * PARAMETERS:  WalkState            - Current state, contains List of  *                                      operands for the opcode  *  * RETURN:      Status  *  * DESCRIPTION: Create a new named alias  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateAlias  *  * PARAMETERS:  WalkState            - Current state, contains operands  *  * RETURN:      Status  *  * DESCRIPTION: Create a new named alias  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -449,6 +437,8 @@ name|WalkState
 operator|->
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 expr_stmt|;
 comment|/*      * If the region object is already attached to this node,      * just return      */
@@ -678,6 +668,8 @@ name|WalkState
 operator|->
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 expr_stmt|;
 comment|/*      * If the region object is already attached to this node,      * just return      */
@@ -915,7 +907,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateProcessor  *  * PARAMETERS:  Op              - Op containing the Processor definition and  *                                args  *              ProcessorNode   - Parent Node for the processor object  *  * RETURN:      Status  *  * DESCRIPTION: Create a new processor object and populate the fields  *  *              Processor (Name[0], CpuID[1], PblockAddr[2], PblockLength[3])  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateProcessor  *  * PARAMETERS:  WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Create a new processor object and populate the fields  *  *              Processor (Name[0], CpuID[1], PblockAddr[2], PblockLength[3])  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -1063,7 +1055,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreatePowerResource  *  * PARAMETERS:  Op              - Op containing the PowerResource definition  *                                and args  *              PowerNode       - Parent Node for the power object  *  * RETURN:      Status  *  * DESCRIPTION: Create a new PowerResource object and populate the fields  *  *              PowerResource (Name[0], SystemLevel[1], ResourceOrder[2])  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreatePowerResource  *  * PARAMETERS:  WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Create a new PowerResource object and populate the fields  *  *              PowerResource (Name[0], SystemLevel[1], ResourceOrder[2])  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -1193,7 +1185,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateMethod  *  * PARAMETERS:  AmlStart        - First byte of the method's AML  *              AmlLength       - AML byte count for this method  *              MethodFlags     - AML method flag byte  *              Method          - Method Node  *  * RETURN:      Status  *  * DESCRIPTION: Create a new method object  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateMethod  *  * PARAMETERS:  AmlStart        - First byte of the method's AML  *              AmlLength       - AML byte count for this method  *              WalkState       - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Create a new method object  *  ****************************************************************************/
 end_comment
 
 begin_function

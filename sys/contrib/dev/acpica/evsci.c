@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: evsci - System Control Interrupt configuration and  *                      legacy to ACPI mode state transition functions  *              $Revision: 83 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: evsci - System Control Interrupt configuration and  *                      legacy to ACPI mode state transition functions  *              $Revision: 86 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -11,18 +11,6 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"achware.h"
 end_include
 
 begin_include
@@ -65,21 +53,48 @@ name|InterruptHandled
 init|=
 name|ACPI_INTERRUPT_NOT_HANDLED
 decl_stmt|;
+name|UINT32
+name|Value
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"EvSciHandler"
 argument_list|)
 expr_stmt|;
 comment|/*      * Make sure that ACPI is enabled by checking SCI_EN.  Note that we are      * required to treat the SCI interrupt as sharable, level, active low.      */
-if|if
-condition|(
-operator|!
-name|AcpiHwBitRegisterRead
+name|Status
+operator|=
+name|AcpiGetRegister
 argument_list|(
 name|ACPI_BITREG_SCI_ENABLE
 argument_list|,
+operator|&
+name|Value
+argument_list|,
 name|ACPI_MTX_DO_NOT_LOCK
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|ACPI_INTERRUPT_NOT_HANDLED
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|Value
 condition|)
 block|{
 comment|/* ACPI is not enabled;  this interrupt cannot be for us */
@@ -165,12 +180,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"EvRemoveSciHandler"
 argument_list|)
 expr_stmt|;
 comment|/* Just let the OS remove the handler and disable the level */
+name|Status
+operator|=
 name|AcpiOsRemoveInterruptHandler
 argument_list|(
 operator|(
@@ -185,7 +205,7 @@ argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_OK
+name|Status
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exnames - interpreter/scanner name load/execute  *              $Revision: 90 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exnames - interpreter/scanner name load/execute  *              $Revision: 91 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
 end_include
 
 begin_define
@@ -293,10 +287,14 @@ modifier|*
 name|NameString
 parameter_list|)
 block|{
-name|UINT8
+name|char
 modifier|*
 name|AmlAddress
 init|=
+operator|(
+name|void
+operator|*
+operator|)
 operator|*
 name|InAmlAddress
 decl_stmt|;
@@ -308,7 +306,7 @@ decl_stmt|;
 name|UINT32
 name|Index
 decl_stmt|;
-name|NATIVE_CHAR
+name|char
 name|CharBuf
 index|[
 literal|5
@@ -378,12 +376,12 @@ for|for
 control|(
 name|Index
 operator|=
-literal|4
+literal|0
 init|;
 operator|(
 name|Index
-operator|>
-literal|0
+operator|<
+name|ACPI_NAME_SIZE
 operator|)
 operator|&&
 operator|(
@@ -395,13 +393,11 @@ argument_list|)
 operator|)
 condition|;
 name|Index
-operator|--
+operator|++
 control|)
 block|{
 name|CharBuf
 index|[
-literal|4
-operator|-
 name|Index
 index|]
 operator|=
@@ -418,8 +414,6 @@ literal|"%c\n"
 operator|,
 name|CharBuf
 index|[
-literal|4
-operator|-
 name|Index
 index|]
 operator|)
@@ -429,9 +423,9 @@ block|}
 comment|/* Valid name segment  */
 if|if
 condition|(
-literal|0
-operator|==
 name|Index
+operator|==
+literal|4
 condition|)
 block|{
 comment|/* Found 4 valid characters */
@@ -484,9 +478,9 @@ block|}
 elseif|else
 if|if
 condition|(
-literal|4
-operator|==
 name|Index
+operator|==
+literal|0
 condition|)
 block|{
 comment|/*          * First character was not a valid name character,          * so we are looking at something other than a name.          */
@@ -534,6 +528,10 @@ block|}
 operator|*
 name|InAmlAddress
 operator|=
+operator|(
+name|UINT8
+operator|*
+operator|)
 name|AmlAddress
 expr_stmt|;
 name|return_ACPI_STATUS

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 29 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 33 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -63,7 +63,7 @@ parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|RetObj
+name|ObjDesc
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -86,7 +86,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|RetObj
+name|ObjDesc
 argument_list|)
 expr_stmt|;
 if|if
@@ -106,7 +106,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|RetObj
+name|ObjDesc
 condition|)
 block|{
 comment|/* Return object is required */
@@ -125,16 +125,15 @@ name|AE_TYPE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * The return object will be a package, so check the parameters.  If the      * return object is not a package, then the underlying AML code is corrupt      * or improperly written.      */
+comment|/*      * The return object must be a package, so check the parameters.  If the      * return object is not a package, then the underlying AML code is corrupt      * or improperly written.      */
 if|if
 condition|(
-name|ACPI_TYPE_PACKAGE
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
 operator|!=
-name|RetObj
-operator|->
-name|Common
-operator|.
-name|Type
+name|ACPI_TYPE_PACKAGE
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -144,13 +143,9 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"_PRT did not return a Package, returned %s\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-name|RetObj
-operator|->
-name|Common
-operator|.
-name|Type
+name|ObjDesc
 argument_list|)
 operator|)
 argument_list|)
@@ -168,7 +163,7 @@ name|Status
 operator|=
 name|AcpiRsCreatePciRoutingTable
 argument_list|(
-name|RetObj
+name|ObjDesc
 argument_list|,
 name|RetBuffer
 argument_list|)
@@ -178,7 +173,7 @@ name|Cleanup
 label|:
 name|AcpiUtRemoveReference
 argument_list|(
-name|RetObj
+name|ObjDesc
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -207,7 +202,7 @@ parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|RetObj
+name|ObjDesc
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -230,7 +225,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|RetObj
+name|ObjDesc
 argument_list|)
 expr_stmt|;
 if|if
@@ -250,7 +245,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|RetObj
+name|ObjDesc
 condition|)
 block|{
 comment|/* Return object is required */
@@ -272,13 +267,12 @@ block|}
 comment|/*      * The return object will be a buffer, but check the      * parameters.  If the return object is not a buffer,      * then the underlying AML code is corrupt or improperly      * written.      */
 if|if
 condition|(
-name|ACPI_TYPE_BUFFER
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
 operator|!=
-name|RetObj
-operator|->
-name|Common
-operator|.
-name|Type
+name|ACPI_TYPE_BUFFER
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -288,13 +282,9 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"_CRS did not return a Buffer, returned %s\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-name|RetObj
-operator|->
-name|Common
-operator|.
-name|Type
+name|ObjDesc
 argument_list|)
 operator|)
 argument_list|)
@@ -312,7 +302,7 @@ name|Status
 operator|=
 name|AcpiRsCreateResourceList
 argument_list|(
-name|RetObj
+name|ObjDesc
 argument_list|,
 name|RetBuffer
 argument_list|)
@@ -322,7 +312,7 @@ name|Cleanup
 label|:
 name|AcpiUtRemoveReference
 argument_list|(
-name|RetObj
+name|ObjDesc
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -351,7 +341,7 @@ parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|RetObj
+name|ObjDesc
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -374,7 +364,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|RetObj
+name|ObjDesc
 argument_list|)
 expr_stmt|;
 if|if
@@ -394,7 +384,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|RetObj
+name|ObjDesc
 condition|)
 block|{
 comment|/* Return object is required */
@@ -416,13 +406,12 @@ block|}
 comment|/*      * The return object will be a buffer, but check the      * parameters.  If the return object is not a buffer,      * then the underlying AML code is corrupt or improperly      * written..      */
 if|if
 condition|(
-name|ACPI_TYPE_BUFFER
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
 operator|!=
-name|RetObj
-operator|->
-name|Common
-operator|.
-name|Type
+name|ACPI_TYPE_BUFFER
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -432,13 +421,9 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"_PRS did not return a Buffer, returned %s\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-name|RetObj
-operator|->
-name|Common
-operator|.
-name|Type
+name|ObjDesc
 argument_list|)
 operator|)
 argument_list|)
@@ -456,7 +441,7 @@ name|Status
 operator|=
 name|AcpiRsCreateResourceList
 argument_list|(
-name|RetObj
+name|ObjDesc
 argument_list|,
 name|RetBuffer
 argument_list|)
@@ -466,7 +451,7 @@ name|Cleanup
 label|:
 name|AcpiUtRemoveReference
 argument_list|(
-name|RetObj
+name|ObjDesc
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -588,6 +573,9 @@ name|Buffer
 operator|.
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|Buffer
 operator|.
 name|Length
@@ -604,6 +592,17 @@ operator|=
 name|Buffer
 operator|.
 name|Pointer
+expr_stmt|;
+name|Params
+index|[
+literal|0
+index|]
+operator|->
+name|Common
+operator|.
+name|Flags
+operator|=
+name|AOPOBJ_DATA_VALID
 expr_stmt|;
 name|Params
 index|[

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 76 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 79 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -95,7 +95,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|ACPI_STATUS
 name|AcpiEvReleaseGlobalLock
 parameter_list|(
 name|void
@@ -205,7 +205,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiEvInstallDefaultAddressSpaceHandlers
+name|AcpiEvInitAddressSpaces
 parameter_list|(
 name|void
 parameter_list|)
@@ -229,7 +229,7 @@ parameter_list|,
 name|UINT32
 name|BitWidth
 parameter_list|,
-name|ACPI_INTEGER
+name|void
 modifier|*
 name|Value
 parameter_list|)
@@ -259,9 +259,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|AcpiEvDisassociateRegionFromHandler
+name|ACPI_STATUS
+name|AcpiEvAttachRegion
 parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|HandlerObj
+parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|RegionObj
@@ -273,13 +277,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_STATUS
-name|AcpiEvAssociateRegionAndHandler
+name|void
+name|AcpiEvDetachRegion
 parameter_list|(
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|HandlerObj
-parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|RegionObj

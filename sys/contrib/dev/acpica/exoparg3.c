@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg3 - AML execution - opcodes with 3 arguments  *              $Revision: 9 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg3 - AML execution - opcodes with 3 arguments  *              $Revision: 14 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -118,7 +118,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"FatalOp: Type %x Code %x Arg %x<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n"
+literal|"FatalOp: Type %X Code %X Arg %X<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n"
 operator|,
 operator|(
 name|UINT32
@@ -223,6 +223,8 @@ name|Value
 expr_stmt|;
 block|}
 comment|/*          * Always signal the OS!          */
+name|Status
+operator|=
 name|AcpiOsSignal
 argument_list|(
 name|ACPI_SIGNAL_FATAL
@@ -308,10 +310,10 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|UINT32
+name|NATIVE_UINT
 name|Index
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|Length
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_STR
@@ -342,14 +344,13 @@ name|ReturnDesc
 operator|=
 name|AcpiUtCreateInternalObject
 argument_list|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|Operand
 index|[
 literal|0
 index|]
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -370,7 +371,7 @@ comment|/* Get the Integer values from the objects */
 name|Index
 operator|=
 operator|(
-name|UINT32
+name|NATIVE_UINT
 operator|)
 name|Operand
 index|[
@@ -384,7 +385,7 @@ expr_stmt|;
 name|Length
 operator|=
 operator|(
-name|UINT32
+name|ACPI_SIZE
 operator|)
 name|Operand
 index|[
@@ -439,6 +440,9 @@ condition|)
 block|{
 name|Length
 operator|=
+operator|(
+name|ACPI_SIZE
+operator|)
 name|Operand
 index|[
 literal|0
@@ -456,6 +460,9 @@ name|Buffer
 operator|=
 name|ACPI_MEM_CALLOCATE
 argument_list|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|Length
 operator|+
 literal|1
@@ -509,6 +516,9 @@ name|String
 operator|.
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|Length
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 60 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 63 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -23,18 +23,6 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acevents.h"
 end_include
 
 begin_include
@@ -319,6 +307,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AcpiDbLoadTable
 parameter_list|(
@@ -715,8 +704,6 @@ name|Status
 operator|=
 name|AcpiTbInstallTable
 argument_list|(
-name|NULL
-argument_list|,
 operator|&
 name|TableInfo
 argument_list|)
@@ -965,7 +952,6 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Table %4.4s is already installed\n"
 argument_list|,
-operator|&
 name|AcpiGbl_DbTablePtr
 operator|->
 name|Signature
@@ -995,7 +981,6 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%4.4s at %p successfully installed and loaded\n"
 argument_list|,
-operator|&
 name|AcpiGbl_DbTablePtr
 operator|->
 name|Signature

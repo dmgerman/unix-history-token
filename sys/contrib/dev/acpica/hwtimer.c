@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwtimer.c - ACPI Power Management Timer Interface  *              $Revision: 20 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwtimer.c - ACPI Power Management Timer Interface  *              $Revision: 21 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -11,12 +11,6 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"achware.h"
 end_include
 
 begin_define
@@ -107,6 +101,9 @@ modifier|*
 name|Ticks
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"AcpiGetTimer"
@@ -124,12 +121,13 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
-name|Ticks
+name|Status
 operator|=
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|32
+argument_list|,
+name|Ticks
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
@@ -141,7 +139,7 @@ argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_OK
+name|Status
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: uteval - Object evaluation  *              $Revision: 38 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: uteval - Object evaluation  *              $Revision: 40 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -117,14 +117,11 @@ literal|"%s on %4.4s was not found\n"
 operator|,
 name|ObjectName
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|DeviceNode
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|)
 argument_list|)
 expr_stmt|;
@@ -140,14 +137,11 @@ literal|"%s on %4.4s failed with status %s\n"
 operator|,
 name|ObjectName
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|DeviceNode
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|AcpiFormatException
 argument_list|(
@@ -190,11 +184,10 @@ block|}
 comment|/* Is the return object of the correct type? */
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|ACPI_TYPE_INTEGER
 condition|)
@@ -208,15 +201,14 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Type returned from %s was not a number: %X \n"
+literal|"Type returned from %s was not an Integer: %X \n"
 operator|,
 name|ObjectName
 operator|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -314,14 +306,11 @@ name|ACPI_DB_EXEC
 operator|,
 literal|"_HID on %4.4s was not found\n"
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|DeviceNode
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|)
 argument_list|)
 expr_stmt|;
@@ -335,14 +324,11 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"_HID on %4.4s failed %s\n"
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|DeviceNode
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|AcpiFormatException
 argument_list|(
@@ -384,21 +370,19 @@ comment|/*      *  A _HID can return either a Number (32 bit compressed EISA ID)
 if|if
 condition|(
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|ACPI_TYPE_INTEGER
 operator|)
 operator|&&
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|ACPI_TYPE_STRING
 operator|)
@@ -415,20 +399,15 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Type returned from _HID not a number or string: %s(%X) \n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -437,11 +416,10 @@ else|else
 block|{
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|ACPI_TYPE_INTEGER
 condition|)
@@ -569,14 +547,11 @@ name|ACPI_DB_EXEC
 operator|,
 literal|"_CID on %4.4s was not found\n"
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|DeviceNode
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|)
 argument_list|)
 expr_stmt|;
@@ -590,14 +565,11 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"_CID on %4.4s failed %s\n"
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|DeviceNode
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|AcpiFormatException
 argument_list|(
@@ -638,11 +610,10 @@ block|}
 comment|/*      *  A _CID can return either a single compatible ID or a package of compatible      *  IDs.  Each compatible ID can be a Number (32 bit compressed EISA ID) or      *  string (PCI ID format, e.g. "PCI\VEN_vvvv&DEV_dddd&SUBSYS_ssssssss").      */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -708,20 +679,15 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Type returned from _CID not a number, string, or package: %s(%X) \n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -807,14 +773,11 @@ name|ACPI_DB_EXEC
 operator|,
 literal|"_UID on %4.4s was not found\n"
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|DeviceNode
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|)
 argument_list|)
 expr_stmt|;
@@ -828,14 +791,11 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"_UID on %4.4s failed %s\n"
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|DeviceNode
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|AcpiFormatException
 argument_list|(
@@ -877,21 +837,19 @@ comment|/*      *  A _UID can return either a Number (32 bit compressed EISA ID)
 if|if
 condition|(
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|ACPI_TYPE_INTEGER
 operator|)
 operator|&&
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|ACPI_TYPE_STRING
 operator|)
@@ -908,11 +866,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Type returned from _UID was not a number or string: %X \n"
 operator|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -921,11 +878,10 @@ else|else
 block|{
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|ACPI_TYPE_INTEGER
 condition|)
@@ -1042,14 +998,11 @@ name|ACPI_DB_EXEC
 operator|,
 literal|"_STA on %4.4s was not found, assuming present.\n"
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|DeviceNode
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1079,14 +1032,11 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"_STA on %4.4s failed %s\n"
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|DeviceNode
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|AcpiFormatException
 argument_list|(
@@ -1124,11 +1074,10 @@ block|}
 comment|/* Is the return object of the correct type? */
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|ACPI_TYPE_INTEGER
 condition|)
@@ -1144,11 +1093,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Type returned from _STA was not a number: %X \n"
 operator|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 17 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 19 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -60,6 +60,20 @@ define|#
 directive|define
 name|ACPI_WALK_METHOD_RESTART
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_WALK_CONST_REQUIRED
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_WALK_CONST_OPTIONAL
+value|4
 end_define
 
 begin_typedef
@@ -280,6 +294,9 @@ name|acpi_init_walk_info
 block|{
 name|UINT16
 name|MethodCount
+decl_stmt|;
+name|UINT16
+name|DeviceCount
 decl_stmt|;
 name|UINT16
 name|OpRegionCount

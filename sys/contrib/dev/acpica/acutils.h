@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 130 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 139 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -179,7 +179,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_STATUS
+name|void
 name|AcpiUtSubsystemShutdown
 parameter_list|(
 name|void
@@ -200,11 +200,19 @@ begin_comment
 comment|/*  * UtGlobal - Global data structures and procedures  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ACPI_DEBUG
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ENABLE_DEBUGGER
+argument_list|)
+end_if
 
 begin_function_decl
 name|NATIVE_CHAR
@@ -224,6 +232,18 @@ name|AcpiUtGetTypeName
 parameter_list|(
 name|ACPI_OBJECT_TYPE
 name|Type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|NATIVE_CHAR
+modifier|*
+name|AcpiUtGetObjectTypeName
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -256,7 +276,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|UINT8
+name|char
 name|AcpiUtHexToAsciiChar
 parameter_list|(
 name|ACPI_INTEGER
@@ -348,7 +368,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|UINT32
+name|int
 name|AcpiUtStrncmp
 parameter_list|(
 specifier|const
@@ -496,24 +516,193 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|UINT32
+name|int
 name|AcpiUtToUpper
 parameter_list|(
-name|UINT32
+name|int
 name|c
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|UINT32
+name|int
 name|AcpiUtToLower
 parameter_list|(
-name|UINT32
+name|int
 name|c
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|UINT8
+name|_acpi_ctype
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|_ACPI_XA
+value|0x00
+end_define
+
+begin_comment
+comment|/* extra alphabetic - not supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_ACPI_XS
+value|0x40
+end_define
+
+begin_comment
+comment|/* extra space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_ACPI_BB
+value|0x00
+end_define
+
+begin_comment
+comment|/* BEL, BS, etc. - not supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_ACPI_CN
+value|0x20
+end_define
+
+begin_comment
+comment|/* CR, FF, HT, NL, VT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_ACPI_DI
+value|0x04
+end_define
+
+begin_comment
+comment|/* '0'-'9' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_ACPI_LO
+value|0x02
+end_define
+
+begin_comment
+comment|/* 'a'-'z' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_ACPI_PU
+value|0x10
+end_define
+
+begin_comment
+comment|/* punctuation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_ACPI_SP
+value|0x08
+end_define
+
+begin_comment
+comment|/* space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_ACPI_UP
+value|0x01
+end_define
+
+begin_comment
+comment|/* 'A'-'Z' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_ACPI_XD
+value|0x80
+end_define
+
+begin_comment
+comment|/* '0'-'9', 'A'-'F', 'a'-'f' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_DIGIT
+parameter_list|(
+name|c
+parameter_list|)
+value|(_acpi_ctype[(unsigned char)(c)]& (_ACPI_DI))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_SPACE
+parameter_list|(
+name|c
+parameter_list|)
+value|(_acpi_ctype[(unsigned char)(c)]& (_ACPI_SP))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_XDIGIT
+parameter_list|(
+name|c
+parameter_list|)
+value|(_acpi_ctype[(unsigned char)(c)]& (_ACPI_XD))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_UPPER
+parameter_list|(
+name|c
+parameter_list|)
+value|(_acpi_ctype[(unsigned char)(c)]& (_ACPI_UP))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_LOWER
+parameter_list|(
+name|c
+parameter_list|)
+value|(_acpi_ctype[(unsigned char)(c)]& (_ACPI_LO))
+end_define
 
 begin_endif
 endif|#
@@ -566,6 +755,50 @@ parameter_list|,
 name|UINT32
 modifier|*
 name|SpaceUsed
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiUtCopyIelementToEelement
+parameter_list|(
+name|UINT8
+name|ObjectType
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|SourceObject
+parameter_list|,
+name|ACPI_GENERIC_STATE
+modifier|*
+name|State
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiUtCopyIelementToIelement
+parameter_list|(
+name|UINT8
+name|ObjectType
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|SourceObject
+parameter_list|,
+name|ACPI_GENERIC_STATE
+modifier|*
+name|State
+parameter_list|,
+name|void
+modifier|*
+name|Context
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1018,7 +1251,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_STATUS
+name|void
 name|AcpiUtDeleteInternalObjectList
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
@@ -1399,6 +1632,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiUtGetElementLength
+parameter_list|(
+name|UINT8
+name|ObjectType
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|SourceObject
+parameter_list|,
+name|ACPI_GENERIC_STATE
+modifier|*
+name|State
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * UtState - Generic state creation/cache routines  */
 end_comment
@@ -1637,6 +1892,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|ACPI_STATUS
+name|AcpiUtStrtoul64
+parameter_list|(
+name|NATIVE_CHAR
+modifier|*
+name|String
+parameter_list|,
+name|UINT32
+name|Base
+parameter_list|,
+name|ACPI_INTEGER
+modifier|*
+name|RetInteger
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|NATIVE_CHAR
 modifier|*
 name|AcpiUtStrupr
@@ -1644,17 +1917,6 @@ parameter_list|(
 name|NATIVE_CHAR
 modifier|*
 name|SrcString
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiUtResolvePackageReferences
-parameter_list|(
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjDesc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1681,6 +1943,26 @@ name|Buffer
 parameter_list|,
 name|UINT32
 name|Length
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|UINT32
+name|AcpiUtDwordByteSwap
+parameter_list|(
+name|UINT32
+name|Value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiUtSetIntegerWidth
+parameter_list|(
+name|UINT8
+name|Revision
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1885,6 +2167,21 @@ name|Module
 parameter_list|,
 name|UINT32
 name|Line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_DEBUG_MEM_BLOCK
+modifier|*
+name|AcpiUtFindAllocation
+parameter_list|(
+name|UINT32
+name|ListId
+parameter_list|,
+name|void
+modifier|*
+name|Allocation
 parameter_list|)
 function_decl|;
 end_function_decl

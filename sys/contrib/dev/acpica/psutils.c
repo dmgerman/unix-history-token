@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psutils - Parser miscellaneous utilities (Parser only)  *              $Revision: 50 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psutils - Parser miscellaneous utilities (Parser only)  *              $Revision: 51 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -60,13 +60,17 @@ argument_list|()
 expr_stmt|;
 name|Op
 operator|->
+name|Common
+operator|.
 name|DataType
 operator|=
 name|ACPI_DESC_TYPE_PARSER
 expr_stmt|;
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|=
 name|Opcode
 expr_stmt|;
@@ -76,7 +80,9 @@ name|ACPI_STRNCPY
 argument_list|(
 name|Op
 operator|->
-name|OpName
+name|Common
+operator|.
+name|AmlOpName
 argument_list|,
 operator|(
 name|AcpiPsGetOpcodeInfo
@@ -91,7 +97,9 @@ sizeof|sizeof
 argument_list|(
 name|Op
 operator|->
-name|OpName
+name|Common
+operator|.
+name|AmlOpName
 argument_list|)
 argument_list|)
 argument_list|)
@@ -153,7 +161,7 @@ name|Size
 operator|=
 sizeof|sizeof
 argument_list|(
-name|ACPI_PARSE2_OBJECT
+name|ACPI_PARSE_OBJ_NAMED
 argument_list|)
 expr_stmt|;
 name|Flags
@@ -175,7 +183,7 @@ name|Size
 operator|=
 sizeof|sizeof
 argument_list|(
-name|ACPI_PARSE2_OBJECT
+name|ACPI_PARSE_OBJ_NAMED
 argument_list|)
 expr_stmt|;
 name|Flags
@@ -195,7 +203,7 @@ name|Size
 operator|=
 sizeof|sizeof
 argument_list|(
-name|ACPI_PARSE2_OBJECT
+name|ACPI_PARSE_OBJ_NAMED
 argument_list|)
 expr_stmt|;
 name|Flags
@@ -209,7 +217,7 @@ name|Size
 operator|=
 sizeof|sizeof
 argument_list|(
-name|ACPI_PARSE_OBJECT
+name|ACPI_PARSE_OBJ_COMMON
 argument_list|)
 expr_stmt|;
 name|Flags
@@ -223,7 +231,7 @@ name|Size
 operator|==
 sizeof|sizeof
 argument_list|(
-name|ACPI_PARSE_OBJECT
+name|ACPI_PARSE_OBJ_COMMON
 argument_list|)
 condition|)
 block|{
@@ -261,6 +269,8 @@ argument_list|)
 expr_stmt|;
 name|Op
 operator|->
+name|Common
+operator|.
 name|Flags
 operator|=
 name|Flags
@@ -296,7 +306,9 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_INT_RETURN_VALUE_OP
 condition|)
@@ -317,6 +329,8 @@ if|if
 condition|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Flags
 operator|==
 name|ACPI_PARSEOP_GENERIC
@@ -464,6 +478,8 @@ if|if
 condition|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Flags
 operator|&
 name|ACPI_PARSEOP_GENERIC
@@ -478,14 +494,10 @@ block|}
 comment|/* Only the "Extended" parse objects have a name */
 return|return
 operator|(
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Name
 operator|)
 return|;
@@ -513,6 +525,8 @@ if|if
 condition|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Flags
 operator|&
 name|ACPI_PARSEOP_GENERIC
@@ -520,14 +534,10 @@ condition|)
 block|{
 return|return;
 block|}
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Name
 operator|=
 name|name

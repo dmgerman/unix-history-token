@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 81 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 86 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -47,18 +47,6 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acdebug.h"
 end_include
 
 begin_define
@@ -137,11 +125,6 @@ operator|,
 literal|"**** Parsing [%4.4s] **** NamedObj=%p\n"
 operator|,
 operator|(
-name|char
-operator|*
-operator|)
-operator|&
-operator|(
 operator|(
 name|ACPI_NAMESPACE_NODE
 operator|*
@@ -150,6 +133,8 @@ name|ObjHandle
 operator|)
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|ObjHandle
 operator|)
@@ -279,6 +264,8 @@ argument_list|)
 expr_stmt|;
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 operator|=
 name|Node
@@ -403,11 +390,6 @@ operator|,
 literal|"**** [%4.4s] Parsed **** NamedObj=%p Op=%p\n"
 operator|,
 operator|(
-name|char
-operator|*
-operator|)
-operator|&
-operator|(
 operator|(
 name|ACPI_NAMESPACE_NODE
 operator|*
@@ -416,6 +398,8 @@ name|ObjHandle
 operator|)
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|ObjHandle
 operator|,
@@ -946,6 +930,9 @@ expr_stmt|;
 comment|/* On error, we must delete the new walk state */
 name|Cleanup
 label|:
+operator|(
+name|void
+operator|)
 name|AcpiDsTerminateControlMethod
 argument_list|(
 name|NextWalkState
@@ -1107,6 +1094,18 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|WalkState
+condition|)
+block|{
+return|return
+operator|(
+name|AE_BAD_PARAMETER
+operator|)
+return|;
+block|}
 comment|/* The current method object was saved in the walk state */
 name|ObjDesc
 operator|=
@@ -1166,6 +1165,8 @@ operator|.
 name|Semaphore
 condition|)
 block|{
+name|Status
+operator|=
 name|AcpiOsSignalSemaphore
 argument_list|(
 name|WalkState
@@ -1179,6 +1180,27 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Could not signal method semaphore\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_OK
+expr_stmt|;
+comment|/* Ignore error and continue cleanup */
+block|}
 block|}
 comment|/* Decrement the thread count on the method parse tree */
 name|WalkState

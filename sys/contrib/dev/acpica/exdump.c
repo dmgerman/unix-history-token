@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 147 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 155 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
 end_include
 
 begin_include
@@ -82,257 +76,11 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExShowHexValue  *  * PARAMETERS:  ByteCount           - Number of bytes to print (1, 2, or 4)  *              *AmlStart             - Address in AML stream of bytes to print  *              InterpreterMode     - Current running mode (load1/Load2/Exec)  *              LeadSpace           - # of spaces to print ahead of value  *                                    0 => none ahead but one behind  *  * DESCRIPTION: Print ByteCount byte(s) starting at AmlStart as a single  *              value, in hex.  If ByteCount> 1 or the value printed is> 9, also  *              print in decimal.  *  ****************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|AcpiExShowHexValue
-parameter_list|(
-name|UINT32
-name|ByteCount
-parameter_list|,
-name|UINT8
-modifier|*
-name|AmlStart
-parameter_list|,
-name|UINT32
-name|LeadSpace
-parameter_list|)
-block|{
-name|UINT32
-name|Value
-decl_stmt|;
-comment|/*  Value retrieved from AML stream */
-name|UINT32
-name|ShowDecimalValue
-decl_stmt|;
-name|UINT32
-name|Length
-decl_stmt|;
-comment|/*  Length of printed field */
-name|UINT8
-modifier|*
-name|CurrentAmlPtr
-init|=
-name|NULL
-decl_stmt|;
-comment|/*  Pointer to current byte of AML value    */
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-literal|"ExShowHexValue"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-operator|(
-name|ACPI_LV_LOAD
-operator|&
-name|AcpiDbgLevel
-operator|)
-operator|&&
-operator|(
-name|_COMPONENT
-operator|&
-name|AcpiDbgLayer
-operator|)
-operator|)
-condition|)
-block|{
-return|return;
-block|}
-if|if
-condition|(
-operator|!
-name|AmlStart
-condition|)
-block|{
-name|ACPI_REPORT_ERROR
-argument_list|(
-operator|(
-literal|"ExShowHexValue: null pointer\n"
-operator|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/*      * AML numbers are always stored little-endian,      * even if the processor is big-endian.      */
-for|for
-control|(
-name|CurrentAmlPtr
-operator|=
-name|AmlStart
-operator|+
-name|ByteCount
-operator|,
-name|Value
-operator|=
-literal|0
-init|;
-name|CurrentAmlPtr
-operator|>
-name|AmlStart
-condition|;
-control|)
-block|{
-name|Value
-operator|=
-operator|(
-name|Value
-operator|<<
-literal|8
-operator|)
-operator|+
-operator|(
-name|UINT32
-operator|)
-operator|*
-operator|--
-name|CurrentAmlPtr
-expr_stmt|;
-block|}
-name|Length
-operator|=
-name|LeadSpace
-operator|*
-name|ByteCount
-operator|+
-literal|2
-expr_stmt|;
-if|if
-condition|(
-name|ByteCount
-operator|>
-literal|1
-condition|)
-block|{
-name|Length
-operator|+=
-operator|(
-name|ByteCount
-operator|-
-literal|1
-operator|)
-expr_stmt|;
-block|}
-name|ShowDecimalValue
-operator|=
-operator|(
-name|ByteCount
-operator|>
-literal|1
-operator|||
-name|Value
-operator|>
-literal|9
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|ShowDecimalValue
-condition|)
-block|{
-name|Length
-operator|+=
-literal|3
-operator|+
-name|AcpiExDigitsNeeded
-argument_list|(
-name|Value
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-block|}
-for|for
-control|(
-name|Length
-operator|=
-name|LeadSpace
-init|;
-name|Length
-condition|;
-operator|--
-name|Length
-control|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
-block|}
-while|while
-condition|(
-name|ByteCount
-operator|--
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"%02x"
-argument_list|,
-operator|*
-name|AmlStart
-operator|++
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ByteCount
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|ShowDecimalValue
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|" [%d]"
-argument_list|,
-name|Value
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-literal|0
-operator|==
-name|LeadSpace
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
-block|}
-name|AcpiOsPrintf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|return_VOID
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*****************************************************************************  *  * FUNCTION:    AcpiExDumpOperand  *  * PARAMETERS:  *ObjDesc          - Pointer to entry to be dumped  *  * RETURN:      Status  *  * DESCRIPTION: Dump an operand object  *  ****************************************************************************/
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiExDumpOperand
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
@@ -351,6 +99,14 @@ name|Length
 decl_stmt|;
 name|UINT32
 name|i
+decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|Element
+decl_stmt|;
+name|UINT16
+name|ElementIndex
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
@@ -374,11 +130,7 @@ operator|)
 operator|)
 condition|)
 block|{
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -392,11 +144,7 @@ argument_list|(
 literal|"Null stack entry ptr\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -426,11 +174,7 @@ argument_list|,
 name|ACPI_LV_EXEC
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -439,7 +183,7 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 operator|!=
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -463,11 +207,7 @@ name|ACPI_OPERAND_OBJECT
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
+return|return;
 block|}
 comment|/*  ObjDesc is a valid object  */
 name|ACPI_DEBUG_PRINT
@@ -483,11 +223,10 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -502,42 +241,6 @@ operator|.
 name|Opcode
 condition|)
 block|{
-case|case
-name|AML_ZERO_OP
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"Reference: Zero\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|AML_ONE_OP
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"Reference: One\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|AML_ONES_OP
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"Reference: Ones\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|AML_REVISION_OP
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"Reference: Revision\n"
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|AML_DEBUG_OP
 case|:
@@ -608,13 +311,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_TYPE_INTEGER
-operator|==
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
+operator|==
+name|ACPI_TYPE_INTEGER
 condition|)
 block|{
 comment|/* Value is a Number */
@@ -664,13 +366,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_TYPE_INTEGER
-operator|==
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
+operator|==
+name|ACPI_TYPE_INTEGER
 condition|)
 block|{
 comment|/* Value is a Number */
@@ -718,6 +419,8 @@ operator|.
 name|Node
 operator|->
 name|Name
+operator|.
+name|Integer
 argument_list|)
 expr_stmt|;
 break|break;
@@ -725,7 +428,7 @@ default|default:
 comment|/*  unknown opcode  */
 name|AcpiOsPrintf
 argument_list|(
-literal|"Unknown opcode=%X\n"
+literal|"Unknown Reference opcode=%X\n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -946,14 +649,6 @@ operator|>
 literal|1
 condition|)
 block|{
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|Element
-decl_stmt|;
-name|UINT16
-name|ElementIndex
-decl_stmt|;
 for|for
 control|(
 name|ElementIndex
@@ -1258,17 +953,16 @@ block|}
 elseif|else
 if|if
 condition|(
-name|ACPI_TYPE_BUFFER
-operator|!=
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
 operator|->
 name|BufferField
 operator|.
 name|BufferObj
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
+operator|!=
+name|ACPI_TYPE_BUFFER
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1372,25 +1066,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/*  unknown ObjDesc->Common.Type value    */
+comment|/* Unknown Type */
 name|AcpiOsPrintf
 argument_list|(
 literal|"Unknown Type %X\n"
 argument_list|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
@@ -1489,7 +1178,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Dump the stack starting at the top, working down */
+comment|/* Dump the operand stack starting at the top */
 for|for
 control|(
 name|i
@@ -1515,20 +1204,12 @@ index|[
 name|i
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|AcpiExDumpOperand
 argument_list|(
 operator|*
 name|ObjDesc
 argument_list|)
-argument_list|)
-condition|)
-block|{
-break|break;
-block|}
+expr_stmt|;
 block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -1639,9 +1320,11 @@ name|ACPI_PHYSICAL_ADDRESS
 name|Value
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|_IA16
+if|#
+directive|if
+name|ACPI_MACHINE_WIDTH
+operator|==
+literal|16
 name|AcpiOsPrintf
 argument_list|(
 literal|"%20s : %p\n"
@@ -1727,14 +1410,11 @@ literal|"%20s : %4.4s\n"
 argument_list|,
 literal|"Name"
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 argument_list|)
 expr_stmt|;
 name|AcpiExOutString
@@ -1875,7 +1555,7 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 operator|!=
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1892,13 +1572,9 @@ name|AcpiExOutString
 argument_list|(
 literal|"Type"
 argument_list|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1927,11 +1603,10 @@ expr_stmt|;
 comment|/* Object-specific Fields */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -1939,7 +1614,7 @@ name|ACPI_TYPE_INTEGER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : %X%8.8X\n"
+literal|"%20s : %8.8X%8.8X\n"
 argument_list|,
 literal|"Value"
 argument_list|,
@@ -2118,9 +1793,8 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" %s"
 argument_list|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 name|ObjDesc
 operator|->
 name|Package
@@ -2129,11 +1803,6 @@ name|Elements
 index|[
 name|i
 index|]
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2459,10 +2128,13 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
-name|AcpiExOutInteger
+name|AcpiExOutAddress
 argument_list|(
 literal|"Address"
 argument_list|,
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
 name|ObjDesc
 operator|->
 name|Processor
@@ -2654,11 +2326,10 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -2764,6 +2435,9 @@ operator|.
 name|DataObj
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+comment|/* All object types covered above */
 break|break;
 block|}
 break|break;
@@ -2962,28 +2636,15 @@ case|:
 case|case
 name|INTERNAL_TYPE_DATA
 case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"ExDumpObjectDescriptor: Display not implemented for object type %X\n"
-argument_list|,
-name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
-argument_list|)
-expr_stmt|;
-break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"ExDumpObjectDescriptor: Unknown object type %X\n"
+literal|"ExDumpObjectDescriptor: Display not implemented for object type %s\n"
 argument_list|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

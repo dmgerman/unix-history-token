@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 86 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 95 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -130,49 +130,15 @@ directive|define
 name|ACPI_APPLICATION
 end_define
 
-begin_define
-define|#
-directive|define
-name|ENABLE_DEBUGGER
-end_define
+begin_comment
+comment|/* #define ENABLE_DEBUGGER */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_USE_SYSTEM_CLIBRARY
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Memory allocation tracking.  Used only if  * 1) This is the debug version  * 2) This is NOT a 16-bit version of the code (not enough real-mode memory)  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUG
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_IA16
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ACPI_DBG_TRACK_ALLOCATIONS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -222,21 +188,6 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|MSDOS
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|"acdos16.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
 name|WIN32
 argument_list|)
 end_elif
@@ -260,6 +211,25 @@ begin_include
 include|#
 directive|include
 file|"acwin64.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* Must appear after WIN32 and WIN64 check */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"acdos16.h"
 end_include
 
 begin_elif
@@ -322,6 +292,20 @@ directive|define
 name|ACPI_USE_STANDARD_HEADERS
 end_define
 
+begin_define
+define|#
+directive|define
+name|COMPILER_DEPENDENT_INT64
+value|long long
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMPILER_DEPENDENT_UINT64
+value|unsigned long long
+end_define
+
 begin_comment
 comment|/* Name of host operating system (returned by the _OS_ namespace object) */
 end_comment
@@ -349,8 +333,90 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Memory allocation tracking.  Used only if  * 1) This is the debug version  * 2) This is NOT a 16-bit version of the code (not enough real-mode memory)  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|ACPI_MACHINE_WIDTH
+operator|!=
+literal|16
+end_if
+
+begin_define
+define|#
+directive|define
+name|ACPI_DBG_TRACK_ALLOCATIONS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*! [End] no source code translation !*/
 end_comment
+
+begin_comment
+comment|/*  * Debugger threading model  * Use single threaded if the entire subsystem is contained in an application  * Use multiple threaded when the subsystem is running in the kernel.  *  * By default the model is single threaded if ACPI_APPLICATION is set,  * multi-threaded if ACPI_APPLICATION is not set.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEBUGGER_SINGLE_THREADED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUGGER_MULTI_THREADED
+value|1
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DEBUGGER_THREADING
+value|DEBUGGER_SINGLE_THREADED
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DEBUGGER_THREADING
+value|DEBUGGER_MULTI_THREADED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/******************************************************************************  *  * C library configuration  *  *****************************************************************************/
@@ -432,7 +498,7 @@ name|ACPI_STRUPR
 parameter_list|(
 name|s
 parameter_list|)
-value|AcpiUtStrupr  ((s))
+value|(void) AcpiUtStrupr ((s))
 end_define
 
 begin_define
@@ -442,7 +508,7 @@ name|ACPI_STRLEN
 parameter_list|(
 name|s
 parameter_list|)
-value|(UINT32) strlen((s))
+value|(ACPI_SIZE) strlen((s))
 end_define
 
 begin_define
@@ -454,7 +520,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|strcpy((d), (s))
+value|(void) strcpy((d), (s))
 end_define
 
 begin_define
@@ -468,7 +534,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|strncpy((d), (s), (NATIVE_INT)(n))
+value|(void) strncpy((d), (s), (ACPI_SIZE)(n))
 end_define
 
 begin_define
@@ -482,7 +548,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|strncmp((d), (s), (NATIVE_INT)(n))
+value|strncmp((d), (s), (ACPI_SIZE)(n))
 end_define
 
 begin_define
@@ -506,7 +572,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|strcat((d), (s))
+value|(void) strcat((d), (s))
 end_define
 
 begin_define
@@ -520,7 +586,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|strncat((d), (s), (NATIVE_INT)(n))
+value|strncat((d), (s), (ACPI_SIZE)(n))
 end_define
 
 begin_define
@@ -534,7 +600,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|strtoul((d), (s), (NATIVE_INT)(n))
+value|strtoul((d), (s), (ACPI_SIZE)(n))
 end_define
 
 begin_define
@@ -548,7 +614,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|(void) memcpy((d), (s), (NATIVE_INT)(n))
+value|(void) memcpy((d), (s), (ACPI_SIZE)(n))
 end_define
 
 begin_define
@@ -562,7 +628,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|(void) memset((d), (s), (NATIVE_INT)(n))
+value|(void) memset((d), (s), (ACPI_SIZE)(n))
 end_define
 
 begin_define
@@ -584,6 +650,27 @@ define|#
 directive|define
 name|ACPI_IS_XDIGIT
 value|isxdigit
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_DIGIT
+value|isdigit
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_SPACE
+value|isspace
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_UPPER
+value|isupper
 end_define
 
 begin_comment
@@ -730,7 +817,7 @@ name|ACPI_STRUPR
 parameter_list|(
 name|s
 parameter_list|)
-value|AcpiUtStrupr  ((s))
+value|(void) AcpiUtStrupr ((s))
 end_define
 
 begin_define
@@ -740,7 +827,7 @@ name|ACPI_STRLEN
 parameter_list|(
 name|s
 parameter_list|)
-value|AcpiUtStrlen  ((s))
+value|(ACPI_SIZE) AcpiUtStrlen  ((s))
 end_define
 
 begin_define
@@ -752,7 +839,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|AcpiUtStrcpy  ((d), (s))
+value|(void) AcpiUtStrcpy  ((d), (s))
 end_define
 
 begin_define
@@ -766,7 +853,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|AcpiUtStrncpy ((d), (s), (n))
+value|(void) AcpiUtStrncpy ((d), (s), (ACPI_SIZE)(n))
 end_define
 
 begin_define
@@ -780,7 +867,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|AcpiUtStrncmp ((d), (s), (n))
+value|AcpiUtStrncmp ((d), (s), (ACPI_SIZE)(n))
 end_define
 
 begin_define
@@ -804,7 +891,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|AcpiUtStrcat  ((d), (s))
+value|(void) AcpiUtStrcat  ((d), (s))
 end_define
 
 begin_define
@@ -818,7 +905,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|AcpiUtStrncat ((d), (s), (n))
+value|AcpiUtStrncat ((d), (s), (ACPI_SIZE)(n))
 end_define
 
 begin_define
@@ -832,7 +919,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|AcpiUtStrtoul ((d), (s),(n))
+value|AcpiUtStrtoul ((d), (s), (ACPI_SIZE)(n))
 end_define
 
 begin_define
@@ -846,7 +933,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|(void) AcpiUtMemcpy  ((d), (s), (n))
+value|(void) AcpiUtMemcpy  ((d), (s), (ACPI_SIZE)(n))
 end_define
 
 begin_define
@@ -860,7 +947,7 @@ name|v
 parameter_list|,
 name|n
 parameter_list|)
-value|(void) AcpiUtMemset  ((d), (v), (n))
+value|(void) AcpiUtMemset  ((d), (v), (ACPI_SIZE)(n))
 end_define
 
 begin_define

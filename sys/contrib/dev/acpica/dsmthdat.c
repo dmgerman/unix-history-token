@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 59 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 62 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -22,19 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acdispat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
 end_include
 
 begin_include
@@ -68,7 +56,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiDsMethodDataInit
 parameter_list|(
 name|ACPI_WALK_STATE
@@ -250,20 +238,17 @@ operator||
 name|ANOBJ_METHOD_LOCAL
 expr_stmt|;
 block|}
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
+name|return_VOID
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataDeleteAll  *  * PARAMETERS:  WalkState           - Current walk state object  *  * RETURN:      Status  *  * DESCRIPTION: Delete method locals and arguments.  Arguments are only  *              deleted if this method was called from another method.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataDeleteAll  *  * PARAMETERS:  WalkState           - Current walk state object  *  * RETURN:      None  *  * DESCRIPTION: Delete method locals and arguments.  Arguments are only  *              deleted if this method was called from another method.  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiDsMethodDataDeleteAll
 parameter_list|(
 name|ACPI_WALK_STATE
@@ -401,10 +386,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
+name|return_VOID
 expr_stmt|;
 block|}
 end_function
@@ -861,11 +843,10 @@ block|}
 comment|/* Get the object type */
 name|return_VALUE
 argument_list|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|Object
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1024,6 +1005,12 @@ argument_list|(
 name|AE_AML_UNINITIALIZED_LOCAL
 argument_list|)
 expr_stmt|;
+default|default:
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_INTERNAL
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/*      * The Index points to an initialized and valid object.      * Return an additional reference to the object      */
@@ -1046,11 +1033,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataDeleteValue  *  * PARAMETERS:  Opcode              - Either AML_LOCAL_OP or AML_ARG_OP  *              Index               - Which localVar or argument to delete  *              WalkState           - Current walk state object  *  * RETURN:      Status  *  * DESCRIPTION: Delete the entry at Opcode:Index on the method stack.  Inserts  *              a null into the stack slot after the object is deleted.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataDeleteValue  *  * PARAMETERS:  Opcode              - Either AML_LOCAL_OP or AML_ARG_OP  *              Index               - Which localVar or argument to delete  *              WalkState           - Current walk state object  *  * RETURN:      None  *  * DESCRIPTION: Delete the entry at Opcode:Index on the method stack.  Inserts  *              a null into the stack slot after the object is deleted.  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiDsMethodDataDeleteValue
 parameter_list|(
 name|UINT16
@@ -1103,10 +1090,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
+name|return_VOID
 expr_stmt|;
 block|}
 comment|/* Get the associated object */
@@ -1136,7 +1120,7 @@ argument_list|(
 name|Object
 argument_list|)
 operator|==
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 operator|)
 condition|)
 block|{
@@ -1147,10 +1131,7 @@ name|Object
 argument_list|)
 expr_stmt|;
 block|}
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
+name|return_VOID
 expr_stmt|;
 block|}
 end_function
@@ -1343,11 +1324,10 @@ name|CurrentObjDesc
 argument_list|,
 name|ObjDesc
 argument_list|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 115 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 124 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ name|ACPI_LOWORD
 parameter_list|(
 name|l
 parameter_list|)
-value|((UINT16)(NATIVE_UINT)(l))
+value|((UINT16)(UINT32)(l))
 end_define
 
 begin_define
@@ -40,7 +40,7 @@ name|ACPI_HIWORD
 parameter_list|(
 name|l
 parameter_list|)
-value|((UINT16)((((NATIVE_UINT)(l))>> 16)& 0xFFFF))
+value|((UINT16)((((UINT32)(l))>> 16)& 0xFFFF))
 end_define
 
 begin_define
@@ -63,11 +63,13 @@ parameter_list|)
 value|((UINT8)((((UINT16)(l))>> 8)& 0xFF))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_IA16
-end_ifdef
+begin_if
+if|#
+directive|if
+name|ACPI_MACHINE_WIDTH
+operator|==
+literal|16
+end_if
 
 begin_comment
 comment|/*  * For 16-bit addresses, we have to assume that the upper 32 bits  * are zero.  */
@@ -80,7 +82,7 @@ name|ACPI_LODWORD
 parameter_list|(
 name|l
 parameter_list|)
-value|(l)
+value|((UINT32)(l))
 end_define
 
 begin_define
@@ -90,7 +92,7 @@ name|ACPI_HIDWORD
 parameter_list|(
 name|l
 parameter_list|)
-value|(0)
+value|((UINT32)(0))
 end_define
 
 begin_define
@@ -112,7 +114,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{(a).Hi=0;(a).Lo=(b);}
+value|{(a).Hi=0;(a).Lo=(UINT32)(b);}
 end_define
 
 begin_define
@@ -157,7 +159,7 @@ name|ACPI_HIDWORD
 parameter_list|(
 name|l
 parameter_list|)
-value|(0)
+value|((UINT32)(0))
 end_define
 
 begin_define
@@ -218,7 +220,7 @@ name|ACPI_HIDWORD
 parameter_list|(
 name|l
 parameter_list|)
-value|((UINT32)(((*(UINT64_STRUCT *)(&l))).Hi))
+value|((UINT32)(((*(UINT64_STRUCT *)(void *)(&l))).Hi))
 end_define
 
 begin_define
@@ -240,7 +242,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((a)=(b))
+value|((a)=(ACPI_PHYSICAL_ADDRESS)(b))
 end_define
 
 begin_define
@@ -292,7 +294,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(t *) ((char *)(a) + (b))
+value|(t *) (void *)((char *)(a) + (NATIVE_UINT)(b))
 end_define
 
 begin_define
@@ -318,7 +320,7 @@ name|ACPI_TO_POINTER
 parameter_list|(
 name|i
 parameter_list|)
-value|ACPI_PTR_ADD (void,NULL,(NATIVE_UINT)i)
+value|ACPI_PTR_ADD (void, (void *) NULL,(NATIVE_UINT)i)
 end_define
 
 begin_define
@@ -328,7 +330,7 @@ name|ACPI_TO_INTEGER
 parameter_list|(
 name|p
 parameter_list|)
-value|ACPI_PTR_DIFF (p,NULL)
+value|ACPI_PTR_DIFF (p,(void *) NULL)
 end_define
 
 begin_define
@@ -338,9 +340,9 @@ name|ACPI_OFFSET
 parameter_list|(
 name|d
 parameter_list|,
-name|o
+name|f
 parameter_list|)
-value|((ACPI_SIZE) ACPI_TO_INTEGER (&(((d *)0)->o)))
+value|(ACPI_SIZE) ACPI_PTR_DIFF (&(((d *)0)->f),(void *) NULL)
 end_define
 
 begin_define
@@ -348,16 +350,54 @@ define|#
 directive|define
 name|ACPI_FADT_OFFSET
 parameter_list|(
-name|o
+name|f
 parameter_list|)
-value|ACPI_OFFSET (FADT_DESCRIPTOR, o)
+value|ACPI_OFFSET (FADT_DESCRIPTOR, f)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_IA16
-end_ifdef
+begin_define
+define|#
+directive|define
+name|ACPI_CAST_PTR
+parameter_list|(
+name|t
+parameter_list|,
+name|p
+parameter_list|)
+value|((t *)(void *)(p))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAST_INDIRECT_PTR
+parameter_list|(
+name|t
+parameter_list|,
+name|p
+parameter_list|)
+value|((t **)(void *)(p))
+end_define
+
+begin_if
+if|#
+directive|if
+name|ACPI_MACHINE_WIDTH
+operator|==
+literal|16
+end_if
+
+begin_define
+define|#
+directive|define
+name|ACPI_STORE_POINTER
+parameter_list|(
+name|d
+parameter_list|,
+name|s
+parameter_list|)
+value|ACPI_MOVE_UNALIGNED32_TO_32(d,s)
+end_define
 
 begin_define
 define|#
@@ -376,7 +416,7 @@ name|ACPI_PTR_TO_PHYSADDR
 parameter_list|(
 name|i
 parameter_list|)
-value|(char *)(i)
+value|(UINT32) (char *)(i)
 end_define
 
 begin_else
@@ -432,7 +472,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|*(UINT16 *)(d) = *(UINT16 *)(s)
+value|*(UINT16 *)(void *)(d) = *(UINT16 *)(void *)(s)
 end_define
 
 begin_define
@@ -444,7 +484,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|*(UINT32 *)(d) = *(UINT32 *)(s)
+value|*(UINT32 *)(void *)(d) = *(UINT32 *)(void *)(s)
 end_define
 
 begin_define
@@ -456,7 +496,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|*(UINT32 *)(d) = *(UINT16 *)(s)
+value|*(UINT32 *)(void *)(d) = *(UINT16 *)(void *)(s)
 end_define
 
 begin_define
@@ -468,7 +508,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|*(UINT64 *)(d) = *(UINT64 *)(s)
+value|*(UINT64 *)(void *)(d) = *(UINT64 *)(void *)(s)
 end_define
 
 begin_else
@@ -489,7 +529,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|{((UINT8 *)(d))[0] = ((UINT8 *)(s))[0];\                                              ((UINT8 *)(d))[1] = ((UINT8 *)(s))[1];}
+value|{((UINT8 *)(void *)(d))[0] = ((UINT8 *)(void *)(s))[0];\                                              ((UINT8 *)(void *)(d))[1] = ((UINT8 *)(void *)(s))[1];}
 end_define
 
 begin_define
@@ -501,7 +541,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|{((UINT8 *)(d))[0] = ((UINT8 *)(s))[0];\                                              ((UINT8 *)(d))[1] = ((UINT8 *)(s))[1];\                                              ((UINT8 *)(d))[2] = ((UINT8 *)(s))[2];\                                              ((UINT8 *)(d))[3] = ((UINT8 *)(s))[3];}
+value|{((UINT8 *)(void *)(d))[0] = ((UINT8 *)(void *)(s))[0];\                                              ((UINT8 *)(void *)(d))[1] = ((UINT8 *)(void *)(s))[1];\                                              ((UINT8 *)(void *)(d))[2] = ((UINT8 *)(void *)(s))[2];\                                              ((UINT8 *)(void *)(d))[3] = ((UINT8 *)(void *)(s))[3];}
 end_define
 
 begin_define
@@ -513,7 +553,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|{(*(UINT32*)(d)) = 0; ACPI_MOVE_UNALIGNED16_TO_16(d,s);}
+value|{(*(UINT32*)(void *)(d)) = 0; ACPI_MOVE_UNALIGNED16_TO_16(d,s);}
 end_define
 
 begin_define
@@ -525,7 +565,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|{((UINT8 *)(d))[0] = ((UINT8 *)(s))[0];\                                              ((UINT8 *)(d))[1] = ((UINT8 *)(s))[1];\                                              ((UINT8 *)(d))[2] = ((UINT8 *)(s))[2];\                                              ((UINT8 *)(d))[3] = ((UINT8 *)(s))[3];\                                              ((UINT8 *)(d))[4] = ((UINT8 *)(s))[4];\                                              ((UINT8 *)(d))[5] = ((UINT8 *)(s))[5];\                                              ((UINT8 *)(d))[6] = ((UINT8 *)(s))[6];\                                              ((UINT8 *)(d))[7] = ((UINT8 *)(s))[7];}
+value|{((UINT8 *)(void *)(d))[0] = ((UINT8 *)(void *)(s))[0];\                                              ((UINT8 *)(void *)(d))[1] = ((UINT8 *)(void *)(s))[1];\                                              ((UINT8 *)(void *)(d))[2] = ((UINT8 *)(void *)(s))[2];\                                              ((UINT8 *)(void *)(d))[3] = ((UINT8 *)(void *)(s))[3];\                                              ((UINT8 *)(void *)(d))[4] = ((UINT8 *)(void *)(s))[4];\                                              ((UINT8 *)(void *)(d))[5] = ((UINT8 *)(void *)(s))[5];\                                              ((UINT8 *)(void *)(d))[6] = ((UINT8 *)(void *)(s))[6];\                                              ((UINT8 *)(void *)(d))[7] = ((UINT8 *)(void *)(s))[7];}
 end_define
 
 begin_endif
@@ -706,7 +746,7 @@ name|value
 parameter_list|,
 name|boundary
 parameter_list|)
-value|(((NATIVE_UINT)(value))& (~((boundary)-1)))
+value|(((NATIVE_UINT)(value))& (~(((NATIVE_UINT) boundary)-1)))
 end_define
 
 begin_define
@@ -718,7 +758,7 @@ name|value
 parameter_list|,
 name|boundary
 parameter_list|)
-value|((((NATIVE_UINT)(value)) + ((boundary)-1))& (~((boundary)-1)))
+value|((((NATIVE_UINT)(value)) + (((NATIVE_UINT) boundary)-1))& (~(((NATIVE_UINT) boundary)-1)))
 end_define
 
 begin_define
@@ -838,7 +878,7 @@ name|ACPI_MASK_BITS_ABOVE
 parameter_list|(
 name|position
 parameter_list|)
-value|(~(((ACPI_INTEGER)(-1))<< ((UINT32) (position))))
+value|(~((ACPI_INTEGER_MAX)<< ((UINT32) (position))))
 end_define
 
 begin_define
@@ -848,7 +888,7 @@ name|ACPI_MASK_BITS_BELOW
 parameter_list|(
 name|position
 parameter_list|)
-value|(((ACPI_INTEGER)(-1))<< ((UINT32) (position)))
+value|((ACPI_INTEGER_MAX)<< ((UINT32) (position)))
 end_define
 
 begin_define
@@ -865,11 +905,13 @@ begin_comment
 comment|/* Macros for GAS addressing */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_IA16
-end_ifndef
+begin_if
+if|#
+directive|if
+name|ACPI_MACHINE_WIDTH
+operator|!=
+literal|16
+end_if
 
 begin_define
 define|#
@@ -892,15 +934,13 @@ name|ACPI_PCI_REGISTER_MASK
 value|(UINT64) 0x000000000000FFFF
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_PCI_FUNCTION
-parameter_list|(
-name|a
-parameter_list|)
-value|(UINT16) ((((a)& ACPI_PCI_FUNCTION_MASK)>> 16))
-end_define
+begin_comment
+comment|/*  * Obsolete  */
+end_comment
+
+begin_comment
+comment|/* #define ACPI_PCI_FUNCTION(a)            (UINT16) ((((UINT64)((UINT64)(a)& ACPI_PCI_FUNCTION_MASK))>> 16)) #define ACPI_PCI_DEVICE(a)              (UINT16) ((((UINT64)((UINT64)(a)& ACPI_PCI_DEVICE_MASK))>> 32)) #define ACPI_PCI_REGISTER(a)            (UINT16) (((UINT64)((UINT64)(a)& ACPI_PCI_REGISTER_MASK))) */
+end_comment
 
 begin_define
 define|#
@@ -909,7 +949,17 @@ name|ACPI_PCI_DEVICE
 parameter_list|(
 name|a
 parameter_list|)
-value|(UINT16) ((((a)& ACPI_PCI_DEVICE_MASK)>> 32))
+value|(UINT16) ((ACPI_HIDWORD ((a)))& 0x0000FFFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCI_FUNCTION
+parameter_list|(
+name|a
+parameter_list|)
+value|(UINT16) ((ACPI_LODWORD ((a)))>> 16)
 end_define
 
 begin_define
@@ -919,7 +969,7 @@ name|ACPI_PCI_REGISTER
 parameter_list|(
 name|a
 parameter_list|)
-value|(UINT16) (((a)& ACPI_PCI_REGISTER_MASK))
+value|(UINT16) ((ACPI_LODWORD ((a)))& 0x0000FFFF)
 end_define
 
 begin_else
@@ -1011,7 +1061,7 @@ name|ACPI_GET_DESCRIPTOR_TYPE
 parameter_list|(
 name|d
 parameter_list|)
-value|(((ACPI_NAMESPACE_NODE *)d)->Descriptor)
+value|(((ACPI_DESCRIPTOR *)(void *)(d))->DescriptorId)
 end_define
 
 begin_define
@@ -1023,7 +1073,7 @@ name|d
 parameter_list|,
 name|t
 parameter_list|)
-value|(((ACPI_NAMESPACE_NODE *)d)->Descriptor = t)
+value|(((ACPI_DESCRIPTOR *)(void *)(d))->DescriptorId = t)
 end_define
 
 begin_comment
@@ -1037,7 +1087,7 @@ name|ACPI_GET_OBJECT_TYPE
 parameter_list|(
 name|d
 parameter_list|)
-value|(((ACPI_OPERAND_OBJECT *)d)->Common.Type)
+value|(((ACPI_OPERAND_OBJECT *)(void *)(d))->Common.Type)
 end_define
 
 begin_comment
@@ -1058,11 +1108,13 @@ begin_comment
 comment|/*  * Macro to check if a pointer is within an ACPI table.  * Parameter (a) is the pointer to check.  Parameter (b) must be defined  * as a pointer to an ACPI_TABLE_HEADER.  (b+1) then points past the header,  * and ((UINT8 *)b+b->Length) points one byte past the end of the table.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_IA16
-end_ifndef
+begin_if
+if|#
+directive|if
+name|ACPI_MACHINE_WIDTH
+operator|!=
+literal|16
+end_if
 
 begin_define
 define|#
@@ -1102,11 +1154,19 @@ begin_comment
 comment|/*  * Macros for the master AML opcode table  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ACPI_DEBUG
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ENABLE_DEBUGGER
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -1446,7 +1506,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|{a.AddressSpaceId = (UINT8) d;\                                              a.RegisterBitWidth = (UINT8) ACPI_MUL_8 (b);\                                              a.RegisterBitOffset = 0;\                                              a.Reserved = 0;\                                              ACPI_STORE_ADDRESS (a.Address,c);}
+value|{a.AddressSpaceId = (UINT8) d;\                                              a.RegisterBitWidth = (UINT8) ACPI_MUL_8 (b);\                                              a.RegisterBitOffset = 0;\                                              a.Reserved = 0;\                                              ACPI_STORE_ADDRESS (a.Address,(ACPI_PHYSICAL_ADDRESS) c);}
 end_define
 
 begin_comment
@@ -1705,11 +1765,47 @@ begin_comment
 comment|/*  * Function exit tracing.  * WARNING: These macros include a return statement.  This is usually considered  * bad form, but having a separate exit macro is very ugly and difficult to maintain.  * One of the FUNCTION_TRACE macros above must be used in conjunction with these macros  * so that "_ProcName" is defined.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_USE_DO_WHILE_0
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DO_WHILE0
+parameter_list|(
+name|a
+parameter_list|)
+value|do a while(0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_DO_WHILE0
+parameter_list|(
+name|a
+parameter_list|)
+value|a
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|return_VOID
-value|{AcpiUtExit(__LINE__,&_Dbg);return;}
+value|ACPI_DO_WHILE0 ({AcpiUtExit(__LINE__,&_Dbg);return;})
 end_define
 
 begin_define
@@ -1719,7 +1815,7 @@ name|return_ACPI_STATUS
 parameter_list|(
 name|s
 parameter_list|)
-value|{AcpiUtStatusExit(__LINE__,&_Dbg,s);return(s);}
+value|ACPI_DO_WHILE0 ({AcpiUtStatusExit(__LINE__,&_Dbg,(s));return((s));})
 end_define
 
 begin_define
@@ -1729,7 +1825,7 @@ name|return_VALUE
 parameter_list|(
 name|s
 parameter_list|)
-value|{AcpiUtValueExit(__LINE__,&_Dbg,s);return(s);}
+value|ACPI_DO_WHILE0 ({AcpiUtValueExit(__LINE__,&_Dbg,(ACPI_INTEGER)(s));return((s));})
 end_define
 
 begin_define
@@ -1739,7 +1835,7 @@ name|return_PTR
 parameter_list|(
 name|s
 parameter_list|)
-value|{AcpiUtPtrExit(__LINE__,&_Dbg,(UINT8 *)s);return(s);}
+value|ACPI_DO_WHILE0 ({AcpiUtPtrExit(__LINE__,&_Dbg,(UINT8 *)(s));return((s));})
 end_define
 
 begin_comment
@@ -1866,7 +1962,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|AcpiNsDumpPathname(a,b,c,d)
+value|(void) AcpiNsDumpPathname(a,b,c,d)
 end_define
 
 begin_define
@@ -2261,6 +2357,23 @@ parameter_list|)
 value|return(s)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENABLE_DEBUGGER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_OPCODE_NAMES
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -2309,11 +2422,13 @@ begin_comment
 comment|/*  * For 16-bit code, we want to shrink some things even though  * we are using ACPI_DEBUG to get the debug output  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_IA16
-end_ifdef
+begin_if
+if|#
+directive|if
+name|ACPI_MACHINE_WIDTH
+operator|==
+literal|16
+end_if
 
 begin_undef
 undef|#
@@ -2405,7 +2520,7 @@ name|ACPI_MEM_ALLOCATE
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiUtAllocate(a,_COMPONENT,_THIS_MODULE,__LINE__)
+value|AcpiUtAllocate((ACPI_SIZE)(a),_COMPONENT,_THIS_MODULE,__LINE__)
 end_define
 
 begin_define
@@ -2415,7 +2530,7 @@ name|ACPI_MEM_CALLOCATE
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiUtCallocate(a, _COMPONENT,_THIS_MODULE,__LINE__)
+value|AcpiUtCallocate((ACPI_SIZE)(a), _COMPONENT,_THIS_MODULE,__LINE__)
 end_define
 
 begin_define
@@ -2453,7 +2568,7 @@ name|ACPI_MEM_ALLOCATE
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiUtAllocateAndTrack(a,_COMPONENT,_THIS_MODULE,__LINE__)
+value|AcpiUtAllocateAndTrack((ACPI_SIZE)(a),_COMPONENT,_THIS_MODULE,__LINE__)
 end_define
 
 begin_define
@@ -2463,7 +2578,7 @@ name|ACPI_MEM_CALLOCATE
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiUtCallocateAndTrack(a, _COMPONENT,_THIS_MODULE,__LINE__)
+value|AcpiUtCallocateAndTrack((ACPI_SIZE)(a), _COMPONENT,_THIS_MODULE,__LINE__)
 end_define
 
 begin_define

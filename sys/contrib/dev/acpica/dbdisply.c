@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 67 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 75 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -11,12 +11,6 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
 end_include
 
 begin_include
@@ -41,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acevents.h"
 end_include
 
 begin_include
@@ -99,9 +87,11 @@ name|void
 modifier|*
 name|ObjPtr
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|_IA16
+if|#
+directive|if
+name|ACPI_MACHINE_WIDTH
+operator|==
+literal|16
 include|#
 directive|include
 file|<stdio.h>
@@ -184,7 +174,9 @@ name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -200,7 +192,9 @@ literal|"Opcode"
 argument_list|,
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 expr_stmt|;
 name|ACPI_DEBUG_ONLY_MEMBERS
@@ -225,7 +219,11 @@ literal|"Value/ArgList"
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
+operator|.
+name|Arg
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -236,6 +234,8 @@ literal|"Parent"
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 argument_list|)
 expr_stmt|;
@@ -247,6 +247,8 @@ literal|"NextOp"
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Next
 argument_list|)
 expr_stmt|;
@@ -477,7 +479,7 @@ goto|goto
 name|DumpNte
 goto|;
 case|case
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 case|:
 comment|/* This is a ACPI OPERAND OBJECT */
 if|if
@@ -824,23 +826,18 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" %s"
 argument_list|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -848,7 +845,7 @@ name|ACPI_TYPE_INTEGER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" %.8X%.8X"
+literal|" %8.8X%8.8X"
 argument_list|,
 name|ACPI_HIDWORD
 argument_list|(
@@ -972,6 +969,9 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+default|default:
+comment|/* No additional display for other types */
+break|break;
 block|}
 block|}
 end_function
@@ -1041,7 +1041,6 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"<Node>            Name %4.4s Type-%s"
 argument_list|,
-operator|&
 operator|(
 operator|(
 name|ACPI_NAMESPACE_NODE
@@ -1051,6 +1050,8 @@ name|ObjDesc
 operator|)
 operator|->
 name|Name
+operator|.
+name|Ascii
 argument_list|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -1110,15 +1111,14 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 case|:
 name|Type
 operator|=
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1129,7 +1129,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" Type %x [Invalid Type]"
+literal|" Type %hX [Invalid Type]"
 argument_list|,
 name|Type
 argument_list|)
@@ -1139,11 +1139,10 @@ block|}
 comment|/* Decode the ACPI object type */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -1158,46 +1157,6 @@ operator|.
 name|Opcode
 condition|)
 block|{
-case|case
-name|AML_ZERO_OP
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"[Const]           Zero (0) [Null Target]"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|AML_ONES_OP
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"[Const]           Ones (0xFFFFFFFFFFFFFFFF) [No Limit]"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|AML_ONE_OP
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"[Const]           One (1)"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|AML_REVISION_OP
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"[Const]           Revision (%X)"
-argument_list|,
-name|ACPI_CA_SUPPORT_LEVEL
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|AML_LOCAL_OP
 case|:
@@ -1322,6 +1281,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|AcpiOsPrintf
+argument_list|(
+literal|"Unknown Reference opcode %X\n"
+argument_list|,
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Opcode
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 break|break;
@@ -1491,10 +1461,11 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Currently executing control method is [%4.4s]\n"
 argument_list|,
-operator|&
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1514,6 +1485,8 @@ while|while
 condition|(
 name|RootOp
 operator|->
+name|Common
+operator|.
 name|Parent
 condition|)
 block|{
@@ -1521,6 +1494,8 @@ name|RootOp
 operator|=
 name|RootOp
 operator|->
+name|Common
+operator|.
 name|Parent
 expr_stmt|;
 block|}
@@ -1564,7 +1539,9 @@ name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1707,10 +1684,11 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Local Variables for method [%4.4s]:\n"
 argument_list|,
-operator|&
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 argument_list|)
 expr_stmt|;
 for|for
@@ -1840,10 +1818,11 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Method [%4.4s] has %X arguments, max concurrency = %X\n"
 argument_list|,
-operator|&
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 argument_list|,
 name|NumArgs
 argument_list|,
@@ -1978,10 +1957,11 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Method [%4.4s] has %X stacked result objects\n"
 argument_list|,
-operator|&
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 argument_list|,
 name|NumResults
 argument_list|)
@@ -2042,9 +2022,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|UINT32
-name|i
-decl_stmt|;
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
@@ -2084,17 +2061,10 @@ argument_list|(
 literal|"Current Control Method Call Tree\n"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
+while|while
+condition|(
 name|WalkState
-condition|;
-name|i
-operator|++
-control|)
+condition|)
 block|{
 name|Node
 operator|=
@@ -2106,10 +2076,11 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"    [%4.4s]\n"
 argument_list|,
-operator|&
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 argument_list|)
 expr_stmt|;
 name|WalkState

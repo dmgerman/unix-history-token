@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actables.h - ACPI table management  *       $Revision: 36 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actables.h - ACPI table management  *       $Revision: 41 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -104,6 +104,32 @@ comment|/*  * tbget - Table "get" routines  */
 end_comment
 
 begin_function_decl
+name|void
+name|AcpiTbTableOverride
+parameter_list|(
+name|ACPI_TABLE_DESC
+modifier|*
+name|TableInfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiTbGetTableWithOverride
+parameter_list|(
+name|ACPI_POINTER
+modifier|*
+name|Address
+parameter_list|,
+name|ACPI_TABLE_DESC
+modifier|*
+name|TableInfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ACPI_STATUS
 name|AcpiTbGetTablePtr
 parameter_list|(
@@ -180,7 +206,7 @@ parameter_list|,
 name|UINT32
 name|Flags
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 modifier|*
 name|Size
 parameter_list|,
@@ -202,10 +228,6 @@ name|AcpiTbGetAllTables
 parameter_list|(
 name|UINT32
 name|NumberOfTables
-parameter_list|,
-name|ACPI_TABLE_HEADER
-modifier|*
-name|BufferPtr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -218,10 +240,6 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiTbInstallTable
 parameter_list|(
-name|ACPI_TABLE_HEADER
-modifier|*
-name|TablePtr
-parameter_list|,
 name|ACPI_TABLE_DESC
 modifier|*
 name|TableInfo
@@ -248,10 +266,6 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiTbRecognizeTable
 parameter_list|(
-name|ACPI_TABLE_HEADER
-modifier|*
-name|TablePtr
-parameter_list|,
 name|ACPI_TABLE_DESC
 modifier|*
 name|TableInfo
@@ -409,7 +423,7 @@ parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS
 name|PhysicalAddress
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 modifier|*
 name|Size
 parameter_list|,

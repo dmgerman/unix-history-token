@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 58 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 61 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -249,6 +249,9 @@ operator|+=
 literal|3
 expr_stmt|;
 break|break;
+default|default:
+comment|/* Can't get here, only 2 bits / 4 cases */
+break|break;
 block|}
 name|return_VALUE
 argument_list|(
@@ -339,9 +342,6 @@ name|ParserState
 operator|->
 name|Aml
 decl_stmt|;
-name|UINT32
-name|Length
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"PsGetNextNamestring"
@@ -396,7 +396,7 @@ break|break;
 case|case
 name|AML_DUAL_NAME_PREFIX
 case|:
-comment|/* two name segments */
+comment|/* Two name segments */
 name|End
 operator|+=
 literal|9
@@ -405,11 +405,14 @@ break|break;
 case|case
 name|AML_MULTI_NAME_PREFIX_OP
 case|:
-comment|/* multiple name segments */
-name|Length
-operator|=
+comment|/* Multiple name segments, 4 chars each */
+name|End
+operator|+=
+literal|2
+operator|+
 operator|(
-name|UINT32
+operator|(
+name|ACPI_SIZE
 operator|)
 name|ACPI_GET8
 argument_list|(
@@ -419,17 +422,11 @@ literal|1
 argument_list|)
 operator|*
 literal|4
-expr_stmt|;
-name|End
-operator|+=
-literal|2
-operator|+
-name|Length
+operator|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* single name segment */
-comment|/* assert (AcpiPsIsLead (GET8 (End))); */
+comment|/* Single name segment */
 name|End
 operator|+=
 literal|4
@@ -535,6 +532,8 @@ argument_list|)
 expr_stmt|;
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Name
@@ -585,7 +584,9 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_METHOD_OP
 condition|)
@@ -606,7 +607,9 @@ name|Count
 operator|&&
 name|Count
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_BYTE_OP
 condition|)
@@ -633,6 +636,8 @@ argument_list|)
 expr_stmt|;
 name|NameOp
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Name
@@ -642,6 +647,8 @@ expr_stmt|;
 comment|/* Point METHODCALL/NAME to the METHOD Node */
 name|NameOp
 operator|->
+name|Common
+operator|.
 name|Node
 operator|=
 operator|(
@@ -665,6 +672,8 @@ name|UINT32
 operator|)
 name|Count
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer
@@ -689,6 +698,8 @@ argument_list|)
 expr_stmt|;
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Name
@@ -780,6 +791,8 @@ argument_list|)
 expr_stmt|;
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Name
@@ -789,12 +802,7 @@ expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|MethodCall
-condition|)
-block|{
-comment|/*          * Lookup the name in the internal namespace          */
+comment|/*      * Lookup the name in the internal namespace      */
 name|ScopeInfo
 operator|.
 name|Scope
@@ -823,7 +831,7 @@ operator|=
 name|Node
 expr_stmt|;
 block|}
-comment|/*          * Lookup object.  We don't want to add anything new to the namespace          * here, however.  So we use MODE_EXECUTE.  Allow searching of the          * parent tree, but don't open a new scope -- we just want to lookup the          * object  (MUST BE mode EXECUTE to perform upsearch)          */
+comment|/*      * Lookup object.  We don't want to add anything new to the namespace      * here, however.  So we use MODE_EXECUTE.  Allow searching of the      * parent tree, but don't open a new scope -- we just want to lookup the      * object  (MUST BE mode EXECUTE to perform upsearch)      */
 name|Status
 operator|=
 name|AcpiNsLookup
@@ -903,6 +911,8 @@ argument_list|)
 expr_stmt|;
 name|NameOp
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Name
@@ -912,6 +922,8 @@ expr_stmt|;
 comment|/* Point METHODCALL/NAME to the METHOD Node */
 name|NameOp
 operator|->
+name|Common
+operator|.
 name|Node
 operator|=
 name|MethodNode
@@ -953,8 +965,7 @@ block|}
 name|return_VOID
 expr_stmt|;
 block|}
-comment|/*              * Else this is normal named object reference.              * Just init the NAMEPATH object with the pathname.              * (See code below)              */
-block|}
+comment|/*          * Else this is normal named object reference.          * Just init the NAMEPATH object with the pathname.          * (See code below)          */
 block|}
 comment|/*      * Either we didn't find the object in the namespace, or the object is      * something other than a control method.  Just initialize the Op with the      * pathname.      */
 name|AcpiPsInitOp
@@ -966,6 +977,8 @@ argument_list|)
 expr_stmt|;
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Name
@@ -1026,6 +1039,8 @@ argument_list|)
 expr_stmt|;
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer
@@ -1062,6 +1077,8 @@ argument_list|(
 operator|&
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer
@@ -1094,6 +1111,8 @@ argument_list|(
 operator|&
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer
@@ -1126,6 +1145,8 @@ argument_list|(
 operator|&
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer
@@ -1154,6 +1175,8 @@ argument_list|)
 expr_stmt|;
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -1205,6 +1228,8 @@ argument_list|)
 expr_stmt|;
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Name
@@ -1212,6 +1237,17 @@ operator|=
 name|AcpiPsGetNextNamestring
 argument_list|(
 name|ParserState
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Invalid ArgType %X\n"
+operator|,
+name|ArgType
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1238,13 +1274,16 @@ block|{
 name|UINT32
 name|AmlOffset
 init|=
+name|ACPI_PTR_DIFF
+argument_list|(
 name|ParserState
 operator|->
 name|Aml
-operator|-
+argument_list|,
 name|ParserState
 operator|->
 name|AmlStart
+argument_list|)
 decl_stmt|;
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -1315,11 +1354,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|Field
 condition|)
 block|{
+name|return_PTR
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 name|Field
 operator|->
+name|Common
+operator|.
 name|AmlOffset
 operator|=
 name|AmlOffset
@@ -1360,6 +1408,8 @@ expr_stmt|;
 comment|/* Get the length which is encoded as a package length */
 name|Field
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Size
@@ -1376,6 +1426,8 @@ case|:
 comment|/* Get the length which is encoded as a package length */
 name|Field
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Size
@@ -1389,9 +1441,11 @@ break|break;
 case|case
 name|AML_INT_ACCESSFIELD_OP
 case|:
-comment|/*              * Get AccessType and AccessAttrib and merge into the field Op              * AccessType is first operand, AccessAttribute is second              */
+comment|/*          * Get AccessType and AccessAttrib and merge into the field Op          * AccessType is first operand, AccessAttribute is second          */
 name|Field
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer32
@@ -1414,6 +1468,8 @@ operator|++
 expr_stmt|;
 name|Field
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer32
@@ -1431,7 +1487,9 @@ name|Aml
 operator|++
 expr_stmt|;
 break|break;
-block|}
+default|default:
+comment|/* Opcode was set in previous switch */
+break|break;
 block|}
 name|return_PTR
 argument_list|(
@@ -1597,6 +1655,8 @@ condition|)
 block|{
 name|Prev
 operator|->
+name|Common
+operator|.
 name|Next
 operator|=
 name|Field
@@ -1655,28 +1715,27 @@ block|{
 comment|/* fill in bytelist data */
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Size
 operator|=
-operator|(
+name|ACPI_PTR_DIFF
+argument_list|(
 name|ParserState
 operator|->
 name|PkgEnd
-operator|-
+argument_list|,
 name|ParserState
 operator|->
 name|Aml
-operator|)
+argument_list|)
 expr_stmt|;
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Arg
-operator|)
 operator|->
+name|Named
+operator|.
 name|Data
 operator|=
 name|ParserState
@@ -1806,6 +1865,17 @@ operator|=
 name|ACPI_VAR_ARGS
 expr_stmt|;
 block|}
+break|break;
+default|default:
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Invalid ArgType: %X\n"
+operator|,
+name|ArgType
+operator|)
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|return_PTR

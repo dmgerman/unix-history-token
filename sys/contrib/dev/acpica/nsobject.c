@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 80 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 83 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -22,25 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
 end_include
 
 begin_define
@@ -304,21 +286,12 @@ name|ObjDesc
 operator|,
 name|Node
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|)
-argument_list|)
-expr_stmt|;
-comment|/*      * Must increment the new value's reference count      * (if it is an internal object)      */
-name|AcpiUtAddReference
-argument_list|(
-name|ObjDesc
 argument_list|)
 expr_stmt|;
 comment|/* Detach an existing attached object if present */
@@ -335,7 +308,18 @@ name|Node
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Handle objects with multiple descriptors - walk      * to the end of the descriptor list      */
+if|if
+condition|(
+name|ObjDesc
+condition|)
+block|{
+comment|/*          * Must increment the new value's reference count          * (if it is an internal object)          */
+name|AcpiUtAddReference
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
+comment|/*          * Handle objects with multiple descriptors - walk          * to the end of the descriptor list          */
 name|LastObjDesc
 operator|=
 name|ObjDesc
@@ -369,6 +353,7 @@ name|Node
 operator|->
 name|Object
 expr_stmt|;
+block|}
 name|Node
 operator|->
 name|Type
@@ -426,11 +411,10 @@ operator|!
 name|ObjDesc
 operator|||
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|INTERNAL_TYPE_DATA
 operator|)
@@ -453,7 +437,7 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 operator|==
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 condition|)
 block|{
 name|Node
@@ -473,13 +457,12 @@ operator|->
 name|Object
 operator|&&
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|Node
 operator|->
 name|Object
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|INTERNAL_TYPE_DATA
 operator|)
@@ -515,14 +498,11 @@ literal|"Node %p [%4.4s] Object %p\n"
 operator|,
 name|Node
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|ObjDesc
 operator|)
@@ -597,7 +577,7 @@ operator|->
 name|Object
 argument_list|)
 operator|!=
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 operator|)
 operator|&&
 operator|(
@@ -613,13 +593,12 @@ operator|)
 operator|)
 operator|||
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|Node
 operator|->
 name|Object
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|INTERNAL_TYPE_DATA
 operator|)
@@ -670,11 +649,10 @@ name|ObjDesc
 operator|)
 operator|||
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|INTERNAL_TYPE_DATA
 operator|)
@@ -689,15 +667,14 @@ name|NextObject
 operator|)
 operator|||
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
 operator|->
 name|Common
 operator|.
 name|NextObject
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|INTERNAL_TYPE_DATA
 operator|)
@@ -772,11 +749,10 @@ block|{
 if|if
 condition|(
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|INTERNAL_TYPE_DATA
 operator|)
@@ -921,11 +897,10 @@ block|{
 if|if
 condition|(
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|INTERNAL_TYPE_DATA
 operator|)
@@ -1043,11 +1018,10 @@ block|{
 if|if
 condition|(
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|INTERNAL_TYPE_DATA
 operator|)

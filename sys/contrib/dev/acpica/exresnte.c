@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 52 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 56 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acdispat.h"
 end_include
 
@@ -47,18 +41,6 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acevents.h"
 end_include
 
 begin_define
@@ -114,9 +96,6 @@ name|Node
 decl_stmt|;
 name|ACPI_OBJECT_TYPE
 name|EntryType
-decl_stmt|;
-name|ACPI_INTEGER
-name|TempVal
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -221,13 +200,12 @@ name|ACPI_TYPE_PACKAGE
 case|:
 if|if
 condition|(
-name|ACPI_TYPE_PACKAGE
-operator|!=
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
+operator|!=
+name|ACPI_TYPE_PACKAGE
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -237,13 +215,9 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Object not a Package, type %s\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -286,13 +260,12 @@ name|ACPI_TYPE_BUFFER
 case|:
 if|if
 condition|(
-name|ACPI_TYPE_BUFFER
-operator|!=
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
+operator|!=
+name|ACPI_TYPE_BUFFER
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -302,13 +275,9 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Object not a Buffer, type %s\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -351,13 +320,12 @@ name|ACPI_TYPE_STRING
 case|:
 if|if
 condition|(
-name|ACPI_TYPE_STRING
-operator|!=
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
+operator|!=
+name|ACPI_TYPE_STRING
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -367,13 +335,9 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Object not a String, type %s\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -400,13 +364,12 @@ name|ACPI_TYPE_INTEGER
 case|:
 if|if
 condition|(
-name|ACPI_TYPE_INTEGER
-operator|!=
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
+operator|!=
+name|ACPI_TYPE_INTEGER
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -416,13 +379,9 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Object not a Integer, type %s\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -538,52 +497,10 @@ name|AE_AML_OPERAND_TYPE
 argument_list|)
 expr_stmt|;
 comment|/* Cannot be AE_TYPE */
-comment|/*      * The only named references allowed are named constants      *   e.g. -- Name (\OSFL, Ones)      */
 case|case
 name|INTERNAL_TYPE_REFERENCE
 case|:
-switch|switch
-condition|(
-name|SourceDesc
-operator|->
-name|Reference
-operator|.
-name|Opcode
-condition|)
-block|{
-case|case
-name|AML_ZERO_OP
-case|:
-name|TempVal
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-case|case
-name|AML_ONE_OP
-case|:
-name|TempVal
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-name|AML_ONES_OP
-case|:
-name|TempVal
-operator|=
-name|ACPI_INTEGER_MAX
-expr_stmt|;
-break|break;
-case|case
-name|AML_REVISION_OP
-case|:
-name|TempVal
-operator|=
-name|ACPI_CA_SUPPORT_LEVEL
-expr_stmt|;
-break|break;
-default|default:
+comment|/* No named references are allowed here */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -601,53 +518,9 @@ argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_AML_BAD_OPCODE
+name|AE_AML_OPERAND_TYPE
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* Create object for result */
-name|ObjDesc
-operator|=
-name|AcpiUtCreateInternalObject
-argument_list|(
-name|ACPI_TYPE_INTEGER
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ObjDesc
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_MEMORY
-argument_list|)
-expr_stmt|;
-block|}
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-name|TempVal
-expr_stmt|;
-comment|/*          * Truncate value if we are executing from a 32-bit ACPI table          * AND actually executing AML code.  If we are resolving          * an object in the namespace via an external call to the          * subsystem, we will have a null WalkState          */
-if|if
-condition|(
-name|WalkState
-condition|)
-block|{
-name|AcpiExTruncateFor32bitTable
-argument_list|(
-name|ObjDesc
-argument_list|,
-name|WalkState
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
 comment|/* Default case is for unknown types */
 default|default:
 name|ACPI_DEBUG_PRINT

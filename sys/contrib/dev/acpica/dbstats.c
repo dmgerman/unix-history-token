@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 55 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 60 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -17,18 +17,6 @@ begin_include
 include|#
 directive|include
 file|<acdebug.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<amlcode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<acparser.h>
 end_include
 
 begin_include
@@ -62,6 +50,7 @@ comment|/*  * Statistics subcommands  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|ARGUMENT_INFO
 name|AcpiDbStatTypes
 index|[]
@@ -106,49 +95,49 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|CMD_ALLOCATIONS
+name|CMD_STAT_ALLOCATIONS
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|CMD_OBJECTS
+name|CMD_STAT_OBJECTS
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|CMD_MEMORY
+name|CMD_STAT_MEMORY
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|CMD_MISC
+name|CMD_STAT_MISC
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|CMD_TABLES
+name|CMD_STAT_TABLES
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|CMD_SIZES
+name|CMD_STAT_SIZES
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|CMD_STACK
+name|CMD_STAT_STACK
 value|6
 end_define
 
@@ -182,11 +171,10 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|>
 name|INTERNAL_TYPE_NODE_MAX
 condition|)
@@ -199,11 +187,10 @@ else|else
 block|{
 name|AcpiGbl_ObjTypeCount
 index|[
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 index|]
 operator|++
 expr_stmt|;
@@ -211,11 +198,10 @@ block|}
 comment|/* Count the sub-objects */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -406,6 +392,8 @@ name|AddrHandler
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 block|}
 end_function
@@ -513,7 +501,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiDbCountNamespaceObjects
 parameter_list|(
 name|void
@@ -567,6 +555,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|AcpiNsWalkNamespace
 argument_list|(
 name|ACPI_TYPE_ANY
@@ -584,11 +575,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
 block|}
 end_function
 
@@ -701,7 +687,7 @@ ifndef|#
 directive|ifndef
 name|PARSER_ONLY
 case|case
-name|CMD_ALLOCATIONS
+name|CMD_STAT_ALLOCATIONS
 case|:
 ifdef|#
 directive|ifdef
@@ -715,7 +701,7 @@ break|break;
 endif|#
 directive|endif
 case|case
-name|CMD_TABLES
+name|CMD_STAT_TABLES
 case|:
 name|AcpiOsPrintf
 argument_list|(
@@ -743,7 +729,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|CMD_OBJECTS
+name|CMD_STAT_OBJECTS
 case|:
 ifndef|#
 directive|ifndef
@@ -828,7 +814,7 @@ endif|#
 directive|endif
 break|break;
 case|case
-name|CMD_MEMORY
+name|CMD_STAT_MEMORY
 case|:
 ifdef|#
 directive|ifdef
@@ -1057,7 +1043,7 @@ endif|#
 directive|endif
 break|break;
 case|case
-name|CMD_MISC
+name|CMD_STAT_MISC
 case|:
 name|AcpiOsPrintf
 argument_list|(
@@ -1122,7 +1108,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|CMD_SIZES
+name|CMD_STAT_SIZES
 case|:
 name|AcpiOsPrintf
 argument_list|(
@@ -1360,17 +1346,27 @@ literal|"ParseObject      %3d\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ACPI_PARSE_OBJECT
+name|ACPI_PARSE_OBJ_COMMON
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Parse2Object     %3d\n"
+literal|"ParseObjectNamed %3d\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ACPI_PARSE2_OBJECT
+name|ACPI_PARSE_OBJ_NAMED
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"ParseObjectAsl   %3d\n"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_PARSE_OBJ_ASL
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1396,13 +1392,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CMD_STACK
+name|CMD_STAT_STACK
 case|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ACPI_DEBUG
+argument_list|)
 name|Size
 operator|=
+call|(
+name|UINT32
+call|)
+argument_list|(
 name|AcpiGbl_EntryStackPointer
 operator|-
 name|AcpiGbl_LowestStackPointer
+argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
@@ -1439,6 +1446,10 @@ argument_list|,
 name|AcpiGbl_DeepestNesting
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+break|break;
+default|default:
 break|break;
 block|}
 name|AcpiOsPrintf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 57 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 62 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -31,18 +31,6 @@ directive|include
 file|"acnamesp.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -58,7 +46,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvSystemMemoryRegionSetup  *  * PARAMETERS:  RegionObj           - region we are interested in  *              Function            - start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling, a nop for now  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvSystemMemoryRegionSetup  *  * PARAMETERS:  RegionObj           - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling, a nop for now  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -131,7 +119,7 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Activate.  Create a new context */
+comment|/* Create a new context */
 name|LocalRegionContext
 operator|=
 name|ACPI_MEM_CALLOCATE
@@ -191,7 +179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvIoSpaceRegionSetup  *  * PARAMETERS:  RegionObj           - region we are interested in  *              Function            - start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvIoSpaceRegionSetup  *  * PARAMETERS:  RegionObj           - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -249,7 +237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvPciConfigRegionSetup  *  * PARAMETERS:  RegionObj           - region we are interested in  *              Function            - start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  * MUTEX:       Assumes namespace is not locked  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvPciConfigRegionSetup  *  * PARAMETERS:  RegionObj           - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  * MUTEX:       Assumes namespace is not locked  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -327,7 +315,7 @@ operator|!
 name|HandlerObj
 condition|)
 block|{
-comment|/*          *  No installed handler. This shouldn't happen because the dispatch          *  routine checks before we get here, but we check again just in case.          */
+comment|/*          * No installed handler. This shouldn't happen because the dispatch          * routine checks before we get here, but we check again just in case.          */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -397,8 +385,8 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      *  For PCI Config space access, we have to pass the segment, bus,      *  device and function numbers.  This routine must acquire those.      */
-comment|/*      *  First get device and function numbers from the _ADR object      *  in the parent's scope.      */
+comment|/*      * For PCI Config space access, we have to pass the segment, bus,      * device and function numbers.  This routine must acquire those.      */
+comment|/*      * First get device and function numbers from the _ADR object      * in the parent's scope.      */
 name|Node
 operator|=
 name|AcpiNsGetParentNode
@@ -410,7 +398,7 @@ operator|.
 name|Node
 argument_list|)
 expr_stmt|;
-comment|/* AcpiEvaluate the _ADR object */
+comment|/* Evaluate the _ADR object */
 name|Status
 operator|=
 name|AcpiUtEvaluateNumericObject
@@ -423,7 +411,7 @@ operator|&
 name|Temp
 argument_list|)
 expr_stmt|;
-comment|/*      *  The default is zero, since the allocation above zeroed the data, just      *  do nothing on failures.      */
+comment|/*      * The default is zero, and since the allocation above zeroed       * the data, just do nothing on failure.      */
 if|if
 condition|(
 name|ACPI_SUCCESS
@@ -438,7 +426,10 @@ name|Device
 operator|=
 name|ACPI_HIWORD
 argument_list|(
+name|ACPI_LODWORD
+argument_list|(
 name|Temp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|PciId
@@ -447,12 +438,15 @@ name|Function
 operator|=
 name|ACPI_LOWORD
 argument_list|(
+name|ACPI_LODWORD
+argument_list|(
 name|Temp
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      *  Get the _SEG and _BBN values from the device upon which the handler      *  is installed.      *      *  We need to get the _SEG and _BBN objects relative to the PCI BUS device.      *  This is the device the handler has been registered to handle.      */
-comment|/*      *  If the AddrHandler.Node is still pointing to the root, we need      *  to scan upward for a PCI Root bridge and re-associate the OpRegion      *  handlers with that device.      */
+comment|/*      * Get the _SEG and _BBN values from the device upon which the handler      * is installed.      *      * We need to get the _SEG and _BBN objects relative to the PCI BUS device.      * This is the device the handler has been registered to handle.      */
+comment|/*      * If the AddrHandler.Node is still pointing to the root, we need      * to scan upward for a PCI Root bridge and re-associate the OpRegion      * handlers with that device.      */
 if|if
 condition|(
 name|HandlerObj
@@ -490,6 +484,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
+comment|/* Got a valid _HID, check if this is a PCI root */
 if|if
 condition|(
 operator|!
@@ -510,6 +505,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+comment|/* Install a handler for this PCI root bridge */
+name|Status
+operator|=
 name|AcpiInstallAddressSpaceHandler
 argument_list|(
 operator|(
@@ -526,6 +524,33 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Could not install PciConfig handler for %4.4s, %s\n"
+operator|,
+name|Node
+operator|->
+name|Name
+operator|.
+name|Ascii
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 block|}
 block|}
@@ -625,7 +650,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvPciBarRegionSetup  *  * PARAMETERS:  RegionObj           - region we are interested in  *              Function            - start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  * MUTEX:       Assumes namespace is not locked  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvPciBarRegionSetup  *  * PARAMETERS:  RegionObj           - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  * MUTEX:       Assumes namespace is not locked  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -662,7 +687,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvCmosRegionSetup  *  * PARAMETERS:  RegionObj           - region we are interested in  *              Function            - start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  * MUTEX:       Assumes namespace is not locked  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvCmosRegionSetup  *  * PARAMETERS:  RegionObj           - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  * MUTEX:       Assumes namespace is not locked  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -699,7 +724,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvDefaultRegionSetup  *  * PARAMETERS:  RegionObj           - region we are interested in  *              Function            - start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvDefaultRegionSetup  *  * PARAMETERS:  RegionObj           - Region we are interested in  *              Function            - Start or stop  *              HandlerContext      - Address space handler context  *              RegionContext       - Region specific context  *  * RETURN:      Status  *  * DESCRIPTION: Do any prep work for region handling  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -757,7 +782,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInitializeRegion  *  * PARAMETERS:  RegionObj  - Region we are initializing  *  * RETURN:      Status  *  * DESCRIPTION: Initializes the region, finds any _REG methods and saves them  *              for execution at a later time  *  *              Get the appropriate address space handler for a newly  *              created region.  *  *              This also performs address space specific intialization.  For  *              example, PCI regions must have an _ADR object that contains  *              a PCI address in the scope of the definition.  This address is  *              required to perform an access to PCI config space.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInitializeRegion  *  * PARAMETERS:  RegionObj       - Region we are initializing  *              AcpiNsLocked    - Is namespace locked?  *  * RETURN:      Status  *  * DESCRIPTION: Initializes the region, finds any _REG methods and saves them  *              for execution at a later time  *  *              Get the appropriate address space handler for a newly  *              created region.  *  *              This also performs address space specific intialization.  For  *              example, PCI regions must have an _ADR object that contains  *              a PCI address in the scope of the definition.  This address is  *              required to perform an access to PCI config space.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -917,7 +942,7 @@ name|Flags
 operator||=
 name|AOPOBJ_OBJECT_INITIALIZED
 expr_stmt|;
-comment|/*      *  Find any "_REG" associated with this region definition      */
+comment|/*      * Find any "_REG" method associated with this region definition      */
 name|Status
 operator|=
 name|AcpiNsSearchNode
@@ -941,7 +966,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/*          *  The _REG method is optional and there can be only one per region          *  definition.  This will be executed when the handler is attached          *  or removed          */
+comment|/*          * The _REG method is optional and there can be only one per region          * definition.  This will be executed when the handler is attached          * or removed          */
 name|RegionObj2
 operator|->
 name|Extra
@@ -951,13 +976,13 @@ operator|=
 name|MethodNode
 expr_stmt|;
 block|}
-comment|/*      *  The following loop depends upon the root Node having no parent      *  ie: AcpiGbl_RootNode->ParentEntry being set to NULL      */
+comment|/*      * The following loop depends upon the root Node having no parent      * ie: AcpiGbl_RootNode->ParentEntry being set to NULL      */
 while|while
 condition|(
 name|Node
 condition|)
 block|{
-comment|/*          *  Check to see if a handler exists          */
+comment|/*          * Check to see if a handler exists          */
 name|HandlerObj
 operator|=
 name|NULL
@@ -974,7 +999,7 @@ condition|(
 name|ObjDesc
 condition|)
 block|{
-comment|/*              *  can only be a handler if the object exists              */
+comment|/*              * Can only be a handler if the object exists              */
 switch|switch
 condition|(
 name|Node
@@ -1018,13 +1043,16 @@ operator|.
 name|AddrHandler
 expr_stmt|;
 break|break;
+default|default:
+comment|/* Ignore other objects */
+break|break;
 block|}
 while|while
 condition|(
 name|HandlerObj
 condition|)
 block|{
-comment|/*                  *  This guy has at least one address handler                  *  see if it has the type we want                  */
+comment|/* Is this handler of the correct type? */
 if|if
 condition|(
 name|HandlerObj
@@ -1036,6 +1064,7 @@ operator|==
 name|SpaceId
 condition|)
 block|{
+comment|/* Found correct handler */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -1051,8 +1080,9 @@ name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*                      *  Found it! Now update the region and the handler                      */
-name|AcpiEvAssociateRegionAndHandler
+name|Status
+operator|=
+name|AcpiEvAttachRegion
 argument_list|(
 name|HandlerObj
 argument_list|,
@@ -1067,6 +1097,7 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Try next handler in the list */
 name|HandlerObj
 operator|=
 name|HandlerObj
@@ -1076,9 +1107,8 @@ operator|.
 name|Next
 expr_stmt|;
 block|}
-comment|/* while handlerobj */
 block|}
-comment|/*          *  This one does not have the handler we need          *  Pop up one level          */
+comment|/*          * This node does not have the handler we need;          * Pop up one level          */
 name|Node
 operator|=
 name|AcpiNsGetParentNode
@@ -1087,8 +1117,7 @@ name|Node
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* while Node != ROOT */
-comment|/*      *  If we get here, there is no handler for this region      */
+comment|/*      * If we get here, there is no handler for this region      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(

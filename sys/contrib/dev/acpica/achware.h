@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: achware.h -- hardware specific interfaces  *       $Revision: 58 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: achware.h -- hardware specific interfaces  *       $Revision: 60 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -105,36 +105,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|UINT32
-name|AcpiHwBitRegisterRead
-parameter_list|(
-name|UINT32
-name|RegisterId
-parameter_list|,
-name|UINT32
-name|Flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|UINT32
-name|AcpiHwBitRegisterWrite
-parameter_list|(
-name|UINT32
-name|RegisterId
-parameter_list|,
-name|UINT32
-name|Value
-parameter_list|,
-name|UINT32
-name|Flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|UINT32
+name|ACPI_STATUS
 name|AcpiHwRegisterRead
 parameter_list|(
 name|BOOLEAN
@@ -142,12 +113,16 @@ name|UseLock
 parameter_list|,
 name|UINT32
 name|RegisterId
+parameter_list|,
+name|UINT32
+modifier|*
+name|ReturnValue
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|ACPI_STATUS
 name|AcpiHwRegisterWrite
 parameter_list|(
 name|BOOLEAN
@@ -163,11 +138,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|UINT32
+name|ACPI_STATUS
 name|AcpiHwLowLevelRead
 parameter_list|(
 name|UINT32
 name|Width
+parameter_list|,
+name|UINT32
+modifier|*
+name|Value
 parameter_list|,
 name|ACPI_GENERIC_ADDRESS
 modifier|*
@@ -180,7 +159,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|ACPI_STATUS
 name|AcpiHwLowLevelWrite
 parameter_list|(
 name|UINT32
@@ -200,7 +179,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|ACPI_STATUS
 name|AcpiHwClearAcpiStatus
 parameter_list|(
 name|void
@@ -213,7 +192,17 @@ comment|/* GPE support */
 end_comment
 
 begin_function_decl
-name|void
+name|UINT8
+name|AcpiHwGetGpeBitMask
+parameter_list|(
+name|UINT32
+name|GpeNumber
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
 name|AcpiHwEnableGpe
 parameter_list|(
 name|UINT32
@@ -233,7 +222,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|ACPI_STATUS
 name|AcpiHwDisableGpe
 parameter_list|(
 name|UINT32
@@ -253,7 +242,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|ACPI_STATUS
 name|AcpiHwClearGpe
 parameter_list|(
 name|UINT32
@@ -263,7 +252,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|ACPI_STATUS
 name|AcpiHwGetGpeStatus
 parameter_list|(
 name|UINT32
@@ -277,7 +266,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|ACPI_STATUS
 name|AcpiHwDisableNonWakeupGpes
 parameter_list|(
 name|void
@@ -286,32 +275,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|ACPI_STATUS
 name|AcpiHwEnableNonWakeupGpes
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Sleep Prototypes */
-end_comment
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiHwGetSleepTypeData
-parameter_list|(
-name|UINT8
-name|SleepState
-parameter_list|,
-name|UINT8
-modifier|*
-name|Slp_TypA
-parameter_list|,
-name|UINT8
-modifier|*
-name|Slp_TypB
 parameter_list|)
 function_decl|;
 end_function_decl

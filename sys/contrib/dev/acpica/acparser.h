@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: acparser.h - AML Parser subcomponent prototypes and defines  *       $Revision: 58 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: acparser.h - AML Parser subcomponent prototypes and defines  *       $Revision: 59 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -315,7 +315,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|BOOLEAN
+name|void
 name|AcpiPsCompleteThisOp
 parameter_list|(
 name|ACPI_WALK_STATE

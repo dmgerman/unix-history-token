@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 67 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 68 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1548,6 +1548,13 @@ define|#
 directive|define
 name|AML_LOGICAL
 value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_CONSTANT
+value|0x1000
 end_define
 
 begin_comment

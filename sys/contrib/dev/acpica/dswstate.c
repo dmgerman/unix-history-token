@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 59 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 65 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,12 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acparser.h"
 end_include
 
@@ -41,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
 end_include
 
 begin_define
@@ -217,19 +205,13 @@ name|Object
 operator|,
 name|Object
 condition|?
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|(
 name|ACPI_OPERAND_OBJECT
 operator|*
 operator|)
 name|Object
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 else|:
 literal|"NULL"
@@ -319,7 +301,7 @@ if|if
 condition|(
 name|Index
 operator|>=
-name|OBJ_NUM_OPERANDS
+name|OBJ_MAX_OPERAND
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -427,16 +409,10 @@ operator|*
 name|Object
 operator|)
 condition|?
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|*
 name|Object
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 else|:
 literal|"NULL"
@@ -613,16 +589,10 @@ operator|*
 name|Object
 operator|)
 condition|?
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|*
 name|Object
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 else|:
 literal|"NULL"
@@ -685,7 +655,7 @@ modifier|*
 name|WalkState
 parameter_list|)
 block|{
-name|UINT32
+name|NATIVE_UINT
 name|Index
 decl_stmt|;
 name|ACPI_GENERIC_STATE
@@ -836,6 +806,9 @@ name|Results
 operator|.
 name|NumResults
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|Index
 operator|)
 argument_list|)
@@ -861,16 +834,10 @@ operator|*
 name|Object
 operator|)
 condition|?
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|*
 name|Object
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 else|:
 literal|"NULL"
@@ -1042,19 +1009,13 @@ name|Object
 operator|,
 name|Object
 condition|?
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|(
 name|ACPI_OPERAND_OBJECT
 operator|*
 operator|)
 name|Object
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 else|:
 literal|"NULL"
@@ -1408,19 +1369,13 @@ literal|"Obj=%p [%s] State=%p #Ops=%X\n"
 operator|,
 name|Object
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|(
 operator|(
 name|ACPI_OPERAND_OBJECT
 operator|*
 operator|)
 name|Object
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|,
 name|WalkState
@@ -1470,7 +1425,7 @@ comment|/* Get operand and set stack entry to null */
 end_comment
 
 begin_endif
-unit|*Object = WalkState->Operands [WalkState->NumOperands];     WalkState->Operands [WalkState->NumOperands] = NULL;      ACPI_DEBUG_PRINT ((ACPI_DB_EXEC, "Obj=%p [%s] State=%p #Ops=%X\n",                     *Object, AcpiUtGetTypeName ((*Object)->Common.Type),                     WalkState, WalkState->NumOperands));      return (AE_OK); }
+unit|*Object = WalkState->Operands [WalkState->NumOperands];     WalkState->Operands [WalkState->NumOperands] = NULL;      ACPI_DEBUG_PRINT ((ACPI_DB_EXEC, "Obj=%p [%s] State=%p #Ops=%X\n",                     *Object, AcpiUtGetObjectTypeName (*Object),                     WalkState, WalkState->NumOperands));      return (AE_OK); }
 endif|#
 directive|endif
 end_endif
@@ -2312,6 +2267,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Init the method arguments */
+name|Status
+operator|=
 name|AcpiDsMethodDataInitArgs
 argument_list|(
 name|Params
@@ -2321,6 +2278,20 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2333,6 +2304,8 @@ name|ParserState
 operator|->
 name|StartOp
 operator|->
+name|Common
+operator|.
 name|Node
 expr_stmt|;
 if|if
@@ -2376,6 +2349,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|Status
+operator|=
 name|AcpiDsInitCallbacks
 argument_list|(
 name|WalkState
@@ -2385,7 +2360,7 @@ argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_OK
+name|Status
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 121 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 133 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"achware.h"
 end_include
 
 begin_include
@@ -50,13 +44,13 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|void
+name|ACPI_STATUS
 name|AcpiHwClearAcpiStatus
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|NATIVE_UINT
+name|NATIVE_UINT_MAX32
 name|i
 decl_stmt|;
 name|NATIVE_UINT
@@ -108,9 +102,14 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_VOID
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
 expr_stmt|;
 block|}
+name|Status
+operator|=
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_DO_NOT_LOCK
@@ -120,6 +119,18 @@ argument_list|,
 name|ACPI_BITMASK_ALL_FIXED_STATUS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
 comment|/* Clear the fixed events */
 if|if
 condition|(
@@ -133,6 +144,8 @@ name|Address
 argument_list|)
 condition|)
 block|{
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|16
@@ -147,6 +160,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
 block|}
 comment|/* Clear the GPE Bits */
 for|for
@@ -182,6 +207,8 @@ name|i
 operator|++
 control|)
 block|{
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|8
@@ -198,8 +225,22 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|UnlockAndExit
+goto|;
 block|}
 block|}
+block|}
+name|UnlockAndExit
+label|:
 operator|(
 name|void
 operator|)
@@ -208,18 +249,21 @@ argument_list|(
 name|ACPI_MTX_HARDWARE
 argument_list|)
 expr_stmt|;
-name|return_VOID
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwGetSleepTypeData  *  * PARAMETERS:  SleepState          - Numeric sleep state  *              *SleepTypeA         - Where SLP_TYPa is returned  *              *SleepTypeB         - Where SLP_TYPb is returned  *  * RETURN:      Status - ACPI status  *  * DESCRIPTION: Obtain the SLP_TYPa and SLP_TYPb values for the requested sleep  *              state.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetSleepTypeData  *  * PARAMETERS:  SleepState          - Numeric sleep state  *              *SleepTypeA         - Where SLP_TYPa is returned  *              *SleepTypeB         - Where SLP_TYPb is returned  *  * RETURN:      Status - ACPI status  *  * DESCRIPTION: Obtain the SLP_TYPa and SLP_TYPb values for the requested sleep  *              state.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiHwGetSleepTypeData
+name|AcpiGetSleepTypeData
 parameter_list|(
 name|UINT8
 name|SleepState
@@ -244,10 +288,10 @@ name|ObjDesc
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"HwGetSleepTypeData"
+literal|"AcpiGetSleepTypeData"
 argument_list|)
 expr_stmt|;
-comment|/*      *  Validate parameters      */
+comment|/*      * Validate parameters      */
 if|if
 condition|(
 operator|(
@@ -269,7 +313,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      *  AcpiEvaluate the namespace object containing the values for this state      */
+comment|/*      * Evaluate the namespace object containing the values for this state      */
 name|Status
 operator|=
 name|AcpiNsEvaluateByName
@@ -303,6 +347,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Must have a return object */
 if|if
 condition|(
 operator|!
@@ -316,21 +361,37 @@ literal|"Missing Sleep State object\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NOT_EXIST
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      *  We got something, now ensure it is correct.  The object must      *  be a package and must have at least 2 numeric values as the      *  two elements      */
-comment|/* Even though AcpiEvaluateObject resolves package references,      * NsEvaluate doesn't. So, we do it here.      */
 name|Status
 operator|=
-name|AcpiUtResolvePackageReferences
+name|AE_NOT_EXIST
+expr_stmt|;
+block|}
+comment|/* It must be of type Package */
+elseif|else
+if|if
+condition|(
+name|ACPI_GET_OBJECT_TYPE
 argument_list|(
 name|ObjDesc
 argument_list|)
+operator|!=
+name|ACPI_TYPE_PACKAGE
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Sleep State object not a Package\n"
+operator|)
+argument_list|)
 expr_stmt|;
+name|Status
+operator|=
+name|AE_AML_OPERAND_TYPE
+expr_stmt|;
+block|}
+comment|/* The package must have at least two elements */
+elseif|else
 if|if
 condition|(
 name|ObjDesc
@@ -342,7 +403,6 @@ operator|<
 literal|2
 condition|)
 block|{
-comment|/* Must have at least two elements */
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
@@ -355,11 +415,13 @@ operator|=
 name|AE_AML_NO_OPERAND
 expr_stmt|;
 block|}
+comment|/* The first two elements must both be of type Integer */
 elseif|else
 if|if
 condition|(
 operator|(
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
 operator|->
 name|Package
@@ -368,17 +430,14 @@ name|Elements
 index|[
 literal|0
 index|]
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|ACPI_TYPE_INTEGER
 operator|)
 operator|||
 operator|(
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
 operator|->
 name|Package
@@ -387,21 +446,40 @@ name|Elements
 index|[
 literal|1
 index|]
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|ACPI_TYPE_INTEGER
 operator|)
 condition|)
 block|{
-comment|/* Must have two  */
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Sleep State package elements are not both of type Number\n"
+literal|"Sleep State package elements are not both Integers (%s, %s)\n"
+operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+name|ObjDesc
+operator|->
+name|Package
+operator|.
+name|Elements
+index|[
+literal|0
+index|]
+argument_list|)
+operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+name|ObjDesc
+operator|->
+name|Package
+operator|.
+name|Elements
+index|[
+literal|1
+index|]
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -412,7 +490,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*          *  Valid _Sx_ package size, type, and value          */
+comment|/*          * Valid _Sx_ package size, type, and value          */
 operator|*
 name|SleepTypeA
 operator|=
@@ -469,15 +547,14 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Bad Sleep object %p type %X\n"
+literal|"Bad Sleep object %p type %s\n"
 operator|,
 name|ObjDesc
 operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -496,7 +573,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwGetRegisterBitMask  *  * PARAMETERS:  RegisterId      - index of ACPI Register to access  *  * RETURN:      The bit mask to be used when accessing the register  *  * DESCRIPTION: Map RegisterId into a register bit mask.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwGetRegisterBitMask  *  * PARAMETERS:  RegisterId          - Index of ACPI Register to access  *    * RETURN:      The bit mask to be used when accessing the register  *  * DESCRIPTION: Map RegisterId into a register bit mask.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -550,15 +627,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwBitRegisterRead  *  * PARAMETERS:  RegisterId      - index of ACPI Register to access  *              UseLock         - Lock the hardware  *  * RETURN:      Value is read from specified Register.  Value returned is  *              normalized to bit0 (is shifted all the way right)  *  * DESCRIPTION: ACPI BitRegister read function.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetRegister  *  * PARAMETERS:  RegisterId          - Index of ACPI Register to access  *              UseLock             - Lock the hardware  *  * RETURN:      Value is read from specified Register.  Value returned is  *              normalized to bit0 (is shifted all the way right)  *  * DESCRIPTION: ACPI BitRegister read function.  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|UINT32
-name|AcpiHwBitRegisterRead
+name|ACPI_STATUS
+name|AcpiGetRegister
 parameter_list|(
 name|UINT32
 name|RegisterId
+parameter_list|,
+name|UINT32
+modifier|*
+name|ReturnValue
 parameter_list|,
 name|UINT32
 name|Flags
@@ -573,36 +654,14 @@ name|ACPI_BIT_REGISTER_INFO
 modifier|*
 name|BitRegInfo
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"HwBitRegisterRead"
+literal|"AcpiGetRegister"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Flags
-operator|&
-name|ACPI_MTX_LOCK
-condition|)
-block|{
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|AcpiUtAcquireMutex
-argument_list|(
-name|ACPI_MTX_HARDWARE
-argument_list|)
-argument_list|)
-condition|)
-block|{
-name|return_VALUE
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 comment|/* Get the info structure corresponding to the requested ACPI Register */
 name|BitRegInfo
 operator|=
@@ -623,7 +682,36 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-name|RegisterValue
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_MTX_LOCK
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiUtAcquireMutex
+argument_list|(
+name|ACPI_MTX_HARDWARE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|Status
 operator|=
 name|AcpiHwRegisterRead
 argument_list|(
@@ -632,6 +720,9 @@ argument_list|,
 name|BitRegInfo
 operator|->
 name|ParentRegister
+argument_list|,
+operator|&
+name|RegisterValue
 argument_list|)
 expr_stmt|;
 if|if
@@ -650,6 +741,14 @@ name|ACPI_MTX_HARDWARE
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
 comment|/* Normalize the value that was read */
 name|RegisterValue
 operator|=
@@ -667,32 +766,38 @@ operator|->
 name|BitPosition
 operator|)
 expr_stmt|;
+operator|*
+name|ReturnValue
+operator|=
+name|RegisterValue
+expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_IO
 operator|,
-literal|"ACPI RegisterRead: got %X\n"
+literal|"Read value %X\n"
 operator|,
 name|RegisterValue
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
+block|}
+name|return_ACPI_STATUS
 argument_list|(
-name|RegisterValue
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwBitRegisterWrite  *  * PARAMETERS:  RegisterId      - ID of ACPI BitRegister to access  *              Value           - (only used on write) value to write to the  *                                Register, NOT pre-normalized to the bit pos.  *              Flags           - Lock the hardware or not  *  * RETURN:      Value written to from specified Register.  This value  *              is shifted all the way right.  *  * DESCRIPTION: ACPI Bit Register write function.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetRegister  *  * PARAMETERS:  RegisterId      - ID of ACPI BitRegister to access  *              Value           - (only used on write) value to write to the  *                                Register, NOT pre-normalized to the bit pos.  *              Flags           - Lock the hardware or not  *  * RETURN:      None  *  * DESCRIPTION: ACPI Bit Register write function.  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|UINT32
-name|AcpiHwBitRegisterWrite
+name|ACPI_STATUS
+name|AcpiSetRegister
 parameter_list|(
 name|UINT32
 name|RegisterId
@@ -713,38 +818,16 @@ name|ACPI_BIT_REGISTER_INFO
 modifier|*
 name|BitRegInfo
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
-literal|"HwBitRegisterWrite"
+literal|"AcpiSetRegister"
 argument_list|,
 name|RegisterId
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Flags
-operator|&
-name|ACPI_MTX_LOCK
-condition|)
-block|{
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|AcpiUtAcquireMutex
-argument_list|(
-name|ACPI_MTX_HARDWARE
-argument_list|)
-argument_list|)
-condition|)
-block|{
-name|return_VALUE
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 comment|/* Get the info structure corresponding to the requested ACPI Register */
 name|BitRegInfo
 operator|=
@@ -759,14 +842,52 @@ operator|!
 name|BitRegInfo
 condition|)
 block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Bad ACPI HW RegisterId: %X\n"
+operator|,
+name|RegisterId
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_MTX_LOCK
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiUtAcquireMutex
+argument_list|(
+name|ACPI_MTX_HARDWARE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* Always do a register read first so we can insert the new bits  */
-name|RegisterValue
+name|Status
 operator|=
 name|AcpiHwRegisterRead
 argument_list|(
@@ -775,8 +896,23 @@ argument_list|,
 name|BitRegInfo
 operator|->
 name|ParentRegister
+argument_list|,
+operator|&
+name|RegisterValue
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
 comment|/*      * Decode the Register ID      * Register id = Register block id | bit id      *      * Check bit id to fine locate Register offset.      * Check Mask to determine Register offset, and then read-write.      */
 switch|switch
 condition|(
@@ -809,6 +945,8 @@ condition|(
 name|Value
 condition|)
 block|{
+name|Status
+operator|=
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_DO_NOT_LOCK
@@ -845,6 +983,8 @@ argument_list|,
 name|Value
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_DO_NOT_LOCK
@@ -888,6 +1028,8 @@ argument_list|,
 name|Value
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_DO_NOT_LOCK
@@ -904,15 +1046,30 @@ break|break;
 case|case
 name|ACPI_REGISTER_PM2_CONTROL
 case|:
-name|RegisterValue
+name|Status
 operator|=
 name|AcpiHwRegisterRead
 argument_list|(
 name|ACPI_MTX_DO_NOT_LOCK
 argument_list|,
 name|ACPI_REGISTER_PM2_CONTROL
+argument_list|,
+operator|&
+name|RegisterValue
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -924,20 +1081,26 @@ name|RegisterValue
 operator|,
 name|ACPI_HIDWORD
 argument_list|(
-name|AcpiGbl_FADT
-operator|->
-name|XPm2CntBlk
-operator|.
-name|Address
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_GET_ADDRESS
 argument_list|(
 name|AcpiGbl_FADT
 operator|->
 name|XPm2CntBlk
 operator|.
 name|Address
+argument_list|)
+argument_list|)
+operator|,
+name|ACPI_LODWORD
+argument_list|(
+name|ACPI_GET_ADDRESS
+argument_list|(
+name|AcpiGbl_FADT
+operator|->
+name|XPm2CntBlk
+operator|.
+name|Address
+argument_list|)
 argument_list|)
 operator|)
 argument_list|)
@@ -962,20 +1125,13 @@ argument_list|(
 operator|(
 name|ACPI_DB_IO
 operator|,
-literal|"About to write %04X to %8.8X%8.8X\n"
+literal|"About to write %4.4X to %8.8X%8.8X\n"
 operator|,
 name|RegisterValue
 operator|,
 name|ACPI_HIDWORD
 argument_list|(
-name|AcpiGbl_FADT
-operator|->
-name|XPm2CntBlk
-operator|.
-name|Address
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_GET_ADDRESS
 argument_list|(
 name|AcpiGbl_FADT
 operator|->
@@ -983,9 +1139,24 @@ name|XPm2CntBlk
 operator|.
 name|Address
 argument_list|)
+argument_list|)
+operator|,
+name|ACPI_LODWORD
+argument_list|(
+name|ACPI_GET_ADDRESS
+argument_list|(
+name|AcpiGbl_FADT
+operator|->
+name|XPm2CntBlk
+operator|.
+name|Address
+argument_list|)
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_DO_NOT_LOCK
@@ -1004,6 +1175,8 @@ break|break;
 default|default:
 break|break;
 block|}
+name|UnlockAndExit
+label|:
 if|if
 condition|(
 name|Flags
@@ -1021,6 +1194,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Normalize the value that was read */
+name|ACPI_DEBUG_EXEC
+argument_list|(
 name|RegisterValue
 operator|=
 operator|(
@@ -1036,21 +1211,22 @@ name|BitRegInfo
 operator|->
 name|BitPosition
 operator|)
+argument_list|)
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_IO
 operator|,
-literal|"ACPI RegisterWrite actual %X\n"
+literal|"ACPI Register Write actual %X\n"
 operator|,
 name|RegisterValue
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
+name|return_ACPI_STATUS
 argument_list|(
-name|RegisterValue
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -1061,7 +1237,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|UINT32
+name|ACPI_STATUS
 name|AcpiHwRegisterRead
 parameter_list|(
 name|BOOLEAN
@@ -1069,15 +1245,27 @@ name|UseLock
 parameter_list|,
 name|UINT32
 name|RegisterId
+parameter_list|,
+name|UINT32
+modifier|*
+name|ReturnValue
 parameter_list|)
 block|{
 name|UINT32
-name|Value
+name|Value1
+init|=
+literal|0
+decl_stmt|;
+name|UINT32
+name|Value2
 init|=
 literal|0
 decl_stmt|;
 name|UINT32
 name|BankOffset
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -1091,20 +1279,24 @@ operator|==
 name|UseLock
 condition|)
 block|{
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
+name|Status
+operator|=
 name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_HARDWARE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 block|{
-name|return_VALUE
+name|return_ACPI_STATUS
 argument_list|(
-literal|0
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -1118,11 +1310,14 @@ case|case
 name|ACPI_REGISTER_PM1_STATUS
 case|:
 comment|/* 16-bit access */
-name|Value
+name|Status
 operator|=
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|16
+argument_list|,
+operator|&
+name|Value1
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
@@ -1132,11 +1327,26 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|Value
-operator||=
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
+name|Status
+operator|=
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|16
+argument_list|,
+operator|&
+name|Value2
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
@@ -1145,6 +1355,10 @@ name|XPm1bEvtBlk
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|Value1
+operator||=
+name|Value2
 expr_stmt|;
 break|break;
 case|case
@@ -1160,11 +1374,14 @@ operator|->
 name|Pm1EvtLen
 argument_list|)
 expr_stmt|;
-name|Value
+name|Status
 operator|=
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|16
+argument_list|,
+operator|&
+name|Value1
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
@@ -1174,11 +1391,26 @@ argument_list|,
 name|BankOffset
 argument_list|)
 expr_stmt|;
-name|Value
-operator||=
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
+name|Status
+operator|=
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|16
+argument_list|,
+operator|&
+name|Value2
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
@@ -1188,16 +1420,23 @@ argument_list|,
 name|BankOffset
 argument_list|)
 expr_stmt|;
+name|Value1
+operator||=
+name|Value2
+expr_stmt|;
 break|break;
 case|case
 name|ACPI_REGISTER_PM1_CONTROL
 case|:
 comment|/* 16-bit access */
-name|Value
+name|Status
 operator|=
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|16
+argument_list|,
+operator|&
+name|Value1
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
@@ -1207,11 +1446,26 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|Value
-operator||=
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
+name|Status
+operator|=
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|16
+argument_list|,
+operator|&
+name|Value2
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
@@ -1221,16 +1475,23 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|Value1
+operator||=
+name|Value2
+expr_stmt|;
 break|break;
 case|case
 name|ACPI_REGISTER_PM2_CONTROL
 case|:
 comment|/* 8-bit access */
-name|Value
+name|Status
 operator|=
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|8
+argument_list|,
+operator|&
+name|Value1
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
@@ -1245,11 +1506,14 @@ case|case
 name|ACPI_REGISTER_PM_TIMER
 case|:
 comment|/* 32-bit access */
-name|Value
+name|Status
 operator|=
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|32
+argument_list|,
+operator|&
+name|Value1
 argument_list|,
 operator|&
 name|AcpiGbl_FADT
@@ -1264,6 +1528,8 @@ case|case
 name|ACPI_REGISTER_SMI_COMMAND_BLOCK
 case|:
 comment|/* 8-bit access */
+name|Status
+operator|=
 name|AcpiOsReadPort
 argument_list|(
 name|AcpiGbl_FADT
@@ -1271,16 +1537,32 @@ operator|->
 name|SmiCmd
 argument_list|,
 operator|&
-name|Value
+name|Value1
 argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* Value will be returned as 0 */
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Unknown Register ID: %X\n"
+operator|,
+name|RegisterId
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_BAD_PARAMETER
+expr_stmt|;
 break|break;
 block|}
+name|UnlockAndExit
+label|:
 if|if
 condition|(
 name|ACPI_MTX_LOCK
@@ -1297,9 +1579,23 @@ name|ACPI_MTX_HARDWARE
 argument_list|)
 expr_stmt|;
 block|}
-name|return_VALUE
+if|if
+condition|(
+name|ACPI_SUCCESS
 argument_list|(
-name|Value
+name|Status
+argument_list|)
+condition|)
+block|{
+operator|*
+name|ReturnValue
+operator|=
+name|Value1
+expr_stmt|;
+block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -1310,7 +1606,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|void
+name|ACPI_STATUS
 name|AcpiHwRegisterWrite
 parameter_list|(
 name|BOOLEAN
@@ -1326,6 +1622,9 @@ block|{
 name|UINT32
 name|BankOffset
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"HwRegisterWrite"
@@ -1338,18 +1637,25 @@ operator|==
 name|UseLock
 condition|)
 block|{
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
+name|Status
+operator|=
 name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_HARDWARE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 block|{
-name|return_VOID
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1362,6 +1668,8 @@ case|case
 name|ACPI_REGISTER_PM1_STATUS
 case|:
 comment|/* 16-bit access */
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|16
@@ -1376,6 +1684,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|16
@@ -1404,6 +1726,8 @@ operator|->
 name|Pm1EvtLen
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|16
@@ -1418,6 +1742,20 @@ argument_list|,
 name|BankOffset
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|16
@@ -1437,6 +1775,8 @@ case|case
 name|ACPI_REGISTER_PM1_CONTROL
 case|:
 comment|/* 16-bit access */
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|16
@@ -1451,6 +1791,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|UnlockAndExit
+goto|;
+block|}
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|16
@@ -1470,6 +1824,8 @@ case|case
 name|ACPI_REGISTER_PM1A_CONTROL
 case|:
 comment|/* 16-bit access */
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|16
@@ -1489,6 +1845,8 @@ case|case
 name|ACPI_REGISTER_PM1B_CONTROL
 case|:
 comment|/* 16-bit access */
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|16
@@ -1508,6 +1866,8 @@ case|case
 name|ACPI_REGISTER_PM2_CONTROL
 case|:
 comment|/* 8-bit access */
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|8
@@ -1527,6 +1887,8 @@ case|case
 name|ACPI_REGISTER_PM_TIMER
 case|:
 comment|/* 32-bit access */
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|32
@@ -1547,12 +1909,17 @@ name|ACPI_REGISTER_SMI_COMMAND_BLOCK
 case|:
 comment|/* 8-bit access */
 comment|/* SMI_CMD is currently always in IO space */
+name|Status
+operator|=
 name|AcpiOsWritePort
 argument_list|(
 name|AcpiGbl_FADT
 operator|->
 name|SmiCmd
 argument_list|,
+operator|(
+name|ACPI_INTEGER
+operator|)
 name|Value
 argument_list|,
 literal|8
@@ -1560,12 +1927,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|Value
+name|Status
 operator|=
-literal|0
+name|AE_BAD_PARAMETER
 expr_stmt|;
 break|break;
 block|}
+name|UnlockAndExit
+label|:
 if|if
 condition|(
 name|ACPI_MTX_LOCK
@@ -1582,7 +1951,10 @@ name|ACPI_MTX_HARDWARE
 argument_list|)
 expr_stmt|;
 block|}
-name|return_VOID
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1592,11 +1964,15 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|UINT32
+name|ACPI_STATUS
 name|AcpiHwLowLevelRead
 parameter_list|(
 name|UINT32
 name|Width
+parameter_list|,
+name|UINT32
+modifier|*
+name|Value
 parameter_list|,
 name|ACPI_GENERIC_ADDRESS
 modifier|*
@@ -1606,11 +1982,6 @@ name|UINT32
 name|Offset
 parameter_list|)
 block|{
-name|UINT32
-name|Value
-init|=
-literal|0
-decl_stmt|;
 name|ACPI_PHYSICAL_ADDRESS
 name|MemAddress
 decl_stmt|;
@@ -1623,10 +1994,15 @@ decl_stmt|;
 name|UINT16
 name|PciRegister
 decl_stmt|;
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_FUNCTION_NAME
+argument_list|(
+literal|"HwLowLevelRead"
+argument_list|)
 expr_stmt|;
-comment|/*      * Must have a valid pointer to a GAS structure, and      * a non-zero address within      */
+comment|/*      * Must have a valid pointer to a GAS structure, and      * a non-zero address within. However, don't return an error      * because the PM1A/B code must not fail if B isn't present.      */
 if|if
 condition|(
 operator|(
@@ -1646,9 +2022,16 @@ operator|)
 condition|)
 block|{
 return|return
-literal|0
+operator|(
+name|AE_OK
+operator|)
 return|;
 block|}
+operator|*
+name|Value
+operator|=
+literal|0
+expr_stmt|;
 comment|/*      * Three address spaces supported:      * Memory, Io, or PCI config.      */
 switch|switch
 condition|(
@@ -1662,10 +2045,7 @@ name|ACPI_ADR_SPACE_SYSTEM_MEMORY
 case|:
 name|MemAddress
 operator|=
-call|(
-name|ACPI_PHYSICAL_ADDRESS
-call|)
-argument_list|(
+operator|(
 name|ACPI_GET_ADDRESS
 argument_list|(
 name|Reg
@@ -1673,14 +2053,18 @@ operator|->
 name|Address
 argument_list|)
 operator|+
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
 name|Offset
-argument_list|)
+operator|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiOsReadMemory
 argument_list|(
 name|MemAddress
 argument_list|,
-operator|&
 name|Value
 argument_list|,
 name|Width
@@ -1703,14 +2087,18 @@ operator|->
 name|Address
 argument_list|)
 operator|+
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
 name|Offset
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiOsReadPort
 argument_list|(
 name|IoAddress
 argument_list|,
-operator|&
 name|Value
 argument_list|,
 name|Width
@@ -1779,6 +2167,8 @@ operator|+
 name|Offset
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiOsReadPciConfiguration
 argument_list|(
 operator|&
@@ -1786,16 +2176,36 @@ name|PciId
 argument_list|,
 name|PciRegister
 argument_list|,
-operator|&
 name|Value
 argument_list|,
 name|Width
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Unsupported address space: %X\n"
+operator|,
+name|Reg
+operator|->
+name|AddressSpaceId
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_BAD_PARAMETER
+expr_stmt|;
+break|break;
 block|}
 return|return
-name|Value
+operator|(
+name|Status
+operator|)
 return|;
 block|}
 end_function
@@ -1805,7 +2215,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|void
+name|ACPI_STATUS
 name|AcpiHwLowLevelWrite
 parameter_list|(
 name|UINT32
@@ -1834,10 +2244,15 @@ decl_stmt|;
 name|UINT16
 name|PciRegister
 decl_stmt|;
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_FUNCTION_NAME
+argument_list|(
+literal|"HwLowLevelWrite"
+argument_list|)
 expr_stmt|;
-comment|/*      * Must have a valid pointer to a GAS structure, and      * a non-zero address within      */
+comment|/*      * Must have a valid pointer to a GAS structure, and      * a non-zero address within. However, don't return an error      * because the PM1A/B code must not fail if B isn't present.      */
 if|if
 condition|(
 operator|(
@@ -1856,7 +2271,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
-return|return;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 block|}
 comment|/*      * Three address spaces supported:      * Memory, Io, or PCI config.      */
 switch|switch
@@ -1871,10 +2290,7 @@ name|ACPI_ADR_SPACE_SYSTEM_MEMORY
 case|:
 name|MemAddress
 operator|=
-call|(
-name|ACPI_PHYSICAL_ADDRESS
-call|)
-argument_list|(
+operator|(
 name|ACPI_GET_ADDRESS
 argument_list|(
 name|Reg
@@ -1882,13 +2298,21 @@ operator|->
 name|Address
 argument_list|)
 operator|+
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
 name|Offset
-argument_list|)
+operator|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiOsWriteMemory
 argument_list|(
 name|MemAddress
 argument_list|,
+operator|(
+name|ACPI_INTEGER
+operator|)
 name|Value
 argument_list|,
 name|Width
@@ -1911,13 +2335,21 @@ operator|->
 name|Address
 argument_list|)
 operator|+
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
 name|Offset
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiOsWritePort
 argument_list|(
 name|IoAddress
 argument_list|,
+operator|(
+name|ACPI_INTEGER
+operator|)
 name|Value
 argument_list|,
 name|Width
@@ -1986,6 +2418,8 @@ operator|+
 name|Offset
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiOsWritePciConfiguration
 argument_list|(
 operator|&
@@ -1993,13 +2427,40 @@ name|PciId
 argument_list|,
 name|PciRegister
 argument_list|,
+operator|(
+name|ACPI_INTEGER
+operator|)
 name|Value
 argument_list|,
 name|Width
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Unsupported address space: %X\n"
+operator|,
+name|Reg
+operator|->
+name|AddressSpaceId
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_BAD_PARAMETER
+expr_stmt|;
+break|break;
 block|}
+return|return
+operator|(
+name|Status
+operator|)
+return|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 53 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 55 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
 end_include
 
 begin_include
@@ -47,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|"acdispat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acdebug.h"
 end_include
 
 begin_define
@@ -134,11 +122,17 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Ignore exceptions from these */
+operator|(
+name|void
+operator|)
 name|AcpiNsLoadTableByType
 argument_list|(
 name|ACPI_TABLE_SSDT
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|AcpiNsLoadTableByType
 argument_list|(
 name|ACPI_TABLE_PSDT
@@ -215,14 +209,10 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|ParseRoot
-operator|)
 operator|->
+name|Named
+operator|.
 name|Name
 operator|=
 name|ACPI_ROOT_NAME
@@ -1080,6 +1070,8 @@ name|ChildHandle
 operator|=
 name|ParentHandle
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiGetParent
 argument_list|(
 name|ParentHandle
@@ -1088,6 +1080,20 @@ operator|&
 name|ParentHandle
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Now delete the starting object, and we are done */

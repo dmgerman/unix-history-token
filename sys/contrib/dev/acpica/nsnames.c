@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 74 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 77 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
 end_include
 
 begin_include
@@ -71,7 +65,7 @@ modifier|*
 name|NameBuffer
 parameter_list|)
 block|{
-name|UINT32
+name|ACPI_SIZE
 name|Index
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
@@ -200,8 +194,14 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Could not construct pathname; index=%X, size=%X, Path=%s\n"
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|Index
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|Size
 operator|,
 operator|&
@@ -481,6 +481,9 @@ name|Buffer
 operator|->
 name|Pointer
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|RequiredSize
 operator|)
 argument_list|)

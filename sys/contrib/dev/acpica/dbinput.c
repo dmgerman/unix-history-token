@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 81 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 86 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -11,30 +11,6 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
 end_include
 
 begin_include
@@ -111,6 +87,8 @@ name|CMD_HISTORY_LAST
 block|,
 name|CMD_INFORMATION
 block|,
+name|CMD_INTEGRITY
+block|,
 name|CMD_INTO
 block|,
 name|CMD_LEVEL
@@ -172,6 +150,7 @@ value|2
 end_define
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|COMMAND_INFO
 name|AcpiGbl_DbCommands
@@ -306,6 +285,12 @@ block|}
 block|,
 block|{
 literal|"INFORMATION"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"INTEGRITY"
 block|,
 literal|0
 block|}
@@ -799,7 +784,7 @@ return|return;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"Unrecognized Command Class: %x\n"
+literal|"Unrecognized Command Class: %X\n"
 argument_list|,
 name|HelpType
 argument_list|)
@@ -1467,6 +1452,8 @@ break|break;
 case|case
 name|CMD_FIND
 case|:
+name|Status
+operator|=
 name|AcpiDbFindNameInNamespace
 argument_list|(
 name|AcpiGbl_DbArgs
@@ -1622,6 +1609,13 @@ name|AcpiDbDisplayMethodInfo
 argument_list|(
 name|Op
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_INTEGRITY
+case|:
+name|AcpiDbCheckIntegrity
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -1794,6 +1788,8 @@ break|break;
 case|case
 name|CMD_METHODS
 case|:
+name|Status
+operator|=
 name|AcpiDbDisplayObjects
 argument_list|(
 literal|"METHOD"
@@ -1853,8 +1849,6 @@ break|break;
 case|case
 name|CMD_OBJECT
 case|:
-name|AcpiDbDisplayObjects
-argument_list|(
 name|ACPI_STRUPR
 argument_list|(
 name|AcpiGbl_DbArgs
@@ -1862,6 +1856,15 @@ index|[
 literal|1
 index|]
 argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiDbDisplayObjects
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
 argument_list|,
 name|AcpiGbl_DbArgs
 index|[
@@ -1967,6 +1970,8 @@ break|break;
 case|case
 name|CMD_STATS
 case|:
+name|Status
+operator|=
 name|AcpiDbDisplayStatistics
 argument_list|(
 name|AcpiGbl_DbArgs
@@ -1981,7 +1986,7 @@ name|CMD_STOP
 case|:
 return|return
 operator|(
-name|AE_AML_ERROR
+name|AE_NOT_IMPLEMENTED
 operator|)
 return|;
 case|case
@@ -2106,6 +2111,7 @@ return|;
 case|case
 name|CMD_NOT_FOUND
 case|:
+default|default:
 name|AcpiOsPrintf
 argument_list|(
 literal|"Unknown Command\n"
@@ -2228,9 +2234,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
 name|AcpiGbl_MethodExecuting
 operator|=
 name|FALSE
@@ -2239,8 +2242,9 @@ name|AcpiGbl_StepToNextCall
 operator|=
 name|FALSE
 expr_stmt|;
-name|Status
-operator|=
+operator|(
+name|void
+operator|)
 name|AcpiDbCommandDispatch
 argument_list|(
 name|AcpiGbl_DbLineBuf
@@ -2313,6 +2317,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get the user input line */
+operator|(
+name|void
+operator|)
 name|AcpiOsGetLine
 argument_list|(
 name|AcpiGbl_DbLineBuf
@@ -2379,6 +2386,8 @@ expr_stmt|;
 block|}
 block|}
 comment|/*      * Only this thread (the original thread) should actually terminate the subsystem,      * because all the semaphores are deleted during termination      */
+name|Status
+operator|=
 name|AcpiTerminate
 argument_list|()
 expr_stmt|;

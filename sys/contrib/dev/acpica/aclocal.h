@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 162 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 167 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -63,116 +63,14 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Object descriptor types */
+comment|/* Total number of aml opcodes defined */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_CACHED_OBJECT
-value|0x11
-end_define
-
-begin_comment
-comment|/* ORed in when object is cached */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_DESC_TYPE_STATE
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DESC_TYPE_STATE_UPDATE
-value|0x21
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DESC_TYPE_STATE_PACKAGE
-value|0x22
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DESC_TYPE_STATE_CONTROL
-value|0x23
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DESC_TYPE_STATE_RPSCOPE
-value|0x24
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DESC_TYPE_STATE_PSCOPE
-value|0x25
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DESC_TYPE_STATE_WSCOPE
-value|0x26
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DESC_TYPE_STATE_RESULT
-value|0x27
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DESC_TYPE_STATE_NOTIFY
-value|0x28
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DESC_TYPE_STATE_THREAD
-value|0x29
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DESC_TYPE_WALK
-value|0x44
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DESC_TYPE_PARSER
-value|0x66
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DESC_TYPE_INTERNAL
-value|0x88
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DESC_TYPE_NAMED
-value|0xAA
+name|AML_NUM_OPCODES
+value|0x7E
 end_define
 
 begin_comment
@@ -703,7 +601,7 @@ decl_stmt|;
 name|UINT32
 name|AmlLength
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|Length
 decl_stmt|;
 name|UINT32
@@ -1129,15 +1027,15 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|acpi_parse_obj
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|acpi_obj_mutex
 struct_decl|;
 end_struct_decl
+
+begin_union_decl
+union_decl|union
+name|acpi_parse_obj
+union_decl|;
+end_union_decl
 
 begin_define
 define|#
@@ -1231,7 +1129,7 @@ struct|struct
 name|acpi_control_state
 block|{
 name|ACPI_STATE_COMMON
-name|struct
+name|union
 name|acpi_parse_obj
 modifier|*
 name|PredicateOp
@@ -1279,7 +1177,7 @@ struct|struct
 name|acpi_pscope_state
 block|{
 name|ACPI_STATE_COMMON
-name|struct
+name|union
 name|acpi_parse_obj
 modifier|*
 name|Op
@@ -1385,7 +1283,7 @@ name|acpi_walk_state
 modifier|*
 name|WalkState
 parameter_list|,
-name|struct
+name|union
 name|acpi_parse_obj
 modifier|*
 modifier|*
@@ -1591,7 +1489,7 @@ modifier|*
 name|Name
 decl_stmt|;
 comment|/* NULL terminated string */
-name|struct
+name|union
 name|acpi_parse_obj
 modifier|*
 name|Arg
@@ -1611,15 +1509,15 @@ value|UINT8                   DataType;
 comment|/* To differentiate various internal objs */
 value|\     UINT8                   Flags;
 comment|/* Type of Op */
-value|\     UINT16                  Opcode;
+value|\     UINT16                  AmlOpcode;
 comment|/* AML opcode */
 value|\     UINT32                  AmlOffset;
 comment|/* offset of declaration in AML */
-value|\     struct acpi_parse_obj   *Parent;
+value|\     union acpi_parse_obj    *Parent;
 comment|/* parent op */
-value|\     struct acpi_parse_obj   *Next;
+value|\     union acpi_parse_obj    *Next;
 comment|/* next op */
-value|\     ACPI_DEBUG_ONLY_MEMBERS (\     NATIVE_CHAR             OpName[16])
+value|\     ACPI_DEBUG_ONLY_MEMBERS (\     NATIVE_CHAR             AmlOpName[16])
 comment|/* op name (debug only) */
 value|\
 comment|/* NON-DEBUG members below: */
@@ -1640,11 +1538,11 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_parse_obj
+name|acpi_parseobj_common
 block|{
 name|ACPI_PARSE_COMMON
 block|}
-name|ACPI_PARSE_OBJECT
+name|ACPI_PARSE_OBJ_COMMON
 typedef|;
 end_typedef
 
@@ -1655,7 +1553,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_parse2_obj
+name|acpi_parseobj_named
 block|{
 name|ACPI_PARSE_COMMON
 name|UINT8
@@ -1672,7 +1570,120 @@ name|Name
 decl_stmt|;
 comment|/* 4-byte name or zero if no name */
 block|}
-name|ACPI_PARSE2_OBJECT
+name|ACPI_PARSE_OBJ_NAMED
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* The parse node is the fundamental element of the parse tree */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_parseobj_asl
+block|{
+name|ACPI_PARSE_COMMON
+name|union
+name|acpi_parse_obj
+modifier|*
+name|Child
+decl_stmt|;
+name|union
+name|acpi_parse_obj
+modifier|*
+name|ParentMethod
+decl_stmt|;
+name|char
+modifier|*
+name|Filename
+decl_stmt|;
+name|char
+modifier|*
+name|ExternalName
+decl_stmt|;
+name|char
+modifier|*
+name|Namepath
+decl_stmt|;
+name|UINT32
+name|ExtraValue
+decl_stmt|;
+name|UINT32
+name|Column
+decl_stmt|;
+name|UINT32
+name|LineNumber
+decl_stmt|;
+name|UINT32
+name|LogicalLineNumber
+decl_stmt|;
+name|UINT32
+name|LogicalByteOffset
+decl_stmt|;
+name|UINT32
+name|EndLine
+decl_stmt|;
+name|UINT32
+name|EndLogicalLine
+decl_stmt|;
+name|UINT16
+name|ParseOpcode
+decl_stmt|;
+name|UINT32
+name|AcpiBtype
+decl_stmt|;
+name|UINT32
+name|AmlLength
+decl_stmt|;
+name|UINT32
+name|AmlSubtreeLength
+decl_stmt|;
+name|UINT32
+name|FinalAmlLength
+decl_stmt|;
+name|UINT32
+name|FinalAmlOffset
+decl_stmt|;
+name|UINT8
+name|AmlOpcodeLength
+decl_stmt|;
+name|UINT8
+name|AmlPkgLenBytes
+decl_stmt|;
+name|UINT16
+name|CompileFlags
+decl_stmt|;
+name|UINT8
+name|Extra
+decl_stmt|;
+name|char
+name|ParseOpName
+index|[
+literal|12
+index|]
+decl_stmt|;
+block|}
+name|ACPI_PARSE_OBJ_ASL
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+union|union
+name|acpi_parse_obj
+block|{
+name|ACPI_PARSE_OBJ_COMMON
+name|Common
+decl_stmt|;
+name|ACPI_PARSE_OBJ_NAMED
+name|Named
+decl_stmt|;
+name|ACPI_PARSE_OBJ_ASL
+name|Asl
+decl_stmt|;
+block|}
+name|ACPI_PARSE_OBJECT
 typedef|;
 end_typedef
 
@@ -1713,7 +1724,7 @@ modifier|*
 name|PkgEnd
 decl_stmt|;
 comment|/* current package end */
-name|struct
+name|union
 name|acpi_parse_obj
 modifier|*
 name|StartOp
@@ -1730,7 +1741,7 @@ modifier|*
 name|Scope
 decl_stmt|;
 comment|/* current scope */
-name|struct
+name|union
 name|acpi_parse_obj
 modifier|*
 name|StartScope
@@ -1873,164 +1884,6 @@ define|#
 directive|define
 name|ACPI_REGISTER_SMI_COMMAND_BLOCK
 value|0x09
-end_define
-
-begin_comment
-comment|/*  * BitRegister IDs  * These are bitfields defined within the full ACPI registers  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_TIMER_STATUS
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_BUS_MASTER_STATUS
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_GLOBAL_LOCK_STATUS
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_POWER_BUTTON_STATUS
-value|0x03
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_SLEEP_BUTTON_STATUS
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_RT_CLOCK_STATUS
-value|0x05
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_WAKE_STATUS
-value|0x06
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_TIMER_ENABLE
-value|0x07
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_GLOBAL_LOCK_ENABLE
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_POWER_BUTTON_ENABLE
-value|0x09
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_SLEEP_BUTTON_ENABLE
-value|0x0A
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_RT_CLOCK_ENABLE
-value|0x0B
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_WAKE_ENABLE
-value|0x0C
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_SCI_ENABLE
-value|0x0D
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_BUS_MASTER_RLD
-value|0x0E
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_GLOBAL_LOCK_RELEASE
-value|0x0F
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_SLEEP_TYPE_A
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_SLEEP_TYPE_B
-value|0x11
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_SLEEP_ENABLE
-value|0x12
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_ARB_DISABLE
-value|0x13
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BITREG_MAX
-value|0x13
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NUM_BITREG
-value|ACPI_BITREG_MAX + 1
 end_define
 
 begin_comment

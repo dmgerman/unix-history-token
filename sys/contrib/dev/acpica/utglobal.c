@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 155 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 162 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -28,25 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acevents.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
 end_include
 
 begin_define
@@ -449,30 +431,40 @@ block|{
 literal|"_GPE"
 block|,
 name|INTERNAL_TYPE_DEF_ANY
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"_PR_"
 block|,
 name|INTERNAL_TYPE_DEF_ANY
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"_SB_"
 block|,
 name|ACPI_TYPE_DEVICE
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"_SI_"
 block|,
 name|INTERNAL_TYPE_DEF_ANY
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"_TZ_"
 block|,
 name|INTERNAL_TYPE_DEF_ANY
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -503,6 +495,8 @@ block|{
 name|NULL
 block|,
 name|ACPI_TYPE_ANY
+block|,
+name|NULL
 block|}
 comment|/* Table terminator */
 block|}
@@ -643,6 +637,7 @@ comment|/* Hex to ASCII conversion table */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|NATIVE_CHAR
 name|AcpiGbl_HexToAscii
@@ -689,7 +684,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|UINT8
+name|char
 name|AcpiUtHexToAsciiChar
 parameter_list|(
 name|ACPI_INTEGER
@@ -1162,6 +1157,7 @@ comment|/* Region type decoding */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|NATIVE_CHAR
 modifier|*
@@ -1250,6 +1246,7 @@ comment|/* Event type decoding */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|NATIVE_CHAR
 modifier|*
@@ -1309,11 +1306,19 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ACPI_DEBUG
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ENABLE_DEBUGGER
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * Strings and procedures used for debug only  *  */
@@ -1551,109 +1556,86 @@ return|;
 block|}
 end_function
 
+begin_function
+name|NATIVE_CHAR
+modifier|*
+name|AcpiUtGetObjectTypeName
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|ObjDesc
+condition|)
+block|{
+return|return
+operator|(
+literal|"[NULL Object Descriptor]"
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|AcpiUtGetTypeName
+argument_list|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Various strings for future use */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|"amlcode.h"
+end_include
+
 begin_comment
 comment|/* Data used in keeping track of fields */
 end_comment
 
-begin_decl_stmt
-specifier|const
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_FENames
-index|[
-name|NUM_FIELD_NAMES
-index|]
-init|=
-block|{
-literal|"skip"
-block|,
-literal|"?access?"
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
+unit|static const NATIVE_CHAR *AcpiGbl_FENames[NUM_FIELD_NAMES] = {     "skip",     "?access?" };
 comment|/* FE = Field Element */
 end_comment
 
-begin_decl_stmt
-specifier|const
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_MatchOps
-index|[
-name|NUM_MATCH_OPS
-index|]
-init|=
-block|{
-literal|"Error"
-block|,
-literal|"MTR"
-block|,
-literal|"MEQ"
-block|,
-literal|"MLE"
-block|,
-literal|"MLT"
-block|,
-literal|"MGE"
-block|,
-literal|"MGT"
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
+unit|static const NATIVE_CHAR *AcpiGbl_MatchOps[NUM_MATCH_OPS] = {     "Error",     "MTR",     "MEQ",     "MLE",     "MLT",     "MGE",     "MGT" };
 comment|/* Access type decoding */
 end_comment
 
-begin_decl_stmt
-specifier|const
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_AccessTypes
-index|[
-name|NUM_ACCESS_TYPES
-index|]
-init|=
-block|{
-literal|"AnyAcc"
-block|,
-literal|"ByteAcc"
-block|,
-literal|"WordAcc"
-block|,
-literal|"DWordAcc"
-block|,
-literal|"QWordAcc"
-block|,
-literal|"BufferAcc"
-block|, }
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
+unit|static const NATIVE_CHAR *AcpiGbl_AccessTypes[NUM_ACCESS_TYPES] = {     "AnyAcc",     "ByteAcc",     "WordAcc",     "DWordAcc",     "QWordAcc",     "BufferAcc", };
 comment|/* Update rule decoding */
 end_comment
 
-begin_decl_stmt
-specifier|const
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_UpdateRules
-index|[
-name|NUM_UPDATE_RULES
-index|]
-init|=
-block|{
-literal|"Preserve"
-block|,
-literal|"WriteAsOnes"
-block|,
-literal|"WriteAsZeros"
-block|}
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static const NATIVE_CHAR *AcpiGbl_UpdateRules[NUM_UPDATE_RULES] = {     "Preserve",     "WriteAsOnes",     "WriteAsZeros" };
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Future use */
+end_comment
 
 begin_endif
 endif|#
@@ -1799,6 +1781,8 @@ name|ACPI_FIRST_METHOD_ID
 expr_stmt|;
 block|}
 break|break;
+default|default:
+break|break;
 block|}
 operator|(
 name|void
@@ -1902,6 +1886,8 @@ operator|)
 name|NULL
 operator|)
 operator|->
+name|Common
+operator|.
 name|Next
 operator|)
 argument_list|,
@@ -1924,12 +1910,14 @@ operator|&
 operator|(
 operator|(
 operator|(
-name|ACPI_PARSE2_OBJECT
+name|ACPI_PARSE_OBJECT
 operator|*
 operator|)
 name|NULL
 operator|)
 operator|->
+name|Common
+operator|.
 name|Next
 operator|)
 argument_list|,
@@ -2027,7 +2015,7 @@ name|ObjectSize
 operator|=
 sizeof|sizeof
 argument_list|(
-name|ACPI_PARSE_OBJECT
+name|ACPI_PARSE_OBJ_COMMON
 argument_list|)
 expr_stmt|;
 name|AcpiGbl_MemoryLists
@@ -2039,7 +2027,7 @@ name|ObjectSize
 operator|=
 sizeof|sizeof
 argument_list|(
-name|ACPI_PARSE2_OBJECT
+name|ACPI_PARSE_OBJ_NAMED
 argument_list|)
 expr_stmt|;
 name|AcpiGbl_MemoryLists
@@ -2329,6 +2317,10 @@ name|Handler
 operator|=
 name|NULL
 expr_stmt|;
+name|AcpiGbl_InitHandler
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Global "typed" ACPI table pointers */
 name|AcpiGbl_RSDP
 operator|=
@@ -2475,7 +2467,7 @@ directive|ifdef
 name|ACPI_DEBUG
 name|AcpiGbl_LowestStackPointer
 operator|=
-name|ACPI_UINT32_MAX
+name|ACPI_SIZE_MAX
 expr_stmt|;
 endif|#
 directive|endif

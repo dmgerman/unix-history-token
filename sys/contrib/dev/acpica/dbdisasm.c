@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisasm - parser op tree display routines  *              $Revision: 61 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisasm - parser op tree display routines  *              $Revision: 66 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -82,7 +82,7 @@ begin_define
 define|#
 directive|define
 name|DB_FULL_OP_INFO
-value|"%5.5X #%4.4X [%2.2d]  "
+value|"%5.5X #%4.4hX [%2.2d]  "
 end_define
 
 begin_decl_stmt
@@ -111,7 +111,9 @@ switch|switch
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 condition|)
 block|{
 case|case
@@ -168,6 +170,8 @@ if|if
 condition|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Flags
 operator|&
 name|ACPI_PARSEOP_GENERIC
@@ -177,6 +181,8 @@ name|Name
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Name
@@ -212,14 +218,10 @@ name|char
 operator|*
 operator|)
 operator|&
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Name
 expr_stmt|;
 block|}
@@ -322,6 +324,8 @@ name|Node
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 expr_stmt|;
 if|if
@@ -341,6 +345,8 @@ name|ScopeInfo
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -380,6 +386,8 @@ block|}
 comment|/* Save it for next time. */
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 operator|=
 name|Node
@@ -547,6 +555,8 @@ name|depth
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 init|;
 name|depth
@@ -555,6 +565,8 @@ name|depth
 operator|=
 name|depth
 operator|->
+name|Common
+operator|.
 name|Parent
 control|)
 block|{
@@ -580,6 +592,8 @@ name|arg
 operator|=
 name|arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 block|}
@@ -671,18 +685,18 @@ for|for
 control|(
 name|j
 operator|=
-literal|0
+name|LastDepth
 init|;
 name|j
-operator|<
+operator|>=
 operator|(
-name|LastDepth
-operator|-
 name|DepthCount
+operator|+
+literal|1
 operator|)
 condition|;
 name|j
-operator|++
+operator|--
 control|)
 block|{
 name|VERBOSE_PRINT
@@ -690,9 +704,11 @@ argument_list|(
 operator|(
 name|DB_NO_OP_INFO
 operator|,
-name|LastDepth
-operator|-
+operator|(
 name|j
+operator|-
+literal|1
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -700,17 +716,11 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
 operator|<
-operator|(
-name|LastDepth
-operator|-
 name|j
-operator|-
-literal|1
-operator|)
 condition|;
 name|i
 operator|++
@@ -757,15 +767,19 @@ operator|(
 name|DB_FULL_OP_INFO
 operator|,
 operator|(
-name|unsigned
+name|UINT32
 operator|)
 name|Op
 operator|->
+name|Common
+operator|.
 name|AmlOffset
 operator|,
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|,
 name|DepthCount
 operator|)
@@ -808,12 +822,16 @@ condition|(
 operator|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_INT_NAMEPATH_OP
 operator|&&
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Name
@@ -822,6 +840,8 @@ operator|&&
 operator|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|)
 operator|&&
@@ -830,6 +850,9 @@ name|AcpiGbl_DbOpt_verbose
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|AcpiPsDisplayObjectPathname
 argument_list|(
 name|WalkState
@@ -1129,7 +1152,9 @@ name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 expr_stmt|;
 if|if
@@ -1160,7 +1185,9 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_CREATE_FIELD_OP
 condition|)
@@ -1196,6 +1223,8 @@ operator|&&
 operator|(
 name|NamePath
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -1204,6 +1233,8 @@ operator|&&
 operator|(
 name|NamePath
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -1219,6 +1250,8 @@ name|AcpiDbDisplayNamestring
 argument_list|(
 name|NamePath
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -1254,6 +1287,8 @@ if|if
 condition|(
 name|Search
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|==
 name|Prev
@@ -1266,6 +1301,8 @@ name|Search
 operator|=
 name|Search
 operator|->
+name|Common
+operator|.
 name|Parent
 expr_stmt|;
 block|}
@@ -1280,7 +1317,9 @@ name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Search
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 expr_stmt|;
 if|if
@@ -1321,7 +1360,9 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_CREATE_FIELD_OP
 condition|)
@@ -1357,6 +1398,8 @@ operator|&&
 operator|(
 name|NamePath
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -1369,6 +1412,8 @@ literal|"%4.4s"
 argument_list|,
 name|NamePath
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -1456,13 +1501,16 @@ argument_list|(
 literal|"<NULL OP PTR>"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 comment|/* op and arguments */
 switch|switch
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 condition|)
 block|{
 case|case
@@ -1475,10 +1523,12 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"(UINT8)  0x%2.2X"
+literal|"(UINT8)  0x%2.2hX"
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer8
@@ -1489,10 +1539,12 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"0x%2.2X"
+literal|"0x%2.2hX"
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer8
@@ -1510,10 +1562,12 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"(UINT16) 0x%4.4X"
+literal|"(UINT16) 0x%4.4hX"
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer16
@@ -1524,10 +1578,12 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"0x%4.4X"
+literal|"0x%4.4hX"
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer16
@@ -1549,6 +1605,8 @@ literal|"(UINT32) 0x%8.8X"
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer32
@@ -1563,6 +1621,8 @@ literal|"0x%8.8X"
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer32
@@ -1584,6 +1644,8 @@ literal|"(UINT64) 0x%8.8X%8.8X"
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer64
@@ -1592,6 +1654,8 @@ name|Hi
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer64
@@ -1608,6 +1672,8 @@ literal|"0x%8.8X%8.8X"
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer64
@@ -1616,6 +1682,8 @@ name|Hi
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer64
@@ -1632,6 +1700,8 @@ if|if
 condition|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -1643,6 +1713,8 @@ literal|"\"%s\""
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -1665,6 +1737,8 @@ if|if
 condition|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -1676,6 +1750,8 @@ literal|"\"%s\""
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -1698,6 +1774,8 @@ name|AcpiDbDisplayNamestring
 argument_list|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Name
@@ -1713,6 +1791,8 @@ literal|"NamedField    (Length 0x%8.8X)  "
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer32
@@ -1728,6 +1808,8 @@ literal|"ReservedField (Length 0x%8.8X)  "
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer32
@@ -1743,6 +1825,8 @@ literal|"AccessField   (Length 0x%8.8X)  "
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer32
@@ -1763,6 +1847,8 @@ literal|"ByteList      (Length 0x%8.8X)  "
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer32
@@ -1777,6 +1863,8 @@ literal|"0x%2.2X"
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer32
@@ -1786,20 +1874,18 @@ name|ByteCount
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer32
 expr_stmt|;
 name|ByteData
 operator|=
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Data
 expr_stmt|;
 for|for
@@ -1837,7 +1923,9 @@ name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1857,9 +1945,15 @@ condition|(
 operator|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_INT_RETURN_VALUE_OP
+operator|)
+operator|&&
+operator|(
+name|WalkState
 operator|)
 operator|&&
 operator|(
@@ -1917,6 +2011,8 @@ if|if
 condition|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Next
 condition|)
 block|{
@@ -1934,7 +2030,9 @@ name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 expr_stmt|;
 if|if
@@ -1974,12 +2072,17 @@ operator|&&
 operator|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|!=
 name|AML_INT_NAMEDFIELD_OP
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|AcpiPsDisplayObjectPathname
 argument_list|(
 name|WalkState

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rslist - Linked list utilities  *              $Revision: 26 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rslist - Linked list utilities  *              $Revision: 30 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -87,6 +87,9 @@ operator|(
 name|ResourceStartByte
 operator|)
 return|;
+default|default:
+comment|/* No other types of resource descriptor */
+break|break;
 block|}
 return|return
 operator|(
@@ -119,7 +122,7 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|BytesParsed
 init|=
 literal|0
@@ -165,8 +168,7 @@ name|BytesParsed
 operator|<
 name|ByteStreamBufferLength
 operator|&&
-name|FALSE
-operator|==
+operator|!
 name|EndTagProcessed
 condition|)
 block|{
@@ -525,10 +527,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/*              * Invalid/Unknowns resource type              */
+comment|/*              * Invalid/Unknown resource type              */
 name|Status
 operator|=
-name|AE_AML_ERROR
+name|AE_AML_INVALID_RESOURCE_TYPE
 expr_stmt|;
 break|break;
 block|}
@@ -559,11 +561,12 @@ expr_stmt|;
 comment|/*          * Set the Buffer to the next structure          */
 name|Resource
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_RESOURCE
-operator|*
-operator|)
+argument_list|,
 name|Buffer
+argument_list|)
 expr_stmt|;
 name|Resource
 operator|->
@@ -588,14 +591,13 @@ comment|/*  end while */
 comment|/*      * Check the reason for exiting the while loop      */
 if|if
 condition|(
-name|TRUE
-operator|!=
+operator|!
 name|EndTagProcessed
 condition|)
 block|{
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_AML_ERROR
+name|AE_AML_NO_RESOURCE_END_TAG
 argument_list|)
 expr_stmt|;
 block|}
@@ -608,7 +610,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsListToByteStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              ByteSteamSizeNeeded     - Calculated size of the byte stream  *                                        needed from calling  *                                        AcpiRsCalculateByteStreamLength()  *                                        The size of the OutputBuffer is  *                                        guaranteed to be>=  *                                        ByteStreamSizeNeeded  *              OutputBuffer            - Pointer to the buffer that will  *                                        contain the byte stream  *  * RETURN:      Status  *  * DESCRIPTION: Takes the resource linked list and parses it, creating a  *              byte stream of resources in the caller's output buffer  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsListToByteStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              ByteSteamSizeNeeded     - Calculated size of the byte stream  *                                        needed from calling  *                                        AcpiRsGetByteStreamLength()  *                                        The size of the OutputBuffer is  *                                        guaranteed to be>=  *                                        ByteStreamSizeNeeded  *              OutputBuffer            - Pointer to the buffer that will  *                                        contain the byte stream  *  * RETURN:      Status  *  * DESCRIPTION: Takes the resource linked list and parses it, creating a  *              byte stream of resources in the caller's output buffer  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -619,7 +621,7 @@ name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 name|ByteStreamSizeNeeded
 parameter_list|,
 name|UINT8

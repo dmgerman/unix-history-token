@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 93 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 100 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acinterp.h"
 end_include
 
@@ -50,19 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acevents.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
 end_include
 
 begin_define
@@ -116,7 +98,7 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Fatal - Could not acquire interpreter lock\n"
+literal|"Could not acquire interpreter mutex\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -155,6 +137,22 @@ argument_list|(
 name|ACPI_MTX_EXECUTE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Could not release interpreter mutex\n"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|return_VOID
 expr_stmt|;
 block|}
@@ -209,7 +207,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExTruncateFor32bitTable  *  * PARAMETERS:  ObjDesc         - Object to be truncated  *              WalkState       - Current walk state  *                                (A method must be executing)  *  * RETURN:      none  *  * DESCRIPTION: Truncate a number to 32-bits if the currently executing method  *              belongs to a 32-bit ACPI table.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExTruncateFor32bitTable  *  * PARAMETERS:  ObjDesc         - Object to be truncated  *  * RETURN:      none  *  * DESCRIPTION: Truncate a number to 32-bits if the currently executing method  *              belongs to a 32-bit ACPI table.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -219,10 +217,6 @@ parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
 parameter_list|)
 block|{
 name|ACPI_FUNCTION_ENTRY
@@ -237,20 +231,12 @@ name|ObjDesc
 operator|)
 operator|||
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|ACPI_TYPE_INTEGER
-operator|)
-operator|||
-operator|(
-operator|!
-name|WalkState
-operator|->
-name|MethodNode
 operator|)
 condition|)
 block|{
@@ -258,13 +244,9 @@ return|return;
 block|}
 if|if
 condition|(
-name|WalkState
-operator|->
-name|MethodNode
-operator|->
-name|Flags
-operator|&
-name|ANOBJ_DATA_WIDTH_32
+name|AcpiGbl_IntegerByteWidth
+operator|==
+literal|4
 condition|)
 block|{
 comment|/*          * We are running a method that exists in a 32-bit ACPI table.          * Truncate the value to 32 bits by zeroing out the upper 32-bit field          */
@@ -368,13 +350,16 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiExReleaseGlobalLock
 parameter_list|(
 name|BOOLEAN
 name|LockedByMe
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"ExReleaseGlobalLock"
@@ -387,15 +372,29 @@ name|LockedByMe
 condition|)
 block|{
 comment|/* OK, now release the lock */
+name|Status
+operator|=
 name|AcpiEvReleaseGlobalLock
 argument_list|()
 expr_stmt|;
-block|}
-name|return_ACPI_STATUS
+if|if
+condition|(
+name|ACPI_FAILURE
 argument_list|(
-name|AE_OK
+name|Status
+argument_list|)
+condition|)
+block|{
+comment|/* Report the error, but there isn't much else we can do */
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Could not release ACPI Global Lock\n"
+operator|)
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -416,59 +415,55 @@ parameter_list|)
 block|{
 name|UINT32
 name|NumDigits
-init|=
-literal|0
+decl_stmt|;
+name|ACPI_INTEGER
+name|CurrentValue
+decl_stmt|;
+name|ACPI_INTEGER
+name|Quotient
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"ExDigitsNeeded"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Base
-operator|<
-literal|1
-condition|)
-block|{
-name|ACPI_REPORT_ERROR
-argument_list|(
-operator|(
-literal|"ExDigitsNeeded: Internal error - Invalid base\n"
-operator|)
-argument_list|)
+comment|/*      * ACPI_INTEGER is unsigned, so we don't worry about a '-'      */
+name|CurrentValue
+operator|=
+name|Value
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/*          * ACPI_INTEGER is unsigned, which is why we don't worry about a '-'          */
-for|for
-control|(
 name|NumDigits
 operator|=
-literal|1
-init|;
+literal|0
+expr_stmt|;
+while|while
+condition|(
+name|CurrentValue
+condition|)
+block|{
 operator|(
+name|void
+operator|)
 name|AcpiUtShortDivide
 argument_list|(
 operator|&
-name|Value
+name|CurrentValue
 argument_list|,
 name|Base
 argument_list|,
 operator|&
-name|Value
+name|Quotient
 argument_list|,
 name|NULL
 argument_list|)
-operator|)
-condition|;
-operator|++
+expr_stmt|;
 name|NumDigits
-control|)
-block|{
-empty_stmt|;
-block|}
+operator|++
+expr_stmt|;
+name|CurrentValue
+operator|=
+name|Quotient
+expr_stmt|;
 block|}
 name|return_VALUE
 argument_list|(
@@ -479,127 +474,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    ntohl  *  * PARAMETERS:  Value           - Value to be converted  *  * DESCRIPTION: Convert a 32-bit value to big-endian (swap the bytes)  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|UINT32
-name|_ntohl
-parameter_list|(
-name|UINT32
-name|Value
-parameter_list|)
-block|{
-union|union
-block|{
-name|UINT32
-name|Value
-decl_stmt|;
-name|UINT8
-name|Bytes
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-name|Out
-union|;
-union|union
-block|{
-name|UINT32
-name|Value
-decl_stmt|;
-name|UINT8
-name|Bytes
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-name|In
-union|;
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
-expr_stmt|;
-name|In
-operator|.
-name|Value
-operator|=
-name|Value
-expr_stmt|;
-name|Out
-operator|.
-name|Bytes
-index|[
-literal|0
-index|]
-operator|=
-name|In
-operator|.
-name|Bytes
-index|[
-literal|3
-index|]
-expr_stmt|;
-name|Out
-operator|.
-name|Bytes
-index|[
-literal|1
-index|]
-operator|=
-name|In
-operator|.
-name|Bytes
-index|[
-literal|2
-index|]
-expr_stmt|;
-name|Out
-operator|.
-name|Bytes
-index|[
-literal|2
-index|]
-operator|=
-name|In
-operator|.
-name|Bytes
-index|[
-literal|1
-index|]
-expr_stmt|;
-name|Out
-operator|.
-name|Bytes
-index|[
-literal|3
-index|]
-operator|=
-name|In
-operator|.
-name|Bytes
-index|[
-literal|0
-index|]
-expr_stmt|;
-return|return
-operator|(
-name|Out
-operator|.
-name|Value
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiExEisaIdToString  *  * PARAMETERS:  NumericId       - EISA ID to be converted  *              OutString       - Where to put the converted string (8 bytes)  *  * DESCRIPTION: Convert a numeric EISA ID to string representation  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiExEisaIdToString
 parameter_list|(
 name|UINT32
@@ -611,15 +490,15 @@ name|OutString
 parameter_list|)
 block|{
 name|UINT32
-name|id
+name|EisaId
 decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/* swap to big-endian to get contiguous bits */
-name|id
+comment|/* Swap ID to big-endian to get contiguous bits */
+name|EisaId
 operator|=
-name|_ntohl
+name|AcpiUtDwordByteSwap
 argument_list|(
 name|NumericId
 argument_list|)
@@ -637,7 +516,7 @@ literal|'@'
 operator|+
 operator|(
 operator|(
-name|id
+name|EisaId
 operator|>>
 literal|26
 operator|)
@@ -659,7 +538,7 @@ literal|'@'
 operator|+
 operator|(
 operator|(
-name|id
+name|EisaId
 operator|>>
 literal|21
 operator|)
@@ -681,7 +560,7 @@ literal|'@'
 operator|+
 operator|(
 operator|(
-name|id
+name|EisaId
 operator|>>
 literal|16
 operator|)
@@ -697,7 +576,10 @@ index|]
 operator|=
 name|AcpiUtHexToAsciiChar
 argument_list|(
-name|id
+operator|(
+name|ACPI_INTEGER
+operator|)
+name|EisaId
 argument_list|,
 literal|12
 argument_list|)
@@ -709,7 +591,10 @@ index|]
 operator|=
 name|AcpiUtHexToAsciiChar
 argument_list|(
-name|id
+operator|(
+name|ACPI_INTEGER
+operator|)
+name|EisaId
 argument_list|,
 literal|8
 argument_list|)
@@ -721,7 +606,10 @@ index|]
 operator|=
 name|AcpiUtHexToAsciiChar
 argument_list|(
-name|id
+operator|(
+name|ACPI_INTEGER
+operator|)
+name|EisaId
 argument_list|,
 literal|4
 argument_list|)
@@ -733,7 +621,10 @@ index|]
 operator|=
 name|AcpiUtHexToAsciiChar
 argument_list|(
-name|id
+operator|(
+name|ACPI_INTEGER
+operator|)
+name|EisaId
 argument_list|,
 literal|0
 argument_list|)
@@ -745,11 +636,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
 block|}
 end_function
 
@@ -758,7 +644,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiExUnsignedIntegerToString
 parameter_list|(
 name|ACPI_INTEGER
@@ -777,6 +663,9 @@ name|DigitsNeeded
 decl_stmt|;
 name|UINT32
 name|Remainder
+decl_stmt|;
+name|ACPI_INTEGER
+name|Quotient
 decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
@@ -811,6 +700,9 @@ name|Count
 operator|--
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|AcpiUtShortDivide
 argument_list|(
 operator|&
@@ -819,7 +711,7 @@ argument_list|,
 literal|10
 argument_list|,
 operator|&
-name|Value
+name|Quotient
 argument_list|,
 operator|&
 name|Remainder
@@ -841,12 +733,12 @@ operator|+
 name|Remainder
 argument_list|)
 expr_stmt|;
+block|\
+name|Value
+operator|=
+name|Quotient
+expr_stmt|;
 block|}
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
 block|}
 end_function
 

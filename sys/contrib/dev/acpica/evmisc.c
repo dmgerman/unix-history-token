@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 48 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 53 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"achware.h"
 end_include
 
 begin_define
@@ -303,7 +297,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*      * Get the notify object attached to the device Node      */
+comment|/*      * Get the notify object attached to the NS Node      */
 name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
@@ -327,36 +321,14 @@ block|{
 case|case
 name|ACPI_TYPE_DEVICE
 case|:
-if|if
-condition|(
-name|NotifyValue
-operator|<=
-name|ACPI_MAX_SYS_NOTIFY
-condition|)
-block|{
-name|HandlerObj
-operator|=
-name|ObjDesc
-operator|->
-name|Device
-operator|.
-name|SysHandler
-expr_stmt|;
-block|}
-else|else
-block|{
-name|HandlerObj
-operator|=
-name|ObjDesc
-operator|->
-name|Device
-operator|.
-name|DrvHandler
-expr_stmt|;
-block|}
-break|break;
 case|case
 name|ACPI_TYPE_THERMAL
+case|:
+case|case
+name|ACPI_TYPE_PROCESSOR
+case|:
+case|case
+name|ACPI_TYPE_POWER
 case|:
 if|if
 condition|(
@@ -369,7 +341,7 @@ name|HandlerObj
 operator|=
 name|ObjDesc
 operator|->
-name|ThermalZone
+name|CommonNotify
 operator|.
 name|SysHandler
 expr_stmt|;
@@ -380,12 +352,19 @@ name|HandlerObj
 operator|=
 name|ObjDesc
 operator|->
-name|ThermalZone
+name|CommonNotify
 operator|.
 name|DrvHandler
 expr_stmt|;
 block|}
 break|break;
+default|default:
+comment|/* All other types are not supported */
+return|return
+operator|(
+name|AE_TYPE
+operator|)
+return|;
 block|}
 block|}
 comment|/* If there is any handler to run, schedule the dispatcher */
@@ -711,6 +690,9 @@ modifier|*
 name|Context
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 comment|/* Signal threads that are waiting for the lock */
 if|if
 condition|(
@@ -718,6 +700,8 @@ name|AcpiGbl_GlobalLockThreadCount
 condition|)
 block|{
 comment|/* Send sufficient units to the semaphore */
+name|Status
+operator|=
 name|AcpiOsSignalSemaphore
 argument_list|(
 name|AcpiGbl_GlobalLockSemaphore
@@ -725,6 +709,22 @@ argument_list|,
 name|AcpiGbl_GlobalLockThreadCount
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Could not signal Global Lock semaphore\n"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -748,6 +748,9 @@ name|Acquired
 init|=
 name|FALSE
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 comment|/*      * Attempt to get the lock      * If we don't get it now, it will be marked pending and we will      * take another interrupt when it becomes free.      */
 name|ACPI_ACQUIRE_GLOBAL_LOCK
 argument_list|(
@@ -769,6 +772,8 @@ operator|=
 name|TRUE
 expr_stmt|;
 comment|/* Run the Global Lock thread which will signal all waiting threads */
+name|Status
+operator|=
 name|AcpiOsQueueForExecution
 argument_list|(
 name|OSD_PRIORITY_HIGH
@@ -778,6 +783,32 @@ argument_list|,
 name|Context
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Could not queue Global Lock thread, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ACPI_INTERRUPT_NOT_HANDLED
+operator|)
+return|;
+block|}
 block|}
 return|return
 operator|(
@@ -970,7 +1001,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|void
+name|ACPI_STATUS
 name|AcpiEvReleaseGlobalLock
 parameter_list|(
 name|void
@@ -980,6 +1011,11 @@ name|BOOLEAN
 name|Pending
 init|=
 name|FALSE
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -999,7 +1035,10 @@ literal|"Cannot release HW Global Lock, it has not been acquired\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_VOID
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NOT_ACQUIRED
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* One fewer thread has the global lock */
@@ -1012,7 +1051,10 @@ name|AcpiGbl_GlobalLockThreadCount
 condition|)
 block|{
 comment|/* There are still some threads holding the lock, cannot release */
-name|return_VOID
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * No more threads holding lock, we can do the actual hardware      * release      */
@@ -1035,7 +1077,9 @@ condition|(
 name|Pending
 condition|)
 block|{
-name|AcpiHwBitRegisterWrite
+name|Status
+operator|=
+name|AcpiSetRegister
 argument_list|(
 name|ACPI_BITREG_GLOBAL_LOCK_RELEASE
 argument_list|,
@@ -1045,7 +1089,10 @@ name|ACPI_MTX_LOCK
 argument_list|)
 expr_stmt|;
 block|}
-name|return_VOID
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
 expr_stmt|;
 block|}
 end_function

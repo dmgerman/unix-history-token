@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 67 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 77 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -38,6 +38,276 @@ argument_list|(
 literal|"tbget"
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbTableOverride  *  * PARAMETERS:  *TableInfo          - Info for current table  *  * RETURN:      None  *  * DESCRIPTION: Attempts override of current table with a new one if provided  *              by the host OS.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiTbTableOverride
+parameter_list|(
+name|ACPI_TABLE_DESC
+modifier|*
+name|TableInfo
+parameter_list|)
+block|{
+name|ACPI_TABLE_HEADER
+modifier|*
+name|NewTable
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_POINTER
+name|Address
+decl_stmt|;
+name|ACPI_TABLE_DESC
+name|NewTableInfo
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+literal|"AcpiTbTableOverride"
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiOsTableOverride
+argument_list|(
+name|TableInfo
+operator|->
+name|Pointer
+argument_list|,
+operator|&
+name|NewTable
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+comment|/* Some severe error from the OSL, but we basically ignore it */
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Could not override ACPI table, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_VOID
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|NewTable
+condition|)
+block|{
+comment|/* No table override */
+name|return_VOID
+expr_stmt|;
+block|}
+comment|/*       * We have a new table to override the old one.  Get a copy of       * the new one.  We know that the new table has a logical pointer.      */
+name|Address
+operator|.
+name|PointerType
+operator|=
+name|ACPI_LOGICAL_POINTER
+expr_stmt|;
+name|Address
+operator|.
+name|Pointer
+operator|.
+name|Logical
+operator|=
+name|NewTable
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiTbGetTable
+argument_list|(
+operator|&
+name|Address
+argument_list|,
+operator|&
+name|NewTableInfo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Could not copy ACPI table override\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_VOID
+expr_stmt|;
+block|}
+comment|/*      * Delete the original table      */
+name|AcpiTbDeleteSingleTable
+argument_list|(
+name|TableInfo
+argument_list|)
+expr_stmt|;
+comment|/* Copy the table info */
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"Successful table override [%4.4s]\n"
+operator|,
+operator|(
+operator|(
+name|ACPI_TABLE_HEADER
+operator|*
+operator|)
+name|NewTableInfo
+operator|.
+name|Pointer
+operator|)
+operator|->
+name|Signature
+operator|)
+argument_list|)
+expr_stmt|;
+name|ACPI_MEMCPY
+argument_list|(
+name|TableInfo
+argument_list|,
+operator|&
+name|NewTableInfo
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_DESC
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|return_VOID
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetTableWithOverride  *  * PARAMETERS:  Address             - Physical or logical address of table  *              *TableInfo          - Where the table info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Gets and installs the table with possible table override by OS.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiTbGetTableWithOverride
+parameter_list|(
+name|ACPI_POINTER
+modifier|*
+name|Address
+parameter_list|,
+name|ACPI_TABLE_DESC
+modifier|*
+name|TableInfo
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+literal|"AcpiTbGetTableWithOverride"
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiTbGetTable
+argument_list|(
+name|Address
+argument_list|,
+name|TableInfo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Could not get ACPI table, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Attempt override.  It either happens or it doesn't, no status      */
+name|AcpiTbTableOverride
+argument_list|(
+name|TableInfo
+argument_list|)
+expr_stmt|;
+comment|/* Install the table */
+name|Status
+operator|=
+name|AcpiTbInstallTable
+argument_list|(
+name|TableInfo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Could not install ACPI table, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetTablePtr  *  * PARAMETERS:  TableType       - one of the defined table types  *              Instance        - Which table of this type  *              TablePtrLoc     - pointer to location to place the pointer for  *                                return  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the pointer to an ACPI table.  *  ******************************************************************************/
@@ -188,7 +458,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetTable  *  * PARAMETERS:  PhysicalAddress         - Physical address of table to retrieve  *              *BufferPtr              - If BufferPtr is valid, read data from  *                                         buffer rather than searching memory  *              *TableInfo              - Where the table info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Maps the physical address of table into a logical address  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetTable  *  * PARAMETERS:  Address             - Physical address of table to retrieve  *              *TableInfo          - Where the table info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Maps the physical address of table into a logical address  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -216,7 +486,7 @@ name|FullTable
 init|=
 name|NULL
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|Size
 decl_stmt|;
 name|UINT8
@@ -291,6 +561,9 @@ block|}
 comment|/* Copy the entire table (including header) to the local buffer */
 name|Size
 operator|=
+operator|(
+name|ACPI_SIZE
+operator|)
 name|TableHeader
 operator|->
 name|Length
@@ -429,7 +702,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetAllTables  *  * PARAMETERS:  NumberOfTables      - Number of tables to get  *              TablePtr            - Input buffer pointer, optional  *  * RETURN:      Status  *  * DESCRIPTION: Load and validate tables other than the RSDT.  The RSDT must  *              already be loaded and validated.  *  *              Get the minimum set of ACPI tables, namely:  *  *              1) FADT (via RSDT in loop below)  *              2) FACS (via FADT)  *              3) DSDT (via FADT)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetAllTables  *  * PARAMETERS:  NumberOfTables      - Number of tables to get  *  * RETURN:      Status  *  * DESCRIPTION: Load and validate tables other than the RSDT.  The RSDT must  *              already be loaded and validated.  *  *              Get the minimum set of ACPI tables, namely:  *  *              1) FADT (via RSDT in loop below)  *              2) FACS (via FADT)  *              3) DSDT (via FADT)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -438,10 +711,6 @@ name|AcpiTbGetAllTables
 parameter_list|(
 name|UINT32
 name|NumberOfTables
-parameter_list|,
-name|ACPI_TABLE_HEADER
-modifier|*
-name|TablePtr
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -556,8 +825,6 @@ name|Status
 operator|=
 name|AcpiTbInstallTable
 argument_list|(
-name|TablePtr
-argument_list|,
 operator|&
 name|TableInfo
 argument_list|)
@@ -571,6 +838,9 @@ argument_list|)
 condition|)
 block|{
 comment|/*              * Unrecognized or unsupported table, delete it and ignore the              * error.  Just get as many tables as we can, later we will              * determine if there are enough tables to continue.              */
+operator|(
+name|void
+operator|)
 name|AcpiTbUninstallTable
 argument_list|(
 operator|&
@@ -582,6 +852,25 @@ operator|=
 name|AE_OK
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+operator|!
+name|AcpiGbl_FADT
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"No FADT present in R/XSDT\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_ACPI_TABLES
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * Convert the FADT to a common format.  This allows earlier revisions of the      * table to coexist with newer versions, using common access code.      */
 name|Status
@@ -652,7 +941,12 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Could not get the FACS\n"
+literal|"Could not get the FACS, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -667,8 +961,6 @@ name|Status
 operator|=
 name|AcpiTbInstallTable
 argument_list|(
-name|TablePtr
-argument_list|,
 operator|&
 name|TableInfo
 argument_list|)
@@ -684,7 +976,12 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Could not install the FACS\n"
+literal|"Could not install the FACS, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -711,20 +1008,13 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_REPORT_ERROR
-argument_list|(
-operator|(
-literal|"Could not convert FACS to common internal format\n"
-operator|)
-argument_list|)
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Get the DSDT (We know that the FADT is valid now)      */
+comment|/*      * Get/install the DSDT (We know that the FADT is valid now)      */
 name|Address
 operator|.
 name|PointerType
@@ -746,7 +1036,7 @@ argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiTbGetTable
+name|AcpiTbGetTableWithOverride
 argument_list|(
 operator|&
 name|Address
@@ -776,45 +1066,21 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Install the DSDT */
-name|Status
-operator|=
-name|AcpiTbInstallTable
+comment|/* Set Integer Width (32/64) based upon DSDT revision */
+name|AcpiUtSetIntegerWidth
 argument_list|(
-name|TablePtr
-argument_list|,
-operator|&
-name|TableInfo
+name|AcpiGbl_DSDT
+operator|->
+name|Revision
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|ACPI_REPORT_ERROR
-argument_list|(
-operator|(
-literal|"Could not install the DSDT\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Dump the entire DSDT */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_TABLES
 operator|,
-literal|"Hex dump of entire DSDT, size %d (0x%X)\n"
+literal|"Hex dump of entire DSDT, size %d (0x%X), Integer width = %d\n"
 operator|,
 name|AcpiGbl_DSDT
 operator|->
@@ -823,6 +1089,8 @@ operator|,
 name|AcpiGbl_DSDT
 operator|->
 name|Length
+operator|,
+name|AcpiGbl_IntegerBitWidth
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1040,11 +1308,12 @@ name|TableInfo
 operator|.
 name|Pointer
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_TABLE_HEADER
-operator|*
-operator|)
+argument_list|,
 name|Rsdp
+argument_list|)
 expr_stmt|;
 name|TableInfo
 operator|.
@@ -1093,13 +1362,14 @@ block|}
 comment|/* Save the RSDP in a global for easy access */
 name|AcpiGbl_RSDP
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|RSDP_DESCRIPTOR
-operator|*
-operator|)
+argument_list|,
 name|TableInfo
 operator|.
 name|Pointer
+argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
@@ -1210,7 +1480,7 @@ modifier|*
 name|TablePtr
 parameter_list|)
 block|{
-name|UINT32
+name|int
 name|NoMatch
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
@@ -1297,8 +1567,19 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"RSDT/XSDT signature at %X is invalid\n"
+literal|"RSDT/XSDT signature at %X (%p) is invalid\n"
 operator|,
+name|AcpiGbl_RSDP
+operator|->
+name|RsdtPhysicalAddress
+operator|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|NATIVE_UINT
+operator|)
 name|AcpiGbl_RSDP
 operator|->
 name|RsdtPhysicalAddress
@@ -1334,7 +1615,7 @@ parameter_list|,
 name|UINT32
 name|Flags
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 modifier|*
 name|Size
 parameter_list|,
@@ -1414,6 +1695,12 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+default|default:
+return|return
+operator|(
+name|AE_BAD_PARAMETER
+operator|)
+return|;
 block|}
 block|}
 else|else
@@ -1452,6 +1739,12 @@ operator|=
 name|AE_BAD_PARAMETER
 expr_stmt|;
 break|break;
+default|default:
+return|return
+operator|(
+name|AE_BAD_PARAMETER
+operator|)
+return|;
 block|}
 block|}
 return|return
@@ -1489,33 +1782,7 @@ argument_list|(
 literal|"TbGetTableRsdt"
 argument_list|)
 expr_stmt|;
-comment|/*      * Get the RSDT from the RSDP      */
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"RSDP located at %p, RSDT physical=%8.8X%8.8X \n"
-operator|,
-name|AcpiGbl_RSDP
-operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|AcpiGbl_RSDP
-operator|->
-name|RsdtPhysicalAddress
-argument_list|)
-operator|,
-name|ACPI_LODWORD
-argument_list|(
-name|AcpiGbl_RSDP
-operator|->
-name|RsdtPhysicalAddress
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Get the RSDT/XSDT */
+comment|/* Get the RSDT/XSDT from the RSDP */
 name|AcpiTbGetRsdtAddress
 argument_list|(
 operator|&
@@ -1546,7 +1813,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Could not get the RSDT, %s\n"
+literal|"Could not get the R/XSDT, %s\n"
 operator|,
 name|AcpiFormatException
 argument_list|(
@@ -1561,6 +1828,35 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"RSDP located at %p, RSDT physical=%8.8X%8.8X \n"
+operator|,
+name|AcpiGbl_RSDP
+operator|,
+name|ACPI_HIDWORD
+argument_list|(
+name|Address
+operator|.
+name|Pointer
+operator|.
+name|Value
+argument_list|)
+operator|,
+name|ACPI_LODWORD
+argument_list|(
+name|Address
+operator|.
+name|Pointer
+operator|.
+name|Value
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Check the RSDT or XSDT signature */
 name|Status
 operator|=

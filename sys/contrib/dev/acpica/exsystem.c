@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exsystem - Interface to OS services  *              $Revision: 71 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exsystem - Interface to OS services  *              $Revision: 73 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -23,18 +23,6 @@ begin_include
 include|#
 directive|include
 file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"achware.h"
 end_include
 
 begin_include
@@ -453,12 +441,14 @@ operator|==
 name|AcpiGbl_GlobalLockSemaphore
 condition|)
 block|{
+name|Status
+operator|=
 name|AcpiEvReleaseGlobalLock
 argument_list|()
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_OK
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -640,6 +630,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|AcpiOsDeleteSemaphore
 argument_list|(
 name|ObjDesc
