@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.52
+literal|3.53
 operator|%
 name|G
 operator|%
@@ -1025,7 +1025,7 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|parse
+name|parseaddr
 argument_list|(
 name|buf
 argument_list|,

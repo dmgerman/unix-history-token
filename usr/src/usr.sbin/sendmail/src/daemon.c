@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.37
+literal|3.38
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.37
+literal|3.38
 operator|%
 name|G
 operator|%
@@ -120,7 +120,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  GETREQUESTS -- open mail IPC port and get requests. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Waits until some interesting activity occurs.  When **		it does, a child is created to process it, and the **		parent waits for completion.  Return from this **		routine is always in the child. */
+comment|/* **  GETREQUESTS -- open mail IPC port and get requests. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Waits until some interesting activity occurs.  When **		it does, a child is created to process it, and the **		parent waits for completion.  Return from this **		routine is always in the child.  The file pointers **		"InChannel" and "OutChannel" should be set to point **		to the communication channel. */
 end_comment
 
 begin_define
@@ -162,10 +162,6 @@ name|int
 name|numconnections
 init|=
 literal|0
-decl_stmt|;
-name|struct
-name|sockaddr
-name|otherend
 decl_stmt|;
 specifier|register
 name|struct

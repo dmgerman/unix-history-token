@@ -33,7 +33,7 @@ operator|)
 name|envelope
 operator|.
 name|c
-literal|3.3
+literal|3.4
 operator|%
 name|G
 operator|%
@@ -2074,7 +2074,7 @@ name|from
 operator|==
 name|NULL
 operator|||
-name|parse
+name|parseaddr
 argument_list|(
 name|from
 argument_list|,
@@ -2099,7 +2099,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|parse
+name|parseaddr
 argument_list|(
 name|from
 argument_list|,

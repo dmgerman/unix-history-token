@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.104		%G%"
+literal|"@(#)sendmail.h	3.105		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2382,7 +2382,7 @@ begin_function_decl
 specifier|extern
 name|ADDRESS
 modifier|*
-name|parse
+name|parseaddr
 parameter_list|()
 function_decl|;
 end_function_decl
