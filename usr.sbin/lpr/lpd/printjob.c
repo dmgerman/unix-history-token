@@ -2794,18 +2794,6 @@ name|locale
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|locale
-index|[
-sizeof|sizeof
-argument_list|(
-name|locale
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 continue|continue;
 default|default:
 comment|/* some file to print */
