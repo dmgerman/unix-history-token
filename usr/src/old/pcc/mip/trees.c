@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.24 (Berkeley) %G%"
+literal|"@(#)trees.c	4.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2413,9 +2413,28 @@ directive|else
 argument|if (t1 == DOUBLE || t1 == FLOAT || t2 == DOUBLE || t2 == FLOAT) 		t = DOUBLE;
 endif|#
 directive|endif
-argument|else if( t1==LONG || t2==LONG ) t = LONG; 	else t = INT;  	if( o == ASSIGN || o == CAST || o == RETURN ){ 		tu = p->in.left->in.type; 		t = t1; 		} 	else { 		tu = (u&& UNSIGNABLE(t))?ENUNSIGN(t):t; 		}
+argument|else if( t1==LONG || t2==LONG ) t = LONG; 	else t = INT;
+ifdef|#
+directive|ifdef
+name|tahoe
+argument|if( asgop(o) ){
+else|#
+directive|else
+argument|if( o == ASSIGN || o == CAST || o == RETURN ){
+endif|#
+directive|endif
+argument|tu = p->in.left->in.type; 		t = t1; 		} 	else { 		tu = (u&& UNSIGNABLE(t))?ENUNSIGN(t):t; 		}
 comment|/* because expressions have values that are at least as wide 	   as INT or UNSIGNED, the only conversions needed 	   are those involving FLOAT/DOUBLE, and those 	   from LONG to INT and ULONG to UNSIGNED */
-argument|if( t != t1&& ! asgop(o) ) 		p->in.left = makety( p->in.left, tu,
+ifdef|#
+directive|ifdef
+name|tahoe
+argument|if( t != t1 )
+else|#
+directive|else
+argument|if( t != t1&& ! asgop(o) )
+endif|#
+directive|endif
+argument|p->in.left = makety( p->in.left, tu,
 literal|0
 argument|, (int)tu );  	if( t != t2 || o==CAST) 		if ( tu == ENUMTY ) {
 comment|/* always asgop */
@@ -2547,9 +2566,16 @@ literal|", %d, %d\n"
 argument|, p->fn.cdim, p->fn.csiz ); 	}
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|PRTDCON
 argument|prtdcon( p ) register NODE *p; { 	int o = p->in.op, i;  	if( o == DCON || o == FCON ){ 		locctr( DATA ); 		defalign( o == DCON ? ALDOUBLE : ALFLOAT ); 		deflab( i = getlab() ); 		if( o == FCON ) 			fincode( p->fpn.fval, SZFLOAT ); 		else 			fincode( p->dpn.dval, SZDOUBLE ); 		p->tn.lval =
 literal|0
-argument|; 		p->tn.rval = -i; 		p->in.type = (o == DCON ? DOUBLE : FLOAT); 		p->in.op = NAME; 		} 	}   int edebug =
+argument|; 		p->tn.rval = -i; 		p->in.type = (o == DCON ? DOUBLE : FLOAT); 		p->in.op = NAME; 		} 	}
+endif|#
+directive|endif
+endif|PRTDCON
+argument|int edebug =
 literal|0
 argument|; ecomp( p ) register NODE *p; {
 ifndef|#
