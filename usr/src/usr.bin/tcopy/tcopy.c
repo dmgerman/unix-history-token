@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1985, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific written prior permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -21,8 +21,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tcopy.c	5.5 (Berkeley) %G%"
+literal|"@(#)tcopy.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -161,13 +167,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|long
-name|itol
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|malloc
@@ -215,6 +214,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -467,6 +469,9 @@ name|buff
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|maxblk
 argument_list|)
 expr_stmt|;
@@ -479,6 +484,8 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"tcopy: no memory\n"
 argument_list|)
 expr_stmt|;
@@ -542,7 +549,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"read error, file %d, record %d: "
+literal|"read error, file %d, record %ld: "
 argument_list|,
 name|filen
 argument_list|,
@@ -586,7 +593,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%d records\n"
+literal|"%ld records\n"
 argument_list|,
 name|record
 argument_list|)
@@ -633,6 +640,9 @@ argument_list|,
 name|nread
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -736,7 +746,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"write error, file %d, record %d: "
+literal|"write error, file %d, record %ld: "
 argument_list|,
 name|filen
 argument_list|,
