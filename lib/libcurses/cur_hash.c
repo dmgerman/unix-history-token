@@ -46,6 +46,7 @@ name|s
 parameter_list|,
 name|len
 parameter_list|)
+name|unsigned
 name|char
 modifier|*
 name|s

@@ -39,8 +39,7 @@ comment|/*  * wstandout  *	Enter standout mode.  */
 end_comment
 
 begin_function
-name|char
-modifier|*
+name|int
 name|wstandout
 parameter_list|(
 name|win
@@ -61,7 +60,7 @@ name|UC
 condition|)
 return|return
 operator|(
-literal|0
+name|ERR
 operator|)
 return|;
 name|win
@@ -72,11 +71,7 @@ name|__WSTANDOUT
 expr_stmt|;
 return|return
 operator|(
-name|SO
-condition|?
-name|SO
-else|:
-name|UC
+name|OK
 operator|)
 return|;
 block|}
@@ -87,8 +82,7 @@ comment|/*  * wstandend --  *	Exit standout mode.  */
 end_comment
 
 begin_function
-name|char
-modifier|*
+name|int
 name|wstandend
 parameter_list|(
 name|win
@@ -109,7 +103,7 @@ name|UC
 condition|)
 return|return
 operator|(
-literal|0
+name|ERR
 operator|)
 return|;
 name|win
@@ -121,11 +115,7 @@ name|__WSTANDOUT
 expr_stmt|;
 return|return
 operator|(
-name|SE
-condition|?
-name|SE
-else|:
-name|UC
+name|OK
 operator|)
 return|;
 block|}

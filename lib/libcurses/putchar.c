@@ -70,5 +70,26 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|int
+name|_putchar
+parameter_list|(
+name|ch
+parameter_list|)
+name|int
+name|ch
+decl_stmt|;
+block|{
+name|__cputchar
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 end_unit
 

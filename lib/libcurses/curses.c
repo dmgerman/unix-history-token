@@ -77,7 +77,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  					 * If terminal doesn't have  					 * insert/delete line capabilities  					 * for quick change on refresh. 					 */
+comment|/*  					 * If terminal doesn't have  					 * insert/delete line capabilities  					 * or change scroll capabilities 					 * for quick change on refresh. 					 */
+end_comment
+
+begin_decl_stmt
+name|int
+name|__usecs
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 					 * If terminal able to change scroll 					 * region (used only if insert/delete 					 * line capabilities absent) 					 */
 end_comment
 
 begin_decl_stmt

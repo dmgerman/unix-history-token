@@ -229,6 +229,16 @@ name|outline
 operator|=
 name|ly
 expr_stmt|;
+if|if
+condition|(
+name|destline
+operator|!=
+name|destcol
+operator|||
+name|outline
+operator|!=
+name|outcol
+condition|)
 name|fgoto
 argument_list|(
 name|in_refresh
@@ -333,7 +343,7 @@ name|tputs
 argument_list|(
 name|CR
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|__cputchar
 argument_list|)
@@ -352,7 +362,7 @@ name|tputs
 argument_list|(
 name|NL
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|__cputchar
 argument_list|)
@@ -471,7 +481,7 @@ name|tputs
 argument_list|(
 name|NL
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|__cputchar
 argument_list|)
@@ -563,7 +573,7 @@ name|tputs
 argument_list|(
 name|cgp
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|__cputchar
 argument_list|)
@@ -817,7 +827,7 @@ name|tputs
 argument_list|(
 name|HO
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|plodput
 argument_list|)
@@ -869,7 +879,7 @@ name|tputs
 argument_list|(
 name|LL
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|plodput
 argument_list|)
@@ -1066,7 +1076,7 @@ name|tputs
 argument_list|(
 name|CR
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|plodput
 argument_list|)
@@ -1090,7 +1100,7 @@ name|tputs
 argument_list|(
 name|NL
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|plodput
 argument_list|)
@@ -1130,7 +1140,7 @@ name|tputs
 argument_list|(
 name|NL
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|plodput
 argument_list|)
@@ -1264,7 +1274,7 @@ name|tputs
 argument_list|(
 name|UP
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|plodput
 argument_list|)

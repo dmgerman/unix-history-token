@@ -112,6 +112,9 @@ literal|1
 init|;
 name|y
 operator|>
+operator|(
+name|int
+operator|)
 name|win
 operator|->
 name|cury
