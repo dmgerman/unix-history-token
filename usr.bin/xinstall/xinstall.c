@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.23 1997/05/24 05:39:19 peter Exp $"
+literal|"$Id: xinstall.c,v 1.24 1997/08/27 06:29:23 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1737,11 +1737,48 @@ if|if
 condition|(
 name|dostrip
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|to_fd
+argument_list|)
+expr_stmt|;
 name|strip
 argument_list|(
 name|to_name
 argument_list|)
 expr_stmt|;
+comment|/* Reopen target. */
+name|to_fd
+operator|=
+name|open
+argument_list|(
+name|to_name
+argument_list|,
+name|O_RDWR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|to_fd
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"%s"
+argument_list|,
+name|to_name
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Unfortunately, because we strip the installed file and not the 	 * original one, it is impossible to do the comparison without 	 * first laboriously copying things over and then comparing. 	 * It may be possible to better optimize the !dostrip case, however. 	 * For further study. 	 */
 if|if
 condition|(
