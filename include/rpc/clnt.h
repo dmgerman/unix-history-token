@@ -827,10 +827,15 @@ name|NULLPROC
 value|((rpcproc_t)0)
 end_define
 
-begin_function_decl
-name|__BEGIN_DECLS
+begin_comment
 comment|/*  * Below are the client handle creation routines for the various  * implementations of client side rpc.  They can return NULL if a  * creation failure occurs.  */
+end_comment
+
+begin_comment
 comment|/*  * Generic client creation routine. Supported protocols are those that  * belong to the nettype namespace (/etc/netconfig).  */
+end_comment
+
+begin_function_decl
 name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
