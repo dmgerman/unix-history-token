@@ -512,14 +512,10 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|error
-operator|=
 name|suser
 argument_list|(
 name|p
 argument_list|)
-operator|)
 condition|)
 return|return
 operator|(
