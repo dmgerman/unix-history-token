@@ -15,6 +15,12 @@ directive|define
 name|_UTIME_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_struct
 struct|struct
 name|utimbuf

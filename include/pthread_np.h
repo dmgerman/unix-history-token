@@ -15,6 +15,12 @@ directive|define
 name|_PTHREAD_NP_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<pthread.h>
+end_include
+
 begin_comment
 comment|/*  * Non-POSIX thread function prototype definitions:  */
 end_comment

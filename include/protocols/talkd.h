@@ -15,6 +15,18 @@ directive|define
 name|_PROTOCOLS_TALKD_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
 begin_comment
 comment|/*  * This describes the protocol used by the talk server and clients.  *  * The talk server acts a repository of invitations, responding to  * requests by clients wishing to rendezvous for the purpose of  * holding a conversation.  In normal operation, a client, the caller,  * initiates a rendezvous by sending a CTL_MSG to the server of  * type LOOK_UP.  This causes the server to search its invitation  * tables to check if an invitation currently exists for the caller  * (to speak to the callee specified in the message).  If the lookup  * fails, the caller then sends an ANNOUNCE message causing the server  * to broadcast an announcement on the callee's login ports requesting  * contact.  When the callee responds, the local server uses the  * recorded invitation to respond with the appropriate rendezvous  * address and the caller and callee client programs establish a  * stream connection through which the conversation takes place.  */
 end_comment

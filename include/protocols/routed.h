@@ -27,7 +27,13 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-empty|#ident "$Revision: 1.1.1.1 $"
+empty|#ident "$Revision: 1.8 $"
+include|#
+directive|include
+file|<sys/types.h>
+include|#
+directive|include
+file|<sys/socket.h>
 comment|/*  * Routing Information Protocol  *  * Derived from Xerox NS Routing Information Protocol  * by changing 32-bit net numbers to sockaddr's and  * padding stuff to 32-bit boundaries.  */
 define|#
 directive|define
