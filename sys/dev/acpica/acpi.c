@@ -228,9 +228,9 @@ literal|"S3"
 block|,
 literal|"S4"
 block|,
-literal|"S4B"
-block|,
 literal|"S5"
+block|,
+literal|"S4B"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4377,7 +4377,7 @@ name|ACPI_STATE_S0
 operator|&&
 name|state
 operator|<=
-name|ACPI_STATE_S5
+name|ACPI_S_STATES_MAX
 condition|)
 name|acpi_SetSleepState
 argument_list|(
@@ -5577,7 +5577,7 @@ name|ACPI_STATE_S0
 operator|&&
 name|state
 operator|<=
-name|ACPI_STATE_S5
+name|ACPI_S_STATES_MAX
 condition|)
 block|{
 name|acpi_SetSleepState
@@ -5656,7 +5656,7 @@ if|if
 condition|(
 name|old_state
 operator|>
-name|ACPI_STATE_S5
+name|ACPI_S_STATES_MAX
 condition|)
 name|strcpy
 argument_list|(
@@ -5721,7 +5721,7 @@ name|ACPI_STATE_S0
 init|;
 name|new_state
 operator|<=
-name|ACPI_STATE_S5
+name|ACPI_S_STATES_MAX
 condition|;
 name|new_state
 operator|++
@@ -5754,7 +5754,7 @@ name|old_state
 operator|&&
 name|new_state
 operator|<=
-name|ACPI_STATE_S5
+name|ACPI_S_STATES_MAX
 condition|)
 operator|*
 operator|(
