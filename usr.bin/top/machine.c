@@ -3473,7 +3473,7 @@ name|pri_level
 operator|-
 name|PZERO
 argument_list|,
-comment|/* 	     * normal time      -> nice value -20 - +20  	     * real time 0 - 31 -> nice value -52 - -21 	     * idle time 0 - 31 -> nice value +21 - +52 	     */
+comment|/* 	     * normal time      -> nice value -20 - +20 	     * real time 0 - 31 -> nice value -52 - -21 	     * idle time 0 - 31 -> nice value +21 - +52 	     */
 operator|(
 name|pp
 operator|->
@@ -3797,7 +3797,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *  proc_compare - comparison function for "qsort"  *	Compares the resource consumption of two processes using five  *  	distinct keys.  The keys (in descending order of importance) are:  *  	percent cpu, cpu ticks, state, resident set size, total virtual  *  	memory usage.  The process states are ordered as follows (from least  *  	to most important):  WAIT, zombie, sleep, stop, start, run.  The  *  	array declaration below maps a process state index into a number  *  	that reflects this ordering.  */
+comment|/*  *  proc_compare - comparison function for "qsort"  *	Compares the resource consumption of two processes using five  *	distinct keys.  The keys (in descending order of importance) are:  *	percent cpu, cpu ticks, state, resident set size, total virtual  *	memory usage.  The process states are ordered as follows (from least  *	to most important):  WAIT, zombie, sleep, stop, start, run.  The  *	array declaration below maps a process state index into a number  *	that reflects this ordering.  */
 end_comment
 
 begin_decl_stmt
@@ -3845,7 +3845,7 @@ define|#
 directive|define
 name|ORDERKEY_CPTICKS
 define|\
-value|if ((result = p2->ki_runtime> p1->ki_runtime ? 1 : \                 p2->ki_runtime< p1->ki_runtime ? -1 : 0) == 0)
+value|if ((result = p2->ki_runtime> p1->ki_runtime ? 1 : \ 		p2->ki_runtime< p1->ki_runtime ? -1 : 0) == 0)
 end_define
 
 begin_define
@@ -3853,7 +3853,7 @@ define|#
 directive|define
 name|ORDERKEY_STATE
 define|\
-value|if ((result = sorted_state[(unsigned char) p2->ki_stat] - \                 sorted_state[(unsigned char) p1->ki_stat]) == 0)
+value|if ((result = sorted_state[(unsigned char) p2->ki_stat] - \ 		sorted_state[(unsigned char) p1->ki_stat]) == 0)
 end_define
 
 begin_define
