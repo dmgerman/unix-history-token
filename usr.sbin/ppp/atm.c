@@ -279,8 +279,11 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"atm_Sendto(%d): %s\n"
+literal|"atm_Sendto(%ld): %s\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|n
 argument_list|,
 name|strerror
@@ -346,8 +349,11 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"atm_Recvfrom(%d): %s\n"
+literal|"atm_Recvfrom(%ld): %s\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|n
 argument_list|,
 name|strerror
