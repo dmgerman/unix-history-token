@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	boot.c	1.3	%G% */
+comment|/*	boot.c	1.4	%G% */
 end_comment
 
 begin_include
@@ -135,6 +135,8 @@ name|JUSTASK
 name|howto
 operator|=
 name|RB_ASKNAME
+operator||
+name|RB_SINGLE
 expr_stmt|;
 else|#
 directive|else
