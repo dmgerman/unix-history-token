@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)swapon.c	4.6 (Berkeley) %G%"
+literal|"@(#)swapon.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,12 +21,25 @@ directive|include
 file|<fstab.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|VSWAPON
 value|85
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -163,6 +176,36 @@ operator|-
 literal|1
 condition|)
 block|{
+switch|switch
+condition|(
+name|errno
+condition|)
+block|{
+case|case
+name|EINVAL
+case|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Device not configured\n"
+argument_list|,
+name|fsp
+operator|->
+name|fs_spec
+argument_list|)
+expr_stmt|;
+name|stat
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|EBUSY
+case|:
+comment|/* ignore already in use */
+break|break;
+default|default:
 name|perror
 argument_list|(
 name|fsp
@@ -174,6 +217,8 @@ name|stat
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+block|}
 block|}
 block|}
 name|endfsent
@@ -206,6 +251,46 @@ name|stat
 operator|=
 literal|1
 expr_stmt|;
+switch|switch
+condition|(
+name|errno
+condition|)
+block|{
+case|case
+name|EINVAL
+case|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Device not configured\n"
+argument_list|,
+name|argv
+index|[
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EBUSY
+case|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Device already in use\n"
+argument_list|,
+name|argv
+index|[
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
 name|perror
 argument_list|(
 name|argv
@@ -215,6 +300,8 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 block|}
 name|argc
 operator|--
