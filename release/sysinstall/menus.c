@@ -853,6 +853,20 @@ literal|"README"
 block|}
 block|,
 block|{
+literal|" Doc, Errata"
+block|,
+literal|"The distribution errata."
+block|,
+name|NULL
+block|,
+name|dmenuDisplayFile
+block|,
+name|NULL
+block|,
+literal|"ERRATA"
+block|}
+block|,
+block|{
 literal|" Doc, Hardware"
 block|,
 literal|"The distribution hardware guide."
@@ -1787,7 +1801,7 @@ name|dmenuExit
 block|}
 block|,
 block|{
-literal|"2 README"
+literal|"1 README"
 block|,
 literal|"A general description of FreeBSD.  Read this!"
 block|,
@@ -1798,6 +1812,20 @@ block|,
 name|NULL
 block|,
 literal|"README"
+block|}
+block|,
+block|{
+literal|"2 Errata"
+block|,
+literal|"Late-breaking, post-release news."
+block|,
+name|NULL
+block|,
+name|dmenuDisplayFile
+block|,
+name|NULL
+block|,
+literal|"ERRATA"
 block|}
 block|,
 block|{
