@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.25 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -519,28 +519,6 @@ name|fs
 parameter_list|)
 value|(D_INDIR(fs) - NINDIR(fs) * NINDIR(fs) - 1)
 end_define
-
-begin_comment
-comment|/* Structure used to pass around logical block paths. */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_indir
-block|{
-name|long
-name|in_lbn
-decl_stmt|;
-comment|/* logical block number */
-name|int
-name|in_off
-decl_stmt|;
-comment|/* offset in buffer */
-block|}
-name|INDIR
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* Unassigned disk address. */
