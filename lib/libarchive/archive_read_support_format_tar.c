@@ -1192,12 +1192,19 @@ operator|<
 literal|512
 condition|)
 block|{
+comment|/* If it's a new archive, then just return a zero bid. */
 if|if
 condition|(
 name|bid
-operator|>
+operator|==
 literal|0
 condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* 		 * If we already know this is a tar archive, 		 * then we have a problem. 		 */
 name|archive_set_error
 argument_list|(
 name|a
