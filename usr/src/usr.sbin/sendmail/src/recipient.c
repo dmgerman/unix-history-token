@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.20	%G%"
+literal|"@(#)recipient.c	3.21	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -855,6 +855,7 @@ modifier|*
 name|finduser
 parameter_list|()
 function_decl|;
+comment|/* warning -- finduser may trash buf */
 name|pw
 operator|=
 name|finduser
@@ -977,7 +978,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FINDUSER -- find the password entry for a user. ** **	This looks a lot like getpwnam, except that it may want to **	do some fancier pattern matching in /etc/passwd. ** **	Parameters: **		name -- the name to match against. ** **	Returns: **		A pointer to a pw struct. **		NULL if name is unknown or ambiguous. ** **	Side Effects: **		none. */
+comment|/* **  FINDUSER -- find the password entry for a user. ** **	This looks a lot like getpwnam, except that it may want to **	do some fancier pattern matching in /etc/passwd. ** **	Parameters: **		name -- the name to match against. ** **	Returns: **		A pointer to a pw struct. **		NULL if name is unknown or ambiguous. ** **	Side Effects: **		may modify name. */
 end_comment
 
 begin_function
@@ -1006,6 +1007,49 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+comment|/* 	**  Make name canonical. 	*/
+for|for
+control|(
+name|p
+operator|=
+name|name
+init|;
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|;
+name|p
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+operator|(
+name|SPACESUB
+operator|&
+literal|0177
+operator|)
+operator|||
+operator|*
+name|p
+operator|==
+literal|'_'
+condition|)
+operator|*
+name|p
+operator|=
+literal|' '
+expr_stmt|;
+block|}
 name|setpwent
 argument_list|()
 expr_stmt|;
@@ -1027,19 +1071,11 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
 specifier|extern
 name|bool
 name|sameword
 parameter_list|()
 function_decl|;
-name|bool
-name|gotaspace
-decl_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -1071,47 +1107,16 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|gotaspace
-operator|=
-name|FALSE
-expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|buf
-init|;
-operator|(
-name|p
-operator|=
+if|if
+condition|(
 name|index
 argument_list|(
-name|p
+name|buf
 argument_list|,
 literal|' '
 argument_list|)
-operator|)
 operator|!=
 name|NULL
-condition|;
-control|)
-block|{
-operator|*
-name|p
-operator|++
-operator|=
-name|SPACESUB
-operator|&
-literal|0177
-expr_stmt|;
-name|gotaspace
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|gotaspace
 operator|&&
 name|sameword
 argument_list|(
