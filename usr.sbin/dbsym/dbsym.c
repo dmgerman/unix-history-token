@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dbsym.c,v 1.8 1993/08/02 17:57:02 mycroft Exp $"
+literal|"$Id: dbsym.c,v 1.2 1993/09/26 16:40:41 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,36 @@ begin_include
 include|#
 directive|include
 file|<machine/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_statistics.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/vmparam.h>
 end_include
 
 begin_define
