@@ -2118,6 +2118,7 @@ name|file_cnt
 operator|==
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|Find_files
@@ -2173,6 +2174,7 @@ argument_list|,
 name|NULL
 argument_list|)
 return|;
+block|}
 for|for
 control|(
 name|i
@@ -4613,6 +4615,7 @@ if|if
 condition|(
 name|Equal_probs
 condition|)
+block|{
 if|if
 condition|(
 name|num_noprob
@@ -4704,7 +4707,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|DPRINTF
 argument_list|(
 literal|1
