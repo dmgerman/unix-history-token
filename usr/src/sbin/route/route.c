@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	4.4 82/11/14"
+literal|"@(#)route.c	4.5 82/11/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,13 +140,13 @@ name|s
 operator|=
 name|socket
 argument_list|(
+name|AF_INET
+argument_list|,
 name|SOCK_RAW
 argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-name|options
 argument_list|)
 expr_stmt|;
 if|if
@@ -158,7 +158,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"socket"
+literal|"route: socket"
 argument_list|)
 expr_stmt|;
 name|exit
