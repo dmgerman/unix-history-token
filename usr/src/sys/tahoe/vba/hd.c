@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Harris Corp.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)hd.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Harris Corp.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)hd.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1054,11 +1054,6 @@ condition|)
 name|printf
 argument_list|(
 literal|" (clearing fault)"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 name|lp
@@ -3088,12 +3083,11 @@ name|mcb
 operator|->
 name|cyl
 operator|=
-name|sn
-operator|/
-name|lp
+name|bp
 operator|->
-name|d_secpercyl
+name|b_cylin
 expr_stmt|;
+comment|/* assumes partition starts on cylinder boundary */
 name|mcb
 operator|->
 name|head
@@ -3724,7 +3718,6 @@ name|xstatus
 argument_list|)
 expr_stmt|;
 else|else
-block|{
 name|hdc
 operator|->
 name|hdc_wticks
@@ -3829,7 +3822,6 @@ name|dk
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 comment|/* if there are devices ready to transfer, start the controller. */
 if|if
 condition|(
@@ -3878,7 +3870,7 @@ name|hdioctl
 argument_list|(
 argument|dev
 argument_list|,
-argument|command
+argument|cmd
 argument_list|,
 argument|data
 argument_list|,
@@ -3894,7 +3886,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|command
+name|cmd
 decl_stmt|,
 name|flag
 decl_stmt|;
@@ -3908,14 +3900,334 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|int
+name|unit
+decl_stmt|;
+specifier|register
+name|struct
+name|dksoftc
+modifier|*
+name|dk
+decl_stmt|;
+specifier|register
+name|struct
+name|disklabel
+modifier|*
+name|lp
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|unit
+operator|=
+name|hdunit
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|dk
+operator|=
+operator|&
+name|dksoftc
+index|[
+name|unit
+index|]
+expr_stmt|;
+name|lp
+operator|=
+operator|&
+name|dk
+operator|->
+name|dk_label
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
-name|command
+name|cmd
 condition|)
 block|{
+case|case
+name|DIOCGDINFO
+case|:
+operator|*
+operator|(
+expr|struct
+name|disklabel
+operator|*
+operator|)
+name|data
+operator|=
+operator|*
+name|lp
+expr_stmt|;
+break|break;
+case|case
+name|DIOCGPART
+case|:
+operator|(
+operator|(
+expr|struct
+name|partinfo
+operator|*
+operator|)
+name|data
+operator|)
+operator|->
+name|disklab
+operator|=
+name|lp
+expr_stmt|;
+operator|(
+operator|(
+expr|struct
+name|partinfo
+operator|*
+operator|)
+name|data
+operator|)
+operator|->
+name|part
+operator|=
+operator|&
+name|lp
+operator|->
+name|d_partitions
+index|[
+name|hdpart
+argument_list|(
+name|dev
+argument_list|)
+index|]
+expr_stmt|;
+break|break;
+case|case
+name|DIOCSDINFO
+case|:
+if|if
+condition|(
+operator|(
+name|flag
+operator|&
+name|FWRITE
+operator|)
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
+name|EBADF
+expr_stmt|;
+else|else
+name|error
+operator|=
+name|setdisklabel
+argument_list|(
+name|lp
+argument_list|,
+operator|(
+expr|struct
+name|disklabel
+operator|*
+operator|)
+name|data
+argument_list|,
+operator|(
+name|dk
+operator|->
+name|dk_state
+operator|==
+name|OPENRAW
+operator|)
+condition|?
+literal|0
+else|:
+name|dk
+operator|->
+name|dk_openpart
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
+name|dk
+operator|->
+name|dk_state
+operator|==
+name|OPENRAW
+condition|)
+name|dk
+operator|->
+name|dk_state
+operator|=
+name|OPEN
+expr_stmt|;
+break|break;
+case|case
+name|DIOCWLABEL
+case|:
+if|if
+condition|(
+operator|(
+name|flag
+operator|&
+name|FWRITE
+operator|)
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
+name|EBADF
+expr_stmt|;
+else|else
+name|dk
+operator|->
+name|dk_wlabel
+operator|=
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+expr_stmt|;
+break|break;
+case|case
+name|DIOCWDINFO
+case|:
+if|if
+condition|(
+operator|(
+name|flag
+operator|&
+name|FWRITE
+operator|)
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
+name|EBADF
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|setdisklabel
+argument_list|(
+name|lp
+argument_list|,
+operator|(
+expr|struct
+name|disklabel
+operator|*
+operator|)
+name|data
+argument_list|,
+operator|(
+name|dk
+operator|->
+name|dk_state
+operator|==
+name|OPENRAW
+operator|)
+condition|?
+literal|0
+else|:
+name|dk
+operator|->
+name|dk_openpart
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|int
+name|wlab
+decl_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
+name|dk
+operator|->
+name|dk_state
+operator|==
+name|OPENRAW
+condition|)
+name|dk
+operator|->
+name|dk_state
+operator|=
+name|OPEN
+expr_stmt|;
+comment|/* simulate opening partition 0 so write succeeds */
+name|dk
+operator|->
+name|dk_openpart
+operator||=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+expr_stmt|;
+comment|/* XXX */
+name|wlab
+operator|=
+name|dk
+operator|->
+name|dk_wlabel
+expr_stmt|;
+name|dk
+operator|->
+name|dk_wlabel
+operator|=
+literal|1
+expr_stmt|;
+name|error
+operator|=
+name|writedisklabel
+argument_list|(
+name|dev
+argument_list|,
+name|hdstrategy
+argument_list|,
+name|lp
+argument_list|)
+expr_stmt|;
+name|dk
+operator|->
+name|dk_openpart
+operator|=
+name|dk
+operator|->
+name|dk_copenpart
+operator||
+name|dk
+operator|->
+name|dk_bopenpart
+expr_stmt|;
+name|dk
+operator|->
+name|dk_wlabel
+operator|=
+name|wlab
+expr_stmt|;
+block|}
+break|break;
 default|default:
 name|error
 operator|=
@@ -4450,384 +4762,13 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|"hd%d: "
+literal|"hd%d: error %lx\n"
 argument_list|,
 name|ctlr
-argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|code
-condition|)
-block|{
-define|#
-directive|define
-name|P
-parameter_list|(
-name|op
-parameter_list|,
-name|msg
-parameter_list|)
-value|case op: printf("%s\n", msg); return;
-name|P
-argument_list|(
-literal|0x0100
-argument_list|,
-literal|"Invalid command code"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0221
-argument_list|,
-literal|"Total longword count too large"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0222
-argument_list|,
-literal|"Total longword count incorrect"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0223
-argument_list|,
-literal|"Longword count of zero not permitted"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0231
-argument_list|,
-literal|"Too many data chained items"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0232
-argument_list|,
-literal|"Data chain not permitted for this command"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0341
-argument_list|,
-literal|"Maximum logical cylinder address exceeded"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0342
-argument_list|,
-literal|"Maximum logical head address exceeded"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0343
-argument_list|,
-literal|"Maximum logical sectoraddress exceeded"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0351
-argument_list|,
-literal|"Maximum physical cylinder address exceeded"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0352
-argument_list|,
-literal|"Maximum physical head address exceeded"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0353
-argument_list|,
-literal|"Maximum physical sectoraddress exceeded"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0621
-argument_list|,
-literal|"Control store PROM revision incorrect"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0642
-argument_list|,
-literal|"Power fail detected"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0721
-argument_list|,
-literal|"Sector count test failed"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0731
-argument_list|,
-literal|"First access test failed"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0811
-argument_list|,
-literal|"Drive not online"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0812
-argument_list|,
-literal|"Drive not ready"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0813
-argument_list|,
-literal|"Drive seek error"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0814
-argument_list|,
-literal|"Drive faulted"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0815
-argument_list|,
-literal|"Drive reserved"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0816
-argument_list|,
-literal|"Drive write protected"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0841
-argument_list|,
-literal|"Timeout waiting for drive to go on-cylinder"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0851
-argument_list|,
-literal|"Timeout waiting for a specific sector address"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0921
-argument_list|,
-literal|"Correctable ECC error"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0A11
-argument_list|,
-literal|"Attempt to spill-off of physical boundary"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0A21
-argument_list|,
-literal|"Attempt to spill-off of logical boundary"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0A41
-argument_list|,
-literal|"Unknown DDC status (PSREAD)"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0A42
-argument_list|,
-literal|"Unknown DDC status (PSWRITE)"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0A51
-argument_list|,
-literal|"Track relocation limit exceeded"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0C00
-argument_list|,
-literal|"HFASM"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0C01
-argument_list|,
-literal|"data field error"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0C02
-argument_list|,
-literal|"sector not found"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0C03
-argument_list|,
-literal|"sector overrun"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0C04
-argument_list|,
-literal|"no data sync"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0C05
-argument_list|,
-literal|"FIFO data lost"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0C06
-argument_list|,
-literal|"correction failed"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0C07
-argument_list|,
-literal|"late interlock"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0D21
-argument_list|,
-literal|"Output data buffer parity error"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0D31
-argument_list|,
-literal|"Input data transfer FIFO indicates overflow"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0D32
-argument_list|,
-literal|"Input data buffer FIFO indicates overflow"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0D41
-argument_list|,
-literal|"Longword count != 0 indicates underflow"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0D42
-argument_list|,
-literal|"Output data buffer FIFO indicates underflow"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0E01
-argument_list|,
-literal|"FT timeout -- DDC interrupt"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0E02
-argument_list|,
-literal|"RDDB timeout -- IDTFINRDY -- and DDC interrupt"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0E03
-argument_list|,
-literal|"RDDB timeout -- DDC interrupt"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0E04
-argument_list|,
-literal|"RDDB timeout -- writing ZERO's to IDTF"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0E05
-argument_list|,
-literal|"RDDB timeout -- IDTFINRDY -- and IDBFEMPTY+"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0E06
-argument_list|,
-literal|"WRDB timeout -- ODTFOUTRDT -- and DDC interrupt"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0E07
-argument_list|,
-literal|"WRDB timeout -- ODTFOUTRDT -- and DDC interrupt"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0E08
-argument_list|,
-literal|"WRDB timeout -- DDC interrupt"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0E09
-argument_list|,
-literal|"WRDB timeout -- ODBFFULL+ and DDC interrupt"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0E0A
-argument_list|,
-literal|"VLT timeout -- DDC interrupt"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0E0B
-argument_list|,
-literal|"WRBA timeout -- ODTFOUTRDY-"
-argument_list|)
-name|P
-argument_list|(
-literal|0x0F00
-argument_list|,
-literal|"Error log full"
-argument_list|)
-default|default:
-if|if
-condition|(
-name|code
-operator|>=
-literal|0x0B00
-operator|&&
-name|code
-operator|<=
-literal|0x0BFF
-condition|)
-name|printf
-argument_list|(
-literal|"Unknown DDC status type 0x%x."
-argument_list|,
-name|code
-operator|&
-literal|0xff
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"Unknown error %lx\n"
 argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
