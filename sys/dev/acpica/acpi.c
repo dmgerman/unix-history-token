@@ -3458,6 +3458,23 @@ argument_list|,
 name|handle
 argument_list|)
 expr_stmt|;
+comment|/* 	     * Check that the device is present.  If it's not present, 	     * leave it disabled (so that we have a device_t attached to 	     * the handle, but we don't probe it). 	     */
+if|if
+condition|(
+operator|!
+name|acpi_DeviceIsPresent
+argument_list|(
+name|child
+argument_list|)
+condition|)
+block|{
+name|device_disable
+argument_list|(
+name|child
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 comment|/* 	     * Get the device's resource settings and attach them. 	     * Note that if the device has _PRS but no _CRS, we need 	     * to decide when it's appropriate to try to configure the 	     * device.  Ignore the return value here; it's OK for the 	     * device not to have any resources. 	     */
 name|acpi_parse_resources
 argument_list|(
