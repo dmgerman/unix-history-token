@@ -1290,7 +1290,7 @@ argument_list|(
 name|KTR_BUSDMA
 argument_list|,
 literal|"bus_dmamem_alloc: tag %p tag "
-literal|"flags %0x%x error Md"
+literal|"flags 0x%x error %d"
 argument_list|,
 name|dmat
 argument_list|,
