@@ -3488,8 +3488,14 @@ argument_list|,
 name|cred
 argument_list|,
 name|td
+operator|!=
+name|NULL
+condition|?
+name|td
 operator|->
 name|td_proc
+else|:
+name|NULL
 argument_list|,
 operator|&
 name|str
