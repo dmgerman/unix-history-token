@@ -302,6 +302,10 @@ literal|2
 index|]
 decl_stmt|;
 name|struct
+name|timeval
+name|tv
+decl_stmt|;
+name|struct
 name|clockinfo
 name|clockinfo
 decl_stmt|;
@@ -853,6 +857,35 @@ operator|->
 name|priority_mutex_count
 operator|=
 literal|0
+expr_stmt|;
+comment|/* Initialize last active time to now: */
+name|gettimeofday
+argument_list|(
+operator|&
+name|tv
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|_thread_initial
+operator|->
+name|last_active
+operator|.
+name|tv_sec
+operator|=
+name|tv
+operator|.
+name|tv_sec
+expr_stmt|;
+name|_thread_initial
+operator|->
+name|last_active
+operator|.
+name|tv_usec
+operator|=
+name|tv
+operator|.
+name|tv_usec
 expr_stmt|;
 comment|/* Initialise the rest of the fields: */
 name|_thread_initial
