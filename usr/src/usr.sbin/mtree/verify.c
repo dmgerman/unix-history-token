@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)verify.c	5.11 (Berkeley) %G%"
+literal|"@(#)verify.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,12 @@ begin_include
 include|#
 directive|include
 file|<fts.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fnmatch.h>
 end_include
 
 begin_include
@@ -408,6 +414,7 @@ name|flags
 operator|&
 name|F_MAGIC
 operator|&&
+operator|!
 name|fnmatch
 argument_list|(
 name|ep
@@ -419,8 +426,6 @@ operator|->
 name|fts_name
 argument_list|,
 name|FNM_PATHNAME
-operator||
-name|FNM_QUOTE
 argument_list|)
 operator|||
 operator|!
