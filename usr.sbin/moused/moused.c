@@ -548,18 +548,12 @@ block|,
 name|MOUSE_IF_SYSMOUSE
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|__i386__
 block|{
 literal|"usb"
 block|,
 name|MOUSE_IF_USB
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* __i386__ */
 block|{
 name|NULL
 block|,
@@ -3408,6 +3402,8 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/*  mouse event  */
+if|if
+condition|(
 name|read
 argument_list|(
 name|rodent
@@ -3419,7 +3415,13 @@ name|b
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+condition|)
+empty_stmt|;
+return|return;
+comment|/* file seems to be closed on us */
 if|if
 condition|(
 name|r_protocol
