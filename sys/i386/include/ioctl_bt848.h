@@ -788,5 +788,145 @@ name|METEOR_DEV2
 value|0x00004000
 end_define
 
+begin_comment
+comment|/*  * right now I don't know were to put these, but as they are suppose to be  * a part of a common video capture interface, these should be relocated to  * another place.  Probably most of the METEOR_xxx defines need to be  * renamed and moved to a common header  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|METEOR_PIXTYPE_RGB
+block|,
+name|METEOR_PIXTYPE_YUV
+block|}
+name|METEOR_PIXTYPE
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|meteor_pixfmt
+block|{
+name|u_int
+name|index
+decl_stmt|;
+comment|/* Index in supported pixfmt list     */
+name|METEOR_PIXTYPE
+name|type
+decl_stmt|;
+comment|/* What's the board gonna feed us     */
+name|u_int
+name|Bpp
+decl_stmt|;
+comment|/* Bytes per pixel                    */
+name|u_long
+name|masks
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* R,G,B or Y,U,V masks, respectively */
+name|unsigned
+name|swap_bytes
+range|:
+literal|1
+decl_stmt|;
+comment|/* Bytes  swapped within shorts       */
+name|unsigned
+name|swap_shorts
+range|:
+literal|1
+decl_stmt|;
+comment|/* Shorts swapped within longs        */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|bktr_clip
+block|{
+name|int
+name|x_min
+decl_stmt|;
+name|int
+name|x_max
+decl_stmt|;
+name|int
+name|y_min
+decl_stmt|;
+name|int
+name|y_max
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|BT848_MAX_CLIP_NODE
+value|100
+end_define
+
+begin_struct
+struct|struct
+name|_bktr_clip
+block|{
+name|struct
+name|bktr_clip
+name|x
+index|[
+name|BT848_MAX_CLIP_NODE
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * I'm using METEOR_xxx just because that will be common to other interface  * and less of a surprise  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORSACTPIXFMT
+value|_IOW('x', 64, int )
+end_define
+
+begin_define
+define|#
+directive|define
+name|METEORGACTPIXFMT
+value|_IOR('x', 64, int )
+end_define
+
+begin_define
+define|#
+directive|define
+name|METEORGSUPPIXFMT
+value|_IOWR('x', 65, struct meteor_pixfmt)
+end_define
+
+begin_comment
+comment|/* set clip list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848SCLIP
+value|_IOW('x', 66, struct _bktr_clip )
+end_define
+
+begin_define
+define|#
+directive|define
+name|BT848GCLIP
+value|_IOR('x', 66, struct _bktr_clip )
+end_define
+
 end_unit
 
