@@ -656,6 +656,24 @@ value|0x64
 end_define
 
 begin_comment
+comment|/* PCI MSI. ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_PCIE_CAPID_REG
+value|0xD0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_PCIE_CAPID
+value|0x10
+end_define
+
+begin_comment
 comment|/*  * PCI registers specific to the BCM570x family.  */
 end_comment
 
@@ -1026,6 +1044,20 @@ name|BGE_CHIPID_BCM5705_A3
 value|0x30030000
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_CHIPID_BCM5750_A0
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPID_BCM5750_A1
+value|0x40010000
+end_define
+
 begin_comment
 comment|/* shorthand one */
 end_comment
@@ -1073,6 +1105,13 @@ define|#
 directive|define
 name|BGE_ASICREV_BCM5705
 value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5750
+value|0x04
 end_define
 
 begin_comment
@@ -10450,6 +10489,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCOM_DEVICEID_BCM5750
+value|0x1676
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5750M
+value|0x167C
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5751
+value|0x1677
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCOM_DEVICEID_BCM5782
 value|0x1696
 end_define
@@ -11916,6 +11976,9 @@ name|bge_chiprev
 decl_stmt|;
 name|u_int8_t
 name|bge_no_3_led
+decl_stmt|;
+name|u_int8_t
+name|bge_pcie
 decl_stmt|;
 name|struct
 name|bge_ring_data

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.4.2.13 2003/07/22 02:12:55 ps Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.4.2.14 2003/10/14 18:22:42 wilko Exp   */
 end_comment
 
 begin_comment
@@ -529,6 +529,20 @@ define|#
 directive|define
 name|MII_STR_xxBROADCOM_BCM5705
 value|"BCM5705 10/100/1000baseTX PHY"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_xxBROADCOM_BCM5750
+value|0x0018
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_xxBROADCOM_BCM5750
+value|"BCM5750 10/100/1000baseTX PHY"
 end_define
 
 begin_comment
