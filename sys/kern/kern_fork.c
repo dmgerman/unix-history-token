@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_fork.c	8.6 (Berkeley) 4/8/94  * $Id: kern_fork.c,v 1.23 1996/07/31 09:26:34 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_fork.c	8.6 (Berkeley) 4/8/94  * $Id: kern_fork.c,v 1.24 1996/08/19 02:28:24 julian Exp $  */
 end_comment
 
 begin_include
@@ -147,7 +147,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * callout list for things to do at fork time  */
+comment|/*  * These are the stuctures used to create a callout list for things to do  * when forking a process  */
 end_comment
 
 begin_typedef
@@ -410,9 +410,11 @@ literal|0
 decl_stmt|;
 name|fle_p
 name|ep
-init|=
-name|fork_list
 decl_stmt|;
+name|ep
+operator|=
+name|fork_list
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1244,7 +1246,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Both processes are set up,  	 * check if any LKMs want to adjust anything 	 * What if they have an error? XXX 	 */
+comment|/* 	 * Both processes are set up, now check if any LKMs want 	 * to adjust anything. 	 *   What if they have an error? XXX 	 */
 while|while
 condition|(
 name|ep
@@ -1349,7 +1351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************  * general routines to handle adding/deleting items on the  * fork callout list  *****  * Take the arguments given and put them onto the fork callout list.  * However first make sure that it's not already there.  * returns 0 on success.  */
+comment|/*  * The next two functionms are general routines to handle adding/deleting  * items on the fork callout list.  *  * at_fork():  * Take the arguments given and put them onto the fork callout list,  * However first make sure that it's not already there.  * Returns 0 on success or a standard error number.  */
 end_comment
 
 begin_function
@@ -1363,6 +1365,7 @@ block|{
 name|fle_p
 name|ep
 decl_stmt|;
+comment|/* let the programmer know if he's been stupid */
 if|if
 condition|(
 name|rm_at_fork
@@ -1370,13 +1373,11 @@ argument_list|(
 name|function
 argument_list|)
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"fork callout entry already present\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|ep
 operator|=
 name|malloc
@@ -1394,11 +1395,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ep
+operator|==
+name|NULL
 condition|)
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 name|ep
 operator|->
@@ -1417,13 +1421,15 @@ operator|=
 name|ep
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Scan the exit callout list for the given items and remove them.  * Returns the number of items removed.  */
+comment|/*  * Scan the exit callout list for the given items and remove them.  * Returns the number of items removed.  * Theoretically this value can only be 0 or 1.  */
 end_comment
 
 begin_function
@@ -1442,9 +1448,11 @@ name|ep
 decl_stmt|;
 name|int
 name|count
-init|=
-literal|0
 decl_stmt|;
+name|count
+operator|=
+literal|0
+expr_stmt|;
 name|epp
 operator|=
 operator|&
@@ -1504,7 +1512,9 @@ name|epp
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|count
+operator|)
 return|;
 block|}
 end_function
