@@ -678,10 +678,6 @@ modifier|*
 name|cmd_save
 decl_stmt|;
 comment|/* saved cmd */
-name|Buffer
-modifier|*
-name|buf
-decl_stmt|;
 comment|/* 	 * Avoid clobbered variable warnings by forcing the compiler 	 * to ``unregister'' variables 	 */
 if|#
 directive|if
@@ -735,8 +731,10 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
-name|buf
+name|cmdStart
 operator|=
+name|Buf_Peel
+argument_list|(
 name|Var_Subst
 argument_list|(
 name|NULL
@@ -747,21 +745,6 @@ name|gn
 argument_list|,
 name|FALSE
 argument_list|)
-expr_stmt|;
-name|cmdStart
-operator|=
-name|Buf_GetAll
-argument_list|(
-name|buf
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|Buf_Destroy
-argument_list|(
-name|buf
-argument_list|,
-name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * brk_string will return an argv with a NULL in av[0], thus causing 	 * execvp to choke and die horribly. Besides, how can we execute a null 	 * command? In any case, we warn the user that the command expanded to 	 * nothing (is this the right thing to do?). 	 */
