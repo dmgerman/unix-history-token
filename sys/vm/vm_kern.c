@@ -1568,6 +1568,12 @@ argument_list|,
 name|end
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|system_map
+operator|=
+literal|1
+expr_stmt|;
 name|vm_map_lock
 argument_list|(
 name|m
@@ -1577,12 +1583,6 @@ comment|/* N.B.: cannot use kgdb to debug, starting with this assignment ... */
 name|kernel_map
 operator|=
 name|m
-expr_stmt|;
-name|kernel_map
-operator|->
-name|system_map
-operator|=
-literal|1
 expr_stmt|;
 operator|(
 name|void
@@ -1594,7 +1594,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|(
-name|vm_offset_t
+name|vm_ooffset_t
 operator|)
 literal|0
 argument_list|,
