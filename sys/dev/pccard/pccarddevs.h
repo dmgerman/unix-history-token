@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.32 2002/04/11 21:18:17 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.33 2002/07/17 04:01:57 imp Exp   */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/* $NetBSD: pcmciadevs,v 1.163 2002/03/04 16:41:50 martin Exp $ */
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: pcmciadevs,v 1.85 2002/03/29 18:54:07 millert Exp $ */
+comment|/* $OpenBSD: pcmciadevs,v 1.93 2002/06/21 08:31:10 henning Exp $ */
 end_comment
 
 begin_comment
@@ -32,6 +32,17 @@ end_define
 
 begin_comment
 comment|/* Fujitsu Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_NETGEAR2
+value|0x000b
+end_define
+
+begin_comment
+comment|/* Netgear */
 end_comment
 
 begin_define
@@ -318,6 +329,17 @@ end_define
 
 begin_comment
 comment|/* Lucent Technologies */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_GEMPLUS
+value|0x0157
+end_define
+
+begin_comment
+comment|/* Gemplus */
 end_comment
 
 begin_define
@@ -1701,6 +1723,27 @@ name|PCMCIA_STR_ELSA_XI800_IEEE
 value|"XI800 CF Wireless LAN"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_ELSA_XI325_IEEE
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_ELSA_XI325_IEEE
+value|0x0005
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_ELSA_XI325_IEEE
+value|"XI325 Wireless LAN"
+end_define
+
 begin_comment
 comment|/* EMTAC */
 end_comment
@@ -1841,6 +1884,31 @@ define|#
 directive|define
 name|PCMCIA_STR_FUJITSU_LA501
 value|"Fujitsu Towa LA501 Ethernet"
+end_define
+
+begin_comment
+comment|/* Gemplus */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_GEMPLUS_GPR400
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_GEMPLUS_GPR400
+value|0x3004
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_GEMPLUS_GPR400
+value|"GPR400 Smartcard Reader"
 end_define
 
 begin_comment
@@ -2869,6 +2937,27 @@ name|PCMCIA_STR_NETGEAR_FA411
 value|"Netgear FA411"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_NETGEAR2_MA401RA
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NETGEAR2_MA401RA
+value|0x7300
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NETGEAR2_MA401RA
+value|"Netgear MA401RA"
+end_define
+
 begin_comment
 comment|/* National Instruments */
 end_comment
@@ -2897,6 +2986,27 @@ end_define
 begin_comment
 comment|/* Nokia Products */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_NOKIA_C110_WLAN
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NOKIA_C110_WLAN
+value|0x1110
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NOKIA_C110_WLAN
+value|"Nokia C110/C111"
+end_define
 
 begin_define
 define|#
