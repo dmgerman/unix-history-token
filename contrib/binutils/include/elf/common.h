@@ -224,7 +224,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ELFOSABI_SYSV
+name|ELFOSABI_NONE
 value|0
 end_define
 

@@ -5147,7 +5147,7 @@ name|printf
 argument_list|(
 name|_
 argument_list|(
-literal|"Copyright 1997 Free Software Foundation, Inc.\n"
+literal|"Copyright 2000 Free Software Foundation, Inc.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;

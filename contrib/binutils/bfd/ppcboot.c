@@ -160,6 +160,15 @@ index|]
 decl_stmt|;
 comment|/* reserved */
 block|}
+ifdef|#
+directive|ifdef
+name|__GNUC__
+name|__attribute__
+typedef|((
+name|packed
+typedef|))
+endif|#
+directive|endif
 name|ppcboot_hdr_t
 typedef|;
 end_typedef
