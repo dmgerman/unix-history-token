@@ -188,14 +188,6 @@ literal|"maplist"
 block|}
 block|,
 index|[
-name|DRM_MEM_VMAS
-index|]
-operator|=
-block|{
-literal|"vmalist"
-block|}
-block|,
-index|[
 name|DRM_MEM_BUFS
 index|]
 operator|=

@@ -2194,7 +2194,7 @@ argument_list|)
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"ring rptr: offset=0x%08x handle=0x%08lx\n"
+literal|"ring rptr: offset=0x%08lx handle=0x%08lx\n"
 argument_list|,
 name|entry
 operator|->
@@ -3634,6 +3634,14 @@ condition|)
 block|{
 endif|#
 directive|endif
+if|if
+condition|(
+name|dev_priv
+operator|->
+name|cce_ring
+operator|!=
+name|NULL
+condition|)
 name|DRM_IOREMAPFREE
 argument_list|(
 name|dev_priv
@@ -3641,6 +3649,14 @@ operator|->
 name|cce_ring
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dev_priv
+operator|->
+name|ring_rptr
+operator|!=
+name|NULL
+condition|)
 name|DRM_IOREMAPFREE
 argument_list|(
 name|dev_priv
@@ -3648,6 +3664,14 @@ operator|->
 name|ring_rptr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dev_priv
+operator|->
+name|buffers
+operator|!=
+name|NULL
+condition|)
 name|DRM_IOREMAPFREE
 argument_list|(
 name|dev_priv
@@ -3814,6 +3838,8 @@ expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 if|if
@@ -3886,6 +3912,8 @@ expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL
@@ -3988,6 +4016,8 @@ expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 if|if
@@ -4053,6 +4083,8 @@ expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 if|if
@@ -4094,6 +4126,8 @@ expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 return|return
@@ -4261,6 +4295,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL
@@ -4419,7 +4455,7 @@ if|if
 condition|(
 name|buf
 operator|->
-name|pid
+name|filp
 operator|==
 literal|0
 condition|)
@@ -4675,6 +4711,9 @@ specifier|static
 name|int
 name|r128_cce_get_buffers
 parameter_list|(
+name|DRMFILE
+name|filp
+parameter_list|,
 name|drm_device_t
 modifier|*
 name|dev
@@ -4729,9 +4768,9 @@ argument_list|)
 return|;
 name|buf
 operator|->
-name|pid
+name|filp
 operator|=
-name|DRM_CURRENTPID
+name|filp
 expr_stmt|;
 if|if
 condition|(
@@ -4835,6 +4874,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL
@@ -4938,6 +4979,8 @@ name|ret
 operator|=
 name|r128_cce_get_buffers
 argument_list|(
+name|filp
+argument_list|,
 name|dev
 argument_list|,
 operator|&

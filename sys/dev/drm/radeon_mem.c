@@ -55,8 +55,8 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
-name|int
-name|pid
+name|DRMFILE
+name|filp
 parameter_list|)
 block|{
 comment|/* Maybe cut off the start of an existing block */
@@ -115,7 +115,7 @@ operator|)
 expr_stmt|;
 name|newblock
 operator|->
-name|pid
+name|filp
 operator|=
 literal|0
 expr_stmt|;
@@ -212,7 +212,7 @@ name|size
 expr_stmt|;
 name|newblock
 operator|->
-name|pid
+name|filp
 operator|=
 literal|0
 expr_stmt|;
@@ -256,9 +256,9 @@ label|:
 comment|/* Our block is in the middle */
 name|p
 operator|->
-name|pid
+name|filp
 operator|=
-name|pid
+name|filp
 expr_stmt|;
 return|return
 name|p
@@ -284,8 +284,8 @@ parameter_list|,
 name|int
 name|align2
 parameter_list|,
-name|int
-name|pid
+name|DRMFILE
+name|filp
 parameter_list|)
 block|{
 name|struct
@@ -341,7 +341,7 @@ if|if
 condition|(
 name|p
 operator|->
-name|pid
+name|filp
 operator|==
 literal|0
 operator|&&
@@ -366,7 +366,7 @@ name|start
 argument_list|,
 name|size
 argument_list|,
-name|pid
+name|filp
 argument_list|)
 return|;
 block|}
@@ -445,18 +445,18 @@ parameter_list|)
 block|{
 name|p
 operator|->
-name|pid
+name|filp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Assumes a single contiguous range.  Needs a special pid in 	 * 'heap' to stop it being subsumed. 	 */
+comment|/* Assumes a single contiguous range.  Needs a special filp in 	 * 'heap' to stop it being subsumed. 	 */
 if|if
 condition|(
 name|p
 operator|->
 name|next
 operator|->
-name|pid
+name|filp
 operator|==
 literal|0
 condition|)
@@ -512,7 +512,7 @@ name|p
 operator|->
 name|prev
 operator|->
-name|pid
+name|filp
 operator|==
 literal|0
 condition|)
@@ -660,7 +660,7 @@ name|size
 expr_stmt|;
 name|blocks
 operator|->
-name|pid
+name|filp
 operator|=
 literal|0
 expr_stmt|;
@@ -695,8 +695,11 @@ operator|*
 name|heap
 operator|)
 operator|->
-name|pid
+name|filp
 operator|=
+operator|(
+name|DRMFILE
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -723,24 +726,22 @@ block|}
 end_function
 
 begin_comment
-comment|/* Free all blocks associated with the releasing pid.  */
+comment|/* Free all blocks associated with the releasing file.  */
 end_comment
 
 begin_function
 name|void
 name|radeon_mem_release
 parameter_list|(
+name|DRMFILE
+name|filp
+parameter_list|,
 name|struct
 name|mem_block
 modifier|*
 name|heap
 parameter_list|)
 block|{
-name|int
-name|pid
-init|=
-name|DRM_CURRENTPID
-decl_stmt|;
 name|struct
 name|mem_block
 modifier|*
@@ -780,18 +781,18 @@ if|if
 condition|(
 name|p
 operator|->
-name|pid
+name|filp
 operator|==
-name|pid
+name|filp
 condition|)
 name|p
 operator|->
-name|pid
+name|filp
 operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Assumes a single contiguous range.  Needs a special pid in 	 * 'heap' to stop it being subsumed. 	 */
+comment|/* Assumes a single contiguous range.  Needs a special filp in 	 * 'heap' to stop it being subsumed. 	 */
 for|for
 control|(
 name|p
@@ -815,7 +816,7 @@ while|while
 condition|(
 name|p
 operator|->
-name|pid
+name|filp
 operator|==
 literal|0
 operator|&&
@@ -823,7 +824,7 @@ name|p
 operator|->
 name|next
 operator|->
-name|pid
+name|filp
 operator|==
 literal|0
 condition|)
@@ -1140,7 +1141,7 @@ name|alloc
 operator|.
 name|alignment
 argument_list|,
-name|DRM_CURRENTPID
+name|filp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1310,9 +1311,9 @@ if|if
 condition|(
 name|block
 operator|->
-name|pid
+name|filp
 operator|!=
-name|DRM_CURRENTPID
+name|filp
 condition|)
 return|return
 name|DRM_ERR

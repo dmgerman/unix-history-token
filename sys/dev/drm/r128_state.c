@@ -3515,6 +3515,9 @@ specifier|static
 name|int
 name|r128_cce_dispatch_blit
 parameter_list|(
+name|DRMFILE
+name|filp
+parameter_list|,
 name|drm_device_t
 modifier|*
 name|dev
@@ -3670,20 +3673,20 @@ if|if
 condition|(
 name|buf
 operator|->
-name|pid
+name|filp
 operator|!=
-name|DRM_CURRENTPID
+name|filp
 condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"process %d using buffer owned by %d\n"
+literal|"process %d using buffer owned by %p\n"
 argument_list|,
 name|DRM_CURRENTPID
 argument_list|,
 name|buf
 operator|->
-name|pid
+name|filp
 argument_list|)
 expr_stmt|;
 return|return
@@ -5733,6 +5736,8 @@ expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL
@@ -5830,6 +5835,8 @@ expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|RING_SPACE_TEST_WITH_RETURN
@@ -5930,6 +5937,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 if|if
@@ -6088,20 +6097,20 @@ if|if
 condition|(
 name|buf
 operator|->
-name|pid
+name|filp
 operator|!=
-name|DRM_CURRENTPID
+name|filp
 condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"process %d using buffer owned by %d\n"
+literal|"process %d using buffer owned by %p\n"
 argument_list|,
 name|DRM_CURRENTPID
 argument_list|,
 name|buf
 operator|->
-name|pid
+name|filp
 argument_list|)
 expr_stmt|;
 return|return
@@ -6213,6 +6222,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 if|if
@@ -6375,20 +6386,20 @@ if|if
 condition|(
 name|buf
 operator|->
-name|pid
+name|filp
 operator|!=
-name|DRM_CURRENTPID
+name|filp
 condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"process %d using buffer owned by %d\n"
+literal|"process %d using buffer owned by %p\n"
 argument_list|,
 name|DRM_CURRENTPID
 argument_list|,
 name|buf
 operator|->
-name|pid
+name|filp
 argument_list|)
 expr_stmt|;
 return|return
@@ -6578,6 +6589,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL
@@ -6659,6 +6672,8 @@ expr_stmt|;
 return|return
 name|r128_cce_dispatch_blit
 argument_list|(
+name|filp
+argument_list|,
 name|dev
 argument_list|,
 operator|&
@@ -6691,6 +6706,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL
@@ -6808,6 +6825,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL
@@ -6914,6 +6933,8 @@ directive|endif
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 if|if
@@ -7033,20 +7054,20 @@ if|if
 condition|(
 name|buf
 operator|->
-name|pid
+name|filp
 operator|!=
-name|DRM_CURRENTPID
+name|filp
 condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"process %d using buffer owned by %d\n"
+literal|"process %d using buffer owned by %p\n"
 argument_list|,
 name|DRM_CURRENTPID
 argument_list|,
 name|buf
 operator|->
-name|pid
+name|filp
 argument_list|)
 expr_stmt|;
 return|return

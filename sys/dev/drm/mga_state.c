@@ -3910,6 +3910,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL
@@ -3998,6 +4000,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 if|if
@@ -4078,6 +4082,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL
@@ -4258,6 +4264,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL
@@ -4443,6 +4451,8 @@ expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL
@@ -4607,6 +4617,8 @@ expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL

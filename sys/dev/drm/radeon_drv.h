@@ -20,30 +20,22 @@ define|#
 directive|define
 name|GET_RING_HEAD
 parameter_list|(
-name|ring
+name|dev_priv
 parameter_list|)
-value|DRM_READ32(  (ring)->ring_rptr, 0 )
+value|DRM_READ32(  (dev_priv)->ring_rptr, 0 )
 end_define
-
-begin_comment
-comment|/* (ring)->head */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|SET_RING_HEAD
 parameter_list|(
-name|ring
+name|dev_priv
 parameter_list|,
 name|val
 parameter_list|)
-value|DRM_WRITE32( (ring)->ring_rptr, 0, (val) )
+value|DRM_WRITE32( (dev_priv)->ring_rptr, 0, (val) )
 end_define
-
-begin_comment
-comment|/* (ring)->head */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -92,11 +84,6 @@ decl_stmt|;
 name|int
 name|size_l2qw
 decl_stmt|;
-specifier|volatile
-name|u32
-modifier|*
-name|head
-decl_stmt|;
 name|u32
 name|tail
 decl_stmt|;
@@ -108,10 +95,6 @@ name|space
 decl_stmt|;
 name|int
 name|high_mark
-decl_stmt|;
-name|drm_local_map_t
-modifier|*
-name|ring_rptr
 decl_stmt|;
 block|}
 name|drm_radeon_ring_buffer_t
@@ -157,10 +140,10 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|;
-name|int
-name|pid
+name|DRMFILE
+name|filp
 decl_stmt|;
-comment|/* 0: free, -1: heap, other: real pids */
+comment|/* 0: free, -1: heap, other: real files */
 block|}
 struct|;
 end_struct
@@ -307,6 +290,30 @@ name|depth_pitch_offset
 decl_stmt|;
 name|drm_radeon_depth_clear_t
 name|depth_clear
+decl_stmt|;
+name|unsigned
+name|long
+name|fb_offset
+decl_stmt|;
+name|unsigned
+name|long
+name|mmio_offset
+decl_stmt|;
+name|unsigned
+name|long
+name|ring_offset
+decl_stmt|;
+name|unsigned
+name|long
+name|ring_rptr_offset
+decl_stmt|;
+name|unsigned
+name|long
+name|buffers_offset
+decl_stmt|;
+name|unsigned
+name|long
+name|agp_textures_offset
 decl_stmt|;
 name|drm_local_map_t
 modifier|*
@@ -694,6 +701,9 @@ specifier|extern
 name|void
 name|radeon_mem_release
 parameter_list|(
+name|DRMFILE
+name|filp
+parameter_list|,
 name|struct
 name|mem_block
 modifier|*
@@ -4071,17 +4081,6 @@ begin_comment
 comment|/* ================================================================  * Misc helper macros  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LOCK_TEST_WITH_RETURN
-parameter_list|(
-name|dev
-parameter_list|)
-define|\
-value|do {									\ 	if ( !_DRM_LOCK_IS_HELD( dev->lock.hw_lock->lock ) ||		\ 	     dev->lock.pid != DRM_CURRENTPID ) {			\ 		DRM_ERROR( "%s called without lock held\n", __FUNCTION__ );	\ 		return DRM_ERR(EINVAL);				\ 	}								\ } while (0)
-end_define
-
 begin_comment
 comment|/* Perfbox functionality only.    */
 end_comment
@@ -4094,7 +4093,7 @@ parameter_list|(
 name|dev_priv
 parameter_list|)
 define|\
-value|do {									\ 	if (!(dev_priv->stats.boxes& RADEON_BOX_DMA_IDLE)) {		\ 		u32 head = GET_RING_HEAD(&dev_priv->ring);		\ 		if (head == dev_priv->ring.tail)			\ 			dev_priv->stats.boxes |= RADEON_BOX_DMA_IDLE;	\ 	}								\ } while (0)
+value|do {									\ 	if (!(dev_priv->stats.boxes& RADEON_BOX_DMA_IDLE)) {		\ 		u32 head = GET_RING_HEAD( dev_priv );			\ 		if (head == dev_priv->ring.tail)			\ 			dev_priv->stats.boxes |= RADEON_BOX_DMA_IDLE;	\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -4181,7 +4180,7 @@ name|COMMIT_RING
 parameter_list|()
 value|do {						\
 comment|/* Flush writes to ring */
-value|\ 	DRM_READMEMORYBARRIER(dev_priv->mmio);					\ 	GET_RING_HEAD(&dev_priv->ring );				\ 	RADEON_WRITE( RADEON_CP_RB_WPTR, dev_priv->ring.tail );		\
+value|\ 	DRM_READMEMORYBARRIER( dev_priv->mmio );			\ 	GET_RING_HEAD( dev_priv );					\ 	RADEON_WRITE( RADEON_CP_RB_WPTR, dev_priv->ring.tail );		\
 comment|/* read from PCI bus to ensure correct posting */
 value|\ 	RADEON_READ( RADEON_CP_RB_RPTR );				\ } while (0)
 end_define

@@ -2404,6 +2404,38 @@ begin_comment
 comment|/* card offset of agp base */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RADEON_PARAM_REGISTER_HANDLE
+value|7
+end_define
+
+begin_comment
+comment|/* for drmMap() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_PARAM_STATUS_HANDLE
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_PARAM_SAREA_HANDLE
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_PARAM_AGP_TEX_HANDLE
+value|10
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct

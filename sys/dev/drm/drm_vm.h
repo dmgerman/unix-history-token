@@ -280,7 +280,6 @@ name|drm_file_t
 modifier|*
 name|priv
 decl_stmt|;
-comment|/*	DRM_DEBUG("offset = 0x%x\n", offset);*/
 name|priv
 operator|=
 name|DRM

@@ -150,12 +150,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dev/drm/drm_init.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"dev/drm/drm_ioctl.h"
 end_include
 

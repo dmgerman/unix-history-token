@@ -4938,6 +4938,9 @@ specifier|static
 name|int
 name|radeon_cp_dispatch_texture
 parameter_list|(
+name|DRMFILE
+name|filp
+parameter_list|,
 name|drm_device_t
 modifier|*
 name|dev
@@ -5583,9 +5586,9 @@ block|}
 block|}
 name|buf
 operator|->
-name|pid
+name|filp
 operator|=
-name|DRM_CURRENTPID
+name|filp
 expr_stmt|;
 name|buf
 operator|->
@@ -5814,6 +5817,8 @@ expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL
@@ -6088,6 +6093,8 @@ expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|RING_SPACE_TEST_WITH_RETURN
@@ -6154,6 +6161,8 @@ expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|RING_SPACE_TEST_WITH_RETURN
@@ -6243,6 +6252,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 if|if
@@ -6395,20 +6406,20 @@ if|if
 condition|(
 name|buf
 operator|->
-name|pid
+name|filp
 operator|!=
-name|DRM_CURRENTPID
+name|filp
 condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"process %d using buffer owned by %d\n"
+literal|"process %d using buffer owned by %p\n"
 argument_list|,
 name|DRM_CURRENTPID
 argument_list|,
 name|buf
 operator|->
-name|pid
+name|filp
 argument_list|)
 expr_stmt|;
 return|return
@@ -6639,6 +6650,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 if|if
@@ -6795,20 +6808,20 @@ if|if
 condition|(
 name|buf
 operator|->
-name|pid
+name|filp
 operator|!=
-name|DRM_CURRENTPID
+name|filp
 condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"process %d using buffer owned by %d\n"
+literal|"process %d using buffer owned by %p\n"
 argument_list|,
 name|DRM_CURRENTPID
 argument_list|,
 name|buf
 operator|->
-name|pid
+name|filp
 argument_list|)
 expr_stmt|;
 return|return
@@ -7096,6 +7109,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL
@@ -7176,6 +7191,8 @@ name|ret
 operator|=
 name|radeon_cp_dispatch_texture
 argument_list|(
+name|filp
+argument_list|,
 name|dev
 argument_list|,
 operator|&
@@ -7223,6 +7240,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 name|DRM_COPY_FROM_USER_IOCTL
@@ -7324,6 +7343,8 @@ expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 if|if
@@ -7437,20 +7458,20 @@ if|if
 condition|(
 name|buf
 operator|->
-name|pid
+name|filp
 operator|!=
-name|DRM_CURRENTPID
+name|filp
 condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"process %d using buffer owned by %d\n"
+literal|"process %d using buffer owned by %p\n"
 argument_list|,
 name|DRM_CURRENTPID
 argument_list|,
 name|buf
 operator|->
-name|pid
+name|filp
 argument_list|)
 expr_stmt|;
 return|return
@@ -7634,6 +7655,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 if|if
@@ -7751,20 +7774,20 @@ if|if
 condition|(
 name|buf
 operator|->
-name|pid
+name|filp
 operator|!=
-name|DRM_CURRENTPID
+name|filp
 condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"process %d using buffer owned by %d\n"
+literal|"process %d using buffer owned by %p\n"
 argument_list|,
 name|DRM_CURRENTPID
 argument_list|,
 name|buf
 operator|->
-name|pid
+name|filp
 argument_list|)
 expr_stmt|;
 return|return
@@ -9194,6 +9217,8 @@ decl_stmt|;
 name|LOCK_TEST_WITH_RETURN
 argument_list|(
 name|dev
+argument_list|,
+name|filp
 argument_list|)
 expr_stmt|;
 if|if
@@ -9532,9 +9557,9 @@ if|if
 condition|(
 name|buf
 operator|->
-name|pid
+name|filp
 operator|!=
-name|DRM_CURRENTPID
+name|filp
 operator|||
 name|buf
 operator|->
@@ -9543,7 +9568,17 @@ condition|)
 block|{
 name|DRM_ERROR
 argument_list|(
-literal|"bad buffer\n"
+literal|"bad buffer %p %p %d\n"
+argument_list|,
+name|buf
+operator|->
+name|filp
+argument_list|,
+name|filp
+argument_list|,
+name|buf
+operator|->
+name|pending
 argument_list|)
 expr_stmt|;
 return|return
@@ -9887,6 +9922,52 @@ operator|=
 name|dev_priv
 operator|->
 name|agp_vm_start
+expr_stmt|;
+break|break;
+case|case
+name|RADEON_PARAM_REGISTER_HANDLE
+case|:
+name|value
+operator|=
+name|dev_priv
+operator|->
+name|mmio_offset
+expr_stmt|;
+break|break;
+case|case
+name|RADEON_PARAM_STATUS_HANDLE
+case|:
+name|value
+operator|=
+name|dev_priv
+operator|->
+name|ring_rptr_offset
+expr_stmt|;
+break|break;
+case|case
+name|RADEON_PARAM_SAREA_HANDLE
+case|:
+comment|/* The lock is the first dword in the sarea. */
+name|value
+operator|=
+operator|(
+name|int
+operator|)
+name|dev
+operator|->
+name|lock
+operator|.
+name|hw_lock
+expr_stmt|;
+break|break;
+case|case
+name|RADEON_PARAM_AGP_TEX_HANDLE
+case|:
+name|value
+operator|=
+name|dev_priv
+operator|->
+name|agp_textures_offset
 expr_stmt|;
 break|break;
 default|default:

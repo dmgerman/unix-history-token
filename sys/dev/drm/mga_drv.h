@@ -762,17 +762,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|LOCK_TEST_WITH_RETURN
-parameter_list|(
-name|dev
-parameter_list|)
-define|\
-value|do {									\ 	if ( !_DRM_LOCK_IS_HELD( dev->lock.hw_lock->lock ) ||		\ 	     dev->lock.pid != DRM_CURRENTPID ) {				\ 		DRM_ERROR( "%s called without lock held\n",		\ 			   __FUNCTION__ );					\ 		return DRM_ERR(EINVAL);				\ 	}								\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|WRAP_TEST_WITH_RETURN
 parameter_list|(
 name|dev_priv
