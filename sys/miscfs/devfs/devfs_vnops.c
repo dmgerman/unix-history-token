@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.29 1996/10/16 18:02:53 julian Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.30 1996/10/16 23:14:00 julian Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -2085,15 +2085,6 @@ operator|!=
 name|VNOVAL
 operator|)
 operator|||
-operator|(
-name|vap
-operator|->
-name|va_size
-operator|!=
-name|VNOVAL
-operator|)
-operator|||
-comment|/* doesn't make sense in devfs */
 operator|(
 name|vap
 operator|->
