@@ -3557,6 +3557,11 @@ index|[
 name|i
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|scounters
