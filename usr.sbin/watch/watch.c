@@ -3,6 +3,32 @@ begin_comment
 comment|/*  * Copyright (c) 1995 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * Snoop stuff.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -31,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -542,15 +574,16 @@ if|if
 condition|(
 name|buf
 condition|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|err
 argument_list|,
-literal|"Fatal: %s\n"
+literal|"fatal: %s"
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+else|else
 name|exit
 argument_list|(
 name|err
@@ -638,9 +671,14 @@ name|fatal
 argument_list|(
 name|EX_OSFILE
 argument_list|,
-literal|"Cannot open snoop device."
+literal|"cannot open snoop device"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -675,13 +713,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|show_usage
+name|usage
 parameter_list|()
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"watch -[ciotnW] [tty name]\n"
+name|stderr
+argument_list|,
+literal|"usage: watch [-ciotnW] [tty name]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -813,9 +854,14 @@ name|fatal
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"Bad tty number."
+literal|"bad tty number"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -868,7 +914,7 @@ name|fatal
 argument_list|(
 name|EX_UNAVAILABLE
 argument_list|,
-literal|"Cannot attach to tty."
+literal|"cannot attach to tty"
 argument_list|)
 expr_stmt|;
 if|if
@@ -989,7 +1035,7 @@ name|fatal
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"Bad device name."
+literal|"bad device name"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1008,7 +1054,7 @@ name|fatal
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"Must be a character device."
+literal|"must be a character device"
 argument_list|)
 expr_stmt|;
 name|snp_tty
@@ -1308,13 +1354,8 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|show_usage
+name|usage
 argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
 expr_stmt|;
 block|}
 name|signal
@@ -1363,7 +1404,7 @@ name|fatal
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"No device name given."
+literal|"no device name given"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1403,7 +1444,7 @@ name|fatal
 argument_list|(
 name|EX_UNAVAILABLE
 argument_list|,
-literal|"Cannot malloc()."
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 name|FD_ZERO
@@ -1490,7 +1531,7 @@ name|fatal
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ioctl() failed."
+literal|"ioctl(FIONREAD)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1520,7 +1561,7 @@ name|fatal
 argument_list|(
 name|EX_IOERR
 argument_list|,
-literal|"read (stdin) failed."
+literal|"read (stdin) failed"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1593,7 +1634,7 @@ name|fatal
 argument_list|(
 name|EX_IOERR
 argument_list|,
-literal|"Write failed."
+literal|"write failed"
 argument_list|)
 expr_stmt|;
 name|ask_dev
@@ -1646,7 +1687,7 @@ name|fatal
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ioctl() failed."
+literal|"ioctl(FIONREAD)"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1776,7 +1817,7 @@ name|fatal
 argument_list|(
 name|EX_UNAVAILABLE
 argument_list|,
-literal|"Cannot malloc()"
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 name|b_size
@@ -1836,7 +1877,7 @@ name|fatal
 argument_list|(
 name|EX_UNAVAILABLE
 argument_list|,
-literal|"Cannot malloc()"
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1857,7 +1898,7 @@ name|fatal
 argument_list|(
 name|EX_IOERR
 argument_list|,
-literal|"read failed."
+literal|"read failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1877,7 +1918,7 @@ name|fatal
 argument_list|(
 name|EX_IOERR
 argument_list|,
-literal|"write failed."
+literal|"write failed"
 argument_list|)
 expr_stmt|;
 block|}
