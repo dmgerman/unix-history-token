@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kpasswdd.c	1.4 (Berkeley) %G%"
+literal|"@(#)kpasswdd.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,12 +35,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -48,6 +42,30 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
@@ -77,19 +95,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -108,7 +114,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|C_Block
+name|des_cblock
 name|master_key
 decl_stmt|,
 name|key
