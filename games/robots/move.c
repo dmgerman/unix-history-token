@@ -616,7 +616,7 @@ goto|;
 case|case
 name|CTRL
 argument_list|(
-name|L
+literal|'L'
 argument_list|)
 case|:
 name|wrefresh
@@ -634,7 +634,7 @@ name|putchar
 argument_list|(
 name|CTRL
 argument_list|(
-name|G
+literal|'G'
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -965,7 +965,7 @@ name|putchar
 argument_list|(
 name|CTRL
 argument_list|(
-name|G
+literal|'G'
 argument_list|)
 argument_list|)
 expr_stmt|;

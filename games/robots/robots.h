@@ -166,7 +166,7 @@ name|CTRL
 parameter_list|(
 name|X
 parameter_list|)
-value|('X' - 'A' + 1)
+value|((X) - 'A' + 1)
 end_define
 
 begin_comment
