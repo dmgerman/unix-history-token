@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: job.c,v 1.5 1996/10/08 04:05:54 steve Exp $  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: job.c,v 1.5.2.1 1998/08/27 16:01:49 cracauer Exp $  */
 end_comment
 
 begin_ifndef
@@ -323,16 +323,19 @@ comment|/* The job is stopped */
 end_comment
 
 begin_comment
-comment|/*  * tfile is the name of a file into which all shell commands are put. It is  * used over by removing it before the child shell is executed. The XXXXX in  * the string are replaced by the pid of the make process in a 5-character  * field with leading zeroes.  */
+comment|/*  * tfile is the name of a file into which all shell commands are put. It is  * used over by removing it before the child shell is executed. The XXXXXXXXXX  * in the string are replaced by mkstemp(3).  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|char
 name|tfile
-index|[]
-init|=
+index|[
+sizeof|sizeof
+argument_list|(
 name|TMPPAT
+argument_list|)
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -6067,13 +6070,6 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* Argument vector to shell */
-specifier|static
-name|int
-name|jobno
-init|=
-literal|0
-decl_stmt|;
-comment|/* job number of catching output in a file */
 name|Boolean
 name|cmdsOK
 decl_stmt|;
@@ -6706,7 +6702,7 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/*      * If we're using pipes to catch output, create the pipe by which we'll      * get the shell's output. If we're using files, print out that we're      * starting a job and then set up its temporary-file name. This is just      * tfile with two extra digits tacked on -- jobno.      */
+comment|/*      * If we're using pipes to catch output, create the pipe by which we'll      * get the shell's output. If we're using files, print out that we're      * starting a job and then set up its temporary-file name.      */
 if|if
 condition|(
 operator|!
@@ -6823,46 +6819,44 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-name|sprintf
+operator|(
+name|void
+operator|)
+name|strcpy
 argument_list|(
 name|job
 operator|->
 name|outFile
 argument_list|,
-literal|"%s%02d"
-argument_list|,
-name|tfile
-argument_list|,
-name|jobno
+name|TMPPAT
 argument_list|)
 expr_stmt|;
-name|jobno
-operator|=
+if|if
+condition|(
 operator|(
-name|jobno
-operator|+
-literal|1
-operator|)
-operator|%
-literal|100
-expr_stmt|;
 name|job
 operator|->
 name|outFd
 operator|=
-name|open
+name|mkstemp
 argument_list|(
 name|job
 operator|->
 name|outFile
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|Punt
+argument_list|(
+literal|"cannot create temp file: %s"
 argument_list|,
-name|O_WRONLY
-operator||
-name|O_CREAT
-operator||
-name|O_APPEND
-argument_list|,
-literal|0600
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -8593,17 +8587,50 @@ modifier|*
 name|begin
 decl_stmt|;
 comment|/* node for commands to do at the very start */
+name|int
+name|tfd
+decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|strcpy
 argument_list|(
 name|tfile
 argument_list|,
-literal|"/tmp/make%05d"
+name|TMPPAT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tfd
+operator|=
+name|mkstemp
+argument_list|(
+name|tfile
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|Punt
+argument_list|(
+literal|"cannot create temp file: %s"
 argument_list|,
-name|getpid
-argument_list|()
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|tfd
 argument_list|)
 expr_stmt|;
 name|jobs
