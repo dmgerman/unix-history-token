@@ -965,6 +965,10 @@ name|KEF_IDLEKSE
 operator|)
 operator|==
 literal|0
+operator|&&
+name|td
+operator|!=
+name|ald_thread
 condition|)
 block|{
 if|if

@@ -278,8 +278,16 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|ald_shutingdown
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
-name|proc
+name|thread
 modifier|*
 name|ald_thread
 decl_stmt|;
@@ -287,10 +295,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|ald_shutingdown
-init|=
-literal|0
+name|struct
+name|proc
+modifier|*
+name|ald_proc
 decl_stmt|;
 end_decl_stmt
 
@@ -666,6 +674,13 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+name|ald_thread
+operator|=
+name|FIRST_THREAD_IN_PROC
+argument_list|(
+name|ald_proc
+argument_list|)
+expr_stmt|;
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|shutdown_pre_sync
@@ -897,8 +912,6 @@ name|alq
 operator|->
 name|aq_vp
 argument_list|,
-name|FREAD
-operator||
 name|FWRITE
 argument_list|,
 name|alq
@@ -1324,7 +1337,7 @@ block|,
 name|ald_daemon
 block|,
 operator|&
-name|ald_thread
+name|ald_proc
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1453,8 +1466,6 @@ argument_list|)
 expr_stmt|;
 name|flags
 operator|=
-name|FREAD
-operator||
 name|FWRITE
 operator||
 name|O_NOFOLLOW

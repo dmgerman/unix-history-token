@@ -26,6 +26,19 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
+comment|/* The thread for the logging daemon */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|thread
+modifier|*
+name|ald_thread
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Async. Logging Entry  */
 end_comment
 
