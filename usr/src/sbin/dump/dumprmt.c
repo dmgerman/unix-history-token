@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumprmt.c	5.17 (Berkeley) %G%"
+literal|"@(#)dumprmt.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -438,7 +438,7 @@ name|servent
 modifier|*
 name|sp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 specifier|static
 name|struct
@@ -446,7 +446,7 @@ name|passwd
 modifier|*
 name|pwd
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -473,7 +473,7 @@ if|if
 condition|(
 name|sp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|sp
@@ -489,7 +489,7 @@ if|if
 condition|(
 name|sp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 operator|(
@@ -520,7 +520,7 @@ if|if
 condition|(
 name|pwd
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 operator|(
@@ -542,6 +542,7 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|index
@@ -550,6 +551,9 @@ name|rmtpeer
 argument_list|,
 literal|'@'
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|tuser
@@ -1277,7 +1281,7 @@ name|TS_OPEN
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|rmtcall
@@ -1452,6 +1456,11 @@ modifier|*
 name|cmd
 decl_stmt|;
 block|{
+specifier|register
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 name|char
 name|code
 index|[
@@ -1498,15 +1507,11 @@ argument_list|)
 expr_stmt|;
 name|msg
 argument_list|(
-literal|"%s: %s\n"
+literal|"%s: %s"
 argument_list|,
 name|cmd
 argument_list|,
 name|emsg
-argument_list|,
-name|code
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1543,9 +1548,36 @@ operator|!=
 literal|'A'
 condition|)
 block|{
+comment|/* Kill trailing newline */
+name|cp
+operator|=
+name|code
+operator|+
+name|strlen
+argument_list|(
+name|code
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|>
+name|code
+operator|&&
+operator|*
+operator|--
+name|cp
+operator|==
+literal|'\n'
+condition|)
+operator|*
+name|cp
+operator|=
+literal|'\0'
+expr_stmt|;
 name|msg
 argument_list|(
-literal|"Protocol to remote tape server botched (code %s?).\n"
+literal|"Protocol to remote tape server botched (code \"%s\").\n"
 argument_list|,
 name|code
 argument_list|)
@@ -1600,6 +1632,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Get a line (guaranteed to have a trailing newline). */
+end_comment
+
 begin_function
 name|void
 name|rmtgets
@@ -1649,7 +1685,7 @@ index|[
 literal|1
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 return|return;
 block|}
@@ -1663,7 +1699,7 @@ block|}
 operator|*
 name|cp
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|msg
 argument_list|(
