@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.6 (Berkeley) %G%"
+literal|"@(#)util.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -418,6 +418,7 @@ operator|->
 name|office
 operator|=
 operator|(
+operator|(
 name|p
 operator|=
 name|strsep
@@ -430,6 +431,10 @@ name|NULL
 argument_list|,
 literal|","
 argument_list|)
+operator|)
+operator|&&
+operator|*
+name|p
 operator|)
 condition|?
 name|strdup
@@ -444,6 +449,7 @@ operator|->
 name|officephone
 operator|=
 operator|(
+operator|(
 name|p
 operator|=
 name|strsep
@@ -456,6 +462,10 @@ name|NULL
 argument_list|,
 literal|","
 argument_list|)
+operator|)
+operator|&&
+operator|*
+name|p
 operator|)
 condition|?
 name|strdup
@@ -470,6 +480,7 @@ operator|->
 name|homephone
 operator|=
 operator|(
+operator|(
 name|p
 operator|=
 name|strsep
@@ -482,6 +493,10 @@ name|NULL
 argument_list|,
 literal|","
 argument_list|)
+operator|)
+operator|&&
+operator|*
+name|p
 operator|)
 condition|?
 name|strdup
