@@ -793,7 +793,7 @@ comment|/* number of bits in a byte */
 end_comment
 
 begin_comment
-comment|/*  * Select uses bit masks of file descriptors in longs.  These macros  * manipulate such bit fields (the filesystem macros use chars).  * FD_SETSIZE may be defined by the user, but the default here should  * be enough for most uses.  */
+comment|/*  * Select uses bit masks of file descriptors in longs.  These macros  * manipulate such bit fields (the filesystem macros use chars).  * FD_SETSIZE may be defined by the user, but the default here should  * be enough for most uses.  *  * WARNING!  temporary masks are stored on the kernel stack, do not increase  * this value past 2048 without fixing the issue in kern/sys_generic.c:select()  */
 end_comment
 
 begin_ifndef
