@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.22 (Berkeley) %G%"
+literal|"@(#)map.c	6.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4030,7 +4030,7 @@ literal|"/var/yp/Makefile"
 argument_list|,
 name|R_OK
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
 endif|#
