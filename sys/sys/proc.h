@@ -602,11 +602,6 @@ name|sigset_t
 name|td_siglist
 decl_stmt|;
 comment|/* (c) Sigs arrived, not delivered. */
-name|sigset_t
-modifier|*
-name|td_waitset
-decl_stmt|;
-comment|/* (c) Wait set for sigwait. */
 name|struct
 name|umtx_q
 modifier|*
