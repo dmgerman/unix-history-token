@@ -1096,6 +1096,8 @@ block|;
 asm|__asm __volatile (
 literal|"1:\tldl_l %0, %4\n\t"
 comment|/* load old value */
+literal|"zapnot  %0,0xf,%0\n\t"
+comment|/* Chop of signed bits */
 literal|"cmpeq %0, %2, %0\n\t"
 comment|/* compare */
 literal|"beq %0, 2f\n\t"
