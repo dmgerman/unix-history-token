@@ -88,7 +88,7 @@ name|data
 index|[
 sizeof|sizeof
 argument_list|(
-name|int
+name|u_int64_t
 argument_list|)
 index|]
 decl_stmt|;
