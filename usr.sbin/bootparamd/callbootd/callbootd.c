@@ -1,6 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  This code is not copyright, and is placed in the public domain. Feel free to use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>  	$Id: callbootd.c,v 1.2 1995/03/26 03:15:39 wpaul Exp $ */
+comment|/*  This code is not copyright, and is placed in the public domain. Feel free to use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -30,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -41,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_decl_stmt
@@ -91,31 +129,62 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_macro
-name|eachres_whoami
-argument_list|(
-argument|resultp
-argument_list|,
-argument|raddr
-argument_list|)
-end_macro
-
 begin_decl_stmt
-name|bp_whoami_res
-modifier|*
-name|resultp
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|printgetfile
+name|__P
+argument_list|(
+operator|(
+name|bp_getfile_res
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|printwhoami
+name|__P
+argument_list|(
+operator|(
+name|bp_whoami_res
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|eachres_whoami
+parameter_list|(
+name|resultp
+parameter_list|,
+name|raddr
+parameter_list|)
+name|bp_whoami_res
+modifier|*
+name|resultp
+decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
 name|raddr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|hostent
@@ -176,7 +245,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|eachres_getfile
@@ -266,6 +335,7 @@ block|}
 end_block
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -281,9 +351,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|int
-name|stat
-decl_stmt|;
 name|char
 modifier|*
 name|server
@@ -347,25 +414,9 @@ name|argc
 operator|<
 literal|3
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: %s server procnum (IP-addr | host fileid)\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|server
 operator|=
 name|argv
@@ -413,27 +464,15 @@ name|clnt
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: could not contact bootparam server on host %s\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"could not contact bootparam server on host %s"
 argument_list|,
 name|server
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|argc
@@ -467,12 +506,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|2
 argument_list|,
-literal|"bogus addr %s\n"
+literal|"bogus addr %s"
 argument_list|,
 name|argv
 index|[
@@ -480,12 +518,6 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|bcopy
 argument_list|(
 operator|&
@@ -532,18 +564,13 @@ name|whoami_res
 argument_list|)
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Bad answer returned from server %s\n"
-argument_list|,
-name|server
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad answer returned from server %s"
+argument_list|,
+name|server
 argument_list|)
 expr_stmt|;
 block|}
@@ -635,18 +662,13 @@ name|getfile_res
 argument_list|)
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Bad answer returned from server %s\n"
-argument_list|,
-name|server
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad answer returned from server %s"
+argument_list|,
+name|server
 argument_list|)
 expr_stmt|;
 block|}
@@ -689,16 +711,24 @@ argument_list|)
 expr_stmt|;
 block|}
 default|default:
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s server procnum (IP-addr | host fileid)\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"usage: callbootd server procnum (IP-addr | host fileid)\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -706,7 +736,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -800,11 +829,9 @@ return|;
 block|}
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Null answer!!!\n"
+literal|"null answer!!!"
 argument_list|)
 expr_stmt|;
 return|return
@@ -864,11 +891,9 @@ return|;
 block|}
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Null answer!!!\n"
+literal|"null answer!!!"
 argument_list|)
 expr_stmt|;
 return|return

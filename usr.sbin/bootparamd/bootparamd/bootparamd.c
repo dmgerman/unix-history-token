@@ -1,6 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  This code is not copyright, and is placed in the public domain. Feel free to use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>  	$Id: bootparamd.c,v 1.2 1995/05/30 03:46:27 rgrimes Exp $  */
+comment|/*  This code is not copyright, and is placed in the public domain. Feel free to use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -30,7 +56,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_include
@@ -43,24 +93,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
 end_include
 
 begin_decl_stmt
@@ -150,6 +182,41 @@ name|domain_name
 index|[
 name|MAX_MACHINE_NAME
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|getthefile
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|checkhost
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -349,11 +416,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"This is host %s\n"
+literal|"this is host %s"
 argument_list|,
 name|he
 operator|->
@@ -597,11 +662,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"whoami failed\n"
+literal|"whoami failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -651,11 +714,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"getfile got question for \"%s\" and file \"%s\"\n"
+literal|"getfile got question for \"%s\" and file \"%s\""
 argument_list|,
 name|getfile
 operator|->
@@ -731,6 +792,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|where
 operator|=
 name|index
@@ -739,6 +801,7 @@ name|buffer
 argument_list|,
 literal|':'
 argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* buffer is re-written to contain the name of the info of file */
@@ -1029,11 +1092,9 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"getfile failed for %s\n"
+literal|"getfile failed for %s"
 argument_list|,
 name|getfile
 operator|->
@@ -1067,33 +1128,28 @@ begin_comment
 comment|/*    getthefile return 1 and fills the buffer with the information       of the file, e g "host:/export/root/client" if it can be found.       If the host is in the database, but the file is not, the buffer       will be empty. (This makes it possible to give the special       empty answer for the file "dump")   */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getthefile
-argument_list|(
-argument|askname
-argument_list|,
-argument|fileid
-argument_list|,
-argument|buffer
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|askname
+parameter_list|,
+name|fileid
+parameter_list|,
+name|buffer
+parameter_list|)
 name|char
 modifier|*
 name|askname
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|fileid
 decl_stmt|,
-modifier|*
+decl|*
 name|buffer
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -1160,22 +1216,15 @@ condition|(
 operator|!
 name|bpf
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"No %s\n"
+literal|"no %s"
 argument_list|,
 name|bootpfile
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 while|while
 condition|(
 name|fscanf
@@ -1269,7 +1318,7 @@ if|if
 condition|(
 name|debug
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"NIS"
 argument_list|)
@@ -1385,11 +1434,9 @@ argument_list|(
 name|bpf
 argument_list|)
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Could not close %s\n"
+literal|"could not close %s"
 argument_list|,
 name|bootpfile
 argument_list|)
@@ -1652,11 +1699,9 @@ name|bpf
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Could not close %s\n"
+literal|"could not close %s"
 argument_list|,
 name|bootpfile
 argument_list|)
@@ -1689,30 +1734,22 @@ begin_comment
 comment|/* checkhost puts the hostname found in the database file in    the hostname-variable and returns 1, if askname is a valid    name for a host in the database */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|checkhost
-argument_list|(
-argument|askname
-argument_list|,
-argument|hostname
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|askname
+parameter_list|,
+name|hostname
+parameter_list|)
 name|char
 modifier|*
 name|askname
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|hostname
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|ch
@@ -1756,22 +1793,15 @@ condition|(
 operator|!
 name|bpf
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"No %s\n"
+literal|"no %s"
 argument_list|,
 name|bootpfile
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 while|while
 condition|(
 name|fscanf
@@ -1872,7 +1902,7 @@ if|if
 condition|(
 name|debug
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"NIS"
 argument_list|)
@@ -1958,11 +1988,9 @@ argument_list|(
 name|bpf
 argument_list|)
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Could not close %s\n"
+literal|"could not close %s"
 argument_list|,
 name|bootpfile
 argument_list|)
@@ -2022,11 +2050,9 @@ name|bpf
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Could not close %s\n"
+literal|"could not close %s"
 argument_list|,
 name|bootpfile
 argument_list|)
@@ -2038,7 +2064,7 @@ name|res
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
