@@ -1465,6 +1465,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|m
