@@ -187,8 +187,6 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|msg
-init|=
-name|stdout
 decl_stmt|;
 end_decl_stmt
 
@@ -328,6 +326,10 @@ decl_stmt|,
 modifier|*
 name|inf
 decl_stmt|;
+name|msg
+operator|=
+name|stdout
+expr_stmt|;
 name|guesslen
 operator|=
 literal|1
