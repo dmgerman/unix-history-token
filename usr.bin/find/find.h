@@ -87,6 +87,10 @@ block|,
 name|N_PRINT0
 block|,
 name|N_DELETE
+block|,
+name|N_MAXDEPTH
+block|,
+name|N_MINDEPTH
 block|}
 enum|;
 end_enum
