@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * GPIB driver for FreeBSD.  * Version 0.1 (No interrupts, no DMA)  * Supports National Instruments AT-GPIB and AT-GPIB/TNT boards.  * (AT-GPIB not tested, but it should work)  *  * Written by Fred Cawthorne (fcawth@delphi.umd.edu)  * Some sections were based partly on the lpt driver.  *  (some remnants may remain)  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * The author grants any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * $FreeBSD$  *  */
+comment|/*   * GPIB driver for FreeBSD.  * Version 0.1 (No interrupts, no DMA)  * Supports National Instruments AT-GPIB and AT-GPIB/TNT boards.  * (AT-GPIB not tested, but it should work)  *  * Written by Fred Cawthorne (fcawth@delphi.umd.edu)  * Some sections were based partly on the lpt driver.  *  (some remnants may remain)  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * The author grants any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*Please read the README file for usage information*/
+comment|/* Please read the README file for usage information */
 end_comment
 
 begin_include
@@ -100,7 +100,7 @@ begin_define
 define|#
 directive|define
 name|GPIBPRI
-value|(PZERO+8)|PCATCH
+value|(PZERO + 8) | PCATCH
 end_define
 
 begin_define
@@ -516,11 +516,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*Probe routine*/
-end_comment
-
-begin_comment
-comment|/*This needs to be changed to be a bit more robust*/
+comment|/*  * Probe routine  * This needs to be changed to be a bit more robust  */
 end_comment
 
 begin_function
@@ -634,7 +630,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * gpattach()  *  Attach device and print the type of card to the screen.  */
+comment|/*   * gpattach()  *  Attach device and print the type of card to the screen.  */
 end_comment
 
 begin_function
@@ -748,7 +744,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * gpopen()  *	New open on device.  *  * More than 1 open is not allowed on the entire device.  * i.e. even if gpib5 is open, we can't open another minor device  */
+comment|/*   * gpopen()  *	New open on device.  *  * More than 1 open is not allowed on the entire device.  * i.e. even if gpib5 is open, we can't open another minor device  */
 end_comment
 
 begin_function
@@ -824,15 +820,13 @@ operator|&
 name|ATTACHED
 operator|)
 condition|)
-block|{
 comment|/* not attached */
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
-comment|/* Already open  */
+comment|/* Already open */
 if|if
 condition|(
 name|sc
@@ -841,14 +835,12 @@ name|sc_flags
 operator|&
 name|OPEN
 condition|)
-block|{
 comment|/* too late .. */
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
-block|}
 comment|/* Have memory for buffer? */
 name|sc
 operator|->
@@ -909,8 +901,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/*Someone is trying to access an actual device*/
-comment|/*So.. we'll address it to listen*/
+comment|/* Someone is trying to access an actual device */
+comment|/* So.. we'll address it to listen */
 name|enableremote
 argument_list|(
 name|unit
@@ -966,7 +958,7 @@ operator|+
 literal|32
 argument_list|)
 expr_stmt|;
-comment|/*address device to listen*/
+comment|/* address device to listen */
 do|do
 name|status
 operator|=
@@ -1009,8 +1001,9 @@ argument_list|,
 literal|64
 argument_list|)
 expr_stmt|;
-comment|/*Address controller (me) to talk*/
+comment|/* Address controller (me) to talk */
 do|do
+block|{
 name|status
 operator|=
 name|inb
@@ -1018,6 +1011,7 @@ argument_list|(
 name|ISR2
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -1052,8 +1046,9 @@ argument_list|,
 name|gts
 argument_list|)
 expr_stmt|;
-comment|/*Set to Standby (Controller)*/
+comment|/* Set to Standby (Controller) */
 do|do
+block|{
 name|status
 operator|=
 name|inb
@@ -1061,6 +1056,7 @@ argument_list|(
 name|ISR1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -1088,7 +1084,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Set up the TURBO488 registers*/
+comment|/* Set up the TURBO488 registers */
 name|outb
 argument_list|(
 name|IMR2
@@ -1096,7 +1092,7 @@ argument_list|,
 literal|0x30
 argument_list|)
 expr_stmt|;
-comment|/*we have to enable DMA (0x30) for turbo488 to work*/
+comment|/* we have to enable DMA (0x30) for turbo488 to work */
 name|outb
 argument_list|(
 name|CNT0
@@ -1104,7 +1100,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*NOTE this does not enable DMA to the host computer!!*/
+comment|/* NOTE this does not enable DMA to the host computer!! */
 name|outb
 argument_list|(
 name|CNT1
@@ -1148,7 +1144,7 @@ argument_list|,
 literal|0x10
 argument_list|)
 expr_stmt|;
-comment|/*RESET fifos*/
+comment|/* RESET fifos */
 name|outb
 argument_list|(
 name|CMDR
@@ -1156,7 +1152,7 @@ argument_list|,
 literal|0x04
 argument_list|)
 expr_stmt|;
-comment|/*Tell TURBO488 to GO*/
+comment|/* Tell TURBO488 to GO */
 block|}
 return|return
 operator|(
@@ -1167,7 +1163,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * gpclose()  *	Close gpib device.  */
+comment|/*   * gpclose()  *	Close gpib device.  */
 end_comment
 
 begin_function
@@ -1228,13 +1224,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/*Here we need to send the last character with EOS*/
-comment|/*and unaddress the listening device*/
+comment|/* Here we need to send the last character with EOS */
+comment|/* and unaddress the listening device */
 name|status
 operator|=
 name|EWOULDBLOCK
 expr_stmt|;
-comment|/*Wait for fifo to become empty*/
+comment|/* Wait for fifo to become empty */
 do|do
 block|{
 name|status
@@ -1271,7 +1267,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Fifo is not empty*/
+comment|/* Fifo is not empty */
 name|outb
 argument_list|(
 name|CMDR
@@ -1279,8 +1275,8 @@ argument_list|,
 literal|0x08
 argument_list|)
 expr_stmt|;
-comment|/*Issue STOP to TURBO488*/
-comment|/*Wait for DONE and STOP*/
+comment|/* Issue STOP to TURBO488 */
+comment|/* Wait for DONE and STOP */
 if|if
 condition|(
 name|status
@@ -1324,8 +1320,8 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*not done and stop*/
-comment|/*Shut down TURBO488 */
+comment|/* not done and stop */
+comment|/* Shut down TURBO488 */
 name|outb
 argument_list|(
 name|IMR2
@@ -1333,7 +1329,7 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-comment|/*DISABLE DMA to turbo488*/
+comment|/* DISABLE DMA to turbo488 */
 name|outb
 argument_list|(
 name|CMDR
@@ -1341,7 +1337,7 @@ argument_list|,
 literal|0x20
 argument_list|)
 expr_stmt|;
-comment|/*soft reset turbo488*/
+comment|/* soft reset turbo488 */
 name|outb
 argument_list|(
 name|CMDR
@@ -1349,9 +1345,9 @@ argument_list|,
 literal|0x10
 argument_list|)
 expr_stmt|;
-comment|/*reset fifos*/
-comment|/*Send last byte with EOI set*/
-comment|/*Send second to last byte if there are 2 bytes left*/
+comment|/* reset fifos */
+comment|/* Send last byte with EOI set */
+comment|/* Send second to last byte if there are 2 bytes left */
 if|if
 condition|(
 name|status
@@ -1360,6 +1356,7 @@ name|EWOULDBLOCK
 condition|)
 block|{
 do|do
+block|{
 if|if
 condition|(
 operator|!
@@ -1389,6 +1386,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -1425,7 +1423,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*Send second to last byte*/
+comment|/* Send second to last byte */
 while|while
 condition|(
 operator|!
@@ -1470,7 +1468,7 @@ argument_list|,
 name|seoi
 argument_list|)
 expr_stmt|;
-comment|/*Set EOI for the last byte*/
+comment|/* Set EOI for the last byte */
 name|outb
 argument_list|(
 name|AUXMR
@@ -1478,7 +1476,7 @@ argument_list|,
 literal|0x5E
 argument_list|)
 expr_stmt|;
-comment|/*Clear SYNC*/
+comment|/* Clear SYNC */
 if|if
 condition|(
 name|oldcount
@@ -1521,7 +1519,7 @@ argument_list|,
 literal|13
 argument_list|)
 expr_stmt|;
-comment|/*Send a CR.. we've got trouble*/
+comment|/* Send a CR.. we've got trouble */
 name|printf
 argument_list|(
 literal|"gpib: Warning: gpclose called with nothing left in buffer\n"
@@ -1530,6 +1528,7 @@ expr_stmt|;
 block|}
 block|}
 do|do
+block|{
 if|if
 condition|(
 operator|!
@@ -1559,6 +1558,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -1595,6 +1595,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -1612,6 +1613,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -1636,8 +1638,9 @@ argument_list|,
 name|tca
 argument_list|)
 expr_stmt|;
-comment|/* Regain full control of the bus*/
+comment|/* Regain full control of the bus */
 do|do
+block|{
 name|status
 operator|=
 name|inb
@@ -1645,6 +1648,7 @@ argument_list|(
 name|ISR2
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -1679,8 +1683,9 @@ argument_list|,
 literal|63
 argument_list|)
 expr_stmt|;
-comment|/*unlisten*/
+comment|/* unlisten */
 do|do
+block|{
 name|status
 operator|=
 name|inb
@@ -1688,6 +1693,7 @@ argument_list|(
 name|ISR2
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -1722,7 +1728,7 @@ argument_list|,
 literal|0x5E
 argument_list|)
 expr_stmt|;
-comment|/*Clear SYNC*/
+comment|/* Clear SYNC */
 name|outb
 argument_list|(
 name|CDOR
@@ -1730,8 +1736,9 @@ argument_list|,
 literal|95
 argument_list|)
 expr_stmt|;
-comment|/*untalk*/
+comment|/* untalk */
 do|do
+block|{
 name|status
 operator|=
 name|inb
@@ -1739,6 +1746,7 @@ argument_list|(
 name|ISR2
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -1766,7 +1774,12 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*gotolocal(minor(dev));*/
+if|#
+directive|if
+literal|0
+block|gotolocal(minor(dev));
+endif|#
+directive|endif
 block|}
 name|closegpib
 argument_list|()
@@ -1802,7 +1815,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * gpwrite()  *	Copy from user's buffer, then write to GPIB device referenced  *    by minor(dev).  */
+comment|/*   * gpwrite()  *	Copy from user's buffer, then write to GPIB device referenced  *    by minor(dev).  */
 end_comment
 
 begin_function
@@ -1856,7 +1869,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/*  If there were>1 bytes left over, send them  */
+comment|/* If there were>1 bytes left over, send them */
 if|if
 condition|(
 name|oldcount
@@ -1875,7 +1888,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/*If there was 1 character left, put it at the beginning                    of the new buffer*/
+comment|/* If there was 1 character left, put it at the beginning 		   of the new buffer */
 if|if
 condition|(
 name|oldcount
@@ -1905,7 +1918,7 @@ name|gpib_sc
 operator|.
 name|sc_inbuf
 expr_stmt|;
-comment|/*  get from user-space  */
+comment|/* get from user-space */
 name|uiomove
 argument_list|(
 name|gpib_sc
@@ -1937,7 +1950,7 @@ name|gpib_sc
 operator|.
 name|sc_inbuf
 expr_stmt|;
-comment|/*  get from user-space  */
+comment|/* get from user-space */
 name|uiomove
 argument_list|(
 name|gpib_sc
@@ -1952,8 +1965,8 @@ name|uio
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*NOTE we always leave one byte in case this is the last write   so close can send EOI with the last byte There may be 2 bytes   since we are doing 16 bit transfers.(note the -1 in the count below)*/
-comment|/*If count<=2 we'll either pick it up on the next write or on close*/
+comment|/* 		 * NOTE we always leave one byte in case this is the last write 		 * so close can send EOI with the last byte There may be 2 bytes 		 * since we are doing 16 bit transfers.(note the -1 in the count below) 		 */
+comment|/* If count<= 2 we'll either pick it up on the next write or on close */
 if|if
 condition|(
 name|gpib_sc
@@ -2005,7 +2018,7 @@ name|sc_count
 operator|-
 name|count
 expr_stmt|;
-comment|/*Set # of remaining bytes*/
+comment|/* Set # of remaining bytes */
 name|gpib_sc
 operator|.
 name|sc_count
@@ -2018,7 +2031,7 @@ name|sc_cp
 operator|+=
 name|count
 expr_stmt|;
-comment|/*point char pointer to remaining bytes*/
+comment|/* point char pointer to remaining bytes */
 block|}
 else|else
 name|oldcount
@@ -2067,7 +2080,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Here is how you would usually access a GPIB device    An exception would be a plotter or printer that you can just    write to using a minor device = its GPIB address */
+comment|/*  * Here is how you would usually access a GPIB device  * An exception would be a plotter or printer that you can just  * write to using a minor device = its GPIB address  */
 end_comment
 
 begin_function
@@ -2326,21 +2339,17 @@ literal|0
 end_if
 
 begin_comment
-comment|/*Just in case you want a dump of the registers...*/
+comment|/* Just in case you want a dump of the registers... */
 end_comment
 
 begin_endif
-unit|static void showregs() {  printf ("NAT4882:\n");  printf ("ISR1=%X\t",inb(ISR1));  printf ("ISR2=%X\t",inb(ISR2));  printf ("SPSR=%X\t",inb(SPSR));  printf ("KSR =%X\t",inb(KSR));  printf ("ADSR=%X\t",inb(ADSR));  printf ("CPTR=%X\t",inb(CPTR));  printf ("SASR=%X\t",inb(SASR));  printf ("ADR0=%X\t",inb(ADR0));  printf ("ISR0=%X\t",inb(ISR0));  printf ("ADR1=%X\t",inb(ADR1));  printf ("BSR =%X\n",inb(BSR));   printf ("Turbo488\n");  printf ("STS1=%X ",inb(STS1));  printf ("STS2=%X ",inb(STS2));  printf ("ISR3=%X ",inb(ISR3));  printf ("CNT0=%X ",inb(CNT0));  printf ("CNT1=%X ",inb(CNT1));  printf ("CNT2=%X ",inb(CNT2));  printf ("CNT3=%X ",inb(CNT3));  printf ("IMR3=%X ",inb(IMR3));  printf ("TIMER=%X\n",inb(TIMER));    }
+unit|static void showregs() { 	printf ("NAT4882:\n"); 	printf ("ISR1=%X\t", inb(ISR1)); 	printf ("ISR2=%X\t", inb(ISR2)); 	printf ("SPSR=%X\t", inb(SPSR)); 	printf ("KSR =%X\t", inb(KSR)); 	printf ("ADSR=%X\t", inb(ADSR)); 	printf ("CPTR=%X\t", inb(CPTR)); 	printf ("SASR=%X\t", inb(SASR)); 	printf ("ADR0=%X\t", inb(ADR0)); 	printf ("ISR0=%X\t", inb(ISR0)); 	printf ("ADR1=%X\t", inb(ADR1)); 	printf ("BSR =%X\n", inb(BSR));  	printf ("Turbo488\n"); 	printf ("STS1=%X ", inb(STS1)); 	printf ("STS2=%X ", inb(STS2)); 	printf ("ISR3=%X ", inb(ISR3)); 	printf ("CNT0=%X ", inb(CNT0)); 	printf ("CNT1=%X ", inb(CNT1)); 	printf ("CNT2=%X ", inb(CNT2)); 	printf ("CNT3=%X ", inb(CNT3)); 	printf ("IMR3=%X ", inb(IMR3)); 	printf ("TIMER=%X\n", inb(TIMER)); }
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*Set up the NAT4882 and TURBO488 registers */
-end_comment
-
-begin_comment
-comment|/*This will be nonsense to you unless you have a data sheet from   National Instruments.  They should give you one if you call them*/
+comment|/*  * Set up the NAT4882 and TURBO488 registers  * This will be nonsense to you unless you have a data sheet from  * National Instruments.  They should give you one if you call them  */
 end_comment
 
 begin_function
@@ -2412,7 +2421,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Put interrupt line in tri-state mode??*/
+comment|/* Put interrupt line in tri-state mode?? */
 name|outb
 argument_list|(
 name|AUXMR
@@ -2427,7 +2436,7 @@ argument_list|,
 literal|0x10
 argument_list|)
 expr_stmt|;
-comment|/* send interrupt to TURBO488 when END received*/
+comment|/* send interrupt to TURBO488 when END received */
 name|outb
 argument_list|(
 name|IMR2
@@ -2506,9 +2515,9 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/*set EOS message to newline*/
-comment|/*should I make the default to interpret END as EOS?*/
-comment|/*It isn't now.  The following changes this*/
+comment|/* set EOS message to newline */
+comment|/* should I make the default to interpret END as EOS? */
+comment|/* It isn't now.  The following changes this */
 name|outb
 argument_list|(
 name|AUXMR
@@ -2516,16 +2525,26 @@ argument_list|,
 literal|0x80
 argument_list|)
 expr_stmt|;
-comment|/*No special EOS handling*/
-comment|/*outb(AUXMR,0x88) */
-comment|/* Transmit END with EOS*/
-comment|/*outb(AUXMR,0x84) */
-comment|/* Set END on EOS received*/
-comment|/*outb(AUXMR,0x8C) */
-comment|/* Do both of the above*/
-comment|/* outb(AUXMR,hldi); */
-comment|/*Perform RFD Holdoff for all data in*/
-comment|/*Not currently supported*/
+comment|/* No special EOS handling */
+if|#
+directive|if
+literal|0
+block|outb(AUXMR, 0x88)
+comment|/* Transmit END with EOS */
+block|outb(AUXMR, 0x84)
+comment|/* Set END on EOS received */
+block|outb(AUXMR, 0x8C)
+comment|/* Do both of the above */
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
+comment|/* Not currently supported */
+block|outb(AUXMR, hldi);
+comment|/* Perform RFD Holdoff for all data in */
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|AUXMR
@@ -2571,7 +2590,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*This is kind of Brute force..  But it works*/
+comment|/* This is kind of Brute force..  But it works */
 end_comment
 
 begin_function
@@ -2591,11 +2610,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*GPIB ROUTINES:   These will also make little sense unless you have a data sheet.   Note that the routines with an "m" in the beginning are for   accessing multiple devices in one call*/
+comment|/*  * GPIB ROUTINES:  * These will also make little sense unless you have a data sheet.  * Note that the routines with an "m" in the beginning are for  * accessing multiple devices in one call  */
 end_comment
 
 begin_comment
-comment|/*This is one thing I could not figure out how to do correctly.   I tried to use the auxilary  command to enable remote, but it   never worked.  Here, I bypass everything and write to the BSR   to enable the remote line.  NOTE that these lines are effectively   "OR'ed" with the actual lines, so writing a 1 to the bit in the BSR   forces the GPIB line true, no matter what the fancy circuitry of the   NAT4882 wants to do with it*/
+comment|/*  * This is one thing I could not figure out how to do correctly.  * I tried to use the auxilary  command to enable remote, but it  * never worked.  Here, I bypass everything and write to the BSR  * to enable the remote line.  NOTE that these lines are effectively  * "OR'ed" with the actual lines, so writing a 1 to the bit in the BSR  * forces the GPIB line true, no matter what the fancy circuitry of the  * NAT4882 wants to do with it  */
 end_comment
 
 begin_function
@@ -2658,7 +2677,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|BSR
@@ -2666,7 +2685,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*Set REN bit on GPIB*/
+comment|/* Set REN bit on GPIB */
 if|if
 condition|(
 name|status
@@ -2710,7 +2729,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|CDOR
@@ -2724,7 +2743,7 @@ operator|+
 literal|32
 argument_list|)
 expr_stmt|;
-comment|/*address device to listen*/
+comment|/* address device to listen */
 if|if
 condition|(
 name|status
@@ -2768,7 +2787,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|CDOR
@@ -2776,7 +2795,7 @@ argument_list|,
 literal|63
 argument_list|)
 expr_stmt|;
-comment|/*Unaddress device*/
+comment|/* Unaddress device */
 if|if
 condition|(
 name|status
@@ -2820,12 +2839,12 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 block|}
 end_function
 
 begin_comment
-comment|/*This does not release the REM line on the gpib port, because if it did,   all the remote devices would go to local mode.  This only sends the   gotolocal message to one device.  Currently, REM is always held true   after enableremote is called, and is reset only on a close of the   gpib device */
+comment|/*  * This does not release the REM line on the gpib port, because if it did,  * all the remote devices would go to local mode.  This only sends the  * gotolocal message to one device.  Currently, REM is always held true  * after enableremote is called, and is reset only on a close of the  * gpib device  */
 end_comment
 
 begin_function
@@ -2888,7 +2907,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|CDOR
@@ -2945,7 +2964,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|AUXMR
@@ -2953,7 +2972,7 @@ argument_list|,
 literal|0x5E
 argument_list|)
 expr_stmt|;
-comment|/*Clear SYNC*/
+comment|/* Clear SYNC */
 name|outb
 argument_list|(
 name|CDOR
@@ -3004,7 +3023,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|AUXMR
@@ -3019,7 +3038,7 @@ argument_list|,
 literal|63
 argument_list|)
 expr_stmt|;
-comment|/*unaddress device*/
+comment|/* unaddress device */
 if|if
 condition|(
 name|status
@@ -3063,7 +3082,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 block|}
 end_function
 
@@ -3132,7 +3151,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|BSR
@@ -3140,7 +3159,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*Set REN bit on GPIB*/
+comment|/* Set REN bit on GPIB */
 do|do
 block|{
 if|if
@@ -3186,7 +3205,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|CDOR
@@ -3203,7 +3222,7 @@ operator|+
 literal|32
 argument_list|)
 expr_stmt|;
-comment|/*address device to listen*/
+comment|/* address device to listen */
 name|counter
 operator|++
 expr_stmt|;
@@ -3261,7 +3280,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|CDOR
@@ -3269,7 +3288,7 @@ argument_list|,
 literal|63
 argument_list|)
 expr_stmt|;
-comment|/*Unaddress device*/
+comment|/* Unaddress device */
 if|if
 condition|(
 name|status
@@ -3313,7 +3332,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 block|}
 end_function
 
@@ -3394,7 +3413,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|CDOR
@@ -3468,7 +3487,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|AUXMR
@@ -3476,7 +3495,7 @@ argument_list|,
 literal|0x5E
 argument_list|)
 expr_stmt|;
-comment|/*Clear SYNC*/
+comment|/* Clear SYNC */
 name|outb
 argument_list|(
 name|CDOR
@@ -3527,7 +3546,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|AUXMR
@@ -3542,7 +3561,7 @@ argument_list|,
 literal|63
 argument_list|)
 expr_stmt|;
-comment|/*unaddress device*/
+comment|/* unaddress device */
 if|if
 condition|(
 name|status
@@ -3586,12 +3605,12 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 block|}
 end_function
 
 begin_comment
-comment|/*Trigger a device.  What happens depends on how the device is  configured.  */
+comment|/* Trigger a device.  What happens depends on how the device is configured. */
 end_comment
 
 begin_function
@@ -3667,7 +3686,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|CDOR
@@ -3681,7 +3700,7 @@ operator|+
 literal|32
 argument_list|)
 expr_stmt|;
-comment|/*address device to listen*/
+comment|/* address device to listen */
 if|if
 condition|(
 operator|!
@@ -3735,7 +3754,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|CDOR
@@ -3743,7 +3762,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/*send GET*/
+comment|/* send GET */
 if|if
 condition|(
 operator|!
@@ -3797,7 +3816,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|AUXMR
@@ -3812,7 +3831,7 @@ argument_list|,
 literal|63
 argument_list|)
 expr_stmt|;
-comment|/*unaddress device*/
+comment|/* unaddress device */
 if|if
 condition|(
 operator|!
@@ -3866,13 +3885,13 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*Trigger multiple devices by addressing them all to listen, and then   sending GET*/
+comment|/*  * Trigger multiple devices by addressing them all to listen, and then  * sending GET  */
 end_comment
 
 begin_function
@@ -3970,7 +3989,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|CDOR
@@ -3987,7 +4006,7 @@ operator|+
 literal|32
 argument_list|)
 expr_stmt|;
-comment|/*address device to listen*/
+comment|/* address device to listen */
 name|counter
 operator|++
 expr_stmt|;
@@ -4055,7 +4074,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|CDOR
@@ -4063,7 +4082,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/*send GET*/
+comment|/* send GET */
 if|if
 condition|(
 operator|!
@@ -4117,7 +4136,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 name|outb
 argument_list|(
 name|AUXMR
@@ -4132,7 +4151,7 @@ argument_list|,
 literal|63
 argument_list|)
 expr_stmt|;
-comment|/*unaddress device*/
+comment|/* unaddress device */
 if|if
 condition|(
 operator|!
@@ -4186,21 +4205,17 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Wait to send next cmd*/
+comment|/* Wait to send next cmd */
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*This is not used now, but it should work with NI's 8 bit gpib board   since it does not use the TURBO488 registers at all */
+comment|/*  * This is not used now, but it should work with NI's 8 bit gpib board  * since it does not use the TURBO488 registers at all  */
 end_comment
 
 begin_comment
-comment|/*Send data through the TURBO488 FIFOS to a device that is already  addressed to listen.  This is used by the write call when someone is  writing to a printer or plotter, etc... */
-end_comment
-
-begin_comment
-comment|/*The last byte of each write is held off until either the next  write or close, so it can be sent with EOI set*/
+comment|/*  * Send data through the TURBO488 FIFOS to a device that is already  * addressed to listen.  This is used by the write call when someone is  * writing to a printer or plotter, etc...  *  * The last byte of each write is held off until either the next  * write or close, so it can be sent with EOI set  */
 end_comment
 
 begin_function
@@ -4250,7 +4265,7 @@ name|EWOULDBLOCK
 expr_stmt|;
 do|do
 block|{
-comment|/*Wait for fifo to become not full if it is full */
+comment|/* Wait for fifo to become not full if it is full */
 name|sleeptime
 operator|=
 name|SLEEP_MIN
@@ -4318,7 +4333,7 @@ name|EWOULDBLOCK
 operator|)
 condition|)
 do|;
-comment|/*Fifo is full*/
+comment|/* Fifo is full */
 if|if
 condition|(
 operator|(
@@ -4353,7 +4368,12 @@ name|counter
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*  printf ("gpib: sent:%c,%c\n",data[counter],data[counter+1]);*/
+if|#
+directive|if
+literal|0
+block|printf ("gpib: sent:%c, %c\n", data[counter], data[counter + 1]);
+endif|#
+directive|endif
 name|counter
 operator|+=
 literal|2
@@ -4379,8 +4399,8 @@ name|EWOULDBLOCK
 operator|)
 condition|)
 do|;
-comment|/*The write routine and close routine must check if there is 1   byte left and handle it accordingly*/
-comment|/*Return the number of bytes written to the device*/
+comment|/* 	 * The write routine and close routine must check if there is 1 	 * byte left and handle it accordingly 	 */
+comment|/* Return the number of bytes written to the device */
 return|return
 operator|(
 name|counter
@@ -4425,7 +4445,7 @@ argument_list|,
 literal|0x30
 argument_list|)
 expr_stmt|;
-comment|/*we have to enable DMA (0x30) for turbo488 to work*/
+comment|/* we have to enable DMA (0x30) for turbo488 to work */
 name|outb
 argument_list|(
 name|CNT0
@@ -4471,6 +4491,7 @@ literal|8
 operator|)
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -4488,6 +4509,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -4518,7 +4540,7 @@ operator|+
 literal|32
 argument_list|)
 expr_stmt|;
-comment|/*address device to listen*/
+comment|/* address device to listen */
 if|if
 condition|(
 operator|!
@@ -4536,6 +4558,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -4553,6 +4576,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -4577,7 +4601,7 @@ argument_list|,
 literal|64
 argument_list|)
 expr_stmt|;
-comment|/*Address controller (me) to talk*/
+comment|/* Address controller (me) to talk */
 if|if
 condition|(
 operator|!
@@ -4595,6 +4619,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -4612,6 +4637,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -4636,7 +4662,7 @@ argument_list|,
 name|gts
 argument_list|)
 expr_stmt|;
-comment|/*Set to Standby (Controller)*/
+comment|/* Set to Standby (Controller) */
 name|fifopos
 operator|=
 literal|0
@@ -4675,7 +4701,7 @@ argument_list|,
 literal|0x10
 argument_list|)
 expr_stmt|;
-comment|/*RESET fifos*/
+comment|/* RESET fifos */
 name|outb
 argument_list|(
 name|CCRG
@@ -4683,7 +4709,7 @@ argument_list|,
 name|seoi
 argument_list|)
 expr_stmt|;
-comment|/*program to send EOI at end*/
+comment|/* program to send EOI at end */
 name|outb
 argument_list|(
 name|CMDR
@@ -4691,14 +4717,14 @@ argument_list|,
 literal|0x04
 argument_list|)
 expr_stmt|;
-comment|/*Tell TURBO488 to GO*/
+comment|/* Tell TURBO488 to GO */
 name|status
 operator|=
 name|EWOULDBLOCK
 expr_stmt|;
 do|do
 block|{
-comment|/*Wait for fifo to become not full if it is full */
+comment|/* Wait for fifo to become not full if it is full */
 name|sleeptime
 operator|=
 name|SLEEP_MIN
@@ -4766,7 +4792,7 @@ name|EWOULDBLOCK
 operator|)
 condition|)
 do|;
-comment|/*Fifo is full*/
+comment|/* Fifo is full */
 if|if
 condition|(
 operator|(
@@ -4785,8 +4811,13 @@ literal|0x08
 operator|)
 condition|)
 block|{
-comment|/*if(count==2) outb(CFG,15+0x40); */
-comment|/*send eoi when done*/
+if|#
+directive|if
+literal|0
+block|if (count == 2) outb(CFG, 15 + 0x40);
+comment|/* send eoi when done */
+endif|#
+directive|endif
 name|outw
 argument_list|(
 name|FIFOB
@@ -4839,7 +4870,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 block|{
-comment|/*Wait for fifo to become not full*/
+comment|/* Wait for fifo to become not full */
 if|if
 condition|(
 name|status
@@ -4893,9 +4924,14 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Fifo is full*/
-comment|/*outb(CFG,0x40+15);*/
-comment|/*send eoi when done*/
+comment|/* Fifo is full */
+if|#
+directive|if
+literal|0
+block|outb(CFG, 0x40 + 15);
+comment|/* send eoi when done */
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|FIFOB
@@ -4913,8 +4949,13 @@ name|count
 operator|--
 expr_stmt|;
 block|}
-comment|/*outb(CMDR,0x04);*/
-comment|/*Wait for fifo to become empty*/
+if|#
+directive|if
+literal|0
+block|outb(CMDR, 0x04);
+endif|#
+directive|endif
+comment|/* Wait for fifo to become empty */
 if|if
 condition|(
 name|status
@@ -4957,7 +4998,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*Fifo is not empty*/
+comment|/* Fifo is not empty */
 name|outb
 argument_list|(
 name|CMDR
@@ -4965,8 +5006,8 @@ argument_list|,
 literal|0x08
 argument_list|)
 expr_stmt|;
-comment|/*Issue STOP to TURBO488*/
-comment|/*Wait for DONE and STOP*/
+comment|/* Issue STOP to TURBO488 */
+comment|/* Wait for DONE and STOP */
 if|if
 condition|(
 name|status
@@ -5010,7 +5051,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*not done and stop*/
+comment|/* not done and stop */
 name|outb
 argument_list|(
 name|IMR2
@@ -5018,7 +5059,7 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-comment|/*we have to enable DMA (0x30) for turbo488 to work*/
+comment|/* we have to enable DMA (0x30) for turbo488 to work */
 name|outb
 argument_list|(
 name|CMDR
@@ -5026,7 +5067,7 @@ argument_list|,
 literal|0x20
 argument_list|)
 expr_stmt|;
-comment|/*soft reset turbo488*/
+comment|/* soft reset turbo488 */
 name|outb
 argument_list|(
 name|CMDR
@@ -5034,10 +5075,8 @@ argument_list|,
 literal|0x10
 argument_list|)
 expr_stmt|;
-comment|/*reset fifos*/
-comment|/*Send last byte with EOI set*/
-comment|/*Here EOI is handled correctly since the string to be sent */
-comment|/*is actually all sent during the ioctl.  (See above)*/
+comment|/* reset fifos */
+comment|/* 	 * Send last byte with EOI set 	 * Here EOI is handled correctly since the string to be sent 	 * is actually all sent during the ioctl.  (See above) 	 */
 if|if
 condition|(
 name|count
@@ -5049,8 +5088,9 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 block|{
-comment|/*Count should always=1 here*/
+comment|/* Count should always=1 here */
 do|do
+block|{
 if|if
 condition|(
 operator|!
@@ -5080,6 +5120,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -5106,7 +5147,7 @@ argument_list|,
 name|seoi
 argument_list|)
 expr_stmt|;
-comment|/*Set EOI for the last byte*/
+comment|/* Set EOI for the last byte */
 name|outb
 argument_list|(
 name|AUXMR
@@ -5114,7 +5155,7 @@ argument_list|,
 literal|0x5E
 argument_list|)
 expr_stmt|;
-comment|/*Clear SYNC*/
+comment|/* Clear SYNC */
 name|outb
 argument_list|(
 name|CDOR
@@ -5133,6 +5174,7 @@ operator|--
 expr_stmt|;
 block|}
 do|do
+block|{
 if|if
 condition|(
 operator|!
@@ -5162,6 +5204,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -5198,6 +5241,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -5215,6 +5259,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -5239,7 +5284,7 @@ argument_list|,
 name|tca
 argument_list|)
 expr_stmt|;
-comment|/* Regain full control of the bus*/
+comment|/* Regain full control of the bus */
 if|if
 condition|(
 operator|!
@@ -5257,6 +5302,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -5274,6 +5320,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -5298,7 +5345,7 @@ argument_list|,
 literal|63
 argument_list|)
 expr_stmt|;
-comment|/*unlisten*/
+comment|/* unlisten */
 if|if
 condition|(
 operator|!
@@ -5316,6 +5363,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -5333,6 +5381,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -5357,7 +5406,7 @@ argument_list|,
 literal|0x5E
 argument_list|)
 expr_stmt|;
-comment|/*Clear SYNC*/
+comment|/* Clear SYNC */
 name|outb
 argument_list|(
 name|CDOR
@@ -5365,7 +5414,7 @@ argument_list|,
 literal|95
 argument_list|)
 expr_stmt|;
-comment|/*untalk*/
+comment|/* untalk */
 if|if
 condition|(
 operator|!
@@ -5383,6 +5432,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -5400,6 +5450,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -5469,8 +5520,13 @@ argument_list|,
 literal|0x30
 argument_list|)
 expr_stmt|;
-comment|/*we have to enable DMA (0x30) for turbo488 to work*/
-comment|/*outb(IMR3,0x1F);  outb(INTR,1); */
+comment|/* we have to enable DMA (0x30) for turbo488 to work */
+if|#
+directive|if
+literal|0
+block|outb(IMR3, 0x1F); 	outb(INTR, 1);
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|CMDR
@@ -5489,7 +5545,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Halt on int,read, fifo B first, CCEN TMOE TIM */
+comment|/* Halt on int, read, fifo B first, CCEN TMOE TIM */
 name|outb
 argument_list|(
 name|CMDR
@@ -5497,7 +5553,7 @@ argument_list|,
 literal|0x10
 argument_list|)
 expr_stmt|;
-comment|/*RESET fifos*/
+comment|/* RESET fifos */
 name|outb
 argument_list|(
 name|CCRG
@@ -5505,7 +5561,7 @@ argument_list|,
 name|tcs
 argument_list|)
 expr_stmt|;
-comment|/*program to tcs at end*/
+comment|/* program to tcs at end */
 name|outb
 argument_list|(
 name|CMDR
@@ -5513,12 +5569,13 @@ argument_list|,
 literal|0x08
 argument_list|)
 expr_stmt|;
-comment|/*STOP??*/
+comment|/* STOP?? */
 name|status
 operator|=
 name|EWOULDBLOCK
 expr_stmt|;
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -5536,6 +5593,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -5560,8 +5618,9 @@ argument_list|,
 literal|32
 argument_list|)
 expr_stmt|;
-comment|/*Address controller (me) to listen*/
+comment|/* Address controller (me) to listen */
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -5579,6 +5638,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -5609,8 +5669,9 @@ operator|+
 literal|64
 argument_list|)
 expr_stmt|;
-comment|/*address device to talk*/
+comment|/* address device to talk */
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -5628,6 +5689,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -5652,7 +5714,7 @@ argument_list|,
 name|gts
 argument_list|)
 expr_stmt|;
-comment|/*Set to Standby (Controller)*/
+comment|/* Set to Standby (Controller) */
 name|counter
 operator|=
 literal|0
@@ -5668,7 +5730,7 @@ argument_list|,
 literal|0x04
 argument_list|)
 expr_stmt|;
-comment|/*Tell TURBO488 to GO*/
+comment|/* Tell TURBO488 to GO */
 do|do
 block|{
 name|status1
@@ -5721,7 +5783,12 @@ operator|)
 operator|=
 name|inword
 expr_stmt|;
-comment|/* printf ("Read:%c,%c\n",data[counter],data[counter+1]);*/
+if|#
+directive|if
+literal|0
+block|printf ("Read:%c, %c\n", data[counter], data[counter + 1]);
+endif|#
+directive|endif
 name|counter
 operator|+=
 literal|2
@@ -5772,7 +5839,7 @@ literal|0x04
 operator|)
 condition|)
 block|{
-comment|/*Only 1 byte came in on last 16 bit transfer*/
+comment|/* Only 1 byte came in on last 16 bit transfer */
 name|data
 index|[
 name|counter
@@ -5801,7 +5868,7 @@ argument_list|,
 literal|0x08
 argument_list|)
 expr_stmt|;
-comment|/*send STOP*/
+comment|/* send STOP */
 do|do
 block|{
 name|status
@@ -5839,7 +5906,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*wait for DONE and STOP*/
+comment|/* wait for DONE and STOP */
 name|outb
 argument_list|(
 name|AUXMR
@@ -5854,7 +5921,7 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-comment|/*we have to enable DMA (0x30) for turbo488 to work*/
+comment|/* we have to enable DMA (0x30) for turbo488 to work */
 name|outb
 argument_list|(
 name|CMDR
@@ -5862,7 +5929,7 @@ argument_list|,
 literal|0x20
 argument_list|)
 expr_stmt|;
-comment|/*soft reset turbo488*/
+comment|/* soft reset turbo488 */
 name|outb
 argument_list|(
 name|CMDR
@@ -5870,8 +5937,13 @@ argument_list|,
 literal|0x10
 argument_list|)
 expr_stmt|;
-comment|/*reset fifos*/
-comment|/* do    status=tsleep((caddr_t)&gpib_sc,GPIBPRI,"gpibpoll",1);  while (!(inb(ISR1)&2));*/
+comment|/* reset fifos */
+if|#
+directive|if
+literal|0
+block|do { 		status = tsleep((caddr_t)&gpib_sc, GPIBPRI, "gpibpoll", 1); 	} while (!(inb(ISR1)& 2));
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|AUXMR
@@ -5879,8 +5951,9 @@ argument_list|,
 name|tca
 argument_list|)
 expr_stmt|;
-comment|/* Regain full control of the bus*/
+comment|/* Regain full control of the bus */
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -5898,6 +5971,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -5922,8 +5996,9 @@ argument_list|,
 literal|63
 argument_list|)
 expr_stmt|;
-comment|/*unlisten*/
+comment|/* unlisten */
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -5941,6 +6016,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -5965,7 +6041,7 @@ argument_list|,
 literal|0x5E
 argument_list|)
 expr_stmt|;
-comment|/*Clear SYNC*/
+comment|/* Clear SYNC */
 name|outb
 argument_list|(
 name|CDOR
@@ -5973,8 +6049,9 @@ argument_list|,
 literal|95
 argument_list|)
 expr_stmt|;
-comment|/*untalk*/
+comment|/* untalk */
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -5992,6 +6069,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -6053,6 +6131,7 @@ literal|8
 operator|)
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -6070,6 +6149,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -6100,7 +6180,7 @@ operator|+
 literal|64
 argument_list|)
 expr_stmt|;
-comment|/*address device to talk*/
+comment|/* address device to talk */
 if|if
 condition|(
 operator|!
@@ -6118,6 +6198,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -6135,6 +6216,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -6159,7 +6241,7 @@ argument_list|,
 literal|32
 argument_list|)
 expr_stmt|;
-comment|/*Address controller (me) to listen*/
+comment|/* Address controller (me) to listen */
 if|if
 condition|(
 operator|!
@@ -6177,6 +6259,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -6194,6 +6277,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -6225,7 +6309,7 @@ argument_list|,
 literal|0x18
 argument_list|)
 expr_stmt|;
-comment|/*Send SPE (serial poll enable)*/
+comment|/* Send SPE (serial poll enable) */
 if|if
 condition|(
 operator|!
@@ -6243,6 +6327,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -6260,6 +6345,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -6277,7 +6363,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*wait for bus to be synced*/
+comment|/* wait for bus to be synced */
 if|if
 condition|(
 operator|!
@@ -6295,6 +6381,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -6312,6 +6399,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -6336,7 +6424,7 @@ argument_list|,
 name|gts
 argument_list|)
 expr_stmt|;
-comment|/*Set to Standby (Controller)*/
+comment|/* Set to Standby (Controller) */
 if|if
 condition|(
 operator|!
@@ -6354,6 +6442,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -6371,6 +6460,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -6402,7 +6492,7 @@ argument_list|,
 name|tcs
 argument_list|)
 expr_stmt|;
-comment|/* Take control after next read*/
+comment|/* Take control after next read */
 name|statusbyte
 operator|=
 name|inb
@@ -6427,6 +6517,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -6444,6 +6535,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -6468,8 +6560,8 @@ argument_list|,
 literal|0x19
 argument_list|)
 expr_stmt|;
-comment|/*SPD (serial poll disable)*/
-comment|/*wait for bus to be synced*/
+comment|/* SPD (serial poll disable) */
+comment|/* wait for bus to be synced */
 if|if
 condition|(
 operator|!
@@ -6487,6 +6579,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -6504,6 +6597,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -6538,6 +6632,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -6555,6 +6650,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -6579,7 +6675,7 @@ argument_list|,
 literal|95
 argument_list|)
 expr_stmt|;
-comment|/*untalk*/
+comment|/* untalk */
 if|if
 condition|(
 operator|!
@@ -6597,6 +6693,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -6614,6 +6711,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -6645,7 +6743,7 @@ argument_list|,
 literal|63
 argument_list|)
 expr_stmt|;
-comment|/*unlisten*/
+comment|/* unlisten */
 if|if
 condition|(
 operator|!
@@ -6663,6 +6761,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -6680,6 +6779,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
@@ -6697,7 +6797,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
-comment|/*wait for bus to be synced*/
+comment|/* wait for bus to be synced */
 if|if
 condition|(
 operator|!
@@ -6715,6 +6815,7 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 do|do
+block|{
 name|status
 operator|=
 name|tsleep
@@ -6732,6 +6833,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 do|while
 condition|(
 operator|!
