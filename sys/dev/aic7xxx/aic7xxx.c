@@ -29416,10 +29416,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|cur_column
-operator|!=
-name|NULL
-operator|&&
 operator|*
 name|cur_column
 operator|>=
