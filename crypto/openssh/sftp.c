@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp.c,v 1.44 2004/02/17 11:03:08 djm Exp $"
+literal|"$OpenBSD: sftp.c,v 1.45 2004/03/03 09:31:20 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -133,6 +133,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|showprogress
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -7065,6 +7067,18 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|isatty
+argument_list|(
+name|STDERR_FILENO
+argument_list|)
+condition|)
+name|showprogress
+operator|=
+literal|0
+expr_stmt|;
 name|log_init
 argument_list|(
 name|argv

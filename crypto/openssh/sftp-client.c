@@ -28,7 +28,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-client.c,v 1.46 2004/02/17 05:39:51 djm Exp $"
+literal|"$OpenBSD: sftp-client.c,v 1.47 2004/03/03 09:30:42 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4056,11 +4056,10 @@ expr_stmt|;
 if|if
 condition|(
 name|showprogress
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|size
+operator|!=
+literal|0
 condition|)
 name|start_progress_meter
 argument_list|(
@@ -4072,17 +4071,6 @@ operator|&
 name|progress_counter
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"Fetching %s to %s\n"
-argument_list|,
-name|remote_path
-argument_list|,
-name|local_path
-argument_list|)
-expr_stmt|;
-block|}
 while|while
 condition|(
 name|num_req
@@ -5317,16 +5305,6 @@ name|st_size
 argument_list|,
 operator|&
 name|offset
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"Uploading %s to %s\n"
-argument_list|,
-name|local_path
-argument_list|,
-name|remote_path
 argument_list|)
 expr_stmt|;
 for|for

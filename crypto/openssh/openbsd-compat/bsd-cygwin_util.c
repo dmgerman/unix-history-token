@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bsd-cygwin_util.c,v 1.11 2003/08/07 06:23:43 dtucker Exp $"
+literal|"$Id: bsd-cygwin_util.c,v 1.12 2004/04/18 11:15:45 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -265,6 +265,13 @@ name|HAS_NTSEC_BY_DEFAULT
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|HAS_CREATE_TOKEN_WO_NTSEC
+value|3
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -285,6 +292,10 @@ decl_stmt|;
 specifier|static
 name|int
 name|has_ntsec_by_default
+decl_stmt|;
+specifier|static
+name|int
+name|has_create_token_wo_ntsec
 decl_stmt|;
 comment|/*  	 * has_capability() basically calls uname() and checks if 	 * specific capabilities of Cygwin can be evaluated from that. 	 * This simplifies the calling functions which only have to ask 	 * for a capability using has_capability() instead of having 	 * to figure that out by themselves. 	 */
 if|if
@@ -435,6 +446,26 @@ name|has_ntsec_by_default
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|major_high
+operator|>
+literal|1
+operator|||
+operator|(
+name|major_high
+operator|==
+literal|1
+operator|&&
+name|major_low
+operator|>=
+literal|5
+operator|)
+condition|)
+name|has_create_token_wo_ntsec
+operator|=
+literal|1
+expr_stmt|;
 name|inited
 operator|=
 literal|1
@@ -460,6 +491,14 @@ case|:
 return|return
 operator|(
 name|has_ntsec_by_default
+operator|)
+return|;
+case|case
+name|HAS_CREATE_TOKEN_WO_NTSEC
+case|:
+return|return
+operator|(
+name|has_create_token_wo_ntsec
 operator|)
 return|;
 block|}
@@ -551,6 +590,11 @@ argument_list|(
 name|cygwin
 argument_list|)
 operator|)
+operator|||
+name|has_capability
+argument_list|(
+name|HAS_CREATE_TOKEN_WO_NTSEC
+argument_list|)
 operator|)
 condition|)
 name|has_create_token

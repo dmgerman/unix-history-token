@@ -9,16 +9,6 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAVE_OSF_SIA
-argument_list|)
-end_if
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -438,15 +428,6 @@ name|pw_password
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined(HAVE_OSF_SIA) */
-end_comment
 
 end_unit
 

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: dh.c,v 1.26 2003/12/16 15:51:54 markus Exp $"
+literal|"$OpenBSD: dh.c,v 1.29 2004/02/27 22:49:27 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -433,6 +433,25 @@ condition|)
 goto|goto
 name|failclean
 goto|;
+if|if
+condition|(
+name|BN_is_zero
+argument_list|(
+name|dhg
+operator|->
+name|g
+argument_list|)
+operator|||
+name|BN_is_one
+argument_list|(
+name|dhg
+operator|->
+name|g
+argument_list|)
+condition|)
+goto|goto
+name|failclean
+goto|;
 return|return
 operator|(
 literal|1
@@ -493,7 +512,7 @@ decl_stmt|;
 name|char
 name|line
 index|[
-literal|2048
+literal|4096
 index|]
 decl_stmt|;
 name|int
@@ -979,8 +998,6 @@ name|int
 name|i
 decl_stmt|,
 name|bits_set
-init|=
-literal|0
 decl_stmt|,
 name|tries
 init|=
@@ -1110,6 +1127,10 @@ expr_stmt|;
 for|for
 control|(
 name|i
+operator|=
+literal|0
+operator|,
+name|bits_set
 operator|=
 literal|0
 init|;
