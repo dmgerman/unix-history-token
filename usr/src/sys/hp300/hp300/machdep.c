@@ -1,96 +1,102 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.51 89/11/28$  *  *	@(#)machdep.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.51 89/11/28$  *  *	@(#)machdep.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|"signalvar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/kernel.h"
+file|"kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/map.h"
+file|"map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/reboot.h"
+file|"reboot.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/conf.h"
+file|"conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/file.h"
+file|"file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/clist.h"
+file|"clist.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/callout.h"
+file|"callout.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/malloc.h"
+file|"malloc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/msgbuf.h"
+file|"msgbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"user.h"
 end_include
 
 begin_ifdef
@@ -102,7 +108,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"sys/shm.h"
+file|"shm.h"
 end_include
 
 begin_endif
@@ -149,6 +155,12 @@ begin_include
 include|#
 directive|include
 file|"isr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pte.h"
 end_include
 
 begin_include
@@ -335,6 +347,76 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Console initialization: called early on from main,  * before vm init or startup.  Do enough configuration  * to choose and initialize a console.  */
+end_comment
+
+begin_macro
+name|consinit
+argument_list|()
+end_macro
+
+begin_block
+block|{
+comment|/* 	 * Set cpuspeed immediately since cninit() called routines 	 * might use delay. 	 */
+switch|switch
+condition|(
+name|machineid
+condition|)
+block|{
+case|case
+name|HP_320
+case|:
+case|case
+name|HP_330
+case|:
+case|case
+name|HP_340
+case|:
+name|cpuspeed
+operator|=
+name|MHZ_16
+expr_stmt|;
+break|break;
+case|case
+name|HP_350
+case|:
+case|case
+name|HP_360
+case|:
+name|cpuspeed
+operator|=
+name|MHZ_25
+expr_stmt|;
+break|break;
+case|case
+name|HP_370
+case|:
+name|cpuspeed
+operator|=
+name|MHZ_33
+expr_stmt|;
+break|break;
+case|case
+name|HP_375
+case|:
+name|cpuspeed
+operator|=
+name|MHZ_50
+expr_stmt|;
+break|break;
+block|}
+comment|/*          * Find what hardware is attached to this machine.          */
+name|find_devs
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Initialize the console before we print anything out. 	 */
+name|cninit
+argument_list|()
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
 comment|/*  * Machine-dependent startup code  */
 end_comment
 
@@ -398,67 +480,6 @@ decl_stmt|;
 name|vm_size_t
 name|size
 decl_stmt|;
-comment|/* 	 * Set cpuspeed immediately since cninit() called routines 	 * might use delay. 	 */
-switch|switch
-condition|(
-name|machineid
-condition|)
-block|{
-case|case
-name|HP_320
-case|:
-case|case
-name|HP_330
-case|:
-case|case
-name|HP_340
-case|:
-name|cpuspeed
-operator|=
-name|MHZ_16
-expr_stmt|;
-break|break;
-case|case
-name|HP_350
-case|:
-case|case
-name|HP_360
-case|:
-name|cpuspeed
-operator|=
-name|MHZ_25
-expr_stmt|;
-break|break;
-case|case
-name|HP_370
-case|:
-name|cpuspeed
-operator|=
-name|MHZ_33
-expr_stmt|;
-break|break;
-case|case
-name|HP_375
-case|:
-name|cpuspeed
-operator|=
-name|MHZ_50
-expr_stmt|;
-break|break;
-block|}
-ifndef|#
-directive|ifndef
-name|DEBUG
-comment|/*          * Find what hardware is attached to this machine.          */
-name|find_devs
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Initialize the console before we print anything out. 	 */
-name|cninit
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Initialize error message buffer (at end of core). 	 */
 ifdef|#
 directive|ifdef
@@ -584,18 +605,6 @@ argument_list|,
 name|fileNFILE
 argument_list|)
 expr_stmt|;
-name|valloclim
-argument_list|(
-name|proc
-argument_list|,
-expr|struct
-name|proc
-argument_list|,
-name|nproc
-argument_list|,
-name|procNPROC
-argument_list|)
-expr_stmt|;
 name|valloc
 argument_list|(
 name|cfree
@@ -625,7 +634,7 @@ name|map
 argument_list|,
 name|nswapmap
 operator|=
-name|nproc
+name|maxproc
 operator|*
 literal|2
 argument_list|)
@@ -1106,10 +1115,7 @@ name|initcpu
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Set up buffers, so they can be used to read disk labels. 	 */
-name|bhinit
-argument_list|()
-expr_stmt|;
-name|binit
+name|bufinit
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Configure the system. 	 */
@@ -1118,70 +1124,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PGINPROF
-end_ifdef
-
-begin_comment
-comment|/*  * Return the difference (in microseconds)  * between the  current time and a previous  * time as represented by the arguments.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_expr_stmt
-name|vmtime
-argument_list|(
-name|otime
-argument_list|,
-name|olbolt
-argument_list|,
-name|oicr
-argument_list|)
-specifier|register
-name|int
-name|otime
-operator|,
-name|olbolt
-operator|,
-name|oicr
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-operator|(
-operator|(
-name|time
-operator|.
-name|tv_sec
-operator|-
-name|otime
-operator|)
-operator|*
-literal|100
-operator|+
-name|lbolt
-operator|-
-name|olbolt
-operator|)
-operator|*
-literal|10000
-operator|)
-return|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Clear registers on exec  */
@@ -1213,9 +1155,17 @@ end_decl_stmt
 
 begin_block
 block|{
-name|u
-operator|.
-name|u_ar0
+specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+name|p
+operator|->
+name|p_regs
 index|[
 name|PC
 index|]
@@ -1256,18 +1206,16 @@ directive|ifdef
 name|HPUXCOMPAT
 if|if
 condition|(
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_flag
 operator|&
 name|SHPUX
 condition|)
 block|{
-name|u
-operator|.
-name|u_ar0
+name|p
+operator|->
+name|p_regs
 index|[
 name|A0
 index|]
@@ -1311,9 +1259,7 @@ comment|/* 	 * Ensure we perform the right action on traps type 1 and 2: 	 * If 
 if|if
 condition|(
 operator|(
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pptr
 operator|->
@@ -1323,9 +1269,7 @@ name|SHPUX
 operator|)
 operator|&&
 operator|(
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_flag
 operator|&
@@ -2042,40 +1986,29 @@ begin_comment
 comment|/*  * Send an interrupt to process.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|sendsig
-argument_list|(
-argument|catcher
-argument_list|,
-argument|sig
-argument_list|,
-argument|mask
-argument_list|,
-argument|code
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|catcher
+parameter_list|,
+name|sig
+parameter_list|,
+name|mask
+parameter_list|,
+name|code
+parameter_list|)
 name|sig_t
 name|catcher
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|sig
 decl_stmt|,
 name|mask
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|code
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2083,9 +2016,7 @@ name|proc
 modifier|*
 name|p
 init|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 decl_stmt|;
 specifier|register
 name|struct
@@ -2103,6 +2034,16 @@ modifier|*
 name|frame
 decl_stmt|;
 specifier|register
+name|struct
+name|sigacts
+modifier|*
+name|ps
+init|=
+name|p
+operator|->
+name|p_sigacts
+decl_stmt|;
+specifier|register
 name|short
 name|ft
 decl_stmt|;
@@ -2118,9 +2059,9 @@ expr|struct
 name|frame
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ar0
+name|p
+operator|->
+name|p_regs
 expr_stmt|;
 name|ft
 operator|=
@@ -2130,9 +2071,9 @@ name|f_format
 expr_stmt|;
 name|oonstack
 operator|=
-name|u
-operator|.
-name|u_onstack
+name|ps
+operator|->
+name|ps_onstack
 expr_stmt|;
 comment|/* 	 * Allocate and validate space for the signal handler 	 * context. Note that if the stack is in P0 space, the 	 * call to grow() is a nop, and the useracc() check 	 * will fail if the process has not already allocated 	 * the space with a `brk'. 	 */
 ifdef|#
@@ -2174,14 +2115,14 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|u
-operator|.
-name|u_onstack
+name|ps
+operator|->
+name|ps_onstack
 operator|&&
 operator|(
-name|u
-operator|.
-name|u_sigonstack
+name|ps
+operator|->
+name|ps_sigonstack
 operator|&
 name|sigmask
 argument_list|(
@@ -2198,16 +2139,16 @@ name|sigframe
 operator|*
 operator|)
 operator|(
-name|u
-operator|.
-name|u_sigsp
+name|ps
+operator|->
+name|ps_sigsp
 operator|-
 name|fsize
 operator|)
 expr_stmt|;
-name|u
-operator|.
-name|u_onstack
+name|ps
+operator|->
+name|ps_onstack
 operator|=
 literal|1
 expr_stmt|;
@@ -2242,9 +2183,11 @@ name|USRSTACK
 operator|-
 name|ctob
 argument_list|(
-name|u
-operator|.
-name|u_ssize
+name|p
+operator|->
+name|p_vmspace
+operator|->
+name|vm_ssize
 argument_list|)
 condition|)
 operator|(
@@ -2252,6 +2195,8 @@ name|void
 operator|)
 name|grow
 argument_list|(
+name|p
+argument_list|,
 operator|(
 name|unsigned
 operator|)
@@ -3148,7 +3093,7 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * System call to cleanup state after a signal  * has been taken.  Reset signal mask and  * stack state from context left by sendsig (above).  * Return to previous pc and psl as specified by  * context left by sendsig. Check carefully to  * make sure that the user has not modified the  * psl to gain improper priviledges or to cause  * a machine fault.  */
@@ -3401,9 +3346,11 @@ name|tsigc
 argument_list|)
 condition|)
 block|{
-name|u
-operator|.
-name|u_onstack
+name|p
+operator|->
+name|p_sigacts
+operator|->
+name|ps_onstack
 operator|=
 name|hscp
 operator|->
@@ -3429,9 +3376,9 @@ expr|struct
 name|frame
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ar0
+name|p
+operator|->
+name|p_regs
 expr_stmt|;
 name|frame
 operator|->
@@ -3586,9 +3533,11 @@ name|EINVAL
 operator|)
 return|;
 comment|/* 	 * Restore the user supplied information 	 */
-name|u
-operator|.
-name|u_onstack
+name|p
+operator|->
+name|p_sigacts
+operator|->
+name|ps_onstack
 operator|=
 name|scp
 operator|->
@@ -3614,9 +3563,9 @@ expr|struct
 name|frame
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ar0
+name|p
+operator|->
+name|p_regs
 expr_stmt|;
 name|frame
 operator|->
@@ -4104,9 +4053,7 @@ block|{
 comment|/* take a snap shot before clobbering any registers */
 if|if
 condition|(
-name|u
-operator|.
-name|u_procp
+name|curproc
 condition|)
 name|resume
 argument_list|(
@@ -4115,9 +4062,7 @@ name|u_int
 operator|)
 name|pcbb
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4185,6 +4130,9 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 include|#
 directive|include
 file|"fd.h"
@@ -4198,14 +4146,24 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
 name|sync
 argument_list|(
+operator|&
+name|proc0
+argument_list|,
 operator|(
-expr|struct
-name|sigcontext
+name|void
 operator|*
 operator|)
-literal|0
+name|NULL
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -5611,9 +5569,7 @@ name|printf
 argument_list|(
 literal|"pid %d: parity error\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 argument_list|)
@@ -5622,18 +5578,14 @@ name|uprintf
 argument_list|(
 literal|"sorry, pid %d killed due to memory parity error\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
 name|psignal
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 name|SIGKILL
 argument_list|)
@@ -5992,9 +5944,7 @@ name|printf
 argument_list|(
 literal|"pid = %d, pc = %s, "
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 argument_list|,
