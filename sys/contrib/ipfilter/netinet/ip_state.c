@@ -645,7 +645,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_state.c,v 2.30.2.71 2002/05/29 14:23:05 darrenr Exp $"
+literal|"@(#)$Id: ip_state.c,v 2.30.2.74 2002/07/27 15:58:10 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4141,6 +4141,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|is
+operator|->
+name|is_group
+operator|=
+name|is
+operator|->
+name|is_rule
+operator|->
+name|fr_group
+expr_stmt|;
 name|ATOMIC_INC32
 argument_list|(
 name|is
@@ -4750,10 +4760,6 @@ argument_list|(
 name|ip
 argument_list|,
 name|fin
-argument_list|,
-name|pass
-operator|^
-name|FR_KEEPSTATE
 argument_list|)
 expr_stmt|;
 return|return
@@ -6155,7 +6161,7 @@ condition|(
 operator|(
 name|flags
 operator|&
-name|FI_W_DPORT
+name|FI_W_DADDR
 operator|)
 operator|!=
 literal|0
@@ -7778,7 +7784,11 @@ name|rev
 decl_stmt|;
 if|if
 condition|(
-name|fr_state_lock
+operator|(
+name|ips_list
+operator|==
+name|NULL
+operator|)
 operator|||
 operator|(
 name|fin
@@ -7787,6 +7797,8 @@ name|fin_off
 operator|!=
 literal|0
 operator|)
+operator|||
+name|fr_state_lock
 operator|||
 operator|(
 name|fin
@@ -9179,10 +9191,6 @@ argument_list|(
 name|ip
 argument_list|,
 name|fin
-argument_list|,
-name|pass
-operator|^
-name|FR_KEEPSTATE
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -10521,6 +10529,22 @@ operator|=
 name|is
 operator|->
 name|is_flags
+expr_stmt|;
+name|ipsl
+operator|.
+name|isl_rulen
+operator|=
+name|is
+operator|->
+name|is_rulen
+expr_stmt|;
+name|ipsl
+operator|.
+name|isl_group
+operator|=
+name|is
+operator|->
+name|is_group
 expr_stmt|;
 if|if
 condition|(
