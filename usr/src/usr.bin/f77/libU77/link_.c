@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_link[] = "@(#)link_.c	1.1";  *  * make a link to an existing file  *  * calling sequence:  *	ierror = link(name1, name2)  * where:  *	name1 is the pathname of an existing file  *	name2 is a pathname to be linked to file name1  *	ierror will be 0 if successful; a system error code otherwise.  */
+comment|/* char id_link[] = "@(#)link_.c	1.2";  *  * make a link to an existing file  *  * calling sequence:  *	ierror = link(name1, name2)  * where:  *	name1 is the pathname of an existing file  *	name2 is a pathname to be linked to file name1  *	ierror will be 0 if successful; a system error code otherwise.  */
 end_comment
 
 begin_include
@@ -8,6 +8,30 @@ include|#
 directive|include
 file|"../libI77/f_errno.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXPATHLEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXPATHLEN
+value|128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|long
@@ -43,13 +67,13 @@ block|{
 name|char
 name|buf1
 index|[
-literal|128
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|char
 name|buf2
 index|[
-literal|128
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 if|if
@@ -96,6 +120,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|buf1
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+operator|||
 name|buf2
 index|[
 literal|0

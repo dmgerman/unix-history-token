@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char	id_rename[] = "@(#)rename_.c	1.1";  *  * rename a file atomically  *  * synopsis:  *	integer function rename (from, to)  *	character*(*) from, to  *  * where:  *	return value will be zero normally, an error number otherwise.  */
+comment|/* char	id_rename[] = "@(#)rename_.c	1.2";  *  * rename a file atomically  *  * synopsis:  *	integer function rename (from, to)  *	character*(*) from, to  *  * where:  *	return value will be zero normally, an error number otherwise.  */
 end_comment
 
 begin_include
@@ -8,6 +8,30 @@ include|#
 directive|include
 file|"../libI77/f_errno.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXPATHLEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXPATHLEN
+value|128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|long
@@ -43,13 +67,13 @@ block|{
 name|char
 name|frbuf
 index|[
-literal|256
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|char
 name|tobuf
 index|[
-literal|256
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 if|if

@@ -1,13 +1,31 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_stat[] = "@(#)stat_.c	1.2";  *  * get file status  *  * calling sequence:  *	integer stat, statb(12)  *	call stat (name, statb)  * where:  *	'statb' will receive the stat structure for file 'name'.  */
+comment|/* char id_stat[] = "@(#)stat_.c	1.3";  *  * get file status  *  * calling sequence:  *	integer stat, statb(12)  *	call stat (name, statb)  * where:  *	'statb' will receive the stat structure for file 'name'.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXPATHLEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXPATHLEN
+value|128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -45,7 +63,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|256
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|struct

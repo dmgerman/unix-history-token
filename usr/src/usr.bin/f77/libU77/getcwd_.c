@@ -1,7 +1,31 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_getcwd[] = "@(#)getcwd_.c	1.4";  * Get pathname of current working directory.  *  * calling sequence:  *	character*128 path  *	ierr = getcwd(path)  * where:  *	path will receive the pathname of the current working directory.  *	ierr will be 0 if successful, a system error code otherwise.  */
+comment|/* char id_getcwd[] = "@(#)getcwd_.c	1.5";  * Get pathname of current working directory.  *  * calling sequence:  *	character*128 path  *	ierr = getcwd(path)  * where:  *	path will receive the pathname of the current working directory.  *	ierr will be 0 if successful, a system error code otherwise.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXPATHLEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXPATHLEN
+value|128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -41,7 +65,7 @@ decl_stmt|;
 name|char
 name|pathname
 index|[
-literal|1024
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|p
