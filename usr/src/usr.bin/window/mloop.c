@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mloop.c	3.17 (Berkeley) %G%"
+literal|"@(#)mloop.c	3.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,8 +139,11 @@ name|p
 operator|<
 name|wwibq
 operator|&&
+name|wwmaskc
+argument_list|(
 operator|*
 name|p
+argument_list|)
 operator|!=
 name|escapec
 condition|;

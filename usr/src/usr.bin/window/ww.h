@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Edward Wang at The University of California, Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)ww.h	3.65 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Edward Wang at The University of California, Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)ww.h	3.66 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -1303,9 +1303,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|wwmaskc
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)& 0x7f)
+end_define
+
+begin_define
+define|#
+directive|define
 name|wwgetc
 parameter_list|()
-value|(wwibp< wwibq ? *wwibp++& 0x7f : -1)
+value|(wwibp< wwibq ? wwmaskc(*wwibp++) : -1)
 end_define
 
 begin_define
@@ -1313,7 +1323,7 @@ define|#
 directive|define
 name|wwpeekc
 parameter_list|()
-value|(wwibp< wwibq ? *wwibp& 0x7f : -1)
+value|(wwibp< wwibq ? wwmaskc(*wwibp) : -1)
 end_define
 
 begin_define
