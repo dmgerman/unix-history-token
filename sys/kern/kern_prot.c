@@ -4433,16 +4433,6 @@ operator|(
 name|EPERM
 operator|)
 return|;
-if|if
-condition|(
-name|proc
-condition|)
-name|proc
-operator|->
-name|p_acflag
-operator||=
-name|ASU
-expr_stmt|;
 return|return
 operator|(
 literal|0
