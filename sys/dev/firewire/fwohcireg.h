@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|PCI_CBMEM
-value|0x10
+value|PCIR_BAR(0)
 end_define
 
 begin_define
