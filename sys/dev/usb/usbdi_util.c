@@ -2328,7 +2328,7 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|usbd_bulk_transfer_cb
 name|__P
@@ -2348,7 +2348,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|usbd_bulk_transfer_cb
 parameter_list|(

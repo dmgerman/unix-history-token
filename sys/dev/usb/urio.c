@@ -422,7 +422,7 @@ operator|)
 end_if
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|struct
 name|cdevsw
 name|urio_cdevsw
@@ -476,7 +476,7 @@ directive|else
 end_else
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|struct
 name|cdevsw
 name|urio_cdevsw
@@ -2663,7 +2663,7 @@ argument_list|)
 end_if
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|urio_detach
 parameter_list|(

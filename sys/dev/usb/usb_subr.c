@@ -231,7 +231,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|usbd_set_config
 name|__P
@@ -246,7 +246,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|char
 modifier|*
 name|usbd_get_string
@@ -265,7 +265,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|usbd_getnewaddr
 name|__P
@@ -288,7 +288,7 @@ argument_list|)
 end_if
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|usbd_print
 name|__P
@@ -308,7 +308,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|usbd_submatch
 name|__P
@@ -338,7 +338,7 @@ argument_list|)
 end_elif
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|usbd_submatch
 name|__P
@@ -362,7 +362,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|usbd_free_iface_data
 name|__P
@@ -379,7 +379,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|usbd_kill_pipe
 name|__P
@@ -392,7 +392,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|usbd_probe_and_attach
 name|__P
@@ -415,7 +415,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|u_int32_t
 name|usb_cookie_no
 init|=
@@ -498,7 +498,7 @@ comment|/* USBVERBOSE */
 end_comment
 
 begin_decl_stmt
-specifier|static
+name|Static
 specifier|const
 name|char
 modifier|*
@@ -2648,7 +2648,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|usbd_status
 name|usbd_set_config
 parameter_list|(

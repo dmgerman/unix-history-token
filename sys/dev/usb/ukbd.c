@@ -362,14 +362,14 @@ function_decl|;
 end_typedef
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_intr_t
 name|ukbd_intr
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|static
+name|Static
 name|int
 name|ukbd_driver_load
 parameter_list|(
@@ -1054,8 +1054,11 @@ name|NMOD
 value|8
 end_define
 
+begin_macro
+name|Static
+end_macro
+
 begin_struct
-specifier|static
 struct|struct
 block|{
 name|int
@@ -1141,7 +1144,7 @@ comment|/*  * FIXME: Mac USB keyboard generates:  * 0x53: keypad NumLock/Clear  
 end_comment
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|u_int8_t
 name|ukbd_trtab
 index|[
@@ -1821,7 +1824,7 @@ comment|/* keyboard driver declaration */
 end_comment
 
 begin_function_decl
-specifier|static
+name|Static
 name|int
 name|ukbd_configure
 parameter_list|(
@@ -1832,119 +1835,119 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_probe_t
 name|ukbd_probe
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_init_t
 name|ukbd_init
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_term_t
 name|ukbd_term
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_intr_t
 name|ukbd_interrupt
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_test_if_t
 name|ukbd_test_if
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_enable_t
 name|ukbd_enable
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_disable_t
 name|ukbd_disable
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_read_t
 name|ukbd_read
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_check_t
 name|ukbd_check
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_read_char_t
 name|ukbd_read_char
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_check_char_t
 name|ukbd_check_char
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_ioctl_t
 name|ukbd_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_lock_t
 name|ukbd_lock
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_clear_state_t
 name|ukbd_clear_state
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_get_state_t
 name|ukbd_get_state
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_set_state_t
 name|ukbd_set_state
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|kbd_poll_mode_t
 name|ukbd_poll
 decl_stmt|;
@@ -2013,7 +2016,7 @@ comment|/* local functions */
 end_comment
 
 begin_function_decl
-specifier|static
+name|Static
 name|int
 name|ukbd_enable_intr
 parameter_list|(
@@ -2032,14 +2035,14 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|timeout_t
 name|ukbd_timeout
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|static
+name|Static
 name|int
 name|ukbd_getc
 parameter_list|(
@@ -2051,7 +2054,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+name|Static
 name|int
 name|probe_keyboard
 parameter_list|(
@@ -2067,7 +2070,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+name|Static
 name|int
 name|init_keyboard
 parameter_list|(
@@ -2086,7 +2089,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+name|Static
 name|void
 name|set_leds
 parameter_list|(
@@ -2101,7 +2104,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+name|Static
 name|int
 name|set_typematic
 parameter_list|(
@@ -2122,7 +2125,7 @@ name|UKBD_EMULATE_ATSCANCODE
 end_ifdef
 
 begin_function_decl
-specifier|static
+name|Static
 name|int
 name|keycode2scancode
 parameter_list|(
@@ -2185,35 +2188,35 @@ comment|/* structures for the default keyboard */
 end_comment
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|keyboard_t
 name|default_kbd
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|ukbd_state_t
 name|default_kbd_state
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|keymap_t
 name|default_keymap
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|accentmap_t
 name|default_accentmap
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|fkeytab_t
 name|default_fkeytab
 index|[
@@ -2227,7 +2230,7 @@ comment|/*   * The back door to the keyboard driver!  * This function is called 
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_configure
 parameter_list|(
@@ -2261,7 +2264,7 @@ comment|/* detect a keyboard */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_probe
 parameter_list|(
@@ -2350,7 +2353,7 @@ comment|/* reset and initialize the device */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_init
 parameter_list|(
@@ -3065,7 +3068,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_enable_intr
 parameter_list|(
@@ -3205,7 +3208,7 @@ comment|/* finish using this keyboard */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_term
 parameter_list|(
@@ -3411,7 +3414,7 @@ comment|/* keyboard interrupt routine */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|ukbd_timeout
 parameter_list|(
@@ -3499,7 +3502,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_interrupt
 parameter_list|(
@@ -4211,7 +4214,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_getc
 parameter_list|(
@@ -4337,7 +4340,7 @@ comment|/* test the interface to the device */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_test_if
 parameter_list|(
@@ -4357,7 +4360,7 @@ comment|/*   * Enable the access to the device; until this function is called,  
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_enable
 parameter_list|(
@@ -4395,7 +4398,7 @@ comment|/* disallow the access to the device */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_disable
 parameter_list|(
@@ -4433,7 +4436,7 @@ comment|/* read one byte from the keyboard if it's allowed */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_read
 parameter_list|(
@@ -4771,7 +4774,7 @@ comment|/* check if data is waiting */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_check
 parameter_list|(
@@ -4846,7 +4849,7 @@ comment|/* read char from the keyboard */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|u_int
 name|ukbd_read_char
 parameter_list|(
@@ -5700,7 +5703,7 @@ comment|/* check if char is waiting */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_check_char
 parameter_list|(
@@ -5778,7 +5781,7 @@ comment|/* some useful control functions */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_ioctl
 parameter_list|(
@@ -6353,7 +6356,7 @@ comment|/* lock the access to the keyboard */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_lock
 parameter_list|(
@@ -6377,7 +6380,7 @@ comment|/* clear the internal state of the keyboard */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|ukbd_clear_state
 parameter_list|(
@@ -6522,7 +6525,7 @@ comment|/* save the internal state */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_get_state
 parameter_list|(
@@ -6588,7 +6591,7 @@ comment|/* set the internal state */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_set_state
 parameter_list|(
@@ -6637,7 +6640,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_poll
 parameter_list|(
@@ -6740,7 +6743,7 @@ comment|/* local functions */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|probe_keyboard
 parameter_list|(
@@ -6811,7 +6814,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|init_keyboard
 parameter_list|(
@@ -7045,7 +7048,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|set_leds
 parameter_list|(
@@ -7093,7 +7096,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|set_typematic
 parameter_list|(
@@ -7240,7 +7243,7 @@ name|UKBD_EMULATE_ATSCANCODE
 end_ifdef
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|keycode2scancode
 parameter_list|(
@@ -7417,7 +7420,7 @@ comment|/* UKBD_EMULATE_ATSCANCODE */
 end_comment
 
 begin_function
-specifier|static
+name|Static
 name|int
 name|ukbd_driver_load
 parameter_list|(

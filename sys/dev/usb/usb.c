@@ -550,7 +550,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|usbd_status
 name|usb_discover
 name|__P
@@ -579,7 +579,7 @@ argument_list|)
 end_if
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|usb_create_event_thread
 name|__P
@@ -593,7 +593,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|usb_event_thread
 name|__P
@@ -636,24 +636,23 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-specifier|static
+begin_decl_stmt
+name|Static
 name|SIMPLEQ_HEAD
-argument_list|(
-argument_list|,
-argument|usb_event_q
+argument_list|(,
+name|usb_event_q
 argument_list|)
 name|usb_events
-operator|=
+init|=
 name|SIMPLEQ_HEAD_INITIALIZER
 argument_list|(
 name|usb_events
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|usb_nevents
 init|=
@@ -662,7 +661,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|struct
 name|selinfo
 name|usb_selevent
@@ -670,7 +669,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|struct
 name|proc
 modifier|*
@@ -683,7 +682,7 @@ comment|/* process who wants USB SIGIO */
 end_comment
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|usb_dev_open
 init|=
@@ -692,7 +691,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|int
 name|usb_get_next_event
 name|__P
@@ -737,7 +736,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
+name|Static
 specifier|const
 name|char
 modifier|*

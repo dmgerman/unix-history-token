@@ -59,8 +59,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_macro
+name|Static
+end_macro
+
 begin_struct
-specifier|static
 struct|struct
 name|usbd_quirk_entry
 block|{

@@ -133,7 +133,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
+name|Static
 name|void
 name|hid_clear_local
 name|__P
@@ -200,7 +200,7 @@ struct|;
 end_struct
 
 begin_function
-specifier|static
+name|Static
 name|void
 name|hid_clear_local
 parameter_list|(
