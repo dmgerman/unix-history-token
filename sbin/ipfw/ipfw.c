@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.53 1998/01/08 03:03:50 alex Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.54 1998/02/12 00:57:06 alex Exp $  *  */
 end_comment
 
 begin_include
@@ -6647,8 +6647,6 @@ name|fw_tcpnf
 condition|)
 name|show_usage
 argument_list|(
-name|EX_USAGE
-argument_list|,
 literal|"can't mix 'frag' and tcpflags"
 argument_list|)
 expr_stmt|;
@@ -6660,8 +6658,6 @@ name|fw_nports
 condition|)
 name|show_usage
 argument_list|(
-name|EX_USAGE
-argument_list|,
 literal|"can't mix 'frag' and port specifications"
 argument_list|)
 expr_stmt|;
