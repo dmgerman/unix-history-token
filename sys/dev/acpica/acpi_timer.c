@@ -438,6 +438,12 @@ argument_list|(
 literal|"timer"
 argument_list|)
 operator|||
+operator|(
+name|acpi_quirks
+operator|&
+name|ACPI_Q_TIMER
+operator|)
+operator|||
 name|AcpiGbl_FADT
 operator|==
 name|NULL

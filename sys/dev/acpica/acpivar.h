@@ -454,6 +454,13 @@ begin_comment
 comment|/* Quirk flags. */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|acpi_quirks
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -470,6 +477,17 @@ end_define
 
 begin_comment
 comment|/* Disable ACPI completely. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_Q_TIMER
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Disable ACPI timer. */
 end_comment
 
 begin_comment
