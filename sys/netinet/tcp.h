@@ -534,7 +534,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCP_SIGNATURE_ENABLE
+name|TCP_MD5SIG
 value|0x10
 end_define
 
