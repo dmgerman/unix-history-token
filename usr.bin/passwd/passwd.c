@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $id$  *  */
+comment|/*  * Copyright (c) 1988, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -35,16 +35,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"From: @(#)passwd.c	8.3 (Berkeley) 4/2/94"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)passwd.c	8.3 (Berkeley) 4/2/94";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -53,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: passwd.c,v 1.11 1997/02/22 19:56:35 peter Exp $"
+literal|"$Id: passwd.c,v 1.12 1997/03/29 04:31:27 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,13 +94,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<unistd.h>
 end_include
 
 begin_ifdef
@@ -185,6 +186,7 @@ file|"extern.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -432,7 +434,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"Only the super-user may use the -d flag."
+literal|"only the super-user may use the -d flag"
 argument_list|)
 expr_stmt|;
 block|}
@@ -467,7 +469,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"Only the super-user may use the -h flag."
+literal|"only the super-user may use the -h flag"
 argument_list|)
 expr_stmt|;
 block|}
@@ -611,7 +613,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unknown local user: %s."
+literal|"unknown local user: %s"
 argument_list|,
 name|uname
 argument_list|)
@@ -635,7 +637,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unknown NIS user: %s."
+literal|"unknown NIS user: %s"
 argument_list|,
 name|uname
 argument_list|)
@@ -740,6 +742,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -754,14 +757,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: passwd [-l] [-i instance] [-r realm] [-u fullname]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"%s\n%s\n"
 argument_list|,
-literal|"        [-l] [-y] [-o] [-d domain [-h host]] [user]\n"
+literal|"usage: passwd [-l] [-i instance] [-r realm] [-u fullname]"
+argument_list|,
+literal|"       passwd [-l] [-y] [-o] [-d domain [-h host]] [user]"
 argument_list|)
 expr_stmt|;
 else|#
@@ -773,7 +773,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: passwd [-l] [-y] [-o] [-d domain \ [-h host]] [user] \n"
+literal|"usage: passwd [-l] [-y] [-o] [-d domain [-h host]] [user]\n"
 argument_list|)
 expr_stmt|;
 endif|#

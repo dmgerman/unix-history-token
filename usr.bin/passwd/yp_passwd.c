@@ -237,7 +237,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Only the super-user may change account information \ for other users"
+literal|"only the super-user may change account information \ for other users"
 argument_list|)
 expr_stmt|;
 return|return
@@ -581,7 +581,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Sorry."
+literal|"sorry"
 argument_list|)
 expr_stmt|;
 block|}
@@ -801,7 +801,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Failed to change NIS password: %s"
+literal|"failed to change NIS password: %s"
 argument_list|,
 name|clnt_sperrno
 argument_list|(
