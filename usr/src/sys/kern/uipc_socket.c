@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.56	82/10/17	*/
+comment|/*	uipc_socket.c	4.57	82/10/20	*/
 end_comment
 
 begin_include
@@ -730,6 +730,9 @@ name|splnet
 argument_list|()
 decl_stmt|;
 comment|/* conservative */
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|so
@@ -747,6 +750,9 @@ name|so_q0
 operator|!=
 name|so
 condition|)
+operator|(
+name|void
+operator|)
 name|soclose
 argument_list|(
 name|so
@@ -764,6 +770,9 @@ name|so_q
 operator|!=
 name|so
 condition|)
+operator|(
+name|void
+operator|)
 name|soclose
 argument_list|(
 name|so
@@ -817,9 +826,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|sodisconnect
 argument_list|(
@@ -835,9 +842,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
+name|error
 condition|)
 block|{
 if|if
@@ -852,7 +857,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 block|}
 if|if
@@ -890,20 +899,11 @@ name|exiting
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EINPROGRESS
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 comment|/* should use tsleep here, for at most linger */
 while|while
 condition|(
@@ -939,9 +939,7 @@ operator|->
 name|so_pcb
 condition|)
 block|{
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 call|(
 modifier|*
@@ -984,9 +982,7 @@ name|exiting
 operator|==
 literal|0
 operator|&&
-name|u
-operator|.
-name|u_error
+name|error
 condition|)
 block|{
 name|splx
@@ -994,7 +990,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 block|}
 name|discard
@@ -1015,6 +1015,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1457,7 +1462,7 @@ operator|&
 name|top
 decl_stmt|;
 specifier|register
-name|u_int
+name|int
 name|len
 decl_stmt|;
 name|int
@@ -2073,7 +2078,7 @@ decl_stmt|,
 modifier|*
 name|n
 decl_stmt|;
-name|u_int
+name|int
 name|len
 decl_stmt|;
 name|int
@@ -2139,7 +2144,11 @@ if|if
 condition|(
 name|error
 condition|)
-return|return;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|len
 operator|=
 name|uio

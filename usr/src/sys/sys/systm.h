@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.29	82/10/20	*/
+comment|/*	systm.h	4.30	82/10/20	*/
 end_comment
 
 begin_comment
@@ -273,6 +273,12 @@ begin_comment
 comment|/* its size */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MUSH
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -295,6 +301,11 @@ end_decl_stmt
 begin_comment
 comment|/*& its size */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|dev_t

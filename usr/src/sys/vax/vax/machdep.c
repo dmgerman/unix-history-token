@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.65	82/10/20	*/
+comment|/*	machdep.c	4.66	82/10/20	*/
 end_comment
 
 begin_include
@@ -996,33 +996,6 @@ name|tocons
 argument_list|(
 name|TXDB_CCSI
 argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * set up a physical address  * into users virtual address space.  */
-end_comment
-
-begin_macro
-name|sysphys
-argument_list|()
-end_macro
-
-begin_block
-block|{
-if|if
-condition|(
-operator|!
-name|suser
-argument_list|()
-condition|)
-return|return;
-name|u
-operator|.
-name|u_error
-operator|=
-name|EINVAL
 expr_stmt|;
 block|}
 end_block
@@ -3993,6 +3966,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_macro
 name|microtime
 argument_list|(
@@ -4069,6 +4048,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

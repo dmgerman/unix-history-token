@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.33	82/10/20	*/
+comment|/*	uipc_syscalls.c	4.34	82/10/20	*/
 end_comment
 
 begin_include
@@ -1072,6 +1072,9 @@ argument_list|(
 name|M_WAIT
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|soaccept
 argument_list|(
 name|so

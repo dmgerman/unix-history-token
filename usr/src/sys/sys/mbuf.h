@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbuf.h	4.14	82/10/05	*/
+comment|/*	mbuf.h	4.15	82/10/20	*/
 end_comment
 
 begin_comment
@@ -350,7 +350,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|nmbclusters
 decl_stmt|;

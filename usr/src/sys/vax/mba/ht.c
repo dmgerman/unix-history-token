@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.33	82/10/20	*/
+comment|/*	ht.c	4.34	82/10/20	*/
 end_comment
 
 begin_include
@@ -3210,20 +3210,14 @@ name|HTDS_BOT
 condition|)
 break|break;
 block|}
+return|return
+operator|(
 name|geterror
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-comment|/* XXX */
-return|return
-operator|(
-name|u
-operator|.
-name|u_error
 operator|)
 return|;
-comment|/* XXX */
 case|case
 name|MTIOCGET
 case|:

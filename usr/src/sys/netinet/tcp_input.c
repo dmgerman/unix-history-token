@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.80	82/10/20	*/
+comment|/*	tcp_input.c	1.81	82/10/20	*/
 end_comment
 
 begin_include
@@ -1109,6 +1109,9 @@ name|inp_laddr
 operator|=
 name|laddr
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|am
@@ -1118,6 +1121,9 @@ goto|goto
 name|drop
 goto|;
 block|}
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|am

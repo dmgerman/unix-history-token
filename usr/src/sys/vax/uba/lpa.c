@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lpa.c	4.8	82/10/17	*/
+comment|/*	lpa.c	4.9	82/10/20	*/
 end_comment
 
 begin_include
@@ -1845,6 +1845,9 @@ specifier|register
 name|int
 name|mcaddr
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|mcaddr
 operator|=
 literal|0
@@ -1856,6 +1859,8 @@ operator|->
 name|uio_resid
 condition|)
 block|{
+name|error
+operator|=
 name|uiomove
 argument_list|(
 operator|&
@@ -1868,7 +1873,11 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-comment|/* get next microcode word */
+if|if
+condition|(
+name|error
+condition|)
+break|break;
 name|lpaaddr
 operator|->
 name|lcim
@@ -1981,7 +1990,7 @@ name|OIE
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 name|TRACER

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inode.h	4.16	82/10/20	*/
+comment|/*	inode.h	4.17	82/10/20	*/
 end_comment
 
 begin_comment
@@ -448,15 +448,6 @@ name|struct
 name|inode
 modifier|*
 name|ialloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|inode
-modifier|*
-name|ifind
 parameter_list|()
 function_decl|;
 end_function_decl
