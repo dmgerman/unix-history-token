@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_domain.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_domain.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -525,6 +525,8 @@ argument_list|,
 argument|newp
 argument_list|,
 argument|newlen
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -565,6 +567,14 @@ end_decl_stmt
 begin_decl_stmt
 name|u_int
 name|newlen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
