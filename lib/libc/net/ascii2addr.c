@@ -97,7 +97,14 @@ name|ina
 operator|=
 name|result
 expr_stmt|;
-name|strncpy
+name|strbuf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|strncat
 argument_list|(
 name|strbuf
 argument_list|,
