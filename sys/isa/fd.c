@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * Libretto PCMCIA floppy support by David Horwitt (dhorwitt@ucsd.edu)  * aided by the Linux floppy driver modifications from David Bateman  * (dbateman@eng.uts.edu.au).  *  * Copyright (c) 1993, 1994 by  *  jc@irbs.UUCP (John Capo)  *  vak@zebub.msk.su (Serge Vakulenko)  *  ache@astral.msk.su (Andrew A. Chernov)  *  * Copyright (c) 1993, 1994, 1995 by  *  joerg_wunsch@uriah.sax.de (Joerg Wunsch)  *  dufault@hda.com (Peter Dufault)  *  * Copyright (c) 2001 Joerg Wunsch,  *  joerg_wunsch@uriah.heep.sax.de (Joerg Wunsch)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)fd.c	7.4 (Berkeley) 5/25/91  * $FreeBSD$  *  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * Libretto PCMCIA floppy support by David Horwitt (dhorwitt@ucsd.edu)  * aided by the Linux floppy driver modifications from David Bateman  * (dbateman@eng.uts.edu.au).  *  * Copyright (c) 1993, 1994 by  *  jc@irbs.UUCP (John Capo)  *  vak@zebub.msk.su (Serge Vakulenko)  *  ache@astral.msk.su (Andrew A. Chernov)  *  * Copyright (c) 1993, 1994, 1995 by  *  joerg_wunsch@uriah.sax.de (Joerg Wunsch)  *  dufault@hda.com (Peter Dufault)  *  * Copyright (c) 2001 Joerg Wunsch,  *  joerg_wunsch@uriah.heep.sax.de (Joerg Wunsch)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)fd.c	7.4 (Berkeley) 5/25/91  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -109,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
 end_include
 
 begin_include
@@ -855,8 +849,12 @@ begin_define
 define|#
 directive|define
 name|MAX_CYLINDER
-value|79
+value|85
 end_define
+
+begin_comment
+comment|/* some people really stress their drives 				 * up to cyl 82 */
+end_comment
 
 begin_define
 define|#
@@ -993,16 +991,12 @@ begin_comment
 comment|/* internal functions */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|void
+name|driver_intr_t
 name|fdc_intr
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -1567,7 +1561,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * named Fdopen() to avoid confusion with fdopen() in fd(4); the  * difference is now only meaningful for debuggers  */
+comment|/*  * The open function is named Fdopen() to avoid confusion with fdopen()  * in fd(4).  The difference is now only meaningful for debuggers.  */
 end_comment
 
 begin_decl_stmt
@@ -2326,9 +2320,6 @@ name|fd_read_status
 parameter_list|(
 name|fdc_p
 name|fdc
-parameter_list|,
-name|int
-name|fdsu
 parameter_list|)
 block|{
 name|int
@@ -2350,7 +2341,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 		 * XXX types are poorly chosen.  Only bytes can by read 		 * from the hardware, but fdc->status[] wants u_ints and 		 * fd_in() gives ints. 		 */
+comment|/* 		 * XXX types are poorly chosen.  Only bytes can be read 		 * from the hardware, but fdc->status[] wants u_ints and 		 * fd_in() gives ints. 		 */
 name|int
 name|status
 decl_stmt|;
@@ -3972,15 +3963,11 @@ name|fdout_wr
 argument_list|(
 name|fdc
 argument_list|,
-operator|(
-operator|(
 name|fdc
 operator|->
 name|fdout
 operator|=
 literal|0
-operator|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|bioq_init
@@ -5384,16 +5371,7 @@ decl_stmt|;
 specifier|static
 name|int
 name|cdevsw_add_done
-init|=
-literal|0
 decl_stmt|;
-name|fd
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -5408,7 +5386,8 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX */
 name|cdevsw_add_done
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|EVENTHANDLER_REGISTER
@@ -5422,18 +5401,23 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
+name|fd
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|make_dev
 argument_list|(
 operator|&
 name|fd_cdevsw
 argument_list|,
-operator|(
 name|fd
 operator|->
 name|fdu
 operator|<<
 literal|6
-operator|)
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -5448,7 +5432,6 @@ operator|->
 name|fdu
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Export the drive to the devstat interface. 	 */
 name|devstat_add_entry
 argument_list|(
 operator|&
@@ -6152,7 +6135,7 @@ operator|->
 name|fdout
 argument_list|)
 expr_stmt|;
-comment|/* after a reset, silently believe the FDC will accept commands */
+comment|/* XXX after a reset, silently believe the FDC will accept commands */
 operator|(
 name|void
 operator|)
@@ -6987,7 +6970,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-empty_stmt|;
 name|fdblk
 operator|=
 literal|128
@@ -7002,16 +6984,12 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|bp
 operator|->
 name|bio_cmd
-operator|&
+operator|!=
 name|BIO_FORMAT
-operator|)
 operator|&&
-operator|!
 operator|(
 name|bp
 operator|->
@@ -7019,6 +6997,8 @@ name|bio_flags
 operator|&
 name|BIO_RDSECTID
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -7255,7 +7235,6 @@ name|toffhandle
 argument_list|)
 expr_stmt|;
 comment|/* a good idea */
-comment|/* Tell devstat we are starting on the transaction */
 name|devstat_start_transaction
 argument_list|(
 operator|&
@@ -7444,7 +7423,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***********************************************************************\ *                                 fdintr				* * keep calling the state machine until it returns a 0			* * ALWAYS called at SPLBIO 						* \***********************************************************************/
+comment|/***********************************************************************\ *                                 fdc_intr				* * keep calling the state machine until it returns a 0			* * ALWAYS called at SPLBIO 						* \***********************************************************************/
 end_comment
 
 begin_function
@@ -7554,7 +7533,6 @@ literal|0
 operator|)
 return|;
 block|}
-empty_stmt|;
 name|SET_BCDR
 argument_list|(
 name|fdc
@@ -7623,7 +7601,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 literal|1
@@ -7678,6 +7655,11 @@ decl_stmt|,
 name|b_cylinder
 init|=
 literal|0
+decl_stmt|;
+name|struct
+name|fdc_readid
+modifier|*
+name|idp
 decl_stmt|;
 name|fdu_t
 name|fdu
@@ -7895,7 +7877,7 @@ operator|=
 name|bp
 operator|->
 name|bio_cmd
-operator|&
+operator|==
 name|BIO_FORMAT
 expr_stmt|;
 name|rdsectid
@@ -8116,7 +8098,7 @@ operator|->
 name|trans
 argument_list|)
 expr_stmt|;
-comment|/*******************************************************\ 		* If the next drive has a motor startup pending, then	* 		* it will start up in its own good time		* 		\*******************************************************/
+comment|/*******************************************************\ 		* If the next drive has a motor startup pending, then	* 		* it will start up in its own good time			* 		\*******************************************************/
 if|if
 condition|(
 name|fd
@@ -9204,7 +9186,6 @@ operator|)
 return|;
 comment|/* will return later */
 block|}
-empty_stmt|;
 comment|/* 		 * write (or format) operation will fall through and 		 * await completion interrupt 		 */
 name|fdc
 operator|->
@@ -9284,10 +9265,6 @@ condition|(
 name|fd_read_status
 argument_list|(
 name|fdc
-argument_list|,
-name|fd
-operator|->
-name|fdsu
 argument_list|)
 condition|)
 block|{
@@ -9535,11 +9512,9 @@ condition|(
 name|rdsectid
 condition|)
 block|{
-name|struct
-name|fdc_readid
-modifier|*
+comment|/* copy out ID field contents */
 name|idp
-init|=
+operator|=
 operator|(
 expr|struct
 name|fdc_readid
@@ -9548,8 +9523,7 @@ operator|)
 name|bp
 operator|->
 name|bio_data
-decl_stmt|;
-comment|/* copy out ID field contents */
+expr_stmt|;
 name|idp
 operator|->
 name|cyl
@@ -10036,10 +10010,6 @@ condition|(
 name|fd_read_status
 argument_list|(
 name|fdc
-argument_list|,
-name|fd
-operator|->
-name|fdsu
 argument_list|)
 operator|==
 literal|0
