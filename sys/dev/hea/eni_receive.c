@@ -2233,7 +2233,10 @@ if|if
 condition|(
 name|que
 condition|)
-name|SCHED_ATM
+name|schednetisr
+argument_list|(
+name|NETISR_ATM
+argument_list|)
 expr_stmt|;
 return|return;
 block|}

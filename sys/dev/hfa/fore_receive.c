@@ -1524,7 +1524,10 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|SCHED_ATM
+name|schednetisr
+argument_list|(
+name|NETISR_ATM
+argument_list|)
 expr_stmt|;
 block|}
 else|else

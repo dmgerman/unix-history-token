@@ -1159,13 +1159,6 @@ begin_comment
 comment|/* Pointer to callback function */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SCHED_ATM
-value|schednetisr(NETISR_ATM)
-end_define
-
 begin_endif
 endif|#
 directive|endif
