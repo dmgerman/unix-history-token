@@ -2462,13 +2462,12 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"spkrioctl: entering with dev = %lx, cmd = %lx\n"
+literal|"spkrioctl: entering with dev = %s, cmd = %lx\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
+name|devtoname
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|cmd
 argument_list|)
@@ -2652,10 +2651,6 @@ operator|)
 return|;
 block|}
 specifier|static
-name|int
-name|spkr_devsw_installed
-decl_stmt|;
-specifier|static
 name|void
 name|spkr_drvinit
 parameter_list|(
@@ -2664,22 +2659,6 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|spkr_devsw_installed
-condition|)
-block|{
-name|cdevsw_add
-argument_list|(
-operator|&
-name|spkr_cdevsw
-argument_list|)
-expr_stmt|;
-name|spkr_devsw_installed
-operator|=
-literal|1
-expr_stmt|;
 name|make_dev
 argument_list|(
 operator|&
@@ -2696,7 +2675,6 @@ argument_list|,
 literal|"speaker"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|SYSINIT
 argument_list|(
