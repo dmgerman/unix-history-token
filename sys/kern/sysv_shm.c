@@ -4680,8 +4680,6 @@ begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
 name|shmsys
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4690,8 +4688,6 @@ begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
 name|shmat
-argument_list|,
-literal|3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4700,8 +4696,6 @@ begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
 name|shmctl
-argument_list|,
-literal|3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4710,8 +4704,6 @@ begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
 name|shmdt
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4720,8 +4712,6 @@ begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
 name|shmget
-argument_list|,
-literal|3
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -474,19 +474,26 @@ end_struct_decl
 
 begin_function_decl
 name|void
-name|aio_proc_rundown
+name|aio_swake_cb
 parameter_list|(
 name|struct
-name|proc
+name|socket
 modifier|*
-name|p
+parameter_list|,
+name|struct
+name|sockbuf
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
+function_decl|(
+modifier|*
 name|aio_swake
+function_decl|)
 parameter_list|(
 name|struct
 name|socket

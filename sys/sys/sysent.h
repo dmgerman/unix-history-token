@@ -398,11 +398,9 @@ directive|define
 name|SYSCALL_MODULE_HELPER
 parameter_list|(
 name|syscallname
-parameter_list|,
-name|argcount
 parameter_list|)
 define|\
-value|static int syscallname##_syscall = SYS_##syscallname;   \ static struct sysent syscallname##_sysent = {           \     argcount, (sy_call_t *)& syscallname                \ };                                                      \ SYSCALL_MODULE(syscallname,                             \& syscallname##_syscall,& syscallname##_sysent,    \     NULL, NULL);
+value|static int syscallname##_syscall = SYS_##syscallname;   \ static struct sysent syscallname##_sysent = {           \     (sizeof(struct syscallname ## _args )               \      / sizeof(register_t)),                             \     (sy_call_t *)& syscallname                          \ };                                                      \ SYSCALL_MODULE(syscallname,                             \& syscallname##_syscall,& syscallname##_sysent,    \     NULL, NULL);
 end_define
 
 begin_decl_stmt

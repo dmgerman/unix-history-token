@@ -2347,6 +2347,54 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Exec callout list declarations. */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+argument_list|(
+argument|*execlist_fn
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|procp
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+name|int
+name|at_exec
+name|__P
+argument_list|(
+operator|(
+name|execlist_fn
+name|function
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rm_at_exec
+name|__P
+argument_list|(
+operator|(
+name|execlist_fn
+name|function
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Not exactly a callout LIST, but a callout entry.  * Allow an external module to define a hardware watchdog tickler.  * Normally a process would do this, but there are times when the  * kernel needs to be able to hold off the watchdog, when the process  * is not active, e.g., when dumping core.  */
 end_comment
 

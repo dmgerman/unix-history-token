@@ -4314,7 +4314,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|aio_return
+name|lkmressys
 block|}
 block|,
 comment|/* 314 = aio_return */
@@ -4328,7 +4328,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|aio_suspend
+name|lkmressys
 block|}
 block|,
 comment|/* 315 = aio_suspend */
@@ -4342,7 +4342,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|aio_cancel
+name|lkmressys
 block|}
 block|,
 comment|/* 316 = aio_cancel */
@@ -4356,7 +4356,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|aio_error
+name|lkmressys
 block|}
 block|,
 comment|/* 317 = aio_error */
@@ -4370,7 +4370,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|aio_read
+name|lkmressys
 block|}
 block|,
 comment|/* 318 = aio_read */
@@ -4384,7 +4384,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|aio_write
+name|lkmressys
 block|}
 block|,
 comment|/* 319 = aio_write */
@@ -4398,7 +4398,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|lio_listio
+name|lkmressys
 block|}
 block|,
 comment|/* 320 = lio_listio */
@@ -4970,7 +4970,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|aio_waitcomplete
+name|lkmressys
 block|}
 block|,
 comment|/* 359 = aio_waitcomplete */

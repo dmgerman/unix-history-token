@@ -1488,8 +1488,6 @@ begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
 name|semsys
-argument_list|,
-literal|5
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1498,8 +1496,6 @@ begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
 name|__semctl
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1508,8 +1504,6 @@ begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
 name|semget
-argument_list|,
-literal|3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1518,8 +1512,6 @@ begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
 name|semop
-argument_list|,
-literal|3
 argument_list|)
 expr_stmt|;
 end_expr_stmt

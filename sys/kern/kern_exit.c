@@ -148,12 +148,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/aio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/jail.h>
 end_include
 
@@ -436,11 +430,6 @@ expr_stmt|;
 block|}
 comment|/* XXXXKSE */
 comment|/* MUST abort all other threads before proceeding past this point */
-name|aio_proc_rundown
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 comment|/* are we a task leader? */
 name|PROC_LOCK
 argument_list|(

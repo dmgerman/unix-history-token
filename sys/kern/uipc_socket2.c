@@ -137,6 +137,24 @@ name|maxsockets
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|aio_swake
+function_decl|)
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+name|struct
+name|sockbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Primitive routines for operating on sockets and socket buffers  */
 end_comment
