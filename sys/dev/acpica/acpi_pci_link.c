@@ -920,17 +920,13 @@ operator|!=
 name|ACPI_RSTYPE_EXT_IRQ
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|printf
 argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"Resource is not an IRQ entry - %d\n"
-operator|,
+literal|"acpi link get: resource %d is not an IRQ\n"
+argument_list|,
 name|resources
 operator|->
 name|Id
-operator|)
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -1002,13 +998,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|printf
 argument_list|(
-operator|(
-name|ACPI_DB_WARN
-operator|,
-literal|"Blank IRQ resource\n"
-operator|)
+literal|"acpi link get: empty IRQ resource\n"
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -1717,7 +1709,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* XXX This only handles one resource, ignoring SourceIndex. */
+comment|/* Skip any DPF descriptors.  XXX We should centralize this code. */
 name|resources
 operator|=
 operator|(
@@ -1728,6 +1720,22 @@ name|buf
 operator|.
 name|Pointer
 expr_stmt|;
+if|if
+condition|(
+name|resources
+operator|->
+name|Id
+operator|==
+name|ACPI_RSTYPE_START_DPF
+condition|)
+name|resources
+operator|=
+name|ACPI_NEXT_RESOURCE
+argument_list|(
+name|resources
+argument_list|)
+expr_stmt|;
+comment|/* XXX This only handles one resource, ignoring SourceIndex. */
 name|bcopy
 argument_list|(
 name|resources
