@@ -1,7 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-1996 Cronyx Engineering Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.4, Thu Apr 30 17:17:21 MSD 1997  *  * $Id: if_spppsubr.c,v 1.42 1998/08/17 00:29:34 bde Exp $  */
+comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-1996 Cronyx Engineering Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.4, Thu Apr 30 17:17:21 MSD 1997  *  * $Id: if_spppsubr.c,v 1.43 1998/10/05 21:02:30 joerg Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -15,11 +30,46 @@ directive|include
 file|"opt_ipx.h"
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NetBSD1_3
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|NetBSD1_3
+operator|>
+literal|6
+end_if
+
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|"opt_inet.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_iso.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -63,11 +113,36 @@ directive|include
 file|<sys/mbuf.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/md5k.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<sys/md5.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -87,16 +162,59 @@ directive|include
 file|<net/if_types.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/stdarg.h>
-end_include
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<machine/random.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_comment
+comment|/* XXX for softnet */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<machine/stdarg.h>
 end_include
 
 begin_ifdef
@@ -135,11 +253,41 @@ directive|include
 file|<netinet/tcp.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<netinet/if_ether.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<net/ethertypes.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -243,6 +391,55 @@ include|#
 directive|include
 file|<net/if_sppp.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|UNTIMEOUT
+parameter_list|(
+name|fun
+parameter_list|,
+name|arg
+parameter_list|,
+name|handle
+parameter_list|)
+define|\
+value|untimeout(fun, arg, handle)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UNTIMEOUT
+parameter_list|(
+name|fun
+parameter_list|,
+name|arg
+parameter_list|,
+name|handle
+parameter_list|)
+define|\
+value|untimeout(fun, arg)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1181,6 +1378,15 @@ name|spppq
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1188,6 +1394,64 @@ name|callout_handle
 name|keepalive_ch
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SPP_FMT
+value|"%s%d: "
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPP_ARGS
+parameter_list|(
+name|ifp
+parameter_list|)
+value|(ifp)->if_name, (ifp)->if_unit
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SPP_FMT
+value|"%s: "
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPP_ARGS
+parameter_list|(
+name|ifp
+parameter_list|)
+value|(ifp)->if_xname
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The following disgusting hack gets around the problem that IP TOS  * can't be set yet.  We want to put "interactive" traffic on a high  * priority queue.  To decide if traffic is interactive, we check that  * a) it is TCP and b) one of its ports is telnet, rlogin or ftp control.  *  * XXX is this really still necessary?  - joerg -  */
@@ -1364,6 +1628,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -1375,6 +1645,11 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2770,15 +3045,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: input packet is too small, %d bytes\n"
+name|SPP_FMT
+literal|"input packet is too small, %d bytes\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|m
 operator|->
@@ -2863,16 +3136,14 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: PPP packet in Cisco mode "
+name|SPP_FMT
+literal|"PPP packet in Cisco mode "
 literal|"<addr=0x%x ctrl=0x%x proto=0x%x>\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|h
 operator|->
@@ -2951,16 +3222,14 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: invalid input protocol "
+name|SPP_FMT
+literal|"invalid input protocol "
 literal|"<addr=0x%x ctrl=0x%x proto=0x%x>\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|h
 operator|->
@@ -3231,16 +3500,14 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: Cisco packet in PPP mode "
+name|SPP_FMT
+literal|"Cisco packet in PPP mode "
 literal|"<addr=0x%x ctrl=0x%x proto=0x%x>\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|h
 operator|->
@@ -3373,16 +3640,14 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: invalid input packet "
+name|SPP_FMT
+literal|"invalid input packet "
 literal|"<addr=0x%x ctrl=0x%x proto=0x%x>\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|h
 operator|->
@@ -3454,15 +3719,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: protocol queue overflow\n"
+name|SPP_FMT
+literal|"protocol queue overflow\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3653,6 +3916,7 @@ operator|==
 name|AF_INET
 condition|)
 block|{
+comment|/* XXX Check mbuf length here? */
 name|struct
 name|ip
 modifier|*
@@ -3709,6 +3973,8 @@ operator|&
 name|IPTOS_LOWDELAY
 operator|)
 operator|||
+operator|(
+operator|(
 name|ip
 operator|->
 name|ip_p
@@ -3741,6 +4007,8 @@ operator|->
 name|th_sport
 argument_list|)
 argument_list|)
+operator|)
+operator|)
 operator|||
 name|INTERACTIVE
 argument_list|(
@@ -3792,15 +4060,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: no memory for transmit header\n"
+name|SPP_FMT
+literal|"no memory for transmit header\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|++
@@ -3819,6 +4085,7 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
+comment|/* 	 * May want to check size of packet 	 * (albeit due to the implementation it's always enough) 	 */
 name|h
 operator|=
 name|mtod
@@ -4168,8 +4435,16 @@ condition|(
 operator|!
 name|spppq
 condition|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|keepalive_ch
 operator|=
+endif|#
+directive|endif
 name|timeout
 argument_list|(
 name|sppp_keepalive
@@ -4369,7 +4644,7 @@ condition|(
 operator|!
 name|spppq
 condition|)
-name|untimeout
+name|UNTIMEOUT
 argument_list|(
 name|sppp_keepalive
 argument_list|,
@@ -4391,7 +4666,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|untimeout
+name|UNTIMEOUT
 argument_list|(
 operator|(
 name|cps
@@ -4416,7 +4691,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|untimeout
+name|UNTIMEOUT
 argument_list|(
 name|sppp_pap_my_TO
 argument_list|,
@@ -5253,15 +5528,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: cisco invalid packet length: %d bytes\n"
+name|SPP_FMT
+literal|"cisco invalid packet length: %d bytes\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|m
 operator|->
@@ -5291,16 +5564,14 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: cisco input: %d bytes "
+name|SPP_FMT
+literal|"cisco input: %d bytes "
 literal|"<0x%lx 0x%lx 0x%lx 0x%x 0x%x-0x%x>\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|m
 operator|->
@@ -5308,6 +5579,9 @@ name|m_pkthdr
 operator|.
 name|len
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|h
@@ -5315,22 +5589,37 @@ operator|->
 name|type
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|h
 operator|->
 name|par1
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|h
 operator|->
 name|par2
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|h
 operator|->
 name|rel
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|h
 operator|->
 name|time0
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|h
 operator|->
 name|time1
@@ -5353,16 +5642,17 @@ name|debug
 condition|)
 name|addlog
 argument_list|(
-literal|"%s%d: cisco unknown packet type: 0x%lx\n"
+name|SPP_FMT
+literal|"cisco unknown packet type: 0x%lx\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
+argument_list|)
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
-argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|h
@@ -5420,15 +5710,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: loopback\n"
+name|SPP_FMT
+literal|"loopback\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sp
@@ -5467,6 +5755,12 @@ operator|->
 name|pp_loopcnt
 expr_stmt|;
 comment|/* Generate new local sequence number */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|sp
 operator|->
 name|pp_seq
@@ -5474,6 +5768,22 @@ operator|=
 name|random
 argument_list|()
 expr_stmt|;
+else|#
+directive|else
+name|sp
+operator|->
+name|pp_seq
+operator|^=
+name|time
+operator|.
+name|tv_sec
+operator|^
+name|time
+operator|.
+name|tv_usec
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 name|sp
@@ -5509,15 +5819,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d: up\n"
+name|SPP_FMT
+literal|"up\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5601,16 +5909,49 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|struct
 name|timeval
 name|tv
 decl_stmt|;
+else|#
+directive|else
+name|u_long
+name|t
+init|=
+operator|(
+name|time
+operator|.
+name|tv_sec
+operator|-
+name|boottime
+operator|.
+name|tv_sec
+operator|)
+operator|*
+literal|1000
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|getmicrouptime
 argument_list|(
 operator|&
 name|tv
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|MGETHDR
 argument_list|(
 name|m
@@ -5727,6 +6068,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|ch
 operator|->
 name|time0
@@ -5759,6 +6106,38 @@ operator|.
 name|tv_sec
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|ch
+operator|->
+name|time0
+operator|=
+name|htons
+argument_list|(
+call|(
+name|u_short
+call|)
+argument_list|(
+name|t
+operator|>>
+literal|16
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ch
+operator|->
+name|time1
+operator|=
+name|htons
+argument_list|(
+operator|(
+name|u_short
+operator|)
+name|t
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|debug
@@ -5767,16 +6146,17 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: cisco output:<0x%lx 0x%lx 0x%lx 0x%x 0x%x-0x%x>\n"
+name|SPP_FMT
+literal|"cisco output:<0x%lx 0x%lx 0x%lx 0x%x 0x%x-0x%x>\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
+argument_list|)
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
-argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ch
@@ -5784,22 +6164,37 @@ operator|->
 name|type
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ch
 operator|->
 name|par1
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ch
 operator|->
 name|par2
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|ch
 operator|->
 name|rel
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|ch
 operator|->
 name|time0
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|ch
 operator|->
 name|time1
@@ -6092,15 +6487,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: %s output<%s id=0x%x len=%d"
+name|SPP_FMT
+literal|"%s output<%s id=0x%x len=%d"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sppp_proto_name
 argument_list|(
@@ -6300,15 +6693,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: %s invalid packet length: %d bytes\n"
+name|SPP_FMT
+literal|"%s invalid packet length: %d bytes\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -6339,15 +6730,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: %s input(%s):<%s id=0x%x len=%d"
+name|SPP_FMT
+literal|"%s input(%s):<%s id=0x%x len=%d"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -6468,15 +6857,13 @@ name|debug
 condition|)
 name|addlog
 argument_list|(
-literal|"%s%d: %s invalid conf-req length %d\n"
+name|SPP_FMT
+literal|"%s invalid conf-req length %d\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -6671,15 +7058,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: %s tlu\n"
+name|SPP_FMT
+literal|"%s tlu\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -6710,15 +7095,13 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"%s%d: %s illegal %s in state %s\n"
+name|SPP_FMT
+literal|"%s illegal %s in state %s\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -6776,15 +7159,13 @@ name|debug
 condition|)
 name|addlog
 argument_list|(
-literal|"%s%d: %s id mismatch 0x%x != 0x%x\n"
+name|SPP_FMT
+literal|"%s id mismatch 0x%x != 0x%x\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -6954,15 +7335,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: %s tlu\n"
+name|SPP_FMT
+literal|"%s tlu\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -6982,15 +7361,13 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"%s%d: %s illegal %s in state %s\n"
+name|SPP_FMT
+literal|"%s illegal %s in state %s\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -7051,15 +7428,13 @@ name|debug
 condition|)
 name|addlog
 argument_list|(
-literal|"%s%d: %s id mismatch 0x%x != 0x%x\n"
+name|SPP_FMT
+literal|"%s id mismatch 0x%x != 0x%x\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -7236,15 +7611,13 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"%s%d: %s illegal %s in state %s\n"
+name|SPP_FMT
+literal|"%s illegal %s in state %s\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -7334,15 +7707,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: %s send terminate-ack\n"
+name|SPP_FMT
+literal|"%s send terminate-ack\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -7408,15 +7779,13 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"%s%d: %s illegal %s in state %s\n"
+name|SPP_FMT
+literal|"%s illegal %s in state %s\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -7568,15 +7937,13 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"%s%d: %s illegal %s in state %s\n"
+name|SPP_FMT
+literal|"%s illegal %s in state %s\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -7620,16 +7987,14 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s%d: %s: ignoring RXJ (%s) for proto 0x%x, "
+name|SPP_FMT
+literal|"%s: ignoring RXJ (%s) for proto 0x%x, "
 literal|"danger will robinson\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -7705,15 +8070,13 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"%s%d: %s illegal %s in state %s\n"
+name|SPP_FMT
+literal|"%s illegal %s in state %s\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -7796,15 +8159,13 @@ name|debug
 condition|)
 name|addlog
 argument_list|(
-literal|"%s%d: lcp echo req but lcp closed\n"
+name|SPP_FMT
+literal|"lcp echo req but lcp closed\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|++
@@ -7827,16 +8188,14 @@ name|debug
 condition|)
 name|addlog
 argument_list|(
-literal|"%s%d: invalid lcp echo request "
+name|SPP_FMT
+literal|"invalid lcp echo request "
 literal|"packet length: %d bytes\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|len
 argument_list|)
@@ -7869,15 +8228,13 @@ block|{
 comment|/* Line loopback mode detected. */
 name|printf
 argument_list|(
-literal|"%s%d: loopback\n"
+name|SPP_FMT
+literal|"loopback\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|if_down
@@ -7937,15 +8294,13 @@ name|debug
 condition|)
 name|addlog
 argument_list|(
-literal|"%s%d: got lcp echo req, sending echo rep\n"
+name|SPP_FMT
+literal|"got lcp echo req, sending echo rep\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sppp_cp_send
@@ -8017,16 +8372,14 @@ name|debug
 condition|)
 name|addlog
 argument_list|(
-literal|"%s%d: lcp invalid echo reply "
+name|SPP_FMT
+literal|"lcp invalid echo reply "
 literal|"packet length: %d bytes\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|len
 argument_list|)
@@ -8039,15 +8392,13 @@ name|debug
 condition|)
 name|addlog
 argument_list|(
-literal|"%s%d: lcp got echo rep\n"
+name|SPP_FMT
+literal|"lcp got echo rep\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8089,15 +8440,13 @@ name|debug
 condition|)
 name|addlog
 argument_list|(
-literal|"%s%d: %s send code-rej for 0x%x\n"
+name|SPP_FMT
+literal|"%s send code-rej for 0x%x\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -8172,15 +8521,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: %s up(%s)\n"
+name|SPP_FMT
+literal|"%s up(%s)\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -8264,15 +8611,13 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"%s%d: %s illegal up in state %s\n"
+name|SPP_FMT
+literal|"%s illegal up in state %s\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -8322,15 +8667,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: %s down(%s)\n"
+name|SPP_FMT
+literal|"%s down(%s)\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -8437,15 +8780,13 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"%s%d: %s illegal down in state %s\n"
+name|SPP_FMT
+literal|"%s illegal down in state %s\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -8495,15 +8836,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: %s open(%s)\n"
+name|SPP_FMT
+literal|"%s open(%s)\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -8660,15 +8999,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: %s close(%s)\n"
+name|SPP_FMT
+literal|"%s close(%s)\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -8863,15 +9200,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: %s TO(%s) rst_counter = %d\n"
+name|SPP_FMT
+literal|"%s TO(%s) rst_counter = %d\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -9039,6 +9374,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|sp
 operator|->
 name|ch
@@ -9048,6 +9389,8 @@ operator|->
 name|protoidx
 index|]
 operator|=
+endif|#
+directive|endif
 name|timeout
 argument_list|(
 name|cp
@@ -9106,6 +9449,12 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|sp
 operator|->
 name|ch
@@ -9115,6 +9464,8 @@ operator|->
 name|protoidx
 index|]
 operator|=
+endif|#
+directive|endif
 name|timeout
 argument_list|(
 name|cp
@@ -9178,7 +9529,7 @@ index|]
 operator|=
 name|newstate
 expr_stmt|;
-name|untimeout
+name|UNTIMEOUT
 argument_list|(
 name|cp
 operator|->
@@ -9236,6 +9587,12 @@ case|:
 case|case
 name|STATE_ACK_SENT
 case|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|sp
 operator|->
 name|ch
@@ -9245,6 +9602,8 @@ operator|->
 name|protoidx
 index|]
 operator|=
+endif|#
+directive|endif
 name|timeout
 argument_list|(
 name|cp
@@ -9382,6 +9741,12 @@ name|max_failure
 operator|=
 literal|10
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|callout_handle_init
 argument_list|(
 operator|&
@@ -9393,6 +9758,8 @@ name|IDX_LCP
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -9435,15 +9802,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: Up event"
+name|SPP_FMT
+literal|"Up event"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -9552,15 +9917,13 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s%d: Down event (carrier loss), taking interface down.\n"
+name|SPP_FMT
+literal|"Down event (carrier loss), taking interface down.\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|if_down
@@ -9579,15 +9942,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: Down event (carrier loss)\n"
+name|SPP_FMT
+literal|"Down event (carrier loss)\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9825,15 +10186,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: lcp parse opts: "
+name|SPP_FMT
+literal|"lcp parse opts: "
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* pass 1: check for things that need to be rejected */
@@ -10149,15 +10508,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: lcp parse opt values: "
+name|SPP_FMT
+literal|"lcp parse opt values: "
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -10303,15 +10660,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: loopback\n"
+name|SPP_FMT
+literal|"loopback\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sp
@@ -10888,15 +11243,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: lcp rej opts: "
+name|SPP_FMT
+literal|"lcp rej opts: "
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -11160,15 +11513,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: lcp nak opts: "
+name|SPP_FMT
+literal|"lcp nak opts: "
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -11319,6 +11670,12 @@ argument_list|(
 literal|"magic glitch "
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|sp
 operator|->
 name|lcp
@@ -11328,6 +11685,24 @@ operator|=
 name|random
 argument_list|()
 expr_stmt|;
+else|#
+directive|else
+name|sp
+operator|->
+name|lcp
+operator|.
+name|magic
+operator|=
+name|time
+operator|.
+name|tv_sec
+operator|+
+name|time
+operator|.
+name|tv_usec
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -11345,7 +11720,7 @@ name|debug
 condition|)
 name|addlog
 argument_list|(
-literal|"magic %lu "
+literal|"%lu "
 argument_list|,
 name|magic
 argument_list|)
@@ -11487,8 +11862,16 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|STDDCL
-expr_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|&
+name|sp
+operator|->
+name|pp_if
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -11524,15 +11907,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d: up\n"
+name|SPP_FMT
+literal|"up\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -11619,15 +12000,13 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s%d: phase %s\n"
+name|SPP_FMT
+literal|"phase %s\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sppp_phase_name
 argument_list|(
@@ -11812,8 +12191,16 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|STDDCL
-expr_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|&
+name|sp
+operator|->
+name|pp_if
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -11830,15 +12217,13 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s%d: phase %s\n"
+name|SPP_FMT
+literal|"phase %s\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sppp_phase_name
 argument_list|(
@@ -11935,8 +12320,16 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|STDDCL
-expr_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|&
+name|sp
+operator|->
+name|pp_if
+decl_stmt|;
 name|sp
 operator|->
 name|pp_phase
@@ -11947,15 +12340,13 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s%d: phase %s\n"
+name|SPP_FMT
+literal|"phase %s\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sppp_phase_name
 argument_list|(
@@ -11995,8 +12386,16 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|STDDCL
-expr_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|&
+name|sp
+operator|->
+name|pp_if
+decl_stmt|;
 name|sp
 operator|->
 name|pp_phase
@@ -12007,15 +12406,13 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s%d: phase %s\n"
+name|SPP_FMT
+literal|"phase %s\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sppp_phase_name
 argument_list|(
@@ -12100,6 +12497,12 @@ name|lcp
 operator|.
 name|magic
 condition|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|sp
 operator|->
 name|lcp
@@ -12109,6 +12512,24 @@ operator|=
 name|random
 argument_list|()
 expr_stmt|;
+else|#
+directive|else
+name|sp
+operator|->
+name|lcp
+operator|.
+name|magic
+operator|=
+name|time
+operator|.
+name|tv_sec
+operator|+
+name|time
+operator|.
+name|tv_usec
+expr_stmt|;
+endif|#
+directive|endif
 name|opt
 index|[
 name|i
@@ -12518,6 +12939,12 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|callout_handle_init
 argument_list|(
 operator|&
@@ -12529,6 +12956,8 @@ name|IDX_IPCP
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -12624,15 +13053,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: ipcp_open(): no IP interface\n"
+name|SPP_FMT
+literal|"ipcp_open(): no IP interface\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -12853,15 +13280,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: ipcp parse opts: "
+name|SPP_FMT
+literal|"ipcp parse opts: "
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -13099,15 +13524,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: ipcp parse opt values: "
+name|SPP_FMT
+literal|"ipcp parse opt values: "
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -13590,15 +14013,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: ipcp rej opts: "
+name|SPP_FMT
+literal|"ipcp rej opts: "
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -13804,15 +14225,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: ipcp nak opts: "
+name|SPP_FMT
+literal|"ipcp nak opts: "
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -14401,15 +14820,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: chap invalid packet length: %d bytes\n"
+name|SPP_FMT
+literal|"chap invalid packet length: %d bytes\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|len
 argument_list|)
@@ -14510,16 +14927,14 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: chap corrupted challenge "
+name|SPP_FMT
+literal|"chap corrupted challenge "
 literal|"<%s id=0x%x len=%d"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sppp_auth_type_name
 argument_list|(
@@ -14582,15 +14997,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: chap input<%s id=0x%x len=%d name="
+name|SPP_FMT
+literal|"chap input<%s id=0x%x len=%d name="
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sppp_auth_type_name
 argument_list|(
@@ -14739,6 +15152,9 @@ name|digest
 argument_list|,
 name|digest
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|sppp_strnlen
 argument_list|(
 name|sp
@@ -14772,15 +15188,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: chap success"
+name|SPP_FMT
+literal|"chap success"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -14903,15 +15317,13 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s%d: chap failure"
+name|SPP_FMT
+literal|"chap failure"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -14955,15 +15367,13 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s%d: chap failure\n"
+name|SPP_FMT
+literal|"chap failure\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* await LCP shutdown by authenticator */
@@ -15024,16 +15434,14 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: chap corrupted response "
+name|SPP_FMT
+literal|"chap corrupted response "
 literal|"<%s id=0x%x len=%d"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sppp_auth_type_name
 argument_list|(
@@ -15109,16 +15517,14 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: chap dropping response for old ID "
+name|SPP_FMT
+literal|"chap dropping response for old ID "
 literal|"(got %d, expected %d)\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|h
 operator|->
@@ -15169,15 +15575,13 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s%d: chap response, his name "
+name|SPP_FMT
+literal|"chap response, his name "
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sppp_print_string
@@ -15227,16 +15631,14 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: chap input(%s) "
+name|SPP_FMT
+literal|"chap input(%s) "
 literal|"<%s id=0x%x len=%d name="
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sppp_state_name
 argument_list|(
@@ -15315,16 +15717,14 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: chap bad hash value length: "
+name|SPP_FMT
+literal|"chap bad hash value length: "
 literal|"%d bytes, should be %d\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|value_len
 argument_list|,
@@ -15555,16 +15955,14 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: chap unknown input(%s) "
+name|SPP_FMT
+literal|"chap unknown input(%s) "
 literal|"<0x%x id=0x%xh len=%d"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sppp_state_name
 argument_list|(
@@ -15656,6 +16054,12 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|callout_handle_init
 argument_list|(
 operator|&
@@ -15667,6 +16071,8 @@ name|IDX_CHAP
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -15819,15 +16225,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: chap TO(%s) rst_counter = %d\n"
+name|SPP_FMT
+literal|"chap TO(%s) rst_counter = %d\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sppp_state_name
 argument_list|(
@@ -16019,6 +16423,12 @@ operator|>>
 literal|7
 operator|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|sp
 operator|->
 name|ch
@@ -16026,6 +16436,8 @@ index|[
 name|IDX_CHAP
 index|]
 operator|=
+endif|#
+directive|endif
 name|timeout
 argument_list|(
 name|chap
@@ -16053,15 +16465,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: chap %s, "
+name|SPP_FMT
+literal|"chap %s, "
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -16180,18 +16590,16 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: chap tld\n"
+name|SPP_FMT
+literal|"chap tld\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|untimeout
+name|UNTIMEOUT
 argument_list|(
 name|chap
 operator|.
@@ -16271,7 +16679,12 @@ name|myauth
 operator|.
 name|challenge
 expr_stmt|;
-comment|/* 	 * XXX: This is bad!, there is a well known relationship between the 	 * four groups of four bytes in the challenge, that improves the 	 * predictability quite a lot. 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|read_random
 argument_list|(
 operator|&
@@ -16281,6 +16694,26 @@ sizeof|sizeof
 name|seed
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|microtime
+argument_list|(
+operator|&
+name|tv
+argument_list|)
+expr_stmt|;
+name|seed
+operator|=
+name|tv
+operator|.
+name|tv_sec
+operator|^
+name|tv
+operator|.
+name|tv_usec
+expr_stmt|;
+endif|#
+directive|endif
 name|ch
 index|[
 literal|0
@@ -16364,6 +16797,9 @@ operator|)
 operator|&
 name|clen
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|AUTHKEYLEN
 argument_list|,
 name|sp
@@ -16372,6 +16808,9 @@ name|myauth
 operator|.
 name|challenge
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|sppp_strnlen
 argument_list|(
 name|sp
@@ -16475,15 +16914,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: pap invalid packet length: %d bytes\n"
+name|SPP_FMT
+literal|"pap invalid packet length: %d bytes\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|len
 argument_list|)
@@ -16596,16 +17033,14 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: pap corrupted input "
+name|SPP_FMT
+literal|"pap corrupted input "
 literal|"<%s id=0x%x len=%d"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sppp_auth_type_name
 argument_list|(
@@ -16668,16 +17103,14 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: pap input(%s) "
+name|SPP_FMT
+literal|"pap input(%s) "
 literal|"<%s id=0x%x len=%d name="
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sppp_state_name
 argument_list|(
@@ -16950,7 +17383,7 @@ comment|/* ack and nak are his authproto */
 case|case
 name|PAP_ACK
 case|:
-name|untimeout
+name|UNTIMEOUT
 argument_list|(
 name|sppp_pap_my_TO
 argument_list|,
@@ -16974,15 +17407,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: pap success"
+name|SPP_FMT
+literal|"pap success"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|name_len
@@ -17107,7 +17538,7 @@ break|break;
 case|case
 name|PAP_NAK
 case|:
-name|untimeout
+name|UNTIMEOUT
 argument_list|(
 name|sppp_pap_my_TO
 argument_list|,
@@ -17131,15 +17562,13 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s%d: pap failure"
+name|SPP_FMT
+literal|"pap failure"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|name_len
@@ -17194,15 +17623,13 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s%d: pap failure\n"
+name|SPP_FMT
+literal|"pap failure\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* await LCP shutdown by authenticator */
@@ -17218,16 +17645,14 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: pap corrupted input "
+name|SPP_FMT
+literal|"pap corrupted input "
 literal|"<0x%x id=0x%x len=%d"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|h
 operator|->
@@ -17309,6 +17734,12 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|callout_handle_init
 argument_list|(
 operator|&
@@ -17328,6 +17759,8 @@ operator|->
 name|pap_my_to_ch
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -17413,10 +17846,18 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|sp
 operator|->
 name|pap_my_to_ch
 operator|=
+endif|#
+directive|endif
 name|timeout
 argument_list|(
 name|sppp_pap_my_TO
@@ -17517,15 +17958,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: pap TO(%s) rst_counter = %d\n"
+name|SPP_FMT
+literal|"pap TO(%s) rst_counter = %d\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sppp_state_name
 argument_list|(
@@ -17662,15 +18101,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: pap peer TO\n"
+name|SPP_FMT
+literal|"pap peer TO\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|pap
@@ -17720,15 +18157,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: %s tlu\n"
+name|SPP_FMT
+literal|"%s tlu\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|pap
 operator|.
@@ -17804,18 +18239,16 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: pap tld\n"
+name|SPP_FMT
+literal|"pap tld\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|untimeout
+name|UNTIMEOUT
 argument_list|(
 name|pap
 operator|.
@@ -17835,7 +18268,7 @@ name|IDX_PAP
 index|]
 argument_list|)
 expr_stmt|;
-name|untimeout
+name|UNTIMEOUT
 argument_list|(
 name|sppp_pap_my_TO
 argument_list|,
@@ -17884,8 +18317,6 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|STDDCL
-expr_stmt|;
 name|u_char
 name|idlen
 decl_stmt|,
@@ -17957,7 +18388,7 @@ operator|&
 name|idlen
 argument_list|,
 operator|(
-name|unsigned
+name|size_t
 operator|)
 name|idlen
 argument_list|,
@@ -17979,7 +18410,7 @@ operator|&
 name|pwdlen
 argument_list|,
 operator|(
-name|unsigned
+name|size_t
 operator|)
 name|pwdlen
 argument_list|,
@@ -18003,7 +18434,7 @@ comment|/*  * Random miscellaneous functions.  */
 end_comment
 
 begin_comment
-comment|/*  * Send a PAP or CHAP proto packet.  *  * Varadic function, each of the elements for the ellipsis is of type  * ``unsigned mlen, const u_char *msg''.  Processing will stop iff  * mlen == 0.  */
+comment|/*  * Send a PAP or CHAP proto packet.  *  * Varadic function, each of the elements for the ellipsis is of type  * ``size_t mlen, const u_char *msg''.  Processing will stop iff  * mlen == 0.  */
 end_comment
 
 begin_function
@@ -18055,7 +18486,7 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-name|unsigned
+name|size_t
 name|mlen
 decl_stmt|;
 specifier|const
@@ -18182,7 +18613,7 @@ name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|unsigned
+name|size_t
 argument_list|)
 operator|)
 operator|!=
@@ -18282,15 +18713,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s%d: %s output<%s id=0x%x len=%d"
+name|SPP_FMT
+literal|"%s output<%s id=0x%x len=%d"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -18605,15 +19034,13 @@ block|{
 comment|/* No keepalive packets got.  Stop the interface. */
 name|printf
 argument_list|(
-literal|"%s%d: down\n"
+name|SPP_FMT
+literal|"down\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|if_down
@@ -18757,8 +19184,16 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|keepalive_ch
 operator|=
+endif|#
+directive|endif
 name|timeout
 argument_list|(
 name|sppp_keepalive
@@ -18835,6 +19270,12 @@ operator|=
 literal|0L
 expr_stmt|;
 comment|/* 	 * Pick the first AF_INET address from the list, 	 * aliases don't make any sense on a p2p link anyway. 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 for|for
 control|(
 name|ifa
@@ -18859,6 +19300,34 @@ name|ifa_link
 operator|.
 name|tqe_next
 control|)
+else|#
+directive|else
+for|for
+control|(
+name|ifa
+operator|=
+name|ifp
+operator|->
+name|if_addrlist
+operator|.
+name|tqh_first
+operator|,
+name|si
+operator|=
+literal|0
+init|;
+name|ifa
+condition|;
+name|ifa
+operator|=
+name|ifa
+operator|->
+name|ifa_list
+operator|.
+name|tqe_next
+control|)
+endif|#
+directive|endif
 if|if
 condition|(
 name|ifa
@@ -19014,16 +19483,8 @@ name|u_long
 name|src
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sp
-operator|->
-name|pp_if
-decl_stmt|;
+name|STDDCL
+expr_stmt|;
 name|struct
 name|ifaddr
 modifier|*
@@ -19034,12 +19495,13 @@ name|sockaddr_in
 modifier|*
 name|si
 decl_stmt|;
-name|u_long
-name|ssrc
-decl_stmt|,
-name|ddst
-decl_stmt|;
 comment|/* 	 * Pick the first AF_INET address from the list, 	 * aliases don't make any sense on a p2p link anyway. 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 for|for
 control|(
 name|ifa
@@ -19064,6 +19526,35 @@ name|ifa_link
 operator|.
 name|tqe_next
 control|)
+else|#
+directive|else
+for|for
+control|(
+name|ifa
+operator|=
+name|ifp
+operator|->
+name|if_addrlist
+operator|.
+name|tqh_first
+operator|,
+name|si
+operator|=
+literal|0
+init|;
+name|ifa
+condition|;
+name|ifa
+operator|=
+name|ifa
+operator|->
+name|ifa_list
+operator|.
+name|tqe_next
+control|)
+endif|#
+directive|endif
+block|{
 if|if
 condition|(
 name|ifa
@@ -19091,6 +19582,7 @@ condition|(
 name|si
 condition|)
 break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -19645,15 +20137,13 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s%d: phase %s\n"
+name|SPP_FMT
+literal|"phase %s\n"
 argument_list|,
+name|SPP_ARGS
+argument_list|(
 name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
+argument_list|)
 argument_list|,
 name|sppp_phase_name
 argument_list|(
@@ -20332,7 +20822,7 @@ parameter_list|)
 block|{
 name|addlog
 argument_list|(
-literal|" %x"
+literal|" %02x"
 argument_list|,
 operator|*
 name|p
@@ -20348,7 +20838,7 @@ literal|0
 condition|)
 name|addlog
 argument_list|(
-literal|"-%x"
+literal|"-%02x"
 argument_list|,
 operator|*
 name|p
@@ -20447,34 +20937,40 @@ call|(
 name|int
 call|)
 argument_list|(
+operator|(
 name|addr
 operator|>>
 literal|24
-argument_list|)
+operator|)
 operator|&
 literal|0xff
+argument_list|)
 argument_list|,
 call|(
 name|int
 call|)
 argument_list|(
+operator|(
 name|addr
 operator|>>
 literal|16
-argument_list|)
+operator|)
 operator|&
 literal|0xff
+argument_list|)
 argument_list|,
 call|(
 name|int
 call|)
 argument_list|(
+operator|(
 name|addr
 operator|>>
 literal|8
-argument_list|)
+operator|)
 operator|&
 literal|0xff
+argument_list|)
 argument_list|,
 call|(
 name|int
