@@ -1426,6 +1426,14 @@ name|m_len
 operator|=
 literal|0
 expr_stmt|;
+name|hm
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|hlen
