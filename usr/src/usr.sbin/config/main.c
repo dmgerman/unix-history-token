@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * main.c	1.5	82/10/11  * Config  *	Do system configuration for VAX/UNIX  *		1) Build system data structures  *		2) Build makefile  *		3) Create header files for devices  *	Michael Toy -- Berkeley -- 1981  */
+comment|/*	main.c	1.6	82/10/24	*/
 end_comment
 
 begin_include
@@ -27,6 +27,10 @@ directive|include
 file|"config.h"
 end_include
 
+begin_comment
+comment|/*  * Config builds a set of files for building a UNIX  * system given a description of the desired system.  */
+end_comment
+
 begin_function
 name|main
 parameter_list|(
@@ -46,35 +50,6 @@ block|{
 if|if
 condition|(
 name|argc
-operator|>
-literal|1
-operator|&&
-name|strcmp
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|,
-literal|"-p"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|argv
-operator|++
-operator|,
-name|argc
-operator|--
-expr_stmt|;
-name|profiling
-operator|++
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|argc
 operator|!=
 literal|2
 condition|)
@@ -83,7 +58,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: config [ -p ]<sysname>\n"
+literal|"usage: config sysname\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -144,9 +119,15 @@ argument_list|(
 literal|3
 argument_list|)
 expr_stmt|;
-else|else
+switch|switch
+condition|(
+name|machine
+condition|)
 block|{
-name|ioconf
+case|case
+name|MACHINE_VAX
+case|:
+name|vax_ioconf
 argument_list|()
 expr_stmt|;
 comment|/* Print ioconf.c */
@@ -154,6 +135,26 @@ name|ubglue
 argument_list|()
 expr_stmt|;
 comment|/* Create ubglue.s */
+break|break;
+case|case
+name|MACHINE_SUN
+case|:
+name|sun_ioconf
+argument_list|()
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Specify machine type, e.g. ``machine vax''\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|makefile
 argument_list|()
 expr_stmt|;
@@ -167,7 +168,6 @@ argument_list|(
 literal|"Don't forget to run \"make depend\"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -235,7 +235,9 @@ operator|==
 name|EOF
 condition|)
 return|return
+operator|(
 name|EOF
+operator|)
 return|;
 if|if
 condition|(
@@ -244,7 +246,9 @@ operator|==
 literal|'\n'
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|cp
 operator|=
@@ -288,7 +292,7 @@ block|}
 operator|*
 name|cp
 operator|=
-literal|'\0'
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -297,7 +301,9 @@ operator|==
 name|EOF
 condition|)
 return|return
+operator|(
 name|EOF
+operator|)
 return|;
 name|ungetc
 argument_list|(
@@ -307,13 +313,15 @@ name|fp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|line
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * path:  *	Prepend the path to a filename  */
+comment|/*  * prepend the path to a filename  */
 end_comment
 
 begin_macro
@@ -383,7 +391,9 @@ name|file
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|cp
+operator|)
 return|;
 block|}
 end_block
