@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t5.c	4.2 %G%"
+literal|"@(#)t5.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,9 @@ condition|)
 block|{
 name|leftover
 operator|=
+operator|(
+name|int
+operator|)
 name|cstore
 expr_stmt|;
 break|break;
@@ -215,6 +218,12 @@ index|[
 name|nlin
 index|]
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 name|fullbot
 index|[
 name|nlin
@@ -228,6 +237,11 @@ index|[
 name|nlin
 index|]
 operator|=
+operator|(
+expr|struct
+name|colstr
+operator|*
+operator|)
 name|alocv
 argument_list|(
 operator|(
@@ -370,6 +384,10 @@ index|]
 operator|.
 name|col
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|gettext
 argument_list|(
 name|cstore
@@ -453,6 +471,10 @@ index|]
 operator|.
 name|rcol
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|maknew
 argument_list|(
 name|table

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tb.c	4.2 %G%"
+literal|"@(#)tb.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -336,12 +336,11 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|char
+modifier|*
 name|chspace
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 modifier|*
@@ -413,7 +412,7 @@ name|pp
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -448,14 +447,13 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
+modifier|*
 name|alocv
-argument_list|(
-argument|n
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|n
+parameter_list|)
 block|{
 name|int
 modifier|*
@@ -560,7 +558,7 @@ name|tp
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|release
