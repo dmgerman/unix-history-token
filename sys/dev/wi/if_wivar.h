@@ -673,21 +673,6 @@ parameter_list|)
 value|splx(s)
 end_define
 
-begin_define
-define|#
-directive|define
-name|IF_HANDOFF
-parameter_list|(
-name|q
-parameter_list|,
-name|m
-parameter_list|,
-name|ifp
-parameter_list|)
-define|\
-value|if (IF_QFULL((q))) { \ 			IF_DROP((q)); \ 			m_freem((m)); \ 		} else { \ 			(ifp)->if_obytes += (m)->m_pkthdr.len; \ 			if ((m)->m_flags& M_MCAST) \ 				(ifp)->if_omcasts++; \ 			IF_ENQUEUE((q), (m)); \ 			if (((ifp)->if_flags& IFF_OACTIVE) == 0) \ 				(*(ifp)->if_start)((ifp)); \ 		}
-end_define
-
 begin_else
 else|#
 directive|else
