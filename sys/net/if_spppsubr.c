@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Wed Oct  4 18:58:15 MSK 1995  *  * $Id: if_spppsubr.c,v 1.22 1997/05/23 20:40:15 joerg Exp $  */
+comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Wed Oct  4 18:58:15 MSK 1995  *  * $Id: if_spppsubr.c,v 1.23 1997/08/06 01:43:09 itojun Exp $  */
 end_comment
 
 begin_include
@@ -9491,6 +9491,59 @@ condition|)
 block|{
 if|if
 condition|(
+operator|++
+name|sp
+operator|->
+name|fail_counter
+index|[
+name|IDX_LCP
+index|]
+operator|>=
+name|sp
+operator|->
+name|lcp
+operator|.
+name|max_failure
+condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|addlog
+argument_list|(
+literal|" max_failure (%d) exceeded, "
+literal|"send conf-rej\n"
+argument_list|,
+name|sp
+operator|->
+name|lcp
+operator|.
+name|max_failure
+argument_list|)
+expr_stmt|;
+name|sppp_cp_send
+argument_list|(
+name|sp
+argument_list|,
+name|PPP_LCP
+argument_list|,
+name|CONF_REJ
+argument_list|,
+name|h
+operator|->
+name|ident
+argument_list|,
+name|rlen
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|debug
 condition|)
 name|addlog
@@ -9515,6 +9568,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -9529,6 +9583,15 @@ name|addlog
 argument_list|(
 literal|" send conf-ack\n"
 argument_list|)
+expr_stmt|;
+name|sp
+operator|->
+name|fail_counter
+index|[
+name|IDX_LCP
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|sp
 operator|->
