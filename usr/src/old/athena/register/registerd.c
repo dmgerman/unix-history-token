@@ -14,6 +14,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resource.h>
 end_include
 
@@ -92,6 +98,13 @@ name|sockaddr_in
 name|sin
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|die
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|main
@@ -186,6 +199,13 @@ argument_list|(
 name|SIGTSTP
 argument_list|,
 name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|die
 argument_list|)
 expr_stmt|;
 if|if
@@ -429,6 +449,15 @@ literal|"couldn't read command code on Kerberos update"
 argument_list|)
 expr_stmt|;
 block|}
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"read comm code and did append (%d)"
+argument_list|,
+name|retval
+argument_list|)
+expr_stmt|;
 name|code
 operator|=
 operator|(
@@ -1184,6 +1213,31 @@ sizeof|sizeof
 argument_list|(
 name|master_key_schedule
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|die
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"remote end died (SIGPIPE)"
+argument_list|)
+expr_stmt|;
+name|cleanup
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
