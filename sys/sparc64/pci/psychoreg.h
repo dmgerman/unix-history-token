@@ -20,7 +20,7 @@ comment|/*  * Sun4u PCI definitions.  Here's where we deal w/the machine  * depe
 end_comment
 
 begin_comment
-comment|/*  * psycho register offset.s  *  * NB: FFB0 and FFB1 intr map regs also appear at 0x6000 and 0x8000  * respectively.  */
+comment|/*  * psycho register offsets.  *  * NB: FFB0 and FFB1 intr map regs also appear at 0x6000 and 0x8000  * respectively.  */
 end_comment
 
 begin_define
@@ -1536,87 +1536,6 @@ end_define
 
 begin_comment
 comment|/* Subordinate bus number register */
-end_comment
-
-begin_comment
-comment|/*  * these are the PROM structures we grovel  */
-end_comment
-
-begin_comment
-comment|/*  * For the physical adddresses split into 3 32 bit values, we deocde  * them like the following (IEEE1275 PCI Bus binding 2.0, 2.2.1.1  * Numerical Representation):  *  * 	phys.hi cell:	npt000ss bbbbbbbb dddddfff rrrrrrrr  * 	phys.mid cell:	hhhhhhhh hhhhhhhh hhhhhhhh hhhhhhhh  * 	phys.lo cell:	llllllll llllllll llllllll llllllll  *  * where these bits affect the address' properties:  *	n	not-relocatable  *	p	prefetchable  *	t	aliased (non-relocatable IO), below 1MB (memory) or  *		below 64KB (reloc. IO)  *	ss	address space code:  *		00 - configuration space  *		01 - I/O space  *		10 - 32 bit memory space  *		11 - 64 bit memory space  *	bb..bb	8 bit bus number  *	ddddd	5 bit device number  *	fff	3 bit function number  *	rr..rr	8 bit register number  *	hh..hh	32 bit unsigned value  *	ll..ll	32 bit unsigned value  * the values of hh..hh and ll..ll are combined to form a larger number.  *  * For config space, we don't have to do much special.  For I/O space,  * hh..hh must be zero, and if n == 0 ll..ll is the offset from the  * start of I/O space, otherwise ll..ll is the I/O space.  For memory  * space, hh..hh must be zero for the 32 bit space, and is the high 32  * bits in 64 bit space, with ll..ll being the low 32 bits in both cases,  * with offset handling being driver via `n == 0' as for I/O space.  */
-end_comment
-
-begin_comment
-comment|/* commonly used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TAG2BUS
-parameter_list|(
-name|tag
-parameter_list|)
-value|((tag)>> 16)& 0xff;
-end_define
-
-begin_define
-define|#
-directive|define
-name|TAG2DEV
-parameter_list|(
-name|tag
-parameter_list|)
-value|((tag)>> 11)& 0x1f;
-end_define
-
-begin_define
-define|#
-directive|define
-name|TAG2FN
-parameter_list|(
-name|tag
-parameter_list|)
-value|((tag)>> 8)& 0x7;
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTPCI_MAXOBINO
-value|0x16
-end_define
-
-begin_comment
-comment|/* maximum OBIO INO value for PCI */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTPCIOBINOX
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0x1f)
-end_define
-
-begin_comment
-comment|/* OBIO ino index (for PCI machines) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTPCIINOX
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x1c)>> 2)
-end_define
-
-begin_comment
-comment|/* PCI ino index */
 end_comment
 
 begin_endif

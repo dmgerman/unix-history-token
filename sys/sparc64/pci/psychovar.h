@@ -16,7 +16,7 @@ name|_SPARC64_PCI_PSYCHOVAR_H_
 end_define
 
 begin_comment
-comment|/*  * per-PCI bus on mainbus softc structure; one for sabre, or two  * per pair of psycho's.  */
+comment|/*  * Per-PCI bus on mainbus softc structure; one for sabre, or two  * per pair of psychos.  */
 end_comment
 
 begin_struct
@@ -26,7 +26,6 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
-comment|/* 	 * PSYCHO register.  we record the base physical address of these 	 * also as it is the base of the entire PSYCHO 	 */
 name|vm_paddr_t
 name|sc_basepaddr
 decl_stmt|;
@@ -34,7 +33,7 @@ comment|/* Interrupt Group Number for this device */
 name|int
 name|sc_ign
 decl_stmt|;
-comment|/* our tags (from parent) */
+comment|/* Our tags (from parent). */
 name|bus_space_tag_t
 name|sc_bustag
 decl_stmt|;
@@ -53,7 +52,7 @@ decl_stmt|;
 name|phandle_t
 name|sc_node
 decl_stmt|;
-comment|/* prom node */
+comment|/* Firmware node. */
 name|int
 name|sc_mode
 decl_stmt|;
@@ -106,7 +105,6 @@ name|sc_iinfo
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * note that the sabre really only has one ranges property, 	 * used for both simba a and simba b (but the ranges for 	 * real psychos are the same for PCI A and PCI B anyway). 	 */
 name|struct
 name|upa_ranges
 modifier|*
@@ -115,7 +113,7 @@ decl_stmt|;
 name|int
 name|sc_nrange
 decl_stmt|;
-comment|/* our tags */
+comment|/* Tags for PCI access. */
 name|bus_space_tag_t
 name|sc_cfgt
 decl_stmt|;

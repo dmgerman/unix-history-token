@@ -184,24 +184,6 @@ end_include
 begin_function_decl
 specifier|static
 name|void
-name|psycho_get_ranges
-parameter_list|(
-name|phandle_t
-parameter_list|,
-name|struct
-name|upa_ranges
-modifier|*
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|psycho_set_intr
 parameter_list|(
 name|struct
@@ -869,7 +851,7 @@ value|PSYCHO_WRITE8((sc), (sc)->sc_pcictl + (off), (v))
 end_define
 
 begin_comment
-comment|/*  * "sabre" is the UltraSPARC IIi onboard UPA to PCI bridge.  It manages a  * single PCI bus and does not have a streaming buffer.  It often has an APB  * (advanced PCI bridge) connected to it, which was designed specifically for  * the IIi.  The APB let's the IIi handle two independednt PCI buses, and  * appears as two "simba"'s underneath the sabre.  *  * "psycho" and "psycho+" is a dual UPA to PCI bridge.  It sits on the UPA bus  * and manages two PCI buses.  "psycho" has two 64-bit 33MHz buses, while  * "psycho+" controls both a 64-bit 33Mhz and a 64-bit 66Mhz PCI bus.  You  * will usually find a "psycho+" since I don't think the original "psycho"  * ever shipped, and if it did it would be in the U30.  *  * Each "psycho" PCI bus appears as a separate OFW node, but since they are  * both part of the same IC, they only have a single register space.  As such,  * they need to be configured together, even though the autoconfiguration will  * attach them separately.  *  * On UltraIIi machines, "sabre" itself usually takes pci0, with "simba" often  * as pci1 and pci2, although they have been implemented with other PCI bus  * numbers on some machines.  *  * On UltraII machines, there can be any number of "psycho+" ICs, each  * providing two PCI buses.  *  *  * XXXX The psycho/sabre node has an `interrupts' attribute.  They contain  * the values of the following interrupts in this order:  *  * PCI Bus Error	(30)  * DMA UE		(2e)  * DMA CE		(2f)  * Power Fail		(25)  *  * We really should attach handlers for each.  */
+comment|/*  * "sabre" is the UltraSPARC IIi onboard UPA to PCI bridge.  It manages a  * single PCI bus and does not have a streaming buffer.  It often has an APB  * (advanced PCI bridge) connected to it, which was designed specifically for  * the IIi.  The APB let's the IIi handle two independednt PCI buses, and  * appears as two "simba"'s underneath the sabre.  *  * "psycho" and "psycho+" are dual UPA to PCI bridges.  They sit on the UPA bus  * and manage two PCI buses.  "psycho" has two 64-bit 33MHz buses, while  * "psycho+" controls both a 64-bit 33Mhz and a 64-bit 66Mhz PCI bus.  You  * will usually find a "psycho+" since I don't think the original "psycho"  * ever shipped, and if it did it would be in the U30.  *  * Each "psycho" PCI bus appears as a separate OFW node, but since they are  * both part of the same IC, they only have a single register space.  As such,  * they need to be configured together, even though the autoconfiguration will  * attach them separately.  *  * On UltraIIi machines, "sabre" itself usually takes pci0, with "simba" often  * as pci1 and pci2, although they have been implemented with other PCI bus  * numbers on some machines.  *  * On UltraII machines, there can be any number of "psycho+" ICs, each  * providing two PCI buses.  */
 end_comment
 
 begin_ifdef
@@ -1242,10 +1224,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * SUNW,psycho initialisation ..  *	- find the per-psycho registers  *	- figure out the IGN.  *	- find our partner psycho  *	- configure ourselves  *	- bus range, bus,  *	- interrupt map,  *	- setup the chipsets.  *	- if we're the first of the pair, initialise the IOMMU, otherwise  *	  just copy it's tags and addresses.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -1383,7 +1361,7 @@ name|desc
 operator|->
 name|pd_mode
 expr_stmt|;
-comment|/* 	 * The psycho gets three register banks: 	 * (0) per-PBM configuration and status registers 	 * (1) per-PBM PCI configuration space, containing only the 	 *     PBM 256-byte PCI header 	 * (2) the shared psycho configuration registers (struct psychoreg) 	 */
+comment|/* 	 * The psycho gets three register banks: 	 * (0) per-PBM configuration and status registers 	 * (1) per-PBM PCI configuration space, containing only the 	 *     PBM 256-byte PCI header 	 * (2) the shared psycho configuration registers 	 */
 name|reg
 operator|=
 name|nexus_get_reg
@@ -1398,7 +1376,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Register layouts are different.  stuupid. */
 if|if
 condition|(
 name|sc
@@ -1767,7 +1744,7 @@ operator|->
 name|sc_half
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Setup the PCI control register 	 */
+comment|/* Setup the PCI control register. */
 name|csr
 operator|=
 name|PCICTL_READ8
@@ -1818,7 +1795,7 @@ operator|==
 name|PSYCHO_MODE_SABRE
 condition|)
 block|{
-comment|/* 		 * Use the PROM preset for now. 		 */
+comment|/* Use the PROM preset for now. */
 name|csr
 operator|=
 name|PCICTL_READ8
@@ -1862,24 +1839,6 @@ name|sc_dvmabase
 operator|=
 operator|-
 literal|1
-expr_stmt|;
-comment|/* Grab the psycho ranges */
-name|psycho_get_ranges
-argument_list|(
-name|sc
-operator|->
-name|sc_node
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_range
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_nrange
-argument_list|)
 expr_stmt|;
 comment|/* Initialize memory and i/o rmans */
 name|sc
@@ -1974,6 +1933,51 @@ condition|)
 name|panic
 argument_list|(
 literal|"psycho_probe: failed to set up memory rman"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_nrange
+operator|=
+name|OF_getprop_alloc
+argument_list|(
+name|sc
+operator|->
+name|sc_node
+argument_list|,
+literal|"ranges"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sc
+operator|->
+name|sc_range
+argument_list|)
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
+name|sc
+operator|->
+name|sc_range
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_nrange
+operator|==
+operator|-
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"could not get psycho ranges"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Find the addresses of the various bus spaces. 	 * There should not be multiple ones of one kind. 	 * The physical start addresses of the ranges are the configuration, 	 * memory and IO handles. 	 */
@@ -2739,7 +2743,7 @@ operator|->
 name|sc_node
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Program the bus range registers. 	 * NOTE: the psycho, the second write changes the bus number the 	 * psycho itself uses for it's configuration space, so these 	 * writes must be kept in this order! 	 * The sabre always uses bus 0, but there only can be one sabre per 	 * machine. 	 */
+comment|/* 	 * Program the bus range registers. 	 * NOTE: for the psycho, the second write changes the bus number the 	 * psycho itself uses for it's configuration space, so these 	 * writes must be kept in this order! 	 * The sabre always uses bus 0, but there only can be one sabre per 	 * machine. 	 */
 name|PCIB_WRITE_CONFIG
 argument_list|(
 name|dev
@@ -3304,69 +3308,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* grovel the OBP for various psycho properties */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|psycho_get_ranges
-parameter_list|(
-name|phandle_t
-name|node
-parameter_list|,
-name|struct
-name|upa_ranges
-modifier|*
-modifier|*
-name|rp
-parameter_list|,
-name|int
-modifier|*
-name|np
-parameter_list|)
-block|{
-operator|*
-name|np
-operator|=
-name|OF_getprop_alloc
-argument_list|(
-name|node
-argument_list|,
-literal|"ranges"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-operator|*
-name|rp
-argument_list|)
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-name|rp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|np
-operator|==
-operator|-
-literal|1
-condition|)
-name|panic
-argument_list|(
-literal|"could not get psycho ranges"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Interrupt handlers.  */
 end_comment
 
@@ -3435,7 +3376,6 @@ argument_list|,
 name|afar
 argument_list|)
 expr_stmt|;
-comment|/* It's uncorrectable.  Dump the regs and panic. */
 name|panic
 argument_list|(
 literal|"%s: uncorrectable DMA error AFAR %#lx AFSR %#lx"
@@ -3506,7 +3446,6 @@ argument_list|,
 name|PSR_CE_AFS
 argument_list|)
 expr_stmt|;
-comment|/* It's correctable.  Dump the regs and continue. */
 name|device_printf
 argument_list|(
 name|sc
@@ -3600,7 +3539,6 @@ operator|+
 name|PCR_AFS
 argument_list|)
 expr_stmt|;
-comment|/* It's uncorrectable.  Dump the regs and panic. */
 name|panic
 argument_list|(
 literal|"%s: PCI bus A error AFAR %#lx AFSR %#lx"
@@ -3675,7 +3613,6 @@ operator|+
 name|PCR_AFS
 argument_list|)
 expr_stmt|;
-comment|/* It's uncorrectable.  Dump the regs and panic. */
 name|panic
 argument_list|(
 literal|"%s: PCI bus B error AFAR %#lx AFSR %#lx"
@@ -3711,7 +3648,6 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-comment|/* We lost power.  Try to shut down NOW. */
 ifdef|#
 directive|ifdef
 name|DEBUGGER_ON_POWERFAIL
@@ -3815,10 +3751,6 @@ end_endif
 
 begin_comment
 comment|/* PSYCHO_MAP_WAKEUP */
-end_comment
-
-begin_comment
-comment|/* initialise the IOMMU... */
 end_comment
 
 begin_function
@@ -3935,7 +3867,7 @@ literal|32
 argument_list|,
 literal|"%s dvma"
 argument_list|,
-name|device_get_name
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4711,7 +4643,7 @@ operator|(
 name|mintr
 operator|)
 return|;
-comment|/* 	 * If this is outside of the range for an intpin, it's likely a full 	 * INO, and no mapping is required at all; this happens on the u30, 	 * where there's no interrupt map at the psycho node. Fortunately, 	 * there seem to be no INOs in the intpin range on this boxen, so 	 * this easy heuristics will do. 	 */
+comment|/* 	 * If this is outside of the range for an intpin, it's likely a full 	 * INO, and no mapping is required at all; this happens on the u30,  	 * where there's no interrupt map at the psycho node. Fortunately, 	 * there seem to be no INOs in the intpin range on this boxen, so 	 * this easy heuristics will do. 	 */
 if|if
 condition|(
 name|pin
@@ -5029,7 +4961,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Hunt through all the interrupt mapping regs to look for our 	 * interrupt vector. 	 * 	 * XXX We only compare INOs rather than IGNs since the firmware may 	 * not provide the IGN and the IGN is constant for all device on that 	 * PCI controller.  This could cause problems for the FFB/external 	 * interrupt which has a full vector that can be set arbitrarily. 	 */
+comment|/* 	 * Hunt through all the interrupt mapping regs to look for our 	 * interrupt vector. 	 * 	 * XXX We only compare INOs rather than IGNs since the firmware may 	 * not provide the IGN and the IGN is constant for all devices on that 	 * PCI controller.  This could cause problems for the FFB/external 	 * interrupt which has a full vector that can be set arbitrarily. 	 */
 name|ino
 operator|=
 name|INTINO
@@ -5423,9 +5355,14 @@ name|sc_ign
 expr_stmt|;
 return|return
 operator|(
-name|bus_alloc_resource
+name|BUS_ALLOC_RESOURCE
+argument_list|(
+name|device_get_parent
 argument_list|(
 name|bus
+argument_list|)
+argument_list|,
+name|child
 argument_list|,
 name|type
 argument_list|,
@@ -5633,9 +5570,14 @@ name|SYS_RES_IRQ
 condition|)
 return|return
 operator|(
-name|bus_activate_resource
+name|BUS_ACTIVATE_RESOURCE
+argument_list|(
+name|device_get_parent
 argument_list|(
 name|bus
+argument_list|)
+argument_list|,
+name|child
 argument_list|,
 name|type
 argument_list|,
@@ -5741,9 +5683,14 @@ name|SYS_RES_IRQ
 condition|)
 return|return
 operator|(
-name|bus_deactivate_resource
+name|BUS_DEACTIVATE_RESOURCE
+argument_list|(
+name|device_get_parent
 argument_list|(
 name|bus
+argument_list|)
+argument_list|,
+name|child
 argument_list|,
 name|type
 argument_list|,
@@ -5826,9 +5773,14 @@ name|SYS_RES_IRQ
 condition|)
 return|return
 operator|(
-name|bus_release_resource
+name|BUS_RELEASE_RESOURCE
+argument_list|(
+name|device_get_parent
 argument_list|(
 name|bus
+argument_list|)
+argument_list|,
+name|child
 argument_list|,
 name|type
 argument_list|,
@@ -6277,10 +6229,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * below here is bus space and bus dma support  */
-end_comment
 
 begin_function
 specifier|static
