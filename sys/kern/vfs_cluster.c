@@ -904,7 +904,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_offset
+name|b_iooffset
 operator|=
 name|dbtob
 argument_list|(
@@ -1189,7 +1189,7 @@ argument_list|)
 expr_stmt|;
 name|rbp
 operator|->
-name|b_offset
+name|b_iooffset
 operator|=
 name|dbtob
 argument_list|(

@@ -6274,6 +6274,21 @@ comment|/* XXX */
 block|if ((raidbp->rf_buf.bio_cmd& BIO_READ) == 0) { 			raidbp->rf_buf.b_vp->v_numoutput++; 		}
 endif|#
 directive|endif
+name|raidbp
+operator|->
+name|rf_buf
+operator|.
+name|b_iooffset
+operator|=
+name|dbtob
+argument_list|(
+name|raidbp
+operator|->
+name|rf_buf
+operator|.
+name|b_blkno
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 name|devsw
@@ -7834,7 +7849,7 @@ name|DEV_BSIZE
 expr_stmt|;
 name|bp
 operator|->
-name|b_offset
+name|b_iooffset
 operator|=
 name|RF_COMPONENT_INFO_OFFSET
 expr_stmt|;
@@ -7996,7 +8011,7 @@ name|DEV_BSIZE
 expr_stmt|;
 name|bp
 operator|->
-name|b_offset
+name|b_iooffset
 operator|=
 name|RF_COMPONENT_INFO_OFFSET
 expr_stmt|;

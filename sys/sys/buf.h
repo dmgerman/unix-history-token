@@ -250,6 +250,10 @@ name|b_ioflags
 value|b_io.bio_flags
 define|#
 directive|define
+name|b_iooffset
+value|b_io.bio_offset
+define|#
+directive|define
 name|b_pblkno
 value|b_io.bio_pblkno
 define|#
