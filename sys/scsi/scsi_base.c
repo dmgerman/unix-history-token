@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.5 1994/01/29 10:30:37 rgrimes Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.6 1994/02/07 02:15:01 rgrimes Exp $  */
 end_comment
 
 begin_define
@@ -1844,6 +1844,9 @@ goto|goto
 name|bad
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|NOBOUNCE
 name|xs
 operator|->
 name|data
@@ -1857,6 +1860,30 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|xs
+operator|->
+name|data
+operator|=
+operator|(
+name|caddr_t
+operator|)
+name|vm_bounce_kva_alloc
+argument_list|(
+operator|(
+name|datalen
+operator|+
+name|PAGE_SIZE
+operator|-
+literal|1
+operator|)
+operator|/
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* I think waiting is ok */
 comment|/*XXX */
 switch|switch
@@ -2194,6 +2221,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|NOBOUNCE
 name|free
 argument_list|(
 name|xs
@@ -2203,6 +2233,29 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|vm_bounce_kva_alloc_free
+argument_list|(
+name|xs
+operator|->
+name|data
+argument_list|,
+operator|(
+name|datalen
+operator|+
+name|PAGE_SIZE
+operator|-
+literal|1
+operator|)
+operator|/
+name|PAGE_SIZE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * we have finished with the xfer stuct, free it and 	 * check if anyone else needs to be started up. 	 */
 name|bad

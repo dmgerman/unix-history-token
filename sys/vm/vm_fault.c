@@ -4,7 +4,7 @@ comment|/*   * Copyright (c) 1991 Regents of the University of California.  * Al
 end_comment
 
 begin_comment
-comment|/*  * $Id: vm_fault.c,v 1.15 1994/03/14 21:54:24 davidg Exp $  */
+comment|/*  * $Id: vm_fault.c,v 1.16 1994/04/14 07:50:18 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -57,7 +57,7 @@ begin_define
 define|#
 directive|define
 name|VM_FAULT_READ_AHEAD
-value|3
+value|4
 end_define
 
 begin_define
@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|VM_FAULT_READ_BEHIND
-value|2
+value|3
 end_define
 
 begin_define

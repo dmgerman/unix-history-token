@@ -1877,7 +1877,7 @@ operator|&&
 operator|(
 name|vm_page_free_count
 operator|<=
-name|vm_pageout_free_min
+name|vm_page_free_reserved
 operator|)
 condition|)
 name|p
