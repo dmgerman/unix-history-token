@@ -2297,7 +2297,9 @@ name|mknod
 argument_list|(
 name|VINUM_SUPERDEV_NAME
 argument_list|,
-name|S_IRWXU
+name|S_IRUSR
+operator||
+name|S_IWUSR
 operator||
 name|S_IFCHR
 argument_list|,
@@ -2332,7 +2334,9 @@ name|mknod
 argument_list|(
 name|VINUM_WRONGSUPERDEV_NAME
 argument_list|,
-name|S_IRWXU
+name|S_IRUSR
+operator||
+name|S_IWUSR
 operator||
 name|S_IFCHR
 argument_list|,
@@ -2378,7 +2382,9 @@ argument_list|(
 name|VINUM_DAEMON_DEV_NAME
 argument_list|,
 comment|/* daemon super device */
-name|S_IRWXU
+name|S_IRUSR
+operator||
+name|S_IWUSR
 operator||
 name|S_IFCHR
 argument_list|,
@@ -2642,7 +2648,9 @@ name|mknod
 argument_list|(
 name|filename
 argument_list|,
-name|S_IRWXU
+name|S_IRUSR
+operator||
+name|S_IWUSR
 operator||
 name|S_IRGRP
 operator||
@@ -2686,7 +2694,9 @@ name|mknod
 argument_list|(
 name|filename
 argument_list|,
-name|S_IRWXU
+name|S_IRUSR
+operator||
+name|S_IWUSR
 operator||
 name|S_IRGRP
 operator||
@@ -2739,7 +2749,9 @@ name|mkdir
 argument_list|(
 name|filename
 argument_list|,
-name|S_IRWXU
+name|S_IRUSR
+operator||
+name|S_IWUSR
 operator||
 name|S_IRGRP
 operator||
@@ -2867,7 +2879,9 @@ name|mknod
 argument_list|(
 name|filename
 argument_list|,
-name|S_IRWXU
+name|S_IRUSR
+operator||
+name|S_IWUSR
 operator||
 name|S_IRGRP
 operator||
@@ -2949,7 +2963,9 @@ name|mknod
 argument_list|(
 name|filename
 argument_list|,
-name|S_IRWXU
+name|S_IRUSR
+operator||
+name|S_IWUSR
 operator||
 name|S_IRGRP
 operator||
@@ -2997,7 +3013,9 @@ name|mkdir
 argument_list|(
 name|filename
 argument_list|,
-name|S_IRWXU
+name|S_IRUSR
+operator||
+name|S_IWUSR
 operator||
 name|S_IRGRP
 operator||
@@ -3133,7 +3151,9 @@ name|mknod
 argument_list|(
 name|filename
 argument_list|,
-name|S_IRWXU
+name|S_IRUSR
+operator||
+name|S_IWUSR
 operator||
 name|S_IRGRP
 operator||
