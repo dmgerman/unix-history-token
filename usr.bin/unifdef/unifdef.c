@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: unifdef.c,v 1.1.1.1.8.1 1997/08/21 06:46:44 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -461,7 +461,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc

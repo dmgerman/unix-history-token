@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ul.c,v 1.2.6.1 1997/08/21 06:42:31 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -477,7 +477,7 @@ value|; else tputs(s, 1, outchar)
 end_define
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
