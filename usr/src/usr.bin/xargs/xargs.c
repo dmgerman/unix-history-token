@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xargs.c	5.6 (Berkeley) %G%"
+literal|"@(#)xargs.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -104,6 +116,12 @@ end_define
 begin_decl_stmt
 name|int
 name|tflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|fflag
 decl_stmt|;
 end_decl_stmt
 
@@ -182,10 +200,6 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|xargs
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
 decl_stmt|;
 name|nargs
 operator|=
@@ -206,7 +220,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"n:s:t"
+literal|"n:s:tf"
 argument_list|)
 operator|)
 operator|!=
@@ -289,6 +303,14 @@ case|case
 literal|'t'
 case|:
 name|tflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|fflag
 operator|=
 literal|1
 expr_stmt|;
@@ -501,6 +523,11 @@ name|p
 condition|)
 block|{
 comment|/* nothing since last arg end */
+operator|*
+name|xp
+operator|=
+name|NULL
+expr_stmt|;
 name|run
 argument_list|(
 name|prog
@@ -598,6 +625,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+operator|*
+name|xp
+operator|=
+name|NULL
+expr_stmt|;
 name|run
 argument_list|(
 name|prog
@@ -1008,6 +1040,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|fflag
+operator|&&
 name|pstat
 operator|.
 name|w_status
@@ -1064,7 +1099,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"xargs: [-t] [-n number] [-s size] [utility [argument ...]]\n"
+literal|"xargs: [-t] [-f] [-n number] [-s size] [utility [argument ...]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
