@@ -536,6 +536,8 @@ operator|&
 name|bus
 argument_list|)
 argument_list|)
+operator|&&
+name|bootverbose
 condition|)
 name|printf
 argument_list|(
@@ -834,6 +836,8 @@ operator|&
 name|bus
 argument_list|)
 argument_list|)
+operator|&&
+name|bootverbose
 condition|)
 name|printf
 argument_list|(
