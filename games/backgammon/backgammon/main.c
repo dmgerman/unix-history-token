@@ -427,7 +427,7 @@ name|c
 decl_stmt|;
 comment|/* non-descript character storage */
 comment|/* revoke privs */
-name|setegid
+name|setgid
 argument_list|(
 name|getgid
 argument_list|()
