@@ -552,9 +552,6 @@ argument_list|,
 name|pw
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PW_COMPACT
 comment|/* 	 * Attempt a recovery if the incremental database update failed by 	 * handing off to the real password hashing program to remake the 	 * whole mess. Even though this costs lots of time it's better than 	 * having the password databases out of sync with the master pw file. 	 */
 if|if
 condition|(
@@ -577,8 +574,6 @@ argument_list|,
 name|progname
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -598,9 +593,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PW_COMPACT
 block|}
 else|else
 block|{
@@ -680,8 +672,6 @@ name|_PATH_PASSWD
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|exit
 argument_list|(
 literal|0
