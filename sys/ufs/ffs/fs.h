@@ -1287,7 +1287,7 @@ parameter_list|(
 name|cgp
 parameter_list|)
 define|\
-value|((int32_t *)((u_int8_t *)(cgp) + (cgp)->cg_clustersumoff))
+value|((int32_t *)((uintptr_t)(cgp) + (cgp)->cg_clustersumoff))
 end_define
 
 begin_comment
