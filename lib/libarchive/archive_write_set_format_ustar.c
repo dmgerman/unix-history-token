@@ -1753,7 +1753,15 @@ name|a
 argument_list|,
 name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
-literal|"tar format cannot archive this"
+literal|"tar format cannot archive this (mode=0%lo)"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|st
+operator|->
+name|st_mode
 argument_list|)
 expr_stmt|;
 name|ret
