@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)term.c	5.1 (Berkeley) %G%"
+literal|"@(#)term.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,7 +152,7 @@ name|rval
 decl_stmt|;
 name|char
 modifier|*
-name|base
+name|p
 decl_stmt|,
 modifier|*
 name|ttype
@@ -199,7 +199,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|base
+name|p
 operator|=
 name|rindex
 argument_list|(
@@ -209,10 +209,10 @@ literal|'/'
 argument_list|)
 condition|)
 operator|++
-name|base
+name|p
 expr_stmt|;
 else|else
-name|base
+name|p
 operator|=
 name|ttypath
 expr_stmt|;
@@ -223,7 +223,7 @@ name|t
 operator|=
 name|getttynam
 argument_list|(
-name|base
+name|p
 argument_list|)
 operator|)
 condition|)
@@ -253,9 +253,27 @@ argument_list|(
 name|ttype
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Remove TERMCAP from the environment so we get a real entry from 	 * /etc/termcap.  This prevents us from being fooled by out of date 	 * stuff in the environment. 	 */
+comment|/* 	 * If not a path, remove TERMCAP from the environment so we get a 	 * real entry from /etc/termcap.  This prevents us from being fooled 	 * by out of date stuff in the environment. 	 */
 name|found
 label|:
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|getenv
+argument_list|(
+literal|"TERMCAP"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'/'
+condition|)
 name|unsetenv
 argument_list|(
 literal|"TERMCAP"
