@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dver.c	1.12	84/02/13  *  * Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
+comment|/*	dver.c	1.12	84/02/27  *  * VAX Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
 end_comment
 
 begin_comment
@@ -201,7 +201,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"dver.c	1.12	84/02/13"
+literal|"dver.c	1.12	84/02/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -3566,7 +3566,16 @@ parameter_list|,
 name|y
 parameter_list|)
 value|{ c = (char*) (x); x = y; y = c; }
-name|ptrswap
+define|#
+directive|define
+name|ptrfswap
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|{ c = (char*) (x); x = y; y = (struct font *)c; }
+name|ptrfswap
 argument_list|(
 name|fontbase
 index|[
@@ -5115,10 +5124,6 @@ else|else
 comment|/* on another font (we hope) */
 for|for
 control|(
-name|k
-operator|=
-name|font
-operator|,
 name|j
 operator|=
 literal|0
@@ -5201,23 +5206,6 @@ condition|(
 name|i
 operator|==
 literal|0
-operator|||
-operator|(
-name|code
-operator|=
-name|p
-index|[
-name|i
-index|]
-operator|&
-name|BMASK
-operator|)
-operator|==
-literal|0
-operator|||
-name|k
-operator|>
-name|nfonts
 condition|)
 block|{
 ifdef|#
@@ -5242,6 +5230,15 @@ endif|#
 directive|endif
 return|return;
 block|}
+name|code
+operator|=
+name|p
+index|[
+name|i
+index|]
+operator|&
+name|BMASK
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUGABLE
