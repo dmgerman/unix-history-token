@@ -447,13 +447,13 @@ typedef|typedef
 struct|struct
 name|fr_ip
 block|{
-name|u_char
+name|u_int
 name|fi_v
 range|:
 literal|4
 decl_stmt|;
 comment|/* IP version */
-name|u_char
+name|u_int
 name|fi_fl
 range|:
 literal|4
@@ -2107,6 +2107,12 @@ ifndef|#
 directive|ifndef
 name|_KERNEL
 end_ifndef
+
+begin_struct_decl
+struct_decl|struct
+name|ifnet
+struct_decl|;
+end_struct_decl
 
 begin_decl_stmt
 specifier|extern
