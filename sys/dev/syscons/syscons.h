@@ -2637,6 +2637,16 @@ parameter_list|)
 value|((vtb)->vtb_rows)
 end_define
 
+begin_define
+define|#
+directive|define
+name|sc_vtb_cols
+parameter_list|(
+name|vtb
+parameter_list|)
+value|((vtb)->vtb_cols)
+end_define
+
 begin_function_decl
 name|void
 name|sc_vtb_copy
