@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kse.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
@@ -809,19 +803,6 @@ name|NULL
 argument_list|,
 operator|(
 literal|"trap: curthread NULL"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|td
-operator|->
-name|td_kse
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"trap: curkse NULL"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1970,19 +1951,6 @@ name|NULL
 argument_list|,
 operator|(
 literal|"trap: curthread NULL"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|td
-operator|->
-name|td_kse
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"trap: curkse NULL"
 operator|)
 argument_list|)
 expr_stmt|;
