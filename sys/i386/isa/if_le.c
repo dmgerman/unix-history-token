@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_le.c,v 1.3 1994/08/20 03:48:39 davidg Exp $  *  */
+comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_le.c,v 1.4 1994/08/23 07:52:17 paul Exp $  *  */
 end_comment
 
 begin_comment
@@ -1521,19 +1521,9 @@ operator||
 name|IFF_SIMPLEX
 operator||
 name|IFF_NOTRAILERS
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTICAST
-name|ifp
-operator|->
-name|if_flags
-operator||=
+operator||
 name|IFF_MULTICAST
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MULTICAST */
 name|ifp
 operator|->
 name|if_output
@@ -2682,9 +2672,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|MULTICAST
 case|case
 name|SIOCADDMULTI
 case|:
@@ -2761,9 +2748,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-endif|#
-directive|endif
-comment|/* MULTICAST */
 default|default:
 block|{
 name|error
@@ -3151,9 +3135,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|MULTICAST
 name|struct
 name|ether_multistep
 name|step
@@ -3163,8 +3144,6 @@ name|ether_multi
 modifier|*
 name|enm
 decl_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|ISO
@@ -3268,9 +3247,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|MULTICAST
 name|ETHER_FIRST_MULTI
 argument_list|(
 name|step
@@ -3361,8 +3337,6 @@ operator|&=
 operator|~
 name|IFF_ALLMULTI
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
