@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.46 (Berkeley) 12/1/96 (with USERDB)"
+literal|"@(#)udb.c	8.47 (Berkeley) 12/6/96 (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.46 (Berkeley) 12/1/96 (without USERDB)"
+literal|"@(#)udb.c	8.47 (Berkeley) 12/6/96 (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -995,7 +995,7 @@ operator|.
 name|size
 argument_list|)
 expr_stmt|;
-name|user
+name|p
 index|[
 name|info
 operator|.

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.260 (Berkeley) 12/1/96"
+literal|"@(#)deliver.c	8.266 (Berkeley) 1/17/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -1153,6 +1153,8 @@ name|ee
 argument_list|,
 name|NULL
 argument_list|,
+literal|'\0'
+argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
@@ -1580,6 +1582,8 @@ name|e
 argument_list|,
 name|NULL
 argument_list|,
+literal|'\0'
+argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
@@ -1921,6 +1925,52 @@ name|e_flags
 operator||=
 name|EF_INQUEUE
 expr_stmt|;
+name|dropenvelope
+argument_list|(
+name|e
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|ee
+operator|=
+name|splitenv
+init|;
+name|ee
+operator|!=
+name|NULL
+condition|;
+name|ee
+operator|=
+name|ee
+operator|->
+name|e_sibling
+control|)
+block|{
+if|if
+condition|(
+name|ee
+operator|->
+name|e_nrcpts
+operator|>
+literal|0
+condition|)
+name|ee
+operator|->
+name|e_flags
+operator||=
+name|EF_INQUEUE
+expr_stmt|;
+name|dropenvelope
+argument_list|(
+name|ee
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 case|case
 name|SM_FORK
@@ -2173,7 +2223,7 @@ expr_stmt|;
 comment|/* be sure we are immune from the terminal */
 name|disconnect
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 name|e
 argument_list|)
@@ -2856,7 +2906,7 @@ begin_define
 define|#
 directive|define
 name|NO_UID
-value|((uid_t) -1)
+value|-1
 end_define
 
 begin_endif
@@ -2874,7 +2924,7 @@ begin_define
 define|#
 directive|define
 name|NO_GID
-value|((gid_t) -1)
+value|-1
 end_define
 
 begin_endif
@@ -6017,17 +6067,17 @@ decl_stmt|;
 name|int
 name|saveerrno
 decl_stmt|;
-name|uid_t
+name|int
 name|new_euid
 init|=
 name|NO_UID
 decl_stmt|;
-name|uid_t
+name|int
 name|new_ruid
 init|=
 name|NO_UID
 decl_stmt|;
-name|gid_t
+name|int
 name|new_gid
 init|=
 name|NO_GID
@@ -7407,6 +7457,18 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* clear out per-message flags from connection structure */
+name|mci
+operator|->
+name|mci_flags
+operator|&=
+operator|~
+operator|(
+name|MCIF_CVT7TO8
+operator||
+name|MCIF_CVT8TO7
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|bitset
@@ -7441,14 +7503,6 @@ name|mci
 operator|->
 name|mci_flags
 operator||=
-name|MCIF_CVT8TO7
-expr_stmt|;
-else|else
-name|mci
-operator|->
-name|mci_flags
-operator|&=
-operator|~
 name|MCIF_CVT8TO7
 expr_stmt|;
 if|#
@@ -8477,6 +8531,10 @@ comment|/* reset the mci state for the next transaction */
 if|if
 condition|(
 name|mci
+operator|!=
+name|NULL
+operator|&&
+name|mci
 operator|->
 name|mci_state
 operator|==
@@ -8540,6 +8598,10 @@ comment|/* now close the connection */
 if|if
 condition|(
 name|clever
+operator|&&
+name|mci
+operator|!=
+name|NULL
 operator|&&
 name|mci
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.279 (Berkeley) 12/1/96  */
+comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.288 (Berkeley) 1/17/97  */
 end_comment
 
 begin_comment
@@ -1749,6 +1749,12 @@ name|BSD
 argument_list|)
 end_if
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1803,24 +1809,6 @@ end_define
 begin_comment
 comment|/* can check IP source routing */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LA_TYPE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LA_TYPE
-value|LA_INT
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1922,12 +1910,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
 
 begin_define
 define|#
@@ -2085,17 +2067,6 @@ end_if
 begin_define
 define|#
 directive|define
-name|HASSNPRINTF
-value|1
-end_define
-
-begin_comment
-comment|/* has snprintf starting in 2.5 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASSETREUID
 value|1
 end_define
@@ -2103,41 +2074,6 @@ end_define
 begin_comment
 comment|/* setreuid works as of 2.5 */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|SOLARIS
-operator|==
-literal|20500
-operator|||
-name|SOLARIS
-operator|==
-literal|205
-end_if
-
-begin_define
-define|#
-directive|define
-name|snprintf
-value|__snprintf
-end_define
-
-begin_comment
-comment|/* but names it oddly in 2.5 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|vsnprintf
-value|__vsnprintf
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -2160,6 +2096,40 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|SOLARIS
+operator|>=
+literal|20600
+operator|||
+operator|(
+name|SOLARIS
+operator|<
+literal|10000
+operator|&&
+name|SOLARIS
+operator|>=
+literal|206
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASSNPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* has snprintf starting in 2.6 */
+end_comment
 
 begin_endif
 endif|#
@@ -2396,10 +2366,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_INT
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* sun&& !BSD */
+end_comment
 
 begin_comment
 comment|/* **  DG/UX ** **	Tested on 5.4.2 and 5.4.3.  Use DGUX_5_4_2 to get the **	older support. **	5.4.3 changes from Mark T. Robinson<mtr@ornl.gov>. */
@@ -3652,7 +3644,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  FreeBSD / NetBSD (all architectures, all versions) ** **  4.3BSD clone, closer to 4.4BSD	for FreeBSD 1.x and NetBSD 0.9x **  4.4BSD-Lite based			for FreeBSD 2.x and NetBSD 1.x ** **	See also BSD defines. */
+comment|/* **  FreeBSD / NetBSD / OpenBSD (all architectures, all versions) ** **  4.3BSD clone, closer to 4.4BSD	for FreeBSD 1.x and NetBSD 0.9x **  4.4BSD-Lite based			for FreeBSD 2.x and NetBSD 1.x ** **	See also BSD defines. */
 end_comment
 
 begin_if
@@ -3666,6 +3658,11 @@ operator|||
 name|defined
 argument_list|(
 name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
 argument_list|)
 end_if
 
@@ -3945,6 +3942,37 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|SPT_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SPT_TYPE
+value|SPT_BUILTIN
+end_define
+
+begin_comment
+comment|/* setproctitle is in libc */
+end_comment
 
 begin_endif
 endif|#
@@ -4491,6 +4519,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USE_SIGLONGJMP
+value|1
+end_define
+
+begin_comment
+comment|/* sigsetjmp needed for signal handling */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MAXPATHLEN
 value|PATHSIZE
 end_define
@@ -4936,6 +4975,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NOFTRUNCATE
+value|1
+end_define
+
+begin_comment
+comment|/* do not have ftruncate(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MAXPATHLEN
 value|PATH_MAX
 end_define
@@ -5034,6 +5084,14 @@ begin_typedef
 typedef|typedef
 name|short
 name|pid_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|mode_t
 typedef|;
 end_typedef
 
@@ -5630,6 +5688,20 @@ directive|define
 name|SIGFUNC_DEFINED
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIGFUNC_RETURN
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGFUNC_DECL
+value|int
+end_define
+
 begin_typedef
 typedef|typedef
 name|int
@@ -6044,6 +6116,28 @@ end_define
 
 begin_comment
 comment|/* sigfunc_t already defined */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGFUNC_RETURN
+value|(0)
+end_define
+
+begin_comment
+comment|/* XXX this is a guess */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGFUNC_DECL
+value|int
+end_define
+
+begin_comment
+comment|/* XXX this is a guess */
 end_comment
 
 begin_ifndef
@@ -6940,6 +7034,29 @@ directive|define
 name|RLIMIT_NEEDS_SYS_TIME_H
 value|1
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NGROUPS_MAX
+argument_list|)
+operator|&&
+operator|!
+name|NGROUPS_MAX
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|NGROUPS_MAX
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -7973,6 +8090,20 @@ directive|define
 name|SIGFUNC_DEFINED
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIGFUNC_RETURN
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGFUNC_DECL
+value|int
+end_define
+
 begin_else
 else|#
 directive|else
@@ -8380,6 +8511,20 @@ begin_define
 define|#
 directive|define
 name|SIGFUNC_DEFINED
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGFUNC_RETURN
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGFUNC_DECL
+value|int
 end_define
 
 begin_function_decl
@@ -8914,6 +9059,106 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* **  Harris Nighthawk PowerUX (nh6000 box) ** **  Contributed by Bob Miorelli, Pratt& Whitney<miorelli@pweh.com> */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_PowerUX
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__svr4__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__svr4__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|_PATH_VENDOR_CF
+value|"/etc/mail/sendmail.cf"
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/etc/mail/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|SYSLOG_BUFSIZE
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASSNPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* has snprintf(3) and vsnprintf(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_ZERO
+end_define
+
+begin_typedef
+typedef|typedef
+name|struct
+name|msgb
+name|mblk_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|offsetof
+end_undef
+
+begin_comment
+comment|/* avoid stddefs.h and sys/sysmacros.h conflict */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/********************************************************************** **  End of Per-Operating System defines **********************************************************************/
 end_comment
 
@@ -9266,38 +9511,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|USE_SIGLONGJMP
+value|1
+end_define
+
 begin_comment
-comment|/* SVr4 uses different routines for setjmp/longjmp with signal support */
+comment|/* sigsetjmp needed for signal handling */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|jmp_buf
-value|sigjmp_buf
-end_define
-
-begin_define
-define|#
-directive|define
-name|setjmp
-parameter_list|(
-name|env
-parameter_list|)
-value|sigsetjmp(env, 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|longjmp
-parameter_list|(
-name|env
-parameter_list|,
-name|val
-parameter_list|)
-value|siglongjmp(env, val)
-end_define
 
 begin_endif
 endif|#
@@ -9952,6 +10175,28 @@ end_define
 
 begin_comment
 comment|/* assume no SecureWare C2 auditing hooks */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_SIGLONGJMP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USE_SIGLONGJMP
+value|0
+end_define
+
+begin_comment
+comment|/* assume setjmp handles signals properly */
 end_comment
 
 begin_endif
@@ -11003,6 +11248,41 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIGFUNC_RETURN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SIGFUNC_RETURN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIGFUNC_DECL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SIGFUNC_DECL
+value|void
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* size of syslog buffer */
 end_comment
@@ -11165,6 +11445,102 @@ directive|define
 name|SCANF
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  SVr4 and similar systems use different routines for setjmp/longjmp **  with signal support */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|USE_SIGLONGJMP
+end_if
+
+begin_comment
+comment|/* Silly SCO /usr/include/setjmp.h file has #define setjmp(env) setjmp(env) */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|setjmp
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|setjmp
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|jmp_buf
+value|sigjmp_buf
+end_define
+
+begin_define
+define|#
+directive|define
+name|setjmp
+parameter_list|(
+name|env
+parameter_list|)
+value|sigsetjmp(env, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|longjmp
+parameter_list|(
+name|env
+parameter_list|,
+name|val
+parameter_list|)
+value|siglongjmp(env, val)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NGROUPS_MAX
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|NGROUPS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NGROUPS_MAX
+value|NGROUPS
+end_define
+
+begin_comment
+comment|/* POSIX naming convention */
+end_comment
 
 begin_endif
 endif|#
