@@ -2586,6 +2586,20 @@ argument_list|,
 literal|0644
 argument_list|)
 expr_stmt|;
+comment|/* BOGON #4: We need a default /etc/sendmail.cw right now */
+if|if
+condition|(
+operator|!
+name|file_readable
+argument_list|(
+literal|"/etc/sendmail.cw"
+argument_list|)
+condition|)
+name|vsystem
+argument_list|(
+literal|"touch /etc/sendmail.cw"
+argument_list|)
+expr_stmt|;
 comment|/* Now run all the mtree stuff to fix things up */
 name|vsystem
 argument_list|(
