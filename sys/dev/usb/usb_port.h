@@ -1324,7 +1324,8 @@ begin_define
 define|#
 directive|define
 name|DECLARE_USB_DMA_T
-value|typedef char * usb_dma_t
+define|\
+value|struct usb_dma_block; \ 	typedef struct { \ 		struct usb_dma_block *block; \ 		u_int offs; \ 		u_int len; \ 	} usb_dma_t
 end_define
 
 begin_typedef

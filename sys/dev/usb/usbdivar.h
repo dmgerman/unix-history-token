@@ -415,23 +415,10 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
 name|bus_dma_tag_t
 name|dmatag
 decl_stmt|;
 comment|/* DMA tag */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
