@@ -135,6 +135,18 @@ operator|->
 name|Common
 operator|.
 name|Parent
+operator|||
+name|Op
+operator|->
+name|Common
+operator|.
+name|Parent
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_SCOPE_OP
 condition|)
 block|{
 comment|/*          * If this is the last statement in the method, we know it is not a          * Return() operator (would not come here.) The following code is the          * optional support for a so-called "implicit return". Some AML code          * assumes that the last value of the method is "implicitly" returned          * to the caller. Just save the last result as the return value.          * NOTE: this is optional because the ASL language does not actually          * support this behavior.          */
