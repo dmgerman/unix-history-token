@@ -475,8 +475,8 @@ name|endpwent
 argument_list|()
 expr_stmt|;
 comment|/* 	 * First, let's check the see if the database is alright 	 * Note: -c is only available in FreeBSD 2.2 and above 	 */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HAVE_PWDB_C
 if|if
 condition|(
