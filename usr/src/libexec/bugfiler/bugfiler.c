@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	4.4 (Berkeley) %G%"
+literal|"@(#)bugfiler.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ name|char
 name|deliver
 index|[]
 init|=
-literal|"/usr/local/lib/mh/deliver"
+literal|"/usr/new/lib/mh/deliver"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,7 +74,7 @@ name|char
 name|unixtomh
 index|[]
 init|=
-literal|"/usr/local/lib/mh/unixtomh"
+literal|"/usr/new/lib/mh/unixtomh"
 decl_stmt|;
 end_decl_stmt
 
