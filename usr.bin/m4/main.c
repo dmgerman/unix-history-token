@@ -3283,6 +3283,22 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+name|sp
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* stack pointer initialized */
+name|fp
+operator|=
+literal|0
+expr_stmt|;
+comment|/* frame pointer initialized */
+name|ilevel
+operator|=
+literal|0
+expr_stmt|;
+comment|/* reset input file stack ptr*/
 ifndef|#
 directive|ifndef
 name|NO__FILE
@@ -3336,9 +3352,17 @@ argument_list|()
 expr_stmt|;
 comment|/* last will and testament   */
 block|}
-else|else
-block|{
-comment|/* default wrap-up: undivert */
+if|if
+condition|(
+name|active
+operator|!=
+name|stdout
+condition|)
+name|active
+operator|=
+name|stdout
+expr_stmt|;
+comment|/* reset output just in case */
 for|for
 control|(
 name|n
@@ -3352,6 +3376,7 @@ condition|;
 name|n
 operator|++
 control|)
+comment|/* default wrap-up: undivert */
 if|if
 condition|(
 name|outfile
@@ -3366,7 +3391,6 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|outfile

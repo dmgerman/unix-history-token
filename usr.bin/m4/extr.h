@@ -346,25 +346,6 @@ parameter_list|)
 value|do { if (ep>= endest) error(csmsg); *ep++ = c; } while (0)
 end_define
 
-begin_comment
-comment|/* getopt() interface */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
