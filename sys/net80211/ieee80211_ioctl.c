@@ -1708,6 +1708,14 @@ operator|->
 name|ic_state
 operator|==
 name|IEEE80211_S_SCAN
+operator|&&
+operator|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_ASCAN
+operator|)
 condition|)
 block|{
 name|error
