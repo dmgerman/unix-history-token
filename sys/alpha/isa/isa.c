@@ -675,7 +675,7 @@ name|u_int
 name|flags
 parameter_list|)
 block|{
-comment|/* 	 * Consider adding a resource definition. We allow rid 0-1 for 	 * irq and drq, 0-3 for memory and 0-7 for ports which is 	 * sufficient for isapnp. 	 */
+comment|/* 	 * Consider adding a resource definition. 	 */
 name|int
 name|passthrough
 init|=
