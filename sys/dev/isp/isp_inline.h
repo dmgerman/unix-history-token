@@ -1441,7 +1441,7 @@ name|arg
 decl_stmt|;
 name|PRINTF
 argument_list|(
-literal|"%s %s index %d:\n   "
+literal|"%s %s index %d:\n"
 argument_list|,
 name|isp
 operator|->
@@ -1502,15 +1502,10 @@ expr_stmt|;
 block|}
 name|PRINTF
 argument_list|(
-literal|"\n   "
-argument_list|)
-expr_stmt|;
-block|}
-name|PRINTF
-argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
