@@ -1247,6 +1247,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* printing disabled */
+name|umask
+argument_list|(
+name|S_IWOTH
+argument_list|)
+expr_stmt|;
 name|lfd
 operator|=
 name|open
@@ -9643,7 +9648,7 @@ argument_list|)
 expr_stmt|;
 name|umask
 argument_list|(
-literal|0
+name|S_IWOTH
 argument_list|)
 expr_stmt|;
 name|fd
