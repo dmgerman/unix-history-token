@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mount.h	8.13 (Berkeley) 3/27/94  *	$Id: mount.h,v 1.18 1995/05/21 21:39:24 davidg Exp $  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mount.h	8.13 (Berkeley) 3/27/94  *	$Id: mount.h,v 1.19 1995/05/30 08:14:28 rgrimes Exp $  */
 end_comment
 
 begin_ifndef
@@ -1868,35 +1868,6 @@ name|NFS
 end_ifdef
 
 begin_comment
-comment|/*  * File Handle (32 bytes for version 2), variable up to 1024 for version 3  */
-end_comment
-
-begin_union
-union|union
-name|nfsv2fh
-block|{
-name|fhandle_t
-name|fh_generic
-decl_stmt|;
-name|u_char
-name|fh_bytes
-index|[
-literal|32
-index|]
-decl_stmt|;
-block|}
-union|;
-end_union
-
-begin_typedef
-typedef|typedef
-name|union
-name|nfsv2fh
-name|nfsv2fh_t
-typedef|;
-end_typedef
-
-begin_comment
 comment|/*  * Arguments to mount NFS  */
 end_comment
 
@@ -1922,11 +1893,15 @@ name|int
 name|proto
 decl_stmt|;
 comment|/* and Protocol */
-name|nfsv2fh_t
+name|u_char
 modifier|*
 name|fh
 decl_stmt|;
 comment|/* File handle to be mounted */
+name|int
+name|fhsize
+decl_stmt|;
+comment|/* Size, in bytes, of fh */
 name|int
 name|flags
 decl_stmt|;
@@ -1939,6 +1914,10 @@ name|int
 name|rsize
 decl_stmt|;
 comment|/* read size in bytes */
+name|int
+name|readdirsize
+decl_stmt|;
+comment|/* readdir size in bytes */
 name|int
 name|timeo
 decl_stmt|;
@@ -2078,12 +2057,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_MYWRITE
+name|NFSMNT_NFSV3
 value|0x00000200
 end_define
 
 begin_comment
-comment|/* Assume writes were mine */
+comment|/* Use NFS Version 3 protocol */
 end_comment
 
 begin_define
@@ -2111,19 +2090,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_RDIRALOOK
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* Do lookup with readdir (nqnfs) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NFSMNT_LEASETERM
-value|0x00002000
+value|0x00001000
 end_define
 
 begin_comment
@@ -2134,7 +2102,7 @@ begin_define
 define|#
 directive|define
 name|NFSMNT_READAHEAD
-value|0x00004000
+value|0x00002000
 end_define
 
 begin_comment
@@ -2145,7 +2113,7 @@ begin_define
 define|#
 directive|define
 name|NFSMNT_DEADTHRESH
-value|0x00008000
+value|0x00004000
 end_define
 
 begin_comment
@@ -2155,19 +2123,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_NQLOOKLEASE
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* Get lease for lookup */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NFSMNT_RESVPORT
-value|0x00020000
+value|0x00008000
 end_define
 
 begin_comment
@@ -2177,12 +2134,67 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NFSMNT_RDIRPLUS
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Use Readdirplus for V3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_READDIRSIZE
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Set readdir size */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NFSMNT_INTERNAL
-value|0xffe00000
+value|0xfffc0000
 end_define
 
 begin_comment
 comment|/* Bits set internally */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_HASWRITEVERF
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Has write verifier for V3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_GOTPATHCONF
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* Got the V3 pathconf info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_GOTFSINFO
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Got the V3 fsinfo */
 end_comment
 
 begin_define

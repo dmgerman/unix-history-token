@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs.h	8.1 (Berkeley) 6/10/93  * $Id: nfs.h,v 1.8 1994/11/02 00:11:00 wollman Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs.h	8.1 (Berkeley) 6/10/93  * $Id: nfs.h,v 1.9 1995/02/14 06:22:18 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -29,19 +29,30 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFS_HZ
-value|25
+name|NFS_TICKINTVL
+value|5
 end_define
 
 begin_comment
-comment|/* Ticks per second for NFS timeouts */
+comment|/* Desired time for a tick (msec) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_HZ
+value|(hz / nfs_ticks)
+end_define
+
+begin_comment
+comment|/* Ticks/sec */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NFS_TIMEO
-value|(1*NFS_HZ)
+value|(1 * NFS_HZ)
 end_define
 
 begin_comment
@@ -52,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|NFS_MINTIMEO
-value|(1*NFS_HZ)
+value|(1 * NFS_HZ)
 end_define
 
 begin_comment
@@ -63,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|NFS_MAXTIMEO
-value|(60*NFS_HZ)
+value|(60 * NFS_HZ)
 end_define
 
 begin_comment
@@ -74,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|NFS_MINIDEMTIMEO
-value|(5*NFS_HZ)
+value|(5 * NFS_HZ)
 end_define
 
 begin_comment
@@ -190,6 +201,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NFS_READDIRSIZE
+value|8192
+end_define
+
+begin_comment
+comment|/* Def. readdir size */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NFS_DEFRAHEAD
 value|1
 end_define
@@ -207,17 +229,6 @@ end_define
 
 begin_comment
 comment|/* Max. read ahead # blocks */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFS_MAXREADDIR
-value|NFS_MAXDATA
-end_define
-
-begin_comment
-comment|/* Max. size of directory read */
 end_comment
 
 begin_define
@@ -245,12 +256,49 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFS_DIRBLKSIZ
-value|1024
+name|NFS_MAXGATHERDELAY
+value|100
 end_define
 
 begin_comment
-comment|/* Size of an NFS directory block */
+comment|/* Max. write gather delay (msec) */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_GATHERDELAY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFS_GATHERDELAY
+value|10
+end_define
+
+begin_comment
+comment|/* Default write gather delay (msec) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|NFS_DIRBLKSIZ
+value|4096
+end_define
+
+begin_comment
+comment|/* Must be a multiple of DIRBLKSIZ */
+end_comment
+
+begin_comment
+comment|/*  * Oddballs  */
 end_comment
 
 begin_define
@@ -262,6 +310,260 @@ name|a
 parameter_list|)
 value|((a) % nfs_asyncdaemons)
 end_define
+
+begin_define
+define|#
+directive|define
+name|NFS_CMPFH
+parameter_list|(
+name|n
+parameter_list|,
+name|f
+parameter_list|,
+name|s
+parameter_list|)
+define|\
+value|((n)->n_fhsize == (s)&& !bcmp((caddr_t)(n)->n_fhp, (caddr_t)(f), (s)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFS_ISV3
+parameter_list|(
+name|v
+parameter_list|)
+value|(VFSTONFS((v)->v_mount)->nm_flag& NFSMNT_NFSV3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFS_SRVMAXDATA
+parameter_list|(
+name|n
+parameter_list|)
+define|\
+value|(((n)->nd_flag& ND_NFSV3) ? (((n)->nd_nam2) ? \ 		 NFS_MAXDGRAMDATA : NFS_MAXDATA) : NFS_V2MAXDATA)
+end_define
+
+begin_comment
+comment|/*  * XXX  * sys/buf.h should be editted to change B_APPENDWRITE --> B_NEEDCOMMIT, but  * until then...  * Same goes for sys/malloc.h, which needs M_NFSDIROFF,  * M_NFSRVDESC and M_NFSBIGFH added.  * The VA_EXCLUSIVE flag should be added for va_vaflags and set for an  * exclusive create.  * The B_INVAFTERWRITE flag should be set to whatever is required by the  * buffer cache code to say "Invalidate the block after it is written back".  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|B_NEEDCOMMIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|B_NEEDCOMMIT
+value|B_APPENDWRITE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|M_NFSRVDESC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|M_NFSRVDESC
+value|M_TEMP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|M_NFSDIROFF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|M_NFSDIROFF
+value|M_TEMP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|M_NFSBIGFH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|M_NFSBIGFH
+value|M_TEMP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VA_EXCLUSIVE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VA_EXCLUSIVE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|B_INVAFTERWRITE
+value|B_NOCACHE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|B_INVAFTERWRITE
+value|B_INVAL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * These ifdefs try to handle the differences between the various 4.4BSD-Lite  * based vfs interfaces.  * btw: NetBSD-current does have a VOP_LEASDE(), but I don't know how to  * differentiate between NetBSD-1.0 and NetBSD-current, so..  * I also don't know about BSDi's 2.0 release.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAS_VOPLEASE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAS_VOPLEASE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAS_VOPREVOKE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAS_VOPREVOKE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The IO_METASYNC flag should be implemented for local file systems.  * (Until then, it is nothin at all.)  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IO_METASYNC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IO_METASYNC
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Set the attribute timeout based on how recently the file has been modified.  */
@@ -276,6 +578,38 @@ name|np
 parameter_list|)
 define|\
 value|((((np)->n_flag& NMODIFIED) || \ 	 (time.tv_sec - (np)->n_mtime) / 10< NFS_MINATTRTIMO) ? NFS_MINATTRTIMO : \ 	 ((time.tv_sec - (np)->n_mtime) / 10> NFS_MAXATTRTIMO ? NFS_MAXATTRTIMO : \ 	  (time.tv_sec - (np)->n_mtime) / 10))
+end_define
+
+begin_comment
+comment|/*  * Expected allocation sizes for major data structures. If the actual size  * of the structure exceeds these sizes, then malloc() will be allocating  * almost twice the memory required. This is used in nfs_init() to warn  * the sysadmin that the size of a structure should be reduced.  * (These sizes are always a power of 2. If the kernel malloc() changes  *  to one that does not allocate space in powers of 2 size, then this all  *  becomes bunk!)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_NODEALLOC
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFS_MNTALLOC
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFS_SVCALLOC
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFS_UIDALLOC
+value|128
 end_define
 
 begin_comment
@@ -329,11 +663,32 @@ name|int
 name|nsd_authlen
 decl_stmt|;
 comment|/* Length of auth string (ret) */
-name|char
+name|u_char
 modifier|*
 name|nsd_authstr
 decl_stmt|;
 comment|/* Auth string (ret) */
+name|int
+name|nsd_verflen
+decl_stmt|;
+comment|/* and the verfier */
+name|u_char
+modifier|*
+name|nsd_verfstr
+decl_stmt|;
+name|struct
+name|timeval
+name|nsd_timestamp
+decl_stmt|;
+comment|/* timestamp from verifier */
+name|u_long
+name|nsd_ttl
+decl_stmt|;
+comment|/* credential ttl (sec) */
+name|NFSKERBKEY_T
+name|nsd_key
+decl_stmt|;
+comment|/* Session key */
 block|}
 struct|;
 end_struct
@@ -359,11 +714,23 @@ name|int
 name|ncd_authlen
 decl_stmt|;
 comment|/* Length of authenticator string */
-name|char
+name|u_char
 modifier|*
 name|ncd_authstr
 decl_stmt|;
 comment|/* Authenticator string */
+name|int
+name|ncd_verflen
+decl_stmt|;
+comment|/* and the verifier */
+name|u_char
+modifier|*
+name|ncd_verfstr
+decl_stmt|;
+name|NFSKERBKEY_T
+name|ncd_key
+decl_stmt|;
+comment|/* Session key */
 block|}
 struct|;
 end_struct
@@ -478,6 +845,9 @@ decl_stmt|;
 name|int
 name|srvnqnfs_getleases
 decl_stmt|;
+name|int
+name|srvvop_writes
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -561,11 +931,19 @@ begin_comment
 comment|/*  * The set of signals the interrupt an I/O in progress for NFSMNT_INT mounts.  * What should be in this set is open to debate, but I believe that since  * I/O system calls on ufs are never interrupted by signals the set should  * be minimal. My reasoning is that many current programs that use signals  * such as SIGALRM will not expect file I/O system calls to be interrupted  * by them and break.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERNEL
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
 
 begin_struct_decl
 struct_decl|struct
@@ -807,24 +1185,31 @@ begin_comment
 comment|/* Probe for one reply only */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|nfsstats
-name|nfsstats
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * A list of nfssvc_sock structures is maintained with all the sockets  * that require service by the nfsd.  * The nfsuid structs hang off of the nfssvc_sock structs in both lru  * and uid hash lists.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_UIDHASHSIZ
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|NUIDHASHSIZ
-value|32
+name|NFS_UIDHASHSIZ
+value|29
 end_define
+
+begin_comment
+comment|/* Tune the size of nfssvc_sock with this */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -836,7 +1221,88 @@ parameter_list|,
 name|uid
 parameter_list|)
 define|\
-value|(&(sock)->ns_uidhashtbl[(uid)& (sock)->ns_uidhash])
+value|(&(sock)->ns_uidhashtbl[(uid) % NFS_UIDHASHSIZ])
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_WDELAYHASHSIZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFS_WDELAYHASHSIZ
+value|16
+end_define
+
+begin_comment
+comment|/* and with this */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|NWDELAYHASH
+parameter_list|(
+name|sock
+parameter_list|,
+name|f
+parameter_list|)
+define|\
+value|(&(sock)->ns_wdelayhashtbl[(*((u_long *)(f))) % NFS_WDELAYHASHSIZ])
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_MUIDHASHSIZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFS_MUIDHASHSIZ
+value|67
+end_define
+
+begin_comment
+comment|/* Tune the size of nfsmount with this */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|NMUIDHASH
+parameter_list|(
+name|nmp
+parameter_list|,
+name|uid
+parameter_list|)
+define|\
+value|(&(nmp)->nm_uidhashtbl[(uid) % NFS_MUIDHASHSIZ])
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSNOHASH
+parameter_list|(
+name|fhsum
+parameter_list|)
+define|\
+value|(&nfsnodehashtbl[(fhsum)& nfsnodehash])
 end_define
 
 begin_comment
@@ -881,10 +1347,6 @@ name|int
 name|nu_flag
 decl_stmt|;
 comment|/* Flags */
-name|uid_t
-name|nu_uid
-decl_stmt|;
-comment|/* Uid mapped by this entry */
 name|union
 name|nethostaddr
 name|nu_haddr
@@ -895,6 +1357,23 @@ name|ucred
 name|nu_cr
 decl_stmt|;
 comment|/* Cred uid mapped to */
+name|int
+name|nu_expire
+decl_stmt|;
+comment|/* Expiry time (sec) */
+name|struct
+name|timeval
+name|nu_timestamp
+decl_stmt|;
+comment|/* Kerb. timestamp */
+name|u_long
+name|nu_nickname
+decl_stmt|;
+comment|/* Nickname on server */
+name|NFSKERBKEY_T
+name|nu_key
+decl_stmt|;
+comment|/* and session key */
 block|}
 struct|;
 end_struct
@@ -924,6 +1403,23 @@ name|NU_INETADDR
 value|0x1
 end_define
 
+begin_define
+define|#
+directive|define
+name|NU_NAM
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NU_NETFAM
+parameter_list|(
+name|u
+parameter_list|)
+value|(((u)->nu_flag& NU_INETADDR) ? AF_INET : AF_ISO)
+end_define
+
 begin_struct
 struct|struct
 name|nfssvc_sock
@@ -942,22 +1438,6 @@ argument|nfsuid
 argument_list|)
 name|ns_uidlruhead
 expr_stmt|;
-name|LIST_HEAD
-argument_list|(,
-name|nfsuid
-argument_list|)
-operator|*
-name|ns_uidhashtbl
-expr_stmt|;
-name|u_long
-name|ns_uidhash
-decl_stmt|;
-name|int
-name|ns_flag
-decl_stmt|;
-name|u_long
-name|ns_sref
-decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -968,16 +1448,10 @@ name|socket
 modifier|*
 name|ns_so
 decl_stmt|;
-name|int
-name|ns_solock
-decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|ns_nam
-decl_stmt|;
-name|int
-name|ns_cc
 decl_stmt|;
 name|struct
 name|mbuf
@@ -989,9 +1463,6 @@ name|mbuf
 modifier|*
 name|ns_rawend
 decl_stmt|;
-name|int
-name|ns_reclen
-decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -1002,9 +1473,58 @@ name|mbuf
 modifier|*
 name|ns_recend
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|ns_frag
+decl_stmt|;
+name|int
+name|ns_flag
+decl_stmt|;
+name|int
+name|ns_solock
+decl_stmt|;
+name|int
+name|ns_cc
+decl_stmt|;
+name|int
+name|ns_reclen
+decl_stmt|;
 name|int
 name|ns_numuids
 decl_stmt|;
+name|u_long
+name|ns_sref
+decl_stmt|;
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|nfsrv_descript
+argument_list|)
+name|ns_tq
+expr_stmt|;
+comment|/* Write gather lists */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|nfsuid
+argument_list|)
+name|ns_uidhashtbl
+index|[
+name|NFS_UIDHASHSIZ
+index|]
+expr_stmt|;
+name|LIST_HEAD
+argument_list|(
+argument|nfsrvw_delayhash
+argument_list|,
+argument|nfsrv_descript
+argument_list|)
+name|ns_wdelayhashtbl
+index|[
+name|NFS_WDELAYHASHSIZ
+index|]
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -1046,6 +1566,13 @@ define|#
 directive|define
 name|SLP_GETSTREAM
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLP_LASTFRAG
+value|0x20
 end_define
 
 begin_define
@@ -1100,88 +1627,58 @@ name|TAILQ_ENTRY
 argument_list|(
 argument|nfsd
 argument_list|)
-name|nd_chain
+name|nfsd_chain
 expr_stmt|;
 comment|/* List of all nfsd's */
 name|int
-name|nd_flag
+name|nfsd_flag
 decl_stmt|;
 comment|/* NFSD_ flags */
 name|struct
 name|nfssvc_sock
 modifier|*
-name|nd_slp
+name|nfsd_slp
 decl_stmt|;
 comment|/* Current socket */
-name|struct
-name|mbuf
-modifier|*
-name|nd_nam
-decl_stmt|;
-comment|/* Client addr for datagram req. */
-name|struct
-name|mbuf
-modifier|*
-name|nd_mrep
-decl_stmt|;
-comment|/* Req. mbuf list */
-name|struct
-name|mbuf
-modifier|*
-name|nd_md
-decl_stmt|;
-name|caddr_t
-name|nd_dpos
-decl_stmt|;
-comment|/* Position in list */
 name|int
-name|nd_procnum
-decl_stmt|;
-comment|/* RPC procedure number */
-name|u_long
-name|nd_retxid
-decl_stmt|;
-comment|/* RPC xid */
-name|int
-name|nd_repstat
-decl_stmt|;
-comment|/* Reply status value */
-name|struct
-name|ucred
-name|nd_cr
-decl_stmt|;
-comment|/* Credentials for req. */
-name|int
-name|nd_nqlflag
-decl_stmt|;
-comment|/* Leasing flag */
-name|u_long
-name|nd_duration
-decl_stmt|;
-comment|/* Lease duration */
-name|int
-name|nd_authlen
+name|nfsd_authlen
 decl_stmt|;
 comment|/* Authenticator len */
 name|u_char
-name|nd_authstr
+name|nfsd_authstr
 index|[
 name|RPCAUTH_MAXSIZ
 index|]
 decl_stmt|;
 comment|/* Authenticator data */
+name|int
+name|nfsd_verflen
+decl_stmt|;
+comment|/* and the Verifier */
+name|u_char
+name|nfsd_verfstr
+index|[
+name|RPCVERF_MAXSIZ
+index|]
+decl_stmt|;
 name|struct
 name|proc
 modifier|*
-name|nd_procp
+name|nfsd_procp
 decl_stmt|;
 comment|/* Proc ptr */
+name|struct
+name|nfsrv_descript
+modifier|*
+name|nfsd_nd
+decl_stmt|;
+comment|/* Associated nfsrv_descript */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* Bits for "nd_flag" */
+comment|/* Bits for "nfsd_flag" */
 end_comment
 
 begin_define
@@ -1212,6 +1709,195 @@ name|NFSD_AUTHFAIL
 value|0x08
 end_define
 
+begin_comment
+comment|/*  * This structure is used by the server for describing each request.  * Some fields are used only when write request gathering is performed.  */
+end_comment
+
+begin_struct
+struct|struct
+name|nfsrv_descript
+block|{
+name|u_quad_t
+name|nd_time
+decl_stmt|;
+comment|/* Write deadline (usec) */
+name|off_t
+name|nd_off
+decl_stmt|;
+comment|/* Start byte offset */
+name|off_t
+name|nd_eoff
+decl_stmt|;
+comment|/* and end byte offset */
+name|LIST_ENTRY
+argument_list|(
+argument|nfsrv_descript
+argument_list|)
+name|nd_hash
+expr_stmt|;
+comment|/* Hash list */
+name|LIST_ENTRY
+argument_list|(
+argument|nfsrv_descript
+argument_list|)
+name|nd_tq
+expr_stmt|;
+comment|/* and timer list */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|nfsrv_descript
+argument_list|)
+name|nd_coalesce
+expr_stmt|;
+comment|/* coalesced writes */
+name|struct
+name|mbuf
+modifier|*
+name|nd_mrep
+decl_stmt|;
+comment|/* Request mbuf list */
+name|struct
+name|mbuf
+modifier|*
+name|nd_md
+decl_stmt|;
+comment|/* Current dissect mbuf */
+name|struct
+name|mbuf
+modifier|*
+name|nd_mreq
+decl_stmt|;
+comment|/* Reply mbuf list */
+name|struct
+name|mbuf
+modifier|*
+name|nd_nam
+decl_stmt|;
+comment|/* and socket addr */
+name|struct
+name|mbuf
+modifier|*
+name|nd_nam2
+decl_stmt|;
+comment|/* return socket addr */
+name|caddr_t
+name|nd_dpos
+decl_stmt|;
+comment|/* Current dissect pos */
+name|int
+name|nd_procnum
+decl_stmt|;
+comment|/* RPC # */
+name|int
+name|nd_stable
+decl_stmt|;
+comment|/* storage type */
+name|int
+name|nd_flag
+decl_stmt|;
+comment|/* nd_flag */
+name|int
+name|nd_len
+decl_stmt|;
+comment|/* Length of this write */
+name|int
+name|nd_repstat
+decl_stmt|;
+comment|/* Reply status */
+name|u_long
+name|nd_retxid
+decl_stmt|;
+comment|/* Reply xid */
+name|u_long
+name|nd_duration
+decl_stmt|;
+comment|/* Lease duration */
+name|struct
+name|timeval
+name|nd_starttime
+decl_stmt|;
+comment|/* Time RPC initiated */
+name|fhandle_t
+name|nd_fh
+decl_stmt|;
+comment|/* File handle */
+name|struct
+name|ucred
+name|nd_cr
+decl_stmt|;
+comment|/* Credentials */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Bits for "nd_flag" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ND_READ
+value|LEASE_READ
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_WRITE
+value|LEASE_WRITE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_CHECK
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_LEASE
+value|(ND_READ | ND_WRITE | ND_CHECK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_NFSV3
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_NQNFS
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_KERBNICK
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_KERBFULL
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_KERBAUTH
+value|(ND_KERBNICK | ND_KERBFULL)
+end_define
+
 begin_macro
 name|TAILQ_HEAD
 argument_list|(
@@ -1238,6 +1924,36 @@ name|NFSD_CHECKSLP
 value|0x01
 end_define
 
+begin_comment
+comment|/*  * These macros compare nfsrv_descript structures.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSW_CONTIG
+parameter_list|(
+name|o
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|((o)->nd_eoff>= (n)->nd_off&& \ 		 !bcmp((caddr_t)&(o)->nd_fh, (caddr_t)&(n)->nd_fh, NFSX_V3FH))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSW_SAMECRED
+parameter_list|(
+name|o
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|(((o)->nd_flag& ND_KERBAUTH) == ((n)->nd_flag& ND_KERBAUTH)&& \  	 !bcmp((caddr_t)&(o)->nd_cr, (caddr_t)&(n)->nd_cr, \ 		sizeof (struct ucred)))
+end_define
+
 begin_decl_stmt
 name|int
 name|nfs_reply
@@ -1258,6 +1974,10 @@ name|nfs_getreq
 name|__P
 argument_list|(
 operator|(
+expr|struct
+name|nfsrv_descript
+operator|*
+operator|,
 expr|struct
 name|nfsd
 operator|*
@@ -1303,7 +2023,11 @@ operator|(
 name|int
 operator|,
 expr|struct
-name|nfsd
+name|nfsrv_descript
+operator|*
+operator|,
+expr|struct
+name|nfssvc_sock
 operator|*
 operator|,
 name|int
@@ -1439,6 +2163,10 @@ name|ucred
 operator|*
 operator|,
 name|int
+operator|*
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1461,6 +2189,32 @@ operator|*
 operator|,
 expr|struct
 name|ucred
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nfs_setattrrpc
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|,
+expr|struct
+name|vattr
+operator|*
+operator|,
+expr|struct
+name|ucred
+operator|*
+operator|,
+expr|struct
+name|proc
 operator|*
 operator|)
 argument_list|)
@@ -1554,7 +2308,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|nfs_readdirlookrpc
+name|nfs_readdirplusrpc
 name|__P
 argument_list|(
 operator|(
@@ -1601,6 +2355,92 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|nfsm_srvfattr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nfsrv_descript
+operator|*
+operator|,
+expr|struct
+name|vattr
+operator|*
+operator|,
+expr|struct
+name|nfs_fattr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|nfsm_srvwcc
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nfsrv_descript
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|vattr
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|vattr
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|nfsm_srvpostopattr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nfsrv_descript
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|vattr
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|nfsrv_fhtovp
 name|__P
@@ -1630,6 +2470,8 @@ operator|*
 operator|,
 name|int
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1781,8 +2623,15 @@ name|caddr_t
 operator|*
 operator|,
 expr|struct
+name|vnode
+operator|*
+operator|*
+operator|,
+expr|struct
 name|proc
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1874,7 +2723,37 @@ expr|struct
 name|ucred
 operator|*
 operator|,
+name|char
+operator|*
+operator|*
+operator|,
 name|int
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|NFSKERBKEY_T
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nfs_getnickauth
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nfsmount
+operator|*
+operator|,
+expr|struct
+name|ucred
 operator|*
 operator|,
 name|char
@@ -1882,6 +2761,46 @@ operator|*
 operator|*
 operator|,
 name|int
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nfs_savenickauth
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nfsmount
+operator|*
+operator|,
+expr|struct
+name|ucred
+operator|*
+operator|,
+name|int
+operator|,
+name|NFSKERBKEY_T
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+expr|struct
+name|mbuf
 operator|*
 operator|)
 argument_list|)
@@ -1972,15 +2891,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|nfsnodehashhead
-modifier|*
+name|u_long
 name|nfs_hash
 name|__P
 argument_list|(
 operator|(
-name|nfsv2fh_t
+name|nfsfh_t
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2051,6 +2970,11 @@ operator|,
 expr|struct
 name|nfsd
 operator|*
+operator|,
+expr|struct
+name|nfsrv_descript
+operator|*
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2063,11 +2987,11 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|mbuf
+name|nfsrv_descript
 operator|*
 operator|,
 expr|struct
-name|nfsd
+name|nfssvc_sock
 operator|*
 operator|,
 expr|struct
@@ -2086,11 +3010,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|mbuf
-operator|*
-operator|,
-expr|struct
-name|nfsd
+name|nfsrv_descript
 operator|*
 operator|,
 name|int
@@ -2257,6 +3177,129 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|nfs_clearcommit
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nfsrv_errmap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nfsrv_descript
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|nfsrvw_coalesce
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nfsrv_descript
+operator|*
+operator|,
+expr|struct
+name|nfsrv_descript
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|nfsrvw_sort
+name|__P
+argument_list|(
+operator|(
+name|gid_t
+index|[]
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|nfsrv_setcred
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ucred
+operator|*
+operator|,
+expr|struct
+name|ucred
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nfs_flush
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|,
+expr|struct
+name|ucred
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|proc
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nfs_writebp
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|nfsrv_vput
 name|__P
@@ -2293,6 +3336,61 @@ operator|(
 expr|struct
 name|vnode
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nfsrv_writegather
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nfsrv_descript
+operator|*
+operator|*
+operator|,
+expr|struct
+name|nfssvc_sock
+operator|*
+operator|,
+expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nfs_fsinfo
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nfsmount
+operator|*
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|,
+expr|struct
+name|ucred
+operator|*
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 decl_stmt|;

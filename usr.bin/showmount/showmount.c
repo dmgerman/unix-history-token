@@ -264,7 +264,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This command queries the NFS mount daemon for it's mount list and/or  * it's exports list and prints them out.  * See "NFS: Network File System Protocol Specification, RFC1094, Appendix A"  * for detailed information on the protocol.  */
+comment|/*  * This command queries the NFS mount daemon for it's mount list and/or  * it's exports list and prints them out.  * See "NFS: Network File System Protocol Specification, RFC1094, Appendix A"  * and the "Network File System Protocol XXX.."  * for detailed information on the protocol.  */
 end_comment
 
 begin_function
@@ -315,6 +315,10 @@ name|int
 name|rpcs
 init|=
 literal|0
+decl_stmt|,
+name|mntvers
+init|=
+literal|1
 decl_stmt|;
 name|char
 name|ch
@@ -337,7 +341,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ade"
+literal|"ade3"
 argument_list|)
 operator|)
 operator|!=
@@ -408,6 +412,14 @@ name|DOEXPORTS
 expr_stmt|;
 break|break;
 case|case
+literal|'3'
+case|:
+name|mntvers
+operator|=
+literal|3
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -466,7 +478,7 @@ name|host
 argument_list|,
 name|RPCPROG_MNT
 argument_list|,
-name|RPCMNT_VER1
+name|mntvers
 argument_list|,
 name|RPCMNT_DUMP
 argument_list|,
@@ -527,7 +539,7 @@ name|host
 argument_list|,
 name|RPCPROG_MNT
 argument_list|,
-name|RPCMNT_VER1
+name|mntvers
 argument_list|,
 name|RPCMNT_EXPORT
 argument_list|,
