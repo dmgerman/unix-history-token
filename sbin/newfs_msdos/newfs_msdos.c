@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newfs_msdos.c,v 1.2 1998/07/15 06:30:38 charnier Exp $"
+literal|"$Id: newfs_msdos.c,v 1.3 1998/07/16 12:24:51 rnordier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3647,18 +3647,6 @@ if|if
 condition|(
 name|bpb
 operator|.
-name|bsec
-operator|<=
-name|MAXU16
-operator|&&
-name|bpb
-operator|.
-name|hid
-operator|<=
-name|MAXU16
-operator|&&
-name|bpb
-operator|.
 name|hid
 operator|+
 name|bpb
@@ -4565,7 +4553,9 @@ name|bps
 operator|-
 literal|20
 argument_list|,
-literal|2
+name|bpb
+operator|.
+name|rdcl
 argument_list|)
 expr_stmt|;
 name|mk2
@@ -5290,9 +5280,6 @@ condition|)
 block|{
 name|slice
 operator|=
-operator|(
-name|int
-operator|)
 name|strtol
 argument_list|(
 name|s2
@@ -5492,9 +5479,6 @@ name|bpb
 operator|->
 name|hid
 operator|=
-operator|(
-name|u_int32_t
-operator|)
 name|ds
 operator|.
 name|dss_slices
@@ -5520,9 +5504,6 @@ name|bpb
 operator|->
 name|bsec
 operator|=
-operator|(
-name|u_int32_t
-operator|)
 name|ds
 operator|.
 name|dss_slices
