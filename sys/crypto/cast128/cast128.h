@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: cast128.h,v 1.6 2000/09/18 20:59:20 itojun Exp $	*/
+comment|/*	$KAME: cast128.h,v 1.7 2001/11/27 09:47:32 sakane Exp $	*/
 end_comment
 
 begin_comment
@@ -63,6 +63,8 @@ operator|*
 operator|,
 name|u_int8_t
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

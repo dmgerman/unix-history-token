@@ -2710,6 +2710,13 @@ name|sav
 operator|->
 name|key_enc
 argument_list|)
+argument_list|,
+name|_KEYLEN
+argument_list|(
+name|sav
+operator|->
+name|key_enc
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
