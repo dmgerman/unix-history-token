@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_emit.c,v 5.5 88/11/18 17:27:20 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_emit.c,v $  *	@(#)tp_emit.c	7.4 (Berkeley) %G% *  *  * This file contains tp_emit() and tp_error_emit(), which  * form TPDUs and hand them to ip.  * They take data in the form of mbuf chain, allocate mbufs as  * necessary for headers, and set the fields as appropriate from  * information found in the tpcb and net-level pcb.  *  * The worst thing about this code is adding the variable-length  * options on a machine that requires alignment for any memory access  * that isn't of size 1.  See the macro ADDOPTION() below.  *  * We don't do any concatenation. (There's a kludge to test the  * basic mechanism of separation under the 'w' tpdebug option, that's all.)  */
+comment|/*   * ARGO TP  *  * $Header: tp_emit.c,v 5.5 88/11/18 17:27:20 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_emit.c,v $  *	@(#)tp_emit.c	7.5 (Berkeley) %G% *  *  * This file contains tp_emit() and tp_error_emit(), which  * form TPDUs and hand them to ip.  * They take data in the form of mbuf chain, allocate mbufs as  * necessary for headers, and set the fields as appropriate from  * information found in the tpcb and net-level pcb.  *  * The worst thing about this code is adding the variable-length  * options on a machine that requires alignment for any memory access  * that isn't of size 1.  See the macro ADDOPTION() below.  *  * We don't do any concatenation. (There's a kludge to test the  * basic mechanism of separation under the 'w' tpdebug option, that's all.)  */
 end_comment
 
 begin_ifndef
@@ -523,10 +523,7 @@ name|hdr
 operator|->
 name|tpdu_CRdref_0
 operator|=
-name|htons
-argument_list|(
 literal|0
-argument_list|)
 expr_stmt|;
 comment|/* must be zero */
 if|if
@@ -2919,15 +2916,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_macro
 name|ENDDEBUG
-name|error
-operator|&=
-literal|0xff
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_if
+if|if
+condition|(
+name|error
+operator|&
+name|TP_ERROR_SNDC
+condition|)
+name|dutype
+operator|=
+name|DC_TPDU_type
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|error
@@ -2953,6 +2957,13 @@ expr_stmt|;
 end_if
 
 begin_expr_stmt
+name|error
+operator|&=
+literal|0xff
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|hdr
 operator|->
 name|tpdu_type
@@ -2976,6 +2987,63 @@ condition|(
 name|dutype
 condition|)
 block|{
+case|case
+name|DC_TPDU_type
+case|:
+name|IncStat
+argument_list|(
+name|ts_DC_sent
+argument_list|)
+expr_stmt|;
+name|hdr
+operator|->
+name|tpdu_li
+operator|=
+literal|6
+expr_stmt|;
+name|hdr
+operator|->
+name|tpdu_DCdref
+operator|=
+name|htons
+argument_list|(
+name|sref
+argument_list|)
+expr_stmt|;
+name|hdr
+operator|->
+name|tpdu_DCsref
+operator|=
+name|tpcb
+condition|?
+name|htons
+argument_list|(
+name|tpcb
+operator|->
+name|tp_lref
+argument_list|)
+else|:
+literal|0
+expr_stmt|;
+name|IFDEBUG
+argument_list|(
+argument|D_ERROR_EMIT
+argument_list|)
+name|printf
+argument_list|(
+literal|"DC case:\n"
+argument_list|)
+expr_stmt|;
+name|dump_buf
+argument_list|(
+name|hdr
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+name|ENDDEBUG
+comment|/* forget the add'l information variable part */
+break|break;
 case|case
 name|DR_TPDU_type
 case|:
@@ -3003,10 +3071,7 @@ name|hdr
 operator|->
 name|tpdu_DRsref
 operator|=
-name|htons
-argument_list|(
 literal|0
-argument_list|)
 expr_stmt|;
 name|hdr
 operator|->
