@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -49,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/disk.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_function
@@ -88,11 +100,6 @@ specifier|static
 name|void
 name|speeddisk
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
 name|int
 name|fd
 parameter_list|,
@@ -578,11 +585,6 @@ name|opt_t
 condition|)
 name|speeddisk
 argument_list|(
-name|argv
-index|[
-name|i
-index|]
-argument_list|,
 name|fd
 argument_list|,
 name|mediasize
@@ -673,6 +675,9 @@ if|if
 condition|(
 name|error
 operator|!=
+operator|(
+name|int
+operator|)
 name|sectorsize
 condition|)
 name|err
@@ -909,11 +914,6 @@ specifier|static
 name|void
 name|speeddisk
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
 name|int
 name|fd
 parameter_list|,
@@ -925,8 +925,6 @@ name|sectorsize
 parameter_list|)
 block|{
 name|int
-name|error
-decl_stmt|,
 name|i
 decl_stmt|;
 name|uint
@@ -935,9 +933,6 @@ decl_stmt|,
 name|b1
 decl_stmt|,
 name|sectorcount
-decl_stmt|;
-name|off_t
-name|size
 decl_stmt|;
 name|sectorcount
 operator|=
