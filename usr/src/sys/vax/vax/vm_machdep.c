@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_machdep.c	6.5	85/03/08	*/
+comment|/*	vm_machdep.c	6.6	85/05/28	*/
 end_comment
 
 begin_include
@@ -292,27 +292,33 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Check for valid program size  */
+comment|/*  * Check for valid program size  * NB - Check data and data growth separately as they may overflow   * when summed together.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|chksize
 argument_list|(
-name|ts
+argument|ts
 argument_list|,
-name|ds
+argument|ids
 argument_list|,
-name|ss
+argument|uds
+argument_list|,
+argument|ss
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|unsigned
 name|ts
-operator|,
-name|ds
-operator|,
+decl_stmt|,
+name|ids
+decl_stmt|,
+name|uds
+decl_stmt|,
 name|ss
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -328,7 +334,37 @@ name|maxtsize
 operator|||
 name|ctob
 argument_list|(
-name|ds
+name|ids
+argument_list|)
+operator|>
+name|u
+operator|.
+name|u_rlimit
+index|[
+name|RLIMIT_DATA
+index|]
+operator|.
+name|rlim_cur
+operator|||
+name|ctob
+argument_list|(
+name|uds
+argument_list|)
+operator|>
+name|u
+operator|.
+name|u_rlimit
+index|[
+name|RLIMIT_DATA
+index|]
+operator|.
+name|rlim_cur
+operator|||
+name|ctob
+argument_list|(
+name|ids
+operator|+
+name|uds
 argument_list|)
 operator|>
 name|u
