@@ -6320,12 +6320,17 @@ modifier|*
 name|addr
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|OHCI_DEBUG
 name|usbd_request_handle
 modifier|*
 name|reqh
 init|=
 name|addr
 decl_stmt|;
+endif|#
+directive|endif
 name|DPRINTF
 argument_list|(
 operator|(
