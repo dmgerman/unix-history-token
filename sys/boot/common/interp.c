@@ -320,7 +320,7 @@ name|setenv
 argument_list|(
 literal|"prompt"
 argument_list|,
-literal|"${interpret}\n"
+literal|"${interpret}"
 argument_list|,
 literal|1
 argument_list|)
