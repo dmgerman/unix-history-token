@@ -263,7 +263,7 @@ comment|/* -P */
 end_comment
 
 begin_comment
-comment|/* 0x1f is reserved for the historical RB_BOOTINFO option */
+comment|/* 0x1f is reserved for the RB_BOOTINFO flag. */
 end_comment
 
 begin_comment
@@ -2049,9 +2049,13 @@ name|caddr_t
 operator|)
 name|addr
 argument_list|,
+name|RB_BOOTINFO
+operator||
+operator|(
 name|opts
 operator|&
 name|RBX_MASK
+operator|)
 argument_list|,
 name|MAKEBOOTDEV
 argument_list|(
