@@ -4,6 +4,10 @@ comment|/* Expands front end tree to back end RTL for GNU C-Compiler    Copyrigh
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* This file handles the generation of rtl code from tree structure    at the level of the function as a whole.    It creates the rtl expressions for parameters and auto variables    and has full responsibility for allocating stack slots.     `expand_function_start' is called at the beginning of a function,    before the function body is parsed, and `expand_function_end' is    called after parsing the body.     Call `assign_stack_local' to allocate a stack slot for a local variable.    This is usually done during the RTL generation for the function body,    but it can also be done in the reload pass when a pseudo-register does    not get a hard register.     Call `put_var_into_stack' when you learn, belatedly, that a variable    previously given a pseudo-register must in fact go in the stack.    This function changes the DECL_RTL to be a stack slot instead of a reg    then scans all the RTL instructions so far generated to correct them.  */
 end_comment
 
@@ -27714,6 +27718,51 @@ name|hard_frame_pointer_rtx
 argument_list|)
 argument_list|,
 name|Pmode
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|current_function_profile
+operator|&&
+name|TARGET_PROFILER_EPILOGUE
+condition|)
+block|{
+specifier|static
+name|rtx
+name|mexitcount_libfunc
+decl_stmt|;
+specifier|static
+name|int
+name|initialized
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|initialized
+condition|)
+block|{
+name|mexitcount_libfunc
+operator|=
+name|init_one_libfunc
+argument_list|(
+literal|".mexitcount"
+argument_list|)
+expr_stmt|;
+name|initialized
+operator|=
+literal|1
+expr_stmt|;
+block|}
+name|emit_library_call
+argument_list|(
+name|mexitcount_libfunc
+argument_list|,
+name|LCT_NORMAL
+argument_list|,
+name|VOIDmode
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
