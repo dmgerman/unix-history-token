@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_rl.c,v 1.9.2.4 1999/04/12 21:39:14 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_rl.c,v 1.32 1999/06/19 20:01:32 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -197,7 +197,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_rl.c,v 1.9.2.4 1999/04/12 21:39:14 wpaul Exp $"
+literal|"$Id: if_rl.c,v 1.32 1999/06/19 20:01:32 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4408,12 +4408,28 @@ goto|goto
 name|fail
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|__i386__
 name|sc
 operator|->
 name|rl_btag
 operator|=
 name|I386_BUS_SPACE_IO
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__alpha__
+name|sc
+operator|->
+name|rl_btag
+operator|=
+name|ALPHA_BUS_SPACE_IO
+expr_stmt|;
+endif|#
+directive|endif
 else|#
 directive|else
 if|if
@@ -4465,12 +4481,28 @@ goto|goto
 name|fail
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|__i386__
 name|sc
 operator|->
 name|rl_btag
 operator|=
 name|I386_BUS_SPACE_MEM
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__alpha__
+name|sc
+operator|->
+name|rl_btag
+operator|=
+name|ALPHA_BUS_SPACE_MEM
+expr_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|rl_bhandle
@@ -4658,7 +4690,7 @@ name|contigmalloc
 argument_list|(
 name|RL_RXBUFLEN
 operator|+
-literal|16
+literal|32
 argument_list|,
 name|M_DEVBUF
 argument_list|,
@@ -4702,6 +4734,30 @@ goto|goto
 name|fail
 goto|;
 block|}
+comment|/* Leave a few bytes before the start of the RX ring buffer. */
+name|sc
+operator|->
+name|rl_cdata
+operator|.
+name|rl_rx_buf_ptr
+operator|=
+name|sc
+operator|->
+name|rl_cdata
+operator|.
+name|rl_rx_buf
+expr_stmt|;
+name|sc
+operator|->
+name|rl_cdata
+operator|.
+name|rl_rx_buf
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|u_int64_t
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 operator|&
@@ -5193,7 +5249,14 @@ name|sc
 argument_list|,
 name|RL_TXADDR0
 operator|+
+operator|(
 name|i
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+operator|)
 argument_list|,
 literal|0x0000000
 argument_list|)
@@ -5224,7 +5287,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A frame has been uploaded: pass the resulting mbuf chain up to  * the higher level protocols.  *  * You know there's something wrong with a PCI bus-master chip design  * when you have to use m_devget().  *  * The receive operation is badly documented in the datasheet, so I'll  * attempt to document it here. The driver provides a buffer area and  * places its base address in the RX buffer start address register.  * The chip then begins copying frames into the RX buffer. Each frame  * is preceeded by a 32-bit RX status word which specifies the length  * of the frame and certain other status bits. Each frame (starting with  * the status word) is also 32-bit aligned. The frame length is in the  * first 16 bits of the status word; the lower 15 bits correspond with  * the 'rx status register' mentioned in the datasheet.  */
+comment|/*  * A frame has been uploaded: pass the resulting mbuf chain up to  * the higher level protocols.  *  * You know there's something wrong with a PCI bus-master chip design  * when you have to use m_devget().  *  * The receive operation is badly documented in the datasheet, so I'll  * attempt to document it here. The driver provides a buffer area and  * places its base address in the RX buffer start address register.  * The chip then begins copying frames into the RX buffer. Each frame  * is preceeded by a 32-bit RX status word which specifies the length  * of the frame and certain other status bits. Each frame (starting with  * the status word) is also 32-bit aligned. The frame length is in the  * first 16 bits of the status word; the lower 15 bits correspond with  * the 'rx status register' mentioned in the datasheet.  *  * Note: to make the Alpha happy, the frame payload needs to be aligned  * on a 32-bit boundary. To achieve this, we cheat a bit by copying from  * the ring buffer starting at an address two bytes before the actual  * data location. We can then shave off the first two bytes using m_adj().  * The reason we do this is because m_devget() doesn't let us specify an  * offset into the mbuf storage space, so we have to artificially create  * one. The ring is allocated in such a way that there are a few unused  * bytes of space preceecing it so that it will be safe for us to do the  * 2-byte backstep even if reading from the ring at offset 0.  */
 end_comment
 
 begin_function
@@ -5583,8 +5646,12 @@ operator|=
 name|m_devget
 argument_list|(
 name|rxbufpos
+operator|-
+name|RL_ETHER_ALIGN
 argument_list|,
 name|wrap
+operator|+
+name|RL_ETHER_ALIGN
 argument_list|,
 literal|0
 argument_list|,
@@ -5619,6 +5686,14 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+name|m_adj
+argument_list|(
+name|m
+argument_list|,
+name|RL_ETHER_ALIGN
+argument_list|)
+expr_stmt|;
 name|m_copyback
 argument_list|(
 name|m
@@ -5636,6 +5711,7 @@ operator|.
 name|rl_rx_buf
 argument_list|)
 expr_stmt|;
+block|}
 name|cur_rx
 operator|=
 operator|(
@@ -5654,8 +5730,12 @@ operator|=
 name|m_devget
 argument_list|(
 name|rxbufpos
+operator|-
+name|RL_ETHER_ALIGN
 argument_list|,
 name|total_len
+operator|+
+name|RL_ETHER_ALIGN
 argument_list|,
 literal|0
 argument_list|,
@@ -5689,6 +5769,14 @@ name|total_len
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|m_adj
+argument_list|(
+name|m
+argument_list|,
+name|RL_ETHER_ALIGN
+argument_list|)
+expr_stmt|;
 name|cur_rx
 operator|+=
 name|total_len
