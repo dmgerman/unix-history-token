@@ -38,6 +38,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|strcasecmp
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|strncasecmp
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|strcpy
