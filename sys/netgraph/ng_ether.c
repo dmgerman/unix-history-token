@@ -1988,7 +1988,9 @@ directive|ifdef
 name|RESTARTABLE_PANICS
 comment|/* so we don't get an error msg in LINT */
 return|return
-name|NULL
+operator|(
+literal|0
+operator|)
 return|;
 endif|#
 directive|endif
