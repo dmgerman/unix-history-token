@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -148,16 +154,8 @@ if|if
 condition|(
 name|prefix
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|cmd
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 literal|"scale"
 argument_list|)
 condition|)

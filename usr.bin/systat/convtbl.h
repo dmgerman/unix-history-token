@@ -143,6 +143,7 @@ decl_stmt|;
 name|u_int
 name|scale
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|str
@@ -176,6 +177,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|get_string

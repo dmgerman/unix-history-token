@@ -138,18 +138,18 @@ operator|=
 literal|0
 block|;
 name|u_int
-name|index
+name|idx
 operator|=
 name|scale
 block|;
 comment|/* If our index is out of range, default to auto-scaling. */
 if|if
 condition|(
-name|index
+name|idx
 operator|>
 name|SC_AUTO
 condition|)
-name|index
+name|idx
 operator|=
 name|SC_AUTO
 expr_stmt|;
@@ -158,7 +158,7 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|index
+name|idx
 operator|==
 name|SC_AUTO
 condition|)
@@ -169,7 +169,7 @@ name|tmp
 operator|=
 name|size
 operator|,
-name|index
+name|idx
 operator|=
 name|SC_KILOBYTE
 init|;
@@ -177,7 +177,7 @@ name|tmp
 operator|>=
 name|MEGA
 operator|&&
-name|index
+name|idx
 operator|<=
 name|SC_GIGABYTE
 condition|;
@@ -185,7 +185,7 @@ name|tmp
 operator|>>=
 literal|10
 operator|,
-name|index
+name|idx
 operator|++
 control|)
 empty_stmt|;
@@ -197,7 +197,7 @@ operator|=
 operator|&
 name|convtbl
 index|[
-name|index
+name|idx
 index|]
 expr_stmt|;
 end_expr_stmt
@@ -256,6 +256,7 @@ block|}
 end_block
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|get_string

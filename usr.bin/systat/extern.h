@@ -666,6 +666,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ifcmd
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|cmd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|args
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|initicmp
 parameter_list|(
 name|void

@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -170,6 +176,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|col0
 init|=
@@ -179,6 +186,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|col1
 init|=
@@ -188,6 +196,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|col2
 init|=
@@ -197,6 +206,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|col3
 init|=
@@ -206,6 +216,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|col4
 init|=
@@ -215,6 +226,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|col5
 init|=
@@ -953,11 +965,6 @@ init|=
 literal|0
 decl_stmt|;
 name|u_int
-name|error
-init|=
-literal|0
-decl_stmt|;
-name|u_int
 name|we_need_to_sort_interface_list
 init|=
 literal|0
@@ -1004,8 +1011,8 @@ name|ifmd_data
 operator|.
 name|ifi_lastchange
 expr_stmt|;
-name|error
-operator|=
+if|if
+condition|(
 name|gettimeofday
 argument_list|(
 operator|&
@@ -1018,10 +1025,8 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
+operator|!=
+literal|0
 condition|)
 name|IFSTAT_ERR
 argument_list|(
@@ -1421,11 +1426,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|u_int
 name|data
 init|=
@@ -1460,8 +1460,8 @@ argument_list|(
 name|data
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+if|if
+condition|(
 name|sysctl
 argument_list|(
 name|name
@@ -1493,10 +1493,8 @@ name|size_t
 operator|)
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
+operator|!=
+literal|0
 condition|)
 name|IFSTAT_ERR
 argument_list|(
@@ -1525,11 +1523,6 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|size_t
 name|datalen
 init|=
@@ -1569,8 +1562,8 @@ index|]
 operator|=
 name|row
 expr_stmt|;
-name|error
-operator|=
+if|if
+condition|(
 name|sysctl
 argument_list|(
 name|name
@@ -1601,10 +1594,8 @@ name|size_t
 operator|)
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
+operator|!=
+literal|0
 condition|)
 name|IFSTAT_ERR
 argument_list|(
