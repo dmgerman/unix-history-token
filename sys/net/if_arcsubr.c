@@ -522,8 +522,6 @@ name|dst
 argument_list|,
 operator|&
 name|adst
-argument_list|,
-name|rt0
 argument_list|)
 condition|)
 return|return

@@ -1154,8 +1154,6 @@ argument_list|,
 name|dst
 argument_list|,
 name|edst
-argument_list|,
-name|rt0
 argument_list|)
 condition|)
 return|return
