@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: s_frexp.c,v 1.6 1994/08/18 23:06:49 jtc Exp $"
+literal|"$Id: s_frexp.c,v 1.1.1.1 1994/08/19 09:39:51 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,11 +60,6 @@ specifier|static
 name|double
 endif|#
 directive|endif
-name|one
-init|=
-literal|1.00000000000000000000e+00
-decl_stmt|,
-comment|/* 0x3FF00000, 0x00000000 */
 name|two54
 init|=
 literal|1.80143985094819840000e+16

@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_log10f.c,v 1.2 1994/08/18 23:05:46 jtc Exp $"
+literal|"$Id: e_log10f.c,v 1.1.1.1 1994/08/19 09:39:56 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,10 +56,6 @@ specifier|static
 name|float
 endif|#
 directive|endif
-name|one
-init|=
-literal|1.0
-decl_stmt|,
 name|two25
 init|=
 literal|3.3554432000e+07
