@@ -2147,7 +2147,7 @@ block|{
 comment|/* start timeout for this transfer */
 if|if
 condition|(
-name|panicstr
+name|dumping
 condition|)
 name|request
 operator|->
