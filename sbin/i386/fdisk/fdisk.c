@@ -1492,6 +1492,12 @@ literal|"OS/2 Boot Manager or OPUS"
 block|}
 block|,
 block|{
+literal|0x0B
+block|,
+literal|"Primary DOS or Windows 95 with 32 bit FAT"
+block|}
+block|,
+block|{
 literal|0x10
 block|,
 literal|"OPUS"
