@@ -546,20 +546,6 @@ name|varCheck
 block|}
 block|,
 block|{
-literal|"Config save"
-block|,
-literal|"Whether or not to save installation kernel config changes"
-block|,
-name|OPT_IS_VAR
-block|,
-name|NULL
-block|,
-name|VAR_KGET
-block|,
-name|varCheck
-block|}
-block|,
-block|{
 literal|"Re-scan Devices"
 block|,
 literal|"Re-run sysinstall's initial device probe"

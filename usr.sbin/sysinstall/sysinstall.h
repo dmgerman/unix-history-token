@@ -534,13 +534,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_KGET
-value|"kget"
-end_define
-
-begin_define
-define|#
-directive|define
 name|VAR_LABEL
 value|"label"
 end_define
