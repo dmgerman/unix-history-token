@@ -63,17 +63,6 @@ parameter_list|,
 name|u_char
 parameter_list|)
 function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|intrack
-function_decl|)
-parameter_list|(
-name|struct
-name|pcic_slot
-modifier|*
-parameter_list|)
-function_decl|;
 name|bus_space_tag_t
 name|bst
 decl_stmt|;
@@ -184,6 +173,9 @@ modifier|*
 name|ih
 decl_stmt|;
 comment|/* Our interrupt handler. */
+name|int
+name|irq
+decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
@@ -196,6 +188,16 @@ name|bus_space_handle_t
 name|bsh
 decl_stmt|;
 comment|/* Bus handle for our regs */
+name|void
+function_decl|(
+modifier|*
+name|slot_poll
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 name|struct
 name|callout_handle
 name|timeout_ch
@@ -206,6 +208,9 @@ name|slots
 index|[
 name|PCIC_MAX_SLOTS
 index|]
+decl_stmt|;
+name|int
+name|cd_pending
 decl_stmt|;
 block|}
 struct|;
