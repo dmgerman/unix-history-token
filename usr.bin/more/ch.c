@@ -222,7 +222,7 @@ directive|define
 name|ch_get
 parameter_list|()
 define|\
-value|((buf_head->block == ch_block&& \ 	    ch_offset< buf_head->datasize) ? \ 	    buf_head->data[ch_offset]& 0xff : fch_get())
+value|((buf_head->block == ch_block&& \ 	    ch_offset< buf_head->datasize) ? \ 	    (unsigned char)buf_head->data[ch_offset] : fch_get())
 end_define
 
 begin_expr_stmt
@@ -305,14 +305,16 @@ name|ispipe
 condition|)
 return|return
 operator|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|bp
 operator|->
 name|data
 index|[
 name|ch_offset
 index|]
-operator|&
-literal|0xff
 operator|)
 return|;
 goto|goto
@@ -780,14 +782,16 @@ end_if
 begin_return
 return|return
 operator|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|bp
 operator|->
 name|data
 index|[
 name|ch_offset
 index|]
-operator|&
-literal|0xff
 operator|)
 return|;
 end_return

@@ -127,9 +127,11 @@ condition|)
 do|;
 return|return
 operator|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
-operator|&
-literal|0xff
 operator|)
 return|;
 block|}

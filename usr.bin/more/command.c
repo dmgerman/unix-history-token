@@ -318,8 +318,6 @@ operator|=
 operator|*
 operator|--
 name|cp
-operator|&
-literal|0xff
 expr_stmt|;
 end_expr_stmt
 
@@ -465,8 +463,6 @@ index|[
 operator|-
 literal|1
 index|]
-operator|&
-literal|0xff
 argument_list|)
 operator|&&
 operator|!
@@ -484,8 +480,6 @@ index|[
 operator|-
 literal|1
 index|]
-operator|&
-literal|0xff
 argument_list|)
 operator|&&
 operator|!
@@ -502,8 +496,6 @@ index|[
 operator|-
 literal|1
 index|]
-operator|&
-literal|0xff
 argument_list|)
 operator|&&
 operator|!
@@ -1189,8 +1181,6 @@ name|isspace
 argument_list|(
 operator|*
 name|p
-operator|&
-literal|0xff
 argument_list|)
 condition|;
 operator|++
@@ -1222,8 +1212,6 @@ name|isspace
 argument_list|(
 operator|*
 name|p
-operator|&
-literal|0xff
 argument_list|)
 condition|;
 operator|++

@@ -234,10 +234,12 @@ call|)
 argument_list|(
 name|c
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
-operator|&
-literal|0xff
 argument_list|)
 condition|)
 block|{
