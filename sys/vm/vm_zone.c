@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.c,v 1.20 1998/04/15 17:47:40 bde Exp $  */
+comment|/*  * Copyright (c) 1997, 1998 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.c,v 1.21 1998/04/25 04:50:01 dyson Exp $  */
 end_comment
 
 begin_include
@@ -1146,6 +1146,19 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|simple_unlock
+argument_list|(
+operator|&
+name|z
+operator|->
+name|zlock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|item
 operator|=
 operator|(
@@ -1161,6 +1174,19 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|simple_lock
+argument_list|(
+operator|&
+name|z
+operator|->
+name|zlock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|zone_kmem_pages
 operator|+=
 name|z
@@ -1175,6 +1201,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|SMP
+name|simple_unlock
+argument_list|(
+operator|&
+name|z
+operator|->
+name|zlock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|item
 operator|=
 operator|(
@@ -1188,6 +1227,19 @@ argument_list|,
 name|nbytes
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|simple_lock
+argument_list|(
+operator|&
+name|z
+operator|->
+name|zlock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|zone_kern_pages
 operator|+=
 name|z
