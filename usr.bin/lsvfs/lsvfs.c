@@ -51,7 +51,7 @@ begin_define
 define|#
 directive|define
 name|DASHES
-value|"-------------------------------- ---- ---- ----\n"
+value|"-------------------------------- ----- ----- -----\n"
 end_define
 
 begin_function
@@ -166,7 +166,8 @@ name|warnx
 argument_list|(
 literal|"VFS %s unknown or not loaded"
 argument_list|,
-name|name
+operator|*
+name|argv
 argument_list|)
 expr_stmt|;
 name|rv
