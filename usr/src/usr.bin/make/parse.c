@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.12 (Berkeley) %G%"
+literal|"@(#)parse.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4238,7 +4238,13 @@ literal|'<'
 operator|)
 condition|)
 block|{
-comment|/* 	 * XXX: Should give some sort of error message, I suppose, but because 	 * # is used for both comments and directives, we can't be sure if 	 * the thing might not just be a comment, so we just return... 	 */
+name|Parse_Error
+argument_list|(
+name|PARSE_FATAL
+argument_list|,
+literal|".include filename must be delimited by '\"' or '<'"
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/*      * Set the search path on which to find the include file based on the      * characters which bracket its name. Angle-brackets imply it's      * a system Makefile while double-quotes imply it's a user makefile      */
