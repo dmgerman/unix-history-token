@@ -192,7 +192,7 @@ end_endif
 begin_decl_stmt
 specifier|extern
 name|u_char
-name|pca200e_microcode
+name|pca200e_microcode_3
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -200,7 +200,22 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|pca200e_microcode_size
+name|pca200e_microcode_size_3
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|pca200e_microcode_4
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pca200e_microcode_size_4
 decl_stmt|;
 end_decl_stmt
 
@@ -3689,6 +3704,11 @@ name|stat
 name|sbuf
 decl_stmt|;
 comment|/* Used to find if .bin or .objd */
+name|int
+name|pca_vers
+init|=
+literal|4
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -3730,7 +3750,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"i:d:f:berv"
+literal|"3i:d:f:berv"
 argument_list|)
 operator|)
 operator|!=
@@ -3742,6 +3762,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'3'
+case|:
+name|pca_vers
+operator|=
+literal|3
+expr_stmt|;
+break|break;
 case|case
 literal|'b'
 case|:
@@ -4365,7 +4393,9 @@ argument|, dirname, 							base, 							    air->acp_bustype ); 						if ( stat 
 literal|1
 argument|) 						    sndfile = filename; 					    } else 						sndfile = filename; 					} else 					    sndfile = filename; 				    } else 					sndfile = filename; 				    break; 				case DEV_FORE_PCA200E:
 comment|/* Use compiled in microcode */
-argument|ucode = pca200e_microcode; 				    ucode_size = pca200e_microcode_size; 				    break; 				default: 				    break; 			        } 			    } else 				sndfile = objfile;  			    if ( ext&& !binary ) 				err = xmitfile ( sndfile ); 			    else if (sndfile != NULL)  				err = sendbinfile ( sndfile, ram ); 			    else  				err = loadmicrocode( ucode, ucode_size, ram );  			    if ( err ) { 				fprintf(stderr,
+argument|if (pca_vers ==
+literal|3
+argument|) { 					    ucode = pca200e_microcode_3; 					    ucode_size = pca200e_microcode_size_3; 				    } else { 					    ucode = pca200e_microcode_4; 					    ucode_size = pca200e_microcode_size_4; 				    } 				    break; 				default: 				    break; 			        } 			    } else 				sndfile = objfile;  			    if ( ext&& !binary ) 				err = xmitfile ( sndfile ); 			    else if (sndfile != NULL)  				err = sendbinfile ( sndfile, ram ); 			    else  				err = loadmicrocode( ucode, ucode_size, ram );  			    if ( err ) { 				fprintf(stderr,
 literal|"%s download failed\n"
 argument|, 					air->acp_intf); 				(void) close(fd); 				continue; 			    }
 comment|/* 			     * Download completed - wait around a while for 			     * the driver to initialize the adapter 			     */
@@ -4387,7 +4417,7 @@ argument|, hb1, hb2); 				if (hb1< hb2) 					break; 			     } 			}  			close ( f
 comment|/* 	 * Exit 	 */
 argument|exit (
 literal|0
-argument|);  }
+argument|); }
 end_function
 
 end_unit
