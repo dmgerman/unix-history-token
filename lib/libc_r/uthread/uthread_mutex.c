@@ -1029,7 +1029,7 @@ name|NULL
 condition|)
 name|ret
 operator|=
-name|pthread_mutex_init
+name|_pthread_mutex_init
 argument_list|(
 name|mutex
 argument_list|,
@@ -1083,7 +1083,7 @@ name|NULL
 condition|)
 name|ret
 operator|=
-name|pthread_mutex_init
+name|_pthread_mutex_init
 argument_list|(
 name|mutex
 argument_list|,
