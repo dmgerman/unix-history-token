@@ -2199,15 +2199,15 @@ expr_stmt|;
 break|break;
 ifndef|#
 directive|ifndef
-name|IPPROTO_ENCAP
+name|IPPROTO_IPIP
 define|#
 directive|define
-name|IPPROTO_ENCAP
+name|IPPROTO_IPIP
 value|4
 endif|#
 directive|endif
 case|case
-name|IPPROTO_ENCAP
+name|IPPROTO_IPIP
 case|:
 comment|/* ip-in-ip encapsulation */
 if|if
