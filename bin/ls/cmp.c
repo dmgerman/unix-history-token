@@ -19,6 +19,16 @@ literal|"@(#)cmp.c	5.4 (Berkeley) 3/8/91"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: /b/source/CVS/src/bin/ls/cmp.c,v 1.3 1993/03/23 00:26:06 cgd Exp $"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

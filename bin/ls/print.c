@@ -19,6 +19,16 @@ literal|"@(#)print.c	5.24 (Berkeley) 10/19/90"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: /b/source/CVS/src/bin/ls/print.c,v 1.3 1993/03/23 00:26:10 cgd Exp $"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
