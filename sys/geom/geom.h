@@ -565,6 +565,12 @@ decl_stmt|;
 name|u_int
 name|sectorsize
 decl_stmt|;
+name|u_int
+name|stripesize
+decl_stmt|;
+name|u_int
+name|stripeoffset
+decl_stmt|;
 name|struct
 name|g_stat
 modifier|*

@@ -209,13 +209,13 @@ name|u_int
 name|d_fwheads
 decl_stmt|;
 name|u_int
-name|d_stripe_offset
+name|d_maxsize
 decl_stmt|;
 name|u_int
-name|d_stripe_width
+name|d_stripeoffset
 decl_stmt|;
 name|u_int
-name|d_max_request
+name|d_stripesize
 decl_stmt|;
 comment|/* Fields private to the driver */
 name|void
