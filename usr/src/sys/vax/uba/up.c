@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	3.21	%G%	*/
+comment|/*	up.c	3.22	%G%	*/
 end_comment
 
 begin_comment
@@ -1865,13 +1865,39 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"!DPR || !MOL, unit %d, ds %o\n"
+literal|"!DPR || !MOL, unit %d, ds %o"
 argument_list|,
 name|dn
 argument_list|,
 name|upaddr
 operator|->
 name|upds
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|upaddr
+operator|->
+name|upds
+operator|&
+operator|(
+name|DPR
+operator||
+name|MOL
+operator|)
+operator|)
+operator|!=
+operator|(
+name|DPR
+operator||
+name|MOL
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"-- hard\n"
 argument_list|)
 expr_stmt|;
 name|uptab
@@ -1911,6 +1937,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+comment|/* A funny place to do this ... */
 name|ubafree
 argument_list|(
 name|up_ubinfo
@@ -1920,10 +1947,15 @@ name|up_ubinfo
 operator|=
 literal|0
 expr_stmt|;
-comment|/* A funny place ... */
 goto|goto
 name|loop
 goto|;
+block|}
+name|printf
+argument_list|(
+literal|"-- came back\n"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * If this is a retry, then with the 16'th retry we 	 * begin to try offsetting the heads to recover the data. 	 */
 if|if
