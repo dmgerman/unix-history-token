@@ -560,6 +560,9 @@ case|:
 case|case
 name|MACHINE_IA64
 case|:
+case|case
+name|MACHINE_POWERPC
+case|:
 break|break;
 default|default:
 name|printf

@@ -142,6 +142,15 @@ literal|512
 block|}
 block|,
 comment|/* MACHINE_IA64 */
+block|{
+literal|8
+block|,
+literal|2
+block|,
+literal|512
+block|}
+block|,
+comment|/* MACHINE_POWERPC */
 block|}
 struct|;
 end_struct
