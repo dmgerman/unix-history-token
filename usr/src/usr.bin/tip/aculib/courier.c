@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)courier.c	5.5 (Berkeley) %G%"
+literal|"@(#)courier.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1536,12 +1536,6 @@ end_endif
 begin_comment
 comment|/*  * Code stolen from /usr/src/lib/libc/gen/sleep.c  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
 
 begin_define
 define|#
