@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2334,12 +2334,15 @@ modifier|*
 name|vp
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|flags
 init|=
 literal|0
 decl_stmt|;
+specifier|extern
 name|int
-name|error
+name|doforce
 decl_stmt|;
 if|if
 condition|(
@@ -2350,6 +2353,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|doforce
+operator|||
 name|mp
 operator|==
 name|rootfs
