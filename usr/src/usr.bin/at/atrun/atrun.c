@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)atrun.c	4.1 (Berkeley) %G%"
+literal|"@(#)atrun.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -575,11 +575,6 @@ argument_list|(
 name|stbuf
 operator|.
 name|st_uid
-argument_list|)
-expr_stmt|;
-name|nice
-argument_list|(
-literal|5
 argument_list|)
 expr_stmt|;
 name|execl
