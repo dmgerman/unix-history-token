@@ -19789,7 +19789,7 @@ operator|&=
 operator|~
 name|B_ASYNC
 expr_stmt|;
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)

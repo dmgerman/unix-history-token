@@ -213,6 +213,18 @@ begin_comment
 comment|/* I/O operation notification */
 end_comment
 
+begin_function_decl
+specifier|static
+name|int
+name|ibwrite
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|buf_ops
@@ -221,7 +233,7 @@ init|=
 block|{
 literal|"buf_ops_bio"
 block|,
-name|bwrite
+name|ibwrite
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3163,6 +3175,55 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|bp
+operator|->
+name|b_op
+operator|!=
+name|NULL
+operator|&&
+name|bp
+operator|->
+name|b_op
+operator|->
+name|bop_write
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"Martian buffer %p in bwrite: nobody to write it."
+operator|,
+name|bp
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|bp
+operator|->
+name|b_op
+operator|->
+name|bop_write
+argument_list|(
+name|bp
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|ibwrite
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+name|bp
+parameter_list|)
+block|{
 name|int
 name|oldflags
 decl_stmt|,
@@ -3210,7 +3271,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"bwrite: buffer is not busy???"
+literal|"ibwrite: buffer is not busy???"
 argument_list|)
 expr_stmt|;
 name|s
@@ -3304,7 +3365,7 @@ name|BV_BKGRDINPROG
 condition|)
 name|panic
 argument_list|(
-literal|"bwrite: still writing"
+literal|"ibwrite: still writing"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3371,7 +3432,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"bwrite: need chained iodone"
+literal|"ibwrite: need chained iodone"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4446,7 +4507,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -6687,7 +6748,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -8920,7 +8981,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	getblk:  *  *	Get a block given a specified block and offset into a file/device.  *	The buffers B_DONE bit will be cleared on return, making it almost  * 	ready for an I/O initiation.  B_INVAL may or may not be set on   *	return.  The caller should clear B_INVAL prior to initiating a  *	READ.  *  *	For a non-VMIO buffer, B_CACHE is set to the opposite of B_INVAL for  *	an existing buffer.  *  *	For a VMIO buffer, B_CACHE is modified according to the backing VM.  *	If getblk()ing a previously 0-sized invalid buffer, B_CACHE is set  *	and then cleared based on the backing VM.  If the previous buffer is  *	non-0-sized but invalid, B_CACHE will be cleared.  *  *	If getblk() must create a new buffer, the new buffer is returned with  *	both B_INVAL and B_CACHE clear unless it is a VMIO buffer, in which  *	case it is returned with B_INVAL clear and B_CACHE set based on the  *	backing VM.  *  *	getblk() also forces a BUF_WRITE() for any B_DELWRI buffer whos  *	B_CACHE bit is clear.  *	  *	What this means, basically, is that the caller should use B_CACHE to  *	determine whether the buffer is fully valid or not and should clear  *	B_INVAL prior to issuing a read.  If the caller intends to validate  *	the buffer by loading its data area with something, the caller needs  *	to clear B_INVAL.  If the caller does this without issuing an I/O,   *	the caller should set B_CACHE ( as an optimization ), else the caller  *	should issue the I/O and biodone() will set B_CACHE if the I/O was  *	a write attempt or if it was a successfull read.  If the caller   *	intends to issue a READ, the caller must clear B_INVAL and BIO_ERROR  *	prior to issuing the READ.  biodone() will *not* clear B_INVAL.  */
+comment|/*  *	getblk:  *  *	Get a block given a specified block and offset into a file/device.  *	The buffers B_DONE bit will be cleared on return, making it almost  * 	ready for an I/O initiation.  B_INVAL may or may not be set on   *	return.  The caller should clear B_INVAL prior to initiating a  *	READ.  *  *	For a non-VMIO buffer, B_CACHE is set to the opposite of B_INVAL for  *	an existing buffer.  *  *	For a VMIO buffer, B_CACHE is modified according to the backing VM.  *	If getblk()ing a previously 0-sized invalid buffer, B_CACHE is set  *	and then cleared based on the backing VM.  If the previous buffer is  *	non-0-sized but invalid, B_CACHE will be cleared.  *  *	If getblk() must create a new buffer, the new buffer is returned with  *	both B_INVAL and B_CACHE clear unless it is a VMIO buffer, in which  *	case it is returned with B_INVAL clear and B_CACHE set based on the  *	backing VM.  *  *	getblk() also forces a bwrite() for any B_DELWRI buffer whos  *	B_CACHE bit is clear.  *	  *	What this means, basically, is that the caller should use B_CACHE to  *	determine whether the buffer is fully valid or not and should clear  *	B_INVAL prior to issuing a read.  If the caller intends to validate  *	the buffer by loading its data area with something, the caller needs  *	to clear B_INVAL.  If the caller does this without issuing an I/O,   *	the caller should set B_CACHE ( as an optimization ), else the caller  *	should issue the I/O and biodone() will set B_CACHE if the I/O was  *	a write attempt or if it was a successfull read.  If the caller   *	intends to issue a READ, the caller must clear B_INVAL and BIO_ERROR  *	prior to issuing the READ.  biodone() will *not* clear B_INVAL.  */
 end_comment
 
 begin_function
@@ -9199,7 +9260,7 @@ name|b_flags
 operator||=
 name|B_NOCACHE
 expr_stmt|;
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -9250,7 +9311,7 @@ name|b_flags
 operator||=
 name|B_NOCACHE
 expr_stmt|;
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -9315,7 +9376,7 @@ name|b_flags
 operator||=
 name|B_NOCACHE
 expr_stmt|;
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)

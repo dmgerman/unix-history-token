@@ -15678,7 +15678,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)

@@ -1538,17 +1538,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|BUF_WRITE
-parameter_list|(
-name|bp
-parameter_list|)
-define|\
-value|(bp)->b_op->bop_write(bp)
-end_define
-
 begin_function
 specifier|static
 name|__inline

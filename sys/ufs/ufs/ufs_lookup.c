@@ -3227,7 +3227,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -3317,7 +3317,7 @@ return|;
 block|}
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -3948,7 +3948,7 @@ else|else
 block|{
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -4408,7 +4408,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -4470,7 +4470,7 @@ name|DOWHITEOUT
 condition|)
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -4503,7 +4503,7 @@ block|}
 else|else
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -4774,7 +4774,7 @@ else|else
 block|{
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)

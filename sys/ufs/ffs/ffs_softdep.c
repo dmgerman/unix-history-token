@@ -21629,7 +21629,7 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|ibp
 argument_list|)
@@ -22385,7 +22385,7 @@ literal|0
 condition|)
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -23004,7 +23004,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|nbp
 argument_list|)
@@ -23091,7 +23091,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|nbp
 argument_list|)
@@ -23170,7 +23170,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|nbp
 argument_list|)
@@ -23362,7 +23362,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|nbp
 argument_list|)
@@ -23437,7 +23437,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|nbp
 argument_list|)
@@ -24038,7 +24038,7 @@ operator|(
 operator|*
 name|errorp
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -24465,7 +24465,7 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -24556,7 +24556,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)

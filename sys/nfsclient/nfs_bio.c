@@ -4018,7 +4018,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -4182,7 +4182,7 @@ name|B_NOCACHE
 expr_stmt|;
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)

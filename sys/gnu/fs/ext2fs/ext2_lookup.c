@@ -3520,7 +3520,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -3684,7 +3684,7 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -3756,7 +3756,7 @@ name|i_reclen
 expr_stmt|;
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -3914,7 +3914,7 @@ name|EXT2_FT_UNKNOWN
 expr_stmt|;
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)

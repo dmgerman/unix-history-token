@@ -7873,7 +7873,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -7908,7 +7908,7 @@ operator|(
 operator|(
 name|error
 operator|=
-name|BUF_WRITE
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
