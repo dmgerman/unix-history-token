@@ -1101,16 +1101,10 @@ argument_list|)
 expr_stmt|;
 name|dirloop
 label|:
-comment|/* 	 * Search a new directory. 	 * 	 * The cn_hash value is for use by vfs_cache. 	 * The last component of the filename is left accessible via 	 * cnp->cn_nameptr for callers that need the name. Callers needing 	 * the name set the SAVENAME flag. When done, they assume 	 * responsibility for freeing the pathname buffer. 	 */
+comment|/* 	 * Search a new directory. 	 * 	 * The last component of the filename is left accessible via 	 * cnp->cn_nameptr for callers that need the name. Callers needing 	 * the name set the SAVENAME flag. When done, they assume 	 * responsibility for freeing the pathname buffer. 	 */
 name|cnp
 operator|->
 name|cn_consume
-operator|=
-literal|0
-expr_stmt|;
-name|cnp
-operator|->
-name|cn_hash
 operator|=
 literal|0
 expr_stmt|;
@@ -1135,17 +1129,7 @@ condition|;
 name|cp
 operator|++
 control|)
-name|cnp
-operator|->
-name|cn_hash
-operator|+=
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|cp
-expr_stmt|;
+continue|continue;
 name|cnp
 operator|->
 name|cn_namelen
@@ -2420,57 +2404,10 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* dirloop: */
-comment|/* 	 * Search a new directory. 	 * 	 * The cn_hash value is for use by vfs_cache. 	 * The last component of the filename is left accessible via 	 * cnp->cn_nameptr for callers that need the name. Callers needing 	 * the name set the SAVENAME flag. When done, they assume 	 * responsibility for freeing the pathname buffer. 	 */
+comment|/* 	 * Search a new directory. 	 * 	 * The last component of the filename is left accessible via 	 * cnp->cn_nameptr for callers that need the name. Callers needing 	 * the name set the SAVENAME flag. When done, they assume 	 * responsibility for freeing the pathname buffer. 	 */
 ifdef|#
 directive|ifdef
 name|NAMEI_DIAGNOSTIC
-for|for
-control|(
-name|newhash
-operator|=
-literal|0
-operator|,
-name|cp
-operator|=
-name|cnp
-operator|->
-name|cn_nameptr
-init|;
-operator|*
-name|cp
-operator|!=
-literal|0
-operator|&&
-operator|*
-name|cp
-operator|!=
-literal|'/'
-condition|;
-name|cp
-operator|++
-control|)
-name|newhash
-operator|+=
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|cp
-expr_stmt|;
-if|if
-condition|(
-name|newhash
-operator|!=
-name|cnp
-operator|->
-name|cn_hash
-condition|)
-name|panic
-argument_list|(
-literal|"relookup: bad hash"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|cnp

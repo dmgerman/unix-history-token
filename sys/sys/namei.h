@@ -137,10 +137,6 @@ name|long
 name|cn_namelen
 decl_stmt|;
 comment|/* length of looked up component */
-name|u_long
-name|cn_hash
-decl_stmt|;
-comment|/* hash value of looked up name */
 name|long
 name|cn_consume
 decl_stmt|;
@@ -495,66 +491,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * This structure describes the elements in the cache of recent  * names looked up by namei.  */
-end_comment
-
-begin_struct
-struct|struct
-name|namecache
-block|{
-name|LIST_ENTRY
-argument_list|(
-argument|namecache
-argument_list|)
-name|nc_hash
-expr_stmt|;
-comment|/* hash chain */
-name|LIST_ENTRY
-argument_list|(
-argument|namecache
-argument_list|)
-name|nc_src
-expr_stmt|;
-comment|/* source vnode list */
-name|TAILQ_ENTRY
-argument_list|(
-argument|namecache
-argument_list|)
-name|nc_dst
-expr_stmt|;
-comment|/* destination vnode list */
-name|struct
-name|vnode
-modifier|*
-name|nc_dvp
-decl_stmt|;
-comment|/* vnode of parent of name */
-name|struct
-name|vnode
-modifier|*
-name|nc_vp
-decl_stmt|;
-comment|/* vnode the name refers to */
-name|u_char
-name|nc_flag
-decl_stmt|;
-comment|/* flag bits */
-name|u_char
-name|nc_nlen
-decl_stmt|;
-comment|/* length of name */
-name|char
-name|nc_name
-index|[
-literal|0
-index|]
-decl_stmt|;
-comment|/* segment name */
-block|}
-struct|;
-end_struct
 
 begin_ifdef
 ifdef|#

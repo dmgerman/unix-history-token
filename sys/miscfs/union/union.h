@@ -204,10 +204,6 @@ name|un_path
 decl_stmt|;
 comment|/* saved component name */
 name|int
-name|un_hash
-decl_stmt|;
-comment|/* saved un_path hash value */
-name|int
 name|un_openl
 decl_stmt|;
 comment|/* # of opens on lowervp */

@@ -117,9 +117,9 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_CACHE
 argument_list|,
-literal|"namecache"
+literal|"cache"
 argument_list|,
-literal|"Dynamically allocated cache entries"
+literal|"Various Dynamically allocated caches"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
