@@ -10773,6 +10773,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* kqueue attach function */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -10843,6 +10847,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* kqueue detach function */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -10884,6 +10892,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* kqueue filter function */
+end_comment
 
 begin_comment
 comment|/*ARGSUSED*/
