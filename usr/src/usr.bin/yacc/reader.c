@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reader.c	5.2 (Berkeley) %G%"
+literal|"@(#)reader.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2763,7 +2763,6 @@ name|c
 operator|=
 operator|*
 name|cptr
-operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -2790,8 +2789,8 @@ expr_stmt|;
 name|c
 operator|=
 operator|*
-name|cptr
 operator|++
+name|cptr
 expr_stmt|;
 if|if
 condition|(
@@ -2877,7 +2876,6 @@ name|c
 operator|=
 operator|*
 name|cptr
-operator|++
 expr_stmt|;
 name|i
 operator|=
@@ -2897,6 +2895,9 @@ operator|>=
 literal|16
 condition|)
 break|break;
+operator|++
+name|cptr
+expr_stmt|;
 name|n
 operator|=
 operator|(
@@ -3201,13 +3202,22 @@ break|break;
 default|default:
 name|cachec
 argument_list|(
+operator|(
+operator|(
 name|c
 operator|>>
 literal|6
+operator|)
+operator|&
+literal|7
+operator|)
+operator|+
+literal|'0'
 argument_list|)
 expr_stmt|;
 name|cachec
 argument_list|(
+operator|(
 operator|(
 name|c
 operator|>>
@@ -3215,13 +3225,20 @@ literal|3
 operator|)
 operator|&
 literal|7
+operator|)
+operator|+
+literal|'0'
 argument_list|)
 expr_stmt|;
 name|cachec
 argument_list|(
+operator|(
 name|c
 operator|&
 literal|7
+operator|)
+operator|+
+literal|'0'
 argument_list|)
 expr_stmt|;
 break|break;
