@@ -18836,6 +18836,7 @@ name|EX_NOHOST
 argument_list|,
 literal|"hostname ``%s'' unknown"
 argument_list|,
+operator|*
 name|av
 argument_list|)
 expr_stmt|;
