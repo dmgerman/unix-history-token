@@ -395,7 +395,7 @@ begin_function_decl
 name|int
 name|get_ether_addr
 parameter_list|(
-name|u_long
+name|u_int32_t
 name|ipaddr
 parameter_list|,
 name|u_char
@@ -3552,7 +3552,7 @@ begin_function
 name|int
 name|get_ether_addr
 parameter_list|(
-name|u_long
+name|u_int32_t
 name|ipaddr
 parameter_list|,
 name|u_char
@@ -3571,7 +3571,7 @@ decl_stmt|,
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|ina
 decl_stmt|,
 name|mask
