@@ -16,6 +16,10 @@ name|_MACHINE_IN_CKSUM_H_
 value|1
 end_define
 
+begin_comment
+comment|/*  * MP safe (alfred)  */
+end_comment
+
 begin_include
 include|#
 directive|include
