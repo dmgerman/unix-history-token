@@ -29,7 +29,7 @@ end_define
 begin_typedef
 typedef|typedef
 name|unsigned
-name|int
+name|long
 name|ITEM_TYPE
 typedef|;
 end_typedef
