@@ -458,6 +458,11 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|panicstr
+condition|)
+return|return;
+if|if
+condition|(
 operator|(
 name|ktr_mask
 operator|&
@@ -544,7 +549,7 @@ argument_list|(
 name|saveintr
 argument_list|)
 expr_stmt|;
-name|nanotime
+name|getnanotime
 argument_list|(
 operator|&
 name|entry
