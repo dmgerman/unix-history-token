@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mtpr.h	1.1	86/01/05	*/
-end_comment
-
-begin_comment
-comment|/*	mtpr.h	4.5	82/11/05	*/
+comment|/*  *	@(#)mtpr.h	7.1 (Berkeley) %G%  *	from mtpr.h	4.5	82/11/05  */
 end_comment
 
 begin_comment

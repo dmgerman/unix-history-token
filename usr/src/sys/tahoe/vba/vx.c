@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vx.c	1.11	87/09/06	*/
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vx.c	7.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -37,12 +37,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/pte.h"
-end_include
 
 begin_include
 include|#
@@ -126,6 +120,12 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoe/pte.h"
 end_include
 
 begin_include

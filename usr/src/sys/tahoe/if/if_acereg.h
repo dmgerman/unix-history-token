@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acereg.h	1.1	85/07/21	*/
+comment|/*  *	@(#)if_acereg.h	7.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment

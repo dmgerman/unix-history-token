@@ -1,31 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	1.8	88/05/21	*/
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.1 (Berkeley) %G%  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/psl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/reg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/mtpr.h"
-end_include
 
 begin_include
 include|#
@@ -73,6 +49,30 @@ begin_include
 include|#
 directive|include
 file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"psl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"reg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mtpr.h"
 end_include
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	1.10	87/05/27	*/
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cons.c	7.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -82,19 +82,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../tahoe/cp.h"
+file|"cp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/cpu.h"
+file|"cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/mtpr.h"
+file|"mtpr.h"
 end_include
 
 begin_function_decl
@@ -937,7 +937,7 @@ index|]
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|KDB
+name|KADB
 if|if
 condition|(
 name|unit
@@ -1793,7 +1793,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|KDB
+name|KADB
 argument_list|)
 operator|||
 name|defined
@@ -2490,7 +2490,7 @@ end_block
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KDB
+name|KADB
 end_ifdef
 
 begin_comment

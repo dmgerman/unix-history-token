@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	swapgeneric.c	1.6	88/02/08	*/
+comment|/*	swapgeneric.c	7.1	88/05/21	*/
 end_comment
 
 begin_include
