@@ -1728,7 +1728,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* XXX can this happen? */
-name|INP_INFO_WLOCK
+name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
@@ -1938,7 +1938,7 @@ name|slot
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WLOCK
+name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
