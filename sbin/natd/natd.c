@@ -766,7 +766,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|log_ipfw_denied
+name|logIpfwDenied
 decl_stmt|;
 end_decl_stmt
 
@@ -872,7 +872,7 @@ name|logFacility
 operator|=
 name|LOG_DAEMON
 expr_stmt|;
-name|log_ipfw_denied
+name|logIpfwDenied
 operator|=
 literal|0
 expr_stmt|;
@@ -2413,7 +2413,7 @@ name|errno
 operator|==
 name|EACCES
 operator|&&
-name|log_ipfw_denied
+name|logIpfwDenied
 condition|)
 block|{
 name|sprintf
@@ -4547,7 +4547,7 @@ name|LogDenied
 case|:
 name|logDropped
 operator|=
-literal|1
+name|yesNoValue
 expr_stmt|;
 break|break;
 case|case
@@ -4622,10 +4622,12 @@ break|break;
 case|case
 name|LogIpfwDenied
 case|:
-name|log_ipfw_denied
+name|logIpfwDenied
 operator|=
-literal|1
+name|yesNoValue
 expr_stmt|;
+empty_stmt|;
+break|break;
 block|}
 block|}
 end_function
