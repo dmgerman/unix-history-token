@@ -91,6 +91,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"extern.h"
 end_include
 
