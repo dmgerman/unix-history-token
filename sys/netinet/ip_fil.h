@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.0.2.39.2.4 1997/11/12 10:50:02 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.0.2.39.2.10 1997/12/03 10:02:30 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -496,32 +496,32 @@ begin_define
 define|#
 directive|define
 name|FI_OPTIONS
-value|0x01
+value|(FF_OPTIONS>> 24)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FI_TCPUDP
-value|0x02
+value|(FF_TCPUDP>> 24)
 end_define
 
 begin_comment
-comment|/* TCP/UCP implied comparison involved */
+comment|/* TCP/UCP implied comparison*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FI_FRAG
-value|0x04
+value|(FF_FRAG>> 24)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FI_SHORT
-value|0x08
+value|(FF_SHORT>> 24)
 end_define
 
 begin_typedef
@@ -1997,6 +1997,12 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+operator|||
+operator|(
+name|_BSDI_VERSION
+operator|>=
+literal|199701
+operator|)
 end_if
 
 begin_decl_stmt
@@ -2631,6 +2637,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|linux
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -2638,13 +2650,40 @@ name|send_reset
 name|__P
 argument_list|(
 operator|(
+name|tcpiphdr_t
+operator|*
+operator|,
 expr|struct
-name|tcpiphdr
+name|ifnet
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|send_reset
+name|__P
+argument_list|(
+operator|(
+name|tcpiphdr_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -2883,11 +2922,20 @@ literal|199511
 operator|)
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__NetBSD__
-end_ifdef
+argument_list|)
+operator|||
+operator|(
+name|_BSDI_VERSION
+operator|>=
+literal|199701
+operator|)
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -3394,6 +3442,8 @@ operator|*
 operator|,
 name|tcphdr_t
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3480,7 +3530,8 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|caddr_t
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_proxy.h,v 2.0.2.10 1997/10/19 15:39:23 darrenr Exp $  */
+comment|/*  * Copyright (C) 1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_proxy.h,v 2.0.2.10.2.1 1997/11/27 09:33:27 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -471,6 +471,19 @@ name|u_char
 operator|,
 name|char
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ap_expire
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
