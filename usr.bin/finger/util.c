@@ -131,6 +131,12 @@ directive|include
 file|"finger.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -2312,11 +2318,13 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%s/.nofinger"
+literal|"%s/%s"
 argument_list|,
 name|pw
 operator|->
 name|pw_dir
+argument_list|,
+name|_PATH_NOFINGER
 argument_list|)
 expr_stmt|;
 if|if
