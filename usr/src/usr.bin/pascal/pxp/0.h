@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* static	char *sccsid = "@(#)0.h	1.4 (Berkeley) %G%";*/
+comment|/* static	char *sccsid = "@(#)0.h	1.5 (Berkeley) %G%";*/
 end_comment
 
 begin_comment
@@ -232,25 +232,109 @@ begin_comment
 comment|/*  * The following limits on hash and tree tables currently  * allow approximately 1200 symbols and 20k words of tree  * space.  The fundamental limit of 64k total data space  * should be exceeded well before these are full.  */
 end_comment
 
+begin_comment
+comment|/*  * TABLE_MULTIPLIER is for uniformly increasing the sizes of the tables  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ADDR32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TABLE_MULTIPLIER
+value|8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|ADDR32
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ADDR16
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TABLE_MULTIPLIER
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|ADDR16
+end_endif
+
 begin_define
 define|#
 directive|define
 name|MAXHASH
-value|4
+value|(4 * TABLE_MULTIPLIER)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAXTREE
-value|30
+value|(30 * TABLE_MULTIPLIER)
 end_define
+
+begin_comment
+comment|/*  * MAXDEPTH is the depth of the parse stack.  * STACK_MULTIPLIER is for increasing its size.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ADDR32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|STACK_MULTIPLIER
+value|8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|ADDR32
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ADDR16
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|STACK_MULTIPLIER
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|ADDR16
+end_endif
 
 begin_define
 define|#
 directive|define
 name|MAXDEPTH
-value|150
+value|( 150 * STACK_MULTIPLIER )
 end_define
 
 begin_escape
