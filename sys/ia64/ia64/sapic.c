@@ -616,9 +616,8 @@ name|rte
 operator|.
 name|rte_delivery_mode
 operator|=
-literal|0
+name|SAPIC_DELMODE_LOWPRI
 expr_stmt|;
-comment|/* fixed */
 name|rte
 operator|.
 name|rte_vector
