@@ -101,13 +101,6 @@ begin_comment
 comment|/* Objects for parse tree walks (method execution) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NS_TABLE_SIZE
-value|4
-end_define
-
 begin_comment
 comment|/* String size constants */
 end_comment
