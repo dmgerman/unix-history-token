@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.43 1999/02/19 14:25:35 luoqi Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.44 1999/02/25 15:54:06 bde Exp $  */
 end_comment
 
 begin_comment
@@ -2954,6 +2954,8 @@ argument_list|,
 name|fp
 operator|->
 name|f_cred
+argument_list|,
+name|FOF_OFFSET
 argument_list|)
 expr_stmt|;
 block|}
@@ -2984,6 +2986,8 @@ argument_list|,
 name|fp
 operator|->
 name|f_cred
+argument_list|,
+name|FOF_OFFSET
 argument_list|)
 expr_stmt|;
 block|}
@@ -7942,6 +7946,8 @@ argument_list|,
 name|fp
 operator|->
 name|f_cred
+argument_list|,
+name|FOF_OFFSET
 argument_list|)
 expr_stmt|;
 if|if
@@ -8293,6 +8299,8 @@ argument_list|,
 name|fp
 operator|->
 name|f_cred
+argument_list|,
+name|FOF_OFFSET
 argument_list|)
 expr_stmt|;
 if|if
