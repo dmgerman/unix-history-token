@@ -1100,6 +1100,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|bpf_if
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|bpf_validate
@@ -1119,7 +1125,7 @@ name|void
 name|bpf_tap
 parameter_list|(
 name|struct
-name|ifnet
+name|bpf_if
 modifier|*
 parameter_list|,
 name|u_char
@@ -1135,7 +1141,7 @@ name|void
 name|bpf_mtap
 parameter_list|(
 name|struct
-name|ifnet
+name|bpf_if
 modifier|*
 parameter_list|,
 name|struct
@@ -1156,6 +1162,26 @@ parameter_list|,
 name|u_int
 parameter_list|,
 name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bpfattach2
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
+name|struct
+name|bpf_if
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1199,6 +1225,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|BPF_TAP
+parameter_list|(
+name|_ifp
+parameter_list|,
+name|_pkt
+parameter_list|,
+name|_pktlen
+parameter_list|)
+value|do {				\ 	if ((_ifp)->if_bpf)					\ 		bpf_tap((_ifp)->if_bpf, (_pkt), (_pktlen));	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_MTAP
+parameter_list|(
+name|_ifp
+parameter_list|,
+name|_m
+parameter_list|)
+value|do {					\ 	if ((_ifp)->if_bpf)					\ 		bpf_mtap((_ifp)->if_bpf, (_m));			\ } while (0)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1219,6 +1271,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _NET_BPF_H_ */
+end_comment
 
 end_unit
 

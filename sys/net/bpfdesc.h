@@ -257,6 +257,13 @@ modifier|*
 name|bif_dlist
 decl_stmt|;
 comment|/* descriptor list */
+name|struct
+name|bpf_if
+modifier|*
+modifier|*
+name|bif_driverp
+decl_stmt|;
+comment|/* pointer into softc */
 name|u_int
 name|bif_dlt
 decl_stmt|;
