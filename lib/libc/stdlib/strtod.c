@@ -623,6 +623,20 @@ name|defined
 operator|.
 endif|#
 directive|endif
+decl|union
+name|doubleasulongs
+block|{
+name|double
+name|x
+decl_stmt|;
+name|ULong
+name|w
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+empty_stmt|;
 ifdef|#
 directive|ifdef
 name|IEEE_LITTLE_ENDIAN
@@ -632,14 +646,14 @@ name|word0
 parameter_list|(
 name|x
 parameter_list|)
-value|((ULong *)&x)[1]
+value|(((union doubleasulongs *)&x)->w)[1]
 define|#
 directive|define
 name|word1
 parameter_list|(
 name|x
 parameter_list|)
-value|((ULong *)&x)[0]
+value|(((union doubleasulongs *)&x)->w)[0]
 else|#
 directive|else
 define|#
@@ -648,14 +662,14 @@ name|word0
 parameter_list|(
 name|x
 parameter_list|)
-value|((ULong *)&x)[0]
+value|(((union doubleasulongs *)&x)->w)[0]
 define|#
 directive|define
 name|word1
 parameter_list|(
 name|x
 parameter_list|)
-value|((ULong *)&x)[1]
+value|(((union doubleasulongs *)&x)->w)[1]
 endif|#
 directive|endif
 comment|/* The following definition of Storeinc is appropriate for MIPS processors.  * An alternative that might be better on some machines is  * #define Storeinc(a,b,c) (*a++ = b<< 16 | c& 0xffff)  */
@@ -1054,7 +1068,7 @@ value|a = rnd_quot(a, b)
 ifdef|#
 directive|ifdef
 name|KR_headers
-decl|extern
+specifier|extern
 name|double
 name|rnd_prod
 argument_list|()
