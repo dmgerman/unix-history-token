@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	4.13	81/04/17	*/
+comment|/*	kern_synch.c	4.14	81/06/11	*/
 end_comment
 
 begin_include
@@ -1106,7 +1106,7 @@ operator|&
 literal|0377
 operator|)
 operator|/
-literal|16
+literal|4
 expr_stmt|;
 name|p
 operator|+=

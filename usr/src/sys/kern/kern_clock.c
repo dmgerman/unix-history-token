@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.21	81/04/28	*/
+comment|/*	kern_clock.c	4.22	81/06/11	*/
 end_comment
 
 begin_include
@@ -471,7 +471,7 @@ name|pp
 operator|->
 name|p_cpu
 operator|%
-literal|16
+literal|4
 operator|==
 literal|0
 condition|)
@@ -539,15 +539,35 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * SCHMAG is the constant in the digital decay cpu  * usage priority assignment.  Each second we multiply  * the previous cpu usage estimate by SCHMAG.  At 9/10  * it tends to decay away all knowledge of previous activity  * in about 10 seconds.  */
+comment|/*  * The digital decay cpu usage priority assignment is scaled to run in  * time as expanded by the 1 minute load average.  Each second we  * multiply the the previous cpu usage estimate by  *		nrscale*avenrun[0]  * The following relates the load average to the period over which  * cpu usage is 90% forgotten:  *	loadav 1	 5 seconds  *	loadav 5	24 seconds  *	loadav 10	47 seconds  *	loadav 20	93 seconds  * This is a great improvement on the previous algorithm which  * decayed the priorities by a constant, and decayed away all knowledge  * of previous activity in about 20 seconds.  Under heavy load,  * the previous algorithm degenerated to round-robin with poor response  * time when there was a high load average.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SCHMAG
-value|9/10
+name|ave
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((int)(((int)(a*b))/(b+1)))
 end_define
+
+begin_decl_stmt
+name|int
+name|nrscale
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|double
+name|avenrun
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Constant for decay filter for cpu usage field  * in process table (used by ps au).  */
@@ -774,7 +794,7 @@ name|runin
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Run paging daemon and reschedule every 1/4 sec. 	 */
+comment|/* 	 * Run paging daemon every 1/4 sec. 	 */
 if|if
 condition|(
 name|lbolt
@@ -791,6 +811,21 @@ block|{
 name|vmpago
 argument_list|()
 expr_stmt|;
+block|}
+comment|/* 	 * Reschedule every 1/10 sec. 	 */
+if|if
+condition|(
+name|lbolt
+operator|%
+operator|(
+name|hz
+operator|/
+literal|10
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|runrun
 operator|++
 expr_stmt|;
@@ -1016,7 +1051,7 @@ operator|)
 name|hz
 operator|)
 expr_stmt|;
-comment|/* 			 * Recompute process priority.  The number p_cpu 			 * is a weighted estimate of cpu time consumed. 			 * A process which consumes cpu time has this 			 * increase regularly.  We here decrease it by 			 * a fraction (SCHMAG is 90%), giving a digital 			 * decay filter which damps out in about 10 seconds. 			 * 			 * If a process is niced, then the nice directly 			 * affects the new priority.  The final priority 			 * is in the range 0 to 255, to fit in a character. 			 */
+comment|/* 			 * Recompute process priority.  The number p_cpu 			 * is a weighted estimate of cpu time consumed. 			 * A process which consumes cpu time has this 			 * increase regularly.  We here decrease it by 			 * a fraction based on load average giving a digital 			 * decay filter which damps out in about 5 seconds 			 * when seconds are measured in time expanded by the 			 * load average. 			 * 			 * If a process is niced, then the nice directly 			 * affects the new priority.  The final priority 			 * is in the range 0 to 255, to fit in a character. 			 */
 name|pp
 operator|->
 name|p_cpticks
@@ -1025,6 +1060,8 @@ literal|0
 expr_stmt|;
 name|a
 operator|=
+name|ave
+argument_list|(
 operator|(
 name|pp
 operator|->
@@ -1032,8 +1069,14 @@ name|p_cpu
 operator|&
 literal|0377
 operator|)
+argument_list|,
+name|avenrun
+index|[
+literal|0
+index|]
 operator|*
-name|SCHMAG
+name|nrscale
+argument_list|)
 operator|+
 name|pp
 operator|->
