@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<../i386/isa/fdreg.h>
+file|<i386/isa/fdreg.h>
 end_include
 
 begin_comment
