@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -11,14 +11,24 @@ begin_struct
 struct|struct
 name|pklcd
 block|{
-name|int
-function_decl|(
+struct|struct
+name|pklcd_q
+block|{
+name|struct
+name|pklcd_q
 modifier|*
-name|lcd_send
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* if X.25 front end, direct connect */
+name|q_forw
+decl_stmt|;
+comment|/* debugging chain */
+name|struct
+name|pklcd_q
+modifier|*
+name|q_back
+decl_stmt|;
+comment|/* debugging chain */
+block|}
+name|lcd_q
+struct|;
 name|int
 function_decl|(
 modifier|*
@@ -31,6 +41,18 @@ name|caddr_t
 name|lcd_upnext
 decl_stmt|;
 comment|/* reference for lcd_upper() */
+name|int
+function_decl|(
+modifier|*
+name|lcd_send
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* if X.25 front end, direct connect */
+name|caddr_t
+name|lcd_downnext
+decl_stmt|;
+comment|/* reference for lcd_send() */
 name|short
 name|lcd_lcn
 decl_stmt|;
@@ -39,14 +61,6 @@ name|short
 name|lcd_state
 decl_stmt|;
 comment|/* Logical Channel state */
-name|bool
-name|lcd_intrconf_pending
-decl_stmt|;
-comment|/* Interrupt confirmation pending */
-name|octet
-name|lcd_intrdata
-decl_stmt|;
-comment|/* Octet of incoming intr data */
 name|short
 name|lcd_timer
 decl_stmt|;
@@ -55,6 +69,14 @@ name|short
 name|lcd_dg_timer
 decl_stmt|;
 comment|/* to reclaim idle datagram circuits */
+name|bool
+name|lcd_intrconf_pending
+decl_stmt|;
+comment|/* Interrupt confirmation pending */
+name|octet
+name|lcd_intrdata
+decl_stmt|;
+comment|/* Octet of incoming intr data */
 name|char
 name|lcd_retry
 decl_stmt|;
@@ -91,6 +113,10 @@ name|bool
 name|lcd_reset_condition
 decl_stmt|;
 comment|/* True, if waiting reset confirm */
+name|bool
+name|lcd_rxrnr_condition
+decl_stmt|;
+comment|/* True, if we have sent rnr */
 name|char
 name|lcd_packetsize
 decl_stmt|;
@@ -107,6 +133,12 @@ name|char
 name|lcd_flags
 decl_stmt|;
 comment|/* copy of sockaddr_x25 op_flags */
+name|struct
+name|mbuf
+modifier|*
+name|lcd_facilities
+decl_stmt|;
+comment|/* user supplied facilities for cr */
 name|struct
 name|mbuf
 modifier|*
@@ -131,12 +163,6 @@ modifier|*
 name|lcd_ceaddr
 decl_stmt|;
 comment|/* Called address pointer */
-name|struct
-name|mbuf
-modifier|*
-name|lcd_facilities
-decl_stmt|;
-comment|/* user supplied facilities for cr */
 name|time_t
 name|lcd_stime
 decl_stmt|;
@@ -462,11 +488,19 @@ begin_comment
 comment|/* accepting incoming calls */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERNEL
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CCITT
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|struct
@@ -498,6 +532,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|pk_name
