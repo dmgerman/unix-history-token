@@ -2457,6 +2457,9 @@ argument_list|(
 name|kernel_text
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
 name|ksym_start
 operator|=
 operator|(
@@ -2487,6 +2490,20 @@ argument_list|(
 name|ksym_end
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|kernend
+operator|=
+operator|(
+name|vm_offset_t
+operator|)
+name|round_page
+argument_list|(
+name|_end
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* But if the bootstrap tells us otherwise, believe it! */
 if|if
 condition|(
