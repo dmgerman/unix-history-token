@@ -344,7 +344,7 @@ index|]
 decl_stmt|,
 name|arg
 index|[
-literal|4
+literal|5
 index|]
 index|[
 literal|50
@@ -353,7 +353,7 @@ decl_stmt|,
 modifier|*
 name|args
 index|[
-literal|4
+literal|5
 index|]
 decl_stmt|;
 if|if
@@ -443,6 +443,20 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|args
+index|[
+literal|4
+index|]
+operator|=
+operator|&
+name|arg
+index|[
+literal|4
+index|]
+index|[
+literal|0
+index|]
+expr_stmt|;
 while|while
 condition|(
 name|fgets
@@ -483,6 +497,11 @@ argument_list|,
 name|arg
 index|[
 literal|3
+index|]
+argument_list|,
+name|arg
+index|[
+literal|4
 index|]
 argument_list|)
 expr_stmt|;
@@ -751,6 +770,28 @@ operator|.
 name|arp_flags
 operator||=
 name|ATF_PUBL
+expr_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"trail"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ar
+operator|.
+name|arp_flags
+operator||=
+name|ATF_USETRAILERS
 expr_stmt|;
 name|argv
 operator|++
@@ -1069,18 +1110,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|ar
 operator|.
 name|arp_flags
 operator|&
 name|ATF_PERM
-operator|)
 condition|)
 name|printf
 argument_list|(
-literal|" temporary"
+literal|" permanent"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1094,6 +1132,19 @@ condition|)
 name|printf
 argument_list|(
 literal|" published"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ar
+operator|.
+name|arp_flags
+operator|&
+name|ATF_USETRAILERS
+condition|)
+name|printf
+argument_list|(
+literal|" trailers"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1717,18 +1768,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|at
 operator|->
 name|at_flags
 operator|&
 name|ATF_PERM
-operator|)
 condition|)
 name|printf
 argument_list|(
-literal|" temporary"
+literal|" permanent"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1742,6 +1790,19 @@ condition|)
 name|printf
 argument_list|(
 literal|" published"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|at
+operator|->
+name|at_flags
+operator|&
+name|ATF_USETRAILERS
+condition|)
+name|printf
+argument_list|(
+literal|" trailers"
 argument_list|)
 expr_stmt|;
 name|printf
