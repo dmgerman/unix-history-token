@@ -8,7 +8,7 @@ comment|/*  *	Manages physical address maps.  *  *	In addition to hardware addre
 end_comment
 
 begin_comment
-comment|/*  * Notes for alpha pmap.  *   * On alpha, pm_pdeobj will hold lev1, lev2 and lev3 page tables.  * Indices from 0 to NUSERLEV3MAPS-1 will map user lev3 page tables,  * indices from NUSERLEV3MAPS to NUSERLEV3MAPS+NUSERLEV2MAPS-1 will  * map user lev2 page tables and index NUSERLEV3MAPS+NUSERLEV2MAPS  * will map the lev1 page table.  The lev1 table will self map at  * address VADDR(PTLEV1I,0,0).  *   * The vm_object kptobj holds the kernel page tables on i386 (62 or 63  * of them, depending on whether the system is SMP).  On alpha, kptobj  * will hold the lev3 and lev2 page tables for K1SEG.  Indices 0 to  * NKLEV3MAPS-1 will map kernel lev3 page tables and indices  * NKLEV3MAPS to NKLEV3MAPS+NKLEV2MAPS will map lev2 page tables. (XXX  * should the kernel Lev1map be inserted into this object?).  *   * pvtmmap is not needed for alpha since K0SEG maps all of physical  * memory. CADDR1 and CADDR2 are not needed for the same reason.  The  * only places outside pmap and machdep which use CADDR1 are xxdump  * routines which use them for dumping physical pages.  *   *   * alpha virtual memory map:  *   *   *  Address							Lev1 index  *   * 	         	---------------------------------  *  0000000000000000    | 				|	0  * 		        |				|  * 		        |				|  * 		        |				|  * 		        |				|  * 		       ---      		       ---  * 		                User space (USEG)  * 		       ---      		       ---  * 		        |				|  * 		        |				|  * 		        |				|  * 		        |				|  *  000003ffffffffff    |				|	511=UMAXLEV1I  * 	                ---------------------------------  *  fffffc0000000000    |				|	512=K0SEGLEV1I  * 	                |	Kernel code/data/bss	|  * 	                |				|  * 	                |				|  * 	                |				|  * 	               ---			       ---  * 	                	K0SEG  * 	               ---			       ---  * 	                |				|  * 	                |	1-1 physical/virtual	|  * 	                |				|  * 	                |				|  *  fffffdffffffffff    |				|  * 	                ---------------------------------  *  fffffe0000000000    |				|	768=K1SEGLEV1I  * 	                |	Kernel dynamic data	|  * 	                |				|  * 	                |				|  * 	                |				|  * 	               ---			       ---  * 	                	K1SEG  * 	               ---	        	       ---  * 	                |				|  * 	                |	mapped by ptes		|  * 	                |				|  * 	                |				|  *  fffffff7ffffffff    |				|  * 	                ---------------------------------  *  fffffffe00000000    | 				|	1023=PTLEV1I  * 		        |	PTmap (pte self map)	|  *  ffffffffffffffff	|				|  * 			---------------------------------  *   */
+comment|/*  * Notes for alpha pmap.  *   * On alpha, pm_pdeobj will hold lev1, lev2 and lev3 page tables.  * Indices from 0 to NUSERLEV3MAPS-1 will map user lev3 page tables,  * indices from NUSERLEV3MAPS to NUSERLEV3MAPS+NUSERLEV2MAPS-1 will  * map user lev2 page tables and index NUSERLEV3MAPS+NUSERLEV2MAPS  * will map the lev1 page table.  The lev1 table will self map at  * address VADDR(PTLEV1I,0,0).  *   * The vm_object kptobj holds the kernel page tables on i386 (62 or 63  * of them, depending on whether the system is SMP).  On alpha, kptobj  * will hold the lev3 and lev2 page tables for K1SEG.  Indices 0 to  * NKLEV3MAPS-1 will map kernel lev3 page tables and indices  * NKLEV3MAPS to NKLEV3MAPS+NKLEV2MAPS will map lev2 page tables. (XXX  * should the kernel Lev1map be inserted into this object?).  *   * pvtmmap is not needed for alpha since K0SEG maps all of physical  * memory.  *   *   * alpha virtual memory map:  *   *   *  Address							Lev1 index  *   * 	         	---------------------------------  *  0000000000000000    | 				|	0  * 		        |				|  * 		        |				|  * 		        |				|  * 		        |				|  * 		       ---      		       ---  * 		                User space (USEG)  * 		       ---      		       ---  * 		        |				|  * 		        |				|  * 		        |				|  * 		        |				|  *  000003ffffffffff    |				|	511=UMAXLEV1I  * 	                ---------------------------------  *  fffffc0000000000    |				|	512=K0SEGLEV1I  * 	                |	Kernel code/data/bss	|  * 	                |				|  * 	                |				|  * 	                |				|  * 	               ---			       ---  * 	                	K0SEG  * 	               ---			       ---  * 	                |				|  * 	                |	1-1 physical/virtual	|  * 	                |				|  * 	                |				|  *  fffffdffffffffff    |				|  * 	                ---------------------------------  *  fffffe0000000000    |				|	768=K1SEGLEV1I  * 	                |	Kernel dynamic data	|  * 	                |				|  * 	                |				|  * 	                |				|  * 	               ---			       ---  * 	                	K1SEG  * 	               ---	        	       ---  * 	                |				|  * 	                |	mapped by ptes		|  * 	                |				|  * 	                |				|  *  fffffff7ffffffff    |				|  * 	                ---------------------------------  *  fffffffe00000000    | 				|	1023=PTLEV1I  * 		        |	PTmap (pte self map)	|  *  ffffffffffffffff	|				|  * 			---------------------------------  *   */
 end_comment
 
 begin_include
@@ -725,40 +725,6 @@ name|struct
 name|pv_entry
 modifier|*
 name|pvinit
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * All those kernel PT submaps that BSD is so fond of  */
-end_comment
-
-begin_decl_stmt
-name|pt_entry_t
-modifier|*
-name|CMAP1
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|pt_entry_t
-modifier|*
-name|CMAP2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|caddr_t
-name|CADDR1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|caddr_t
-name|CADDR2
 decl_stmt|;
 end_decl_stmt
 
@@ -1809,38 +1775,9 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-comment|/* 	 * CMAP1/CMAP2 are used for zeroing and copying pages. 	 */
-name|SYSMAP
-argument_list|(
-argument|caddr_t
-argument_list|,
-argument|CMAP1
-argument_list|,
-argument|CADDR1
-argument_list|,
-literal|1
-argument_list|)
-name|SYSMAP
-argument_list|(
-argument|caddr_t
-argument_list|,
-argument|CMAP2
-argument_list|,
-argument|CADDR2
-argument_list|,
-literal|1
-argument_list|)
 name|virtual_avail
 operator|=
 name|va
-expr_stmt|;
-operator|*
-name|CMAP1
-operator|=
-operator|*
-name|CMAP2
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 	 * Set up proc0's PCB such that the ptbr points to the right place 	 * and has the kernel pmap's. 	 */
 name|proc0
@@ -7679,6 +7616,32 @@ expr_stmt|;
 comment|/* XXX overkill? */
 return|return
 name|mpte
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Make temporary mapping for a physical address. This is called  * during dump.  */
+end_comment
+
+begin_function
+name|void
+modifier|*
+name|pmap_kenter_temporary
+parameter_list|(
+name|vm_offset_t
+name|pa
+parameter_list|)
+block|{
+return|return
+operator|(
+name|void
+operator|*
+operator|)
+name|ALPHA_PHYS_TO_K0SEG
+argument_list|(
+name|pa
+argument_list|)
 return|;
 block|}
 end_function

@@ -713,6 +713,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+modifier|*
+name|pmap_kenter_temporary
+name|__P
+argument_list|(
+operator|(
+name|vm_offset_t
+name|pa
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|pmap_init2
 name|__P
 argument_list|(
