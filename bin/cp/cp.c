@@ -1229,7 +1229,7 @@ condition|(
 name|checkch
 operator|!=
 literal|'y'
-operator|||
+operator|&&
 name|checkch
 operator|!=
 literal|'Y'
