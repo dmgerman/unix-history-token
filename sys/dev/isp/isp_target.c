@@ -1129,12 +1129,6 @@ operator|)
 operator|->
 name|rqs_entry_type
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splcam
-argument_list|()
-decl_stmt|;
 if|if
 condition|(
 name|isp_getrqentry
@@ -1152,11 +1146,6 @@ name|outp
 argument_list|)
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|PRINTF
 argument_list|(
 literal|"%s: Request Queue Overflow in isp_target_put_entry "
@@ -1234,11 +1223,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|PRINTF
 argument_list|(
 literal|"%s: Unknown type 0x%x in isp_put_entry\n"
@@ -1277,11 +1261,6 @@ argument_list|(
 name|isp
 argument_list|,
 name|iptr
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -1630,6 +1609,8 @@ operator|.
 name|ct_scsi_status
 operator|=
 name|sts
+operator|&
+literal|0xff
 expr_stmt|;
 name|cto
 operator|->
@@ -1679,14 +1660,18 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|sts
+operator|&
+literal|0xff
+operator|)
 operator|==
 name|SCSI_CHECK
 operator|&&
 operator|(
 name|sts
 operator|&
-literal|0x100
+name|ECMD_SVALID
 operator|)
 condition|)
 block|{
@@ -2782,35 +2767,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|MEMCPY
-argument_list|(
-name|storage
-argument_list|,
-name|arg
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|isphdr_t
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|MEMZERO
 argument_list|(
-operator|&
 name|storage
-index|[
-sizeof|sizeof
-argument_list|(
-name|isphdr_t
-argument_list|)
-index|]
 argument_list|,
 name|QENTRY_LEN
-operator|-
-sizeof|sizeof
-argument_list|(
-name|isphdr_t
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2842,6 +2803,18 @@ name|inp
 init|=
 name|arg
 decl_stmt|;
+name|MEMCPY
+argument_list|(
+name|storage
+argument_list|,
+name|arg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|isphdr_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|na
 operator|->
 name|na_iid
@@ -2954,6 +2927,18 @@ name|inp
 init|=
 name|arg
 decl_stmt|;
+name|MEMCPY
+argument_list|(
+name|storage
+argument_list|,
+name|arg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|isphdr_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|na
 operator|->
 name|na_iid
@@ -3089,7 +3074,7 @@ case|case
 name|AT_PATH_INVALID
 case|:
 comment|/* 		 * ATIO rejected by the firmware due to disabled lun. 		 */
-name|printf
+name|PRINTF
 argument_list|(
 literal|"%s: rejected ATIO for disabled lun %d\n"
 argument_list|,
@@ -3122,7 +3107,7 @@ case|case
 name|AT_BDR_MSG
 case|:
 comment|/* 		 * If we send an ATIO to the firmware to increment 		 * its command resource count, and the firmware is 		 * recovering from a Bus Device Reset, it returns 		 * the ATIO with this status. We set the command 		 * resource count in the Enable Lun entry and no 		 * not increment it. Therefore we should never get 		 * this status here. 		 */
-name|printf
+name|PRINTF
 argument_list|(
 literal|"%s: ATIO returned for lun %d because it was in the "
 literal|" middle of coping with a Bus Device Reset\n"
@@ -3286,7 +3271,7 @@ case|case
 name|AT_PATH_INVALID
 case|:
 comment|/* 		 * ATIO rejected by the firmware due to disabled lun. 		 */
-name|printf
+name|PRINTF
 argument_list|(
 literal|"%s: rejected ATIO2 for disabled lun %d\n"
 argument_list|,
@@ -3319,7 +3304,7 @@ case|case
 name|AT_BDR_MSG
 case|:
 comment|/* 		 * If we send an ATIO to the firmware to increment 		 * its command resource count, and the firmware is 		 * recovering from a Bus Device Reset, it returns 		 * the ATIO with this status. We set the command 		 * resource count in the Enable Lun entry and no 		 * not increment it. Therefore we should never get 		 * this status here. 		 */
-name|printf
+name|PRINTF
 argument_list|(
 literal|"%s: ATIO2 returned for lun %d because it was in the "
 literal|" middle of coping with a Bus Device Reset\n"
@@ -4048,18 +4033,14 @@ break|break;
 case|case
 name|CT_INVAL
 case|:
-comment|/* 		 * CTIO rejected by the firmware due to disabled lun. 		 * "Cannot Happen". 		 */
+comment|/* 		 * CTIO rejected by the firmware - invalid data direction. 		 */
 name|PRINTF
 argument_list|(
-literal|"%s: Firmware rejected CTIO2 for disabled lun %d\n"
+literal|"%s: CTIO2 had wrong data directiond\n"
 argument_list|,
 name|isp
 operator|->
 name|isp_name
-argument_list|,
-name|ct
-operator|->
-name|ct_lun
 argument_list|)
 expr_stmt|;
 break|break;
