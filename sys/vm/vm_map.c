@@ -8729,7 +8729,7 @@ argument_list|(
 name|src_object
 argument_list|)
 expr_stmt|;
-name|vm_object_lock
+name|VM_OBJECT_LOCK
 argument_list|(
 name|src_object
 argument_list|)
@@ -8741,7 +8741,7 @@ argument_list|,
 name|OBJ_ONEMAPPING
 argument_list|)
 expr_stmt|;
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|src_object
 argument_list|)
@@ -9125,7 +9125,7 @@ operator|.
 name|vm_object
 expr_stmt|;
 block|}
-name|vm_object_lock
+name|VM_OBJECT_LOCK
 argument_list|(
 name|object
 argument_list|)
@@ -9137,7 +9137,7 @@ argument_list|,
 name|OBJ_ONEMAPPING
 argument_list|)
 expr_stmt|;
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
 argument_list|)
