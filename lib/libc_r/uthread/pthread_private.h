@@ -3094,6 +3094,7 @@ begin_function_decl
 name|void
 name|_thread_kern_set_timeout
 parameter_list|(
+specifier|const
 name|struct
 name|timespec
 modifier|*
