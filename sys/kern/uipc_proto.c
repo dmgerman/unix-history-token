@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_proto.c	8.1 (Berkeley) 6/10/93  * $Id$  */
+comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_proto.c	8.1 (Berkeley) 6/10/93  * $Id: uipc_proto.c,v 1.2 1994/08/02 07:43:04 davidg Exp $  */
 end_comment
 
 begin_include
@@ -34,7 +34,7 @@ file|<sys/mbuf.h>
 end_include
 
 begin_comment
-comment|/*  * Definitions of protocols supported in the UNIX domain.  */
+comment|/*  * Definitions of protocols supported in the LOCAL domain.  */
 end_comment
 
 begin_decl_stmt
@@ -64,7 +64,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|domain
-name|unixdomain
+name|localdomain
 decl_stmt|;
 end_decl_stmt
 
@@ -75,7 +75,7 @@ end_comment
 begin_decl_stmt
 name|struct
 name|protosw
-name|unixsw
+name|localsw
 index|[]
 init|=
 block|{
@@ -83,7 +83,7 @@ block|{
 name|SOCK_STREAM
 block|,
 operator|&
-name|unixdomain
+name|localdomain
 block|,
 literal|0
 block|,
@@ -116,7 +116,7 @@ block|{
 name|SOCK_DGRAM
 block|,
 operator|&
-name|unixdomain
+name|localdomain
 block|,
 literal|0
 block|,
@@ -189,12 +189,12 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|domain
-name|unixdomain
+name|localdomain
 init|=
 block|{
-name|AF_UNIX
+name|AF_LOCAL
 block|,
-literal|"unix"
+literal|"local"
 block|,
 literal|0
 block|,
@@ -202,19 +202,19 @@ name|unp_externalize
 block|,
 name|unp_dispose
 block|,
-name|unixsw
+name|localsw
 block|,
 operator|&
-name|unixsw
+name|localsw
 index|[
 sizeof|sizeof
 argument_list|(
-name|unixsw
+name|localsw
 argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|unixsw
+name|localsw
 index|[
 literal|0
 index|]

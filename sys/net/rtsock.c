@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -4389,6 +4395,14 @@ index|]
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|DOMAIN_SET
+argument_list|(
+name|route
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
