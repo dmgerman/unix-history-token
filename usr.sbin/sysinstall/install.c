@@ -1550,7 +1550,7 @@ argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Please remove the FreeBSD fixit CDROM now."
+literal|"Please remove the FreeBSD fixit CDROM/DVD now."
 argument_list|)
 expr_stmt|;
 return|return
