@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.h	4.12	82/11/15	*/
+comment|/*	mem.h	4.13	83/07/09	*/
 end_comment
 
 begin_comment
@@ -393,7 +393,7 @@ begin_define
 define|#
 directive|define
 name|MEMINTVL
-value|(60*60*10)
+value|(hz*60*10)
 end_define
 
 begin_comment
