@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.11 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.12 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.11 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -546,32 +546,13 @@ name|RealHostName
 operator|!=
 name|NULL
 condition|)
-block|{
-specifier|static
-name|char
-name|status
-index|[
-literal|100
-index|]
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
+name|setproctitle
 argument_list|(
-name|status
-argument_list|,
 literal|"talking to %s"
 argument_list|,
 name|RealHostName
 argument_list|)
 expr_stmt|;
-name|setproctitle
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
-block|}
 name|expand
 argument_list|(
 literal|"\001e"
@@ -731,10 +712,13 @@ name|cmd
 operator|=
 name|p
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|cmd
+operator|=
+name|cmdbuf
+init|;
 operator|*
-operator|++
 name|p
 operator|!=
 literal|'\0'
@@ -745,18 +729,18 @@ argument_list|(
 operator|*
 name|p
 argument_list|)
-condition|)
-continue|continue;
-if|if
-condition|(
+condition|;
+control|)
 operator|*
-name|p
-operator|!=
-literal|'\0'
-condition|)
+name|cmd
+operator|++
+operator|=
 operator|*
 name|p
 operator|++
+expr_stmt|;
+operator|*
+name|cmd
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -806,6 +790,15 @@ name|SmtpPhase
 operator|=
 literal|"HELO"
 expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"talking to %s (%s)"
+argument_list|,
+name|RealHostName
+argument_list|,
+name|inp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sameword
@@ -844,7 +837,7 @@ argument_list|)
 condition|)
 block|{
 name|char
-name|buf
+name|hostbuf
 index|[
 name|MAXNAME
 index|]
@@ -854,7 +847,7 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|buf
+name|hostbuf
 argument_list|,
 literal|"%s (%s)"
 argument_list|,
@@ -869,7 +862,7 @@ literal|'s'
 argument_list|,
 name|newstr
 argument_list|(
-name|buf
+name|hostbuf
 argument_list|)
 argument_list|,
 name|CurEnv
@@ -979,23 +972,17 @@ break|break;
 name|initsys
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
+name|setproctitle
 argument_list|(
-name|state
+literal|"talking to %s (%s - %s)"
 argument_list|,
-literal|"srvrsmtp %s"
+name|RealHostName
 argument_list|,
 name|CurEnv
 operator|->
 name|e_id
-argument_list|)
-expr_stmt|;
-name|setproctitle
-argument_list|(
-name|state
+argument_list|,
+name|inp
 argument_list|)
 expr_stmt|;
 comment|/* child -- go do the processing */
@@ -1055,6 +1042,19 @@ comment|/* rcpt -- designate recipient */
 name|SmtpPhase
 operator|=
 literal|"RCPT"
+expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"talking to %s (%s - %s)"
+argument_list|,
+name|RealHostName
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+argument_list|,
+name|inp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1228,6 +1228,19 @@ comment|/* collect the text of the message */
 name|SmtpPhase
 operator|=
 literal|"collect"
+expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"talking to %s (%s - %s)"
+argument_list|,
+name|RealHostName
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+argument_list|,
+name|inp
+argument_list|)
 expr_stmt|;
 name|collect
 argument_list|(
@@ -1410,7 +1423,11 @@ condition|)
 break|break;
 name|setproctitle
 argument_list|(
-literal|"SMTP-VRFY"
+literal|"talking to %s (%s)"
+argument_list|,
+name|RealHostName
+argument_list|,
+name|inp
 argument_list|)
 expr_stmt|;
 name|paddrtree

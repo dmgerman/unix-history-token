@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.11 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.12 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.11 (Berkeley) %G%"
+literal|"@(#)queue.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,10 +106,6 @@ name|long
 name|w_pri
 decl_stmt|;
 comment|/* priority of message, see below */
-name|long
-name|w_ctime
-decl_stmt|;
-comment|/* creation time of message */
 name|struct
 name|work
 modifier|*
@@ -1381,13 +1377,6 @@ name|WORK
 modifier|*
 name|w
 decl_stmt|;
-specifier|register
-name|WORK
-modifier|*
-modifier|*
-name|wp
-decl_stmt|;
-comment|/* parent of w */
 name|DIR
 modifier|*
 name|f
@@ -1719,26 +1708,6 @@ index|]
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'T'
-case|:
-name|wlist
-index|[
-name|wn
-index|]
-operator|.
-name|w_ctime
-operator|=
-name|atol
-argument_list|(
-operator|&
-name|lbuf
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
 block|}
 block|}
 operator|(
@@ -1824,10 +1793,9 @@ comment|/* 	**  Convert the work list into canonical form. 	**	Should be turning
 end_comment
 
 begin_expr_stmt
-name|wp
-operator|=
-operator|&
 name|WorkQ
+operator|=
+name|NULL
 expr_stmt|;
 end_expr_stmt
 
@@ -1887,32 +1855,13 @@ name|w_pri
 expr_stmt|;
 name|w
 operator|->
-name|w_ctime
-operator|=
-name|wlist
-index|[
-name|i
-index|]
-operator|.
-name|w_ctime
-expr_stmt|;
-name|w
-operator|->
 name|w_next
 operator|=
-name|NULL
+name|WorkQ
 expr_stmt|;
-operator|*
-name|wp
+name|WorkQ
 operator|=
 name|w
-expr_stmt|;
-name|wp
-operator|=
-operator|&
-name|w
-operator|->
-name|w_next
 expr_stmt|;
 block|}
 end_for
@@ -1985,7 +1934,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  WORKCMPF -- compare function for ordering work. ** **	Parameters: **		a -- the first argument. **		b -- the second argument. ** **	Returns: **		1 if a< b **		0 if a == b **		-1 if a> b ** **	Side Effects: **		none. */
+comment|/* **  WORKCMPF -- compare function for ordering work. ** **	Parameters: **		a -- the first argument. **		b -- the second argument. ** **	Returns: **		-1 if a< b **		 0 if a == b **		+1 if a> b ** **	Side Effects: **		none. */
 end_comment
 
 begin_expr_stmt
@@ -2018,10 +1967,6 @@ init|=
 name|a
 operator|->
 name|w_pri
-operator|+
-name|a
-operator|->
-name|w_ctime
 decl_stmt|;
 name|long
 name|pb
@@ -2029,10 +1974,6 @@ init|=
 name|b
 operator|->
 name|w_pri
-operator|+
-name|b
-operator|->
-name|w_ctime
 decl_stmt|;
 if|if
 condition|(
@@ -2054,13 +1995,13 @@ name|pb
 condition|)
 return|return
 operator|(
-operator|-
 literal|1
 operator|)
 return|;
 else|else
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
@@ -2709,13 +2650,8 @@ index|[
 literal|1
 index|]
 argument_list|)
-expr_stmt|;
-comment|/* make sure that big things get sent eventually */
-name|e
-operator|->
-name|e_msgpriority
-operator|-=
-name|WKTIMEFACT
+operator|-
+name|WkTimeFact
 expr_stmt|;
 break|break;
 case|case

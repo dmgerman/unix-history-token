@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	5.5 (Berkeley) %G%"
+literal|"@(#)headers.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1455,13 +1455,13 @@ name|e
 operator|->
 name|e_class
 operator|*
-name|WKPRIFACT
+name|WkClassFact
 operator|+
 name|e
 operator|->
 name|e_nrcpts
 operator|*
-name|WKRECIPFACT
+name|WkRecipFact
 expr_stmt|;
 comment|/* return receipt to */
 name|p

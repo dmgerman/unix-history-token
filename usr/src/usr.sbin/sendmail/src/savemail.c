@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	5.5 (Berkeley) %G%"
+literal|"@(#)savemail.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -660,6 +660,29 @@ operator|->
 name|e_from
 operator|.
 name|q_paddr
+argument_list|,
+operator|(
+name|ADDRESS
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|&
+name|e
+operator|->
+name|e_errorqueue
+argument_list|)
+expr_stmt|;
+comment|/* deliver a cc: to the postmaster if desired */
+if|if
+condition|(
+name|PostMasterCopy
+operator|!=
+name|NULL
+condition|)
+name|sendtolist
+argument_list|(
+name|PostMasterCopy
 argument_list|,
 operator|(
 name|ADDRESS

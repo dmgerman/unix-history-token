@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)envelope.c	5.6 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,6 +211,21 @@ name|e_ctime
 operator|=
 name|curtime
 argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|e
+operator|->
+name|e_msgpriority
+operator|=
+name|parent
+operator|->
+name|e_msgsize
+operator|+
+name|e
+operator|->
+name|e_ctime
 expr_stmt|;
 end_expr_stmt
 

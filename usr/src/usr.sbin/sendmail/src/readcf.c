@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	5.5 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2964,12 +2964,48 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'z'
+literal|'y'
+case|:
+comment|/* work recipient factor */
+name|WkRecipFact
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'Y'
 case|:
 comment|/* fork jobs during queue runs */
 name|ForkQueueRuns
 operator|=
 name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+comment|/* work message class factor */
+name|WkClassFact
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'Z'
+case|:
+comment|/* work time factor */
+name|WkTimeFact
+operator|=
+name|atoi
 argument_list|(
 name|val
 argument_list|)

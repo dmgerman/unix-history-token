@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	5.6 (Berkeley) %G%"
+literal|"@(#)conf.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -330,6 +330,31 @@ expr_stmt|;
 name|SpaceSub
 operator|=
 literal|' '
+expr_stmt|;
+name|WkRecipFact
+operator|=
+literal|1000
+expr_stmt|;
+name|WkClassFact
+operator|=
+literal|1800
+expr_stmt|;
+name|WkTimeFact
+operator|=
+operator|-
+literal|600
+expr_stmt|;
+name|FileMode
+operator|=
+literal|0644
+expr_stmt|;
+name|DefUid
+operator|=
+literal|1
+expr_stmt|;
+name|DefGid
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_block
