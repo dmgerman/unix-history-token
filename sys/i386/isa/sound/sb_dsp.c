@@ -1051,8 +1051,8 @@ directive|else
 if|if
 condition|(
 name|sb_dsp_model
-operator|==
-literal|1
+operator|<
+literal|3
 operator|||
 name|sb16
 condition|)
@@ -2274,15 +2274,9 @@ name|sb16
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|major
-operator|>=
-literal|3
-condition|)
 name|sb_dsp_model
 operator|=
-literal|2
+name|major
 expr_stmt|;
 ifndef|#
 directive|ifndef
