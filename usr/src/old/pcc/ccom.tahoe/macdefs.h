@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	macdefs.h	1.4	87/12/10	*/
+comment|/*	macdefs.h	1.5	87/12/10	*/
 end_comment
 
 begin_ifndef
@@ -337,6 +337,16 @@ end_define
 
 begin_comment
 comment|/* assembler supports .lcomm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPRECC
+end_define
+
+begin_comment
+comment|/* double only arithmetic not supported */
 end_comment
 
 begin_define
