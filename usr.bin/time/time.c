@@ -512,8 +512,10 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|wait3
+name|wait4
 argument_list|(
+name|pid
+argument_list|,
 operator|&
 name|status
 argument_list|,
@@ -526,7 +528,6 @@ operator|!=
 name|pid
 condition|)
 empty_stmt|;
-comment|/* XXX use waitpid */
 name|gettimeofday
 argument_list|(
 operator|&
