@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.114 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.115 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3010,6 +3010,29 @@ argument_list|(
 name|to
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|10
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ctladdr="
+argument_list|)
+expr_stmt|;
+name|printaddr
+argument_list|(
+name|ctladdr
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 name|user
 operator|=
 name|to
