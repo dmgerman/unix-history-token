@@ -316,6 +316,10 @@ name|PPTP_TIME_SCALE
 value|1000
 end_define
 
+begin_comment
+comment|/* milliseconds */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|u_int32_t
@@ -331,7 +335,7 @@ begin_define
 define|#
 directive|define
 name|PPTP_XMIT_WIN
-value|8
+value|16
 end_define
 
 begin_comment
@@ -346,7 +350,18 @@ value|(PPTP_TIME_SCALE / 10)
 end_define
 
 begin_comment
-comment|/* 1/10 second */
+comment|/* 100 milliseconds */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPTP_MIN_TIMEOUT
+value|(PPTP_TIME_SCALE / 100)
+end_define
+
+begin_comment
+comment|/* 10 milliseconds */
 end_comment
 
 begin_define
@@ -358,6 +373,10 @@ end_define
 
 begin_comment
 comment|/* 10 seconds */
+end_comment
+
+begin_comment
+comment|/* See RFC 2637 section 4.4 */
 end_comment
 
 begin_define
@@ -2966,16 +2985,11 @@ name|a
 operator|->
 name|rtt
 operator|+
-call|(
-name|u_int
-call|)
-argument_list|(
 name|PPTP_ACK_CHI
 argument_list|(
 name|a
 operator|->
 name|dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2992,6 +3006,21 @@ name|ato
 operator|=
 name|PPTP_MAX_TIMEOUT
 expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|ato
+operator|<
+name|PPTP_MIN_TIMEOUT
+condition|)
+name|a
+operator|->
+name|ato
+operator|=
+name|PPTP_MIN_TIMEOUT
+expr_stmt|;
+comment|/* Shift packet transmit times in our transmit window */
 name|ovbcopy
 argument_list|(
 name|a
@@ -3025,6 +3054,7 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* If we sent an entire window, increase window size by one */
 if|if
 condition|(
 name|PPTP_SEQ_DIFF
@@ -3613,53 +3643,30 @@ name|ato
 operator|=
 name|PPTP_MAX_TIMEOUT
 expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|ato
+operator|<
+name|PPTP_MIN_TIMEOUT
+condition|)
+name|a
+operator|->
+name|ato
+operator|=
+name|PPTP_MIN_TIMEOUT
+expr_stmt|;
+comment|/* Reset ack and sliding window */
 name|priv
 operator|->
 name|recvAck
-operator|++
-expr_stmt|;
-comment|/* assume packet was lost */
-name|a
-operator|->
-name|winAck
 operator|=
 name|priv
 operator|->
-name|recvAck
-operator|+
-name|a
-operator|->
-name|xmitWin
+name|xmitSeq
 expr_stmt|;
-comment|/* reset win expand time */
-name|ovbcopy
-argument_list|(
-name|a
-operator|->
-name|timeSent
-operator|+
-literal|1
-argument_list|,
-name|a
-operator|->
-name|timeSent
-argument_list|,
-comment|/* shift xmit window times */
-sizeof|sizeof
-argument_list|(
-operator|*
-name|a
-operator|->
-name|timeSent
-argument_list|)
-operator|*
-operator|(
-name|PPTP_XMIT_WIN
-operator|-
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* pretend we got the ack */
 name|a
 operator|->
 name|xmitWin
@@ -3675,22 +3682,19 @@ operator|/
 literal|2
 expr_stmt|;
 comment|/* shrink transmit window */
-comment|/* Restart timer if there are any more outstanding frames */
-if|if
-condition|(
+name|a
+operator|->
+name|winAck
+operator|=
 name|priv
 operator|->
 name|recvAck
-operator|!=
-name|priv
+operator|+
+name|a
 operator|->
-name|xmitSeq
-condition|)
-name|ng_pptpgre_start_recv_ack_timer
-argument_list|(
-name|node
-argument_list|)
+name|xmitWin
 expr_stmt|;
+comment|/* reset win expand time */
 name|splx
 argument_list|(
 name|s
@@ -4062,12 +4066,14 @@ name|xmitWin
 operator|<
 literal|2
 condition|)
+comment|/* often the first packet is lost */
 name|a
 operator|->
 name|xmitWin
 operator|=
 literal|2
 expr_stmt|;
+comment|/*   because the peer isn't ready */
 if|if
 condition|(
 name|a
