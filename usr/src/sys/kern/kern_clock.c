@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.14	%G%	*/
+comment|/*	kern_clock.c	4.15	%G%	*/
 end_comment
 
 begin_include
@@ -527,6 +527,10 @@ name|cpu
 operator|==
 name|VAX_780
 operator|&&
+name|panicstr
+operator|==
+literal|0
+operator|&&
 operator|!
 name|BASEPRI
 argument_list|(
@@ -606,9 +610,13 @@ name|a
 decl_stmt|,
 name|s
 decl_stmt|;
-comment|/* 	 * callout 	 */
+comment|/* 	 * Perform callouts (but not after panic's!) 	 */
 if|if
 condition|(
+name|panicstr
+operator|==
+literal|0
+operator|&&
 name|callout
 index|[
 literal|0
@@ -796,6 +804,7 @@ operator|>=
 name|hz
 condition|)
 block|{
+comment|/* 		 * This doesn't mean much since we run at 		 * software interrupt time... if hardclock() 		 * calls softclock() directly, it prevents 		 * this code from running when the priority 		 * was raised when the clock interrupt occurred. 		 */
 if|if
 condition|(
 name|BASEPRI
@@ -804,13 +813,18 @@ name|ps
 argument_list|)
 condition|)
 return|return;
+comment|/* 		 * If we didn't run a few times because of 		 * long blockage at high ipl, we don't 		 * really want to run this code several times, 		 * so squish out all multiples of hz here. 		 */
+name|time
+operator|+=
 name|lbolt
-operator|-=
+operator|/
 name|hz
 expr_stmt|;
-operator|++
-name|time
+name|lbolt
+operator|%=
+name|hz
 expr_stmt|;
+comment|/* 		 * Wakeup lightning bolt sleepers. 		 * Processes sleep on lbolt to wait 		 * for short amounts of time (e.g. 1 second). 		 */
 name|wakeup
 argument_list|(
 operator|(
@@ -820,6 +834,7 @@ operator|&
 name|lbolt
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Recompute process priority and process 		 * sleep() system calls as well as internal 		 * sleeps with timeouts (tsleep() kernel routine). 		 */
 for|for
 control|(
 name|pp
@@ -846,6 +861,7 @@ operator|!=
 name|SZOMB
 condition|)
 block|{
+comment|/* 			 * Increase resident time, to max of 127 seconds 			 * (it is kept in a character.)  For 			 * loaded processes this is time in core; for 			 * swapped processes, this is time on drum. 			 */
 if|if
 condition|(
 name|pp
@@ -859,14 +875,13 @@ operator|->
 name|p_time
 operator|++
 expr_stmt|;
+comment|/* 			 * If process has clock counting down, and it 			 * expires, set it running (if this is a tsleep()), 			 * or give it an SIGALRM (if the user process 			 * is using alarm signals. 			 */
 if|if
 condition|(
 name|pp
 operator|->
 name|p_clktim
-condition|)
-if|if
-condition|(
+operator|&&
 operator|--
 name|pp
 operator|->
@@ -935,6 +950,7 @@ argument_list|,
 name|SIGALRM
 argument_list|)
 expr_stmt|;
+comment|/* 			 * If process is blocked, increment computed 			 * time blocked.  This is used in swap scheduling. 			 */
 if|if
 condition|(
 name|pp
@@ -962,6 +978,7 @@ operator|->
 name|p_slptime
 operator|++
 expr_stmt|;
+comment|/* 			 * Update digital filter estimation of process 			 * cpu utilization for loaded processes. 			 */
 if|if
 condition|(
 name|pp
@@ -997,6 +1014,7 @@ operator|)
 name|hz
 operator|)
 expr_stmt|;
+comment|/* 			 * Recompute process priority.  The number p_cpu 			 * is a weighted estimate of cpu time consumed. 			 * A process which consumes cpu time has this 			 * increase regularly.  We here decrease it by 			 * a fraction (SCHMAG is 90%), giving a digital 			 * decay filter which damps out in about 10 seconds. 			 * 			 * If a process is niced, then the nice directly 			 * affects the new priority.  The final priority 			 * is in the range 0 to 255, to fit in a character. 			 */
 name|pp
 operator|->
 name|p_cpticks
@@ -1055,6 +1073,7 @@ argument_list|(
 name|pp
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Now have computed new process priority 			 * in p->p_usrpri.  Carefully change p->p_pri. 			 * A process is on a run queue associated with 			 * this priority, so we must block out process 			 * state changes during the transition. 			 */
 name|s
 operator|=
 name|spl6
@@ -1139,9 +1158,11 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Perform virtual memory metering. 		 */
 name|vmmeter
 argument_list|()
 expr_stmt|;
+comment|/* 		 * If the swap process is trying to bring 		 * a process in, have it look again to see 		 * if it is possible now. 		 */
 if|if
 condition|(
 name|runin
@@ -1182,6 +1203,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If the trap occurred from usermode, 		 * then check to see if it has now been 		 * running more than 10 minutes of user time 		 * and should thus run with reduced priority 		 * to give other processes a chance. 		 */
 if|if
 condition|(
 name|USERMODE
@@ -1201,9 +1223,7 @@ condition|(
 name|pp
 operator|->
 name|p_uid
-condition|)
-if|if
-condition|(
+operator|&&
 name|pp
 operator|->
 name|p_nice
@@ -1246,6 +1266,7 @@ name|p_usrpri
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * If trapped user-mode, give it a profiling tick. 	 */
 if|if
 condition|(
 name|USERMODE
