@@ -187,13 +187,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
-name|mp_fixme
-argument_list|(
-literal|"these variables need a lock"
-argument_list|)
-end_macro
-
 begin_decl_stmt
 name|int
 name|jail_set_hostname_allowed
