@@ -2716,7 +2716,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common routine that tries to make sending messages as easy as possible.  * We allocate memory for the data, copy strings into that, but do not  * free it unless there's an error.  The dequeue part of the driver should  * free the data.  We don't send data when the device is disabled.  We do  * send data, even when we have no listeners, because we wish to avoid  * races relating to startup and restart of listening applications.  */
+comment|/*  * Common routine that tries to make sending messages as easy as possible.  * We allocate memory for the data, copy strings into that, but do not  * free it unless there's an error.  The dequeue part of the driver should  * free the data.  We don't send data when the device is disabled.  We do  * send data, even when we have no listeners, because we wish to avoid  * races relating to startup and restart of listening applications.  *  * devaddq is designed to string together the type of event, with the  * object of that event, plus the plug and play info and location info  * for that event.  This is likely most useful for devices, but less  * useful for other consumers of this interface.  Those should use  * the devctl_queue_data() interface instead.  */
 end_comment
 
 begin_function
@@ -2747,6 +2747,14 @@ decl_stmt|;
 name|char
 modifier|*
 name|loc
+init|=
+name|NULL
+decl_stmt|;
+name|char
+modifier|*
+name|pnp
+init|=
+name|NULL
 decl_stmt|;
 specifier|const
 name|char
@@ -2778,6 +2786,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* get the bus specific location of this device */
 name|loc
 operator|=
 name|malloc
@@ -2812,6 +2821,42 @@ argument_list|,
 literal|1024
 argument_list|)
 expr_stmt|;
+comment|/* Get the bus specific pnp info of this device */
+name|pnp
+operator|=
+name|malloc
+argument_list|(
+literal|1024
+argument_list|,
+name|M_BUS
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pnp
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|bad
+goto|;
+operator|*
+name|pnp
+operator|=
+literal|'\0'
+expr_stmt|;
+name|bus_child_pnpinfo_str
+argument_list|(
+name|dev
+argument_list|,
+name|pnp
+argument_list|,
+literal|1024
+argument_list|)
+expr_stmt|;
+comment|/* Get the parent of this device, or / if high enough in the tree. */
 if|if
 condition|(
 name|device_get_parent
@@ -2837,13 +2882,14 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* String it all together. */
 name|snprintf
 argument_list|(
 name|data
 argument_list|,
 literal|1024
 argument_list|,
-literal|"%s%s at %s on %s\n"
+literal|"%s%s at %s %s on %s\n"
 argument_list|,
 name|type
 argument_list|,
@@ -2851,12 +2897,21 @@ name|what
 argument_list|,
 name|loc
 argument_list|,
+name|pnp
+argument_list|,
 name|parstr
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
 name|loc
+argument_list|,
+name|M_BUS
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|pnp
 argument_list|,
 name|M_BUS
 argument_list|)
@@ -2869,6 +2924,20 @@ expr_stmt|;
 return|return;
 name|bad
 label|:
+name|free
+argument_list|(
+name|pnp
+argument_list|,
+name|M_BUS
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|loc
+argument_list|,
+name|M_BUS
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|data
@@ -3165,61 +3234,15 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|pnp
-init|=
-name|NULL
-decl_stmt|;
-name|pnp
-operator|=
-name|malloc
-argument_list|(
-literal|1024
-argument_list|,
-name|M_BUS
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pnp
-operator|==
-name|NULL
-condition|)
-return|return;
-operator|*
-name|pnp
-operator|=
-literal|'\0'
-expr_stmt|;
-name|bus_child_pnpinfo_str
-argument_list|(
-name|dev
-argument_list|,
-name|pnp
-argument_list|,
-literal|1024
-argument_list|)
-expr_stmt|;
 name|devaddq
 argument_list|(
 literal|"?"
 argument_list|,
-name|pnp
+literal|""
 argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|pnp
-argument_list|,
-name|M_BUS
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 end_function
 
