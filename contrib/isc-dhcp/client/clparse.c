@@ -1851,13 +1851,15 @@ expr|*
 name|ip
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ip
 operator|->
 name|name
 argument_list|,
 name|name
+argument_list|,
+name|IFNAMSIZ
 argument_list|)
 expr_stmt|;
 name|ip
