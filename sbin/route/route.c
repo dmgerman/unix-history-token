@@ -4605,16 +4605,6 @@ name|ifa
 operator|->
 name|ifa_name
 argument_list|)
-operator|||
-operator|(
-name|ifa
-operator|->
-name|ifa_flags
-operator|&
-name|IFF_POINTOPOINT
-operator|)
-operator|==
-literal|0
 condition|)
 continue|continue;
 name|sdl
