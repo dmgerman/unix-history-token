@@ -105,7 +105,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|KNOTE((struct klist *)&vp->v_pollinfo.vpi_selinfo.si_note, (caddr_t)(b))
+value|KNOTE((struct klist *)&vp->v_pollinfo.vpi_selinfo.si_note, (b))
 end_define
 
 begin_comment
