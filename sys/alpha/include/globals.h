@@ -21,6 +21,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<machine/globaldata.h>
+end_include
+
 begin_decl_stmt
 specifier|register
 name|struct
@@ -96,6 +102,17 @@ directive|define
 name|CURPROC
 value|PCPU_GET(curproc)
 end_define
+
+begin_define
+define|#
+directive|define
+name|CURTHD
+value|PCPU_GET(curproc)
+end_define
+
+begin_comment
+comment|/* temporary */
+end_comment
 
 begin_define
 define|#

@@ -63,42 +63,6 @@ directive|include
 file|<machine/globals.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_comment
-comment|/* Needed for curproc. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|curproc
-end_ifndef
-
-begin_struct_decl
-struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|proc
-modifier|*
-name|curproc
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
@@ -540,21 +504,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_comment
-comment|/* Misc */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CURTHD
-value|CURPROC
-end_define
-
-begin_comment
-comment|/* Current thread ID */
-end_comment
 
 begin_comment
 comment|/* Prototypes */
