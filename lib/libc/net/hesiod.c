@@ -262,23 +262,6 @@ decl_stmt|,
 modifier|*
 name|configname
 decl_stmt|;
-name|int
-name|trust
-decl_stmt|;
-name|trust
-operator|=
-name|geteuid
-argument_list|()
-operator|==
-name|getuid
-argument_list|()
-operator|&&
-name|getegid
-argument_list|()
-operator|==
-name|getgid
-argument_list|()
-expr_stmt|;
 name|ctx
 operator|=
 name|malloc
@@ -302,7 +285,9 @@ name|ctx
 expr_stmt|;
 if|if
 condition|(
-name|trust
+operator|!
+name|issetugid
+argument_list|()
 condition|)
 name|configname
 operator|=
@@ -340,7 +325,9 @@ block|{
 comment|/* 			 * The default rhs can be overridden by an 			 * environment variable. 			 */
 if|if
 condition|(
-name|trust
+operator|!
+name|issetugid
+argument_list|()
 condition|)
 name|p
 operator|=
