@@ -306,9 +306,17 @@ block|,
 block|{
 name|COREGA_VENDORID
 block|,
-name|COREGA_DEVICEID_CBTXD
+name|COREGA_DEVICEID_FETHERCBTXD
 block|,
 literal|"Corega FEther CB-TXD"
+block|}
+block|,
+block|{
+name|COREGA_VENDORID
+block|,
+name|COREGA_DEVICEID_FETHERIICBTXD
+block|,
+literal|"Corega FEtherII CB-TXD"
 block|}
 block|,
 block|{
@@ -3899,6 +3907,10 @@ operator|||
 name|rl_did
 operator|==
 name|DLINK_DEVICEID_690TXD
+operator|||
+name|rl_did
+operator|==
+name|COREGA_DEVICEID_CBTXD
 operator|||
 name|rl_did
 operator|==

@@ -2251,14 +2251,25 @@ value|0x1259
 end_define
 
 begin_comment
-comment|/*  * Coreaga FEther CB-TXD device ID  */
+comment|/*  * Corega FEther CB-TXD device ID  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|COREGA_DEVICEID_CBTXD
+name|COREGA_DEVICEID_FETHERCBTXD
 value|0xa117
+end_define
+
+begin_comment
+comment|/*  * Corega FEtherII CB-TXD device ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COREGA_DEVICEID_FETHERIICBTXD
+value|0xa11e
 end_define
 
 begin_comment
