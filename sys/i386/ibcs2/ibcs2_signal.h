@@ -319,16 +319,14 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|void
-argument_list|(
-argument|*ibcs2_sig_t
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|ibcs2_sig_t
+function_decl|)
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_struct

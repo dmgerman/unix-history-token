@@ -672,22 +672,19 @@ parameter_list|)
 value|(const void *) (((const char *) (sc)) + (sc)->offs)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|struct
 name|svr4_strm
 modifier|*
 name|svr4_stream_get
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|file
-operator|*
+modifier|*
 name|fp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

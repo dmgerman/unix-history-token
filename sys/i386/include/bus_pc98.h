@@ -139,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|_PASCAL_CALL
-value|__P((void))
+value|(void)
 end_define
 
 begin_define
@@ -524,7 +524,7 @@ parameter_list|,
 name|BWN
 parameter_list|)
 define|\
-value|static __inline TYPE bus_space_read_##BWN 			\ 	__P((bus_space_tag_t, bus_space_handle_t, bus_size_t offset));	\ 	static __inline void bus_space_read_multi_##BWN			\ 	__P((bus_space_tag_t, bus_space_handle_t,			\ 	     bus_size_t, TYPE *, size_t));				\ 	static __inline void bus_space_read_region_##BWN		\ 	__P((bus_space_tag_t, bus_space_handle_t,			\ 	     bus_size_t, TYPE *, size_t));				\ 	static __inline void bus_space_write_##BWN			\ 	__P((bus_space_tag_t, bus_space_handle_t, bus_size_t, TYPE));	\ 	static __inline void bus_space_write_multi_##BWN		\ 	__P((bus_space_tag_t, bus_space_handle_t,			\ 	     bus_size_t, const TYPE *, size_t));			\ 	static __inline void bus_space_write_region_##BWN		\ 	__P((bus_space_tag_t, bus_space_handle_t,			\ 	     bus_size_t, const TYPE *, size_t));			\ 	static __inline void bus_space_set_multi_##BWN			\ 	__P((bus_space_tag_t, bus_space_handle_t, bus_size_t, TYPE, size_t));\ 	static __inline void bus_space_set_region_##BWN			\ 	__P((bus_space_tag_t, bus_space_handle_t, bus_size_t, TYPE, size_t));\ 	static __inline void bus_space_copy_region_##BWN		\ 	__P((bus_space_tag_t, bus_space_handle_t, bus_size_t,		\ 	     bus_space_handle_t, bus_size_t, size_t));
+value|static __inline TYPE bus_space_read_##BWN 			\ 	(bus_space_tag_t, bus_space_handle_t, bus_size_t offset);	\ 	static __inline void bus_space_read_multi_##BWN			\ 	(bus_space_tag_t, bus_space_handle_t,				\ 	     bus_size_t, TYPE *, size_t);				\ 	static __inline void bus_space_read_region_##BWN		\ 	(bus_space_tag_t, bus_space_handle_t,				\ 	     bus_size_t, TYPE *, size_t);				\ 	static __inline void bus_space_write_##BWN			\ 	(bus_space_tag_t, bus_space_handle_t, bus_size_t, TYPE);	\ 	static __inline void bus_space_write_multi_##BWN		\ 	(bus_space_tag_t, bus_space_handle_t,				\ 	     bus_size_t, const TYPE *, size_t);				\ 	static __inline void bus_space_write_region_##BWN		\ 	(bus_space_tag_t, bus_space_handle_t,				\ 	     bus_size_t, const TYPE *, size_t);				\ 	static __inline void bus_space_set_multi_##BWN			\ 	(bus_space_tag_t, bus_space_handle_t, bus_size_t, TYPE, size_t);\ 	static __inline void bus_space_set_region_##BWN			\ 	(bus_space_tag_t, bus_space_handle_t, bus_size_t, TYPE, size_t);\ 	static __inline void bus_space_copy_region_##BWN		\ 	(bus_space_tag_t, bus_space_handle_t, bus_size_t,		\ 	     bus_space_handle_t, bus_size_t, size_t);
 end_define
 
 begin_macro

@@ -127,7 +127,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*void svr4_setregs __P((struct thread *, struct exec_package *, u_long));*/
+comment|/*void svr4_setregs(struct thread *, struct exec_package *, u_long);*/
 end_comment
 
 begin_endif

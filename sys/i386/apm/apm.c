@@ -163,18 +163,15 @@ begin_comment
 comment|/* Used by the apm_saver screen saver module */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|apm_display
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|newstate
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -183,18 +180,15 @@ name|apm_softc
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|apm_resume
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -206,22 +200,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|apm_check_function_supported
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int
 name|version
-operator|,
+parameter_list|,
 name|u_int
 name|func
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -2013,22 +2004,19 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|apm_record_event
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|apm_softc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static

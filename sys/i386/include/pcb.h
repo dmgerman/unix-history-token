@@ -131,19 +131,16 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|savectx
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|pcb
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -70,19 +70,16 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|i386_extend_pcb
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|thread
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

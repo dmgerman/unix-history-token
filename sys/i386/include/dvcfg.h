@@ -92,23 +92,20 @@ parameter_list|)
 value|(sizeof(array) / sizeof(dvcfg_hw_t))
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|__inline
 name|dvcfg_hw_t
 name|dvcfg_hw
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dvcfg_hwsel
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static

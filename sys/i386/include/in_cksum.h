@@ -280,20 +280,17 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
+begin_function_decl
 name|u_int
 name|in_cksum_hdr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
-expr|struct
+name|struct
 name|ip
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
