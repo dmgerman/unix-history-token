@@ -234,15 +234,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|user
-modifier|*
-name|up
-init|=
-name|p2
-operator|->
-name|p_addr
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -301,7 +292,9 @@ operator|(
 name|vm_offset_t
 operator|)
 operator|&
-name|up
+name|p2
+operator|->
+name|p_addr
 operator|->
 name|u_pcb
 argument_list|)
@@ -430,6 +423,15 @@ endif|#
 directive|endif
 comment|/* 	 * create the child's kernel stack, from scratch. 	 */
 block|{
+name|struct
+name|user
+modifier|*
+name|up
+init|=
+name|p2
+operator|->
+name|p_addr
+decl_stmt|;
 name|struct
 name|trapframe
 modifier|*
