@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_output.c 4.7 81/10/31 */
+comment|/* tcp_output.c 4.8 81/11/01 */
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../inet/cksum.h"
+file|"../inet/inet_cksum.h"
 end_include
 
 begin_include
@@ -1289,7 +1289,7 @@ endif|#
 directive|endif
 name|COUNT
 argument_list|(
-name|SEND_TCP
+name|TCP_OUTPUT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1876,7 +1876,7 @@ name|p
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|SND_COPY
+name|TCP_SNDCOPY
 argument_list|)
 expr_stmt|;
 if|if

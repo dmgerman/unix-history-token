@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.16 81/10/31 */
+comment|/* tcp_input.c 1.17 81/11/01 */
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../inet/cksum.h"
+file|"../inet/inet_cksum.h"
 end_include
 
 begin_include
@@ -265,7 +265,7 @@ name|tcpcksum
 condition|)
 block|{
 comment|/* 		 * Checksum extended header and data 		 */
-name|CKSUM_TCPGET
+name|CKSUM_TCPCHK
 argument_list|(
 name|mp
 argument_list|,
@@ -286,7 +286,7 @@ if|if
 condition|(
 name|n
 operator|->
-name|t_cksum
+name|t_sum
 operator|!=
 literal|0
 condition|)
@@ -1946,7 +1946,7 @@ name|n
 operator|->
 name|t_sum
 operator|=
-name|cksum
+name|inet_cksum
 argument_list|(
 name|mp
 argument_list|,

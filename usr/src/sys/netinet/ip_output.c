@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_output.c 1.8 81/10/31 */
+comment|/* ip_output.c 1.9 81/11/01 */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../inet/cksum.h"
+file|"../inet/inet_cksum.h"
 end_include
 
 begin_include

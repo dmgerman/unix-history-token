@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* if_en.c 4.2 81/10/31 */
+comment|/* if_en.c 4.3 81/11/01 */
 end_comment
 
 begin_include
@@ -1046,6 +1046,22 @@ block|}
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|enlastdel
+init|=
+literal|25
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|enlastx
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|enstart
 argument_list|(
@@ -1373,7 +1389,6 @@ operator|=
 name|mp
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
 name|enxswapnow
@@ -1402,6 +1417,34 @@ name|enxmap
 index|[
 literal|1
 index|]
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|enlastx
+operator|&&
+name|enlastx
+operator|==
+name|xpkt
+operator|->
+name|Header
+operator|.
+name|en_dhost
+condition|)
+name|imp_stat
+operator|.
+name|endelay
+operator|=
+name|enlastdel
+expr_stmt|;
+else|else
+name|enlastx
+operator|=
+name|xpkt
+operator|->
+name|Header
+operator|.
+name|en_dhost
 expr_stmt|;
 block|}
 name|len
@@ -1832,8 +1875,19 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
+else|else
+name|enlastx
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_block
+
+begin_decl_stmt
+name|int
+name|collisions
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|encollide
@@ -1866,6 +1920,9 @@ name|COUNT
 argument_list|(
 name|ENCOLLIDE
 argument_list|)
+expr_stmt|;
+name|collisions
+operator|++
 expr_stmt|;
 name|ui
 operator|=
@@ -1961,7 +2018,10 @@ name|imp_stat
 operator|.
 name|endelay
 operator|=
-name|time
+name|mfpr
+argument_list|(
+name|ICR
+argument_list|)
 operator|&
 operator|~
 name|imp_stat
