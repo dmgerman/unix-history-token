@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sccsid:  @(#)gprof.h	1.5 (Berkeley) %G% */
+comment|/* sccsid:  @(#)gprof.h	1.6 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -504,11 +504,29 @@ name|zflg
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* zero time/called functions, too */
+end_comment
+
 begin_decl_stmt
 name|int
 name|cflag
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* discovered call graph, too */
+end_comment
+
+begin_decl_stmt
+name|int
+name|aflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* static functions, too */
+end_comment
 
 begin_comment
 comment|/*      * booleans      */
@@ -744,6 +762,13 @@ name|flatprofline
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+name|bool
+name|funcsymbol
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|getnfile
