@@ -363,6 +363,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+modifier|*
+name|OF_alloc_phys
+parameter_list|(
+name|size_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|OF_release
 parameter_list|(
 name|void
