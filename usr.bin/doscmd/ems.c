@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Helmut Wirth<hfwirth@ping.at>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, witout modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997 Helmut Wirth<hfwirth@ping.at>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, witout modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*   * EMS memory emulation  *  * To emulate Expanded Memory we use a DOS driver (emsdriv.sys) which  * routes calls to int 0x67 to this emulator routine. The main entry point  * is ems_entry(..). The emulator needs to be initialized before the first  * call. The first step of the initialization is done during program startup  * the second part is done during DOS boot, from a call of the DOS driver.  * The DOS driver is neccessary because DOS programs look for it to  * determine if EMS is available.  *  * To emulate a configurable amount of EMS memory we use a file created  * at startup with the size of the configured EMS memory. This file is  * mapped into the EMS window like any DOS memory manager would do, using  * mmap calls.  *  * The emulation follows the LIM EMS 4.0 standard. Not all functions of it  * are implemented yet. The "alter page map and jump" and "alter page map  * and call" functions are not implemented, because they are rather hard to  * do. (It would mean a call to the emulator executes a routine in EMS   * memory and returns to the emulator, the emulator switches the page map  * and then returns to the DOS program.) LINUX does not emulate this   * functions and I think they were very rarely used by DOS applications.  *  * Credits: To the writers of LINUX dosemu, I looked at their code  */
@@ -223,7 +237,9 @@ begin_function_decl
 specifier|static
 name|int
 name|init_mapfile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -233,16 +249,12 @@ name|void
 name|map_page
 parameter_list|(
 name|u_long
-name|pagenum
 parameter_list|,
 name|u_char
-name|position
 parameter_list|,
 name|short
-name|handle
 parameter_list|,
 name|int
-name|unmaponly
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -254,7 +266,6 @@ modifier|*
 name|get_new_handle
 parameter_list|(
 name|long
-name|npages
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -265,7 +276,6 @@ name|void
 name|context_to_handle
 parameter_list|(
 name|short
-name|handle
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -274,7 +284,9 @@ begin_function_decl
 specifier|static
 name|long
 name|find_next_free_handle
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -296,10 +308,8 @@ name|void
 name|allocate_pages_to_handle
 parameter_list|(
 name|u_short
-name|handle
 parameter_list|,
 name|long
-name|npages
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -310,10 +320,8 @@ name|void
 name|allocate_handle
 parameter_list|(
 name|short
-name|handle
 parameter_list|,
 name|long
-name|npages
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -324,10 +332,8 @@ name|void
 name|reallocate_pages_to_handle
 parameter_list|(
 name|u_short
-name|handle
 parameter_list|,
 name|long
-name|npages
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -338,7 +344,6 @@ name|void
 name|free_handle
 parameter_list|(
 name|short
-name|handle
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -349,7 +354,6 @@ name|void
 name|free_pages_of_handle
 parameter_list|(
 name|short
-name|handle
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -361,7 +365,6 @@ name|restore_context
 parameter_list|(
 name|EMS_mapping_context
 modifier|*
-name|emc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -373,7 +376,6 @@ name|save_context_to_dos
 parameter_list|(
 name|EMScontext
 modifier|*
-name|emp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -385,7 +387,6 @@ name|check_saved_context
 parameter_list|(
 name|EMScontext
 modifier|*
-name|emp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -397,13 +398,10 @@ modifier|*
 name|get_valid_pointer
 parameter_list|(
 name|u_short
-name|seg
 parameter_list|,
 name|u_short
-name|offs
 parameter_list|,
 name|u_long
-name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -414,19 +412,14 @@ name|u_long
 name|move_ems_to_conv
 parameter_list|(
 name|short
-name|handle
 parameter_list|,
 name|u_short
-name|src_seg
 parameter_list|,
 name|u_short
-name|src_offset
 parameter_list|,
 name|u_long
-name|dst_addr
 parameter_list|,
 name|u_long
-name|length
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -437,19 +430,14 @@ name|u_long
 name|move_conv_to_ems
 parameter_list|(
 name|u_long
-name|src_addr
 parameter_list|,
 name|u_short
-name|dst_handle
 parameter_list|,
 name|u_short
-name|dst_seg
 parameter_list|,
 name|u_short
-name|dst_offset
 parameter_list|,
 name|u_long
-name|length
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -460,25 +448,18 @@ name|u_long
 name|move_ems_to_ems
 parameter_list|(
 name|u_short
-name|src_hande
 parameter_list|,
 name|u_short
-name|src_seg
 parameter_list|,
 name|u_short
-name|src_offset
 parameter_list|,
 name|u_short
-name|dst_handle
 parameter_list|,
 name|u_short
-name|dst_seg
 parameter_list|,
 name|u_short
-name|dst_offset
 parameter_list|,
 name|u_long
-name|length
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -492,7 +473,7 @@ name|int
 name|ems_init
 parameter_list|()
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 if|if
@@ -1500,7 +1481,7 @@ name|EMShandlepage
 modifier|*
 name|ehp
 decl_stmt|;
-name|int
+name|unsigned
 name|safecount
 decl_stmt|;
 name|int
@@ -1591,7 +1572,8 @@ operator|)
 condition|)
 name|fatal
 argument_list|(
-literal|"EMS: ems_alloc_handles is wrong, cannot continue\n"
+literal|"EMS: ems_alloc_handles is wrong, "
+literal|"cannot continue\n"
 argument_list|)
 expr_stmt|;
 name|ehp
@@ -1633,9 +1615,6 @@ case|case
 name|PAGE_MAP_PARTIAL
 case|:
 block|{
-name|u_long
-name|addr
-decl_stmt|;
 name|int
 name|subfunction
 decl_stmt|;
@@ -2350,7 +2329,7 @@ name|debug
 argument_list|(
 name|D_EMS
 argument_list|,
-literal|"changed from %d to %d pages\n"
+literal|"changed from %ld to %ld pages\n"
 argument_list|,
 name|ems_handle
 index|[
@@ -4195,8 +4174,6 @@ operator|=
 name|EMS_FUNCTION_DISABLED
 expr_stmt|;
 break|break;
-name|unknown
-label|:
 default|default:
 name|debug
 argument_list|(
@@ -4242,7 +4219,9 @@ name|ems_max_size
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 name|strcpy
 argument_list|(
 name|path
@@ -4411,8 +4390,8 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|MAP_FAILED
 condition|)
 block|{
 name|debug
@@ -4655,8 +4634,8 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|MAP_FAILED
 condition|)
 name|fatal
 argument_list|(
@@ -4689,8 +4668,8 @@ name|mapfile_fd
 argument_list|,
 name|file_offs
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|MAP_FAILED
 condition|)
 block|{
 name|fatal
@@ -5014,6 +4993,13 @@ argument_list|(
 literal|"EMS handle count garbled, should not happen\n"
 argument_list|)
 expr_stmt|;
+comment|/* quiet 'gcc -Wall' */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -5252,7 +5238,7 @@ name|long
 name|npages
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|syspagenum
 decl_stmt|;
 name|int
@@ -5402,14 +5388,14 @@ name|long
 name|npages
 parameter_list|)
 block|{
-name|int
+name|unsigned
+name|allocpagenum
+decl_stmt|;
+name|unsigned
 name|syspagenum
 decl_stmt|;
 name|int
 name|pages_to_alloc
-decl_stmt|;
-name|int
-name|allocpagenum
 decl_stmt|;
 name|long
 name|delta
@@ -5801,7 +5787,7 @@ block|{
 name|int
 name|allocpagenum
 decl_stmt|;
-name|int
+name|unsigned
 name|syspagenum
 decl_stmt|;
 name|int
@@ -6279,6 +6265,7 @@ name|offset
 parameter_list|,
 name|u_long
 name|length
+name|__unused
 parameter_list|)
 block|{
 name|u_long

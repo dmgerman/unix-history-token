@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI trace.c,v 2.2 1996/04/08 19:33:07 bostic Exp  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI trace.c,v 2.2 1996/04/08 19:33:07 bostic Exp  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -14,14 +28,6 @@ include|#
 directive|include
 file|"trap.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|FILE
-modifier|*
-name|debugf
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -65,6 +71,21 @@ parameter_list|,
 name|char
 modifier|*
 name|buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|void
+name|showstate
+parameter_list|(
+name|long
+parameter_list|,
+name|long
+parameter_list|,
+name|char
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -564,16 +585,21 @@ block|}
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
+specifier|static
 specifier|inline
+name|void
 name|showstate
-argument_list|(
-argument|long flags
-argument_list|,
-argument|long flag
-argument_list|,
-argument|char f
-argument_list|)
+parameter_list|(
+name|long
+name|flags
+parameter_list|,
+name|long
+name|flag
+parameter_list|,
+name|char
+name|f
+parameter_list|)
 block|{
 name|putc
 argument_list|(
@@ -582,33 +608,44 @@ name|flags
 operator|&
 name|flag
 operator|)
-operator|?
+condition|?
 name|f
-operator|:
+else|:
 literal|' '
 argument_list|,
 name|debugf
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|printtrace
-argument_list|(
-argument|regcontext_t *REGS
-argument_list|,
-argument|char *buf
-argument_list|)
+parameter_list|(
+name|regcontext_t
+modifier|*
+name|REGS
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|)
 block|{
 specifier|static
 name|int
 name|first
-operator|=
+init|=
 literal|1
-block|;
+decl_stmt|;
+if|#
+directive|if
+name|BIG_DEBUG
 name|u_char
-operator|*
+modifier|*
 name|addr
-operator|=
+init|=
 operator|(
 name|u_char
 operator|*
@@ -619,21 +656,9 @@ name|R_CS
 argument_list|,
 name|R_IP
 argument_list|)
-block|;
-name|char
-operator|*
-name|bigfmt
-operator|=
-literal|"%04x:%04x "
-if|#
-directive|if
-name|BIG_DEBUG
-literal|"%02x %02x %02x %02x %02x %02x "
+decl_stmt|;
 endif|#
 directive|endif
-literal|"%-30s "
-literal|"%04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x "
-block|;
 if|if
 condition|(
 name|first
@@ -691,7 +716,15 @@ name|fprintf
 argument_list|(
 name|debugf
 argument_list|,
-name|bigfmt
+literal|"%04x:%04x "
+if|#
+directive|if
+name|BIG_DEBUG
+literal|"%02x %02x %02x %02x %02x %02x "
+endif|#
+directive|endif
+literal|"%-30s "
+literal|"%04x %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x "
 argument_list|,
 name|R_CS
 argument_list|,
@@ -757,21 +790,12 @@ argument_list|,
 name|R_ES
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|#
 directive|if
 literal|0
-end_if
-
-begin_endif
-unit|fprintf(debugf, "%04x %04x %04x %04x ", 	    ((u_short *)VECPTR(0x0D760FCA-14))[0], 	    ((u_short *)VECPTR(0x0D760FCA-14))[1], 	    ((u_short *)VECPTR(0x0D760F7A+8))[0], 	    ((u_short *)VECPTR(0x0D760F7A+8))[1]);
+block|fprintf(debugf, "%04x %04x %04x %04x ", 	    ((u_short *)VECPTR(0x0D760FCA-14))[0], 	    ((u_short *)VECPTR(0x0D760FCA-14))[1], 	    ((u_short *)VECPTR(0x0D760F7A+8))[0], 	    ((u_short *)VECPTR(0x0D760F7A+8))[1]);
 endif|#
 directive|endif
-end_endif
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -781,9 +805,6 @@ argument_list|,
 literal|'C'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -793,9 +814,6 @@ argument_list|,
 literal|'P'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -805,9 +823,6 @@ argument_list|,
 literal|'c'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -817,9 +832,6 @@ argument_list|,
 literal|'Z'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -829,9 +841,6 @@ argument_list|,
 literal|'N'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -841,9 +850,6 @@ argument_list|,
 literal|'T'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -853,9 +859,6 @@ argument_list|,
 literal|'I'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -865,9 +868,6 @@ argument_list|,
 literal|'D'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -877,9 +877,6 @@ argument_list|,
 literal|'V'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -889,9 +886,6 @@ argument_list|,
 literal|'n'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -901,9 +895,6 @@ argument_list|,
 literal|'r'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -913,9 +904,6 @@ argument_list|,
 literal|'v'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -925,9 +913,6 @@ argument_list|,
 literal|'a'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -937,9 +922,6 @@ argument_list|,
 literal|'i'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|showstate
 argument_list|(
 name|R_EFLAGS
@@ -949,9 +931,6 @@ argument_list|,
 literal|'p'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|putc
 argument_list|(
 literal|'\n'
@@ -959,8 +938,8 @@ argument_list|,
 name|debugf
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
-unit|}
 end_unit
 

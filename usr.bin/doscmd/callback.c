@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* No copyright?! ** ** $FreeBSD$ */
+comment|/* No copyright?! */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -35,6 +49,7 @@ decl_stmt|;
 name|callback_t
 name|func
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -84,6 +99,7 @@ parameter_list|,
 name|callback_t
 name|func
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name

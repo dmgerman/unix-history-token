@@ -1,7 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI int10.c,v 2.3 1996/04/08 19:32:40 bostic Exp  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI int10.c,v 2.3 1996/04/08 19:32:40 bostic Exp  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#
@@ -15,29 +35,34 @@ directive|include
 file|"mouse.h"
 end_include
 
-begin_comment
-comment|/*  * 0040:0060 contains the start and end of the cursor  */
-end_comment
+begin_include
+include|#
+directive|include
+file|"tty.h"
+end_include
 
-begin_define
-define|#
-directive|define
-name|curs_end
-value|BIOSDATA[0x60]
-end_define
+begin_include
+include|#
+directive|include
+file|"video.h"
+end_include
 
-begin_define
-define|#
-directive|define
-name|curs_start
-value|BIOSDATA[0x61]
-end_define
+begin_decl_stmt
+specifier|static
+name|int
+name|cursoremu
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
 name|int10
 parameter_list|(
-name|REGISTERS
+name|regcontext_t
+modifier|*
+name|REGS
 parameter_list|)
 block|{
 name|char
@@ -67,12 +92,16 @@ case|case
 literal|0x00
 case|:
 comment|/* Set display mode */
-name|debug
+if|if
+condition|(
+operator|!
+name|xmode
+condition|)
+goto|goto
+name|unsupported
+goto|;
+name|init_mode
 argument_list|(
-name|D_HALF
-argument_list|,
-literal|"Set video mode to %02x\n"
-argument_list|,
 name|R_AL
 argument_list|)
 expr_stmt|;
@@ -81,15 +110,128 @@ case|case
 literal|0x01
 case|:
 comment|/* Define cursor */
-name|curs_start
+block|{
+name|int
+name|start
+decl_stmt|,
+name|end
+decl_stmt|;
+name|start
 operator|=
 name|R_CH
 expr_stmt|;
-name|curs_end
+name|end
 operator|=
 name|R_CL
 expr_stmt|;
+if|if
+condition|(
+name|cursoremu
+operator|==
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
+comment|/* Cursor emulation */
+if|if
+condition|(
+name|start
+operator|<=
+literal|3
+operator|&&
+name|end
+operator|<=
+literal|3
+condition|)
+goto|goto
+name|out
+goto|;
+if|if
+condition|(
+name|start
+operator|+
+literal|2
+operator|>=
+name|end
+condition|)
+block|{
+comment|/* underline cursor */
+name|start
+operator|=
+name|CharHeight
+operator|-
+literal|3
+expr_stmt|;
+name|end
+operator|=
+name|CharHeight
+operator|-
+literal|2
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+name|start
+operator|<=
+literal|2
+operator|||
+name|end
+operator|<
+name|start
+condition|)
+block|{
+comment|/* block cursor */
+name|start
+operator|=
+literal|0
+expr_stmt|;
+name|end
+operator|=
+name|CharHeight
+operator|-
+literal|2
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+name|start
+operator|>
+name|CharHeight
+operator|/
+literal|2
+condition|)
+block|{
+comment|/* half block cursor */
+name|start
+operator|=
+name|CharHeight
+operator|/
+literal|2
+expr_stmt|;
+name|end
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|out
+label|:
+name|CursStart
+operator|=
+name|start
+expr_stmt|;
+name|CursEnd
+operator|=
+name|end
+expr_stmt|;
 break|break;
+block|}
 case|case
 literal|0x02
 case|:
@@ -141,11 +283,11 @@ name|j
 expr_stmt|;
 name|R_CH
 operator|=
-name|curs_start
+name|CursStart
 expr_stmt|;
 name|R_CL
 operator|=
-name|curs_end
+name|CursEnd
 expr_stmt|;
 break|break;
 case|case
@@ -153,7 +295,7 @@ literal|0x05
 case|:
 name|debug
 argument_list|(
-name|D_HALF
+name|D_VIDEO
 argument_list|,
 literal|"Select current display page %d\n"
 argument_list|,
@@ -173,6 +315,19 @@ condition|)
 goto|goto
 name|unsupported
 goto|;
+if|if
+condition|(
+name|R_AL
+operator|==
+literal|0
+condition|)
+comment|/* clear screen */
+name|R_AL
+operator|=
+name|DpyRows
+operator|+
+literal|1
+expr_stmt|;
 name|tty_scroll
 argument_list|(
 name|R_CH
@@ -203,6 +358,19 @@ condition|)
 goto|goto
 name|unsupported
 goto|;
+if|if
+condition|(
+name|R_AL
+operator|==
+literal|0
+condition|)
+comment|/* clear screen */
+name|R_AL
+operator|=
+name|DpyRows
+operator|+
+literal|1
+expr_stmt|;
 name|tty_rscroll
 argument_list|(
 name|R_CH
@@ -285,6 +453,15 @@ condition|)
 goto|goto
 name|unsupported
 goto|;
+name|debug
+argument_list|(
+name|D_HALF
+argument_list|,
+literal|"Int 10:0a: Write char: %02x\n"
+argument_list|,
+name|R_AL
+argument_list|)
+expr_stmt|;
 name|tty_rwrite
 argument_list|(
 name|R_CX
@@ -315,6 +492,38 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|0x0c
+case|:
+comment|/* write graphics pixel */
+name|debug
+argument_list|(
+name|D_VIDEO
+argument_list|,
+literal|"Write graphics pixel at %d, %d\n"
+argument_list|,
+name|R_CX
+argument_list|,
+name|R_DX
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x0d
+case|:
+comment|/* read graphics pixel */
+name|debug
+argument_list|(
+name|D_VIDEO
+argument_list|,
+literal|"Read graphics pixel at %d, %d\n"
+argument_list|,
+name|R_CX
+argument_list|,
+name|R_DX
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|0x0e
 case|:
 comment|/* write character */
@@ -330,52 +539,116 @@ break|break;
 case|case
 literal|0x0f
 case|:
-comment|/* get display mode */
+comment|/* get current video mode */
 name|R_AH
 operator|=
-literal|80
+name|DpyCols
 expr_stmt|;
 comment|/* number of columns */
 name|R_AL
 operator|=
-literal|3
+name|VideoMode
 expr_stmt|;
-comment|/* color */
+comment|/* active mode */
 name|R_BH
 operator|=
 literal|0
 expr_stmt|;
+comment|/*ActivePage */
 comment|/* display page */
 break|break;
 case|case
 literal|0x10
 case|:
+if|if
+condition|(
+operator|!
+name|xmode
+condition|)
+goto|goto
+name|unsupported
+goto|;
 switch|switch
 condition|(
 name|R_AL
 condition|)
 block|{
 case|case
+literal|0x00
+case|:
+comment|/* Set single palette register */
+name|palette
+index|[
+name|R_BL
+index|]
+operator|=
+name|R_BH
+expr_stmt|;
+name|update_pixels
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
 literal|0x01
 case|:
-name|video_setborder
-argument_list|(
+comment|/* Set overscan register */
+name|VGA_ATC
+index|[
+name|ATC_OverscanColor
+index|]
+operator|=
 name|R_BH
-operator|&
-literal|0x0f
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|0x02
 case|:
-comment|/* Set pallete registers */
-name|debug
+comment|/* Set all palette registers */
+name|addr
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|MAKEPTR
 argument_list|(
-name|D_HALF
+name|R_ES
 argument_list|,
-literal|"INT 10 10:02 Set all palette registers\n"
+name|R_DX
 argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|16
+condition|;
+name|i
+operator|++
+control|)
+name|palette
+index|[
+name|i
+index|]
+operator|=
+operator|*
+name|addr
+operator|++
+expr_stmt|;
+name|VGA_ATC
+index|[
+name|ATC_OverscanColor
+index|]
+operator|=
+operator|*
+name|addr
+expr_stmt|;
+name|update_pixels
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -384,7 +657,11 @@ case|:
 comment|/* Enable/Disable blinking mode */
 name|video_blink
 argument_list|(
+operator|(
 name|R_BL
+operator|&
+literal|1
+operator|)
 condition|?
 literal|1
 else|:
@@ -393,34 +670,403 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|0x07
+case|:
+comment|/* Get individual palette register */
+name|R_BH
+operator|=
+name|palette
+index|[
+name|R_BL
+index|]
+expr_stmt|;
+break|break;
+case|case
+literal|0x08
+case|:
+comment|/* Read overscan register */
+name|R_BH
+operator|=
+name|VGA_ATC
+index|[
+name|ATC_OverscanColor
+index|]
+expr_stmt|;
+break|break;
+case|case
+literal|0x09
+case|:
+comment|/* Read all palette registers */
+name|addr
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|MAKEPTR
+argument_list|(
+name|R_ES
+argument_list|,
+name|R_DX
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|16
+condition|;
+name|i
+operator|++
+control|)
+operator|*
+name|addr
+operator|++
+operator|=
+name|palette
+index|[
+name|i
+index|]
+expr_stmt|;
+operator|*
+name|addr
+operator|=
+name|VGA_ATC
+index|[
+name|ATC_OverscanColor
+index|]
+expr_stmt|;
+break|break;
+case|case
+literal|0x10
+case|:
+comment|/* Set individual DAC register */
+name|dac_rgb
+index|[
+name|R_BX
+index|]
+operator|.
+name|red
+operator|=
+name|R_DH
+operator|&
+literal|0x3f
+expr_stmt|;
+name|dac_rgb
+index|[
+name|R_BX
+index|]
+operator|.
+name|green
+operator|=
+name|R_CH
+operator|&
+literal|0x3f
+expr_stmt|;
+name|dac_rgb
+index|[
+name|R_BX
+index|]
+operator|.
+name|blue
+operator|=
+name|R_CL
+operator|&
+literal|0x3f
+expr_stmt|;
+name|update_pixels
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|0x12
+case|:
+comment|/* Set block of DAC registers */
+name|addr
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|MAKEPTR
+argument_list|(
+name|R_ES
+argument_list|,
+name|R_DX
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|R_BX
+init|;
+name|i
+operator|<
+name|R_BX
+operator|+
+name|R_CX
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|dac_rgb
+index|[
+name|i
+index|]
+operator|.
+name|red
+operator|=
+operator|*
+name|addr
+operator|++
+expr_stmt|;
+name|dac_rgb
+index|[
+name|i
+index|]
+operator|.
+name|green
+operator|=
+operator|*
+name|addr
+operator|++
+expr_stmt|;
+name|dac_rgb
+index|[
+name|i
+index|]
+operator|.
+name|blue
+operator|=
+operator|*
+name|addr
+operator|++
+expr_stmt|;
+block|}
+name|update_pixels
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
 literal|0x13
 case|:
+comment|/* Select video DAC color page */
+switch|switch
+condition|(
+name|R_BL
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|VGA_ATC
+index|[
+name|ATC_ModeCtrl
+index|]
+operator||=
+operator|(
+name|R_BH
+operator|&
+literal|0x01
+operator|)
+operator|<<
+literal|7
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|VGA_ATC
+index|[
+name|ATC_ColorSelect
+index|]
+operator|=
+name|R_BH
+operator|&
+literal|0x0f
+expr_stmt|;
+break|break;
+default|default:
+name|debug
+argument_list|(
+name|D_VIDEO
+argument_list|,
+literal|"INT 10 10:13 "
+literal|"Bad value for BL: 0x%02x\n"
+argument_list|,
+name|R_BL
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+case|case
+literal|0x15
+case|:
+comment|/* Read individual DAC register */
+name|R_DH
+operator|=
+name|dac_rgb
+index|[
+name|R_BX
+index|]
+operator|.
+name|red
+expr_stmt|;
+name|R_CH
+operator|=
+name|dac_rgb
+index|[
+name|R_BX
+index|]
+operator|.
+name|green
+expr_stmt|;
+name|R_CL
+operator|=
+name|dac_rgb
+index|[
+name|R_BX
+index|]
+operator|.
+name|blue
+expr_stmt|;
+break|break;
+case|case
+literal|0x17
+case|:
+comment|/* Read block of DAC registers */
+name|addr
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|MAKEPTR
+argument_list|(
+name|R_ES
+argument_list|,
+name|R_DX
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|R_BX
+init|;
+name|i
+operator|<
+name|R_BX
+operator|+
+name|R_CX
+condition|;
+name|i
+operator|++
+control|)
+block|{
+operator|*
+name|addr
+operator|++
+operator|=
+name|dac_rgb
+index|[
+name|i
+index|]
+operator|.
+name|red
+expr_stmt|;
+operator|*
+name|addr
+operator|++
+operator|=
+name|dac_rgb
+index|[
+name|i
+index|]
+operator|.
+name|green
+expr_stmt|;
+operator|*
+name|addr
+operator|++
+operator|=
+name|dac_rgb
+index|[
+name|i
+index|]
+operator|.
+name|blue
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|0x18
+case|:
+comment|/* Set PEL mask */
 name|debug
 argument_list|(
 name|D_HALF
 argument_list|,
-literal|"INT 10 10:13 Select color or DAC (%02x, %02x)\n"
+literal|"INT 10 10:18 Set PEL mask (%02x)\n"
 argument_list|,
 name|R_BL
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x19
+case|:
+comment|/* Read PEL mask */
+name|debug
+argument_list|(
+name|D_HALF
 argument_list|,
-name|R_BH
+literal|"INT 10 10:19 Read PEL mask\n"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|0x1a
 case|:
-comment|/* get video dac color-page state */
+comment|/* Get video dac color-page state */
 name|R_BH
 operator|=
-literal|0
+operator|(
+name|VGA_ATC
+index|[
+name|ATC_ModeCtrl
+index|]
+operator|&
+literal|0x80
+operator|)
+operator|>>
+literal|7
 expr_stmt|;
-comment|/* Current page */
 name|R_BL
 operator|=
-literal|0
+name|VGA_ATC
+index|[
+name|ATC_ColorSelect
+index|]
 expr_stmt|;
-comment|/* four pages of 64... */
+break|break;
+case|case
+literal|0x1b
+case|:
+comment|/* Perform gray-scale summing */
+name|debug
+argument_list|(
+name|D_HALF
+argument_list|,
+literal|"Perform gray-scale summing\n"
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|unknown_int3
@@ -437,9 +1083,6 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
-if|#
-directive|if
-literal|1
 case|case
 literal|0x11
 case|:
@@ -451,8 +1094,11 @@ block|{
 case|case
 literal|0x00
 case|:
-name|printf
+comment|/* Text-mode chargen: load user-specified                                    patterns */
+name|debug
 argument_list|(
+name|D_VIDEO
+argument_list|,
 literal|"Tried to load user defined font.\n"
 argument_list|)
 expr_stmt|;
@@ -460,8 +1106,11 @@ break|break;
 case|case
 literal|0x01
 case|:
-name|printf
+comment|/* Text-mode chargen: load ROM monochrome                                    patterns */
+name|debug
 argument_list|(
+name|D_VIDEO
+argument_list|,
 literal|"Tried to load 8x14 font.\n"
 argument_list|)
 expr_stmt|;
@@ -469,8 +1118,11 @@ break|break;
 case|case
 literal|0x02
 case|:
-name|printf
+comment|/* Text-mode chargen: load ROM 8x8 double-dot                                    patterns */
+name|debug
 argument_list|(
+name|D_VIDEO
+argument_list|,
 literal|"Tried to load 8x8 font.\n"
 argument_list|)
 expr_stmt|;
@@ -478,8 +1130,11 @@ break|break;
 case|case
 literal|0x03
 case|:
-name|printf
+comment|/* Text-mode chargen: set block specifier */
+name|debug
 argument_list|(
+name|D_VIDEO
+argument_list|,
 literal|"Tried to activate character set\n"
 argument_list|)
 expr_stmt|;
@@ -487,8 +1142,11 @@ break|break;
 case|case
 literal|0x04
 case|:
-name|printf
+comment|/* Text-mode chargen: load ROM 8x16 character                                    set */
+name|debug
 argument_list|(
+name|D_VIDEO
+argument_list|,
 literal|"Tried to load 8x16 font.\n"
 argument_list|)
 expr_stmt|;
@@ -496,8 +1154,11 @@ break|break;
 case|case
 literal|0x10
 case|:
-name|printf
+comment|/* Text-mode chargen: load and activate                                    user-specified patterns */
+name|debug
 argument_list|(
+name|D_VIDEO
+argument_list|,
 literal|"Tried to load and activate user defined font\n"
 argument_list|)
 expr_stmt|;
@@ -505,8 +1166,11 @@ break|break;
 case|case
 literal|0x11
 case|:
-name|printf
+comment|/* Text-mode chargen: load and activate ROM                                    monochrome patterns */
+name|debug
 argument_list|(
+name|D_VIDEO
+argument_list|,
 literal|"Tried to load and activate 8x14 font.\n"
 argument_list|)
 expr_stmt|;
@@ -514,8 +1178,11 @@ break|break;
 case|case
 literal|0x12
 case|:
-name|printf
+comment|/* Text-mode chargen: load and activate ROM                                    8x8 double-dot patterns */
+name|debug
 argument_list|(
+name|D_VIDEO
+argument_list|,
 literal|"Tried to load and activate 8x8 font.\n"
 argument_list|)
 expr_stmt|;
@@ -523,22 +1190,95 @@ break|break;
 case|case
 literal|0x14
 case|:
-name|printf
+comment|/* Text-mode chargen: load and activate ROM                                    8x16 character set */
+name|debug
 argument_list|(
+name|D_VIDEO
+argument_list|,
 literal|"Tried to load and activate 8x16 font.\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x20
+case|:
+comment|/* Graph-mode chargen: set user 8x8 graphics                                    characters */
+name|debug
+argument_list|(
+name|D_VIDEO
+argument_list|,
+literal|"Load second half of 8x8 char set\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x21
+case|:
+comment|/* Graph-mode chargen: set user graphics                                    characters */
+name|debug
+argument_list|(
+name|D_VIDEO
+argument_list|,
+literal|"Install user defined char set\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x22
+case|:
+comment|/* Graph-mode chargen: set ROM 8x14 graphics                                    chars */
+name|debug
+argument_list|(
+name|D_VIDEO
+argument_list|,
+literal|"Install 8x14 char set\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x23
+case|:
+comment|/* Graph-mode chargen: set ROM 8x8 double-dot                                    chars */
+name|debug
+argument_list|(
+name|D_VIDEO
+argument_list|,
+literal|"Install 8x8 char set\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x24
+case|:
+comment|/* Graph-mode chargen: load 8x16 graphics                                    chars */
+name|debug
+argument_list|(
+name|D_VIDEO
+argument_list|,
+literal|"Install 8x16 char set\n"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|0x30
 case|:
+comment|/* Get font information */
+name|debug
+argument_list|(
+name|D_VIDEO
+argument_list|,
+literal|"INT 10 11:30 Request font address %02x\n"
+argument_list|,
+name|R_BH
+argument_list|)
+expr_stmt|;
 name|R_CX
 operator|=
-literal|14
+name|CharHeight
 expr_stmt|;
 name|R_DL
 operator|=
-literal|24
+name|DpyRows
 expr_stmt|;
 switch|switch
 condition|(
@@ -603,15 +1343,6 @@ name|R_BP
 operator|=
 literal|0
 expr_stmt|;
-name|debug
-argument_list|(
-name|D_HALF
-argument_list|,
-literal|"INT 10 11:30 Request font address %02x"
-argument_list|,
-name|R_BH
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 name|unknown_int4
@@ -645,12 +1376,10 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
-endif|#
-directive|endif
 case|case
 literal|0x12
 case|:
-comment|/* Load multiple DAC color register */
+comment|/* Alternate function select */
 if|if
 condition|(
 operator|!
@@ -670,16 +1399,55 @@ case|:
 comment|/* Read EGA/VGA config */
 name|R_BH
 operator|=
+name|NumColors
+operator|>
+literal|1
+condition|?
 literal|0
+else|:
+literal|1
 expr_stmt|;
 comment|/* Color */
 name|R_BL
 operator|=
+literal|3
+expr_stmt|;
+comment|/* 256 K */
+break|break;
+case|case
+literal|0x34
+case|:
+comment|/* Cursor emulation */
+if|if
+condition|(
+name|R_AL
+operator|==
+literal|0
+condition|)
+name|cursoremu
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|cursoremu
+operator|=
 literal|0
 expr_stmt|;
-comment|/* 64K */
+name|R_AL
+operator|=
+literal|0x12
+expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|vflag
+condition|)
+name|dump_regs
+argument_list|(
+name|REGS
+argument_list|)
+expr_stmt|;
 name|unknown_int3
 argument_list|(
 literal|0x10
@@ -944,6 +1712,74 @@ expr_stmt|;
 comment|/* No other card */
 break|break;
 case|case
+literal|0x1b
+case|:
+comment|/* Video Functionality/State information */
+if|if
+condition|(
+name|R_BX
+operator|==
+literal|0
+condition|)
+block|{
+name|addr
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|MAKEPTR
+argument_list|(
+name|R_ES
+argument_list|,
+name|R_DI
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|addr
+argument_list|,
+name|vga_status
+argument_list|,
+literal|64
+argument_list|)
+expr_stmt|;
+name|R_AL
+operator|=
+literal|0x1b
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|0x1c
+case|:
+comment|/* Save/Restore video state */
+name|debug
+argument_list|(
+name|D_VIDEO
+argument_list|,
+literal|"VGA: Save/restore video state\n"
+argument_list|)
+expr_stmt|;
+name|R_AL
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|0x30
+case|:
+comment|/* Locate 3270PC configuration table */
+name|R_CX
+operator|=
+literal|0
+expr_stmt|;
+name|R_DX
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
 literal|0x4f
 case|:
 comment|/* get VESA information */
@@ -952,11 +1788,6 @@ operator|=
 literal|0x01
 expr_stmt|;
 comment|/* no VESA support */
-break|break;
-case|case
-literal|0x1b
-case|:
-comment|/* Functionality state information */
 break|break;
 case|case
 literal|0x6f
@@ -1046,9 +1877,16 @@ argument_list|,
 name|R_AL
 argument_list|)
 expr_stmt|;
-name|unknown
-label|:
 default|default:
+if|if
+condition|(
+name|vflag
+condition|)
+name|dump_regs
+argument_list|(
+name|REGS
+argument_list|)
+expr_stmt|;
 name|unknown_int3
 argument_list|(
 literal|0x10

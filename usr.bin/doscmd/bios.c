@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI bios.c,v 2.3 1996/04/08 19:32:19 bostic Exp  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI bios.c,v 2.3 1996/04/08 19:32:19 bostic Exp  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -213,144 +227,6 @@ end_define
 begin_decl_stmt
 specifier|static
 name|u_char
-name|video_parms
-index|[]
-init|=
-block|{
-literal|0x38
-block|,
-literal|40
-block|,
-literal|0x2d
-block|,
-literal|10
-block|,
-literal|0x1f
-block|,
-literal|6
-block|,
-literal|0x19
-block|,
-literal|0x1c
-block|,
-literal|2
-block|,
-literal|7
-block|,
-literal|6
-block|,
-literal|7
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0x71
-block|,
-literal|80
-block|,
-literal|0x5a
-block|,
-literal|10
-block|,
-literal|0x1f
-block|,
-literal|6
-block|,
-literal|0x19
-block|,
-literal|0x1c
-block|,
-literal|2
-block|,
-literal|7
-block|,
-literal|6
-block|,
-literal|7
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0x38
-block|,
-literal|40
-block|,
-literal|0x2d
-block|,
-literal|10
-block|,
-literal|0x7f
-block|,
-literal|6
-block|,
-literal|0x64
-block|,
-literal|0x70
-block|,
-literal|2
-block|,
-literal|1
-block|,
-literal|6
-block|,
-literal|7
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0x61
-block|,
-literal|80
-block|,
-literal|0x52
-block|,
-literal|15
-block|,
-literal|0x19
-block|,
-literal|6
-block|,
-literal|0x19
-block|,
-literal|0x19
-block|,
-literal|2
-block|,
-literal|13
-block|,
-literal|11
-block|,
-literal|12
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|u_char
 name|disk_params
 index|[]
 init|=
@@ -544,12 +420,6 @@ modifier|*
 name|REGS
 parameter_list|)
 block|{
-name|int
-name|cond
-decl_stmt|;
-name|int
-name|count
-decl_stmt|;
 name|R_FLAGS
 operator|&=
 operator|~
@@ -587,7 +457,17 @@ break|break;
 case|case
 literal|0x4f
 case|:
-comment|/* 	 * XXX - Check scan code in GET8L(sc->sc_eax). 	 */
+comment|/* Keyboard intercept */
+name|debug
+argument_list|(
+name|D_TRAPS
+operator||
+literal|0x15
+argument_list|,
+literal|"BIOS: Keyboard intercept\n"
+argument_list|)
+expr_stmt|;
+comment|/* Don't translate scan code. */
 break|break;
 case|case
 literal|0x88
@@ -601,16 +481,14 @@ break|break;
 case|case
 literal|0xc0
 case|:
-comment|/* get configuration */
+comment|/* Get configuration */
 name|debug
 argument_list|(
 name|D_TRAPS
 operator||
 literal|0x15
 argument_list|,
-literal|"Get configuration\n"
-argument_list|,
-name|R_DX
+literal|"BIOS: Get configuration\n"
 argument_list|)
 expr_stmt|;
 name|PUTVEC
@@ -630,7 +508,7 @@ break|break;
 case|case
 literal|0xc1
 case|:
-comment|/* get extended BIOS data area */
+comment|/* Get extended BIOS data area */
 name|R_FLAGS
 operator||=
 name|PSL_C
@@ -640,6 +518,15 @@ case|case
 literal|0xc2
 case|:
 comment|/* Pointing device */
+name|debug
+argument_list|(
+name|D_TRAPS
+operator||
+literal|0x15
+argument_list|,
+literal|"BIOS: Pointing device?\n"
+argument_list|)
+expr_stmt|;
 name|R_FLAGS
 operator||=
 name|PSL_C
@@ -664,42 +551,6 @@ break|break;
 block|}
 block|}
 end_function
-
-begin_function_decl
-specifier|extern
-name|void
-name|int16
-parameter_list|(
-name|regcontext_t
-modifier|*
-name|REGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|int17
-parameter_list|(
-name|regcontext_t
-modifier|*
-name|REGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|int1a
-parameter_list|(
-name|regcontext_t
-modifier|*
-name|REGS
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|void
@@ -737,14 +588,6 @@ decl_stmt|;
 name|u_long
 name|vec
 decl_stmt|;
-if|if
-condition|(
-literal|1
-operator|||
-operator|!
-name|raw_kbd
-condition|)
-block|{
 name|strcpy
 argument_list|(
 operator|(
@@ -937,7 +780,6 @@ operator|=
 literal|0xcf
 expr_stmt|;
 comment|/* IRET */
-comment|/* 	 *memcpy((u_char *)BIOS_video_parms, video_parms, sizeof(video_parms)); 	 */
 name|memcpy
 argument_list|(
 operator|(
@@ -1035,15 +877,6 @@ operator|++
 operator|=
 literal|'3'
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|*(u_char *)BIOS_hardware_id = 0xfe;
-comment|/* Identify as a PC/XT */
-block|*(u_char *)BIOS_hardware_id = 0xff;
-comment|/* Identify as a PC */
-endif|#
-directive|endif
 operator|*
 operator|(
 name|u_char
@@ -1054,7 +887,6 @@ operator|=
 literal|0xfc
 expr_stmt|;
 comment|/* Identify as a PC/AT */
-block|}
 comment|/*      * Interrupt revectors F000:0000 - F000:03ff      */
 for|for
 control|(
@@ -1388,9 +1220,11 @@ operator|)
 operator||
 comment|/* Initial video (80 x 25 C) */
 operator|(
+operator|(
 name|nfloppies
 operator|-
 literal|1
+operator|)
 operator|<<
 literal|6
 operator|)

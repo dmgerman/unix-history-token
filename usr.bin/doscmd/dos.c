@@ -1,19 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996  *	Michael Smith.  All rights reserved.  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI int21.c,v 2.2 1996/04/08 19:32:51 bostic Exp  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1996  *	Michael Smith.  All rights reserved.  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI int21.c,v 2.2 1996/04/08 19:32:51 bostic Exp  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"doscmd.h"
+file|<sys/cdefs.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dirent.h>
-end_include
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -36,19 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<glob.h>
+file|<dirent.h>
 end_include
 
 begin_include
@@ -60,7 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<glob.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -72,15 +74,38 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"doscmd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cwd.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dispatch.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|u_long
-name|upcase_vector
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"tty.h"
+end_include
 
 begin_comment
 comment|/* Country Info */
@@ -252,21 +277,6 @@ begin_comment
 comment|/* exports */
 end_comment
 
-begin_function_decl
-name|void
-name|encode_dos_file_time
-parameter_list|(
-name|time_t
-parameter_list|,
-name|u_short
-modifier|*
-parameter_list|,
-name|u_short
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|int
 name|diskdrive
@@ -286,16 +296,24 @@ name|InDOS
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|unsigned
-name|long
-name|disk_transfer_addr
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* locals */
 end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|fcb_to_string
+parameter_list|(
+name|struct
+name|fcb
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -336,6 +354,13 @@ end_decl_stmt
 begin_comment
 comment|/* first fit (we ignore this) */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|upcase_vector
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1265,7 +1290,7 @@ name|strcpy
 argument_list|(
 name|uname
 argument_list|,
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|)
 expr_stmt|;
 return|return
@@ -1297,7 +1322,7 @@ name|strcpy
 argument_list|(
 name|uname
 argument_list|,
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -1623,7 +1648,7 @@ name|isvalid
 parameter_list|(
 name|x
 parameter_list|)
-value|((magic[x]& 0x01) != 0)
+value|((magic[(int)(x)]& 0x01) != 0)
 end_define
 
 begin_define
@@ -1633,7 +1658,7 @@ name|issep
 parameter_list|(
 name|x
 parameter_list|)
-value|((magic[x]& 0x02) == 0)
+value|((magic[(int)(x)]& 0x02) == 0)
 end_define
 
 begin_define
@@ -1643,7 +1668,7 @@ name|iswhite
 parameter_list|(
 name|x
 parameter_list|)
-value|((magic[x]& 0x04) == 0)
+value|((magic[(int)(x)]& 0x04) == 0)
 end_define
 
 begin_function
@@ -6967,6 +6992,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 ifdef|#
@@ -7856,10 +7882,16 @@ name|total
 operator|/
 literal|128
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fcb_to_string
 parameter_list|(
@@ -10134,6 +10166,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|dos_return
@@ -10628,7 +10661,7 @@ argument_list|,
 literal|"upcase"
 argument_list|)
 expr_stmt|;
-comment|/* build fastlookup idx into the monster table of interrupts */
+comment|/* build fastlookup index into the monster table of interrupts */
 name|intfunc_init
 argument_list|(
 name|int21_table

@@ -1,7 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI trap.c,v 2.3 1996/04/08 19:33:08 bostic Exp  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI trap.c,v 2.3 1996/04/08 19:33:08 bostic Exp  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<machine/trap.h>
+end_include
 
 begin_include
 include|#
@@ -13,6 +33,18 @@ begin_include
 include|#
 directive|include
 file|"trap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"video.h"
 end_include
 
 begin_comment
@@ -100,7 +132,7 @@ name|D_ITRAPS
 operator||
 name|intnum
 argument_list|,
-literal|"int %02x:%02x %04x:%04x/%08x\n"
+literal|"INT %02x:%02x %04x:%04x/%08lx\n"
 argument_list|,
 name|intnum
 argument_list|,
@@ -127,6 +159,10 @@ case|:
 comment|/* multiplex interrupt */
 name|int2f
 argument_list|(
+operator|(
+name|regcontext_t
+operator|*
+operator|)
 operator|&
 name|REGS
 operator|->
@@ -163,26 +199,16 @@ name|intnum
 argument_list|)
 expr_stmt|;
 block|}
-name|debug
-argument_list|(
-name|D_ITRAPS
-operator||
-name|intnum
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
-name|user_int
-label|:
+comment|/* user_int: */
 name|debug
 argument_list|(
 name|D_TRAPS
 operator||
 name|intnum
 argument_list|,
-literal|"INT %02x:%02x [%04x:%04x] %04x %04x %04x %04x from %04x:%04x\n"
+literal|"INT %02x:%02x [%04lx:%04lx] %04x %04x %04x %04x from %04x:%04x\n"
 argument_list|,
 name|intnum
 argument_list|,
@@ -1134,6 +1160,51 @@ operator|!=
 literal|0
 condition|)
 block|{
+switch|switch
+condition|(
+name|sf
+operator|->
+name|sf_uc
+operator|.
+name|uc_mcontext
+operator|.
+name|mc_trapno
+condition|)
+block|{
+case|case
+name|T_PAGEFLT
+case|:
+name|debug
+argument_list|(
+name|D_TRAPS2
+argument_list|,
+literal|"Page fault, trying to access 0x%x\n"
+argument_list|,
+name|sf
+operator|->
+name|sf_addr
+argument_list|)
+expr_stmt|;
+comment|/* nothing but accesses to video memory can fault for now */
+if|if
+condition|(
+name|vmem_pageflt
+argument_list|(
+name|sf
+argument_list|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
+comment|/* FALLTHROUGH */
+default|default:
+name|dump_regs
+argument_list|(
+name|REGS
+argument_list|)
+expr_stmt|;
 name|fatal
 argument_list|(
 literal|"SIGBUS code %d, trapno: %d, err: %d\n"
@@ -1162,6 +1233,8 @@ operator|.
 name|mc_err
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 block|}
 name|addr
 operator|=
@@ -1204,24 +1277,6 @@ name|PSL_VIF
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|n_pending
-operator|<
-literal|1
-condition|)
-block|{
-name|fatal
-argument_list|(
-literal|"Pending interrupts out of sync\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|resume_interrupt
 argument_list|()
 expr_stmt|;
@@ -1330,7 +1385,7 @@ name|debug
 argument_list|(
 name|D_TRAPS2
 argument_list|,
-literal|"pushf<- 0x%x\n"
+literal|"pushf<- 0x%lx\n"
 argument_list|,
 name|R_EFLAGS
 argument_list|)
@@ -1464,7 +1519,7 @@ name|debug
 argument_list|(
 name|D_TRAPS2
 argument_list|,
-literal|"popf -> 0x%x\n"
+literal|"popf -> 0x%lx\n"
 argument_list|,
 name|R_EFLAGS
 argument_list|)
@@ -2276,7 +2331,6 @@ argument_list|(
 name|REGS
 argument_list|)
 expr_stmt|;
-comment|/*     debug(D_ALWAYS,"tick %d", update_counter); */
 name|update_counter
 operator|=
 literal|0
@@ -2284,6 +2338,10 @@ expr_stmt|;
 comment|/* remember we've updated */
 name|video_update
 argument_list|(
+operator|(
+name|regcontext_t
+operator|*
+operator|)
 operator|&
 name|REGS
 operator|->
@@ -2292,10 +2350,9 @@ argument_list|)
 expr_stmt|;
 name|hardint
 argument_list|(
-literal|0x08
+literal|0x00
 argument_list|)
 expr_stmt|;
-comment|/*    debug(D_ALWAYS,"\n"); */
 if|if
 condition|(
 name|tmode

@@ -1,13 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI intff.c,v 2.2 1996/04/08 19:32:56 bostic Exp  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI intff.c,v 2.2 1996/04/08 19:32:56 bostic Exp  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"doscmd.h"
+file|<sys/cdefs.h>
 end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -19,6 +27,24 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"doscmd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cwd.h"
 end_include
 
 begin_include
@@ -400,6 +426,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -479,6 +506,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -663,7 +691,7 @@ name|debug
 argument_list|(
 name|D_REDIR
 argument_list|,
-literal|"offset now %d\n"
+literal|"offset now %ld\n"
 argument_list|,
 name|r_sft
 operator|->
@@ -690,6 +718,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 name|fsstat_t
@@ -761,6 +790,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -1659,6 +1689,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -1706,6 +1737,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -1868,9 +1900,17 @@ block|{
 name|char
 modifier|*
 name|fname
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|tname
+decl_stmt|;
+specifier|static
+name|char
+name|errmsg
+index|[]
+init|=
+literal|"(failed)"
 decl_stmt|;
 name|int
 name|savedrive
@@ -1934,7 +1974,7 @@ name|error
 condition|)
 name|tname
 operator|=
-literal|"(failed)"
+name|errmsg
 expr_stmt|;
 name|diskdrive
 operator|=
@@ -1972,6 +2012,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -1994,6 +2035,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -2399,6 +2441,7 @@ name|func
 init|=
 name|R_AL
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path
@@ -2794,14 +2837,10 @@ name|REGS
 parameter_list|)
 block|{
 name|int
-name|index
+name|idx
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|char
-modifier|*
-name|fname
 decl_stmt|;
 if|if
 condition|(
@@ -2817,7 +2856,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|index
+name|idx
 operator|=
 name|intfunc_find
 argument_list|(
@@ -2832,7 +2871,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|idx
 operator|==
 operator|-
 literal|1
@@ -2883,14 +2922,14 @@ literal|"REDIR: %02x (%s)\n"
 argument_list|,
 name|int2f11_table
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|func
 argument_list|,
 name|int2f11_table
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|desc
@@ -2901,7 +2940,7 @@ name|error
 operator|=
 name|int2f11_table
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|handler
@@ -3180,12 +3219,16 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|path
 operator|=
 name|dos_getpath
 argument_list|(
 name|drive
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 comment|/* assigned to a path? */
 name|install_drive

@@ -1,18 +1,50 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI int13.c,v 2.3 1996/04/08 19:32:43 bostic Exp  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI int13.c,v 2.3 1996/04/08 19:32:43 bostic Exp  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"doscmd.h"
+file|<sys/cdefs.h>
 end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"doscmd.h"
 end_include
 
 begin_define
@@ -374,10 +406,6 @@ name|diskinfo
 index|[
 literal|26
 index|]
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -403,10 +431,32 @@ block|,
 operator|-
 literal|1
 block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 literal|0
 block|,
 literal|0
-block|, }
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|,
 comment|/* Probably not correct */
 block|{
@@ -423,10 +473,32 @@ block|,
 operator|-
 literal|1
 block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 literal|0
 block|,
 literal|0
-block|, }
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|,
 block|{
 literal|2
@@ -442,10 +514,32 @@ block|,
 operator|-
 literal|1
 block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 literal|0
 block|,
 literal|0
-block|, }
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|,
 block|{
 literal|3
@@ -461,10 +555,32 @@ block|,
 operator|-
 literal|1
 block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 literal|0
 block|,
 literal|0
-block|, }
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|,
 block|{
 literal|4
@@ -480,10 +596,32 @@ block|,
 operator|-
 literal|1
 block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 literal|0
 block|,
 literal|0
-block|, }
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|,
 block|{
 literal|6
@@ -499,10 +637,32 @@ block|,
 operator|-
 literal|1
 block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 literal|0
 block|,
 literal|0
-block|, }
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|,
 block|{
 operator|-
@@ -518,11 +678,33 @@ literal|0
 block|,
 literal|0
 block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 literal|0
 block|,
 literal|0
-block|, }
-block|, }
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1154,11 +1336,16 @@ index|]
 operator|.
 name|numSectors
 operator|==
+call|(
+name|u_long
+call|)
+argument_list|(
 name|head
 operator|*
 name|tracksize
 operator|*
 name|cyl
+argument_list|)
 operator|&&
 operator|(
 name|ptab
@@ -1840,13 +2027,15 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
 specifier|inline
+name|int
 name|bps
-argument_list|(
-argument|int size
-argument_list|)
+parameter_list|(
+name|int
+name|size
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -1901,21 +2090,29 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+comment|/* keep `gcc -Wall' happy */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
-begin_macro
-unit|}  int
+begin_function
+name|int
 name|init_floppy
-argument_list|(
-argument|int drive
-argument_list|,
-argument|int type
-argument_list|,
-argument|char *file
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|drive
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|file
+parameter_list|)
 block|{
 name|struct
 name|diskinfo
@@ -2539,7 +2736,7 @@ name|drive
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -2567,15 +2764,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|int
-name|icnt
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -4007,7 +4195,7 @@ name|debug
 argument_list|(
 name|D_DISK
 argument_list|,
-literal|"Verify %2d sectors from %d\n"
+literal|"Verify %2d sectors from %qd\n"
 argument_list|,
 name|sectors
 argument_list|,

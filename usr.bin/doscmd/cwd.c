@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI cwd.c,v 2.2 1996/04/08 19:32:25 bostic Exp  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI cwd.c,v 2.2 1996/04/08 19:32:25 bostic Exp  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -68,6 +82,63 @@ include|#
 directive|include
 file|"doscmd.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"cwd.h"
+end_include
+
+begin_comment
+comment|/* Local functions */
+end_comment
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|int
+name|isvalid
+parameter_list|(
+name|unsigned
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|int
+name|isdot
+parameter_list|(
+name|unsigned
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|int
+name|isslash
+parameter_list|(
+name|unsigned
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|to_dos_fcb
+parameter_list|(
+name|u_char
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -171,13 +242,6 @@ name|names
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|diskdrive
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Initialize the drive to be based at 'base' in the BSD filesystem  */
 end_comment
@@ -189,10 +253,12 @@ parameter_list|(
 name|int
 name|drive
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|base
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|dir
@@ -730,7 +796,7 @@ name|where
 parameter_list|,
 name|u_char
 modifier|*
-name|new_path
+name|newpath
 parameter_list|)
 block|{
 name|int
@@ -757,9 +823,9 @@ index|]
 decl_stmt|;
 name|u_char
 modifier|*
-name|snew_path
+name|snewpath
 init|=
-name|new_path
+name|newpath
 decl_stmt|;
 if|if
 condition|(
@@ -787,7 +853,7 @@ name|where
 argument_list|)
 expr_stmt|;
 operator|*
-name|new_path
+name|newpath
 operator|++
 operator|=
 operator|*
@@ -795,7 +861,7 @@ name|where
 operator|++
 expr_stmt|;
 operator|*
-name|new_path
+name|newpath
 operator|++
 operator|=
 operator|*
@@ -810,7 +876,7 @@ operator|=
 name|diskdrive
 expr_stmt|;
 operator|*
-name|new_path
+name|newpath
 operator|++
 operator|=
 name|drntol
@@ -819,7 +885,7 @@ name|diskdrive
 argument_list|)
 expr_stmt|;
 operator|*
-name|new_path
+name|newpath
 operator|++
 operator|=
 literal|':'
@@ -902,7 +968,7 @@ argument_list|)
 expr_stmt|;
 name|np
 operator|=
-name|new_path
+name|newpath
 expr_stmt|;
 if|if
 condition|(
@@ -941,10 +1007,6 @@ name|ustrncat
 argument_list|(
 name|tmppath
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 literal|"/"
 argument_list|,
 literal|1024
@@ -1007,7 +1069,7 @@ operator|)
 return|;
 name|np
 operator|=
-name|new_path
+name|newpath
 expr_stmt|;
 while|while
 condition|(
@@ -1038,11 +1100,11 @@ condition|)
 block|{
 name|np
 operator|=
-name|new_path
+name|newpath
 operator|+
 literal|1
 expr_stmt|;
-name|new_path
+name|newpath
 index|[
 literal|0
 index|]
@@ -1122,7 +1184,7 @@ name|np
 operator|-
 literal|1
 operator|>
-name|new_path
+name|newpath
 condition|)
 operator|--
 name|np
@@ -1159,7 +1221,7 @@ operator|)
 operator|&&
 name|np
 operator|-
-name|snew_path
+name|snewpath
 operator|<
 literal|1023
 condition|)
@@ -1401,7 +1463,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|ustrcpy
+name|ustrncpy
 argument_list|(
 name|d
 operator|->
@@ -1410,6 +1472,14 @@ argument_list|,
 name|new_path
 operator|+
 literal|2
+argument_list|,
+name|d
+operator|->
+name|maxlen
+operator|-
+name|d
+operator|->
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -1421,7 +1491,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a DOS path dospath and a drive, convert it to a BSD pathname  * and store the result in real_path.  * Return DOS errno on failure.  */
+comment|/*  * Given a DOS path dos_path and a drive, convert it to a BSD pathname  * and store the result in real_path.  * Return DOS errno on failure.  */
 end_comment
 
 begin_function
@@ -1430,7 +1500,7 @@ name|dos_to_real_path
 parameter_list|(
 name|u_char
 modifier|*
-name|dospath
+name|dos_path
 parameter_list|,
 name|u_char
 modifier|*
@@ -1455,9 +1525,6 @@ name|u_char
 modifier|*
 name|rp
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|u_char
 modifier|*
 modifier|*
@@ -1476,19 +1543,19 @@ name|D_REDIR
 argument_list|,
 literal|"dos_to_real_path(%s)\n"
 argument_list|,
-name|dospath
+name|dos_path
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dospath
+name|dos_path
 index|[
 literal|0
 index|]
 operator|!=
 literal|'\0'
 operator|&&
-name|dospath
+name|dos_path
 index|[
 literal|1
 index|]
@@ -1501,13 +1568,13 @@ operator|=
 name|drlton
 argument_list|(
 operator|*
-name|dospath
+name|dos_path
 argument_list|)
 expr_stmt|;
-name|dospath
+name|dos_path
 operator|++
 expr_stmt|;
-name|dospath
+name|dos_path
 operator|++
 expr_stmt|;
 block|}
@@ -1560,11 +1627,18 @@ condition|)
 operator|++
 name|rp
 expr_stmt|;
-name|ustrcpy
+name|ustrncpy
 argument_list|(
 name|new_path
 argument_list|,
-name|dospath
+name|dos_path
+argument_list|,
+literal|1024
+operator|-
+name|ustrlen
+argument_list|(
+name|new_path
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dirs
@@ -1588,11 +1662,15 @@ return|;
 comment|/*      * Skip the leading /      * There are no . or .. entries to worry about either      */
 while|while
 condition|(
+operator|(
 name|dir
 operator|=
 operator|*
 operator|++
 name|dirs
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 operator|*
@@ -2166,12 +2244,15 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function
+specifier|static
 specifier|inline
+name|int
 name|isvalid
-argument_list|(
-argument|unsigned c
-argument_list|)
+parameter_list|(
+name|unsigned
+name|c
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -2186,14 +2267,17 @@ literal|1
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
-begin_expr_stmt
+begin_function
+specifier|static
 specifier|inline
+name|int
 name|isdot
-argument_list|(
-argument|unsigned c
-argument_list|)
+parameter_list|(
+name|unsigned
+name|c
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -2208,14 +2292,17 @@ literal|3
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
-begin_expr_stmt
+begin_function
+specifier|static
 specifier|inline
+name|int
 name|isslash
-argument_list|(
-argument|unsigned c
-argument_list|)
+parameter_list|(
+name|unsigned
+name|c
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -2230,7 +2317,7 @@ literal|4
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_comment
 comment|/*  * Given a real component, compute the DOS component.  */
@@ -3799,16 +3886,17 @@ begin_comment
 comment|/*  * Return file system statistics for drive.  * Return the DOS errno on failure.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|get_space
-argument_list|(
-argument|int drive
-argument_list|,
-argument|fsstat_t *fs
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|drive
+parameter_list|,
+name|fsstat_t
+modifier|*
+name|fs
+parameter_list|)
 block|{
 name|Path_t
 modifier|*
@@ -4103,7 +4191,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_if
 if|#
@@ -4122,6 +4210,7 @@ comment|/*  * Convert a dos filename into normal form (8.3 format, space padded)
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|to_dos_fcb
 parameter_list|(
@@ -4471,12 +4560,6 @@ begin_decl_stmt
 specifier|static
 name|search_t
 name|dir_search
-init|=
-block|{
-name|dp
-operator|:
-name|NULL
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -4484,20 +4567,25 @@ begin_comment
 comment|/*  * Find the first file on drive which matches the path with the given  * attributes attr.  * If found, the result is placed in dir (32 bytes).  * The DTA is populated as required by DOS, but the state area is ignored.  * Returns DOS errno on failure.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|find_first
-argument_list|(
-argument|u_char *path
-argument_list|,
-argument|int attr
-argument_list|,
-argument|dosdir_t *dir
-argument_list|,
-argument|find_block_t *dta
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|u_char
+modifier|*
+name|path
+parameter_list|,
+name|int
+name|attr
+parameter_list|,
+name|dosdir_t
+modifier|*
+name|dir
+parameter_list|,
+name|find_block_t
+modifier|*
+name|dta
+parameter_list|)
 block|{
 name|u_char
 name|new_path
@@ -4675,13 +4763,20 @@ operator|(
 name|PATH_NOT_FOUND
 operator|)
 return|;
-name|ustrcpy
+name|ustrncpy
 argument_list|(
 name|search
 operator|->
 name|searchdir
 argument_list|,
 name|real_path
+argument_list|,
+literal|1024
+operator|-
+name|ustrlen
+argument_list|(
+name|real_path
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|search
@@ -4761,7 +4856,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Continue on where find_first left off.  * The results will be placed in dir.  * DTA state area is ignored.  */
@@ -4822,6 +4917,7 @@ endif|#
 directive|endif
 while|while
 condition|(
+operator|(
 name|d
 operator|=
 name|readdir
@@ -4830,6 +4926,9 @@ name|search
 operator|->
 name|dp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|real_to_dos

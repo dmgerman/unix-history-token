@@ -1,18 +1,44 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI exe.c,v 2.2 1996/04/08 19:32:34 bostic Exp  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI exe.c,v 2.2 1996/04/08 19:32:34 bostic Exp  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/cdefs.h>
 end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -24,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -89,14 +115,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|env_block
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -104,7 +122,7 @@ name|make_environment
 parameter_list|(
 name|char
 modifier|*
-name|cmdname
+name|cmd_name
 parameter_list|,
 name|char
 modifier|*
@@ -204,7 +222,7 @@ name|total
 operator|+=
 name|strlen
 argument_list|(
-name|cmdname
+name|cmd_name
 argument_list|)
 operator|+
 literal|1
@@ -347,7 +365,7 @@ name|p
 operator|=
 name|strlen
 argument_list|(
-name|cmdname
+name|cmd_name
 argument_list|)
 expr_stmt|;
 name|p
@@ -358,7 +376,7 @@ name|strcpy
 argument_list|(
 name|p
 argument_list|,
-name|cmdname
+name|cmd_name
 argument_list|)
 expr_stmt|;
 while|while
@@ -493,6 +511,7 @@ name|start_segment
 parameter_list|,
 name|int
 name|reloc_segment
+name|__unused
 parameter_list|,
 name|struct
 name|exehdr
@@ -728,7 +747,7 @@ name|fd
 parameter_list|,
 name|char
 modifier|*
-name|cmdname
+name|cmd_name
 parameter_list|,
 name|u_short
 modifier|*
@@ -813,7 +832,7 @@ name|envseg
 operator|=
 name|make_environment
 argument_list|(
-name|cmdname
+name|cmd_name
 argument_list|,
 name|envs
 argument_list|)
@@ -1816,25 +1835,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|int
-name|get_psp
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|psp_s
-index|[
-name|curpsp
-index|]
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 name|int
 name|get_env
 parameter_list|(
@@ -1868,7 +1868,7 @@ name|fd
 parameter_list|,
 name|char
 modifier|*
-name|cmdname
+name|cmd_name
 parameter_list|,
 name|u_short
 modifier|*
@@ -1980,10 +1980,10 @@ name|debug
 argument_list|(
 name|D_EXEC
 argument_list|,
-literal|"exec_command: cmdname = %s\n"
+literal|"exec_command: cmd_name = %s\n"
 literal|"env = 0x0%x, arg = %04x:%04x(%s)\n"
 argument_list|,
-name|cmdname
+name|cmd_name
 argument_list|,
 name|param
 index|[
@@ -2060,7 +2060,7 @@ name|run
 argument_list|,
 name|fd
 argument_list|,
-name|cmdname
+name|cmd_name
 argument_list|,
 name|param
 argument_list|,
@@ -2079,7 +2079,7 @@ name|run
 argument_list|,
 name|fd
 argument_list|,
-name|cmdname
+name|cmd_name
 argument_list|,
 name|param
 argument_list|,

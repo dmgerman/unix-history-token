@@ -1,12 +1,44 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI port.c,v 2.2 1996/04/08 19:33:03 bostic Exp  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI port.c,v 2.2 1996/04/08 19:33:03 bostic Exp  */
 end_comment
 
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/sysarch.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"doscmd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tty.h"
 end_include
 
 begin_define
@@ -22,28 +54,6 @@ directive|define
 name|MAXPORT_MASK
 value|(MAXPORT - 1)
 end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/sysarch.h>
-end_include
-
-begin_decl_stmt
-specifier|static
-name|int
-name|consfd
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -524,10 +534,12 @@ name|outb_nullport
 parameter_list|(
 name|int
 name|port
+name|__unused
 parameter_list|,
 name|unsigned
 name|char
 name|byte
+name|__unused
 parameter_list|)
 block|{
 comment|/*     debug(D_PORT, "outb_nullport called for port 0x%03X = 0x%02X.\n", 		   port, byte);  */
@@ -542,6 +554,7 @@ name|inb_nullport
 parameter_list|(
 name|int
 name|port
+name|__unused
 parameter_list|)
 block|{
 comment|/*     debug(D_PORT, "inb_nullport called for port 0x%03X.\n", port);  */
@@ -1779,6 +1792,7 @@ name|outb_speaker
 parameter_list|(
 name|int
 name|port
+name|__unused
 parameter_list|,
 name|unsigned
 name|char
@@ -1808,6 +1822,7 @@ name|inb_speaker
 parameter_list|(
 name|int
 name|port
+name|__unused
 parameter_list|)
 block|{
 comment|/*    port_61 = (port_61 + 1)& 0xff; */
