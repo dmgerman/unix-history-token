@@ -25,9 +25,13 @@ specifier|static
 name|u_long
 name|randseed
 init|=
-literal|1
+literal|892053144
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* after srandom(1), NSHUFF counted */
+end_comment
 
 begin_function
 name|void
