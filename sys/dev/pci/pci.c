@@ -3733,9 +3733,9 @@ name|probe
 operator|.
 name|hose
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
-comment|/* XXXXX */
 name|probe
 operator|.
 name|bus
@@ -3832,9 +3832,9 @@ name|probe
 operator|.
 name|hose
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
-comment|/* XXXXX */
 name|probe
 operator|.
 name|bus
