@@ -681,10 +681,6 @@ name|int
 name|p_intr_nesting_level
 decl_stmt|;
 comment|/* (k) Interrupt recursion. */
-name|int
-name|p_giant_optional
-decl_stmt|;
-comment|/* (i) Giant Lock Sanity */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define

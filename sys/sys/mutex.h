@@ -1169,57 +1169,11 @@ define|\
 value|_mtx_assert((m), (what), __FILE__, __LINE__)
 end_define
 
-begin_comment
-comment|/*  *  GIANT_IRRELEVANT	- empty place mark assertion for system startup code  *			  where serialization is implied or utterly trivial  *			  routines that do not need giant.  *  *  GIANT_REQUIRED	- Giant must be held on entry  *  *  *_GIANT_DEPRECATED	- Giant may or may not be held, we may hold giant here  *			  based on a sysctl, and no deeper subroutine  *			  may require giant.  *  *  *_GIANT_OPTIONAL	- Giant may or may not be held and no deeper subroutine  *			  may require giant.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GIANT_IRRELEVANT
-end_define
-
 begin_define
 define|#
 directive|define
 name|GIANT_REQUIRED
-define|\
-value|do {								\ 		KASSERT(curproc->p_giant_optional == 0, ("Giant not optional at %s: %d", __FILE__, __LINE__));						\ 		mtx_assert(&Giant, MA_OWNED);				\ 	} while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|START_GIANT_DEPRECATED
-parameter_list|(
-name|sysctlvar
-parameter_list|)
-define|\
-value|int __gotgiant = (curproc->p_giant_optional == 0&& sysctlvar) ? \ 		(mtx_lock(&Giant), 1) : 0
-end_define
-
-begin_define
-define|#
-directive|define
-name|END_GIANT_DEPRECATED
-define|\
-value|if (__gotgiant) mtx_unlock(&Giant)
-end_define
-
-begin_define
-define|#
-directive|define
-name|START_GIANT_OPTIONAL
-define|\
-value|++curproc->p_giant_optional
-end_define
-
-begin_define
-define|#
-directive|define
-name|END_GIANT_OPTIONAL
-define|\
-value|--curproc->p_giant_optional
+value|mtx_assert(&Giant, MA_OWNED)
 end_define
 
 begin_else
@@ -1245,40 +1199,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|GIANT_IRRELEVANT
-end_define
-
-begin_define
-define|#
-directive|define
 name|GIANT_REQUIRED
-end_define
-
-begin_define
-define|#
-directive|define
-name|START_GIANT_DEPRECATED
-parameter_list|(
-name|sysctl
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|END_GIANT_DEPRECATED
-end_define
-
-begin_define
-define|#
-directive|define
-name|START_GIANT_OPTIONAL
-end_define
-
-begin_define
-define|#
-directive|define
-name|END_GIANT_OPTIONAL
 end_define
 
 begin_endif
