@@ -385,6 +385,8 @@ argument_list|,
 name|fw
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_SECURE
 argument_list|,
 literal|0
 argument_list|,
@@ -403,6 +405,8 @@ argument_list|,
 name|enable
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_SECURE
 argument_list|,
 operator|&
 name|ip6_fw_enable
@@ -445,6 +449,8 @@ argument_list|,
 name|verbose
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_SECURE
 argument_list|,
 operator|&
 name|fw6_verbose
