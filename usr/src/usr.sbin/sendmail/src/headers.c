@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.43 (Berkeley) %G%"
+literal|"@(#)headers.c	8.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1736,6 +1736,8 @@ name|e
 operator|->
 name|e_sendqueue
 argument_list|,
+literal|0
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -1851,6 +1853,8 @@ operator|&
 name|e
 operator|->
 name|e_errorqueue
+argument_list|,
+literal|0
 argument_list|,
 name|e
 argument_list|)

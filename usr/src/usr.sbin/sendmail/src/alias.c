@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.31 (Berkeley) %G%"
+literal|"@(#)alias.c	8.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,7 +70,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ALIAS -- Compute aliases. ** **	Scans the alias file for an alias for the given address. **	If found, it arranges to deliver to the alias list instead. **	Uses libdbm database if -DDBM. ** **	Parameters: **		a -- address to alias. **		sendq -- a pointer to the head of the send queue **			to put the aliases in. **		e -- the current envelope. ** **	Returns: **		none ** **	Side Effects: **		Aliases found are expanded. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. */
+comment|/* **  ALIAS -- Compute aliases. ** **	Scans the alias file for an alias for the given address. **	If found, it arranges to deliver to the alias list instead. **	Uses libdbm database if -DDBM. ** **	Parameters: **		a -- address to alias. **		sendq -- a pointer to the head of the send queue **			to put the aliases in. **		aliaslevel -- the current alias nesting depth. **		e -- the current envelope. ** **	Returns: **		none ** **	Side Effects: **		Aliases found are expanded. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. */
 end_comment
 
 begin_expr_stmt
@@ -79,6 +79,8 @@ argument_list|(
 name|a
 argument_list|,
 name|sendq
+argument_list|,
+name|aliaslevel
 argument_list|,
 name|e
 argument_list|)
@@ -94,6 +96,12 @@ name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|aliaslevel
 decl_stmt|;
 end_decl_stmt
 
@@ -310,40 +318,6 @@ operator|&=
 operator|~
 name|QSELFREF
 expr_stmt|;
-name|AliasLevel
-operator|++
-expr_stmt|;
-name|a
-operator|->
-name|q_child
-operator|=
-name|sendto
-argument_list|(
-name|p
-argument_list|,
-literal|1
-argument_list|,
-name|a
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|AliasLevel
-operator|--
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|QSELFREF
-argument_list|,
-name|a
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-block|{
 if|if
 condition|(
 name|tTd
@@ -373,7 +347,41 @@ name|q_flags
 operator||=
 name|QDONTSEND
 expr_stmt|;
-block|}
+name|naliases
+operator|=
+name|sendtolist
+argument_list|(
+name|p
+argument_list|,
+name|a
+argument_list|,
+name|sendq
+argument_list|,
+name|aliaslevel
+operator|+
+literal|1
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QSELFREF
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+name|a
+operator|->
+name|q_flags
+operator|&=
+operator|~
+name|QDONTSEND
+expr_stmt|;
 comment|/* 	**  Look for owner of alias 	*/
 operator|(
 name|void
@@ -2834,7 +2842,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Parameters: **		user -- the name of the user who's mail we would like **			to forward to.  It must have been verified -- **			i.e., the q_home field must have been filled **			in. **		sendq -- a pointer to the head of the send queue to **			put this user's aliases in. ** **	Returns: **		none. ** **	Side Effects: **		New names are added to send queues. */
+comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Parameters: **		user -- the name of the user who's mail we would like **			to forward to.  It must have been verified -- **			i.e., the q_home field must have been filled **			in. **		sendq -- a pointer to the head of the send queue to **			put this user's aliases in. **		aliaslevel -- the current alias nesting depth. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		New names are added to send queues. */
 end_comment
 
 begin_macro
@@ -2843,6 +2851,8 @@ argument_list|(
 argument|user
 argument_list|,
 argument|sendq
+argument_list|,
+argument|aliaslevel
 argument_list|,
 argument|e
 argument_list|)
@@ -2860,6 +2870,12 @@ name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|aliaslevel
 decl_stmt|;
 end_decl_stmt
 
@@ -3094,6 +3110,8 @@ argument_list|,
 name|user
 argument_list|,
 name|sendq
+argument_list|,
+name|aliaslevel
 argument_list|,
 name|e
 argument_list|)

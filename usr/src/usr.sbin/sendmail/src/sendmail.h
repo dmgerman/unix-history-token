@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.74 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.75 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.74		%G%"
+literal|"@(#)sendmail.h	8.75		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4691,17 +4691,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
-name|AliasLevel
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* depth of aliasing */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
 name|LineNumber
 decl_stmt|;
 end_decl_stmt
@@ -5951,6 +5940,8 @@ operator|,
 name|ADDRESS
 operator|*
 operator|*
+operator|,
+name|int
 operator|,
 name|ENVELOPE
 operator|*

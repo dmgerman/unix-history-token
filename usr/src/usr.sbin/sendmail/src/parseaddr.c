@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.41 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8216,12 +8216,14 @@ index|]
 expr_stmt|;
 block|}
 block|}
-comment|/* **  MAPLOCALUSER -- run local username through ruleset 5 for final redirection ** **	Parameters: **		a -- the address to map (but just the user name part). **		sendq -- the sendq in which to install any replacement **			addresses. ** **	Returns: **		none. */
+comment|/* **  MAPLOCALUSER -- run local username through ruleset 5 for final redirection ** **	Parameters: **		a -- the address to map (but just the user name part). **		sendq -- the sendq in which to install any replacement **			addresses. **		aliaslevel -- the alias nesting depth. **		e -- the envelope. ** **	Returns: **		none. */
 name|maplocaluser
 argument_list|(
 name|a
 argument_list|,
 name|sendq
+argument_list|,
+name|aliaslevel
 argument_list|,
 name|e
 argument_list|)
@@ -8234,6 +8236,9 @@ name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
+decl_stmt|;
+name|int
+name|aliaslevel
 decl_stmt|;
 name|ENVELOPE
 modifier|*
@@ -8432,6 +8437,8 @@ argument_list|(
 name|a1
 argument_list|,
 name|sendq
+argument_list|,
+name|aliaslevel
 argument_list|,
 name|e
 argument_list|)

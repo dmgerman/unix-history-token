@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.46 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -559,6 +559,8 @@ operator|&
 name|e
 operator|->
 name|e_errorqueue
+argument_list|,
+literal|0
 argument_list|,
 name|e
 argument_list|)
@@ -1207,6 +1209,8 @@ argument_list|,
 operator|&
 name|rlist
 argument_list|,
+literal|0
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -1312,6 +1316,8 @@ name|NULLADDR
 argument_list|,
 operator|&
 name|rlist
+argument_list|,
+literal|0
 argument_list|,
 name|e
 argument_list|)

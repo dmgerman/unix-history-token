@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.55 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.56 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ file|<pwd.h>
 end_include
 
 begin_comment
-comment|/* **  SENDTOLIST -- Designate a send list. ** **	The parameter is a comma-separated list of people to send to. **	This routine arranges to send to all of them. ** **	The `ctladdr' is the address that expanded to be this one, **	e.g., in an alias expansion.  This is used for a number of **	purposed, most notably inheritance of uid/gid for protection **	purposes.  It is also used to detect self-reference in group **	expansions and the like. ** **	Parameters: **		list -- the send list. **		ctladdr -- the address template for the person to **			send to -- effective uid/gid are important. **			This is typically the alias that caused this **			expansion. **		sendq -- a pointer to the head of a queue to put **			these people into. **		e -- the envelope in which to add these recipients. **		qflags -- special flags to set in the q_flags field. ** **	Returns: **		pointer to chain of addresses. ** **	Side Effects: **		none. */
+comment|/* **  SENDTOLIST -- Designate a send list. ** **	The parameter is a comma-separated list of people to send to. **	This routine arranges to send to all of them. ** **	The `ctladdr' is the address that expanded to be this one, **	e.g., in an alias expansion.  This is used for a number of **	purposed, most notably inheritance of uid/gid for protection **	purposes.  It is also used to detect self-reference in group **	expansions and the like. ** **	Parameters: **		list -- the send list. **		ctladdr -- the address template for the person to **			send to -- effective uid/gid are important. **			This is typically the alias that caused this **			expansion. **		sendq -- a pointer to the head of a queue to put **			these people into. **		aliaslevel -- the current alias nesting depth -- to **			diagnose loops. **		e -- the envelope in which to add these recipients. **		qflags -- special flags to set in the q_flags field. ** **	Returns: **		pointer to chain of addresses. ** **	Side Effects: **		none. */
 end_comment
 
 begin_define
@@ -91,6 +91,9 @@ name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
+decl_stmt|;
+name|int
+name|aliaslevel
 decl_stmt|;
 specifier|register
 name|ENVELOPE
@@ -689,7 +692,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  RECIPIENT -- Designate a message recipient ** **	Saves the named person for future mailing. ** **	Parameters: **		a -- the (preparsed) address header for the recipient. **		sendq -- a pointer to the head of a queue to put the **			recipient in.  Duplicate supression is done **			in this queue. **		e -- the current envelope. ** **	Returns: **		pointer to address actually inserted in send list. ** **	Side Effects: **		none. */
+comment|/* **  RECIPIENT -- Designate a message recipient ** **	Saves the named person for future mailing. ** **	Parameters: **		a -- the (preparsed) address header for the recipient. **		sendq -- a pointer to the head of a queue to put the **			recipient in.  Duplicate supression is done **			in this queue. **		aliaslevel -- the current alias nesting depth. **		e -- the current envelope. ** **	Returns: **		pointer to address actually inserted in send list. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -703,6 +706,8 @@ name|a
 parameter_list|,
 name|sendq
 parameter_list|,
+name|aliaslevel
+parameter_list|,
 name|e
 parameter_list|)
 specifier|register
@@ -715,6 +720,9 @@ name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
+decl_stmt|;
+name|int
+name|aliaslevel
 decl_stmt|;
 specifier|register
 name|ENVELOPE
@@ -861,7 +869,7 @@ block|}
 comment|/* break aliasing loops */
 if|if
 condition|(
-name|AliasLevel
+name|aliaslevel
 operator|>
 name|MAXRCRSN
 condition|)
@@ -1345,6 +1353,8 @@ name|a
 argument_list|,
 name|sendq
 argument_list|,
+name|aliaslevel
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -1625,6 +1635,8 @@ name|a
 argument_list|,
 name|sendq
 argument_list|,
+name|aliaslevel
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -1670,6 +1682,8 @@ argument_list|(
 name|a
 argument_list|,
 name|sendq
+argument_list|,
+name|aliaslevel
 argument_list|,
 name|e
 argument_list|)
@@ -1832,6 +1846,8 @@ argument_list|(
 name|a
 argument_list|,
 name|sendq
+argument_list|,
+name|aliaslevel
 argument_list|,
 name|e
 argument_list|)
@@ -2128,6 +2144,8 @@ argument_list|(
 name|a
 argument_list|,
 name|sendq
+argument_list|,
+name|aliaslevel
 argument_list|,
 name|e
 argument_list|)
@@ -3115,7 +3133,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  INCLUDE -- handle :include: specification. ** **	Parameters: **		fname -- filename to include. **		forwarding -- if TRUE, we are reading a .forward file. **			if FALSE, it's a :include: file. **		ctladdr -- address template to use to fill in these **			addresses -- effective user/group id are **			the important things. **		sendq -- a pointer to the head of the send queue **			to put these addresses in. ** **	Returns: **		open error status ** **	Side Effects: **		reads the :include: file and sends to everyone **		listed in that file. ** **	Security Note: **		If you have restricted chown (that is, you can't **		give a file away), it is reasonable to allow programs **		and files called from this :include: file to be to be **		run as the owner of the :include: file.  This is bogus **		if there is any chance of someone giving away a file. **		We assume that pre-POSIX systems can give away files. ** **		There is an additional restriction that if you **		forward to a :include: file, it will not take on **		the ownership of the :include: file.  This may not **		be necessary, but shouldn't hurt. */
+comment|/* **  INCLUDE -- handle :include: specification. ** **	Parameters: **		fname -- filename to include. **		forwarding -- if TRUE, we are reading a .forward file. **			if FALSE, it's a :include: file. **		ctladdr -- address template to use to fill in these **			addresses -- effective user/group id are **			the important things. **		sendq -- a pointer to the head of the send queue **			to put these addresses in. **		aliaslevel -- the alias nesting depth. **		e -- the current envelope. ** **	Returns: **		open error status ** **	Side Effects: **		reads the :include: file and sends to everyone **		listed in that file. ** **	Security Note: **		If you have restricted chown (that is, you can't **		give a file away), it is reasonable to allow programs **		and files called from this :include: file to be to be **		run as the owner of the :include: file.  This is bogus **		if there is any chance of someone giving away a file. **		We assume that pre-POSIX systems can give away files. ** **		There is an additional restriction that if you **		forward to a :include: file, it will not take on **		the ownership of the :include: file.  This may not **		be necessary, but shouldn't hurt. */
 end_comment
 
 begin_decl_stmt
@@ -3163,6 +3181,8 @@ name|ctladdr
 parameter_list|,
 name|sendq
 parameter_list|,
+name|aliaslevel
+parameter_list|,
 name|e
 parameter_list|)
 name|char
@@ -3180,6 +3200,9 @@ name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
+decl_stmt|;
+name|int
+name|aliaslevel
 decl_stmt|;
 name|ENVELOPE
 modifier|*
@@ -4200,22 +4223,22 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|AliasLevel
-operator|++
-expr_stmt|;
-name|sendto
+name|nincludes
+operator|+=
+name|sendtolist
 argument_list|(
 name|buf
 argument_list|,
-literal|1
-argument_list|,
 name|ctladdr
 argument_list|,
-literal|0
+name|sendq
+argument_list|,
+name|aliaslevel
+operator|+
+literal|1
+argument_list|,
+name|e
 argument_list|)
-expr_stmt|;
-name|AliasLevel
-operator|--
 expr_stmt|;
 block|}
 if|if

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.11 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	8.12 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.11 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	8.12 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -291,7 +291,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  UDBEXPAND -- look up user in database and expand ** **	Parameters: **		a -- address to expand. **		sendq -- pointer to head of sendq to put the expansions in. ** **	Returns: **		EX_TEMPFAIL -- if something "odd" happened -- probably due **			to accessing a file on an NFS server that is down. **		EX_OK -- otherwise. ** **	Side Effects: **		Modifies sendq. */
+comment|/* **  UDBEXPAND -- look up user in database and expand ** **	Parameters: **		a -- address to expand. **		sendq -- pointer to head of sendq to put the expansions in. **		aliaslevel -- the current alias nesting depth. **		e -- the current envelope. ** **	Returns: **		EX_TEMPFAIL -- if something "odd" happened -- probably due **			to accessing a file on an NFS server that is down. **		EX_OK -- otherwise. ** **	Side Effects: **		Modifies sendq. */
 end_comment
 
 begin_decl_stmt
@@ -347,6 +347,8 @@ name|a
 parameter_list|,
 name|sendq
 parameter_list|,
+name|aliaslevel
+parameter_list|,
 name|e
 parameter_list|)
 specifier|register
@@ -358,6 +360,9 @@ name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
+decl_stmt|;
+name|int
+name|aliaslevel
 decl_stmt|;
 specifier|register
 name|ENVELOPE
@@ -866,9 +871,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|AliasLevel
-operator|++
-expr_stmt|;
 name|naddrs
 operator|+=
 name|sendtolist
@@ -879,11 +881,12 @@ name|a
 argument_list|,
 name|sendq
 argument_list|,
+name|aliaslevel
+operator|+
+literal|1
+argument_list|,
 name|e
 argument_list|)
-expr_stmt|;
-name|AliasLevel
-operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -1396,9 +1399,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|AliasLevel
-operator|++
-expr_stmt|;
 name|naddrs
 operator|=
 name|sendtolist
@@ -1409,11 +1409,12 @@ name|a
 argument_list|,
 name|sendq
 argument_list|,
+name|aliaslevel
+operator|+
+literal|1
+argument_list|,
 name|e
 argument_list|)
-expr_stmt|;
-name|AliasLevel
-operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -1708,9 +1709,6 @@ operator|&=
 operator|~
 name|QSELFREF
 expr_stmt|;
-name|AliasLevel
-operator|++
-expr_stmt|;
 name|naddrs
 operator|=
 name|sendtolist
@@ -1721,11 +1719,12 @@ name|a
 argument_list|,
 name|sendq
 argument_list|,
+name|aliaslevel
+operator|+
+literal|1
+argument_list|,
 name|e
 argument_list|)
-expr_stmt|;
-name|AliasLevel
-operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -4035,6 +4034,8 @@ name|a
 parameter_list|,
 name|sendq
 parameter_list|,
+name|aliaslevel
+parameter_list|,
 name|e
 parameter_list|)
 name|ADDRESS
@@ -4045,6 +4046,9 @@ name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
+decl_stmt|;
+name|int
+name|aliaslevel
 decl_stmt|;
 name|ENVELOPE
 modifier|*
