@@ -3433,6 +3433,11 @@ operator|)
 literal|0
 condition|)
 return|return;
+name|WL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|oldpri
 operator|=
 name|splimp
@@ -3516,6 +3521,11 @@ block|}
 name|splx
 argument_list|(
 name|oldpri
+argument_list|)
+expr_stmt|;
+name|WL_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
