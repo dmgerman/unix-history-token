@@ -1000,12 +1000,23 @@ name|device_printf
 argument_list|(
 name|pccarddev
 argument_list|,
-literal|"Assigning %s: io 0x%x-0x%x irq %d mem 0x%lx-0x%lx\n"
+literal|"Assigning %s:"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
 name|child
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|desc
+operator|->
+name|iobase
+condition|)
+name|printf
+argument_list|(
+literal|" io 0x%x-0x%x"
 argument_list|,
 name|desc
 operator|->
@@ -1020,8 +1031,28 @@ operator|->
 name|iosize
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|irq
+condition|)
+name|printf
+argument_list|(
+literal|" irq %d"
 argument_list|,
 name|irq
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|desc
+operator|->
+name|mem
+condition|)
+name|printf
+argument_list|(
+literal|" mem 0x%lx-0x%lx"
 argument_list|,
 name|desc
 operator|->
@@ -1036,6 +1067,15 @@ operator|->
 name|memsize
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" flags 0x%x\n"
+argument_list|,
+name|desc
+operator|->
+name|flags
 argument_list|)
 expr_stmt|;
 block|}
