@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: pps.c,v 1.5 1998/06/07 19:44:22 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: pps.c,v 1.6 1998/06/08 02:43:12 bde Exp $  *  * This driver implements a draft-mogul-pps-api-02.txt PPS source.  *  * The input pin is pin#10   * The echo output pin is pin#14  *  */
 end_comment
 
 begin_include
@@ -130,6 +130,8 @@ operator||
 name|PPS_OFFSETASSERT
 operator||
 name|PPS_ECHOASSERT
+operator||
+name|PPS_TSFMT_TSPEC
 decl_stmt|;
 end_decl_stmt
 
@@ -692,6 +694,17 @@ operator||
 name|AUTOFEED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ppsparam
+operator|.
+name|mode
+operator|&
+name|PPS_OFFSETASSERT
+condition|)
+block|{
 name|timespecadd
 argument_list|(
 operator|&
@@ -725,6 +738,7 @@ name|tv_nsec
 operator|+=
 literal|1000000000
 expr_stmt|;
+block|}
 block|}
 name|sc
 operator|->
@@ -963,6 +977,16 @@ operator|=
 name|sc
 operator|->
 name|ppsinfo
+expr_stmt|;
+name|pi
+operator|->
+name|current_mode
+operator|=
+name|sc
+operator|->
+name|ppsparam
+operator|.
+name|mode
 expr_stmt|;
 return|return
 operator|(
