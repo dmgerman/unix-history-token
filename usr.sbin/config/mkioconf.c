@@ -3965,7 +3965,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%6.6s, %2d, C 0x%05X, %5d, %8.8s,  %2d, 0x%04X, %2d },\n"
+literal|"%6.6s, %2d, C 0x%05X, %5d, %8.8s,  %2d, 0x%04X, %2d, 0, 0, 0, 0, 1 },\n"
 argument_list|,
 name|sirq
 argument_list|(
@@ -4191,7 +4191,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%6.6s, %2d, C 0x%05X, %5d, %8.8s,  %2d, 0x%04X },\n"
+literal|"%6.6s, %2d, C 0x%05X, %5d, %8.8s,  %2d, 0x%04X, 0, 0, 0, 0, 0, 1 },\n"
 argument_list|,
 name|sirq
 argument_list|(
