@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.11 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,7 +177,8 @@ init|=
 literal|1
 decl_stmt|,
 name|pid
-decl_stmt|,
+decl_stmt|;
+name|long
 name|oldmask
 decl_stmt|;
 name|struct
