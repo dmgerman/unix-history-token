@@ -1310,7 +1310,7 @@ name|sc
 operator|->
 name|sc_scan_ch
 argument_list|,
-literal|0
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -1320,7 +1320,7 @@ name|sc
 operator|->
 name|sc_cal_ch
 argument_list|,
-literal|0
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|mtx_init
