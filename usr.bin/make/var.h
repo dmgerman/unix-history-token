@@ -142,24 +142,18 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|char
+name|struct
+name|Buffer
 modifier|*
 name|lhs
 decl_stmt|;
 comment|/* String to match */
-name|size_t
-name|leftLen
-decl_stmt|;
-comment|/* Length of string */
-name|char
+name|struct
+name|Buffer
 modifier|*
 name|rhs
 decl_stmt|;
 comment|/* Replacement string (w/&'s removed) */
-name|size_t
-name|rightLen
-decl_stmt|;
-comment|/* Length of replacement */
 name|regex_t
 name|re
 decl_stmt|;
