@@ -195,7 +195,7 @@ operator|&&
 operator|(
 name|next
 operator|==
-name|NilListNode
+name|NULL
 operator|||
 name|next
 operator|==

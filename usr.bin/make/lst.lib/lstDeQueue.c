@@ -43,7 +43,7 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_DeQueue --  *	Remove and return the datum at the head of the given list.  *  * Results:  *	The datum in the node at the head or (ick) NIL if the list  *	is empty.  *  * Side Effects:  *	The head node is removed from the list.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_DeQueue --  *	Remove and return the datum at the head of the given list.  *  * Results:  *	The datum in the node at the head or (ick) NULL if the list  *	is empty.  *  * Side Effects:  *	The head node is removed from the list.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -77,7 +77,7 @@ if|if
 condition|(
 name|tln
 operator|==
-name|NilListNode
+name|NULL
 condition|)
 block|{
 return|return
@@ -85,7 +85,7 @@ operator|(
 operator|(
 name|ClientData
 operator|)
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}
@@ -115,7 +115,7 @@ operator|(
 operator|(
 name|ClientData
 operator|)
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}

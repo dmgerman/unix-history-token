@@ -108,7 +108,7 @@ argument_list|)
 operator|&&
 name|ln
 operator|==
-name|NILLNODE
+name|NULL
 operator|)
 condition|)
 goto|goto
@@ -171,7 +171,7 @@ if|if
 condition|(
 name|ln
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 if|if
@@ -202,7 +202,7 @@ name|nLNode
 operator|->
 name|nextPtr
 operator|=
-name|NilListNode
+name|NULL
 expr_stmt|;
 block|}
 name|list
@@ -238,7 +238,7 @@ name|nLNode
 operator|->
 name|prevPtr
 operator|!=
-name|NilListNode
+name|NULL
 condition|)
 block|{
 name|nLNode

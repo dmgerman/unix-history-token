@@ -84,7 +84,7 @@ specifier|register
 name|ListNode
 name|tln
 init|=
-name|NilListNode
+name|NULL
 decl_stmt|;
 specifier|register
 name|List
@@ -99,7 +99,7 @@ if|if
 condition|(
 name|l
 operator|==
-name|NILLST
+name|NULL
 operator|||
 operator|!
 name|l
@@ -115,7 +115,7 @@ name|list
 operator|->
 name|lastPtr
 operator|!=
-name|NilListNode
+name|NULL
 condition|)
 name|list
 operator|->
@@ -123,7 +123,7 @@ name|lastPtr
 operator|->
 name|nextPtr
 operator|=
-name|NilListNode
+name|NULL
 expr_stmt|;
 else|else
 block|{
@@ -152,7 +152,7 @@ name|firstPtr
 init|;
 name|ln
 operator|!=
-name|NilListNode
+name|NULL
 condition|;
 name|ln
 operator|=
@@ -197,7 +197,7 @@ name|firstPtr
 init|;
 name|ln
 operator|!=
-name|NilListNode
+name|NULL
 condition|;
 name|ln
 operator|=

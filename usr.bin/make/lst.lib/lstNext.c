@@ -43,7 +43,7 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Next --  *	Return the next node for the given list.  *  * Results:  *	The next node or NILLNODE if the list has yet to be opened. Also  *	if the list is non-circular and the end has been reached, NILLNODE  *	is returned.  *  * Side Effects:  *	the curPtr field is updated.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Next --  *	Return the next node for the given list.  *  * Results:  *	The next node or NULL if the list has yet to be opened. Also  *	if the list is non-circular and the end has been reached, NULL  *	is returned.  *  * Side Effects:  *	the curPtr field is updated.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -91,7 +91,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|NILLNODE
+name|NULL
 operator|)
 return|;
 block|}
@@ -109,7 +109,7 @@ name|list
 operator|->
 name|curPtr
 operator|==
-name|NilListNode
+name|NULL
 condition|)
 block|{
 if|if
@@ -143,7 +143,7 @@ else|else
 block|{
 name|tln
 operator|=
-name|NilListNode
+name|NULL
 expr_stmt|;
 name|list
 operator|->
@@ -179,7 +179,7 @@ name|firstPtr
 operator|||
 name|tln
 operator|==
-name|NilListNode
+name|NULL
 condition|)
 block|{
 comment|/* 	     * If back at the front, then we've hit the end... 	     */

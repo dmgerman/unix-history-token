@@ -43,7 +43,7 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Remove --  *	Remove the given node from the given list.  *  * Results:  *	SUCCESS or FAILURE.  *  * Side Effects:  *	The list's firstPtr will be set to NilListNode if ln is the last  *	node on the list. firsPtr and lastPtr will be altered if ln is  *	either the first or last node, respectively, on the list.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Remove --  *	Remove the given node from the given list.  *  * Results:  *	SUCCESS or FAILURE.  *  * Side Effects:  *	The list's firstPtr will be set to NULL if ln is the last  *	node on the list. firsPtr and lastPtr will be altered if ln is  *	either the first or last node, respectively, on the list.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -109,7 +109,7 @@ name|lNode
 operator|->
 name|nextPtr
 operator|!=
-name|NilListNode
+name|NULL
 condition|)
 block|{
 name|lNode
@@ -129,7 +129,7 @@ name|lNode
 operator|->
 name|prevPtr
 operator|!=
-name|NilListNode
+name|NULL
 condition|)
 block|{
 name|lNode
@@ -180,7 +180,7 @@ operator|->
 name|prevPtr
 expr_stmt|;
 block|}
-comment|/*      * Sequential access stuff. If the node we're removing is the current      * node in the list, reset the current node to the previous one. If the      * previous one was non-existent (prevPtr == NilListNode), we set the      * end to be Unknown, since it is.      */
+comment|/*      * Sequential access stuff. If the node we're removing is the current      * node in the list, reset the current node to the previous one. If the      * previous one was non-existent (prevPtr == NULL), we set the      * end to be Unknown, since it is.      */
 if|if
 condition|(
 name|list
@@ -210,7 +210,7 @@ name|list
 operator|->
 name|curPtr
 operator|==
-name|NilListNode
+name|NULL
 condition|)
 block|{
 name|list
@@ -235,7 +235,7 @@ name|list
 operator|->
 name|firstPtr
 operator|=
-name|NilListNode
+name|NULL
 expr_stmt|;
 block|}
 comment|/*      * note that the datum is unmolested. The caller must free it as      * necessary and as expected.      */

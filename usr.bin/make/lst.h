@@ -70,20 +70,6 @@ name|LstNode
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|NILLST
-value|((Lst) NIL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NILLNODE
-value|((LstNode) NIL)
-end_define
-
 begin_comment
 comment|/*  * NOFREE can be used as the freeProc to Lst_Destroy when the elements are  *	not to be freed.  * NOCOPY performs similarly when given as the copyProc to Lst_Duplicate.  */
 end_comment

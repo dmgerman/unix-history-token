@@ -66,7 +66,7 @@ if|if
 condition|(
 name|ln
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 return|return

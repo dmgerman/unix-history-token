@@ -43,7 +43,7 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Duplicate --  *	Duplicate an entire list. If a function to copy a ClientData is  *	given, the individual client elements will be duplicated as well.  *  * Results:  *	The new Lst structure or NILLST if failure.  *  * Side Effects:  *	A new list is created.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Duplicate --  *	Duplicate an entire list. If a function to copy a ClientData is  *	given, the individual client elements will be duplicated as well.  *  * Results:  *	The new Lst structure or NULL if failure.  *  * Side Effects:  *	A new list is created.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function_decl
@@ -105,7 +105,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|NILLST
+name|NULL
 operator|)
 return|;
 block|}
@@ -122,12 +122,12 @@ if|if
 condition|(
 name|nl
 operator|==
-name|NILLST
+name|NULL
 condition|)
 block|{
 return|return
 operator|(
-name|NILLST
+name|NULL
 operator|)
 return|;
 block|}
@@ -141,7 +141,7 @@ while|while
 condition|(
 name|ln
 operator|!=
-name|NilListNode
+name|NULL
 condition|)
 block|{
 if|if
@@ -173,7 +173,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|NILLST
+name|NULL
 operator|)
 return|;
 block|}
@@ -195,7 +195,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|NILLST
+name|NULL
 operator|)
 return|;
 block|}
@@ -214,7 +214,7 @@ condition|)
 block|{
 name|ln
 operator|=
-name|NilListNode
+name|NULL
 expr_stmt|;
 block|}
 else|else

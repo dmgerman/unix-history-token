@@ -754,7 +754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarFind --  *	Find the given variable in the given context and any other contexts  *	indicated.  *  * Results:  *	A pointer to the structure describing the desired variable or  *	NIL if the variable does not exist.  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarFind --  *	Find the given variable in the given context and any other contexts  *	indicated.  *  * Results:  *	A pointer to the structure describing the desired variable or  *	NULL if the variable does not exist.  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -971,7 +971,7 @@ operator|)
 name|strcmp
 argument_list|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|localCheckEnvFirst
@@ -1008,7 +1008,7 @@ condition|(
 operator|(
 name|var
 operator|==
-name|NILLNODE
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -1046,7 +1046,7 @@ condition|(
 operator|(
 name|var
 operator|==
-name|NILLNODE
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -1090,7 +1090,7 @@ condition|(
 operator|(
 name|var
 operator|==
-name|NILLNODE
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -1229,7 +1229,7 @@ if|if
 condition|(
 name|var
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 return|return
@@ -1238,7 +1238,7 @@ operator|(
 name|Var
 operator|*
 operator|)
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}
@@ -1266,7 +1266,7 @@ operator|(
 name|Var
 operator|*
 operator|)
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}
@@ -1276,7 +1276,7 @@ if|if
 condition|(
 name|var
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 return|return
@@ -1285,7 +1285,7 @@ operator|(
 name|Var
 operator|*
 operator|)
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}
@@ -1581,7 +1581,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 specifier|register
@@ -1692,7 +1692,7 @@ operator|(
 name|Var
 operator|*
 operator|)
-name|NIL
+name|NULL
 condition|)
 block|{
 name|VarAdd
@@ -1845,7 +1845,7 @@ operator|(
 name|Var
 operator|*
 operator|)
-name|NIL
+name|NULL
 condition|)
 block|{
 name|VarAdd
@@ -2011,7 +2011,7 @@ operator|(
 name|Var
 operator|*
 operator|)
-name|NIL
+name|NULL
 condition|)
 block|{
 return|return
@@ -2127,7 +2127,7 @@ operator|(
 name|Var
 operator|*
 operator|)
-name|NIL
+name|NULL
 condition|)
 block|{
 name|char
@@ -5456,7 +5456,7 @@ operator|(
 name|Var
 operator|*
 operator|)
-name|NIL
+name|NULL
 condition|)
 block|{
 operator|*
@@ -5797,7 +5797,7 @@ operator|(
 name|Var
 operator|*
 operator|)
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -5910,7 +5910,7 @@ operator|(
 name|Var
 operator|*
 operator|)
-name|NIL
+name|NULL
 condition|)
 block|{
 comment|/* 			 * No need for nested expansion or anything, as we're 			 * the only one who sets these things and we sure don't 			 * put nested invocations in them... 			 */
@@ -6020,7 +6020,7 @@ operator|(
 name|Var
 operator|*
 operator|)
-name|NIL
+name|NULL
 condition|)
 block|{
 if|if

@@ -1106,7 +1106,7 @@ name|path
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|p
@@ -1806,7 +1806,7 @@ name|path
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|p
@@ -2176,7 +2176,7 @@ name|path
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|p
@@ -2464,7 +2464,7 @@ if|if
 condition|(
 name|ln
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 return|return
@@ -3037,7 +3037,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|p
@@ -3063,7 +3063,7 @@ operator|)
 name|p
 argument_list|)
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|p
@@ -3419,7 +3419,7 @@ name|path
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|p
@@ -3659,7 +3659,7 @@ argument_list|)
 init|;
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|;
 name|ln
 operator|=
@@ -3692,7 +3692,7 @@ operator|)
 name|p
 argument_list|)
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|p
@@ -3803,7 +3803,7 @@ name|openDirectories
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|p

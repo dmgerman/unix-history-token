@@ -872,7 +872,7 @@ name|children
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|gn
@@ -897,7 +897,7 @@ argument_list|,
 name|gn
 argument_list|)
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 operator|(
@@ -1196,7 +1196,7 @@ name|parents
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|pgn
@@ -1357,7 +1357,7 @@ argument_list|)
 init|;
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|;
 name|ln
 operator|=
@@ -1408,7 +1408,7 @@ operator|)
 name|succ
 argument_list|)
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 operator|(
@@ -1470,7 +1470,7 @@ name|iParents
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|pgn
@@ -1933,7 +1933,7 @@ argument_list|)
 init|;
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|;
 name|ln
 operator|=
@@ -1990,12 +1990,12 @@ block|}
 break|break;
 block|}
 block|}
-comment|/* 	     * If ln isn't nil, there's a predecessor as yet unmade, so we 	     * just drop this node on the floor. When the node in question 	     * has been made, it will notice this node as being ready to 	     * make but as yet unmade and will place the node on the queue. 	     */
+comment|/* 	     * If ln isn't NULL, there's a predecessor as yet unmade, so we 	     * just drop this node on the floor. When the node in question 	     * has been made, it will notice this node as being ready to 	     * make but as yet unmade and will place the node on the queue. 	     */
 if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 continue|continue;

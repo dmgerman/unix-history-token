@@ -43,7 +43,7 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Last --  *	Return the last node on the list l.  *  * Results:  *	The requested node or NILLNODE if the list is empty.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Last --  *	Return the last node on the list l.  *  * Results:  *	The requested node or NULL if the list is empty.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -72,7 +72,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|NILLNODE
+name|NULL
 operator|)
 return|;
 block|}

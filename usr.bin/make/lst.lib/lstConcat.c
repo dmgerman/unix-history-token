@@ -136,17 +136,17 @@ name|list2
 operator|->
 name|firstPtr
 operator|!=
-name|NilListNode
+name|NULL
 condition|)
 block|{
-comment|/* 	     * We set the nextPtr of the 	     * last element of list two to be NIL to make the loop easier and 	     * so we don't need an extra case should the first list turn 	     * out to be non-circular -- the final element will already point 	     * to NIL space and the first element will be untouched if it 	     * existed before and will also point to NIL space if it didn't. 	     */
+comment|/* 	     * We set the nextPtr of the 	     * last element of list two to be NULL to make the loop easier and 	     * so we don't need an extra case should the first list turn 	     * out to be non-circular -- the final element will already point 	     * to NULL space and the first element will be untouched if it 	     * existed before and will also point to NULL space if it didn't. 	     */
 name|list2
 operator|->
 name|lastPtr
 operator|->
 name|nextPtr
 operator|=
-name|NilListNode
+name|NULL
 expr_stmt|;
 comment|/* 	     * So long as the second list isn't empty, we just link the 	     * first element of the second list to the last element of the 	     * first list. If the first list isn't empty, we then link the 	     * last element of the list to the first element of the second list 	     * The last element of the second list, if it exists, then becomes 	     * the last element of the first list. 	     */
 name|list2
@@ -165,7 +165,7 @@ name|list1
 operator|->
 name|lastPtr
 operator|!=
-name|NilListNode
+name|NULL
 condition|)
 block|{
 name|list1
@@ -209,7 +209,7 @@ name|list1
 operator|->
 name|firstPtr
 operator|!=
-name|NilListNode
+name|NULL
 condition|)
 block|{
 comment|/* 	     * If the first list is supposed to be circular and it is (now) 	     * non-empty, we must make sure it's circular by linking the 	     * first element to the last and vice versa 	     */
@@ -250,17 +250,17 @@ name|list2
 operator|->
 name|firstPtr
 operator|!=
-name|NilListNode
+name|NULL
 condition|)
 block|{
-comment|/* 	 * We set the nextPtr of the last element of list 2 to be nil to make 	 * the loop less difficult. The loop simply goes through the entire 	 * second list creating new LstNodes and filling in the nextPtr, and 	 * prevPtr to fit into l1 and its datum field from the 	 * datum field of the corresponding element in l2. The 'last' node 	 * follows the last of the new nodes along until the entire l2 has 	 * been appended. Only then does the bookkeeping catch up with the 	 * changes. During the first iteration of the loop, if 'last' is nil, 	 * the first list must have been empty so the newly-created node is 	 * made the first node of the list. 	 */
+comment|/* 	 * We set the nextPtr of the last element of list 2 to be NULL to make 	 * the loop less difficult. The loop simply goes through the entire 	 * second list creating new LstNodes and filling in the nextPtr, and 	 * prevPtr to fit into l1 and its datum field from the 	 * datum field of the corresponding element in l2. The 'last' node 	 * follows the last of the new nodes along until the entire l2 has 	 * been appended. Only then does the bookkeeping catch up with the 	 * changes. During the first iteration of the loop, if 'last' is NULL, 	 * the first list must have been empty so the newly-created node is 	 * made the first node of the list. 	 */
 name|list2
 operator|->
 name|lastPtr
 operator|->
 name|nextPtr
 operator|=
-name|NilListNode
+name|NULL
 expr_stmt|;
 for|for
 control|(
@@ -278,7 +278,7 @@ name|firstPtr
 init|;
 name|ln
 operator|!=
-name|NilListNode
+name|NULL
 condition|;
 name|ln
 operator|=
@@ -306,7 +306,7 @@ if|if
 condition|(
 name|last
 operator|!=
-name|NilListNode
+name|NULL
 condition|)
 block|{
 name|last
@@ -388,7 +388,7 @@ name|last
 operator|->
 name|nextPtr
 operator|=
-name|NilListNode
+name|NULL
 expr_stmt|;
 block|}
 if|if

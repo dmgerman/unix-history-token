@@ -43,7 +43,7 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Open --  *	Open a list for sequential access. A list can still be searched,  *	etc., without confusing these functions.  *  * Results:  *	SUCCESS or FAILURE.  *  * Side Effects:  *	isOpen is set TRUE and curPtr is set to NilListNode so the  *	other sequential functions no it was just opened and can choose  *	the first element accessed based on this.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Open --  *	Open a list for sequential access. A list can still be searched,  *	etc., without confusing these functions.  *  * Results:  *	SUCCESS or FAILURE.  *  * Side Effects:  *	isOpen is set TRUE and curPtr is set to NULL so the  *	other sequential functions no it was just opened and can choose  *	the first element accessed based on this.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -111,7 +111,7 @@ operator|)
 operator|->
 name|curPtr
 operator|=
-name|NilListNode
+name|NULL
 expr_stmt|;
 return|return
 operator|(

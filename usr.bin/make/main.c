@@ -2629,7 +2629,7 @@ argument_list|()
 expr_stmt|;
 name|DEFAULT
 operator|=
-name|NILGNODE
+name|NULL
 expr_stmt|;
 operator|(
 name|void
@@ -2664,7 +2664,7 @@ argument_list|)
 init|;
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|;
 name|ln
 operator|=
@@ -2845,7 +2845,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 name|Fatal
 argument_list|(
@@ -2892,7 +2892,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 name|Fatal
 argument_list|(
@@ -3174,7 +3174,7 @@ argument_list|)
 init|;
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|;
 name|ln
 operator|=

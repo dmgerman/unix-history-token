@@ -429,7 +429,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Predecessor node for handling .ORDER. Initialized to NILGNODE when .ORDER  * seen, then set to each successive source on the line.  */
+comment|/*  * Predecessor node for handling .ORDER. Initialized to NULL when .ORDER  * seen, then set to each successive source on the line.  */
 end_comment
 
 begin_decl_stmt
@@ -1380,7 +1380,7 @@ operator|)
 name|cgn
 argument_list|)
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 operator|(
@@ -1913,7 +1913,7 @@ if|if
 condition|(
 name|predecessor
 operator|!=
-name|NILGNODE
+name|NULL
 condition|)
 block|{
 operator|(
@@ -2026,7 +2026,7 @@ argument_list|)
 init|;
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|;
 name|ln
 operator|=
@@ -2617,7 +2617,7 @@ index|]
 operator|.
 name|op
 expr_stmt|;
-comment|/* 		 * Certain special targets have special semantics: 		 *	.PATH		Have to set the dirSearchPath 		 *			variable too 		 *	.MAIN		Its sources are only used if 		 *			nothing has been specified to 		 *			create. 		 *	.DEFAULT    	Need to create a node to hang 		 *			commands on, but we don't want 		 *			it in the graph, nor do we want 		 *			it to be the Main Target, so we 		 *			create it, set OP_NOTMAIN and 		 *			add it to the list, setting 		 *			DEFAULT to the new node for 		 *			later use. We claim the node is 		 *	    	    	A transformation rule to make 		 *	    	    	life easier later, when we'll 		 *	    	    	use Make_HandleUse to actually 		 *	    	    	apply the .DEFAULT commands. 		 *	.PHONY		The list of targets 		 *	.BEGIN 		 *	.END 		 *	.INTERRUPT  	Are not to be considered the 		 *			main target. 		 *  	.NOTPARALLEL	Make only one target at a time. 		 *  	.SINGLESHELL	Create a shell for each command. 		 *  	.ORDER	    	Must set initial predecessor to NIL 		 */
+comment|/* 		 * Certain special targets have special semantics: 		 *	.PATH		Have to set the dirSearchPath 		 *			variable too 		 *	.MAIN		Its sources are only used if 		 *			nothing has been specified to 		 *			create. 		 *	.DEFAULT    	Need to create a node to hang 		 *			commands on, but we don't want 		 *			it in the graph, nor do we want 		 *			it to be the Main Target, so we 		 *			create it, set OP_NOTMAIN and 		 *			add it to the list, setting 		 *			DEFAULT to the new node for 		 *			later use. We claim the node is 		 *	    	    	A transformation rule to make 		 *	    	    	life easier later, when we'll 		 *	    	    	use Make_HandleUse to actually 		 *	    	    	apply the .DEFAULT commands. 		 *	.PHONY		The list of targets 		 *	.BEGIN 		 *	.END 		 *	.INTERRUPT  	Are not to be considered the 		 *			main target. 		 *  	.NOTPARALLEL	Make only one target at a time. 		 *  	.SINGLESHELL	Create a shell for each command. 		 *  	.ORDER	    	Must set initial predecessor to NULL 		 */
 switch|switch
 condition|(
 name|specType
@@ -2776,7 +2776,7 @@ name|Order
 case|:
 name|predecessor
 operator|=
-name|NILGNODE
+name|NULL
 expr_stmt|;
 break|break;
 default|default:
@@ -2821,7 +2821,7 @@ if|if
 condition|(
 name|path
 operator|==
-name|NILLST
+name|NULL
 condition|)
 block|{
 name|Parse_Error
@@ -3848,7 +3848,7 @@ if|if
 condition|(
 name|mainNode
 operator|==
-name|NILGNODE
+name|NULL
 condition|)
 block|{
 comment|/* 	 * If we have yet to decide on a main target to make, in the 	 * absence of any user input, we want the first target on 	 * the first dependency line that is actually a real target 	 * (i.e. isn't a .USE or .EXEC rule) to be made. 	 */
@@ -7701,7 +7701,7 @@ parameter_list|()
 block|{
 name|mainNode
 operator|=
-name|NILGNODE
+name|NULL
 expr_stmt|;
 name|parseIncPath
 operator|=
@@ -7818,7 +7818,7 @@ if|if
 condition|(
 name|mainNode
 operator|==
-name|NILGNODE
+name|NULL
 condition|)
 block|{
 name|Punt

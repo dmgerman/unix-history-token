@@ -43,7 +43,7 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Datum --  *	Return the datum stored in the given node.  *  * Results:  *	The datum or (ick!) NIL if the node is invalid.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Datum --  *	Return the datum stored in the given node.  *  * Results:  *	The datum or (ick!) NULL if the node is invalid.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -60,7 +60,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 return|return
@@ -83,7 +83,7 @@ operator|(
 operator|(
 name|ClientData
 operator|)
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}

@@ -862,7 +862,7 @@ if|if
 condition|(
 name|gn
 operator|==
-name|NILGNODE
+name|NULL
 condition|)
 block|{
 name|free
@@ -1063,7 +1063,7 @@ if|if
 condition|(
 name|gn
 operator|==
-name|NILGNODE
+name|NULL
 condition|)
 block|{
 name|free
@@ -1169,7 +1169,7 @@ if|if
 condition|(
 name|gn
 operator|==
-name|NILGNODE
+name|NULL
 condition|)
 block|{
 return|return
@@ -1449,7 +1449,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|ar
@@ -3692,7 +3692,7 @@ name|parents
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|pgn

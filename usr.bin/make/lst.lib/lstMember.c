@@ -79,11 +79,11 @@ if|if
 condition|(
 name|lNode
 operator|==
-name|NilListNode
+name|NULL
 condition|)
 block|{
 return|return
-name|NILLNODE
+name|NULL
 return|;
 block|}
 do|do
@@ -115,7 +115,7 @@ do|while
 condition|(
 name|lNode
 operator|!=
-name|NilListNode
+name|NULL
 operator|&&
 name|lNode
 operator|!=
@@ -125,7 +125,7 @@ name|firstPtr
 condition|)
 do|;
 return|return
-name|NILLNODE
+name|NULL
 return|;
 block|}
 end_function

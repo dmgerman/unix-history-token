@@ -131,7 +131,7 @@ parameter_list|(
 name|elementPtr
 parameter_list|)
 define|\
-value|(elementPtr)->prevPtr = (List_Links *) NIL; \     (elementPtr)->nextPtr = (List_Links *) NIL;
+value|(elementPtr)->prevPtr = (List_Links *) NULL; \     (elementPtr)->nextPtr = (List_Links *) NULL;
 end_define
 
 begin_comment

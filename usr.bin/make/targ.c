@@ -591,7 +591,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_FindNode  --  *	Find a node in the list using the given name for matching  *  * Results:  *	The node in the list if it was. If it wasn't, return NILGNODE of  *	flags was TARG_NOCREATE or the newly created and initialized node  *	if it was TARG_CREATE  *  * Side Effects:  *	Sometimes a node is created and added to the list  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Targ_FindNode  --  *	Find a node in the list using the given name for matching  *  * Results:  *	The node in the list if it was. If it wasn't, return NULL of  *	flags was TARG_NOCREATE or the newly created and initialized node  *	if it was TARG_CREATE  *  * Side Effects:  *	Sometimes a node is created and added to the list  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -708,7 +708,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|NILGNODE
+name|NULL
 operator|)
 return|;
 block|}
@@ -804,7 +804,7 @@ name|names
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|name
@@ -831,7 +831,7 @@ if|if
 condition|(
 name|gn
 operator|!=
-name|NILGNODE
+name|NULL
 condition|)
 block|{
 comment|/* 	     * Note: Lst_AtEnd must come before the Lst_Concat so the nodes 	     * are added to the list in the order in which they were 	     * encountered in the makefile. 	     */

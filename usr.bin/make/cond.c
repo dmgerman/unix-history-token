@@ -1081,7 +1081,7 @@ argument_list|,
 name|CondStrMatch
 argument_list|)
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|result
@@ -1269,7 +1269,7 @@ condition|(
 operator|(
 name|gn
 operator|!=
-name|NILGNODE
+name|NULL
 operator|)
 operator|&&
 operator|!

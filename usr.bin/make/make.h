@@ -341,17 +341,6 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Manifest constants  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NILGNODE
-value|((GNode *) NIL)
-end_define
-
-begin_comment
 comment|/*  * The OP_ constants are used when parsing a dependency line as a way of  * communicating to other parts of the program the way in which a target  * should be made. These constants are bitwise-OR'ed together and  * placed in the 'type' field of each node. Any node that has  * a 'type' field which satisfies the OP_NOP function was never never on  * the lefthand side of an operator, though it may have been on the  * righthand side...  */
 end_comment
 
@@ -612,7 +601,7 @@ value|(((t)& OP_OPMASK) == 0x00000000)
 end_define
 
 begin_comment
-comment|/*  * The TARG_ constants are used when calling the Targ_FindNode and  * Targ_FindList functions in targ.c. They simply tell the functions what to  * do if the desired node(s) is (are) not found. If the TARG_CREATE constant  * is given, a new, empty node will be created for the target, placed in the  * table of all targets and its address returned. If TARG_NOCREATE is given,  * a NIL pointer will be returned.  */
+comment|/*  * The TARG_ constants are used when calling the Targ_FindNode and  * Targ_FindList functions in targ.c. They simply tell the functions what to  * do if the desired node(s) is (are) not found. If the TARG_CREATE constant  * is given, a new, empty node will be created for the target, placed in the  * table of all targets and its address returned. If TARG_NOCREATE is given,  * a NULL pointer will be returned.  */
 end_comment
 
 begin_define

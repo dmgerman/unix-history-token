@@ -43,7 +43,7 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_FindFrom --  *	Search for a node starting and ending with the given one on the  *	given list using the passed datum and comparison function to  *	determine when it has been found.  *  * Results:  *	The found node or NILLNODE  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_FindFrom --  *	Search for a node starting and ending with the given one on the  *	given list using the passed datum and comparison function to  *	determine when it has been found.  *  * Results:  *	The found node or NULL  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_decl_stmt
@@ -129,7 +129,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|NILLNODE
+name|NULL
 operator|)
 return|;
 block|}
@@ -186,7 +186,7 @@ name|ln
 operator|&&
 name|tln
 operator|!=
-name|NilListNode
+name|NULL
 condition|)
 do|;
 if|if
@@ -207,7 +207,7 @@ else|else
 block|{
 return|return
 operator|(
-name|NILLNODE
+name|NULL
 operator|)
 return|;
 block|}

@@ -3463,7 +3463,7 @@ name|job
 operator|->
 name|tailCmds
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|Lst_ForEachFrom
@@ -3920,7 +3920,7 @@ condition|(
 operator|(
 name|DEFAULT
 operator|!=
-name|NILGNODE
+name|NULL
 operator|)
 operator|&&
 operator|!
@@ -6217,7 +6217,7 @@ name|job
 operator|->
 name|tailCmds
 operator|=
-name|NILLNODE
+name|NULL
 expr_stmt|;
 comment|/*      * Set the initial value of the flags for this job based on the global      * ones and the node's attributes... Any flags supplied by the caller      * are also added to the field.      */
 name|job
@@ -6468,7 +6468,7 @@ condition|(
 operator|(
 name|ln
 operator|==
-name|NILLNODE
+name|NULL
 operator|)
 operator|||
 name|JobPrintCommand
@@ -6708,7 +6708,7 @@ name|job
 operator|->
 name|tailCmds
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|Lst_ForEachFrom
@@ -8211,7 +8211,7 @@ if|if
 condition|(
 name|jnode
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 if|if
@@ -8250,7 +8250,7 @@ if|if
 condition|(
 name|jnode
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|Error
@@ -8578,7 +8578,7 @@ name|jobs
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|job
@@ -8731,7 +8731,7 @@ literal|0
 expr_stmt|;
 name|lastNode
 operator|=
-name|NILGNODE
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -9034,7 +9034,7 @@ if|if
 condition|(
 name|begin
 operator|!=
-name|NILGNODE
+name|NULL
 condition|)
 block|{
 name|JobStart
@@ -10076,7 +10076,7 @@ name|jobs
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|job
@@ -10294,7 +10294,7 @@ name|stoppedJobs
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|job
@@ -10578,7 +10578,7 @@ if|if
 condition|(
 name|interrupt
 operator|!=
-name|NILGNODE
+name|NULL
 condition|)
 block|{
 name|ignoreErrors
@@ -10637,7 +10637,7 @@ if|if
 condition|(
 name|postCommands
 operator|!=
-name|NILGNODE
+name|NULL
 operator|&&
 operator|!
 name|Lst_IsEmpty
@@ -10795,7 +10795,7 @@ name|jobs
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|job
@@ -10984,7 +10984,7 @@ if|if
 condition|(
 name|jnode
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|jnode
@@ -11005,7 +11005,7 @@ if|if
 condition|(
 name|jnode
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 if|if

@@ -43,7 +43,7 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Append --  *	Create a new node and add it to the given list after the given node.  *  * Results:  *	SUCCESS if all went well.  *  * Side Effects:  *	A new ListNode is created and linked in to the List. The lastPtr  *	field of the List will be altered if ln is the last node in the  *	list. lastPtr and firstPtr will alter if the list was empty and  *	ln was NILLNODE.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Append --  *	Create a new node and add it to the given list after the given node.  *  * Results:  *	SUCCESS if all went well.  *  * Side Effects:  *	A new ListNode is created and linked in to the List. The lastPtr  *	field of the List will be altered if ln is the last node in the  *	list. lastPtr and firstPtr will alter if the list was empty and  *	ln was NULL.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -91,7 +91,7 @@ operator|&&
 operator|(
 name|ln
 operator|==
-name|NILLNODE
+name|NULL
 operator|&&
 name|LstIsEmpty
 argument_list|(
@@ -175,7 +175,7 @@ if|if
 condition|(
 name|lNode
 operator|==
-name|NilListNode
+name|NULL
 condition|)
 block|{
 if|if
@@ -206,7 +206,7 @@ name|nLNode
 operator|->
 name|prevPtr
 operator|=
-name|NilListNode
+name|NULL
 expr_stmt|;
 block|}
 name|list
@@ -248,7 +248,7 @@ name|nLNode
 operator|->
 name|nextPtr
 operator|!=
-name|NilListNode
+name|NULL
 condition|)
 block|{
 name|nLNode

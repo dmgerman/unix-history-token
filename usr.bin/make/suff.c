@@ -33,7 +33,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*-  * suff.c --  *	Functions to maintain suffix lists and find implicit dependents  *	using suffix transformation rules  *  * Interface:  *	Suff_Init 	    	Initialize all things to do with suffixes.  *  *	Suff_End 	    	Cleanup the module  *  *	Suff_DoPaths	    	This function is used to make life easier  *	    	  	    	when searching for a file according to its  *	    	  	    	suffix. It takes the global search path,  *	    	  	    	as defined using the .PATH: target, and appends  *	    	  	    	its directories to the path of each of the  *	    	  	    	defined suffixes, as specified using  *	    	  	    	.PATH<suffix>: targets. In addition, all  *	    	  	    	directories given for suffixes labeled as  *	    	  	    	include files or libraries, using the .INCLUDES  *	    	  	    	or .LIBS targets, are played with using  *	    	  	    	Dir_MakeFlags to create the .INCLUDES and  *	    	  	    	.LIBS global variables.  *  *	Suff_ClearSuffixes  	Clear out all the suffixes and defined  *	    	  	    	transformations.  *  *	Suff_IsTransform    	Return TRUE if the passed string is the lhs  *	    	  	    	of a transformation rule.  *  *	Suff_AddSuffix	    	Add the passed string as another known suffix.  *  *	Suff_GetPath	    	Return the search path for the given suffix.  *  *	Suff_AddInclude	    	Mark the given suffix as denoting an include  *	    	  	    	file.  *  *	Suff_AddLib	    	Mark the given suffix as denoting a library.  *  *	Suff_AddTransform   	Add another transformation to the suffix  *	    	  	    	graph. Returns  GNode suitable for framing, I  *	    	  	    	mean, tacking commands, attributes, etc. on.  *  *	Suff_SetNull	    	Define the suffix to consider the suffix of  *	    	  	    	any file that doesn't have a known one.  *  *	Suff_FindDeps	    	Find implicit sources for and the location of  *	    	  	    	a target based on its suffix. Returns the  *	    	  	    	bottom-most node added to the graph or NILGNODE  *	    	  	    	if the target had no implicit sources.  */
+comment|/*-  * suff.c --  *	Functions to maintain suffix lists and find implicit dependents  *	using suffix transformation rules  *  * Interface:  *	Suff_Init 	    	Initialize all things to do with suffixes.  *  *	Suff_End 	    	Cleanup the module  *  *	Suff_DoPaths	    	This function is used to make life easier  *	    	  	    	when searching for a file according to its  *	    	  	    	suffix. It takes the global search path,  *	    	  	    	as defined using the .PATH: target, and appends  *	    	  	    	its directories to the path of each of the  *	    	  	    	defined suffixes, as specified using  *	    	  	    	.PATH<suffix>: targets. In addition, all  *	    	  	    	directories given for suffixes labeled as  *	    	  	    	include files or libraries, using the .INCLUDES  *	    	  	    	or .LIBS targets, are played with using  *	    	  	    	Dir_MakeFlags to create the .INCLUDES and  *	    	  	    	.LIBS global variables.  *  *	Suff_ClearSuffixes  	Clear out all the suffixes and defined  *	    	  	    	transformations.  *  *	Suff_IsTransform    	Return TRUE if the passed string is the lhs  *	    	  	    	of a transformation rule.  *  *	Suff_AddSuffix	    	Add the passed string as another known suffix.  *  *	Suff_GetPath	    	Return the search path for the given suffix.  *  *	Suff_AddInclude	    	Mark the given suffix as denoting an include  *	    	  	    	file.  *  *	Suff_AddLib	    	Mark the given suffix as denoting a library.  *  *	Suff_AddTransform   	Add another transformation to the suffix  *	    	  	    	graph. Returns  GNode suitable for framing, I  *	    	  	    	mean, tacking commands, attributes, etc. on.  *  *	Suff_SetNull	    	Define the suffix to consider the suffix of  *	    	  	    	any file that doesn't have a known one.  *  *	Suff_FindDeps	    	Find implicit sources for and the location of  *	    	  	    	a target based on its suffix. Returns the  *	    	  	    	bottom-most node added to the graph or NULL  *	    	  	    	if the target had no implicit sources.  */
 end_comment
 
 begin_include
@@ -1154,7 +1154,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|Lst_Remove
@@ -1233,7 +1233,7 @@ name|l
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|s2
@@ -1292,7 +1292,7 @@ if|if
 condition|(
 name|ln
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 if|if
@@ -1535,11 +1535,11 @@ decl_stmt|;
 comment|/* Source of possible transformation to 				     * null suffix */
 name|srcLn
 operator|=
-name|NILLNODE
+name|NULL
 expr_stmt|;
 name|singleLn
 operator|=
-name|NILLNODE
+name|NULL
 expr_stmt|;
 comment|/*      * Loop looking first for a suffix that matches the start of the      * string and then for one that exactly matches the rest of it. If      * we can find two that meet these criteria, we've successfully      * parsed the string.      */
 for|for
@@ -1552,7 +1552,7 @@ if|if
 condition|(
 name|srcLn
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|srcLn
@@ -1596,7 +1596,7 @@ if|if
 condition|(
 name|srcLn
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 comment|/* 	     * Ran out of source suffixes -- no such rule 	     */
@@ -1604,7 +1604,7 @@ if|if
 condition|(
 name|singleLn
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 comment|/* 		 * Not so fast Mr. Smith! There was a suffix that encompassed 		 * the entire string, so we assume it was a transformation 		 * to the null suffix (thank you POSIX). We still prefer to 		 * find a double rule over a singleton, hence we leave this 		 * check until the end. 		 * 		 * XXX: Use emptySuff over suffNull? 		 */
@@ -1686,7 +1686,7 @@ if|if
 condition|(
 name|targLn
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 operator|*
@@ -1810,7 +1810,7 @@ if|if
 condition|(
 name|ln
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 comment|/* 	 * Make a new graph node for the transformation. It will be filled in 	 * by the Parse module. 	 */
@@ -2056,7 +2056,7 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Remove the source from the target's children list. We check for a 	 * nil return to handle a beanhead saying something like 	 *  .c.o .c.o: 	 * 	 * We'll be called twice when the next target is seen, but .c and .o 	 * are only linked once... 	 */
+comment|/* 	 * Remove the source from the target's children list. We check for a 	 * NULL return to handle a beanhead saying something like 	 *  .c.o .c.o: 	 * 	 * We'll be called twice when the next target is seen, but .c and .o 	 * are only linked once... 	 */
 name|SuffRemove
 argument_list|(
 name|t
@@ -2212,7 +2212,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 comment|/* 	     * Found target. Link in and return, since it can't be anything 	     * else. 	     */
@@ -2323,7 +2323,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 comment|/* 	     * Found it -- establish the proper relationship 	     */
@@ -2408,7 +2408,7 @@ if|if
 condition|(
 name|ln
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|s
@@ -2531,7 +2531,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Suff_GetPath --  *	Return the search path for the given suffix, if it's defined.  *  * Results:  *	The searchPath for the desired suffix or NILLST if the suffix isn't  *	defined.  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Suff_GetPath --  *	Return the search path for the given suffix, if it's defined.  *  * Results:  *	The searchPath for the desired suffix or NULL if the suffix isn't  *	defined.  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2570,12 +2570,12 @@ if|if
 condition|(
 name|ln
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 return|return
 operator|(
-name|NILLST
+name|NULL
 operator|)
 return|;
 block|}
@@ -2670,7 +2670,7 @@ name|sufflist
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|s
@@ -2884,7 +2884,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|s
@@ -2949,7 +2949,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|s
@@ -3099,7 +3099,7 @@ name|s2
 operator|->
 name|node
 operator|=
-name|NILGNODE
+name|NULL
 expr_stmt|;
 name|s2
 operator|->
@@ -3247,7 +3247,7 @@ name|s2
 operator|->
 name|node
 operator|=
-name|NILGNODE
+name|NULL
 expr_stmt|;
 name|s2
 operator|->
@@ -3496,7 +3496,7 @@ name|l
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|s
@@ -3572,7 +3572,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 name|Lst_Remove
 argument_list|(
@@ -3796,7 +3796,7 @@ argument_list|,
 name|TARG_NOCREATE
 argument_list|)
 operator|!=
-name|NILGNODE
+name|NULL
 condition|)
 block|{
 ifdef|#
@@ -3923,7 +3923,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * SuffFindCmds --  *	See if any of the children of the target in the Src structure is  *	one from which the target can be transformed. If there is one,  *	a Src structure is put together for it and returned.  *  * Results:  *	The Src structure of the "winning" child, or NIL if no such beast.  *  * Side Effects:  *	A Src structure may be allocated.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * SuffFindCmds --  *	See if any of the children of the target in the Src structure is  *	one from which the target can be transformed. If there is one,  *	a Src structure is put together for it and returned.  *  * Results:  *	The Src structure of the "winning" child, or NULL if no such beast.  *  * Side Effects:  *	A Src structure may be allocated.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -4015,7 +4015,7 @@ name|children
 argument_list|)
 operator|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|s
@@ -4103,7 +4103,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 comment|/* 		 * It even has a known suffix, see if there's a transformation 		 * defined between the node's suffix and the target's suffix. 		 * 		 * XXX: Handle multi-stage transformations here, too. 		 */
@@ -4134,7 +4134,7 @@ operator|->
 name|suff
 argument_list|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 comment|/* 		     * Hot Damn! Create a new Src structure to describe 		     * this transformation (making sure to duplicate the 		     * source node's name so Suff_FindDeps can free it 		     * again (ick)), and return the new structure. 		     */
@@ -4761,7 +4761,7 @@ operator|)
 name|gn
 argument_list|)
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 operator|(
@@ -4941,7 +4941,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|Suff
@@ -5070,7 +5070,7 @@ operator|)
 name|gn
 argument_list|)
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 operator|(
@@ -5245,7 +5245,7 @@ operator|)
 name|sGn
 argument_list|)
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 comment|/* 	 * Not already linked, so form the proper links between the 	 * target and source. 	 */
@@ -5313,7 +5313,7 @@ argument_list|)
 init|;
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|;
 name|ln
 operator|=
@@ -5348,7 +5348,7 @@ operator|)
 name|gn
 argument_list|)
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 comment|/* 		 * Not already linked, so form the proper links between the 		 * target and source. 		 */
@@ -5430,7 +5430,7 @@ if|if
 condition|(
 name|ln
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 comment|/* 	 * Not really such a transformation rule (can happen when we're 	 * called to link an OP_MEMBER and OP_ARCHV node), so return 	 * FALSE. 	 */
@@ -5510,7 +5510,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|Lst_ForEachFrom
@@ -5692,7 +5692,7 @@ operator|)
 name|mem
 argument_list|)
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 operator|(
@@ -5878,7 +5878,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 comment|/* 	     * Got one -- apply it 	     */
@@ -6083,7 +6083,7 @@ while|while
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 comment|/* 	 * Look for next possible suffix... 	 */
@@ -6104,7 +6104,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|int
@@ -7013,7 +7013,7 @@ operator|)
 name|bottom
 argument_list|)
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|Lst_AtEnd
@@ -7059,7 +7059,7 @@ name|bottom
 operator|->
 name|node
 operator|==
-name|NILGNODE
+name|NULL
 condition|)
 block|{
 name|bottom
@@ -7147,7 +7147,7 @@ name|targ
 operator|->
 name|node
 operator|==
-name|NILGNODE
+name|NULL
 condition|)
 block|{
 name|targ
@@ -7297,7 +7297,7 @@ operator|)
 name|bottom
 argument_list|)
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 name|Lst_AtEnd
 argument_list|(
@@ -7499,7 +7499,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|gn
@@ -7619,7 +7619,7 @@ if|if
 condition|(
 name|ln
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|s

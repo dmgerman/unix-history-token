@@ -43,7 +43,7 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_IsEmpty --  *	Return TRUE if the given list is empty.  *  * Results:  *	TRUE if the list is empty, FALSE otherwise.  *  * Side Effects:  *	None.  *  *	A list is considered empty if its firstPtr == NilListNode (or if  *	the list itself is NILLIST).  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_IsEmpty --  *	Return TRUE if the given list is empty.  *  * Results:  *	TRUE if the list is empty, FALSE otherwise.  *  * Side Effects:  *	None.  *  *	A list is considered empty if its firstPtr == NULL (or if  *	the list itself is NULLLIST).  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function

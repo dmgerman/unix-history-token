@@ -60,12 +60,12 @@ if|if
 condition|(
 name|ln
 operator|==
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 return|return
 operator|(
-name|NILLNODE
+name|NULL
 operator|)
 return|;
 block|}

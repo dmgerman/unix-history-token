@@ -122,7 +122,7 @@ name|GNode
 modifier|*
 name|curTarg
 init|=
-name|NILGNODE
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -240,7 +240,7 @@ condition|(
 operator|(
 name|curTarg
 operator|!=
-name|NILGNODE
+name|NULL
 operator|)
 operator|&&
 operator|!
@@ -316,7 +316,7 @@ if|if
 condition|(
 name|gn
 operator|!=
-name|NILGNODE
+name|NULL
 condition|)
 block|{
 name|Lst_ForEach
@@ -1495,7 +1495,7 @@ argument_list|,
 name|pgn
 argument_list|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|char
@@ -1681,7 +1681,7 @@ argument_list|)
 expr_stmt|;
 name|curTarg
 operator|=
-name|NILGNODE
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -1920,7 +1920,7 @@ argument_list|,
 name|pgn
 argument_list|)
 operator|!=
-name|NILLNODE
+name|NULL
 condition|)
 block|{
 name|char
@@ -2229,7 +2229,7 @@ if|if
 condition|(
 name|gn
 operator|!=
-name|NILGNODE
+name|NULL
 condition|)
 block|{
 name|Lst_ForEach

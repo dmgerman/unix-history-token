@@ -107,20 +107,6 @@ begin_comment
 comment|/*  * A nil pointer must be something that will cause an exception if  * referenced.  There are two nils: the kernels nil and the nil used  * by user processes.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NIL
-value|~0
-end_define
-
-begin_define
-define|#
-directive|define
-name|USER_NIL
-value|0
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef

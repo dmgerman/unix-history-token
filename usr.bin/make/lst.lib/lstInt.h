@@ -84,13 +84,6 @@ begin_comment
 comment|/* List node should be removed when done */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NilListNode
-value|((ListNode)-1)
-end_define
-
 begin_typedef
 typedef|typedef
 enum|enum
@@ -135,7 +128,7 @@ comment|/* true if list has been Lst_Open'ed */
 name|ListNode
 name|curPtr
 decl_stmt|;
-comment|/* current node, if open. NilListNode if 				   * *just* opened */
+comment|/* current node, if open. NULL if 				   * *just* opened */
 name|ListNode
 name|prevPtr
 decl_stmt|;
@@ -145,13 +138,6 @@ typedef|*
 name|List
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|NilList
-value|((List)-1)
-end_define
 
 begin_comment
 comment|/*  * PAlloc (var, ptype) --  *	Allocate a pointer-typedef structure 'ptype' into the variable 'var'  */
@@ -180,7 +166,7 @@ name|LstValid
 parameter_list|(
 name|l
 parameter_list|)
-value|(((Lst)l == NILLST) ? FALSE : TRUE)
+value|(((Lst)l == NULL) ? FALSE : TRUE)
 end_define
 
 begin_comment
@@ -196,7 +182,7 @@ name|ln
 parameter_list|,
 name|l
 parameter_list|)
-value|((((LstNode)ln) == NILLNODE) ? FALSE : TRUE)
+value|((((LstNode)ln) == NULL) ? FALSE : TRUE)
 end_define
 
 begin_comment
@@ -210,7 +196,7 @@ name|LstIsEmpty
 parameter_list|(
 name|l
 parameter_list|)
-value|(((List)l)->firstPtr == NilListNode)
+value|(((List)l)->firstPtr == NULL)
 end_define
 
 begin_endif

@@ -72,13 +72,13 @@ name|nList
 operator|->
 name|firstPtr
 operator|=
-name|NilListNode
+name|NULL
 expr_stmt|;
 name|nList
 operator|->
 name|lastPtr
 operator|=
-name|NilListNode
+name|NULL
 expr_stmt|;
 name|nList
 operator|->
