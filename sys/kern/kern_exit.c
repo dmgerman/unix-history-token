@@ -395,6 +395,11 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* are we a task leader? */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -434,12 +439,22 @@ operator|->
 name|p_pid
 expr_stmt|;
 comment|/* 		         * The interface for kill is better 			 * than the internal signal 			 */
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|kill
 argument_list|(
 name|p
 argument_list|,
 operator|&
 name|killArgs
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|nq
@@ -459,12 +474,17 @@ name|p
 operator|->
 name|p_peers
 condition|)
-name|tsleep
+name|msleep
 argument_list|(
 operator|(
 name|caddr_t
 operator|)
 name|p
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_mtx
 argument_list|,
 name|PWAIT
 argument_list|,
@@ -474,6 +494,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PGINPROF
@@ -520,14 +545,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_PROFIL
-condition|)
 name|stopprofclock
 argument_list|(
 name|p
@@ -555,6 +572,11 @@ name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If parent is waiting for us to exit or exec, 	 * P_PPWAIT is set; we will wakeup the parent below. 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_flag
@@ -577,6 +599,11 @@ argument_list|(
 name|p
 operator|->
 name|p_siglist
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -610,6 +637,12 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Close open files and release open-file table. 	 * This may block! 	 */
 name|fdfree
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Remove ourself from our leader's peer list and wake our leader. 	 */
+name|PROC_LOCK
 argument_list|(
 name|p
 argument_list|)
@@ -662,6 +695,11 @@ name|p_leader
 argument_list|)
 expr_stmt|;
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 	 * XXX Shutdown SYSV semaphores 	 */
 name|semexit
 argument_list|(
@@ -724,6 +762,11 @@ name|VM_MAXUSER_ADDRESS
 argument_list|)
 expr_stmt|;
 block|}
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|SESS_LEADER
@@ -742,6 +785,11 @@ name|p
 operator|->
 name|p_session
 decl_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sp
@@ -843,6 +891,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+else|else
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|fixjobc
 argument_list|(
 name|p
@@ -941,6 +995,8 @@ expr_stmt|;
 if|if
 condition|(
 name|q
+operator|!=
+name|NULL
 condition|)
 comment|/* only need this if any child is S_ZOMB */
 name|wakeup
@@ -956,7 +1012,7 @@ control|(
 init|;
 name|q
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|q
 operator|=
@@ -997,6 +1053,11 @@ name|p_pptr
 operator|=
 name|initproc
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
 name|q
 operator|->
 name|p_sigparent
@@ -1020,6 +1081,11 @@ operator|&=
 operator|~
 name|P_TRACED
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
 name|psignal
 argument_list|(
 name|q
@@ -1028,6 +1094,12 @@ name|SIGKILL
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|PROC_UNLOCK
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Save exit status and final rusage info, adding in child rusage 	 * info and self times. 	 */
 name|p
@@ -1046,6 +1118,14 @@ operator|->
 name|p_stats
 operator|->
 name|p_ru
+expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
 expr_stmt|;
 name|calcru
 argument_list|(
@@ -1066,6 +1146,14 @@ operator|->
 name|ru_stime
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|ruadd
@@ -1099,6 +1187,11 @@ name|ticks
 argument_list|)
 expr_stmt|;
 comment|/* 	 * notify interested parties of our demise. 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|KNOTE
 argument_list|(
 operator|&
@@ -1107,6 +1200,11 @@ operator|->
 name|p_klist
 argument_list|,
 name|NOTE_EXIT
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Notify parent that we're gone.  If parent has the PS_NOCLDWAIT 	 * flag set, notify process 1 instead (and hope it will handle 	 * this situation). 	 */
@@ -1202,6 +1300,14 @@ name|PT_RELEASE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Clear curproc after we've done all operations 	 * that could block, and before tearing down the rest 	 * of the process state that might be used from clock, etc. 	 * Also, can't clear curproc while we're still runnable, 	 * as we're not on a run queue (we are current, just not 	 * a proper proc any longer!). 	 * 	 * Other substructures are freed from wait(). 	 */
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|--
@@ -1483,6 +1589,11 @@ name|pid
 condition|)
 continue|continue;
 comment|/* 		 * This special case handles a kthread spawned by linux_clone  		 * (see linux_misc.c).  The linux_wait4 and linux_waitpid 		 * functions need to be able to distinguish between waiting 		 * on a process and waiting on a thread.  It is a thread if 		 * p_sigparent is not SIGCHLD, and the WLINUXCLONE option 		 * signifies we want to wait for threads and not processes. 		 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1505,7 +1616,14 @@ operator|!=
 literal|0
 operator|)
 condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 name|nfound
 operator|++
 expr_stmt|;
@@ -1532,6 +1650,11 @@ operator|&
 name|sched_lock
 argument_list|,
 name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|PROCTREE_LOCK
@@ -1824,6 +1947,11 @@ name|p_textvp
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Free up credentials. 			 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|--
@@ -1940,6 +2068,11 @@ argument_list|,
 name|M_PARGS
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Finally finished with old proc entry. 			 * Unlink it from its process group and free it. 			 */
 name|leavepgrp
 argument_list|(
@@ -1979,6 +2112,11 @@ expr_stmt|;
 name|PROCTREE_LOCK
 argument_list|(
 name|PT_RELEASE
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -2031,6 +2169,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Give machine-dependent layer a chance 			 * to free anything that cpu_exit couldn't 			 * release while still running in process context. 			 */
 name|cpu_wait
 argument_list|(
@@ -2102,16 +2245,21 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-name|PROCTREE_LOCK
-argument_list|(
-name|PT_RELEASE
-argument_list|)
-expr_stmt|;
 name|p
 operator|->
 name|p_flag
 operator||=
 name|P_WAITED
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|PROCTREE_LOCK
+argument_list|(
+name|PT_RELEASE
+argument_list|)
 expr_stmt|;
 name|q
 operator|->
@@ -2211,6 +2359,11 @@ operator|&
 name|sched_lock
 argument_list|,
 name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -2534,6 +2687,11 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -2600,6 +2758,11 @@ name|M_SUBPROC
 argument_list|)
 expr_stmt|;
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
