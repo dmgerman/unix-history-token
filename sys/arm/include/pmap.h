@@ -348,6 +348,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|pmap_page_is_mapped
+parameter_list|(
+name|m
+parameter_list|)
+value|(!TAILQ_EMPTY(&(m)->md.pv_list))
+end_define
+
 begin_comment
 comment|/*  * Pmap sutff  */
 end_comment
