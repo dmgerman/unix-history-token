@@ -1110,17 +1110,6 @@ operator|=
 name|RLIM_INFINITY
 expr_stmt|;
 comment|/* 	 * Write the accounting information to the file. 	 */
-name|VOP_LEASE
-argument_list|(
-name|vp
-argument_list|,
-name|td
-argument_list|,
-name|acctcred
-argument_list|,
-name|LEASE_WRITE
-argument_list|)
-expr_stmt|;
 name|uc
 operator|=
 name|crhold
@@ -1137,6 +1126,17 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|acct_mtx
+argument_list|)
+expr_stmt|;
+name|VOP_LEASE
+argument_list|(
+name|vp
+argument_list|,
+name|td
+argument_list|,
+name|uc
+argument_list|,
+name|LEASE_WRITE
 argument_list|)
 expr_stmt|;
 name|ret
