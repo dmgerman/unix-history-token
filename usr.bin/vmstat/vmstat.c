@@ -5035,11 +5035,6 @@ name|i
 operator|++
 control|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|p
-decl_stmt|;
 if|if
 condition|(
 name|intrname
@@ -5309,6 +5304,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|sym
