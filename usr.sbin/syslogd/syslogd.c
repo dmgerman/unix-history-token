@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.50 1999/05/04 18:03:59 des Exp $"
+literal|"$Id: syslogd.c,v 1.51 1999/05/06 13:57:57 dt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3964,7 +3964,7 @@ name|f_prevline
 argument_list|)
 operator|&&
 operator|!
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|from
 argument_list|,
@@ -4764,7 +4764,7 @@ expr_stmt|;
 comment|/* check for local vs remote messages */
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|f
 operator|->
@@ -6057,7 +6057,7 @@ literal|'.'
 argument_list|)
 operator|)
 operator|&&
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|p
 operator|+
