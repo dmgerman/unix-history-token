@@ -14,12 +14,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"vlan.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -89,14 +83,6 @@ directive|include
 file|<net/if_media.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -108,11 +94,6 @@ include|#
 directive|include
 file|<net/if_vlan_var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -5947,11 +5928,6 @@ operator|=
 literal|0xffff
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 comment|/* 		 * If we received a packet with a vlan tag, pass it 		 * to vlan_input() instead of ether_input(). 		 */
 if|if
 condition|(
@@ -5960,8 +5936,10 @@ operator|&
 name|NGE_RXEXTSTS_VLANPKT
 condition|)
 block|{
-name|vlan_input_tag
+name|VLAN_INPUT_TAG
 argument_list|(
+name|ifp
+argument_list|,
 name|eh
 argument_list|,
 name|m
@@ -5973,8 +5951,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-endif|#
-directive|endif
 name|ether_input
 argument_list|(
 name|ifp
@@ -6736,11 +6712,6 @@ name|cnt
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 name|struct
 name|ifvlan
 modifier|*
@@ -6796,8 +6767,6 @@ name|rcvif
 operator|->
 name|if_softc
 expr_stmt|;
-endif|#
-directive|endif
 comment|/*  	 * Start packing the mbufs in this chain into 	 * the fragment pointers. Stop when we run out  	 * of fragments or hit the end of the mbuf chain. 	 */
 name|m
 operator|=
@@ -7030,11 +6999,6 @@ operator||=
 name|NGE_TXEXTSTS_UDPCSUM
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 if|if
 condition|(
 name|ifv
@@ -7062,8 +7026,6 @@ name|ifv_tag
 operator|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|sc
 operator|->
 name|nge_ldata
@@ -7661,12 +7623,7 @@ argument_list|,
 name|NGE_VIPRXCTL_IPCSUM_ENB
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
-comment|/* 	 * If VLAN support is enabled, tell the chip to detect 	 * and strip VLAN tag info from received frames. The tag 	 * will be provided in the extsts field in the RX descriptors. 	 */
+comment|/* 	 * Tell the chip to detect and strip VLAN tag info from 	 * received frames. The tag will be provided in the extsts 	 * field in the RX descriptors. 	 */
 name|NGE_SETBIT
 argument_list|(
 name|sc
@@ -7678,8 +7635,6 @@ operator||
 name|NGE_VIPRXCTL_TAG_STRIP_ENB
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Set TX configuration */
 name|CSR_WRITE_4
 argument_list|(
@@ -7700,12 +7655,7 @@ argument_list|,
 name|NGE_VIPTXCTL_CSUM_PER_PKT
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
-comment|/* 	 * If VLAN support is enabled, tell the chip to insert 	 * VLAN tags on a per-packet basis as dictated by the 	 * code in the frame encapsulation routine. 	 */
+comment|/* 	 * Tell the chip to insert VLAN tags on a per-packet basis as 	 * dictated by the code in the frame encapsulation routine. 	 */
 name|NGE_SETBIT
 argument_list|(
 name|sc
@@ -7715,8 +7665,6 @@ argument_list|,
 name|NGE_VIPTXCTL_TAG_PER_PKT
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Set full/half duplex mode. */
 if|if
 condition|(
