@@ -2100,6 +2100,11 @@ argument_list|(
 name|stdscr
 argument_list|)
 expr_stmt|;
+name|wnoutrefresh
+argument_list|(
+name|stdscr
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2113,7 +2118,7 @@ block|{
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
-name|refresh
+name|doupdate
 argument_list|()
 expr_stmt|;
 block|}
