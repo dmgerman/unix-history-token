@@ -175,8 +175,6 @@ name|n
 operator|=
 name|TerminalWrite
 argument_list|(
-name|tout
-argument_list|,
 name|ttyoring
 operator|.
 name|consume
@@ -220,8 +218,6 @@ name|n1
 operator|=
 name|TerminalWrite
 argument_list|(
-name|tout
-argument_list|,
 name|ttyoring
 operator|.
 name|bottom
@@ -381,10 +377,6 @@ parameter_list|()
 block|{
 name|TerminalNewMode
 argument_list|(
-name|tin
-argument_list|,
-name|tout
-argument_list|,
 name|getconnmode
 argument_list|()
 argument_list|)
@@ -399,10 +391,6 @@ parameter_list|()
 block|{
 name|TerminalNewMode
 argument_list|(
-name|tin
-argument_list|,
-name|tout
-argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;

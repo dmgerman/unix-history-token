@@ -57,10 +57,6 @@ name|showoptions
 decl_stmt|,
 name|net
 decl_stmt|,
-name|tin
-decl_stmt|,
-name|tout
-decl_stmt|,
 name|crlf
 decl_stmt|,
 comment|/* Should '\r' be mapped to<CR><LF> (or<CR><NUL>)? */
@@ -119,11 +115,6 @@ decl_stmt|,
 name|myopts
 index|[]
 decl_stmt|,
-name|subbuffer
-index|[
-name|SUBBUFSIZE
-index|]
-decl_stmt|,
 modifier|*
 name|hostname
 decl_stmt|,
@@ -165,15 +156,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|void
-name|intr
-argument_list|()
-decl_stmt|,
-name|intr2
-argument_list|()
-decl_stmt|,
-name|deadpeer
-argument_list|()
-decl_stmt|,
 name|dosynch
 argument_list|()
 decl_stmt|,

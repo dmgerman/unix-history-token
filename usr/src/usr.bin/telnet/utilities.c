@@ -604,8 +604,7 @@ block|{
 name|char
 name|tmpbuf
 index|[
-sizeof|sizeof
-name|subbuffer
+name|SUBBUFSIZE
 index|]
 decl_stmt|;
 name|int

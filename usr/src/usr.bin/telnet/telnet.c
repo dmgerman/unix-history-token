@@ -346,8 +346,6 @@ literal|0
 decl_stmt|,
 comment|/* We have talked about suppress go ahead */
 name|telnetport
-init|=
-literal|1
 decl_stmt|,
 name|SYNCHing
 decl_stmt|,
@@ -598,7 +596,6 @@ end_macro
 
 begin_block
 block|{
-comment|/* Don't change telnetport */
 name|SB_CLEAR
 argument_list|()
 expr_stmt|;
@@ -619,10 +616,6 @@ operator|=
 name|ISend
 operator|=
 name|donebinarytoggle
-operator|=
-literal|0
-expr_stmt|;
-name|telnetport
 operator|=
 literal|0
 expr_stmt|;

@@ -251,19 +251,11 @@ end_block
 begin_macro
 name|TerminalWrite
 argument_list|(
-argument|fd
-argument_list|,
 argument|buf
 argument_list|,
 argument|n
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|fd
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -283,7 +275,7 @@ block|{
 return|return
 name|write
 argument_list|(
-name|fd
+name|tout
 argument_list|,
 name|buf
 argument_list|,
@@ -296,19 +288,11 @@ end_block
 begin_macro
 name|TerminalRead
 argument_list|(
-argument|fd
-argument_list|,
 argument|buf
 argument_list|,
 argument|n
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|fd
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -328,7 +312,7 @@ block|{
 return|return
 name|read
 argument_list|(
-name|fd
+name|tin
 argument_list|,
 name|buf
 argument_list|,
@@ -667,18 +651,8 @@ begin_function
 name|void
 name|TerminalNewMode
 parameter_list|(
-name|fd_in
-parameter_list|,
-name|fd_out
-parameter_list|,
 name|f
 parameter_list|)
-name|int
-name|fd_in
-decl_stmt|,
-name|fd_out
-decl_stmt|;
-comment|/* File descriptor */
 specifier|register
 name|int
 name|f
@@ -1117,7 +1091,7 @@ return|return;
 block|}
 name|ioctl
 argument_list|(
-name|fd_in
+name|tin
 argument_list|,
 name|TIOCSLTC
 argument_list|,
@@ -1130,7 +1104,7 @@ argument_list|)
 expr_stmt|;
 name|ioctl
 argument_list|(
-name|fd_in
+name|tin
 argument_list|,
 name|TIOCSETC
 argument_list|,
@@ -1143,7 +1117,7 @@ argument_list|)
 expr_stmt|;
 name|ioctl
 argument_list|(
-name|fd_in
+name|tin
 argument_list|,
 name|TIOCSETP
 argument_list|,
@@ -1181,7 +1155,7 @@ argument_list|)
 operator|)
 name|ioctl
 argument_list|(
-name|fd_in
+name|tin
 argument_list|,
 name|FIONBIO
 argument_list|,
@@ -1195,7 +1169,7 @@ argument_list|)
 expr_stmt|;
 name|ioctl
 argument_list|(
-name|fd_out
+name|tout
 argument_list|,
 name|FIONBIO
 argument_list|,
@@ -1225,7 +1199,7 @@ condition|)
 block|{
 name|ioctl
 argument_list|(
-name|fd_in
+name|tin
 argument_list|,
 name|FIOASYNC
 argument_list|,
@@ -1440,6 +1414,7 @@ comment|/*  * Various signal handling routines.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|deadpeer
 parameter_list|()
@@ -1459,6 +1434,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|intr
 parameter_list|()
@@ -1488,6 +1464,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|intr2
 parameter_list|()
@@ -1506,6 +1483,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|doescape
 parameter_list|()
@@ -2217,8 +2195,6 @@ name|c
 operator|=
 name|TerminalRead
 argument_list|(
-name|tin
-argument_list|,
 name|ttyiring
 operator|.
 name|supply
