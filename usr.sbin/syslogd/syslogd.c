@@ -1643,6 +1643,14 @@ literal|60
 expr_stmt|;
 break|break;
 case|case
+literal|'n'
+case|:
+name|resolve
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
 literal|'p'
 case|:
 comment|/* path */
@@ -1652,14 +1660,6 @@ literal|0
 index|]
 operator|=
 name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'r'
-case|:
-name|resolve
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
