@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/src/sys.386bsd/kern/RCS/init_main.c,v 1.3 92/01/21 21:28:49 william Exp Locker: root $"
+literal|"$Header: /a/cvs/386BSD/src/sys/kern/init_main.c,v 1.1.1.1 1993/06/12 14:57:34 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -308,17 +308,10 @@ expr_stmt|;
 name|consinit
 argument_list|()
 expr_stmt|;
-comment|/* -hv- 22 Apr 93 corrects a hack which prevents proper handling 	 * of different terminal emulators 	 * plain ESC codes in the kernel other than in the console part 	 * should be a NO-NO! Fixed in pccons.c/co_vga.c 	 */
-name|cons_highlight
-argument_list|()
-expr_stmt|;
 name|printf
 argument_list|(
 name|copyright1
 argument_list|)
-expr_stmt|;
-name|cons_normal
-argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
