@@ -93,6 +93,7 @@ value|(((a)>= '0')&& ((a)<= '9'))
 end_define
 
 begin_function
+specifier|static
 name|int
 name|search_string
 parameter_list|(
@@ -220,6 +221,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|alias_rtsp_out
 parameter_list|(
@@ -1108,6 +1110,7 @@ comment|/* Support the protocol used by early versions of RealPlayer */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|alias_pna_out
 parameter_list|(
