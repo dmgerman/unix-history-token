@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	8.1 (Berkeley) %G%"
+literal|"@(#)res_init.c	6.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -568,7 +568,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|_res
 operator|.
@@ -877,7 +877,7 @@ operator|&&
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -977,7 +977,7 @@ control|)
 block|{
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,

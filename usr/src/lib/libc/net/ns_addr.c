@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ns_addr.c	8.1 (Berkeley) %G%"
+literal|"@(#)ns_addr.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,7 +148,7 @@ if|if
 condition|(
 name|hostname
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -163,7 +163,7 @@ else|else
 block|{
 name|hostname
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -175,7 +175,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -256,7 +256,7 @@ return|;
 comment|/* No separator means net only */
 name|socketname
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|hostname
 argument_list|,
