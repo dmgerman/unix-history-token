@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)args.c	5.5 (Berkeley) %G%"
+literal|"@(#)args.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -996,7 +996,7 @@ index|]
 decl_stmt|;
 specifier|static
 name|char
-name|pro
+name|prof
 index|[]
 init|=
 literal|".indent.pro"
@@ -1012,7 +1012,7 @@ argument_list|(
 literal|"HOME"
 argument_list|)
 argument_list|,
-name|pro
+name|prof
 argument_list|)
 expr_stmt|;
 if|if
@@ -1052,7 +1052,7 @@ name|f
 operator|=
 name|fopen
 argument_list|(
-name|pro
+name|prof
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1093,6 +1093,10 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
+name|int
+name|i
+decl_stmt|;
+specifier|register
 name|char
 modifier|*
 name|p
@@ -1108,15 +1112,14 @@ condition|(
 literal|1
 condition|)
 block|{
+for|for
+control|(
 name|p
 operator|=
 name|buf
-expr_stmt|;
-while|while
-condition|(
+init|;
 operator|(
-operator|*
-name|p
+name|i
 operator|=
 name|getc
 argument_list|(
@@ -1126,14 +1129,19 @@ operator|)
 operator|!=
 name|EOF
 operator|&&
+operator|(
 operator|*
 name|p
+operator|=
+name|i
+operator|)
 operator|>
 literal|' '
-condition|)
-name|p
+condition|;
 operator|++
-expr_stmt|;
+name|p
+control|)
+empty_stmt|;
 if|if
 condition|(
 name|p
@@ -1167,8 +1175,7 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|*
-name|p
+name|i
 operator|==
 name|EOF
 condition|)
