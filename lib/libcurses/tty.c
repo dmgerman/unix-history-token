@@ -37,6 +37,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<curses.h>
 end_include
 
@@ -50,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_comment
@@ -91,6 +103,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|int
+name|__tty_fileno
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -183,7 +201,43 @@ if|if
 condition|(
 name|tcgetattr
 argument_list|(
+name|__tty_fileno
+operator|=
 name|STDIN_FILENO
+argument_list|,
+operator|&
+name|__orig_termios
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|__tty_fileno
+operator|=
+name|open
+argument_list|(
+name|_PATH_TTY
+argument_list|,
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|ERR
+operator|)
+return|;
+elseif|else
+if|if
+condition|(
+name|tcgetattr
+argument_list|(
+name|__tty_fileno
 argument_list|,
 operator|&
 name|__orig_termios
@@ -194,6 +248,7 @@ operator|(
 name|ERR
 operator|)
 return|;
+block|}
 name|__baset
 operator|=
 name|__orig_termios
@@ -342,7 +397,7 @@ return|return
 operator|(
 name|tcsetattr
 argument_list|(
-name|STDIN_FILENO
+name|__tty_fileno
 argument_list|,
 name|__tcaction
 condition|?
@@ -385,7 +440,7 @@ return|return
 operator|(
 name|tcsetattr
 argument_list|(
-name|STDIN_FILENO
+name|__tty_fileno
 argument_list|,
 name|__tcaction
 condition|?
@@ -424,7 +479,7 @@ return|return
 operator|(
 name|tcsetattr
 argument_list|(
-name|STDIN_FILENO
+name|__tty_fileno
 argument_list|,
 name|__tcaction
 condition|?
@@ -464,7 +519,7 @@ return|return
 operator|(
 name|tcsetattr
 argument_list|(
-name|STDIN_FILENO
+name|__tty_fileno
 argument_list|,
 name|__tcaction
 condition|?
@@ -504,7 +559,7 @@ return|return
 operator|(
 name|tcsetattr
 argument_list|(
-name|STDIN_FILENO
+name|__tty_fileno
 argument_list|,
 name|__tcaction
 condition|?
@@ -552,7 +607,7 @@ return|return
 operator|(
 name|tcsetattr
 argument_list|(
-name|STDIN_FILENO
+name|__tty_fileno
 argument_list|,
 name|__tcaction
 condition|?
@@ -603,7 +658,7 @@ return|return
 operator|(
 name|tcsetattr
 argument_list|(
-name|STDIN_FILENO
+name|__tty_fileno
 argument_list|,
 name|__tcaction
 condition|?
@@ -669,7 +724,7 @@ return|return
 operator|(
 name|tcsetattr
 argument_list|(
-name|STDIN_FILENO
+name|__tty_fileno
 argument_list|,
 name|__tcaction
 condition|?
@@ -741,7 +796,7 @@ return|return
 operator|(
 name|tcsetattr
 argument_list|(
-name|STDIN_FILENO
+name|__tty_fileno
 argument_list|,
 name|__tcaction
 condition|?
@@ -1004,7 +1059,7 @@ return|return
 operator|(
 name|tcsetattr
 argument_list|(
-name|STDIN_FILENO
+name|__tty_fileno
 argument_list|,
 name|__tcaction
 condition|?
@@ -1043,7 +1098,7 @@ return|return
 operator|(
 name|tcgetattr
 argument_list|(
-name|STDIN_FILENO
+name|__tty_fileno
 argument_list|,
 operator|&
 name|savedtty
@@ -1062,7 +1117,7 @@ return|return
 operator|(
 name|tcsetattr
 argument_list|(
-name|STDIN_FILENO
+name|__tty_fileno
 argument_list|,
 name|__tcaction
 condition|?

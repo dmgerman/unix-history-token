@@ -86,7 +86,7 @@ if|if
 condition|(
 name|tcgetattr
 argument_list|(
-name|STDIN_FILENO
+name|__tty_fileno
 argument_list|,
 operator|&
 name|save
@@ -202,7 +202,7 @@ name|void
 operator|)
 name|tcgetattr
 argument_list|(
-name|STDIN_FILENO
+name|__tty_fileno
 argument_list|,
 operator|&
 name|__orig_termios
@@ -214,7 +214,7 @@ name|void
 operator|)
 name|tcsetattr
 argument_list|(
-name|STDIN_FILENO
+name|__tty_fileno
 argument_list|,
 name|__tcaction
 condition|?

@@ -999,6 +999,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|__tty_fileno
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Terminal file descriptor */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|COLS
 decl_stmt|;
 end_decl_stmt
