@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: kern_lkm.c,v 1.18 1994/06/29 06:32:31 cgd Exp $	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1994 Christopher G. Demetriou  * Copyright (c) 1992 Terrence R. Lambert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY TERRENCE R. LAMBERT ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1994 Christopher G. Demetriou  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY TERRENCE R. LAMBERT ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -75,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysent.h>
 end_include
 
 begin_include
@@ -1720,10 +1722,10 @@ init|=
 literal|0
 decl_stmt|;
 specifier|extern
-name|int
-name|nsysent
+name|struct
+name|sysentvec
+name|aout_sysvec
 decl_stmt|;
-comment|/* from init_sysent.c */
 switch|switch
 condition|(
 name|cmd
@@ -1769,14 +1771,18 @@ literal|0
 init|;
 name|i
 operator|<
-name|nsysent
+name|aout_sysvec
+operator|.
+name|sv_size
 condition|;
 name|i
 operator|++
 control|)
 if|if
 condition|(
-name|sysent
+name|aout_sysvec
+operator|.
+name|sv_table
 index|[
 name|i
 index|]
@@ -1792,7 +1798,9 @@ if|if
 condition|(
 name|i
 operator|==
-name|nsysent
+name|aout_sysvec
+operator|.
+name|sv_size
 condition|)
 block|{
 name|err
@@ -1813,7 +1821,9 @@ literal|0
 operator|||
 name|i
 operator|>=
-name|nsysent
+name|aout_sysvec
+operator|.
+name|sv_size
 condition|)
 block|{
 name|err
@@ -1827,7 +1837,9 @@ comment|/* save old */
 name|bcopy
 argument_list|(
 operator|&
-name|sysent
+name|aout_sysvec
+operator|.
+name|sv_table
 index|[
 name|i
 index|]
@@ -1854,7 +1866,9 @@ operator|->
 name|lkm_sysent
 argument_list|,
 operator|&
-name|sysent
+name|aout_sysvec
+operator|.
+name|sv_table
 index|[
 name|i
 index|]
@@ -1896,7 +1910,9 @@ name|lkm_oldent
 operator|)
 argument_list|,
 operator|&
-name|sysent
+name|aout_sysvec
+operator|.
+name|sv_table
 index|[
 name|i
 index|]
