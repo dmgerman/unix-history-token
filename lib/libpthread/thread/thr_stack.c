@@ -257,7 +257,7 @@ condition|(
 operator|(
 name|stacksize
 operator|==
-name|THR_STACK_DEFAULT
+name|_thr_stack_default
 operator|)
 operator|&&
 operator|(
@@ -383,7 +383,7 @@ name|last_stack
 operator|=
 name|_usrstack
 operator|-
-name|THR_STACK_INITIAL
+name|_thr_stack_initial
 operator|-
 name|_thr_guard_default
 expr_stmt|;
@@ -625,7 +625,7 @@ name|spare_stack
 operator|->
 name|stacksize
 operator|==
-name|THR_STACK_DEFAULT
+name|_thr_stack_default
 operator|&&
 name|spare_stack
 operator|->

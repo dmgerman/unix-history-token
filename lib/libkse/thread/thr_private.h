@@ -1307,8 +1307,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|THR_STACK_DEFAULT
-value|65536
+name|THR_STACK32_DEFAULT
+value|(1 * 1024 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_STACK64_DEFAULT
+value|(2 * 1024 * 1024)
 end_define
 
 begin_comment
@@ -1318,8 +1325,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|THR_STACK_INITIAL
-value|0x100000
+name|THR_STACK32_INITIAL
+value|(2 * 1024 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_STACK64_INITIAL
+value|(4 * 1024 * 1024)
 end_define
 
 begin_comment
@@ -2590,7 +2604,8 @@ name|NULL
 operator|,
 name|NULL
 operator|,
-name|THR_STACK_DEFAULT
+comment|/* stacksize */
+literal|0
 operator|,
 comment|/* guardsize */
 literal|0
@@ -2796,6 +2811,20 @@ begin_decl_stmt
 name|SCLASS
 name|int
 name|_thr_guard_default
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SCLASS
+name|int
+name|_thr_stack_default
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SCLASS
+name|int
+name|_thr_stack_initial
 decl_stmt|;
 end_decl_stmt
 
