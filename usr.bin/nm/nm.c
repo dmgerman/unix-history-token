@@ -2740,7 +2740,7 @@ return|;
 case|case
 name|N_FN
 case|:
-comment|/* This one is overloaded. EXT = Warn, INT = filename */
+comment|/* This one is overloaded. EXT = Filename, INT = warn refs */
 return|return
 operator|(
 name|IS_EXTERNAL
@@ -2748,9 +2748,9 @@ argument_list|(
 name|type
 argument_list|)
 condition|?
-literal|'W'
+literal|'F'
 else|:
-literal|'f'
+literal|'w'
 operator|)
 return|;
 case|case
