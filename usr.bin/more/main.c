@@ -260,10 +260,12 @@ decl_stmt|;
 name|off_t
 name|initial_pos
 decl_stmt|,
-name|prev_pos
-decl_stmt|,
 name|position
 argument_list|()
+decl_stmt|;
+specifier|static
+name|off_t
+name|prev_pos
 decl_stmt|;
 specifier|static
 name|int
@@ -357,6 +359,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|previous_file
+operator|||
 operator|*
 name|previous_file
 operator|==
