@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c	5.28 (Berkeley) %G%"
+literal|"@(#)func.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,20 +184,6 @@ name|__P
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|isrchx
-name|__P
-argument_list|(
-operator|(
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
