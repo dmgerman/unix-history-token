@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.25 1997/10/11 07:35:25 phk Exp $ */
+comment|/* $Id: ccd.c,v 1.26 1997/10/24 14:24:55 phk Exp $ */
 end_comment
 
 begin_comment
@@ -434,20 +434,6 @@ begin_decl_stmt
 specifier|static
 name|d_psize_t
 name|ccdsize
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_read_t
-name|ccdread
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_write_t
-name|ccdwrite
 decl_stmt|;
 end_decl_stmt
 
