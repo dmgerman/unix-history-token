@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)size.c	4.1 (Berkeley) %G%"
+literal|"@(#)size.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ include|#
 directive|include
 file|<a.out.h>
 end_include
+
+begin_decl_stmt
+name|int
+name|header
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -157,21 +163,24 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|gorp
-operator|>
-literal|2
+name|header
+operator|==
+literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"%s: "
-argument_list|,
-operator|*
-name|argv
+literal|"text\tdata\tbss\tdec\thex\n"
 argument_list|)
 expr_stmt|;
+name|header
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
-literal|"%u+%u+%u = "
+literal|"%u\t%u\t%u\t"
 argument_list|,
 name|buf
 operator|.
@@ -211,11 +220,30 @@ name|a_bss
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%Db = 0x%Xb\n"
+literal|"%ld\t%lx"
 argument_list|,
 name|sum
 argument_list|,
 name|sum
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gorp
+operator|>
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|"\t%s"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|fclose
