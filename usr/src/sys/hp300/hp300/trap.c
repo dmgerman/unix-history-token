@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.28 89/09/25$  *  *	@(#)trap.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.28 89/09/25$  *  *	@(#)trap.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2416,18 +2416,28 @@ endif|#
 directive|endif
 name|error
 operator|=
-operator|(
-operator|*
-operator|(
+call|(
+modifier|*
 name|callp
 operator|->
 name|sy_call
-operator|)
-operator|)
-operator|(
+call|)
+argument_list|(
+name|u
+operator|.
+name|u_procp
+argument_list|,
+name|u
+operator|.
+name|u_ap
+argument_list|,
 operator|&
 name|u
-operator|)
+operator|.
+name|u_r
+operator|.
+name|r_val1
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1120,18 +1120,28 @@ index|]
 expr_stmt|;
 name|error
 operator|=
-operator|(
-operator|*
-operator|(
+call|(
+modifier|*
 name|callp
 operator|->
 name|sy_call
-operator|)
-operator|)
-operator|(
+call|)
+argument_list|(
+name|u
+operator|.
+name|u_procp
+argument_list|,
+name|u
+operator|.
+name|u_ap
+argument_list|,
 operator|&
 name|u
-operator|)
+operator|.
+name|u_r
+operator|.
+name|r_val1
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
