@@ -241,15 +241,6 @@ argument_list|,
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"allocate another stats-page %p\n"
-argument_list|,
-name|spp
-operator|->
-name|stat
-argument_list|)
-expr_stmt|;
 name|spp
 operator|->
 name|nfree
