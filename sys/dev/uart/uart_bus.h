@@ -15,6 +15,29 @@ directive|define
 name|_DEV_UART_BUS_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KLD_MODULE
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"opt_uart.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/timepps.h>
+end_include
+
 begin_comment
 comment|/* Drain and flush targets. */
 end_comment
@@ -248,6 +271,50 @@ name|UART_SIGMASK_DELTA
 value|0x3f00
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UART_PPS_ON_CTS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|UART_SIG_DPPS
+value|UART_SIG_DCTS
+end_define
+
+begin_define
+define|#
+directive|define
+name|UART_SIG_PPS
+value|UART_SIG_CTS
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UART_SIG_DPPS
+value|UART_SIG_DDCD
+end_define
+
+begin_define
+define|#
+directive|define
+name|UART_SIG_PPS
+value|UART_SIG_DCD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* UART_IOCTL() requests */
 end_comment
@@ -461,6 +528,11 @@ name|int
 name|sc_txfifosz
 decl_stmt|;
 comment|/* Size of TX FIFO and buffer. */
+comment|/* Pulse capturing support (PPS). */
+name|struct
+name|pps_state
+name|sc_pps
+decl_stmt|;
 comment|/* Upper layer data. */
 name|void
 modifier|*
