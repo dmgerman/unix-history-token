@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs_vnops.c	8.6 (Berkeley) 2/7/94  *  *	$Id: procfs_vnops.c,v 1.15 1995/08/11 07:26:26 davidg Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs_vnops.c	8.6 (Berkeley) 2/7/94  *  *	$Id: procfs_vnops.c,v 1.16 1995/09/02 18:28:48 mpp Exp $  */
 end_comment
 
 begin_comment
@@ -250,6 +250,7 @@ comment|/*  * set things up for doing i/o on  * the pfsnode (vp).  (vp) is locke
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|procfs_open
 parameter_list|(
@@ -386,6 +387,7 @@ comment|/*  * close the pfsnode (vp) after doing i/o.  * (vp) is not locked on e
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|procfs_close
 parameter_list|(
@@ -465,6 +467,7 @@ comment|/*  * do an ioctl operation on pfsnode (vp).  * (vp) is not locked on en
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|procfs_ioctl
 parameter_list|(
@@ -489,6 +492,7 @@ comment|/*  * _inactive is called when the pfsnode  * is vrele'd and the referen
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|procfs_inactive
 parameter_list|(
@@ -543,6 +547,7 @@ comment|/*  * _reclaim is called when getnewvnode()  * wants to make use of an e
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|procfs_reclaim
 parameter_list|(
@@ -579,6 +584,7 @@ comment|/*  * Return POSIX pathconf information applicable to special devices.  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|procfs_pathconf
 parameter_list|(
@@ -704,6 +710,7 @@ comment|/*  * _print is used for debugging.  * just print a readable description
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|procfs_print
 parameter_list|(
@@ -757,6 +764,7 @@ comment|/*  * _abortop is called when operations such as  * rename and create fa
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|procfs_abortop
 parameter_list|(
@@ -810,6 +818,7 @@ comment|/*  * generic entry point for unsupported operations  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|procfs_badop
 parameter_list|()
@@ -827,6 +836,7 @@ comment|/*  * Invent attributes for pfsnode (vp) and store  * them in (vap).  * 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|procfs_getattr
 parameter_list|(
@@ -1288,6 +1298,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|procfs_setattr
 parameter_list|(
@@ -1313,6 +1324,7 @@ comment|/*  * implement access checking.  *  * something very similar to this co
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|procfs_access
 parameter_list|(
@@ -1501,6 +1513,7 @@ comment|/*  * lookup.  this is incredibly complicated in the  * general case, ho
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|procfs_lookup
 parameter_list|(
@@ -1994,6 +2007,7 @@ comment|/*  * readdir returns directory entries from pfsnode (vp).  *  * the str
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|procfs_readdir
 parameter_list|(
@@ -2634,6 +2648,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|procfs_vnodeop_entries
@@ -2981,6 +2996,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|procfs_vnodeop_opv_desc
