@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1996 by Andrey A. Chernov, Moscow, Russia.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *		$Id: adjkerntz.c,v 1.18.2.1 1997/06/11 06:55:53 charnier Exp $  */
+comment|/*  * Copyright (C) 1993-1996 by Andrey A. Chernov, Moscow, Russia.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *		$Id: adjkerntz.c,v 1.21 1998/02/25 09:40:21 ache Exp $  */
 end_comment
 
 begin_ifndef
@@ -1041,19 +1041,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|tv
-operator|.
-name|tv_sec
-operator|+=
-name|diff
-expr_stmt|;
-name|tv
-operator|.
-name|tv_usec
-operator|=
-literal|0
-expr_stmt|;
-comment|/* we are restarting here... */
+comment|/* 			 * stv is abused as a flag.  The important value 			 * is in `diff'. 			 */
 name|stv
 operator|=
 operator|&
@@ -1240,7 +1228,6 @@ block|}
 if|if
 condition|(
 operator|(
-operator|(
 name|init
 operator|&&
 operator|(
@@ -1263,8 +1250,57 @@ name|stv
 operator|==
 name|NULL
 operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|stv
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 			 * Get the time again, as close as possible to 			 * adjusting it, to minimise drift. 			 * XXX we'd better not fail between here and 			 * restoring disrtcset, since we don't clean up 			 * anything. 			 */
+if|if
+condition|(
+name|gettimeofday
+argument_list|(
+operator|&
+name|tv
+argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
 operator|)
-operator|&&
+name|NULL
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"gettimeofday: %m"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+name|tv
+operator|.
+name|tv_sec
+operator|+=
+name|diff
+expr_stmt|;
+name|stv
+operator|=
+operator|&
+name|tv
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|settimeofday
 argument_list|(
 name|stv
@@ -1283,6 +1319,7 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
 block|}
 comment|/* setting CPU_ADJKERNTZ have a side effect: resettodr(), which */
 comment|/* can be disabled by CPU_DISRTCSET, so if init or UTC clock    */
