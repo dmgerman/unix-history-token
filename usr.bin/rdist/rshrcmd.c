@@ -11,8 +11,9 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|RCSid
+name|rcsid
 index|[]
 init|=
 literal|"$Id$"
@@ -23,6 +24,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -39,12 +44,6 @@ argument_list|(
 name|DIRECT_RCMD
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -67,31 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_function

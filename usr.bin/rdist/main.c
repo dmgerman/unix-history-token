@@ -20,21 +20,6 @@ literal|"@(#) Copyright (c) 1983, 1993\n\ 	The Regents of the University of Cali
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
@@ -54,7 +39,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.3 1997/08/05 06:41:26 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 

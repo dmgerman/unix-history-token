@@ -9,9 +9,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "From: @(#)docmd.c	8.1 (Berkeley) 6/9/93";*/
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "From: @(#)docmd.c	8.1 (Berkeley) 6/9/93";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -20,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: docmd.c,v 1.9 1997/02/22 19:56:40 peter Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -961,6 +969,11 @@ operator|!
 name|nflag
 condition|)
 block|{
+name|struct
+name|linkbuf
+modifier|*
+name|nextihead
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -978,15 +991,14 @@ name|NULL
 condition|;
 name|ihead
 operator|=
+name|nextihead
+control|)
+block|{
+name|nextihead
+operator|=
 name|ihead
 operator|->
 name|nextp
-control|)
-block|{
-name|free
-argument_list|(
-name|ihead
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1012,6 +1024,11 @@ argument_list|,
 name|ihead
 operator|->
 name|pathname
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ihead
 argument_list|)
 expr_stmt|;
 block|}
