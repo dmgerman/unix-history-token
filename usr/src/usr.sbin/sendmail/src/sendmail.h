@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.111		%G%"
+literal|"@(#)sendmail.h	3.112		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +109,133 @@ endif|#
 directive|endif
 endif|LOG
 end_endif
+
+begin_comment
+comment|/* **  Data structure for bit maps. ** **	Each bit in this map can be referenced by an ascii character. **	This is 128 possible bits, or 12 8-bit bytes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BITMAPBYTES
+value|16
+end_define
+
+begin_comment
+comment|/* number of bytes in a bit map */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BYTEBITS
+value|8
+end_define
+
+begin_comment
+comment|/* number of bits in a byte */
+end_comment
+
+begin_comment
+comment|/* internal macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BITWORD
+parameter_list|(
+name|bit
+parameter_list|)
+value|(bit / (BYTEBITS * sizeof (int)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_BITBIT
+parameter_list|(
+name|bit
+parameter_list|)
+value|(1<< (bit % (BYTEBITS * sizeof (int))))
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+name|BITMAP
+index|[
+name|BITMAPBYTES
+operator|/
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+index|]
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* test bit number N */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bitnset
+parameter_list|(
+name|bit
+parameter_list|,
+name|map
+parameter_list|)
+value|((map)[_BITWORD(bit)]& _BITBIT(bit))
+end_define
+
+begin_comment
+comment|/* set bit number N */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|setbitn
+parameter_list|(
+name|bit
+parameter_list|,
+name|map
+parameter_list|)
+value|(map)[_BITWORD(bit)] |= _BITBIT(bit)
+end_define
+
+begin_comment
+comment|/* clear bit number N */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|clrbitn
+parameter_list|(
+name|bit
+parameter_list|,
+name|map
+parameter_list|)
+value|(map)[_BITWORD(bit)]&= ~_BITBIT(bit)
+end_define
+
+begin_comment
+comment|/* clear an entire bit map */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|clrbitmap
+parameter_list|(
+name|map
+parameter_list|)
+value|bzero((char *) map, BITMAPBYTES / sizeof (int))
+end_define
 
 begin_escape
 end_escape
@@ -296,7 +423,7 @@ modifier|*
 name|m_mailer
 decl_stmt|;
 comment|/* pathname of the mailer to use */
-name|u_long
+name|BITMAP
 name|m_flags
 decl_stmt|;
 comment|/* status flags, see below */
@@ -323,6 +450,10 @@ modifier|*
 name|m_eol
 decl_stmt|;
 comment|/* end of line string */
+name|long
+name|m_maxsize
+decl_stmt|;
+comment|/* size limit on message to this mailer */
 block|}
 struct|;
 end_struct
@@ -343,7 +474,7 @@ begin_define
 define|#
 directive|define
 name|M_FOPT
-value|000000001L
+value|'f'
 end_define
 
 begin_comment
@@ -354,7 +485,7 @@ begin_define
 define|#
 directive|define
 name|M_ROPT
-value|000000002L
+value|'r'
 end_define
 
 begin_comment
@@ -365,7 +496,7 @@ begin_define
 define|#
 directive|define
 name|M_RPATH
-value|000000004L
+value|'P'
 end_define
 
 begin_comment
@@ -376,7 +507,7 @@ begin_define
 define|#
 directive|define
 name|M_RESTR
-value|000000010L
+value|'S'
 end_define
 
 begin_comment
@@ -387,7 +518,7 @@ begin_define
 define|#
 directive|define
 name|M_NHDR
-value|000000020L
+value|'n'
 end_define
 
 begin_comment
@@ -398,7 +529,7 @@ begin_define
 define|#
 directive|define
 name|M_LOCAL
-value|000000040L
+value|'l'
 end_define
 
 begin_comment
@@ -409,7 +540,7 @@ begin_define
 define|#
 directive|define
 name|M_STRIPQ
-value|000000100L
+value|'s'
 end_define
 
 begin_comment
@@ -420,7 +551,7 @@ begin_define
 define|#
 directive|define
 name|M_MUSER
-value|000000200L
+value|'m'
 end_define
 
 begin_comment
@@ -431,7 +562,7 @@ begin_define
 define|#
 directive|define
 name|M_NEEDFROM
-value|000000400L
+value|'F'
 end_define
 
 begin_comment
@@ -442,7 +573,7 @@ begin_define
 define|#
 directive|define
 name|M_NEEDDATE
-value|000001000L
+value|'D'
 end_define
 
 begin_comment
@@ -453,7 +584,7 @@ begin_define
 define|#
 directive|define
 name|M_MSGID
-value|000002000L
+value|'M'
 end_define
 
 begin_comment
@@ -464,7 +595,7 @@ begin_define
 define|#
 directive|define
 name|M_CANONICAL
-value|000004000L
+value|'C'
 end_define
 
 begin_comment
@@ -475,7 +606,7 @@ begin_define
 define|#
 directive|define
 name|M_USR_UPPER
-value|000010000L
+value|'u'
 end_define
 
 begin_comment
@@ -486,7 +617,7 @@ begin_define
 define|#
 directive|define
 name|M_HST_UPPER
-value|000020000L
+value|'h'
 end_define
 
 begin_comment
@@ -497,7 +628,7 @@ begin_define
 define|#
 directive|define
 name|M_FULLNAME
-value|000040000L
+value|'x'
 end_define
 
 begin_comment
@@ -508,7 +639,7 @@ begin_define
 define|#
 directive|define
 name|M_UGLYUUCP
-value|000100000L
+value|'U'
 end_define
 
 begin_comment
@@ -519,7 +650,7 @@ begin_define
 define|#
 directive|define
 name|M_EXPENSIVE
-value|000200000L
+value|'e'
 end_define
 
 begin_comment
@@ -530,7 +661,7 @@ begin_define
 define|#
 directive|define
 name|M_LIMITS
-value|000400000L
+value|'L'
 end_define
 
 begin_comment
@@ -541,7 +672,7 @@ begin_define
 define|#
 directive|define
 name|M_INTERNAL
-value|001000000L
+value|'I'
 end_define
 
 begin_comment
@@ -552,7 +683,7 @@ begin_define
 define|#
 directive|define
 name|M_FROMPATH
-value|004000000L
+value|'p'
 end_define
 
 begin_comment
@@ -563,7 +694,7 @@ begin_define
 define|#
 directive|define
 name|M_XDOT
-value|010000000L
+value|'X'
 end_define
 
 begin_comment
@@ -645,7 +776,7 @@ name|u_short
 name|h_flags
 decl_stmt|;
 comment|/* status bits, see below */
-name|u_long
+name|BITMAP
 name|h_mflags
 decl_stmt|;
 comment|/* m_flags bits needed */
@@ -1335,7 +1466,7 @@ decl_stmt|;
 comment|/* pointer to next in chain */
 union|union
 block|{
-name|long
+name|BITMAP
 name|sv_class
 decl_stmt|;
 comment|/* bit-map of word classes */
