@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -36,12 +42,6 @@ end_include
 begin_comment
 comment|/* XXX for CHAR_BIT */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
 
 begin_comment
 comment|/*  * This structure is used for the management of descriptors.  It may be  * shared by multiple processes.  *  * A process is initially started out with NDFILE descriptors stored within  * this structure, selected to be enough for typical applications based on  * the historical limit of 20 open files (and the usage of descriptors by  * shells).  If these descriptors are exhausted, a larger descriptor table  * may be allocated, up to a process' resource limit; the internal arrays  * are then unused.  */
@@ -314,13 +314,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|FILEDESC_LOCK_DESC
-value|"filedesc structure"
-end_define
-
 begin_comment
 comment|/* Lock a file descriptor table. */
 end_comment
@@ -365,6 +358,13 @@ parameter_list|,
 name|type
 parameter_list|)
 value|mtx_assert(&(fd)->fd_mtx, (type))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_LOCK_DESC
+value|"filedesc structure"
 end_define
 
 begin_struct_decl
@@ -442,36 +442,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|fdused
-parameter_list|(
-name|struct
-name|filedesc
-modifier|*
-name|fdp
-parameter_list|,
-name|int
-name|fd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|fdunused
-parameter_list|(
-name|struct
-name|filedesc
-modifier|*
-name|fdp
-parameter_list|,
-name|int
-name|fd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|fdalloc
 parameter_list|(
@@ -506,8 +476,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|fdcloseexec
+name|int
+name|fdcheckstd
 parameter_list|(
 name|struct
 name|thread
@@ -518,8 +488,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|fdcheckstd
+name|void
+name|fdcloseexec
 parameter_list|(
 name|struct
 name|thread
@@ -585,6 +555,36 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|fdunused
+parameter_list|(
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+parameter_list|,
+name|int
+name|fd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fdused
+parameter_list|(
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+parameter_list|,
+name|int
+name|fd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ffree
 parameter_list|(
 name|struct
@@ -595,20 +595,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|file
-operator|*
-name|fget_locked
-argument_list|(
-argument|struct filedesc *fdp
-argument_list|,
-argument|int fd
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_function_decl
+name|struct
+name|filedesc_to_leader
+modifier|*
+name|filedesc_to_leader_alloc
+parameter_list|(
+name|struct
+name|filedesc_to_leader
+modifier|*
+name|old
+parameter_list|,
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|leader
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -639,30 +648,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|filedesc_to_leader
-modifier|*
-name|filedesc_to_leader_alloc
-parameter_list|(
-name|struct
-name|filedesc_to_leader
-modifier|*
-name|old
-parameter_list|,
-name|struct
-name|filedesc
-modifier|*
-name|fdp
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|leader
 parameter_list|)
 function_decl|;
 end_function_decl
