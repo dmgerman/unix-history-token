@@ -4,7 +4,7 @@ comment|/*  * (Free/Net/386)BSD ST01/02, Future Domain TMC-885, TMC-950 SCSI dri
 end_comment
 
 begin_comment
-comment|/*  *  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code   * rknier 940407 Added assembler coded data transfers   *  * $Id: seagate.c,v 1.1 1994/10/24 22:14:34 sos Exp $  */
+comment|/*  *  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code   * rknier 940407 Added assembler coded data transfers   *  * $Id: seagate.c,v 1.2 1994/10/27 05:23:09 phk Exp $  */
 end_comment
 
 begin_comment
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -1933,7 +1939,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sea: board not expected at address 0x%lx\n"
+literal|"sea%d: board not expected at address 0x%lx\n"
+argument_list|,
+name|unit
 argument_list|,
 name|dev
 operator|->
@@ -1970,7 +1978,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sea: board address 0x%lx already probed!\n"
+literal|"sea%d: board address 0x%lx already probed!\n"
+argument_list|,
+name|unit
 argument_list|,
 name|dev
 operator|->
@@ -2326,6 +2336,128 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|kern_devconf
+name|kdc_sea
+index|[
+name|NSEA
+index|]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* filled in by dev_attach */
+literal|"sea"
+block|,
+literal|0
+block|,
+block|{
+name|MDDT_ISA
+block|,
+literal|0
+block|,
+literal|"bio"
+block|}
+block|,
+name|isa_generic_externalize
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|ISA_EXTERNALLEN
+block|,
+operator|&
+name|kdc_isa0
+block|,
+comment|/* parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_BUSY
+block|,
+comment|/* host adaptors are always busy */
+literal|"Seagate ST01/02 SCSI controller"
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|sea_registerdev
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|id
+parameter_list|)
+block|{
+if|if
+condition|(
+name|id
+operator|->
+name|id_unit
+condition|)
+name|kdc_sea
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|=
+name|kdc_sea
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|kdc_sea
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_unit
+operator|=
+name|id
+operator|->
+name|id_unit
+expr_stmt|;
+name|kdc_sea
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_isa
+operator|=
+name|id
+expr_stmt|;
+name|dev_attach
+argument_list|(
+operator|&
+name|kdc_sea
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/***********************************************\ * Attach all sub-devices we can find		* \***********************************************/
 end_comment
@@ -2420,6 +2552,11 @@ name|sea
 operator|->
 name|sc_link
 operator|)
+argument_list|)
+expr_stmt|;
+name|sea_registerdev
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
