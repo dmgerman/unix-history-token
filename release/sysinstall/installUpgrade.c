@@ -356,6 +356,16 @@ block|,
 block|{
 name|JUST_COPY
 block|,
+literal|"host.conf"
+block|,
+name|TRUE
+block|,
+name|NULL
+block|}
+block|,
+block|{
+name|JUST_COPY
+block|,
 literal|"hosts.equiv"
 block|,
 name|TRUE
