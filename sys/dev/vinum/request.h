@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: request.h,v 1.18 2000/05/07 04:05:33 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: request.h,v 1.19 2000/11/24 03:41:51 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -77,6 +77,11 @@ init|=
 literal|0x2000
 block|,
 comment|/* BUF_LOCK performed on this buffer */
+name|XFR_COPYBUF
+init|=
+literal|0x4000
+block|,
+comment|/* data buffer was copied */
 comment|/* operations that need a parity block */
 name|XFR_PARITYOP
 init|=
@@ -274,6 +279,10 @@ modifier|*
 name|bp
 decl_stmt|;
 comment|/* pointer to the high-level request */
+name|caddr_t
+name|save_data
+decl_stmt|;
+comment|/* for copied write buffers */
 name|enum
 name|xferinfo
 name|flags
@@ -446,6 +455,31 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/*  * This is the rangelock structure with an added  * buffer pointer and plex number.  We don't need  * the plex number for the locking protocol, but  * it does help a lot when logging.  */
+end_comment
+
+begin_struct
+struct|struct
+name|rangelockinfo
+block|{
+name|daddr_t
+name|stripe
+decl_stmt|;
+comment|/* address + 1 of the range being locked  */
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
+comment|/* user's buffer pointer */
+name|int
+name|plexno
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_union
 union|union
 name|rqinfou
@@ -463,7 +497,7 @@ name|rqe
 decl_stmt|;
 comment|/* address of request, for correlation */
 name|struct
-name|rangelock
+name|rangelockinfo
 modifier|*
 name|lockinfo
 decl_stmt|;
