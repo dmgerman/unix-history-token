@@ -7373,6 +7373,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|RT_LOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 name|rtfree
 argument_list|(
 name|rt
