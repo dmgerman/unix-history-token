@@ -537,6 +537,42 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Keep structures in sync with ng_atm.h  *  * These are used by netgraph/harp to call the driver  * NATM uses the atm_pseudoioctl instead.  */
+end_comment
+
+begin_struct
+struct|struct
+name|atmio_openvcc
+block|{
+name|void
+modifier|*
+name|rxhand
+decl_stmt|;
+comment|/* handle argument */
+name|struct
+name|atmio_vcc
+name|param
+decl_stmt|;
+comment|/* parameters */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|atmio_closevcc
+block|{
+name|uint16_t
+name|vpi
+decl_stmt|;
+name|uint16_t
+name|vci
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_if
 if|#
 directive|if
@@ -776,6 +812,20 @@ define|#
 directive|define
 name|SIOCATMGETVCCS
 value|_IOW('a', 125, struct atmio_vcctable)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCATMOPENVCC
+value|_IOR('a', 126, struct atmio_openvcc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCATMCLOSEVCC
+value|_IOR('a', 127, struct atmio_closevcc)
 end_define
 
 begin_define
