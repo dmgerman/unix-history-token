@@ -269,27 +269,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SWI_NOSWITCH
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SWI_SWITCH
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
 name|SWI_DELAY
 value|0x2
 end_define
-
-begin_comment
-comment|/* implies NOSWITCH */
-end_comment
 
 begin_comment
 comment|/*  * Software interrupt bit numbers in priority order.  The priority only  * determines which swi will be dispatched next; a higher priority swi  * may be dispatched when a nested h/w interrupt handler returns.  */

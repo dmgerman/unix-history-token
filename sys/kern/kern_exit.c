@@ -1410,12 +1410,10 @@ operator|&
 name|Giant
 argument_list|)
 condition|)
-name|mtx_unlock_flags
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_NOSWITCH
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We have to wait until after releasing all locks before 	 * changing p_stat.  If we block on a mutex then we will be 	 * back at SRUN when we resume and our parent will never 	 * harvest us. 	 */
@@ -1432,7 +1430,7 @@ operator|->
 name|p_pptr
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK_NOSWITCH
+name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)

@@ -229,17 +229,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LOP_NOSWITCH
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* Lock doesn't switch on release. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LOP_QUIET
 value|0x00000002
 end_define

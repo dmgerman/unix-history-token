@@ -373,6 +373,9 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|handleclock
 argument_list|(
 name|framep
@@ -399,6 +402,9 @@ operator|*
 operator|)
 name|framep
 argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1283,6 +1289,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|ih
 operator|->
 name|ih_handler
@@ -1296,6 +1305,9 @@ name|ia64_send_eoi
 argument_list|(
 name|vector
 argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 return|return;
 block|}

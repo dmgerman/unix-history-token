@@ -660,25 +660,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|opts
-operator|&
-name|MTX_NOSWITCH
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"MTX_NOSWITCH used at %s:%d"
-operator|,
-name|file
-operator|,
-name|line
-operator|)
-argument_list|)
-expr_stmt|;
 name|_get_sleep_lock
 argument_list|(
 name|m
@@ -1010,24 +991,6 @@ argument_list|(
 name|curthread
 operator|!=
 name|NULL
-argument_list|)
-expr_stmt|;
-comment|/* 	 * _mtx_trylock does not accept MTX_NOSWITCH option. 	 */
-name|KASSERT
-argument_list|(
-operator|(
-name|opts
-operator|&
-name|MTX_NOSWITCH
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"mtx_trylock() called with invalid option flag(s) %d"
-operator|,
-name|opts
-operator|)
 argument_list|)
 expr_stmt|;
 name|rval
@@ -2202,13 +2165,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|opts
-operator|&
-name|MTX_NOSWITCH
-operator|)
+name|td
+operator|->
+name|td_critnest
 operator|==
-literal|0
+literal|1
 operator|&&
 name|td1
 operator|->
@@ -2918,8 +2879,6 @@ operator|->
 name|mtx_object
 argument_list|,
 name|LOP_EXCLUSIVE
-operator||
-name|LOP_NOSWITCH
 argument_list|,
 name|__FILE__
 argument_list|,

@@ -220,7 +220,7 @@ name|swi_sched
 argument_list|(
 name|taskqueue_acpi_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

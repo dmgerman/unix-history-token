@@ -2080,7 +2080,7 @@ name|swi_sched
 argument_list|(
 name|rc_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2273,7 +2273,7 @@ name|swi_sched
 argument_list|(
 name|rc_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 name|optr
@@ -2526,7 +2526,7 @@ name|swi_sched
 argument_list|(
 name|rc_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2780,7 +2780,7 @@ name|swi_sched
 argument_list|(
 name|rc_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

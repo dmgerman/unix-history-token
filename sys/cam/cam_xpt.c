@@ -20055,7 +20055,7 @@ name|swi_sched
 argument_list|(
 name|cambio_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -20091,7 +20091,7 @@ name|swi_sched
 argument_list|(
 name|camnet_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;

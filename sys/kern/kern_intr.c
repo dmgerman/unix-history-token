@@ -1890,7 +1890,7 @@ operator|->
 name|it_need
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set it_need to tell the thread to keep running if it is already 	 * running.  Then, grab sched_lock and see if we actually need to 	 * put this thread on the runqueue.  If so and the do_switch flag is 	 * true, then switch to the ithread immediately.  Otherwise, set the 	 * needresched flag to guarantee that this ithread will run before any 	 * userland processes. 	 */
+comment|/* 	 * Set it_need to tell the thread to keep running if it is already 	 * running.  Then, grab sched_lock and see if we actually need to 	 * put this thread on the runqueue.  If so and the do_switch flag is 	 * true and it is safe to switch, then switch to the ithread 	 * immediately.  Otherwise, set the needresched flag to guarantee 	 * that this ithread will run before any userland processes. 	 */
 name|ithread
 operator|->
 name|it_need
@@ -1940,6 +1940,12 @@ comment|/* XXXKSE */
 if|if
 condition|(
 name|do_switch
+operator|&&
+name|curthread
+operator|->
+name|td_critnest
+operator|==
+literal|1
 operator|&&
 name|curthread
 operator|->
@@ -2302,10 +2308,6 @@ name|it
 argument_list|,
 operator|!
 name|cold
-operator|&&
-name|flags
-operator|&
-name|SWI_SWITCH
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -2902,7 +2904,7 @@ name|swi_sched
 argument_list|(
 name|net_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

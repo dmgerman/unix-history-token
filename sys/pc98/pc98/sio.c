@@ -13628,7 +13628,7 @@ name|swi_sched
 argument_list|(
 name|sio_fast_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 name|ioptr
@@ -13682,7 +13682,7 @@ if|#
 directive|if
 literal|0
 comment|/* for testing input latency vs efficiency */
-block|if (com->iptr - com->ibuf == 8) 	swi_sched(sio_fast_ih, SWI_NOSWITCH);
+block|if (com->iptr - com->ibuf == 8) 	swi_sched(sio_fast_ih, 0);
 endif|#
 directive|endif
 name|ioptr
@@ -13922,7 +13922,7 @@ name|swi_sched
 argument_list|(
 name|sio_fast_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -14443,7 +14443,7 @@ name|swi_sched
 argument_list|(
 name|sio_fast_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

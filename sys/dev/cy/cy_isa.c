@@ -5119,7 +5119,7 @@ name|swi_sched
 argument_list|(
 name|sio_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5286,7 +5286,7 @@ name|swi_sched
 argument_list|(
 name|sio_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5528,7 +5528,7 @@ name|swi_sched
 argument_list|(
 name|sio_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5605,7 +5605,7 @@ name|swi_sched
 argument_list|(
 name|sio_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5724,7 +5724,7 @@ name|swi_sched
 argument_list|(
 name|sio_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6009,7 +6009,7 @@ name|swi_sched
 argument_list|(
 name|sio_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6481,7 +6481,7 @@ name|swi_sched
 argument_list|(
 name|sio_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6528,7 +6528,7 @@ name|swi_sched
 argument_list|(
 name|sio_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6794,7 +6794,7 @@ name|swi_sched
 argument_list|(
 name|sio_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6857,7 +6857,7 @@ name|swi_sched
 argument_list|(
 name|sio_ih
 argument_list|,
-name|SWI_NOSWITCH
+literal|0
 argument_list|)
 expr_stmt|;
 name|COM_UNLOCK

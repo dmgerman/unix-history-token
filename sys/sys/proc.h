@@ -2104,17 +2104,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PROC_UNLOCK_NOSWITCH
-parameter_list|(
-name|p
-parameter_list|)
-define|\
-value|mtx_unlock_flags(&(p)->p_mtx, MTX_NOSWITCH)
-end_define
-
-begin_define
-define|#
-directive|define
 name|PROC_LOCKED
 parameter_list|(
 name|p

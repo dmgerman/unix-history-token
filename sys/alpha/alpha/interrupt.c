@@ -1737,6 +1737,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|ih
 operator|->
 name|ih_handler
@@ -1745,6 +1748,9 @@ name|ih
 operator|->
 name|ih_argument
 argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -1841,6 +1847,9 @@ operator|.
 name|clockintr
 condition|)
 block|{
+name|critical_enter
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -1945,6 +1954,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|critical_exit
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 end_function

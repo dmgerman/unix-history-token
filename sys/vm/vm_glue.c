@@ -2144,7 +2144,7 @@ name|p_sflag
 operator||=
 name|PS_SWAPPING
 expr_stmt|;
-name|PROC_UNLOCK_NOSWITCH
+name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)

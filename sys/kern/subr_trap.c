@@ -217,7 +217,7 @@ operator|&
 name|KEF_NEEDRESCHED
 condition|)
 block|{
-name|DROP_GIANT_NOSWITCH
+name|DROP_GIANT
 argument_list|()
 expr_stmt|;
 name|setrunqueue
