@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_bsd.c	5.3 (Berkeley) %G%"
+literal|"@(#)sys_bsd.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,6 +148,26 @@ end_define
 begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIGINFO
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|SIG_FUNC_RET
+name|ayt_status
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+endif|SIGINFO
 end_endif
 
 begin_decl_stmt
@@ -682,16 +702,8 @@ begin_comment
 comment|/*  * TerminalSpecialChars()  *  * Look at an input character to see if it is a special character  * and decide what to do.  *  * Output:  *  *	0	Don't add this character.  *	1	Do add this character  */
 end_comment
 
-begin_function
-name|int
-name|TerminalSpecialChars
-parameter_list|(
-name|c
-parameter_list|)
-name|int
-name|c
-decl_stmt|;
-block|{
+begin_decl_stmt
+specifier|extern
 name|void
 name|xmitAO
 argument_list|()
@@ -708,6 +720,18 @@ decl_stmt|,
 name|sendbrk
 argument_list|()
 decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|TerminalSpecialChars
+parameter_list|(
+name|c
+parameter_list|)
+name|int
+name|c
+decl_stmt|;
+block|{
 if|if
 condition|(
 name|c
@@ -2609,10 +2633,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|SIGINFO
-name|SIG_FUNC_RET
-name|ayt_status
-parameter_list|()
-function_decl|;
 operator|(
 name|void
 operator|)

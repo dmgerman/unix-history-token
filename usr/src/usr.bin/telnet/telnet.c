@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.54 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.55 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5959,6 +5959,64 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENV_HACK
+end_ifdef
+
+begin_comment
+comment|/*  * Earlier version of telnet/telnetd from the BSD code had  * the definitions of VALUE and VAR reversed.  To ensure  * maximum interoperability, we assume that the server is  * an older BSD server, until proven otherwise.  The newer  * BSD servers should be able to handle either definition,  * so it is better to use the wrong values if we don't  * know what type of server it is.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|env_auto
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|env_var
+init|=
+name|ENV_VALUE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|env_value
+init|=
+name|ENV_VAR
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|env_var
+value|ENV_VAR
+end_define
+
+begin_define
+define|#
+directive|define
+name|env_value
+value|ENV_VALUE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|env_opt
@@ -6050,7 +6108,36 @@ literal|0xff
 condition|)
 block|{
 case|case
+name|ENV_VAR
+case|:
+ifdef|#
+directive|ifdef
+name|ENV_HACK
+if|if
+condition|(
+name|env_auto
+condition|)
+block|{
+comment|/* The server has correct definitions */
+name|env_var
+operator|=
+name|ENV_VAR
+expr_stmt|;
+name|env_value
+operator|=
 name|ENV_VALUE
+expr_stmt|;
+block|}
+comment|/* FALL THROUGH */
+endif|#
+directive|endif
+case|case
+name|ENV_VALUE
+case|:
+comment|/* 				 * Although ENV_VALUE is not legal, we will 				 * still recognize it, just in case it is an 				 * old server that has VAR& VALUE mixed up... 				 */
+comment|/* FALL THROUGH */
+case|case
+name|ENV_USERVAR
 case|:
 if|if
 condition|(
@@ -6104,6 +6191,7 @@ index|]
 expr_stmt|;
 break|break;
 block|}
+block|}
 if|if
 condition|(
 name|ep
@@ -6119,7 +6207,6 @@ argument_list|(
 name|ep
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|env_opt_end
 argument_list|(
@@ -6504,7 +6591,7 @@ operator|*
 name|opt_replyp
 operator|++
 operator|=
-name|ENV_VAR
+name|env_var
 expr_stmt|;
 else|else
 operator|*
@@ -6583,7 +6670,7 @@ operator|*
 name|opt_replyp
 operator|++
 operator|=
-name|ENV_VALUE
+name|env_value
 expr_stmt|;
 name|vp
 operator|=
