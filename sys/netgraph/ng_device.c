@@ -186,7 +186,7 @@ name|ng_type
 name|typestruct
 init|=
 block|{
-name|NG_ABI_VERSION
+name|NG_VERSION
 block|,
 comment|/* version */
 name|NG_DEVICE_NODE_TYPE
@@ -216,6 +216,9 @@ comment|/* connect */
 name|ng_device_rcvdata
 block|,
 comment|/* receive data */
+name|ng_device_rcvdata
+block|,
+comment|/* receive queued data */
 name|ng_device_disconnect
 block|,
 comment|/* disconnect */
@@ -438,7 +441,11 @@ name|nopsize
 block|,
 comment|/* flags */
 literal|0
-block|, }
+block|,
+comment|/* bmaj */
+operator|-
+literal|1
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -497,6 +504,12 @@ name|MOD_UNLOAD
 case|:
 comment|/* XXX do we need to do something specific ? */
 comment|/* ng_device_breakdown */
+comment|/* cdevsw_remove(&ngd_cdevsw);*/
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+comment|/* no unload! */
 break|break;
 default|default:
 name|error
@@ -632,6 +645,12 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+name|cdevsw_add
+argument_list|(
+operator|&
+name|ngd_cdevsw
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -675,7 +694,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Receive control message. We just bounce it back as a reply.  */
+comment|/*  * Receive control message. We just  free it.  */
 end_comment
 
 begin_function
@@ -686,113 +705,33 @@ parameter_list|(
 name|node_p
 name|node
 parameter_list|,
-name|item_p
-name|item
-parameter_list|,
-name|hook_p
-name|lasthook
-parameter_list|)
-block|{
-name|struct
-name|ngd_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|ngd_softc
-decl_stmt|;
 name|struct
 name|ng_mesg
 modifier|*
 name|msg
-decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
-name|struct
-name|ngd_connection
+parameter_list|,
+specifier|const
+name|char
 modifier|*
-name|connection
-init|=
-name|NULL
-decl_stmt|;
+name|retaddr
+parameter_list|,
 name|struct
-name|ngd_connection
+name|ng_mesg
 modifier|*
-name|tmp
-init|=
-name|NULL
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|NGD_DEBUG
-name|printf
+modifier|*
+name|rptr
+parameter_list|)
+block|{
+name|FREE
 argument_list|(
-literal|"%s()\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* NGD_DEBUG */
-name|NGI_GET_MSG
-argument_list|(
-name|item
-argument_list|,
 name|msg
-argument_list|)
-expr_stmt|;
-name|SLIST_FOREACH
-argument_list|(
-argument|tmp
 argument_list|,
-argument|&sc->head
-argument_list|,
-argument|links
-argument_list|)
-block|{
-if|if
-condition|(
-name|tmp
-operator|->
-name|active_hook
-operator|==
-name|lasthook
-condition|)
-block|{
-name|connection
-operator|=
-name|tmp
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|connection
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s(): connection is still NULL, no hook found\n"
-argument_list|,
-name|__func__
+name|M_NETGRAPH
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|error
+name|ENOTTY
 operator|)
 return|;
 block|}
@@ -1030,6 +969,13 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|new_connection
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -1079,6 +1025,27 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|SLIST_REMOVE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|head
+argument_list|,
+name|new_connection
+argument_list|,
+name|ngd_connection
+argument_list|,
+name|links
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|new_connection
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -1120,6 +1087,34 @@ argument_list|(
 literal|"%s(): readq malloc failed\n"
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+name|destroy_dev
+argument_list|(
+name|new_connection
+operator|->
+name|ngddev
+argument_list|)
+expr_stmt|;
+name|SLIST_REMOVE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|head
+argument_list|,
+name|new_connection
+argument_list|,
+name|ngd_connection
+argument_list|,
+name|links
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|new_connection
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -1208,15 +1203,15 @@ parameter_list|(
 name|hook_p
 name|hook
 parameter_list|,
-name|item_p
-name|item
-parameter_list|)
-block|{
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
+name|meta_p
+name|meta
+parameter_list|)
+block|{
 name|struct
 name|ngd_softc
 modifier|*
@@ -1287,7 +1282,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s(): connection is still NULL, no hook found\n"
+literal|"%s(): connection still NULL, no hook found\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -1299,16 +1294,9 @@ literal|1
 operator|)
 return|;
 block|}
-name|NGI_GET_M
+name|NG_FREE_META
 argument_list|(
-name|item
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-name|NG_FREE_ITEM
-argument_list|(
-name|item
+name|meta
 argument_list|)
 expr_stmt|;
 name|m
@@ -1537,7 +1525,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s(): connection is still NULL, no hook found\n"
+literal|"%s(): connection still NULL, no hook found\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -1784,7 +1772,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s(): connection is still NULL, no dev found\n"
+literal|"%s(): connection still NULL, no dev found\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -1850,20 +1838,23 @@ name|p
 operator|=
 name|addr
 expr_stmt|;
-comment|/* NG_SEND_MSG_HOOK(error, here, msg, hook, retaddr) */
-name|NG_SEND_MSG_HOOK
-argument_list|(
+comment|/*ng_send_msg(node_p here, struct ng_mesg *msg, 		    const char *address, struct ng_mesg **resp); */
 name|error
-argument_list|,
+operator|=
+name|ng_send_msg
+argument_list|(
 name|sc
 operator|->
 name|node
 argument_list|,
 name|msg
 argument_list|,
+name|NG_HOOK_NAME
+argument_list|(
 name|connection
 operator|->
 name|active_hook
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|)
@@ -1874,7 +1865,7 @@ name|error
 condition|)
 name|printf
 argument_list|(
-literal|"%s(): NG_SEND_MSG_HOOK error: %d\n"
+literal|"%s(): ng_send_msg() error: %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1995,7 +1986,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s(): connection is still NULL, no dev found\n"
+literal|"%s(): connection still NULL, no dev found\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -2239,7 +2230,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s(): connection is still NULL, no dev found\n"
+literal|"%s(): connection still NULL, no dev found\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -2285,7 +2276,7 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"%s(): len<= 0 : is this supposed to happen?!\n"
+literal|"%s(): len<= 0 : supposed to happen?!\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -2432,7 +2423,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s(): ERROR: connection is still NULL,"
+literal|"%s(): ERROR: connection still NULL, "
 literal|"no dev found\n"
 argument_list|,
 name|__func__
