@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	8.3 (Berkeley) %G%  *  * from: $Header: conf.c,v 1.17 93/10/31 05:37:39 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	8.4 (Berkeley) %G%  *  * from: $Header: conf.c,v 1.17 93/10/31 05:37:39 torek Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -1598,6 +1598,66 @@ operator|==
 literal|12
 operator|)
 return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Routine to determine if a device is a tty.  *  * A minimal stub routine can always return 0.  */
+end_comment
+
+begin_macro
+name|istty
+argument_list|(
+argument|dev
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+switch|switch
+condition|(
+name|major
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0
+case|:
+case|case
+literal|2
+case|:
+case|case
+literal|12
+case|:
+case|case
+literal|20
+case|:
+case|case
+literal|21
+case|:
+case|case
+literal|29
+case|:
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 block|}
 end_block
 
