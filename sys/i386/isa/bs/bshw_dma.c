@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*	$NecBSD: bshw_dma.c,v 1.3 1997/07/26 06:03:16 honda Exp $	*/
 end_comment
 
@@ -21,7 +25,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|BS_INLINE
 name|void
 name|bshw_dmastart
 name|__P
@@ -684,7 +687,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|short
+name|u_int8_t
 name|dmapageport
 index|[
 literal|4
@@ -776,7 +779,6 @@ end_define
 
 begin_function
 specifier|static
-name|BS_INLINE
 name|void
 name|bshw_dmastart
 parameter_list|(
