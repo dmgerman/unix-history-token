@@ -78,6 +78,10 @@ name|next
 decl_stmt|;
 name|unsigned
 name|char
+name|index_type
+decl_stmt|;
+name|unsigned
+name|char
 name|index
 decl_stmt|;
 name|struct
@@ -724,6 +728,31 @@ define|#
 directive|define
 name|MAXINCLUDES
 value|10
+end_define
+
+begin_comment
+comment|/*  * Config index types  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NORMAL_INDEX
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_INDEX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUTO_INDEX
+value|2
 end_define
 
 end_unit
