@@ -261,6 +261,10 @@ name|um_malloctype
 decl_stmt|;
 comment|/* The inodes malloctype */
 name|int
+name|um_i_effnlink_valid
+decl_stmt|;
+comment|/* i_effnlink valid? */
+name|int
 argument_list|(
 argument|*um_blkatoff
 argument_list|)

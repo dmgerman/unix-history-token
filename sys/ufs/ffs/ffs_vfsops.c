@@ -2715,6 +2715,12 @@ name|malloctype
 expr_stmt|;
 name|ump
 operator|->
+name|um_i_effnlink_valid
+operator|=
+literal|1
+expr_stmt|;
+name|ump
+operator|->
 name|um_fs
 operator|=
 name|malloc
