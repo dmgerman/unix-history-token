@@ -1072,6 +1072,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -9829,6 +9830,7 @@ decl_stmt|;
 name|int
 name|l
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s
