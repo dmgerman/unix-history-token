@@ -65,14 +65,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kldunload [-v] -i id\n"
+literal|"usage: kldunload [-fv] -i id\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       kldunload [-v] [-n] name\n"
+literal|"       kldunload [-fv] [-n] name\n"
 argument_list|)
 expr_stmt|;
 name|exit
