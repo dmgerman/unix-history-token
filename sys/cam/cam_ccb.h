@@ -175,6 +175,11 @@ init|=
 literal|0x00000004
 block|,
 comment|/* CCB contains a linked CDB     */
+name|CAM_NEGOTIATE
+init|=
+literal|0x00000008
+block|,
+comment|/* 					      * Perform transport negotiation 					      * with this command. 					      */
 name|CAM_SCATTER_VALID
 init|=
 literal|0x00000010
