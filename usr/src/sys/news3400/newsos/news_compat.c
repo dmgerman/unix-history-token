@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  *	%sccs.include.redist.c%  *  *	@(#)news_compat.c	8.1 (Berkeley) %G%  *  * from: $Hdr: sun_misc.c,v 1.12 92/07/12 13:26:10 torek Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  *	%sccs.include.redist.c%  *  *	@(#)news_compat.c	8.2 (Berkeley) %G%  *  * from: $Hdr: sun_misc.c,v 1.12 92/07/12 13:26:10 torek Exp $  */
 end_comment
 
 begin_comment
@@ -385,11 +385,14 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
-name|vp
+argument|vp
+argument_list|,
+argument|LK_EXCLUSIVE | LK_RETRY
+argument_list|,
+argument|p
 argument_list|)
-expr_stmt|;
 name|off
 operator|=
 name|fp
@@ -713,6 +716,10 @@ label|:
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|free

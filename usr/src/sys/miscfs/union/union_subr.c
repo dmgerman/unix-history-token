@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 Jan-Simon Pendry  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_subr.c	8.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 Jan-Simon Pendry  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_subr.c	8.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1265,6 +1265,14 @@ name|un
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+name|cnp
+condition|?
+name|cnp
+operator|->
+name|cn_proc
+else|:
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -2230,6 +2238,10 @@ expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|fvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -2244,15 +2256,25 @@ argument_list|,
 name|LEASE_READ
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|fvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
 name|VOP_UNLOCK
 argument_list|(
 name|tvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -2267,9 +2289,15 @@ argument_list|,
 name|LEASE_WRITE
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|tvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -2563,9 +2591,15 @@ name|docopy
 condition|)
 block|{
 comment|/* 		 * XX - should not ignore errors 		 * from VOP_CLOSE 		 */
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|lvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -2604,6 +2638,10 @@ expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|lvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2652,6 +2690,10 @@ expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|uvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|union_vn_close
@@ -2665,9 +2707,15 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|uvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|un
@@ -3072,6 +3120,10 @@ expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|dvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -3213,6 +3265,10 @@ decl_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|dvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -3244,9 +3300,15 @@ condition|(
 name|error
 condition|)
 block|{
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|dvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -3795,6 +3857,14 @@ modifier|*
 name|un
 decl_stmt|;
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|union_newupper
 argument_list|(
 name|un
@@ -3847,6 +3917,10 @@ argument_list|(
 name|un
 operator|->
 name|un_uppervp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -4094,11 +4168,18 @@ modifier|*
 name|union_dircache
 parameter_list|(
 name|vp
+parameter_list|,
+name|p
 parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|vp
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 name|int
@@ -4255,10 +4336,16 @@ operator|(
 name|NULLVP
 operator|)
 return|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 operator|*
 name|vpp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|VREF
