@@ -285,6 +285,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MBOX_GET_PCI_PARAMS
+value|MBOX_GET_SBUS_PARAMS
+end_define
+
+begin_define
+define|#
+directive|define
 name|MBOX_GET_TARGET_PARAMS
 value|0x0028
 end_define
