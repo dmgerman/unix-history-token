@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_glue.c	1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_glue.c	7.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -22,13 +22,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"frame.h"
+file|"../include/frame.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/reg.h"
+file|"../include/reg.h"
 end_include
 
 begin_ifndef
@@ -243,30 +243,6 @@ operator|*
 operator|)
 name|src
 expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Decide what to do on panic.  * For now, wait for debugger if kgdb_debug_init is set.  */
-end_comment
-
-begin_macro
-name|kgdb_panic
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|extern
-name|int
-name|kgdb_debug_init
-decl_stmt|;
-if|if
-condition|(
-name|kgdb_debug_init
-condition|)
-comment|/* XXX, need boot flag/sysctl */
-asm|asm("trap #15");
 block|}
 end_block
 
