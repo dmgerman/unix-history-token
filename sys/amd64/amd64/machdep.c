@@ -5884,6 +5884,7 @@ name|PHYSMAP_SIZE
 index|]
 decl_stmt|;
 name|pt_entry_t
+modifier|*
 name|pte
 decl_stmt|;
 specifier|const
@@ -5975,9 +5976,6 @@ control|)
 block|{
 name|pte
 operator|=
-operator|(
-name|pt_entry_t
-operator|)
 name|vtopte
 argument_list|(
 name|pa
@@ -6000,6 +5998,7 @@ name|pte
 operator|=
 operator|(
 name|pt_entry_t
+operator|*
 operator|)
 name|vm86paddr
 expr_stmt|;
@@ -6038,9 +6037,6 @@ expr_stmt|;
 comment|/* 	 * map page 1 R/W into the kernel page table so we can use it 	 * as a buffer.  The kernel will unmap this page later. 	 */
 name|pte
 operator|=
-operator|(
-name|pt_entry_t
-operator|)
 name|vtopte
 argument_list|(
 name|KERNBASE
@@ -6843,14 +6839,11 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|pte = (pt_entry_t)vtopte(KERNBASE);
+block|pte = vtopte(KERNBASE);
 else|#
 directive|else
 name|pte
 operator|=
-operator|(
-name|pt_entry_t
-operator|)
 name|CMAP1
 expr_stmt|;
 endif|#

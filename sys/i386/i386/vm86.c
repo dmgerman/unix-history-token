@@ -2679,10 +2679,12 @@ name|vmc
 decl_stmt|;
 block|{
 name|pt_entry_t
+modifier|*
 name|pte
 init|=
 operator|(
 name|pt_entry_t
+operator|*
 operator|)
 name|vm86paddr
 decl_stmt|;

@@ -485,18 +485,14 @@ end_include
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
-modifier|*
+name|u_int32_t
 name|pd_entry_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
-modifier|*
+name|u_int32_t
 name|pt_entry_t
 typedef|;
 end_typedef
@@ -541,8 +537,6 @@ index|[]
 decl_stmt|,
 name|APTmap
 index|[]
-decl_stmt|,
-name|Upte
 decl_stmt|;
 end_decl_stmt
 
@@ -554,12 +548,15 @@ index|[]
 decl_stmt|,
 name|APTD
 index|[]
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|pd_entry_t
 name|PTDpde
 decl_stmt|,
 name|APTDpde
-decl_stmt|,
-name|Upde
 decl_stmt|;
 end_decl_stmt
 
