@@ -132,6 +132,8 @@ end_define
 
 begin_decl_stmt
 name|int
+name|checkfor
+decl_stmt|,
 name|compress
 decl_stmt|,
 name|clear
@@ -1376,6 +1378,29 @@ goto|;
 block|}
 if|if
 condition|(
+name|checkfor
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"A dump exists on %s\n"
+argument_list|,
+name|device
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|kdhl
 operator|.
 name|panicstring
@@ -2070,7 +2095,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: savecore [-cfkv] [directory [device...]]\n"
+literal|"usage: savecore [-Cv|-cfkv] [directory [device...]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2157,7 +2182,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdfkN:vz"
+literal|"CcdfkN:vz"
 argument_list|)
 operator|)
 operator|!=
@@ -2169,6 +2194,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'C'
+case|:
+name|checkfor
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'c'
 case|:
@@ -2224,6 +2257,21 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|checkfor
+operator|&&
+operator|(
+name|clear
+operator|||
+name|force
+operator|||
+name|keep
+operator|)
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 name|argc
 operator|-=
 name|optind
@@ -2376,6 +2424,23 @@ name|nfound
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|checkfor
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"No dump exists\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -2383,6 +2448,7 @@ argument_list|,
 literal|"no dumps found"
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
