@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clri.c 2.1 %G%"
+literal|"@(#)clri.c 2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -257,6 +257,26 @@ name|argv
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_magic
+operator|!=
+name|FS_MAGIC
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"bad super block magic number\n"
 argument_list|)
 expr_stmt|;
 name|exit
