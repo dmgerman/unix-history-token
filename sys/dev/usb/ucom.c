@@ -860,7 +860,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"still open, focing close\n"
+literal|"still open, forcing close\n"
 argument_list|)
 expr_stmt|;
 operator|(
