@@ -1,11 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)rpc_util.c	2.1 88/08/01 4.0 RPCSRC */
-end_comment
-
-begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
+
+begin_empty
+empty|#ident	"@(#)rpc_util.c	1.14	93/07/05 SMI"
+end_empty
 
 begin_ifndef
 ifndef|#
@@ -13,17 +13,13 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "from: @(#)rpc_util.c 1.5 87/06/24 (C) 1987 SMI";*/
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$Id: rpc_util.c,v 1.1 1993/09/13 23:20:20 jtc Exp $"
+literal|"@(#)rpc_util.c 1.11 89/02/22 (C) 1987 SMI"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,13 +29,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * rpc_util.c, Utility routines for the RPC protocol compiler   * Copyright (C) 1987, Sun Microsystems, Inc.   */
+comment|/*  * rpc_util.c, Utility routines for the RPC protocol compiler  * Copyright (C) 1989, Sun Microsystems, Inc.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -59,6 +61,13 @@ include|#
 directive|include
 file|"rpc_util.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|ARGEXT
+value|"argument"
+end_define
 
 begin_decl_stmt
 name|char
@@ -113,7 +122,7 @@ begin_define
 define|#
 directive|define
 name|NFILES
-value|4
+value|7
 end_define
 
 begin_decl_stmt
@@ -169,16 +178,21 @@ begin_comment
 comment|/* list of defined things */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|printwhere
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/*  * Reinitialize the world   */
+comment|/*  * Reinitialize the world  */
 end_comment
 
 begin_macro
@@ -188,9 +202,11 @@ end_macro
 
 begin_block
 block|{
-name|bzero
+name|memset
 argument_list|(
 name|curline
+argument_list|,
+literal|0
 argument_list|,
 name|MAXLINESIZE
 argument_list|)
@@ -211,7 +227,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * string equality   */
+comment|/*  * string equality  */
 end_comment
 
 begin_macro
@@ -255,11 +271,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * find a value in a list   */
+comment|/*  * find a value in a list  */
 end_comment
 
 begin_decl_stmt
-name|char
+name|definition
 modifier|*
 name|findval
 argument_list|(
@@ -341,7 +357,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * store a value in a list   */
+comment|/*  * store a value in a list  */
 end_comment
 
 begin_function
@@ -357,7 +373,7 @@ modifier|*
 modifier|*
 name|lstp
 decl_stmt|;
-name|char
+name|definition
 modifier|*
 name|val
 decl_stmt|;
@@ -534,6 +550,27 @@ block|{
 case|case
 name|REL_VECTOR
 case|:
+if|if
+condition|(
+name|streq
+argument_list|(
+name|def
+operator|->
+name|def
+operator|.
+name|ty
+operator|.
+name|old_type
+argument_list|,
+literal|"opaque"
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|"char"
+operator|)
+return|;
+else|else
 return|return
 operator|(
 name|def
@@ -947,7 +984,6 @@ block|}
 end_block
 
 begin_function
-specifier|static
 name|char
 modifier|*
 name|locase
@@ -1024,6 +1060,40 @@ end_function
 
 begin_function
 name|void
+name|pvname_svc
+parameter_list|(
+name|pname
+parameter_list|,
+name|vnum
+parameter_list|)
+name|char
+modifier|*
+name|pname
+decl_stmt|;
+name|char
+modifier|*
+name|vnum
+decl_stmt|;
+block|{
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"%s_%s_svc"
+argument_list|,
+name|locase
+argument_list|(
+name|pname
+argument_list|)
+argument_list|,
+name|vnum
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|pvname
 parameter_list|(
 name|pname
@@ -1057,7 +1127,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * print a useful (?) error message, and then die   */
+comment|/*  * print a useful (?) error message, and then die  */
 end_comment
 
 begin_function
@@ -1101,7 +1171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Something went wrong, unlink any files that we may have created and then  * die.   */
+comment|/*  * Something went wrong, unlink any files that we may have created and then  * die.  */
 end_comment
 
 begin_macro
@@ -1211,7 +1281,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * error, token encountered was not the expected one   */
+comment|/*  * error, token encountered was not the expected one  */
 end_comment
 
 begin_function
@@ -1245,7 +1315,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * error, token encountered was not one of two expected ones   */
+comment|/*  * error, token encountered was not one of two expected ones  */
 end_comment
 
 begin_function
@@ -1288,7 +1358,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * error, token encountered was not one of 3 expected ones   */
+comment|/*  * error, token encountered was not one of 3 expected ones  */
 end_comment
 
 begin_function
@@ -1833,6 +1903,291 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-unit|}
+begin_expr_stmt
+unit|}  char
+operator|*
+name|make_argname
+argument_list|(
+argument|pname
+argument_list|,
+argument|vname
+argument_list|)
+name|char
+operator|*
+name|pname
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|vname
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|name
+operator|=
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
+name|pname
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|vname
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|ARGEXT
+argument_list|)
+operator|+
+literal|3
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|name
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"failed in malloc"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"%s_%s_%s"
+argument_list|,
+name|locase
+argument_list|(
+name|pname
+argument_list|)
+argument_list|,
+name|vname
+argument_list|,
+name|ARGEXT
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|name
+operator|)
+return|;
+block|}
+end_block
+
+begin_decl_stmt
+name|bas_type
+modifier|*
+name|typ_list_h
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bas_type
+modifier|*
+name|typ_list_t
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|add_type
+argument_list|(
+argument|len
+argument_list|,
+argument|type
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|len
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|type
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|bas_type
+modifier|*
+name|ptr
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|ptr
+operator|=
+operator|(
+name|bas_type
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|bas_type
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+operator|(
+name|bas_type
+operator|*
+operator|)
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"failed in malloc"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|ptr
+operator|->
+name|name
+operator|=
+name|type
+expr_stmt|;
+name|ptr
+operator|->
+name|length
+operator|=
+name|len
+expr_stmt|;
+name|ptr
+operator|->
+name|next
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|typ_list_t
+operator|==
+name|NULL
+condition|)
+block|{
+name|typ_list_t
+operator|=
+name|ptr
+expr_stmt|;
+name|typ_list_h
+operator|=
+name|ptr
+expr_stmt|;
+block|}
+else|else
+block|{
+name|typ_list_t
+operator|->
+name|next
+operator|=
+name|ptr
+expr_stmt|;
+name|typ_list_t
+operator|=
+name|ptr
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
+end_block
+
+begin_function
+name|bas_type
+modifier|*
+name|find_type
+parameter_list|(
+name|type
+parameter_list|)
+name|char
+modifier|*
+name|type
+decl_stmt|;
+block|{
+name|bas_type
+modifier|*
+name|ptr
+decl_stmt|;
+name|ptr
+operator|=
+name|typ_list_h
+expr_stmt|;
+while|while
+condition|(
+name|ptr
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|ptr
+operator|->
+name|name
+argument_list|,
+name|type
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ptr
+operator|)
+return|;
+else|else
+name|ptr
+operator|=
+name|ptr
+operator|->
+name|next
+expr_stmt|;
+block|}
+empty_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
