@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.59 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.60 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.59 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.60 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2575,17 +2575,77 @@ name|p
 argument_list|)
 condition|)
 continue|continue;
-comment|/* p now points to the authenticated name */
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|hbuf
-argument_list|,
-literal|"%s@%s"
-argument_list|,
+comment|/* p now points to the authenticated name -- copy carefully */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAXNAME
+operator|&&
+operator|*
 name|p
+operator|!=
+literal|'\0'
+condition|;
+name|p
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+operator|(
+name|isalnum
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|||
+name|strchr
+argument_list|(
+literal|"!#$%&'*+-./^_`{|}~"
+argument_list|,
+operator|*
+name|p
+argument_list|)
+operator|!=
+name|NULL
+operator|)
+condition|)
+name|hbuf
+index|[
+name|i
+operator|++
+index|]
+operator|=
+operator|*
+name|p
+expr_stmt|;
+block|}
+name|hbuf
+index|[
+name|i
+operator|++
+index|]
+operator|=
+literal|'@'
+expr_stmt|;
+name|strcpy
+argument_list|(
+operator|&
+name|hbuf
+index|[
+name|i
+index|]
 argument_list|,
 name|RealHostName
 operator|==
