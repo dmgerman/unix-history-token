@@ -125,17 +125,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NETISR_ATM
-value|30
-end_define
-
-begin_comment
-comment|/* same as AF_ATM */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NETISR_NETGRAPH
 value|31
 end_define
