@@ -3883,6 +3883,8 @@ literal|0
 decl_stmt|;
 name|int
 name|actlen
+decl_stmt|,
+name|cerr
 decl_stmt|;
 name|u_int
 name|pkts_left
@@ -4195,9 +4197,12 @@ name|pkts_left
 operator|%
 literal|2
 expr_stmt|;
+name|cerr
+operator|=
+name|EHCI_QTD_GET_CERR
+argument_list|(
 name|status
-operator|&=
-name|EHCI_QTD_STATERRS
+argument_list|)
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -4205,13 +4210,16 @@ comment|/*10*/
 literal|2
 argument_list|,
 operator|(
-literal|"ehci_idone: len=%d, actlen=%d, status=0x%x\n"
+literal|"ehci_idone: len=%d, actlen=%d, cerr=%d, "
+literal|"status=0x%x\n"
 operator|,
 name|xfer
 operator|->
 name|length
 operator|,
 name|actlen
+operator|,
+name|cerr
 operator|,
 name|status
 operator|)
@@ -4225,7 +4233,11 @@ name|actlen
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|status
+operator|&
+name|EHCI_QTD_HALTED
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -4247,7 +4259,7 @@ operator|)
 name|status
 argument_list|,
 literal|"\20\7HALTED\6BUFERR\5BABBLE\4XACTERR"
-literal|"\3MISSED"
+literal|"\3MISSED\2SPLIT\1PING"
 argument_list|,
 name|sbuf
 argument_list|,
@@ -4259,15 +4271,7 @@ argument_list|)
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
-operator|(
-name|status
-operator|==
-name|EHCI_QTD_HALTED
-operator|)
-condition|?
 literal|2
-else|:
-literal|0
 argument_list|,
 operator|(
 literal|"ehci_idone: error, addr=%d, endpt=0x%02x, "
@@ -4321,9 +4325,17 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|status
+operator|&
+name|EHCI_QTD_BABBLE
+operator|)
 operator|==
-name|EHCI_QTD_HALTED
+literal|0
+operator|&&
+name|cerr
+operator|>
+literal|0
 condition|)
 name|xfer
 operator|->
