@@ -11611,6 +11611,23 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|pmap_unmapdev
+parameter_list|(
+name|pa
+parameter_list|,
+name|size
+parameter_list|)
+name|vm_offset_t
+name|va
+decl_stmt|;
+name|vm_size_t
+name|size
+decl_stmt|;
+block|{ }
+end_function
+
 begin_comment
 comment|/*  * perform the pmap work for mincore  */
 end_comment
@@ -12076,7 +12093,7 @@ argument_list|)
 end_if
 
 begin_endif
-unit|pmap_pid_dump(int pid) { 	pmap_t pmap; 	struct proc *p; 	int npte = 0; 	int index;  	sx_slock(&allproc_lock); 	LIST_FOREACH(p,&allproc, p_list) { 		if (p->p_pid != pid) 			continue;  		if (p->p_vmspace) { 			int i,j; 			index = 0; 			pmap = vmspace_pmap(p->p_vmspace); 			for (i = 0; i< NPDEPG; i++) { 				pd_entry_t *pde; 				pt_entry_t *pte; 				vm_offset_t base = i<< PDRSHIFT; 				 				pde =&pmap->pm_pdir[i]; 				if (pde&& pmap_pde_v(pde)) { 					for (j = 0; j< NPTEPG; j++) { 						vm_offset_t va = base + (j<< PAGE_SHIFT); 						if (va>= (vm_offset_t) VM_MIN_KERNEL_ADDRESS) { 							if (index) { 								index = 0; 								printf("\n"); 							} 							sx_sunlock(&allproc_lock); 							return npte; 						} 						pte = pmap_pte_quick( pmap, va); 						if (pte&& pmap_pte_v(pte)) { 							vm_offset_t pa; 							vm_page_t m; 							pa = *(int *)pte; 							m = PHYS_TO_VM_PAGE(pa); 							printf("va: 0x%x, pt: 0x%x, h: %d, w: %d, f: 0x%x", 								va, pa, m->hold_count, m->wire_count, m->flags); 							npte++; 							index++; 							if (index>= 2) { 								index = 0; 								printf("\n"); 							} else { 								printf(" "); 							} 						} 					} 				} 			} 		} 	} 	sx_sunlock(&allproc_lock); 	return npte; }
+unit|pmap_pid_dump(int pid) { 	pmap_t pmap; 	struct proc *p; 	int npte = 0; 	int index;  	sx_slock(&allproc_lock); 	LIST_FOREACH(p,&allproc, p_list) { 		if (p->p_pid != pid) 			continue;  		if (p->p_vmspace) { 			int i,j; 			index = 0; 			pmap = vmspace_pmap(p->p_vmspace); 			for (i = 0; i< NPDEPG; i++) { 				pd_entry_t *pde; 				pt_entry_t *pte; 				vm_offset_t base = i<< PDRSHIFT; 				 				pde =&pmap->pm_pdir[i]; 				if (pde&& pmap_pde_v(pde)) { 					for (j = 0; j< NPTEPG; j++) { 						vm_offset_t va = base + (j<< PAGE_SHIFT); 						if (va>= (vm_offset_t) VM_MIN_KERNEL_ADDRESS) { 							if (index) { 								index = 0; 								printf("\n"); 							} 							sx_sunlock(&allproc_lock); 							return npte; 						} 						pte = pmap_pte_quick(pmap, va); 						if (pte&& pmap_pte_v(pte)) { 							vm_offset_t pa; 							vm_page_t m; 							pa = *(int *)pte; 							m = PHYS_TO_VM_PAGE(pa); 							printf("va: 0x%x, pt: 0x%x, h: %d, w: %d, f: 0x%x", 								va, pa, m->hold_count, m->wire_count, m->flags); 							npte++; 							index++; 							if (index>= 2) { 								index = 0; 								printf("\n"); 							} else { 								printf(" "); 							} 						} 					} 				} 			} 		} 	} 	sx_sunlock(&allproc_lock); 	return npte; }
 endif|#
 directive|endif
 end_endif
