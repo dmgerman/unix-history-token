@@ -31,7 +31,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|4.8
+literal|4.9
 operator|%
 name|G
 operator|%
@@ -1254,9 +1254,8 @@ literal|1
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|lseek
 argument_list|(
 name|kmem
@@ -1273,10 +1272,9 @@ name|n_value
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
+operator|<
+literal|0
+operator|||
 name|read
 argument_list|(
 name|kmem
@@ -1288,7 +1286,21 @@ argument_list|(
 name|avenrun
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|<
+sizeof|sizeof
+argument_list|(
+name|avenrun
+argument_list|)
+condition|)
+block|{
+comment|/* thank you Ian */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 return|return
 operator|(
 call|(
