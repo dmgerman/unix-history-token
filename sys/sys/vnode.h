@@ -182,10 +182,6 @@ name|int
 name|v_holdcnt
 decl_stmt|;
 comment|/* page& buffer references */
-name|daddr_t
-name|v_lastr
-decl_stmt|;
-comment|/* last read (read-ahead) */
 name|u_long
 name|v_id
 decl_stmt|;

@@ -2921,12 +2921,6 @@ literal|0
 expr_stmt|;
 name|vp
 operator|->
-name|v_lastr
-operator|=
-literal|0
-expr_stmt|;
-name|vp
-operator|->
 name|v_lastw
 operator|=
 literal|0

@@ -398,6 +398,17 @@ value|_unlock_things(fs, 1)
 end_define
 
 begin_comment
+comment|/*  * TRYPAGER - used by vm_fault to calculate whether the pager for the  *	      current object *might* contain the page.  *  *	      default objects are zero-fill, there is no real pager.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRYPAGER
+value|(fs.object->type != OBJT_DEFAULT&& \ 			(((fault_flags& VM_FAULT_WIRE_MASK) == 0) || wired))
+end_define
+
+begin_comment
 comment|/*  *	vm_fault:  *  *	Handle a page fault occuring at the given address,  *	requiring the given permissions, in the map specified.  *	If successful, the page is inserted into the  *	associated physical map.  *  *	NOTE: the given address should be truncated to the  *	proper page address.  *  *	KERN_SUCCESS is returned if the page fault is handled; otherwise,  *	a standard error specifying why the fault is fatal is returned.  *  *  *	The map in question must be referenced, and remains so.  *	Caller may hold no locks.  */
 end_comment
 
@@ -462,13 +473,13 @@ expr_stmt|;
 name|RetryFault
 label|:
 empty_stmt|;
+comment|/* 	 * Find the backing store object and offset into it to begin the 	 * search. 	 */
 name|fs
 operator|.
 name|map
 operator|=
 name|map
 expr_stmt|;
-comment|/* 	 * Find the backing store object and offset into it to begin the 	 * search. 	 */
 if|if
 condition|(
 operator|(
@@ -882,10 +893,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 			 * This code is designed to prevent thrashing in a  			 * low-memory situation by assuming that pages placed 			 * in the cache are generally inactive, so if a cached 			 * page is requested and we are low on memory, we try 			 * to wait for the low-memory condition to be resolved. 			 * 			 * This code cannot handle a major memory starvation 			 * situation where pages are forced into the cache and 			 * may cause 'good' programs to stall.  As of 22Jan99 			 * the problem is still under discussion and not  			 * resolved. 			 */
 if|if
 condition|(
-operator|(
 operator|(
 name|queue
 operator|-
@@ -897,21 +906,9 @@ name|pc
 operator|)
 operator|==
 name|PQ_CACHE
-operator|)
 operator|&&
-operator|(
-name|cnt
-operator|.
-name|v_free_count
-operator|+
-name|cnt
-operator|.
-name|v_cache_count
-operator|)
-operator|<
-name|cnt
-operator|.
-name|v_free_min
+name|vm_page_count_severe
+argument_list|()
 condition|)
 block|{
 name|vm_page_activate
@@ -980,36 +977,11 @@ goto|;
 block|}
 break|break;
 block|}
-comment|/* 		 * Page is not resident, If this is the search termination, 		 * allocate a new page. 		 */
+comment|/* 		 * Page is not resident, If this is the search termination 		 * or the pager might contain the page, allocate a new page. 		 */
 if|if
 condition|(
-operator|(
-operator|(
-name|fs
-operator|.
-name|object
-operator|->
-name|type
-operator|!=
-name|OBJT_DEFAULT
-operator|)
-operator|&&
-operator|(
-operator|(
-operator|(
-name|fault_flags
-operator|&
-name|VM_FAULT_WIRE_MASK
-operator|)
-operator|==
-literal|0
-operator|)
+name|TRYPAGER
 operator|||
-name|wired
-operator|)
-operator|)
-operator|||
-operator|(
 name|fs
 operator|.
 name|object
@@ -1017,7 +989,6 @@ operator|==
 name|fs
 operator|.
 name|first_object
-operator|)
 condition|)
 block|{
 if|if
@@ -1050,6 +1021,19 @@ name|fs
 operator|.
 name|m
 operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|vm_page_count_severe
+argument_list|()
+condition|)
+block|{
+name|fs
+operator|.
+name|m
+operator|=
 name|vm_page_alloc
 argument_list|(
 name|fs
@@ -1077,6 +1061,7 @@ else|:
 name|VM_ALLOC_ZERO
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|fs
@@ -1101,30 +1086,10 @@ block|}
 block|}
 name|readrest
 label|:
-comment|/* 		 * Have page, but it may not be entirely valid ( or valid at 		 * all ).   If this object is not the default, try to fault-in 		 * the page as well as activate additional pages when 		 * appropriate, and page-in additional pages when appropriate. 		 */
+comment|/* 		 * We have found a valid page or we have allocated a new page. 		 * The page thus may not be valid or may not be entirely  		 * valid. 		 * 		 * Attempt to fault-in the page if there is a chance that the 		 * pager has it, and potentially fault in additional pages 		 * at the same time. 		 */
 if|if
 condition|(
-name|fs
-operator|.
-name|object
-operator|->
-name|type
-operator|!=
-name|OBJT_DEFAULT
-operator|&&
-operator|(
-operator|(
-operator|(
-name|fault_flags
-operator|&
-name|VM_FAULT_WIRE_MASK
-operator|)
-operator|==
-literal|0
-operator|)
-operator|||
-name|wired
-operator|)
+name|TRYPAGER
 condition|)
 block|{
 name|int
@@ -1235,6 +1200,34 @@ operator|(
 name|behavior
 operator|==
 name|MAP_ENTRY_BEHAV_SEQUENTIAL
+operator|||
+operator|(
+name|behavior
+operator|!=
+name|MAP_ENTRY_BEHAV_RANDOM
+operator|&&
+name|fs
+operator|.
+name|pindex
+operator|>=
+name|fs
+operator|.
+name|entry
+operator|->
+name|lastr
+operator|&&
+name|fs
+operator|.
+name|pindex
+operator|<
+name|fs
+operator|.
+name|entry
+operator|->
+name|lastr
+operator|+
+name|VM_FAULT_READ
+operator|)
 operator|)
 condition|)
 block|{
@@ -1251,13 +1244,7 @@ name|first_pindex
 operator|<
 literal|2
 operator|*
-operator|(
-name|VM_FAULT_READ_BEHIND
-operator|+
-name|VM_FAULT_READ_AHEAD
-operator|+
-literal|1
-operator|)
+name|VM_FAULT_READ
 condition|)
 name|firstpindex
 operator|=
@@ -1272,13 +1259,7 @@ name|first_pindex
 operator|-
 literal|2
 operator|*
-operator|(
-name|VM_FAULT_READ_BEHIND
-operator|+
-name|VM_FAULT_READ_AHEAD
-operator|+
-literal|1
-operator|)
+name|VM_FAULT_READ
 expr_stmt|;
 comment|/* 				 * note: partially valid pages cannot be  				 * included in the lookahead - NFS piecemeal 				 * writes will barf on it badly. 				 */
 for|for
@@ -1424,6 +1405,21 @@ argument_list|,
 operator|&
 name|reqpage
 argument_list|)
+expr_stmt|;
+comment|/* 			 * update lastr imperfectly (we do not know how much 			 * getpages will actually read), but good enough. 			 */
+name|fs
+operator|.
+name|entry
+operator|->
+name|lastr
+operator|=
+name|fs
+operator|.
+name|pindex
+operator|+
+name|faultcount
+operator|-
+name|behind
 expr_stmt|;
 comment|/* 			 * Call the pager to retrieve the data, if any, after 			 * releasing the lock on the map.  We hold a ref on 			 * fs.object and the pages are PG_BUSY'd. 			 */
 name|unlock_map
