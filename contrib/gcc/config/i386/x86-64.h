@@ -3,6 +3,10 @@ begin_comment
 comment|/* OS independent definitions for AMD x86-64.    Copyright (C) 2001 Free Software Foundation, Inc.    Contributed by Bo Thorsen<bo@suse.de>.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -41,6 +45,7 @@ begin_define
 define|#
 directive|define
 name|NO_PROFILE_COUNTERS
+value|1
 end_define
 
 begin_undef
@@ -166,21 +171,6 @@ end_define
 begin_comment
 comment|/* A C statement to output to the stdio stream FILE an assembler    command to advance the location counter to a multiple of 1<<LOG    bytes if it is within MAX_SKIP bytes.     This is used to align code labels according to Intel recommendations.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_MAX_SKIP_ALIGN
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LOG
-parameter_list|,
-name|MAX_SKIP
-parameter_list|)
-define|\
-value|do {									\     if ((LOG) != 0) {							\       if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG));	\       else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP));	\     }									\   } while (0)
-end_define
 
 begin_comment
 comment|/* i386 System V Release 4 uses DWARF debugging info.    x86-64 ABI specifies DWARF2.  */
