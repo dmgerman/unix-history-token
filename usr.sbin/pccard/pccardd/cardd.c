@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.33 1999/01/10 13:00:09 guido Exp $"
+literal|"$Id: cardd.c,v 1.34 1999/02/05 16:00:17 kuriyama Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -749,6 +749,22 @@ name|size
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+comment|/* release irq */
+if|if
+condition|(
+name|sp
+operator|->
+name|irq
+condition|)
+name|pool_irq
+index|[
+name|sp
+operator|->
+name|irq
+index|]
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
