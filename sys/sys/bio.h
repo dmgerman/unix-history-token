@@ -214,6 +214,81 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * The bio structure descripes an I/O operation in the kernel.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bio
+block|{
+name|u_int
+name|bio_cmd
+decl_stmt|;
+comment|/* BIO_READ, BIO_WRITE, BIO_DELETE */
+name|dev_t
+name|bio_dev
+decl_stmt|;
+comment|/* Device to do I/O on */
+name|daddr_t
+name|bio_blkno
+decl_stmt|;
+comment|/* Underlying physical block number. */
+name|u_int
+name|bio_flags
+decl_stmt|;
+comment|/* BIO_ORDERED, BIO_ERROR */
+name|struct
+name|buf
+modifier|*
+name|__bio_buf
+decl_stmt|;
+comment|/* Parent buffer */
+name|int
+name|bio_error
+decl_stmt|;
+comment|/* Errno for BIO_ERROR */
+name|long
+name|bio_resid
+decl_stmt|;
+comment|/* Remaining I/0 in bytes */
+name|void
+argument_list|(
+argument|*bio_done
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+modifier|*
+name|bio_driver1
+decl_stmt|;
+comment|/* for private use by the driver */
+name|void
+modifier|*
+name|bio_driver2
+decl_stmt|;
+comment|/* for private use by the driver */
+name|void
+modifier|*
+name|bio_caller1
+decl_stmt|;
+comment|/* for private use by the caller */
+name|void
+modifier|*
+name|bio_caller2
+decl_stmt|;
+comment|/* for private use by the caller */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * The buffer header describes an I/O operation in the kernel.  *  * NOTES:  *	b_bufsize, b_bcount.  b_bufsize is the allocation size of the  *	buffer, either DEV_BSIZE or PAGE_SIZE aligned.  b_bcount is the  *	originally requested buffer size and can serve as a bounds check  *	against EOF.  For most, but not all uses, b_bcount == b_bufsize.  *  *	b_dirtyoff, b_dirtyend.  Buffers support piecemeal, unaligned  *	ranges of dirty data that need to be written to backing store.  *	The range is typically clipped at b_bcount ( not b_bufsize ).  *  *	b_resid.  Number of bytes remaining in I/O.  After an I/O operation  *	completes, b_resid is usually 0 indicating 100% success.  */
 end_comment
 
@@ -221,6 +296,55 @@ begin_struct
 struct|struct
 name|buf
 block|{
+name|struct
+name|bio
+name|b_bio
+decl_stmt|;
+comment|/* I/O request 					 * XXX: Must be first element for now 					 */
+define|#
+directive|define
+name|b_iocmd
+value|b_bio.bio_cmd
+define|#
+directive|define
+name|b_ioflags
+value|b_bio.bio_flags
+define|#
+directive|define
+name|b_iodone
+value|b_bio.bio_done
+define|#
+directive|define
+name|b_error
+value|b_bio.bio_error
+define|#
+directive|define
+name|b_resid
+value|b_bio.bio_resid
+define|#
+directive|define
+name|b_blkno
+value|b_bio.bio_blkno
+define|#
+directive|define
+name|b_driver1
+value|b_bio.bio_driver1
+define|#
+directive|define
+name|b_driver2
+value|b_bio.bio_driver2
+define|#
+directive|define
+name|b_caller1
+value|b_bio.bio_caller1
+define|#
+directive|define
+name|b_caller2
+value|b_bio.bio_caller2
+define|#
+directive|define
+name|b_dev
+value|b_bio.bio_dev
 name|LIST_ENTRY
 argument_list|(
 argument|buf
@@ -249,10 +373,6 @@ argument_list|)
 name|b_act
 expr_stmt|;
 comment|/* Device driver queue when active. *new* */
-name|u_int
-name|b_iocmd
-decl_stmt|;
-comment|/* BIO_READ, BIO_WRITE, BIO_DELETE */
 name|long
 name|b_flags
 decl_stmt|;
@@ -272,10 +392,6 @@ name|lock
 name|b_lock
 decl_stmt|;
 comment|/* Buffer lock */
-name|int
-name|b_error
-decl_stmt|;
-comment|/* Errno value. */
 name|long
 name|b_bufsize
 decl_stmt|;
@@ -284,14 +400,6 @@ name|long
 name|b_bcount
 decl_stmt|;
 comment|/* Valid bytes in buffer. */
-name|long
-name|b_resid
-decl_stmt|;
-comment|/* Remaining I/O. */
-name|dev_t
-name|b_dev
-decl_stmt|;
-comment|/* Device associated with buffer. */
 name|caddr_t
 name|b_data
 decl_stmt|;
@@ -308,29 +416,11 @@ name|daddr_t
 name|b_lblkno
 decl_stmt|;
 comment|/* Logical block number. */
-name|daddr_t
-name|b_blkno
-decl_stmt|;
-comment|/* Underlying physical block number. */
 name|off_t
 name|b_offset
 decl_stmt|;
 comment|/* Offset into file */
 comment|/* Function to call upon completion. */
-name|void
-argument_list|(
-argument|*b_iodone
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|buf
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* For nested b_iodone's. */
 name|struct
 name|iodone_chain
 modifier|*
@@ -371,26 +461,6 @@ modifier|*
 name|b_saveaddr
 decl_stmt|;
 comment|/* Original b_addr for physio. */
-name|void
-modifier|*
-name|b_driver1
-decl_stmt|;
-comment|/* for private use by the driver */
-name|void
-modifier|*
-name|b_driver2
-decl_stmt|;
-comment|/* for private use by the driver */
-name|void
-modifier|*
-name|b_caller1
-decl_stmt|;
-comment|/* for private use by the caller */
-name|void
-modifier|*
-name|b_caller2
-decl_stmt|;
-comment|/* for private use by the caller */
 union|union
 name|pager_info
 block|{

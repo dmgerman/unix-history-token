@@ -9802,7 +9802,7 @@ name|s
 decl_stmt|;
 name|void
 argument_list|(
-argument|*b_iodone
+argument|*biodone
 argument_list|)
 name|__P
 argument_list|(
@@ -9909,7 +9909,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|b_iodone
+name|biodone
 operator|=
 name|bp
 operator|->
@@ -9923,7 +9923,7 @@ name|NULL
 expr_stmt|;
 call|(
 modifier|*
-name|b_iodone
+name|biodone
 call|)
 argument_list|(
 name|bp
