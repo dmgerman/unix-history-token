@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: vasprintf.c,v 1.5 1997/02/22 15:02:39 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -459,21 +459,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|h
-operator|.
-name|base
-index|[
-name|h
-operator|.
-name|size
-operator|-
-name|h
-operator|.
-name|left
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 operator|*
 name|str
 operator|=
@@ -506,15 +491,38 @@ name|str
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* failed to realloc it to actual size */
-operator|*
-name|str
-operator|=
+name|free
+argument_list|(
 name|h
 operator|.
 name|base
+argument_list|)
 expr_stmt|;
-comment|/* return oversize buffer */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+operator|(
+operator|*
+name|str
+operator|)
+index|[
+name|h
+operator|.
+name|size
+operator|-
+name|h
+operator|.
+name|left
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 return|return
 operator|(
 name|ret
