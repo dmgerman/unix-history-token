@@ -28,8 +28,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 comment|/* Reset the accumulated time slice value for the current thread: */
-name|_thread_run
+name|curthread
 operator|->
 name|slice_usec
 operator|=
@@ -62,8 +70,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 comment|/* Reset the accumulated time slice value for the current thread: */
-name|_thread_run
+name|curthread
 operator|->
 name|slice_usec
 operator|=

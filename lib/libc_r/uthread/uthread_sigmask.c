@@ -68,6 +68,14 @@ modifier|*
 name|oset
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|sigset_t
 name|sigset
 decl_stmt|;
@@ -88,7 +96,7 @@ comment|/* Return the current mask: */
 operator|*
 name|oset
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 expr_stmt|;
@@ -114,7 +122,7 @@ case|:
 comment|/* Add signals to the existing mask: */
 name|SIGSETOR
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 argument_list|,
@@ -130,7 +138,7 @@ case|:
 comment|/* Clear signals from the existing mask: */
 name|SIGSETNAND
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 argument_list|,
@@ -144,7 +152,7 @@ case|case
 name|SIG_SETMASK
 case|:
 comment|/* Set the new mask: */
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 operator|=
@@ -167,7 +175,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Increment the sequence number: */
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask_seqno
 operator|++
@@ -175,7 +183,7 @@ expr_stmt|;
 comment|/* 		 * Check if there are pending signals for the running 		 * thread or process that aren't blocked: 		 */
 name|sigset
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|sigpend
 expr_stmt|;
@@ -190,7 +198,7 @@ name|SIGSETNAND
 argument_list|(
 name|sigset
 argument_list|,
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 argument_list|)

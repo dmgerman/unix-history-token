@@ -976,6 +976,14 @@ modifier|*
 name|mutex
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -1108,7 +1116,7 @@ operator|)
 operator|->
 name|m_owner
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 comment|/* Add to the list of owned mutexes: */
 name|_MUTEX_ASSERT_NOT_OWNED
@@ -1120,7 +1128,7 @@ expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|mutexq
 argument_list|,
@@ -1143,7 +1151,7 @@ operator|)
 operator|->
 name|m_owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 name|ret
 operator|=
@@ -1185,10 +1193,10 @@ operator|)
 operator|->
 name|m_owner
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 comment|/* Track number of priority mutexes owned: */
-name|_thread_run
+name|curthread
 operator|->
 name|priority_mutex_count
 operator|++
@@ -1201,7 +1209,7 @@ operator|)
 operator|->
 name|m_prio
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|active_priority
 expr_stmt|;
@@ -1212,7 +1220,7 @@ operator|)
 operator|->
 name|m_saved_prio
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|inherited_priority
 expr_stmt|;
@@ -1226,7 +1234,7 @@ expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|mutexq
 argument_list|,
@@ -1249,7 +1257,7 @@ operator|)
 operator|->
 name|m_owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 name|ret
 operator|=
@@ -1273,7 +1281,7 @@ case|:
 comment|/* Check for a priority ceiling violation: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|active_priority
 operator|>
@@ -1310,16 +1318,16 @@ operator|)
 operator|->
 name|m_owner
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 comment|/* Track number of priority mutexes owned: */
-name|_thread_run
+name|curthread
 operator|->
 name|priority_mutex_count
 operator|++
 expr_stmt|;
 comment|/* 				 * The running thread inherits the ceiling 				 * priority of the mutex and executes at that 				 * priority. 				 */
-name|_thread_run
+name|curthread
 operator|->
 name|active_priority
 operator|=
@@ -1337,11 +1345,11 @@ operator|)
 operator|->
 name|m_saved_prio
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|inherited_priority
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|inherited_priority
 operator|=
@@ -1362,7 +1370,7 @@ expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|mutexq
 argument_list|,
@@ -1385,7 +1393,7 @@ operator|)
 operator|->
 name|m_owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 name|ret
 operator|=
@@ -1446,6 +1454,14 @@ modifier|*
 name|mutex
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -1500,7 +1516,7 @@ name|ret
 operator|)
 return|;
 comment|/* Reset the interrupted flag: */
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -1604,7 +1620,7 @@ operator|)
 operator|->
 name|m_owner
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 comment|/* Add to the list of owned mutexes: */
 name|_MUTEX_ASSERT_NOT_OWNED
@@ -1616,7 +1632,7 @@ expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|mutexq
 argument_list|,
@@ -1639,7 +1655,7 @@ operator|)
 operator|->
 name|m_owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 name|ret
 operator|=
@@ -1657,11 +1673,11 @@ argument_list|(
 operator|*
 name|mutex
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Keep a pointer to the mutex this thread 				 * is waiting on: 				 */
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -1727,10 +1743,10 @@ operator|)
 operator|->
 name|m_owner
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 comment|/* Track number of priority mutexes owned: */
-name|_thread_run
+name|curthread
 operator|->
 name|priority_mutex_count
 operator|++
@@ -1743,7 +1759,7 @@ operator|)
 operator|->
 name|m_prio
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|active_priority
 expr_stmt|;
@@ -1754,11 +1770,11 @@ operator|)
 operator|->
 name|m_saved_prio
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|inherited_priority
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|inherited_priority
 operator|=
@@ -1779,7 +1795,7 @@ expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|mutexq
 argument_list|,
@@ -1802,7 +1818,7 @@ operator|)
 operator|->
 name|m_owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 name|ret
 operator|=
@@ -1820,11 +1836,11 @@ argument_list|(
 operator|*
 name|mutex
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Keep a pointer to the mutex this thread 				 * is waiting on: 				 */
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -1835,7 +1851,7 @@ name|mutex
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|active_priority
 operator|>
@@ -1892,7 +1908,7 @@ case|:
 comment|/* Check for a priority ceiling violation: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|active_priority
 operator|>
@@ -1929,16 +1945,16 @@ operator|)
 operator|->
 name|m_owner
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 comment|/* Track number of priority mutexes owned: */
-name|_thread_run
+name|curthread
 operator|->
 name|priority_mutex_count
 operator|++
 expr_stmt|;
 comment|/* 				 * The running thread inherits the ceiling 				 * priority of the mutex and executes at that 				 * priority: 				 */
-name|_thread_run
+name|curthread
 operator|->
 name|active_priority
 operator|=
@@ -1956,11 +1972,11 @@ operator|)
 operator|->
 name|m_saved_prio
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|inherited_priority
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|inherited_priority
 operator|=
@@ -1981,7 +1997,7 @@ expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|mutexq
 argument_list|,
@@ -2004,7 +2020,7 @@ operator|)
 operator|->
 name|m_owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 name|ret
 operator|=
@@ -2022,11 +2038,11 @@ argument_list|(
 operator|*
 name|mutex
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Keep a pointer to the mutex this thread 				 * is waiting on: 				 */
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -2036,7 +2052,7 @@ operator|*
 name|mutex
 expr_stmt|;
 comment|/* Clear any previous error: */
-name|_thread_run
+name|curthread
 operator|->
 name|error
 operator|=
@@ -2075,11 +2091,11 @@ expr_stmt|;
 comment|/* 				 * The threads priority may have changed while 				 * waiting for the mutex causing a ceiling 				 * violation. 				 */
 name|ret
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|error
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|error
 operator|=
@@ -2099,7 +2115,7 @@ block|}
 comment|/* 		 * Check to see if this thread was interrupted and 		 * is still in the mutex queue of waiting threads: 		 */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|!=
@@ -2110,7 +2126,7 @@ argument_list|(
 operator|*
 name|mutex
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Unlock the mutex structure: */
@@ -2140,7 +2156,7 @@ operator|)
 operator|->
 name|m_owner
 operator|!=
-name|_thread_run
+name|curthread
 operator|)
 operator|&&
 operator|(
@@ -2150,7 +2166,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|==
@@ -2160,19 +2176,19 @@ condition|)
 do|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|!=
 literal|0
 operator|&&
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 operator|!=
 name|NULL
 condition|)
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 argument_list|(
@@ -2180,7 +2196,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Return the completion status: */
@@ -2433,6 +2449,14 @@ name|int
 name|add_reference
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -2498,7 +2522,7 @@ operator|)
 operator|->
 name|m_owner
 operator|!=
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* 				 * Return an invalid argument error for no 				 * owner and a permission error otherwise: 				 */
@@ -2722,7 +2746,7 @@ operator|)
 operator|->
 name|m_owner
 operator|!=
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* 				 * Return an invalid argument error for no 				 * owner and a permission error otherwise: 				 */
@@ -2797,7 +2821,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 				 * Restore the threads inherited priority and 				 * recompute the active priority (being careful 				 * not to override changes in the threads base 				 * priority subsequent to locking the mutex). 				 */
-name|_thread_run
+name|curthread
 operator|->
 name|inherited_priority
 operator|=
@@ -2808,23 +2832,23 @@ operator|)
 operator|->
 name|m_saved_prio
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|active_priority
 operator|=
 name|MAX
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|inherited_priority
 argument_list|,
-name|_thread_run
+name|curthread
 operator|->
 name|base_priority
 argument_list|)
 expr_stmt|;
 comment|/* 				 * This thread now owns one less priority mutex. 				 */
-name|_thread_run
+name|curthread
 operator|->
 name|priority_mutex_count
 operator|--
@@ -3052,7 +3076,7 @@ operator|)
 operator|->
 name|m_owner
 operator|!=
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* 				 * Return an invalid argument error for no 				 * owner and a permission error otherwise: 				 */
@@ -3127,7 +3151,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 				 * Restore the threads inherited priority and 				 * recompute the active priority (being careful 				 * not to override changes in the threads base 				 * priority subsequent to locking the mutex). 				 */
-name|_thread_run
+name|curthread
 operator|->
 name|inherited_priority
 operator|=
@@ -3138,23 +3162,23 @@ operator|)
 operator|->
 name|m_saved_prio
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|active_priority
 operator|=
 name|MAX
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|inherited_priority
 argument_list|,
-name|_thread_run
+name|curthread
 operator|->
 name|base_priority
 argument_list|)
 expr_stmt|;
 comment|/* 				 * This thread now owns one less priority mutex. 				 */
-name|_thread_run
+name|curthread
 operator|->
 name|priority_mutex_count
 operator|--

@@ -68,6 +68,14 @@ modifier|*
 name|namelen
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -135,7 +143,7 @@ operator|)
 condition|)
 block|{
 comment|/* Save the socket file descriptor: */
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -145,7 +153,7 @@ name|fd
 operator|=
 name|fd
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -155,7 +163,7 @@ name|fname
 operator|=
 name|__FILE__
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -171,7 +179,7 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -190,7 +198,7 @@ expr_stmt|;
 comment|/* Check if the wait was interrupted: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 condition|)

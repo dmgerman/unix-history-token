@@ -783,6 +783,14 @@ name|int
 name|long_version
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|char
 name|s
 index|[
@@ -897,7 +905,7 @@ if|if
 condition|(
 name|pthread
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* Output a record for the running thread: */

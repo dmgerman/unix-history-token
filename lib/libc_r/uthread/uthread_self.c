@@ -31,7 +31,8 @@ block|{
 comment|/* Return the running thread pointer: */
 return|return
 operator|(
-name|_thread_run
+name|_get_curthread
+argument_list|()
 operator|)
 return|;
 block|}

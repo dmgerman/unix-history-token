@@ -63,6 +63,14 @@ name|namelen
 parameter_list|)
 block|{
 name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
+name|struct
 name|sockaddr
 name|tmpname
 decl_stmt|;
@@ -149,7 +157,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.

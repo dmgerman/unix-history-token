@@ -106,7 +106,9 @@ modifier|*
 name|fp
 decl_stmt|;
 comment|/* The target file.          */
-name|pthread_t
+name|struct
+name|pthread
+modifier|*
 name|owner
 decl_stmt|;
 comment|/* Thread that owns lock.    */
@@ -330,6 +332,14 @@ name|fp
 parameter_list|)
 block|{
 name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
+name|struct
 name|file_lock
 modifier|*
 name|p
@@ -462,7 +472,7 @@ name|p
 operator|->
 name|owner
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 name|p
 operator|->
@@ -503,6 +513,14 @@ name|int
 name|lineno
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|idx
 init|=
@@ -602,7 +620,7 @@ name|p
 operator|->
 name|owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* 			 * The running thread is already the 			 * owner, so increment the count of 			 * the number of times it has locked 			 * the file: 			 */
@@ -622,7 +640,7 @@ block|}
 else|else
 block|{
 comment|/* Clear the interrupted flag: */
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -640,12 +658,12 @@ name|p
 operator|->
 name|l_head
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|,
 name|qe
 argument_list|)
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|flags
 operator||=
@@ -658,7 +676,7 @@ operator|&
 name|hash_lock
 argument_list|)
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -679,7 +697,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|flags
 operator|&
@@ -696,12 +714,12 @@ name|p
 operator|->
 name|l_head
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|,
 name|qe
 argument_list|)
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|flags
 operator|&=
@@ -714,19 +732,19 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|!=
 literal|0
 operator|&&
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 operator|!=
 name|NULL
 condition|)
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 argument_list|(
@@ -734,7 +752,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -772,6 +790,14 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -844,7 +870,7 @@ name|p
 operator|->
 name|owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* 			 * The running thread is already the 			 * owner, so increment the count of 			 * the number of times it has locked 			 * the file: 			 */
@@ -899,6 +925,14 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|idx
 init|=
@@ -953,7 +987,7 @@ name|p
 operator|->
 name|owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* 			 * Check if this thread has locked the FILE 			 * more than once: 			 */
@@ -1077,7 +1111,9 @@ begin_function
 name|void
 name|_funlock_owned
 parameter_list|(
-name|pthread_t
+name|struct
+name|pthread
+modifier|*
 name|pthread
 parameter_list|)
 block|{
@@ -1280,7 +1316,9 @@ begin_function
 name|void
 name|_flockfile_backout
 parameter_list|(
-name|pthread_t
+name|struct
+name|pthread
+modifier|*
 name|pthread
 parameter_list|)
 block|{

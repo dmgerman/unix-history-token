@@ -258,6 +258,14 @@ name|arg
 parameter_list|)
 block|{
 name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
+name|struct
 name|itimerval
 name|itimer
 decl_stmt|;
@@ -623,7 +631,7 @@ name|new_thread
 operator|->
 name|sigmask
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 expr_stmt|;
@@ -729,7 +737,7 @@ name|new_thread
 operator|->
 name|base_priority
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|base_priority
 operator|&
@@ -742,7 +750,7 @@ name|attr
 operator|.
 name|prio
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|base_priority
 operator|&
@@ -755,7 +763,7 @@ name|attr
 operator|.
 name|sched_policy
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|attr
 operator|.
@@ -1023,6 +1031,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 comment|/* We just left the scheduler via longjmp: */
 name|_thread_kern_in_sched
 operator|=
@@ -1031,11 +1047,11 @@ expr_stmt|;
 comment|/* Run the current thread's start routine with argument: */
 name|pthread_exit
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|start_routine
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|arg
 argument_list|)

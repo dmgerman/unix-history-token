@@ -552,6 +552,14 @@ name|int
 name|lock_type
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -596,7 +604,7 @@ index|]
 operator|->
 name|r_owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* Check the file descriptor and lock types: */
@@ -711,7 +719,7 @@ index|]
 operator|->
 name|w_owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* Check the file descriptor and lock types: */
@@ -852,6 +860,14 @@ modifier|*
 name|timeout
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -871,7 +887,7 @@ literal|0
 condition|)
 block|{
 comment|/* Clear the interrupted flag: */
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -912,11 +928,11 @@ index|]
 operator|->
 name|r_owner
 operator|!=
-name|_thread_run
+name|curthread
 operator|)
 operator|&&
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|==
@@ -948,11 +964,11 @@ index|]
 operator|->
 name|r_queue
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 					 * Save the file descriptor details 					 * in the thread structure for the 					 * running thread:  					 */
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -1004,7 +1020,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|!=
@@ -1021,7 +1037,7 @@ index|]
 operator|->
 name|r_queue
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -1036,7 +1052,7 @@ index|]
 operator|->
 name|r_owner
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 comment|/* 					 * Reset the number of read locks for 					 * this file descriptor:  					 */
 name|_thread_fd_table
@@ -1059,7 +1075,7 @@ index|]
 operator|->
 name|r_owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 comment|/* Increment the read lock count: */
 name|_thread_fd_table
@@ -1074,7 +1090,7 @@ block|}
 comment|/* Check the file descriptor and lock types: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|==
@@ -1102,11 +1118,11 @@ index|]
 operator|->
 name|w_owner
 operator|!=
-name|_thread_run
+name|curthread
 operator|)
 operator|&&
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|==
@@ -1138,11 +1154,11 @@ index|]
 operator|->
 name|w_queue
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 					 * Save the file descriptor details 					 * in the thread structure for the 					 * running thread:  					 */
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -1194,7 +1210,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|!=
@@ -1211,7 +1227,7 @@ index|]
 operator|->
 name|w_queue
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -1226,7 +1242,7 @@ index|]
 operator|->
 name|w_owner
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 comment|/* 					 * Reset the number of write locks 					 * for this file descriptor:  					 */
 name|_thread_fd_table
@@ -1249,7 +1265,7 @@ index|]
 operator|->
 name|w_owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 comment|/* Increment the write lock count: */
 name|_thread_fd_table
@@ -1275,7 +1291,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|!=
@@ -1293,13 +1309,13 @@ name|EINTR
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 operator|!=
 name|NULL
 condition|)
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 argument_list|(
@@ -1307,7 +1323,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -1339,6 +1355,14 @@ name|int
 name|lineno
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -1387,7 +1411,7 @@ index|]
 operator|->
 name|r_owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* Check the file descriptor and lock types: */
@@ -1502,7 +1526,7 @@ index|]
 operator|->
 name|w_owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* Check the file descriptor and lock types: */
@@ -1650,6 +1674,14 @@ name|int
 name|lineno
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -1669,7 +1701,7 @@ literal|0
 condition|)
 block|{
 comment|/* Clear the interrupted flag: */
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -1714,11 +1746,11 @@ index|]
 operator|->
 name|r_owner
 operator|!=
-name|_thread_run
+name|curthread
 operator|)
 operator|&&
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|==
@@ -1750,11 +1782,11 @@ index|]
 operator|->
 name|r_queue
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 					 * Save the file descriptor details 					 * in the thread structure for the 					 * running thread:  					 */
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -1764,7 +1796,7 @@ name|fd
 operator|=
 name|fd
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -1774,7 +1806,7 @@ name|branch
 operator|=
 name|lineno
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -1826,7 +1858,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|!=
@@ -1843,7 +1875,7 @@ index|]
 operator|->
 name|r_queue
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -1858,7 +1890,7 @@ index|]
 operator|->
 name|r_owner
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 comment|/* 					 * Reset the number of read locks for 					 * this file descriptor:  					 */
 name|_thread_fd_table
@@ -1900,7 +1932,7 @@ index|]
 operator|->
 name|r_owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 comment|/* Increment the read lock count: */
 name|_thread_fd_table
@@ -1915,7 +1947,7 @@ block|}
 comment|/* Check the file descriptor and lock types: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|==
@@ -1943,11 +1975,11 @@ index|]
 operator|->
 name|w_owner
 operator|!=
-name|_thread_run
+name|curthread
 operator|)
 operator|&&
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|==
@@ -1979,11 +2011,11 @@ index|]
 operator|->
 name|w_queue
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 					 * Save the file descriptor details 					 * in the thread structure for the 					 * running thread:  					 */
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -1993,7 +2025,7 @@ name|fd
 operator|=
 name|fd
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -2003,7 +2035,7 @@ name|branch
 operator|=
 name|lineno
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -2055,7 +2087,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|!=
@@ -2072,7 +2104,7 @@ index|]
 operator|->
 name|w_queue
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -2087,7 +2119,7 @@ index|]
 operator|->
 name|w_owner
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 comment|/* 					 * Reset the number of write locks 					 * for this file descriptor:  					 */
 name|_thread_fd_table
@@ -2129,7 +2161,7 @@ index|]
 operator|->
 name|w_owner
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 comment|/* Increment the write lock count: */
 name|_thread_fd_table
@@ -2155,7 +2187,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|!=
@@ -2173,13 +2205,13 @@ name|EINTR
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 operator|!=
 name|NULL
 condition|)
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 argument_list|(
@@ -2187,7 +2219,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}

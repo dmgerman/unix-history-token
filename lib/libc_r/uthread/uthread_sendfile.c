@@ -80,6 +80,14 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|type
 decl_stmt|,
@@ -451,7 +459,7 @@ name|SHORT_WRITE
 goto|;
 block|}
 comment|/* 			 * Otherwise wait on the fd. 			 */
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -467,7 +475,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Reset the interrupted operation flag. */
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -484,7 +492,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 condition|)

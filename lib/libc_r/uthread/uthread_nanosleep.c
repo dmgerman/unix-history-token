@@ -49,6 +49,14 @@ modifier|*
 name|time_remaining
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -138,7 +146,7 @@ name|current_time
 argument_list|)
 expr_stmt|;
 comment|/* Calculate the time for the current thread to wake up: */
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -152,7 +160,7 @@ name|time_to_sleep
 operator|->
 name|tv_sec
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -169,7 +177,7 @@ expr_stmt|;
 comment|/* Check if the nanosecond field has overflowed: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -179,7 +187,7 @@ literal|1000000000
 condition|)
 block|{
 comment|/* Wrap the nanosecond field: */
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -187,7 +195,7 @@ name|tv_sec
 operator|+=
 literal|1
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -196,7 +204,7 @@ operator|-=
 literal|1000000000
 expr_stmt|;
 block|}
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -374,7 +382,7 @@ block|}
 comment|/* Check if the sleep was interrupted: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 condition|)

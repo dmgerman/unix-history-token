@@ -283,6 +283,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|void
 modifier|*
 name|data
@@ -335,7 +343,7 @@ control|)
 block|{
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data_count
 condition|)
@@ -368,7 +376,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 index|[
@@ -382,14 +390,14 @@ operator|(
 name|void
 operator|*
 operator|)
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 index|[
 name|key
 index|]
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 index|[
@@ -398,7 +406,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data_count
 operator|--
@@ -441,12 +449,12 @@ else|else
 block|{
 name|free
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 argument_list|)
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 operator|=
@@ -458,12 +466,12 @@ block|}
 block|}
 name|free
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 argument_list|)
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 operator|=
@@ -557,7 +565,9 @@ modifier|*
 name|value
 parameter_list|)
 block|{
-name|pthread_t
+name|struct
+name|pthread
+modifier|*
 name|pthread
 decl_stmt|;
 name|int
@@ -568,7 +578,8 @@ decl_stmt|;
 comment|/* Point to the running thread: */
 name|pthread
 operator|=
-name|_thread_run
+name|_get_curthread
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -691,7 +702,9 @@ name|pthread_key_t
 name|key
 parameter_list|)
 block|{
-name|pthread_t
+name|struct
+name|pthread
+modifier|*
 name|pthread
 decl_stmt|;
 name|void
@@ -701,7 +714,8 @@ decl_stmt|;
 comment|/* Point to the running thread: */
 name|pthread
 operator|=
-name|_thread_run
+name|_get_curthread
+argument_list|()
 expr_stmt|;
 comment|/* Check if there is specific data: */
 if|if

@@ -230,6 +230,14 @@ modifier|*
 name|psf
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 comment|/* 	 * Flag the pthread kernel as executing scheduler code 	 * to avoid a signal from interrupting this execution and 	 * corrupting the (soon-to-be) current frame. 	 */
 name|_thread_kern_in_sched
 operator|=
@@ -238,13 +246,13 @@ expr_stmt|;
 comment|/* Restore the signal frame: */
 name|_thread_sigframe_restore
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|,
 name|psf
 argument_list|)
 expr_stmt|;
 comment|/* The signal mask was restored; check for any pending signals: */
-name|_thread_run
+name|curthread
 operator|->
 name|check_pending
 operator|=
@@ -270,6 +278,14 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 comment|/* 	 * Flag the pthread kernel as executing scheduler code 	 * to avoid a scheduler signal from interrupting this 	 * execution and calling the scheduler again. 	 */
 name|_thread_kern_in_sched
 operator|=
@@ -300,7 +316,7 @@ if|if
 condition|(
 name|_setjmp
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|ctx
 operator|.
@@ -311,13 +327,13 @@ literal|0
 condition|)
 block|{
 comment|/* Flag the jump buffer was the last state saved: */
-name|_thread_run
+name|curthread
 operator|->
 name|ctxtype
 operator|=
 name|CTX_JB_NOSIG
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|longjmp_val
 operator|=
@@ -330,7 +346,7 @@ name|DBG_MSG
 argument_list|(
 literal|"Returned from ___longjmp, thread %p\n"
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 			 * This point is reached when a longjmp() is called 			 * to restore the state of a thread. 			 * 			 * This is the normal way out of the scheduler. 			 */
@@ -340,7 +356,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|sig_defer_count
 operator|==
@@ -351,7 +367,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|cancelflags
 operator|&
@@ -363,7 +379,7 @@ operator|)
 operator|&&
 operator|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|cancelflags
 operator|&
@@ -390,7 +406,7 @@ name|thread_run_switch_hook
 argument_list|(
 name|_last_user_thread
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -415,7 +431,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|_thread_run
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
+name|curthread
 operator|->
 name|check_pending
 operator|=
@@ -444,6 +468,14 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|pthread_t
 name|pthread
 decl_stmt|,
@@ -460,7 +492,7 @@ comment|/* If the currently running thread is a user thread, save it: */
 if|if
 condition|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|flags
 operator|&
@@ -471,7 +503,7 @@ literal|0
 condition|)
 name|_last_user_thread
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 if|if
 condition|(
@@ -566,14 +598,14 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|!=
 operator|&
 name|_thread_kern_thread
 condition|)
 block|{
 comment|/* 			 * This thread no longer needs to yield the CPU. 			 */
-name|_thread_run
+name|curthread
 operator|->
 name|yield_on_sig_undefer
 operator|=
@@ -581,7 +613,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|state
 operator|!=
@@ -589,7 +621,7 @@ name|PS_RUNNING
 condition|)
 block|{
 comment|/* 				 * Save the current time as the time that the 				 * thread became inactive: 				 */
-name|_thread_run
+name|curthread
 operator|->
 name|last_inactive
 operator|=
@@ -600,17 +632,17 @@ name|current_tick
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|last_inactive
 operator|<
-name|_thread_run
+name|curthread
 operator|->
 name|last_active
 condition|)
 block|{
 comment|/* Account for a rollover: */
-name|_thread_run
+name|curthread
 operator|->
 name|last_inactive
 operator|=
@@ -624,7 +656,7 @@ block|}
 comment|/* 			 * Place the currently running thread into the 			 * appropriate queue(s). 			 */
 switch|switch
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|state
 condition|)
@@ -682,7 +714,7 @@ case|case
 name|PS_WAIT_WAIT
 case|:
 comment|/* No timeouts for these states: */
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -691,7 +723,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -701,7 +733,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Restart the time slice: */
-name|_thread_run
+name|curthread
 operator|->
 name|slice_usec
 operator|=
@@ -711,7 +743,7 @@ expr_stmt|;
 comment|/* Insert into the waiting queue: */
 name|PTHREAD_WAITQ_INSERT
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 break|break;
@@ -723,7 +755,7 @@ case|case
 name|PS_SLEEP_WAIT
 case|:
 comment|/* Restart the time slice: */
-name|_thread_run
+name|curthread
 operator|->
 name|slice_usec
 operator|=
@@ -733,7 +765,7 @@ expr_stmt|;
 comment|/* Insert into the waiting queue: */
 name|PTHREAD_WAITQ_INSERT
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 break|break;
@@ -742,7 +774,7 @@ case|case
 name|PS_SPINBLOCK
 case|:
 comment|/* No timeouts for this state: */
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -751,7 +783,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -778,7 +810,7 @@ case|case
 name|PS_SELECT_WAIT
 case|:
 comment|/* Restart the time slice: */
-name|_thread_run
+name|curthread
 operator|->
 name|slice_usec
 operator|=
@@ -788,13 +820,13 @@ expr_stmt|;
 comment|/* Insert into the waiting queue: */
 name|PTHREAD_WAITQ_INSERT
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Insert into the work queue: */
 name|PTHREAD_WORKQ_INSERT
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 break|break;
@@ -802,14 +834,14 @@ block|}
 comment|/* 			 * Are there pending signals for this thread? 			 * 			 * This check has to be performed after the thread 			 * has been placed in the queue(s) appropriate for 			 * its state.  The process of adding pending signals 			 * can change a threads state, which in turn will 			 * attempt to add or remove the thread from any 			 * scheduling queue to which it belongs. 			 */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|check_pending
 operator|!=
 literal|0
 condition|)
 block|{
-name|_thread_run
+name|curthread
 operator|->
 name|check_pending
 operator|=
@@ -817,7 +849,7 @@ literal|0
 expr_stmt|;
 name|_thread_sig_check_pending
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -850,7 +882,7 @@ operator|)
 operator|||
 operator|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|state
 operator|!=
@@ -1005,7 +1037,7 @@ name|nfds
 operator|=
 literal|0
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 default|default:
 comment|/* 				 * Remove this thread from the waiting queue 				 * (and work queue if necessary) and place it 				 * in the ready queue. 				 */
 name|PTHREAD_WAITQ_CLEARACTIVE
@@ -1060,7 +1092,7 @@ name|current_tick
 operator|=
 name|_sched_ticks
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|last_inactive
 operator|=
@@ -1071,17 +1103,17 @@ name|current_tick
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|last_inactive
 operator|<
-name|_thread_run
+name|curthread
 operator|->
 name|last_active
 condition|)
 block|{
 comment|/* Account for a rollover: */
-name|_thread_run
+name|curthread
 operator|->
 name|last_inactive
 operator|=
@@ -1094,7 +1126,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|slice_usec
 operator|!=
@@ -1103,7 +1135,7 @@ literal|1
 operator|)
 operator|&&
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|attr
 operator|.
@@ -1114,16 +1146,16 @@ operator|)
 condition|)
 block|{
 comment|/* 				 * Accumulate the number of microseconds for 				 * which the current thread has run: 				 */
-name|_thread_run
+name|curthread
 operator|->
 name|slice_usec
 operator|+=
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|last_inactive
 operator|-
-name|_thread_run
+name|curthread
 operator|->
 name|last_active
 operator|)
@@ -1136,13 +1168,13 @@ expr_stmt|;
 comment|/* Check for time quantum exceeded: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|slice_usec
 operator|>
 name|TIMESLICE_USEC
 condition|)
-name|_thread_run
+name|curthread
 operator|->
 name|slice_usec
 operator|=
@@ -1152,7 +1184,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|slice_usec
 operator|==
@@ -1163,7 +1195,7 @@ block|{
 comment|/* 				 * The thread exceeded its time 				 * quantum or it yielded the CPU; 				 * place it at the tail of the 				 * queue for its priority. 				 */
 name|PTHREAD_PRIOQ_INSERT_TAIL
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -1172,7 +1204,7 @@ block|{
 comment|/* 				 * The thread hasn't exceeded its 				 * interval.  Place it at the head 				 * of the queue for its priority. 				 */
 name|PTHREAD_PRIOQ_INSERT_HEAD
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -1192,7 +1224,13 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * Lock the pthread kernel by changing the pointer to 			 * the running thread to point to the global kernel 			 * thread structure: 			 */
-name|_thread_run
+name|_set_curthread
+argument_list|(
+operator|&
+name|_thread_kern_thread
+argument_list|)
+expr_stmt|;
+name|curthread
 operator|=
 operator|&
 name|_thread_kern_thread
@@ -1201,7 +1239,7 @@ name|DBG_MSG
 argument_list|(
 literal|"No runnable threads, using kernel thread %p\n"
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Unprotect the scheduling queues: */
@@ -1333,7 +1371,12 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* Make the selected thread the current thread: */
-name|_thread_run
+name|_set_curthread
+argument_list|(
+name|pthread_h
+argument_list|)
+expr_stmt|;
+name|curthread
 operator|=
 name|pthread_h
 expr_stmt|;
@@ -1342,7 +1385,7 @@ name|current_tick
 operator|=
 name|_sched_ticks
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|last_active
 operator|=
@@ -1354,7 +1397,7 @@ expr_stmt|;
 comment|/* 			 * Check if this thread is running for the first time 			 * or running again after using its full time slice 			 * allocation: 			 */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|slice_usec
 operator|==
@@ -1363,7 +1406,7 @@ literal|1
 condition|)
 block|{
 comment|/* Reset the accumulated time slice period: */
-name|_thread_run
+name|curthread
 operator|->
 name|slice_usec
 operator|=
@@ -1382,7 +1425,7 @@ operator|&&
 operator|(
 name|_last_user_thread
 operator|!=
-name|_thread_run
+name|curthread
 operator|)
 condition|)
 block|{
@@ -1390,14 +1433,14 @@ name|thread_run_switch_hook
 argument_list|(
 name|_last_user_thread
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * Continue the thread at its current frame: 			 */
 switch|switch
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|ctxtype
 condition|)
@@ -1407,13 +1450,13 @@ name|CTX_JB_NOSIG
 case|:
 name|___longjmp
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|ctx
 operator|.
 name|jb
 argument_list|,
-name|_thread_run
+name|curthread
 operator|->
 name|longjmp_val
 argument_list|)
@@ -1424,13 +1467,13 @@ name|CTX_JB
 case|:
 name|__longjmp
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|ctx
 operator|.
 name|jb
 argument_list|,
-name|_thread_run
+name|curthread
 operator|->
 name|longjmp_val
 argument_list|)
@@ -1441,13 +1484,13 @@ name|CTX_SJB
 case|:
 name|__siglongjmp
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|ctx
 operator|.
 name|sigjb
 argument_list|,
-name|_thread_run
+name|curthread
 operator|->
 name|longjmp_val
 argument_list|)
@@ -1460,7 +1503,7 @@ comment|/* XXX - Restore FP regsisters? */
 name|FP_RESTORE_UC
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|ctx
 operator|.
@@ -1478,7 +1521,7 @@ name|NOT_YET
 name|_setcontext
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|ctx
 operator|.
@@ -1488,7 +1531,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* 				 * Ensure the process signal mask is set 				 * correctly: 				 */
-name|_thread_run
+name|curthread
 operator|->
 name|ctx
 operator|.
@@ -1501,7 +1544,7 @@ expr_stmt|;
 name|sigreturn
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|ctx
 operator|.
@@ -1545,6 +1588,14 @@ name|int
 name|lineno
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 comment|/* 	 * Flag the pthread kernel as executing scheduler code 	 * to avoid a scheduler signal from interrupting this 	 * execution and calling the scheduler again. 	 */
 name|_thread_kern_in_sched
 operator|=
@@ -1556,19 +1607,19 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Change the state of the current thread: */
-name|_thread_run
+name|curthread
 operator|->
 name|state
 operator|=
 name|state
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|fname
 operator|=
 name|fname
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|lineno
 operator|=
@@ -1603,6 +1654,14 @@ name|int
 name|lineno
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 comment|/* 	 * Flag the pthread kernel as executing scheduler code 	 * to avoid a scheduler signal from interrupting this 	 * execution and calling the scheduler again. 	 */
 name|_thread_kern_in_sched
 operator|=
@@ -1614,19 +1673,19 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Change the state of the current thread: */
-name|_thread_run
+name|curthread
 operator|->
 name|state
 operator|=
 name|state
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|fname
 operator|=
 name|fname
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|lineno
 operator|=
@@ -2706,6 +2765,14 @@ name|timeout
 parameter_list|)
 block|{
 name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
+name|struct
 name|timespec
 name|current_time
 decl_stmt|;
@@ -2714,7 +2781,7 @@ name|timeval
 name|tv
 decl_stmt|;
 comment|/* Reset the timeout flag for the running thread: */
-name|_thread_run
+name|curthread
 operator|->
 name|timeout
 operator|=
@@ -2729,7 +2796,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Set the wakeup time to something that can be recognised as 		 * different to an actual time of day: 		 */
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -2738,7 +2805,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -2766,7 +2833,7 @@ literal|0
 condition|)
 block|{
 comment|/* Set the wake up time to 'immediately': */
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -2774,7 +2841,7 @@ name|tv_sec
 operator|=
 literal|0
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -2801,7 +2868,7 @@ name|current_time
 argument_list|)
 expr_stmt|;
 comment|/* Calculate the time for the current thread to wake up: */
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -2815,7 +2882,7 @@ name|timeout
 operator|->
 name|tv_sec
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -2832,7 +2899,7 @@ expr_stmt|;
 comment|/* Check if the nanosecond field needs to wrap: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -2842,7 +2909,7 @@ literal|1000000000
 condition|)
 block|{
 comment|/* Wrap the nanosecond field: */
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -2850,7 +2917,7 @@ name|tv_sec
 operator|+=
 literal|1
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -2870,8 +2937,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 comment|/* Allow signal deferral to be recursive. */
-name|_thread_run
+name|curthread
 operator|->
 name|sig_defer_count
 operator|++
@@ -2886,10 +2961,18 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 comment|/* 	 * Perform checks to yield only if we are about to undefer 	 * signals. 	 */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|sig_defer_count
 operator|>
@@ -2897,7 +2980,7 @@ literal|1
 condition|)
 block|{
 comment|/* Decrement the signal deferral count. */
-name|_thread_run
+name|curthread
 operator|->
 name|sig_defer_count
 operator|--
@@ -2906,7 +2989,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|sig_defer_count
 operator|==
@@ -2914,7 +2997,7 @@ literal|1
 condition|)
 block|{
 comment|/* Reenable signals: */
-name|_thread_run
+name|curthread
 operator|->
 name|sig_defer_count
 operator|=
@@ -2937,7 +3020,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|cancelflags
 operator|&
@@ -2949,7 +3032,7 @@ operator|)
 operator|&&
 operator|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|cancelflags
 operator|&
@@ -2966,7 +3049,7 @@ comment|/* 		 * If there are pending signals or this thread has 		 * to yield th
 if|if
 condition|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|yield_on_sig_undefer
 operator|!=
@@ -2975,13 +3058,13 @@ operator|)
 operator|||
 name|SIGNOTEMPTY
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|sigpend
 argument_list|)
 condition|)
 block|{
-name|_thread_run
+name|curthread
 operator|->
 name|yield_on_sig_undefer
 operator|=
@@ -3172,6 +3255,49 @@ name|tid_in
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|struct
+name|pthread
+modifier|*
+name|_get_curthread
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|_thread_initial
+operator|==
+name|NULL
+condition|)
+name|_thread_init
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|_thread_run
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|_set_curthread
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+name|newthread
+parameter_list|)
+block|{
+name|_thread_run
+operator|=
+name|newthread
+expr_stmt|;
 block|}
 end_function
 

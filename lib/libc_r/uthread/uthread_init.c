@@ -1179,9 +1179,10 @@ argument_list|,
 name|tle
 argument_list|)
 expr_stmt|;
-name|_thread_run
-operator|=
+name|_set_curthread
+argument_list|(
 name|_thread_initial
+argument_list|)
 expr_stmt|;
 comment|/* Initialise the global signal action structure: */
 name|sigfillset

@@ -67,6 +67,14 @@ name|size_t
 name|nbytes
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|blocking
 decl_stmt|;
@@ -242,7 +250,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -258,7 +266,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Reset the interrupted operation flag: */
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -276,7 +284,7 @@ expr_stmt|;
 comment|/* 				 * Check if the operation was 				 * interrupted by a signal 				 */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 condition|)

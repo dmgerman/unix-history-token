@@ -40,6 +40,14 @@ modifier|*
 name|thread_return
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -80,7 +88,7 @@ if|if
 condition|(
 name|pthread
 operator|==
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* Avoid a deadlock condition: */
@@ -241,10 +249,10 @@ name|pthread
 operator|->
 name|joiner
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 comment|/* Keep track of which thread we're joining to: */
-name|_thread_run
+name|curthread
 operator|->
 name|join_status
 operator|.
@@ -254,7 +262,7 @@ name|pthread
 expr_stmt|;
 while|while
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|join_status
 operator|.
@@ -277,7 +285,7 @@ block|}
 comment|/* 		 * The thread return value and error are set by the thread we're 		 * joining to when it exits or detaches:  		 */
 name|ret
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|join_status
 operator|.
@@ -300,7 +308,7 @@ condition|)
 operator|*
 name|thread_return
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|join_status
 operator|.

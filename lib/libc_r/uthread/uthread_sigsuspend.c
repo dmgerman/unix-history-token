@@ -43,6 +43,14 @@ modifier|*
 name|set
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -63,12 +71,12 @@ block|{
 comment|/* Save the current signal mask: */
 name|oset
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 expr_stmt|;
 comment|/* Change the caller's mask: */
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 operator|=
@@ -91,7 +99,7 @@ operator|=
 name|EINTR
 expr_stmt|;
 comment|/* Restore the signal mask: */
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 operator|=

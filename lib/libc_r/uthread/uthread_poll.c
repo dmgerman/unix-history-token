@@ -81,6 +81,14 @@ name|timeout
 parameter_list|)
 block|{
 name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
+name|struct
 name|timespec
 name|ts
 decl_stmt|;
@@ -247,7 +255,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -256,7 +264,7 @@ operator|=
 operator|&
 name|data
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -273,7 +281,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 condition|)

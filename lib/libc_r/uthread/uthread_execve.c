@@ -61,6 +61,14 @@ modifier|*
 name|envp
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
@@ -317,7 +325,7 @@ argument_list|(
 name|SIG_SETMASK
 argument_list|,
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|sigmask
 argument_list|,

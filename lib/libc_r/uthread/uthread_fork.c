@@ -58,6 +58,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -114,7 +122,7 @@ comment|/* Reset signals pending for the running thread: */
 name|sigemptyset
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|sigpend
 argument_list|)
@@ -347,7 +355,7 @@ if|if
 condition|(
 name|pthread_save
 operator|!=
-name|_thread_run
+name|curthread
 condition|)
 block|{
 comment|/* Remove this thread from the list: */
@@ -476,7 +484,7 @@ block|}
 comment|/* Treat the current thread as the initial thread: */
 name|_thread_initial
 operator|=
-name|_thread_run
+name|curthread
 expr_stmt|;
 comment|/* Re-init the dead thread list: */
 name|TAILQ_INIT
@@ -502,7 +510,7 @@ comment|/* Re-init the threads mutex queue: */
 name|TAILQ_INIT
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|mutexq
 argument_list|)

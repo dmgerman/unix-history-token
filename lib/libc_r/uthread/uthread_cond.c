@@ -480,6 +480,14 @@ modifier|*
 name|mutex
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|rval
 init|=
@@ -661,13 +669,13 @@ block|}
 else|else
 block|{
 comment|/* Reset the timeout and interrupted flags: */
-name|_thread_run
+name|curthread
 operator|->
 name|timeout
 operator|=
 literal|0
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -679,7 +687,7 @@ argument_list|(
 operator|*
 name|cond
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Remember the mutex and sequence number: */
@@ -703,7 +711,7 @@ operator|->
 name|c_seqno
 expr_stmt|;
 comment|/* Wait forever: */
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -733,7 +741,7 @@ argument_list|(
 operator|*
 name|cond
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Check for no more waiters: */
@@ -809,7 +817,7 @@ operator|)
 expr_stmt|;
 name|interrupted
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 expr_stmt|;
@@ -850,7 +858,7 @@ argument_list|(
 operator|*
 name|cond
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Check for no more waiters: */
@@ -931,14 +939,14 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 operator|!=
 name|NULL
 operator|)
 condition|)
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 argument_list|(
@@ -946,7 +954,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -996,6 +1004,14 @@ modifier|*
 name|abstime
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|rval
 init|=
@@ -1195,7 +1211,7 @@ block|}
 else|else
 block|{
 comment|/* Set the wakeup time: */
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -1205,7 +1221,7 @@ name|abstime
 operator|->
 name|tv_sec
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|wakeup_time
 operator|.
@@ -1216,13 +1232,13 @@ operator|->
 name|tv_nsec
 expr_stmt|;
 comment|/* Reset the timeout and interrupted flags: */
-name|_thread_run
+name|curthread
 operator|->
 name|timeout
 operator|=
 literal|0
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
@@ -1234,7 +1250,7 @@ argument_list|(
 operator|*
 name|cond
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Remember the mutex and sequence number: */
@@ -1278,7 +1294,7 @@ argument_list|(
 operator|*
 name|cond
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Check for no more waiters: */
@@ -1354,7 +1370,7 @@ operator|)
 expr_stmt|;
 name|interrupted
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 expr_stmt|;
@@ -1395,7 +1411,7 @@ argument_list|(
 operator|*
 name|cond
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Check for no more waiters: */
@@ -1446,7 +1462,7 @@ comment|/* 						 * Return ETIMEDOUT if the wait 						 * timed out and there wa
 if|if
 condition|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|timeout
 operator|!=
@@ -1495,14 +1511,14 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 operator|!=
 name|NULL
 operator|)
 condition|)
-name|_thread_run
+name|curthread
 operator|->
 name|continuation
 argument_list|(
@@ -1510,7 +1526,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}

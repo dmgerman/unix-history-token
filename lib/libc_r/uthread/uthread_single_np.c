@@ -35,7 +35,8 @@ block|{
 comment|/* Enter single-threaded (non-POSIX) scheduling mode: */
 name|_thread_single
 operator|=
-name|_thread_run
+name|_get_curthread
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

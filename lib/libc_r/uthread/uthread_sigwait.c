@@ -59,6 +59,14 @@ modifier|*
 name|sig
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -160,7 +168,7 @@ expr_stmt|;
 comment|/* Check to see if a pending signal is in the wait mask. */
 name|tempset
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|sigpend
 expr_stmt|;
@@ -219,7 +227,7 @@ condition|(
 name|sigismember
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|sigpend
 argument_list|,
@@ -229,7 +237,7 @@ condition|)
 name|sigdelset
 argument_list|(
 operator|&
-name|_thread_run
+name|curthread
 operator|->
 name|sigpend
 argument_list|,
@@ -367,7 +375,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Save the wait signal mask.  The wait signal 		 * mask is independent of the threads signal mask 		 * and requires separate storage. 		 */
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -390,12 +398,12 @@ comment|/* Return the signal number to the caller: */
 operator|*
 name|sig
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|signo
 expr_stmt|;
 comment|/* 		 * Probably unnecessary, but since it's in a union struct 		 * we don't know how it could be used in the future. 		 */
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.

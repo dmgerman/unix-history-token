@@ -60,6 +60,14 @@ modifier|*
 name|lck
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 comment|/* 	 * Try to grab the lock and loop if another thread grabs 	 * it before we do. 	 */
 while|while
 condition|(
@@ -73,7 +81,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* Block the thread until the lock. */
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -99,7 +107,7 @@ operator|=
 operator|(
 name|long
 operator|)
-name|_thread_run
+name|curthread
 expr_stmt|;
 block|}
 end_function
@@ -124,6 +132,14 @@ name|int
 name|lineno
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|cnt
 init|=
@@ -170,7 +186,7 @@ literal|"%s - Warning: Thread %p attempted to lock %p from %s (%d) was left lock
 argument_list|,
 name|__progname
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|,
 name|lck
 argument_list|,
@@ -210,7 +226,7 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* Block the thread until the lock. */
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -236,7 +252,7 @@ operator|=
 operator|(
 name|long
 operator|)
-name|_thread_run
+name|curthread
 expr_stmt|;
 name|lck
 operator|->

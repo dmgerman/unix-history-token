@@ -345,23 +345,31 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 comment|/* 	 * POSIX states that cancellation/termination of a thread should 	 * not release any visible resources (such as mutexes) and that 	 * it is the applications responsibility.  Resources that are 	 * internal to the threads library, including file and fd locks, 	 * are not visible to the application and need to be released. 	 */
 comment|/* Unlock all owned fd locks: */
 name|_thread_fd_unlock_owned
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Unlock all owned file locks: */
 name|_funlock_owned
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Unlock all private mutexes: */
 name|_mutex_unlock_private
 argument_list|(
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This still isn't quite correct because we don't account 	 * for held spinlocks (see libc/stdlib/malloc.c). 	 */
@@ -377,6 +385,14 @@ modifier|*
 name|status
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|pthread_t
 name|pthread
 decl_stmt|;
@@ -384,7 +400,7 @@ comment|/* Check if this thread is already in the process of exiting: */
 if|if
 condition|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|flags
 operator|&
@@ -411,7 +427,7 @@ argument_list|)
 argument_list|,
 literal|"Thread %p has called pthread_exit() from a destructor. POSIX 1003.1 1996 s16.2.5.2 does not allow this!"
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|)
 expr_stmt|;
 name|PANIC
@@ -421,14 +437,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Flag this thread as exiting: */
-name|_thread_run
+name|curthread
 operator|->
 name|flags
 operator||=
 name|PTHREAD_EXITING
 expr_stmt|;
 comment|/* Save the return value: */
-name|_thread_run
+name|curthread
 operator|->
 name|ret
 operator|=
@@ -436,7 +452,7 @@ name|status
 expr_stmt|;
 while|while
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|cleanup
 operator|!=
@@ -451,7 +467,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|attr
 operator|.
@@ -460,13 +476,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|_thread_run
+name|curthread
 operator|->
 name|attr
 operator|.
 name|cleanup_attr
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|attr
 operator|.
@@ -477,7 +493,7 @@ block|}
 comment|/* Check if there is thread specific data: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|specific_data
 operator|!=
@@ -492,7 +508,7 @@ block|}
 comment|/* Free thread-specific poll_data structure, if allocated: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|poll_data
 operator|.
@@ -503,14 +519,14 @@ condition|)
 block|{
 name|free
 argument_list|(
-name|_thread_run
+name|curthread
 operator|->
 name|poll_data
 operator|.
 name|fds
 argument_list|)
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|poll_data
 operator|.
@@ -541,7 +557,7 @@ argument_list|(
 operator|&
 name|_dead_list
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|,
 name|dle
 argument_list|)
@@ -579,13 +595,13 @@ literal|0
 condition|)
 name|PANIC
 argument_list|(
-literal|"Cannot lock gc mutex"
+literal|"Cannot unlock gc mutex"
 argument_list|)
 expr_stmt|;
 comment|/* Check if there is a thread joining this one: */
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|joiner
 operator|!=
@@ -594,11 +610,11 @@ condition|)
 block|{
 name|pthread
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|joiner
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|joiner
 operator|=
@@ -648,7 +664,7 @@ name|join_status
 operator|.
 name|ret
 operator|=
-name|_thread_run
+name|curthread
 operator|->
 name|ret
 expr_stmt|;
@@ -673,7 +689,7 @@ name|PTHREAD_ASSERT
 argument_list|(
 operator|(
 operator|(
-name|_thread_run
+name|curthread
 operator|->
 name|attr
 operator|.
@@ -688,7 +704,7 @@ argument_list|,
 literal|"Cannot join a detached thread"
 argument_list|)
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|attr
 operator|.
@@ -703,7 +719,7 @@ argument_list|(
 operator|&
 name|_thread_list
 argument_list|,
-name|_thread_run
+name|curthread
 argument_list|,
 name|tle
 argument_list|)

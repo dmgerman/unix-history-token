@@ -83,6 +83,14 @@ name|timeout
 parameter_list|)
 block|{
 name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
+name|struct
 name|timespec
 name|nullts
 init|=
@@ -153,7 +161,7 @@ operator|)
 condition|)
 block|{
 comment|/* Save the socket file descriptor: */
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -163,7 +171,7 @@ name|fd
 operator|=
 name|kq
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -173,7 +181,7 @@ name|fname
 operator|=
 name|__FILE__
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|data
 operator|.
@@ -186,13 +194,13 @@ expr_stmt|;
 do|do
 block|{
 comment|/* Reset the interrupted and timeout flags: */
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 operator|=
 literal|0
 expr_stmt|;
-name|_thread_run
+name|curthread
 operator|->
 name|timeout
 operator|=
@@ -209,7 +217,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_thread_run
+name|curthread
 operator|->
 name|interrupted
 condition|)
@@ -250,7 +258,7 @@ name|rc
 operator|==
 literal|0
 operator|&&
-name|_thread_run
+name|curthread
 operator|->
 name|timeout
 operator|==
