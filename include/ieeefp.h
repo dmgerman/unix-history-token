@@ -34,7 +34,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|i386
+name|__i386__
 end_ifdef
 
 begin_include
@@ -47,6 +47,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* !__i386__ */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -132,7 +136,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* i386 */
+comment|/* __i386__ */
 end_comment
 
 begin_endif
