@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.15 1999/05/06 22:08:57 peter Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.16 1999/08/11 14:37:58 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -503,7 +503,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"-- warning, refcnt now %d, decreasing\n"
+literal|"-- warning, refcnt now %ld, decreasing\n"
 argument_list|,
 name|rt
 operator|->
