@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: net.c,v 1.1 1997/12/02 20:45:22 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -548,6 +548,25 @@ name|nlocaladdrs
 decl_stmt|,
 name|ncommonaddrs
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|pp
+operator|->
+name|rp_matches_local
+condition|)
+block|{
+comment|/* Remote printer doesn't match local */
+name|pp
+operator|->
+name|remote
+operator|=
+literal|1
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|pp
 operator|->
 name|remote
