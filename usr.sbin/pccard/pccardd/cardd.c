@@ -2467,7 +2467,7 @@ condition|)
 block|{
 name|struct
 name|pccard_resource
-name|resource
+name|res
 decl_stmt|;
 name|char
 name|name
@@ -2499,13 +2499,13 @@ argument_list|,
 name|O_RDWR
 argument_list|)
 expr_stmt|;
-name|resource
+name|res
 operator|.
 name|type
 operator|=
 name|SYS_RES_IRQ
 expr_stmt|;
-name|resource
+name|res
 operator|.
 name|size
 operator|=
@@ -2525,13 +2525,13 @@ name|i
 operator|++
 control|)
 block|{
-name|resource
+name|res
 operator|.
 name|min
 operator|=
 name|i
 expr_stmt|;
-name|resource
+name|res
 operator|.
 name|max
 operator|=
@@ -2546,7 +2546,7 @@ argument_list|,
 name|PIOCSRESOURCE
 argument_list|,
 operator|&
-name|resource
+name|res
 argument_list|)
 operator|<
 literal|0
@@ -2570,7 +2570,7 @@ index|[
 name|i
 index|]
 operator|&&
-name|resource
+name|res
 operator|.
 name|resource_addr
 operator|==
@@ -2684,7 +2684,7 @@ name|cio
 decl_stmt|;
 name|struct
 name|pccard_resource
-name|resource
+name|res
 decl_stmt|;
 name|char
 name|name
@@ -2716,7 +2716,7 @@ argument_list|,
 name|O_RDWR
 argument_list|)
 expr_stmt|;
-name|resource
+name|res
 operator|.
 name|type
 operator|=
@@ -2769,7 +2769,7 @@ operator|->
 name|next
 control|)
 block|{
-name|resource
+name|res
 operator|.
 name|size
 operator|=
@@ -2777,7 +2777,7 @@ name|cio
 operator|->
 name|size
 expr_stmt|;
-name|resource
+name|res
 operator|.
 name|min
 operator|=
@@ -2785,11 +2785,11 @@ name|cio
 operator|->
 name|addr
 expr_stmt|;
-name|resource
+name|res
 operator|.
 name|max
 operator|=
-name|resource
+name|res
 operator|.
 name|min
 operator|+
@@ -2808,7 +2808,7 @@ argument_list|,
 name|PIOCSRESOURCE
 argument_list|,
 operator|&
-name|resource
+name|res
 argument_list|)
 operator|<
 literal|0
@@ -2827,7 +2827,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|resource
+name|res
 operator|.
 name|resource_addr
 operator|!=
