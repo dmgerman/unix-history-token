@@ -1464,7 +1464,7 @@ argument|VN_IO
 argument_list|)
 name|printf
 argument_list|(
-literal|"vnstrategy: vp %p/%p bn 0x%x/0x%lx sz 0x%x\n"
+literal|"vnstrategy: vp %p/%p bn 0x%lx/0x%lx sz 0x%x\n"
 argument_list|,
 name|vn
 operator|->
