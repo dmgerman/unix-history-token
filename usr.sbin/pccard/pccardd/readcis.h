@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|CIS_MAXSTR
-value|30
+value|254
 end_define
 
 begin_struct
