@@ -2504,15 +2504,25 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|allproc
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|again
+label|:
 if|if
 condition|(
-operator|(
 operator|*
 name|pn
-operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+comment|/* first node */
 operator|*
 name|pn
 operator|=
@@ -2520,9 +2530,8 @@ name|pd
 operator|->
 name|pn_nodes
 expr_stmt|;
-else|else
-name|again
-label|:
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -2534,6 +2543,8 @@ name|pn_type
 operator|!=
 name|pfstype_procdir
 condition|)
+block|{
+comment|/* next node */
 operator|*
 name|pn
 operator|=
@@ -2544,7 +2555,8 @@ operator|)
 operator|->
 name|pn_next
 expr_stmt|;
-while|while
+block|}
+if|if
 condition|(
 operator|*
 name|pn
@@ -2561,6 +2573,7 @@ operator|==
 name|pfstype_procdir
 condition|)
 block|{
+comment|/* next process */
 if|if
 condition|(
 operator|*
@@ -2589,14 +2602,14 @@ argument_list|,
 name|p_list
 argument_list|)
 expr_stmt|;
+comment|/* out of processes: next node */
 if|if
 condition|(
 operator|*
 name|p
-operator|!=
+operator|==
 name|NULL
 condition|)
-break|break;
 operator|*
 name|pn
 operator|=
