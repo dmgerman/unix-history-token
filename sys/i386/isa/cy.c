@@ -2202,6 +2202,11 @@ operator||
 name|CD1400_CCR_FULLRESET
 argument_list|)
 expr_stmt|;
+comment|/* XXX bogus initialization to avoid a gcc bug/warning. */
+name|firmware_version
+operator|=
+literal|0
+expr_stmt|;
 comment|/* wait for the CD1400 to initialize itself */
 for|for
 control|(
