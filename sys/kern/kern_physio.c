@@ -70,13 +70,6 @@ operator|)
 name|bp
 argument_list|)
 expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator|&=
-operator|~
-name|B_CALL
-expr_stmt|;
 block|}
 end_function
 
