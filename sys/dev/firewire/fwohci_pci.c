@@ -599,6 +599,10 @@ operator||
 name|PCIM_CMD_BUSMASTEREN
 operator||
 name|PCIM_CMD_MWRICEN
+operator||
+name|PCIM_CMD_SERRESPEN
+operator||
+name|PCIM_CMD_PERRESPEN
 expr_stmt|;
 if|#
 directive|if
