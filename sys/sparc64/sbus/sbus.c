@@ -984,24 +984,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * This value is or'ed into the attach args' interrupt level cookie  * if the interrupt level comes from an `intr' property, i.e. it is  * not an Sbus interrupt level.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SBUS_INTR_COMPAT
-value|0x80000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBUS_MEM_SIZE
-value|0x100000000
-end_define
-
 begin_define
 define|#
 directive|define
@@ -3453,17 +3435,6 @@ name|intrmap
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|vec
-operator|&
-name|SBUS_INTR_COMPAT
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
 name|inr
 operator|=
 name|INTVEC
@@ -3482,7 +3453,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * We're in an SBUS slot, register the map and clear 			 * intr registers. 			 */
+comment|/* 		 * We're in an SBUS slot, register the map and clear 		 * intr registers. 		 */
 name|slot
 operator|=
 name|INTSLOT
@@ -3612,13 +3583,6 @@ literal|"sbus_setup_intr: IRQ not found!"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-name|panic
-argument_list|(
-literal|"sbus_setup_intr: XXX: compat"
-argument_list|)
-expr_stmt|;
 name|scl
 operator|->
 name|scl_sc
@@ -3644,12 +3608,6 @@ operator|=
 name|intrclrptr
 expr_stmt|;
 comment|/* Disable the interrupt while we fiddle with it */
-if|if
-condition|(
-name|intrmapptr
-operator|!=
-literal|0
-condition|)
 name|SYSIO_WRITE8
 argument_list|(
 name|sc
@@ -3714,12 +3672,6 @@ operator|=
 name|scl
 expr_stmt|;
 comment|/* 	 * Clear the interrupt, it might have been triggered before it was 	 * set up. 	 */
-if|if
-condition|(
-name|intrclrptr
-operator|!=
-literal|0
-condition|)
 name|SYSIO_WRITE8
 argument_list|(
 name|sc
@@ -3730,12 +3682,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Enable the interrupt now we have the handler installed. 	 * Read the current value as we can't change it besides the 	 * valid bit so so make sure only this bit is changed. 	 */
-if|if
-condition|(
-name|intrmapptr
-operator|!=
-name|NULL
-condition|)
 name|SYSIO_WRITE8
 argument_list|(
 name|sc
@@ -3743,8 +3689,11 @@ argument_list|,
 name|intrmapptr
 argument_list|,
 name|intrmap
-operator||
-name|INTMAP_V
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|mid
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
