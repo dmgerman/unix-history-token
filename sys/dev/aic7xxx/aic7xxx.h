@@ -2941,6 +2941,13 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|AHC_EISA_SLOT_SIZE
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
 name|AHC_EISA_SLOT_OFFSET
 value|0xc00
 end_define
