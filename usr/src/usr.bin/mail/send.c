@@ -18,7 +18,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<wait.h>
+file|<sys/wait.h>
 end_include
 
 begin_endif
@@ -48,7 +48,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)send.c	2.11 %G%"
+literal|"@(#)send.c	2.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
