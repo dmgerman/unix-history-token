@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.53 1997/06/01 01:13:00 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.54 1997/06/09 03:27:16 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -5536,13 +5536,26 @@ block|{
 name|u_long
 name|map
 decl_stmt|;
+name|char
+modifier|*
+name|arg
+decl_stmt|;
 if|if
 condition|(
 name|argc
 operator|>
 literal|0
 condition|)
-block|{
+name|arg
+operator|=
+operator|*
+name|argv
+expr_stmt|;
+else|else
+name|arg
+operator|=
+literal|""
+expr_stmt|;
 switch|switch
 condition|(
 name|param
@@ -5555,8 +5568,7 @@ name|strncpy
 argument_list|(
 name|VarAuthKey
 argument_list|,
-operator|*
-name|argv
+name|arg
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -5586,8 +5598,7 @@ name|strncpy
 argument_list|(
 name|VarAuthName
 argument_list|,
-operator|*
-name|argv
+name|arg
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -5617,8 +5628,7 @@ name|strncpy
 argument_list|(
 name|VarDialScript
 argument_list|,
-operator|*
-name|argv
+name|arg
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -5648,8 +5658,7 @@ name|strncpy
 argument_list|(
 name|VarLoginScript
 argument_list|,
-operator|*
-name|argv
+name|arg
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -5682,8 +5691,7 @@ name|strncpy
 argument_list|(
 name|VarDevice
 argument_list|,
-operator|*
-name|argv
+name|arg
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -5730,8 +5738,7 @@ name|VAR_ACCMAP
 case|:
 name|sscanf
 argument_list|(
-operator|*
-name|argv
+name|arg
 argument_list|,
 literal|"%lx"
 argument_list|,
@@ -5751,8 +5758,7 @@ name|strncpy
 argument_list|(
 name|VarPhoneList
 argument_list|,
-operator|*
-name|argv
+name|arg
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -5786,7 +5792,6 @@ operator|=
 name|VarPhoneCopy
 expr_stmt|;
 break|break;
-block|}
 block|}
 return|return
 literal|0
