@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.57 1998/05/19 14:04:09 dg Exp $ */
+comment|/* $Id: if_ppp.c,v 1.58 1998/06/07 17:12:03 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -590,27 +590,10 @@ specifier|extern
 name|struct
 name|compressor
 name|ppp_deflate
+decl_stmt|,
+name|ppp_deflate_draft
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CI_BADDEFLATE
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|compressor
-name|ppp_baddeflate
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -647,14 +630,9 @@ argument_list|)
 operator|&
 name|ppp_deflate
 block|,
-ifdef|#
-directive|ifdef
-name|CI_BADDEFLATE
 operator|&
-name|ppp_baddeflate
+name|ppp_deflate_draft
 block|,
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|NULL
