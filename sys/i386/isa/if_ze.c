@@ -1531,14 +1531,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|int
-name|ether_output
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|struct
 name|isa_driver
@@ -2658,7 +2650,7 @@ name|if_watchdog
 operator|=
 name|ze_watchdog
 expr_stmt|;
-comment|/* 	 * Set default state for LLC0 flag (used to disable the tranceiver 	 *	for AUI operation), based on compile-time config option. 	 */
+comment|/* 	 * Set default state for IIF_LINK0 flag (used to disable the tranceiver 	 *	for AUI operation), based on compile-time config option. 	 */
 if|if
 condition|(
 name|isa_dev
@@ -2678,7 +2670,7 @@ name|IFF_SIMPLEX
 operator||
 name|IFF_NOTRAILERS
 operator||
-name|IFF_LLC0
+name|IFF_LINK0
 operator|)
 expr_stmt|;
 else|else
@@ -2835,7 +2827,7 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
-name|IFF_LLC0
+name|IFF_LINK0
 condition|?
 literal|" [tranceiver disabled]"
 else|:
@@ -3578,7 +3570,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * If this is a 3Com board, the tranceiver must be software enabled 	 *	(there is no settable hardware default). 	 */
-block|if (sc->vendor == ZE_VENDOR_3COM) { 		if (ifp->if_flags& IFF_LLC0) { 			outb(sc->asic_addr + ZE_3COM_CR, 0); 		} else { 			outb(sc->asic_addr + ZE_3COM_CR, ZE_3COM_CR_XSEL); 		} 	}
+block|if (sc->vendor == ZE_VENDOR_3COM) { 		if (ifp->if_flags& IFF_LINK0) { 			outb(sc->asic_addr + ZE_3COM_CR, 0); 		} else { 			outb(sc->asic_addr + ZE_3COM_CR, ZE_3COM_CR_XSEL); 		} 	}
 endif|#
 directive|endif
 comment|/* 	 * Set 'running' flag, and clear output active flag. 	 */
@@ -5390,7 +5382,7 @@ if|#
 directive|if
 literal|0
 comment|/* 		 * An unfortunate hack to provide the (required) software control 		 *	of the tranceiver for 3Com boards. The LLC0 flag disables 		 *	the tranceiver if set. 		 */
-block|if (sc->vendor == ZE_VENDOR_3COM) { 			if (ifp->if_flags& IFF_LLC0) { 				outb(sc->asic_addr + ZE_3COM_CR, 0); 			} else { 				outb(sc->asic_addr + ZE_3COM_CR, ZE_3COM_CR_XSEL); 			} 		}
+block|if (sc->vendor == ZE_VENDOR_3COM) { 			if (ifp->if_flags& IFF_LINK0) { 				outb(sc->asic_addr + ZE_3COM_CR, 0); 			} else { 				outb(sc->asic_addr + ZE_3COM_CR, ZE_3COM_CR_XSEL); 			} 		}
 endif|#
 directive|endif
 break|break;
