@@ -3145,6 +3145,9 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|COMPAT_43
 name|struct
 name|trapframe
 modifier|*
@@ -3660,6 +3663,17 @@ operator|(
 name|EJUSTRETURN
 operator|)
 return|;
+else|#
+directive|else
+comment|/* !COMPAT_43 */
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* COMPAT_43 */
 block|}
 end_function
 
