@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.1 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.2 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.1 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.2 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -596,6 +596,8 @@ sizeof|sizeof
 name|inp
 argument_list|,
 name|InChannel
+argument_list|,
+name|ReadTimeout
 argument_list|)
 expr_stmt|;
 comment|/* handle errors */
