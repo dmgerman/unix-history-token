@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -356,14 +356,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|ndp
+name|p
 operator|->
-name|ni_cred
+name|p_ucred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|p
+operator|->
+name|p_acflag
 argument_list|)
 condition|)
 return|return
@@ -402,6 +402,8 @@ operator|=
 name|namei
 argument_list|(
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -630,14 +632,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|p
+operator|->
+name|p_acflag
 argument_list|)
 condition|)
 return|return
@@ -831,15 +833,15 @@ expr_stmt|;
 comment|/* Copy the cred so others don't see changes */
 name|cr
 operator|=
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 operator|=
 name|crcopy
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set protocol specific options { for now TCP only } and 	 * reserve some space. For datagram sockets, this can get called 	 * repeatedly for the same socket, but that isn't harmful. 	 */
@@ -1517,14 +1519,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|p
+operator|->
+name|p_acflag
 argument_list|)
 condition|)
 return|return
