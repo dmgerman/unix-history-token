@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.84 (Berkeley) 11/18/95"
+literal|"@(#)util.c	8.84.1.1 (Berkeley) 2/18/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -3659,9 +3659,58 @@ name|l
 operator|==
 literal|'\n'
 condition|)
+block|{
+if|if
+condition|(
+operator|*
 operator|++
 name|l
+operator|!=
+literal|' '
+operator|&&
+operator|*
+name|l
+operator|!=
+literal|'\t'
+operator|&&
+name|l
+index|[
+literal|1
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|putc
+argument_list|(
+literal|' '
+argument_list|,
+name|mci
+operator|->
+name|mci_out
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TrafficLogFile
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|putc
+argument_list|(
+literal|' '
+argument_list|,
+name|TrafficLogFile
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 do|while
 condition|(
@@ -7266,7 +7315,39 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-comment|/* #ifdef LOG 	if (logattacks) 	{ 		syslog(LOG_NOTICE, "POSSIBLE ATTACK from %.100s: newline in string \"%s\"", 			RealHostName == NULL ? "[UNKNOWN]" : RealHostName, 			shortenstring(bp, 203)); 	} #endif */
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|logattacks
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"POSSIBLE ATTACK from %.100s: newline in string \"%s\""
+argument_list|,
+name|RealHostName
+operator|==
+name|NULL
+condition|?
+literal|"[UNKNOWN]"
+else|:
+name|RealHostName
+argument_list|,
+name|shortenstring
+argument_list|(
+name|bp
+argument_list|,
+literal|203
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 return|return
 name|bp
 return|;
