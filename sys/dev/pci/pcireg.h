@@ -337,6 +337,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIR_CAP_PTR
+value|0x34
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIR_INTLINE
 value|0x3c
 end_define
