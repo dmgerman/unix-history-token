@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)correct.c	2.2 (Berkeley) %G%"
+literal|"@(#)correct.c	2.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -557,6 +557,7 @@ operator|>
 operator|-
 name|MAXADJ
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -635,20 +636,17 @@ literal|"can't set time"
 argument_list|)
 expr_stmt|;
 block|}
-name|first
-operator|=
-literal|0
-expr_stmt|;
+block|}
 block|}
 end_block
 
 begin_expr_stmt
-unit|}  timevaladd
-operator|(
+name|timevaladd
+argument_list|(
 name|tv1
-operator|,
+argument_list|,
 name|tv2
-operator|)
+argument_list|)
 specifier|register
 expr|struct
 name|timeval
