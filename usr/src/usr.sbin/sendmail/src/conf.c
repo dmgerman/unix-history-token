@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.158 (Berkeley) %G%"
+literal|"@(#)conf.c	8.159 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -543,6 +543,10 @@ block|}
 name|ServiceSwitchFile
 operator|=
 literal|"/etc/service.switch"
+expr_stmt|;
+name|HostsFile
+operator|=
+name|_PATH_HOSTS
 expr_stmt|;
 name|setdefuser
 argument_list|()
@@ -1909,6 +1913,26 @@ decl_stmt|;
 name|int
 name|svc
 decl_stmt|;
+for|for
+control|(
+name|svcno
+operator|=
+literal|0
+init|;
+name|svcno
+operator|<
+name|MAXMAPACTIONS
+condition|;
+name|svcno
+operator|++
+control|)
+name|mapreturn
+index|[
+name|svcno
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|svcinfo
 operator|=
 name|getsvc
@@ -2084,6 +2108,26 @@ argument_list|(
 name|__osf__
 argument_list|)
 comment|/* 	**  Fall-back mechanism. 	*/
+for|for
+control|(
+name|svcno
+operator|=
+literal|0
+init|;
+name|svcno
+operator|<
+name|MAXMAPACTIONS
+condition|;
+name|svcno
+operator|++
+control|)
+name|mapreturn
+index|[
+name|svcno
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|svcno
 operator|=
 literal|0
@@ -2252,6 +2296,30 @@ directive|endif
 comment|/* if the service file doesn't work, use an absolute fallback */
 name|punt
 label|:
+for|for
+control|(
+name|svcno
+operator|=
+literal|0
+init|;
+name|svcno
+operator|<
+name|MAXMAPACTIONS
+condition|;
+name|svcno
+operator|++
+control|)
+name|mapreturn
+index|[
+name|svcno
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|svcno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|strcmp

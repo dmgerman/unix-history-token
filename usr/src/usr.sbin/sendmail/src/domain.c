@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.36 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.37 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.36 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.37 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1615,18 +1615,20 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  GETCANONNAME -- get the canonical name for named host ** **	This algorithm tries to be smart about wildcard MX records. **	This is hard to do because DNS doesn't tell is if we matched **	against a wildcard or a specific MX. **	 **	We always prefer A& CNAME records, since these are presumed **	to be specific. ** **	If we match an MX in one pass and lose it in the next, we use **	the old one.  For example, consider an MX matching *.FOO.BAR.COM. **	A hostname bletch.foo.bar.com will match against this MX, but **	will stop matching when we try bletch.bar.com -- so we know **	that bletch.foo.bar.com must have been right.  This fails if **	there was also an MX record matching *.BAR.COM, but there are **	some things that just can't be fixed. ** **	Parameters: **		host -- a buffer containing the name of the host. **			This is a value-result parameter. **		hbsize -- the size of the host buffer. **		trymx -- if set, try MX records as well as A and CNAME. ** **	Returns: **		TRUE -- if the host matched. **		FALSE -- otherwise. */
+comment|/* **  DNS_GETCANONNAME -- get the canonical name for named host using DNS ** **	This algorithm tries to be smart about wildcard MX records. **	This is hard to do because DNS doesn't tell is if we matched **	against a wildcard or a specific MX. **	 **	We always prefer A& CNAME records, since these are presumed **	to be specific. ** **	If we match an MX in one pass and lose it in the next, we use **	the old one.  For example, consider an MX matching *.FOO.BAR.COM. **	A hostname bletch.foo.bar.com will match against this MX, but **	will stop matching when we try bletch.bar.com -- so we know **	that bletch.foo.bar.com must have been right.  This fails if **	there was also an MX record matching *.BAR.COM, but there are **	some things that just can't be fixed. ** **	Parameters: **		host -- a buffer containing the name of the host. **			This is a value-result parameter. **		hbsize -- the size of the host buffer. **		trymx -- if set, try MX records as well as A and CNAME. **		statp -- pointer to place to store status. ** **	Returns: **		TRUE -- if the host matched. **		FALSE -- otherwise. */
 end_comment
 
 begin_function
 name|bool
-name|getcanonname
+name|dns_getcanonname
 parameter_list|(
 name|host
 parameter_list|,
 name|hbsize
 parameter_list|,
 name|trymx
+parameter_list|,
+name|statp
 parameter_list|)
 name|char
 modifier|*
@@ -1637,6 +1639,10 @@ name|hbsize
 decl_stmt|;
 name|bool
 name|trymx
+decl_stmt|;
+name|int
+modifier|*
+name|statp
 decl_stmt|;
 block|{
 specifier|extern
@@ -1774,11 +1780,16 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+operator|*
+name|statp
+operator|=
+name|EX_UNAVAILABLE
+expr_stmt|;
 return|return
-operator|(
 name|FALSE
-operator|)
 return|;
+block|}
 comment|/* 	**  Initialize domain search list.  If there is at least one 	**  dot in the name, search the unmodified name first so we 	**  find "vse.CS" in Czechoslovakia instead of in the local 	**  domain (e.g., vse.CS.Berkeley.EDU). 	** 	**  Older versions of the resolver could create this 	**  list by tearing apart the host name. 	*/
 name|loopcnt
 operator|=
@@ -2113,6 +2124,11 @@ name|h_errno
 operator|=
 name|TRY_AGAIN
 expr_stmt|;
+operator|*
+name|statp
+operator|=
+name|EX_TEMPFAIL
+expr_stmt|;
 return|return
 name|FALSE
 return|;
@@ -2283,6 +2299,11 @@ operator|->
 name|qdcount
 argument_list|)
 argument_list|)
+expr_stmt|;
+operator|*
+name|statp
+operator|=
+name|EX_SOFTWARE
 expr_stmt|;
 return|return
 name|FALSE
@@ -2480,6 +2501,11 @@ name|h_errno
 operator|=
 name|NO_RECOVERY
 expr_stmt|;
+operator|*
+name|statp
+operator|=
+name|EX_CONFIG
+expr_stmt|;
 return|return
 name|FALSE
 return|;
@@ -2607,9 +2633,16 @@ name|mxmatch
 operator|==
 name|NULL
 condition|)
+block|{
+operator|*
+name|statp
+operator|=
+name|EX_NOHOST
+expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 comment|/* create matching name and return */
 operator|(
 name|void
@@ -2655,6 +2688,11 @@ literal|1
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+operator|*
+name|statp
+operator|=
+name|EX_OK
 expr_stmt|;
 return|return
 name|TRUE
@@ -3513,155 +3551,6 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DNS_MAILB */
-else|#
-directive|else
-comment|/* not NAMED_BIND */
-name|bool
-name|getcanonname
-parameter_list|(
-name|host
-parameter_list|,
-name|hbsize
-parameter_list|,
-name|trymx
-parameter_list|)
-name|char
-modifier|*
-name|host
-decl_stmt|;
-name|int
-name|hbsize
-decl_stmt|;
-name|bool
-name|trymx
-decl_stmt|;
-block|{
-name|struct
-name|hostent
-modifier|*
-name|hp
-decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|hp
-operator|=
-name|sm_gethostbyname
-argument_list|(
-name|host
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|hp
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-name|p
-operator|=
-name|hp
-operator|->
-name|h_name
-expr_stmt|;
-if|if
-condition|(
-name|strchr
-argument_list|(
-name|p
-argument_list|,
-literal|'.'
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* first word is a short name -- try to find a long one */
-name|char
-modifier|*
-modifier|*
-name|ap
-decl_stmt|;
-for|for
-control|(
-name|ap
-operator|=
-name|hp
-operator|->
-name|h_aliases
-init|;
-operator|*
-name|ap
-operator|!=
-name|NULL
-condition|;
-name|ap
-operator|++
-control|)
-if|if
-condition|(
-name|strchr
-argument_list|(
-operator|*
-name|ap
-argument_list|,
-literal|'.'
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-break|break;
-if|if
-condition|(
-operator|*
-name|ap
-operator|!=
-name|NULL
-condition|)
-name|p
-operator|=
-operator|*
-name|ap
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|p
-argument_list|)
-operator|>=
-name|hbsize
-condition|)
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|host
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
-block|}
 end_block
 
 begin_endif
@@ -3670,7 +3559,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not NAMED_BIND */
+comment|/* DNS_MAILB */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NAMED_BIND */
 end_comment
 
 end_unit

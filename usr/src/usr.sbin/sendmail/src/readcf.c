@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.87 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.88 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5225,6 +5225,16 @@ name|TRUE
 block|,
 define|#
 directive|define
+name|O_HOSTSFILE
+value|0x82
+literal|"HostsFile"
+block|,
+name|O_HOSTSFILE
+block|,
+name|FALSE
+block|,
+define|#
+directive|define
 name|O_MQA
 value|0x83
 literal|"MinQueueAge"
@@ -7462,6 +7472,18 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+case|case
+name|O_HOSTSFILE
+case|:
+comment|/* pathname of /etc/hosts file */
+name|HostsFile
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|O_MQA
