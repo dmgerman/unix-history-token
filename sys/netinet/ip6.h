@@ -732,41 +732,6 @@ begin_comment
 comment|/*  * IP6_EXTHDR_CHECK ensures that region between the IP6 header and the  * target header (including IPv6 itself, extension headers and  * TCP/UDP/ICMP6 headers) are continuous. KAME requires drivers  * to store incoming data into one internal mbuf or one or more external  * mbufs(never into two or more internal mbufs). Thus, the third case is  * supposed to never be matched but is prepared just in case.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IP6_EXTHDR_STAT
-parameter_list|(
-name|x
-parameter_list|)
-value|x
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|IP6_EXTHDR_STAT
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -781,7 +746,7 @@ parameter_list|,
 name|ret
 parameter_list|)
 define|\
-value|do {									\     if ((m)->m_next != NULL) {						\ 	if (((m)->m_flags& M_LOOP)&&					\ 	    ((m)->m_len< (off) + (hlen))&&				\ 	    (((m) = m_pullup((m), (off) + (hlen))) == NULL)) {		\ 		IP6_EXTHDR_STAT(ip6stat.ip6s_exthdrtoolong++);		\ 		return ret;						\ 	} else if ((m)->m_flags& M_EXT) {				\ 		if ((m)->m_len< (off) + (hlen)) {			\ 			IP6_EXTHDR_STAT(ip6stat.ip6s_exthdrtoolong++);	\ 			m_freem(m);					\ 			return ret;					\ 		}							\ 	} else {							\ 		if ((m)->m_len< (off) + (hlen)) {			\ 			IP6_EXTHDR_STAT(ip6stat.ip6s_exthdrtoolong++);	\ 			m_freem(m);					\ 			return ret;					\ 		}							\ 	}								\     } else {								\ 	if ((m)->m_len< (off) + (hlen)) {				\ 		IP6_EXTHDR_STAT(ip6stat.ip6s_tooshort++);		\ 		in6_ifstat_inc(m->m_pkthdr.rcvif, ifs6_in_truncated);	\ 		m_freem(m);						\ 		return ret;						\ 	}								\     }									\ } while (0)
+value|do {									\     if ((m)->m_next != NULL) {						\ 	if (((m)->m_flags& M_LOOP)&&					\ 	    ((m)->m_len< (off) + (hlen))&&				\ 	    (((m) = m_pullup((m), (off) + (hlen))) == NULL)) {		\ 		ip6stat.ip6s_exthdrtoolong++;				\ 		return ret;						\ 	} else if ((m)->m_flags& M_EXT) {				\ 		if ((m)->m_len< (off) + (hlen)) {			\ 			ip6stat.ip6s_exthdrtoolong++;			\ 			m_freem(m);					\ 			return ret;					\ 		}							\ 	} else {							\ 		if ((m)->m_len< (off) + (hlen)) {			\ 			ip6stat.ip6s_exthdrtoolong++;			\ 			m_freem(m);					\ 			return ret;					\ 		}							\ 	}								\     } else {								\ 	if ((m)->m_len< (off) + (hlen)) {				\ 		ip6stat.ip6s_tooshort++;				\ 		in6_ifstat_inc(m->m_pkthdr.rcvif, ifs6_in_truncated);	\ 		m_freem(m);						\ 		return ret;						\ 	}								\     }									\ } while (0)
 end_define
 
 begin_comment
@@ -804,7 +769,7 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|do {									\ 	struct mbuf *t;							\ 	int tmp;							\ 	IP6_EXTHDR_STAT(ip6stat.ip6s_exthdrget++);			\ 	if ((m)->m_len>= (off) + (len))				\ 		(val) = (typ)(mtod((m), caddr_t) + (off));		\ 	else {								\ 		t = m_pulldown((m), (off), (len),&tmp);		\ 		if (t) {						\ 			if (t->m_len< tmp + (len))			\ 				panic("m_pulldown malfunction");	\ 			(val) = (typ)(mtod(t, caddr_t) + tmp);		\ 		} else {						\ 			(val) = (typ)NULL;				\ 			(m) = NULL;					\ 		}							\ 	}								\ } while (0)
+value|do {									\ 	struct mbuf *t;							\ 	int tmp;							\ 	if ((m)->m_len>= (off) + (len))				\ 		(val) = (typ)(mtod((m), caddr_t) + (off));		\ 	else {								\ 		t = m_pulldown((m), (off), (len),&tmp);		\ 		if (t) {						\ 			if (t->m_len< tmp + (len))			\ 				panic("m_pulldown malfunction");	\ 			(val) = (typ)(mtod(t, caddr_t) + tmp);		\ 		} else {						\ 			(val) = (typ)NULL;				\ 			(m) = NULL;					\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -823,7 +788,7 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|do {									\ 	struct mbuf *t;							\ 	IP6_EXTHDR_STAT(ip6stat.ip6s_exthdrget0++);			\ 	if ((off) == 0)							\ 		(val) = (typ)mtod(m, caddr_t);				\ 	else {								\ 		t = m_pulldown((m), (off), (len), NULL);		\ 		if (t) {						\ 			if (t->m_len< (len))				\ 				panic("m_pulldown malfunction");	\ 			(val) = (typ)mtod(t, caddr_t);			\ 		} else {						\ 			(val) = (typ)NULL;				\ 			(m) = NULL;					\ 		}							\ 	}								\ } while (0)
+value|do {									\ 	struct mbuf *t;							\ 	if ((off) == 0)							\ 		(val) = (typ)mtod(m, caddr_t);				\ 	else {								\ 		t = m_pulldown((m), (off), (len), NULL);		\ 		if (t) {						\ 			if (t->m_len< (len))				\ 				panic("m_pulldown malfunction");	\ 			(val) = (typ)mtod(t, caddr_t);			\ 		} else {						\ 			(val) = (typ)NULL;				\ 			(m) = NULL;					\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_endif
