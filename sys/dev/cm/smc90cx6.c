@@ -1049,14 +1049,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ifp
-operator|->
-name|if_name
-condition|)
-block|{
 name|ifp
 operator|->
 name|if_softc
@@ -1203,7 +1195,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 name|if_printf
 argument_list|(
 name|ifp

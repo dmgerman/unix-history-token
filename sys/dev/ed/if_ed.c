@@ -6708,15 +6708,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ifp
-operator|->
-name|if_name
-condition|)
-block|{
-comment|/* 		 * Initialize ifnet structure 		 */
+comment|/* 	 * Initialize ifnet structure 	 */
 name|ifp
 operator|->
 name|if_softc
@@ -6791,7 +6783,7 @@ name|sc
 operator|->
 name|mibdata
 expr_stmt|;
-comment|/* 		 * XXX - should do a better job. 		 */
+comment|/* 	 * XXX - should do a better job. 	 */
 if|if
 condition|(
 name|sc
@@ -6835,7 +6827,7 @@ name|dot3Compliance
 operator|=
 name|DOT3COMPLIANCE_COLLS
 expr_stmt|;
-comment|/* 		 * Set default state for ALTPHYS flag (used to disable the  		 * tranceiver for AUI operation), based on compile-time  		 * config option. 		 */
+comment|/* 	 * Set default state for ALTPHYS flag (used to disable the  	 * tranceiver for AUI operation), based on compile-time  	 * config option. 	 */
 if|if
 condition|(
 name|flags
@@ -6869,7 +6861,7 @@ operator||
 name|IFF_MULTICAST
 operator|)
 expr_stmt|;
-comment|/* 		 * Attach the interface 		 */
+comment|/* 	 * Attach the interface 	 */
 name|ether_ifattach
 argument_list|(
 name|ifp
@@ -6881,7 +6873,6 @@ operator|.
 name|ac_enaddr
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* device attach does transition from UNCONFIGURED to IDLE state */
 comment|/* 	 * Print additional info when attached 	 */
 name|if_printf

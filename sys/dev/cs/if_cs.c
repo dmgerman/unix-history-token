@@ -2719,14 +2719,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ifp
-operator|->
-name|if_name
-condition|)
-block|{
 name|ifp
 operator|->
 name|if_softc
@@ -2783,8 +2775,8 @@ name|ifq_maxlen
 operator|=
 name|IFQ_MAXLEN
 expr_stmt|;
-comment|/*                  *  MIB DATA                  */
-comment|/* 		ifp->if_linkmib=&sc->mibdata; 		ifp->if_linkmiblen=sizeof sc->mibdata;                 */
+comment|/* 	 *  MIB DATA 	 */
+comment|/* 	ifp->if_linkmib=&sc->mibdata; 	ifp->if_linkmiblen=sizeof sc->mibdata; 	*/
 name|ifp
 operator|->
 name|if_flags
@@ -2797,7 +2789,7 @@ operator||
 name|IFF_MULTICAST
 operator|)
 expr_stmt|;
-comment|/* 		 * this code still in progress (DMA support) 		 *  		sc->recv_ring=malloc(CS_DMA_BUFFER_SIZE<<1, M_DEVBUF, M_NOWAIT); 		if (sc->recv_ring == NULL) { 			log(LOG_ERR,CS_NAME 			"%d: Couldn't allocate memory for NIC\n", unit); 			return(0); 		} 		if ((sc->recv_ring-(sc->recv_ring& 0x1FFFF))< (128*1024-CS_DMA_BUFFER_SIZE)) 		    sc->recv_ring+=16*1024;  		*/
+comment|/* 	 * this code still in progress (DMA support) 	 *  	sc->recv_ring=malloc(CS_DMA_BUFFER_SIZE<<1, M_DEVBUF, M_NOWAIT); 	if (sc->recv_ring == NULL) { 		log(LOG_ERR,CS_NAME 		"%d: Couldn't allocate memory for NIC\n", unit); 		return(0); 	} 	if ((sc->recv_ring-(sc->recv_ring& 0x1FFFF))< (128*1024-CS_DMA_BUFFER_SIZE)) 	    sc->recv_ring+=16*1024;  	*/
 name|sc
 operator|->
 name|buffer
@@ -2835,7 +2827,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * Initialize the media structures. 		 */
+comment|/* 	 * Initialize the media structures. 	 */
 name|ifmedia_init
 argument_list|(
 operator|&
@@ -3081,7 +3073,6 @@ operator|.
 name|ac_enaddr
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|bootverbose

@@ -928,14 +928,6 @@ operator|->
 name|wch
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ifp
-operator|->
-name|if_name
-condition|)
-block|{
 comment|/* Initialize ifnet structure */
 name|ifp
 operator|->
@@ -1046,7 +1038,6 @@ operator|.
 name|ac_enaddr
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* device attach does transition from UNCONFIGURED to IDLE state */
 name|if_printf
 argument_list|(

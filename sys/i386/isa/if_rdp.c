@@ -2088,15 +2088,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ifp
-operator|->
-name|if_name
-condition|)
-block|{
-comment|/* 		 * Initialize ifnet structure 		 */
+comment|/* 	 * Initialize ifnet structure 	 */
 name|ifp
 operator|->
 name|if_softc
@@ -2155,7 +2147,7 @@ name|IFF_BROADCAST
 operator||
 name|IFF_SIMPLEX
 expr_stmt|;
-comment|/* 		 * Attach the interface 		 */
+comment|/* 	 * Attach the interface 	 */
 name|ether_ifattach
 argument_list|(
 name|ifp
@@ -2167,7 +2159,6 @@ operator|.
 name|ac_enaddr
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Print additional info when attached 	 */
 name|if_printf
 argument_list|(

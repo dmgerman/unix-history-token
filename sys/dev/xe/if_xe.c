@@ -765,16 +765,6 @@ operator|=
 name|XE_AUTONEG_NONE
 expr_stmt|;
 comment|/* Initialise the ifnet structure */
-if|if
-condition|(
-operator|!
-name|scp
-operator|->
-name|ifp
-operator|->
-name|if_name
-condition|)
-block|{
 name|scp
 operator|->
 name|ifp
@@ -904,7 +894,6 @@ name|ifq_maxlen
 operator|=
 name|IFQ_MAXLEN
 expr_stmt|;
-block|}
 comment|/* Initialise the ifmedia structure */
 name|ifmedia_init
 argument_list|(
