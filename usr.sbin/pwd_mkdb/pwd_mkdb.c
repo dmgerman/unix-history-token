@@ -555,7 +555,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CNd:ps:u:v"
+literal|"CNd:ips:u:v"
 argument_list|)
 operator|)
 operator|!=
