@@ -245,6 +245,7 @@ name|pw_mkdb
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)

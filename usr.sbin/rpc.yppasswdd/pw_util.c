@@ -534,6 +534,7 @@ name|pw_mkdb
 parameter_list|(
 name|username
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|username
@@ -697,6 +698,7 @@ name|err
 parameter_list|,
 name|eval
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
