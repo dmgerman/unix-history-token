@@ -60,7 +60,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEBUG
+name|ERROR
 parameter_list|(
 name|uufsd
 parameter_list|,
