@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.18 (Berkeley) %G%"
+literal|"@(#)table.c	1.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2933,6 +2933,7 @@ block|,
 literal|"	movl	AL,U1\n	clrl	A1\n	ediv	AR,A1,U1,A1\n"
 block|,
 comment|/* should only see UNSIGNED lhs here if converted from UCHAR/USHORT lhs */
+comment|/* beware -- the ediv remainder operand must be a register */
 name|ASG
 name|MOD
 block|,
@@ -2968,7 +2969,7 @@ name|RLEFT
 operator||
 name|RESCC
 block|,
-literal|"	ZM	ediv	AR,A1,A1,AL\n"
+literal|"	ZM	ediv	AR,A1,U1,A1\n	movl	A1,AL\n"
 block|,
 name|ASG
 name|MOD
@@ -3028,7 +3029,7 @@ name|NEVEN
 block|,
 name|RLEFT
 block|,
-literal|"	movl	AL,U1\n	clrl	A1\n	ediv	AR,A1,A1,AL\n"
+literal|"	movl	AL,U1\n	clrl	A1\n	ediv	AR,A1,U1,A1\n	movl	A1,AL\n"
 block|,
 comment|/* XXX is this supposed to help on overflow? */
 name|ASG
