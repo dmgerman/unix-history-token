@@ -431,7 +431,7 @@ name|t_state
 operator||=
 name|TS_CARR_ON
 expr_stmt|;
-name|ttyconsmode
+name|ttyconsolemode
 argument_list|(
 name|tp
 argument_list|,
