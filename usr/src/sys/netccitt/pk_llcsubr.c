@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (C) Dirk Husemann, Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1990, 1991, 1992  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Dirk Husemann and the Computer Science Department (IV) of  * the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)pk_llcsubr.c	8.1 (Berkeley) %G%  */
+comment|/*   * Copyright (C) Dirk Husemann, Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1990, 1991, 1992  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Dirk Husemann and the Computer Science Department (IV) of  * the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)pk_llcsubr.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -170,7 +170,7 @@ value|((struct sockaddr *)s)
 end_define
 
 begin_function
-name|int
+name|void
 name|cons_rtrequest
 parameter_list|(
 name|int
@@ -235,11 +235,8 @@ if|if
 condition|(
 name|pkp
 condition|)
-return|return
-operator|(
-name|EEXIST
-operator|)
-return|;
+return|return;
+comment|/* XXX: EEXIST */
 if|if
 condition|(
 name|rt
@@ -283,11 +280,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
+comment|/* XXX: OK */
 block|}
 comment|/* 		 * Assumptions:	(1) ifnet structure is filled in 		 *		(2) at least the pkcb created via  		 *		    x25config (ifconfig?) has been  		 *		    set up already. 		 *		(3) HDLC interfaces have an if_type of  		 *		    IFT_X25{,DDN}, LLC2 interfaces  		 *		    anything else (any better way to  		 *		    do this?) 		 * 		 */
 if|if
@@ -297,11 +291,8 @@ name|rt
 operator|->
 name|rt_ifa
 condition|)
-return|return
-operator|(
-name|ENETDOWN
-operator|)
-return|;
+return|return;
+comment|/* XXX: ENETDOWN */
 comment|/*	 		 * We differentiate between dealing with a many-to-one 		 * (HDLC: DTE-DCE) and a one-to-one (LLC2: DTE-DTE)  		 * relationship (by looking at the if type). 		 * 		 * Only in case of the many-to-one relationship (HDLC) 		 * we set the ia->ia_pkcb pointer to the pkcb allocated 		 * via pk_newlink() as we will use just that one pkcb for 		 * future route additions (the rtentry->rt_llinfo pointer 		 * points to the pkcb allocated for that route). 		 * 		 * In case of the one-to-one relationship (LLC2) we  		 * create a new pkcb (via pk_newlink()) for each new rtentry. 		 *  		 * NOTE: Only in case of HDLC does ia->ia_pkcb point 		 * to a pkcb, in the LLC2 case it doesn't (as we don't  		 * need it here)! 		 */
 name|one_to_one
 operator|=
@@ -441,11 +432,8 @@ name|caddr_t
 operator|)
 name|pkp
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
+comment|/* XXX: OK */
 case|case
 name|RTM_DELETE
 case|:
@@ -483,11 +471,8 @@ operator|->
 name|rt_llinfo
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
+comment|/* XXX: OK */
 block|}
 if|if
 condition|(
@@ -507,11 +492,8 @@ argument_list|(
 name|pkp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
+comment|/* XXX: OK */
 block|}
 block|}
 block|}
