@@ -1202,5 +1202,34 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ioc_read_audio
+block|{
+name|u_char
+name|address_format
+decl_stmt|;
+name|union
+name|msf_lba
+name|address
+decl_stmt|;
+name|int
+name|nframes
+decl_stmt|;
+name|u_char
+modifier|*
+name|buffer
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CDIOCREADAUDIO
+value|_IOWR('c',31,struct ioc_read_audio)
+end_define
+
 end_unit
 
