@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/lpt.h>
+file|<dev/ppbus/lptio.h>
 end_include
 
 begin_include
