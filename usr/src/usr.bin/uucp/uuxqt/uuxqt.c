@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuxqt.c	5.6 (Berkeley) %G%"
+literal|"@(#)uuxqt.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,6 +189,13 @@ name|int
 name|nonzero
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|timeb
+name|Now
 decl_stmt|;
 end_decl_stmt
 
@@ -1046,15 +1053,42 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* if /etc/nologin exists, exit cleanly */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BSD4_2
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|USG
+argument_list|)
+if|if
+condition|(
+name|access
+argument_list|(
+name|NOLOGIN
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+else|#
+directive|else
+else|!BSD4_2&& ! USG
 name|ultouch
 argument_list|()
 expr_stmt|;
-comment|/* if /etc/nologin exists, exit cleanly */
 if|if
 condition|(
 name|nologinflag
 condition|)
 block|{
+endif|#
+directive|endif
+endif|!BSD4_2&& !USG
 name|logent
 argument_list|(
 name|NOLOGIN
@@ -2276,22 +2310,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_macro
 name|cleanup
 argument_list|(
 argument|code
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|int
 name|code
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|logcls
 argument_list|()
@@ -2325,13 +2350,7 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
 comment|/*  *	get a file to execute  *  *	return codes:  0 - no file  |  1 - file to execute  */
-end_comment
-
-begin_expr_stmt
 name|gtxfile
 argument_list|(
 name|file
@@ -2341,9 +2360,6 @@ name|char
 operator|*
 name|file
 expr_stmt|;
-end_expr_stmt
-
-begin_block
 block|{
 name|char
 name|pre
@@ -2655,13 +2671,7 @@ goto|goto
 name|retry
 goto|;
 block|}
-end_block
-
-begin_comment
 comment|/*  *	check for needed files  *  *	return codes:  0 - not ready  |  1 - all files ready  */
-end_comment
-
-begin_expr_stmt
 name|gotfiles
 argument_list|(
 name|file
@@ -2671,9 +2681,6 @@ name|char
 operator|*
 name|file
 expr_stmt|;
-end_expr_stmt
-
-begin_block
 block|{
 name|struct
 name|stat
@@ -2803,13 +2810,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
-
-begin_comment
 comment|/*  *	remove execute files to x-directory  */
-end_comment
-
-begin_expr_stmt
 name|rmxfiles
 argument_list|(
 name|xfile
@@ -2819,9 +2820,6 @@ name|char
 operator|*
 name|xfile
 expr_stmt|;
-end_expr_stmt
-
-begin_block
 block|{
 specifier|register
 name|FILE
@@ -2940,27 +2938,15 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_block
-
-begin_comment
 comment|/*  *	move execute files to x-directory  */
-end_comment
-
-begin_macro
 name|mvxfiles
 argument_list|(
 argument|xfile
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|xfile
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|FILE
@@ -3108,13 +3094,7 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
 comment|/*  *	check for valid command/argument	  *	*NOTE - side effect is to set xc to the	command to be executed.  *  *	return 0 - ok | 1 nok  */
-end_comment
-
-begin_expr_stmt
 name|argok
 argument_list|(
 name|xc
@@ -3129,9 +3109,6 @@ operator|,
 operator|*
 name|cmd
 expr_stmt|;
-end_expr_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -3283,27 +3260,15 @@ return|return
 name|SUCCESS
 return|;
 block|}
-end_block
-
-begin_comment
 comment|/*  *	if notification should be sent for successful execution of cmd  *  *	return NT_YES - do notification  *	       NT_ERR - do notification if exit status != 0  *	       NT_NO  - don't do notification ever  */
-end_comment
-
-begin_macro
 name|chknotify
 argument_list|(
 argument|cmd
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -3360,13 +3325,7 @@ name|NT_YES
 return|;
 comment|/* "shouldn't happen" */
 block|}
-end_block
-
-begin_comment
 comment|/*  *	send mail to user giving execution results  */
-end_comment
-
-begin_macro
 name|notify
 argument_list|(
 argument|user
@@ -3377,9 +3336,6 @@ argument|cmd
 argument_list|,
 argument|str
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|user
@@ -3393,9 +3349,6 @@ decl_stmt|,
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|text
@@ -3459,13 +3412,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_block
-
-begin_comment
 comment|/*  *	return mail to sender  *  */
-end_comment
-
-begin_macro
 name|retosndr
 argument_list|(
 argument|user
@@ -3474,9 +3421,6 @@ argument|rmt
 argument_list|,
 argument|file
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|user
@@ -3487,9 +3431,6 @@ decl_stmt|,
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|ruser
@@ -3557,13 +3498,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_block
-
-begin_comment
 comment|/*  *	execute shell of command with fi and fo as standard input/output  */
-end_comment
-
-begin_macro
 name|shio
 argument_list|(
 argument|cmd
@@ -3572,9 +3507,6 @@ argument|fi
 argument_list|,
 argument|fo
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|cmd
@@ -3585,9 +3517,6 @@ decl_stmt|,
 modifier|*
 name|fo
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|status
@@ -3698,13 +3627,6 @@ expr_stmt|;
 name|signal
 argument_list|(
 name|SIGQUIT
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGKILL
 argument_list|,
 name|SIG_IGN
 argument_list|)
@@ -3852,7 +3774,7 @@ return|return
 name|status
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

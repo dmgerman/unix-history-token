@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)versys.c	5.4 (Berkeley) %G%"
+literal|"@(#)versys.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,15 @@ end_include
 begin_comment
 comment|/*LINTLIBRARY*/
 end_comment
+
+begin_decl_stmt
+name|char
+name|PhoneNumber
+index|[
+name|MAXPH
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  *	verify system names n1 and n2  *	return codes:  SUCCESS  |  FAIL  *  *	NOTE:  *		the old calling sequence was versys(name) but is  *	now versys(&name) so that we can perform aliasing!!!!  *	See accompanying changes in uucp.c and uux.c  *		-- Ray Essick, April 27, 1984  */
@@ -146,6 +155,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|PhoneNumber
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 while|while
 condition|(
 name|cfgets
@@ -199,6 +215,18 @@ block|{
 name|fclose
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|PhoneNumber
+argument_list|,
+name|targs
+index|[
+name|F_PHONE
+index|]
+argument_list|,
+name|MAXPH
 argument_list|)
 expr_stmt|;
 return|return
@@ -310,7 +338,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|fgets
+name|cfgets
 argument_list|(
 name|buf
 argument_list|,
@@ -323,17 +351,6 @@ name|Aliases
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|buf
-index|[
-literal|0
-index|]
-operator|==
-literal|'#'
-condition|)
-comment|/* comment line */
-continue|continue;
 name|p
 operator|=
 operator|&
