@@ -60,14 +60,12 @@ begin_struct
 struct|struct
 name|ipq
 block|{
-name|struct
-name|ipq
-modifier|*
-name|next
-decl_stmt|,
-modifier|*
-name|prev
-decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|ipq
+argument_list|)
+name|ipq_list
+expr_stmt|;
 comment|/* to other reass headers */
 name|u_char
 name|ipq_ttl
