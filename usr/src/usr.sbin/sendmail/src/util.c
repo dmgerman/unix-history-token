@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.10 (Berkeley) %G%"
+literal|"@(#)util.c	8.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3489,25 +3489,31 @@ begin_comment
 comment|/* **  WAITFOR -- wait for a particular process id. ** **	Parameters: **		pid -- process id to wait for. ** **	Returns: **		status of pid. **		-1 if pid never shows up. ** **	Side Effects: **		none. */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|waitfor
-argument_list|(
-argument|pid
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pid
+parameter_list|)
 name|int
 name|pid
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|WAITUNION
+name|union
+name|wait
+name|st
+decl_stmt|;
+else|#
+directive|else
 specifier|auto
 name|int
 name|st
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|i
 decl_stmt|;
@@ -3549,18 +3555,27 @@ name|i
 operator|<
 literal|0
 condition|)
-name|st
-operator|=
+return|return
 operator|-
 literal|1
-expr_stmt|;
-return|return
-operator|(
-name|st
-operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|WAITUNION
+return|return
+name|st
+operator|.
+name|w_status
+return|;
+else|#
+directive|else
+return|return
+name|st
+return|;
+endif|#
+directive|endif
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
