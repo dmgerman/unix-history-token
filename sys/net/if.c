@@ -4978,6 +4978,11 @@ if|if
 condition|(
 name|space
 operator|<
+sizeof|sizeof
+argument_list|(
+name|ifr
+argument_list|)
+operator|+
 name|sa
 operator|->
 name|sa_len
@@ -5001,16 +5006,6 @@ operator|*
 name|sa
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|space
-operator|<
-sizeof|sizeof
-argument_list|(
-name|ifr
-argument_list|)
-condition|)
-break|break;
 name|error
 operator|=
 name|copyout
@@ -5164,17 +5159,6 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|space
-operator|<
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"ifconf: space< 0"
-argument_list|)
-expr_stmt|;
 name|ifc
 operator|->
 name|ifc_len
