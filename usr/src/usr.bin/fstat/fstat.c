@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.25 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3118,7 +3118,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: fstat [-u user] [-p pid] [filename ...]\n"
+literal|"usage: fstat [-fnv] [-p pid] [-u user] [filename ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
