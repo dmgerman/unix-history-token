@@ -2904,6 +2904,14 @@ operator|-
 name|count
 operator|<
 name|B_size
+operator|&&
+name|us
+operator|.
+name|size
+operator|-
+name|count
+operator|>=
+literal|0
 condition|)
 name|size
 operator|=
