@@ -1488,13 +1488,17 @@ name|framep
 operator|->
 name|tf_special
 operator|.
-name|psr
-operator|&
-name|IA64_PSR_CPL
+name|iip
+operator|>>
+literal|61
 operator|)
-operator|==
-name|IA64_PSR_CPL_USER
+operator|<
+literal|5
 operator|)
+condition|?
+literal|1
+else|:
+literal|0
 expr_stmt|;
 comment|/* Short-circuit break instruction based system calls. */
 if|if

@@ -98,10 +98,9 @@ define|#
 directive|define
 name|TRAPF_USERMODE
 parameter_list|(
-name|framep
+name|tf
 parameter_list|)
-define|\
-value|(((framep)->tf_special.psr& IA64_PSR_CPL) == IA64_PSR_CPL_USER)
+value|((TRAPF_PC(tf)>> 61)< 5)
 end_define
 
 begin_comment
