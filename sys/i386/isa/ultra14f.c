@@ -4,7 +4,7 @@ comment|/*  * Ported for use with the UltraStor 14f by Gary Close (gclose@wvnvms
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log:	ultra14f.c,v $  *  * Revision 1.1  93/05/07  11:37:24  julian  * fix SLEEPTIME calculation.  *  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  */
+comment|/*  * HISTORY  * $Log: ultra14f.c,v $  * Revision 1.3  1993/07/29  11:55:37  nate  * Syncing our sources back with Julian's, and removing PATCHKIT headers.  *  * Large Bustek changes, most everything else is minimal.  *  *  * Revision 1.1  93/05/07  11:37:24  julian  * fix SLEEPTIME calculation.  *  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  */
 end_comment
 
 begin_include
@@ -2262,7 +2262,9 @@ directive|ifdef
 name|__386BSD__
 name|printf
 argument_list|(
-literal|" probing for scsi devices**\n"
+literal|"uha%d: **probing for scsi devices**\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 endif|#

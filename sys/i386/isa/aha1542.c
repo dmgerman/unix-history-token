@@ -8,7 +8,7 @@ comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sep
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: aha1542.c,v $  * Revision 1.2  1993/07/15  17:52:58  davidg  * Modified attach printf's so that the output is compatible with the "new"  * way of doing things. There still remain several drivers that need to  * be updated.  Also added a compile-time option to pccons to switch the  * control and caps-lock keys (REVERSE_CAPS_CTRL) - added for my personal  * sanity.  *  * Revision 1.1.1.1  1993/06/12  14:57:59  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.3  93/05/22  16:51:18  julian  * set up  dev->dev_pic before it's needed for OSF  *   * Revision 1.2  93/05/07  11:40:27  julian  * fixed SLEEPTIME calculation  *   * Revision 1.1  93/05/07  11:14:03  julian  * Initial revision  *   * Revision 1.6  1992/08/24  21:01:58  jason  * many changes and bugfixes for osf1  *  * Revision 1.5  1992/07/31  01:22:03  julian  * support improved scsi.h layout  *  * Revision 1.4  1992/07/25  03:11:26  julian  * check each request fro sane flags.  *  * Revision 1.3  1992/07/24  00:52:45  julian  * improved timeout handling.  * added support for two arguments to the sd_done (or equiv) call so that  * they can pre-queue several arguments.  * slightly clean up error handling  *  * Revision 1.2  1992/07/17  22:03:54  julian  * upgraded the timeout code.  * added support for UIO-based i/o (as used for pmem operations)  *  * Revision 1.1  1992/05/27  00:51:12  balsup  * machkern/cor merge  */
+comment|/*  * HISTORY  * $Log: aha1542.c,v $  * Revision 1.3  1993/07/29  11:55:31  nate  * Syncing our sources back with Julian's, and removing PATCHKIT headers.  *  * Large Bustek changes, most everything else is minimal.  *  * Revision 1.2  1993/07/15  17:52:58  davidg  * Modified attach printf's so that the output is compatible with the "new"  * way of doing things. There still remain several drivers that need to  * be updated.  Also added a compile-time option to pccons to switch the  * control and caps-lock keys (REVERSE_CAPS_CTRL) - added for my personal  * sanity.  *  * Revision 1.1.1.1  1993/06/12  14:57:59  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.3  93/05/22  16:51:18  julian  * set up  dev->dev_pic before it's needed for OSF  *   * Revision 1.2  93/05/07  11:40:27  julian  * fixed SLEEPTIME calculation  *   * Revision 1.1  93/05/07  11:14:03  julian  * Initial revision  *   * Revision 1.6  1992/08/24  21:01:58  jason  * many changes and bugfixes for osf1  *  * Revision 1.5  1992/07/31  01:22:03  julian  * support improved scsi.h layout  *  * Revision 1.4  1992/07/25  03:11:26  julian  * check each request fro sane flags.  *  * Revision 1.3  1992/07/24  00:52:45  julian  * improved timeout handling.  * added support for two arguments to the sd_done (or equiv) call so that  * they can pre-queue several arguments.  * slightly clean up error handling  *  * Revision 1.2  1992/07/17  22:03:54  julian  * upgraded the timeout code.  * added support for UIO-based i/o (as used for pmem operations)  *  * Revision 1.1  1992/05/27  00:51:12  balsup  * machkern/cor merge  */
 end_comment
 
 begin_comment
@@ -2753,7 +2753,9 @@ directive|ifdef
 name|__386BSD__
 name|printf
 argument_list|(
-literal|"**probing for scsi devices**\n"
+literal|"aha%d: **probing for scsi devices**\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 endif|#
