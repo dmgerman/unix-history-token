@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.72 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.73 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1322,7 +1322,6 @@ operator|->
 name|uio_offset
 argument_list|)
 expr_stmt|;
-comment|/* LFS */
 name|n
 operator|=
 name|MIN
@@ -1351,7 +1350,6 @@ name|fs
 operator|->
 name|lfs_bsize
 condition|)
-comment|/* LFS */
 name|flags
 operator||=
 name|B_CLRBUF
@@ -1362,7 +1360,6 @@ operator|&=
 operator|~
 name|B_CLRBUF
 expr_stmt|;
-comment|/* LFS */
 if|if
 condition|(
 name|error
@@ -1518,7 +1515,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* 		 * Update segment usage information; call segment 		 * writer if necessary. 		 */
+comment|/* 		 * XXX 		 * This doesn't handle ioflag& IO_SYNC. 		 */
 name|lfs_bwrite
 argument_list|(
 name|bp
@@ -1582,14 +1579,10 @@ name|IO_UNIT
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|NOTLFS
-comment|/* This just doesn't work... */
 operator|(
 name|void
 operator|)
-name|lfs_itrunc
+name|lfs_truncate
 argument_list|(
 name|vp
 argument_list|,
@@ -1600,8 +1593,6 @@ operator|&
 name|IO_SYNC
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|uio
 operator|->
 name|uio_offset
@@ -1630,18 +1621,21 @@ operator|&
 name|IO_SYNC
 operator|)
 condition|)
-name|ITIMES
+name|error
+operator|=
+name|lfs_update
 argument_list|(
-name|ip
+name|vp
 argument_list|,
 operator|&
 name|time
 argument_list|,
 operator|&
 name|time
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
-comment|/* LFS */
 return|return
 operator|(
 name|error
