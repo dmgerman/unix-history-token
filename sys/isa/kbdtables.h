@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (C) 1992, 1993 Søren Schmidt  *  *  This program is free software; you may redistribute it and/or   *  modify it, provided that it retain the above copyright notice   *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   *  *	Søren Schmidt 		Email:	sos@kmd-ac.dk  *	Tritonvej 36		UUCP:	...uunet!dkuug!kmd-ac!sos  *	DK9210 Aalborg SO	Phone:  +45 9814 8076  *  *	$Id: kbdtables.h,v 1.7 1993/11/04 01:49:20 ache Exp $  */
+comment|/*  *  Copyright (C) 1992, 1993 Søren Schmidt  *  *  This program is free software; you may redistribute it and/or   *  modify it, provided that it retain the above copyright notice   *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   *  *	Søren Schmidt 		Email:	sos@kmd-ac.dk  *	Tritonvej 36		UUCP:	...uunet!dkuug!kmd-ac!sos  *	DK9210 Aalborg SO	Phone:  +45 9814 8076  *  *	$Id: kbdtables.h,v 1.8 1994/01/18 05:31:37 nate Exp $  */
 end_comment
 
 begin_define
@@ -11232,7 +11232,7 @@ name|SET8
 operator||
 literal|0x1B
 block|,
-name|NOP
+name|DBG
 block|,
 name|NOP
 block|,
@@ -14950,7 +14950,7 @@ name|SET8
 operator||
 literal|0x1B
 block|,
-name|NOP
+name|DBG
 block|,
 name|NOP
 block|,
