@@ -107,14 +107,6 @@ name|u_char
 name|ipq_nfrags
 decl_stmt|;
 comment|/* # frags in this packet */
-name|u_int32_t
-name|ipq_div_info
-decl_stmt|;
-comment|/* ipfw divert port& flags */
-name|u_int16_t
-name|ipq_div_cookie
-decl_stmt|;
-comment|/* ipfw divert cookie */
 name|struct
 name|label
 modifier|*
@@ -399,6 +391,21 @@ end_define
 
 begin_comment
 comment|/* can send broadcast packets */
+end_comment
+
+begin_comment
+comment|/* mbuf flag used by ip_fastfwd */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FASTFWD_OURS
+value|M_PROTO1
+end_define
+
+begin_comment
+comment|/* changed dst to local */
 end_comment
 
 begin_struct_decl
@@ -962,92 +969,85 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPDIVERT
-end_ifdef
+begin_comment
+comment|/*  * Obtain next_hop information asociated with the mbuf; if any.  * If a tag is present devalidate it also.  */
+end_comment
 
-begin_function_decl
-name|void
-name|div_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|div_input
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|div_ctlinput
-parameter_list|(
-name|int
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|divert_packet
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|sockaddr_in
+operator|*
+name|ip_claim_next_hop
+argument_list|(
+argument|struct mbuf *m
+argument_list|)
+block|{ 	struct
+name|m_tag
+operator|*
+name|mtag
+operator|=
+name|m_tag_find
+argument_list|(
 name|m
-parameter_list|,
-name|int
-name|incoming
-parameter_list|,
-name|int
-name|port
-parameter_list|,
-name|int
-name|rule
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
+argument_list|,
+name|PACKET_TAG_IPFORWARD
+argument_list|,
+name|NULL
+argument_list|)
+block|;
+if|if
+condition|(
+name|mtag
+condition|)
+block|{
 name|struct
-name|pr_usrreqs
-name|div_usrreqs
+name|sockaddr_in
+modifier|*
+name|sin
+init|=
+operator|*
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|*
+operator|)
+operator|(
+name|mtag
+operator|+
+literal|1
+operator|)
 decl_stmt|;
-end_decl_stmt
+name|mtag
+operator|->
+name|m_tag_id
+operator|=
+name|PACKET_TAG_NONE
+expr_stmt|;
+return|return
+name|sin
+return|;
+block|}
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_else
+else|else
+return|return
+name|NULL
+return|;
+end_else
 
 begin_ifdef
+unit|}
 ifdef|#
 directive|ifdef
 name|PFIL_HOOKS
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
+unit|extern
 name|struct
 name|pfil_head
 name|inet_pfil_hook
