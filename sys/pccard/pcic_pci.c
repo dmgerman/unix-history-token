@@ -669,7 +669,7 @@ name|PCI_DEVICE_ID_PCIC_CLPD6729
 block|,
 literal|"Cirrus Logic PD6729/6730 PC-Card Controller"
 block|,
-name|PCIC_PD672X
+name|PCIC_PD6729
 block|,
 name|PCIC_PD_POWER
 block|,
@@ -682,7 +682,7 @@ name|PCI_DEVICE_ID_PCIC_CLPD6832
 block|,
 literal|"Cirrus Logic PD6832 PCI-CardBus Bridge"
 block|,
-name|PCIC_PD672X
+name|PCIC_PD673X
 block|,
 name|PCIC_PD_POWER
 block|,
@@ -695,7 +695,7 @@ name|PCI_DEVICE_ID_PCIC_CLPD6833
 block|,
 literal|"Cirrus Logic PD6833 PCI-CardBus Bridge"
 block|,
-name|PCIC_PD672X
+name|PCIC_PD673X
 block|,
 name|PCIC_PD_POWER
 block|,
@@ -708,7 +708,7 @@ name|PCI_DEVICE_ID_PCIC_CLPD6834
 block|,
 literal|"Cirrus Logic PD6834 PCI-CardBus Bridge"
 block|,
-name|PCIC_PD672X
+name|PCIC_PD673X
 block|,
 name|PCIC_PD_POWER
 block|,
@@ -4342,7 +4342,7 @@ index|]
 operator|.
 name|controller
 operator|=
-name|PCIC_PD672X
+name|PCIC_PD6729
 expr_stmt|;
 if|if
 condition|(

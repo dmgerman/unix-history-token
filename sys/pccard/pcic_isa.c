@@ -205,7 +205,7 @@ name|PCIC_AB_POWER
 block|}
 block|,
 block|{
-literal|"Cirrus logic 672x"
+literal|"Cirrus logic 6722"
 block|,
 name|PCIC_PD_POWER
 block|}
@@ -1007,7 +1007,7 @@ name|sp
 operator|->
 name|controller
 operator|=
-name|PCIC_PD672X
+name|PCIC_PD6722
 expr_stmt|;
 else|else
 name|sp
@@ -1089,7 +1089,7 @@ name|sp
 operator|->
 name|controller
 operator|==
-name|PCIC_PD672X
+name|PCIC_PD6722
 condition|)
 block|{
 name|pcic_setb
