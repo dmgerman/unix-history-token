@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	6.4	84/03/20	*/
+comment|/*	if.c	6.4	84/03/22	*/
 end_comment
 
 begin_include
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|"../net/af.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ether.h"
 end_include
 
 begin_decl_stmt
@@ -940,6 +946,51 @@ name|data
 argument_list|)
 operator|)
 return|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|&&
+name|NETHER
+operator|>
+literal|0
+case|case
+name|SIOCSARP
+case|:
+case|case
+name|SIOCDARP
+case|:
+if|if
+condition|(
+operator|!
+name|suser
+argument_list|()
+condition|)
+return|return
+operator|(
+name|u
+operator|.
+name|u_error
+operator|)
+return|;
+comment|/* FALL THROUGH */
+case|case
+name|SIOCGARP
+case|:
+return|return
+operator|(
+name|arpioctl
+argument_list|(
+name|cmd
+argument_list|,
+name|data
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
 case|case
 name|SIOCSIFADDR
 case|:
