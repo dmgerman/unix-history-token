@@ -246,6 +246,14 @@ operator|!=
 name|COLS
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|CRUNCH
+operator|*
+name|o_nearscroll
+operator|=
+endif|#
+directive|endif
 operator|*
 name|o_lines
 operator|=
@@ -329,11 +337,13 @@ end_else
 begin_if
 if|#
 directive|if
-name|M_SYSV
+name|UNIXV
+operator|||
+name|COH_386
 end_if
 
 begin_comment
-comment|/* For System-V or Coherent, we use VMIN/VTIME to implement the timeout.  * For no timeout, VMIN should be 1 and VTIME should be 0; for timeout,  * VMIN should be 0 and VTIME should be the timeout value.  */
+comment|/* For System-V, we use VMIN/VTIME to implement the timeout.  For no timeout,  * VMIN should be 1 and VTIME should be 0; for timeout, VMIN should be 0 and  * VTIME should be the timeout value.  */
 end_comment
 
 begin_include
@@ -452,6 +462,9 @@ literal|0
 argument_list|,
 name|buf
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|len
 argument_list|)
 operator|)
@@ -492,6 +505,11 @@ operator|!
 name|wset
 condition|)
 block|{
+operator|*
+name|o_nearscroll
+operator|=
+name|LINES
+expr_stmt|;
 operator|*
 name|o_window
 operator|=
@@ -563,7 +581,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
-name|int
+name|SIGTYPE
 name|dummy
 parameter_list|(
 name|signo
@@ -607,25 +625,6 @@ decl_stmt|;
 comment|/* maximum time to allow for reading */
 block|{
 comment|/* arrange for timeout */
-if|#
-directive|if
-name|__GNUC__
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-name|dummy
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|signal
 argument_list|(
 name|SIGALRM
@@ -633,8 +632,6 @@ argument_list|,
 name|dummy
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|alarm
 argument_list|(
 name|time
@@ -659,6 +656,9 @@ literal|0
 argument_list|,
 name|buf
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -708,7 +708,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !(M_SYSV || COHERENT) */
+comment|/* M_SYSV */
 end_comment
 
 begin_endif

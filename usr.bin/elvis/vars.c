@@ -243,6 +243,18 @@ begin_comment
 comment|/* boolean: was a *REAL* change made? */
 end_comment
 
+begin_decl_stmt
+name|int
+name|exitcode
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0=overwritten, 1=not updated, else error */
+end_comment
+
 begin_comment
 comment|/* used to support the pfetch() macro */
 end_comment

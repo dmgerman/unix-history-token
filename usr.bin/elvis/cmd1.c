@@ -35,6 +35,68 @@ directive|include
 file|"regexp.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_TAGSTACK
+end_ifndef
+
+begin_comment
+comment|/* These describe the current state of the tag related commands		  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXTAGS
+value|15
+end_define
+
+begin_struct
+struct|struct
+name|Tag_item
+block|{
+name|MARK
+name|tag_mark
+decl_stmt|;
+name|char
+modifier|*
+name|tag_file
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|Tag_item
+name|tag_stack
+index|[
+name|MAXTAGS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|curr_tag
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !NO_TAGSTACK */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -825,6 +887,9 @@ block|}
 comment|/* either the file must not exist, or we must have a ! or be appending */
 if|if
 condition|(
+operator|*
+name|extra
+operator|&&
 name|access
 argument_list|(
 name|extra
@@ -1329,13 +1394,13 @@ if|if
 condition|(
 operator|*
 name|extra
-operator|!=
-literal|'/'
-operator|&&
+operator|==
+literal|' '
+operator|||
 operator|*
 name|extra
-operator|!=
-literal|'?'
+operator|==
+literal|'\n'
 condition|)
 block|{
 name|msg
@@ -1532,7 +1597,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/* free the regexp */
-name|free
+name|_free_
 argument_list|(
 name|re
 argument_list|)
@@ -1625,12 +1690,12 @@ directive|ifndef
 name|CRUNCH
 name|msg
 argument_list|(
-literal|"\"%s\" %s%s%s %ld lines,  line %ld [%ld%%]"
+literal|"\"%s\" %s%s%s line %ld of %ld [%ld%%]"
 argument_list|,
 else|#
 directive|else
 argument|msg(
-literal|"\"%s\" %s%s %ld lines,  line %ld [%ld%%]"
+literal|"\"%s\" %s%s line %ld of %ld [%ld%%]"
 argument|,
 endif|#
 directive|endif
@@ -1655,7 +1720,7 @@ argument|tstflag(file, READONLY) ?
 literal|"[READONLY]"
 argument|:
 literal|""
-argument|, 			nlines, 			markline(frommark), 			markline(frommark) *
+argument|, 			markline(frommark), 			nlines, 			markline(frommark) *
 literal|100
 argument|/ nlines); 	}
 ifndef|#
@@ -1764,27 +1829,38 @@ literal|"previous"
 argument|:
 literal|"rewind"
 argument|); 	} }
-comment|/* also called from :wq -- always writes back in this case */
+comment|/* also called for :wq -- always writes back in this case */
+comment|/* also called for :q -- never writes back in that case */
 comment|/*ARGSUSED*/
 argument|void cmd_xit(frommark, tomark, cmd, bang, extra) 	MARK	frommark
 argument_list|,
 argument|tomark; 	CMD	cmd; 	int	bang; 	char	*extra; { 	static long	whenwarned;
 comment|/* when the user was last warned of extra files */
 argument|int		oldflag;
-comment|/* if there are more files to edit, then warn user */
+comment|/* Unless the command is ":q", save the file if it has been modified */
+argument|if (cmd != CMD_QUIT&& (cmd == CMD_WQUIT || tstflag(file, MODIFIED))&& !tmpsave((char *)
+literal|0
+argument|, FALSE)&& !bang) 	{ 		msg(
+literal|"Could not save file -- use quit! to abort changes, or w filename"
+argument|); 		return; 	}
+comment|/* If there are more files to edit, then warn user */
 argument|if (argno>=
 literal|0
 argument|&& argno +
 literal|1
-argument|< nargs&& whenwarned != changes&& (!bang || cmd != CMD_QUIT)) 	{ 		msg(
+argument|< nargs
+comment|/* more args */
+argument|&& whenwarned != changes
+comment|/* user not already warned */
+argument|&& (!bang || cmd != CMD_QUIT))
+comment|/* command not ":q!" */
+argument|{ 		msg(
 literal|"More files to edit -- Use \":n\" to go to next file"
-argument|); 		whenwarned = changes; 		return; 	}  	if (cmd == CMD_QUIT) 	{ 		oldflag = *o_autowrite; 		*o_autowrite = FALSE; 		if (tmpabort(bang)) 		{ 			mode = MODE_QUIT; 		} 		else 		{ 			msg(
+argument|); 		whenwarned = changes; 		return; 	}
+comment|/* Discard the temp file.  Note that we should already have saved the 	 * the file, unless the command is ":q", so the only way that tmpabort 	 * could fail would be if you did a ":q" on a modified file. 	 */
+argument|oldflag = *o_autowrite; 	*o_autowrite = FALSE; 	if (tmpabort(bang)) 	{ 		mode = MODE_QUIT; 	} 	else 	{ 		msg(
 literal|"Use q! to abort changes, or wq to save changes"
-argument|); 		} 		*o_autowrite = oldflag; 	} 	else 	{
-comment|/* else try to save this file */
-argument|oldflag = tstflag(file, MODIFIED); 		if (cmd == CMD_WQUIT) 			setflag(file, MODIFIED); 		if (tmpend(bang)) 		{ 			mode = MODE_QUIT; 		} 		else 		{ 			msg(
-literal|"Could not save file -- use quit! to abort changes, or w filename"
-argument|); 		} 		if (!oldflag) 			clrflag(file, MODIFIED); 	} }
+argument|); 	} 	*o_autowrite = oldflag; }
 comment|/*ARGSUSED*/
 argument|void cmd_args(frommark, tomark, cmd, bang, extra) 	MARK	frommark
 argument_list|,
@@ -1840,7 +1916,7 @@ argument|, nargs); 		} 	} }
 comment|/*ARGSUSED*/
 argument|void cmd_cd(frommark, tomark, cmd, bang, extra) 	MARK	frommark
 argument_list|,
-argument|tomark; 	CMD	cmd; 	int	bang; 	char	*extra; { 	char	*getenv();
+argument|tomark; 	CMD	cmd; 	int	bang; 	char	*extra; {
 ifndef|#
 directive|ifndef
 name|CRUNCH
@@ -1851,8 +1927,8 @@ argument|, extra); 	}
 endif|#
 directive|endif
 comment|/* default directory name is $HOME */
-argument|if (!*extra) 	{ 		extra = getenv(
-literal|"HOME"
+argument|if (!*extra) 	{ 		extra = gethome((char *)
+literal|0
 argument|); 		if (!extra) 		{ 			msg(
 literal|"environment variable $HOME not set"
 argument|); 			return; 		} 	}
@@ -2095,8 +2171,25 @@ argument|char	*cmp;
 comment|/* char of tag name we're comparing, or NULL */
 argument|char	*end;
 comment|/* marks the end of chars in tmpblk.c */
+argument|char	file[
+literal|128
+argument|];
+comment|/* name of file containing tag */
+argument|int	found;
+comment|/* whether the tag has been found */
+argument|int	file_exists;
+comment|/* whether any tag file exists */
+argument|char	*s
+argument_list|,
+argument|*t;
 else|#
 directive|else
+ifndef|#
+directive|ifndef
+name|NO_TAGSTACK
+argument|char	*s;
+endif|#
+directive|endif
 argument|int	i;
 endif|#
 directive|endif
@@ -2144,7 +2237,9 @@ argument|;
 comment|/* close the pipe.  abort if error */
 argument|if (rpclose(fd) !=
 literal|0
-argument||| scan< tmpblk.c +
+argument|) 	{ 		msg(
+literal|"Trouble running \"ref\" -- Can't do tag lookup"
+argument|); 		return; 	} 	else if (scan< tmpblk.c +
 literal|3
 argument|) 	{ 		msg(
 literal|"tag \"%s\" not found"
@@ -2152,33 +2247,56 @@ argument|, extra); 		return; 	}
 else|#
 directive|else
 comment|/* use internal code to look up the tag */
-comment|/* open the tags file */
-argument|fd = open(TAGS, O_RDONLY); 	if (fd<
+argument|found =
 literal|0
-argument|) 	{ 		msg(
-literal|"No tags file"
-argument|); 		return; 	}
+argument|; 	file_exists =
+literal|0
+argument|; 	s = o_tags; 	while (!found&& *s !=
+literal|0
+argument|) { 		while (isspace(*s)) s++; 		for(t = file; s&& *s&& !isspace(*s); s++) 			*t++ = *s; 		*t =
+literal|'\0'
+argument|;
+comment|/* open the next tags file */
+argument|fd = open(file, O_RDONLY); 		if (fd<
+literal|0
+argument|) 			continue; 		else 			file_exists =
+literal|1
+argument|;
 comment|/* Hmmm... this would have been a lot easier with<stdio.h> */
 comment|/* find the line with our tag in it */
-argument|for(scan = end = tmpblk.c, cmp = extra; ; scan++) 	{
+argument|for(scan = end = tmpblk.c, cmp = extra; ; scan++) 		{
 comment|/* read a block, if necessary */
-argument|if (scan>= end) 		{ 			end = tmpblk.c + tread(fd, tmpblk.c, BLKSIZE); 			scan = tmpblk.c; 			if (scan>= end) 			{ 				msg(
-literal|"tag \"%s\" not found"
-argument|, extra); 				close(fd); 				return; 			} 		}
+argument|if (scan>= end) 			{ 				end = tmpblk.c + tread(fd, tmpblk.c, BLKSIZE); 				scan = tmpblk.c; 				if (scan>= end) 				{ 					close(fd); 					break; 				} 			}
 comment|/* if we're comparing, compare... */
-argument|if (cmp) 		{
+argument|if (cmp) 			{
 comment|/* matched??? wow! */
 argument|if (!*cmp&& *scan ==
 literal|'\t'
-argument|) 			{ 				break; 			} 			if (*cmp++ != *scan) 			{
+argument|) 				{ 					if ((s = strrchr(file,
+literal|'/'
+argument|)) !=
+literal|0
+argument||| 					    (s = strrchr(file,
+literal|'\\'
+argument|)) !=
+literal|0
+argument|) 						++s; 					else 						s = file; 					*s =
+literal|'\0'
+argument|; 					found =
+literal|1
+argument|; 					break; 				} 				if (*cmp++ != *scan) 				{
 comment|/* failed! skip to newline */
 argument|cmp = (char *)
 literal|0
-argument|; 			} 		}
+argument|; 				} 			}
 comment|/* if we're skipping to newline, do it fast! */
-argument|if (!cmp) 		{ 			while (scan< end&& *scan !=
+argument|if (!cmp) 			{ 				while (scan< end&& *scan !=
 literal|'\n'
-argument|) 			{ 				scan++; 			} 			if (scan< end) 			{ 				cmp = extra; 			} 		} 	}
+argument|) 				{ 					scan++; 				} 				if (scan< end) 				{ 					cmp = extra; 				} 			} 		} 	}  	if (!file_exists) { 		msg(
+literal|"No tags file"
+argument|); 		return; 	}  	if (!found) { 		msg(
+literal|"tag \"%s\" not found"
+argument|, extra); 		return; 	}
 comment|/* found it! get the rest of the line into memory */
 argument|for (cmp = tmpblk.c, scan++; scan< end&& *scan !=
 literal|'\n'
@@ -2197,7 +2315,31 @@ argument|; 	if (strcmp(origname, tmpblk.c) !=
 literal|0
 argument|) 	{ 		if (!tmpabort(bang)) 		{ 			msg(
 literal|"Use :tag! to abort changes, or :w to save changes"
-argument|); 			return; 		} 		tmpstart(tmpblk.c); 	}
+argument|); 			return; 		} 		tmpstart(tmpblk.c);
+ifdef|#
+directive|ifdef
+name|NO_TAGSTACK
+argument|}
+else|#
+directive|else
+comment|/* tagstack enabled */
+argument|s = prevorig; 	} 	else 		s = origname;  	if (frommark != MARK_UNSET&& *s&& *o_tagstack) 	{ 		curr_tag++; 		if (curr_tag>= MAXTAGS) 		{
+comment|/* discard the oldest tag position */
+argument|free(tag_stack[
+literal|0
+argument|].tag_file); 			for (curr_tag =
+literal|0
+argument|; curr_tag< MAXTAGS -
+literal|1
+argument|; curr_tag++) 			{ 				tag_stack[curr_tag] = tag_stack[curr_tag +
+literal|1
+argument|]; 			}
+comment|/* at this point, curr_tag = MAXTAGS-1 */
+argument|} 		tag_stack[curr_tag].tag_file = (char *) malloc(strlen(s) +
+literal|1
+argument|); 		strcpy(tag_stack[curr_tag].tag_file, s); 		tag_stack[curr_tag].tag_mark = frommark; 	}
+endif|#
+directive|endif
 comment|/* move to the desired line (or to line 1 if that fails) */
 ifndef|#
 directive|ifndef
@@ -2215,6 +2357,27 @@ argument|*o_magic = wasmagic;
 endif|#
 directive|endif
 argument|}
+ifndef|#
+directive|ifndef
+name|NO_TAGSTACK
+comment|/*ARGSUSED*/
+argument|void cmd_pop(frommark, tomark, cmd, bang, extra) 	MARK	frommark
+argument_list|,
+argument|tomark; 	CMD	cmd; 	int	bang; 	char	*extra; { 	char	buf[
+literal|8
+argument|];  	if (!*o_tagstack) 	{ 		msg(
+literal|"Tagstack not enabled"
+argument|); 		return; 	}  	if (curr_tag<
+literal|0
+argument|) 		msg(
+literal|"Tagstack empty"
+argument|); 	else 	{ 		if (strcmp(origname, tag_stack[curr_tag].tag_file) !=
+literal|0
+argument|) 		{ 			if (!tmpabort(bang)) 			{ 				msg(
+literal|"Use :pop! to abort changes, or :w to save changes"
+argument|); 				return; 			} 			tmpstart(tag_stack[curr_tag].tag_file); 		} 		cursor = tag_stack[curr_tag].tag_mark; 		if (cursor< MARK_FIRST || cursor> MARK_LAST + BLKSIZE) 		{ 			cursor = MARK_FIRST; 		} 		free(tag_stack[curr_tag--].tag_file); 	} }
+endif|#
+directive|endif
 comment|/* describe this version of the program */
 comment|/*ARGSUSED*/
 argument|void cmd_version(frommark, tomark, cmd, bang, extra) 	MARK	frommark; 	MARK	tomark; 	CMD	cmd; 	int	bang; 	char	*extra; { 	msg(
@@ -2374,9 +2537,13 @@ argument|; 	}
 comment|/* skip garbage between filename and line number */
 argument|while (*text&& !isdigit(*text)) 	{ 		text++; 	}
 comment|/* if the number is part of a larger word, then ignore this line */
-argument|if (*text&& isalpha(text[-
+argument|if (*text&& (isalpha(text[-
 literal|1
-argument|])) 	{ 		return (char *)
+argument|]) || text[-
+literal|1
+argument|] ==
+literal|'_'
+argument|)) 	{ 		return (char *)
 literal|0
 argument|; 	}
 comment|/* get the error line */
@@ -2532,10 +2699,35 @@ literal|0
 argument|) 	{ 		close(errfd); 		errfd = -
 literal|3
 argument|; 	}
+if|#
+directive|if
+name|MINT
+comment|/* I guess MiNT can't depend on the shell for redirection? */
+argument|close(creat(ERRLIST,
+literal|0666
+argument|)); 	if ((fd = open(ERRLIST, O_RDWR)) == -
+literal|1
+argument|) 	{ 		unlink(ERRLIST); 		return; 	} 	suspend_curses(); 	old2 = dup(
+literal|2
+argument|); 	dup2(fd,
+literal|2
+argument|); 	system(buf.c); 	dup2(old2,
+literal|2
+argument|); 	close(old2); 	close(fd);
+else|#
+directive|else
 comment|/* run the command, with curses temporarily disabled */
-argument|suspend_curses(); 	system(buf.c); 	resume_curses(mode == MODE_EX); 	if (mode == MODE_COLON) 		mode = MODE_VI;
+argument|suspend_curses(); 	system(buf.c);
+endif|#
+directive|endif
+argument|resume_curses(mode == MODE_EX); 	if (mode == MODE_COLON)
+comment|/* ':' hit instead of CR, so let him escape... -nox */
+argument|return;
 comment|/* run the "errlist" command */
-argument|cmd_errlist(MARK_UNSET, MARK_UNSET, cmd, bang, ERRLIST); }
+argument|cmd_errlist(MARK_UNSET, MARK_UNSET, cmd, bang, ERRLIST);
+comment|/* avoid spurious `Hit<RETURN>' after 1st error message  -nox */
+comment|/* (which happened when cmd_errlist didn't have to change files...)  */
+argument|if (mode == MODE_VI) 		refresh(); }
 endif|#
 directive|endif
 ifndef|#
@@ -3054,20 +3246,11 @@ directive|ifdef
 name|SIGTSTP
 comment|/* temporarily suspend elvis */
 comment|/*ARGSUSED*/
-argument|void cmd_suspend(frommark, tomark, cmd, bang, extra) 	MARK	frommark; 	MARK	tomark; 	CMD	cmd; 	int	bang; 	char	*extra; { 	void	(*func)();
+argument|void cmd_suspend(frommark, tomark, cmd, bang, extra) 	MARK	frommark; 	MARK	tomark; 	CMD	cmd; 	int	bang; 	char	*extra; { 	SIGTYPE	(*func)();
 comment|/* stores the previous setting of SIGTSTP */
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|__386BSD__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
 name|ANY_UNIX
-argument_list|)
 comment|/* the Bourne shell can't handle ^Z */
 argument|if (!strcmp(o_shell,
 literal|"/bin/sh"
@@ -3076,9 +3259,7 @@ literal|"The /bin/sh shell doesn't support ^Z"
 argument|); 		return; 	}
 endif|#
 directive|endif
-argument|func = signal(SIGTSTP, SIG_DFL); 	if ( func == SIG_IGN ) { 		msg(
-literal|"SIGTSTP is being ignored, you may not suspend the editor"
-argument|, func); 		return; 	} 	move(LINES -
+argument|move(LINES -
 literal|1
 argument|,
 literal|0
@@ -3086,9 +3267,7 @@ argument|); 	if (tstflag(file, MODIFIED)) 	{ 		addstr(
 literal|"Warning: \""
 argument|); 		addstr(origname); 		addstr(
 literal|"\" modified but not yet saved"
-argument|); 		clrtoeol(); 	} 	refresh(); 	suspend_curses();
-comment|/* was here func = signal(SIGTSTP, SIG_DFL); /* races ??? */
-argument|kill (
+argument|); 		clrtoeol(); 	} 	refresh(); 	suspend_curses(); 	func = signal(SIGTSTP, SIG_DFL); 	kill (
 literal|0
 argument|, SIGTSTP);
 comment|/* the process stops and resumes here */

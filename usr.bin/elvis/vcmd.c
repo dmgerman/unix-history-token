@@ -930,7 +930,7 @@ name|m
 argument_list|,
 name|WHEN_VIREP
 argument_list|,
-name|FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1233,9 +1233,11 @@ name|long
 name|reps
 decl_stmt|;
 name|int
-name|above
+name|delta
+init|=
+literal|0
 decl_stmt|;
-comment|/* boolean: new line going above old line? */
+comment|/* 1 to take autoindent from line below, -1 for above */
 name|DEFAULT
 argument_list|(
 literal|1
@@ -1244,10 +1246,6 @@ expr_stmt|;
 name|ChangeText
 block|{
 comment|/* tweak the insertion point, based on command key */
-name|above
-operator|=
-name|FALSE
-expr_stmt|;
 switch|switch
 condition|(
 name|key
@@ -1339,9 +1337,9 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|above
+name|delta
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1368,6 +1366,11 @@ name|m
 argument_list|,
 literal|"\n"
 argument_list|)
+expr_stmt|;
+name|delta
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 break|break;
 block|}
@@ -1404,7 +1407,7 @@ name|m
 argument_list|,
 name|WHEN_VIINP
 argument_list|,
-name|above
+name|delta
 argument_list|)
 operator|+
 literal|1
@@ -1587,7 +1590,7 @@ name|n
 argument_list|,
 name|WHEN_VIINP
 argument_list|,
-name|FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1678,7 +1681,7 @@ name|cnt
 argument_list|,
 name|WHEN_VIINP
 argument_list|,
-name|FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3480,16 +3483,12 @@ literal|9
 expr_stmt|;
 break|break;
 block|}
-comment|/* arrange for the menu to be erased (except that "chg from kbd" 	 * already erased it, and "save& exit" doesn't care) 	 */
+comment|/* arrange for the menu to be erased (except "save& exit" doesn't care) 	 */
 if|if
 condition|(
-name|sel
-operator|!=
-literal|5
-operator|&&
-name|sel
-operator|!=
-literal|9
+name|mode
+operator|==
+name|MODE_VI
 condition|)
 name|redraw
 argument_list|(
@@ -3512,6 +3511,77 @@ end_endif
 begin_comment
 comment|/* undef NO_POPUP */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_TAGSTACK
+end_ifndef
+
+begin_function
+name|MARK
+name|v_pop
+parameter_list|(
+name|m
+parameter_list|,
+name|cnt
+parameter_list|,
+name|cmd
+parameter_list|)
+name|MARK
+name|m
+decl_stmt|;
+comment|/* original cursor position (ignored) */
+name|long
+name|cnt
+decl_stmt|;
+comment|/* number of levels to pop */
+name|int
+name|cmd
+decl_stmt|;
+comment|/* command key -- ^T  (ignored) */
+block|{
+name|DEFAULT
+argument_list|(
+literal|1L
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|tmpblk
+operator|.
+name|c
+argument_list|,
+literal|"%ld"
+argument_list|,
+name|cnt
+argument_list|)
+expr_stmt|;
+name|cmd_pop
+argument_list|(
+name|m
+argument_list|,
+name|m
+argument_list|,
+name|CMD_POP
+argument_list|,
+name|FALSE
+argument_list|,
+name|tmpblk
+operator|.
+name|c
+argument_list|)
+expr_stmt|;
+return|return
+name|cursor
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

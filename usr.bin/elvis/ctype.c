@@ -20,6 +20,19 @@ file|"ctype.h"
 end_include
 
 begin_decl_stmt
+name|void
+name|_ct_init
+name|P_
+argument_list|(
+operator|(
+name|uchar
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|uchar
 name|_ct_toupper
 index|[

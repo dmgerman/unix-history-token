@@ -23,6 +23,36 @@ directive|include
 file|"vi.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRUNCH
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NEAR
+value|LINES
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NEAR
+value|(*o_nearscroll&0xff)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* This variable contains the line number that smartdrawtext() knows best */
 end_comment
@@ -1306,7 +1336,7 @@ name|sprintf
 argument_list|(
 name|numstr
 argument_list|,
-literal|"%6ld |"
+literal|"%6ld  "
 argument_list|,
 name|lno
 argument_list|)
@@ -1746,6 +1776,10 @@ condition|(
 name|col
 operator|<
 name|i
+operator|&&
+name|col
+operator|<
+name|limitcol
 condition|)
 do|;
 block|}
@@ -1868,6 +1902,10 @@ condition|(
 name|col
 operator|<
 name|i
+operator|&&
+name|col
+operator|<
+name|limitcol
 condition|)
 do|;
 block|}
@@ -1875,6 +1913,23 @@ block|}
 else|else
 comment|/* tab ending after screen? next line! */
 block|{
+ifdef|#
+directive|ifdef
+name|CRUNCH
+comment|/* needed at least when scrolling the screen right  -nox */
+if|if
+condition|(
+name|clr
+operator|&&
+name|col
+operator|<
+name|limitcol
+condition|)
+name|clrtoeol
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|col
 operator|=
 name|limitcol
@@ -2861,7 +2916,7 @@ name|sprintf
 argument_list|(
 name|numstr
 argument_list|,
-literal|"%6ld |"
+literal|"%6ld  "
 argument_list|,
 name|lno
 argument_list|)
@@ -3588,10 +3643,10 @@ operator|<
 name|topline
 operator|&&
 name|l
-operator|>
+operator|>=
 name|topline
 operator|-
-name|LINES
+name|NEAR
 operator|&&
 operator|(
 name|has_SR
@@ -3698,10 +3753,10 @@ operator|>
 name|topline
 operator|&&
 name|l
-operator|<
+operator|<=
 name|botline
 operator|+
-name|LINES
+name|NEAR
 condition|)
 block|{
 comment|/* near bottom -- scroll up */
@@ -3793,11 +3848,11 @@ name|l
 operator|-
 operator|(
 name|LINES
-operator|/
-literal|2
-operator|)
 operator|-
 literal|1
+operator|)
+operator|/
+literal|2
 expr_stmt|;
 if|if
 condition|(
@@ -3819,6 +3874,10 @@ name|INFINITY
 argument_list|,
 name|INFINITY
 argument_list|)
+expr_stmt|;
+name|smartlno
+operator|=
+literal|0L
 expr_stmt|;
 name|changes
 operator|++

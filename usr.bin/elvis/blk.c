@@ -114,6 +114,22 @@ begin_comment
 comment|/* next block to be recycled */
 end_comment
 
+begin_decl_stmt
+name|void
+name|blkflush
+name|P_
+argument_list|(
+operator|(
+name|REG
+expr|struct
+name|_blkbuf
+operator|*
+name|this
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* This function wipes out all buffers */
 end_comment
@@ -251,6 +267,9 @@ name|this
 operator|->
 name|logical
 operator|==
+operator|(
+name|unsigned
+operator|)
 name|logical
 condition|)
 block|{
@@ -580,6 +599,11 @@ block|{
 name|msg
 argument_list|(
 literal|"Trouble writing to tmp file"
+argument_list|)
+expr_stmt|;
+name|deathtrap
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -919,6 +943,9 @@ index|]
 operator|.
 name|logical
 operator|>=
+operator|(
+name|unsigned
+operator|)
 name|k
 condition|)
 block|{
@@ -1032,10 +1059,64 @@ name|logical
 decl_stmt|;
 comment|/* where to insert the new block */
 block|{
+specifier|static
+name|long
+name|chg
+decl_stmt|;
 name|REG
 name|int
 name|i
 decl_stmt|;
+comment|/* if we're approaching the limit, then give a warning */
+if|if
+condition|(
+name|hdr
+operator|.
+name|n
+index|[
+name|MAXBLKS
+operator|-
+literal|10
+index|]
+operator|&&
+name|chg
+operator|!=
+name|changes
+condition|)
+block|{
+name|chg
+operator|=
+name|changes
+expr_stmt|;
+name|msg
+argument_list|(
+literal|"WARNING: The edit buffer will overflow soon."
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|hdr
+operator|.
+name|n
+index|[
+name|MAXBLKS
+operator|-
+literal|2
+index|]
+condition|)
+block|{
+name|msg
+argument_list|(
+literal|"BAD NEWS: edit buffer overflow -- GOOD NEWS: text preserved"
+argument_list|)
+expr_stmt|;
+name|deathtrap
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* adjust hdr and lnum[] */
 for|for
 control|(
@@ -1127,6 +1208,9 @@ index|]
 operator|.
 name|logical
 operator|>=
+operator|(
+name|unsigned
+operator|)
 name|logical
 condition|)
 block|{
@@ -1310,7 +1394,12 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"Trouble writing header to tmp file "
+literal|"Trouble writing header to tmp file"
+argument_list|)
+expr_stmt|;
+name|deathtrap
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

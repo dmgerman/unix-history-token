@@ -388,6 +388,24 @@ name|MARK
 name|tmp
 decl_stmt|;
 comment|/* a temporary mark, used as arg to redraw() */
+ifndef|#
+directive|ifndef
+name|CRUNCH
+name|int
+name|savenearscroll
+decl_stmt|;
+name|savenearscroll
+operator|=
+operator|*
+name|o_nearscroll
+expr_stmt|;
+operator|*
+name|o_nearscroll
+operator|=
+name|LINES
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* adjust cnt, and maybe *o_scroll, depending of key */
 switch|switch
 condition|(
@@ -668,6 +686,16 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+ifndef|#
+directive|ifndef
+name|CRUNCH
+operator|*
+name|o_nearscroll
+operator|=
+name|savenearscroll
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|m
 return|;

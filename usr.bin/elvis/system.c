@@ -23,6 +23,12 @@ directive|include
 file|"vi.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XDOS
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -31,6 +37,11 @@ modifier|*
 name|environ
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -48,6 +59,12 @@ name|system
 parameter_list|(
 name|cmd
 parameter_list|)
+ifdef|#
+directive|ifdef
+name|__STDC__
+specifier|const
+endif|#
+directive|endif
 name|char
 modifier|*
 name|cmd
@@ -230,25 +247,6 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__GNUC__
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-name|trapint
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|signal
 argument_list|(
 name|SIGINT
@@ -256,8 +254,6 @@ argument_list|,
 name|trapint
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 return|return
 name|status
@@ -554,25 +550,6 @@ operator|&
 name|status
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__GNUC__
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-name|trapint
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|signal
 argument_list|(
 name|SIGINT
@@ -580,8 +557,6 @@ argument_list|,
 name|trapint
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|status
 return|;
@@ -1345,7 +1320,6 @@ block|}
 endif|#
 directive|endif
 block|}
-block|}
 comment|/* delete old text, if any */
 if|if
 condition|(
@@ -1366,6 +1340,7 @@ argument_list|,
 name|to
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else

@@ -269,13 +269,13 @@ if|if
 condition|(
 operator|*
 name|extra
-operator|!=
-literal|'/'
-operator|&&
+operator|==
+literal|' '
+operator|||
 operator|*
 name|extra
-operator|!=
-literal|'?'
+operator|==
+literal|'\n'
 condition|)
 block|{
 name|msg
@@ -866,7 +866,7 @@ block|}
 block|}
 block|}
 comment|/* free the regexp */
-name|free
+name|_free_
 argument_list|(
 name|re
 argument_list|)
@@ -1499,6 +1499,9 @@ name|len
 operator|+
 literal|3
 operator|>
+operator|(
+name|unsigned
+operator|)
 name|BLKSIZE
 condition|)
 block|{
@@ -1569,7 +1572,6 @@ index|]
 operator|=
 literal|' '
 expr_stmt|;
-block|}
 name|tmpblk
 operator|.
 name|c
@@ -1580,6 +1582,33 @@ index|]
 operator|=
 literal|' '
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|tmpblk
+operator|.
+name|c
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|!=
+literal|' '
+condition|)
+block|{
+name|tmpblk
+operator|.
+name|c
+index|[
+name|len
+operator|++
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+block|}
 block|}
 block|}
 name|strcpy
@@ -2716,8 +2745,8 @@ if|if
 condition|(
 operator|*
 name|scan
-operator|>
-literal|0
+operator|>=
+literal|1
 operator|&&
 operator|*
 name|scan
@@ -2846,6 +2875,11 @@ name|exrefresh
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* leave the cursor on the last line printed */
+name|cursor
+operator|=
+name|tomark
+expr_stmt|;
 block|}
 end_function
 

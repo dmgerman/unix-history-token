@@ -87,7 +87,7 @@ comment|/* current position */
 name|long
 name|cnt
 decl_stmt|;
-name|char
+name|int
 name|cmd
 decl_stmt|;
 comment|/* command: either ',' or ';' */
@@ -192,7 +192,7 @@ comment|/* where to search from */
 name|long
 name|cnt
 decl_stmt|;
-name|char
+name|int
 name|key
 decl_stmt|;
 comment|/* what to search for */
@@ -303,7 +303,7 @@ comment|/* where to search from */
 name|long
 name|cnt
 decl_stmt|;
-name|char
+name|int
 name|key
 decl_stmt|;
 comment|/* what to search for */
@@ -415,37 +415,11 @@ comment|/* where to search from */
 name|long
 name|cnt
 decl_stmt|;
-name|char
+name|int
 name|key
 decl_stmt|;
 comment|/* what to search for */
 block|{
-comment|/* skip the adjacent char */
-name|pfetch
-argument_list|(
-name|markline
-argument_list|(
-name|m
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|plen
-operator|<=
-name|markidx
-argument_list|(
-name|m
-argument_list|)
-condition|)
-block|{
-return|return
-name|MARK_UNSET
-return|;
-block|}
-name|m
-operator|++
-expr_stmt|;
 name|m
 operator|=
 name|m_fch
@@ -460,14 +434,10 @@ expr_stmt|;
 if|if
 condition|(
 name|m
-operator|==
+operator|!=
 name|MARK_UNSET
 condition|)
 block|{
-return|return
-name|MARK_UNSET
-return|;
-block|}
 name|prevfwdfn
 operator|=
 name|m_tch
@@ -476,10 +446,12 @@ name|prevrevfn
 operator|=
 name|m_Tch
 expr_stmt|;
+name|m
+operator|--
+expr_stmt|;
+block|}
 return|return
 name|m
-operator|-
-literal|1
 return|;
 block|}
 end_function
@@ -505,29 +477,11 @@ comment|/* where to search from */
 name|long
 name|cnt
 decl_stmt|;
-name|char
+name|int
 name|key
 decl_stmt|;
 comment|/* what to search for */
 block|{
-comment|/* skip the adjacent char */
-if|if
-condition|(
-name|markidx
-argument_list|(
-name|m
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-name|MARK_UNSET
-return|;
-block|}
-name|m
-operator|--
-expr_stmt|;
 name|m
 operator|=
 name|m_Fch
@@ -546,10 +500,6 @@ operator|==
 name|MARK_UNSET
 condition|)
 block|{
-return|return
-name|MARK_UNSET
-return|;
-block|}
 name|prevfwdfn
 operator|=
 name|m_Tch
@@ -558,10 +508,12 @@ name|prevrevfn
 operator|=
 name|m_tch
 expr_stmt|;
+name|m
+operator|++
+expr_stmt|;
+block|}
 return|return
 name|m
-operator|+
-literal|1
 return|;
 block|}
 end_function

@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"ELVIS 1.5, by Steve Kirkendall (23 March 1992)"
+value|"ELVIS 1.7, by Steve Kirkendall (30 December 1992)"
 end_define
 
 begin_define
@@ -27,24 +27,17 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
 begin_if
 if|#
 directive|if
 name|TOS
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__GNUC__
+end_ifndef
 
 begin_define
 define|#
@@ -52,6 +45,11 @@ directive|define
 name|ENOENT
 value|(-AEFILNF)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -168,16 +166,28 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+operator|!
+name|AMIGA
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
-name|COHERENT
+name|COH_286
 end_if
 
 begin_include
@@ -241,6 +251,88 @@ include|#
 directive|include
 file|<signal.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_comment
+comment|/* for [v]sprintf prototype		*/
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_comment
+comment|/* for str* prototypes			*/
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_comment
+comment|/* for atoi, system, malloc, free	*/
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_comment
+comment|/* for vararg definitions		*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|ANY_UNIX
+end_if
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_comment
+comment|/* for read, write, ... prototypes	*/
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
+begin_comment
+comment|/* for wait prototype			*/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*------------------------------------------------------------------------*/
@@ -352,27 +444,37 @@ begin_comment
 comment|/* buffer for the header block */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|BLK
 modifier|*
 name|blkget
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* given index into hdr.c[], reads block */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|BLK
 modifier|*
 name|blkadd
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* inserts a new block into hdr.c[] */
@@ -894,6 +996,16 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
+name|o_nearscroll
+index|[
+literal|3
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
 name|o_novice
 index|[
 literal|1
@@ -917,6 +1029,16 @@ name|char
 name|o_taglength
 index|[
 literal|3
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|o_tags
+index|[
+literal|256
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1237,6 +1359,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_TAGSTACK
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|o_tagstack
+index|[
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*/
 end_comment
@@ -1316,6 +1459,13 @@ define|#
 directive|define
 name|MARK_LAST
 value|((MARK)(nlines * BLKSIZE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MARK_EOF
+value|((MARK)((nlines + 1) * BLKSIZE))
 end_define
 
 begin_define
@@ -1533,6 +1683,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|exitcode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0=not updated, 1=overwritten, else error */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|BLK
 name|tmpblk
 decl_stmt|;
@@ -1656,77 +1817,125 @@ begin_comment
 comment|/* description of how lines were affected */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|fetchline
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* read a given line from tmp file */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|parseptrn
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|REG
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* isolate a regexp in a line */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|paste
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* paste from cut buffer to a given point */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|wildcard
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* expand wildcards in filenames */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|input
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* inserts characters from keyboard */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|linespec
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|REG
+name|char
+operator|*
+operator|,
+name|MARK
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* finds the end of a /regexp/ string */
@@ -1748,13 +1957,18 @@ directive|ifndef
 name|NO_RECYCLE
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|long
 name|allocate
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* allocate a free block of the tmp file */
@@ -1765,101 +1979,153 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|int
+name|SIGTYPE
 name|trapint
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* trap handler for SIGINT */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|int
+name|SIGTYPE
 name|deathtrap
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* trap handler for deadly signals */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|blkdirty
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|BLK
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* marks a block as being "dirty" */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-name|blkflush
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* writes a single dirty block to the disk */
-end_comment
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|blksync
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* forces all "dirty" blocks to disk */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|blkinit
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* resets the block cache to "empty" state */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|beep
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* rings the terminal's bell */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|exrefresh
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* writes text to the screen */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|msg
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* writes a printf-style message to the screen */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_function_decl
 specifier|extern
@@ -1873,325 +2139,936 @@ begin_comment
 comment|/* writes a printf-style message to the screen */
 end_comment
 
-begin_function_decl
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|endmsgs
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* if "manymsgs" is set, then scroll up 1 line */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|garbage
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* reclaims any garbage blocks */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|redraw
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* updates the screen after a change */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|resume_curses
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* puts the terminal in "cbreak" mode */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|beforedo
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* saves current revision before a new change */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|afterdo
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* marks end of a beforedo() change */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|abortdo
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* like "afterdo()" followed by "undo()" */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|undo
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* restores file to previous undo() */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|dumpkey
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* lists key mappings to the screen */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|mapkey
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* defines a new key mapping */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-name|savekeys
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* lists key mappings to a file */
-end_comment
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|redrawrange
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|long
+operator|,
+name|long
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* records clues from modify.c */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cut
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* saves text in a cut buffer */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|delete
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* deletes text */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|add
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* adds text */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|change
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* deletes text, and then adds other text */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cutswitch
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* updates cut buffers when we switch files */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-name|do_abbr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* defines or lists abbreviations */
-end_comment
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|do_digraph
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* defines or lists digraphs */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|exstring
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* execute a string as EX commands */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|dumpopts
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_comment
+comment|/* display current option settings on the screen */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|setopts
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_comment
+comment|/* assign new values to options */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|saveopts
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_comment
+comment|/* save current option values to a given fd */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|savedigs
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|void
-name|saveabbr
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* save current non-standard digraphs to fd */
+end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|savecolor
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_comment
+comment|/* save current color settings (if any) to fd */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|cutname
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|void
-name|cutname
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* select cut buffer for next cut/paste */
+end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|initopts
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_comment
+comment|/* initialize options */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|cutend
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* free all cut buffers& delete temp files */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|storename
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* stamp temp file with pathname of text file */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tmpstart
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* load a text file into edit buffer */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tmpsave
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* write edit buffer out to text file */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tmpend
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* call tmpsave(), and then tmpabort */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tmpabort
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* abandon the current edit buffer */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|savemaps
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* write current :map or :ab commands to fd */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ansicolor
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* emit ANSI color command to terminal */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|filter
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* I/O though another program */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|getkey
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* return a keystroke, interpretting maps */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|vgets
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* read a single line from keyboard */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|doexrc
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* execute a string as a sequence of EX commands */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cb2str
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* return a string containing cut buffer's contents */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ansiquit
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* neutralize previous ansicolor() call */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ttyread
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* read from keyboard with optional timeout */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tgetent
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* start termcap */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tgetnum
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* get a termcap number */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tgetflag
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* get a termcap boolean */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|getsize
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* determine how big the screen is */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|endcolor
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* used during color output */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|getabkey
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* like getkey(), but also does abbreviations */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|idx2col
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|REG
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* returns column# of a given MARK */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cutneeds
+name|P_
+argument_list|(
+operator|(
+name|BLK
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* returns bitmap of blocks needed to hold cutbuffer text */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|execmap
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* replaces "raw" keys with "mapped" keys */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -2265,133 +3142,228 @@ begin_comment
 comment|/* location& number and returns a mark for the destination.		  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_updnto
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* k j G */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_right
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* h */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_left
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* l */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_tocol
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* | */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_front
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ^ */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_rear
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* $ */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_fword
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* w */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_bword
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* b */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_eword
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* e */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_paragraph
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* { } [[ ]] */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_match
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* % */
@@ -2403,13 +3375,22 @@ directive|ifndef
 name|NO_SENTENCE
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_sentence
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ( ) */
@@ -2420,13 +3401,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_tomark
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 'm */
@@ -2438,13 +3428,23 @@ directive|ifndef
 name|NO_EXTENSIONS
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_wsrch
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|MARK
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ^A */
@@ -2455,49 +3455,62 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_nsrch
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* n */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|MARK
-name|m_Nsrch
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* N */
-end_comment
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_fsrch
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* /regexp */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_bsrch
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ?regexp */
@@ -2509,61 +3522,106 @@ directive|ifndef
 name|NO_CHARSEARCH
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m__ch
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ; , */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_fch
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* f */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_tch
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* t */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_Fch
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* F */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_Tch
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* T */
@@ -2574,37 +3632,64 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_row
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* H L M */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_z
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* z */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|m_scroll
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ^B ^F ^E ^Y ^U ^D */
@@ -2614,13 +3699,23 @@ begin_comment
 comment|/* Some stuff that is used by movement functions... */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|adjmove
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|REG
+name|MARK
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* a helper fn, used by move fns */
@@ -2689,21 +3784,33 @@ begin_comment
 comment|/* text of previous line, if valid */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|pfetch
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 name|digraph
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* This is used to build a MARK that corresponds to a specific point in the  * line that was most recently pfetch'ed.  */
@@ -3038,8 +4145,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CMD_PRESERVE
+name|CMD_POP
 value|28
+end_define
+
+begin_comment
+comment|/* "pop a position off the tagstack" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMD_PRESERVE
+value|29
 end_define
 
 begin_comment
@@ -3050,7 +4168,7 @@ begin_define
 define|#
 directive|define
 name|CMD_PREVIOUS
-value|29
+value|30
 end_define
 
 begin_comment
@@ -3061,7 +4179,7 @@ begin_define
 define|#
 directive|define
 name|CMD_PRINT
-value|30
+value|31
 end_define
 
 begin_comment
@@ -3072,7 +4190,7 @@ begin_define
 define|#
 directive|define
 name|CMD_PUT
-value|31
+value|32
 end_define
 
 begin_comment
@@ -3083,7 +4201,7 @@ begin_define
 define|#
 directive|define
 name|CMD_QUIT
-value|32
+value|33
 end_define
 
 begin_comment
@@ -3094,7 +4212,7 @@ begin_define
 define|#
 directive|define
 name|CMD_READ
-value|33
+value|34
 end_define
 
 begin_comment
@@ -3105,7 +4223,7 @@ begin_define
 define|#
 directive|define
 name|CMD_RECOVER
-value|34
+value|35
 end_define
 
 begin_comment
@@ -3116,7 +4234,7 @@ begin_define
 define|#
 directive|define
 name|CMD_REWIND
-value|35
+value|36
 end_define
 
 begin_comment
@@ -3127,7 +4245,7 @@ begin_define
 define|#
 directive|define
 name|CMD_SET
-value|36
+value|37
 end_define
 
 begin_comment
@@ -3138,7 +4256,7 @@ begin_define
 define|#
 directive|define
 name|CMD_SHELL
-value|37
+value|38
 end_define
 
 begin_comment
@@ -3149,7 +4267,7 @@ begin_define
 define|#
 directive|define
 name|CMD_SHIFTL
-value|38
+value|39
 end_define
 
 begin_comment
@@ -3160,7 +4278,7 @@ begin_define
 define|#
 directive|define
 name|CMD_SHIFTR
-value|39
+value|40
 end_define
 
 begin_comment
@@ -3171,7 +4289,7 @@ begin_define
 define|#
 directive|define
 name|CMD_SOURCE
-value|40
+value|41
 end_define
 
 begin_comment
@@ -3182,7 +4300,7 @@ begin_define
 define|#
 directive|define
 name|CMD_STOP
-value|41
+value|42
 end_define
 
 begin_comment
@@ -3193,7 +4311,7 @@ begin_define
 define|#
 directive|define
 name|CMD_SUBAGAIN
-value|42
+value|43
 end_define
 
 begin_comment
@@ -3204,7 +4322,7 @@ begin_define
 define|#
 directive|define
 name|CMD_SUBSTITUTE
-value|43
+value|44
 end_define
 
 begin_comment
@@ -3215,7 +4333,7 @@ begin_define
 define|#
 directive|define
 name|CMD_SUSPEND
-value|44
+value|45
 end_define
 
 begin_comment
@@ -3226,7 +4344,7 @@ begin_define
 define|#
 directive|define
 name|CMD_TR
-value|45
+value|46
 end_define
 
 begin_comment
@@ -3237,7 +4355,7 @@ begin_define
 define|#
 directive|define
 name|CMD_TAG
-value|46
+value|47
 end_define
 
 begin_comment
@@ -3248,7 +4366,7 @@ begin_define
 define|#
 directive|define
 name|CMD_UNABBR
-value|47
+value|48
 end_define
 
 begin_comment
@@ -3259,7 +4377,7 @@ begin_define
 define|#
 directive|define
 name|CMD_UNDO
-value|48
+value|49
 end_define
 
 begin_comment
@@ -3270,7 +4388,7 @@ begin_define
 define|#
 directive|define
 name|CMD_UNMAP
-value|49
+value|50
 end_define
 
 begin_comment
@@ -3281,7 +4399,7 @@ begin_define
 define|#
 directive|define
 name|CMD_VERSION
-value|50
+value|51
 end_define
 
 begin_comment
@@ -3292,7 +4410,7 @@ begin_define
 define|#
 directive|define
 name|CMD_VGLOBAL
-value|51
+value|52
 end_define
 
 begin_comment
@@ -3303,7 +4421,7 @@ begin_define
 define|#
 directive|define
 name|CMD_VISUAL
-value|52
+value|53
 end_define
 
 begin_comment
@@ -3314,7 +4432,7 @@ begin_define
 define|#
 directive|define
 name|CMD_WQUIT
-value|53
+value|54
 end_define
 
 begin_comment
@@ -3325,7 +4443,7 @@ begin_define
 define|#
 directive|define
 name|CMD_WRITE
-value|54
+value|55
 end_define
 
 begin_comment
@@ -3336,7 +4454,7 @@ begin_define
 define|#
 directive|define
 name|CMD_XIT
-value|55
+value|56
 end_define
 
 begin_comment
@@ -3347,24 +4465,18 @@ begin_define
 define|#
 directive|define
 name|CMD_YANK
-value|56
+value|57
 end_define
 
 begin_comment
 comment|/* "copy the selected text into the cut buffer" */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|CMD_DEBUG
-value|57
+value|58
 end_define
 
 begin_comment
@@ -3375,17 +4487,12 @@ begin_define
 define|#
 directive|define
 name|CMD_VALIDATE
-value|58
+value|59
 end_define
 
 begin_comment
 comment|/* check for internal consistency */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef
@@ -3394,45 +4501,89 @@ name|CMD
 typedef|;
 end_typedef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|ex
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|vi
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|doexcmd
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_append
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_args
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -3440,26 +4591,54 @@ directive|ifndef
 name|NO_AT
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_at
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_cd
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -3467,26 +4646,54 @@ directive|ifndef
 name|NO_COLOR
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_color
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_delete
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -3494,26 +4701,54 @@ directive|ifndef
 name|NO_DIGRAPH
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_digraph
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_edit
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -3521,50 +4756,120 @@ directive|ifndef
 name|NO_ERRLIST
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_errlist
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_file
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_global
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_join
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_mark
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -3572,26 +4877,54 @@ directive|ifndef
 name|NO_ERRLIST
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_make
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_map
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -3599,138 +4932,395 @@ directive|ifndef
 name|NO_MKEXRC
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_mkexrc
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_next
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_TAGSTACK
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|cmd_pop
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_print
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_put
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_read
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_set
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_shell
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_shift
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_source
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_substitute
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_tag
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_undo
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_version
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_write
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_xit
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_move
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -3738,21 +5328,49 @@ directive|ifdef
 name|DEBUG
 end_ifdef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_debug
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_validate
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -3765,13 +5383,27 @@ directive|ifdef
 name|SIGTSTP
 end_ifdef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|cmd_suspend
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|,
+name|CMD
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -3786,325 +5418,518 @@ begin_comment
 comment|/* These are used to handle VI commands 				*/
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_1ex
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* : */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_mark
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* m */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_quit
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Q */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_redraw
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ^L ^R */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_ulcase
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ~ */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_undo
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* u */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_xchar
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* x X */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_replace
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* r */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_overtype
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* R */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_selcut
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* " */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_paste
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* p P */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_yank
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* y Y */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_delete
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* d D */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_join
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* J */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_insert
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* a A i I o O */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_change
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* c C */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_subst
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* s */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_lshift
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*< */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_rshift
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*> */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_reformat
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* = */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_filter
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ! */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_status
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ^G */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_switch
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ^^ */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_tag
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|MARK
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ^] */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_xit
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ZZ */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_undoline
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* U */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_again
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*& */
@@ -4116,25 +5941,45 @@ directive|ifndef
 name|NO_EXTENSIONS
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_keyword
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|MARK
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* K */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_increment
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|MARK
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* * */
@@ -4151,13 +5996,18 @@ directive|ifndef
 name|NO_ERRLIST
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_errlist
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* * */
@@ -4174,13 +6024,22 @@ directive|ifndef
 name|NO_AT
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_at
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* @ */
@@ -4197,13 +6056,18 @@ directive|ifdef
 name|SIGTSTP
 end_ifdef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_suspend
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ^Z */
@@ -4220,16 +6084,55 @@ directive|ifndef
 name|NO_POPUP
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_popup
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|MARK
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* \ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_TAGSTACK
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|MARK
+name|v_pop
+name|P_
+argument_list|(
+operator|(
+name|MARK
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ^T */
 end_comment
 
 begin_endif
@@ -4340,6 +6243,28 @@ begin_comment
 comment|/* set the "dot" variables, for the "." cmd */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FINL
+value|0x100
+end_define
+
+begin_comment
+comment|/* final testing, more strict! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NWRP
+value|0x200
+end_define
+
+begin_comment
+comment|/* no line-wrap (used for 'w' and 'W') */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -4350,7 +6275,7 @@ begin_define
 define|#
 directive|define
 name|VIZ
-value|0x100
+value|0x400
 end_define
 
 begin_comment
@@ -4599,13 +6524,25 @@ name|V_linemd
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|MARK
 name|v_start
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P_
+argument_list|(
+operator|(
+name|MARK
+name|m
+operator|,
+name|long
+name|cnt
+operator|,
+name|int
+name|cmd
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -4638,14 +6575,44 @@ parameter_list|)
 value|dbfree(ptr, __FILE__, __LINE__)
 end_define
 
-begin_function_decl
+begin_define
+define|#
+directive|define
+name|checkmem
+parameter_list|()
+value|dbcheckmem(__FILE__, __LINE__)
+end_define
+
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|dbmalloc
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|checkmem
 parameter_list|()
-function_decl|;
-end_function_decl
+end_define
 
 begin_endif
 endif|#

@@ -50,27 +50,17 @@ directive|include
 file|"vi.h"
 end_include
 
-begin_extern
-extern|extern		trapint(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_function_decl
+specifier|extern
+name|SIGTYPE
+name|trapint
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* defined below */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|jmp_buf
@@ -318,13 +308,6 @@ name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|deathtrap
 argument_list|)
 expr_stmt|;
@@ -340,13 +323,6 @@ name|signal
 argument_list|(
 name|SIGILL
 argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|deathtrap
 argument_list|)
 expr_stmt|;
@@ -359,13 +335,6 @@ name|signal
 argument_list|(
 name|SIGBUS
 argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|deathtrap
 argument_list|)
 expr_stmt|;
@@ -378,13 +347,6 @@ name|signal
 argument_list|(
 name|SIGSEGV
 argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|deathtrap
 argument_list|)
 expr_stmt|;
@@ -397,13 +359,6 @@ name|signal
 argument_list|(
 name|SIGSYS
 argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|deathtrap
 argument_list|)
 expr_stmt|;
@@ -419,13 +374,6 @@ name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|deathtrap
 argument_list|)
 expr_stmt|;
@@ -438,13 +386,6 @@ name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|deathtrap
 argument_list|)
 expr_stmt|;
@@ -457,13 +398,6 @@ name|signal
 argument_list|(
 name|SIGUSR1
 argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|deathtrap
 argument_list|)
 expr_stmt|;
@@ -476,13 +410,6 @@ name|signal
 argument_list|(
 name|SIGUSR2
 argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|deathtrap
 argument_list|)
 expr_stmt|;
@@ -944,7 +871,7 @@ case|:
 comment|/* recover */
 name|msg
 argument_list|(
-literal|"Use the `elvisrecover` program to recover lost files"
+literal|"Use the `elvrec` program to recover lost files"
 argument_list|)
 expr_stmt|;
 name|endmsgs
@@ -958,7 +885,7 @@ argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1406,9 +1333,12 @@ directive|ifdef
 name|HMEXRC
 name|str
 operator|=
-name|getenv
+name|gethome
 argument_list|(
-literal|"HOME"
+name|argv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -1569,7 +1499,7 @@ condition|)
 block|{
 name|cmd_tag
 argument_list|(
-name|MARK_FIRST
+name|MARK_UNSET
 argument_list|,
 name|MARK_FIRST
 argument_list|,
@@ -1676,13 +1606,6 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|trapint
 argument_list|)
 expr_stmt|;
@@ -1764,7 +1687,7 @@ argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|exitcode
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -1776,7 +1699,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
-name|int
+name|SIGTYPE
 name|trapint
 parameter_list|(
 name|signo
@@ -1807,27 +1730,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|TURBOC
-operator|||
-name|__GNUC__
-name|signal
-argument_list|(
-name|signo
-argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-name|trapint
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|signal
 argument_list|(
 name|signo
@@ -1835,8 +1737,6 @@ argument_list|,
 name|trapint
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|doingglobal
 operator|=
 name|FALSE
@@ -1848,9 +1748,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+comment|/*NOTREACHED*/
 block|}
 end_function
 
@@ -2179,14 +2077,15 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|init_digraphs
-argument_list|()
+parameter_list|()
 block|{
 name|int
 name|i
-block|;
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -2225,16 +2124,13 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 literal|0
 return|;
-end_return
+block|}
+end_function
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

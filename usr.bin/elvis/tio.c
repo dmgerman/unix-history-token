@@ -29,6 +29,19 @@ directive|include
 file|"ctype.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|showmsg
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* This function reads in a line from the terminal. */
 end_comment
@@ -43,7 +56,7 @@ name|buf
 parameter_list|,
 name|bsize
 parameter_list|)
-name|char
+name|int
 name|prompt
 decl_stmt|;
 comment|/* the prompt character, or '\0' for none */
@@ -182,7 +195,8 @@ name|word
 operator|>=
 literal|0
 operator|&&
-name|isalnum
+operator|!
+name|isspace
 argument_list|(
 name|buf
 index|[
@@ -252,26 +266,12 @@ block|}
 endif|#
 directive|endif
 comment|/* some special conversions */
-if|if
-condition|(
-name|ch
-operator|==
-name|ctrl
-argument_list|(
-literal|'D'
-argument_list|)
-operator|&&
-name|len
-operator|==
+if|#
+directive|if
 literal|0
-condition|)
-name|ch
-operator|=
-name|ctrl
-argument_list|(
-literal|'['
-argument_list|)
-expr_stmt|;
+block|if (ch == ctrl('D')&& len == 0) 			ch = ctrl('[');
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|NO_DIGRAPH
@@ -350,13 +350,19 @@ break|break;
 case|case
 name|ctrl
 argument_list|(
-literal|'['
+literal|'D'
 argument_list|)
 case|:
 return|return
 operator|-
 literal|1
 return|;
+case|case
+name|ctrl
+argument_list|(
+literal|'['
+argument_list|)
+case|:
 case|case
 literal|'\n'
 case|:
@@ -379,6 +385,56 @@ expr_stmt|;
 goto|goto
 name|BreakBreak
 goto|;
+ifndef|#
+directive|ifndef
+name|CRUNCH
+case|case
+name|ctrl
+argument_list|(
+literal|'U'
+argument_list|)
+case|:
+while|while
+condition|(
+name|len
+operator|>
+literal|0
+condition|)
+block|{
+name|len
+operator|--
+expr_stmt|;
+while|while
+condition|(
+name|widths
+index|[
+name|len
+index|]
+operator|--
+operator|>
+literal|0
+condition|)
+block|{
+name|qaddch
+argument_list|(
+literal|'\b'
+argument_list|)
+expr_stmt|;
+name|qaddch
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+name|qaddch
+argument_list|(
+literal|'\b'
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'\b'
 case|:
@@ -773,11 +829,35 @@ begin_comment
 comment|/* Write a message in an appropriate way.  This should really be a varargs  * function, but there is no such thing as vwprintw.  Hack!!!  *  * In MODE_EX or MODE_COLON, the message is written immediately, with a  * newline at the end.  *  * In MODE_VI, the message is stored in a character buffer.  It is not  * displayed until getkey() is called.  msg() will call getkey() itself,  * if necessary, to prevent messages from being lost.  *  * msg("")		- clears the message line  * msg("%s %d", ...)	- does a printf onto the message line  */
 end_comment
 
-begin_comment
-comment|/*VARARGS1*/
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
 
 begin_function
+name|void
+name|msg
+parameter_list|(
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|void
 name|msg
 parameter_list|(
@@ -817,6 +897,8 @@ decl_stmt|,
 name|arg7
 decl_stmt|;
 block|{
+endif|#
+directive|endif
 if|if
 condition|(
 name|mode
@@ -824,6 +906,20 @@ operator|!=
 name|MODE_VI
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__STDC__
+name|vsprintf
+argument_list|(
+name|pmsg
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|sprintf
 argument_list|(
 name|pmsg
@@ -845,6 +941,8 @@ argument_list|,
 name|arg7
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|qaddstr
 argument_list|(
 name|pmsg
@@ -874,6 +972,20 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* real message */
+ifdef|#
+directive|ifdef
+name|__STDC__
+name|vsprintf
+argument_list|(
+name|pmsg
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|sprintf
 argument_list|(
 name|pmsg
@@ -895,6 +1007,8 @@ argument_list|,
 name|arg7
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|*
@@ -907,14 +1021,18 @@ name|TRUE
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|__STDC__
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
-end_function
-
-begin_comment
 comment|/* This function calls refresh() if the option exrefresh is set */
-end_comment
-
-begin_function
 name|void
 name|exrefresh
 parameter_list|()
@@ -978,13 +1096,7 @@ name|FALSE
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* This structure is used to store maps and abbreviations.  The distinction  * between them is that maps are stored in the list referenced by the "maps"  * pointer, while abbreviations are referenced by the "abbrs" pointer.  */
-end_comment
-
-begin_typedef
 typedef|typedef
 struct|struct
 name|_map
@@ -1021,9 +1133,6 @@ comment|/* the "cooked" characters */
 block|}
 name|MAP
 typedef|;
-end_typedef
-
-begin_decl_stmt
 specifier|static
 name|char
 name|keybuf
@@ -1031,93 +1140,45 @@ index|[
 name|KEYBUFSIZE
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|cend
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* end of input characters */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|int
 name|user
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* from user through end are chars typed by user */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|int
 name|next
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* index of the next character to be returned */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|MAP
 modifier|*
 name|match
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* the matching map, found by countmatch() */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|MAP
 modifier|*
 name|maps
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* the map table */
-end_comment
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|NO_ABBR
-end_ifndef
-
-begin_decl_stmt
 specifier|static
 name|MAP
 modifier|*
 name|abbrs
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* the abbreviation table */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* ring the terminal's bell */
-end_comment
-
-begin_function
 name|void
 name|beep
 parameter_list|()
@@ -1143,11 +1204,13 @@ operator|*
 name|o_errorbells
 condition|)
 block|{
-name|ttywrite
+name|tputs
 argument_list|(
 literal|"\007"
 argument_list|,
 literal|1
+argument_list|,
+name|faddch
 argument_list|)
 expr_stmt|;
 block|}
@@ -1159,13 +1222,7 @@ operator|=
 name|cend
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* This function replaces a "rawin" character sequence with the "cooked" version,  * by modifying the internal type-ahead buffer.  */
-end_comment
-
-begin_function
 name|void
 name|execmap
 parameter_list|(
@@ -1525,13 +1582,16 @@ block|}
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_comment
+ifndef|#
+directive|ifndef
+name|NO_CURSORSHAPE
+comment|/* made global so that suspend_curses() can reset it.  -nox */
+name|int
+name|oldcurs
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* This function calls ttyread().  If necessary, it will also redraw the screen,  * change the cursor shape, display the mode, and update the ruler.  If the  * number of characters read is 0, and we didn't time-out, then it exits because  * we've apparently reached the end of an EX script.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|fillkeybuf
@@ -1575,15 +1635,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|str
-decl_stmt|;
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|NO_CURSORSHAPE
-specifier|static
-name|int
-name|oldcurs
 decl_stmt|;
 endif|#
 directive|endif
@@ -1759,7 +1810,7 @@ name|WHEN_REP1
 condition|)
 name|str
 operator|=
-literal|" Rep 1 "
+literal|"Replc 1"
 expr_stmt|;
 elseif|else
 if|if
@@ -1770,7 +1821,7 @@ name|WHEN_CUT
 condition|)
 name|str
 operator|=
-literal|"BufName"
+literal|"Buffer "
 expr_stmt|;
 elseif|else
 if|if
@@ -1781,7 +1832,7 @@ name|WHEN_MARK
 condition|)
 name|str
 operator|=
-literal|"Mark AZ"
+literal|" Mark  "
 expr_stmt|;
 elseif|else
 if|if
@@ -2018,7 +2069,7 @@ argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|exitcode
 argument_list|)
 expr_stmt|;
 block|}
@@ -2034,13 +2085,7 @@ return|return
 name|nkeys
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* This function counts the number of maps that could match the characters  * between&keybuf[next] and&keybuf[cend], including incomplete matches.  * The longest comlete match is remembered via the "match" variable.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|countmatch
@@ -2187,8 +2232,10 @@ name|next
 argument_list|)
 condition|)
 block|{
+comment|/* increment by 2 instead of 1 so that, in the 				 * event that we have a partial match with a 				 * single map, we don't mistakenly assume we 				 * have resolved the map yet. 				 */
 name|count
-operator|++
+operator|+=
+literal|2
 expr_stmt|;
 block|}
 block|}
@@ -2197,19 +2244,10 @@ return|return
 name|count
 return|;
 block|}
-end_function
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|NO_ABBR
-end_ifndef
-
-begin_comment
 comment|/* This function checks to see whether a word is an abbreviation.  If it is,  * then an appropriate number of backspoace characters is inserted into the  * type-ahead buffer, followed by the expanded form of the abbreviation.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|expandabbr
@@ -2250,6 +2288,13 @@ name|ctrl
 argument_list|(
 literal|'V'
 argument_list|)
+operator|||
+name|keybuf
+index|[
+name|next
+index|]
+operator|==
+literal|'\b'
 condition|)
 block|{
 return|return;
@@ -2350,18 +2395,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* This function calls getabkey() without attempting to expand abbreviations */
-end_comment
-
-begin_function
 name|int
 name|getkey
 parameter_list|(
@@ -2383,13 +2419,7 @@ literal|0
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* This is it.  This function returns keystrokes one-at-a-time, after mapping  * and abbreviations have been taken into account.  */
-end_comment
-
-begin_function
 name|int
 name|getabkey
 parameter_list|(
@@ -2505,7 +2535,7 @@ comment|/* try to map the key, unless already mapped and not ":set noremap" */
 if|if
 condition|(
 name|next
-operator|>=
+operator|<=
 name|user
 operator|||
 operator|*
@@ -2594,6 +2624,25 @@ literal|1
 condition|)
 do|;
 block|}
+comment|/* ERASEKEY should always be mapped to '\b'. */
+if|if
+condition|(
+name|keybuf
+index|[
+name|next
+index|]
+operator|==
+name|ERASEKEY
+condition|)
+block|{
+name|keybuf
+index|[
+name|next
+index|]
+operator|=
+literal|'\b'
+expr_stmt|;
+block|}
 ifndef|#
 directive|ifndef
 name|NO_ABBR
@@ -2629,25 +2678,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* ERASEKEY should always be mapped to '\b'. */
-if|if
-condition|(
-name|keybuf
-index|[
-name|next
-index|]
-operator|==
-name|ERASEKEY
-condition|)
-block|{
-name|keybuf
-index|[
-name|next
-index|]
-operator|=
-literal|'\b'
-expr_stmt|;
-block|}
 comment|/* return the next key */
 return|return
 name|keybuf
@@ -2657,13 +2687,7 @@ operator|++
 index|]
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* This function maps or unmaps a key */
-end_comment
-
-begin_function
 name|void
 name|mapkey
 parameter_list|(
@@ -2685,7 +2709,7 @@ modifier|*
 name|cooked
 decl_stmt|;
 comment|/* after mapping -- or NULL to remove map */
-name|short
+name|int
 name|when
 decl_stmt|;
 comment|/* bitmap of when mapping should happen */
@@ -2772,6 +2796,15 @@ argument_list|,
 name|scan
 operator|->
 name|rawin
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|rawin
+argument_list|,
+name|scan
+operator|->
+name|cooked
 argument_list|)
 operator|||
 operator|!
@@ -2895,11 +2928,16 @@ name|rawin
 operator|=
 name|malloc
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|scan
 operator|->
 name|len
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -2958,7 +2996,7 @@ block|}
 else|else
 comment|/* recycle old structure */
 block|{
-name|free
+name|_free_
 argument_list|(
 name|scan
 operator|->
@@ -2972,12 +3010,17 @@ name|cooked
 operator|=
 name|malloc
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|strlen
 argument_list|(
 name|cooked
 argument_list|)
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -3028,34 +3071,28 @@ name|next
 expr_stmt|;
 block|}
 comment|/* free it, and the strings that it refers to */
-name|free
+name|_free_
 argument_list|(
 name|scan
 operator|->
 name|rawin
 argument_list|)
 expr_stmt|;
-name|free
+name|_free_
 argument_list|(
 name|scan
 operator|->
 name|cooked
 argument_list|)
 expr_stmt|;
-name|free
+name|_free_
 argument_list|(
 name|scan
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* This function returns a printable version of a string.  It uses tmpblk.c */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|printable
@@ -3187,13 +3224,7 @@ operator|.
 name|c
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* This function displays the contents of either the map table or the  * abbreviation table.  User commands call this function as follows:  *	:map	dumpkey(WHEN_VICMD, FALSE);  *	:map!	dumpkey(WHEN_VIREP|WHEN_VIINP, FALSE);  *	:abbr	dumpkey(WHEN_VIINP|WHEN_VIREP, TRUE);  *	:abbr!	dumpkey(WHEN_EX|WHEN_VIINP|WHEN_VIREP, TRUE);  */
-end_comment
-
-begin_function
 name|void
 name|dumpkey
 parameter_list|(
@@ -3426,27 +3457,19 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|NO_MKEXRC
-end_ifndef
-
-begin_expr_stmt
 specifier|static
+name|void
 name|safequote
-argument_list|(
-argument|str
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|str
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|char
+modifier|*
+name|str
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -3514,59 +3537,32 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
 comment|/* This function saves the contents of either the map table or the  * abbreviation table into a file.  Both the "bang" and "no bang" versions  * are saved.  *	:map	dumpkey(WHEN_VICMD, FALSE);  *	:map!	dumpkey(WHEN_VIREP|WHEN_VIINP, FALSE);  *	:abbr	dumpkey(WHEN_VIINP|WHEN_VIREP, TRUE);  *	:abbr!	dumpkey(WHEN_EX|WHEN_VIINP|WHEN_VIREP, TRUE);  */
-end_comment
-
-begin_macro
+name|void
 name|savemaps
-argument_list|(
-argument|fd
-argument_list|,
-argument|abbr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fd
+parameter_list|,
+name|abbr
+parameter_list|)
 name|int
 name|fd
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* file descriptor of an open file to write to */
-end_comment
-
-begin_decl_stmt
 name|int
 name|abbr
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* boolean: do abbr table? (else do map table) */
-end_comment
-
-begin_block
 block|{
 name|MAP
 modifier|*
 name|scan
-decl_stmt|;
-name|char
-modifier|*
-name|str
 decl_stmt|;
 name|int
 name|bang
 decl_stmt|;
 name|int
 name|when
-decl_stmt|;
-name|int
-name|len
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -3861,7 +3857,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

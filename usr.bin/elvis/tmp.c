@@ -4,7 +4,7 @@ comment|/* tmp.c */
 end_comment
 
 begin_comment
-comment|/* Author:  *	Steve Kirkendall  *	14407 SW Teal Blvd. #C  *	Beaverton, OR 97005  *	kirkenda@cs.pdx.edu  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00041  * --------------------         -----   ----------------------  *  *  12 Aug 92	Bob Wilcox		Fixed named yank buffer problem  */
+comment|/* Author:  *	Steve Kirkendall  *	14407 SW Teal Blvd. #C  *	Beaverton, OR 97005  *	kirkenda@cs.pdx.edu  */
 end_comment
 
 begin_comment
@@ -648,15 +648,6 @@ directive|if
 name|AMIGA
 operator|||
 name|MSDOS
-operator|||
-operator|(
-name|TOS
-operator|&&
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|)
 if|if
 condition|(
 operator|*
@@ -676,12 +667,25 @@ directive|endif
 if|#
 directive|if
 name|TOS
-operator|&&
-operator|!
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__GNUC__
-argument_list|)
+if|if
+condition|(
+operator|*
+name|o_readonly
+operator|||
+operator|!
+operator|(
+name|statb
+operator|.
+name|st_mode
+operator|&
+name|S_IWRITE
+operator|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 operator|*
@@ -695,6 +699,8 @@ operator|&
 name|S_IJRON
 operator|)
 condition|)
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|#
@@ -796,6 +802,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* make a name for the tmp file */
+do|do
+block|{
 name|tmpnum
 operator|++
 expr_stmt|;
@@ -804,7 +812,7 @@ directive|if
 name|MSDOS
 operator|||
 name|TOS
-comment|/* MS-Dos doesn't allow multiple slashes, but supports drives 	 * with current directories. 	 * This relies on TMPNAME beginning with "%s\\"!!!! 	 */
+comment|/* MS-Dos doesn't allow multiple slashes, but supports drives 		 * with current directories. 		 * This relies on TMPNAME beginning with "%s\\"!!!! 		 */
 name|strcpy
 argument_list|(
 name|tmpname
@@ -878,8 +886,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* make sure nobody else is editing the same file */
-if|if
+block|}
+do|while
 condition|(
 name|access
 argument_list|(
@@ -890,15 +898,8 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|FAIL
-argument_list|(
-literal|"Temp file \"%s\" already exists?"
-argument_list|,
-name|tmpname
-argument_list|)
-expr_stmt|;
-block|}
+do|;
+comment|/* !!! RACE CONDITION HERE - some other process with the same PID could 	 * create the temp file between the access() call and the creat() call. 	 * This could happen in a couple of ways: 	 * - different workstation may share the same temp dir via NFS.  Each 	 *   workstation could have a process with the same number. 	 * - The DOS version may be running multiple times on the same physical 	 *   machine in different virtual machines.  The DOS pid number will 	 *   be the same on all virtual machines. 	 * 	 * This race condition could be fixed by replacing access(tmpname, 0) 	 * with open(tmpname, O_CREAT|O_EXCL, 0600), if we could only be sure 	 * that open() *always* used modern UNIX semantics. 	 */
 comment|/* create the temp file */
 if|#
 directive|if
@@ -959,6 +960,8 @@ literal|1
 return|;
 block|}
 comment|/* allocate space for the header in the file */
+if|if
+condition|(
 name|write
 argument_list|(
 name|tmpfd
@@ -972,7 +975,9 @@ name|unsigned
 operator|)
 name|BLKSIZE
 argument_list|)
-expr_stmt|;
+operator|<
+name|BLKSIZE
+operator|||
 name|write
 argument_list|(
 name|tmpfd
@@ -986,7 +991,18 @@ name|unsigned
 operator|)
 name|BLKSIZE
 argument_list|)
+operator|<
+name|BLKSIZE
+condition|)
+block|{
+name|FAIL
+argument_list|(
+literal|"Error writing headers to \"%s\""
+argument_list|,
+name|tmpname
+argument_list|)
 expr_stmt|;
+block|}
 ifndef|#
 directive|ifndef
 name|NO_RECYCLE
@@ -1269,8 +1285,8 @@ name|c
 index|[
 name|k
 index|]
-operator|>
-literal|0
+operator|>=
+literal|1
 condition|)
 block|{
 if|if
@@ -1457,6 +1473,27 @@ expr_stmt|;
 block|}
 block|}
 comment|/* allocate next buffer */
+if|if
+condition|(
+name|i
+operator|>=
+name|MAXBLKS
+operator|-
+literal|2
+condition|)
+block|{
+name|FAIL
+argument_list|(
+literal|"File too big.  Limit is approx %ld kbytes."
+argument_list|,
+name|MAXBLKS
+operator|*
+name|BLKSIZE
+operator|/
+literal|1024L
+argument_list|)
+expr_stmt|;
+block|}
 name|next
 operator|=
 name|blkget
@@ -1916,9 +1953,6 @@ name|FALSE
 return|;
 block|}
 comment|/* can't rewrite a READONLY file */
-if|#
-directive|if
-name|AMIGA
 if|if
 condition|(
 operator|!
@@ -1939,26 +1973,6 @@ operator|&&
 operator|!
 name|bang
 condition|)
-else|#
-directive|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|filename
-argument_list|,
-name|origname
-argument_list|)
-operator|&&
-operator|*
-name|o_readonly
-operator|&&
-operator|!
-name|bang
-condition|)
-endif|#
-directive|endif
 block|{
 name|msg
 argument_list|(
@@ -2273,6 +2287,23 @@ name|significant
 operator|=
 name|FALSE
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|origname
+argument_list|,
+name|filename
+argument_list|)
+condition|)
+block|{
+name|exitcode
+operator|&=
+operator|~
+literal|1
+expr_stmt|;
+block|}
 comment|/* report lines& characters */
 if|#
 directive|if
@@ -2403,28 +2434,6 @@ expr_stmt|;
 name|initflags
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BROKEN_YANK_BUFFERS
-comment|/* 12 Aug 92*/
-name|close
-argument_list|(
-name|tmpfd
-argument_list|)
-expr_stmt|;
-name|tmpfd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|unlink
-argument_list|(
-name|tmpname
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* BROKEN_YANK_BUFFERS*/
 return|return
 name|TRUE
 return|;
@@ -2540,25 +2549,17 @@ begin_comment
 comment|/* This function stores the file's name in the second block of the temp file.  * SLEAZE ALERT!  SLEAZE ALERT!  The "tmpblk" buffer is probably being used  * to store the arguments to a command, so we can't use it here.  Instead,  * we'll borrow the buffer that is used for "shift-U".  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|storename
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* the name of the file - normally origname */
-end_comment
-
-begin_block
 block|{
 ifndef|#
 directive|ifndef
@@ -2603,6 +2604,43 @@ block|}
 ifndef|#
 directive|ifndef
 name|CRUNCH
+if|#
+directive|if
+name|TOS
+operator|||
+name|MINT
+operator|||
+name|MSDOS
+operator|||
+name|AMIGA
+elseif|else
+if|if
+condition|(
+operator|*
+name|name
+operator|!=
+literal|'/'
+operator|&&
+operator|*
+name|name
+operator|!=
+literal|'\\'
+operator|&&
+operator|!
+operator|(
+operator|*
+name|name
+operator|&&
+name|name
+index|[
+literal|1
+index|]
+operator|==
+literal|':'
+operator|)
+condition|)
+else|#
+directive|else
 elseif|else
 if|if
 condition|(
@@ -2611,6 +2649,8 @@ name|name
 operator|!=
 name|SLASH
 condition|)
+endif|#
+directive|endif
 block|{
 comment|/* get the directory name */
 name|ptr
@@ -2713,6 +2753,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|write
 argument_list|(
 name|tmpfd
@@ -2724,20 +2766,31 @@ name|unsigned
 operator|)
 name|BLKSIZE
 argument_list|)
+operator|<
+name|BLKSIZE
+condition|)
+block|{
+name|FAIL
+argument_list|(
+literal|"Error stuffing name \"%s\" into temp file"
+argument_list|,
+name|U_text
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* This function handles deadly signals.  It restores sanity to the terminal  * preserves the current temp file, and deletes any old temp files.  */
 end_comment
 
 begin_function
-name|int
+name|SIGTYPE
 name|deathtrap
 parameter_list|(
 name|sig
@@ -2812,18 +2865,13 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|SIGSEGV
 if|#
 directive|if
-name|defined
-argument_list|(
-name|SIGSEGV
-argument_list|)
-operator|&&
 operator|!
-name|defined
-argument_list|(
 name|TOS
-argument_list|)
 case|case
 name|SIGSEGV
 case|:
@@ -2832,6 +2880,8 @@ operator|=
 literal|"-Elvis had a segmentation violation"
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#

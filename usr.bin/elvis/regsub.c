@@ -227,6 +227,9 @@ literal|'\0'
 expr_stmt|;
 block|}
 comment|/* allocate memory for the ~ed version of src */
+name|checkmem
+argument_list|()
+expr_stmt|;
 name|start
 operator|=
 name|cpy
@@ -415,12 +418,15 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|checkmem
+argument_list|()
+expr_stmt|;
 comment|/* remember this as the "previous" for next time */
 if|if
 condition|(
 name|prev
 condition|)
-name|free
+name|_free_
 argument_list|(
 name|prev
 argument_list|)

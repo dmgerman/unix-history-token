@@ -1569,9 +1569,14 @@ operator|->
 name|c
 operator|)
 operator|<
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|BLKSIZE
 operator|-
 literal|1
+argument_list|)
 condition|)
 block|{
 comment|/* we can!  Copy text from following to blk */

@@ -33,6 +33,8 @@ begin_if
 if|#
 directive|if
 name|UNIXV
+operator|||
+name|COH_386
 end_if
 
 begin_ifdef
@@ -63,11 +65,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|S5WINSIZE
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_S5WINSIZE
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SEQUENT_
+end_ifndef
 
 begin_include
 include|#
@@ -84,6 +92,11 @@ include|#
 directive|include
 file|<sys/ptem.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -181,15 +194,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -586,7 +590,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* :ks=: init string for cursor */
+comment|/* :ks=: switch keypad to application mode */
 end_comment
 
 begin_decl_stmt
@@ -599,7 +603,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* :ke=: restore string for cursor */
+comment|/* :ke=: switch keypad to system mode */
 end_comment
 
 begin_decl_stmt
@@ -1020,7 +1024,7 @@ begin_decl_stmt
 name|char
 name|normalcolor
 index|[
-literal|16
+literal|24
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1029,7 +1033,7 @@ begin_decl_stmt
 name|char
 name|SOcolor
 index|[
-literal|16
+literal|24
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1038,7 +1042,7 @@ begin_decl_stmt
 name|char
 name|SEcolor
 index|[
-literal|16
+literal|24
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1047,7 +1051,7 @@ begin_decl_stmt
 name|char
 name|UScolor
 index|[
-literal|16
+literal|24
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1056,7 +1060,7 @@ begin_decl_stmt
 name|char
 name|UEcolor
 index|[
-literal|16
+literal|24
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1065,7 +1069,7 @@ begin_decl_stmt
 name|char
 name|MDcolor
 index|[
-literal|16
+literal|24
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1074,7 +1078,7 @@ begin_decl_stmt
 name|char
 name|MEcolor
 index|[
-literal|16
+literal|24
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1083,7 +1087,7 @@ begin_decl_stmt
 name|char
 name|AScolor
 index|[
-literal|16
+literal|24
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1092,7 +1096,7 @@ begin_decl_stmt
 name|char
 name|AEcolor
 index|[
-literal|16
+literal|24
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1107,7 +1111,7 @@ begin_decl_stmt
 name|char
 name|POPUPcolor
 index|[
-literal|16
+literal|24
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1127,7 +1131,7 @@ begin_decl_stmt
 name|char
 name|VISIBLEcolor
 index|[
-literal|16
+literal|24
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1152,6 +1156,8 @@ begin_if
 if|#
 directive|if
 name|UNIXV
+operator|||
+name|COH_386
 end_if
 
 begin_ifdef
@@ -1493,7 +1499,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1515,7 +1521,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1575,7 +1581,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1612,6 +1618,8 @@ name|ANY_UNIX
 if|#
 directive|if
 name|UNIXV
+operator|||
+name|COH_386
 ifdef|#
 directive|ifdef
 name|TERMIOS
@@ -1720,6 +1728,13 @@ name|FALSE
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|oldcurs
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Send any required termination strings.  Turn off "raw" mode. */
 end_comment
@@ -1734,7 +1749,11 @@ directive|if
 name|ANY_UNIX
 operator|&&
 operator|!
+operator|(
 name|UNIXV
+operator|||
+name|COH_386
+operator|)
 name|struct
 name|tchars
 name|tbuf
@@ -1760,6 +1779,10 @@ condition|)
 block|{
 name|do_CQ
 argument_list|()
+expr_stmt|;
+name|oldcurs
+operator|=
+literal|0
 expr_stmt|;
 block|}
 endif|#
@@ -1800,9 +1823,13 @@ directive|if
 name|ANY_UNIX
 if|#
 directive|if
+operator|(
 name|UNIXV
-if|#
-directive|if
+operator|||
+name|COH_386
+operator|)
+ifdef|#
+directive|ifdef
 name|TERMIOS
 name|tcsetattr
 argument_list|(
@@ -1997,6 +2024,8 @@ name|ANY_UNIX
 if|#
 directive|if
 name|UNIXV
+operator|||
+name|COH_386
 name|ospeed
 operator|=
 operator|(
@@ -2137,7 +2166,7 @@ endif|#
 directive|endif
 else|#
 directive|else
-comment|/* BSD or V7 or Coherent or Minix */
+comment|/* BSD, V7, Coherent-286, or Minix */
 name|struct
 name|tchars
 name|tbuf
@@ -2415,6 +2444,17 @@ expr_stmt|;
 comment|/* Accept<DEL> as<^H> for VMS */
 endif|#
 directive|endif
+name|curses_active
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+comment|/* If we're supposed to quit quietly, then we're done */
+if|if
+condition|(
+name|quietly
+condition|)
+block|{
 if|if
 condition|(
 name|has_TI
@@ -2434,17 +2474,6 @@ name|do_KS
 argument_list|()
 expr_stmt|;
 block|}
-name|curses_active
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-comment|/* If we're supposed to quit quietly, then we're done */
-if|if
-condition|(
-name|quietly
-condition|)
-block|{
 return|return;
 block|}
 name|signal
@@ -2501,6 +2530,15 @@ expr_stmt|;
 comment|/* in RAW mode, so<20 is very likely */
 if|if
 condition|(
+name|has_TI
+condition|)
+block|{
+name|do_TI
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|kbuf
 index|[
 literal|0
@@ -2540,27 +2578,6 @@ name|exwrote
 operator|=
 name|FALSE
 expr_stmt|;
-if|#
-directive|if
-name|TURBOC
-operator|||
-name|__GNUC__
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-name|trapint
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|signal
 argument_list|(
 name|SIGINT
@@ -2568,8 +2585,6 @@ argument_list|,
 name|trapint
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2717,7 +2732,7 @@ endif|#
 directive|endif
 name|exit
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
@@ -3192,6 +3207,7 @@ argument_list|,
 literal|"ke"
 argument_list|)
 expr_stmt|;
+comment|/* keypad enable/disable */
 name|mayhave
 argument_list|(
 operator|&
@@ -3213,21 +3229,49 @@ comment|/* down */
 name|mayhave
 argument_list|(
 operator|&
-name|KL
-argument_list|,
-literal|"kl"
-argument_list|)
-expr_stmt|;
-comment|/* left */
-name|mayhave
-argument_list|(
-operator|&
 name|KR
 argument_list|,
 literal|"kr"
 argument_list|)
 expr_stmt|;
 comment|/* right */
+name|mayhave
+argument_list|(
+operator|&
+name|KL
+argument_list|,
+literal|"kl"
+argument_list|)
+expr_stmt|;
+comment|/* left */
+if|if
+condition|(
+name|KL
+operator|&&
+name|KL
+index|[
+literal|0
+index|]
+operator|==
+literal|'\b'
+operator|&&
+operator|!
+name|KL
+index|[
+literal|1
+index|]
+condition|)
+block|{
+comment|/* never use '\b' as a left arrow! */
+name|KL
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+block|}
 name|mayhave
 argument_list|(
 operator|&
@@ -4677,7 +4721,7 @@ name|int
 name|ansiquit
 parameter_list|()
 block|{
-comment|/* if ANSI color terminal, then reset the colors */
+comment|/* if ANSI terminal& colors were set, then reset the colors */
 if|if
 condition|(
 operator|!
@@ -4686,6 +4730,13 @@ argument_list|(
 name|UP
 argument_list|,
 literal|"\033[A"
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|SOcolor
+argument_list|,
+name|SO
 argument_list|)
 condition|)
 block|{
@@ -4735,7 +4786,7 @@ block|{
 name|char
 name|temp
 index|[
-literal|16
+literal|24
 index|]
 decl_stmt|;
 comment|/* hold the new mode string */
@@ -4757,16 +4808,74 @@ literal|"\033OA"
 argument_list|)
 condition|)
 block|{
+comment|/* Only give an error message if we're editing a file. 		 * (I.e., if we're *NOT* currently doing a ".exrc") 		 */
+if|if
+condition|(
+name|tmpfd
+operator|>=
+literal|0
+condition|)
 name|msg
 argument_list|(
 literal|"Don't know how to set colors for this terminal"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|FALSE
 return|;
 block|}
 comment|/* construct the color string */
+ifdef|#
+directive|ifdef
+name|MWC
+comment|/* either Coherent-286 ("COHERENT"), or Coherent-386 ("M_SYSV") */
+name|sprintf
+argument_list|(
+name|temp
+argument_list|,
+literal|"\033[m\033[3%cm\033[4%cm%s%s"
+argument_list|,
+literal|"04261537"
+index|[
+name|attrbyte
+operator|&
+literal|0x07
+index|]
+argument_list|,
+literal|"04261537"
+index|[
+operator|(
+name|attrbyte
+operator|>>
+literal|4
+operator|)
+operator|&
+literal|0x07
+index|]
+argument_list|,
+operator|(
+name|attrbyte
+operator|&
+literal|0x08
+operator|)
+condition|?
+literal|"\033[1m"
+else|:
+literal|""
+argument_list|,
+operator|(
+name|attrbyte
+operator|&
+literal|0x80
+operator|)
+condition|?
+literal|"\033[5m"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|sprintf
 argument_list|(
 name|temp
@@ -4812,6 +4921,8 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* stick it in the right place */
 switch|switch
 condition|(
@@ -5012,7 +5123,7 @@ endif|#
 directive|endif
 block|}
 return|return
-literal|1
+name|TRUE
 return|;
 block|}
 end_function
@@ -5021,12 +5132,10 @@ begin_comment
 comment|/* This function outputs the ESC sequence needed to switch the screen back  * to "normal" mode.  On color terminals which haven't had their color set  * yet, this is one of the termcap strings; for color terminals that really  * have had colors defined, we just the "normal color" escape sequence.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|endcolor
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -5099,7 +5208,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

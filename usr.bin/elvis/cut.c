@@ -602,7 +602,7 @@ expr_stmt|;
 else|else
 endif|#
 directive|endif
-name|free
+name|_free_
 argument_list|(
 operator|(
 name|char
@@ -2381,6 +2381,10 @@ block|}
 comment|/* if too big, return the size now, without doing anything */
 if|if
 condition|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|cb
 operator|->
 name|end
@@ -2388,6 +2392,7 @@ operator|-
 name|cb
 operator|->
 name|start
+argument_list|)
 operator|>=
 name|size
 condition|)

@@ -120,8 +120,6 @@ condition|)
 block|{
 return|return
 name|m
-operator|+
-literal|1L
 return|;
 block|}
 endif|#
