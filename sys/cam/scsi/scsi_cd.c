@@ -5757,18 +5757,6 @@ argument_list|,
 comment|/* cbfcnp */
 name|cddone
 argument_list|,
-operator|(
-name|bp
-operator|->
-name|bio_flags
-operator|&
-name|BIO_ORDERED
-operator|)
-operator|!=
-literal|0
-condition|?
-name|MSG_ORDERED_Q_TAG
-else|:
 name|MSG_SIMPLE_Q_TAG
 argument_list|,
 comment|/* read */

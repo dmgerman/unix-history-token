@@ -3580,13 +3580,7 @@ name|b_io
 operator|.
 name|bio_flags
 operator|=
-name|ubp
-operator|->
-name|b_io
-operator|.
-name|bio_flags
-operator|&
-name|BIO_ORDERED
+literal|0
 expr_stmt|;
 name|bp
 operator|->

@@ -694,9 +694,8 @@ name|bp
 operator|->
 name|b_ioflags
 operator|=
-name|BIO_ORDERED
+literal|0
 expr_stmt|;
-comment|/* and make this an ordered write */
 name|bp
 operator|->
 name|b_iocmd
