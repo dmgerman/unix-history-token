@@ -114,6 +114,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
+name|mflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
 name|nofile
 decl_stmt|;
 end_decl_stmt
@@ -633,6 +639,14 @@ name|intact
 operator|++
 expr_stmt|;
 name|nofile
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+comment|/* -m	read .cshrc (from su) */
+name|mflag
 operator|++
 expr_stmt|;
 break|break;
@@ -1832,36 +1846,24 @@ argument_list|(
 name|ep
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INGRES
 name|srcunit
 argument_list|(
 name|unit
 argument_list|,
+name|mflag
+condition|?
 literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|srcunit
-argument_list|(
-name|unit
-argument_list|,
+else|:
 literal|1
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
 begin_comment
-comment|/*  * Source to a unit.  If onlyown it must be our file or our group or  * we don't chance it.	This occurs on ".cshrc"s and the like.  */
+comment|/*  * Source to a unit.  * This occurs on ".cshrc"s and the like.  */
 end_comment
 
 begin_decl_stmt
@@ -1889,11 +1891,7 @@ end_expr_stmt
 begin_decl_stmt
 name|bool
 name|onlyown
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bool
+decl_stmt|,
 name|hflg
 decl_stmt|;
 end_decl_stmt
