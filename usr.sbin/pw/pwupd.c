@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: pwupd.c,v 1.6 1997/10/10 06:23:41 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -500,7 +500,7 @@ decl_stmt|;
 name|endpwent
 argument_list|()
 expr_stmt|;
-comment|/* 	 * First, let's check the see if the database is alright 	 * Note: -c is only available in FreeBSD 2.2 and above 	 */
+comment|/* 	 * First, let's check the see if the database is alright 	 * Note: -C is only available in FreeBSD 2.2 and above 	 */
 ifdef|#
 directive|ifdef
 name|HAVE_PWDB_C
@@ -508,7 +508,7 @@ if|if
 condition|(
 name|pwdb
 argument_list|(
-literal|"-c"
+literal|"-C"
 argument_list|,
 name|NULL
 argument_list|)
@@ -520,7 +520,7 @@ comment|/* Check only */
 else|#
 directive|else
 block|{
-comment|/* No -c */
+comment|/* No -C */
 endif|#
 directive|endif
 name|char
