@@ -44,12 +44,29 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_VA_LIST_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_VA_LIST_DECLARED
+end_define
+
 begin_typedef
 typedef|typedef
 name|__va_list
 name|va_list
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
