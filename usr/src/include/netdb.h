@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)netdb.h	5.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980,1983,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)netdb.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -197,7 +197,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Error return codes from gethostbyname() and gethostbyaddr()  */
+comment|/*  * Error return codes from gethostbyname() and gethostbyaddr()  * (left in extern int h_errno).  */
 end_comment
 
 begin_define
@@ -208,7 +208,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Authoritive Answer Host not found */
+comment|/* Authoritative Answer Host not found */
 end_comment
 
 begin_define
@@ -236,12 +236,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NO_ADDRESS
+name|NO_DATA
 value|4
 end_define
 
 begin_comment
-comment|/* Valid host name, no address, look for MX record */
+comment|/* Valid name, no data record of requested type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_ADDRESS
+value|NO_DATA
+end_define
+
+begin_comment
+comment|/* no address, look for MX record */
 end_comment
 
 end_unit
