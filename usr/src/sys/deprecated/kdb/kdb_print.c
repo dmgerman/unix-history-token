@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_print.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_print.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -987,6 +987,44 @@ operator|)
 literal|0
 argument_list|,
 name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_spare0
+operator|==
+literal|0
+condition|)
+continue|continue;
+name|printf
+argument_list|(
+literal|"\towner pid %d"
+argument_list|,
+name|ip
+operator|->
+name|i_spare0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_spare1
+condition|)
+name|printf
+argument_list|(
+literal|" waiting pid %d"
+argument_list|,
+name|ip
+operator|->
+name|i_spare1
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
