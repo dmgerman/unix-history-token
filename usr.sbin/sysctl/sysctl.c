@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: sysctl.c,v 1.3 1995/02/09 23:16:17 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,6 +170,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/igmp_var.h>
 end_include
 
 begin_include
@@ -1352,6 +1358,9 @@ name|flags
 argument_list|,
 operator|&
 name|type
+argument_list|,
+operator|&
+name|special
 argument_list|)
 expr_stmt|;
 if|if
@@ -2222,6 +2231,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
+name|ctlname
+name|igmpname
+index|[]
+init|=
+name|IGMPCTL_NAMES
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
 name|list
 name|inetlist
 init|=
@@ -2255,9 +2274,9 @@ block|}
 block|,
 comment|/* icmp */
 block|{
-literal|0
+name|igmpname
 block|,
-literal|0
+name|IGMPCTL_MAXID
 block|}
 block|,
 comment|/* igmp */
@@ -2267,13 +2286,14 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* ggmp */
+comment|/* ggp */
 block|{
 literal|0
 block|,
 literal|0
 block|}
 block|,
+comment|/* ipencap */
 block|{
 literal|0
 block|,
@@ -2364,57 +2384,46 @@ begin_comment
 comment|/*  * handle internet requests  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|sysctl_inet
-argument_list|(
-argument|string
-argument_list|,
-argument|bufpp
-argument_list|,
-argument|mib
-argument_list|,
-argument|flags
-argument_list|,
-argument|typep
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|string
+parameter_list|,
+name|bufpp
+parameter_list|,
+name|mib
+parameter_list|,
+name|flags
+parameter_list|,
+name|typep
+parameter_list|,
+name|specialp
+parameter_list|)
 name|char
 modifier|*
 name|string
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|bufpp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|mib
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|typep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+modifier|*
+name|specialp
+decl_stmt|;
 block|{
 name|struct
 name|list
@@ -2607,7 +2616,7 @@ literal|4
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Scan a list of names searching for a particular name.  */
