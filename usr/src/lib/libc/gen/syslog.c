@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.13 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -350,7 +350,7 @@ operator|~
 operator|(
 name|LOG_PRIMASK
 operator||
-name|LOG_PRIMASK
+name|LOG_FACMASK
 operator|)
 operator|)
 operator|!=
