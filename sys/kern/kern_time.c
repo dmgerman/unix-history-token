@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_time.c	8.1 (Berkeley) 6/10/93  * $Id: kern_time.c,v 1.9 1995/06/26 07:48:50 bde Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_time.c	8.1 (Berkeley) 6/10/93  * $Id: kern_time.c,v 1.10 1995/06/29 07:07:00 davidg Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysproto.h>
 end_include
 
 begin_include
@@ -62,6 +68,12 @@ begin_comment
 comment|/*  * Time of day and interval timer support.  *  * These routines provide the kernel entry points to get and set  * the time-of-day and per-process interval timers.  Subroutines  * here provide support for adding and subtracting timeval structures  * and decrementing interval timers, optionally reloading the interval  * timers when they expire.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|gettimeofday_args
@@ -79,6 +91,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -202,6 +219,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|settimeofday_args
@@ -219,6 +242,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -515,6 +543,12 @@ begin_comment
 comment|/* use 10x skew above bigadj us. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|adjtime_args
@@ -532,6 +566,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -775,6 +814,12 @@ begin_comment
 comment|/*  * Get value of an interval timer.  The process virtual and  * profiling virtual time timers are kept in the p_stats area, since  * they can be swapped out.  These are kept internally in the  * way they are specified externally: in time until they expire.  *  * The real time interval timer is kept in the process table slot  * for the process, and its value (it_value) is kept as an  * absolute time rather than as a delta, so that it is easy to keep  * periodic real-time signals from drifting.  *  * Virtual time timers are processed in the hardclock() routine of  * kern_clock.c.  The real time timer is processed by a timeout  * routine, called from the softclock() routine.  Since a callout  * may be delayed in real time due to interrupt processing in the system,  * it is possible for the real time timeout routine (realitexpire, given below),  * to be delayed in real time past when it is supposed to occur.  It  * does not suffice, therefore, to reload the real timer .it_value from the  * real time timers .it_interval.  Rather, we compute the next time in  * absolute time the timer should go off.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|getitimer_args
@@ -790,6 +835,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -960,6 +1010,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|setitimer_args
@@ -978,6 +1034,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_syscalls.c	8.13 (Berkeley) 4/15/94  * $Id: vfs_syscalls.c,v 1.36 1995/11/04 10:35:26 bde Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_syscalls.c	8.13 (Berkeley) 4/15/94  * $Id: vfs_syscalls.c,v 1.37 1995/11/05 21:01:01 dyson Exp $  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysproto.h>
 end_include
 
 begin_include
@@ -139,6 +145,12 @@ begin_comment
 comment|/*  * Mount a file system.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|mount_args
@@ -159,6 +171,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -888,6 +905,12 @@ begin_comment
 comment|/*  * Unmount a file system.  *  * Note: unmount takes a path to the vnode mounted on as argument,  * not special file (as before).  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|unmount_args
@@ -902,6 +925,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1383,6 +1411,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|sync_args
@@ -1393,6 +1427,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1554,6 +1593,12 @@ begin_comment
 comment|/*  * Change filesystem quotas.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|quotactl_args
@@ -1574,6 +1619,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1697,6 +1747,12 @@ begin_comment
 comment|/*  * Get filesystem statistics.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|statfs_args
@@ -1713,6 +1769,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1881,6 +1942,12 @@ begin_comment
 comment|/*  * Get filesystem statistics.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|fstatfs_args
@@ -1896,6 +1963,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2054,6 +2126,12 @@ begin_comment
 comment|/*  * Get statistics on all filesystems.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|getfsstat_args
@@ -2072,6 +2150,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -2325,6 +2408,12 @@ begin_comment
 comment|/*  * Change current working directory to a given file descriptor.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|fchdir_args
@@ -2335,6 +2424,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2500,6 +2594,12 @@ begin_comment
 comment|/*  * Change current working directory (``.'').  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|chdir_args
@@ -2511,6 +2611,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2624,6 +2729,12 @@ begin_comment
 comment|/*  * Change notion of root (``/'') directory.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|chroot_args
@@ -2635,6 +2746,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2884,6 +3000,12 @@ begin_comment
 comment|/*  * Check permissions, allocate an open file structure,  * and call the device open routine if any.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|open_args
@@ -2901,6 +3023,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -3372,6 +3499,12 @@ begin_comment
 comment|/*  * Create a file.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|ocreat_args
@@ -3386,6 +3519,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -3472,6 +3610,12 @@ begin_comment
 comment|/*  * Create a special file.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|mknod_args
@@ -3489,6 +3633,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -3797,6 +3946,12 @@ begin_comment
 comment|/*  * Create named pipe.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|mkfifo_args
@@ -3811,6 +3966,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -4023,6 +4183,12 @@ begin_comment
 comment|/*  * Make a hard file link.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|link_args
@@ -4038,6 +4204,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -4328,6 +4499,12 @@ begin_comment
 comment|/*  * Make a symbolic link.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|symlink_args
@@ -4343,6 +4520,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -4596,6 +4778,12 @@ begin_comment
 comment|/*  * Delete a name from the filesystem.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|unlink_args
@@ -4607,6 +4795,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -4854,6 +5047,12 @@ begin_comment
 comment|/*  * Reposition read/write file offset.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|lseek_args
@@ -4873,6 +5072,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -5099,6 +5303,12 @@ begin_comment
 comment|/*  * Reposition read/write file offset.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|olseek_args
@@ -5115,6 +5325,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -5219,6 +5434,12 @@ begin_comment
 comment|/*  * Check access permissions.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|access_args
@@ -5233,6 +5454,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -5499,6 +5725,12 @@ begin_comment
 comment|/*  * Get file status; this version follows links.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|ostat_args
@@ -5515,6 +5747,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -5672,6 +5909,12 @@ begin_comment
 comment|/*  * Get file status; this version does not follow links.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|olstat_args
@@ -5688,6 +5931,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -6168,6 +6416,12 @@ begin_comment
 comment|/*  * Get file status; this version follows links.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|stat_args
@@ -6184,6 +6438,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -6328,6 +6587,12 @@ begin_comment
 comment|/*  * Get file status; this version does not follow links.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|lstat_args
@@ -6344,6 +6609,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -6635,6 +6905,12 @@ begin_comment
 comment|/*  * Get configurable pathname variables.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|pathconf_args
@@ -6649,6 +6925,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -6758,6 +7039,12 @@ begin_comment
 comment|/*  * Return target name of a symbolic link.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|readlink_args
@@ -6776,6 +7063,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -6989,6 +7281,12 @@ begin_comment
 comment|/*  * Change flags of a file given a path name.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|chflags_args
@@ -7003,6 +7301,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -7157,6 +7460,12 @@ begin_comment
 comment|/*  * Change flags of a file given a file descriptor.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|fchflags_args
@@ -7170,6 +7479,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -7319,6 +7633,12 @@ begin_comment
 comment|/*  * Change mode of a file given path name.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|chmod_args
@@ -7333,6 +7653,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -7489,6 +7814,12 @@ begin_comment
 comment|/*  * Change mode of a file given a file descriptor.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|fchmod_args
@@ -7502,6 +7833,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -7653,6 +7989,12 @@ begin_comment
 comment|/*  * Set ownership given a path name.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|chown_args
@@ -7670,6 +8012,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -7832,6 +8179,12 @@ begin_comment
 comment|/*  * Set ownership given a file descriptor.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|fchown_args
@@ -7848,6 +8201,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -8005,6 +8363,12 @@ begin_comment
 comment|/*  * Set the access and modification times of a file.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|utimes_args
@@ -8021,6 +8385,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -8299,6 +8668,12 @@ begin_comment
 comment|/*  * Truncate a file given its path name.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|truncate_args
@@ -8316,6 +8691,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -8530,6 +8910,12 @@ begin_comment
 comment|/*  * Truncate a file given a file descriptor.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|ftruncate_args
@@ -8546,6 +8932,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -8767,6 +9158,12 @@ begin_comment
 comment|/*  * Truncate a file given its path name.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|otruncate_args
@@ -8781,6 +9178,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -8852,6 +9254,12 @@ begin_comment
 comment|/*  * Truncate a file given a file descriptor.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|oftruncate_args
@@ -8865,6 +9273,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -8945,6 +9358,12 @@ begin_comment
 comment|/*  * Sync an open file.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|fsync_args
@@ -8955,6 +9374,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -9107,6 +9531,12 @@ begin_comment
 comment|/*  * Rename files.  Source and destination must either both be directories,  * or both not be directories.  If target is a directory, it must be empty.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|rename_args
@@ -9122,6 +9552,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -9667,6 +10102,12 @@ begin_comment
 comment|/*  * Make a directory file.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|mkdir_args
@@ -9681,6 +10122,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -9923,6 +10369,12 @@ begin_comment
 comment|/*  * Remove a directory file.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|rmdir_args
@@ -9934,6 +10386,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */
@@ -10184,6 +10641,12 @@ begin_comment
 comment|/*  * Read a block of directory entries in a file system independent format.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|ogetdirentries_args
@@ -10205,6 +10668,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -10745,6 +11213,12 @@ begin_comment
 comment|/*  * Read a block of directory entries in a file system independent format.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|getdirentries_args
@@ -10766,6 +11240,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -11255,6 +11734,12 @@ begin_comment
 comment|/*  * Set the mode mask for creation of filesystem nodes.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|umask_args
@@ -11265,6 +11750,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|mode_t
@@ -11333,6 +11823,12 @@ begin_comment
 comment|/*  * Void all references to file by ripping underlying filesystem  * away from vnode.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|revoke_args
@@ -11344,6 +11840,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ARGSUSED */

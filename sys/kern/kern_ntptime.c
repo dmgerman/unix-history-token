@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -524,6 +530,12 @@ begin_comment
 comment|/*  * ntp_adjtime() - NTP daemon application interface  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|ntp_adjtime_args
@@ -536,6 +548,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
