@@ -106,7 +106,9 @@ specifier|const
 name|char
 modifier|*
 name|user
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|void
 modifier|*
 name|ruser
 decl_stmt|,
@@ -189,12 +191,6 @@ name|pamh
 argument_list|,
 name|PAM_RUSER
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|ruser
 argument_list|)
@@ -218,12 +214,6 @@ name|pamh
 argument_list|,
 name|PAM_RHOST
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|rhost
 argument_list|)

@@ -82,10 +82,12 @@ name|PAM_MAX_MSG_SIZE
 index|]
 decl_stmt|;
 specifier|const
-name|char
+name|void
 modifier|*
 name|str
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|p
 decl_stmt|,
@@ -297,12 +299,6 @@ name|pamh
 argument_list|,
 name|item
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|str
 argument_list|)

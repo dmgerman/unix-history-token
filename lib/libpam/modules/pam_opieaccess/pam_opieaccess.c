@@ -112,7 +112,7 @@ modifier|*
 name|pwent
 decl_stmt|;
 specifier|const
-name|char
+name|void
 modifier|*
 name|luser
 decl_stmt|,
@@ -130,12 +130,6 @@ name|pamh
 argument_list|,
 name|PAM_USER
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|luser
 argument_list|)
@@ -204,12 +198,6 @@ name|pamh
 argument_list|,
 name|PAM_RHOST
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|rhost
 argument_list|)
@@ -232,6 +220,11 @@ operator|==
 name|NULL
 operator|||
 operator|*
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|rhost
 operator|==
 literal|'\0'
