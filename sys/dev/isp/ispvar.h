@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.7 1998/12/28 19:22:27 mjacob Exp $ */
+comment|/* $Id: ispvar.h,v 1.8 1999/01/10 02:51:48 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_12_28_98_A+ */
+comment|/* release_5_11_99 */
 end_comment
 
 begin_comment
@@ -23,11 +23,19 @@ directive|define
 name|_ISPVAR_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__NetBSD__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -85,11 +93,11 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|5
+value|8
 end_define
 
 begin_comment
-comment|/*  * Vector for MD code to provide specific services.  */
+comment|/*  * Vector for bus specific code to provide specific services.  */
 end_comment
 
 begin_struct_decl
@@ -265,12 +273,35 @@ name|MAX_TARGETS
 value|16
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP2100_FABRIC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAX_FC_TARG
+value|256
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|MAX_FC_TARG
 value|126
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -301,7 +332,7 @@ begin_define
 define|#
 directive|define
 name|RESULT_QUEUE_LEN
-value|(MAXISPREQUEST/4)
+value|(MAXISPREQUEST/2)
 end_define
 
 begin_define
@@ -354,7 +385,7 @@ value|((in == out)? (qlen - 1) : ((in> out)? \ 		((qlen - 1) - (in - out)) : (ou
 end_define
 
 begin_comment
-comment|/*  * SCSI (as opposed to FC-PH) Specific Host Adapter Parameters  */
+comment|/*  * SCSI Specific Host Adapter Parameters- per bus, per target  */
 end_comment
 
 begin_typedef
@@ -362,6 +393,10 @@ typedef|typedef
 struct|struct
 block|{
 name|u_int
+name|isp_gotdparms
+range|:
+literal|1
+decl_stmt|,
 name|isp_req_ack_active_neg
 range|:
 literal|1
@@ -382,11 +417,18 @@ name|isp_fifo_threshold
 range|:
 literal|3
 decl_stmt|,
+name|isp_ultramode
+range|:
+literal|1
+decl_stmt|,
 name|isp_diffmode
 range|:
 literal|1
 decl_stmt|,
-name|isp_fast_mttr
+name|isp_lvdmode
+range|:
+literal|1
+decl_stmt|,
 range|:
 literal|1
 decl_stmt|,
@@ -404,9 +446,6 @@ decl_stmt|;
 name|u_int16_t
 name|isp_max_queue_depth
 decl_stmt|;
-name|u_int16_t
-name|isp_clock
-decl_stmt|;
 name|u_int8_t
 name|isp_tag_aging
 decl_stmt|;
@@ -422,30 +461,46 @@ decl_stmt|;
 struct|struct
 block|{
 name|u_int
+name|dev_enable
+range|:
+literal|1
+decl_stmt|,
+comment|/* ignored */
+range|:
+literal|1
+decl_stmt|,
 name|dev_update
 range|:
 literal|1
 decl_stmt|,
-name|dev_enable
+name|dev_refresh
 range|:
 literal|1
 decl_stmt|,
 name|exc_throttle
 range|:
-literal|7
+literal|8
+decl_stmt|,
+name|cur_offset
+range|:
+literal|4
 decl_stmt|,
 name|sync_offset
 range|:
 literal|4
-decl_stmt|,
-name|sync_period
-range|:
-literal|8
 decl_stmt|;
+name|u_int8_t
+name|cur_period
+decl_stmt|;
+comment|/* current sync period */
+name|u_int8_t
+name|sync_period
+decl_stmt|;
+comment|/* goal sync period */
 name|u_int16_t
 name|dev_flags
 decl_stmt|;
-comment|/* persistent device flags */
+comment|/* goal device flags */
 name|u_int16_t
 name|cur_dflags
 decl_stmt|;
@@ -460,10 +515,6 @@ block|}
 name|sdparam
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* scsi device parameters */
-end_comment
 
 begin_comment
 comment|/*  * Device Flags  */
@@ -551,7 +602,7 @@ begin_define
 define|#
 directive|define
 name|DPARM_DEFAULT
-value|(0xFFFF& ~DPARM_QFRZ)
+value|(0xFF00& ~DPARM_QFRZ)
 end_define
 
 begin_define
@@ -559,6 +610,17 @@ define|#
 directive|define
 name|DPARM_SAFE_DFLT
 value|(DPARM_DEFAULT& ~(DPARM_WIDE|DPARM_SYNC|DPARM_TQING))
+end_define
+
+begin_comment
+comment|/* technically, not really correct, as they need to be rated based upon clock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_40M_SYNCPARMS
+value|0x080a
 end_define
 
 begin_define
@@ -604,10 +666,12 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int64_t
-name|isp_wwn
+name|u_int8_t
+name|isp_gotdparms
 decl_stmt|;
-comment|/* WWN of adapter */
+name|u_int8_t
+name|isp_reserved
+decl_stmt|;
 name|u_int8_t
 name|isp_loopid
 decl_stmt|;
@@ -629,6 +693,10 @@ name|u_int8_t
 name|isp_fwstate
 decl_stmt|;
 comment|/* ISP F/W state */
+name|u_int64_t
+name|isp_wwn
+decl_stmt|;
+comment|/* WWN of adapter */
 name|u_int16_t
 name|isp_maxalloc
 decl_stmt|;
@@ -637,6 +705,13 @@ name|isp_maxfrmlen
 decl_stmt|;
 name|u_int16_t
 name|isp_fwoptions
+decl_stmt|;
+comment|/* 	 * Port Data Base 	 */
+name|isp_pdb_t
+name|isp_pdb
+index|[
+name|MAX_FC_TARG
+index|]
 decl_stmt|;
 comment|/* 	 * Scratch DMA mapped in area to fetch Port Database stuff, etc. 	 */
 specifier|volatile
@@ -856,46 +931,57 @@ name|ispmdvec
 modifier|*
 name|isp_mdvec
 decl_stmt|;
-comment|/* 	 * Mostly nonvolatile state, debugging, etc.. 	 */
+comment|/* 	 * Mostly nonvolatile state. 	 */
 name|u_int
-label|:
+name|isp_clock
+range|:
 literal|8
-operator|,
+decl_stmt|,
 name|isp_confopts
-operator|:
+range|:
 literal|8
-operator|,
-operator|:
-literal|2
-operator|,
+decl_stmt|,
+name|isp_fast_mttr
+range|:
+literal|1
+decl_stmt|,
+range|:
+literal|1
+decl_stmt|,
+name|isp_used
+range|:
+literal|1
+decl_stmt|,
 name|isp_dblev
-operator|:
+range|:
 literal|3
-operator|,
-name|isp_gotdparms
-operator|:
-literal|1
-operator|,
+decl_stmt|,
 name|isp_dogactive
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 name|isp_bustype
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 comment|/* BUS Implementation */
 name|isp_type
-operator|:
+range|:
 literal|8
-expr_stmt|;
+decl_stmt|;
 comment|/* HBA Type and Revision */
 name|u_int16_t
 name|isp_fwrev
+index|[
+literal|3
+index|]
 decl_stmt|;
 comment|/* Running F/W revision */
 name|u_int16_t
 name|isp_romfw_rev
+index|[
+literal|3
+index|]
 decl_stmt|;
 comment|/* 'ROM' F/W revision */
 name|void
@@ -906,25 +992,28 @@ comment|/* 	 * Volatile state 	 */
 specifier|volatile
 name|u_int
 operator|:
-literal|19
+literal|13
 operator|,
 name|isp_state
 operator|:
 literal|3
 operator|,
+operator|:
+literal|2
+operator|,
 name|isp_sendmarker
 operator|:
-literal|1
+literal|2
 operator|,
 comment|/* send a marker entry */
 name|isp_update
 operator|:
-literal|1
+literal|2
 operator|,
-comment|/* update paramters */
+comment|/* update parameters */
 name|isp_nactive
 operator|:
-literal|9
+literal|10
 expr_stmt|;
 comment|/* how many commands active */
 comment|/* 	 * Result and Request Queue indices. 	 */
@@ -949,7 +1038,6 @@ name|isp_seqno
 decl_stmt|;
 comment|/* rolling sequence # */
 comment|/* 	 * Sheer laziness, but it gets us around the problem 	 * where we don't have a clean way of remembering 	 * which transaction is bound to which ISP queue entry. 	 * 	 * There are other more clever ways to do this, but, 	 * jeez, so I blow a couple of KB per host adapter... 	 * and it *is* faster. 	 */
-specifier|volatile
 name|ISP_SCSI_XFER_T
 modifier|*
 name|isp_xflist
@@ -1076,13 +1164,36 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ISP_CFG_NONVRAM
+value|0x40
+end_define
+
+begin_comment
+comment|/* ignore NVRAM */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ISP_FW_REV
 parameter_list|(
 name|maj
 parameter_list|,
 name|min
+parameter_list|,
+name|mic
 parameter_list|)
-value|((maj)<< 10| (min))
+value|((maj<< 24) | (min<< 16) | mic)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_FW_REVX
+parameter_list|(
+name|xp
+parameter_list|)
+value|((xp[0]<<24) | (xp[1]<< 16) | xp[2])
 end_define
 
 begin_comment
@@ -1167,6 +1278,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_HA_SCSI_1040C
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_HA_SCSI_1080
+value|0xd
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_HA_SCSI_12X0
+value|0xe
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP_HA_FC
 value|0xf0
 end_define
@@ -1178,8 +1310,48 @@ name|ISP_HA_FC_2100
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|IS_SCSI
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type& ISP_HA_SCSI)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_1080
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type == ISP_HA_SCSI_1080)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_12X0
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type == ISP_HA_SCSI_12X0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_FC
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type& ISP_HA_FC)
+end_define
+
 begin_comment
-comment|/*  * Macros to read, write ISP registers through MD code  */
+comment|/*  * Macros to read, write ISP registers through bus specific code.  */
 end_comment
 
 begin_define
@@ -1411,7 +1583,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Platform Dependent to Internal Control Point  *  * For: 	Aborting a running command	- arg is an ISP_SCSI_XFER_T *  *		Resetting a Device		- arg is target to reset  *		Resetting a BUS			- arg is ignored  *		Updating parameters		- arg is ignored  *  * Second argument is an index into xflist array.  * Assumes all locks must be held already.  */
+comment|/*  * Platform Dependent to External to Internal Control Function  *  * For: 	Aborting a running command	- arg is an ISP_SCSI_XFER_T *  *		Resetting a Device		- arg is target to reset  *		Resetting a BUS			- arg is ignored  *		Updating parameters		- arg is ignored  *  * First argument is this instance's softc pointer.  * Second argument is an index into xflist array.  * Assumes all locks must be held already.  */
 end_comment
 
 begin_typedef
@@ -1425,7 +1597,9 @@ block|,
 name|ISPCTL_ABORT_CMD
 block|,
 name|ISPCTL_UPDATE_PARAMS
-block|, }
+block|,
+name|ISPCTL_FCLINK_TEST
+block|}
 name|ispctl_t
 typedef|;
 end_typedef
@@ -1441,6 +1615,54 @@ name|ispsoftc
 operator|*
 operator|,
 name|ispctl_t
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Platform Dependent to Internal to External Control Function  * (each platform must provide such a function)  *  * For: 	Announcing Target Paramter Changes (arg is target)  *  * Assumes all locks are held.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|ISPASYNC_NEW_TGT_PARAMS
+block|,
+name|ISPASYNC_BUS_RESET
+block|,
+comment|/* Bus Reset */
+name|ISPASYNC_LOOP_DOWN
+block|,
+comment|/* Obvious FC only */
+name|ISPASYNC_LOOP_UP
+block|,
+comment|/* "" */
+name|ISPASYNC_PDB_CHANGE_COMPLETE
+block|,
+comment|/* "" */
+name|ISPASYNC_CHANGE_NOTIFY
+comment|/* "" */
+block|}
+name|ispasync_t
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|int
+name|isp_async
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ispsoftc
+operator|*
+operator|,
+name|ispasync_t
 operator|,
 name|void
 operator|*
