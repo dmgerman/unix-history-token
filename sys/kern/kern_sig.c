@@ -4788,6 +4788,7 @@ argument_list|,
 name|sig
 argument_list|)
 operator|&&
+operator|!
 name|SIGISMEMBER
 argument_list|(
 name|p
