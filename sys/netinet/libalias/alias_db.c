@@ -8519,6 +8519,28 @@ begin_comment
 comment|/*****************   Code to support firewall punching.  This shouldn't really be in this   file, but making variables global is evil too.   ****************/
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPFW2
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IPFW2
+value|1
+end_define
+
+begin_comment
+comment|/* use new ipfw code */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Firewall include files */
 end_comment
@@ -8546,28 +8568,6 @@ include|#
 directive|include
 file|<err.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IPFW2
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IPFW2
-value|1
-end_define
-
-begin_comment
-comment|/* use new ipfw code */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
