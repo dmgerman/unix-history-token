@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbuf.h	4.13	82/06/14	*/
+comment|/*	mbuf.h	4.14	82/10/05	*/
 end_comment
 
 begin_comment
@@ -249,7 +249,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)=mfree) \ 		{ if ((m)->m_free == 0) panic("mget"); (m)->m_free = 0; \ 		  mbstat.m_mbfree--; mfree = (m)->m_next; (m)->m_next = 0; } \ 	  else \ 		(m) = m_more(i); \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)=mfree) \ 		{ if ((m)->m_free == 0) panic("mget"); (m)->m_free = 0; \ 		  mbstat.m_mbfree--; mfree = (m)->m_next; (m)->m_next = 0; \ 		  (m)->m_off = MMINOFF; } \ 	  else \ 		(m) = m_more(i); \ 	  splx(ms); }
 end_define
 
 begin_define
