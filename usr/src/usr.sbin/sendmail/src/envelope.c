@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)envelope.c	5.5 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -777,16 +777,11 @@ name|e_dfp
 argument_list|)
 expr_stmt|;
 comment|/* now clear out the data */
-name|bzero
+name|STRUCTCOPY
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|e
+name|BlankEnvelope
 argument_list|,
-sizeof|sizeof
-expr|*
+operator|*
 name|e
 argument_list|)
 expr_stmt|;
