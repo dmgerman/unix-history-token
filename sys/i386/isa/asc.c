@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.16 1996/01/27 00:53:55 bde Exp $  */
+comment|/*  * $Id: asc.c,v 1.17 1996/03/28 14:28:35 scrappy Exp $  */
 end_comment
 
 begin_include
@@ -2670,6 +2670,20 @@ return|return
 name|EBUSY
 return|;
 block|}
+if|if
+condition|(
+name|isa_dma_acquire
+argument_list|(
+name|scu
+operator|->
+name|dma_num
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
 name|scu
 operator|->
 name|flags
@@ -3018,6 +3032,13 @@ name|cfg_byte
 argument_list|)
 expr_stmt|;
 comment|/* --- disable dma controller ? --- */
+name|isa_dma_release
+argument_list|(
+name|scu
+operator|->
+name|dma_num
+argument_list|)
+expr_stmt|;
 comment|/* --- disable interrupts on the controller (sub_24) --- */
 name|scu
 operator|->
