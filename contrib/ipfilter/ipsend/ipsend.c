@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipsend.c,v 2.0.2.19 1997/10/12 09:48:38 darrenr Exp $"
+literal|"@(#)$Id: ipsend.c,v 2.0.2.19.2.1 1998/05/14 14:01:19 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1793,6 +1793,8 @@ index|[
 name|optind
 index|]
 init|;
+name|s
+operator|&&
 operator|(
 name|c
 operator|=

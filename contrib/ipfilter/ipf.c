@@ -232,7 +232,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipf.c,v 2.0.2.13.2.2 1997/11/06 21:23:36 darrenr Exp $"
+literal|"@(#)$Id: ipf.c,v 2.0.2.13.2.4 1998/05/23 14:29:44 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1032,32 +1032,12 @@ sizeof|sizeof
 argument_list|(
 name|line
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 name|fp
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * treat both CR and LF as EOL 		 */
-if|if
-condition|(
-operator|(
-name|s
-operator|=
-name|index
-argument_list|(
-name|line
-argument_list|,
-literal|'\n'
-argument_list|)
-operator|)
-condition|)
-operator|*
-name|s
-operator|=
-literal|'\0'
-expr_stmt|;
+comment|/* 		 * treat CR as EOL.  LF is converted to NUL by getline(). 		 */
 if|if
 condition|(
 operator|(
@@ -1296,11 +1276,17 @@ argument|); 			} else if (!(opts& OPT_DONOTHING)) { 				if (ioctl(fd, add, fr) =
 literal|1
 argument|) 					perror(
 literal|"ioctl(SIOCADDFR)"
-argument|); 			} 		} 	} 	(void)fclose(fp); }
-comment|/*  * Similar to fgets(3) but can handle '\\'  */
-argument|static char *getline(str, size, file) register char	*str; size_t	size; FILE	*file; { 	register char *p; 	register int len;  	do { 		for (p = str; ; p += strlen(p) -
+argument|); 			} 		} 	} 	if (ferror(fp) || !feof(fp)) { 		fprintf(stderr,
+literal|"%s: %s: file error or line too long\n"
+argument|, 		    name, file); 		exit(
 literal|1
-argument|) { 			if (!fgets(p, size, file)) 				return(NULL); 			len = strlen(p); 			p[len -
+argument|); 	} 	(void)fclose(fp); }
+comment|/*  * Similar to fgets(3) but can handle '\\' and NL is converted to NUL.  * Returns NULL if error occured, EOF encounterd or input line is too long.  */
+argument|static char *getline(str, size, file) register char	*str; size_t	size; FILE	*file; { 	char *p; 	int s
+argument_list|,
+argument|len;  	do { 		for (p = str, s = size;; p += len, s -= len) {
+comment|/* 			 * if an error occured, EOF was encounterd, or there 			 * was no room to put NUL, return NULL. 			 */
+argument|if (fgets(p, s, file) == NULL) 				return (NULL); 			len = strlen(p); 			p[len -
 literal|1
 argument|] =
 literal|'\0'
@@ -1312,7 +1298,7 @@ argument|) 				break; 			size -= len; 		} 	} while (*str ==
 literal|'\0'
 argument||| *str ==
 literal|'\n'
-argument|); 	return(str); }   static void packetlogon(opt) char	*opt; { 	int	err
+argument|); 	return (str); }   static void packetlogon(opt) char	*opt; { 	int	err
 argument_list|,
 argument|flag =
 literal|0
@@ -1409,11 +1395,11 @@ argument|) 		perror(
 literal|"ioctl(SIOCSWAPA)"
 argument|); 	else 		printf(
 literal|"Set %d now inactive\n"
-argument|, in); }   static void frsync() { 	if (opendevice(ipfname) != -
-literal|2
-argument|&& ioctl(fd, SIOCFRSYN,
+argument|, in); }   static void frsync() { 	int frsyn =
 literal|0
-argument|) == -
+argument|;  	if (opendevice(ipfname) != -
+literal|2
+argument|&& ioctl(fd, SIOCFRSYN,&frsyn) == -
 literal|1
 argument|) 		perror(
 literal|"SIOCFRSYN"

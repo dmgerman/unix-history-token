@@ -11,7 +11,7 @@ begin_pragma
 pragma|#
 directive|pragma
 name|ident
-literal|"@(#)$Id: solaris.c,v 2.0.2.22.2.2 1997/11/24 06:15:52 darrenr Exp $"
+literal|"@(#)$Id: solaris.c,v 2.0.2.22.2.4 1998/02/28 02:35:21 darrenr Exp $"
 name|;
 end_pragma
 
@@ -936,12 +936,12 @@ name|ddi_attach_cmd_t
 name|cmd
 decl_stmt|;
 block|{
-name|int
-name|instance
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|IPFDEBUG
+name|int
+name|instance
+decl_stmt|;
 name|cmn_err
 argument_list|(
 name|CE_NOTE
@@ -963,6 +963,9 @@ block|{
 case|case
 name|DDI_ATTACH
 case|:
+ifdef|#
+directive|ifdef
+name|IPFDEBUG
 name|instance
 operator|=
 name|ddi_get_instance
@@ -970,9 +973,6 @@ argument_list|(
 name|dip
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFDEBUG
 name|cmn_err
 argument_list|(
 name|CE_NOTE
@@ -4482,7 +4482,7 @@ index|[
 literal|0
 index|]
 index|[
-literal|0
+name|fr_active
 index|]
 init|;
 name|f
@@ -4566,7 +4566,7 @@ index|[
 literal|1
 index|]
 index|[
-literal|0
+name|fr_active
 index|]
 init|;
 name|f
@@ -5146,7 +5146,7 @@ index|[
 literal|0
 index|]
 index|[
-literal|0
+name|fr_active
 index|]
 init|;
 name|f
@@ -5192,7 +5192,7 @@ index|[
 literal|1
 index|]
 index|[
-literal|0
+name|fr_active
 index|]
 init|;
 name|f

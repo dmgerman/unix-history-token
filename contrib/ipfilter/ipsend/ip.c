@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip.c,v 2.0.2.11.2.2 1997/11/28 03:36:47 darrenr Exp $"
+literal|"@(#)$Id: ip.c,v 2.0.2.11.2.3 1997/12/21 12:17:37 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -685,17 +685,6 @@ operator|=
 name|htons
 argument_list|(
 name|iplen
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_off
 argument_list|)
 expr_stmt|;
 if|if
@@ -1649,9 +1638,12 @@ name|TH_SYN
 operator|)
 operator|&&
 operator|!
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_off
+argument_list|)
 operator|&&
 operator|(
 name|lbuf
