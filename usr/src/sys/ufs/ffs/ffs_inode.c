@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.63 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.64 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -201,11 +201,28 @@ name|mnt_flag
 operator|&
 name|MNT_RDONLY
 condition|)
+block|{
+name|ip
+operator|->
+name|i_flag
+operator|&=
+operator|~
+operator|(
+name|IUPD
+operator||
+name|IACC
+operator||
+name|ICHG
+operator||
+name|IMOD
+operator|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|ip
 operator|=
 name|VTOI
