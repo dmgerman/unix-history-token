@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	3.4	%G%	*/
+comment|/*	uba.c	3.5	%G%	*/
 end_comment
 
 begin_include
@@ -406,11 +406,28 @@ operator|==
 literal|0
 condition|)
 block|{
-name|v
-operator|&=
-literal|0x1fffff
+name|pte
+operator|=
+operator|&
+name|Sysmap
+index|[
+name|btop
+argument_list|(
+operator|(
+operator|(
+name|int
+operator|)
+name|bp
+operator|->
+name|b_un
+operator|.
+name|b_addr
+operator|)
+operator|&
+literal|0x7fffffff
+argument_list|)
+index|]
 expr_stmt|;
-comment|/* drop to physical addr */
 while|while
 condition|(
 operator|--
@@ -426,8 +443,10 @@ operator|)
 name|io
 operator|++
 operator|=
-name|v
+name|pte
 operator|++
+operator|->
+name|pg_pfnum
 operator||
 name|temp
 expr_stmt|;
