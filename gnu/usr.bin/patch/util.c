@@ -901,6 +901,7 @@ name|rv
 expr_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|t
 operator|++
@@ -908,6 +909,7 @@ operator|=
 operator|*
 name|s
 operator|++
+operator|)
 condition|)
 empty_stmt|;
 block|}
@@ -2168,11 +2170,11 @@ argument_list|)
 operator|||
 name|try
 argument_list|(
-literal|"RCS/%s"
+literal|"RCS/%s%s"
 argument_list|,
 name|filebase
 argument_list|,
-literal|0
+literal|""
 argument_list|)
 operator|||
 name|try
