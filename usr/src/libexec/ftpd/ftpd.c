@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.6 (Berkeley) 83/01/16"
+literal|"@(#)ftpd.c	4.7 (Berkeley) 83/01/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -2090,7 +2090,7 @@ expr_stmt|;
 block|}
 name|usedefault
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 if|if
 condition|(
