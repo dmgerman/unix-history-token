@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.23 (Berkeley) %G%"
+literal|"@(#)err.c	8.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1261,7 +1261,12 @@ name|eb
 argument_list|,
 literal|"%s... "
 argument_list|,
+name|shortenstring
+argument_list|(
 name|to
+argument_list|,
+literal|203
+argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
