@@ -2511,7 +2511,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If this buffer is marked for background writing and we 	 * do not have to wait for it, make a copy and write the 	 * copy so as to leave this buffer ready for further use. 	 */
+comment|/* 	 * If this buffer is marked for background writing and we 	 * do not have to wait for it, make a copy and write the 	 * copy so as to leave this buffer ready for further use. 	 * 	 * This optimization eats a lot of memory.  If we have a page 	 * or buffer shortfull we can't do it. 	 */
 if|if
 condition|(
 operator|(
@@ -2529,6 +2529,14 @@ name|b_flags
 operator|&
 name|B_ASYNC
 operator|)
+operator|&&
+operator|!
+name|vm_page_count_severe
+argument_list|()
+operator|&&
+operator|!
+name|buf_dirty_count_severe
+argument_list|()
 condition|)
 block|{
 if|if
@@ -3442,6 +3450,27 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Return true if we have too many dirty buffers.  */
+end_comment
+
+begin_function
+name|int
+name|buf_dirty_count_severe
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|numdirtybuffers
+operator|>=
+name|hidirtybuffers
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  *	brelse:  *  *	Release a busy buffer and, if requested, free its resources.  The  *	buffer will be stashed in the appropriate bufqueue[] allowing it  *	to be accessed later as a cache entity or reused for other purposes.  */
 end_comment
 
@@ -3662,7 +3691,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * We must clear B_RELBUF if B_DELWRI is set.  If vfs_vmio_release()  	 * is called with B_DELWRI set, the underlying pages may wind up 	 * getting freed causing a previous write (bdwrite()) to get 'lost' 	 * because pages associated with a B_DELWRI bp are marked clean. 	 *  	 * We still allow the B_INVAL case to call vfs_vmio_release(), even 	 * if B_DELWRI is set. 	 */
+comment|/* 	 * We must clear B_RELBUF if B_DELWRI is set.  If vfs_vmio_release()  	 * is called with B_DELWRI set, the underlying pages may wind up 	 * getting freed causing a previous write (bdwrite()) to get 'lost' 	 * because pages associated with a B_DELWRI bp are marked clean. 	 *  	 * We still allow the B_INVAL case to call vfs_vmio_release(), even 	 * if B_DELWRI is set. 	 * 	 * If B_DELWRI is not set we may have to set B_RELBUF if we are low 	 * on pages to return pages to the VM page queues. 	 */
 if|if
 condition|(
 name|bp
@@ -3676,6 +3705,27 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
+name|B_RELBUF
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|vm_page_count_severe
+argument_list|()
+operator|&&
+operator|!
+operator|(
+name|bp
+operator|->
+name|b_xflags
+operator|&
+name|BX_BKGRDINPROG
+operator|)
+condition|)
+name|bp
+operator|->
+name|b_flags
+operator||=
 name|B_RELBUF
 expr_stmt|;
 comment|/* 	 * VMIO buffer rundown.  It is not very necessary to keep a VMIO buffer 	 * constituted, not even NFS buffers now.  Two flags effect this.  If 	 * B_INVAL, the struct buf is invalidated but the VM object is kept 	 * around ( i.e. so it is trivial to reconstitute the buffer later ). 	 * 	 * If B_ERROR or B_NOCACHE is set, pages in the VM object will be 	 * invalidated.  B_ERROR cannot be set for a failed write unless the 	 * buffer is also B_INVAL because it hits the re-dirtying code above. 	 * 	 * Normally we can do this whether a buffer is B_DELWRI or not.  If 	 * the buffer is an NFS buffer, it is tracking piecemeal writes or 	 * the commit state and we cannot afford to lose the buffer. If the 	 * buffer has a background write in progress, we need to keep it 	 * around to prevent it from being reconstituted and starting a second 	 * background write. 	 */
@@ -4549,7 +4599,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Release a buffer back to the appropriate queue but do not try to free  * it.  *  * bqrelse() is used by bdwrite() to requeue a delayed write, and used by  * biodone() to requeue an async I/O on completion.  It is also used when  * known good buffers need to be requeued but we think we may need the data  * again soon.  */
+comment|/*  * Release a buffer back to the appropriate queue but do not try to free  * it.  The buffer is expected to be used again soon.  *  * bqrelse() is used by bdwrite() to requeue a delayed write, and used by  * biodone() to requeue an async I/O on completion.  It is also used when  * known good buffers need to be requeued but we think we may need the data  * again soon.  */
 end_comment
 
 begin_function
@@ -4699,6 +4749,26 @@ argument_list|,
 name|b_freelist
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|vm_page_count_severe
+argument_list|()
+condition|)
+block|{
+comment|/* 		 * We are too low on memory, we have to try to free the 		 * buffer (most importantly: the wired pages making up its 		 * backing store) *now*. 		 */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 else|else
 block|{
@@ -4956,6 +5026,19 @@ name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|vm_page_count_severe
+argument_list|()
+condition|)
+block|{
+name|vm_page_try_to_cache
 argument_list|(
 name|m
 argument_list|)
@@ -5580,36 +5663,11 @@ decl_stmt|;
 name|int
 name|nqindex
 decl_stmt|;
-name|int
-name|isspecial
-decl_stmt|;
 specifier|static
 name|int
 name|flushingbufs
 decl_stmt|;
-if|if
-condition|(
-name|curproc
-operator|&&
-operator|(
-name|curproc
-operator|->
-name|p_flag
-operator|&
-name|P_BUFEXHAUST
-operator|)
-operator|==
-literal|0
-condition|)
-name|isspecial
-operator|=
-literal|0
-expr_stmt|;
-else|else
-name|isspecial
-operator|=
-literal|1
-expr_stmt|;
+comment|/* 	 * We can't afford to block since we might be holding a vnode lock, 	 * which may prevent system daemons from running.  We deal with 	 * low-memory situations by proactively returning memory and running 	 * async I/O rather then sync I/O. 	 */
 operator|++
 name|getnewbufcalls
 expr_stmt|;
@@ -5622,30 +5680,6 @@ operator|++
 name|getnewbufrestarts
 expr_stmt|;
 comment|/* 	 * Setup for scan.  If we do not have enough free buffers, 	 * we setup a degenerate case that immediately fails.  Note 	 * that if we are specially marked process, we are allowed to 	 * dip into our reserves. 	 * 	 * The scanning sequence is nominally:  EMPTY->EMPTYKVA->CLEAN 	 * 	 * We start with EMPTYKVA.  If the list is empty we backup to EMPTY. 	 * However, there are a number of cases (defragging, reusing, ...) 	 * where we cannot backup. 	 */
-if|if
-condition|(
-name|isspecial
-operator|==
-literal|0
-operator|&&
-name|numfreebuffers
-operator|<
-name|lofreebuffers
-condition|)
-block|{
-comment|/* 		 * This will cause an immediate failure 		 */
-name|nqindex
-operator|=
-name|QUEUE_CLEAN
-expr_stmt|;
-name|nbp
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * Locate a buffer which already has KVA assigned.  First 		 * try EMPTYKVA buffers. 		 */
 name|nqindex
 operator|=
 name|QUEUE_EMPTYKVA
@@ -5668,7 +5702,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * If no EMPTYKVA buffers and we are either 			 * defragging or reusing, locate a CLEAN buffer 			 * to free or reuse.  If bufspace useage is low 			 * skip this step so we can allocate a new buffer. 			 */
+comment|/* 		 * If no EMPTYKVA buffers and we are either 		 * defragging or reusing, locate a CLEAN buffer 		 * to free or reuse.  If bufspace useage is low 		 * skip this step so we can allocate a new buffer. 		 */
 if|if
 condition|(
 name|defrag
@@ -5694,7 +5728,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Nada.  If we are allowed to allocate an EMPTY  			 * buffer, go get one. 			 */
+comment|/* 		 * Nada.  If we are allowed to allocate an EMPTY  		 * buffer, go get one. 		 */
 if|if
 condition|(
 name|nbp
@@ -5705,13 +5739,9 @@ name|defrag
 operator|==
 literal|0
 operator|&&
-operator|(
-name|isspecial
-operator|||
 name|bufspace
 operator|<
 name|hibufspace
-operator|)
 condition|)
 block|{
 name|nqindex
@@ -5729,7 +5759,6 @@ name|QUEUE_EMPTY
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/* 	 * Run scan, possibly freeing data and/or kva mappings on the fly 	 * depending. 	 */
@@ -6186,18 +6215,10 @@ goto|goto
 name|restart
 goto|;
 block|}
-comment|/* 		 * If we are a normal process then deal with bufspace 		 * hysteresis.  A normal process tries to keep bufspace 		 * between lobufspace and hibufspace.  Note: if we encounter 		 * a buffer with b_kvasize == 0 then it means we started 		 * our scan on the EMPTY list and should allocate a new 		 * buffer. 		 */
-if|if
-condition|(
-name|isspecial
-operator|==
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 name|bufspace
-operator|>
+operator|>=
 name|hibufspace
 condition|)
 name|flushingbufs
@@ -6245,7 +6266,6 @@ name|flushingbufs
 operator|=
 literal|0
 expr_stmt|;
-block|}
 break|break;
 block|}
 comment|/* 	 * If we exhausted our list, sleep as appropriate.  We may have to 	 * wakeup various daemons and write out some dirty buffers. 	 * 	 * Generally we are sleeping due to insufficient buffer space. 	 */
@@ -6490,64 +6510,21 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/*  *	waitfreebuffers:  *  *	Wait for sufficient free buffers.  Only called from normal processes.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|waitfreebuffers
-parameter_list|(
-name|int
-name|slpflag
-parameter_list|,
-name|int
-name|slptimeo
-parameter_list|)
-block|{
-while|while
-condition|(
-name|numfreebuffers
-operator|<
-name|hifreebuffers
-condition|)
-block|{
-if|if
-condition|(
-name|numfreebuffers
-operator|>=
-name|hifreebuffers
-condition|)
-break|break;
-name|needsbuffer
-operator||=
-name|VFS_BIO_NEED_FREE
-expr_stmt|;
-if|if
-condition|(
-name|tsleep
-argument_list|(
-operator|&
-name|needsbuffer
-argument_list|,
-operator|(
-name|PRIBIO
-operator|+
-literal|4
-operator|)
-operator||
-name|slpflag
-argument_list|,
-literal|"biofre"
-argument_list|,
-name|slptimeo
-argument_list|)
-condition|)
-break|break;
-block|}
-block|}
-end_function
+begin_endif
+unit|static void waitfreebuffers(int slpflag, int slptimeo)  { 	while (numfreebuffers< hifreebuffers) { 		if (numfreebuffers>= hifreebuffers) 			break; 		needsbuffer |= VFS_BIO_NEED_FREE; 		if (tsleep(&needsbuffer, (PRIBIO + 4)|slpflag, "biofre", slptimeo)) 			break; 	} }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *	buf_daemon:  *  *	buffer flushing daemon.  Buffers are normally flushed by the  *	update daemon but if it cannot keep up this process starts to  *	take the load in an attempt to prevent getnewbuf() from blocking.  */
@@ -7739,21 +7716,13 @@ argument_list|()
 expr_stmt|;
 name|loop
 label|:
-comment|/* 	 * Block if we are low on buffers.   Certain processes are allowed 	 * to completely exhaust the buffer cache.          *          * If this check ever becomes a bottleneck it may be better to          * move it into the else, when gbincore() fails.  At the moment          * it isn't a problem.          */
-if|if
-condition|(
-operator|!
-name|curproc
-operator|||
-operator|(
-name|curproc
-operator|->
-name|p_flag
-operator|&
-name|P_BUFEXHAUST
-operator|)
-condition|)
-block|{
+comment|/* 	 * Block if we are low on buffers.   Certain processes are allowed 	 * to completely exhaust the buffer cache.          *          * If this check ever becomes a bottleneck it may be better to          * move it into the else, when gbincore() fails.  At the moment          * it isn't a problem. 	 * 	 * XXX remove, we cannot afford to block anywhere if holding a vnode 	 * lock in low-memory situation, so take it to the max.          */
+if|#
+directive|if
+literal|0
+block|if (!curproc || (curproc->p_flag& P_BUFEXHAUST)) {
+endif|#
+directive|endif
 if|if
 condition|(
 name|numfreebuffers
@@ -7792,23 +7761,12 @@ name|slptimeo
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|numfreebuffers
-operator|<
-name|lofreebuffers
-condition|)
-block|{
-name|waitfreebuffers
-argument_list|(
-name|slpflag
-argument_list|,
-name|slptimeo
-argument_list|)
-expr_stmt|;
-block|}
+if|#
+directive|if
+literal|0
+block|} else if (numfreebuffers< lofreebuffers) { 		waitfreebuffers(slpflag, slptimeo); 	}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -9287,6 +9245,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* 					 * note: must allocate system pages 					 * since blocking here could intefere 					 * with paging I/O, no matter which 					 * process we are. 					 */
 name|m
 operator|=
 name|vm_page_alloc
@@ -9295,7 +9254,7 @@ name|obj
 argument_list|,
 name|pi
 argument_list|,
-name|VM_ALLOC_NORMAL
+name|VM_ALLOC_SYSTEM
 argument_list|)
 expr_stmt|;
 if|if
@@ -10264,44 +10223,17 @@ operator|!
 name|m
 condition|)
 block|{
-name|printf
+name|panic
 argument_list|(
-literal|"biodone: page disappeared\n"
+literal|"biodone: page disappeared"
 argument_list|)
 expr_stmt|;
-name|vm_object_pip_subtract
-argument_list|(
-name|obj
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator|&=
-operator|~
-name|B_CACHE
-expr_stmt|;
-name|foff
-operator|=
-operator|(
-name|foff
-operator|+
-name|PAGE_SIZE
-operator|)
-operator|&
-operator|~
-operator|(
-name|off_t
-operator|)
-name|PAGE_MASK
-expr_stmt|;
-name|iosize
-operator|-=
-name|resid
-expr_stmt|;
-continue|continue;
+if|#
+directive|if
+literal|0
+block|vm_object_pip_subtract(obj, 1); 					bp->b_flags&= ~B_CACHE; 					foff = (foff + PAGE_SIZE)&  					    ~(off_t)PAGE_MASK; 					iosize -= resid; 					continue;
+endif|#
+directive|endif
 block|}
 name|bp
 operator|->
@@ -11982,6 +11914,7 @@ control|)
 block|{
 name|tryagain
 label|:
+comment|/* 		 * note: must allocate system pages since blocking here 		 * could intefere with paging I/O, no matter which 		 * process we are. 		 */
 name|p
 operator|=
 name|vm_page_alloc
@@ -11998,7 +11931,7 @@ operator|>>
 name|PAGE_SHIFT
 operator|)
 argument_list|,
-name|VM_ALLOC_NORMAL
+name|VM_ALLOC_SYSTEM
 argument_list|)
 expr_stmt|;
 if|if

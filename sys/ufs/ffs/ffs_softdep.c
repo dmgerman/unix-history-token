@@ -316,6 +316,13 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
+name|M_SOFTDEP_FLAGS
+value|(M_WAITOK | M_USE_RESERVE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|D_PAGEDEP
 value|0
 end_define
@@ -3981,7 +3988,7 @@ argument_list|)
 argument_list|,
 name|M_PAGEDEP
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -4385,7 +4392,7 @@ argument_list|)
 argument_list|,
 name|M_INODEDEP
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|inodedep
@@ -4720,7 +4727,7 @@ argument_list|)
 argument_list|,
 name|M_NEWBLK
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|newblk
@@ -5471,7 +5478,7 @@ argument_list|)
 argument_list|,
 name|M_BMSAFEMAP
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|bmsafemap
@@ -5659,7 +5666,7 @@ argument_list|)
 argument_list|,
 name|M_ALLOCDIRECT
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -6355,7 +6362,7 @@ argument_list|)
 argument_list|,
 name|M_FREEFRAG
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|freefrag
@@ -6574,7 +6581,7 @@ argument_list|)
 argument_list|,
 name|M_ALLOCINDIR
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -7392,7 +7399,7 @@ argument_list|)
 argument_list|,
 name|M_INDIRDEP
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|newindirdep
@@ -7604,7 +7611,7 @@ argument_list|)
 argument_list|,
 name|M_FREEBLKS
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -8722,7 +8729,7 @@ argument_list|)
 argument_list|,
 name|M_FREEFILE
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|freefile
@@ -10191,7 +10198,7 @@ argument_list|)
 argument_list|,
 name|M_DIRADD
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -10277,7 +10284,7 @@ argument_list|)
 argument_list|,
 name|M_MKDIR
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|mkdir1
@@ -10316,7 +10323,7 @@ argument_list|)
 argument_list|,
 name|M_MKDIR
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|mkdir2
@@ -11428,7 +11435,7 @@ argument_list|)
 argument_list|,
 name|M_DIRREM
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -11851,7 +11858,7 @@ argument_list|)
 argument_list|,
 name|M_DIRADD
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -12995,7 +13002,7 @@ name|b_bcount
 argument_list|,
 name|M_INDIRDEP
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 name|ACQUIRE_LOCK
@@ -13433,7 +13440,7 @@ argument_list|)
 argument_list|,
 name|M_INODEDEP
 argument_list|,
-name|M_WAITOK
+name|M_SOFTDEP_FLAGS
 argument_list|)
 expr_stmt|;
 operator|*

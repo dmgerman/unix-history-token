@@ -386,6 +386,12 @@ comment|/* what has happened */
 block|}
 name|v_pollinfo
 struct|;
+name|struct
+name|proc
+modifier|*
+name|v_vxproc
+decl_stmt|;
+comment|/* proc owning VXLOCK */
 ifdef|#
 directive|ifdef
 name|DEBUG_LOCKS
