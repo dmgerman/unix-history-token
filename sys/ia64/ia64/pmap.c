@@ -6495,6 +6495,9 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|pmap_remove_pte
@@ -6509,6 +6512,9 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
