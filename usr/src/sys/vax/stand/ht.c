@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.5	81/03/22	*/
+comment|/*	ht.c	4.6	81/12/01	*/
 end_comment
 
 begin_comment
@@ -283,6 +283,9 @@ name|errcnt
 decl_stmt|,
 name|ds
 decl_stmt|;
+name|int
+name|er
+decl_stmt|;
 name|short
 name|fc
 decl_stmt|;
@@ -409,6 +412,12 @@ name|htaddr
 operator|->
 name|htds
 expr_stmt|;
+name|er
+operator|=
+name|htaddr
+operator|->
+name|hter
+expr_stmt|;
 if|if
 condition|(
 name|ds
@@ -437,29 +446,6 @@ operator|&
 name|HTDS_ERR
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"ht error: ds=%b, er=%b\n"
-argument_list|,
-name|MASKREG
-argument_list|(
-name|htaddr
-operator|->
-name|htds
-argument_list|)
-argument_list|,
-name|HTDS_BITS
-argument_list|,
-name|MASKREG
-argument_list|(
-name|htaddr
-operator|->
-name|hter
-argument_list|)
-argument_list|,
-name|HTER_BITS
-argument_list|)
-expr_stmt|;
 name|htaddr
 operator|->
 name|htcs1
@@ -467,6 +453,36 @@ operator|=
 name|HT_DCLR
 operator||
 name|HT_GO
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|er
+operator|&
+name|HTER_CORCRC
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ht error: ds=%b, er=%b\n"
+argument_list|,
+name|MASKREG
+argument_list|(
+name|ds
+argument_list|)
+argument_list|,
+name|HTDS_BITS
+argument_list|,
+name|MASKREG
+argument_list|(
+name|er
+argument_list|)
+argument_list|,
+name|HTER_BITS
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -500,6 +516,7 @@ expr_stmt|;
 goto|goto
 name|retry
 goto|;
+block|}
 block|}
 if|if
 condition|(
