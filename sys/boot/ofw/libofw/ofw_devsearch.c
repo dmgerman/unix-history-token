@@ -15,12 +15,6 @@ directive|include
 file|"libofw.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"openfirm.h"
-end_include
-
 begin_decl_stmt
 specifier|static
 name|phandle_t
