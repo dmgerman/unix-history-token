@@ -4,10 +4,6 @@ comment|/*	$NetBSD: rpcinfo.c,v 1.15 2000/10/04 20:09:05 mjl Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
@@ -41,6 +37,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * rpcinfo: ping a particular rpc program  * 	or dump the the registered programs on the remote machine.  */
@@ -1036,22 +1046,15 @@ name|strptr
 operator|!=
 literal|'\0'
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rpcinfo: %s is illegal port number\n"
+literal|"%s is illegal port number"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 endif|#
 directive|endif
@@ -1206,16 +1209,9 @@ operator|!
 name|netid
 operator|)
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|function
@@ -1258,16 +1254,9 @@ name|portnum
 operator|!=
 literal|0
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 name|pmapdump
 argument_list|(
 name|argc
@@ -1774,16 +1763,9 @@ name|argc
 operator|>
 literal|3
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|to
 operator|.
 name|tv_sec
@@ -2346,16 +2328,9 @@ name|argc
 operator|>
 literal|1
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|argc
@@ -2542,11 +2517,9 @@ name|low
 operator|>
 name|PMAPVERS
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s does not support portmapper.  Try rpcinfo %s instead\n"
+literal|"%s does not support portmapper.  Try rpcinfo %s instead"
 argument_list|,
 name|host
 argument_list|,
@@ -2836,20 +2809,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rpcinfo: couldn't find a suitable transport\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"couldn't find a suitable transport"
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 name|memset
@@ -2890,12 +2856,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rpcinfo: %s: %s\n"
+literal|"%s: %s"
 argument_list|,
 name|host
 argument_list|,
@@ -2905,12 +2870,6 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 block|{
 name|memcpy
@@ -3122,16 +3081,9 @@ name|argc
 operator|!=
 literal|2
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|prognum
 operator|=
 name|getprognum
@@ -3206,12 +3158,11 @@ operator|!=
 name|RPC_TIMEDOUT
 operator|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rpcinfo: broadcast failed: %s\n"
+literal|"broadcast failed: %s"
 argument_list|,
 name|clnt_sperrno
 argument_list|(
@@ -3219,12 +3170,6 @@ name|rpc_stat
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
@@ -3535,16 +3480,9 @@ name|argc
 operator|>
 literal|1
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|argc
@@ -4677,11 +4615,9 @@ expr_stmt|;
 return|return;
 name|error
 label|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"rpcinfo: no memory\n"
+literal|"no memory"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4747,16 +4683,9 @@ name|argc
 operator|!=
 literal|3
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|host
 operator|=
 name|argv
@@ -6648,16 +6577,9 @@ name|argc
 operator|!=
 literal|2
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|netid
@@ -6676,22 +6598,15 @@ name|nconf
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rpcinfo: netid %s not supported\n"
+literal|"netid %s not supported"
 argument_list|,
 name|netid
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -6720,12 +6635,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rpcinfo: Could not delete registration for prog %s version %s\n"
+literal|"could not delete registration for prog %s version %s"
 argument_list|,
 name|argv
 index|[
@@ -6738,12 +6652,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 comment|/*  * Create and return a handle for the given nconf.  * Exit if cannot create handle.  */
 specifier|static
@@ -6838,20 +6746,13 @@ name|nbuf
 operator|==
 name|NULL
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"rpcinfo: no address for client handle"
+literal|"no address for client handle"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|client
 operator|=
@@ -6976,16 +6877,9 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|nconf
 operator|=
 name|getnetconfigent
@@ -7004,22 +6898,15 @@ operator|*
 operator|)
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rpcinfo: Could not find %s\n"
+literal|"could not find %s"
 argument_list|,
 name|netid
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|to
 operator|.
 name|tv_sec
@@ -7564,16 +7451,9 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|prognum
 operator|=
 name|getprognum
@@ -7634,22 +7514,15 @@ operator|*
 operator|)
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rpcinfo: Could not find %s\n"
+literal|"could not find %s"
 argument_list|,
 name|netid
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|client
 operator|=
 name|clnt_tp_create
@@ -8159,6 +8032,11 @@ argument_list|,
 literal|"       rpcinfo -d [-T netid] prognum versnum\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 specifier|static
 name|u_long
@@ -8231,22 +8109,15 @@ name|rpc
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rpcinfo: %s is unknown service\n"
+literal|"%s is unknown service"
 argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|prognum
 operator|=
 name|rpc
@@ -8279,22 +8150,15 @@ name|strptr
 operator|!=
 literal|'\0'
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rpcinfo: %s is illegal program number\n"
+literal|"%s is illegal program number"
 argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -8345,22 +8209,15 @@ name|strptr
 operator|!=
 literal|'\0'
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rpcinfo: %s is illegal version number\n"
+literal|"%s is illegal version number"
 argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|vers
