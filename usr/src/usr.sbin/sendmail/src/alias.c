@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.22	%G%	(with DBM)"
+literal|"@(#)alias.c	3.23	%G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.22	%G%	(without DBM)"
+literal|"@(#)alias.c	3.23	%G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,6 +317,17 @@ name|p
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|a
+operator|->
+name|q_alias
+operator|==
+name|NULL
+operator|)
+condition|?
+operator|&
+name|From
+else|:
 name|a
 argument_list|)
 expr_stmt|;

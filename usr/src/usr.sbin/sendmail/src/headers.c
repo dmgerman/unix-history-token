@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	3.8	%G%"
+literal|"@(#)headers.c	3.9	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -430,8 +430,7 @@ name|h_value
 argument_list|,
 literal|0
 argument_list|,
-operator|&
-name|From
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return

@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.39	%G%"
+literal|"@(#)deliver.c	3.40	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2676,6 +2676,17 @@ name|exit
 argument_list|(
 name|EX_CANTCREAT
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ctladdr
+operator|==
+name|NULL
+condition|)
+name|ctladdr
+operator|=
+operator|&
+name|From
 expr_stmt|;
 if|if
 condition|(

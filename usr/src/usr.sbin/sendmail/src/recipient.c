@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.17	%G%"
+literal|"@(#)recipient.c	3.18	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -425,8 +425,7 @@ argument_list|(
 name|a
 argument_list|)
 operator|==
-operator|&
-name|From
+name|NULL
 operator|&&
 name|Debug
 operator|==
@@ -593,8 +592,7 @@ argument_list|(
 name|a
 argument_list|)
 operator|==
-operator|&
-name|From
+name|NULL
 operator|&&
 name|Debug
 operator|==
@@ -768,8 +766,7 @@ argument_list|(
 name|a
 argument_list|)
 operator|==
-operator|&
-name|From
+name|NULL
 operator|&&
 name|Debug
 operator|==
@@ -1640,8 +1637,7 @@ name|p
 argument_list|,
 literal|0
 argument_list|,
-operator|&
-name|From
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1686,18 +1682,6 @@ name|a
 operator|->
 name|q_alias
 expr_stmt|;
-if|if
-condition|(
-name|a
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-operator|&
-name|From
-operator|)
-return|;
 return|return
 operator|(
 name|a
