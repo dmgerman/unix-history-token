@@ -51,6 +51,12 @@ directive|include
 file|<pccard/slot.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<pccard/pcicvar.h>
+end_include
+
 begin_comment
 comment|/* Get pnp IDs */
 end_comment
@@ -223,164 +229,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  *	Per-slot data table.  */
-end_comment
-
-begin_struct
-struct|struct
-name|pcic_slot
-block|{
-name|int
-name|index
-decl_stmt|;
-comment|/* Index register */
-name|int
-name|data
-decl_stmt|;
-comment|/* Data register */
-name|int
-name|offset
-decl_stmt|;
-comment|/* Offset value for index */
-name|char
-name|controller
-decl_stmt|;
-comment|/* Device type */
-name|char
-name|revision
-decl_stmt|;
-comment|/* Device Revision */
-name|struct
-name|slot
-modifier|*
-name|slt
-decl_stmt|;
-comment|/* Back ptr to slot */
-name|u_char
-function_decl|(
-modifier|*
-name|getb
-function_decl|)
-parameter_list|(
-name|struct
-name|pcic_slot
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|putb
-function_decl|)
-parameter_list|(
-name|struct
-name|pcic_slot
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|u_char
-parameter_list|)
-function_decl|;
-name|u_char
-modifier|*
-name|regs
-decl_stmt|;
-comment|/* Pointer to regs in mem */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|pcic_softc
-block|{
-name|int
-name|unit
-decl_stmt|;
-name|struct
-name|pcic_slot
-name|slots
-index|[
-name|PCIC_MAX_SLOTS
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_decl_stmt
-specifier|static
-name|struct
-name|slot_ctrl
-name|cinfo
+name|devclass_t
+name|pcic_devclass
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|isa_pnp_id
-name|pcic_ids
-index|[]
-init|=
-block|{
-block|{
-name|PCIC_PNP_ACTIONTEC
-block|,
-name|NULL
-block|}
-block|,
-comment|/* AEI0218 */
-block|{
-name|PCIC_PNP_IBM3765
-block|,
-name|NULL
-block|}
-block|,
-comment|/* IBM3765 */
-block|{
-name|PCIC_PNP_82365
-block|,
-name|NULL
-block|}
-block|,
-comment|/* PNP0E00 */
-block|{
-name|PCIC_PNP_CL_PD6720
-block|,
-name|NULL
-block|}
-block|,
-comment|/* PNP0E01 */
-block|{
-name|PCIC_PNP_VLSI_82C146
-block|,
-name|NULL
-block|}
-block|,
-comment|/* PNP0E02 */
-block|{
-name|PCIC_PNP_82365_CARDBUS
-block|,
-name|NULL
-block|}
-block|,
-comment|/* PNP0E03 */
-block|{
-name|PCIC_PNP_SCM_SWAPBOX
-block|,
-name|NULL
-block|}
-block|,
-comment|/* SCM0469 */
-block|{
-literal|0
-block|}
-block|}
+name|slot_ctrl
+name|cinfo
 decl_stmt|;
 end_decl_stmt
 
@@ -1372,7 +1231,6 @@ comment|/*  *	VLSI 82C146 has incompatibilities about the I/O address of slot 1.
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|pcic_probe
 parameter_list|(
@@ -1396,9 +1254,6 @@ name|unsigned
 name|char
 name|c
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -1418,32 +1273,6 @@ name|pcic_softc
 modifier|*
 name|sc
 decl_stmt|;
-comment|/* Check isapnp ids */
-name|error
-operator|=
-name|ISA_PNP_PROBE
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|dev
-argument_list|,
-name|pcic_ids
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-name|ENXIO
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 comment|/* 	 *	Initialise controller information structure. 	 */
 name|cinfo
 operator|.
@@ -2166,7 +1995,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|pcic_attach
 parameter_list|(
@@ -3975,7 +3803,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|pcic_activate_resource
 parameter_list|(
@@ -4287,7 +4114,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|pcic_deactivate_resource
 parameter_list|(
@@ -4494,7 +4320,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|pcic_setup_intr
 parameter_list|(
@@ -4638,7 +4463,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|pcic_teardown_intr
 parameter_list|(
@@ -4697,7 +4521,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|pcic_set_res_flags
 parameter_list|(
@@ -4834,7 +4657,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|pcic_get_res_flags
 parameter_list|(
@@ -4957,7 +4779,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|pcic_set_memory_offset
 parameter_list|(
@@ -5037,7 +4858,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|pcic_get_memory_offset
 parameter_list|(
@@ -5105,187 +4925,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|device_method_t
-name|pcic_methods
-index|[]
-init|=
-block|{
-comment|/* Device interface */
-name|DEVMETHOD
-argument_list|(
-name|device_probe
-argument_list|,
-name|pcic_probe
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|device_attach
-argument_list|,
-name|pcic_attach
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|device_detach
-argument_list|,
-name|bus_generic_detach
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|device_shutdown
-argument_list|,
-name|bus_generic_shutdown
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|device_suspend
-argument_list|,
-name|bus_generic_suspend
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|device_resume
-argument_list|,
-name|bus_generic_resume
-argument_list|)
-block|,
-comment|/* Bus interface */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_alloc_resource
-argument_list|,
-name|bus_generic_alloc_resource
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_release_resource
-argument_list|,
-name|bus_generic_release_resource
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_activate_resource
-argument_list|,
-name|pcic_activate_resource
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_deactivate_resource
-argument_list|,
-name|pcic_deactivate_resource
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_setup_intr
-argument_list|,
-name|pcic_setup_intr
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_teardown_intr
-argument_list|,
-name|pcic_teardown_intr
-argument_list|)
-block|,
-comment|/* Card interface */
-name|DEVMETHOD
-argument_list|(
-name|card_set_res_flags
-argument_list|,
-name|pcic_set_res_flags
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|card_get_res_flags
-argument_list|,
-name|pcic_get_res_flags
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|card_set_memory_offset
-argument_list|,
-name|pcic_set_memory_offset
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|card_get_memory_offset
-argument_list|,
-name|pcic_get_memory_offset
-argument_list|)
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|devclass_t
-name|pcic_devclass
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|driver_t
-name|pcic_driver
-init|=
-block|{
-literal|"pcic"
-block|,
-name|pcic_methods
-block|,
-expr|sizeof
-operator|(
-expr|struct
-name|pcic_softc
-operator|)
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|pcic
-argument_list|,
-name|isa
-argument_list|,
-name|pcic_driver
-argument_list|,
-name|pcic_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 end_unit
 
