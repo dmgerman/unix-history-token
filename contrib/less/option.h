@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_define
@@ -111,6 +111,17 @@ end_define
 
 begin_comment
 comment|/* Option cannot be queried with "_" cmd */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INIT_HANDLER
+value|01000
+end_define
+
+begin_comment
+comment|/* Call option handler function at startup */
 end_comment
 
 begin_define
@@ -228,7 +239,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|option
+name|loption
 block|{
 name|char
 name|oletter

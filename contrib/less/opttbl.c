@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -180,23 +180,23 @@ end_comment
 begin_decl_stmt
 name|public
 name|int
-name|cbufs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Current number of buffers */
-end_comment
-
-begin_decl_stmt
-name|public
-name|int
 name|autobuf
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Automatically allocate buffers as needed */
+end_comment
+
+begin_decl_stmt
+name|public
+name|int
+name|bufspace
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Max buffer space per file (K) */
 end_comment
 
 begin_decl_stmt
@@ -318,6 +318,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Display a status column */
+end_comment
+
+begin_decl_stmt
+name|public
+name|int
+name|use_lessopen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Use the LESSOPEN filter */
 end_comment
 
 begin_if
@@ -588,6 +599,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|optname
+name|L__optname
+init|=
+block|{
+literal|"no-lessopen"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -969,7 +994,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|option
+name|loption
 name|option
 index|[]
 init|=
@@ -989,11 +1014,13 @@ name|how_search
 block|,
 name|NULL
 block|,
+block|{
 literal|"Search includes displayed screen"
 block|,
 literal|"Search skips displayed screen"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1003,19 +1030,23 @@ operator|&
 name|b_optname
 block|,
 name|NUMBER
+operator||
+name|INIT_HANDLER
 block|,
-literal|10
+literal|64
 block|,
 operator|&
-name|cbufs
+name|bufspace
 block|,
 name|opt_b
 block|,
-literal|"Buffers: "
+block|{
+literal|"Max buffer space per file (K): "
 block|,
-literal|"%d buffers"
+literal|"Max buffer space per file: %dK"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1033,11 +1064,13 @@ name|autobuf
 block|,
 name|NULL
 block|,
+block|{
 literal|"Don't automatically allocate buffers"
 block|,
 literal|"Automatically allocate buffers when needed"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1055,11 +1088,13 @@ name|top_scroll
 block|,
 name|NULL
 block|,
+block|{
 literal|"Repaint by scrolling from bottom of screen"
 block|,
 literal|"Repaint by clearing each line"
 block|,
 literal|"Repaint by painting from top of screen"
+block|}
 block|}
 block|,
 block|{
@@ -1079,11 +1114,13 @@ name|know_dumb
 block|,
 name|NULL
 block|,
+block|{
 literal|"Assume intelligent terminal"
 block|,
 literal|"Assume dumb terminal"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 if|#
@@ -1107,11 +1144,13 @@ name|NULL
 block|,
 name|opt_D
 block|,
+block|{
 literal|"color desc: "
 block|,
 literal|"Ddknsu0123456789."
 block|,
 name|NULL
+block|}
 block|}
 block|,
 endif|#
@@ -1131,11 +1170,13 @@ name|quit_at_eof
 block|,
 name|NULL
 block|,
+block|{
 literal|"Don't quit at end-of-file"
 block|,
 literal|"Quit at end-of-file"
 block|,
 literal|"Quit immediately at end-of-file"
+block|}
 block|}
 block|,
 block|{
@@ -1153,11 +1194,13 @@ name|force_open
 block|,
 name|NULL
 block|,
+block|{
 literal|"Open only regular files"
 block|,
 literal|"Open even non-regular files"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1175,11 +1218,13 @@ name|quit_if_one_screen
 block|,
 name|NULL
 block|,
+block|{
 literal|"Don't quit if end-of-file on first screen"
 block|,
 literal|"Quit if end-of-file on first screen"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 if|#
@@ -1202,12 +1247,14 @@ name|hilite_search
 block|,
 name|NULL
 block|,
+block|{
 literal|"Don't highlight search matches"
 block|,
 literal|"Highlight matches for previous search only"
 block|,
 literal|"Highlight all matches for previous search pattern"
-block|, 	}
+block|, 		}
+block|}
 block|,
 endif|#
 directive|endif
@@ -1227,11 +1274,13 @@ name|back_scroll
 block|,
 name|NULL
 block|,
+block|{
 literal|"Backwards scroll limit: "
 block|,
 literal|"Backwards scroll limit is %d lines"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1251,11 +1300,13 @@ name|caseless
 block|,
 name|opt_i
 block|,
+block|{
 literal|"Case is significant in searches"
 block|,
 literal|"Ignore case in searches"
 block|,
 literal|"Ignore case in searches and in patterns"
+block|}
 block|}
 block|,
 block|{
@@ -1273,11 +1324,13 @@ name|jump_sline
 block|,
 name|NULL
 block|,
+block|{
 literal|"Target line: "
 block|,
 literal|"Position target at screen line %d"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1297,11 +1350,13 @@ name|status_col
 block|,
 name|NULL
 block|,
+block|{
 literal|"Don't display a status column"
 block|,
 literal|"Display a status column"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 if|#
@@ -1325,11 +1380,13 @@ name|NULL
 block|,
 name|opt_k
 block|,
+block|{
 name|NULL
 block|,
 name|NULL
 block|,
 name|NULL
+block|}
 block|}
 block|,
 endif|#
@@ -1351,11 +1408,37 @@ name|NULL
 block|,
 name|opt_l
 block|,
+block|{
 name|NULL
 block|,
 name|NULL
 block|,
 name|NULL
+block|}
+block|}
+block|,
+block|{
+literal|'L'
+block|,
+operator|&
+name|L__optname
+block|,
+name|BOOL
+block|,
+name|OPT_ON
+block|,
+operator|&
+name|use_lessopen
+block|,
+name|NULL
+block|,
+block|{
+literal|"Don't use the LESSOPEN filter"
+block|,
+literal|"Use the LESSOPEN filter"
+block|,
+name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1373,11 +1456,13 @@ name|pr_type
 block|,
 name|NULL
 block|,
+block|{
 literal|"Short prompt"
 block|,
 literal|"Medium prompt"
 block|,
 literal|"Long prompt"
+block|}
 block|}
 block|,
 block|{
@@ -1397,11 +1482,13 @@ name|linenums
 block|,
 name|NULL
 block|,
+block|{
 literal|"Don't use line numbers"
 block|,
 literal|"Use line numbers"
 block|,
 literal|"Constantly display line numbers"
+block|}
 block|}
 block|,
 if|#
@@ -1421,11 +1508,13 @@ name|NULL
 block|,
 name|opt_o
 block|,
+block|{
 literal|"log file: "
 block|,
 name|NULL
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1442,11 +1531,13 @@ name|NULL
 block|,
 name|opt__O
 block|,
+block|{
 literal|"Log file: "
 block|,
 name|NULL
 block|,
 name|NULL
+block|}
 block|}
 block|,
 endif|#
@@ -1469,11 +1560,13 @@ name|NULL
 block|,
 name|opt_p
 block|,
+block|{
 name|NULL
 block|,
 name|NULL
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1490,11 +1583,13 @@ name|NULL
 block|,
 name|opt__P
 block|,
+block|{
 literal|"prompt: "
 block|,
 name|NULL
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1512,11 +1607,13 @@ name|quiet
 block|,
 name|NULL
 block|,
+block|{
 literal|"Ring the bell for errors AND at eof/bof"
 block|,
 literal|"Ring the bell for errors but not at eof/bof"
 block|,
 literal|"Never ring the bell"
+block|}
 block|}
 block|,
 block|{
@@ -1536,11 +1633,13 @@ name|ctldisp
 block|,
 name|NULL
 block|,
+block|{
 literal|"Display control characters as ^X"
 block|,
 literal|"Display control characters directly"
 block|,
 literal|"Display control characters directly, processing ANSI sequences"
+block|}
 block|}
 block|,
 block|{
@@ -1560,11 +1659,13 @@ name|squeeze
 block|,
 name|NULL
 block|,
+block|{
 literal|"Display all blank lines"
 block|,
 literal|"Squeeze multiple blank lines"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1584,11 +1685,13 @@ name|chopline
 block|,
 name|NULL
 block|,
+block|{
 literal|"Fold long lines"
 block|,
 literal|"Chop long lines"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 if|#
@@ -1610,11 +1713,13 @@ name|NULL
 block|,
 name|opt_t
 block|,
+block|{
 literal|"tag: "
 block|,
 name|NULL
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1631,11 +1736,13 @@ name|NULL
 block|,
 name|opt__T
 block|,
+block|{
 literal|"tags file: "
 block|,
 name|NULL
 block|,
 name|NULL
+block|}
 block|}
 block|,
 endif|#
@@ -1657,11 +1764,13 @@ name|bs_mode
 block|,
 name|NULL
 block|,
+block|{
 literal|"Display underlined text in underline mode"
 block|,
 literal|"Backspaces cause overstrike"
 block|,
 literal|"Print backspace as ^H"
+block|}
 block|}
 block|,
 block|{
@@ -1678,11 +1787,13 @@ name|NULL
 block|,
 name|opt__V
 block|,
+block|{
 name|NULL
 block|,
 name|NULL
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1702,12 +1813,14 @@ name|show_attn
 block|,
 name|NULL
 block|,
+block|{
 literal|"Don't highlight first unread line"
 block|,
 literal|"Highlight first unread line after forward-screen"
 block|,
 literal|"Highlight first unread line after any forward movement"
-block|, 	}
+block|, 		}
+block|}
 block|,
 block|{
 literal|'x'
@@ -1725,11 +1838,13 @@ name|NULL
 block|,
 name|opt_x
 block|,
+block|{
 literal|"Tab stops: "
 block|,
 literal|"0123456789,"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1749,11 +1864,13 @@ name|no_init
 block|,
 name|NULL
 block|,
+block|{
 literal|"Send init/deinit strings to terminal"
 block|,
 literal|"Don't use init/deinit strings"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1772,11 +1889,13 @@ name|forw_scroll
 block|,
 name|NULL
 block|,
+block|{
 literal|"Forward scroll limit: "
 block|,
 literal|"Forward scroll limit is %d lines"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1795,11 +1914,13 @@ name|swindow
 block|,
 name|NULL
 block|,
+block|{
 literal|"Scroll window size: "
 block|,
 literal|"Scroll window size is %d lines"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1816,11 +1937,13 @@ name|NULL
 block|,
 name|opt_quote
 block|,
+block|{
 literal|"quotes: "
 block|,
 name|NULL
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1840,11 +1963,13 @@ name|twiddle
 block|,
 name|NULL
 block|,
+block|{
 literal|"Don't show tildes after end of file"
 block|,
 literal|"Show tildes after end of file"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1861,11 +1986,13 @@ name|NULL
 block|,
 name|opt_query
 block|,
+block|{
 name|NULL
 block|,
 name|NULL
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1883,11 +2010,13 @@ name|shift_count
 block|,
 name|NULL
 block|,
+block|{
 literal|"Horizontal shift: "
 block|,
 literal|"Horizontal shift %d positions"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1907,11 +2036,13 @@ name|no_keypad
 block|,
 name|NULL
 block|,
+block|{
 literal|"Use keypad mode"
 block|,
 literal|"Don't use keypad mode"
 block|,
 name|NULL
+block|}
 block|}
 block|,
 block|{
@@ -1927,11 +2058,13 @@ name|NULL
 block|,
 name|NULL
 block|,
+block|{
 name|NULL
 block|,
 name|NULL
 block|,
 name|NULL
+block|}
 block|}
 block|}
 decl_stmt|;
@@ -1949,7 +2082,7 @@ parameter_list|()
 block|{
 specifier|register
 name|struct
-name|option
+name|loption
 modifier|*
 name|o
 decl_stmt|;
@@ -1989,6 +2122,32 @@ name|o
 operator|->
 name|odefault
 expr_stmt|;
+if|if
+condition|(
+name|o
+operator|->
+name|otype
+operator|&
+name|INIT_HANDLER
+condition|)
+operator|(
+operator|*
+operator|(
+name|o
+operator|->
+name|ofunc
+operator|)
+operator|)
+operator|(
+name|INIT
+operator|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+operator|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -2000,7 +2159,7 @@ end_comment
 begin_function
 name|public
 name|struct
-name|option
+name|loption
 modifier|*
 name|findopt
 parameter_list|(
@@ -2012,7 +2171,7 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|option
+name|loption
 modifier|*
 name|o
 decl_stmt|;
@@ -2079,13 +2238,63 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|is_optchar
+parameter_list|(
+name|c
+parameter_list|)
+name|char
+name|c
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|SIMPLE_IS_UPPER
+argument_list|(
+name|c
+argument_list|)
+condition|)
+return|return
+literal|1
+return|;
+if|if
+condition|(
+name|SIMPLE_IS_LOWER
+argument_list|(
+name|c
+argument_list|)
+condition|)
+return|return
+literal|1
+return|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'-'
+condition|)
+return|return
+literal|1
+return|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Find an option in the option table, given its option name.  * p_optname is the (possibly partial) name to look for, and  * is updated to point after the matched name.  * p_oname if non-NULL is set to point to the full option name.  */
 end_comment
 
 begin_function
 name|public
 name|struct
-name|option
+name|loption
 modifier|*
 name|findopt_name
 parameter_list|(
@@ -2119,7 +2328,7 @@ name|p_optname
 decl_stmt|;
 specifier|register
 name|struct
-name|option
+name|loption
 modifier|*
 name|o
 decl_stmt|;
@@ -2137,7 +2346,7 @@ name|int
 name|uppercase
 decl_stmt|;
 name|struct
-name|option
+name|loption
 modifier|*
 name|maxo
 init|=
@@ -2164,6 +2373,10 @@ name|int
 name|exact
 init|=
 literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|eq
 decl_stmt|;
 comment|/* 	 * Check all options. 	 */
 for|for
@@ -2230,6 +2443,24 @@ argument_list|,
 name|uppercase
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<=
+literal|0
+operator|||
+name|is_optchar
+argument_list|(
+name|optname
+index|[
+name|len
+index|]
+argument_list|)
+condition|)
+block|{
+comment|/* 					 * We didn't use all of the option name. 					 */
+continue|continue;
+block|}
 if|if
 condition|(
 operator|!
@@ -2340,6 +2571,12 @@ condition|)
 operator|*
 name|p_oname
 operator|=
+name|maxoname
+operator|==
+name|NULL
+condition|?
+name|NULL
+else|:
 name|maxoname
 operator|->
 name|oname

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -346,60 +346,18 @@ block|{
 name|char
 modifier|*
 name|esccmd
+init|=
+name|shell_quote
+argument_list|(
+name|cmd
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|esccmd
-operator|=
-name|esc_metachars
-argument_list|(
-name|cmd
-argument_list|)
-operator|)
-operator|==
+operator|!=
 name|NULL
 condition|)
-block|{
-name|p
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|ecalloc
-argument_list|(
-name|strlen
-argument_list|(
-name|shell
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|cmd
-argument_list|)
-operator|+
-literal|7
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|p
-argument_list|,
-literal|"%s -c \"%s\""
-argument_list|,
-name|shell
-argument_list|,
-name|cmd
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|p
 operator|=
@@ -431,9 +389,12 @@ name|sprintf
 argument_list|(
 name|p
 argument_list|,
-literal|"%s -c %s"
+literal|"%s %s %s"
 argument_list|,
 name|shell
+argument_list|,
+name|shell_coption
+argument_list|()
 argument_list|,
 name|esccmd
 argument_list|)

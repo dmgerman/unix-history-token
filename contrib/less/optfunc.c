@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|cbufs
+name|bufspace
 decl_stmt|;
 end_decl_stmt
 
@@ -407,10 +407,7 @@ name|parg
 operator|.
 name|p_string
 operator|=
-name|unquote_file
-argument_list|(
 name|namelogfile
-argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
@@ -418,13 +415,6 @@ literal|"Log file \"%s\""
 argument_list|,
 operator|&
 name|parg
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|parg
-operator|.
-name|p_string
 argument_list|)
 expr_stmt|;
 block|}
@@ -523,7 +513,7 @@ argument_list|(
 operator|&
 name|t
 argument_list|,
-literal|'l'
+literal|"l"
 argument_list|,
 operator|&
 name|err
@@ -609,10 +599,7 @@ name|parg
 operator|.
 name|p_string
 operator|=
-name|unquote_file
-argument_list|(
 name|s
-argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
@@ -620,13 +607,6 @@ literal|"Cannot use lesskey file \"%s\""
 argument_list|,
 operator|&
 name|parg
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|parg
-operator|.
-name|p_string
 argument_list|)
 expr_stmt|;
 block|}
@@ -821,10 +801,7 @@ name|parg
 operator|.
 name|p_string
 operator|=
-name|unquote_file
-argument_list|(
 name|tags
-argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
@@ -832,13 +809,6 @@ literal|"Tags file \"%s\""
 argument_list|,
 operator|&
 name|parg
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|parg
-operator|.
-name|p_string
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1113,22 +1083,20 @@ name|type
 condition|)
 block|{
 case|case
-name|TOGGLE
+name|INIT
 case|:
 case|case
-name|QUERY
+name|TOGGLE
 case|:
-comment|/* 		 * Allocate the new number of buffers. 		 */
-name|cbufs
-operator|=
-name|ch_nbuf
+comment|/* 		 * Set the new number of buffers. 		 */
+name|ch_setbufspace
 argument_list|(
-name|cbufs
+name|bufspace
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|INIT
+name|QUERY
 case|:
 break|break;
 block|}
@@ -1243,7 +1211,7 @@ argument_list|)
 expr_stmt|;
 name|putstr
 argument_list|(
-literal|"\nCopyright (C) 2001 Mark Nudelman\n\n"
+literal|"\nCopyright (C) 2002 Mark Nudelman\n\n"
 argument_list|)
 expr_stmt|;
 name|putstr
@@ -1325,7 +1293,7 @@ argument_list|(
 operator|&
 name|s
 argument_list|,
-literal|'D'
+literal|"D"
 argument_list|,
 operator|&
 name|err
@@ -1368,7 +1336,7 @@ argument_list|(
 operator|&
 name|s
 argument_list|,
-literal|'D'
+literal|"D"
 argument_list|,
 operator|&
 name|err
@@ -1654,6 +1622,13 @@ name|n
 init|=
 literal|0
 decl_stmt|;
+name|s
+operator|=
+name|skipsp
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -1700,6 +1675,13 @@ operator|++
 index|]
 operator|=
 name|n
+expr_stmt|;
+name|s
+operator|=
+name|skipsp
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1889,6 +1871,24 @@ case|:
 case|case
 name|TOGGLE
 case|:
+if|if
+condition|(
+name|s
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|openquote
+operator|=
+name|closequote
+operator|=
+literal|'\0'
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|s

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -329,6 +329,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|maxbufs
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|autobuf
@@ -339,13 +349,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|sigs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cbufs
 decl_stmt|;
 end_decl_stmt
 
@@ -530,14 +533,13 @@ operator|)
 operator|)
 operator|||
 operator|(
-name|cbufs
-operator|==
-operator|-
-literal|1
+name|maxbufs
+operator|<
+literal|0
 operator|||
 name|ch_nbufs
 operator|<
-name|cbufs
+name|maxbufs
 operator|)
 condition|)
 if|if
@@ -1854,72 +1856,60 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate buffers.  * Caller wants us to have a total of at least want_nbufs buffers.  */
+comment|/*  * Set max amount of buffer space.  * bufspace is in units of 1024 bytes.  -1 mean no limit.  */
 end_comment
 
 begin_function
 name|public
-name|int
-name|ch_nbuf
+name|void
+name|ch_setbufspace
 parameter_list|(
-name|want_nbufs
+name|bufspace
 parameter_list|)
 name|int
-name|want_nbufs
+name|bufspace
 decl_stmt|;
 block|{
-name|PARG
-name|parg
-decl_stmt|;
-while|while
+if|if
 condition|(
-name|ch_nbufs
+name|bufspace
 operator|<
-name|want_nbufs
-condition|)
-block|{
-if|if
-condition|(
-name|ch_addbuf
-argument_list|()
-condition|)
-block|{
-comment|/* 			 * Cannot allocate enough buffers. 			 * If we don't have ANY, then quit. 			 * Otherwise, just report the error and return. 			 */
-name|parg
-operator|.
-name|p_int
-operator|=
-name|want_nbufs
-operator|-
-name|ch_nbufs
-expr_stmt|;
-name|error
-argument_list|(
-literal|"Cannot allocate %d buffers"
-argument_list|,
-operator|&
-name|parg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ch_nbufs
-operator|==
 literal|0
 condition|)
-name|quit
-argument_list|(
-name|QUIT_ERROR
-argument_list|)
+name|maxbufs
+operator|=
+operator|-
+literal|1
 expr_stmt|;
-break|break;
-block|}
-block|}
-return|return
+else|else
+block|{
+name|maxbufs
+operator|=
 operator|(
-name|ch_nbufs
+operator|(
+name|bufspace
+operator|*
+literal|1024
 operator|)
-return|;
+operator|+
+name|LBUFSIZE
+operator|-
+literal|1
+operator|)
+operator|/
+name|LBUFSIZE
+expr_stmt|;
+if|if
+condition|(
+name|maxbufs
+operator|<
+literal|1
+condition|)
+name|maxbufs
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -364,8 +364,8 @@ end_function_decl
 
 begin_function_decl
 name|public
-name|int
-name|ch_nbuf
+name|void
+name|ch_setbufspace
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -517,7 +517,7 @@ end_function_decl
 
 begin_function_decl
 name|public
-name|int
+name|LINENUM
 name|cmd_int
 parameter_list|()
 function_decl|;
@@ -795,7 +795,25 @@ begin_function_decl
 name|public
 name|char
 modifier|*
-name|unquote_file
+name|shell_unquote
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|public
+name|char
+modifier|*
+name|get_meta_escape
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|public
+name|char
+modifier|*
+name|shell_quote
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -831,24 +849,6 @@ begin_function_decl
 name|public
 name|int
 name|bin_file
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|public
-name|char
-modifier|*
-name|esc_metachars
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|public
-name|char
-modifier|*
-name|esc_metachars
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -900,6 +900,15 @@ begin_function_decl
 name|public
 name|POSITION
 name|filesize
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|public
+name|char
+modifier|*
+name|shell_coption
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1252,7 +1261,7 @@ end_function_decl
 
 begin_function_decl
 name|public
-name|int
+name|LINENUM
 name|find_linenum
 parameter_list|()
 function_decl|;
@@ -1268,7 +1277,7 @@ end_function_decl
 
 begin_function_decl
 name|public
-name|int
+name|LINENUM
 name|currline
 parameter_list|()
 function_decl|;
@@ -1550,7 +1559,7 @@ end_function_decl
 begin_function_decl
 name|public
 name|struct
-name|option
+name|loption
 modifier|*
 name|findopt
 parameter_list|()
@@ -1560,7 +1569,7 @@ end_function_decl
 begin_function_decl
 name|public
 name|struct
-name|option
+name|loption
 modifier|*
 name|findopt_name
 parameter_list|()
