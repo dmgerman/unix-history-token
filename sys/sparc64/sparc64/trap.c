@@ -1797,12 +1797,6 @@ name|p
 operator|->
 name|p_vmspace
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Keep swapout from messing with us during this 		 * critical time. 		 */
 name|PROC_LOCK
 argument_list|(
@@ -1819,23 +1813,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Grow the stack if necessary.  vm_map_growstack only 		 * fails if the va falls into a growable stack region 		 * and the stack growth fails.  If it succeeds, or the 		 * va was not within a growable stack region, fault in 		 * the user page. 		 */
-if|if
-condition|(
-name|vm_map_growstack
-argument_list|(
-name|p
-argument_list|,
-name|va
-argument_list|)
-operator|!=
-name|KERN_SUCCESS
-condition|)
-name|rv
-operator|=
-name|KERN_FAILURE
-expr_stmt|;
-else|else
+comment|/* Fault in the user page. */
 name|rv
 operator|=
 name|vm_fault
@@ -1885,12 +1863,6 @@ literal|"trap_pfault: fault on nucleus context from user mode"
 operator|)
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Don't have to worry about process locking or stacks in the 		 * kernel. 		 */
 name|rv
 operator|=
@@ -1906,12 +1878,6 @@ name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_TRAP
