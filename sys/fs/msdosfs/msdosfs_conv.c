@@ -4951,14 +4951,15 @@ name|un
 operator|+=
 name|i
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|unlen
 operator|-=
 name|i
-operator|)
-operator|<=
+expr_stmt|;
+comment|/* 	 * unlen being zero must not be treated as length missmatch. It is 	 * possible if the entry is WIN_LAST and contains nothing but the 	 * terminating 0. 	 */
+if|if
+condition|(
+name|unlen
+operator|<
 literal|0
 condition|)
 return|return
