@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)errlst.c	5.7 (Berkeley) %G%"
+literal|"@(#)errlst.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,6 +289,9 @@ comment|/* 77 - ENOLCK */
 literal|"Function not implemented"
 block|,
 comment|/* 78 - ENOSYS */
+literal|"Incorrect format"
+block|,
+comment|/* 79 - EBADFORMAT */
 block|}
 decl_stmt|;
 end_decl_stmt
