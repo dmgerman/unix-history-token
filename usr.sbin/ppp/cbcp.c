@@ -621,6 +621,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|cbcpname
 index|[]
 init|=
@@ -1005,6 +1006,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|types
 index|[]
 init|=

@@ -1026,6 +1026,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|cftypes
 index|[]
 init|=
@@ -1059,6 +1060,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|cftypes128
 index|[]
 init|=
@@ -2842,6 +2844,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|timer_names
 index|[]
 init|=

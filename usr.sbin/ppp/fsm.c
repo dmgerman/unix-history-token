@@ -536,6 +536,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|StateNames
 index|[]
 init|=
@@ -726,6 +727,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|timer_names
 index|[
 literal|3

@@ -447,6 +447,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|PhaseNames
 index|[]
 init|=

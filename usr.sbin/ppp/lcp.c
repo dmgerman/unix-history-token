@@ -452,6 +452,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|lcp_TimerNames
 index|[]
 init|=
@@ -470,6 +471,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|cftypes
 index|[]
 init|=

@@ -420,6 +420,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|ccp_TimerNames
 index|[]
 init|=
@@ -438,6 +439,7 @@ specifier|static
 name|char
 specifier|const
 modifier|*
+specifier|const
 name|cftypes
 index|[]
 init|=
@@ -566,6 +568,7 @@ specifier|const
 name|struct
 name|ccp_algorithm
 modifier|*
+specifier|const
 name|algorithm
 index|[]
 init|=

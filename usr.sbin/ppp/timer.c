@@ -112,6 +112,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|StateNames
 index|[]
 init|=

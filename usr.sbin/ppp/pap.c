@@ -245,6 +245,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|papcodes
 index|[]
 init|=
