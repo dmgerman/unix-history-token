@@ -674,6 +674,8 @@ comment|/* vn_open leaves it locked */
 name|ioflg
 operator|=
 name|IO_UNIT
+operator||
+name|IO_NOMACCHECK
 expr_stmt|;
 for|for
 control|(

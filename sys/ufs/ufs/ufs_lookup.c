@@ -4919,6 +4919,8 @@ argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
 name|IO_NODELOCKED
+operator||
+name|IO_NOMACCHECK
 argument_list|,
 name|cred
 argument_list|,
@@ -5238,6 +5240,8 @@ argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
 name|IO_NODELOCKED
+operator||
+name|IO_NOMACCHECK
 argument_list|,
 name|cred
 argument_list|,
