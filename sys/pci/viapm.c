@@ -209,6 +209,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VIA_8233A_PMU_ID
+value|0x31471106
+end_define
+
+begin_define
+define|#
+directive|define
 name|VIAPM_INB
 parameter_list|(
 name|port
@@ -1079,6 +1086,9 @@ name|viapro
 goto|;
 case|case
 name|VIA_8233_PMU_ID
+case|:
+case|case
+name|VIA_8233A_PMU_ID
 case|:
 name|desc
 operator|=
