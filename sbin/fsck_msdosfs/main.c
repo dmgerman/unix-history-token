@@ -162,11 +162,20 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-name|errexit
+name|fprintf
 argument_list|(
-literal|"usage: fsck_msdos [-fnpy] filesystem ... \n"
+name|stderr
+argument_list|,
+literal|"usage: fsck_msdos [-fnpy] filesystem ...\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
