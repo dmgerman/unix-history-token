@@ -10249,6 +10249,16 @@ comment|/* XXX: what if MNT_WAIT? */
 continue|continue;
 if|if
 condition|(
+name|vp
+operator|->
+name|v_flag
+operator|&
+name|VNOSYNC
+condition|)
+comment|/* unlinked, skip it */
+continue|continue;
+if|if
+condition|(
 name|flags
 operator|!=
 name|MNT_WAIT

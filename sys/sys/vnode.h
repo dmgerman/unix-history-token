@@ -565,8 +565,15 @@ begin_comment
 comment|/* waiting for output to complete */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VNOSYNC
+value|0x01000
+end_define
+
 begin_comment
-comment|/* open for business    0x00800 */
+comment|/* unlinked, stop syncing */
 end_comment
 
 begin_comment
