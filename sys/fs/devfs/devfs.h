@@ -15,12 +15,6 @@ directive|define
 name|_FS_DEVFS_DEVFS_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -447,10 +441,8 @@ decl_stmt|;
 name|struct
 name|devfs_dirent
 modifier|*
+modifier|*
 name|dm_dirent
-index|[
-name|NDEVFSINO
-index|]
 decl_stmt|;
 name|struct
 name|devfs_dirent
