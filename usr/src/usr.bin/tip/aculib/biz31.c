@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)biz31.c	4.6 (Berkeley) %G%"
+literal|"@(#)biz31.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,12 +25,6 @@ include|#
 directive|include
 file|"tip.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|BIZ1031
-end_if
 
 begin_define
 define|#
@@ -948,11 +942,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

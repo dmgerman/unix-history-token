@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	4.7 (Berkeley) %G%"
+literal|"@(#)df.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,20 +23,6 @@ end_endif
 begin_comment
 comment|/*  * Dial the DF02-AC or DF03-AC  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DF02
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|DF03
-argument_list|)
-end_if
 
 begin_include
 include|#
@@ -57,12 +43,6 @@ name|timeout
 argument_list|()
 expr_stmt|;
 end_expr_stmt
-
-begin_if
-if|#
-directive|if
-name|DF02
-end_if
 
 begin_macro
 name|df02_dialer
@@ -100,17 +80,6 @@ return|;
 block|}
 end_block
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|DF03
-end_if
-
 begin_macro
 name|df03_dialer
 argument_list|(
@@ -146,11 +115,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|df_dialer
@@ -526,11 +490,6 @@ literal|1
 argument_list|)
 block|; }
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v3451.c	4.3 (Berkeley) %G%"
+literal|"@(#)v3451.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,12 +19,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|V3451
-end_ifdef
 
 begin_comment
 comment|/*  * Routines for calling up on a Vadic 3451 Modem  */
@@ -861,11 +855,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

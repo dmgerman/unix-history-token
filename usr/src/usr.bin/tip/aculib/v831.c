@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v831.c	4.4 (Berkeley) %G%"
+literal|"@(#)v831.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,12 +19,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|V831
-end_ifdef
 
 begin_comment
 comment|/*  * Routines for dialing up on Vadic 831  */
@@ -625,13 +619,8 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
 begin_comment
+unit|}
 comment|/*  * Sigh, this probably must be changed at each site.  */
 end_comment
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ventel.c	1.4 (Berkeley) %G%"
+literal|"@(#)ventel.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,12 +19,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-name|VENTEL
-end_if
 
 begin_comment
 comment|/*  * Routines for calling up on a Ventel Modem  * The Ventel is expected to be strapped for "no echo".  */
@@ -775,11 +769,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
