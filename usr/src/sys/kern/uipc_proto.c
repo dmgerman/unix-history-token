@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*	uipc_proto.c	4.2	81/11/08	*/
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -8,13 +12,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../inet/protocol.h"
+file|"../h/socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/protocolsw.h"
+file|"../h/protocol.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/protosw.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/inet.h"
 end_include
 
 begin_comment
@@ -57,6 +79,9 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|ip_init
+argument_list|()
+decl_stmt|,
 name|ip_input
 argument_list|()
 decl_stmt|,
@@ -79,7 +104,7 @@ name|int
 name|icmp_input
 argument_list|()
 decl_stmt|,
-name|icmp_output
+name|icmp_drain
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -102,6 +127,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|tcp_init
+argument_list|()
+decl_stmt|,
 name|tcp_input
 argument_list|()
 decl_stmt|,
@@ -114,6 +142,9 @@ decl_stmt|,
 name|tcp_slowtimo
 argument_list|()
 decl_stmt|,
+name|tcp_usrreq
+argument_list|()
+decl_stmt|,
 name|tcp_drain
 argument_list|()
 decl_stmt|,
@@ -124,19 +155,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|rawip_input
+name|ri_input
 argument_list|()
 decl_stmt|,
-name|rawip_advise
+name|ri_advise
 argument_list|()
 decl_stmt|,
-name|rawip_advise
+name|ri_usrreq
 argument_list|()
 decl_stmt|,
-name|rawip_usrreq
-argument_list|()
-decl_stmt|,
-name|rawip_sense
+name|ri_sense
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -359,6 +387,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 name|gen_usrreq
 block|,
 literal|0
@@ -375,7 +405,9 @@ literal|0
 block|,
 name|PR_ATOMIC
 operator||
-name|PR_PROVIDEADDR
+name|PR_ADDR
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -405,7 +437,9 @@ literal|0
 block|,
 name|PR_ATOMIC
 operator||
-name|PR_PROVIDEADDR
+name|PR_ADDR
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -435,7 +469,9 @@ literal|0
 block|,
 name|PR_ATOMIC
 operator||
-name|PR_PROVIDEADDR
+name|PR_ADDR
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -453,6 +489,9 @@ name|gen_usrreq
 block|,
 literal|0
 block|,
+literal|0
+block|}
+block|,
 if|#
 directive|if
 name|NTCP
@@ -466,6 +505,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|ip_init
 block|,
 name|ip_input
 block|,
@@ -495,9 +536,11 @@ name|IPPROTO_ICMP
 block|,
 literal|0
 block|,
+literal|0
+block|,
 name|icmp_input
 block|,
-name|icmp_output
+literal|0
 block|,
 literal|0
 block|,
@@ -523,7 +566,9 @@ name|IPPROTO_UDP
 block|,
 name|PR_ATOMIC
 operator||
-name|PR_PROVIDEADDR
+name|PR_ADDR
+block|,
+literal|0
 block|,
 name|udp_input
 block|,
@@ -553,6 +598,8 @@ name|IPPROTO_TCP
 block|,
 literal|0
 block|,
+name|tcp_init
+block|,
 name|tcp_input
 block|,
 literal|0
@@ -581,7 +628,9 @@ name|IPPROTO_RAW
 block|,
 name|PR_ATOMIC
 operator||
-name|PR_PROVIDEADDR
+name|PR_ADDR
+block|,
+literal|0
 block|,
 name|ri_input
 block|,
@@ -589,11 +638,11 @@ literal|0
 block|,
 name|ri_advise
 block|,
-name|ri_fasttimo
+literal|0
 block|,
-name|ri_slowtimo
+literal|0
 block|,
-name|ri_drain
+literal|0
 block|,
 name|ri_usrreq
 block|,
@@ -618,7 +667,9 @@ literal|0
 block|,
 name|PR_ATOMIC
 operator||
-name|PR_PROVIDEADDR
+name|PR_ADDR
+block|,
+name|pup_init
 block|,
 name|pup_input
 block|,
@@ -648,6 +699,8 @@ name|PUPPROTO_BSP
 block|,
 literal|0
 block|,
+name|bsp_init
+block|,
 name|bsp_input
 block|,
 literal|0
@@ -676,7 +729,9 @@ name|PUPPROTO_RAW
 block|,
 name|PR_ATOMIC
 operator||
-name|PR_PROVIDEADDR
+name|PR_ADDR
+block|,
+name|rp_init
 block|,
 name|rp_input
 block|,
@@ -740,31 +795,46 @@ comment|/* ... */
 endif|#
 directive|endif
 block|}
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_define
 define|#
 directive|define
 name|protoswEND
 value|&protosw[sizeof (protosw)/sizeof (protosw[0])]
+end_define
+
+begin_comment
 comment|/*  * Operations on protocol table and protocol families.  */
+end_comment
+
+begin_comment
 comment|/*  * Find a standard protocol in a protocol family  * of a specific type.  */
-name|pf_stdproto
-argument_list|(
-argument|family
-argument_list|,
-argument|type
-argument_list|)
+end_comment
+
+begin_function
+name|struct
+name|protosw
+modifier|*
+name|pf_findtype
+parameter_list|(
+name|family
+parameter_list|,
+name|type
+parameter_list|)
 name|int
 name|family
-block|,
+decl_stmt|,
 name|type
-block|;
+decl_stmt|;
 block|{
 specifier|register
-expr|struct
+name|struct
 name|protosw
-operator|*
+modifier|*
 name|pr
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|family
@@ -808,36 +878,33 @@ operator|(
 name|pr
 operator|)
 return|;
-end_decl_stmt
-
-begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Find a specified protocol in a specified protocol family.  */
 end_comment
 
-begin_expr_stmt
-unit|pf_findproto
-operator|(
+begin_function
+name|struct
+name|protosw
+modifier|*
+name|pf_findproto
+parameter_list|(
 name|family
-operator|,
-name|proto
-operator|)
+parameter_list|,
+name|protocol
+parameter_list|)
 name|int
 name|family
-operator|,
-name|proto
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|,
+name|protocol
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -879,9 +946,9 @@ name|family
 operator|&&
 name|pr
 operator|->
-name|pr_proto
+name|pr_protocol
 operator|==
-name|proto
+name|protocol
 condition|)
 return|return
 operator|(
@@ -894,6 +961,15 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_macro
+name|prinit
+argument_list|()
+end_macro
+
+begin_block
+block|{  }
 end_block
 
 end_unit
