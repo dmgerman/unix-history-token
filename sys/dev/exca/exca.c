@@ -2622,9 +2622,6 @@ name|child
 parameter_list|)
 block|{
 name|int
-name|cardtype
-decl_stmt|;
-name|int
 name|win
 decl_stmt|;
 comment|/* enable socket i/o */
@@ -2687,29 +2684,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|CARD_GET_TYPE
-argument_list|(
-name|child
-argument_list|,
-operator|&
-name|cardtype
-argument_list|)
-expr_stmt|;
 name|exca_setb
 argument_list|(
 name|sc
 argument_list|,
 name|EXCA_INTR
 argument_list|,
-operator|(
-name|cardtype
-operator|==
-name|PCCARD_IFTYPE_IO
-operator|)
-condition|?
 name|EXCA_INTR_CARDTYPE_IO
-else|:
-name|EXCA_INTR_CARDTYPE_MEM
 argument_list|)
 expr_stmt|;
 name|DEVPRINTF
@@ -2718,17 +2699,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"card type is %s\n"
-argument_list|,
-operator|(
-name|cardtype
-operator|==
-name|PCCARD_IFTYPE_IO
-operator|)
-condition|?
-literal|"io"
-else|:
-literal|"mem"
+literal|"card type is io\n"
 argument_list|)
 expr_stmt|;
 comment|/* reinstall all the memory and io mappings */
