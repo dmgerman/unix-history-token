@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: pathnames.h,v 1.2 1995/07/03 21:25:20 cgd Exp $	*/
+comment|/*	$NetBSD: pathnames.h,v 1.3 1999/04/22 04:40:58 mrg Exp $	*/
 end_comment
 
 begin_comment
@@ -11,11 +11,33 @@ begin_comment
 comment|/* directory where lint1 and lint2 reside */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PATH_LIBEXEC
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|PATH_LIBEXEC
 value|"/usr/libexec"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* directory where cc(1) resides */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PATH_USRBIN
+value|"/usr/bin"
 end_define
 
 begin_comment
