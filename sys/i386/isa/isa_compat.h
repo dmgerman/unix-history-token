@@ -375,23 +375,6 @@ directive|include
 file|"fla.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"bs.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|old_isa_driver
@@ -895,25 +878,6 @@ name|isa_driver
 name|ppcdriver
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|bsdriver
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1505,9 +1469,6 @@ block|,
 endif|#
 directive|endif
 comment|/* CAM */
-ifndef|#
-directive|ifndef
-name|PC98
 if|#
 directive|if
 name|NADV
@@ -1522,8 +1483,6 @@ block|}
 block|,
 endif|#
 directive|endif
-endif|#
-directive|endif
 if|#
 directive|if
 name|NAHA
@@ -1536,25 +1495,6 @@ operator|&
 name|ahadriver
 block|}
 block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|PC98
-if|#
-directive|if
-name|NBS
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_CAM
-block|,
-operator|&
-name|bsdriver
-block|}
-block|,
-endif|#
-directive|endif
 endif|#
 directive|endif
 comment|/* MISC */
