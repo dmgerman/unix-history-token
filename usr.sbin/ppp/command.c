@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.158 1998/07/31 19:50:24 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.159 1998/08/07 18:42:48 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -523,6 +523,13 @@ name|VAR_CBCP
 value|25
 end_define
 
+begin_define
+define|#
+directive|define
+name|VAR_CHOKED
+value|26
+end_define
+
 begin_comment
 comment|/* ``accept|deny|disable|enable'' masks */
 end_comment
@@ -638,7 +645,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1998/07/31 19:50:24 $"
+literal|"$Date: 1998/08/07 18:42:48 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -10068,6 +10075,51 @@ block|}
 block|}
 block|}
 break|break;
+case|case
+name|VAR_CHOKED
+case|:
+name|arg
+operator|->
+name|bundle
+operator|->
+name|cfg
+operator|.
+name|choked
+operator|.
+name|timeout
+operator|=
+name|atoi
+argument_list|(
+name|argp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|arg
+operator|->
+name|bundle
+operator|->
+name|cfg
+operator|.
+name|choked
+operator|.
+name|timeout
+operator|<=
+literal|0
+condition|)
+name|arg
+operator|->
+name|bundle
+operator|->
+name|cfg
+operator|.
+name|choked
+operator|.
+name|timeout
+operator|=
+name|CHOKED_TIMEOUT
+expr_stmt|;
+break|break;
 block|}
 return|return
 name|err
@@ -10365,6 +10417,27 @@ name|void
 operator|*
 operator|)
 name|VAR_CHAPRETRY
+block|}
+block|,
+block|{
+literal|"choked"
+block|,
+name|NULL
+block|,
+name|SetVariable
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"choked timeout"
+block|,
+literal|"set choked [secs]"
+block|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|VAR_CHOKED
 block|}
 block|,
 block|{

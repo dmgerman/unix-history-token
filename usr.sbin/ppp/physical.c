@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.c,v 1.4 1998/06/27 14:18:09 brian Exp $  *  */
+comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.c,v 1.5 1998/08/07 18:42:50 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -1236,6 +1236,48 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|physical_DeleteQueue
+parameter_list|(
+name|struct
+name|physical
+modifier|*
+name|p
+parameter_list|)
+block|{
+if|if
+condition|(
+name|p
+operator|->
+name|out
+condition|)
+block|{
+name|mbuf_Free
+argument_list|(
+name|p
+operator|->
+name|out
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|out
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|link_DeleteQueue
+argument_list|(
+operator|&
+name|p
+operator|->
+name|link
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
