@@ -4,6 +4,10 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
+comment|/* *****[ libU77 ]***** */
+end_comment
+
+begin_comment
 comment|/* config.h.  Generated automatically by configure.  */
 end_comment
 
@@ -442,6 +446,152 @@ define|#
 directive|define
 name|_FILE_OFFSET_BITS
 value|64
+end_define
+
+begin_comment
+comment|/* *****[ libI77 ]***** */
+end_comment
+
+begin_comment
+comment|/* config.h.  Generated automatically by configure.  */
+end_comment
+
+begin_comment
+comment|/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+end_comment
+
+begin_comment
+comment|/* Define to `long' if<sys/types.h> doesn't define.  */
+end_comment
+
+begin_comment
+comment|/* #undef off_t */
+end_comment
+
+begin_comment
+comment|/* Define if you have the fseeko function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FSEEKO
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the ftello function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FTELLO
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the ftruncate function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FTRUNCATE
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the mkstemp function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MKSTEMP
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the tempnam function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TEMPNAM
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the tmpnam function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TMPNAM
+value|1
+end_define
+
+begin_comment
+comment|/* Define for HP-UX ftello and fseeko extension. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_LARGEFILE_SOURCE
+value|1
+end_define
+
+begin_comment
+comment|/* Define if we do not have Unix Stdio. */
+end_comment
+
+begin_comment
+comment|/* #undef NON_UNIX_STDIO */
+end_comment
+
+begin_comment
+comment|/* Define if we use strlen. */
+end_comment
+
+begin_comment
+comment|/* #undef USE_STRLEN */
+end_comment
+
+begin_comment
+comment|/* Define if we have non ANSI RW modes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NON_ANSI_RW_MODES
+value|1
+end_define
+
+begin_comment
+comment|/* Always defined. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_EOF_CHAR_CHECK
+value|1
+end_define
+
+begin_comment
+comment|/* Define to skip f2c undefs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Skip_f2c_Undefs
+value|1
 end_define
 
 end_unit
