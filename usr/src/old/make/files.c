@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.6 (Berkeley) 83/02/09"
+literal|"@(#)files.c	4.7 (Berkeley) 83/05/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ literal|".SUFFIXES : .L .out .o .c .f .e .r .y .yr .ye .l .s .z .x .t .h .cl"
 block|,
 else|#
 directive|else
-literal|".SUFFIXES : .out .o .c .f .e .r .y .yr .ye .l .s .cl .p"
+literal|".SUFFIXES : .out .o .c .f .F .e .r .y .yr .ye .l .s .cl .p"
 block|,
 endif|#
 directive|endif
@@ -111,7 +111,7 @@ literal|".cl.o :"
 block|,
 literal|"\tclass -c $<"
 block|,
-literal|".e.o .r.o .f.o :"
+literal|".e.o .r.o .F.o .f.o :"
 block|,
 literal|"\t$(FC) $(RFLAGS) $(EFLAGS) $(FFLAGS) -c $<"
 block|,
@@ -212,7 +212,7 @@ literal|".s.out .c.out .o.out :"
 block|,
 literal|"\t$(CC) $(CFLAGS) $< $(LOADLIBES) -o $@"
 block|,
-literal|".f.out .r.out .e.out :"
+literal|".f.out .F.out .r.out .e.out :"
 block|,
 literal|"\t$(FC) $(EFLAGS) $(RFLAGS) $(FFLAGS) $< $(LOADLIBES) -o $@"
 block|,
