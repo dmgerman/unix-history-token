@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_hy.c	4.8	83/06/13	*/
+comment|/*	if_hy.c	4.9	83/06/19	*/
 end_comment
 
 begin_include
@@ -5127,7 +5127,7 @@ name|RQ_XASSOC
 condition|)
 block|{
 specifier|register
-name|unsigned
+name|int
 name|len
 decl_stmt|;
 name|is
