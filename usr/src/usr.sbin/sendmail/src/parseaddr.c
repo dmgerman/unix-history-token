@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.13 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2534,6 +2534,9 @@ name|EX_OK
 decl_stmt|;
 comment|/* return status */
 name|int
+name|loopcount
+decl_stmt|;
+name|int
 name|subr
 decl_stmt|;
 comment|/* subroutine number if>= 0 */
@@ -2719,6 +2722,10 @@ name|ruleno
 operator|=
 literal|1
 expr_stmt|;
+name|loopcount
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|rwr
@@ -2734,11 +2741,6 @@ name|NULL
 condition|;
 control|)
 block|{
-name|int
-name|loopcount
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -3855,6 +3857,10 @@ expr_stmt|;
 name|ruleno
 operator|++
 expr_stmt|;
+name|loopcount
+operator|=
+literal|0
+expr_stmt|;
 name|nmatches
 operator|=
 literal|0
@@ -3950,6 +3956,10 @@ name|r_next
 expr_stmt|;
 name|ruleno
 operator|++
+expr_stmt|;
+name|loopcount
+operator|=
+literal|0
 expr_stmt|;
 name|nmatches
 operator|=
