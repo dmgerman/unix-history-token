@@ -445,10 +445,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|vm_pageout_stats_free_max
-init|=
-literal|0
-decl_stmt|,
 name|vm_pageout_algorithm
 init|=
 literal|0
@@ -629,27 +625,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Interval for partial stats scan"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vm
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|pageout_stats_free_max
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|vm_pageout_stats_free_max
-argument_list|,
-literal|0
-argument_list|,
-literal|"Not implemented"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4994,17 +4969,6 @@ operator|=
 name|vm_pageout_stats_interval
 operator|*
 literal|4
-expr_stmt|;
-comment|/* 	 * Set maximum free per pass 	 */
-if|if
-condition|(
-name|vm_pageout_stats_free_max
-operator|==
-literal|0
-condition|)
-name|vm_pageout_stats_free_max
-operator|=
-literal|5
 expr_stmt|;
 name|swap_pager_swap_init
 argument_list|()
