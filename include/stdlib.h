@@ -563,6 +563,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LONG_LONG_SUPPORTED
+end_ifdef
+
 begin_decl_stmt
 name|long
 name|long
@@ -583,6 +589,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|unsigned
@@ -605,6 +616,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LONG_LONG_SUPPORTED
+end_ifdef
+
 begin_decl_stmt
 name|unsigned
 name|long
@@ -626,6 +643,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
