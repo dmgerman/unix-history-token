@@ -1556,7 +1556,7 @@ name|LOGIN_CAP
 comment|/* 		 * Establish the class now, before we might goto 		 * within the next block. pwd can be NULL since it 		 * falls back to the "default" class if it is. 		 */
 name|lc
 operator|=
-name|login_getclass
+name|login_getpwclass
 argument_list|(
 name|pwd
 argument_list|)
@@ -2073,7 +2073,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOGIN_CAP
+name|LOGIN_CAP_AUTH
 if|if
 condition|(
 name|rval
