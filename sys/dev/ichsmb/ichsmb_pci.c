@@ -4,7 +4,7 @@ comment|/*  * ichsmb_pci.c  *  * Copyright (c) 2000 Whistle Communications, Inc.
 end_comment
 
 begin_comment
-comment|/*  * Support for the SMBus controller logical device which is part of the  * Intel 81801AA (ICH) and 81801AB (ICH0) I/O controller hub chips.  */
+comment|/*  * Support for the SMBus controller logical device which is part of the  * Intel 81801AA/AB/BA/CA/DC/EB (ICH/ICH[02345]) I/O controller hub chips.  */
 end_comment
 
 begin_include
@@ -121,6 +121,20 @@ define|#
 directive|define
 name|ID_82801CA
 value|0x24838086
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_82801DC
+value|0x24C38086
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_82801EB
+value|0x24D38086
 end_define
 
 begin_define
@@ -380,6 +394,28 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Intel 82801CA (ICH3) SMBus controller"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ID_82801DC
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel 82801DC (ICH4) SMBus controller"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ID_82801EB
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel 82801EB (ICH5) SMBus controller"
 argument_list|)
 expr_stmt|;
 break|break;
