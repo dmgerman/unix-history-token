@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.30 (Berkeley) %G%"
+literal|"@(#)df.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,9 +112,9 @@ name|bread
 name|__P
 argument_list|(
 operator|(
-name|long
+name|off_t
 operator|,
-name|char
+name|void
 operator|*
 operator|,
 name|int
@@ -1138,7 +1138,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This code constitutes the old df code for extracting  * information from filesystem superblocks.  */
+comment|/*  * This code constitutes the pre-system call Berkeley df code for extracting  * information from filesystem superblocks.  */
 end_comment
 
 begin_include
@@ -1186,7 +1186,7 @@ end_define
 
 begin_decl_stmt
 name|int
-name|fi
+name|rfd
 decl_stmt|;
 end_decl_stmt
 
@@ -1237,7 +1237,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|fi
+name|rfd
 operator|=
 name|open
 argument_list|(
@@ -1274,14 +1274,10 @@ condition|(
 name|bread
 argument_list|(
 operator|(
-name|long
+name|off_t
 operator|)
 name|SBOFF
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|sblock
 argument_list|,
@@ -1296,7 +1292,7 @@ name|void
 operator|)
 name|close
 argument_list|(
-name|fi
+name|rfd
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1521,7 +1517,7 @@ name|void
 operator|)
 name|close
 argument_list|(
-name|fi
+name|rfd
 argument_list|)
 expr_stmt|;
 block|}
@@ -1537,10 +1533,10 @@ name|buf
 parameter_list|,
 name|cnt
 parameter_list|)
-name|long
+name|off_t
 name|off
 decl_stmt|;
-name|char
+name|void
 modifier|*
 name|buf
 decl_stmt|;
@@ -1549,14 +1545,14 @@ name|cnt
 decl_stmt|;
 block|{
 name|int
-name|n
+name|nr
 decl_stmt|;
 operator|(
 name|void
 operator|)
 name|lseek
 argument_list|(
-name|fi
+name|rfd
 argument_list|,
 name|off
 argument_list|,
@@ -1566,11 +1562,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|n
+name|nr
 operator|=
 name|read
 argument_list|(
-name|fi
+name|rfd
 argument_list|,
 name|buf
 argument_list|,
@@ -1581,40 +1577,36 @@ operator|!=
 name|cnt
 condition|)
 block|{
-comment|/* probably a dismounted disk if errno == EIO */
+comment|/* Probably a dismounted disk if errno == EIO. */
 if|if
 condition|(
 name|errno
 operator|!=
 name|EIO
 condition|)
-block|{
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
-literal|"\nread error off = %ld\n"
+name|stderr
+argument_list|,
+literal|"\ndf: %qd: %s\n"
 argument_list|,
 name|off
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"count = %d: %s\n"
-argument_list|,
-name|n
 argument_list|,
 name|strerror
 argument_list|(
+name|nr
+operator|>
+literal|0
+condition|?
+name|EIO
+else|:
 name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
