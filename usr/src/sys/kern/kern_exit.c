@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_exit.c	6.2	84/05/22	*/
+comment|/*	kern_exit.c	6.3	84/06/10	*/
 end_comment
 
 begin_include
@@ -985,9 +985,21 @@ operator|.
 name|u_error
 condition|)
 return|return;
+if|if
+condition|(
+name|rup
+operator|!=
 operator|(
-name|void
+expr|struct
+name|rusage
+operator|*
 operator|)
+literal|0
+condition|)
+name|u
+operator|.
+name|u_error
+operator|=
 name|copyout
 argument_list|(
 operator|(
