@@ -308,6 +308,45 @@ argument_list|(
 name|linebuf
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Transforms lines ending in<CR><LF> to just<LF>. 		 * This allows mail to be able to read Eudora mailboxes. 		 */
+if|if
+condition|(
+name|count
+operator|>=
+literal|2
+operator|&&
+name|linebuf
+index|[
+name|count
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\n'
+operator|&&
+name|linebuf
+index|[
+name|count
+operator|-
+literal|2
+index|]
+operator|==
+literal|'\r'
+condition|)
+block|{
+name|count
+operator|--
+expr_stmt|;
+name|linebuf
+index|[
+name|count
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\n'
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -670,7 +709,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read up a line from the specified input into the line  * buffer.  Return the number of characters read.  Do not  * include the newline at the end.  */
+comment|/*  * Read up a line from the specified input into the line  * buffer.  Return the number of characters read.  Do not  * include the newline (or carriage return) at the end.  */
 end_comment
 
 begin_function
@@ -742,6 +781,29 @@ literal|1
 index|]
 operator|==
 literal|'\n'
+condition|)
+name|linebuf
+index|[
+operator|--
+name|n
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+operator|&&
+name|linebuf
+index|[
+name|n
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\r'
 condition|)
 name|linebuf
 index|[
