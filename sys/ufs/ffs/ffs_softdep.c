@@ -5496,7 +5496,7 @@ name|max_softdeps
 operator|=
 name|desiredvnodes
 operator|*
-literal|8
+literal|4
 expr_stmt|;
 name|pagedep_hashtbl
 operator|=
