@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strip.c	5.10 (Berkeley) %G%"
+literal|"@(#)strip.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -141,6 +147,8 @@ name|err
 name|__P
 argument_list|(
 operator|(
+name|int
+operator|,
 specifier|const
 name|char
 operator|*
@@ -199,6 +207,12 @@ operator|(
 name|void
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|eval
 decl_stmt|;
 end_decl_stmt
 
@@ -350,6 +364,8 @@ condition|)
 block|{
 name|err
 argument_list|(
+literal|0
+argument_list|,
 literal|"%s: %s"
 argument_list|,
 name|fn
@@ -379,6 +395,8 @@ condition|)
 block|{
 name|err
 argument_list|(
+literal|0
+argument_list|,
 literal|"%s: %s"
 argument_list|,
 name|fn
@@ -410,6 +428,8 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
+literal|0
+argument_list|,
 literal|"%s: %s"
 argument_list|,
 name|fn
@@ -423,7 +443,7 @@ expr_stmt|;
 block|}
 name|exit
 argument_list|(
-literal|0
+name|eval
 argument_list|)
 expr_stmt|;
 block|}
@@ -585,6 +605,8 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
+literal|0
+argument_list|,
 literal|"%s: %s"
 argument_list|,
 name|fn
@@ -667,6 +689,32 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/* Check size. */
+if|if
+condition|(
+name|sb
+operator|.
+name|st_size
+operator|>
+name|SIZE_T_MAX
+condition|)
+block|{
+name|err
+argument_list|(
+literal|0
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|fn
+argument_list|,
+name|strerror
+argument_list|(
+name|EFBIG
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Map the file. */
 if|if
 condition|(
@@ -718,8 +766,11 @@ operator|)
 operator|-
 literal|1
 condition|)
+block|{
 name|err
 argument_list|(
+literal|0
+argument_list|,
 literal|"%s: %s"
 argument_list|,
 name|fn
@@ -730,6 +781,8 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Initialize old and new symbol pointers.  They both point to the 	 * beginning of the symbol table in memory, since we're deleting 	 * entries. 	 */
 name|sym
 operator|=
@@ -793,6 +846,8 @@ name|NULL
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s"
 argument_list|,
 name|strerror
@@ -962,6 +1017,8 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
+literal|0
+argument_list|,
 literal|"%s: %s"
 argument_list|,
 name|fn
@@ -1048,6 +1105,9 @@ directive|if
 name|__STDC__
 name|err
 parameter_list|(
+name|int
+name|fatal
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1059,10 +1119,15 @@ else|#
 directive|else
 function|err
 parameter_list|(
+name|fatal
+parameter_list|,
 name|fmt
 parameter_list|,
 name|va_alist
 parameter_list|)
+name|int
+name|fatal
+decl_stmt|;
 name|char
 modifier|*
 name|fmt
@@ -1130,10 +1195,18 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fatal
+condition|)
 name|exit
 argument_list|(
 literal|1
 argument_list|)
+expr_stmt|;
+name|eval
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
