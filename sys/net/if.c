@@ -147,6 +147,27 @@ directive|include
 file|<netinet/in_var.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
+end_include
+
+begin_comment
+comment|/* XXX: temporal workaround for fxp issue */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -4397,6 +4418,12 @@ block|{
 ifdef|#
 directive|ifdef
 name|INET6
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+comment|/* XXX: temporal workaround for fxp issue*/
 if|if
 condition|(
 name|ifp
