@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_subr.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_subr.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1955,21 +1955,11 @@ name|v_count
 operator|<
 literal|0
 condition|)
-name|printf
+name|vprint
 argument_list|(
-literal|"vnode bad ref count %d, type %d, tag %d\n"
+literal|"vrele: bad ref count"
 argument_list|,
 name|vp
-operator|->
-name|v_count
-argument_list|,
-name|vp
-operator|->
-name|v_type
-argument_list|,
-name|vp
-operator|->
-name|v_tag
 argument_list|)
 expr_stmt|;
 if|if
@@ -2217,21 +2207,11 @@ if|if
 condition|(
 name|busyprt
 condition|)
-name|printf
+name|vprint
 argument_list|(
-literal|"vflush: busy vnode count %d type %d tag %d\n"
+literal|"vflush: busy vnode"
 argument_list|,
 name|vp
-operator|->
-name|v_count
-argument_list|,
-name|vp
-operator|->
-name|v_type
-argument_list|,
-name|vp
-operator|->
-name|v_tag
 argument_list|)
 expr_stmt|;
 name|busy
@@ -2285,7 +2265,7 @@ decl_stmt|;
 name|int
 name|active
 decl_stmt|;
-comment|/* 	 * Check to see if the vnode is in use. 	 * If so we have to lock it before we clean it out. 	 */
+comment|/* 	 * Check to see if the vnode is in use. 	 * If so we have to reference it before we clean it out 	 * so that its count cannot fall to zero and generate a 	 * race against ourselves to recycle it. 	 */
 if|if
 condition|(
 name|active
@@ -2294,20 +2274,13 @@ name|vp
 operator|->
 name|v_count
 condition|)
-block|{
 name|VREF
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Prevent the vnode from being recycled or 	 * brought into use while we clean it out. 	 */
-while|while
+if|if
 condition|(
 name|vp
 operator|->
@@ -2315,29 +2288,33 @@ name|v_flag
 operator|&
 name|VXLOCK
 condition|)
-block|{
-name|vp
-operator|->
-name|v_flag
-operator||=
-name|VXWANT
-expr_stmt|;
-name|sleep
+name|panic
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|vp
-argument_list|,
-name|PINOD
+literal|"vclean: deadlock"
 argument_list|)
 expr_stmt|;
-block|}
 name|vp
 operator|->
 name|v_flag
 operator||=
 name|VXLOCK
+expr_stmt|;
+comment|/* 	 * Even if the count is zero, the VOP_INACTIVE routine may still 	 * have the object locked while it cleans it out. The VOP_LOCK 	 * ensures that the VOP_INACTIVE routine is done with its work. 	 * For active vnodes, it ensures that no other activity can 	 * occur while the buffer list is being cleaned out. 	 */
+name|VOP_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|doclose
+condition|)
+name|vinvalbuf
+argument_list|(
+name|vp
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Prevent any further operations on the vnode from 	 * being passed through to the old file system. 	 */
 name|origops
@@ -2360,11 +2337,6 @@ operator|=
 name|VT_NON
 expr_stmt|;
 comment|/* 	 * If purging an active vnode, it must be unlocked, closed, 	 * and deactivated before being reclaimed. 	 */
-if|if
-condition|(
-name|active
-condition|)
-block|{
 operator|(
 operator|*
 operator|(
@@ -2377,6 +2349,11 @@ operator|(
 name|vp
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|active
+condition|)
+block|{
 if|if
 condition|(
 name|doclose
@@ -3054,6 +3031,101 @@ operator|(
 name|count
 operator|)
 return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Print out a description of a vnode.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|typename
+index|[]
+init|=
+block|{
+literal|"VNON"
+block|,
+literal|"VREG"
+block|,
+literal|"VDIR"
+block|,
+literal|"VBLK"
+block|,
+literal|"VCHR"
+block|,
+literal|"VLNK"
+block|,
+literal|"VSOCK"
+block|,
+literal|"VBAD"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|vprint
+argument_list|(
+argument|label
+argument_list|,
+argument|vp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|label
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+if|if
+condition|(
+name|label
+operator|!=
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"%s: "
+argument_list|,
+name|label
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"type %s, count %d, "
+argument_list|,
+name|typename
+index|[
+name|vp
+operator|->
+name|v_type
+index|]
+argument_list|,
+name|vp
+operator|->
+name|v_count
+argument_list|)
+expr_stmt|;
+name|VOP_PRINT
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
