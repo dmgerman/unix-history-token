@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -10,12 +10,11 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
-specifier|static
 name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1988 The Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1992 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)test.c	1.4 (Berkeley) %G%"
+literal|"@(#)test.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,18 +51,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
 
 begin_include
 include|#
@@ -80,19 +67,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"operators.h"
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"extern.h"
+file|"operators.h"
 end_include
 
 begin_define
@@ -137,33 +136,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|INITARGS
-parameter_list|(
-name|argv
-parameter_list|)
-value|if (argv[0] == NULL) {fputs("Argc is zero\n", stderr); exit(2);} else
-end_define
-
-begin_define
-define|#
-directive|define
 name|IS_BANG
 parameter_list|(
 name|s
 parameter_list|)
 value|(s[0] == '!'&& s[1] == '\0')
-end_define
-
-begin_define
-define|#
-directive|define
-name|equal
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
-value|(strcmp(s1, s2) == 0)
 end_define
 
 begin_comment
@@ -200,11 +177,11 @@ block|{
 name|short
 name|op
 decl_stmt|;
-comment|/* which operator */
+comment|/* Which operator. */
 name|short
 name|pri
 decl_stmt|;
-comment|/* priority of operator */
+comment|/* Priority of operator. */
 block|}
 struct|;
 end_struct
@@ -217,19 +194,51 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* name of file */
+comment|/* Name of file. */
 name|int
 name|rcode
 decl_stmt|;
-comment|/* return code from stat */
+comment|/* Return code from stat. */
 name|struct
 name|stat
 name|stat
 decl_stmt|;
-comment|/* status info on file */
+comment|/* Status info on file. */
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|static
+name|long
+name|atol
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|err
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -270,6 +279,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|int_tcheck
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|lookup_op
 name|__P
 argument_list|(
@@ -288,14 +311,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|long
-name|atol
+name|void
+name|overflow
 name|__P
 argument_list|(
 operator|(
-specifier|const
-name|char
-operator|*
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -333,13 +354,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|int_tcheck
+name|void
+name|syntax
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -358,42 +378,10 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
-name|char
-modifier|*
-modifier|*
-name|ap
-decl_stmt|;
-name|char
-modifier|*
-name|opname
-decl_stmt|;
-name|char
-name|c
-decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|int
-name|nest
-decl_stmt|;
-comment|/* parentheses nesting */
-name|int
-name|op
-decl_stmt|;
-name|int
-name|pri
-decl_stmt|;
-name|int
-name|skipping
-decl_stmt|;
-name|int
-name|binary
-decl_stmt|;
 name|struct
 name|operator
 name|opstack
@@ -424,14 +412,53 @@ name|struct
 name|filestat
 name|fs
 decl_stmt|;
-name|int
-name|ret_val
+name|char
+name|c
+decl_stmt|,
+modifier|*
+modifier|*
+name|ap
+decl_stmt|,
+modifier|*
+name|opname
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|;
-name|INITARGS
-argument_list|(
+name|int
+name|binary
+decl_stmt|,
+name|nest
+decl_stmt|,
+name|op
+decl_stmt|,
+name|pri
+decl_stmt|,
+name|ret_val
+decl_stmt|,
+name|skipping
+decl_stmt|;
+if|if
+condition|(
 name|argv
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+condition|)
+block|{
+name|err
+argument_list|(
+literal|"test: argc is zero.\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
@@ -443,8 +470,7 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|equal
+name|strcmp
 argument_list|(
 name|argv
 index|[
@@ -456,7 +482,7 @@ argument_list|,
 literal|"]"
 argument_list|)
 condition|)
-name|error
+name|err
 argument_list|(
 literal|"missing ]"
 argument_list|)
@@ -483,7 +509,7 @@ name|name
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Test(1) implements an inherently ambiguous grammer.  In order to 	 * assure some degree of consistency, we special case the POSIX 	 * requirements to assure correct evaluation for POSIX following 	 * scripts.  The following special cases comply with POSIX 	 * P1003.2/D11.2 Section 4.62.4. */
+comment|/* 	 * Test(1) implements an inherently ambiguous grammer.  In order to 	 * assure some degree of consistency, we special case the POSIX 1003.2 	 * requirements to assure correct evaluation for POSIX scripts.  The 	 * following special cases comply with POSIX P1003.2/D11.2 Section 	 * 4.62.4. 	 */
 switch|switch
 condition|(
 name|argc
@@ -496,7 +522,9 @@ literal|0
 case|:
 comment|/* % test */
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 break|break;
 case|case
@@ -572,7 +600,9 @@ operator|>=
 literal|0
 condition|)
 return|return
+operator|(
 name|ret_val
+operator|)
 return|;
 block|}
 break|break;
@@ -609,8 +639,10 @@ operator|>=
 literal|0
 condition|)
 return|return
+operator|(
 operator|!
 name|ret_val
+operator|)
 return|;
 block|}
 else|else
@@ -633,7 +665,9 @@ operator|>=
 literal|0
 condition|)
 return|return
+operator|(
 name|ret_val
+operator|)
 return|;
 block|}
 break|break;
@@ -670,15 +704,17 @@ operator|>=
 literal|0
 condition|)
 return|return
+operator|(
 operator|!
 name|ret_val
+operator|)
 return|;
 block|}
 break|break;
 default|default:
 break|break;
 block|}
-comment|/* We use operator precedence parsing, evaluating the expression as 	 * we parse it.  Parentheses are handled by bumping up the priority 	 * of operators using the variable "nest."  We use the variable 	 * "skipping" to turn off evaluation temporarily for the short 	 * circuit boolean operators.  (It is important do the short circuit 	 * evaluation because under NFS a stat operation can take infinitely 	 * long.) */
+comment|/* 	 * We use operator precedence parsing, evaluating the expression as 	 * we parse it.  Parentheses are handled by bumping up the priority 	 * of operators using the variable "nest."  We use the variable 	 * "skipping" to turn off evaluation temporarily for the short 	 * circuit boolean operators.  (It is important do the short circuit 	 * evaluation because under NFS a stat operation can take infinitely 	 * long.) 	 */
 name|opsp
 operator|=
 name|opstack
@@ -691,8 +727,6 @@ name|valstack
 expr_stmt|;
 name|nest
 operator|=
-literal|0
-expr_stmt|;
 name|skipping
 operator|=
 literal|0
@@ -747,9 +781,9 @@ name|opname
 operator|==
 name|NULL
 condition|)
-goto|goto
 name|syntax
-goto|;
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|opname
@@ -803,9 +837,9 @@ index|[
 literal|0
 index|]
 condition|)
-goto|goto
 name|overflow
-goto|;
+argument_list|()
+expr_stmt|;
 operator|--
 name|opsp
 expr_stmt|;
@@ -873,9 +907,9 @@ name|nest
 operator|!=
 literal|0
 condition|)
-goto|goto
 name|syntax
-goto|;
+argument_list|()
+expr_stmt|;
 name|pri
 operator|=
 literal|0
@@ -914,9 +948,9 @@ operator|)
 operator|<
 literal|0
 condition|)
-goto|goto
 name|syntax
-goto|;
+argument_list|()
+expr_stmt|;
 name|op
 operator|+=
 name|FIRST_BINARY_OP
@@ -942,9 +976,9 @@ operator|)
 operator|<
 literal|0
 condition|)
-goto|goto
 name|syntax
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 while|while
 condition|(
@@ -1051,11 +1085,27 @@ operator|==
 name|INTEGER
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|p
 operator|=
-name|stalloc
+name|malloc
 argument_list|(
 literal|32
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|"%s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1078,6 +1128,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|p
@@ -1157,8 +1210,7 @@ name|name
 operator|==
 name|NULL
 operator|||
-operator|!
-name|equal
+name|strcmp
 argument_list|(
 name|fs
 operator|.
@@ -1276,9 +1328,9 @@ index|[
 literal|0
 index|]
 condition|)
-goto|goto
 name|overflow
-goto|;
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|op
@@ -1359,6 +1411,7 @@ block|}
 name|done
 label|:
 return|return
+operator|(
 name|expr_is_false
 argument_list|(
 operator|&
@@ -1367,21 +1420,8 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|)
 return|;
-name|syntax
-label|:
-name|error
-argument_list|(
-literal|"syntax error"
-argument_list|)
-expr_stmt|;
-name|overflow
-label|:
-name|error
-argument_list|(
-literal|"Expression too complex"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1421,7 +1461,9 @@ operator|==
 literal|'\0'
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 else|else
@@ -1438,11 +1480,15 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1533,7 +1579,7 @@ name|ISREAD
 case|:
 name|i
 operator|=
-literal|04
+name|S_IROTH
 expr_stmt|;
 goto|goto
 name|permission
@@ -1543,7 +1589,7 @@ name|ISWRITE
 case|:
 name|i
 operator|=
-literal|02
+name|S_IWOTH
 expr_stmt|;
 goto|goto
 name|permission
@@ -1553,7 +1599,7 @@ name|ISEXEC
 case|:
 name|i
 operator|=
-literal|01
+name|S_IXOTH
 expr_stmt|;
 name|permission
 label|:
@@ -1635,9 +1681,6 @@ goto|;
 case|case
 name|ISFIFO
 case|:
-ifdef|#
-directive|ifdef
-name|S_IFIFO
 name|i
 operator|=
 name|S_IFIFO
@@ -1645,13 +1688,6 @@ expr_stmt|;
 goto|goto
 name|filetype
 goto|;
-else|#
-directive|else
-goto|goto
-name|false
-goto|;
-endif|#
-directive|endif
 name|filetype
 label|:
 if|if
@@ -1674,7 +1710,6 @@ name|rcode
 operator|>=
 literal|0
 condition|)
-block|{
 name|true
 label|:
 name|sp
@@ -1685,9 +1720,7 @@ name|num
 operator|=
 literal|1
 expr_stmt|;
-block|}
 else|else
-block|{
 name|false
 label|:
 name|sp
@@ -1698,7 +1731,6 @@ name|num
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|sp
 operator|->
 name|type
@@ -1865,7 +1897,7 @@ case|:
 case|case
 name|AND1
 case|:
-comment|/* These operators are mostly handled by the parser.  If we 		 * get here it means that both operands were evaluated, so 		 * the value is the value of the second operand. */
+comment|/* 		 * These operators are mostly handled by the parser.  If we 		 * get here it means that both operands were evaluated, so 		 * the value is the value of the second operand. 		 */
 operator|*
 name|sp
 operator|=
@@ -1889,7 +1921,8 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|equal
+operator|!
+name|strcmp
 argument_list|(
 name|sp
 operator|->
@@ -2139,12 +2172,14 @@ name|p
 decl_stmt|;
 name|char
 name|c
-init|=
+decl_stmt|;
+name|c
+operator|=
 name|name
 index|[
 literal|1
 index|]
-decl_stmt|;
+expr_stmt|;
 for|for
 control|(
 name|tp
@@ -2163,7 +2198,6 @@ condition|;
 name|tp
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|p
@@ -2173,7 +2207,8 @@ index|]
 operator|==
 name|c
 operator|&&
-name|equal
+operator|!
+name|strcmp
 argument_list|(
 name|p
 argument_list|,
@@ -2181,14 +2216,17 @@ name|name
 argument_list|)
 condition|)
 return|return
+operator|(
 name|tp
 operator|-
 name|table
+operator|)
 return|;
-block|}
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -2206,6 +2244,14 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+name|struct
+name|filestat
+name|fs
+decl_stmt|;
+name|struct
+name|value
+name|valp
+decl_stmt|;
 name|int
 name|op
 decl_stmt|,
@@ -2214,14 +2260,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|opname
-decl_stmt|;
-name|struct
-name|filestat
-name|fs
-decl_stmt|;
-name|struct
-name|value
-name|valp
 decl_stmt|;
 name|opname
 operator|=
@@ -2244,8 +2282,10 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|c
 operator|=
@@ -2305,8 +2345,10 @@ operator|!=
 name|OP_STRING
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|expr_operator
 argument_list|(
@@ -2346,6 +2388,13 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+name|struct
+name|value
+name|v
+index|[
+literal|2
+index|]
+decl_stmt|;
 name|int
 name|op
 decl_stmt|,
@@ -2354,13 +2403,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|opname
-decl_stmt|;
-name|struct
-name|value
-name|v
-index|[
-literal|2
-index|]
 decl_stmt|;
 name|opname
 operator|=
@@ -2385,8 +2427,10 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|op
 operator|+=
@@ -2534,12 +2578,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|char
-name|outbuf
-index|[
-literal|512
-index|]
-decl_stmt|;
 for|for
 control|(
 name|p
@@ -2556,40 +2594,179 @@ operator|++
 control|)
 if|if
 condition|(
+operator|!
+name|isdigit
+argument_list|(
 operator|*
 name|p
-operator|<
-literal|'0'
-operator|||
-operator|*
-name|p
-operator|>
-literal|'9'
-condition|)
-block|{
-name|snprintf
-argument_list|(
-name|outbuf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|outbuf
 argument_list|)
-argument_list|,
-literal|"Illegal operand \"%s\" -- expected integer."
+condition|)
+name|err
+argument_list|(
+literal|"illegal operand \"%s\" -- expected integer."
 argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-name|error
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|syntax
+parameter_list|()
+block|{
+name|err
 argument_list|(
-name|outbuf
+literal|"syntax error"
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-literal|1
-return|;
+end_function
+
+begin_function
+specifier|static
+name|void
+name|overflow
+parameter_list|()
+block|{
+name|err
+argument_list|(
+literal|"expression is too complex"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|void
+if|#
+directive|if
+name|__STDC__
+name|err
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+else|#
+directive|else
+function|err
+parameter_list|(
+name|fmt
+parameter_list|,
+name|va_alist
+parameter_list|)
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
+function|va_dcl
+endif|#
+directive|endif
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+if|#
+directive|if
+name|__STDC__
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"test: "
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
