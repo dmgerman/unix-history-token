@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)memalloc.c	5.1 (Berkeley) %G%"
+literal|"@(#)memalloc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -579,6 +579,11 @@ operator|==
 name|stackp
 operator|->
 name|space
+operator|&&
+name|stackp
+operator|!=
+operator|&
+name|stackbase
 condition|)
 block|{
 name|INTOFF
@@ -712,6 +717,8 @@ decl_stmt|;
 if|if
 condition|(
 name|herefd
+operator|>=
+literal|0
 operator|&&
 name|len
 operator|>=

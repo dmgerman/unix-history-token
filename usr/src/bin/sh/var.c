@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c	5.1 (Berkeley) %G%"
+literal|"@(#)var.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -326,17 +326,6 @@ block|,
 literal|"PS2=> "
 block|}
 block|,
-block|{
-operator|&
-name|vvers
-block|,
-name|VSTRFIXED
-operator||
-name|VTEXTFIXED
-block|,
-literal|"SHELLVERS=ash 0.2"
-block|}
-block|,
 if|#
 directive|if
 name|ATTY
@@ -590,6 +579,34 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|strncmp
+argument_list|(
+name|ip
+operator|->
+name|text
+argument_list|,
+literal|"PS1="
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|&&
+name|getuid
+argument_list|()
+operator|==
+literal|0
+condition|)
+name|ip
+operator|->
+name|text
+operator|=
+literal|"PS1=# "
+expr_stmt|;
 name|vpp
 operator|=
 name|hashvar

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkinit.c	5.2 (Berkeley) %G%"
+literal|"@(#)mkinit.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Usage:  mkinit command sourcefile...  *  * This program scans all the source files for code to handle various  * special events and combines this code into one file.  This (allegedly)  * improves the structure of the program since there is no need for  * anyone outside of a module to know that that module performs special  * operations on particular events.  The command is executed iff init.c  * is actually changed.  */
+comment|/*  * This program scans all the source files for code to handle various  * special events and combines this code into one file.  This (allegedly)  * improves the structure of the program since there is no need for  * anyone outside of a module to know that that module performs special  * operations on particular events.  The command is executed iff init.c  * is actually changed.  *  * Usage:  mkinit command sourcefile...  */
 end_comment
 
 begin_include
@@ -66,6 +66,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_comment
@@ -421,6 +427,12 @@ modifier|*
 modifier|*
 name|ap
 decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+name|char
+name|c
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -492,6 +504,28 @@ argument_list|(
 name|OUTTEMP
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|unlink
+argument_list|(
+name|OUTTEMP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|touch
+argument_list|(
+name|OUTOBJ
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* no compilation necessary */
+block|}
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -527,20 +561,6 @@ argument_list|(
 literal|"Can't exec shell"
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|unlink
-argument_list|(
-name|OUTTEMP
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1716,7 +1736,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return true if the new output file is different from the old one.  * Also return true if init.o has been deleted since we want to force  * a recompilation in this case.  */
+comment|/*  * Return true if the new output file is different from the old one.  */
 end_comment
 
 begin_function
@@ -1736,29 +1756,6 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|c
-operator|=
-name|open
-argument_list|(
-name|OUTOBJ
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-return|return
-literal|1
-return|;
-name|close
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1817,6 +1814,99 @@ return|return
 literal|0
 return|;
 block|}
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Touch a file.  Returns 0 on failure, 1 on success.  */
+end_comment
+
+begin_function
+name|int
+name|touch
+parameter_list|(
+name|file
+parameter_list|)
+name|char
+modifier|*
+name|file
+decl_stmt|;
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|char
+name|c
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|file
+argument_list|,
+name|O_RDWR
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|read
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|c
+argument_list|,
+literal|1
+argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|lseek
+argument_list|(
+name|fd
+argument_list|,
+literal|0L
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|c
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cd.c	5.1 (Berkeley) %G%"
+literal|"@(#)cd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,15 +278,18 @@ modifier|*
 name|padvance
 parameter_list|()
 function_decl|;
+name|nextopt
+argument_list|(
+name|nullstr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
 name|dest
 operator|=
-name|argv
-index|[
-literal|1
-index|]
+operator|*
+name|argptr
 operator|)
 operator|==
 name|NULL

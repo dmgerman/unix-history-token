@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)miscbltin.c	5.1 (Berkeley) %G%"
+literal|"@(#)miscbltin.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,8 +169,8 @@ argument_list|(
 literal|"ep:"
 argument_list|)
 operator|)
-operator|>=
-literal|0
+operator|!=
+literal|'\0'
 condition|)
 block|{
 if|if

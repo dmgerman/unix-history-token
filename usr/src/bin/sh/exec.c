@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	5.1 (Berkeley) %G%"
+literal|"@(#)exec.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -230,6 +230,9 @@ begin_decl_stmt
 name|STATIC
 name|int
 name|builtinloc
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1473,8 +1476,8 @@ argument_list|(
 literal|"rv"
 argument_list|)
 operator|)
-operator|>=
-literal|0
+operator|!=
+literal|'\0'
 condition|)
 block|{
 if|if

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parser.c	5.1 (Berkeley) %G%"
+literal|"@(#)parser.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1580,6 +1580,9 @@ argument_list|(
 name|TFI
 argument_list|)
 expr_stmt|;
+name|checkkwd
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 name|TWHILE
@@ -1662,6 +1665,9 @@ name|synexpect
 argument_list|(
 name|TDONE
 argument_list|)
+expr_stmt|;
+name|checkkwd
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -1977,6 +1983,9 @@ name|synexpect
 argument_list|(
 name|t
 argument_list|)
+expr_stmt|;
+name|checkkwd
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -2308,6 +2317,9 @@ argument_list|(
 name|TESAC
 argument_list|)
 expr_stmt|;
+name|checkkwd
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 name|TLP
@@ -2365,6 +2377,9 @@ argument_list|(
 name|TRP
 argument_list|)
 expr_stmt|;
+name|checkkwd
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 name|TBEGIN
@@ -2387,6 +2402,9 @@ name|synexpect
 argument_list|(
 name|TEND
 argument_list|)
+expr_stmt|;
+name|checkkwd
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -2692,6 +2710,9 @@ argument_list|(
 name|TRP
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 operator|!
@@ -2709,6 +2730,8 @@ argument_list|(
 literal|"Bad function name"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|n
 operator|->
 name|type
@@ -3287,7 +3310,9 @@ operator|)
 operator|==
 name|TNL
 condition|)
-empty_stmt|;
+name|parseheredoc
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|t
@@ -3400,30 +3425,6 @@ name|wordtext
 else|:
 literal|""
 operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vflag
-condition|)
-name|outfmt
-argument_list|(
-name|out2
-argument_list|,
-literal|"%s %s\n"
-argument_list|,
-name|tokname
-index|[
-name|t
-index|]
-argument_list|,
-name|t
-operator|==
-name|TWORD
-condition|?
-name|wordtext
-else|:
-literal|""
 argument_list|)
 expr_stmt|;
 return|return
@@ -4859,27 +4860,6 @@ expr_stmt|;
 if|if
 condition|(
 name|c
-operator|==
-literal|' '
-operator|||
-name|c
-operator|==
-literal|'\t'
-operator|||
-name|c
-operator|==
-literal|'\n'
-operator|||
-name|c
-operator|==
-name|PEOF
-ifndef|#
-directive|ifndef
-name|STRICT_VARCHECKING
-comment|/* make this an option? */
-operator|||
-operator|(
-name|c
 operator|!=
 literal|'('
 operator|&&
@@ -4898,9 +4878,6 @@ name|is_special
 argument_list|(
 name|c
 argument_list|)
-operator|)
-endif|#
-directive|endif
 condition|)
 block|{
 name|USTPUTC

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)options.c	5.1 (Berkeley) %G%"
+literal|"@(#)options.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -471,6 +471,10 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+if|if
+condition|(
+name|cmdline
+condition|)
 name|minusc
 operator|=
 name|NULL
@@ -530,8 +534,47 @@ index|]
 operator|==
 literal|'\0'
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|cmdline
+condition|)
+block|{
+comment|/* "-" means turn off -x and -v */
+if|if
+condition|(
+name|p
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|xflag
+operator|=
+name|vflag
+operator|=
+literal|0
+expr_stmt|;
+comment|/* "--" means reset params */
+elseif|else
+if|if
+condition|(
+operator|*
+name|argptr
+operator|==
+name|NULL
+condition|)
+name|setparam
+argument_list|(
+name|argptr
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 comment|/* "-" or  "--" terminates options */
+block|}
 block|}
 elseif|else
 if|if
@@ -582,6 +625,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NOHACK
+comment|/* removing this code allows sh -ce 'foo' for compat */
 if|if
 condition|(
 operator|*
@@ -1481,7 +1525,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Standard option processing (a la getopt) for builtin routines.  The  * only argument that is passed to nextopt is the option string; the  * other arguments are unnecessary.  It return the character, or -1 on  * end of input.  This routine assumes that all characters in optstring  * are positive.  */
+comment|/*  * Standard option processing (a la getopt) for builtin routines.  The  * only argument that is passed to nextopt is the option string; the  * other arguments are unnecessary.  It return the character, or '\0' on  * end of input.  */
 end_comment
 
 begin_function
@@ -1545,8 +1589,7 @@ operator|==
 literal|'\0'
 condition|)
 return|return
-operator|-
-literal|1
+literal|'\0'
 return|;
 name|argptr
 operator|++
@@ -1569,8 +1612,7 @@ literal|'\0'
 condition|)
 comment|/* check for "--" */
 return|return
-operator|-
-literal|1
+literal|'\0'
 return|;
 block|}
 name|c

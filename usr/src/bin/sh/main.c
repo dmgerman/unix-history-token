@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -754,7 +754,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-comment|/* BROKEN - FIX showtree(n); */
+comment|/* showtree(n); */
 endif|#
 directive|endif
 if|if
