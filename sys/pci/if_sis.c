@@ -488,7 +488,8 @@ specifier|static
 name|void
 name|sis_initl
 parameter_list|(
-name|void
+name|struct
+name|sis_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3676,11 +3677,9 @@ specifier|static
 name|void
 name|sis_miibus_statchg
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sis_softc
@@ -3694,12 +3693,16 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|sis_init
+name|SIS_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+name|sis_initl
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4359,13 +4362,11 @@ specifier|static
 name|void
 name|sis_reset
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|sis_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -7973,6 +7974,11 @@ init|;
 condition|;
 control|)
 block|{
+name|SIS_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Reading the ISR register clears all interrupts. */
 name|status
 operator|=
@@ -8500,13 +8506,11 @@ specifier|static
 name|void
 name|sis_start
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sis_softc
@@ -8732,7 +8736,7 @@ argument_list|)
 expr_stmt|;
 name|sis_initl
 argument_list|(
-name|xsc
+name|sc
 argument_list|)
 expr_stmt|;
 name|SIS_UNLOCK
@@ -8748,18 +8752,12 @@ specifier|static
 name|void
 name|sis_initl
 parameter_list|(
-name|void
-modifier|*
-name|xsc
-parameter_list|)
-block|{
 name|struct
 name|sis_softc
 modifier|*
 name|sc
-init|=
-name|xsc
-decl_stmt|;
+parameter_list|)
+block|{
 name|struct
 name|ifnet
 modifier|*
@@ -9935,11 +9933,23 @@ name|if_flags
 operator|&
 name|IFF_RUNNING
 condition|)
+block|{
+name|SIS_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sis_stop
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|SIS_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|error
 operator|=
@@ -10150,7 +10160,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10186,7 +10195,7 @@ operator|->
 name|sis_stopped
 condition|)
 return|return;
-name|SIS_LOCK
+name|SIS_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -10499,12 +10508,6 @@ name|sis_stopped
 operator|=
 literal|1
 expr_stmt|;
-name|SIS_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10517,11 +10520,9 @@ specifier|static
 name|void
 name|sis_shutdown
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sis_softc
@@ -10555,7 +10556,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
