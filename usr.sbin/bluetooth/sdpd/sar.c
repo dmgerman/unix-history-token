@@ -1070,12 +1070,9 @@ argument_list|)
 expr_stmt|;
 name|bcount
 operator|=
-name|htons
-argument_list|(
 name|rsp_end
 operator|-
 name|rsp
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1143,6 +1140,13 @@ name|cs
 index|[
 literal|0
 index|]
+argument_list|)
+expr_stmt|;
+name|bcount
+operator|=
+name|htons
+argument_list|(
+name|bcount
 argument_list|)
 expr_stmt|;
 name|iov
