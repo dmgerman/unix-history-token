@@ -73,6 +73,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Nflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* run mkfs without writing file system */
+end_comment
+
+begin_decl_stmt
+name|int
 name|verbose
 decl_stmt|;
 end_decl_stmt
@@ -432,6 +442,13 @@ name|verbose
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|'N'
+case|:
+name|Nflag
+operator|++
+expr_stmt|;
+comment|/* fall through to */
 case|case
 literal|'n'
 case|:
@@ -891,6 +908,15 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"where mkfs-options are:\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-N do not create file system, %s\n"
+argument_list|,
+literal|"just print out parameters"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1407,6 +1433,26 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|Nflag
+condition|)
+name|av
+index|[
+name|i
+operator|++
+index|]
+operator|=
+literal|"-N"
+expr_stmt|;
+name|av
+index|[
+name|i
+operator|++
+index|]
+operator|=
+name|special
+expr_stmt|;
 name|av
 index|[
 name|i
@@ -1552,13 +1598,11 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|sprintf
+name|strcpy
 argument_list|(
 name|cmd
 argument_list|,
-literal|"/etc/mkfs %s"
-argument_list|,
-name|special
+literal|"/etc/mkfs"
 argument_list|)
 expr_stmt|;
 for|for
