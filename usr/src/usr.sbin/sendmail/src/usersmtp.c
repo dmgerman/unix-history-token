@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.51 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.52 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.51 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.52 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1390,6 +1390,9 @@ condition|)
 block|{
 comment|/* just pass it through */
 block|}
+if|#
+directive|if
+name|MIME8TO7
 elseif|else
 if|if
 condition|(
@@ -1428,6 +1431,8 @@ operator||=
 name|MCIF_CVT8TO7
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.90 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.91 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5079,12 +5079,17 @@ literal|'7'
 block|,
 name|TRUE
 block|,
+if|#
+directive|if
+name|MIME8TO7
 literal|"EightBitMode"
 block|,
 literal|'8'
 block|,
 name|TRUE
 block|,
+endif|#
+directive|endif
 literal|"AliasFile"
 block|,
 literal|'A'
@@ -6035,6 +6040,9 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|MIME8TO7
 case|case
 literal|'8'
 case|:
@@ -6106,6 +6114,8 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+endif|#
+directive|endif
 case|case
 literal|'A'
 case|:

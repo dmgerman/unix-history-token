@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.150 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.151 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9332,6 +9332,9 @@ operator|->
 name|e_dfp
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|MIME8TO7
 if|if
 condition|(
 name|bitset
@@ -9434,6 +9437,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 name|int
 name|ostate

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.163 (Berkeley) %G%"
+literal|"@(#)conf.c	8.164 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -497,6 +497,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* option p */
+if|#
+directive|if
+name|MIME8TO7
 name|MimeMode
 operator|=
 name|MM_CVTMIME
@@ -504,6 +507,14 @@ operator||
 name|MM_PASS8BIT
 expr_stmt|;
 comment|/* option 8 */
+else|#
+directive|else
+name|MimeMode
+operator|=
+name|MM_PASS8BIT
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.62 (Berkeley) %G%"
+literal|"@(#)headers.c	8.63 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4779,6 +4779,9 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	**  If we are converting this to a MIME message, add the 	**  MIME headers. 	*/
+if|#
+directive|if
+name|MIME8TO7
 if|if
 condition|(
 name|bitset
@@ -4895,6 +4898,8 @@ name|mci
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_block
 

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.21 (Berkeley) %G%"
+literal|"@(#)mime.c	8.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,12 @@ end_comment
 begin_comment
 comment|/* **  MIME support. ** **	I am indebted to John Beck of Hewlett-Packard, who contributed **	his code to me for inclusion.  As it turns out, I did not use **	his code since he used a "minimum change" approach that used **	several temp files, and I wanted a "minimum impact" approach **	that would avoid copying.  However, looking over his code **	helped me cement my understanding of the problem. ** **	I also looked at, but did not directly use, Nathaniel **	Borenstein's "code.c" module.  Again, it functioned as **	a file-to-file translator, which did not fit within my **	design bounds, but it was a useful base for understanding **	the problem. ** **	Also, I looked at John G. Meyer's "part.[ch]" code.  Some **	ideas have been loosely borrowed. */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|MIME8TO7
+end_if
 
 begin_comment
 comment|/* character set for hex and base64 encoding */
@@ -6573,6 +6579,15 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MIME */
+end_comment
 
 end_unit
 
