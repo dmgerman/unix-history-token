@@ -1678,7 +1678,7 @@ modifier|*
 name|get_snddev_info
 parameter_list|(
 name|dev_t
-name|dev
+name|i_dev
 parameter_list|,
 name|int
 modifier|*
@@ -1694,11 +1694,14 @@ name|d
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|dev
+decl_stmt|;
 name|dev
 operator|=
 name|minor
 argument_list|(
-name|dev
+name|i_dev
 argument_list|)
 expr_stmt|;
 name|u
@@ -1904,7 +1907,7 @@ name|d
 operator|=
 name|get_snddev_info
 argument_list|(
-name|dev
+name|i_dev
 argument_list|,
 operator|&
 name|unit
@@ -2079,7 +2082,7 @@ name|d
 operator|=
 name|get_snddev_info
 argument_list|(
-name|dev
+name|i_dev
 argument_list|,
 operator|&
 name|unit
@@ -2209,7 +2212,7 @@ name|d
 operator|=
 name|get_snddev_info
 argument_list|(
-name|dev
+name|i_dev
 argument_list|,
 operator|&
 name|unit
@@ -2614,7 +2617,7 @@ name|d
 operator|=
 name|get_snddev_info
 argument_list|(
-name|dev
+name|i_dev
 argument_list|,
 operator|&
 name|unit
@@ -2951,7 +2954,7 @@ name|d
 operator|=
 name|get_snddev_info
 argument_list|(
-name|dev
+name|i_dev
 argument_list|,
 operator|&
 name|unit
@@ -3002,7 +3005,7 @@ name|d
 operator|->
 name|ioctl
 argument_list|(
-name|dev
+name|i_dev
 argument_list|,
 name|cmd
 argument_list|,
@@ -5028,7 +5031,7 @@ name|d
 operator|=
 name|get_snddev_info
 argument_list|(
-name|dev
+name|i_dev
 argument_list|,
 operator|&
 name|unit

@@ -436,7 +436,7 @@ name|int
 name|sb_dsp_open
 parameter_list|(
 name|dev_t
-name|dev
+name|i_dev
 parameter_list|,
 name|int
 name|flags
@@ -457,11 +457,14 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
+name|int
+name|dev
+decl_stmt|;
 name|dev
 operator|=
 name|minor
 argument_list|(
-name|dev
+name|i_dev
 argument_list|)
 expr_stmt|;
 name|unit
@@ -804,7 +807,7 @@ name|int
 name|sb_dsp_close
 parameter_list|(
 name|dev_t
-name|dev
+name|i_dev
 parameter_list|,
 name|int
 name|flags
@@ -821,6 +824,9 @@ block|{
 name|int
 name|unit
 decl_stmt|;
+name|int
+name|dev
+decl_stmt|;
 name|snddev_info
 modifier|*
 name|d
@@ -832,7 +838,7 @@ name|dev
 operator|=
 name|minor
 argument_list|(
-name|dev
+name|i_dev
 argument_list|)
 expr_stmt|;
 name|unit
@@ -898,7 +904,7 @@ name|int
 name|sb_dsp_ioctl
 parameter_list|(
 name|dev_t
-name|dev
+name|i_dev
 parameter_list|,
 name|u_long
 name|cmd
@@ -918,6 +924,9 @@ block|{
 name|int
 name|unit
 decl_stmt|;
+name|int
+name|dev
+decl_stmt|;
 name|snddev_info
 modifier|*
 name|d
@@ -926,7 +935,7 @@ name|dev
 operator|=
 name|minor
 argument_list|(
-name|dev
+name|i_dev
 argument_list|)
 expr_stmt|;
 name|unit
