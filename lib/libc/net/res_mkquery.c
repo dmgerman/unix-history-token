@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_mkquery.c,v 1.3 1994/09/25 17:45:39 pst Exp $"
+literal|"$Id: res_mkquery.c,v 1.4 1995/05/30 05:40:56 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,18 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<res_config.h>
 end_include
 
 begin_comment
@@ -165,6 +177,9 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ALLOW_UPDATES
 name|struct
 name|rrec
 modifier|*
@@ -177,6 +192,8 @@ operator|*
 operator|)
 name|newrr_in
 decl_stmt|;
+endif|#
+directive|endif
 name|u_char
 modifier|*
 name|dnptrs
@@ -192,6 +209,39 @@ modifier|*
 modifier|*
 name|lastdnptr
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_INIT
+operator|)
+operator|==
+literal|0
+operator|&&
+name|res_init
+argument_list|()
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|h_errno
+operator|=
+name|NETDB_INTERNAL
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -213,6 +263,8 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Initialize header fields. 	 */
 if|if
 condition|(
@@ -266,20 +318,6 @@ operator|->
 name|opcode
 operator|=
 name|op
-expr_stmt|;
-name|hp
-operator|->
-name|pr
-operator|=
-operator|(
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_PRIMARY
-operator|)
-operator|!=
-literal|0
 expr_stmt|;
 name|hp
 operator|->
@@ -348,6 +386,10 @@ condition|)
 block|{
 case|case
 name|QUERY
+case|:
+comment|/*FALLTHROUGH*/
+case|case
+name|NS_NOTIFY_OP
 case|:
 if|if
 condition|(
@@ -915,6 +957,13 @@ break|break;
 endif|#
 directive|endif
 comment|/* ALLOW_UPDATES */
+default|default:
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 return|return
 operator|(

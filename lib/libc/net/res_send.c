@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.3 1994/09/25 17:45:41 pst Exp $"
+literal|"$Id: res_send.c,v 1.4 1995/05/30 05:40:58 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* XXX - should be in options.h */
+comment|/* XXX - should be in res_config.h */
 end_comment
 
 begin_comment
@@ -129,6 +129,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -136,6 +142,18 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<res_config.h>
 end_include
 
 begin_decl_stmt
@@ -190,6 +208,87 @@ begin_comment
 comment|/* is the socket a virtual ciruit? */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEBUG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|Dprint
+parameter_list|(
+name|cond
+parameter_list|,
+name|args
+parameter_list|)
+end_define
+
+begin_comment
+comment|/*empty*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DprintQ
+parameter_list|(
+name|cond
+parameter_list|,
+name|args
+parameter_list|,
+name|query
+parameter_list|,
+name|size
+parameter_list|)
+end_define
+
+begin_comment
+comment|/*empty*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Aerror
+parameter_list|(
+name|file
+parameter_list|,
+name|string
+parameter_list|,
+name|error
+parameter_list|,
+name|address
+parameter_list|)
+end_define
+
+begin_comment
+comment|/*empty*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Perror
+parameter_list|(
+name|file
+parameter_list|,
+name|string
+parameter_list|,
+name|error
+parameter_list|)
+end_define
+
+begin_comment
+comment|/*empty*/
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -212,8 +311,10 @@ parameter_list|,
 name|args
 parameter_list|,
 name|query
+parameter_list|,
+name|size
 parameter_list|)
-value|if (cond) {\ 			fprintf args;\ 			__p_query(query);\ 		} else {}
+value|if (cond) {\ 			fprintf args;\ 			__fp_nquery(query, size, stdout);\ 		} else {}
 end_define
 
 begin_function
@@ -263,7 +364,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"res_send: %s ([%s].%d): %s\n"
+literal|"res_send: %s ([%s].%u): %s\n"
 argument_list|,
 name|string
 argument_list|,
@@ -274,9 +375,12 @@ operator|.
 name|sin_addr
 argument_list|)
 argument_list|,
+name|ntohs
+argument_list|(
 name|address
 operator|.
 name|sin_port
+argument_list|)
 argument_list|,
 name|strerror
 argument_list|(
@@ -351,6 +455,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|res_send_qhook
@@ -404,13 +513,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* int  * our_server(ina)  *	looks up "ina" in _res.ns_addr_list[]  * returns:  *	0  : not found  *>0 : found  * author:  *	paul vixie, 29may94  */
+comment|/* int  * res_isourserver(ina)  *	looks up "ina" in _res.ns_addr_list[]  * returns:  *	0  : not found  *>0 : found  * author:  *	paul vixie, 29may94  */
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|our_server
+name|res_isourserver
 parameter_list|(
 name|inp
 parameter_list|)
@@ -527,13 +635,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* int  * name_in_query(name, type, class, buf, eom)  *	look for (name,type,class) in the query section of packet (buf,eom)  * returns:  *	-1 : format error  *	0  : not found  *>0 : found  */
+comment|/* int  * res_nameinquery(name, type, class, buf, eom)  *	look for (name,type,class) in the query section of packet (buf,eom)  * returns:  *	-1 : format error  *	0  : not found  *>0 : found  * author:  *	paul vixie, 29may94  */
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|name_in_query
+name|res_nameinquery
 parameter_list|(
 name|name
 parameter_list|,
@@ -706,13 +813,12 @@ block|}
 end_block
 
 begin_comment
-comment|/* int  * queries_match(buf1, eom1, buf2, eom2)  *	is there a 1:1 mapping of (name,type,class)  *	in (buf1,eom1) and (buf2,eom2)?  * returns:  *	-1 : format error  *	0  : not a 1:1 mapping  *>0 : is a 1:1 mapping  */
+comment|/* int  * res_queriesmatch(buf1, eom1, buf2, eom2)  *	is there a 1:1 mapping of (name,type,class)  *	in (buf1,eom1) and (buf2,eom2)?  * returns:  *	-1 : format error  *	0  : not a 1:1 mapping  *>0 : is a 1:1 mapping  * author:  *	paul vixie, 29may94  */
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|queries_match
+name|res_queriesmatch
 parameter_list|(
 name|buf1
 parameter_list|,
@@ -874,7 +980,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|name_in_query
+name|res_nameinquery
 argument_list|(
 name|tname
 argument_list|,
@@ -951,22 +1057,11 @@ name|ans
 decl_stmt|;
 name|int
 name|gotsomewhere
-init|=
-literal|0
 decl_stmt|,
 name|connreset
-init|=
-literal|0
 decl_stmt|,
 name|terrno
-init|=
-name|ETIMEDOUT
-decl_stmt|;
-specifier|register
-name|int
-name|n
-decl_stmt|;
-name|int
+decl_stmt|,
 name|try
 decl_stmt|,
 name|v_circuit
@@ -975,10 +1070,41 @@ name|resplen
 decl_stmt|,
 name|ns
 decl_stmt|;
+specifier|register
+name|int
+name|n
+decl_stmt|;
 name|u_int
 name|badns
 decl_stmt|;
 comment|/* XXX NSMAX can't exceed #/bits in this var */
+if|if
+condition|(
+operator|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_INIT
+operator|)
+operator|==
+literal|0
+operator|&&
+name|res_init
+argument_list|()
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* errno should have been set by res_init() in this case. */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|DprintQ
 argument_list|(
 operator|(
@@ -1004,35 +1130,10 @@ literal|";; res_send()\n"
 operator|)
 argument_list|,
 name|buf
+argument_list|,
+name|buflen
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_INIT
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|res_init
-argument_list|()
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
 name|v_circuit
 operator|=
 operator|(
@@ -1046,6 +1147,18 @@ operator|||
 name|buflen
 operator|>
 name|PACKETSZ
+expr_stmt|;
+name|gotsomewhere
+operator|=
+literal|0
+expr_stmt|;
+name|connreset
+operator|=
+literal|0
+expr_stmt|;
+name|terrno
+operator|=
+name|ETIMEDOUT
 expr_stmt|;
 name|badns
 operator|=
@@ -1310,11 +1423,11 @@ name|s
 operator|=
 name|socket
 argument_list|(
-name|AF_INET
+name|PF_INET
 argument_list|,
 name|SOCK_STREAM
 argument_list|,
-name|PF_UNSPEC
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1344,6 +1457,10 @@ literal|1
 operator|)
 return|;
 block|}
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|connect
@@ -1750,7 +1867,7 @@ block|{
 name|char
 name|junk
 index|[
-literal|512
+name|PACKETSZ
 index|]
 decl_stmt|;
 name|n
@@ -1836,11 +1953,11 @@ name|s
 operator|=
 name|socket
 argument_list|(
-name|AF_INET
+name|PF_INET
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,
-name|PF_UNSPEC
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1850,8 +1967,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|bad_dg_sock
-label|:
 name|terrno
 operator|=
 name|errno
@@ -1965,6 +2080,10 @@ name|send
 argument_list|(
 name|s
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|buflen
@@ -2068,6 +2187,10 @@ name|sendto
 argument_list|(
 name|s
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|buflen
@@ -2269,6 +2392,10 @@ goto|goto
 name|next_ns
 goto|;
 block|}
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|fromlen
 operator|=
 sizeof|sizeof
@@ -2283,6 +2410,10 @@ name|recvfrom
 argument_list|(
 name|s
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|ans
 argument_list|,
 name|anssiz
@@ -2365,6 +2496,8 @@ literal|";; old answer:\n"
 operator|)
 argument_list|,
 name|ans
+argument_list|,
+name|resplen
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2386,7 +2519,7 @@ name|RES_INSECURE1
 operator|)
 operator|&&
 operator|!
-name|our_server
+name|res_isourserver
 argument_list|(
 operator|&
 name|from
@@ -2419,6 +2552,8 @@ literal|";; not our server:\n"
 operator|)
 argument_list|,
 name|ans
+argument_list|,
+name|resplen
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2439,7 +2574,7 @@ name|RES_INSECURE2
 operator|)
 operator|&&
 operator|!
-name|queries_match
+name|res_queriesmatch
 argument_list|(
 name|buf
 argument_list|,
@@ -2481,6 +2616,8 @@ literal|";; wrong query name:\n"
 operator|)
 argument_list|,
 name|ans
+argument_list|,
+name|resplen
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2523,6 +2660,8 @@ literal|"server rejected query:\n"
 operator|)
 argument_list|,
 name|ans
+argument_list|,
+name|resplen
 argument_list|)
 expr_stmt|;
 name|badns
@@ -2536,6 +2675,14 @@ expr_stmt|;
 name|_res_close
 argument_list|()
 expr_stmt|;
+comment|/* don't retry if called from dig */
+if|if
+condition|(
+operator|!
+name|_res
+operator|.
+name|pfcode
+condition|)
 goto|goto
 name|next_ns
 goto|;
@@ -2610,6 +2757,8 @@ literal|";; got answer:\n"
 operator|)
 argument_list|,
 name|ans
+argument_list|,
+name|resplen
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If using virtual circuits, we assume that the first server 		 * is preferred over the rest (i.e. it is on the local 		 * machine) and only keep that one open. 		 * If we have temporarily opened a virtual circuit, 		 * or if we haven't been asked to keep a socket open, 		 * close the socket. 		 */
@@ -2767,7 +2916,6 @@ condition|(
 operator|!
 name|v_circuit
 condition|)
-block|{
 if|if
 condition|(
 operator|!
@@ -2784,14 +2932,11 @@ operator|=
 name|ETIMEDOUT
 expr_stmt|;
 comment|/* no answer obtained */
-block|}
 else|else
-block|{
 name|errno
 operator|=
 name|terrno
 expr_stmt|;
-block|}
 return|return
 operator|(
 operator|-
