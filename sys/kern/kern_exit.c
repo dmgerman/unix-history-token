@@ -1391,6 +1391,14 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* 	 * Release this thread's reference to the ucred.  The actual proc 	 * reference will stay around until the proc is harvested by 	 * wait().  At this point the ucred is immutable (no other threads 	 * from this proc are around that can change it) so we leave the 	 * per-thread ucred pointer intact in case it is needed although 	 * in theory nothing should be using it at this point. 	 */
+name|crfree
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Finally, call machine-dependent code to release the remaining 	 * resources including address space, the kernel stack and pcb. 	 * The address space is released by "vmspace_free(p->p_vmspace)" 	 * in vm_waitproc(); 	 */
 name|cpu_exit
 argument_list|(

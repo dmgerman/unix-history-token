@@ -1317,6 +1317,17 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Don't jail it. */
+name|td
+operator|->
+name|td_ucred
+operator|=
+name|crhold
+argument_list|(
+name|p
+operator|->
+name|p_ucred
+argument_list|)
+expr_stmt|;
 comment|/* Create procsig. */
 name|p
 operator|->

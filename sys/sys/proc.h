@@ -515,6 +515,12 @@ directive|define
 name|td_endcopy
 value|td_pcb
 name|struct
+name|ucred
+modifier|*
+name|td_ucred
+decl_stmt|;
+comment|/* (k) Reference to credentials. */
+name|struct
 name|pcb
 modifier|*
 name|td_pcb
