@@ -1884,6 +1884,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|mac_check_system_settime
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|mac_check_system_swapon
 parameter_list|(
 name|struct
