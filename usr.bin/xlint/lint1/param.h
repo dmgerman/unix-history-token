@@ -161,6 +161,26 @@ end_define
 begin_elif
 elif|#
 directive|elif
+name|__powerpc__
+end_elif
+
+begin_define
+define|#
+directive|define
+name|PTRDIFF_IS_LONG
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_IS_ULONG
+value|0
+end_define
+
+begin_elif
+elif|#
+directive|elif
 name|__sparc__
 end_elif
 
