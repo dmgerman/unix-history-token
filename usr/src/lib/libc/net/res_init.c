@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	5.7 (Berkeley) %G%"
+literal|"@(#)res_init.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -487,17 +487,8 @@ name|defdname
 argument_list|)
 argument_list|)
 operator|==
-operator|-
-literal|1
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-if|if
-condition|(
+literal|0
+operator|&&
 operator|(
 name|cp
 operator|=
@@ -508,15 +499,7 @@ argument_list|,
 literal|'.'
 argument_list|)
 operator|)
-operator|==
-name|NULL
 condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 operator|(
 name|void
 operator|)
