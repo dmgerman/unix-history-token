@@ -62,25 +62,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|int
+name|ev_sethook_t
 name|ofw_setcurrdev
-parameter_list|(
-name|struct
-name|env_var
-modifier|*
-name|ev
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|void
-modifier|*
-name|value
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

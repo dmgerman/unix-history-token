@@ -89,6 +89,7 @@ name|NULL
 operator|)
 operator|||
 operator|(
+operator|(
 name|strchr
 argument_list|(
 name|devspec
@@ -97,6 +98,18 @@ literal|'@'
 argument_list|)
 operator|==
 name|NULL
+operator|)
+operator|&&
+operator|(
+name|strchr
+argument_list|(
+name|devspec
+argument_list|,
+literal|':'
+argument_list|)
+operator|==
+name|NULL
+operator|)
 operator|)
 condition|)
 block|{
@@ -464,6 +477,7 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|value
