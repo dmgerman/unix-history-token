@@ -804,59 +804,59 @@ name|u_int32_t
 name|irmc
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* iso. resource manager capable */
 name|cmc
-label|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 comment|/* cycle master capable */
 name|isc
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 comment|/* iso. operation support */
 name|bmc
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 comment|/* bus manager capable */
 name|pmc
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 comment|/* power manager capable */
-operator|:
+range|:
 literal|3
-operator|,
+decl_stmt|,
 name|cyc_clk_acc
-operator|:
+range|:
 literal|8
-operator|,
+decl_stmt|,
 comment|/* 0<= ppm<= 100 */
 name|max_rec
-operator|:
+range|:
 literal|4
-operator|,
+decl_stmt|,
 comment|/* (2<< max_rec) bytes */
-operator|:
+range|:
 literal|2
-operator|,
+decl_stmt|,
 name|max_rom
-operator|:
+range|:
 literal|2
-operator|,
+decl_stmt|,
 name|generation
-operator|:
+range|:
 literal|4
-operator|,
-operator|:
+decl_stmt|,
+range|:
 literal|1
-operator|,
+decl_stmt|,
 name|link_spd
-operator|:
+range|:
 literal|3
-expr_stmt|;
+decl_stmt|;
 else|#
 directive|else
 name|u_int32_t
