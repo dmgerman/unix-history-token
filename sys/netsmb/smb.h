@@ -1263,6 +1263,13 @@ name|SMB_SET_FILE_BASIC_INFO
 value|0x101
 end_define
 
+begin_define
+define|#
+directive|define
+name|SMB_SET_FILE_END_OF_FILE_INFO
+value|0x104
+end_define
+
 begin_comment
 comment|/*  * LOCKING_ANDX LockType flags  */
 end_comment
