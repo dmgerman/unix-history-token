@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.37 1999/04/20 13:32:05 peter Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.38 1999/06/19 18:43:30 green Exp $  */
 end_comment
 
 begin_ifndef
@@ -179,13 +179,10 @@ name|u_char
 name|fw_prot
 decl_stmt|;
 comment|/* IP protocol */
+comment|/* 	 * N'of src ports and # of dst ports in ports array (dst ports 	 * follow src ports; max of 10 ports in all; count of 0 means 	 * match all ports) 	 */
 name|u_char
 name|fw_nports
 decl_stmt|;
-comment|/* N'of src ports and # of dst ports */
-comment|/* in ports array (dst ports follow */
-comment|/* src ports; max of 10 ports in all; */
-comment|/* count of 0 means match all ports) */
 name|void
 modifier|*
 name|pipe_ptr
