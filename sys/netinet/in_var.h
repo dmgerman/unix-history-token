@@ -562,6 +562,8 @@ expr|struct
 name|ifaddr
 operator|*
 name|ifa
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

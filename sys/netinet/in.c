@@ -2098,6 +2098,8 @@ operator|&
 name|ia
 operator|->
 name|ia_ifa
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Protect from ipintr() traversing address list 		 * while we're modifying it. 		 */

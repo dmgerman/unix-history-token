@@ -1473,7 +1473,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * This zaps old routes (including ARP entries) when the interface  * address is deleted.  Previously it didn't delete static routes,  * and this caused some weird things to happen.  In particular, if  * you changed the address on an interface, and the default route  * was using this interface and address, outgoing datagrams still  * used the old address.  */
+comment|/*  * This zaps old routes when the interface goes down or interface  * address is deleted.  In the latter case, it deletes static routes  * that point to this address.  If we don't do this, we may end up  * using the old address in the future.  The ones we always want to  * get rid of are things like ARP entries, since the user might down  * the interface, walk over to a completely different network, and  * plug back in.  */
 end_comment
 
 begin_struct
@@ -1489,6 +1489,9 @@ name|struct
 name|ifaddr
 modifier|*
 name|ifa
+decl_stmt|;
+name|int
+name|del
 decl_stmt|;
 block|}
 struct|;
@@ -1540,6 +1543,21 @@ operator|==
 name|ap
 operator|->
 name|ifa
+operator|&&
+operator|(
+name|ap
+operator|->
+name|del
+operator|||
+operator|!
+operator|(
+name|rt
+operator|->
+name|rt_flags
+operator|&
+name|RTF_STATIC
+operator|)
+operator|)
 condition|)
 block|{
 comment|/* 		 * We need to disable the automatic prune that happens 		 * in this case in rtrequest() because it will blow 		 * away the pointers that rn_walktree() needs in order 		 * continue our descent.  We will end up deleting all 		 * the routes that rtrequest() would have in any case, 		 * so that behavior is not needed there. 		 */
@@ -1616,6 +1634,9 @@ name|struct
 name|ifaddr
 modifier|*
 name|ifa
+parameter_list|,
+name|int
+name|delete
 parameter_list|)
 block|{
 name|struct
@@ -1656,6 +1677,12 @@ operator|.
 name|ifa
 operator|=
 name|ifa
+expr_stmt|;
+name|arg
+operator|.
+name|del
+operator|=
+name|delete
 expr_stmt|;
 name|rnh
 operator|->
