@@ -2734,6 +2734,14 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
+name|b_iooffset
+operator|=
+name|bp
+operator|->
+name|b_offset
+expr_stmt|;
+name|bp
+operator|->
 name|b_bcount
 operator|=
 name|ap
