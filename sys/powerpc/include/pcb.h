@@ -32,7 +32,7 @@ block|{
 name|register_t
 name|pcb_context
 index|[
-literal|18
+literal|20
 index|]
 decl_stmt|;
 comment|/* non-volatile r14-r31 */
