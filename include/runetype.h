@@ -54,21 +54,21 @@ typedef|typedef
 struct|struct
 block|{
 name|__rune_t
-name|min
+name|__min
 decl_stmt|;
 comment|/* First rune of the range */
 name|__rune_t
-name|max
+name|__max
 decl_stmt|;
 comment|/* Last rune (inclusive) of the range */
 name|__rune_t
-name|map
+name|__map
 decl_stmt|;
 comment|/* What first maps to in maps */
 name|unsigned
 name|long
 modifier|*
-name|types
+name|__types
 decl_stmt|;
 comment|/* Array of types in range */
 block|}
@@ -81,12 +81,12 @@ typedef|typedef
 struct|struct
 block|{
 name|int
-name|nranges
+name|__nranges
 decl_stmt|;
 comment|/* Number of ranges stored */
 name|_RuneEntry
 modifier|*
-name|ranges
+name|__ranges
 decl_stmt|;
 comment|/* Pointer to the ranges */
 block|}
@@ -99,14 +99,14 @@ typedef|typedef
 struct|struct
 block|{
 name|char
-name|magic
+name|__magic
 index|[
 literal|8
 index|]
 decl_stmt|;
 comment|/* Magic saying what version we are */
 name|char
-name|encoding
+name|__encoding
 index|[
 literal|32
 index|]
@@ -115,7 +115,7 @@ comment|/* ASCII name of this encoding */
 name|__rune_t
 function_decl|(
 modifier|*
-name|sgetrune
+name|__sgetrune
 function_decl|)
 parameter_list|(
 specifier|const
@@ -133,7 +133,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|sputrune
+name|__sputrune
 function_decl|)
 parameter_list|(
 name|__rune_t
@@ -149,44 +149,44 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|__rune_t
-name|invalid_rune
+name|__invalid_rune
 decl_stmt|;
 name|unsigned
 name|long
-name|runetype
+name|__runetype
 index|[
 name|_CACHED_RUNES
 index|]
 decl_stmt|;
 name|__rune_t
-name|maplower
+name|__maplower
 index|[
 name|_CACHED_RUNES
 index|]
 decl_stmt|;
 name|__rune_t
-name|mapupper
+name|__mapupper
 index|[
 name|_CACHED_RUNES
 index|]
 decl_stmt|;
 comment|/* 	 * The following are to deal with Runes larger than _CACHED_RUNES - 1. 	 * Their data is actually contiguous with this structure so as to make 	 * it easier to read/write from/to disk. 	 */
 name|_RuneRange
-name|runetype_ext
+name|__runetype_ext
 decl_stmt|;
 name|_RuneRange
-name|maplower_ext
+name|__maplower_ext
 decl_stmt|;
 name|_RuneRange
-name|mapupper_ext
+name|__mapupper_ext
 decl_stmt|;
 name|void
 modifier|*
-name|variable
+name|__variable
 decl_stmt|;
 comment|/* Data which depends on the encoding */
 name|int
-name|variable_len
+name|__variable_len
 decl_stmt|;
 comment|/* how long that data is */
 block|}

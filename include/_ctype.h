@@ -813,7 +813,7 @@ argument_list|)
 else|:
 name|_CurrentRuneLocale
 operator|->
-name|runetype
+name|__runetype
 index|[
 name|_c
 index|]
@@ -885,7 +885,7 @@ operator|!
 operator|(
 name|_DefaultRuneLocale
 operator|.
-name|runetype
+name|__runetype
 index|[
 name|_c
 index|]
@@ -924,7 +924,7 @@ argument_list|)
 else|:
 name|_CurrentRuneLocale
 operator|->
-name|mapupper
+name|__mapupper
 index|[
 name|_c
 index|]
@@ -960,7 +960,7 @@ argument_list|)
 else|:
 name|_CurrentRuneLocale
 operator|->
-name|maplower
+name|__maplower
 index|[
 name|_c
 index|]

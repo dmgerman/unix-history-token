@@ -49,7 +49,7 @@ init|=
 operator|&
 name|_CurrentRuneLocale
 operator|->
-name|maplower_ext
+name|__maplower_ext
 decl_stmt|;
 name|_RuneEntry
 modifier|*
@@ -78,7 +78,7 @@ name|base
 operator|=
 name|rr
 operator|->
-name|ranges
+name|__ranges
 expr_stmt|;
 for|for
 control|(
@@ -86,7 +86,7 @@ name|lim
 operator|=
 name|rr
 operator|->
-name|nranges
+name|__nranges
 init|;
 name|lim
 operator|!=
@@ -111,7 +111,7 @@ if|if
 condition|(
 name|re
 operator|->
-name|min
+name|__min
 operator|<=
 name|c
 operator|&&
@@ -119,19 +119,19 @@ name|c
 operator|<=
 name|re
 operator|->
-name|max
+name|__max
 condition|)
 return|return
 operator|(
 name|re
 operator|->
-name|map
+name|__map
 operator|+
 name|c
 operator|-
 name|re
 operator|->
-name|min
+name|__min
 operator|)
 return|;
 elseif|else
@@ -141,7 +141,7 @@ name|c
 operator|>
 name|re
 operator|->
-name|max
+name|__max
 condition|)
 block|{
 name|base

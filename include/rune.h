@@ -55,21 +55,7 @@ begin_define
 define|#
 directive|define
 name|_INVALID_RUNE
-value|_CurrentRuneLocale->invalid_rune
-end_define
-
-begin_define
-define|#
-directive|define
-name|__sgetrune
-value|_CurrentRuneLocale->sgetrune
-end_define
-
-begin_define
-define|#
-directive|define
-name|__sputrune
-value|_CurrentRuneLocale->sputrune
+value|_CurrentRuneLocale->__invalid_rune
 end_define
 
 begin_define
@@ -83,7 +69,7 @@ name|n
 parameter_list|,
 name|r
 parameter_list|)
-value|(*__sgetrune)((s), (n), (r))
+value|(_CurrentRuneLocale->__sgetrune)((s), (n), (r))
 end_define
 
 begin_define
@@ -99,7 +85,7 @@ name|n
 parameter_list|,
 name|r
 parameter_list|)
-value|(*__sputrune)((c), (s), (n), (r))
+value|(_CurrentRuneLocale->__sputrune)((c), (s), \ 				    (n), (r))
 end_define
 
 begin_function_decl

@@ -729,13 +729,13 @@ name|__wcsrtombs_std
 expr_stmt|;
 name|rl
 operator|->
-name|sputrune
+name|__sputrune
 operator|=
 name|__emulated_sputrune
 expr_stmt|;
 name|rl
 operator|->
-name|sgetrune
+name|__sgetrune
 operator|=
 name|__emulated_sgetrune
 expr_stmt|;
@@ -745,7 +745,7 @@ name|strcmp
 argument_list|(
 name|rl
 operator|->
-name|encoding
+name|__encoding
 argument_list|,
 literal|"NONE"
 argument_list|)
@@ -766,7 +766,7 @@ name|strcmp
 argument_list|(
 name|rl
 operator|->
-name|encoding
+name|__encoding
 argument_list|,
 literal|"UTF2"
 argument_list|)
@@ -787,7 +787,7 @@ name|strcmp
 argument_list|(
 name|rl
 operator|->
-name|encoding
+name|__encoding
 argument_list|,
 literal|"UTF-8"
 argument_list|)
@@ -808,7 +808,7 @@ name|strcmp
 argument_list|(
 name|rl
 operator|->
-name|encoding
+name|__encoding
 argument_list|,
 literal|"EUC"
 argument_list|)
@@ -829,7 +829,7 @@ name|strcmp
 argument_list|(
 name|rl
 operator|->
-name|encoding
+name|__encoding
 argument_list|,
 literal|"GB18030"
 argument_list|)
@@ -850,7 +850,7 @@ name|strcmp
 argument_list|(
 name|rl
 operator|->
-name|encoding
+name|__encoding
 argument_list|,
 literal|"GB2312"
 argument_list|)
@@ -871,7 +871,7 @@ name|strcmp
 argument_list|(
 name|rl
 operator|->
-name|encoding
+name|__encoding
 argument_list|,
 literal|"GBK"
 argument_list|)
@@ -892,7 +892,7 @@ name|strcmp
 argument_list|(
 name|rl
 operator|->
-name|encoding
+name|__encoding
 argument_list|,
 literal|"BIG5"
 argument_list|)
@@ -913,7 +913,7 @@ name|strcmp
 argument_list|(
 name|rl
 operator|->
-name|encoding
+name|__encoding
 argument_list|,
 literal|"MSKanji"
 argument_list|)
@@ -953,7 +953,7 @@ name|strcmp
 argument_list|(
 name|CachedRuneLocale
 operator|->
-name|encoding
+name|__encoding
 argument_list|,
 literal|"EUC"
 argument_list|)
@@ -964,7 +964,7 @@ name|free
 argument_list|(
 name|CachedRuneLocale
 operator|->
-name|variable
+name|__variable
 argument_list|)
 expr_stmt|;
 name|free

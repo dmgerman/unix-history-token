@@ -224,7 +224,7 @@ if|if
 condition|(
 name|rl
 operator|->
-name|variable
+name|__variable
 operator|==
 name|NULL
 condition|)
@@ -241,7 +241,7 @@ operator|*
 operator|)
 name|rl
 operator|->
-name|variable
+name|__variable
 expr_stmt|;
 while|while
 condition|(
@@ -488,13 +488,13 @@ return|;
 block|}
 name|rl
 operator|->
-name|variable
+name|__variable
 operator|=
 name|ei
 expr_stmt|;
 name|rl
 operator|->
-name|variable_len
+name|__variable_len
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -566,7 +566,7 @@ begin_define
 define|#
 directive|define
 name|CEI
-value|((_EucInfo *)(_CurrentRuneLocale->variable))
+value|((_EucInfo *)(_CurrentRuneLocale->__variable))
 end_define
 
 begin_define
