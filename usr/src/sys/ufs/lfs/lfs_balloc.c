@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.40 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.41 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -493,7 +493,7 @@ expr_stmt|;
 name|bp
 operator|->
 name|b_flags
-operator|!=
+operator||=
 name|B_READ
 expr_stmt|;
 name|VOP_STRATEGY
