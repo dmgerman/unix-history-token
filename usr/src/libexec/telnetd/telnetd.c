@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.34 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1075,7 +1075,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * getterminalspeed  *  *     Ask the other end to send along its terminal speed.  * subopt does the rest.  Interlocked so it can't happen during  * getterminaltype.  */
+comment|/*  * getterminalspeed  *  *     Ask the other end to send along its terminal speed.  * subopt does the rest.  */
 end_comment
 
 begin_function
@@ -4679,17 +4679,6 @@ name|struct
 name|winsize
 name|win
 decl_stmt|;
-name|char
-name|c
-decl_stmt|;
-define|#
-directive|define
-name|SB_GETCHAR
-parameter_list|(
-name|c
-parameter_list|)
-define|\
-value|{ if ((c = SB_GET()) == IAC&& SB_GET() != IAC) return; }
 name|ioctl
 argument_list|(
 name|pty
@@ -4732,53 +4721,37 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-name|SB_GETCHAR
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
 name|win
 operator|.
 name|ws_col
 operator|=
-name|c
+name|SB_GET
+argument_list|()
 operator|<<
 literal|8
-expr_stmt|;
-name|SB_GETCHAR
-argument_list|(
-name|c
-argument_list|)
 expr_stmt|;
 name|win
 operator|.
 name|ws_col
 operator||=
-name|c
-expr_stmt|;
-name|SB_GETCHAR
-argument_list|(
-name|c
-argument_list|)
+name|SB_GET
+argument_list|()
 expr_stmt|;
 name|win
 operator|.
 name|ws_row
 operator|=
-name|c
+name|SB_GET
+argument_list|()
 operator|<<
 literal|8
-expr_stmt|;
-name|SB_GETCHAR
-argument_list|(
-name|c
-argument_list|)
 expr_stmt|;
 name|win
 operator|.
 name|ws_row
 operator||=
-name|c
+name|SB_GET
+argument_list|()
 expr_stmt|;
 name|syslog
 argument_list|(
