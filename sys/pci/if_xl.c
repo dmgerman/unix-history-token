@@ -4288,12 +4288,8 @@ operator|->
 name|xl_unit
 argument_list|)
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|100000
-argument_list|)
-expr_stmt|;
 comment|/* Reset TX and RX. */
+comment|/* Note: the RX reset takes an absurd amount of time 	 * on newer versions of the Tornado chips such as those 	 * on the 3c905CX and newer 3c908C cards. We wait an     	 * extra amount of time so that xl_wait() doesn't complain 	 * and annoy the users. 	 */
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -4301,6 +4297,11 @@ argument_list|,
 name|XL_COMMAND
 argument_list|,
 name|XL_CMD_RX_RESET
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100000
 argument_list|)
 expr_stmt|;
 name|xl_wait
