@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)implog.c	5.3 (Berkeley) %G%"
+literal|"@(#)implog.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,6 +138,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|showcontents
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rawheader
 init|=
 literal|0
 decl_stmt|;
@@ -376,6 +384,30 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
+literal|"-r"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|rawheader
+operator|++
+expr_stmt|;
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
 literal|"-l"
 argument_list|)
 operator|==
@@ -580,7 +612,7 @@ continue|continue;
 block|}
 name|printf
 argument_list|(
-literal|"usage: implog [ -D ] [ -c ] [ -f ] [-h #] [-i #] [ -t # ] [-l [#]] [logfile]\n"
+literal|"usage: implog [ -D ] [ -c ] [ -f ] [ -r ] [-h #] [-i #] [ -t # ] [-l [#]] [logfile]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1109,6 +1141,13 @@ name|imp_leader
 modifier|*
 name|ip
 decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|fn
+function_decl|)
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|read
@@ -1161,6 +1200,20 @@ operator|->
 name|il_imp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|il_format
+operator|!=
+name|IMP_NFF
+condition|)
+name|fn
+operator|=
+name|impundef
+expr_stmt|;
+else|else
+block|{
 for|for
 control|(
 name|mp
@@ -1188,11 +1241,18 @@ operator|->
 name|il_mtype
 condition|)
 break|break;
-if|if
-condition|(
+name|fn
+operator|=
 name|mp
 operator|->
-name|m_type
+name|m_func
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ip
+operator|->
+name|il_mtype
 operator|==
 name|IMPTYPE_DATA
 condition|)
@@ -1223,9 +1283,9 @@ name|packettype
 operator|>=
 literal|0
 operator|&&
-name|mp
+name|ip
 operator|->
-name|m_type
+name|il_mtype
 operator|!=
 name|packettype
 condition|)
@@ -1245,10 +1305,25 @@ argument_list|)
 expr_stmt|;
 call|(
 modifier|*
-name|mp
-operator|->
-name|m_func
+name|fn
 call|)
+argument_list|(
+name|ip
+argument_list|,
+name|f
+operator|->
+name|sin_cc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rawheader
+operator|&&
+name|fn
+operator|!=
+name|impundef
+condition|)
+name|impundef
 argument_list|(
 name|ip
 argument_list|,
@@ -1279,21 +1354,18 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|"<%d/%d, DATA, link="
+literal|"<DATA, source=%d/%d, link="
 argument_list|,
 name|ip
 operator|->
 name|il_host
 argument_list|,
-name|ntohs
-argument_list|(
 operator|(
 name|u_short
 operator|)
 name|ip
 operator|->
 name|il_imp
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1657,15 +1729,12 @@ name|ip
 operator|->
 name|il_host
 argument_list|,
-name|ntohs
-argument_list|(
 operator|(
 name|u_short
 operator|)
 name|ip
 operator|->
 name|il_imp
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1719,7 +1788,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%x,"
+literal|"%d,"
 argument_list|,
 name|ip
 operator|->
@@ -1797,7 +1866,15 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|"host dead: "
+literal|"host %d/%d dead: "
+argument_list|,
+name|ip
+operator|->
+name|il_host
+argument_list|,
+name|ip
+operator|->
+name|il_imp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1890,7 +1967,15 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|"host unreachable: "
+literal|"host %d/%d unreachable: "
+argument_list|,
+name|ip
+operator|->
+name|il_host
+argument_list|,
+name|ip
+operator|->
+name|il_imp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1974,7 +2059,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%x, "
+literal|"%d, "
 argument_list|,
 name|ip
 operator|->
@@ -2063,7 +2148,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%x,"
+literal|"%d,"
 argument_list|,
 name|ip
 operator|->
@@ -2383,7 +2468,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%x,"
+literal|"%d,"
 argument_list|,
 name|ip
 operator|->
