@@ -6153,6 +6153,12 @@ name|inc_isipv6
 operator|=
 literal|1
 expr_stmt|;
+name|INP_INFO_WLOCK
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
 name|syncache_unreach
 argument_list|(
 operator|&
@@ -6160,6 +6166,12 @@ name|inc
 argument_list|,
 operator|&
 name|th
+argument_list|)
+expr_stmt|;
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|tcbinfo
 argument_list|)
 expr_stmt|;
 block|}
