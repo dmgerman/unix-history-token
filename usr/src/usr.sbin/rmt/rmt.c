@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmt.c	4.3 82/05/19"
+literal|"@(#)rmt.c	4.4 (Berkeley) 84/11/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +166,42 @@ name|debug
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|DEBUG
+parameter_list|(
+name|f
+parameter_list|)
+value|if (debug) fprintf(debug, f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUG1
+parameter_list|(
+name|f
+parameter_list|,
+name|a
+parameter_list|)
+value|if (debug) fprintf(debug, f, a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUG2
+parameter_list|(
+name|f
+parameter_list|,
+name|a1
+parameter_list|,
+name|a2
+parameter_list|)
+value|if (debug) fprintf(debug, f, a1, a2)
+end_define
+
 begin_function
 name|main
 parameter_list|(
@@ -295,24 +331,18 @@ argument_list|(
 name|tape
 argument_list|)
 expr_stmt|;
-name|gets
+name|getstring
 argument_list|(
 name|device
 argument_list|)
 expr_stmt|;
-name|gets
+name|getstring
 argument_list|(
 name|mode
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|debug
-condition|)
-name|fprintf
+name|DEBUG2
 argument_list|(
-name|debug
-argument_list|,
 literal|"rmtd: O %s %s\n"
 argument_list|,
 name|device
@@ -347,18 +377,12 @@ goto|;
 case|case
 literal|'C'
 case|:
-if|if
-condition|(
-name|debug
-condition|)
-name|fprintf
+name|DEBUG
 argument_list|(
-name|debug
-argument_list|,
 literal|"rmtd: C\n"
 argument_list|)
 expr_stmt|;
-name|gets
+name|getstring
 argument_list|(
 name|device
 argument_list|)
@@ -387,24 +411,18 @@ goto|;
 case|case
 literal|'L'
 case|:
-name|gets
+name|getstring
 argument_list|(
 name|count
 argument_list|)
 expr_stmt|;
-name|gets
+name|getstring
 argument_list|(
 name|pos
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|debug
-condition|)
-name|fprintf
+name|DEBUG2
 argument_list|(
-name|debug
-argument_list|,
 literal|"rmtd: L %s %s\n"
 argument_list|,
 name|count
@@ -447,7 +465,7 @@ goto|;
 case|case
 literal|'W'
 case|:
-name|gets
+name|getstring
 argument_list|(
 name|count
 argument_list|)
@@ -459,14 +477,8 @@ argument_list|(
 name|count
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|debug
-condition|)
-name|fprintf
+name|DEBUG1
 argument_list|(
-name|debug
-argument_list|,
 literal|"rmtd: W %s\n"
 argument_list|,
 name|count
@@ -511,14 +523,8 @@ operator|<=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|debug
-condition|)
-name|fprintf
+name|DEBUG
 argument_list|(
-name|debug
-argument_list|,
 literal|"rmtd: premature eof\n"
 argument_list|)
 expr_stmt|;
@@ -555,19 +561,13 @@ goto|;
 case|case
 literal|'R'
 case|:
-name|gets
+name|getstring
 argument_list|(
 name|count
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|debug
-condition|)
-name|fprintf
+name|DEBUG1
 argument_list|(
-name|debug
-argument_list|,
 literal|"rmtd: R %s\n"
 argument_list|,
 name|count
@@ -661,24 +661,18 @@ goto|;
 case|case
 literal|'I'
 case|:
-name|gets
+name|getstring
 argument_list|(
 name|op
 argument_list|)
 expr_stmt|;
-name|gets
+name|getstring
 argument_list|(
 name|count
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|debug
-condition|)
-name|fprintf
+name|DEBUG2
 argument_list|(
-name|debug
-argument_list|,
 literal|"rmtd: I %s %s\n"
 argument_list|,
 name|op
@@ -744,14 +738,8 @@ case|case
 literal|'S'
 case|:
 comment|/* status */
-if|if
-condition|(
-name|debug
-condition|)
-name|fprintf
+name|DEBUG
 argument_list|(
-name|debug
-argument_list|,
 literal|"rmtd: S\n"
 argument_list|)
 expr_stmt|;
@@ -813,14 +801,8 @@ name|respond
 goto|;
 block|}
 default|default:
-if|if
-condition|(
-name|debug
-condition|)
-name|fprintf
+name|DEBUG1
 argument_list|(
-name|debug
-argument_list|,
 literal|"rmtd: garbage command %c\n"
 argument_list|,
 name|c
@@ -834,14 +816,8 @@ expr_stmt|;
 block|}
 name|respond
 label|:
-if|if
-condition|(
-name|debug
-condition|)
-name|fprintf
+name|DEBUG1
 argument_list|(
-name|debug
-argument_list|,
 literal|"rmtd: A %d\n"
 argument_list|,
 name|rval
@@ -891,7 +867,7 @@ block|}
 end_function
 
 begin_macro
-name|gets
+name|getstring
 argument_list|(
 argument|bp
 argument_list|)
@@ -985,14 +961,8 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
-name|debug
-condition|)
-name|fprintf
+name|DEBUG2
 argument_list|(
-name|debug
-argument_list|,
 literal|"rmtd: E %d (%s)\n"
 argument_list|,
 name|num
