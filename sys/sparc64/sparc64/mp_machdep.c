@@ -198,6 +198,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
+name|ipi_cache_args
+name|ipi_cache_args
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
 name|ipi_tlb_args
 name|ipi_tlb_args
 decl_stmt|;
