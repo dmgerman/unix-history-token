@@ -7015,6 +7015,14 @@ name|bios_smap
 modifier|*
 name|smap
 decl_stmt|;
+comment|/* 	 * Change the mapping of the page at address zero from r/o to r/w 	 * so that vm86 can scribble on this page.  Note that this page is 	 * not in the general free page pool. 	 */
+name|pmap_kenter
+argument_list|(
+name|KERNBASE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|hasbrokenint12
 operator|=
 literal|0
@@ -7034,8 +7042,7 @@ name|vmf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|vm86frame
+name|vmf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7126,15 +7133,7 @@ argument_list|,
 name|pa
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Map the page at address zero for the bios code to use. 	 * Note that page zero is not in the general page pool. 	 */
-name|pmap_kenter
-argument_list|(
-name|KERNBASE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* 	 * if basemem != 640, map pages r/w into vm86 page table so  	 * that the bios can scribble on it. 	 */
+comment|/* 	 * Map pages between basemem and ISA_HOLE_START, if any, r/w into 	 * the vm86 page table so that vm86 can scribble on them using 	 * the vm86 map too.  XXX: why 2 ways for this and only 1 way for 	 * page 0, at least as initialized here? 	 */
 name|pte
 operator|=
 operator|(
@@ -7556,18 +7555,17 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* 		 * XXX this function is horribly organized and has to the same 		 * things that it does above here. 		 */
 if|if
 condition|(
 name|basemem
 operator|==
 literal|0
 condition|)
-block|{
 name|basemem
 operator|=
 literal|640
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|basemem
@@ -7587,6 +7585,7 @@ operator|=
 literal|640
 expr_stmt|;
 block|}
+comment|/* 		 * Let vm86 scribble on pages between basemem and 		 * ISA_HOLE_START, as above. 		 */
 for|for
 control|(
 name|pa
