@@ -11,6 +11,12 @@ begin_comment
 comment|/* #define DEBUGGING_MEMCLUSTER */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MEMCLUSTER_ATEND
+end_define
+
 begin_if
 if|#
 directive|if
@@ -34,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: memcluster.c,v 8.19 1999/10/13 17:11:22 vixie Exp $"
+literal|"$Id: memcluster.c,v 8.20 2001/02/13 23:14:54 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1921,6 +1927,60 @@ name|line
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|MEMCLUSTER_ATEND
+name|e
+operator|->
+name|next
+operator|=
+name|NULL
+expr_stmt|;
+name|el
+operator|=
+name|freelists
+index|[
+name|new_size
+index|]
+expr_stmt|;
+while|while
+condition|(
+name|el
+operator|!=
+name|NULL
+operator|&&
+name|el
+operator|->
+name|next
+operator|!=
+name|NULL
+condition|)
+name|el
+operator|=
+name|el
+operator|->
+name|next
+expr_stmt|;
+if|if
+condition|(
+name|el
+condition|)
+name|el
+operator|->
+name|next
+operator|=
+name|e
+expr_stmt|;
+else|else
+name|freelists
+index|[
+name|new_size
+index|]
+operator|=
+name|e
+expr_stmt|;
+else|#
+directive|else
 name|e
 operator|->
 name|next
@@ -1941,6 +2001,8 @@ operator|*
 operator|)
 name|e
 expr_stmt|;
+endif|#
+directive|endif
 else|#
 directive|else
 operator|(

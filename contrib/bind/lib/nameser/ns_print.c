@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_print.c,v 8.21 2000/12/09 00:15:38 marka Exp $"
+literal|"$Id: ns_print.c,v 8.22 2001/03/26 07:04:31 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1909,6 +1909,8 @@ block|{
 name|char
 name|t
 index|[
+literal|2
+operator|+
 literal|255
 operator|*
 literal|3

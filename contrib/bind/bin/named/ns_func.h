@@ -16,7 +16,7 @@ comment|/*  * Portions Copyright (c) 1999 by Check Point Software Technologies, 
 end_comment
 
 begin_comment
-comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $Id: ns_func.h,v 8.104 2001/01/25 05:50:54 marka Exp $  */
+comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $Id: ns_func.h,v 8.105 2001/02/16 04:46:12 marka Exp $  */
 end_comment
 
 begin_comment
@@ -126,6 +126,21 @@ end_function_decl
 begin_function_decl
 name|void
 name|ns_error
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ns_critical
 parameter_list|(
 name|int
 parameter_list|,

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_notify.c,v 8.12 2000/12/23 08:14:40 vixie Exp $"
+literal|"$Id: ns_notify.c,v 8.14 2001/04/01 18:38:36 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -655,8 +655,6 @@ operator|=
 name|MIN
 argument_list|(
 name|nzones
-operator|/
-literal|5
 argument_list|,
 literal|895
 argument_list|)
@@ -1816,6 +1814,11 @@ name|is_us
 decl_stmt|,
 name|nsc
 decl_stmt|;
+name|int
+name|cname
+init|=
+literal|0
+decl_stmt|;
 name|htp
 operator|=
 name|hashtab
@@ -1870,6 +1873,50 @@ name|struct
 name|in_addr
 name|ina
 decl_stmt|;
+if|if
+condition|(
+name|match
+argument_list|(
+name|adp
+argument_list|,
+name|class
+argument_list|,
+name|T_CNAME
+argument_list|)
+condition|)
+block|{
+name|cname
+operator|=
+literal|1
+expr_stmt|;
+name|ns_error
+argument_list|(
+name|ns_log_notify
+argument_list|,
+literal|"NS '%s' for '%s/%s' is a CNAME"
+argument_list|,
+operator|*
+name|aname
+condition|?
+name|aname
+else|:
+literal|"."
+argument_list|,
+operator|*
+name|dname
+condition|?
+name|dname
+else|:
+literal|"."
+argument_list|,
+name|p_class
+argument_list|(
+name|class
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 operator|!
@@ -1942,6 +1989,9 @@ if|if
 condition|(
 operator|!
 name|is_us
+operator|&&
+operator|!
+name|cname
 operator|&&
 operator|!
 name|NS_OPTION_P

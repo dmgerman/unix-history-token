@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nsap_addr.c,v 8.10 1999/10/13 16:39:28 vixie Exp $"
+literal|"$Id: nsap_addr.c,v 8.11 2001/03/26 07:04:30 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +162,36 @@ name|len
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|ascii
+index|[
+literal|0
+index|]
+operator|!=
+literal|'0'
+operator|||
+operator|(
+name|ascii
+index|[
+literal|1
+index|]
+operator|!=
+literal|'x'
+operator|&&
+name|ascii
+index|[
+literal|1
+index|]
+operator|!=
+literal|'X'
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 while|while
 condition|(
 operator|(
@@ -343,6 +373,8 @@ specifier|static
 name|char
 name|tmpbuf
 index|[
+literal|2
+operator|+
 literal|255
 operator|*
 literal|3
@@ -371,6 +403,16 @@ operator|=
 name|tmpbuf
 expr_stmt|;
 block|}
+operator|*
+name|ascii
+operator|=
+literal|'0'
+expr_stmt|;
+operator|*
+name|ascii
+operator|=
+literal|'x'
+expr_stmt|;
 if|if
 condition|(
 name|binlen

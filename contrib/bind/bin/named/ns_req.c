@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_req.c,v 8.129 2001/01/08 23:46:41 marka Exp $"
+literal|"$Id: ns_req.c,v 8.138.2.1 2001/04/27 07:44:05 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -660,11 +660,25 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ns_r_formerr
+expr_stmt|;
+name|hp
+operator|->
+name|rcode
+operator|=
+name|ns_r_formerr
+expr_stmt|;
 name|key
 operator|=
 name|NULL
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|(
 name|key
 operator|=
 name|find_key
@@ -673,10 +687,7 @@ name|buf
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|key
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -703,6 +714,74 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|LOG_TSIG_BUG
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+operator|||
+name|key
+operator|==
+name|NULL
+condition|)
+name|ns_error
+argument_list|(
+name|ns_log_security
+argument_list|,
+literal|"SECURITY: POSSIBLE ATTEMPT TO EXERCISE \"TSIG BUG\" FROM %s: %s%s%s"
+argument_list|,
+name|sin_ntoa
+argument_list|(
+name|from
+argument_list|)
+argument_list|,
+operator|(
+name|n
+operator|<
+literal|0
+operator|)
+condition|?
+literal|"bad key (formerr)"
+else|:
+literal|"unknown key ("
+argument_list|,
+operator|(
+name|n
+operator|<
+literal|0
+operator|)
+condition|?
+literal|""
+else|:
+operator|(
+name|buf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|?
+name|buf
+else|:
+literal|"."
+operator|)
+argument_list|,
+operator|(
+name|n
+operator|<
+literal|0
+operator|)
+condition|?
+literal|""
+else|:
+literal|")"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -1704,6 +1783,16 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|ns_wouldlog
+argument_list|(
+name|ns_log_default
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
 name|ns_debug
 argument_list|(
 name|ns_log_default
@@ -1745,6 +1834,7 @@ operator|->
 name|rcode
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|debug
@@ -2248,6 +2338,34 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX - when answers are allowed, we'll need to do compression 	 * correctly here, and we will need to check for packet underflow. 	 */
+comment|/* 	 * We are ignoring the other field, make sure the header reflects 	 * *cpp. 	 */
+name|hp
+operator|->
+name|ancount
+operator|=
+name|htons
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|hp
+operator|->
+name|nscount
+operator|=
+name|htons
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|hp
+operator|->
+name|arcount
+operator|=
+name|htons
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Find the zone this NOTIFY refers to. */
 name|zp
 operator|=
@@ -2309,7 +2427,7 @@ name|ns_info
 argument_list|(
 name|ns_log_notify
 argument_list|,
-literal|"NOTIFY(SOA) for non-secondary name (%s), from %s"
+literal|"NOTIFY(SOA) for non-slave zone (%s), from %s"
 argument_list|,
 name|dnbuf
 argument_list|,
@@ -2429,6 +2547,12 @@ literal|"NOTIFY(SOA) for zone already xferring (%s)"
 argument_list|,
 name|dnbuf
 argument_list|)
+expr_stmt|;
+name|zp
+operator|->
+name|z_flags
+operator||=
+name|Z_NEEDREFRESH
 expr_stmt|;
 goto|goto
 name|noerror
@@ -3670,6 +3794,58 @@ block|}
 endif|#
 directive|endif
 comment|/*YPKLUDGE*/
+comment|/* 	 * Don't accept in a query names which would be rejected in responses. 	 * (This is primarily in case we have to forward it, but it's also a 	 * matter of architectural symmetry.) 	 */
+if|if
+condition|(
+operator|!
+name|ns_nameok
+argument_list|(
+name|NULL
+argument_list|,
+name|dname
+argument_list|,
+name|class
+argument_list|,
+name|NULL
+argument_list|,
+name|response_trans
+argument_list|,
+name|ns_ownercontext
+argument_list|(
+name|type
+argument_list|,
+name|response_trans
+argument_list|)
+argument_list|,
+name|dname
+argument_list|,
+name|from
+operator|.
+name|sin_addr
+argument_list|)
+condition|)
+block|{
+name|ns_debug
+argument_list|(
+name|ns_log_default
+argument_list|,
+literal|1
+argument_list|,
+literal|"bad name in query"
+argument_list|)
+expr_stmt|;
+name|hp
+operator|->
+name|rcode
+operator|=
+name|ns_r_formerr
+expr_stmt|;
+return|return
+operator|(
+name|Refuse
+operator|)
+return|;
+block|}
 comment|/* 	 * Begin Access Control Point 	 */
 name|zone
 operator|=
@@ -4164,7 +4340,7 @@ name|ns_notice
 argument_list|(
 name|ns_log_security
 argument_list|,
-literal|"denied query from %s for \"%s\""
+literal|"denied query from %s for \"%s\" %s"
 argument_list|,
 name|sin_ntoa
 argument_list|(
@@ -4177,6 +4353,11 @@ condition|?
 name|dname
 else|:
 literal|"."
+argument_list|,
+name|p_class
+argument_list|(
+name|class
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nameserIncr
@@ -4245,7 +4426,7 @@ name|ns_notice
 argument_list|(
 name|ns_log_security
 argument_list|,
-literal|"denied %s from %s for \"%s\" (acl)"
+literal|"denied %s from %s for \"%s\" %s (acl)"
 argument_list|,
 name|p_type
 argument_list|(
@@ -4263,6 +4444,11 @@ condition|?
 name|dname
 else|:
 literal|"."
+argument_list|,
+name|p_class
+argument_list|(
+name|class
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nameserIncr
@@ -4391,7 +4577,7 @@ name|ns_notice
 argument_list|(
 name|ns_log_security
 argument_list|,
-literal|"denied %s from %s for \"%s\" (not authoritative)"
+literal|"denied %s from %s for \"%s\" %s (not authoritative)"
 argument_list|,
 name|p_type
 argument_list|(
@@ -4409,6 +4595,11 @@ condition|?
 name|dname
 else|:
 literal|"."
+argument_list|,
+name|p_class
+argument_list|(
+name|class
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nameserIncr
@@ -4464,7 +4655,7 @@ name|ns_notice
 argument_list|(
 name|ns_log_security
 argument_list|,
-literal|"denied %s from %s for \"%s\" (not zone top)"
+literal|"denied %s from %s for \"%s\" %s (not zone top)"
 argument_list|,
 name|p_type
 argument_list|(
@@ -4482,6 +4673,11 @@ condition|?
 name|dname
 else|:
 literal|"."
+argument_list|,
+name|p_class
+argument_list|(
+name|class
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nameserIncr
@@ -5788,7 +5984,7 @@ name|ns_notice
 argument_list|(
 name|ns_log_security
 argument_list|,
-literal|"denied recursion for query from %s for %s"
+literal|"denied recursion for query from %s for %s %s"
 argument_list|,
 name|sin_ntoa
 argument_list|(
@@ -5801,6 +5997,11 @@ condition|?
 name|dname
 else|:
 literal|"."
+argument_list|,
+name|p_class
+argument_list|(
+name|class
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nameserIncr
@@ -6051,6 +6252,13 @@ name|rcode
 operator|=
 name|ns_r_servfail
 expr_stmt|;
+name|memput
+argument_list|(
+name|omsg
+argument_list|,
+name|omsglen
+argument_list|)
+expr_stmt|;
 name|free_nsp
 argument_list|(
 name|nsp
@@ -6150,6 +6358,12 @@ expr_stmt|;
 name|qp
 operator|->
 name|q_cmsglen
+operator|=
+name|omsglen
+expr_stmt|;
+name|qp
+operator|->
+name|q_cmsgsize
 operator|=
 name|omsglen
 expr_stmt|;
@@ -7023,7 +7237,7 @@ directive|endif
 case|case
 name|z_slave
 case|:
-comment|/* 		 * Check to see whether a secondary zone has expired or 		 * time warped; if so clear authority flag for zone, 		 * schedule the zone for immediate maintenance, and 		 * return true. 		 */
+comment|/* 		 * Check to see whether a slave zone has expired or 		 * time warped; if so clear authority flag for zone, 		 * schedule the zone for immediate maintenance, and 		 * return true. 		 */
 if|if
 condition|(
 call|(
@@ -7081,7 +7295,7 @@ name|ns_notice
 argument_list|(
 name|ns_log_default
 argument_list|,
-literal|"secondary zone \"%s\" expired"
+literal|"slave zone \"%s\" expired"
 argument_list|,
 name|zp
 operator|->
@@ -7165,7 +7379,7 @@ name|ns_notice
 argument_list|(
 name|ns_log_default
 argument_list|,
-literal|"secondary zone \"%s\" time warp"
+literal|"slave zone \"%s\" time warp"
 argument_list|,
 name|zp
 operator|->

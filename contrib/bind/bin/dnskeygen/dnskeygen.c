@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dnskeygen.c,v 1.11 2000/12/23 08:14:31 vixie Exp $"
+literal|"$Id: dnskeygen.c,v 1.11.2.1 2001/04/26 02:56:06 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,6 +99,24 @@ directive|define
 name|PRINT_SUPPORTED
 value|2
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PATH_SEP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PATH_SEP
+value|'/'
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -267,7 +285,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|'/'
+name|PATH_SEP
 argument_list|)
 operator|)
 operator|==

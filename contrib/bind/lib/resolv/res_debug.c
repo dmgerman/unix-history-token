@@ -48,7 +48,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_debug.c,v 8.37 2000/11/13 05:22:53 vixie Exp $"
+literal|"$Id: res_debug.c,v 8.38 2001/02/13 23:12:56 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2202,6 +2202,38 @@ block|,
 literal|"CERT"
 block|,
 literal|"Certificate"
+block|}
+block|,
+block|{
+name|ns_t_a6
+block|,
+literal|"A6"
+block|,
+literal|"IPv6 Address"
+block|}
+block|,
+block|{
+name|ns_t_dname
+block|,
+literal|"DNAME"
+block|,
+literal|"dname"
+block|}
+block|,
+block|{
+name|ns_t_sink
+block|,
+literal|"SINK"
+block|,
+literal|"Kitchen Sink (experimental)"
+block|}
+block|,
+block|{
+name|ns_t_opt
+block|,
+literal|"OPT"
+block|,
+literal|"EDNS Options"
 block|}
 block|,
 block|{

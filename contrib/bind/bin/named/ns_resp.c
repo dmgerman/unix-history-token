@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_resp.c,v 8.149 2001/01/03 09:47:27 marka Exp $"
+literal|"$Id: ns_resp.c,v 8.152 2001/02/13 23:28:31 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2209,11 +2209,38 @@ name|ns_info
 argument_list|(
 name|ns_log_default
 argument_list|,
-literal|"Response from unexpected source (%s)"
+literal|"Response from unexpected source (%s) for query \"%s %s %s\""
 argument_list|,
 name|sin_ntoa
 argument_list|(
 name|from
+argument_list|)
+argument_list|,
+operator|*
+operator|(
+name|qp
+operator|->
+name|q_name
+operator|)
+condition|?
+name|qp
+operator|->
+name|q_name
+else|:
+literal|"."
+argument_list|,
+name|p_class
+argument_list|(
+name|qp
+operator|->
+name|q_class
+argument_list|)
+argument_list|,
+name|p_type
+argument_list|(
+name|qp
+operator|->
+name|q_type
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -12194,6 +12221,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ns_wouldlog
+argument_list|(
+name|ns_log_default
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
 name|ns_debug
 argument_list|(
 name|ns_log_default
@@ -12234,6 +12271,7 @@ operator|->
 name|q_time
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -13634,7 +13672,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* XXX:	zone isn't loaded but we're 					 *	primary or secondary for it. 					 *	should we fwd this? 					 */
+comment|/* XXX:	zone isn't loaded but we're 					 *	primary or slave for it. 					 *	should we fwd this? 					 */
 return|return
 operator|(
 name|SERVFAIL
