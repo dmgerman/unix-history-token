@@ -115,7 +115,7 @@ value|"debug"
 end_define
 
 begin_comment
-comment|/**********************************************************************  * Netgraph commands understood by this node type.  * FAIL, SUCCESS and CLOSE are sent by the node rather than received.  ********************************************************************/
+comment|/**********************************************************************  * Netgraph commands understood by this node type.  * FAIL, SUCCESS, CLOSE and ACNAME are sent by the node rather than received.  ********************************************************************/
 end_comment
 
 begin_enum
@@ -161,6 +161,11 @@ init|=
 literal|8
 block|,
 comment|/* additional Service to advertise (in PADO) */
+name|NGM_PPPOE_ACNAME
+init|=
+literal|9
+block|,
+comment|/* AC_NAME for informational purposes */
 name|NGM_PPPOE_GET_STATUS
 block|}
 enum|;
