@@ -908,7 +908,7 @@ name|usermax
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * If there are more interfaces on the list, count 		 * them.  This allows the caller to set ifmr->ifm_count 		 * to 0 on the first call to know how much space to 		 * callocate. 		 */
+comment|/* 		 * If there are more interfaces on the list, count 		 * them.  This allows the caller to set ifmr->ifm_count 		 * to 0 on the first call to know how much space to 		 * allocate. 		 */
 name|LIST_FOREACH
 argument_list|(
 argument|ep
