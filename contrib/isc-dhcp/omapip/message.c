@@ -3457,6 +3457,14 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+name|omapi_object_dereference
+argument_list|(
+operator|&
+name|object
+argument_list|,
+name|MDL
+argument_list|)
+expr_stmt|;
 return|return
 name|status
 return|;

@@ -23,7 +23,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: socket.c,v 1.55.2.1 2002/01/17 19:42:55 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: socket.c,v 1.55.2.2 2002/06/09 22:21:20 murray Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -258,6 +258,19 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+name|memset
+argument_list|(
+operator|&
+name|name
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Set up the address we're going to bind to. */
 name|name
 operator|.
@@ -276,22 +289,6 @@ operator|.
 name|sin_addr
 operator|=
 name|local_address
-expr_stmt|;
-name|memset
-argument_list|(
-name|name
-operator|.
-name|sin_zero
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|name
-operator|.
-name|sin_zero
-argument_list|)
-argument_list|)
 expr_stmt|;
 comment|/* Make a socket... */
 if|if

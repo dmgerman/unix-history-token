@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: parse.c,v 1.104.2.9 2002/04/27 05:30:02 murray Exp $ Copyright (c) 1995-2001 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: parse.c,v 1.104.2.10 2002/11/03 04:31:55 dhankins Exp $ Copyright (c) 1995-2001 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1404,7 +1404,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * hardware-parameter :== HARDWARE hardware-type colon-seperated-hex-list SEMI  * hardware-type :== ETHERNET | TOKEN_RING  */
+comment|/*  * hardware-parameter :== HARDWARE hardware-type colon-seperated-hex-list SEMI  * hardware-type :== ETHERNET | TOKEN_RING | FDDI  */
 end_comment
 
 begin_function

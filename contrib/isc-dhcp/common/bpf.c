@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: bpf.c,v 1.48.2.1 2002/04/30 05:12:53 murray Exp $ Copyright (c) 1995-2000 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: bpf.c,v 1.48.2.2 2002/06/08 09:29:16 murray Exp $ Copyright (c) 1995-2000 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1929,6 +1929,18 @@ operator|<=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|errno
+operator|==
+name|ENXIO
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 name|errno
@@ -1936,6 +1948,8 @@ operator|==
 name|EIO
 condition|)
 block|{
+endif|#
+directive|endif
 name|dhcp_interface_remove
 argument_list|(
 operator|(
@@ -2280,24 +2294,18 @@ operator|.
 name|bh_caplen
 return|;
 block|}
-do|while
+while|while
 condition|(
 operator|!
 name|length
 condition|)
-do|;
+empty_stmt|;
 return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
-name|int
-name|can_unicast_without_arp
-parameter_list|(
-name|ip
-parameter_list|)
+do|int can_unicast_without_arp (ip
+block|)
 name|struct
 name|interface_info
 modifier|*
