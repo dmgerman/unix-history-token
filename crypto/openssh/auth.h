@@ -970,6 +970,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|abandon_challenge_response
+parameter_list|(
+name|Authctxt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|passwd
 modifier|*
