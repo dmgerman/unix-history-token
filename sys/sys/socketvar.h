@@ -2416,6 +2416,14 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet_accf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
