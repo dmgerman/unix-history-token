@@ -129,6 +129,14 @@ name|pc_cpuid
 operator|=
 name|cpuid
 expr_stmt|;
+name|pcpu
+operator|->
+name|pc_cpumask
+operator|=
+literal|1
+operator|<<
+name|cpuid
+expr_stmt|;
 name|cpuid_to_pcpu
 index|[
 name|cpuid

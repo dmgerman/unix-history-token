@@ -95,9 +95,13 @@ name|pc_cpuid
 decl_stmt|;
 comment|/* This cpu number */
 name|u_int
+name|pc_cpumask
+decl_stmt|;
+comment|/* This cpu mask */
+name|u_int
 name|pc_other_cpus
 decl_stmt|;
-comment|/* All other cpus */
+comment|/* Mask of all other cpus */
 name|SLIST_ENTRY
 argument_list|(
 argument|pcpu
