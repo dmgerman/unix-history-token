@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	6.3	84/02/15	*/
+comment|/*	uipc_usrreq.c	6.4	84/05/02	*/
 end_comment
 
 begin_include
@@ -1998,6 +1998,13 @@ operator|(
 name|caddr_t
 operator|)
 literal|0
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|unp
+operator|->
+name|unp_remaddr
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
