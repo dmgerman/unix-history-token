@@ -3910,11 +3910,11 @@ name|DLINK_DEVICEID_690TXD
 operator|||
 name|rl_did
 operator|==
-name|COREGA_DEVICEID_CBTXD
+name|COREGA_DEVICEID_FETHERCBTXD
 operator|||
 name|rl_did
 operator|==
-name|COREGA_DEVICEID_CBTXD
+name|COREGA_DEVICEID_FETHERIICBTXD
 condition|)
 name|sc
 operator|->
