@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)uda.c	6.12 (Berkeley) %G%  */
+comment|/*  *	@(#)uda.c	6.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -43,7 +43,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * UDA50/RAxx disk device driver  *  * Restrictions:  *      Unit numbers must be less than 8.  *      Partitions A and B must be the same size on all RA drives.  */
+comment|/*  * UDA50/RAxx disk device driver  *  * Restrictions:  *      Unit numbers must be less than 8.  */
 end_comment
 
 begin_include
@@ -361,45 +361,42 @@ literal|15884
 block|,
 literal|0
 block|,
-comment|/* A=blk 0 thru 15883 */
+comment|/* A=sectors 0 thru 15883 */
 literal|33440
 block|,
 literal|15884
 block|,
-comment|/* B=blk 15884 thru 49323 */
-operator|-
-literal|1
+comment|/* B=sectors 15884 thru 49323 */
+literal|400176
 block|,
 literal|0
 block|,
-comment|/* C=blk 0 thru end */
-literal|15884
+comment|/* C=sectors 0 thru 400175 */
+literal|82080
+block|,
+literal|49324
+block|,
+comment|/* 4.2 G => D=sectors 49324 thru 131403 */
+literal|268772
+block|,
+literal|131404
+block|,
+comment|/* 4.2 H => E=sectors 131404 thru 400175 */
+literal|350852
+block|,
+literal|49324
+block|,
+comment|/* F=sectors 49324 thru 400175 */
+literal|157570
 block|,
 literal|242606
 block|,
-comment|/* D=blk 242606 thru 258489 */
-operator|-
-literal|1
-block|,
-literal|258490
-block|,
-comment|/* E=blk 258490 thru end */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* F=unused */
-operator|-
-literal|1
-block|,
-literal|242606
-block|,
-comment|/* G=blk 242606 thru end */
+comment|/* UCB G => G=sectors 242606 thru 400175 */
 literal|193282
 block|,
 literal|49324
 block|,
-comment|/* H=blk 49324 thru 242605 */
+comment|/* UCB H => H=sectors 49324 thru 242605 */
 block|}
 struct|,
 name|ra80_sizes
@@ -412,43 +409,42 @@ literal|15884
 block|,
 literal|0
 block|,
-comment|/* A=blk 0 thru 15883 */
+comment|/* A=sectors 0 thru 15883 */
 literal|33440
 block|,
 literal|15884
 block|,
-comment|/* B=blk 15884 thru 49323 */
-operator|-
-literal|1
+comment|/* B=sectors 15884 thru 49323 */
+literal|242606
 block|,
 literal|0
 block|,
-comment|/* C=blk 0 thru end */
+comment|/* C=sectors 0 thru 242605 */
 literal|0
 block|,
 literal|0
 block|,
 comment|/* D=unused */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* E=unused */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* F=unused */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* G=unused */
 literal|193282
 block|,
 literal|49324
 block|,
-comment|/* H=blk 49324 thru 242605 */
+comment|/* UCB H => E=sectors 49324 thru 242605 */
+literal|82080
+block|,
+literal|49324
+block|,
+comment|/* 4.2 G => F=sectors 49324 thru 131403 */
+literal|192696
+block|,
+literal|49910
+block|,
+comment|/* G=sectors 49910 thru 242605 */
+literal|111202
+block|,
+literal|131404
+block|,
+comment|/* 4.2 H => H=sectors 131404 thru 242605 */
 block|}
 struct|,
 name|ra81_sizes
@@ -457,49 +453,120 @@ literal|8
 index|]
 init|=
 block|{
+comment|/*  * These are the new standard partition sizes for ra81's.  * A COMPAT_42 system is compiled with D, E, and F corresponding  * to the 4.2 partitions for G, H, and F respectively.  */
+ifndef|#
+directive|ifndef
+name|UCBRA
 literal|15884
 block|,
 literal|0
 block|,
-comment|/* A=blk 0 thru 15883 */
+comment|/* A=sectors 0 thru 15883 */
+literal|66880
+block|,
+literal|16422
+block|,
+comment|/* B=sectors 16422 thru 83301 */
+literal|891072
+block|,
+literal|0
+block|,
+comment|/* C=sectors 0 thru 891071 */
+ifdef|#
+directive|ifdef
+name|COMPAT_42
+literal|82080
+block|,
+literal|49324
+block|,
+comment|/* 4.2 G => D=sectors 49324 thru 131403 */
+literal|759668
+block|,
+literal|131404
+block|,
+comment|/* 4.2 H => E=sectors 131404 thru 891071 */
+literal|478582
+block|,
+literal|412490
+block|,
+comment|/* 4.2 F => F=sectors 412490 thru 891071 */
+else|#
+directive|else
+literal|15884
+block|,
+literal|375564
+block|,
+comment|/* D=sectors 375564 thru 391447 */
+literal|307200
+block|,
+literal|391986
+block|,
+comment|/* E=sectors 391986 thru 699185 */
+literal|191352
+block|,
+literal|699720
+block|,
+comment|/* F=sectors 699720 thru 891071 */
+endif|#
+directive|endif
+endif|COMPAT_42
+literal|515508
+block|,
+literal|375564
+block|,
+comment|/* G=sectors 375564 thru 891071 */
+literal|291346
+block|,
+literal|83538
+block|,
+comment|/* H=sectors 83538 thru 374883 */
+comment|/*  * These partitions correspond to the sizes used by sites at Berkeley,  * and by those sites that have received copies of the Berkeley driver  * with deltas 6.2 or greater (11/15/83).  */
+else|#
+directive|else
+else|UCBRA
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=sectors 0 thru 15883 */
 literal|33440
 block|,
 literal|15884
 block|,
-comment|/* B=blk 15884 thru 49323 */
-operator|-
-literal|1
+comment|/* B=sectors 15884 thru 49323 */
+literal|891072
 block|,
 literal|0
 block|,
-comment|/* C=blk 0 thru end */
+comment|/* C=sectors 0 thru 891071 */
 literal|15884
 block|,
 literal|242606
 block|,
-comment|/* D=blk 242606 thru 258489 */
+comment|/* D=sectors 242606 thru 258489 */
 literal|307200
 block|,
 literal|258490
 block|,
-comment|/* E=blk 258490 thru 565689 */
-operator|-
-literal|1
+comment|/* E=sectors 258490 thru 565689 */
+literal|325382
 block|,
 literal|565690
 block|,
-comment|/* F=blk 565690 thru end */
-operator|-
-literal|1
+comment|/* F=sectors 565690 thru 891071 */
+literal|648466
 block|,
 literal|242606
 block|,
-comment|/* G=blk 242606 thru end */
+comment|/* G=sectors 242606 thru 891071 */
 literal|193282
 block|,
 literal|49324
 block|,
-comment|/* H=blk 49324 thru 242605 */
+comment|/* H=sectors 49324 thru 242605 */
+endif|#
+directive|endif
+endif|UCBRA
 block|}
 struct|;
 end_struct
