@@ -10627,10 +10627,6 @@ name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|td
-operator|->
-name|td_proc
 decl_stmt|;
 name|int
 name|i
@@ -10662,6 +10658,12 @@ name|vt_mode
 operator|*
 operator|)
 name|data
+expr_stmt|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 name|opri
 operator|=
@@ -10889,6 +10891,12 @@ return|;
 case|case
 name|VT_RELDISP
 case|:
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
 if|if
 condition|(
 name|minor
