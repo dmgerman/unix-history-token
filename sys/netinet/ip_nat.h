@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.0.2.23.2.1 1997/11/05 11:08:18 darrenr Exp $  */
+comment|/*  * Copyright (C) 1995-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.0.2.23.2.3 1998/05/23 18:52:44 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -205,10 +205,10 @@ decl_stmt|;
 name|int
 name|nat_flags
 decl_stmt|;
-name|u_long
+name|u_32_t
 name|nat_sumd
 decl_stmt|;
-name|u_long
+name|u_32_t
 name|nat_ipsumd
 decl_stmt|;
 name|void
@@ -1002,7 +1002,7 @@ operator|(
 name|u_short
 operator|*
 operator|,
-name|u_long
+name|u_32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1018,7 +1018,7 @@ operator|(
 name|u_short
 operator|*
 operator|,
-name|u_long
+name|u_32_t
 operator|)
 argument_list|)
 decl_stmt|;
