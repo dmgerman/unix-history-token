@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.13 1996/01/21 09:03:15 julian Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.14 1996/01/21 09:07:58 julian Exp $  */
 end_comment
 
 begin_include
@@ -1725,6 +1725,9 @@ name|child
 parameter_list|)
 comment|/*proto*/
 block|{
+name|int
+name|error
+decl_stmt|;
 name|devnm_p
 name|newnmp
 decl_stmt|;
@@ -1782,6 +1785,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|error
+operator|=
 name|dev_add_node
 argument_list|(
 name|type
@@ -1797,11 +1802,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Device %s: node allocation failed\n"
+literal|"Device %s: node allocation failed (E=%d)\n"
 argument_list|,
 name|child
 operator|->
 name|name
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1809,6 +1816,8 @@ block|}
 block|}
 if|if
 condition|(
+name|error
+operator|=
 name|dev_add_name
 argument_list|(
 name|child
@@ -1844,11 +1853,13 @@ comment|/* 1->0 */
 block|}
 name|printf
 argument_list|(
-literal|"Device %s: allocation failed\n"
+literal|"Device %s: allocation failed (E=%d)\n"
 argument_list|,
 name|child
 operator|->
 name|name
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -3124,9 +3135,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Device %s: base node allocation failed\n"
+literal|"Device %s: base node allocation failed (E=%d)\n"
 argument_list|,
 name|name
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return
@@ -3159,9 +3172,11 @@ expr_stmt|;
 comment|/* 1->0 for dir, 0->(-1) for other */
 name|printf
 argument_list|(
-literal|"Device %s: name slot allocation failed\n"
+literal|"Device %s: name slot allocation failed (E=%d)\n"
 argument_list|,
 name|name
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 block|}
