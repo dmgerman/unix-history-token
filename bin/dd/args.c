@@ -2129,7 +2129,7 @@ name|prevnum
 operator|>
 literal|0
 operator|)
-operator|!=
+operator|==
 operator|(
 name|num
 operator|>
