@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rshd.c,v 1.9.2.6 1998/03/06 01:46:10 jkh Exp $"
+literal|"$Id: rshd.c,v 1.9.2.7 1998/07/19 06:53:02 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -881,6 +881,8 @@ decl_stmt|,
 name|pid
 decl_stmt|,
 name|s
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|one
@@ -896,6 +898,8 @@ name|errorstr
 decl_stmt|,
 modifier|*
 name|errorhost
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -1464,14 +1468,15 @@ name|IPPORT_RESERVED
 operator|-
 literal|1
 decl_stmt|;
+name|int
 name|s
-operator|=
+init|=
 name|rresvport
 argument_list|(
 operator|&
 name|lport
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|s

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rquotad.c,v 1.1.1.1.2.1 1997/12/17 07:31:28 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1361,6 +1361,10 @@ name|qcmd
 argument_list|,
 name|id
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|dqblk
 argument_list|)
 operator|==
