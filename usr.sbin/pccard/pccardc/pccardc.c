@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pccardc.c,v 1.6 1997/10/06 11:35:54 charnier Exp $"
+literal|"$Id: pccardc.c,v 1.7 1998/02/26 14:36:01 hosokawa Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,14 @@ name|foo
 parameter_list|)
 value|int foo(int, char**);
 end_define
+
+begin_expr_stmt
+name|DECL
+argument_list|(
+name|beep_main
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|DECL
@@ -165,6 +173,14 @@ name|subcommands
 index|[]
 init|=
 block|{
+block|{
+literal|"beep"
+block|,
+name|beep_main
+block|,
+literal|"Beep type"
+block|}
+block|,
 block|{
 literal|"dumpcis"
 block|,
