@@ -349,6 +349,12 @@ block|,
 block|{
 name|USB_VENDOR_HP
 block|,
+name|USB_PRODUCT_HP_4300C
+block|}
+block|,
+block|{
+name|USB_VENDOR_HP
+block|,
 name|USB_PRODUCT_HP_S20
 block|}
 block|,
