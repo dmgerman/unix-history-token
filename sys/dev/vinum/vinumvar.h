@@ -1606,6 +1606,11 @@ init|=
 literal|256
 block|,
 comment|/* go into remote gdb */
+name|DEBUG_EXITFREE
+init|=
+literal|512
+block|,
+comment|/* log "freeing malloc" on exit  */
 block|}
 enum|;
 end_enum
