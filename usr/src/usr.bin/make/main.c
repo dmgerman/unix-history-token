@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.27 (Berkeley) %G%"
+literal|"@(#)main.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -979,8 +979,10 @@ operator|==
 literal|'-'
 operator|&&
 operator|!
+operator|(
 operator|*
 name|argv
+operator|)
 index|[
 literal|1
 index|]
