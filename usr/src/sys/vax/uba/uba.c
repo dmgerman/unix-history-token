@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.22	81/03/09	*/
+comment|/*	uba.c	4.23	81/03/13	*/
 end_comment
 
 begin_include
@@ -1667,7 +1667,7 @@ if|#
 directive|if
 name|VAX780
 case|case
-name|VAX780
+name|VAX_780
 case|:
 name|uba
 operator|->
@@ -1707,7 +1707,7 @@ if|#
 directive|if
 name|VAX750
 case|case
-name|VAX750
+name|VAX_750
 case|:
 name|mtpr
 argument_list|(
@@ -2018,7 +2018,7 @@ name|uba
 operator|->
 name|uba_cnfgr
 argument_list|,
-name|nexflt_bits
+name|NEXFLT_BITS
 argument_list|)
 expr_stmt|;
 name|ubareset
