@@ -2875,7 +2875,7 @@ operator|==
 name|USB_PRODUCT_YEDATA_FLASHBUSTERU
 condition|)
 block|{
-comment|/* Revisions< 1.28 do not handle the inerrupt endpoint 		 * very well. 		 */
+comment|/* Revisions< 1.28 do not handle the interrupt endpoint 		 * very well. 		 */
 if|if
 condition|(
 name|UGETW
@@ -4082,7 +4082,7 @@ expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
 expr_stmt|;
 block|}
-comment|/* Open the intr-in pipe if the protocol is CBI with CCI. 	 * Note: early versions of the Zip drive do have an interrupt pipe, but 	 * this pipe is unused 	 * 	 * We do not open the interrupt pipe as an interrupt pipe, but as a 	 * normal bulk endpoint. We send an IN transfer down the wire at the 	 * appropriate time, because we know exactly when to expect data on 	 * that endpoint. This saves bandwidth, but more important, makes the 	 * code for handling the data on that endpoint simpler. No data 	 * arriving concurently. 	 */
+comment|/* Open the intr-in pipe if the protocol is CBI with CCI. 	 * Note: early versions of the Zip drive do have an interrupt pipe, but 	 * this pipe is unused. 	 * 	 * We do not open the interrupt pipe as an interrupt pipe, but as a 	 * normal bulk endpoint. We send an IN transfer down the wire at the 	 * appropriate time, because we know exactly when to expect data on 	 * that endpoint. This saves bandwidth, but more important, makes the 	 * code for handling the data on that endpoint simpler. No data 	 * arriving concurrently. 	 */
 if|if
 condition|(
 name|sc
@@ -4874,7 +4874,7 @@ block|{
 name|usbd_status
 name|err
 decl_stmt|;
-comment|/* Initialiase a USB transfer and then schedule it */
+comment|/* Initialise a USB transfer and then schedule it */
 operator|(
 name|void
 operator|)
@@ -4990,7 +4990,7 @@ block|{
 name|usbd_status
 name|err
 decl_stmt|;
-comment|/* Initialiase a USB control transfer and then schedule it */
+comment|/* Initialise a USB control transfer and then schedule it */
 operator|(
 name|void
 operator|)
@@ -5895,7 +5895,7 @@ name|proto
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * State handling for BBB transfers. 	 * 	 * The subroutine is rather long. It steps through the states given in 	 * Annex A of the Bulk-Only specification. 	 * Each state first does the error handling of the previous transfer 	 * and then prepares the next transfer. 	 * Each transfer is done asynchroneously so after the request/transfer 	 * has been submitted you will find a 'return;'. 	 */
+comment|/* 	 * State handling for BBB transfers. 	 * 	 * The subroutine is rather long. It steps through the states given in 	 * Annex A of the Bulk-Only specification. 	 * Each state first does the error handling of the previous transfer 	 * and then prepares the next transfer. 	 * Each transfer is done asynchronously so after the request/transfer 	 * has been submitted you will find a 'return;'. 	 */
 name|DPRINTF
 argument_list|(
 name|UDMASS_BBB
@@ -7422,7 +7422,7 @@ name|proto
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Command Block Reset Protocol 	 * 	 * First send a reset request to the device. Then clear 	 * any possibly stalled bulk endpoints.  	 * This is done in 3 steps, states: 	 * TSTATE_CBI_RESET1 	 * TSTATE_CBI_RESET2 	 * TSTATE_CBI_RESET3 	 * 	 * If the reset doesn't succeed, the device should be port reset. 	 */
+comment|/* 	 * Command Block Reset Protocol 	 * 	 * First send a reset request to the device. Then clear 	 * any possibly stalled bulk endpoints. 	 * 	 * This is done in 3 steps, states: 	 * TSTATE_CBI_RESET1 	 * TSTATE_CBI_RESET2 	 * TSTATE_CBI_RESET3 	 * 	 * If the reset doesn't succeed, the device should be port reset. 	 */
 name|DPRINTF
 argument_list|(
 name|UDMASS_CBI
@@ -7486,7 +7486,7 @@ name|transfer_status
 operator|=
 name|status
 expr_stmt|;
-comment|/* The 0x1d code is the SEND DIAGNOSTIC command. To distingiush between 	 * the two the last 10 bytes of the cbl is filled with 0xff (section 	 * 2.2 of the CBI spec). 	 */
+comment|/* The 0x1d code is the SEND DIAGNOSTIC command. To distinguish between 	 * the two the last 10 bytes of the cbl is filled with 0xff (section 	 * 2.2 of the CBI spec). 	 */
 name|sc
 operator|->
 name|cbl
@@ -7546,7 +7546,7 @@ name|XFER_CBI_RESET1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* XXX if the command fails we should reset the port on the bub */
+comment|/* XXX if the command fails we should reset the port on the hub */
 block|}
 end_function
 
