@@ -6348,10 +6348,6 @@ case|case
 literal|0x3600630e
 case|:
 comment|/* CS4236 */
-case|case
-literal|0x3500630e
-case|:
-comment|/* CS4236B */
 name|tmp_d
 operator|.
 name|bd_id
