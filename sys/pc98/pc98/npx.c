@@ -1864,7 +1864,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|I586_CPU
+name|I586_CPU_XXX
 if|if
 condition|(
 name|cpu_class
