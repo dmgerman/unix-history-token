@@ -228,6 +228,31 @@ name|ISA_ID_3C509_TPC
 value|0x506d5098
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ISA_ID_3C569B_COMBO
+value|0x506d5694
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISA_ID_3C569B_TPO
+value|0x506d5695
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -266,6 +291,23 @@ block|,
 literal|"3Com 3C509-TPC EtherLink III"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PC98
+block|{
+name|ISA_ID_3C569B_COMBO
+block|,
+literal|"3Com 3C569B-J-Combo EtherLink III"
+block|}
+block|,
+block|{
+name|ISA_ID_3C569B_TPO
+block|,
+literal|"3Com 3C569B-J-TPO EtherLink III"
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|,
