@@ -247,6 +247,13 @@ name|isc_result_t
 name|result
 parameter_list|)
 block|{
+specifier|static
+name|char
+name|ebuf
+index|[
+literal|40
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|result
@@ -263,8 +270,17 @@ index|[
 name|result
 index|]
 return|;
+name|sprintf
+argument_list|(
+name|ebuf
+argument_list|,
+literal|"unknown error: %d"
+argument_list|,
+name|result
+argument_list|)
+expr_stmt|;
 return|return
-literal|"unknown error."
+name|ebuf
 return|;
 block|}
 end_function

@@ -4,7 +4,7 @@ comment|/* print.c     Turn data structures into printable text. */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995-2002 Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This software has been written for the Internet Software Consortium  * by Ted Lemon in cooperation with Vixie Enterprises and Nominum, Inc.  * To learn more about the Internet Software Consortium, see  * ``http://www.isc.org/''.  To learn more about Vixie Enterprises,  * see ``http://www.vix.com''.   To learn more about Nominum, Inc., see  * ``http://www.nominum.com''.  */
+comment|/*  * Copyright (c) 1995-2003 Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This software has been written for the Internet Software Consortium  * by Ted Lemon in cooperation with Vixie Enterprises and Nominum, Inc.  * To learn more about the Internet Software Consortium, see  * ``http://www.isc.org/''.  To learn more about Vixie Enterprises,  * see ``http://www.vix.com''.   To learn more about Nominum, Inc., see  * ``http://www.nominum.com''.  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: print.c,v 1.53.2.7 2002/11/17 02:26:59 dhankins Exp $ Copyright (c) 1995-2002 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: print.c,v 1.53.2.9 2003/03/31 03:06:56 dhankins Exp $ Copyright (c) 1995-2003 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1113,7 +1113,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DEBUG
+name|DEBUG_PACKET
 argument_list|)
 end_if
 
@@ -1662,9 +1662,19 @@ name|lbix
 init|=
 literal|0
 decl_stmt|;
+comment|/*           1         2         3         4         5         6         7 01234567890123456789012345678901234567890123456789012345678901234567890123 280: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00   .................   */
+name|memset
+argument_list|(
+name|lbuf
+argument_list|,
+literal|' '
+argument_list|,
+literal|79
+argument_list|)
+expr_stmt|;
 name|lbuf
 index|[
-literal|0
+literal|79
 index|]
 operator|=
 literal|0
@@ -1698,10 +1708,56 @@ if|if
 condition|(
 name|lbix
 condition|)
+block|{
+name|lbuf
+index|[
+literal|53
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+name|lbuf
+index|[
+literal|54
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+name|lbuf
+index|[
+literal|55
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+name|lbuf
+index|[
+literal|73
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|log_info
 argument_list|(
 name|lbuf
 argument_list|)
+expr_stmt|;
+block|}
+name|memset
+argument_list|(
+name|lbuf
+argument_list|,
+literal|' '
+argument_list|,
+literal|79
+argument_list|)
+expr_stmt|;
+name|lbuf
+index|[
+literal|79
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -1736,6 +1792,50 @@ index|]
 operator|=
 literal|' '
 expr_stmt|;
+if|if
+condition|(
+name|isprint
+argument_list|(
+name|buf
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+block|{
+name|lbuf
+index|[
+literal|56
+operator|+
+operator|(
+name|i
+operator|%
+literal|16
+operator|)
+index|]
+operator|=
+name|buf
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
+else|else
+block|{
+name|lbuf
+index|[
+literal|56
+operator|+
+operator|(
+name|i
+operator|%
+literal|16
+operator|)
+index|]
+operator|=
+literal|'.'
+expr_stmt|;
+block|}
 name|sprintf
 argument_list|(
 operator|&
@@ -1756,7 +1856,42 @@ name|lbix
 operator|+=
 literal|3
 expr_stmt|;
+name|lbuf
+index|[
+name|lbix
+index|]
+operator|=
+literal|' '
+expr_stmt|;
 block|}
+name|lbuf
+index|[
+literal|53
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+name|lbuf
+index|[
+literal|54
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+name|lbuf
+index|[
+literal|55
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+name|lbuf
+index|[
+literal|73
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|log_info
 argument_list|(
 name|lbuf
@@ -1865,6 +2000,8 @@ expr_stmt|;
 else|else
 name|log_info
 argument_list|(
+literal|"%s"
+argument_list|,
 operator|(
 specifier|const
 name|char
@@ -6576,6 +6713,14 @@ literal|"TXT"
 expr_stmt|;
 break|break;
 case|case
+name|T_KEY
+case|:
+name|en
+operator|=
+literal|"KEY"
+expr_stmt|;
+break|break;
+case|case
 name|T_CNAME
 case|:
 name|en
@@ -6678,6 +6823,32 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|u
+operator|->
+name|r_type
+operator|==
+name|T_KEY
+condition|)
+block|{
+name|strcat
+argument_list|(
+name|s
+argument_list|,
+literal|"<keydata>"
+argument_list|)
+expr_stmt|;
+name|s
+operator|+=
+name|strlen
+argument_list|(
+literal|"<keydata>"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|s
 operator|+
 name|u
@@ -6729,6 +6900,7 @@ operator|++
 operator|=
 literal|'"'
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
