@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.89.1.3 (Berkeley) %G%"
+literal|"@(#)conf.c	8.139 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6463,6 +6463,16 @@ name|int
 name|optind
 decl_stmt|,
 name|opterr
+decl_stmt|,
+name|optopt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|optarg
 decl_stmt|;
 end_decl_stmt
 
@@ -6495,11 +6505,6 @@ begin_comment
 comment|/* index into parent argv vector */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|int
 name|optopt
@@ -6524,6 +6529,11 @@ end_decl_stmt
 begin_comment
 comment|/* argument associated with option */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
