@@ -36,7 +36,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	5.10 (Berkeley) %G%"
+literal|"@(#)main.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -314,6 +314,9 @@ init|=
 name|FALSE
 decl_stmt|;
 comment|/* process queue requests */
+name|bool
+name|nothaw
+decl_stmt|;
 specifier|static
 name|bool
 name|reenter
@@ -567,6 +570,13 @@ name|argv
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|nothaw
+operator|=
+name|FALSE
+expr_stmt|;
+end_expr_stmt
+
 begin_while
 while|while
 condition|(
@@ -634,7 +644,10 @@ name|getruid
 argument_list|()
 argument_list|)
 expr_stmt|;
-break|break;
+name|nothaw
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -650,16 +663,77 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-break|break;
+name|nothaw
+operator|=
+name|TRUE
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|p
+argument_list|,
+literal|"-d"
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|tTsetup
+argument_list|(
+name|tTdvect
+argument_list|,
+sizeof|sizeof
+name|tTdvect
+argument_list|,
+literal|"0-99.1"
+argument_list|)
+expr_stmt|;
+name|tTflag
+argument_list|(
+operator|&
+name|p
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+name|setbuf
+argument_list|(
+name|stdout
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Version %s\n"
+argument_list|,
+name|Version
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|DEBUG
 block|}
 end_while
 
 begin_if
 if|if
 condition|(
-name|p
-operator|==
-name|NULL
+operator|!
+name|nothaw
 condition|)
 name|readconfig
 operator|=
@@ -995,6 +1069,28 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"canonical name: %s\n"
+argument_list|,
+name|jbuf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 name|p
 operator|=
 name|newstr
@@ -1030,6 +1126,30 @@ name|av
 operator|!=
 name|NULL
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"\ta.k.a.: %s\n"
+argument_list|,
+operator|*
+name|av
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 name|setclass
 argument_list|(
 literal|'w'
@@ -1039,6 +1159,7 @@ name|av
 operator|++
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* version */
 name|define
 argument_list|(
@@ -1289,7 +1410,7 @@ name|DEBUG
 case|case
 literal|'d'
 case|:
-comment|/* debug */
+comment|/* debugging -- redo in case frozen */
 name|tTsetup
 argument_list|(
 name|tTdvect
@@ -1318,13 +1439,6 @@ name|char
 operator|*
 operator|)
 name|NULL
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Version %s\n"
-argument_list|,
-name|Version
 argument_list|)
 expr_stmt|;
 break|break;
