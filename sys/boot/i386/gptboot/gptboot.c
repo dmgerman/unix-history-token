@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.16 1998/11/08 18:37:28 rnordier Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.17 1999/01/10 13:29:52 peter Exp $  */
 end_comment
 
 begin_include
@@ -232,13 +232,6 @@ define|#
 directive|define
 name|PATH_KERNEL
 value|"/kernel"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PATH_HELP
-value|"boot.help"
 end_define
 
 begin_define
@@ -474,16 +467,6 @@ name|char
 name|kname
 index|[
 literal|1024
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|help
-index|[
-literal|2048
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -834,8 +817,6 @@ block|{
 name|int
 name|autoboot
 decl_stmt|,
-name|helpon
-decl_stmt|,
 name|i
 decl_stmt|;
 name|v86
@@ -967,22 +948,6 @@ name|autoboot
 operator|=
 literal|2
 expr_stmt|;
-name|helpon
-operator|=
-literal|1
-expr_stmt|;
-name|readfile
-argument_list|(
-name|PATH_HELP
-argument_list|,
-name|help
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|help
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|readfile
 argument_list|(
 name|PATH_CONFIG
@@ -1104,7 +1069,6 @@ name|printf
 argument_list|(
 literal|" \n>> FreeBSD/i386 BOOT\n"
 literal|"Default: %u:%s(%u,%c)%s\n"
-literal|"%s"
 literal|"boot: "
 argument_list|,
 name|dsk
@@ -1131,12 +1095,6 @@ operator|.
 name|part
 argument_list|,
 name|kname
-argument_list|,
-name|helpon
-condition|?
-name|help
-else|:
-literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -1176,8 +1134,6 @@ argument_list|)
 expr_stmt|;
 name|autoboot
 operator|=
-name|helpon
-operator|=
 literal|0
 expr_stmt|;
 if|if
@@ -1187,9 +1143,10 @@ argument_list|(
 name|cmd
 argument_list|)
 condition|)
-name|helpon
-operator|=
-literal|1
+name|putchar
+argument_list|(
+literal|'\a'
+argument_list|)
 expr_stmt|;
 else|else
 name|load
