@@ -1440,10 +1440,6 @@ name|int
 name|ver
 parameter_list|)
 block|{
-define|#
-directive|define
-name|_module
-value|joy_module
 name|DISPATCH
 argument_list|(
 name|lkmtp
