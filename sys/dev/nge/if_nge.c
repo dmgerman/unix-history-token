@@ -6892,7 +6892,8 @@ name|nge_ldata
 operator|->
 name|nge_tx_list
 index|[
-name|cur
+operator|*
+name|txidx
 index|]
 operator|.
 name|nge_extsts
@@ -6924,7 +6925,8 @@ name|nge_ldata
 operator|->
 name|nge_tx_list
 index|[
-name|cur
+operator|*
+name|txidx
 index|]
 operator|.
 name|nge_extsts
@@ -6947,7 +6949,8 @@ name|nge_ldata
 operator|->
 name|nge_tx_list
 index|[
-name|cur
+operator|*
+name|txidx
 index|]
 operator|.
 name|nge_extsts
@@ -6970,7 +6973,8 @@ name|nge_ldata
 operator|->
 name|nge_tx_list
 index|[
-name|cur
+operator|*
+name|txidx
 index|]
 operator|.
 name|nge_extsts
