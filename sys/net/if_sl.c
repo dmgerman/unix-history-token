@@ -2467,13 +2467,11 @@ specifier|static
 name|void
 name|slstart
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sl_softc
