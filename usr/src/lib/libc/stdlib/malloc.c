@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)malloc.c	4.2 (Berkeley) %G%"
+literal|"@(#)malloc.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -912,7 +912,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 4 should be plenty.  -1 means whole list */
+comment|/* 4 should be plenty, -1 =>'s whole list */
 end_comment
 
 begin_function
@@ -1009,7 +1009,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* already free: he is doing "compaction" (tee hee) */
+comment|/* 		 * Already free, doing "compaction". 		 * 		 * Search for the old block of memory on the 		 * free list.  First, check the most common 		 * case (last element free'd), then (this failing) 		 * the last ``realloc_srchlen'' items free'd. 		 * If all lookups fail, then assume the size of 		 * the memory block being realloc'd is the 		 * smallest possible. 		 */
 if|if
 condition|(
 operator|(
@@ -1042,7 +1042,6 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
-comment|/* assume shortest possible */
 block|}
 name|onb
 operator|=
@@ -1064,11 +1063,11 @@ argument_list|)
 operator|-
 name|RSLOP
 expr_stmt|;
+comment|/* avoid the copy if same size block */
 if|if
 condition|(
 name|was_alloced
 operator|&&
-comment|/* avoid the copy if same size block */
 name|nbytes
 operator|<=
 name|onb
@@ -1205,12 +1204,13 @@ condition|;
 name|i
 operator|++
 control|)
-for|for
-control|(
+block|{
 name|j
 operator|=
 literal|0
-operator|,
+expr_stmt|;
+for|for
+control|(
 name|p
 operator|=
 name|nextf
@@ -1224,15 +1224,13 @@ name|j
 operator|!=
 name|srchlen
 condition|;
-name|j
-operator|++
-operator|,
 name|p
 operator|=
 name|p
 operator|->
 name|ov_next
 control|)
+block|{
 if|if
 condition|(
 name|p
@@ -1244,6 +1242,11 @@ operator|(
 name|i
 operator|)
 return|;
+name|j
+operator|++
+expr_stmt|;
+block|}
+block|}
 return|return
 operator|(
 operator|-
