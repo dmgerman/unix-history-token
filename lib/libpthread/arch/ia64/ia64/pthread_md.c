@@ -77,14 +77,6 @@ name|tcb_thread
 operator|=
 name|thread
 expr_stmt|;
-name|tcb
-operator|->
-name|tcb_tp
-operator|.
-name|tp_self
-operator|=
-name|tcb
-expr_stmt|;
 comment|/* Allocate TDV */
 block|}
 return|return
@@ -177,19 +169,6 @@ operator|.
 name|tm_flags
 operator|=
 name|TMF_NOUPCALL
-expr_stmt|;
-name|kcb
-operator|->
-name|kcb_faketcb
-operator|.
-name|tcb_tp
-operator|.
-name|tp_self
-operator|=
-operator|&
-name|kcb
-operator|->
-name|kcb_faketcb
 expr_stmt|;
 name|kcb
 operator|->
