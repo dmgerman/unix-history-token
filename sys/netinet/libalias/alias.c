@@ -1416,7 +1416,9 @@ operator|&
 name|PKT_ALIAS_PROXY_ONLY
 condition|)
 return|return
+operator|(
 name|PKT_ALIAS_OK
+operator|)
 return|;
 name|ic
 operator|=
@@ -2256,7 +2258,9 @@ operator|&
 name|PKT_ALIAS_PROXY_ONLY
 condition|)
 return|return
+operator|(
 name|PKT_ALIAS_OK
+operator|)
 return|;
 name|ic
 operator|=
@@ -2396,7 +2400,9 @@ operator|&
 name|PKT_ALIAS_PROXY_ONLY
 condition|)
 return|return
+operator|(
 name|PKT_ALIAS_OK
+operator|)
 return|;
 name|link
 operator|=
@@ -2509,7 +2515,9 @@ operator|&
 name|PKT_ALIAS_PROXY_ONLY
 condition|)
 return|return
+operator|(
 name|PKT_ALIAS_OK
+operator|)
 return|;
 name|link
 operator|=
@@ -2623,7 +2631,9 @@ operator|&
 name|PKT_ALIAS_PROXY_ONLY
 condition|)
 return|return
+operator|(
 name|PKT_ALIAS_OK
+operator|)
 return|;
 name|ud
 operator|=
@@ -2975,7 +2985,9 @@ operator|&
 name|PKT_ALIAS_PROXY_ONLY
 condition|)
 return|return
+operator|(
 name|PKT_ALIAS_OK
+operator|)
 return|;
 name|ud
 operator|=
@@ -3863,7 +3875,9 @@ name|PKT_ALIAS_PROXY_ONLY
 operator|)
 condition|)
 return|return
+operator|(
 name|PKT_ALIAS_OK
+operator|)
 return|;
 comment|/* If this is a transparent proxy, save original destination,    then alter the destination and adjust checksums */
 name|dest_port
@@ -4983,7 +4997,9 @@ operator||=
 name|PKT_ALIAS_REVERSE
 expr_stmt|;
 return|return
+operator|(
 name|iresult
+operator|)
 return|;
 block|}
 name|HouseKeeping
@@ -5034,7 +5050,9 @@ operator|>
 name|maxpacketsize
 condition|)
 return|return
+operator|(
 name|PKT_ALIAS_IGNORED
+operator|)
 return|;
 name|iresult
 operator|=
@@ -5394,7 +5412,9 @@ operator||=
 name|PKT_ALIAS_REVERSE
 expr_stmt|;
 return|return
+operator|(
 name|iresult
+operator|)
 return|;
 block|}
 name|HouseKeeping
@@ -5439,7 +5459,9 @@ operator|>
 name|maxpacketsize
 condition|)
 return|return
+operator|(
 name|PKT_ALIAS_IGNORED
+operator|)
 return|;
 name|addr_save
 operator|=

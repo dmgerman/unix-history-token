@@ -3330,7 +3330,9 @@ name|old_link
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|new_link
+operator|)
 return|;
 block|}
 end_function
@@ -5073,7 +5075,9 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 break|break;
 block|}
@@ -5220,7 +5224,9 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 break|break;
 block|}
@@ -5759,7 +5765,9 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 break|break;
 block|}
@@ -5897,7 +5905,9 @@ operator|==
 name|INADDR_ANY
 condition|)
 return|return
+operator|(
 name|alias_addr
+operator|)
 return|;
 elseif|else
 if|if
@@ -5929,9 +5939,11 @@ name|alias_addr
 return|;
 else|else
 return|return
+operator|(
 name|la
 operator|->
 name|targetAddress
+operator|)
 return|;
 block|}
 else|else
@@ -6004,9 +6016,11 @@ name|alias_addr
 return|;
 else|else
 return|return
+operator|(
 name|link
 operator|->
 name|src_addr
+operator|)
 return|;
 block|}
 block|}
@@ -6109,9 +6123,11 @@ name|original_addr
 return|;
 else|else
 return|return
+operator|(
 name|link
 operator|->
 name|alias_addr
+operator|)
 return|;
 block|}
 block|}
@@ -6425,6 +6441,7 @@ parameter_list|)
 block|{
 comment|/* TCP input state */
 return|return
+operator|(
 name|link
 operator|->
 name|data
@@ -6434,6 +6451,7 @@ operator|->
 name|state
 operator|.
 name|in
+operator|)
 return|;
 block|}
 end_function
@@ -6450,6 +6468,7 @@ parameter_list|)
 block|{
 comment|/* TCP output state */
 return|return
+operator|(
 name|link
 operator|->
 name|data
@@ -6459,6 +6478,7 @@ operator|->
 name|state
 operator|.
 name|out
+operator|)
 return|;
 block|}
 end_function
@@ -6485,11 +6505,13 @@ operator|==
 name|INADDR_ANY
 condition|)
 return|return
+operator|(
 name|link
 operator|->
 name|la
 operator|->
 name|aliasAddress
+operator|)
 return|;
 else|else
 return|return
@@ -6545,17 +6567,21 @@ operator|==
 name|INADDR_ANY
 condition|)
 return|return
+operator|(
 name|link
 operator|->
 name|la
 operator|->
 name|aliasAddress
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|link
 operator|->
 name|alias_addr
+operator|)
 return|;
 block|}
 end_function
@@ -6572,9 +6598,11 @@ name|la
 parameter_list|)
 block|{
 return|return
+operator|(
 name|la
 operator|->
 name|aliasAddress
+operator|)
 return|;
 block|}
 end_function
@@ -6712,9 +6740,11 @@ name|link
 parameter_list|)
 block|{
 return|return
+operator|(
 name|link
 operator|->
 name|proxy_addr
+operator|)
 return|;
 block|}
 end_function
@@ -6753,9 +6783,11 @@ name|link
 parameter_list|)
 block|{
 return|return
+operator|(
 name|link
 operator|->
 name|proxy_port
+operator|)
 return|;
 block|}
 end_function
@@ -6794,6 +6826,7 @@ parameter_list|)
 block|{
 comment|/* See if ACK numbers have been modified */
 return|return
+operator|(
 name|link
 operator|->
 name|data
@@ -6803,6 +6836,7 @@ operator|->
 name|state
 operator|.
 name|ack_modified
+operator|)
 return|;
 block|}
 end_function
@@ -8004,7 +8038,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|link
@@ -8059,7 +8095,9 @@ block|}
 endif|#
 directive|endif
 return|return
+operator|(
 name|link
+operator|)
 return|;
 block|}
 end_function
@@ -8297,7 +8335,9 @@ block|}
 endif|#
 directive|endif
 return|return
+operator|(
 name|link
+operator|)
 return|;
 block|}
 end_function
@@ -8385,7 +8425,9 @@ block|}
 endif|#
 directive|endif
 return|return
+operator|(
 name|link
+operator|)
 return|;
 block|}
 end_function
@@ -9027,9 +9069,11 @@ name|mask
 operator|)
 expr_stmt|;
 return|return
+operator|(
 name|la
 operator|->
 name|packetAliasMode
+operator|)
 return|;
 block|}
 end_function
@@ -9045,9 +9089,11 @@ name|la
 parameter_list|)
 block|{
 return|return
+operator|(
 name|la
 operator|->
 name|newDefaultLink
+operator|)
 return|;
 block|}
 end_function
@@ -9156,7 +9202,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|cmd
+operator|)
 return|;
 block|}
 end_function

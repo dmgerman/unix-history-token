@@ -318,7 +318,9 @@ name|pip
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -377,7 +379,9 @@ name|localIpAddr
 expr_stmt|;
 comment|/* 	 * XXX I should probably handle in bound global translations as 	 * well. 	 */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -442,7 +446,9 @@ name|pip
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -593,7 +599,9 @@ name|pip
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

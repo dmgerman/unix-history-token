@@ -221,16 +221,20 @@ literal|1
 condition|)
 block|{
 return|return
+operator|(
 name|j
 operator|+
 literal|1
+operator|)
 return|;
 block|}
 block|}
 block|}
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -437,8 +441,10 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|port_data
@@ -1015,8 +1021,10 @@ operator|!
 name|pkt_updated
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|memcpy
 argument_list|(
@@ -1128,7 +1136,9 @@ name|pip
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1248,7 +1258,9 @@ condition|)
 block|{
 comment|/* end of options */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -1391,7 +1403,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
