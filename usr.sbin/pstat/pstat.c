@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pstat.c,v 1.38 1999/01/21 08:08:55 dillon Exp $"
+literal|"$Id: pstat.c,v 1.39 1999/01/22 10:36:48 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5765,6 +5765,7 @@ index|]
 argument_list|)
 argument_list|,
 operator|(
+operator|(
 name|swapflag
 operator|>
 literal|1
@@ -5773,6 +5774,9 @@ condition|?
 name|SWIF_DUMP_TREE
 else|:
 literal|0
+operator|)
+operator||
+name|SWIF_DEV_PREFIX
 argument_list|)
 expr_stmt|;
 define|#
@@ -5841,7 +5845,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"/dev/%-6s %*d "
+literal|"%-11s %*d "
 argument_list|,
 name|kswap
 index|[
