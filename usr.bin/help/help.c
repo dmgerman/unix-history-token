@@ -82,6 +82,17 @@ name|_PATH_LIBHELP
 value|"/usr/lib/help"
 end_define
 
+begin_comment
+comment|/*  * The file we check if all else fails.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_DEFAULT
+value|_PATH_LIBHELP "/default"
+end_define
+
 begin_function_decl
 name|int
 name|help
@@ -352,6 +363,32 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* 	 * Try the default help file if we have a numeric key. 	 * Or else, use the non-numeric part of the key. 	 */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|keybase
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|strlcpy
+argument_list|(
+name|path
+argument_list|,
+name|_PATH_DEFAULT
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|snprintf
 argument_list|(
 name|path
@@ -367,6 +404,7 @@ argument_list|,
 name|keybase
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|keybase
@@ -379,6 +417,16 @@ argument_list|(
 name|keynumber
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|numlen
+condition|)
+block|{
+goto|goto
+name|fail
+goto|;
+block|}
 name|helpfile
 operator|=
 name|fopen
