@@ -785,7 +785,7 @@ operator|)
 return|;
 ifndef|#
 directive|ifndef
-name|i386
+name|__i386__
 if|if
 condition|(
 name|VM_MIN_ADDRESS
@@ -2129,7 +2129,7 @@ operator|)
 return|;
 ifndef|#
 directive|ifndef
-name|i386
+name|__i386__
 if|if
 condition|(
 name|VM_MIN_ADDRESS
@@ -2695,7 +2695,7 @@ operator|)
 return|;
 ifndef|#
 directive|ifndef
-name|i386
+name|__i386__
 if|if
 condition|(
 name|VM_MIN_ADDRESS
