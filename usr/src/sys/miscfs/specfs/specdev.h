@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)specdev.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)specdev.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -339,12 +339,19 @@ name|spec_mmap
 value|((int (*) __P((struct  vop_mmap_args *)))spec_badop)
 end_define
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|spec_fsync
-value|((int (*) __P((struct  vop_fsync_args *)))nullop)
-end_define
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_fsync_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
