@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.1 (Berkeley) %G%"
+literal|"@(#)main.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -306,6 +306,17 @@ operator|,
 name|stru
 operator|=
 name|STRU_F
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|bytename
+argument_list|,
+literal|"8"
+argument_list|)
+operator|,
+name|bytesize
+operator|=
+literal|8
 expr_stmt|;
 if|if
 condition|(

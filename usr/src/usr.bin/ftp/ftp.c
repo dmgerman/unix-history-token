@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	4.2 (Berkeley) %G%"
+literal|"@(#)ftp.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1571,6 +1571,7 @@ argument_list|(
 name|local
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|errno
@@ -1665,6 +1666,7 @@ argument_list|(
 name|local
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|ferror
