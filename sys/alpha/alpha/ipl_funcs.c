@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ipl_funcs.c,v 1.1 1998/06/10 10:52:49 dfr Exp $  */
 end_comment
 
 begin_include
@@ -40,13 +40,6 @@ name|netisr
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|void
-name|do_sir
-parameter_list|()
-block|{ }
-end_function
-
 begin_macro
 name|void
 argument_list|(
@@ -68,9 +61,311 @@ end_expr_stmt
 
 begin_decl_stmt
 name|u_int64_t
-name|ssir
+name|ipending
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|cpl
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|atomic_setbit
+parameter_list|(
+name|u_int64_t
+modifier|*
+name|p
+parameter_list|,
+name|u_int64_t
+name|bit
+parameter_list|)
+block|{
+name|u_int64_t
+name|temp
+decl_stmt|;
+asm|__asm__
+specifier|__volatile__
+asm|( 	"1:\tldq_l %0,%2\n\t"
+comment|/* load current mask value, asserting lock */
+asm|"or %3,%0,%0\n\t"
+comment|/* add our bits */
+asm|"stq_c %0,%1\n\t"
+comment|/* attempt to store */
+asm|"beq %0,2f\n\t"
+comment|/* if the store failed, spin */
+asm|"br 3f\n"
+comment|/* it worked, exit */
+asm|"2:\tbr 1b\n"
+comment|/* *p not updated, loop */
+asm|"3:\tmb\n"
+comment|/* it worked */
+asm|: "=&r"(temp), "=m" (*p) 	: "m"(*p), "r"(bit) 	: "memory");
+block|}
+end_function
+
+begin_function
+specifier|static
+name|u_int64_t
+name|atomic_readandclear
+parameter_list|(
+name|u_int64_t
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|u_int64_t
+name|v
+decl_stmt|,
+name|temp
+decl_stmt|;
+asm|__asm__
+specifier|__volatile__
+asm|( 	"wmb\n"
+comment|/* ensure pending writes have drained */
+asm|"1:\tldq_l %0,%3\n\t"
+comment|/* load current value, asserting lock */
+asm|"ldiq %1,0\n\t"
+comment|/* value to store */
+asm|"stq_c %1,%2\n\t"
+comment|/* attempt to store */
+asm|"beq %1,2f\n\t"
+comment|/* if the store failed, spin */
+asm|"br 3f\n"
+comment|/* it worked, exit */
+asm|"2:\tbr 1b\n"
+comment|/* *p not updated, loop */
+asm|"3:\tmb\n"
+comment|/* it worked */
+asm|: "=&r"(v), "=&r"(temp), "=m" (*p) 	: "m"(*p) 	: "memory");
+return|return
+name|v
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|do_sir
+parameter_list|()
+block|{
+name|u_int64_t
+name|pend
+init|=
+name|atomic_readandclear
+argument_list|(
+operator|&
+name|ipending
+argument_list|)
+decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/*      * Later - no users of these yet.      */
+block|if (pend& (1<< SWI_TTY)) 	swi_tty();     if (pend& (1<< SWI_NET)) 	swi_net();
+endif|#
+directive|endif
+if|if
+condition|(
+name|pend
+operator|&
+operator|(
+literal|1
+operator|<<
+name|SWI_CLOCK
+operator|)
+condition|)
+name|softclock
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|GENSETSOFT
+parameter_list|(
+name|name
+parameter_list|,
+name|bit
+parameter_list|)
+define|\ 						\
+value|void name(void)					\ {						\     atomic_setbit(&ipending, (1<< bit));	\ }
+end_define
+
+begin_macro
+name|GENSETSOFT
+argument_list|(
+argument|setsofttty
+argument_list|,
+argument|SWI_TTY
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSETSOFT
+argument_list|(
+argument|setsoftnet
+argument_list|,
+argument|SWI_NET
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSETSOFT
+argument_list|(
+argument|setsoftcamnet
+argument_list|,
+argument|SWI_CAMNET
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSETSOFT
+argument_list|(
+argument|setsoftcambio
+argument_list|,
+argument|SWI_CAMBIO
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSETSOFT
+argument_list|(
+argument|setsoftvm
+argument_list|,
+argument|SWI_VM
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSETSOFT
+argument_list|(
+argument|setsoftclock
+argument_list|,
+argument|SWI_CLOCK
+argument_list|)
+end_macro
+
+begin_define
+define|#
+directive|define
+name|SPLDOWN
+parameter_list|(
+name|name
+parameter_list|,
+name|pri
+parameter_list|)
+define|\ 							\
+value|int name(void)						\ {							\     int s = alpha_pal_swpipl(ALPHA_PSL_IPL_##pri);	\     cpl = ALPHA_PSL_IPL_##pri;				\     return s;						\ }
+end_define
+
+begin_macro
+name|SPLDOWN
+argument_list|(
+argument|splsoftclock
+argument_list|,
+argument|SOFT
+argument_list|)
+end_macro
+
+begin_macro
+name|SPLDOWN
+argument_list|(
+argument|splsoftnet
+argument_list|,
+argument|SOFT
+argument_list|)
+end_macro
+
+begin_define
+define|#
+directive|define
+name|SPLUP
+parameter_list|(
+name|name
+parameter_list|,
+name|pri
+parameter_list|)
+define|\ 							\
+value|int name(void)						\ {							\     if (ALPHA_PSL_IPL_##pri> cpl) {			\ 	int s = alpha_pal_swpipl(ALPHA_PSL_IPL_##pri);	\ 	cpl = ALPHA_PSL_IPL_##pri;			\ 	return s;					\     } else						\ 	return cpl;					\ }
+end_define
+
+begin_macro
+name|SPLUP
+argument_list|(
+argument|splnet
+argument_list|,
+argument|IO
+argument_list|)
+end_macro
+
+begin_macro
+name|SPLUP
+argument_list|(
+argument|splbio
+argument_list|,
+argument|IO
+argument_list|)
+end_macro
+
+begin_macro
+name|SPLUP
+argument_list|(
+argument|splimp
+argument_list|,
+argument|IO
+argument_list|)
+end_macro
+
+begin_macro
+name|SPLUP
+argument_list|(
+argument|spltty
+argument_list|,
+argument|IO
+argument_list|)
+end_macro
+
+begin_macro
+name|SPLUP
+argument_list|(
+argument|splvm
+argument_list|,
+argument|IO
+argument_list|)
+end_macro
+
+begin_macro
+name|SPLUP
+argument_list|(
+argument|splclock
+argument_list|,
+argument|CLOCK
+argument_list|)
+end_macro
+
+begin_macro
+name|SPLUP
+argument_list|(
+argument|splstatclock
+argument_list|,
+argument|CLOCK
+argument_list|)
+end_macro
+
+begin_macro
+name|SPLUP
+argument_list|(
+argument|splhigh
+argument_list|,
+argument|HIGH
+argument_list|)
+end_macro
 
 begin_function
 name|void
@@ -82,6 +377,40 @@ name|alpha_pal_swpipl
 argument_list|(
 name|ALPHA_PSL_IPL_0
 argument_list|)
+expr_stmt|;
+name|cpl
+operator|=
+name|ALPHA_PSL_IPL_0
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|splx
+parameter_list|(
+name|int
+name|s
+parameter_list|)
+block|{
+if|if
+condition|(
+name|s
+condition|)
+block|{
+name|alpha_pal_swpipl
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|cpl
+operator|=
+name|s
+expr_stmt|;
+block|}
+else|else
+name|spl0
+argument_list|()
 expr_stmt|;
 block|}
 end_function
