@@ -631,7 +631,7 @@ parameter_list|,
 name|ident
 parameter_list|)
 define|\
-value|static struct sysinit uniquifier ## _sys_init = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		ident						\ 	};							\ 	DATA_SET(sysinit_set,uniquifier ## _sys_init);
+value|static struct sysinit uniquifier ## _sys_init = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		(ident)						\ 	};							\ 	DATA_SET(sysinit_set,uniquifier ## _sys_init);
 end_define
 
 begin_define
@@ -650,7 +650,7 @@ parameter_list|,
 name|ident
 parameter_list|)
 define|\
-value|C_SYSINIT(uniquifier, subsystem, order,			\ 	(sysinit_cfunc_t)(sysinit_nfunc_t)func, (void *)ident)
+value|C_SYSINIT(uniquifier, subsystem, order,			\ 	(sysinit_cfunc_t)(sysinit_nfunc_t)func, (void *)(ident))
 end_define
 
 begin_comment
@@ -673,7 +673,7 @@ parameter_list|,
 name|ident
 parameter_list|)
 define|\
-value|static struct sysinit uniquifier ## _sys_uninit = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		ident						\ 	};							\ 	DATA_SET(sysuninit_set,uniquifier ## _sys_uninit)
+value|static struct sysinit uniquifier ## _sys_uninit = {	\ 		subsystem,					\ 		order,						\ 		func,						\ 		(ident)						\ 	};							\ 	DATA_SET(sysuninit_set,uniquifier ## _sys_uninit)
 end_define
 
 begin_define
@@ -692,7 +692,7 @@ parameter_list|,
 name|ident
 parameter_list|)
 define|\
-value|C_SYSUNINIT(uniquifier, subsystem, order,		\ 	(sysinit_cfunc_t)(sysinit_nfunc_t)func, (void *)ident)
+value|C_SYSUNINIT(uniquifier, subsystem, order,		\ 	(sysinit_cfunc_t)(sysinit_nfunc_t)func, (void *)(ident))
 end_define
 
 begin_function_decl

@@ -1036,7 +1036,7 @@ name|WITNESS_INIT
 parameter_list|(
 name|lock
 parameter_list|)
-value|(lock)->lo_flags |= LO_INITIALIZED
+value|((lock)->lo_flags |= LO_INITIALIZED)
 end_define
 
 begin_define
@@ -1046,7 +1046,7 @@ name|WITNESS_DESTROY
 parameter_list|(
 name|lock
 parameter_list|)
-value|(lock)->lo_flags&= ~LO_INITIALIZED
+value|((lock)->lo_flags&= ~LO_INITIALIZED)
 end_define
 
 begin_define
