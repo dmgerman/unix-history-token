@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ddb.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_watchdog.h"
 end_include
 
@@ -51,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
 end_include
 
 begin_include
@@ -177,23 +177,6 @@ begin_include
 include|#
 directive|include
 file|<sys/gmon.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ddb/ddb.h>
 end_include
 
 begin_endif
@@ -1895,18 +1878,17 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DDB
-name|db_print_backtrace
+name|KDB
+name|kdb_backtrace
 argument_list|()
 expr_stmt|;
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"watchdog timeout"
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* !DDB */
 name|panic
 argument_list|(
 literal|"watchdog timeout"
@@ -1914,7 +1896,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DDB */
+comment|/* KDB */
 block|}
 end_function
 

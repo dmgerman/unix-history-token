@@ -20,19 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_ddb.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_ddb_trace.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_ddb_unattended.h"
+file|"opt_kdb.h"
 end_include
 
 begin_include
@@ -99,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
 end_include
 
 begin_include
@@ -201,23 +195,6 @@ directive|include
 file|<sys/signalvar.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ddb/ddb.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -253,13 +230,13 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 end_ifdef
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DDB_UNATTENDED
+name|KDB_UNATTENDED
 end_ifdef
 
 begin_decl_stmt
@@ -312,7 +289,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DDB_TRACE
+name|KDB_TRACE
 end_ifdef
 
 begin_decl_stmt
@@ -366,6 +343,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KDB */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -475,6 +456,10 @@ begin_comment
 comment|/* our selected dumper */
 end_comment
 
+begin_comment
+comment|/* Context information for dump-debuggers. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -484,7 +469,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* "You Are Here" sign for dump-debuggers */
+comment|/* Registers. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|lwpid_t
+name|dumptid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Thread ID. */
 end_comment
 
 begin_decl_stmt
@@ -973,6 +969,12 @@ operator|&
 name|dumppcb
 argument_list|)
 expr_stmt|;
+name|dumptid
+operator|=
+name|curthread
+operator|->
+name|td_tid
+expr_stmt|;
 name|dumping
 operator|++
 expr_stmt|;
@@ -1003,16 +1005,11 @@ name|howto
 operator||=
 name|shutdown_howto
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DDB
 comment|/* We are out of the debugger now. */
-name|db_active
+name|kdb_active
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|SMP
@@ -1753,40 +1750,6 @@ comment|/* assuming reset worked */
 block|}
 end_function
 
-begin_comment
-comment|/*  * Print a backtrace if we can.  */
-end_comment
-
-begin_function
-name|void
-name|backtrace
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|DDB
-name|printf
-argument_list|(
-literal|"Stack backtrace:\n"
-argument_list|)
-expr_stmt|;
-name|db_print_backtrace
-argument_list|()
-expr_stmt|;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"Sorry, need DDB option to print backtrace"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2017,26 +1980,23 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DDB
-argument_list|)
+ifdef|#
+directive|ifdef
+name|KDB
 if|if
 condition|(
 name|newpanic
 operator|&&
 name|trace_on_panic
 condition|)
-name|backtrace
+name|kdb_backtrace
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
 name|debugger_on_panic
 condition|)
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"panic"
 argument_list|)

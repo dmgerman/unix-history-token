@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -888,7 +894,7 @@ argument_list|,
 name|indx
 argument_list|)
 expr_stmt|;
-name|backtrace
+name|kdb_backtrace
 argument_list|()
 expr_stmt|;
 name|flags
@@ -905,7 +911,7 @@ directive|endif
 if|#
 directive|if
 literal|0
-block|if (size == 0) 		Debugger("zero size malloc");
+block|if (size == 0) 		kdb_enter("zero size malloc");
 endif|#
 directive|endif
 ifdef|#

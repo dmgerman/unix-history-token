@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_ddb.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -45,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
 end_include
 
 begin_include
@@ -130,23 +130,6 @@ include|#
 directive|include
 file|<sys/vmmeter.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ddb/ddb.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1263,13 +1246,10 @@ name|td_generation
 operator|++
 expr_stmt|;
 comment|/* bump preempt-detect counter */
-ifdef|#
-directive|ifdef
-name|DDB
 comment|/* 	 * Don't perform context switches from the debugger. 	 */
 if|if
 condition|(
-name|db_active
+name|kdb_active
 condition|)
 block|{
 name|mtx_unlock_spin
@@ -1278,17 +1258,20 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|db_print_backtrace
+name|kdb_backtrace
 argument_list|()
 expr_stmt|;
-name|db_error
+name|kdb_reenter
+argument_list|()
+expr_stmt|;
+name|panic
 argument_list|(
-literal|"Context switches not allowed in the debugger"
+literal|"%s: did not reenter debugger"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Check if the process exceeds its cpu resource allocation.  If 	 * over max, arrange to kill the process in ast(). 	 */
 if|if
 condition|(
