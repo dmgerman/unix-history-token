@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: shlib.c,v 1.3 1993/10/23 00:34:26 pk Exp $  */
+comment|/*  * $Id: shlib.c,v 1.4 1993/11/08 13:21:23 pk Exp $  */
 end_comment
 
 begin_include
@@ -196,8 +196,9 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|strtok
+name|strsep
 argument_list|(
+operator|&
 name|paths
 argument_list|,
 literal|":"
@@ -207,14 +208,23 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|paths
-operator|=
-name|NULL
-expr_stmt|;
 name|add_search_dir
 argument_list|(
 name|cp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|paths
+condition|)
+operator|*
+operator|(
+name|paths
+operator|-
+literal|1
+operator|)
+operator|=
+literal|':'
 expr_stmt|;
 block|}
 comment|/* Append standard search directories */
