@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	1.3	%G%"
+literal|"@(#)conf.c	1.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -671,7 +671,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  GETNAME -- Get the current users login name. ** **	This is in config.c because it is somewhat machine dependent. **	Examine it carefully for your installation. ** **	Algorithm: **		See if the person is logged in.  If so, return **			the name s/he is logged in as. **		Look up the user id in /etc/passwd.  If found, **			return that name. **		Return NULL. ** **	Parameters: **		none ** **	Returns: **		The login name of this user. **		NULL if this person is noone. ** **	Side Effects: **		none ** **	Requires: **		getlogin (sys) **		getpwuid (sys) **		getuid (sys) ** **	Called By: **		main ** **	History: **		12/26/79 -- written. */
+comment|/* **  GETNAME -- Get the current users login name. ** **	This is in config.c because it is somewhat machine dependent. **	Examine it carefully for your installation. ** **	Algorithm: **		See if the person is logged in.  If so, return **			the name s/he is logged in as. **		Look up the user id in /etc/passwd.  If found, **			return that name. **		Return NULL. ** **	Parameters: **		none ** **	Returns: **		The login name of this user. **		NULL if this person is noone. ** **	Side Effects: **		none ** **	Called By: **		main */
 end_comment
 
 begin_function
@@ -800,7 +800,7 @@ name|V6
 end_ifdef
 
 begin_comment
-comment|/* **  TTYPATH -- Get the path of the user's tty -- Version 6 version. ** **	Returns the pathname of the user's tty.  Returns NULL if **	the user is not logged in or if s/he has write permission **	denied. ** **	Parameters: **		none ** **	Returns: **		pathname of the user's tty. **		NULL if not logged in or write permission denied. ** **	Side Effects: **		none. ** **	WARNING: **		Return value is in a local buffer. ** **	Requires: **		stat (sys) **		ttyn (sys) **		open (sys) **		read (sys) **		close (sys) **		seek (sys) ** **	Called By: **		savemail ** **	History: **		1/12/80 -- written. */
+comment|/* **  TTYPATH -- Get the path of the user's tty -- Version 6 version. ** **	Returns the pathname of the user's tty.  Returns NULL if **	the user is not logged in or if s/he has write permission **	denied. ** **	Parameters: **		none ** **	Returns: **		pathname of the user's tty. **		NULL if not logged in or write permission denied. ** **	Side Effects: **		none. ** **	WARNING: **		Return value is in a local buffer. ** **	Called By: **		savemail */
 end_comment
 
 begin_include
@@ -954,7 +954,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FDOPEN -- Open a stdio file given an open file descriptor. ** **	This is included here because it is standard in v7, but we **	need it in v6. ** **	Algorithm: **		Open /dev/null to create a descriptor. **		Close that descriptor. **		Copy the existing fd into the descriptor. ** **	Parameters: **		fd -- the open file descriptor. **		type -- "r", "w", or whatever. ** **	Returns: **		The file descriptor it creates. ** **	Side Effects: **		none ** **	Requires: **		fopen (sys) ** **	Called By: **		deliver ** **	Notes: **		The mode of fd must match "type". */
+comment|/* **  FDOPEN -- Open a stdio file given an open file descriptor. ** **	This is included here because it is standard in v7, but we **	need it in v6. ** **	Algorithm: **		Open /dev/null to create a descriptor. **		Close that descriptor. **		Copy the existing fd into the descriptor. ** **	Parameters: **		fd -- the open file descriptor. **		type -- "r", "w", or whatever. ** **	Returns: **		The file descriptor it creates. ** **	Side Effects: **		none ** **	Called By: **		deliver ** **	Notes: **		The mode of fd must match "type". */
 end_comment
 
 begin_function
@@ -1015,7 +1015,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  INDEX -- Return pointer to character in string ** **	For V7 compatibility. ** **	Parameters: **		s -- a string to scan. **		c -- a character to look for. ** **	Returns: **		If c is in s, returns the address of the first **			instance of c in s. **		NULL if c is not in s. ** **	Side Effects: **		none. ** **	Requires: **		none. ** **	History: **		3/14/80 -- written.  Why isn't this in -lS? */
+comment|/* **  INDEX -- Return pointer to character in string ** **	For V7 compatibility. ** **	Parameters: **		s -- a string to scan. **		c -- a character to look for. ** **	Returns: **		If c is in s, returns the address of the first **			instance of c in s. **		NULL if c is not in s. ** **	Side Effects: **		none. */
 end_comment
 
 begin_expr_stmt
@@ -1088,7 +1088,7 @@ name|V6
 end_ifndef
 
 begin_comment
-comment|/* **  TTYPATH -- Get the path of the user's tty -- Version 7 version. ** **	Returns the pathname of the user's tty.  Returns NULL if **	the user is not logged in or if s/he has write permission **	denied. ** **	Parameters: **		none ** **	Returns: **		pathname of the user's tty. **		NULL if not logged in or write permission denied. ** **	Side Effects: **		none. ** **	WARNING: **		Return value is in a local buffer. ** **	Requires: **		stat (sys) **		ttyn (sys) **		open (sys) **		read (sys) **		close (sys) **		seek (sys) ** **	Called By: **		savemail ** **	History: **		1/12/80 -- written. */
+comment|/* **  TTYPATH -- Get the path of the user's tty -- Version 7 version. ** **	Returns the pathname of the user's tty.  Returns NULL if **	the user is not logged in or if s/he has write permission **	denied. ** **	Parameters: **		none ** **	Returns: **		pathname of the user's tty. **		NULL if not logged in or write permission denied. ** **	Side Effects: **		none. ** **	WARNING: **		Return value is in a local buffer. ** **	Called By: **		savemail */
 end_comment
 
 begin_include

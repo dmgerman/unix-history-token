@@ -23,12 +23,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	1.2	%G%"
+literal|"@(#)parseaddr.c	1.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  PARSE -- Parse an address ** **	Parses an address and breaks it up into three parts: a **	net to transmit the message on, the host to transmit it **	to, and a user on that host.  These are loaded into an **	addrq header with the values squirreled away if necessary. **	The "user" part may not be a real user; the process may **	just reoccur on that machine.  For example, on a machine **	with an arpanet connection, the address **		csvax.bill@berkeley **	will break up to a "user" of 'csvax.bill' and a host **	of 'berkeley' -- to be transmitted over the arpanet. ** **	Parameters: **		addr -- the address to parse. **		a -- a pointer to the address descriptor buffer. **			If NULL, a header will be created. **		copyf -- determines what shall be copied: **			-1 -- don't copy anything.  The printname **				(q_paddr) is just addr, and the **				user& host are allocated internally **				to parse. **			0 -- copy out the parsed user& host, but **				don't copy the printname. **			+1 -- copy everything. ** **	Returns: **		A pointer to the address descriptor header (`a' if **			`a' is non-NULL). **		NULL on error. ** **	Side Effects: **		none ** **	Defined Constants: **		none ** **	Requires: **		usrerr **		strcpy (sys) **		isalpha (sys) **		xalloc **		prescan **		flagset **		makelower **		printf (sys) **		ParseTab -- the parse table. ** **	Called By: **		main **		sendto **		alias **		savemail ** **	History: **		12/26/79 -- written. */
+comment|/* **  PARSE -- Parse an address ** **	Parses an address and breaks it up into three parts: a **	net to transmit the message on, the host to transmit it **	to, and a user on that host.  These are loaded into an **	addrq header with the values squirreled away if necessary. **	The "user" part may not be a real user; the process may **	just reoccur on that machine.  For example, on a machine **	with an arpanet connection, the address **		csvax.bill@berkeley **	will break up to a "user" of 'csvax.bill' and a host **	of 'berkeley' -- to be transmitted over the arpanet. ** **	Parameters: **		addr -- the address to parse. **		a -- a pointer to the address descriptor buffer. **			If NULL, a header will be created. **		copyf -- determines what shall be copied: **			-1 -- don't copy anything.  The printname **				(q_paddr) is just addr, and the **				user& host are allocated internally **				to parse. **			0 -- copy out the parsed user& host, but **				don't copy the printname. **			+1 -- copy everything. ** **	Returns: **		A pointer to the address descriptor header (`a' if **			`a' is non-NULL). **		NULL on error. ** **	Side Effects: **		none ** **	Called By: **		main **		sendto **		alias **		savemail */
 end_comment
 
 begin_function
@@ -723,7 +723,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAKELOWER -- Translate a line into lower case ** **	Parameters: **		p -- the string to translate.  If NULL, return is **			immediate. ** **	Returns: **		none. ** **	Side Effects: **		String pointed to by p is translated to lower case. ** **	Requires: **		isupper (sys) ** **	Called By: **		parse ** **	History: **		12/26/79 -- written. */
+comment|/* **  MAKELOWER -- Translate a line into lower case ** **	Parameters: **		p -- the string to translate.  If NULL, return is **			immediate. ** **	Returns: **		none. ** **	Side Effects: **		String pointed to by p is translated to lower case. ** **	Called By: **		parse */
 end_comment
 
 begin_expr_stmt
@@ -797,7 +797,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PRESCAN -- Prescan name and make it canonical ** **	Scans a name and turns it into canonical form.  This involves **	deleting blanks, comments (in parentheses), and turning the **	word "at" into an at-sign ("@").  The name is copied as this **	is done; it is legal to copy a name onto itself, since this **	process can only make things smaller. ** **	This routine knows about quoted strings and angle brackets. ** **	There are certain subtleties to this routine.  The one that **	comes to mind now is that backslashes on the ends of names **	are silently stripped off; this is intentional.  The problem **	is that some versions of sndmsg (like at LBL) set the kill **	character to something other than @ when reading addresses; **	so people type "csvax.eric\@berkeley" -- which screws up the **	berknet mailer. ** **	Parameters: **		addr -- the name to chomp. **		buf -- the buffer to copy it into. **		buflim -- the last usable address in the buffer **			(which will old a null byte).  Normally **&buf[sizeof buf - 1]. **		delim -- the delimiter for the address, normally **			'\0' or ','; \0 is accepted in any case. **			are moving in place; set buflim to high core. ** **	Returns: **		A pointer to the terminator of buf. **		NULL on error. ** **	Side Effects: **		buf gets clobbered. ** **	Requires: **		isspace (sys) **		any **		usrerr ** **	Called By: **		parse **		maketemp ** **	History: **		12/30/79 -- broken from parse; comment processing **			added. */
+comment|/* **  PRESCAN -- Prescan name and make it canonical ** **	Scans a name and turns it into canonical form.  This involves **	deleting blanks, comments (in parentheses), and turning the **	word "at" into an at-sign ("@").  The name is copied as this **	is done; it is legal to copy a name onto itself, since this **	process can only make things smaller. ** **	This routine knows about quoted strings and angle brackets. ** **	There are certain subtleties to this routine.  The one that **	comes to mind now is that backslashes on the ends of names **	are silently stripped off; this is intentional.  The problem **	is that some versions of sndmsg (like at LBL) set the kill **	character to something other than @ when reading addresses; **	so people type "csvax.eric\@berkeley" -- which screws up the **	berknet mailer. ** **	Parameters: **		addr -- the name to chomp. **		buf -- the buffer to copy it into. **		buflim -- the last usable address in the buffer **			(which will old a null byte).  Normally **&buf[sizeof buf - 1]. **		delim -- the delimiter for the address, normally **			'\0' or ','; \0 is accepted in any case. **			are moving in place; set buflim to high core. ** **	Returns: **		A pointer to the terminator of buf. **		NULL on error. ** **	Side Effects: **		buf gets clobbered. ** **	Called By: **		parse **		maketemp */
 end_comment
 
 begin_function

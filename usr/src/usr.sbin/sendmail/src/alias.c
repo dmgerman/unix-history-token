@@ -29,12 +29,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	1.2	%G%"
+literal|"@(#)alias.c	1.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  ALIAS -- Compute aliases. ** **	Scans the file /usr/lib/mailaliases for a set of aliases. **	If found, it arranges to deliver to them by inserting the **	new names onto the SendQ queue. ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Aliases found on SendQ are removed and put onto **		AliasQ; replacements are added to SendQ.  This is **		done until no such replacement occurs. ** **	Defined Constants: **		MAXRCRSN -- the maximum recursion depth. **		ALIASFILE -- the pathname of the alias file. ** **	Requires: **		fopen (stdio) **		fgets (stdio) **		rewind (stdio) **		isspace (sys) **		printf (sys) **		sendto **		syserr **		parse **		nxtinq **		sameaddr **		tkoffq **		putonq **		fclose (sys) ** **	Called By: **		main ** **	Files: **		/usr/lib/mailaliases -- the mail aliases. ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. **		It is unsophisticated about line overflows. ** **	History: **		3/5/80 -- extensive mods to change internal address **			format. **		12/27/79 -- written. */
+comment|/* **  ALIAS -- Compute aliases. ** **	Scans the file /usr/lib/mailaliases for a set of aliases. **	If found, it arranges to deliver to them by inserting the **	new names onto the SendQ queue. ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Aliases found on SendQ are removed and put onto **		AliasQ; replacements are added to SendQ.  This is **		done until no such replacement occurs. ** **	Defined Constants: **		MAXRCRSN -- the maximum recursion depth. **		ALIASFILE -- the pathname of the alias file. ** **	Called By: **		main ** **	Files: **		ALIASFILE -- the mail aliases.  The format is **			a series of lines of the form: **				alias:name1,name2,name3,... **			where 'alias' expands to all of **			'name[i]'.  Continuations begin with **			space or tab. ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. **		It is unsophisticated about line overflows. */
 end_comment
 
 begin_define
@@ -497,7 +497,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Currently it is undefined, until the protocol for userinfo **	databases is finalized. ** **	Parameters: **		user -- the name of the user who's mail we **			would like to forward to. ** **	Returns: **		TRUE -- we have forwarded it somewhere. **		FALSE -- not forwarded; go ahead& deliver. ** **	Side Effects: **		New names are added to SendQ. ** **	Requires: **		none ** **	Called By: **		recipient ** **	History: **		3/5/80 -- return value changed. **		1/23/80 -- null version written. */
+comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Currently it is undefined, until the protocol for userinfo **	databases is finalized. ** **	Parameters: **		user -- the name of the user who's mail we **			would like to forward to. ** **	Returns: **		TRUE -- we have forwarded it somewhere. **		FALSE -- not forwarded; go ahead& deliver. ** **	Side Effects: **		New names are added to SendQ. ** **	Called By: **		recipient */
 end_comment
 
 begin_function

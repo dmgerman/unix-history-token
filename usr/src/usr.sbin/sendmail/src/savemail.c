@@ -23,12 +23,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	1.3	%G%"
+literal|"@(#)savemail.c	1.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  SAVEMAIL -- Save mail on error ** **	If the MailBack flag is set, mail it back to the originator **	together with an error message; otherwise, just put it in **	dead.letter in the user's home directory (if he exists on **	this machine). ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Saves the letter, by writing or mailing it back to the **		sender, or by putting it in dead.letter in her home **		directory. ** **		WARNING: the user id is reset to the original user. ** **	Requires: **		fopen (sys) **		bmove **		parse **		deliver **		strcpy (sys) **		strcat (sys) **		fclose (sys) **		fgets (sys) **		fputs (sys) **		setpwent (sys) **		getuid (sys) **		setuid (sys) **		getgid (sys) **		setgid (sys) **		getpwnam (sys) **		fprintf (sys) **		ttypath **		freopen (sys) **		printf (sys) **		syserr **		rewind (sys) **		time (sys) **		ferror (sys) ** **	Called By: **		finis ** **	History: **		12/30/79 -- written. */
+comment|/* **  SAVEMAIL -- Save mail on error ** **	If the MailBack flag is set, mail it back to the originator **	together with an error message; otherwise, just put it in **	dead.letter in the user's home directory (if he exists on **	this machine). ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Saves the letter, by writing or mailing it back to the **		sender, or by putting it in dead.letter in her home **		directory. ** **		WARNING: the user id is reset to the original user. */
 end_comment
 
 begin_define
@@ -723,7 +723,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  ERRHDR -- Output the header for error mail. ** **	This is the edit filter to error mailbacks. ** **	Algorithm: **		Output fixed header. **		Output the transcript part. **		Output the original message. ** **	Parameters: **		xfile -- the transcript file. **		fp -- the output file. ** **	Returns: **		none ** **	Side Effects: **		input from xfile **		output to fp ** **	Requires: **		read (sys) **		write (sys) **		open (sys) **		close (sys) **		syserr **		rewind (sys) **		fflush (sys) **		fprintf (sys) **		fileno (sys) ** **	Called By: **		deliver ** **	History: **		12/28/79 -- written. */
+comment|/* **  ERRHDR -- Output the header for error mail. ** **	This is the edit filter to error mailbacks. ** **	Algorithm: **		Output fixed header. **		Output the transcript part. **		Output the original message. ** **	Parameters: **		xfile -- the transcript file. **		fp -- the output file. ** **	Returns: **		none ** **	Side Effects: **		input from xfile **		output to fp ** **	Called By: **		deliver */
 end_comment
 
 begin_expr_stmt

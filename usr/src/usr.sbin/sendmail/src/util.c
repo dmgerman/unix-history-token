@@ -17,19 +17,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)util.c	1.2	%G%"
+literal|"@(#)util.c	1.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  UTIL.C -- General Purpose Routines ** **	Defines: **		stripquotes **		xalloc **		any */
-end_comment
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  STRIPQUOTES -- Strip quotes& quote bits from a string. ** **	Runs through a string and strips off unquoted quote **	characters and quote bits.  This is done in place. ** **	Parameters: **		s -- the string to strip. ** **	Returns: **		none. ** **	Side Effects: **		none. ** **	Requires: **		none. ** **	Called By: **		deliver ** **	History: **		3/5/80 -- written. */
+comment|/* **  STRIPQUOTES -- Strip quotes& quote bits from a string. ** **	Runs through a string and strips off unquoted quote **	characters and quote bits.  This is done in place. ** **	Parameters: **		s -- the string to strip. ** **	Returns: **		none. ** **	Side Effects: **		none. ** **	Called By: **		deliver */
 end_comment
 
 begin_macro
@@ -109,7 +102,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  XALLOC -- Allocate memory and bitch wildly on failure. ** **	THIS IS A CLUDGE.  This should be made to give a proper **	error -- but after all, what can we do? ** **	Parameters: **		sz -- size of area to allocate. ** **	Returns: **		pointer to data region. ** **	Side Effects: **		Memory is allocated. ** **	Requires: **		malloc **		syserr **		exit ** **	Called By: **		lots of people. ** **	History: **		12/31/79 -- written. */
+comment|/* **  XALLOC -- Allocate memory and bitch wildly on failure. ** **	THIS IS A CLUDGE.  This should be made to give a proper **	error -- but after all, what can we do? ** **	Parameters: **		sz -- size of area to allocate. ** **	Returns: **		pointer to data region. ** **	Side Effects: **		Memory is allocated. ** **	Called By: **		lots of people. */
 end_comment
 
 begin_function
@@ -173,7 +166,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ANY -- Return TRUE if the character exists in the string. ** **	Parameters: **		c -- the character. **		s -- the string **			(sounds like an avant garde script) ** **	Returns: **		TRUE -- if c could be found in s. **		FALSE -- otherwise. ** **	Side Effects: **		none. ** **	Requires: **		none. ** **	Called By: **		prescan ** **	History: **		3/5/80 -- written. */
+comment|/* **  ANY -- Return TRUE if the character exists in the string. ** **	Parameters: **		c -- the character. **		s -- the string **			(sounds like an avant garde script) ** **	Returns: **		TRUE -- if c could be found in s. **		FALSE -- otherwise. ** **	Side Effects: **		none. ** **	Called By: **		prescan */
 end_comment
 
 begin_expr_stmt

@@ -35,12 +35,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	1.2	%G%"
+literal|"@(#)err.c	1.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  ERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		-1 always ** **	Side Effects: **		Sets Error. **		Sets ExitStat. ** **	Requires: **		sprintf (sys) **		printf (sys) **		logmsg ** **	History: **		12/29/79 -- written. */
+comment|/* **  ERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		-1 always ** **	Side Effects: **		Sets Error. **		Sets ExitStat. */
 end_comment
 
 begin_comment
@@ -241,7 +241,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  USRERR -- Signal user error. ** **	This is much like syserr except it is for user errors. ** **	Parameters: **		fmt, a, b, c, d -- printf strings ** **	Returns: **		-1 ** **	Side Effects: **		sets Error. ** **	Requires: **		printf (sys) ** **	History: **		1/1/80 -- written. */
+comment|/* **  USRERR -- Signal user error. ** **	This is much like syserr except it is for user errors. ** **	Parameters: **		fmt, a, b, c, d -- printf strings ** **	Returns: **		-1 ** **	Side Effects: **		sets Error. */
 end_comment
 
 begin_comment

@@ -11,9 +11,13 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sysexits.c	1.2	%G%"
+literal|"@(#)sysexits.c	1.3	%G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* **  SYSEXITS.C -- error messages corresponding to sysexits.h */
+end_comment
 
 begin_decl_stmt
 name|char
