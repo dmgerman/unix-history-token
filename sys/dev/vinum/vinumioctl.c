@@ -1464,7 +1464,7 @@ name|cmd
 condition|)
 block|{
 case|case
-name|DIOCGDINFO
+name|DIOCGDVIRGIN
 case|:
 comment|/* get disk label */
 name|get_volume_label
@@ -1488,6 +1488,36 @@ operator|*
 operator|)
 name|data
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DIOCGMEDIASIZE
+case|:
+operator|*
+operator|(
+name|off_t
+operator|*
+operator|)
+name|data
+operator|=
+name|vol
+operator|->
+name|size
+operator|<<
+name|DEV_BSHIFT
+expr_stmt|;
+break|break;
+case|case
+name|DIOCGSECTORSIZE
+case|:
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+name|data
+operator|=
+name|DEV_BSIZE
 expr_stmt|;
 break|break;
 comment|/* 	     * We don't have this stuff on hardware, 	     * so just pretend to do it so that 	     * utilities don't get upset. 	     */
