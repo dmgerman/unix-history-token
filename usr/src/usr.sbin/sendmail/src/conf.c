@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.186 (Berkeley) %G%"
+literal|"@(#)conf.c	8.187 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5486,7 +5486,7 @@ parameter_list|()
 block|{
 specifier|extern
 name|bool
-name|enoughspace
+name|enoughdiskspace
 parameter_list|()
 function_decl|;
 ifdef|#
@@ -5510,7 +5510,7 @@ operator|>=
 name|RefuseLA
 operator|||
 operator|!
-name|enoughspace
+name|enoughdiskspace
 argument_list|(
 name|MinBlocksFree
 operator|+
@@ -8751,7 +8751,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FREESPACE -- see how much free space is on the queue filesystem ** **	Only implemented if you have statfs. ** **	Parameters: **		dir -- the directory in question. **		bsize -- a variable into which the filesystem **			block size is stored. ** **	Returns: **		The number of bytes free on the queue filesystem. **		-1 if the statfs call fails. ** **	Side effects: **		Puts the filesystem block size into bsize. */
+comment|/* **  FREEDISKSPACE -- see how much free space is on the queue filesystem ** **	Only implemented if you have statfs. ** **	Parameters: **		dir -- the directory in question. **		bsize -- a variable into which the filesystem **			block size is stored. ** **	Returns: **		The number of bytes free on the queue filesystem. **		-1 if the statfs call fails. ** **	Side effects: **		Puts the filesystem block size into bsize. */
 end_comment
 
 begin_comment
@@ -8954,7 +8954,7 @@ end_endif
 
 begin_function
 name|long
-name|freespace
+name|freediskspace
 parameter_list|(
 name|dir
 parameter_list|,
@@ -9204,12 +9204,12 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ENOUGHSPACE -- check to see if there is enough free space on the queue fs ** **	Only implemented if you have statfs. ** **	Parameters: **		msize -- the size to check against.  If zero, we don't yet **		know how big the message will be, so just check for **		a "reasonable" amount. ** **	Returns: **		TRUE if there is enough space. **		FALSE otherwise. */
+comment|/* **  ENOUGHDISKSPACE -- is there enough free space on the queue fs? ** **	Only implemented if you have statfs. ** **	Parameters: **		msize -- the size to check against.  If zero, we don't yet **		know how big the message will be, so just check for **		a "reasonable" amount. ** **	Returns: **		TRUE if there is enough space. **		FALSE otherwise. */
 end_comment
 
 begin_function
 name|bool
-name|enoughspace
+name|enoughdiskspace
 parameter_list|(
 name|msize
 parameter_list|)
@@ -9244,7 +9244,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"enoughspace: no threshold\n"
+literal|"enoughdiskspace: no threshold\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9256,7 +9256,7 @@ condition|(
 operator|(
 name|bfree
 operator|=
-name|freespace
+name|freediskspace
 argument_list|(
 name|QueueDir
 argument_list|,
@@ -9279,7 +9279,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"enoughspace: bavail=%ld, need=%ld\n"
+literal|"enoughdiskspace: bavail=%ld, need=%ld\n"
 argument_list|,
 name|bfree
 argument_list|,
@@ -9373,7 +9373,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"enoughspace failure: min=%ld, need=%ld: %s\n"
+literal|"enoughdiskspace failure: min=%ld, need=%ld: %s\n"
 argument_list|,
 name|MinBlocksFree
 argument_list|,

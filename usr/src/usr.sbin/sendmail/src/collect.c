@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.42 (Berkeley) %G%"
+literal|"@(#)collect.c	8.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2272,7 +2272,7 @@ argument_list|)
 expr_stmt|;
 name|avail
 operator|=
-name|freespace
+name|freediskspace
 argument_list|(
 name|QueueDir
 argument_list|,
