@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	5.30.1.1 (Berkeley) %G%"
+literal|"@(#)rcp.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,6 +144,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -556,6 +562,8 @@ name|sp
 operator|=
 name|getservbyname
 argument_list|(
+name|shell
+operator|=
 literal|"shell"
 argument_list|,
 literal|"tcp"
@@ -568,6 +576,8 @@ name|sp
 operator|=
 name|getservbyname
 argument_list|(
+name|shell
+operator|=
 literal|"shell"
 argument_list|,
 literal|"tcp"
@@ -589,7 +599,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rcp: shell/tcp: unknown service\n"
+literal|"rcp: %s/tcp: unknown service\n"
+argument_list|,
+name|shell
 argument_list|)
 expr_stmt|;
 name|exit
@@ -629,6 +641,9 @@ name|stderr
 argument_list|,
 literal|"rcp: unknown user %d.\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|userid
 argument_list|)
 expr_stmt|;
@@ -916,12 +931,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|colon
-argument_list|()
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 operator|*
 name|targ
 operator|++
@@ -1083,10 +1094,6 @@ name|bp
 operator|=
 name|malloc
 argument_list|(
-call|(
-name|u_int
-call|)
-argument_list|(
 name|strlen
 argument_list|(
 name|_PATH_RSH
@@ -1105,6 +1112,7 @@ argument_list|(
 name|src
 argument_list|)
 operator|+
+operator|(
 name|tuser
 condition|?
 name|strlen
@@ -1113,6 +1121,7 @@ name|tuser
 argument_list|)
 else|:
 literal|0
+operator|)
 operator|+
 name|strlen
 argument_list|(
@@ -1122,7 +1131,6 @@ operator|+
 name|strlen
 argument_list|(
 name|targ
-argument_list|)
 argument_list|)
 operator|+
 name|CMDNEEDS
@@ -1286,9 +1294,6 @@ name|bp
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 name|strlen
 argument_list|(
 name|targ
@@ -1513,12 +1518,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|colon
-argument_list|()
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 for|for
 control|(
 name|i
@@ -1560,10 +1561,6 @@ name|bp
 operator|=
 name|malloc
 argument_list|(
-call|(
-name|u_int
-call|)
-argument_list|(
 name|strlen
 argument_list|(
 name|_PATH_CP
@@ -1585,7 +1582,6 @@ name|argc
 operator|-
 literal|1
 index|]
-argument_list|)
 argument_list|)
 operator|+
 literal|20
@@ -1744,14 +1740,9 @@ name|bp
 operator|=
 name|malloc
 argument_list|(
-call|(
-name|u_int
-call|)
-argument_list|(
 name|strlen
 argument_list|(
 name|src
-argument_list|)
 argument_list|)
 operator|+
 name|CMDNEEDS
@@ -2546,6 +2537,9 @@ name|rem
 argument_list|,
 name|buf
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|buf
@@ -2602,6 +2596,9 @@ name|rem
 argument_list|,
 name|buf
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|buf
@@ -2921,6 +2918,9 @@ name|rem
 argument_list|,
 name|path
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|path
@@ -2972,6 +2972,9 @@ name|rem
 argument_list|,
 name|path
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|path
@@ -3439,10 +3442,6 @@ name|buf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
 decl_stmt|;
 define|#
 directive|define
@@ -3688,6 +3687,9 @@ name|buf
 operator|+
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|buf
@@ -4026,7 +4028,7 @@ specifier|static
 name|int
 name|cursize
 decl_stmt|;
-name|int
+name|size_t
 name|need
 decl_stmt|;
 name|need
@@ -4058,9 +4060,6 @@ name|namebuf
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 name|need
 argument_list|)
 operator|)
@@ -4669,14 +4668,9 @@ name|struct
 name|stat
 name|stb
 decl_stmt|;
-name|int
+name|size_t
 name|size
 decl_stmt|;
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|fstat
@@ -4755,15 +4749,8 @@ name|bp
 operator|->
 name|buf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 name|size
 argument_list|)
 expr_stmt|;
