@@ -1376,7 +1376,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: date [-nu] [-d dst] [-r seconds] [-t west] "
+literal|"usage: date [-jnu] [-d dst] [-r seconds] [-t west] "
 literal|"[-v[+|-]val[ymwdHMS]] ... "
 argument_list|,
 literal|"            "
