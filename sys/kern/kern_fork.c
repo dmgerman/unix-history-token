@@ -184,36 +184,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|fast_vfork
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_kern
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|fast_vfork
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|fast_vfork
-argument_list|,
-literal|0
-argument_list|,
-literal|"flag to indicate whether we have a fast vfork()"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * These are the stuctures used to create a callout list for things to do  * when forking a process  */
 end_comment
