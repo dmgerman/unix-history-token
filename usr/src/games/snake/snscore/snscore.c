@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)snscore.c	5.5 (Berkeley) %G%"
+literal|"@(#)snscore.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,12 +55,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -68,6 +62,18 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -91,23 +97,6 @@ directive|define
 name|MAXPLAYERS
 value|256
 end_define
-
-begin_function_decl
-name|struct
-name|passwd
-modifier|*
-name|getpwuid
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_struct
 struct|struct
