@@ -1526,6 +1526,26 @@ operator|+=
 name|sizepb
 expr_stmt|;
 block|}
+comment|/* 	 * It's impossible to create a snapshot in case that fs_maxfilesize 	 * is smaller than the fssize. 	 */
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_maxfilesize
+operator|<
+operator|(
+name|u_quad_t
+operator|)
+name|fssize
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"WARNING: You will be unable to create snapshots on this "
+literal|"file system.  Correct by using a larger blocksize."
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Calculate the number of blocks to put into each cylinder group. 	 * 	 * This algorithm selects the number of blocks per cylinder 	 * group. The first goal is to have at least enough data blocks 	 * in each cylinder group to meet the density requirement. Once 	 * this goal is achieved we try to expand to have at least 	 * MINCYLGRPS cylinder groups. Once this goal is achieved, we 	 * pack as many blocks into each cylinder group map as will fit. 	 * 	 * We start by calculating the smallest number of blocks that we 	 * can put into each cylinder group. If this is too big, we reduce 	 * the density until it fits. 	 */
 name|origdensity
 operator|=
