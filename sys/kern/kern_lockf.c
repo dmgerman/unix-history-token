@@ -406,6 +406,7 @@ case|:
 comment|/* 'size' is always>= 0 */
 if|if
 condition|(
+operator|(
 name|fl
 operator|->
 name|l_start
@@ -419,6 +420,23 @@ operator|-
 name|fl
 operator|->
 name|l_start
+operator|)
+operator|||
+operator|(
+name|fl
+operator|->
+name|l_start
+operator|<
+literal|0
+operator|&&
+name|size
+operator|+
+name|fl
+operator|->
+name|l_start
+operator|>
+name|OFF_MAX
+operator|)
 condition|)
 return|return
 operator|(
