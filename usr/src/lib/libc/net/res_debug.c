@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.9 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1150,12 +1150,18 @@ case|:
 case|case
 name|T_MB
 case|:
+ifdef|#
+directive|ifdef
+name|OLDRR
 case|case
 name|T_MD
 case|:
 case|case
 name|T_MF
 case|:
+endif|#
+directive|endif
+comment|/* OLDRR */
 case|case
 name|T_MG
 case|:
@@ -1390,7 +1396,26 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"\tname = "
+literal|"\tpreference = %ld,"
+argument_list|,
+name|getshort
+argument_list|(
+name|cp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|cp
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|u_short
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|" name = "
 argument_list|)
 expr_stmt|;
 name|cp
@@ -1402,25 +1427,6 @@ argument_list|,
 name|msg
 argument_list|,
 name|file
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-literal|", preference = %ld"
-argument_list|,
-name|getlong
-argument_list|(
-name|cp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|cp
-operator|+=
-sizeof|sizeof
-argument_list|(
-name|u_long
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1735,6 +1741,9 @@ operator|(
 literal|"NS"
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|OLDRR
 case|case
 name|T_MD
 case|:
@@ -1753,6 +1762,9 @@ operator|(
 literal|"MF"
 operator|)
 return|;
+endif|#
+directive|endif
+comment|/* OLDRR */
 case|case
 name|T_CNAME
 case|:
