@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.21	83/05/12	*/
+comment|/*	uda.c	4.22	83/05/14	*/
 end_comment
 
 begin_include
@@ -825,7 +825,7 @@ condition|(
 name|ui
 operator|->
 name|ui_dk
-operator|>
+operator|>=
 literal|0
 condition|)
 name|dk_mspw
