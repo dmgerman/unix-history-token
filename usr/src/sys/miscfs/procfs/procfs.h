@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 The Regents of the University of California.  * Copyright (c) 1993 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs.h	8.2 (Berkeley) %G%  *  * From:  *	$Id: procfs.h,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 The Regents of the University of California.  * Copyright (c) 1993 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs.h	8.3 (Berkeley) %G%  *  * From:  *	$Id: procfs.h,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -951,13 +951,6 @@ define|#
 directive|define
 name|procfs_advlock
 value|((int (*) __P((struct vop_advlock_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_pathconf
-value|((int (*) __P((struct vop_pathconf_args *))) procfs_badop)
 end_define
 
 begin_define
