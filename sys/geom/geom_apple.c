@@ -1208,11 +1208,15 @@ name|g_class
 name|g_apple_class
 init|=
 block|{
+operator|.
+name|name
+operator|=
 name|APPLE_CLASS_NAME
 block|,
+operator|.
+name|taste
+operator|=
 name|g_apple_taste
-block|,
-name|NULL
 block|,
 name|G_CLASS_INITIALIZER
 block|}

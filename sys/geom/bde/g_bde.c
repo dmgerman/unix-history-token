@@ -1357,10 +1357,14 @@ name|g_class
 name|g_bde_class
 init|=
 block|{
+operator|.
+name|name
+operator|=
 name|BDE_CLASS_NAME
 block|,
-name|NULL
-block|,
+operator|.
+name|config
+operator|=
 name|g_bde_config
 block|,
 name|G_CLASS_INITIALIZER

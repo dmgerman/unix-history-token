@@ -199,11 +199,15 @@ name|g_class
 name|g_dev_class
 init|=
 block|{
+operator|.
+name|name
+operator|=
 literal|"DEV"
 block|,
+operator|.
+name|taste
+operator|=
 name|g_dev_taste
-block|,
-name|NULL
 block|,
 name|G_CLASS_INITIALIZER
 block|}

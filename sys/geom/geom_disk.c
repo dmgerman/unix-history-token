@@ -126,11 +126,10 @@ name|g_class
 name|g_disk_class
 init|=
 block|{
+operator|.
+name|name
+operator|=
 literal|"DISK"
-block|,
-name|NULL
-block|,
-name|NULL
 block|,
 name|G_CLASS_INITIALIZER
 block|}

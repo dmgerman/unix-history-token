@@ -4291,11 +4291,15 @@ name|g_class
 name|g_bsd_class
 init|=
 block|{
+operator|.
+name|name
+operator|=
 name|BSD_CLASS_NAME
 block|,
+operator|.
+name|taste
+operator|=
 name|g_bsd_taste
-block|,
-name|NULL
 block|,
 name|G_CLASS_INITIALIZER
 block|}

@@ -325,7 +325,8 @@ begin_define
 define|#
 directive|define
 name|G_CLASS_INITIALIZER
-value|{ 0, 0 }, { 0 }, 0, 0
+define|\
+value|.class = { 0, 0 },	\ 	.geom = { 0 },		\ 	.event = 0,		\ 	.protect = 0
 end_define
 
 begin_comment

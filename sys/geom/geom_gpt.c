@@ -1088,11 +1088,15 @@ name|g_class
 name|g_gpt_class
 init|=
 block|{
+operator|.
+name|name
+operator|=
 literal|"GPT"
 block|,
+operator|.
+name|taste
+operator|=
 name|g_gpt_taste
-block|,
-name|NULL
 block|,
 name|G_CLASS_INITIALIZER
 block|}
