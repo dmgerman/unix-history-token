@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket2.c	6.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket2.c	6.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1281,7 +1281,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Allot mbufs to a sockbuf.  */
+comment|/*  * Allot mbufs to a sockbuf.  * Attempt to scale cc so that mbcnt doesn't become limiting  * if buffering efficiency is near the normal case.  */
 end_comment
 
 begin_macro
@@ -1310,21 +1310,32 @@ name|unsigned
 operator|)
 name|cc
 operator|>
+operator|(
+name|unsigned
+operator|)
 name|SB_MAX
+operator|*
+name|CLBYTES
+operator|/
+operator|(
+literal|2
+operator|*
+name|MSIZE
+operator|+
+name|CLBYTES
+operator|)
 condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* someday maybe this routine will fail... */
 name|sb
 operator|->
 name|sb_hiwat
 operator|=
 name|cc
 expr_stmt|;
-comment|/* * 2 implies names can be no more than 1 mbuf each */
 name|sb
 operator|->
 name|sb_mbmax
