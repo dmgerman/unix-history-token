@@ -169,20 +169,31 @@ name|pagerops
 name|defaultpagerops
 init|=
 block|{
-name|NULL
-block|,
+operator|.
+name|pgo_alloc
+operator|=
 name|default_pager_alloc
 block|,
+operator|.
+name|pgo_dealloc
+operator|=
 name|default_pager_dealloc
 block|,
+operator|.
+name|pgo_getpages
+operator|=
 name|default_pager_getpages
 block|,
+operator|.
+name|pgo_putpages
+operator|=
 name|default_pager_putpages
 block|,
+operator|.
+name|pgo_haspage
+operator|=
 name|default_pager_haspage
-block|,
-name|NULL
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
