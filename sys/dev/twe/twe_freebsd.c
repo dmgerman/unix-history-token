@@ -4169,9 +4169,9 @@ argument_list|)
 operator|==
 name|EBUSY
 condition|)
-name|panic
+name|twe_requeue_ready
 argument_list|(
-literal|"EBUSY should not happen"
+name|tr
 argument_list|)
 expr_stmt|;
 block|}
