@@ -9007,19 +9007,6 @@ block|{
 name|tree
 name|u
 decl_stmt|;
-comment|/* We know nothing about vector types */
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|t
-argument_list|)
-operator|==
-name|VECTOR_TYPE
-condition|)
-return|return
-literal|0
-return|;
 comment|/* Permit type-punning when accessing a union, provided the access      is directly through the union.  For example, this code does not      permit taking the address of a union member and then storing      through it.  Even the type-punning allowed here is a GCC      extension, albeit a common and useful one; the C standard says      that such accesses have implementation-defined behavior.  */
 for|for
 control|(
@@ -9077,45 +9064,6 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* If this is a char *, the ANSI C standard says it can alias      anything.  Note that all references need do this.  */
-if|if
-condition|(
-name|TREE_CODE_CLASS
-argument_list|(
-name|TREE_CODE
-argument_list|(
-name|t
-argument_list|)
-argument_list|)
-operator|==
-literal|'r'
-operator|&&
-name|TREE_CODE
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|t
-argument_list|)
-argument_list|)
-operator|==
-name|INTEGER_TYPE
-operator|&&
-name|TYPE_PRECISION
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|t
-argument_list|)
-argument_list|)
-operator|==
-name|TYPE_PRECISION
-argument_list|(
-name|char_type_node
-argument_list|)
-condition|)
-return|return
-literal|0
-return|;
 comment|/* That's all the expressions we handle specially.  */
 if|if
 condition|(
@@ -9128,6 +9076,24 @@ condition|)
 return|return
 operator|-
 literal|1
+return|;
+comment|/* The C standard guarantess that any object may be accessed via an      lvalue that has character type.  */
+if|if
+condition|(
+name|t
+operator|==
+name|char_type_node
+operator|||
+name|t
+operator|==
+name|signed_char_type_node
+operator|||
+name|t
+operator|==
+name|unsigned_char_type_node
+condition|)
+return|return
+literal|0
 return|;
 comment|/* The C standard specifically allows aliasing between signed and      unsigned variants of the same type.  We treat the signed      variant as canonical.  */
 if|if
@@ -13323,6 +13289,11 @@ name|preserve_result
 init|=
 name|false
 decl_stmt|;
+name|bool
+name|return_target
+init|=
+name|false
+decl_stmt|;
 comment|/* Since expand_expr_stmt calls free_temp_slots after every 	   expression statement, we must call push_temp_slots here. 	   Otherwise, any temporaries in use now would be considered 	   out-of-scope after the first EXPR_STMT from within the 	   STMT_EXPR.  */
 name|push_temp_slots
 argument_list|()
@@ -13425,6 +13396,38 @@ operator|==
 name|EXPR_STMT
 condition|)
 block|{
+if|if
+condition|(
+name|target
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|EXPR_STMT_EXPR
+argument_list|(
+name|expr
+argument_list|)
+argument_list|)
+operator|==
+name|VAR_DECL
+operator|&&
+name|DECL_RTL_IF_SET
+argument_list|(
+name|EXPR_STMT_EXPR
+argument_list|(
+name|expr
+argument_list|)
+argument_list|)
+operator|==
+name|target
+condition|)
+comment|/* If the last expression is a variable whose RTL is the 		     same as our target, just return the target; if it 		     isn't valid expanding the decl would produce different 		     RTL, and store_expr would try to do a copy.  */
+name|return_target
+operator|=
+name|true
+expr_stmt|;
+else|else
+block|{
+comment|/* Otherwise, note that we want the value from the last 		       expression.  */
 name|TREE_ADDRESSABLE
 argument_list|(
 name|expr
@@ -13436,6 +13439,7 @@ name|preserve_result
 operator|=
 name|true
 expr_stmt|;
+block|}
 block|}
 block|}
 name|expand_stmt
@@ -13464,6 +13468,15 @@ argument_list|,
 name|modifier
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|return_target
+condition|)
+name|result
+operator|=
+name|target
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|preserve_result
@@ -15816,6 +15829,14 @@ condition|)
 name|warning
 argument_list|(
 literal|"-Wmissing-format-attribute ignored without -Wformat"
+argument_list|)
+expr_stmt|;
+comment|/* If an error has occurred in cpplib, note it so we fail      immediately.  */
+name|errorcount
+operator|+=
+name|cpp_errors
+argument_list|(
+name|parse_in
 argument_list|)
 expr_stmt|;
 block|}

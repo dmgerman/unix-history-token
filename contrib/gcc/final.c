@@ -11339,6 +11339,15 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|op
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
 name|GET_CODE
 argument_list|(
 name|op

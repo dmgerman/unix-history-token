@@ -10857,10 +10857,12 @@ specifier|static
 name|void
 name|fixup_newlines
 parameter_list|(
+name|fp
+parameter_list|)
 name|FILE_BUF
 modifier|*
 name|fp
-parameter_list|)
+decl_stmt|;
 block|{
 name|U_CHAR
 modifier|*

@@ -586,6 +586,25 @@ value|"\t.set "
 end_define
 
 begin_comment
+comment|/* This is how we tell the assembler to equate two values.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_DEF
+parameter_list|(
+name|FILE
+parameter_list|,
+name|LABEL1
+parameter_list|,
+name|LABEL2
+parameter_list|)
+define|\
+value|do {	fprintf ((FILE), "%s", SET_ASM_OP);				\ 	RS6000_OUTPUT_BASENAME (FILE, LABEL1);				\ 	fprintf (FILE, ",");						\ 	RS6000_OUTPUT_BASENAME (FILE, LABEL2);				\ 	fprintf (FILE, "\n");						\   } while (0)
+end_define
+
+begin_comment
 comment|/* Used by rs6000_assemble_integer, among others.  */
 end_comment
 

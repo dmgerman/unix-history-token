@@ -2612,40 +2612,6 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/* Output assembler code to FILE to initialize this source file's    basic block profiling info, if that has not already been done.    This assumes that __bb_init_func doesn't garble a1-a5.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_BLOCK_PROFILER
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|do {							\ 	ASM_OUTPUT_REG_PUSH (FILE, 16);				\ 	fputs ("\tlda $16,$PBX32\n", (FILE));			\ 	fputs ("\tldq $26,0($16)\n", (FILE));			\ 	fputs ("\tbne $26,1f\n", (FILE));			\ 	fputs ("\tlda $27,__bb_init_func\n", (FILE));		\ 	fputs ("\tjsr $26,($27),__bb_init_func\n", (FILE));	\ 	fputs ("\tldgp $29,0($26)\n", (FILE));			\ 	fputs ("1:\n", (FILE));					\ 	ASM_OUTPUT_REG_POP (FILE, 16);				\     } while (0);
-end_define
-
-begin_comment
-comment|/* Output assembler code to FILE to increment the entry-count for    the BLOCKNO'th basic block in this source file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BLOCK_PROFILER
-parameter_list|(
-name|FILE
-parameter_list|,
-name|BLOCKNO
-parameter_list|)
-define|\
-value|do {							\ 	int blockn = (BLOCKNO);					\ 	fputs ("\tsubq $30,16,$30\n", (FILE));			\ 	fputs ("\tstq $26,0($30)\n", (FILE));			\ 	fputs ("\tstq $27,8($30)\n", (FILE));			\ 	fputs ("\tlda $26,$PBX34\n", (FILE));			\ 	fprintf ((FILE), "\tldq $27,%d($26)\n", 8*blockn);	\ 	fputs ("\taddq $27,1,$27\n", (FILE));			\ 	fprintf ((FILE), "\tstq $27,%d($26)\n", 8*blockn);	\ 	fputs ("\tldq $26,0($30)\n", (FILE));			\ 	fputs ("\tldq $27,8($30)\n", (FILE));			\ 	fputs ("\taddq $30,16,$30\n", (FILE));			\     } while (0)
-end_define
-
-begin_comment
 comment|/* EXIT_IGNORE_STACK should be nonzero if, when returning from a function,    the stack pointer does not matter.  The value is tested only in    functions that have frame pointers.    No definition is equivalent to always zero.  */
 end_comment
 

@@ -2807,7 +2807,7 @@ parameter_list|,
 name|CLASS
 parameter_list|)
 define|\
-value|(CONSTANT_P (X)					\    ? ((FP_REG_CLASS_P (CLASS)				\        || (GET_MODE_CLASS (GET_MODE (X)) == MODE_FLOAT	\&& ! TARGET_FPU)				\        || (GET_MODE (X) == TFmode			\&& ! fp_zero_operand (X, TFmode)))		\       ? NO_REGS						\       : (!FP_REG_CLASS_P (CLASS)			\&& GET_MODE_CLASS (GET_MODE (X)) == MODE_INT)	\       ? GENERAL_REGS					\       : (CLASS))					\    : (CLASS))
+value|(CONSTANT_P (X)					\    ? ((FP_REG_CLASS_P (CLASS)				\        || (CLASS) == GENERAL_OR_FP_REGS			\        || (CLASS) == GENERAL_OR_EXTRA_FP_REGS		\        || (GET_MODE_CLASS (GET_MODE (X)) == MODE_FLOAT	\&& ! TARGET_FPU)				\        || (GET_MODE (X) == TFmode			\&& ! fp_zero_operand (X, TFmode)))		\       ? NO_REGS						\       : (!FP_REG_CLASS_P (CLASS)			\&& GET_MODE_CLASS (GET_MODE (X)) == MODE_INT)	\       ? GENERAL_REGS					\       : (CLASS))					\    : (CLASS))
 end_define
 
 begin_comment
@@ -3828,7 +3828,8 @@ name|DYNAMIC_CHAIN_ADDRESS
 parameter_list|(
 name|frame
 parameter_list|)
-value|plus_constant (frame, 14 * UNITS_PER_WORD)
+define|\
+value|plus_constant (frame, 14 * UNITS_PER_WORD + SPARC_STACK_BIAS)
 end_define
 
 begin_comment
@@ -4962,6 +4963,17 @@ value|"_Q_fle"
 end_define
 
 begin_comment
+comment|/* Assume by default that the _Qp_* 64-bit libcalls are implemented such    that the inputs are fully consumed before the output memory is clobbered.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_BUGGY_QP_LIB
+value|0
+end_define
+
+begin_comment
 comment|/* We can define the TFmode sqrt optab only if TARGET_FPU.  This is because    with soft-float, the SFmode and DFmode sqrt instructions will be absent,    and the compiler will notice and try to use the TFmode sqrt instruction    for calls to the builtin function sqrt, but this fails.  */
 end_comment
 
@@ -4970,7 +4982,9 @@ define|#
 directive|define
 name|INIT_TARGET_OPTABS
 define|\
-value|do {									\     if (TARGET_ARCH32)							\       {									\ 	add_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (ADDTF3_LIBCALL);				\ 	sub_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (SUBTF3_LIBCALL);				\ 	neg_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (NEGTF2_LIBCALL);				\ 	smul_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (MULTF3_LIBCALL);				\ 	sdiv_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (DIVTF3_LIBCALL);				\ 	eqtf2_libfunc = init_one_libfunc (EQTF2_LIBCALL);		\ 	netf2_libfunc = init_one_libfunc (NETF2_LIBCALL);		\ 	gttf2_libfunc = init_one_libfunc (GTTF2_LIBCALL);		\ 	getf2_libfunc = init_one_libfunc (GETF2_LIBCALL);		\ 	lttf2_libfunc = init_one_libfunc (LTTF2_LIBCALL);		\ 	letf2_libfunc = init_one_libfunc (LETF2_LIBCALL);		\ 	trunctfsf2_libfunc = init_one_libfunc (TRUNCTFSF2_LIBCALL);	\ 	trunctfdf2_libfunc = init_one_libfunc (TRUNCTFDF2_LIBCALL);	\ 	extendsftf2_libfunc = init_one_libfunc (EXTENDSFTF2_LIBCALL);	\ 	extenddftf2_libfunc = init_one_libfunc (EXTENDDFTF2_LIBCALL);	\ 	floatsitf_libfunc = init_one_libfunc (FLOATSITF2_LIBCALL);	\ 	fixtfsi_libfunc = init_one_libfunc (FIX_TRUNCTFSI2_LIBCALL);	\ 	fixunstfsi_libfunc						\ 	  = init_one_libfunc (FIXUNS_TRUNCTFSI2_LIBCALL);		\ 	if (TARGET_FPU)							\ 	  sqrt_optab->handlers[(int) TFmode].libfunc			\ 	    = init_one_libfunc ("_Q_sqrt");				\       }									\     INIT_SUBTARGET_OPTABS;						\   } while (0)
+value|do {									\     if (TARGET_ARCH32)							\       {									\ 	add_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (ADDTF3_LIBCALL);				\ 	sub_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (SUBTF3_LIBCALL);				\ 	neg_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (NEGTF2_LIBCALL);				\ 	smul_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (MULTF3_LIBCALL);				\ 	sdiv_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (DIVTF3_LIBCALL);				\ 	eqtf2_libfunc = init_one_libfunc (EQTF2_LIBCALL);		\ 	netf2_libfunc = init_one_libfunc (NETF2_LIBCALL);		\ 	gttf2_libfunc = init_one_libfunc (GTTF2_LIBCALL);		\ 	getf2_libfunc = init_one_libfunc (GETF2_LIBCALL);		\ 	lttf2_libfunc = init_one_libfunc (LTTF2_LIBCALL);		\ 	letf2_libfunc = init_one_libfunc (LETF2_LIBCALL);		\ 	trunctfsf2_libfunc = init_one_libfunc (TRUNCTFSF2_LIBCALL);	\ 	trunctfdf2_libfunc = init_one_libfunc (TRUNCTFDF2_LIBCALL);	\ 	extendsftf2_libfunc = init_one_libfunc (EXTENDSFTF2_LIBCALL);	\ 	extenddftf2_libfunc = init_one_libfunc (EXTENDDFTF2_LIBCALL);	\ 	floatsitf_libfunc = init_one_libfunc (FLOATSITF2_LIBCALL);	\ 	fixtfsi_libfunc = init_one_libfunc (FIX_TRUNCTFSI2_LIBCALL);	\ 	fixunstfsi_libfunc						\ 	  = init_one_libfunc (FIXUNS_TRUNCTFSI2_LIBCALL);		\ 	if (TARGET_FPU)							\ 	  sqrt_optab->handlers[(int) TFmode].libfunc			\ 	    = init_one_libfunc ("_Q_sqrt");				\       }									\     if (TARGET_ARCH64)							\       {									\
+comment|/* In the SPARC 64bit ABI, these libfuncs do not exist in the	\            library.  Make sure the compiler does not emit calls to them	\ 	   by accident.  */
+value|\ 	sdiv_optab->handlers[(int) SImode].libfunc = NULL;		\ 	udiv_optab->handlers[(int) SImode].libfunc = NULL;		\ 	smod_optab->handlers[(int) SImode].libfunc = NULL;		\ 	umod_optab->handlers[(int) SImode].libfunc = NULL;		\         smul_optab->handlers[(int) SImode].libfunc = NULL;		\       }									\     INIT_SUBTARGET_OPTABS;						\   } while (0)
 end_define
 
 begin_comment
@@ -5571,7 +5585,7 @@ parameter_list|,
 name|FUNCTION
 parameter_list|)
 define|\
-value|do {									\   int reg = 0;								\ 									\   if (TARGET_ARCH64							\&& aggregate_value_p (TREE_TYPE (TREE_TYPE (FUNCTION))))		\     reg = 1;								\   if ((DELTA)>= 4096 || (DELTA)< -4096)				\     fprintf (FILE, "\tset\t%d, %%g1\n\tadd\t%%o%d, %%g1, %%o%d\n",	\ 	     (int)(DELTA), reg, reg);					\   else									\     fprintf (FILE, "\tadd\t%%o%d, %d, %%o%d\n", reg, (int)(DELTA), reg);\   fprintf (FILE, "\tor\t%%o7, %%g0, %%g1\n");				\   fprintf (FILE, "\tcall\t");						\   assemble_name (FILE, XSTR (XEXP (DECL_RTL (FUNCTION), 0), 0));	\   fprintf (FILE, ", 0\n");						\   fprintf (FILE, "\t or\t%%g1, %%g0, %%o7\n");				\ } while (0)
+value|sparc_output_mi_thunk (FILE, THUNK_FNDECL, DELTA, FUNCTION)
 end_define
 
 begin_define

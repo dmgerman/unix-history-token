@@ -1020,6 +1020,8 @@ operator|(
 name|tree
 operator|,
 name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1931,6 +1933,8 @@ parameter_list|(
 name|decl
 parameter_list|,
 name|reloc
+parameter_list|,
+name|flag_function_or_data_sections
 parameter_list|)
 name|tree
 name|decl
@@ -1938,6 +1942,9 @@ decl_stmt|;
 name|int
 name|reloc
 name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|int
+name|flag_function_or_data_sections
 decl_stmt|;
 block|{
 if|if
@@ -1950,7 +1957,7 @@ operator|==
 name|NULL_TREE
 operator|&&
 operator|(
-name|flag_function_sections
+name|flag_function_or_data_sections
 operator|||
 operator|(
 name|targetm
@@ -2121,6 +2128,10 @@ argument_list|(
 name|file
 argument_list|,
 name|rounded
+condition|?
+name|rounded
+else|:
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4615,6 +4626,8 @@ argument_list|(
 name|decl
 argument_list|,
 literal|0
+argument_list|,
+name|flag_function_sections
 argument_list|)
 expr_stmt|;
 name|function_section
@@ -5407,6 +5420,8 @@ argument_list|(
 name|decl
 argument_list|,
 literal|0
+argument_list|,
+name|flag_data_sections
 argument_list|)
 expr_stmt|;
 if|if
@@ -6263,6 +6278,8 @@ argument_list|(
 name|decl
 argument_list|,
 name|reloc
+argument_list|,
+name|flag_data_sections
 argument_list|)
 expr_stmt|;
 name|variable_section
@@ -9764,6 +9781,9 @@ block|}
 case|case
 name|ADDR_EXPR
 case|:
+case|case
+name|FDESC_EXPR
+case|:
 block|{
 name|struct
 name|addr_const
@@ -10890,6 +10910,9 @@ return|;
 block|}
 case|case
 name|ADDR_EXPR
+case|:
+case|case
+name|FDESC_EXPR
 case|:
 block|{
 name|struct
@@ -16908,6 +16931,9 @@ block|{
 case|case
 name|ADDR_EXPR
 case|:
+case|case
+name|FDESC_EXPR
+case|:
 comment|/* Go inside any operations that get_inner_reference can handle and see 	 if what's inside is a constant: no need to do anything here for 	 addresses of variables or functions.  */
 for|for
 control|(
@@ -20022,38 +20048,35 @@ condition|)
 return|return;
 if|if
 condition|(
-name|SUPPORTS_WEAK
-operator|&&
 name|DECL_WEAK
 argument_list|(
 name|newdecl
 argument_list|)
-operator|&&
-name|DECL_EXTERNAL
+condition|)
+block|{
+name|tree
+name|wd
+decl_stmt|;
+comment|/* NEWDECL is weak, but OLDDECL is not.  */
+comment|/* If we already output the OLDDECL, we're in trouble; we can't 	 go back and make it weak.  This error cannot caught in 	 declare_weak because the NEWDECL and OLDDECL was not yet 	 been merged; therefore, TREE_ASM_WRITTEN was not set.  */
+if|if
+condition|(
+name|TREE_ASM_WRITTEN
+argument_list|(
+name|olddecl
+argument_list|)
+condition|)
+name|error_with_decl
 argument_list|(
 name|newdecl
+argument_list|,
+literal|"weak declaration of `%s' must precede definition"
 argument_list|)
-operator|&&
-name|DECL_EXTERNAL
-argument_list|(
-name|olddecl
-argument_list|)
-operator|&&
-operator|(
-name|TREE_CODE
-argument_list|(
-name|olddecl
-argument_list|)
-operator|!=
-name|VAR_DECL
-operator|||
-operator|!
-name|TREE_STATIC
-argument_list|(
-name|olddecl
-argument_list|)
-operator|)
-operator|&&
+expr_stmt|;
+comment|/* If we've already generated rtl referencing OLDDECL, we may 	 have done so in a way that will not function properly with 	 a weak symbol.  */
+elseif|else
+if|if
+condition|(
 name|TREE_USED
 argument_list|(
 name|olddecl
@@ -20072,40 +20095,6 @@ argument_list|(
 name|newdecl
 argument_list|,
 literal|"weak declaration of `%s' after first use results in unspecified behavior"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|DECL_WEAK
-argument_list|(
-name|newdecl
-argument_list|)
-condition|)
-block|{
-name|tree
-name|wd
-decl_stmt|;
-comment|/* NEWDECL is weak, but OLDDECL is not.  */
-comment|/* If we already output the OLDDECL, we're in trouble; we can't 	 go back and make it weak.  This error cannot caught in 	 declare_weak because the NEWDECL and OLDDECL was not yet 	 been merged; therefore, TREE_ASM_WRITTEN was not set.  */
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|olddecl
-argument_list|)
-operator|==
-name|FUNCTION_DECL
-operator|&&
-name|TREE_ASM_WRITTEN
-argument_list|(
-name|olddecl
-argument_list|)
-condition|)
-name|error_with_decl
-argument_list|(
-name|newdecl
-argument_list|,
-literal|"weak declaration of `%s' must precede definition"
 argument_list|)
 expr_stmt|;
 if|if
@@ -20600,13 +20589,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|TREE_ASM_WRITTEN
-argument_list|(
-name|decl
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
 else|#
 directive|else
 comment|/* !ASM_OUTPUT_DEF */
@@ -20667,13 +20649,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|TREE_ASM_WRITTEN
-argument_list|(
-name|decl
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
 else|#
 directive|else
 name|warning
@@ -20685,6 +20660,30 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+name|TREE_USED
+argument_list|(
+name|decl
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+name|TREE_ASM_WRITTEN
+argument_list|(
+name|decl
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+name|TREE_ASM_WRITTEN
+argument_list|(
+name|DECL_ASSEMBLER_NAME
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 

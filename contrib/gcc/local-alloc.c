@@ -341,7 +341,7 @@ begin_struct
 struct|struct
 name|equivalence
 block|{
-comment|/* Set when an attempt should be made to replace a register      with the associated src entry.  */
+comment|/* Set when an attempt should be made to replace a register      with the associated src_p entry.  */
 name|char
 name|replace
 decl_stmt|;
@@ -350,7 +350,8 @@ name|rtx
 name|replacement
 decl_stmt|;
 name|rtx
-name|src
+modifier|*
+name|src_p
 decl_stmt|;
 comment|/* Loop depth is used to recognize equivalences which appear      to be present within the same loop (or in an inner loop).  */
 name|int
@@ -3685,9 +3686,13 @@ index|[
 name|regno
 index|]
 operator|.
-name|src
+name|src_p
 operator|=
-name|src
+operator|&
+name|SET_SRC
+argument_list|(
+name|set
+argument_list|)
 expr_stmt|;
 name|reg_equiv
 index|[
@@ -4001,12 +4006,15 @@ index|[
 name|regno
 index|]
 argument_list|,
+operator|*
+operator|(
 name|reg_equiv
 index|[
 name|regno
 index|]
 operator|.
-name|src
+name|src_p
+operator|)
 argument_list|,
 name|insn
 argument_list|)

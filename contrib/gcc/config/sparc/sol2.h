@@ -195,7 +195,7 @@ begin_define
 define|#
 directive|define
 name|ASM_CPU_SPEC
-value|"\ %{mcpu=v8plus:-xarch=v8plus} \ %{mcpu=ultrasparc:-xarch=v8plusa} \ %{!mcpu*:%(asm_cpu_default)} \ "
+value|"\ %{mcpu=v8plus:-xarch=v8plus} \ %{mcpu=v9:-xarch=v8plus} \ %{mcpu=ultrasparc:-xarch=v8plusa} \ %{!mcpu*:%(asm_cpu_default)} \ "
 end_define
 
 begin_comment
@@ -539,6 +539,23 @@ define|#
 directive|define
 name|UMODDI3_LIBCALL
 value|"__urem64"
+end_define
+
+begin_comment
+comment|/* Solaris's _Qp_* library routine implementation clobbers the output    memory before the inputs are fully consumed.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_BUGGY_QP_LIB
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_BUGGY_QP_LIB
+value|1
 end_define
 
 begin_undef

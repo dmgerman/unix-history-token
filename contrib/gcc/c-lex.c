@@ -1449,14 +1449,24 @@ name|space
 decl_stmt|,
 modifier|*
 name|name
-init|=
-literal|0
 decl_stmt|;
 specifier|const
 name|cpp_token
 modifier|*
 name|s
 decl_stmt|;
+name|space
+operator|=
+name|name
+operator|=
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
+literal|""
+expr_stmt|;
 name|s
 operator|=
 name|cpp_get_token
@@ -1464,6 +1474,15 @@ argument_list|(
 name|pfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|type
+operator|!=
+name|CPP_EOF
+condition|)
+block|{
 name|space
 operator|=
 name|cpp_token_as_text
@@ -1497,6 +1516,7 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+block|}
 name|lineno
 operator|=
 name|SOURCE_LINE
@@ -1506,10 +1526,6 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|name
-condition|)
 name|warning
 argument_list|(
 literal|"ignoring #pragma %s %s"
@@ -1517,14 +1533,6 @@ argument_list|,
 name|space
 argument_list|,
 name|name
-argument_list|)
-expr_stmt|;
-else|else
-name|warning
-argument_list|(
-literal|"ignoring #pragma %s"
-argument_list|,
-name|space
 argument_list|)
 expr_stmt|;
 block|}

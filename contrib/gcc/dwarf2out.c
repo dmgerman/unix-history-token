@@ -1594,11 +1594,20 @@ literal|0
 init|;
 name|i
 operator|<
-name|DWARF_FRAME_REGISTERS
+name|FIRST_PSEUDO_REGISTER
 condition|;
 name|i
 operator|++
 control|)
+if|if
+condition|(
+name|DWARF_FRAME_REGNUM
+argument_list|(
+name|i
+argument_list|)
+operator|<
+name|DWARF_FRAME_REGISTERS
+condition|)
 block|{
 name|HOST_WIDE_INT
 name|offset
@@ -7073,6 +7082,9 @@ expr_stmt|;
 comment|/* Don't emit EH unwind info for leaf functions that don't need it.  */
 if|if
 condition|(
+operator|!
+name|flag_asynchronous_unwind_tables
+operator|&&
 name|for_eh
 operator|&&
 name|fde
@@ -29887,15 +29899,15 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* We want to equate the qualified type to the die below.  */
-if|if
-condition|(
-name|qualified_type
-condition|)
 name|type
 operator|=
 name|qualified_type
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|type
+condition|)
 name|equate_type_number_to_die
 argument_list|(
 name|type
@@ -34332,15 +34344,63 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* We mustn't actually emit anything here, as we might not get a          chance to emit any symbols we refer to.  For the release, don't          try to get this right.  */
-block|if (rtl == NULL) 	{ 	  rtl = expand_expr (DECL_INITIAL (decl), NULL_RTX, VOIDmode, 			     EXPAND_INITIALIZER);
-comment|/* If expand_expr returned a MEM, we cannot use it, since 	     it won't be output, leading to unresolved symbol.  */
-block|if (rtl&& GET_CODE (rtl) == MEM) 	    rtl = NULL; 	}
-endif|#
-directive|endif
+comment|/* If the initializer is something that we know will expand into an 	 immediate RTL constant, expand it now.  Expanding anything else 	 tends to produce unresolved symbols; see debug/5770 and c++/6381.  */
+elseif|else
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|DECL_INITIAL
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+operator|==
+name|INTEGER_CST
+operator|||
+name|TREE_CODE
+argument_list|(
+name|DECL_INITIAL
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+operator|==
+name|REAL_CST
+condition|)
+block|{
+name|rtl
+operator|=
+name|expand_expr
+argument_list|(
+name|DECL_INITIAL
+argument_list|(
+name|decl
+argument_list|)
+argument_list|,
+name|NULL_RTX
+argument_list|,
+name|VOIDmode
+argument_list|,
+name|EXPAND_INITIALIZER
+argument_list|)
+expr_stmt|;
+comment|/* If expand_expr returns a MEM, it wasn't immediate.  */
+if|if
+condition|(
+name|rtl
+operator|&&
+name|GET_CODE
+argument_list|(
+name|rtl
+argument_list|)
+operator|==
+name|MEM
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 ifdef|#
 directive|ifdef

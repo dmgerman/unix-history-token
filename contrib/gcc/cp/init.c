@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Handle initialization things in C++.    Copyright (C) 1987, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Handle initialization things in C++.    Copyright (C) 1987, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -790,13 +790,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* [dcl.init]:    To default-initialize an object of type T means:    --if T is a non-POD class type (clause _class_), the default construc-     tor  for  T is called (and the initialization is ill-formed if T has     no accessible default constructor);    --if T is an array type, each element is default-initialized;    --otherwise, the storage for the object is zero-initialized.    A program that calls for default-initialization of an entity of refer-   ence type is ill-formed.  */
+comment|/* Types containing pointers to data members cannot be    zero-initialized with zeros, because the NULL value for such    pointers is -1.     TYPE is a type that requires such zero initialization.  The    returned value is the initializer.  */
 end_comment
 
 begin_function
-specifier|static
 name|tree
-name|build_default_init
+name|build_forced_zero_init
 parameter_list|(
 name|type
 parameter_list|)
@@ -807,20 +806,8 @@ block|{
 name|tree
 name|init
 init|=
-name|NULL_TREE
+name|NULL
 decl_stmt|;
-if|if
-condition|(
-name|TYPE_NEEDS_CONSTRUCTING
-argument_list|(
-name|type
-argument_list|)
-condition|)
-comment|/* Other code will handle running the default constructor.  We can't do        anything with a CONSTRUCTOR for arrays here, as that would imply        copy-initialization.  */
-return|return
-name|NULL_TREE
-return|;
-elseif|else
 if|if
 condition|(
 name|AGGREGATE_TYPE_P
@@ -908,6 +895,46 @@ argument_list|)
 expr_stmt|;
 return|return
 name|init
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* [dcl.init]:    To default-initialize an object of type T means:    --if T is a non-POD class type (clause _class_), the default construc-     tor  for  T is called (and the initialization is ill-formed if T has     no accessible default constructor);    --if T is an array type, each element is default-initialized;    --otherwise, the storage for the object is zero-initialized.    A program that calls for default-initialization of an entity of refer-   ence type is ill-formed.  */
+end_comment
+
+begin_function
+specifier|static
+name|tree
+name|build_default_init
+parameter_list|(
+name|type
+parameter_list|)
+name|tree
+name|type
+decl_stmt|;
+block|{
+name|tree
+name|init
+init|=
+name|NULL_TREE
+decl_stmt|;
+if|if
+condition|(
+name|TYPE_NEEDS_CONSTRUCTING
+argument_list|(
+name|type
+argument_list|)
+condition|)
+comment|/* Other code will handle running the default constructor.  We can't do        anything with a CONSTRUCTOR for arrays here, as that would imply        copy-initialization.  */
+return|return
+name|NULL_TREE
+return|;
+return|return
+name|build_forced_zero_init
+argument_list|(
+name|type
+argument_list|)
 return|;
 block|}
 end_function
@@ -3961,7 +3988,6 @@ argument_list|)
 operator|!=
 name|TYPE_UNQUALIFIED
 condition|)
-block|{
 name|TREE_TYPE
 argument_list|(
 name|exp
@@ -3974,7 +4000,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|init
+name|itype
+operator|&&
+name|cp_type_quals
+argument_list|(
+name|itype
+argument_list|)
+operator|!=
+name|TYPE_UNQUALIFIED
 condition|)
 name|TREE_TYPE
 argument_list|(
@@ -3986,7 +4019,6 @@ argument_list|(
 name|itype
 argument_list|)
 expr_stmt|;
-block|}
 name|stmt_expr
 operator|=
 name|build_vec_init
@@ -9277,6 +9309,19 @@ name|controller
 init|=
 name|NULL_TREE
 decl_stmt|;
+comment|/* We should only have 1-D arrays here.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|ARRAY_TYPE
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -10795,6 +10840,51 @@ block|{
 name|tree
 name|e
 decl_stmt|;
+name|tree
+name|m
+init|=
+name|cp_build_binary_op
+argument_list|(
+name|MINUS_EXPR
+argument_list|,
+name|maxindex
+argument_list|,
+name|iterator
+argument_list|)
+decl_stmt|;
+comment|/* Flatten multi-dimensional array since build_vec_delete only 	 expects one-dimensional array.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|ARRAY_TYPE
+condition|)
+block|{
+name|m
+operator|=
+name|cp_build_binary_op
+argument_list|(
+name|MULT_EXPR
+argument_list|,
+name|m
+argument_list|,
+name|array_type_nelts_total
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|type
+operator|=
+name|strip_array_types
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
+block|}
 name|finish_compound_stmt
 argument_list|(
 comment|/*has_no_scope=*/
@@ -10814,14 +10904,7 @@ name|build_vec_delete_1
 argument_list|(
 name|rval
 argument_list|,
-name|cp_build_binary_op
-argument_list|(
-name|MINUS_EXPR
-argument_list|,
-name|maxindex
-argument_list|,
-name|iterator
-argument_list|)
+name|m
 argument_list|,
 name|type
 argument_list|,

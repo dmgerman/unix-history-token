@@ -26,6 +26,17 @@ file|"hooks.h"
 end_include
 
 begin_comment
+comment|/* Generic hook that does absolutely zappo.  */
+end_comment
+
+begin_function
+name|void
+name|hook_void_void
+parameter_list|()
+block|{ }
+end_function
+
+begin_comment
 comment|/* Generic hook that takes no arguments and returns false.  */
 end_comment
 

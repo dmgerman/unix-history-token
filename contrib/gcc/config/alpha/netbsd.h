@@ -27,7 +27,7 @@ define|#
 directive|define
 name|CPP_PREDEFINES
 define|\
-value|"-D__NetBSD__ -D__ELF__ -Asystem=unix -Asystem=NetBSD"
+value|"-D__NetBSD__ -D__ELF__ -D_LP64 -Asystem=unix -Asystem=NetBSD"
 end_define
 
 begin_comment

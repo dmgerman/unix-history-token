@@ -1149,6 +1149,32 @@ parameter_list|)
 value|atof(x)
 end_define
 
+begin_define
+define|#
+directive|define
+name|REAL_VALUE_TO_TARGET_SINGLE
+parameter_list|(
+name|IN
+parameter_list|,
+name|OUT
+parameter_list|)
+define|\
+value|do {								\   union {							\     float f;							\     HOST_WIDE_INT l;						\   } u;								\ 								\   u.f = (IN);							\   (OUT) = (u.l>> 32)& 0xFFFFFFFF;				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|REAL_VALUE_TO_TARGET_DOUBLE
+parameter_list|(
+name|IN
+parameter_list|,
+name|OUT
+parameter_list|)
+define|\
+value|do {								\   union {							\     REAL_VALUE_TYPE f;						\     HOST_WIDE_INT l;						\   } u;								\ 								\   u.f = (IN);							\   (OUT)[0] = (u.l>> 32)& 0xFFFFFFFF;				\   (OUT)[1] = (u.l& 0xFFFFFFFF);				\ } while (0)
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -453,6 +453,7 @@ name|dest
 expr_stmt|;
 block|}
 comment|/* In the absence of a prediction, disturb things as little as possible      by selecting the old "next" block from the list of successors.  If      there had been a fallthru edge, that will be the one.  */
+comment|/* Note that the fallthru block may not be next any time we eliminate      forwarder blocks.  */
 if|if
 condition|(
 operator|!
@@ -479,6 +480,24 @@ if|if
 condition|(
 name|e
 operator|->
+name|flags
+operator|&
+name|EDGE_FALLTHRU
+condition|)
+block|{
+name|next
+operator|=
+name|e
+operator|->
+name|dest
+expr_stmt|;
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+name|e
+operator|->
 name|dest
 operator|->
 name|index
@@ -492,21 +511,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|e
-operator|->
-name|flags
-operator|&
-name|EDGE_FALLTHRU
-operator|)
-operator|||
-operator|(
-name|e
-operator|->
-name|dest
-operator|->
-name|succ
-operator|&&
 operator|!
 operator|(
 name|e
@@ -519,7 +523,6 @@ operator||
 name|EDGE_EH
 operator|)
 operator|)
-operator|)
 condition|)
 name|next
 operator|=
@@ -527,7 +530,6 @@ name|e
 operator|->
 name|dest
 expr_stmt|;
-break|break;
 block|}
 block|}
 comment|/* Make sure we didn't select a silly next block.  */

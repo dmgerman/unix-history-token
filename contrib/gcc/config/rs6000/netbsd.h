@@ -137,23 +137,6 @@ value|fprintf (stderr, " (PowerPC NetBSD/ELF)");
 end_define
 
 begin_comment
-comment|/* For backward compatibility, we must continue to use the AIX    structure return convention.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DRAFT_V4_STRUCT_RET
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DRAFT_V4_STRUCT_RET
-value|1
-end_define
-
-begin_comment
 comment|/* Use STABS debugging information by default.  DWARF2 makes a mess of    the 1.5.2 linker.  */
 end_comment
 

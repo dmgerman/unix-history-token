@@ -1569,6 +1569,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Determine whether __cxa_atexit, rather than atexit, is used to    register C++ destructors for local statics and global objects. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEFAULT_USE_CXA_ATEXIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_USE_CXA_ATEXIT
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif

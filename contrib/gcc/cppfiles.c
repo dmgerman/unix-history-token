@@ -1216,7 +1216,7 @@ literal|0
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* For -M, add the file to the dependencies on its first inclusion.  */
+comment|/* Add the file to the dependencies on its first inclusion.  */
 if|if
 condition|(
 name|CPP_OPTION
@@ -1226,12 +1226,30 @@ argument_list|,
 name|print_deps
 argument_list|)
 operator|>
+operator|!
+operator|!
 name|sysp
 operator|&&
 operator|!
 name|inc
 operator|->
 name|include_count
+condition|)
+block|{
+if|if
+condition|(
+name|pfile
+operator|->
+name|buffer
+operator|||
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|deps_ignore_main_file
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|deps_add_dep
 argument_list|(
@@ -1244,6 +1262,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Not in cache?  */
 if|if
 condition|(

@@ -2627,6 +2627,13 @@ argument_list|,
 name|src_reg
 argument_list|)
 operator|||
+name|REG_N_DEATHS
+argument_list|(
+name|src_no
+argument_list|)
+operator|!=
+literal|1
+operator|||
 name|REG_N_SETS
 argument_list|(
 name|src_no

@@ -2449,6 +2449,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Return a wide integer for the size in bytes of the value of EXP, or -1    if the size can vary or is larger than an integer.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|HOST_WIDE_INT
+name|int_expr_size
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|rtx

@@ -355,6 +355,31 @@ value|do {									\   output_file_directive (STREAM, main_input_filename);			\ 
 end_define
 
 begin_comment
+comment|/* A C statement or statements to switch to the appropriate    section for output of DECL.  DECL is either a `VAR_DECL' node    or a constant of some sort.  RELOC indicates whether forming    the initial value of DECL requires link-time relocations.     Set SECNUM to: 	0	.text 	1	.rodata 	2	.data 	3	.sdata 	4	.bss 	5	.sbss */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DO_SELECT_SECTION
+parameter_list|(
+name|SECNUM
+parameter_list|,
+name|DECL
+parameter_list|,
+name|RELOC
+parameter_list|)
+define|\
+value|do									\     {									\       if (TREE_CODE (DECL) == FUNCTION_DECL)				\ 	SECNUM = 0;							\       else if (TREE_CODE (DECL) == STRING_CST)				\ 	{								\ 	  if (! flag_writable_strings)					\ 	    SECNUM = 0x101;						\ 	  else								\ 	    SECNUM = 2;							\ 	}								\       else if (TREE_CODE (DECL) == VAR_DECL)				\ 	{								\ 	  if (XSTR (XEXP (DECL_RTL (DECL), 0), 0)[0]			\ 	      == SDATA_NAME_FLAG_CHAR)					\ 	    SECNUM = 3;							\
+comment|/* ??? We need the extra RELOC check, because the default	\ 	     is to only check RELOC if flag_pic is set, and we don't	\ 	     set flag_pic (yet?).  */
+value|\ 	  else if (!DECL_READONLY_SECTION (DECL, RELOC) || (RELOC))	\ 	    SECNUM = 2;							\ 	  else if (flag_merge_constants< 2)				\
+comment|/* C and C++ don't allow different variables to share	\ 	       the same location.  -fmerge-all-constants allows		\ 	       even that (at the expense of not conforming).  */
+value|\ 	    SECNUM = 1;							\ 	  else if (TREE_CODE (DECL_INITIAL (DECL)) == STRING_CST)	\ 	    SECNUM = 0x201;						\ 	  else								\ 	    SECNUM = 0x301;						\ 	}								\
+comment|/* This could be a CONSTRUCTOR containing ADDR_EXPR of a VAR_DECL, \ 	 in which case we can't put it in a shared library rodata.  */
+value|\       else if (flag_pic&& (RELOC))					\ 	SECNUM = 3;							\       else								\ 	SECNUM = 2;							\     }									\   while (0)
+end_define
+
+begin_comment
 comment|/* We override svr4.h so that we can support the sdata section.  */
 end_comment
 
@@ -376,13 +401,26 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|{									\   if (TREE_CODE (DECL) == STRING_CST)					\     {									\       if (! flag_writable_strings)					\ 	mergeable_string_section ((DECL), (ALIGN), 0);			\       else								\ 	data_section ();						\     }									\   else if (TREE_CODE (DECL) == VAR_DECL)				\     {									\       if (XSTR (XEXP (DECL_RTL (DECL), 0), 0)[0]			\ 	  == SDATA_NAME_FLAG_CHAR)					\         sdata_section ();						\
-comment|/* ??? We need the extra RELOC check, because the default is to	\ 	 only check RELOC if flag_pic is set, and we don't set flag_pic \ 	 (yet?).  */
-value|\       else if (!DECL_READONLY_SECTION (DECL, RELOC) || (RELOC))		\ 	data_section ();						\       else if (flag_merge_constants< 2)				\
-comment|/* C and C++ don't allow different variables to share		\ 	   the same location.  -fmerge-all-constants allows		\ 	   even that (at the expense of not conforming).  */
-value|\ 	const_section ();						\       else if (TREE_CODE (DECL_INITIAL (DECL)) == STRING_CST)		\ 	mergeable_string_section (DECL_INITIAL (DECL), (ALIGN), 0);	\       else								\ 	mergeable_constant_section (DECL_MODE (DECL), (ALIGN), 0);	\     }									\
-comment|/* This could be a CONSTRUCTOR containing ADDR_EXPR of a VAR_DECL,	\      in which case we can't put it in a shared library rodata.  */
-value|\   else if (flag_pic&& (RELOC))						\     data_section ();							\   else									\     const_section ();							\ }
+value|do									\     {									\       typedef void (*sec_fn) PARAMS ((void));				\       static sec_fn const sec_functions[6] =				\       {									\ 	text_section,							\ 	const_section,							\ 	data_section,							\ 	sdata_section,							\ 	bss_section,							\ 	sbss_section							\       };								\ 									\       int sec;								\ 									\       DO_SELECT_SECTION (sec, DECL, RELOC);				\ 									\       switch (sec)							\ 	{								\ 	case 0x101:							\ 	  mergeable_string_section (DECL, ALIGN, 0);			\ 	  break;							\ 	case 0x201:							\ 	  mergeable_string_section (DECL_INITIAL (DECL),		\ 				    ALIGN, 0);				\ 	  break;							\ 	case 0x301:							\ 	  mergeable_constant_section (DECL_MODE (DECL),			\ 				      ALIGN, 0);			\ 	  break;							\ 	default:							\ 	  (*sec_functions[sec]) ();					\ 	  break;							\ 	}								\     }									\   while (0)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|UNIQUE_SECTION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|UNIQUE_SECTION
+parameter_list|(
+name|DECL
+parameter_list|,
+name|RELOC
+parameter_list|)
+define|\
+value|do									\     {									\       static const char * const prefixes[6][2] =			\       {									\ 	{ ".text.",   ".gnu.linkonce.t." },				\ 	{ ".rodata.", ".gnu.linkonce.r." },				\ 	{ ".data.",   ".gnu.linkonce.d." },				\ 	{ ".sdata.",  ".gnu.linkonce.s." },				\ 	{ ".bss.",    ".gnu.linkonce.b." },				\ 	{ ".sbss.",   ".gnu.linkonce.sb." }				\       };								\ 									\       int nlen, plen, sec;						\       const char *name, *prefix;					\       char *string;							\ 									\       DO_SELECT_SECTION (sec, DECL, RELOC);				\ 									\       name = IDENTIFIER_POINTER (DECL_ASSEMBLER_NAME (DECL));		\       STRIP_NAME_ENCODING (name, name);					\       nlen = strlen (name);						\ 									\       prefix = prefixes[sec& 0xff][DECL_ONE_ONLY(DECL)];		\       plen = strlen (prefix);						\ 									\       string = alloca (nlen + plen + 1);				\ 									\       memcpy (string, prefix, plen);					\       memcpy (string + plen, name, nlen + 1);				\ 									\       DECL_SECTION_NAME (DECL) = build_string (nlen + plen, string);	\     }									\   while (0)
 end_define
 
 begin_comment

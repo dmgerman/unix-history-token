@@ -6964,7 +6964,7 @@ name|warning_with_decl
 argument_list|(
 name|dwarf_last_decl
 argument_list|,
-literal|"internal regno botch: regno = %d\n"
+literal|"internal regno botch: `%s' has regno = %d\n"
 argument_list|,
 name|regno
 argument_list|)
@@ -7456,6 +7456,11 @@ name|bound
 argument_list|)
 operator|==
 name|SAVE_EXPR
+operator|&&
+name|SAVE_EXPR_RTL
+argument_list|(
+name|bound
+argument_list|)
 condition|)
 name|output_loc_descriptor
 argument_list|(

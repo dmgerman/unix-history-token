@@ -502,6 +502,11 @@ name|unsigned
 name|char
 name|print_deps_append
 decl_stmt|;
+comment|/* If true, no dependency is generated on the main file.  */
+name|unsigned
+name|char
+name|deps_ignore_main_file
+decl_stmt|;
 comment|/* Nonzero means print names of header files (-H).  */
 name|unsigned
 name|char
@@ -586,6 +591,11 @@ comment|/* Nonzero for the 1999 C Standard, including corrigenda and amendments.
 name|unsigned
 name|char
 name|c99
+decl_stmt|;
+comment|/* Nonzero if conforming to some particular standard.  */
+name|unsigned
+name|char
+name|std
 decl_stmt|;
 comment|/* Nonzero means give all the error messages the ANSI standard requires.  */
 name|unsigned

@@ -1996,6 +1996,27 @@ name|set
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Unless the language specifies otherwise, let vector types alias      their components.  This avoids some nasty type punning issues in      normal usage.  And indeed lets vectors be treated more like an      array slice.  */
+elseif|else
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|t
+argument_list|)
+operator|==
+name|VECTOR_TYPE
+condition|)
+name|set
+operator|=
+name|get_alias_set
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
 else|else
 comment|/* Otherwise make a new alias set for this type.  */
 name|set

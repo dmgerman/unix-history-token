@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Language-dependent hooks for C++.    Copyright 2001 Free Software Foundation, Inc.    Contributed by Alexandre Oliva<aoliva@redhat.com>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Language-dependent hooks for C++.    Copyright 2001, 2002 Free Software Foundation, Inc.    Contributed by Alexandre Oliva<aoliva@redhat.com>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -55,6 +55,19 @@ begin_decl_stmt
 specifier|static
 name|HOST_WIDE_INT
 name|cxx_get_alias_set
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|tree
+name|cp_expr_size
 name|PARAMS
 argument_list|(
 operator|(
@@ -152,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|LANG_HOOKS_POST_OPTIONS
-value|cxx_post_options
+value|c_common_post_options
 end_define
 
 begin_undef
@@ -421,6 +434,19 @@ name|LANG_HOOKS_TREE_DUMP_TYPE_QUALS_FN
 value|cp_type_quals
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|LANG_HOOKS_EXPR_SIZE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LANG_HOOKS_EXPR_SIZE
+value|cp_expr_size
+end_define
+
 begin_comment
 comment|/* Each front end provides its own hooks, for toplev.c.  */
 end_comment
@@ -465,6 +491,76 @@ return|return
 name|c_common_get_alias_set
 argument_list|(
 name|t
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Langhook for expr_size: Tell the backend that the value of an expression    of non-POD class type does not include any tail padding; a derived class    might have allocated something there.  */
+end_comment
+
+begin_function
+specifier|static
+name|tree
+name|cp_expr_size
+parameter_list|(
+name|exp
+parameter_list|)
+name|tree
+name|exp
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|CLASS_TYPE_P
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|exp
+argument_list|)
+argument_list|)
+condition|)
+block|{
+comment|/* The backend should not be interested in the size of an expression 	 of a type with both of these set; all copies of such types must go 	 through a constructor or assignment op.  */
+if|if
+condition|(
+name|TYPE_HAS_COMPLEX_INIT_REF
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|exp
+argument_list|)
+argument_list|)
+operator|&&
+name|TYPE_HAS_COMPLEX_ASSIGN_REF
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|exp
+argument_list|)
+argument_list|)
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+comment|/* This would be wrong for a type with virtual bases, but they are 	 caught by the abort above.  */
+return|return
+name|CLASSTYPE_SIZE_UNIT
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|exp
+argument_list|)
+argument_list|)
+return|;
+block|}
+else|else
+comment|/* Use the default code.  */
+return|return
+name|lhd_expr_size
+argument_list|(
+name|exp
 argument_list|)
 return|;
 block|}

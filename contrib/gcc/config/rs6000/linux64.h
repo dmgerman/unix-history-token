@@ -843,5 +843,28 @@ define|\
 value|(TARGET_TOC								\&& (GET_CODE (X) == SYMBOL_REF					\        || (GET_CODE (X) == CONST&& GET_CODE (XEXP (X, 0)) == PLUS	\&& GET_CODE (XEXP (XEXP (X, 0), 0)) == SYMBOL_REF)		\        || GET_CODE (X) == LABEL_REF					\        || (GET_CODE (X) == CONST_INT 					\&& GET_MODE_BITSIZE (MODE)<= GET_MODE_BITSIZE (Pmode))	\        || (GET_CODE (X) == CONST_DOUBLE					\&& (TARGET_POWERPC64						\ 	       || TARGET_MINIMAL_TOC					\ 	       || (GET_MODE_CLASS (GET_MODE (X)) == MODE_FLOAT		\&& ! TARGET_NO_FP_IN_TOC)))))
 end_define
 
+begin_comment
+comment|/* This is the same as the dbxelf.h version, except that we need to    use the function code label, not the function descriptor.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_SOURCE_LINE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_SOURCE_LINE
+parameter_list|(
+name|FILE
+parameter_list|,
+name|LINE
+parameter_list|)
+define|\
+value|do									\   {									\     static int sym_lineno = 1;						\     char temp[256];							\     ASM_GENERATE_INTERNAL_LABEL (temp, "LM", sym_lineno);		\     fprintf (FILE, "\t.stabn 68,0,%d,", LINE);				\     assemble_name (FILE, temp);						\     fputs ("-.", FILE);							\     assemble_name (FILE,						\ 		   XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));\     putc ('\n', FILE);							\     ASM_OUTPUT_INTERNAL_LABEL (FILE, "LM", sym_lineno);			\     sym_lineno += 1;							\   }									\ while (0)
+end_define
+
 end_unit
 

@@ -6879,6 +6879,10 @@ operator|->
 name|pred_next
 operator|==
 name|NULL
+operator|&&
+name|b
+operator|!=
+name|c
 comment|/* If the jump insn has side effects, 			we can't kill the edge.  */
 operator|&&
 operator|(

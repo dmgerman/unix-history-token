@@ -354,7 +354,7 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Called when all command line options have been parsed.  Should do      any required consistency checks, modifications etc.  Complex      initialization should be left to the "init" callback, since GC      and the identifier hashes are set up between now and then.  */
+comment|/* Called when all command line options have been parsed.  Should do      any required consistency checks, modifications etc.  Complex      initialization should be left to the "init" callback, since GC      and the identifier hashes are set up between now and then.       If errorcount is non-zero after this call the compiler exits      immediately and the finish hook is not called.  */
 name|void
 argument_list|(
 argument|*post_options
@@ -496,6 +496,18 @@ name|PARAMS
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Called from expr_size to calculate the size of the value of an      expression in a language-dependent way.  Returns a tree for the size      in bytes.  A frontend can call lhd_expr_size to get the default      semantics in cases that it doesn't want to handle specially.  */
+name|tree
+argument_list|(
+argument|*expr_size
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
 operator|)
 argument_list|)
 expr_stmt|;

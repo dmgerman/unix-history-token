@@ -15,6 +15,12 @@ directive|define
 name|GCC_LANG_HOOKS_DEF_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"hooks.h"
+end_include
+
 begin_comment
 comment|/* Provide a hook routine for alias sets that always returns 1.  This is    used by languages that haven't deal with alias sets yet.  */
 end_comment
@@ -163,6 +169,19 @@ name|PARAMS
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|lhd_expr_size
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
 operator|)
 argument_list|)
 decl_stmt|;
@@ -392,7 +411,7 @@ begin_define
 define|#
 directive|define
 name|LANG_HOOKS_POST_OPTIONS
-value|lhd_do_nothing
+value|hook_void_void
 end_define
 
 begin_define
@@ -470,6 +489,13 @@ define|#
 directive|define
 name|LANG_HOOKS_SET_YYDEBUG
 value|lhd_set_yydebug
+end_define
+
+begin_define
+define|#
+directive|define
+name|LANG_HOOKS_EXPR_SIZE
+value|lhd_expr_size
 end_define
 
 begin_comment
@@ -632,7 +658,7 @@ begin_define
 define|#
 directive|define
 name|LANG_HOOKS_INITIALIZER
-value|{ \   LANG_HOOKS_NAME, \   LANG_HOOKS_IDENTIFIER_SIZE, \   LANG_HOOKS_INIT_OPTIONS, \   LANG_HOOKS_DECODE_OPTION, \   LANG_HOOKS_POST_OPTIONS, \   LANG_HOOKS_INIT, \   LANG_HOOKS_FINISH, \   LANG_HOOKS_CLEAR_BINDING_STACK, \   LANG_HOOKS_GET_ALIAS_SET, \   LANG_HOOKS_EXPAND_CONSTANT, \   LANG_HOOKS_SAFE_FROM_P, \   LANG_HOOKS_STATICP, \   LANG_HOOKS_HONOR_READONLY, \   LANG_HOOKS_PRINT_STATISTICS, \   LANG_HOOKS_PRINT_XNODE, \   LANG_HOOKS_PRINT_DECL, \   LANG_HOOKS_PRINT_TYPE, \   LANG_HOOKS_PRINT_IDENTIFIER, \   LANG_HOOKS_SET_YYDEBUG, \   LANG_HOOKS_TREE_INLINING_INITIALIZER, \   LANG_HOOKS_TREE_DUMP_INITIALIZER \ }
+value|{ \   LANG_HOOKS_NAME, \   LANG_HOOKS_IDENTIFIER_SIZE, \   LANG_HOOKS_INIT_OPTIONS, \   LANG_HOOKS_DECODE_OPTION, \   LANG_HOOKS_POST_OPTIONS, \   LANG_HOOKS_INIT, \   LANG_HOOKS_FINISH, \   LANG_HOOKS_CLEAR_BINDING_STACK, \   LANG_HOOKS_GET_ALIAS_SET, \   LANG_HOOKS_EXPAND_CONSTANT, \   LANG_HOOKS_SAFE_FROM_P, \   LANG_HOOKS_STATICP, \   LANG_HOOKS_HONOR_READONLY, \   LANG_HOOKS_PRINT_STATISTICS, \   LANG_HOOKS_PRINT_XNODE, \   LANG_HOOKS_PRINT_DECL, \   LANG_HOOKS_PRINT_TYPE, \   LANG_HOOKS_PRINT_IDENTIFIER, \   LANG_HOOKS_SET_YYDEBUG, \   LANG_HOOKS_EXPR_SIZE, \   LANG_HOOKS_TREE_INLINING_INITIALIZER, \   LANG_HOOKS_TREE_DUMP_INITIALIZER \ }
 end_define
 
 begin_endif

@@ -5874,6 +5874,14 @@ argument_list|,
 name|insn
 argument_list|)
 expr_stmt|;
+comment|/* Consume SCHED_GROUP_P flag.  */
+name|SCHED_GROUP_P
+argument_list|(
+name|insn
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 name|insn
 operator|=
 name|prev
@@ -6481,7 +6489,30 @@ argument_list|,
 name|can_issue_more
 argument_list|)
 expr_stmt|;
-else|else
+comment|/* A naked CLOBBER or USE generates no instruction, so do 	     not count them against the issue rate.  */
+elseif|else
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|PATTERN
+argument_list|(
+name|insn
+argument_list|)
+argument_list|)
+operator|!=
+name|USE
+operator|&&
+name|GET_CODE
+argument_list|(
+name|PATTERN
+argument_list|(
+name|insn
+argument_list|)
+argument_list|)
+operator|!=
+name|CLOBBER
+condition|)
 name|can_issue_more
 operator|--
 expr_stmt|;

@@ -152,7 +152,7 @@ begin_define
 define|#
 directive|define
 name|IA64_GATE_AREA_END
-value|0xa000000000010000LL
+value|0xa000000000020000LL
 end_define
 
 begin_define
