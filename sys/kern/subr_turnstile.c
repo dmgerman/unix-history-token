@@ -169,6 +169,17 @@ parameter_list|)
 value|(mtx_unowned((m)) ? NULL \ 	: (struct thread *)((m)->mtx_lock& MTX_FLAGMASK))
 end_define
 
+begin_define
+define|#
+directive|define
+name|thread_runnable
+parameter_list|(
+name|td
+parameter_list|)
+define|\
+value|((td)->td_kse != NULL&& (td)->td_kse->ke_oncpu != NOCPU)
+end_define
+
 begin_comment
 comment|/*  * Lock classes for sleep and spin mutexes.  */
 end_comment
@@ -356,19 +367,10 @@ comment|/* 		 * If lock holder is actually running, just bump priority. 		 */
 comment|/* XXXKSE this test is not sufficient */
 if|if
 condition|(
+name|thread_runnable
+argument_list|(
 name|td
-operator|->
-name|td_kse
-operator|&&
-operator|(
-name|td
-operator|->
-name|td_kse
-operator|->
-name|ke_oncpu
-operator|!=
-name|NOCPU
-operator|)
+argument_list|)
 condition|)
 block|{
 name|MPASS
@@ -2470,19 +2472,10 @@ operator|!=
 operator|&
 name|Giant
 operator|&&
+name|thread_runnable
+argument_list|(
 name|owner
-operator|->
-name|td_kse
-operator|!=
-name|NULL
-operator|&&
-name|owner
-operator|->
-name|td_kse
-operator|->
-name|ke_oncpu
-operator|!=
-name|NOCPU
+argument_list|)
 condition|)
 block|{
 name|mtx_unlock_spin
