@@ -1773,6 +1773,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|acpi_battery_remove
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|acpi_battery_get_battinfo
 parameter_list|(
 name|int
