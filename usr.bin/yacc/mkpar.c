@@ -1096,13 +1096,19 @@ literal|1
 condition|)
 name|warnx
 argument_list|(
-literal|"1 rule never reduced"
+literal|"%s: 1 rule never reduced"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 else|else
 name|warnx
 argument_list|(
-literal|"%d rules never reduced"
+literal|"%s: %d rules never reduced"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|nunused
 argument_list|)
@@ -1443,7 +1449,10 @@ literal|1
 condition|)
 name|warnx
 argument_list|(
-literal|"1 shift/reduce conflict"
+literal|"%s: 1 shift/reduce conflict"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1455,7 +1464,10 @@ literal|1
 condition|)
 name|warnx
 argument_list|(
-literal|"%d shift/reduce conflicts"
+literal|"%s: %d shift/reduce conflicts"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|SRtotal
 argument_list|)
@@ -1469,7 +1481,10 @@ literal|1
 condition|)
 name|warnx
 argument_list|(
-literal|"1 reduce/reduce conflict"
+literal|"%s: 1 reduce/reduce conflict"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1481,7 +1496,10 @@ literal|1
 condition|)
 name|warnx
 argument_list|(
-literal|"%d reduce/reduce conflicts"
+literal|"%s: %d reduce/reduce conflicts"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|RRtotal
 argument_list|)
