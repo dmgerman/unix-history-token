@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.77 1999/05/18 12:16:15 roger Exp $ */
+comment|/* $Id: brooktree848.c,v 1.78 1999/05/19 22:04:21 roger Exp $ */
 end_comment
 
 begin_comment
@@ -20678,7 +20678,7 @@ name|Bpp
 operator|)
 operator|&&
 operator|!
-name|memcmp
+name|bcmp
 argument_list|(
 name|pf1
 operator|->
