@@ -2212,7 +2212,7 @@ name|DEV_DRIVER_MODULE
 argument_list|(
 name|fb
 argument_list|,
-operator|???
+name|foo
 argument_list|,
 name|fb_driver
 argument_list|,
