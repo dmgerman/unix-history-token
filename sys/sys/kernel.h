@@ -305,11 +305,6 @@ init|=
 literal|0x2500000
 block|,
 comment|/* create init process*/
-name|SI_SUB_DEVFS
-init|=
-literal|0x3000000
-block|,
-comment|/* get DEVFS ready */
 name|SI_SUB_DRIVERS
 init|=
 literal|0x3100000
