@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)id.c	5.3 (Berkeley) %G%"
+literal|"@(#)id.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1479,17 +1479,17 @@ continue|continue;
 if|if
 condition|(
 name|nflag
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|gr
 operator|=
 name|getgrgid
 argument_list|(
 name|id
 argument_list|)
-operator|)
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -1502,11 +1502,6 @@ operator|->
 name|gr_name
 argument_list|)
 expr_stmt|;
-name|fmt
-operator|=
-literal|" %s"
-expr_stmt|;
-block|}
 else|else
 operator|(
 name|void
@@ -1525,6 +1520,28 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
+name|fmt
+operator|=
+literal|" %s"
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|fmt
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
+name|fmt
+operator|=
+literal|" %u"
+expr_stmt|;
+block|}
 name|lastid
 operator|=
 name|id
