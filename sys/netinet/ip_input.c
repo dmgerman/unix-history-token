@@ -1547,25 +1547,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|KASSERT
+name|M_ASSERTPKTHDR
 argument_list|(
 name|m
-operator|!=
-name|NULL
-operator|&&
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-operator|)
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"ip_input: no HDR"
-operator|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -1313,6 +1313,21 @@ value|(!((m)->m_flags& M_RDONLY)&& (!((m)->m_flags  \& M_EXT) || !MEXT_IS_REF(m)
 end_define
 
 begin_comment
+comment|/*  * Check if the supplied mbuf has a packet header, or else panic.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_ASSERTPKTHDR
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|KASSERT(m != NULL&& m->m_flags& M_PKTHDR,	\ 		("%s: no mbuf packet header!", __func__))
+end_define
+
+begin_comment
 comment|/*  * Set the m_data pointer of a newly-allocated mbuf (m_get/MGET) to place  * an object of the specified size at the end of the mbuf, longword aligned.  */
 end_comment
 

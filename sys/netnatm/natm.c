@@ -3105,21 +3105,9 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-operator|)
-operator|==
-literal|0
-condition|)
-name|panic
+name|M_ASSERTPKTHDR
 argument_list|(
-literal|"natmintr no HDR"
+name|m
 argument_list|)
 expr_stmt|;
 endif|#

@@ -813,21 +813,9 @@ block|{
 name|int
 name|isr
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-operator|)
-operator|==
-literal|0
-condition|)
-name|panic
+name|M_ASSERTPKTHDR
 argument_list|(
-literal|"faithoutput no HDR"
+name|m
 argument_list|)
 expr_stmt|;
 comment|/* BPF write needs to be handled specially */

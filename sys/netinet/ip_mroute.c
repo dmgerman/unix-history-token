@@ -8249,20 +8249,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-if|if
-condition|(
-operator|!
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-operator|)
-condition|)
-name|panic
+name|M_ASSERTPKTHDR
 argument_list|(
-literal|"rsvp_input no hdr"
+name|m
 argument_list|)
 expr_stmt|;
 endif|#

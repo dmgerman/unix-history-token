@@ -1548,28 +1548,9 @@ literal|0
 condition|)
 return|return;
 comment|/* We need the header for m_pkthdr.len. */
-if|if
-condition|(
-operator|(
+name|M_ASSERTPKTHDR
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-operator|)
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"%s: sncstart: no header mbuf"
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If bpf is listening on this interface, let it 	 * see the packet before we commit it to the wire. 	 */

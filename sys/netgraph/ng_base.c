@@ -1549,7 +1549,7 @@ name|CHECK_DATA_MBUF
 parameter_list|(
 name|m
 parameter_list|)
-value|do {					\ 		struct mbuf *n;						\ 		int total;						\ 									\ 		if (((m)->m_flags& M_PKTHDR) == 0)			\ 			panic("%s: !PKTHDR", __func__);		\ 		for (total = 0, n = (m); n != NULL; n = n->m_next)	\ 			total += n->m_len;				\ 		if ((m)->m_pkthdr.len != total) {			\ 			panic("%s: %d != %d",				\ 			    __func__, (m)->m_pkthdr.len, total);	\ 		}							\ 	} while (0)
+value|do {					\ 		struct mbuf *n;						\ 		int total;						\ 									\ 		M_ASSERTPKTHDR(m);					\ 		for (total = 0, n = (m); n != NULL; n = n->m_next)	\ 			total += n->m_len;				\ 		if ((m)->m_pkthdr.len != total) {			\ 			panic("%s: %d != %d",				\ 			    __func__, (m)->m_pkthdr.len, total);	\ 		}							\ 	} while (0)
 end_define
 
 begin_else

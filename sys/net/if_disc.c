@@ -617,21 +617,9 @@ modifier|*
 name|rt
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-operator|)
-operator|==
-literal|0
-condition|)
-name|panic
+name|M_ASSERTPKTHDR
 argument_list|(
-literal|"discoutput no HDR"
+name|m
 argument_list|)
 expr_stmt|;
 comment|/* BPF write needs to be handled specially */

@@ -3053,19 +3053,9 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|M_ASSERTPKTHDR
 argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-argument_list|,
-operator|(
-literal|"%s: not pkthdr"
-operator|,
-name|__func__
-operator|)
 argument_list|)
 expr_stmt|;
 if|if

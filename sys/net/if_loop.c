@@ -825,23 +825,12 @@ modifier|*
 name|rt
 decl_stmt|;
 block|{
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-operator|)
-operator|==
-literal|0
-condition|)
-name|panic
+name|M_ASSERTPKTHDR
 argument_list|(
-literal|"looutput no HDR"
+name|m
 argument_list|)
 expr_stmt|;
+comment|/* check if we have the packet header */
 if|if
 condition|(
 name|rt
@@ -1149,21 +1138,9 @@ block|{
 name|int
 name|isr
 decl_stmt|;
-name|KASSERT
+name|M_ASSERTPKTHDR
 argument_list|(
-operator|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-operator|)
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"if_simloop: no HDR"
-operator|)
 argument_list|)
 expr_stmt|;
 name|m

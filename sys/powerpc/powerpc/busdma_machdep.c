@@ -1599,17 +1599,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|KASSERT
+name|M_ASSERTPKTHDR
 argument_list|(
 name|m0
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-argument_list|,
-operator|(
-literal|"bus_dmamap_load_mbuf: no packet header"
-operator|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -2427,17 +2427,9 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|KASSERT
+name|M_ASSERTPKTHDR
 argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-argument_list|,
-operator|(
-literal|"mac_init_mbuf on non-header mbuf"
-operator|)
 argument_list|)
 expr_stmt|;
 name|mac_init_label
@@ -8978,17 +8970,9 @@ operator|(
 literal|0
 operator|)
 return|;
-name|KASSERT
+name|M_ASSERTPKTHDR
 argument_list|(
 name|mbuf
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-argument_list|,
-operator|(
-literal|"packet has no pkthdr"
-operator|)
 argument_list|)
 expr_stmt|;
 if|if

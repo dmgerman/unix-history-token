@@ -1695,31 +1695,10 @@ name|if_snd
 operator|.
 name|ifq_head
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
-return|return;
-block|}
 comment|/* We need to use m->m_pkthdr.len, so require the header */
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-operator|)
-operator|==
-literal|0
-condition|)
-name|panic
+name|M_ASSERTPKTHDR
 argument_list|(
-literal|"vxstart: no header mbuf"
+name|m
 argument_list|)
 expr_stmt|;
 name|len

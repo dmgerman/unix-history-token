@@ -326,7 +326,7 @@ if|#
 directive|if
 literal|0
 comment|/* see below for why these are not enabled */
-block|KASSERT(to->m_flags& M_PKTHDR, 	    ("m_move_pkthdr: called on non-header")); 	KASSERT(SLIST_EMPTY(&to->m_pkthdr.tags), 	    ("m_move_pkthdr: to has tags"));
+block|M_ASSERTPKTHDR(to); 	KASSERT(SLIST_EMPTY(&to->m_pkthdr.tags), 	    ("m_move_pkthdr: to has tags"));
 endif|#
 directive|endif
 name|KASSERT
@@ -458,7 +458,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * The mbuf allocator only initializes the pkthdr 	 * when the mbuf is allocated with MGETHDR. Many users 	 * (e.g. m_copy*, m_prepend) use MGET and then 	 * smash the pkthdr as needed causing these 	 * assertions to trip.  For now just disable them. 	 */
-block|KASSERT(to->m_flags& M_PKTHDR, ("m_dup_pkthdr: called on non-header")); 	KASSERT(SLIST_EMPTY(&to->m_pkthdr.tags), ("m_dup_pkthdr: to has tags"));
+block|M_ASSERTPKTHDR(to); 	KASSERT(SLIST_EMPTY(&to->m_pkthdr.tags), ("m_dup_pkthdr: to has tags"));
 endif|#
 directive|endif
 ifdef|#
@@ -1603,23 +1603,9 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|KASSERT
+name|M_ASSERTPKTHDR
 argument_list|(
-operator|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-operator|)
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"%s: !PKTHDR"
-operator|,
-name|__func__
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* While there's more data, get a new mbuf, tack it on, and fill it */

@@ -1559,17 +1559,9 @@ name|nsegs
 decl_stmt|,
 name|error
 decl_stmt|;
-name|KASSERT
+name|M_ASSERTPKTHDR
 argument_list|(
 name|m0
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-argument_list|,
-operator|(
-literal|"nexus_dmamap_load_mbuf: no packet header"
-operator|)
 argument_list|)
 expr_stmt|;
 name|nsegs

@@ -857,24 +857,9 @@ name|m
 operator|=
 name|m0
 expr_stmt|;
-name|KASSERT
+name|M_ASSERTPKTHDR
 argument_list|(
-operator|!
 name|m
-operator|||
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-operator|)
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"ip_output: no HDR"
-operator|)
 argument_list|)
 expr_stmt|;
 ifndef|#
