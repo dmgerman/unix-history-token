@@ -20647,7 +20647,7 @@ name|fs_rtmax
 operator|=
 name|txdr_unsigned
 argument_list|(
-name|NFS_MAXDATA
+name|pref
 argument_list|)
 expr_stmt|;
 name|sip
@@ -20674,7 +20674,7 @@ name|fs_wtmax
 operator|=
 name|txdr_unsigned
 argument_list|(
-name|NFS_MAXDATA
+name|pref
 argument_list|)
 expr_stmt|;
 name|sip
