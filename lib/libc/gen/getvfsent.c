@@ -519,7 +519,7 @@ index|[
 name|i
 index|]
 operator|.
-name|vfc_index
+name|vfc_typenum
 operator|==
 name|type
 condition|)
