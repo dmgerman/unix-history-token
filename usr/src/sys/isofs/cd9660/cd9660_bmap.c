@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_bmap.c	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_bmap.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -87,8 +87,8 @@ name|ap
 operator|->
 name|a_bn
 decl_stmt|;
-name|long
-name|bsize
+name|int
+name|bshift
 decl_stmt|;
 comment|/* 	 * Check for underlying vnode requests and ensure that logical 	 * to physical mapping is requested. 	 */
 if|if
@@ -122,13 +122,13 @@ literal|0
 operator|)
 return|;
 comment|/* 	 * Compute the requested block number 	 */
-name|bsize
+name|bshift
 operator|=
 name|ip
 operator|->
 name|i_mnt
 operator|->
-name|logical_block_size
+name|im_bshift
 expr_stmt|;
 operator|*
 name|ap
@@ -142,11 +142,12 @@ name|iso_start
 operator|+
 name|lblkno
 operator|)
-operator|*
-name|btodb
-argument_list|(
-name|bsize
-argument_list|)
+operator|<<
+operator|(
+name|bshift
+operator|-
+name|DEV_BSHIFT
+operator|)
 expr_stmt|;
 comment|/* 	 * Determine maximum number of readahead blocks following the 	 * requested block. 	 */
 if|if
@@ -165,17 +166,15 @@ operator|(
 name|ip
 operator|->
 name|i_size
+operator|>>
+name|bshift
+operator|)
 operator|-
 operator|(
 name|lblkno
 operator|+
 literal|1
 operator|)
-operator|*
-name|bsize
-operator|)
-operator|/
-name|bsize
 expr_stmt|;
 if|if
 condition|(
@@ -195,18 +194,22 @@ if|if
 condition|(
 name|nblk
 operator|>=
+operator|(
 name|MAXBSIZE
-operator|/
-name|bsize
+operator|>>
+name|bshift
+operator|)
 condition|)
 operator|*
 name|ap
 operator|->
 name|a_runp
 operator|=
+operator|(
 name|MAXBSIZE
-operator|/
-name|bsize
+operator|>>
+name|bshift
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -220,7 +223,9 @@ name|nblk
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

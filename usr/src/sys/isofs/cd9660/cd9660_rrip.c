@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_rrip.c	8.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_rrip.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -117,11 +123,11 @@ name|inode
 operator|.
 name|iso_mode
 operator|=
-name|isonum_731
+name|isonum_733
 argument_list|(
 name|p
 operator|->
-name|mode_l
+name|mode
 argument_list|)
 expr_stmt|;
 name|ana
@@ -132,14 +138,11 @@ name|inode
 operator|.
 name|iso_uid
 operator|=
-operator|(
-name|uid_t
-operator|)
-name|isonum_731
+name|isonum_733
 argument_list|(
 name|p
 operator|->
-name|uid_l
+name|uid
 argument_list|)
 expr_stmt|;
 name|ana
@@ -150,14 +153,11 @@ name|inode
 operator|.
 name|iso_gid
 operator|=
-operator|(
-name|gid_t
-operator|)
-name|isonum_731
+name|isonum_733
 argument_list|(
 name|p
 operator|->
-name|gid_l
+name|gid
 argument_list|)
 expr_stmt|;
 name|ana
@@ -168,11 +168,11 @@ name|inode
 operator|.
 name|iso_links
 operator|=
-name|isonum_731
+name|isonum_733
 argument_list|(
 name|p
 operator|->
-name|links_l
+name|links
 argument_list|)
 expr_stmt|;
 name|ana
@@ -1086,8 +1086,7 @@ modifier|*
 name|ana
 decl_stmt|;
 block|{
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|ptime
 decl_stmt|;
@@ -1168,7 +1167,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|timeval
+name|timespec
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1318,7 +1317,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|timeval
+name|timespec
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1477,7 +1476,7 @@ modifier|*
 name|ana
 decl_stmt|;
 block|{
-name|unsigned
+name|u_int
 name|high
 decl_stmt|,
 name|low
@@ -1488,7 +1487,7 @@ name|isonum_733
 argument_list|(
 name|p
 operator|->
-name|dev_t_high_l
+name|dev_t_high
 argument_list|)
 expr_stmt|;
 name|low
@@ -1497,7 +1496,7 @@ name|isonum_733
 argument_list|(
 name|p
 operator|->
-name|dev_t_low_l
+name|dev_t_low
 argument_list|)
 expr_stmt|;
 if|if
@@ -2173,14 +2172,16 @@ argument_list|,
 name|ana
 operator|->
 name|iso_ce_blk
-operator|*
+operator|<<
+operator|(
 name|ana
 operator|->
 name|imp
 operator|->
-name|logical_block_size
-operator|/
-name|DEV_BSIZE
+name|im_bshift
+operator|-
+name|DEV_BSHIFT
+operator|)
 argument_list|,
 name|ana
 operator|->
@@ -2205,9 +2206,7 @@ operator|)
 operator|(
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|ana
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_rrip.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_rrip.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -18,8 +18,7 @@ literal|1
 argument_list|)
 index|]
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|length
 index|[
 name|ISODCL
@@ -31,8 +30,7 @@ argument_list|)
 index|]
 decl_stmt|;
 comment|/* 711 */
-name|unsigned
-name|char
+name|u_char
 name|version
 index|[
 name|ISODCL
@@ -56,101 +54,53 @@ name|ISO_SUSP_HEADER
 name|h
 decl_stmt|;
 name|char
-name|mode_l
+name|mode
 index|[
 name|ISODCL
 argument_list|(
 literal|4
 argument_list|,
-literal|7
-argument_list|)
-index|]
-decl_stmt|;
-comment|/* 731 */
-name|char
-name|mode_m
-index|[
-name|ISODCL
-argument_list|(
-literal|8
-argument_list|,
 literal|11
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* 732 */
+comment|/* 733 */
 name|char
-name|links_l
+name|links
 index|[
 name|ISODCL
 argument_list|(
 literal|12
 argument_list|,
-literal|15
-argument_list|)
-index|]
-decl_stmt|;
-comment|/* 731 */
-name|char
-name|links_m
-index|[
-name|ISODCL
-argument_list|(
-literal|16
-argument_list|,
 literal|19
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* 732 */
+comment|/* 733 */
 name|char
-name|uid_l
+name|uid
 index|[
 name|ISODCL
 argument_list|(
 literal|20
 argument_list|,
-literal|23
-argument_list|)
-index|]
-decl_stmt|;
-comment|/* 731 */
-name|char
-name|uid_m
-index|[
-name|ISODCL
-argument_list|(
-literal|24
-argument_list|,
 literal|27
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* 732 */
+comment|/* 733 */
 name|char
-name|gid_l
+name|gid
 index|[
 name|ISODCL
 argument_list|(
 literal|28
 argument_list|,
-literal|31
-argument_list|)
-index|]
-decl_stmt|;
-comment|/* 731 */
-name|char
-name|gid_m
-index|[
-name|ISODCL
-argument_list|(
-literal|32
-argument_list|,
 literal|35
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* 732 */
+comment|/* 733 */
 block|}
 name|ISO_RRIP_ATTR
 typedef|;
@@ -164,53 +114,29 @@ name|ISO_SUSP_HEADER
 name|h
 decl_stmt|;
 name|char
-name|dev_t_high_l
+name|dev_t_high
 index|[
 name|ISODCL
 argument_list|(
 literal|4
 argument_list|,
-literal|7
-argument_list|)
-index|]
-decl_stmt|;
-comment|/* 731 */
-name|char
-name|dev_t_high_m
-index|[
-name|ISODCL
-argument_list|(
-literal|8
-argument_list|,
 literal|11
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* 732 */
+comment|/* 733 */
 name|char
-name|dev_t_low_l
+name|dev_t_low
 index|[
 name|ISODCL
 argument_list|(
 literal|12
 argument_list|,
-literal|15
-argument_list|)
-index|]
-decl_stmt|;
-comment|/* 731 */
-name|char
-name|dev_t_low_m
-index|[
-name|ISODCL
-argument_list|(
-literal|16
-argument_list|,
 literal|19
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* 732 */
+comment|/* 733 */
 block|}
 name|ISO_RRIP_DEVICE
 typedef|;
@@ -287,9 +213,10 @@ decl_stmt|;
 name|u_char
 name|name
 index|[
-literal|0
+literal|1
 index|]
 decl_stmt|;
+comment|/* XXX */
 block|}
 name|ISO_RRIP_SLINK_COMPONENT
 typedef|;
@@ -489,8 +416,7 @@ block|{
 name|ISO_SUSP_HEADER
 name|h
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|flags
 index|[
 name|ISODCL
@@ -501,8 +427,7 @@ literal|4
 argument_list|)
 index|]
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|time
 index|[
 name|ISODCL
@@ -525,8 +450,7 @@ block|{
 name|ISO_SUSP_HEADER
 name|h
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|flags
 index|[
 name|ISODCL
