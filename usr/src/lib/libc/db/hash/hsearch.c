@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hsearch.c	5.1 (Berkeley) %G%"
+literal|"@(#)hsearch.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,10 +324,26 @@ name|data
 expr_stmt|;
 block|}
 block|}
+name|retval
+operator|.
+name|key
+operator|=
+name|item
+operator|.
+name|key
+expr_stmt|;
+name|retval
+operator|.
+name|data
+operator|=
+name|item
+operator|.
+name|data
+expr_stmt|;
 return|return
 operator|(
 operator|&
-name|item
+name|retval
 operator|)
 return|;
 block|}
