@@ -230,25 +230,11 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* 		 * Got it. Fill in the instance and return it. We have 		 * both i8251 an ns8250 and successors on pc98. 		 */
-if|if
-condition|(
-name|flags
-operator|&
-literal|0x100
-condition|)
 name|di
 operator|->
 name|ops
 operator|=
 name|uart_ns8250_ops
-expr_stmt|;
-else|else
-name|di
-operator|->
-name|ops
-operator|=
-name|uart_i8251_ops
 expr_stmt|;
 name|di
 operator|->
