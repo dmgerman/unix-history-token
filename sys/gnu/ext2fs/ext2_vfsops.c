@@ -1953,7 +1953,7 @@ name|printf
 argument_list|(
 literal|"ext2_check_descriptors: "
 literal|"Block bitmap for group %d"
-literal|" not in group (block %lu)!"
+literal|" not in group (block %lu)!\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1994,7 +1994,7 @@ name|printf
 argument_list|(
 literal|"ext2_check_descriptors: "
 literal|"Inode bitmap for group %d"
-literal|" not in group (block %lu)!"
+literal|" not in group (block %lu)!\n"
 argument_list|,
 name|i
 argument_list|,
@@ -2039,7 +2039,7 @@ name|printf
 argument_list|(
 literal|"ext2_check_descriptors: "
 literal|"Inode table for group %d"
-literal|" not in group (block %lu)!"
+literal|" not in group (block %lu)!\n"
 argument_list|,
 name|i
 argument_list|,
@@ -3604,6 +3604,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|compute_sb_data
@@ -3620,17 +3621,12 @@ name|ump
 operator|->
 name|um_e2fs
 argument_list|)
+operator|)
 condition|)
-block|{
-name|brelse
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-return|return
-name|error
-return|;
-block|}
+goto|goto
+name|out
+goto|;
+comment|/* 	 * We don't free the group descriptors allocated by compute_sb_data() 	 * until ext2_unmount().  This is OK since the mount will succeed. 	 */
 name|brelse
 argument_list|(
 name|bp
@@ -3884,7 +3880,18 @@ name|bsd_free
 argument_list|(
 name|ump
 operator|->
-name|um_fs
+name|um_e2fs
+operator|->
+name|s_es
+argument_list|,
+name|M_UFSMNT
+argument_list|)
+expr_stmt|;
+name|bsd_free
+argument_list|(
+name|ump
+operator|->
+name|um_e2fs
 argument_list|,
 name|M_UFSMNT
 argument_list|)
@@ -4079,6 +4086,15 @@ name|ULCK_BUF
 argument_list|(
 argument|fs->s_group_desc[i]
 argument_list|)
+name|bsd_free
+argument_list|(
+name|fs
+operator|->
+name|s_group_desc
+argument_list|,
+name|M_UFSMNT
+argument_list|)
+expr_stmt|;
 comment|/* release cached inode/block bitmaps */
 for|for
 control|(
