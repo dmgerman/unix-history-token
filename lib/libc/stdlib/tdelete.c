@@ -57,12 +57,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
-
 begin_define
 define|#
 directive|define
