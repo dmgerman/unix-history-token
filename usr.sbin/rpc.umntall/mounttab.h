@@ -49,6 +49,15 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtablist
+modifier|*
+name|mtabhead
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|add_mtab
@@ -64,16 +73,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|badline
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|clean_mtab
 parameter_list|(
 name|char
@@ -81,6 +80,8 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -89,9 +90,7 @@ begin_function_decl
 name|int
 name|read_mtab
 parameter_list|(
-name|struct
-name|mtablist
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -100,7 +99,7 @@ begin_function_decl
 name|int
 name|write_mtab
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -199,14 +199,6 @@ end_typedef
 
 begin_decl_stmt
 name|struct
-name|mtablist
-modifier|*
-name|mtabhead
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
 name|addrinfo
 modifier|*
 name|nfshost_ai
@@ -2225,9 +2217,7 @@ comment|/* 		 * Remove the unmounted entry from /var/db/mounttab. 		 */
 if|if
 condition|(
 name|read_mtab
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 condition|)
 block|{
 name|clean_mtab
@@ -2235,13 +2225,17 @@ argument_list|(
 name|hostp
 argument_list|,
 name|nfsdirname
+argument_list|,
+name|vflag
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
 name|write_mtab
-argument_list|()
+argument_list|(
+name|vflag
+argument_list|)
 condition|)
 name|warnx
 argument_list|(
