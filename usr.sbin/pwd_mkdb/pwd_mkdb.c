@@ -511,12 +511,20 @@ name|methoduid
 decl_stmt|;
 name|int
 name|Cflag
+decl_stmt|,
+name|dflag
+decl_stmt|,
+name|iflag
 decl_stmt|;
 name|int
 name|nblock
 init|=
 literal|0
 decl_stmt|;
+name|iflag
+operator|=
+name|dflag
+operator|=
 name|Cflag
 operator|=
 literal|0
@@ -581,6 +589,9 @@ break|break;
 case|case
 literal|'d'
 case|:
+name|dflag
+operator|++
+expr_stmt|;
 name|strlcpy
 argument_list|(
 name|prefix
@@ -592,6 +603,13 @@ argument_list|(
 name|prefix
 argument_list|)
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|iflag
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -796,6 +814,13 @@ name|nblock
 argument_list|)
 operator|<
 literal|0
+operator|&&
+operator|!
+operator|(
+name|dflag
+operator|&&
+name|iflag
+operator|)
 condition|)
 name|error
 argument_list|(
@@ -4500,7 +4525,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pwd_mkdb [-C] [-N] [-p] [-d<dest dir>] [-s<cachesize>] [-u<local username>] file\n"
+literal|"usage: pwd_mkdb [-C] [-N] [-i] [-p] [-d<dest dir>] [-s<cachesize>] [-u<local username>] file\n"
 argument_list|)
 expr_stmt|;
 name|exit
