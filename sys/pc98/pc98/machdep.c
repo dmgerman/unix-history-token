@@ -361,12 +361,6 @@ directive|include
 file|<machine/globals.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/intrcnt.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
