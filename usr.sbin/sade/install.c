@@ -2402,8 +2402,11 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"Unable to find an rsaref package on the current intallation media.\n"
-literal|"You may wish to switch media types and try again, perhaps\n"
-literal|"from an FTP server which carries this package."
+literal|"This is probably because you are installing from a CDROM which\n"
+literal|"was produced for world-wide use, in which case the RSA patent\n"
+literal|"prevents distribution of RSA code on CD.  Please change your\n"
+literal|"media device to point to an International FTP server and install\n"
+literal|"the rsaref package manually through the Packages menu."
 argument_list|)
 expr_stmt|;
 block|}
@@ -2441,8 +2444,11 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"Unable to find an rsaintl package on the current intallation media.\n"
-literal|"You may wish to switch media types and try again, perhaps\n"
-literal|"from an FTP server which carries this package."
+literal|"This is probably because you are installing from a CDROM which\n"
+literal|"was produced for use in the USA, in which case the RSA patent\n"
+literal|"prevents distribution of RSA code on CD.  Please change your\n"
+literal|"media device to point to an International FTP server and install\n"
+literal|"the rsaintl package manually through the Packages menu."
 argument_list|)
 expr_stmt|;
 block|}
