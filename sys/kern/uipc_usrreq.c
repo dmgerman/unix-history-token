@@ -2844,6 +2844,8 @@ argument_list|,
 name|NOFOLLOW
 operator||
 name|LOCKPARENT
+operator||
+name|SAVENAME
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
