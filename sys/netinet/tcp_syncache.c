@@ -1669,15 +1669,6 @@ name|sc
 operator|=
 name|nsc
 expr_stmt|;
-name|nsc
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|sc
-argument_list|,
-name|sc_timerq
-argument_list|)
-expr_stmt|;
 name|inp
 operator|=
 name|sc
@@ -1712,6 +1703,15 @@ operator|->
 name|sc_inp_gencnt
 condition|)
 block|{
+name|nsc
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|sc
+argument_list|,
+name|sc_timerq
+argument_list|)
+expr_stmt|;
 name|syncache_drop
 argument_list|(
 name|sc
@@ -1731,6 +1731,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * syncache_respond() may call back into the syncache to 		 * to modify another entry, so do not obtain the next 		 * entry on the timer chain until it has completed. 		 */
 operator|(
 name|void
 operator|)
@@ -1744,6 +1745,15 @@ expr_stmt|;
 name|INP_UNLOCK
 argument_list|(
 name|inp
+argument_list|)
+expr_stmt|;
+name|nsc
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|sc
+argument_list|,
+name|sc_timerq
 argument_list|)
 expr_stmt|;
 name|tcpstat
