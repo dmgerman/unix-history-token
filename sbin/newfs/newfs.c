@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: newfs.c,v 1.20 1998/07/15 06:28:05 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,6 +99,18 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dinode.h>
 end_include
 
 begin_include
@@ -200,6 +212,17 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
 end_include
 
 begin_endif
