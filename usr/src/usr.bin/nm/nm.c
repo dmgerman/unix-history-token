@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nm.c 4.4 %G%"
+literal|"@(#)nm.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -712,13 +712,16 @@ operator|.
 name|st_size
 operator|)
 condition|)
+block|{
 name|error
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|"old format .o (no string table) or truncated file"
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
 name|i
 operator|=
 literal|0
