@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c 4.1 %G%"
+literal|"@(#)csh.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2204,6 +2204,29 @@ end_macro
 
 begin_block
 block|{
+name|pintr1
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|pintr1
+argument_list|(
+argument|wantnl
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|bool
+name|wantnl
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|char
 modifier|*
@@ -2320,6 +2343,8 @@ elseif|else
 if|if
 condition|(
 name|intty
+operator|&&
+name|wantnl
 condition|)
 name|printf
 argument_list|(

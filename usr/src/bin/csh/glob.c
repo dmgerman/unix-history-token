@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glob.c 4.1 %G%"
+literal|"@(#)glob.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -429,7 +429,22 @@ elseif|else
 if|if
 condition|(
 name|noglob
+operator|||
+name|eq
+argument_list|(
+name|as
+argument_list|,
+literal|"{"
+argument_list|)
+operator|||
+name|eq
+argument_list|(
+name|as
+argument_list|,
+literal|"{}"
+argument_list|)
 condition|)
+block|{
 name|Gcat
 argument_list|(
 name|as
@@ -437,6 +452,10 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+name|sort
+argument_list|()
+expr_stmt|;
+block|}
 else|else
 name|acollect
 argument_list|(
