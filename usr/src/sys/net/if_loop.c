@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_loop.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_loop.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -192,16 +192,6 @@ name|loif
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|looutput
-argument_list|()
-decl_stmt|,
-name|loioctl
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -317,54 +307,40 @@ directive|endif
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|looutput
-argument_list|(
-argument|ifp
-argument_list|,
-argument|m
-argument_list|,
-argument|dst
-argument_list|,
-argument|rt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ifp
+parameter_list|,
+name|m
+parameter_list|,
+name|dst
+parameter_list|,
+name|rt
+parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 name|dst
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|rtentry
 modifier|*
 name|rt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|s
@@ -685,7 +661,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
@@ -738,36 +714,28 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|loioctl
-argument_list|(
+parameter_list|(
 name|ifp
-argument_list|,
+parameter_list|,
 name|cmd
-argument_list|,
+parameter_list|,
 name|data
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -899,7 +867,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
