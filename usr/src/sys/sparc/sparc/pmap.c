@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.3 (Berkeley) %G%  *  * from: $Header: pmap.c,v 1.36 92/07/10 00:03:10 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.4 (Berkeley) %G%  *  * from: $Header: pmap.c,v 1.39 93/04/20 11:17:12 torek Exp $  */
 end_comment
 
 begin_comment
@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/ctlreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sparc/sparc/asm.h>
 end_include
 
@@ -89,12 +95,6 @@ begin_include
 include|#
 directive|include
 file|<sparc/sparc/cache.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sparc/sparc/ctlreg.h>
 end_include
 
 begin_ifdef
@@ -5957,6 +5957,82 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|perftest
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|perftest
+end_ifdef
+
+begin_comment
+comment|/* counters, one per possible length */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rmk_vlen
+index|[
+name|NPTESG
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* virtual length per rmk() call */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rmk_npg
+index|[
+name|NPTESG
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* n valid pages per rmk() call */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rmk_vlendiff
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # times npg != vlen */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The following magic number was chosen because:  *	1. It is the same amount of work to cache_flush_page 4 pages  *	   as to cache_flush_segment 1 segment (so at 4 the cost of  *	   flush is the same).  *	2. Flushing extra pages is bad (causes cache not to work).  *	3. The current code, which malloc()s 5 pages for each process  *	   for a user vmspace/pmap, almost never touches all 5 of those  *	   pages.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMAP_RMK_MAGIC
+value|5
+end_define
+
+begin_comment
+comment|/* if> magic, use cache_flush_segment */
+end_comment
+
 begin_comment
 comment|/*  * Remove a range contained within a single segment.  * These are egregiously complicated routines.  */
 end_comment
@@ -6008,6 +6084,10 @@ name|int
 name|i
 decl_stmt|,
 name|tpte
+decl_stmt|,
+name|perpage
+decl_stmt|,
+name|npg
 decl_stmt|;
 specifier|register
 name|struct
@@ -6015,6 +6095,15 @@ name|pvlist
 modifier|*
 name|pv
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|perftest
+specifier|register
+name|int
+name|nvalid
+decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -6026,7 +6115,7 @@ name|seginval
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_rmk: kernel seg not loaded"
+literal|"pmap_rmk: not loaded"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6039,17 +6128,38 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_rmk: kernel lost context"
+literal|"pmap_rmk: lost context"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* flush cache */
-comment|/* XXX better to flush per page? (takes more code) */
 name|setcontext
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+comment|/* decide how to flush cache */
+name|npg
+operator|=
+operator|(
+name|endva
+operator|-
+name|va
+operator|)
+operator|>>
+name|PGSHIFT
+expr_stmt|;
+if|if
+condition|(
+name|npg
+operator|>
+name|PMAP_RMK_MAGIC
+condition|)
+block|{
+comment|/* flush the whole segment */
+name|perpage
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -6067,6 +6177,24 @@ argument_list|(
 name|vseg
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* flush each page individually; some never need flushing */
+name|perpage
+operator|=
+literal|1
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|perftest
+name|nvalid
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|va
@@ -6102,6 +6230,36 @@ name|pv
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* if cacheable, flush page as needed */
+if|if
+condition|(
+operator|(
+name|tpte
+operator|&
+name|PG_NC
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|perftest
+name|nvalid
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|perpage
+condition|)
+name|cache_flush_page
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -6175,6 +6333,32 @@ operator|+=
 name|NBPG
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|perftest
+name|rmk_vlen
+index|[
+name|npg
+index|]
+operator|++
+expr_stmt|;
+name|rmk_npg
+index|[
+name|nvalid
+index|]
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|npg
+operator|!=
+name|nvalid
+condition|)
+name|rmk_vlendiff
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * If the segment is all gone, remove it from everyone and 	 * free the MMU entry. 	 */
 if|if
 condition|(
@@ -6240,6 +6424,86 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|perftest
+end_ifdef
+
+begin_comment
+comment|/* as before but for pmap_rmu */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rmu_vlen
+index|[
+name|NPTESG
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* virtual length per rmu() call */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rmu_npg
+index|[
+name|NPTESG
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* n valid pages per rmu() call */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rmu_vlendiff
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # times npg != vlen */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rmu_noflush
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # times rmu does not need to flush at all */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Just like pmap_rmk_magic, but we have a different threshold.  * Note that this may well deserve further tuning work.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMAP_RMU_MAGIC
+value|4
+end_define
+
+begin_comment
+comment|/* if> magic, use cache_flush_segment */
+end_comment
+
 begin_comment
 comment|/* remove from user */
 end_comment
@@ -6292,6 +6556,10 @@ decl_stmt|,
 name|pteva
 decl_stmt|,
 name|tpte
+decl_stmt|,
+name|perpage
+decl_stmt|,
+name|npg
 decl_stmt|;
 specifier|register
 name|struct
@@ -6299,6 +6567,17 @@ name|pvlist
 modifier|*
 name|pv
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|perftest
+specifier|register
+name|int
+name|doflush
+decl_stmt|,
+name|nvalid
+decl_stmt|;
+endif|#
+directive|endif
 name|pte0
 operator|=
 name|pm
@@ -6456,7 +6735,29 @@ name|pm_ctx
 condition|)
 block|{
 comment|/* process has a context, must flush cache */
-comment|/* XXX better to flush per page? (takes more code) */
+name|npg
+operator|=
+operator|(
+name|endva
+operator|-
+name|va
+operator|)
+operator|>>
+name|PGSHIFT
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|perftest
+name|doflush
+operator|=
+literal|1
+expr_stmt|;
+name|nvalid
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|setcontext
 argument_list|(
 name|pm
@@ -6464,6 +6765,18 @@ operator|->
 name|pm_ctxnum
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|npg
+operator|>
+name|PMAP_RMU_MAGIC
+condition|)
+block|{
+name|perpage
+operator|=
+literal|0
+expr_stmt|;
+comment|/* flush the whole segment */
 ifdef|#
 directive|ifdef
 name|notdef
@@ -6479,6 +6792,12 @@ name|cache_flush_segment
 argument_list|(
 name|vseg
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|perpage
+operator|=
+literal|1
 expr_stmt|;
 name|pteva
 operator|=
@@ -6510,6 +6829,30 @@ argument_list|)
 operator|*
 name|NBPG
 expr_stmt|;
+name|perpage
+operator|=
+literal|0
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|perftest
+name|npg
+operator|=
+literal|0
+expr_stmt|;
+name|doflush
+operator|=
+literal|0
+expr_stmt|;
+name|nvalid
+operator|=
+literal|0
+expr_stmt|;
+name|rmu_noflush
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 for|for
 control|(
@@ -6549,6 +6892,38 @@ name|pv
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* if cacheable, flush page as needed */
+if|if
+condition|(
+name|doflush
+operator|&&
+operator|(
+name|tpte
+operator|&
+name|PG_NC
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|perftest
+name|nvalid
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|perpage
+condition|)
+name|cache_flush_page
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -6618,6 +6993,38 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|perftest
+if|if
+condition|(
+name|doflush
+condition|)
+block|{
+name|rmu_vlen
+index|[
+name|npg
+index|]
+operator|++
+expr_stmt|;
+name|rmu_npg
+index|[
+name|nvalid
+index|]
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|npg
+operator|!=
+name|nvalid
+condition|)
+name|rmu_vlendiff
+operator|++
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* 	 * If the segment is all gone, and the context is loaded, give 	 * the segment back. 	 */
 if|if
 condition|(
