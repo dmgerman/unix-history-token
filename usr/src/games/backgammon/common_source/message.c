@@ -15,7 +15,7 @@ name|char
 name|Msccsid
 index|[]
 init|=
-literal|"@(#)Mesgfix	5.1 (Berkeley) 5/29/85"
+literal|"@(#)Mesgfix	5.2 (Berkeley) 1/8/86"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)message.c	4.2 (Berkeley) %G%"
+literal|"@(#)message.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,9 +42,7 @@ name|message
 index|[]
 init|=
 block|{
-literal|"Last update on Saturday, March 30, 1985."
-block|,
-literal|"Check the file /usr/public/gammon.news for details."
+literal|"Last update on Saturday, January 11, 1986."
 block|,
 literal|0
 block|}
