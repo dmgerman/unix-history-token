@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -432,66 +432,6 @@ name|ip
 parameter_list|)
 value|((ip)->i_vnode)
 end_define
-
-begin_comment
-comment|/* Lock and unlock inodes. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ILOCK
-parameter_list|(
-name|ip
-parameter_list|)
-value|{ \ 	while ((ip)->i_flag& ILOCKED) { \ 		(ip)->i_flag |= IWANT; \ 		(void) sleep((caddr_t)(ip), PINOD); \ 	} \ 	(ip)->i_flag |= ILOCKED; \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|IUNLOCK
-parameter_list|(
-name|ip
-parameter_list|)
-value|{ \ 	(ip)->i_flag&= ~ILOCKED; \ 	if ((ip)->i_flag&IWANT) { \ 		(ip)->i_flag&= ~IWANT; \ 		wakeup((caddr_t)(ip)); \ 	} \ }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ILOCK
-parameter_list|(
-name|ip
-parameter_list|)
-value|ufs_ilock(ip)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IUNLOCK
-parameter_list|(
-name|ip
-parameter_list|)
-value|ufs_iunlock(ip)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
