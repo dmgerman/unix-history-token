@@ -2894,6 +2894,11 @@ break|break;
 block|}
 if|if
 condition|(
+name|bestchan
+operator|==
+operator|-
+literal|1
+operator|||
 name|maxrssi
 index|[
 name|i
