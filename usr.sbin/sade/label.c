@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.19 1995/05/21 17:53:27 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.20 1995/05/21 18:24:33 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -66,6 +66,17 @@ value|11
 end_define
 
 begin_comment
+comment|/* One MB worth of blocks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ONE_MEG
+value|2048
+end_define
+
+begin_comment
 comment|/* The smallest filesystem we're willing to create */
 end_comment
 
@@ -73,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|FS_MIN_SIZE
-value|2048
+value|ONE_MEG
 end_define
 
 begin_comment
@@ -84,12 +95,8 @@ begin_define
 define|#
 directive|define
 name|ROOT_MIN_SIZE
-value|40960
+value|(20 * ONE_MEG)
 end_define
-
-begin_comment
-comment|/* 20MB */
-end_comment
 
 begin_comment
 comment|/* All the chunks currently displayed on the screen */
@@ -651,6 +658,9 @@ name|c
 operator|=
 name|c1
 expr_stmt|;
+operator|++
+name|j
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -858,12 +868,6 @@ name|PartInfo
 modifier|*
 name|tmp
 decl_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|clear
-argument_list|()
-expr_stmt|;
 name|val
 operator|=
 name|msgGetInput
@@ -1085,12 +1089,6 @@ block|,
 literal|"A swap partition."
 block|,     }
 decl_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|clear
-argument_list|()
-expr_stmt|;
 name|i
 operator|=
 name|dialog_menu
@@ -1558,7 +1556,7 @@ argument_list|,
 operator|(
 name|sz
 operator|/
-literal|2048
+name|ONE_MEG
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1894,7 +1892,7 @@ name|c
 operator|->
 name|size
 operator|/
-literal|2048
+name|ONE_MEG
 else|:
 literal|0
 argument_list|)
@@ -2107,6 +2105,9 @@ return|return
 literal|0
 return|;
 block|}
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|clear
 argument_list|()
 expr_stmt|;
@@ -2115,6 +2116,9 @@ condition|(
 name|labeling
 condition|)
 block|{
+name|clear
+argument_list|()
+expr_stmt|;
 name|print_label_chunks
 argument_list|()
 expr_stmt|;
@@ -2369,6 +2373,24 @@ condition|)
 break|break;
 if|if
 condition|(
+name|sz
+operator|<=
+name|FS_MIN_SIZE
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"The minimum filesystem size is %dMB"
+argument_list|,
+name|FS_MIN_SIZE
+operator|/
+name|ONE_MEG
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
 operator|*
 name|cp
 operator|&&
@@ -2382,7 +2404,7 @@ literal|'M'
 condition|)
 name|size
 operator|*=
-literal|2048
+name|ONE_MEG
 expr_stmt|;
 name|type
 operator|=
@@ -2492,7 +2514,7 @@ literal|"This is too small a size for a root partition.  For a variety of\nreaso
 argument_list|,
 name|ROOT_MIN_SIZE
 operator|/
-literal|2048
+name|ONE_MEG
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3057,9 +3079,6 @@ literal|"yes"
 argument_list|)
 expr_stmt|;
 name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|refresh
 argument_list|()
 expr_stmt|;
 return|return

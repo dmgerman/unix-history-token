@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media_strategy.c,v 1.9 1995/05/21 19:51:50 gpalmer Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media_strategy.c,v 1.9 1995/05/21 19:51:50 gpalmer Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -586,11 +586,14 @@ break|break;
 case|case
 name|COMMIT
 case|:
+operator|(
+operator|*
 name|attr
+operator|)
 index|[
 name|num_attribs
 index|]
-operator|->
+operator|.
 name|name
 operator|=
 name|strdup
@@ -598,12 +601,15 @@ argument_list|(
 name|hold_n
 argument_list|)
 expr_stmt|;
+operator|(
+operator|*
 name|attr
+operator|)
 index|[
 name|num_attribs
 operator|++
 index|]
-operator|->
+operator|.
 name|value
 operator|=
 name|strdup
@@ -683,6 +689,12 @@ name|n
 operator|<
 name|num_attribs
 operator|)
+operator|&&
+operator|(
+name|n
+operator|<
+literal|20
+operator|)
 condition|)
 name|n
 operator|++
@@ -700,6 +712,8 @@ name|name
 argument_list|,
 name|name
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -759,6 +773,11 @@ decl_stmt|,
 name|pid
 decl_stmt|,
 name|numchunks
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|tmp
 decl_stmt|;
 name|snprintf
 argument_list|(
@@ -833,19 +852,24 @@ name|path
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
-name|numchunks
+name|tmp
 operator|=
-name|atoi
-argument_list|(
 name|attr_match
 argument_list|(
 name|dist_attrib
 argument_list|,
 literal|"pieces"
 argument_list|)
+expr_stmt|;
+name|numchunks
+operator|=
+name|atoi
+argument_list|(
+name|tmp
 argument_list|)
 expr_stmt|;
 name|msgDebug
@@ -878,6 +902,9 @@ name|int
 name|chunk
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|retval
 decl_stmt|;
 name|dup2
 argument_list|(
@@ -930,19 +957,16 @@ name|chunk
 operator|/
 literal|26
 operator|)
+operator|+
+literal|'a'
 argument_list|,
 operator|(
 name|chunk
 operator|%
 literal|26
 operator|)
-argument_list|)
-expr_stmt|;
-name|msgDebug
-argument_list|(
-literal|"Opening %s\n"
-argument_list|,
-name|buf
+operator|+
+literal|'a'
 argument_list|)
 expr_stmt|;
 if|if
@@ -958,7 +982,8 @@ name|O_RDONLY
 argument_list|)
 operator|)
 operator|==
-name|NULL
+operator|-
+literal|1
 condition|)
 name|msgFatal
 argument_list|(
@@ -1026,11 +1051,8 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|msgDebug
-argument_list|(
-literal|"writing out mmap() space\n"
-argument_list|)
-expr_stmt|;
+name|retval
+operator|=
 name|write
 argument_list|(
 literal|1
@@ -1042,13 +1064,34 @@ operator|.
 name|st_size
 argument_list|)
 expr_stmt|;
-name|msgDebug
+if|if
+condition|(
+name|retval
+operator|!=
+name|sb
+operator|.
+name|st_size
+condition|)
+block|{
+name|msgConfirm
 argument_list|(
-literal|"munmapping %s\n"
+literal|"write didn't write out the complete file!\n (wrote %d bytes of %d bytes)\n"
 argument_list|,
-name|buf
+name|retval
+argument_list|,
+name|sb
+operator|.
+name|st_size
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|retval
+operator|=
 name|munmap
 argument_list|(
 name|memory
@@ -1058,13 +1101,26 @@ operator|.
 name|st_size
 argument_list|)
 expr_stmt|;
-name|msgDebug
+if|if
+condition|(
+name|retval
+operator|!=
+literal|0
+condition|)
+block|{
+name|msgConfirm
 argument_list|(
-literal|"closing %s\n"
+literal|"munmap() returned %d\n"
 argument_list|,
-name|buf
+name|retval
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|fd
@@ -1074,6 +1130,23 @@ operator|++
 name|chunk
 expr_stmt|;
 block|}
+name|close
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"Extract of %s finished!!!\n"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 name|close
 argument_list|(
@@ -1098,6 +1171,13 @@ begin_comment
 comment|/* Various media "strategy" routines */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|Boolean
+name|cdromMounted
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|Boolean
 name|mediaInitCDROM
@@ -1117,9 +1197,16 @@ name|sb
 decl_stmt|;
 if|if
 condition|(
+name|cdromMounted
+condition|)
+return|return
+name|TRUE
+return|;
+if|if
+condition|(
 name|Mkdir
 argument_list|(
-literal|"/mnt"
+literal|"/cdrom"
 argument_list|,
 name|NULL
 argument_list|)
@@ -1147,7 +1234,7 @@ name|mount
 argument_list|(
 name|MOUNT_CD9660
 argument_list|,
-literal|"/mnt"
+literal|"/cdrom"
 argument_list|,
 name|MNT_RDONLY
 argument_list|,
@@ -1164,7 +1251,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Error mounting %s on /mnt: %s (%u)\n"
+literal|"Error mounting %s on /cdrom: %s (%u)\n"
 argument_list|,
 name|dev
 argument_list|,
@@ -1185,7 +1272,7 @@ if|if
 condition|(
 name|stat
 argument_list|(
-literal|"/mnt/dists"
+literal|"/cdrom/dists"
 argument_list|,
 operator|&
 name|sb
@@ -1214,7 +1301,7 @@ name|msgConfirm
 argument_list|(
 literal|"Couldn't stat directory %s: %s"
 argument_list|,
-literal|"/mnt/dists"
+literal|"/cdrom/dists"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1227,6 +1314,10 @@ name|FALSE
 return|;
 block|}
 block|}
+name|cdromMounted
+operator|=
+name|TRUE
+expr_stmt|;
 return|return
 name|TRUE
 return|;
@@ -1308,7 +1399,7 @@ name|buf
 argument_list|,
 name|PATH_MAX
 argument_list|,
-literal|"/mnt/dists/%s"
+literal|"/cdrom/dists/%s"
 argument_list|,
 name|dist
 argument_list|)
@@ -1346,7 +1437,7 @@ if|if
 condition|(
 name|unmount
 argument_list|(
-literal|"/mnt"
+literal|"/cdrom"
 argument_list|,
 literal|0
 argument_list|)
@@ -1362,6 +1453,10 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|cdromMounted
+operator|=
+name|FALSE
 expr_stmt|;
 return|return;
 block|}
