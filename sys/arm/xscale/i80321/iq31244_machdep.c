@@ -1890,6 +1890,12 @@ operator|.
 name|pv_va
 operator|+
 name|USPACE_SVC_STACK_TOP
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcb
+argument_list|)
 operator|)
 operator|)
 return|;

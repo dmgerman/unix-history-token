@@ -338,7 +338,7 @@ begin_define
 define|#
 directive|define
 name|USPACE_SVC_STACK_TOP
-value|0
+value|KSTACK_PAGES * PAGE_SIZE
 end_define
 
 begin_define
