@@ -451,6 +451,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPOPT_ESO
+value|133
+end_define
+
+begin_comment
+comment|/* extended security */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPOPT_CIPSO
 value|134
 end_define
