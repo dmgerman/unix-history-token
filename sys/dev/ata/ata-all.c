@@ -3688,7 +3688,6 @@ name|active
 operator|=
 name|ATA_ACTIVE
 expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|ata_service
