@@ -1742,7 +1742,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s-: %s%d already exists, skipping it\n"
+literal|"%s: %s%d already exists; skipping it\n"
 argument_list|,
 name|dc
 operator|->
@@ -5971,7 +5971,9 @@ block|}
 block|}
 block|}
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -7643,6 +7645,7 @@ name|count
 parameter_list|)
 block|{
 return|return
+operator|(
 name|BUS_SET_RESOURCE
 argument_list|(
 name|device_get_parent
@@ -7660,6 +7663,7 @@ name|start
 argument_list|,
 name|count
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
