@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwunframe.c	3.4 83/08/16"
+literal|"@(#)wwunframe.c	3.5 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,13 +62,6 @@ name|ww
 modifier|*
 name|wp
 decl_stmt|;
-if|if
-condition|(
-name|wwfmap
-operator|==
-literal|0
-condition|)
-return|return;
 for|for
 control|(
 name|i
