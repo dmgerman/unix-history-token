@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.61 (Berkeley) %G%"
+literal|"@(#)headers.c	8.62 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4305,6 +4305,10 @@ specifier|register
 name|char
 modifier|*
 name|p
+init|=
+name|h
+operator|->
+name|h_value
 decl_stmt|;
 specifier|extern
 name|bool
@@ -4332,9 +4336,7 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
-name|h
-operator|->
-name|h_value
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -4514,12 +4516,6 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* macro expand value if generated internally */
-name|p
-operator|=
-name|h
-operator|->
-name|h_value
-expr_stmt|;
 if|if
 condition|(
 name|bitset
