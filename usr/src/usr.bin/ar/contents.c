@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)contents.c	5.2 (Berkeley) %G%"
+literal|"@(#)contents.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -291,15 +291,9 @@ name|argv
 condition|)
 break|break;
 block|}
-name|SKIP
+name|skipobj
 argument_list|(
 name|afd
-argument_list|,
-name|chdr
-operator|.
-name|size
-argument_list|,
-name|archive
 argument_list|)
 expr_stmt|;
 block|}
