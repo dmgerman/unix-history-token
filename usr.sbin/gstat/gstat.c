@@ -115,6 +115,16 @@ literal|500000
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|main
@@ -327,12 +337,8 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"Usage!"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -350,12 +356,8 @@ name|argc
 operator|!=
 literal|0
 condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"Usage!"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 name|i
 operator|=
@@ -1177,6 +1179,30 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: gstat [-c] [-I interval]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
