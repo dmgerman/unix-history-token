@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.7 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,7 +24,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"mfile1"
+file|"pass1.h"
 end_include
 
 begin_decl_stmt

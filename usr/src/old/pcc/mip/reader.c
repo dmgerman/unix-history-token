@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)reader.c	4.2 (Berkeley) %G%"
+literal|"@(#)reader.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,7 +24,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"mfile2"
+file|"pass2.h"
 end_include
 
 begin_comment

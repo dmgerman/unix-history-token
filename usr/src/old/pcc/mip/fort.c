@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)fort.c	4.3 (Berkeley) %G%"
+literal|"@(#)fort.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"mfile2"
+file|"pass2.h"
 end_include
 
 begin_include
@@ -549,73 +549,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*	new opcode definitions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FORTOPS
-value|200
-end_define
-
-begin_define
-define|#
-directive|define
-name|FTEXT
-value|200
-end_define
-
-begin_define
-define|#
-directive|define
-name|FEXPR
-value|201
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSWITCH
-value|202
-end_define
-
-begin_define
-define|#
-directive|define
-name|FLBRAC
-value|203
-end_define
-
-begin_define
-define|#
-directive|define
-name|FRBRAC
-value|204
-end_define
-
-begin_define
-define|#
-directive|define
-name|FEOF
-value|205
-end_define
-
-begin_define
-define|#
-directive|define
-name|FARIF
-value|206
-end_define
-
-begin_define
-define|#
-directive|define
-name|LABEL
-value|207
-end_define
 
 begin_comment
 comment|/*	stack for reading nodes in postfix form */
@@ -1485,7 +1418,7 @@ argument_list|()
 expr_stmt|;
 continue|continue;
 case|case
-name|LABEL
+name|FLABEL
 case|:
 if|if
 condition|(

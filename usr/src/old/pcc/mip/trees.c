@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.6 (Berkeley) %G%"
+literal|"@(#)trees.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,7 +23,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"mfile1"
+file|"pass1.h"
 end_include
 
 begin_decl_stmt
