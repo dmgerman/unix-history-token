@@ -82,6 +82,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"symfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"objfiles.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"command.h"
 end_include
 
@@ -1603,6 +1615,15 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* Print all the panic messages if possible. */
+if|if
+condition|(
+name|symfile_objfile
+operator|!=
+name|NULL
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"panic messages:\n---\n"
@@ -1615,9 +1636,18 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-literal|"/sbin/dmesg -M %s | \ 		 /usr/bin/awk '/^(panic:|Fatal trap) / { printing = 1 } \ 			       { if (printing) print $0 }'"
+literal|"/sbin/dmesg -N %s -M %s | \ 		 /usr/bin/awk '/^(panic:|Fatal trap) / { printing = 1 } \ 			       { if (printing) print $0 }'"
+argument_list|,
+name|symfile_objfile
+operator|->
+name|name
 argument_list|,
 name|filename
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
 argument_list|)
 expr_stmt|;
 name|system
