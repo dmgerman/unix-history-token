@@ -298,13 +298,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MINICMPLEN
-value|ICMP_MINLEN
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAXWAIT
 value|10
 end_define
@@ -2243,7 +2236,7 @@ expr|struct
 name|ip
 argument_list|)
 operator|+
-name|MINICMPLEN
+name|ICMP_MINLEN
 operator|+
 name|phdr_len
 expr_stmt|;
@@ -2291,7 +2284,7 @@ operator|=
 operator|&
 name|outpack
 index|[
-name|MINICMPLEN
+name|ICMP_MINLEN
 operator|+
 name|phdr_len
 operator|+
@@ -4659,7 +4652,7 @@ operator|)
 operator|&
 name|outpack
 index|[
-name|MINICMPLEN
+name|ICMP_MINLEN
 operator|+
 name|phdr_len
 index|]
@@ -4674,7 +4667,7 @@ expr_stmt|;
 block|}
 name|cc
 operator|=
-name|MINICMPLEN
+name|ICMP_MINLEN
 operator|+
 name|phdr_len
 operator|+
@@ -5463,7 +5456,7 @@ operator|=
 operator|&
 name|outpack
 index|[
-name|MINICMPLEN
+name|ICMP_MINLEN
 operator|+
 name|phdr_len
 index|]
@@ -5632,7 +5625,7 @@ operator|=
 operator|&
 name|outpack
 index|[
-name|MINICMPLEN
+name|ICMP_MINLEN
 index|]
 expr_stmt|;
 for|for
