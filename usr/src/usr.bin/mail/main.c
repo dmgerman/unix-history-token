@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.9 (Berkeley) %G%"
+literal|"@(#)main.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,10 +130,6 @@ argument_list|()
 decl_stmt|,
 name|f
 decl_stmt|;
-name|struct
-name|sgttyb
-name|tbuf
-decl_stmt|;
 specifier|extern
 name|int
 name|getopt
@@ -167,31 +163,6 @@ name|isatty
 argument_list|(
 literal|1
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|outtty
-condition|)
-block|{
-name|gtty
-argument_list|(
-literal|1
-argument_list|,
-operator|&
-name|tbuf
-argument_list|)
-expr_stmt|;
-name|baud
-operator|=
-name|tbuf
-operator|.
-name|sg_ospeed
-expr_stmt|;
-block|}
-else|else
-name|baud
-operator|=
-name|B9600
 expr_stmt|;
 name|image
 operator|=
@@ -975,7 +946,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Compute what the screen size should be.  * We use the following algorithm for the height:  *	If baud rate< 1200, use  9  *	If baud rate = 1200, use 14  *	If baud rate> 1200, use 24 or ws_row  * Width is either 80 or ws_col;  */
+comment|/*  * Compute what the screen size for printing headers should be.  * We use the following algorithm for the height:  *	If baud rate< 1200, use  9  *	If baud rate = 1200, use 14  *	If baud rate> 1200, use 24 or ws_row  * Width is either 80 or ws_col;  */
 end_comment
 
 begin_macro
@@ -985,6 +956,10 @@ end_macro
 
 begin_block
 block|{
+name|struct
+name|sgttyb
+name|tbuf
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|TIOCGWINSZ
@@ -1013,6 +988,8 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+endif|#
+directive|endif
 name|ws
 operator|.
 name|ws_col
@@ -1023,11 +1000,30 @@ name|ws_row
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
-name|baud
+name|outtty
+condition|)
+name|gtty
+argument_list|(
+literal|1
+argument_list|,
+operator|&
+name|tbuf
+argument_list|)
+expr_stmt|;
+else|else
+name|tbuf
+operator|.
+name|sg_ospeed
+operator|=
+name|B9600
+expr_stmt|;
+if|if
+condition|(
+name|tbuf
+operator|.
+name|sg_ospeed
 operator|<
 name|B1200
 condition|)
@@ -1038,7 +1034,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|baud
+name|tbuf
+operator|.
+name|sg_ospeed
 operator|==
 name|B1200
 condition|)
@@ -1046,9 +1044,6 @@ name|screenheight
 operator|=
 literal|14
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TIOCGWINSZ
 elseif|else
 if|if
 condition|(
@@ -1064,33 +1059,39 @@ name|ws
 operator|.
 name|ws_row
 expr_stmt|;
-endif|#
-directive|endif
 else|else
 name|screenheight
 operator|=
 literal|24
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TIOCGWINSZ
 if|if
 condition|(
+operator|(
+name|realscreenheight
+operator|=
 name|ws
 operator|.
-name|ws_col
-operator|!=
+name|ws_row
+operator|)
+operator|==
 literal|0
 condition|)
+name|realscreenheight
+operator|=
+literal|24
+expr_stmt|;
+if|if
+condition|(
+operator|(
 name|screenwidth
 operator|=
 name|ws
 operator|.
 name|ws_col
-expr_stmt|;
-else|else
-endif|#
-directive|endif
+operator|)
+operator|==
+literal|0
+condition|)
 name|screenwidth
 operator|=
 literal|80

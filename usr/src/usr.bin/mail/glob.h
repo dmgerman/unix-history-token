@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)glob.h	5.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)glob.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -263,16 +263,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* True if standard input a tty */
-end_comment
-
-begin_decl_stmt
-name|int
-name|baud
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Output baud rate */
 end_comment
 
 begin_decl_stmt
@@ -589,7 +579,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Screen height, or best guess */
+comment|/* Screen height, or best guess, 					   for "header" command */
+end_comment
+
+begin_decl_stmt
+name|int
+name|realscreenheight
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the real screen height */
 end_comment
 
 begin_include

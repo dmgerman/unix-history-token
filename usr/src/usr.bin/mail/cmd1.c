@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	5.6 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1512,10 +1512,17 @@ name|page
 operator|||
 name|nlines
 operator|>
+operator|(
+operator|*
+name|cp
+condition|?
 name|atoi
 argument_list|(
 name|cp
 argument_list|)
+else|:
+name|realscreenheight
+operator|)
 condition|)
 block|{
 name|cp
