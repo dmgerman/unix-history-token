@@ -2516,7 +2516,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"iface_ClearFlags: socket: %s\n"
+literal|"iface_ChangeFlags: socket: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2590,7 +2590,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"iface_ClearFlags: ioctl(SIOCGIFFLAGS): %s\n"
+literal|"iface_ChangeFlags: ioctl(SIOCGIFFLAGS): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2646,7 +2646,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"iface_ClearFlags: ioctl(SIOCSIFFLAGS): %s\n"
+literal|"iface_ChangeFlags: ioctl(SIOCSIFFLAGS): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
