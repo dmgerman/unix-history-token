@@ -332,6 +332,9 @@ name|int
 name|sc_buflen
 decl_stmt|;
 comment|/* TX buffer size */
+name|int
+name|sc_ntxbuf
+decl_stmt|;
 define|#
 directive|define
 name|WI_NTXBUF
