@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Poul-Henning Kamp of the FreeBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cache.c	8.5 (Berkeley) 3/22/95  * $Id: vfs_cache.c,v 1.26 1997/08/04 07:31:36 phk Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Poul-Henning Kamp of the FreeBSD Project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cache.c	8.5 (Berkeley) 3/22/95  * $Id: vfs_cache.c,v 1.27 1997/08/26 07:32:34 phk Exp $  */
 end_comment
 
 begin_include
@@ -378,6 +378,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|ncp
+operator|->
+name|nc_dvp
+operator|->
+name|v_cache_src
+argument_list|)
+condition|)
+name|vdrop
+argument_list|(
+name|ncp
+operator|->
+name|nc_dvp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|ncp
 operator|->
 name|nc_vp
@@ -701,13 +720,6 @@ operator|.
 name|ncs_goodhits
 operator|++
 expr_stmt|;
-name|vtouch
-argument_list|(
-name|ncp
-operator|->
-name|nc_vp
-argument_list|)
-expr_stmt|;
 operator|*
 name|vpp
 operator|=
@@ -966,26 +978,10 @@ condition|(
 operator|!
 name|vp
 condition|)
+block|{
 name|numneg
 operator|++
 expr_stmt|;
-comment|/* 	 * Fill in cache info, if vp is NULL this is a "negative" cache entry. 	 * For negative entries, we have to record whether it is a whiteout. 	 * the whiteout flag is stored in the nc_vpid field which is 	 * otherwise unused. 	 */
-name|ncp
-operator|->
-name|nc_vp
-operator|=
-name|vp
-expr_stmt|;
-if|if
-condition|(
-name|vp
-condition|)
-name|vtouch
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-else|else
 name|ncp
 operator|->
 name|nc_flag
@@ -999,6 +995,14 @@ condition|?
 name|NCF_WHITE
 else|:
 literal|0
+expr_stmt|;
+block|}
+comment|/* 	 * Fill in cache info, if vp is NULL this is a "negative" cache entry. 	 * For negative entries, we have to record whether it is a whiteout. 	 * the whiteout flag is stored in the nc_vpid field which is 	 * otherwise unused. 	 */
+name|ncp
+operator|->
+name|nc_vp
+operator|=
+name|vp
 expr_stmt|;
 name|ncp
 operator|->
@@ -1048,6 +1052,21 @@ argument_list|,
 name|ncp
 argument_list|,
 name|nc_hash
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|dvp
+operator|->
+name|v_cache_src
+argument_list|)
+condition|)
+name|vhold
+argument_list|(
+name|dvp
 argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
