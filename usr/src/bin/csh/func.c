@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c	5.6 (Berkeley) %G%"
+literal|"@(#)func.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -853,7 +859,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-literal|"/bin/login"
+name|_PATH_LOGIN
 argument_list|,
 literal|"login"
 argument_list|,
