@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)teach.c	5.1 (Berkeley) %G%"
+literal|"@(#)teach.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,15 +188,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
-name|char
-modifier|*
-name|s
-decl_stmt|,
-modifier|*
-name|ts
-index|[]
-decl_stmt|;
 specifier|register
 name|int
 name|i
