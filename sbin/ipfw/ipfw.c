@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipfw.c,v 1.70 1999/06/11 09:43:53 ru Exp $"
+literal|"$Id: ipfw.c,v 1.64.2.6 1999/06/17 13:03:39 ru Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1154,6 +1154,47 @@ argument_list|(
 name|EX_OSERR
 argument_list|,
 literal|"impossible"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|chain
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_RND_MATCH
+condition|)
+block|{
+name|double
+name|d
+init|=
+literal|1.0
+operator|*
+call|(
+name|int
+call|)
+argument_list|(
+name|chain
+operator|->
+name|pipe_ptr
+argument_list|)
+decl_stmt|;
+name|d
+operator|=
+literal|1
+operator|-
+operator|(
+name|d
+operator|/
+literal|0x7fffffff
+operator|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" prob %f"
+argument_list|,
+name|d
 argument_list|)
 expr_stmt|;
 block|}
@@ -3209,7 +3250,7 @@ literal|"    [pipe] list [number ...]\n"
 literal|"    [pipe] show [number ...]\n"
 literal|"    zero [number ...]\n"
 literal|"    pipe number config [pipeconfig]\n"
-literal|"  rule:  action proto src dst extras...\n"
+literal|"  rule: [prob<match_probability>] action proto src dst extras...\n"
 literal|"    action:\n"
 literal|"      {allow|permit|accept|pass|deny|drop|reject|unreach code|\n"
 literal|"       reset|count|skipto num|divert port|tee port|fwd ip|\n"
@@ -5949,6 +5990,106 @@ operator|--
 expr_stmt|;
 block|}
 comment|/* Action */
+if|if
+condition|(
+name|ac
+operator|>
+literal|1
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"prob"
+argument_list|,
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|double
+name|d
+init|=
+name|strtod
+argument_list|(
+name|av
+index|[
+literal|1
+index|]
+argument_list|,
+name|NULL
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|d
+operator|<=
+literal|0
+operator|||
+name|d
+operator|>
+literal|1
+condition|)
+name|show_usage
+argument_list|(
+literal|"illegal match prob. %s"
+argument_list|,
+name|av
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|d
+operator|!=
+literal|1
+condition|)
+block|{
+comment|/* 1 means always match */
+name|rule
+operator|.
+name|fw_flg
+operator||=
+name|IP_FW_F_RND_MATCH
+expr_stmt|;
+comment|/* we really store dont_match probability */
+operator|(
+name|long
+operator|)
+name|rule
+operator|.
+name|pipe_ptr
+operator|=
+call|(
+name|long
+call|)
+argument_list|(
+operator|(
+literal|1
+operator|-
+name|d
+operator|)
+operator|*
+literal|0x7fffffff
+argument_list|)
+expr_stmt|;
+block|}
+name|av
+operator|+=
+literal|2
+expr_stmt|;
+name|ac
+operator|-=
+literal|2
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ac

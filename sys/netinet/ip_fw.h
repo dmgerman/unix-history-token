@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.35 1998/09/02 19:14:01 phk Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.36 1998/12/14 18:09:13 luigi Exp $  */
 end_comment
 
 begin_ifndef
@@ -196,6 +196,32 @@ modifier|*
 name|next_rule_ptr
 decl_stmt|;
 comment|/* next rule in case of match */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * extended ipfw structure... some fields in the original struct  * can be used to pass parameters up/down, namely pointers  *     void *pipe_ptr  *     void *next_rule_ptr   * some others can be used to pass parameters down, namely counters etc.  *     u_int64_t fw_pcnt,fw_bcnt;  *     long timestamp;  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip_fw_ext
+block|{
+comment|/* extended structure */
+name|struct
+name|ip_fw
+name|rule
+decl_stmt|;
+comment|/* must be at offset 0 */
+name|long
+name|dont_match_prob
+decl_stmt|;
+comment|/* 0x7fffffff means 1.0, always fail */
+name|u_int
+name|param1
+decl_stmt|;
+comment|/* unused at the moment */
 block|}
 struct|;
 end_struct
@@ -558,8 +584,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_F_RND_MATCH
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* probabilistic rule match		*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_F_MASK
-value|0x001FFFFF
+value|0x009FFFFF
 end_define
 
 begin_comment
