@@ -577,16 +577,7 @@ name|int
 name|i
 decl_stmt|,
 name|count
-decl_stmt|,
-name|s
 decl_stmt|;
-specifier|extern
-name|struct
-name|cmap
-modifier|*
-name|mfind
-parameter_list|()
-function_decl|;
 name|fs
 operator|=
 name|ip
