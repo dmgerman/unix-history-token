@@ -220,6 +220,12 @@ argument|NULL
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_SWAPPING
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -234,6 +240,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -270,10 +281,8 @@ argument_list|(
 operator|(
 name|rw
 operator|&
-operator|(
 operator|~
 name|VM_PROT_ALL
-operator|)
 operator|)
 operator|==
 literal|0
@@ -382,10 +391,8 @@ argument_list|(
 operator|(
 name|rw
 operator|&
-operator|(
 operator|~
 name|VM_PROT_ALL
-operator|)
 operator|)
 operator|==
 literal|0
@@ -1109,10 +1116,6 @@ name|RLIM_INFINITY
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Must be called with the proc struc mutex held.  */
-end_comment
 
 begin_function
 name|void
