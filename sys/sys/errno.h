@@ -1212,6 +1212,17 @@ begin_comment
 comment|/* ioctl not handled by this layer */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EDIRIOCTL
+value|(-4)
+end_define
+
+begin_comment
+comment|/* do direct ioctl in GEOM */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
