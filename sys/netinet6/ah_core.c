@@ -288,7 +288,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<crypto/ripemd160/rmd160.h>
+file|<opencrypto/rmd160.h>
 end_include
 
 begin_define
