@@ -2763,7 +2763,7 @@ name|M_MOUNT
 argument_list|)
 expr_stmt|;
 block|}
-name|vput
+name|vrele
 argument_list|(
 name|vp
 argument_list|)
@@ -4544,7 +4544,7 @@ name|M_MOUNT
 argument_list|)
 expr_stmt|;
 block|}
-name|vput
+name|vrele
 argument_list|(
 name|vp
 argument_list|)
