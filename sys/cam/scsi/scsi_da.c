@@ -484,6 +484,7 @@ name|da_quirk_table
 index|[]
 init|=
 block|{
+comment|/* SPI, FC devices */
 block|{
 comment|/* 		 * Fujitsu M2513A MO drives. 		 * Tested devices: M2513A2 firmware versions 1200& 1300. 		 * (dip switch selects whether T_DIRECT or T_OPTICAL device) 		 * Reported by: W.Scholten<whs@xs4all.nl> 		 */
 block|{
@@ -664,10 +665,8 @@ comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|DA_OLD_QUIRKS
-comment|/* Below a list of quirks for USB devices supported by umass. */
+comment|/* XXX USB floppy quirks temporarily enabled for 4.9R */
+comment|/* USB floppy devices supported by umass(4) */
 block|{
 comment|/* 		 * This USB floppy drive uses the UFI command set. This 		 * command set is a derivative of the ATAPI command set and 		 * does not support READ_6 commands only READ_10. It also does 		 * not support sync cache (0x35). 		 */
 block|{
@@ -705,6 +704,46 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * The vendor, product and version strings coming from the 		 * controller are null terminated instead of being padded with 		 * spaces. The trailing wildcard character '*' is required. 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"SMSC*"
+block|,
+literal|"USB FDC*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * SmartDisk (Mitsumi) USB floppy drive 		 * PR: kern/50226 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"MITSUMI"
+block|,
+literal|"USB FDD"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+ifdef|#
+directive|ifdef
+name|DA_OLD_QUIRKS
+comment|/* USB mass storage devices supported by umass(4) */
+block|{
 comment|/* 		 * Sony Memory Stick adapter MSAC-US1 and 		 * Sony PCG-C1VJ Internal Memory Stick Slot (MSC-U01). 		 * Make all sony MS* products use this quirk. 		 */
 block|{
 name|T_DIRECT
@@ -741,6 +780,24 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * Intelligent Stick USB disk-on-key 		 * PR: kern/53005 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"USB Card"
+block|,
+literal|"IntelligentStick*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * Sony DSC cameras (DSC-S30, DSC-S50, DSC-S70) 		 */
 block|{
 name|T_DIRECT
@@ -768,24 +825,6 @@ block|,
 literal|"eUSB    Compact*"
 block|,
 literal|"Compact Flash*"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_SYNC_CACHE
-block|}
-block|,
-block|{
-comment|/* 		 * The vendor, product and version strings coming from the 		 * controller are null terminated instead of being padded with 		 * spaces. The trailing wildcard character '*' is required. 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"SMSC*"
-block|,
-literal|"USB FDC*"
 block|,
 literal|"*"
 block|}
@@ -930,24 +969,6 @@ block|,
 literal|"Sony"
 block|,
 literal|"Storage Media"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/*quirks*/
-name|DA_Q_NO_SYNC_CACHE
-block|}
-block|,
-block|{
-comment|/* 		 * SmartDisk (Mitsumi) USB floppy drive 		 * PR: kern/50226 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"MITSUMI"
-block|,
-literal|"USB FDD"
 block|,
 literal|"*"
 block|}
