@@ -3227,11 +3227,16 @@ literal|" (pipelined)"
 else|:
 literal|""
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|sc
 operator|->
 name|en_obmemsz
 operator|/
 literal|1024
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -16841,8 +16846,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"resid = 0x%x\n"
+literal|"resid = 0x%lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -16855,6 +16863,9 @@ name|printf
 argument_list|(
 literal|"interrupt status = 0x%b\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -16869,6 +16880,9 @@ name|printf
 argument_list|(
 literal|"interrupt enable = 0x%b\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -16883,6 +16897,9 @@ name|printf
 argument_list|(
 literal|"mcsr = 0x%b\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -16895,8 +16912,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"serv_write = [chip=%d] [us=%d]\n"
+literal|"serv_write = [chip=%ld] [us=%d]\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -16914,8 +16934,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"dma addr = 0x%x\n"
+literal|"dma addr = 0x%lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -16926,8 +16949,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"DRQ: chip[rd=0x%x,wr=0x%x], sc[chip=0x%x,us=0x%x]\n"
+literal|"DRQ: chip[rd=0x%lx,wr=0x%lx], sc[chip=0x%x,us=0x%x]\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|MID_DRQ_REG2A
 argument_list|(
 name|EN_READ
@@ -16938,6 +16964,9 @@ name|MID_DMA_RDRX
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|MID_DRQ_REG2A
 argument_list|(
 name|EN_READ
@@ -16959,8 +16988,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"DTQ: chip[rd=0x%x,wr=0x%x], sc[chip=0x%x,us=0x%x]\n"
+literal|"DTQ: chip[rd=0x%lx,wr=0x%lx], sc[chip=0x%x,us=0x%x]\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|MID_DTQ_REG2A
 argument_list|(
 name|EN_READ
@@ -16971,6 +17003,9 @@ name|MID_DMA_RDTX
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|MID_DTQ_REG2A
 argument_list|(
 name|EN_READ
@@ -17192,8 +17227,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"txhw: base_address=0x%x, size=%d, read=%d, descstart=%d\n"
+literal|"txhw: base_address=0x%lx, size=%ld, read=%ld, descstart=%ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|MIDX_BASE
 argument_list|(
 name|EN_READ
@@ -17207,6 +17245,9 @@ argument_list|)
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|MIDX_SZ
 argument_list|(
 name|EN_READ
@@ -17220,6 +17261,9 @@ argument_list|)
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -17230,6 +17274,9 @@ name|slot
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -17348,8 +17395,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RXHW: mode=0x%x, DST_RP=0x%x, WP_ST_CNT=0x%x\n"
+literal|"RXHW: mode=0x%lx, DST_RP=0x%lx, WP_ST_CNT=0x%lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -17367,6 +17417,9 @@ name|atm_vci
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -17384,6 +17437,9 @@ name|atm_vci
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -17450,7 +17506,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t0x%x=[cnt=%d, chan=%d, end=%d, type=%d @ 0x%x]\n"
+literal|"\t0x%x=[cnt=%d, chan=%d, end=%d, type=%d @ 0x%lx]\n"
 argument_list|,
 name|sc
 operator|->
@@ -17485,6 +17541,9 @@ argument_list|(
 name|reg
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -17554,7 +17613,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t0x%x=[cnt=%d, chan=%d, end=%d, type=%d @ 0x%x]\n"
+literal|"\t0x%x=[cnt=%d, chan=%d, end=%d, type=%d @ 0x%lx]\n"
 argument_list|,
 name|sc
 operator|->
@@ -17589,6 +17648,9 @@ argument_list|(
 name|reg
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
