@@ -4888,8 +4888,8 @@ operator|->
 name|subchan
 operator|.
 name|control
-operator|>>
-literal|4
+operator|&
+literal|0xf
 expr_stmt|;
 name|data
 operator|.
@@ -4904,8 +4904,8 @@ operator|->
 name|subchan
 operator|.
 name|control
-operator|&
-literal|0xf
+operator|>>
+literal|4
 expr_stmt|;
 name|data
 operator|.
@@ -6717,7 +6717,7 @@ index|[
 literal|0
 index|]
 operator|.
-name|addr_type
+name|control
 operator|&
 literal|4
 condition|)
