@@ -4321,12 +4321,7 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
-condition|)
-return|return
-name|EINVAL
-return|;
-if|if
-condition|(
+operator|||
 name|te
 operator|->
 name|address_format
@@ -4442,6 +4437,20 @@ name|te
 operator|->
 name|data_len
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+sizeof|sizeof
+argument_list|(
+name|toc
+operator|->
+name|tab
+argument_list|)
+condition|)
+return|return
+name|EINVAL
+return|;
 comment|/* Convert to MSF format, if needed. */
 if|if
 condition|(
