@@ -119,6 +119,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|addr
+parameter_list|,
+name|socklen_t
+name|addrlen
 parameter_list|)
 block|{
 name|struct
@@ -145,11 +148,7 @@ name|li
 argument_list|,
 name|addr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr
-argument_list|)
+name|addrlen
 argument_list|)
 expr_stmt|;
 name|login_login
@@ -197,6 +196,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|addr
+parameter_list|,
+name|socklen_t
+name|addrlen
 parameter_list|)
 block|{
 name|struct
@@ -223,11 +225,7 @@ name|li
 argument_list|,
 name|addr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr
-argument_list|)
+name|addrlen
 argument_list|)
 expr_stmt|;
 name|login_utmp_only

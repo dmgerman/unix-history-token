@@ -5565,12 +5565,6 @@ name|from
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|packet_connection_is_on_socket
-argument_list|()
-condition|)
-block|{
 name|fromlen
 operator|=
 sizeof|sizeof
@@ -5578,6 +5572,12 @@ argument_list|(
 name|from
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|packet_connection_is_on_socket
+argument_list|()
+condition|)
+block|{
 if|if
 condition|(
 name|getpeername
@@ -5650,6 +5650,8 @@ operator|*
 operator|)
 operator|&
 name|from
+argument_list|,
+name|fromlen
 argument_list|)
 expr_stmt|;
 block|}
