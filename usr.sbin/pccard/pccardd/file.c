@@ -4482,6 +4482,10 @@ name|lineno
 operator|=
 name|lineno
 expr_stmt|;
+name|lineno
+operator|=
+literal|1
+expr_stmt|;
 comment|/* now we start parsing new config file */
 name|includes
 operator|++
