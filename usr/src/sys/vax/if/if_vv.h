@@ -1,10 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.h	4.2	82/08/01	*/
+comment|/*	if_vv.h	4.3	83/02/20	*/
 end_comment
 
 begin_comment
 comment|/*  * Local network header for V2LNI Ring  * This is arbitrated by "V2LNI-PEOPLE@MIT-MC"  * (aka Joel N. Chiappa)  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NEW_BROADCAST
+end_undef
+
+begin_comment
+comment|/* new plas for broadcast problem */
 end_comment
 
 begin_struct
@@ -41,7 +51,7 @@ begin_define
 define|#
 directive|define
 name|RING_VERSION
-value|1
+value|2
 end_define
 
 begin_comment
@@ -49,7 +59,7 @@ comment|/* current version of v2lni header */
 end_comment
 
 begin_comment
-comment|/*  * Packet types (protocol numbers) in v2lni header  *  * NOTE: the Trailer format stuff is lifted right out of  * the other drivers.  It will be changed to take advantage  * of the fields in the vv_header, but the packet throw-away  * code must first be improved.  */
+comment|/*  * Packet types (protocol numbers) in v2lni header  */
 end_comment
 
 begin_define
@@ -84,16 +94,43 @@ begin_comment
 comment|/* insure some bit transitions */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_BROADCAST
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|VV_BROADCAST
-value|0
+value|0xff
 end_define
 
 begin_comment
 comment|/* hardware-defined broadcast address */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VV_BROADCAST
+value|0x00
+end_define
+
+begin_comment
+comment|/* hardware-defined broadcast address */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Proteon V2LNI Hardware definitions  * register bit definitions - new style  */
