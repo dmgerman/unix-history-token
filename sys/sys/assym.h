@@ -26,11 +26,11 @@ define|#
 directive|define
 name|offsetof
 parameter_list|(
-name|s
+name|t
 parameter_list|,
 name|m
 parameter_list|)
-value|(&((struct s*)0)->m)
+value|(&((t *)0)->m)
 end_define
 
 begin_endif

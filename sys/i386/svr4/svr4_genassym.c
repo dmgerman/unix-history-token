@@ -66,6 +66,7 @@ name|SVR4_SIGF_HANDLER
 argument_list|,
 name|offsetof
 argument_list|(
+expr|struct
 name|svr4_sigframe
 argument_list|,
 name|sf_handler
@@ -81,6 +82,7 @@ name|SVR4_SIGF_UC
 argument_list|,
 name|offsetof
 argument_list|(
+expr|struct
 name|svr4_sigframe
 argument_list|,
 name|sf_uc
@@ -96,6 +98,7 @@ name|SVR4_UC_FS
 argument_list|,
 name|offsetof
 argument_list|(
+expr|struct
 name|svr4_ucontext
 argument_list|,
 name|uc_mcontext
@@ -116,6 +119,7 @@ name|SVR4_UC_GS
 argument_list|,
 name|offsetof
 argument_list|(
+expr|struct
 name|svr4_ucontext
 argument_list|,
 name|uc_mcontext
@@ -136,6 +140,7 @@ name|SVR4_UC_EFLAGS
 argument_list|,
 name|offsetof
 argument_list|(
+expr|struct
 name|svr4_ucontext
 argument_list|,
 name|uc_mcontext

@@ -28,6 +28,7 @@ name|LINUX_SIGF_HANDLER
 argument_list|,
 name|offsetof
 argument_list|(
+expr|struct
 name|linux_sigframe
 argument_list|,
 name|sf_handler
@@ -43,6 +44,7 @@ name|LINUX_SIGF_SC
 argument_list|,
 name|offsetof
 argument_list|(
+expr|struct
 name|linux_sigframe
 argument_list|,
 name|sf_sc
@@ -58,6 +60,7 @@ name|LINUX_SC_GS
 argument_list|,
 name|offsetof
 argument_list|(
+expr|struct
 name|linux_sigcontext
 argument_list|,
 name|sc_gs
@@ -73,6 +76,7 @@ name|LINUX_SC_EFLAGS
 argument_list|,
 name|offsetof
 argument_list|(
+expr|struct
 name|linux_sigcontext
 argument_list|,
 name|sc_eflags
