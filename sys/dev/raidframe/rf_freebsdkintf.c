@@ -1240,7 +1240,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0x644
+literal|0644
 argument_list|,
 literal|"raidctl"
 argument_list|)
