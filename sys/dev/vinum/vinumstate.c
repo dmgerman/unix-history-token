@@ -472,6 +472,9 @@ case|case
 name|sd_crashed
 case|:
 case|case
+name|sd_reborn
+case|:
+case|case
 name|sd_down
 case|:
 comment|/* been down, no data lost */
@@ -519,6 +522,13 @@ condition|)
 break|break;
 comment|/* do it */
 comment|/* 		 * XXX Get this right: make sure that other plexes in 		 * the volume cover this address space, otherwise 		 * we make this one sd_up. 		 * 		 * Do we even want this any more? 		 */
+if|if
+condition|(
+name|oldstate
+operator|!=
+name|sd_reborn
+condition|)
+block|{
 name|sd
 operator|->
 name|state
@@ -549,6 +559,7 @@ name|newstate
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|status
 operator|=
 operator|-
