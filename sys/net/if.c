@@ -2378,7 +2378,9 @@ name|ifp
 expr_stmt|;
 if|if
 condition|(
-name|domains
+name|domain_init_status
+operator|>=
+literal|2
 condition|)
 name|if_attachdomain1
 argument_list|(
@@ -2454,7 +2456,7 @@ name|domainifattach
 argument_list|,
 name|SI_SUB_PROTO_IFATTACHDOMAIN
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_SECOND
 argument_list|,
 name|if_attachdomain
 argument_list|,
@@ -2510,6 +2512,8 @@ condition|(
 name|ifp
 operator|->
 name|if_afdata_initialized
+operator|>=
+name|domain_init_status
 condition|)
 block|{
 name|IF_AFDATA_UNLOCK
@@ -2537,7 +2541,7 @@ name|ifp
 operator|->
 name|if_afdata_initialized
 operator|=
-literal|1
+name|domain_init_status
 expr_stmt|;
 name|IF_AFDATA_UNLOCK
 argument_list|(

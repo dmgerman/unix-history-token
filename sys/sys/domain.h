@@ -160,6 +160,13 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|domain_init_status
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|domain
 modifier|*
