@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)icmp_var.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)icmp_var.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -64,6 +64,35 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Names for ICMP sysctl objects  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMPCTL_MASKREPL
+value|1
+end_define
+
+begin_comment
+comment|/* allow replies to netmask requests */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICMPCTL_MAXID
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICMPCTL_NAMES
+value|{ \ 	{ 0, 0 }, \ 	{ "maskrepl", CTLTYPE_INT }, \ }
+end_define
 
 begin_ifdef
 ifdef|#
