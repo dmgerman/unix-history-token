@@ -3004,7 +3004,7 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-comment|/*  	     * The cursor shape is global property; all virtual consoles 	     * are affected. Update the cursor in the current console... 	     */
+comment|/*  			 * The cursor shape is global property; 			 * all virtual consoles are affected. 			 * Update the cursor in the current console... 			 */
 if|if
 condition|(
 operator|!
@@ -3220,10 +3220,10 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-block|}
 if|#
 directive|if
 name|notyet
+block|}
 elseif|else
 if|if
 condition|(
@@ -3236,9 +3236,9 @@ condition|)
 block|{
 comment|/* seen ESC Q */
 comment|/* to be filled */
-block|}
 endif|#
 directive|endif
+block|}
 elseif|else
 if|if
 condition|(
@@ -3726,7 +3726,7 @@ name|cnt
 expr_stmt|;
 do|do
 block|{
-comment|/* 	     * gcc-2.6.3 generates poor (un)sign extension code.  Casting the 	     * pointers in the following to volatile should have no effect, 	     * but in fact speeds up this inner loop from 26 to 18 cycles 	     * (+ cache misses) on i486's. 	     */
+comment|/* 		     * gcc-2.6.3 generates poor (un)sign extension code. 		     * Casting the pointers in the following to volatile should 		     * have no effect, but in fact speeds up this inner loop 		     * from 26 to 18 cycles (+ cache misses) on i486's. 		     */
 define|#
 directive|define
 name|UCVP
