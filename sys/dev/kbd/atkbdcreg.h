@@ -15,6 +15,16 @@ directive|define
 name|_DEV_KBD_ATKBDCREG_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"opt_kbd.h"
+end_include
+
+begin_comment
+comment|/* Structures depend on the value if KBDIO_DEBUG */
+end_comment
+
 begin_comment
 comment|/* constants */
 end_comment
