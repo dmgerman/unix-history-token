@@ -172,7 +172,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_long
+name|uid_t
 name|id
 parameter_list|(
 specifier|const
@@ -1084,7 +1084,7 @@ block|}
 end_function
 
 begin_function
-name|u_long
+name|uid_t
 name|id
 parameter_list|(
 specifier|const
@@ -1098,7 +1098,7 @@ modifier|*
 name|type
 parameter_list|)
 block|{
-name|u_long
+name|uid_t
 name|val
 decl_stmt|;
 name|char
