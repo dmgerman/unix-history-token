@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c 3.18 %G%"
+literal|"@(#)pc.c 3.19 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1715,6 +1715,10 @@ literal|1
 condition|)
 name|done
 argument_list|()
+expr_stmt|;
+name|errs
+operator|=
+literal|0
 expr_stmt|;
 comment|/* char	*ldargs[NARGS] =	{ "ld", "-X", "/lib/crt0.o", 0, }; */
 name|ldargs
