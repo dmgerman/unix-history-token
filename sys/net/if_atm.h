@@ -327,6 +327,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|atm_ifdetach
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|atm_input
 parameter_list|(
 name|struct

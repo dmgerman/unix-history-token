@@ -107,6 +107,38 @@ directive|include
 file|<dev/en/midwayvar.h>
 end_include
 
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|en
+argument_list|,
+name|pci
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|en
+argument_list|,
+name|atm
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * local structures  */
 end_comment
@@ -1033,7 +1065,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|if_detach
+name|atm_ifdetach
 argument_list|(
 operator|&
 name|sc
@@ -1173,7 +1205,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|if_detach
+name|atm_ifdetach
 argument_list|(
 operator|&
 name|sc

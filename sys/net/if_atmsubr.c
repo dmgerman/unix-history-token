@@ -50,6 +50,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mac.h>
 end_include
 
@@ -75,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -176,6 +194,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|atm
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"ATM hardware"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#
@@ -1079,7 +1115,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform common duties while attaching to interface list  */
+comment|/*  * Perform common duties while attaching to interface list.  */
 end_comment
 
 begin_function
@@ -1121,6 +1157,11 @@ operator|->
 name|if_hdrlen
 operator|=
 literal|0
+expr_stmt|;
+name|if_attach
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -1294,6 +1335,67 @@ break|break;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Common stuff for detaching an ATM interface  */
+end_comment
+
+begin_function
+name|void
+name|atm_ifdetach
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+name|if_detach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_decl_stmt
+specifier|static
+name|moduledata_t
+name|atm_mod
+init|=
+block|{
+literal|"atm"
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DECLARE_MODULE
+argument_list|(
+name|atm
+argument_list|,
+name|atm_mod
+argument_list|,
+name|SI_SUB_PSEUDO
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|atm
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

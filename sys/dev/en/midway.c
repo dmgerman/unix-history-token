@@ -495,19 +495,9 @@ comment|/* in software service list */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_NODE
+name|SYSCTL_DECL
 argument_list|(
-name|_hw
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|en
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"ENI 155p"
+name|_hw_atm
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12514,7 +12504,7 @@ name|sysctl_ctx
 argument_list|,
 name|SYSCTL_STATIC_CHILDREN
 argument_list|(
-name|_hw_en
+name|_hw_atm
 argument_list|)
 argument_list|,
 name|OID_AUTO
@@ -13288,11 +13278,6 @@ literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * final commit 	 */
-name|if_attach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|atm_ifattach
 argument_list|(
 name|ifp
