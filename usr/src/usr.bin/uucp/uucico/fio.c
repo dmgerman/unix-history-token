@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1985 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Adams.  *  * %sccs.include.redist.c%  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.7	(Berkeley) %G%"
+literal|"@(#)fio.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +23,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * flow control protocol.  *  * This protocol relies on flow control of the data stream.  * It is meant for working over links that can (almost) be  * guaranteed to be errorfree, specifically X.25/PAD links.  * A sumcheck is carried out over a whole file only. If a  * transport fails the receiver can request retransmission(s).  * This protocol uses a 7-bit datapath only, so it can be  * used on links that are not 8-bit transparent.  *  * When using this protocol with an X.25 PAD:  * Although this protocol uses no control chars except CR,  * control chars NULL and ^P are used before this protocol  * is started; since ^P is the default char for accessing  * PAD X.28 command mode, be sure to disable that access  * (PAD par 1). Also make sure both flow control pars  * (5 and 12) are set. The CR used in this proto is meant  * to trigger packet transmission, hence par 3 should be   * set to 2; a good value for the Idle Timer (par 4) is 10.  * All other pars should be set to 0.  *  * Normally a calling site will take care of setting the  * local PAD pars via an X.28 command and those of the remote  * PAD via an X.29 command, unless the remote site has a  * special channel assigned for this protocol with the proper  * par settings.  *  * Additional comments for hosts with direct X.25 access:  * - the global variable IsTcpIp, when set, excludes the ioctl's,  *   so the same binary can run on X.25 and non-X.25 hosts;  * - reads are done in small chunks, which can be smaller than  *   the packet size; your X.25 driver must support that.  *  *  * Author:  *	Piet Beertema, CWI, Amsterdam, Sep 1984  * Modified for X.25 hosts:  *	Robert Elz, Melbourne Univ, Mar 1985  */
