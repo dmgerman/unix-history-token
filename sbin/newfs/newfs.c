@@ -232,16 +232,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|COMPAT
-end_define
-
-begin_comment
-comment|/* allow non-labeled disks */
-end_comment
-
 begin_comment
 comment|/*  * The following two constants set the default block and fragment sizes.  * Both constants must be a power of 2 and meet the following constraints:  *	MINBSIZE<= DESBLKSIZE<= MAXBSIZE  *	sectorsize<= DESFRAGSIZE<= DESBLKSIZE  *	DESBLKSIZE / DESFRAGSIZE<= 8  */
 end_comment
@@ -550,12 +540,6 @@ begin_comment
 comment|/* user has specified -t or -u */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -570,11 +554,6 @@ name|int
 name|unlabeled
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -777,9 +756,6 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|COMPAT
 case|case
 literal|'T'
 case|:
@@ -788,8 +764,6 @@ operator|=
 name|optarg
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 literal|'U'
 case|:
@@ -1513,9 +1487,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COMPAT
 if|if
 condition|(
 name|disktype
@@ -1529,8 +1500,6 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-endif|#
-directive|endif
 name|lp
 operator|=
 name|getdisklabel
@@ -2023,12 +1992,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT
-end_ifdef
-
 begin_decl_stmt
 specifier|const
 name|char
@@ -2038,26 +2001,6 @@ init|=
 literal|"%s: can't read disk label; disk type must be specified"
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|const
-name|char
-name|lmsg
-index|[]
-init|=
-literal|"%s: can't read disk label"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|struct
@@ -2097,9 +2040,6 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|COMPAT
 if|if
 condition|(
 name|disktype
@@ -2139,8 +2079,6 @@ name|lp
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 name|warn
 argument_list|(
 literal|"ioctl (GDINFO)"
@@ -2180,16 +2118,11 @@ modifier|*
 name|lp
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|COMPAT
 if|if
 condition|(
 name|unlabeled
 condition|)
 return|return;
-endif|#
-directive|endif
 name|lp
 operator|->
 name|d_checksum
@@ -2335,25 +2268,9 @@ literal|"usage: %s [ -fsoptions ] special-device%s\n"
 argument_list|,
 name|progname
 argument_list|,
-ifdef|#
-directive|ifdef
-name|COMPAT
 literal|" [device-type]"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-literal|""
-block|)
-function|;
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2361,9 +2278,6 @@ argument_list|,
 literal|"where fsoptions are:\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2371,9 +2285,6 @@ argument_list|,
 literal|"\t-N do not create file system, just print out parameters\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2381,9 +2292,6 @@ argument_list|,
 literal|"\t-R regression test, supress random factors\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2391,15 +2299,6 @@ argument_list|,
 literal|"\t-S sector size\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT
-end_ifdef
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2407,14 +2306,6 @@ argument_list|,
 literal|"\t-T disktype\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2422,9 +2313,6 @@ argument_list|,
 literal|"\t-U enable soft updates\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2432,9 +2320,6 @@ argument_list|,
 literal|"\t-a maximum contiguous blocks\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2442,9 +2327,6 @@ argument_list|,
 literal|"\t-b block size\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2452,9 +2334,6 @@ argument_list|,
 literal|"\t-c cylinders/group\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2462,9 +2341,6 @@ argument_list|,
 literal|"\t-e maximum blocks per file in a cylinder group\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2472,9 +2348,6 @@ argument_list|,
 literal|"\t-f frag size\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2482,9 +2355,6 @@ argument_list|,
 literal|"\t-g average file size\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2492,9 +2362,6 @@ argument_list|,
 literal|"\t-h average files per directory\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2502,9 +2369,6 @@ argument_list|,
 literal|"\t-i number of bytes per inode\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2512,9 +2376,6 @@ argument_list|,
 literal|"\t-m minimum free space %%\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2522,9 +2383,6 @@ argument_list|,
 literal|"\t-o optimization preference (`space' or `time')\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2532,9 +2390,6 @@ argument_list|,
 literal|"\t-s file system size (sectors)\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2542,9 +2397,6 @@ argument_list|,
 literal|"\t-u sectors/cylinder\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -2552,16 +2404,13 @@ argument_list|,
 literal|"\t-v do not attempt to determine partition name from device name\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
-unit|}
 end_unit
 
