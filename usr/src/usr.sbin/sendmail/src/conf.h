@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.59 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.60 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3809,6 +3809,28 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* size of syslog buffer */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYSLOG_BUFSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYSLOG_BUFSIZE
+value|1024
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* **  Size of tobuf (deliver.c) **	Tweak this to match your syslog implementation.  It will have to **	allow for the extra information printed. */
 end_comment
 
@@ -3818,12 +3840,39 @@ directive|ifndef
 name|TOBUFSIZE
 end_ifndef
 
+begin_if
+if|#
+directive|if
+operator|(
+name|SYSLOG_BUFSIZE
+operator|)
+operator|>
+literal|512
+end_if
+
 begin_define
 define|#
 directive|define
 name|TOBUFSIZE
-value|(1024 - 256)
+value|(SYSLOG_BUFSIZE - 256)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TOBUFSIZE
+value|256
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
