@@ -232,39 +232,17 @@ name|hz
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GPROF4
-end_ifdef
+begin_decl_stmt
+name|size_t
+name|histcounter_size
+decl_stmt|;
+end_decl_stmt
 
-begin_typedef
-typedef|typedef
-name|int64_t
-name|UNIT
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|u_short
-name|UNIT
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* unit of profiling */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+name|int
+name|histcounter_type
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -704,11 +682,11 @@ begin_struct
 struct|struct
 name|ophdr
 block|{
-name|UNIT
+name|u_short
 modifier|*
 name|lpc
 decl_stmt|;
-name|UNIT
+name|u_short
 modifier|*
 name|hpc
 decl_stmt|;
@@ -730,7 +708,7 @@ comment|/*      * Each discretized pc sample has      * a count of the number of
 end_comment
 
 begin_decl_stmt
-name|UNIT
+name|double
 modifier|*
 name|samples
 decl_stmt|;
@@ -768,7 +746,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* range profiled, in UNIT's */
+comment|/* range profiled, in historical units  */
 end_comment
 
 begin_decl_stmt
