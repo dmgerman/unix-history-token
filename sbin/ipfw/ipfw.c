@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.50 1998/01/06 00:11:57 alex Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.51 1998/01/07 02:23:04 alex Exp $  *  */
 end_comment
 
 begin_include
@@ -2401,9 +2401,12 @@ name|warn
 argument_list|(
 literal|"invalid rule number: %s"
 argument_list|,
+operator|*
+operator|(
 name|av
 operator|-
 literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 continue|continue;
