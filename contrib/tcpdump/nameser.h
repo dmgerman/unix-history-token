@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/nameser.h,v 1.5 2000/12/28 20:30:41 itojun Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/nameser.h,v 1.9 2001/06/27 05:40:16 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -245,6 +245,78 @@ end_define
 begin_comment
 comment|/* incremental zone referesh */
 end_comment
+
+begin_comment
+comment|/*  * Undefine various #defines from various System V-flavored OSes (Solaris,  * SINIX, HP-UX) so the compiler doesn't whine that we redefine them.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|T_NULL
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|T_NULL
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|T_OPT
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|T_OPT
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|T_UNSPEC
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|T_UNSPEC
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOERROR
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|NOERROR
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Currently defined response codes  */
@@ -536,6 +608,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|T_X25
+value|19
+end_define
+
+begin_comment
+comment|/* X_25 calling address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_ISDN
+value|20
+end_define
+
+begin_comment
+comment|/* ISDN calling address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_RT
+value|21
+end_define
+
+begin_comment
+comment|/* router */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|T_NSAP
 value|22
 end_define
@@ -553,6 +658,171 @@ end_define
 
 begin_comment
 comment|/* reverse lookup for NSAP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_SIG
+value|24
+end_define
+
+begin_comment
+comment|/* security signature */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_KEY
+value|25
+end_define
+
+begin_comment
+comment|/* security key */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_PX
+value|26
+end_define
+
+begin_comment
+comment|/* X.400 mail mapping */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_GPOS
+value|27
+end_define
+
+begin_comment
+comment|/* geographical position (withdrawn) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_AAAA
+value|28
+end_define
+
+begin_comment
+comment|/* IP6 Address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_LOC
+value|29
+end_define
+
+begin_comment
+comment|/* Location Information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_NXT
+value|30
+end_define
+
+begin_comment
+comment|/* Next Valid Name in Zone */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_EID
+value|31
+end_define
+
+begin_comment
+comment|/* Endpoint identifier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_NIMLOC
+value|32
+end_define
+
+begin_comment
+comment|/* Nimrod locator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_SRV
+value|33
+end_define
+
+begin_comment
+comment|/* Server selection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_ATMA
+value|34
+end_define
+
+begin_comment
+comment|/* ATM Address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_NAPTR
+value|35
+end_define
+
+begin_comment
+comment|/* Naming Authority PoinTeR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_A6
+value|38
+end_define
+
+begin_comment
+comment|/* IP6 address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_DNAME
+value|39
+end_define
+
+begin_comment
+comment|/* non-terminal redirection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_OPT
+value|41
+end_define
+
+begin_comment
+comment|/* EDNS0 option (meta-RR) */
 end_comment
 
 begin_comment
@@ -603,8 +873,52 @@ begin_comment
 comment|/* Unspecified format (binary data) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|T_UNSPECA
+value|104
+end_define
+
+begin_comment
+comment|/* "unspecified ascii". Ugly MIT hack */
+end_comment
+
 begin_comment
 comment|/* Query type values which do not appear in resource records */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_TKEY
+value|249
+end_define
+
+begin_comment
+comment|/* Transaction Key [RFC2930] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_TSIG
+value|250
+end_define
+
+begin_comment
+comment|/* Transaction Signature [RFC2845] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_IXFR
+value|251
+end_define
+
+begin_comment
+comment|/* incremental transfer [RFC1995] */
 end_comment
 
 begin_define
