@@ -518,6 +518,17 @@ begin_comment
 comment|/* currency symbol */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|D_MD_ORDER
+value|57
+end_define
+
+begin_comment
+comment|/* month/day order (local extension) */
+end_comment
+
 begin_function_decl
 name|__BEGIN_DECLS
 name|char
