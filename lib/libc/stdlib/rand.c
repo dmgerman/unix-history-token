@@ -126,6 +126,17 @@ begin_comment
 comment|/* TEST */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NSHUFF
+value|100
+end_define
+
+begin_comment
+comment|/* to drop part of seed -> 1st value correlation */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -327,9 +338,34 @@ name|u_int
 name|seed
 decl_stmt|;
 block|{
+name|int
+name|i
+decl_stmt|;
 name|next
 operator|=
 name|seed
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NSHUFF
+condition|;
+name|i
+operator|++
+control|)
+operator|(
+name|void
+operator|)
+name|do_rand
+argument_list|(
+operator|&
+name|next
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -426,8 +462,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|next
-operator|=
+name|srand
+argument_list|(
 operator|(
 name|getpid
 argument_list|()
@@ -444,6 +480,7 @@ operator|.
 name|tv_usec
 operator|^
 name|junk
+argument_list|)
 expr_stmt|;
 block|}
 block|}

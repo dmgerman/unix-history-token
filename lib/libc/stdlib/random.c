@@ -288,6 +288,17 @@ begin_comment
 comment|/* max number of types above */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NSHUFF
+value|100
+end_define
+
+begin_comment
+comment|/* to drop part of seed -> 1st value correlation */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|long
@@ -698,29 +709,28 @@ decl_stmt|;
 block|{
 name|long
 name|i
+decl_stmt|,
+name|lim
 decl_stmt|;
+name|state
+index|[
+literal|0
+index|]
+operator|=
+name|x
+expr_stmt|;
 if|if
 condition|(
 name|rand_type
 operator|==
 name|TYPE_0
 condition|)
-name|state
-index|[
-literal|0
-index|]
+name|lim
 operator|=
-name|x
+name|NSHUFF
 expr_stmt|;
 else|else
 block|{
-name|state
-index|[
-literal|0
-index|]
-operator|=
-name|x
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -765,6 +775,13 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|lim
+operator|=
+literal|10
+operator|*
+name|rand_deg
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -773,9 +790,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|10
-operator|*
-name|rand_deg
+name|lim
 condition|;
 name|i
 operator|++
@@ -786,7 +801,6 @@ operator|)
 name|random
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 end_function
 
