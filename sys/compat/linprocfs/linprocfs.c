@@ -1721,12 +1721,6 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mp_ncpus
-operator|>
-literal|1
-condition|)
 for|for
 control|(
 name|i
