@@ -54,17 +54,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UFS_EXTATTR_MAXEXTATTRSIZE
-value|1024
-end_define
-
-begin_comment
-comment|/* bytes */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UFS_EXTATTR_ATTR_FLAG_INUSE
 value|0x00000001
 end_define
