@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vax.c	1.11 (Berkeley) %G%"
+literal|"@(#)vax.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2488,6 +2488,14 @@ end_comment
 begin_function_decl
 name|private
 name|Address
+name|findnextaddr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|private
+name|Address
 name|getcall
 parameter_list|()
 function_decl|;
@@ -2568,7 +2576,7 @@ name|addr
 expr_stmt|;
 name|addr
 operator|=
-name|nextaddr
+name|findnextaddr
 argument_list|(
 name|addr
 argument_list|,
@@ -2631,14 +2639,6 @@ end_function
 begin_comment
 comment|/*  * Compute the next address that will be executed from the given one.  * If "isnext" is true then consider a procedure call as straight line code.  *  * We must unfortunately do much of the same work that is necessary  * to print instructions.  In addition we have to deal with branches.  * Unconditional branches we just follow, for conditional branches  * we continue execution to the current location and then single step  * the machine.  We assume that the last argument in an instruction  * that branches is the branch address (or relative offset).  */
 end_comment
-
-begin_function_decl
-name|private
-name|Address
-name|findnextaddr
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 name|public
