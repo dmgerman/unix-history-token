@@ -1223,6 +1223,10 @@ name|sb
 argument_list|)
 condition|)
 block|{
+name|obj_is_elsewhere
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|chdir
@@ -1238,7 +1242,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"make: Warning: can't cd to %s: %s.\n"
+literal|"make: fatal: %s exists, but I can't chdir to it: %s.\n"
 argument_list|,
 name|path
 argument_list|,
@@ -1248,12 +1252,12 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-name|obj_is_elsewhere
-operator|=
-literal|1
+name|exit
+argument_list|(
+literal|2
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|create
 operator|=
