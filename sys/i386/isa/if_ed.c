@@ -10343,6 +10343,25 @@ expr_stmt|;
 comment|/* not local, need forwarding */
 if|if
 condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return ;
+comment|/* dropped */
+name|eh
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ether_header
+operator|*
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|ifp
 operator|==
 name|BDG_LOCAL
