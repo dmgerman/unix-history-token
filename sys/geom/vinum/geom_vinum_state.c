@@ -861,6 +861,9 @@ name|gv_drive
 modifier|*
 name|d
 decl_stmt|;
+name|int
+name|oldstate
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|s
@@ -888,6 +891,12 @@ operator|(
 literal|"gv_update_sd_state: NULL d"
 operator|)
 argument_list|)
+expr_stmt|;
+name|oldstate
+operator|=
+name|s
+operator|->
+name|state
 expr_stmt|;
 comment|/* If our drive isn't up we cannot be up either. */
 if|if
@@ -951,13 +960,26 @@ name|state
 operator|=
 name|GV_SD_UP
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|state
+operator|!=
+name|oldstate
+condition|)
 name|printf
 argument_list|(
-literal|"GEOM_VINUM: subdisk %s is %s\n"
+literal|"GEOM_VINUM: subdisk %s state change: %s -> %s\n"
 argument_list|,
 name|s
 operator|->
 name|name
+argument_list|,
+name|gv_sdstate
+argument_list|(
+name|oldstate
+argument_list|)
 argument_list|,
 name|gv_sdstate
 argument_list|(
@@ -1003,6 +1025,9 @@ block|{
 name|int
 name|sdstates
 decl_stmt|;
+name|int
+name|oldstate
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|p
@@ -1013,6 +1038,12 @@ operator|(
 literal|"gv_update_plex_state: NULL p"
 operator|)
 argument_list|)
+expr_stmt|;
+name|oldstate
+operator|=
+name|p
+operator|->
+name|state
 expr_stmt|;
 comment|/* First, check the state of our subdisks. */
 name|sdstates
@@ -1115,13 +1146,26 @@ name|state
 operator|=
 name|GV_PLEX_DOWN
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|state
+operator|!=
+name|oldstate
+condition|)
 name|printf
 argument_list|(
-literal|"GEOM_VINUM: plex %s is %s\n"
+literal|"GEOM_VINUM: plex %s state change: %s -> %s\n"
 argument_list|,
 name|p
 operator|->
 name|name
+argument_list|,
+name|gv_plexstate
+argument_list|(
+name|oldstate
+argument_list|)
 argument_list|,
 name|gv_plexstate
 argument_list|(
