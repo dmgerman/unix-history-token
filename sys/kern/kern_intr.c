@@ -1605,8 +1605,8 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|intrmask_t
-name|saveintr
+name|critical_t
+name|savecrit
 decl_stmt|;
 comment|/* 	 * If no ithread or no handlers, then we have a stray interrupt. 	 */
 if|if
@@ -1773,11 +1773,11 @@ operator|==
 name|SRUN
 condition|)
 block|{
-name|saveintr
+name|savecrit
 operator|=
 name|sched_lock
 operator|.
-name|mtx_saveintr
+name|mtx_savecrit
 expr_stmt|;
 name|mtx_intr_enable
 argument_list|(
@@ -1813,9 +1813,9 @@ argument_list|()
 expr_stmt|;
 name|sched_lock
 operator|.
-name|mtx_saveintr
+name|mtx_savecrit
 operator|=
-name|saveintr
+name|savecrit
 expr_stmt|;
 block|}
 else|else
