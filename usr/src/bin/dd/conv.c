@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conv.c	5.4 (Berkeley) %G%"
+literal|"@(#)conv.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -417,8 +417,12 @@ operator|<
 name|cbsz
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
+name|in
+operator|.
+name|db
+argument_list|,
 name|in
 operator|.
 name|dbp
@@ -426,10 +430,6 @@ operator|-
 name|in
 operator|.
 name|dbcnt
-argument_list|,
-name|in
-operator|.
-name|db
 argument_list|,
 name|in
 operator|.
@@ -595,8 +595,12 @@ name|st
 operator|.
 name|trunc
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|out
+operator|.
+name|dbp
+argument_list|,
 name|in
 operator|.
 name|dbp
@@ -604,10 +608,6 @@ operator|-
 name|in
 operator|.
 name|dbcnt
-argument_list|,
-name|out
-operator|.
-name|dbp
 argument_list|,
 name|in
 operator|.
@@ -773,13 +773,13 @@ name|inp
 operator|+
 literal|1
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|inp
-argument_list|,
 name|out
 operator|.
 name|dbp
+argument_list|,
+name|inp
 argument_list|,
 name|cnt
 argument_list|)
@@ -832,8 +832,12 @@ name|in
 operator|.
 name|dbcnt
 condition|)
-name|bcopy
+name|memmove
 argument_list|(
+name|in
+operator|.
+name|db
+argument_list|,
 name|in
 operator|.
 name|dbp
@@ -841,10 +845,6 @@ operator|-
 name|in
 operator|.
 name|dbcnt
-argument_list|,
-name|in
-operator|.
-name|db
 argument_list|,
 name|in
 operator|.
@@ -944,15 +944,15 @@ name|db
 operator|+
 literal|1
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|in
-operator|.
-name|db
-argument_list|,
 name|out
 operator|.
 name|dbp
+argument_list|,
+name|in
+operator|.
+name|db
 argument_list|,
 name|cnt
 argument_list|)
