@@ -13095,6 +13095,13 @@ block|}
 block|,
 comment|/* IBM3780, ThinkPad */
 block|{
+literal|0x81374d24
+block|,
+literal|"IBM PS/2 mouse port"
+block|}
+block|,
+comment|/* IBM3781, ThinkPad */
+block|{
 literal|0
 block|}
 block|}
