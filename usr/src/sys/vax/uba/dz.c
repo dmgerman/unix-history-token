@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.28	81/07/25	*/
+comment|/*	dz.c	4.29	81/08/31	*/
 end_comment
 
 begin_include
@@ -313,37 +313,12 @@ begin_comment
 comment|/* Transmit Interrupt Enable */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|NBK
-operator|==
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|DZ_IEN
-value|(DZ_MSE|DZ_RIE|DZ_TIE)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|DZ_IEN
 value|(DZ_MSE|DZ_RIE|DZ_TIE|DZ_SAE)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Flags for modem-control */
