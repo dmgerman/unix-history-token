@@ -7473,16 +7473,19 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+specifier|const
 name|u_short
 modifier|*
 name|a
 init|=
 operator|(
+specifier|const
 name|u_short
 operator|*
 operator|)
 name|addr
 decl_stmt|;
+specifier|const
 name|u_char
 modifier|*
 name|d
@@ -7631,6 +7634,7 @@ block|}
 name|d
 operator|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)

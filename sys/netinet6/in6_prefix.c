@@ -3088,7 +3088,7 @@ name|rpp
 operator|->
 name|rp_ifp
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if

@@ -286,6 +286,7 @@ operator|*
 operator|,
 name|u_int
 operator|,
+specifier|const
 expr|struct
 name|sockaddr
 operator|*

@@ -1722,6 +1722,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
+specifier|const
 expr|struct
 name|sockaddr
 operator|*
