@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.3 90/01/21$  *  *	@(#)vm_mmap.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.3 90/01/21$  *  *	@(#)vm_mmap.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -77,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"vm_prot.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm_statistics.h"
 end_include
 
 begin_ifdef
@@ -1064,9 +1058,13 @@ directive|endif
 comment|/* 	 * Do not msync non-vnoded backed objects. 	 */
 if|if
 condition|(
+operator|(
 name|object
 operator|->
-name|internal
+name|flags
+operator|&
+name|OBJ_INTERNAL
+operator|)
 operator|||
 name|object
 operator|->
@@ -2359,9 +2357,9 @@ literal|0
 condition|)
 name|object
 operator|->
-name|internal
-operator|=
-name|TRUE
+name|flags
+operator||=
+name|OBJ_INTERNAL
 expr_stmt|;
 name|rv
 operator|=
@@ -2385,9 +2383,10 @@ argument_list|)
 expr_stmt|;
 name|object
 operator|->
-name|internal
-operator|=
-name|FALSE
+name|flags
+operator|&=
+operator|~
+name|OBJ_INTERNAL
 expr_stmt|;
 comment|/* 			 * (XXX) 			 * My oh my, this only gets worse... 			 * Force creation of a shadow object so that 			 * vm_map_fork will do the right thing. 			 */
 if|if
@@ -3214,9 +3213,9 @@ argument_list|(
 name|pager
 argument_list|)
 expr_stmt|;
-name|vm_stat
+name|cnt
 operator|.
-name|lookups
+name|v_lookups
 operator|++
 expr_stmt|;
 if|if
@@ -3242,16 +3241,28 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|vm_stat
+name|cnt
 operator|.
-name|hits
+name|v_hits
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|internal
+condition|)
 name|object
 operator|->
-name|internal
-operator|=
-name|internal
+name|flags
+operator||=
+name|OBJ_INTERNAL
+expr_stmt|;
+else|else
+name|object
+operator|->
+name|flags
+operator|&=
+operator|~
+name|OBJ_INTERNAL
 expr_stmt|;
 name|result
 operator|=
