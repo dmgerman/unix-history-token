@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<security/openpam.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/dsa.h>
 end_include
 
@@ -329,10 +335,6 @@ name|int
 name|retval
 decl_stmt|;
 comment|/* from calls */
-name|uid_t
-name|saved_uid
-decl_stmt|;
-comment|/* caller's uid */
 comment|/* locate the user's private key file */
 if|if
 condition|(
@@ -363,28 +365,29 @@ return|return
 name|PAM_SERVICE_ERR
 return|;
 block|}
-name|saved_uid
-operator|=
-name|getuid
-argument_list|()
-expr_stmt|;
 comment|/* Try to decrypt the private key with the passphrase provided.  If 	   success, the user is authenticated. */
 name|comment
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
 operator|(
-name|void
-operator|)
-name|setreuid
+name|retval
+operator|=
+name|openpam_borrow_cred
 argument_list|(
-name|user
-operator|->
-name|pw_uid
+name|pamh
 argument_list|,
-name|saved_uid
+name|user
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+name|PAM_SUCCESS
+condition|)
+return|return
+name|retval
+return|;
 name|key
 operator|=
 name|key_load_private
@@ -397,12 +400,9 @@ operator|&
 name|comment
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setuid
+name|openpam_restore_cred
 argument_list|(
-name|saved_uid
+name|pamh
 argument_list|)
 expr_stmt|;
 name|free
@@ -1458,10 +1458,6 @@ name|int
 name|retval
 decl_stmt|;
 comment|/* from calls */
-name|uid_t
-name|saved_uid
-decl_stmt|;
-comment|/* caller's uid */
 name|int
 name|start_agent
 decl_stmt|;
@@ -1577,19 +1573,35 @@ name|retval
 return|;
 block|}
 comment|/* take on the user's privileges for writing files and starting the 	   agent */
-name|saved_uid
+if|if
+condition|(
+operator|(
+name|retval
 operator|=
+name|openpam_borrow_cred
+argument_list|(
+name|pamh
+argument_list|,
+name|pwent
+argument_list|)
+operator|)
+operator|!=
+name|PAM_SUCCESS
+condition|)
+return|return
+name|retval
+return|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ruid %d, euid %d\n"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
 name|geteuid
 argument_list|()
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|seteuid
-argument_list|(
-name|pwent
-operator|->
-name|pw_uid
 argument_list|)
 expr_stmt|;
 comment|/* Try to create the per-agent file or open it for reading if it 	   exists.  If we can't do either, we won't try to link a 	   per-session filename later.  Start the agent if we can't open 	   the file for reading. */
@@ -1649,12 +1661,9 @@ name|start_agent
 operator|=
 literal|0
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|seteuid
+name|openpam_restore_cred
 argument_list|(
-name|saved_uid
+name|pamh
 argument_list|)
 expr_stmt|;
 block|}
@@ -1673,12 +1682,9 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|seteuid
+name|openpam_restore_cred
 argument_list|(
-name|saved_uid
+name|pamh
 argument_list|)
 expr_stmt|;
 if|if
