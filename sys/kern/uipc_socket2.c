@@ -791,7 +791,7 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|sotryfree
+name|sodealloc
 argument_list|(
 name|so
 argument_list|)
