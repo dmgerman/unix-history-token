@@ -389,6 +389,11 @@ decl_stmt|,
 comment|/* do we suppress local echoing right now? */
 name|globalmode
 decl_stmt|,
+name|doaddrlookup
+init|=
+literal|1
+decl_stmt|,
+comment|/* do a reverse address lookup? */
 name|clienteof
 init|=
 literal|0
@@ -8444,6 +8449,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|escape
+operator|!=
+name|_POSIX_VDISABLE
+operator|&&
 name|sc
 operator|==
 name|escape
