@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.14 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -726,6 +726,10 @@ goto|goto
 name|eftype
 goto|;
 comment|/* 		 * Read in the meta-data.  This can change the notion of what 		 * the lorder, page size and flags are, and, when the page size 		 * changes the cachesize value can change as well. 		 * 		 * Lorder is always stored in host-independent format. 		 */
+name|m
+operator|.
+name|m_lorder
+operator|=
 name|NTOHL
 argument_list|(
 name|m
