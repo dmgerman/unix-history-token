@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	5.4	82/08/10	*/
+comment|/*	kern_descrip.c	5.5	82/08/22	*/
 end_comment
 
 begin_include
@@ -789,6 +789,9 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|notdef
 specifier|register
 struct|struct
 name|a
@@ -813,6 +816,8 @@ operator|.
 name|u_ap
 struct|;
 comment|/* XXX */
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -823,6 +828,9 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|notdef
 specifier|register
 struct|struct
 name|a
@@ -847,6 +855,8 @@ operator|.
 name|u_ap
 struct|;
 comment|/* XXX */
+endif|#
+directive|endif
 block|}
 end_block
 
