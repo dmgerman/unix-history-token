@@ -5425,6 +5425,9 @@ name|rlist
 modifier|*
 name|swaplist
 decl_stmt|;
+name|u_long
+name|ptr
+decl_stmt|;
 name|KGET
 argument_list|(
 name|VM_NSWAP
@@ -5500,6 +5503,19 @@ name|KGET1
 argument_list|(
 name|VM_SWDEVT
 argument_list|,
+operator|&
+name|ptr
+argument_list|,
+sizeof|sizeof
+name|ptr
+argument_list|,
+literal|"swdevt"
+argument_list|)
+expr_stmt|;
+name|KGET2
+argument_list|(
+name|ptr
+argument_list|,
 name|sw
 argument_list|,
 name|nswdev
@@ -5510,7 +5526,7 @@ operator|*
 name|sw
 argument_list|)
 argument_list|,
-literal|"swdevt"
+literal|"*swdevt"
 argument_list|)
 expr_stmt|;
 comment|/* Count up swap space. */
