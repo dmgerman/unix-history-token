@@ -220,6 +220,13 @@ name|M3_RCHANS
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|M3_MAXADDR
+value|((1<< 27) - 1)
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|sc_info
@@ -6232,7 +6239,7 @@ comment|/*boundary*/
 literal|0
 argument_list|,
 comment|/*lowaddr*/
-literal|0x08000000
+name|M3_MAXADDR
 argument_list|,
 comment|/*highaddr*/
 name|BUS_SPACE_MAXADDR
