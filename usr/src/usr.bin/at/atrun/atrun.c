@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atrun.c	5.3 (Berkeley) %G%"
+literal|"@(#)atrun.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,11 +86,22 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/quota.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -493,14 +504,14 @@ comment|/* file sent to forked shell for exec- 					   ution */
 name|char
 name|owner
 index|[
-literal|16
+literal|128
 index|]
 decl_stmt|;
 comment|/* owner of job we're going to run */
 name|char
 name|jobname
 index|[
-literal|100
+literal|128
 index|]
 decl_stmt|;
 comment|/* name of job we're going to run */
@@ -569,43 +580,77 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Grab the 3-line header out of the spoolfile. 	 */
+comment|/* 	 * Grab the 4-line header out of the spoolfile. 	 */
+if|if
+condition|(
+operator|(
 name|fscanf
 argument_list|(
 name|infile
 argument_list|,
-literal|"# owner: %s\n"
+literal|"# owner: %127s%*[^\n]\n"
 argument_list|,
 name|owner
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|1
+operator|)
+operator|||
+operator|(
 name|fscanf
 argument_list|(
 name|infile
 argument_list|,
-literal|"# jobname: %s\n"
+literal|"# jobname: %127s%*[^\n]\n"
 argument_list|,
 name|jobname
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|1
+operator|)
+operator|||
+operator|(
 name|fscanf
 argument_list|(
 name|infile
 argument_list|,
-literal|"# shell: %s\n"
+literal|"# shell: %3s%*[^\n]\n"
 argument_list|,
 name|shell
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|1
+operator|)
+operator|||
+operator|(
 name|fscanf
 argument_list|(
 name|infile
 argument_list|,
-literal|"# notify by mail: %s\n"
+literal|"# notify by mail: %3s%*[^\n]\n"
 argument_list|,
 name|mailvar
 argument_list|)
+operator|!=
+literal|1
+operator|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: bad spool header\n"
+argument_list|,
+name|spoolfile
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Check to see if we should send mail to the owner. 	 */
 name|notifybymail
 operator|=
@@ -633,6 +678,28 @@ argument_list|(
 name|owner
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pwdbuf
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: could not find owner in passwd file\n"
+argument_list|,
+name|spoolfile
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|chown
@@ -925,6 +992,10 @@ expr_stmt|;
 block|}
 comment|/* 	 * HERE'S WHERE WE SET UP AND FORK THE SHELL. 	 */
 comment|/* 	 * Run the job as the owner of the jobfile 	 */
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* This is no longer needed with the new, stripped-down quota system */
 name|quota
 argument_list|(
 name|Q_SETUID
@@ -938,6 +1009,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|setgid
 argument_list|(
 name|jobbuf

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atrm.c	5.1 (Berkeley) %G%"
+literal|"@(#)atrm.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -260,9 +260,13 @@ expr_stmt|;
 operator|++
 name|argv
 expr_stmt|;
-comment|/* 	 * Process command line flags. 	 */
+comment|/* 	 * Process command line flags. 	 * Special case the "-" option so that others may be grouped. 	 */
 while|while
 condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
 operator|*
 operator|*
 name|argv
@@ -270,26 +274,41 @@ operator|==
 literal|'-'
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+operator|(
+operator|++
 operator|(
 operator|*
 name|argv
 operator|)
+operator|)
+operator|==
+literal|'\0'
+condition|)
+block|{
 operator|++
+name|allflag
 expr_stmt|;
-switch|switch
+block|}
+else|else
+while|while
 condition|(
 operator|*
 operator|*
 name|argv
 condition|)
-block|{
-case|case
-literal|'\0'
-case|:
+switch|switch
+condition|(
+operator|*
+operator|(
+operator|*
+name|argv
+operator|)
 operator|++
-name|allflag
-expr_stmt|;
-break|break;
+condition|)
+block|{
 case|case
 literal|'f'
 case|:
@@ -532,6 +551,9 @@ operator|->
 name|d_name
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|removentry
 argument_list|(
 name|namelist
@@ -594,6 +616,19 @@ operator|++
 name|i
 control|)
 block|{
+comment|/* if the inode number is 0, this entry was removed */
+if|if
+condition|(
+name|stbuf
+index|[
+name|i
+index|]
+operator|->
+name|st_ino
+operator|==
+literal|0
+condition|)
+continue|continue;
 comment|/*  			 * if argv is a username, compare his/her uid to 			 * the uid of the owner of the file...... 			 */
 if|if
 condition|(
@@ -641,6 +676,9 @@ block|}
 operator|++
 name|jobexists
 expr_stmt|;
+comment|/* 			 * if the entry is ultimately removed, don't 			 * try to remove it again later. 			 */
+if|if
+condition|(
 name|removentry
 argument_list|(
 name|namelist
@@ -662,7 +700,18 @@ name|st_ino
 argument_list|,
 name|user
 argument_list|)
+condition|)
+block|{
+name|stbuf
+index|[
+name|i
+index|]
+operator|->
+name|st_ino
+operator|=
+literal|0
 expr_stmt|;
+block|}
 block|}
 comment|/* 		 * If a requested argument doesn't exist, print a message. 		 */
 if|if
@@ -677,8 +726,10 @@ operator|!
 name|isuname
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%6s: no such job number\n"
 argument_list|,
 operator|*
@@ -847,40 +898,29 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Remove an entry from the queue. The access of the file is checked for  * write permission (since all jobs are mode 644). If access is granted,  * unlink the file. If the fflag (suppress announcements) is not set,  * print the job number that we are removing and the result of the access  * check (either "permission denied" or "removed"). If we are running   * interactively (iflag), prompt the user before we unlink the file. If   * the super-user is removing jobs, inform him/her who owns each file before   * it is removed.  */
+comment|/*  * Remove an entry from the queue. The access of the file is checked for  * write permission (since all jobs are mode 644). If access is granted,  * unlink the file. If the fflag (suppress announcements) is not set,  * print the job number that we are removing and the result of the access  * check (either "permission denied" or "removed"). If we are running   * interactively (iflag), prompt the user before we unlink the file. If   * the super-user is removing jobs, inform him/her who owns each file before   * it is removed.  Return TRUE if file removed, else FALSE.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|removentry
-argument_list|(
-argument|filename
-argument_list|,
-argument|inode
-argument_list|,
-argument|user
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|filename
+parameter_list|,
+name|inode
+parameter_list|,
+name|user
+parameter_list|)
 name|char
 modifier|*
 name|filename
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|inode
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|user
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -924,6 +964,11 @@ literal|"permission denied\n"
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 else|else
 block|{
@@ -951,7 +996,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|")"
+literal|") "
 argument_list|)
 expr_stmt|;
 block|}
@@ -966,7 +1011,11 @@ operator|!
 name|yes
 argument_list|()
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -986,13 +1035,8 @@ condition|)
 block|{
 name|fputs
 argument_list|(
-literal|"FATAL ERROR (unlink fails): "
+literal|"could not remove\n"
 argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
@@ -1002,7 +1046,11 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -1017,9 +1065,14 @@ argument_list|(
 literal|"removed\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * See if "name" owns "job".  */
@@ -1053,7 +1106,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|30
+literal|128
 index|]
 decl_stmt|;
 comment|/* buffer for 1st line of spoolfile  					   header */
@@ -1082,7 +1135,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Couldn't open spoolfile"
+literal|"Couldn't open spoolfile "
 argument_list|)
 expr_stmt|;
 name|perror
@@ -1102,7 +1155,7 @@ name|fscanf
 argument_list|(
 name|infile
 argument_list|,
-literal|"# owner: %s\n"
+literal|"# owner: %127s%*[^\n]\n"
 argument_list|,
 name|buf
 argument_list|)
@@ -1121,7 +1174,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|close
+name|fclose
 argument_list|(
 name|infile
 argument_list|)
@@ -1170,7 +1223,7 @@ block|{
 name|char
 name|owner
 index|[
-literal|80
+literal|128
 index|]
 decl_stmt|;
 comment|/* the owner */
@@ -1216,7 +1269,7 @@ name|fscanf
 argument_list|(
 name|infile
 argument_list|,
-literal|"# owner: %s"
+literal|"# owner: %127s%*[^\n]\n"
 argument_list|,
 name|owner
 argument_list|)
@@ -1229,11 +1282,6 @@ argument_list|(
 literal|"%s"
 argument_list|,
 literal|"???"
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-name|file
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -1298,6 +1346,20 @@ name|ch1
 operator|=
 name|getchar
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|isupper
+argument_list|(
+name|ch
+argument_list|)
+condition|)
+name|ch
+operator|=
+name|tolower
+argument_list|(
+name|ch
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

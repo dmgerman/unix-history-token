@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atq.c	5.1 (Berkeley) %G%"
+literal|"@(#)atq.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +162,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+modifier|*
+name|nullentry
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* avoid 'namelist' NULL ptr problems */
+end_comment
+
+begin_decl_stmt
 name|int
 name|numentries
 decl_stmt|;
@@ -258,6 +271,9 @@ name|char
 modifier|*
 modifier|*
 name|namelist
+init|=
+operator|&
+name|nullentry
 decl_stmt|;
 comment|/* array of specific name(s) requested*/
 operator|--
@@ -331,9 +347,9 @@ block|}
 comment|/* 	 * If a certain name (or names) is requested, set a pointer to the 	 * beginning of the list. 	 */
 if|if
 condition|(
-operator|*
-operator|*
-name|argv
+name|argc
+operator|>
+literal|0
 condition|)
 block|{
 operator|++
@@ -861,7 +877,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|30
+literal|128
 index|]
 decl_stmt|;
 comment|/* buffer for 1st line of spoolfile  					   header */
@@ -890,7 +906,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Couldn't open spoolfile"
+literal|"Couldn't open spoolfile "
 argument_list|)
 expr_stmt|;
 name|perror
@@ -910,7 +926,7 @@ name|fscanf
 argument_list|(
 name|infile
 argument_list|,
-literal|"# owner: %s\n"
+literal|"# owner: %127s%*[^\n]\n"
 argument_list|,
 name|buf
 argument_list|)
@@ -978,7 +994,7 @@ block|{
 name|char
 name|owner
 index|[
-literal|80
+literal|10
 index|]
 decl_stmt|;
 comment|/* the owner */
@@ -1011,6 +1027,11 @@ argument_list|,
 literal|"???"
 argument_list|)
 expr_stmt|;
+name|perror
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -1019,7 +1040,7 @@ name|fscanf
 argument_list|(
 name|infile
 argument_list|,
-literal|"# owner: %s"
+literal|"# owner: %9s%*[^\n]\n"
 argument_list|,
 name|owner
 argument_list|)
@@ -1662,7 +1683,7 @@ comment|/* scratch pointer */
 name|char
 name|jobname
 index|[
-literal|80
+literal|28
 index|]
 decl_stmt|;
 comment|/* the job name */
@@ -1700,16 +1721,19 @@ argument_list|,
 literal|"???"
 argument_list|)
 expr_stmt|;
+name|perror
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * We'll yank the first line into the buffer temporarily. 	 */
-name|fgets
+comment|/* 	 * Skip over the first line. 	 */
+name|fscanf
 argument_list|(
-name|jobname
-argument_list|,
-literal|80
-argument_list|,
 name|filename
+argument_list|,
+literal|"%*[^\n]\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now get the job name. 	 */
@@ -1719,7 +1743,7 @@ name|fscanf
 argument_list|(
 name|filename
 argument_list|,
-literal|"# jobname: %s"
+literal|"# jobname: %27s%*[^\n]\n"
 argument_list|,
 name|jobname
 argument_list|)

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)at.c	5.3 (Berkeley) %G%"
+literal|"@(#)at.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,7 +162,7 @@ begin_define
 define|#
 directive|define
 name|BOURNE
-value|0
+value|"/bin/sh"
 end_define
 
 begin_comment
@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|CSHELL
-value|1
+value|"/bin/csh"
 end_define
 
 begin_comment
@@ -200,6 +200,17 @@ end_define
 
 begin_comment
 comment|/* spooling area */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINSIZ
+value|256
+end_define
+
+begin_comment
+comment|/* length of input buffer */
 end_comment
 
 begin_comment
@@ -610,14 +621,17 @@ function_decl|;
 comment|/* do cleanup on an interrupt signal */
 name|int
 name|dateindex
+init|=
+name|NODATEFOUND
 decl_stmt|;
 comment|/* if a day is specified, what option 					   is it? (mon day, week, dayofweek) */
-name|int
+name|char
+modifier|*
 name|shell
 init|=
-literal|0
+name|BOURNE
 decl_stmt|;
-comment|/* what shell do we use to run job?    					   BOURNE = 0	CSHELL = 1 */
+comment|/* what shell do we use to run job? */
 name|int
 name|shflag
 init|=
@@ -650,7 +664,7 @@ comment|/* scratch pointer */
 name|char
 name|line
 index|[
-literal|100
+name|LINSIZ
 index|]
 decl_stmt|;
 comment|/* a line from input file */
@@ -801,11 +815,9 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|!
-operator|(
-operator|*
-name|argv
-operator|)
+name|argc
+operator|<=
+literal|0
 condition|)
 name|usage
 argument_list|()
@@ -839,25 +851,14 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * If no argv[2] exists, then we are reading from standard input 	 * and only a time of day has been specified. Therefore, we set 	 * the standard input flag, and indicate that a date was not 	 * specified (NODATEFOUND). 	 */
+comment|/* 	 * If argv[(2)] exists, this is a request to run a job on a certain 	 * day of year or a certain day of week. 	 * 	 * We send  argv to the function "getdateindex" which returns the  	 * index value of the requested day in the table "dates_info"  	 * (see line 50 for table). If 'getdateindex" returns a NODATEFOUND,  	 * then the requested day format was not found in the table (usually  	 * this means that the argument is a "filename"). If the requested  	 * day is found, we continue to process command line arguments. 	 */
 if|if
 condition|(
-operator|!
-operator|*
-name|argv
+name|argc
+operator|>
+literal|0
 condition|)
 block|{
-operator|++
-name|standardin
-expr_stmt|;
-name|dateindex
-operator|=
-name|NODATEFOUND
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 	 * Otherwise, we are dealing with a request to run a job on a certain 	 * day of year or a certain day of week. 	 * 	 * We send  argv to the function "getdateindex" which returns the  	 * index value of the requested day in the table "dates_info"  	 * (see line 50 for table). If 'getdateindex" returns a NODATEFOUND,  	 * then the requested day format was not found in the table (usually  	 * this means that the argument is a "filename"). If the requested  	 * day is found, we continue to process command line arguments. 	 */
 if|if
 condition|(
 operator|(
@@ -884,57 +885,12 @@ name|makedayofyear
 argument_list|(
 name|dateindex
 argument_list|,
-name|argv
-argument_list|)
-expr_stmt|;
-comment|/* 			 * If we were dealing with the<month day> format, 			 * we need to skip over the next argv (the day of 			 * month). 			 */
-if|if
-condition|(
-name|dates_info
-index|[
-name|dateindex
-index|]
-operator|.
-name|type
-operator|==
-name|MONTH
-condition|)
-operator|++
-name|argv
-expr_stmt|;
-operator|--
-name|argc
-expr_stmt|;
-comment|/* 			 * If 'week' was requested, we need to skip over  			 * the next argv ('week'). 			 */
-if|if
-condition|(
-name|strcmp
-argument_list|(
-operator|*
+operator|&
 name|argv
 argument_list|,
-literal|"week"
-argument_list|)
-operator|==
-literal|0
-condition|)
-operator|++
-name|argv
-expr_stmt|;
-operator|--
+operator|&
 name|argc
-expr_stmt|;
-comment|/* 			 * If no more arguments exist, then we are reading 			 * from standard input. Thus, we set the standard 			 * input flag (++standardin). 			 */
-if|if
-condition|(
-operator|!
-operator|(
-operator|*
-name|argv
-operator|)
-condition|)
-operator|++
-name|standardin
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -951,24 +907,38 @@ name|daysinyear
 decl_stmt|;
 if|if
 condition|(
-name|strncmp
+operator|(
+name|argc
+operator|>
+literal|0
+operator|)
+operator|&&
+operator|(
+name|strcmp
 argument_list|(
 operator|*
 name|argv
 argument_list|,
 literal|"week"
-argument_list|,
-literal|4
 argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
+block|{
 name|attime
 operator|.
 name|yday
 operator|+=
 literal|7
 expr_stmt|;
+operator|++
+name|argv
+expr_stmt|;
+operator|--
+name|argc
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1015,6 +985,16 @@ name|year
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * If no more arguments exist, then we are reading 	 * from standard input. Thus, we set the standard 	 * input flag (++standardin). 	 */
+if|if
+condition|(
+name|argc
+operator|<=
+literal|0
+condition|)
+operator|++
+name|standardin
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1225,6 +1205,42 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * If the inputfile is not from a tty then turn off standardin 	 * If the inputfile is a tty, put out a prompt now, instead of 	 * waiting for a lot of file activity to complete. 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|inputfile
+argument_list|)
+argument_list|)
+operator|)
+condition|)
+name|standardin
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|standardin
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"at> "
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Determine what shell we should use to run the job. If the user 	 * didn't explicitly request that his/her current shell be over- 	 * ridden (shflag of cshflag) then we use the current shell. 	 */
 if|if
 condition|(
@@ -1237,48 +1253,26 @@ operator|(
 operator|!
 name|cshflag
 operator|)
-condition|)
-block|{
-name|tmp
-operator|=
+operator|&&
+operator|(
 name|getenv
 argument_list|(
 literal|"SHELL"
 argument_list|)
-expr_stmt|;
+operator|!=
+name|NULL
+operator|)
+condition|)
 name|shell
 operator|=
-operator|(
-operator|(
-name|strcmp
-argument_list|(
-name|tmp
-operator|+
-name|strlen
-argument_list|(
-name|tmp
-argument_list|)
-operator|-
-literal|3
-argument_list|,
-literal|"csh"
-argument_list|)
-operator|==
-literal|0
-operator|)
-condition|?
-name|CSHELL
-else|:
-name|BOURNE
-operator|)
+literal|"$SHELL"
 expr_stmt|;
-block|}
 comment|/* 	 * Put some standard information at the top of the spoolfile. 	 * This info is used by the other "at"-oriented programs (atq, 	 * atrm, atrun). 	 */
 name|fprintf
 argument_list|(
 name|spoolfile
 argument_list|,
-literal|"# owner: %s\n"
+literal|"# owner: %.127s\n"
 argument_list|,
 name|getname
 argument_list|(
@@ -1291,7 +1285,7 @@ name|fprintf
 argument_list|(
 name|spoolfile
 argument_list|,
-literal|"# jobname: %s\n"
+literal|"# jobname: %.127s\n"
 argument_list|,
 name|jobfile
 argument_list|)
@@ -1300,17 +1294,7 @@ name|fprintf
 argument_list|(
 name|spoolfile
 argument_list|,
-literal|"# shell: %s\n"
-argument_list|,
-operator|(
-name|shell
-operator|==
-literal|1
-operator|)
-condition|?
-literal|"csh"
-else|:
-literal|"sh"
+literal|"# shell: sh\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1398,61 +1382,34 @@ condition|)
 block|{
 name|copyenvironment
 argument_list|(
-name|shell
-argument_list|,
 operator|&
 name|spoolfile
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If the inputfile is not from a tty then turn off standardin 	 */
-if|if
-condition|(
-operator|!
-operator|(
-name|isatty
+comment|/* 	 * Put in a line to run the proper shell using the rest of 	 * the file as input.  Note that 'exec'ing the shell will 	 * cause sh() to leave a /tmp/sh### file around. 	 */
+name|fprintf
 argument_list|(
-name|fileno
-argument_list|(
-name|inputfile
+name|spoolfile
+argument_list|,
+literal|"%s<< '...the rest of this file is shell input'\n"
+argument_list|,
+name|shell
 argument_list|)
-argument_list|)
-operator|)
-condition|)
-name|standardin
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 	 * Now that we have all the files set up, we can start reading in 	 * the job. (I added the prompt "at>" so that the user could tell 	 * when/if he/she was supposed to enter commands from standard 	 * input. The old "at" just sat there and didn't send any kind of  	 * message that said it was waiting for input if it was reading 	 * form standard input). 	 */
 while|while
 condition|(
-name|fputs
-argument_list|(
-operator|(
-name|standardin
-operator|)
-condition|?
-literal|"at> "
-else|:
-literal|""
-argument_list|,
-name|stdout
-argument_list|)
-operator|!=
-name|EOF
-operator|&&
-operator|(
 name|fgets
 argument_list|(
 name|line
 argument_list|,
-literal|100
+name|LINSIZ
 argument_list|,
 name|inputfile
 argument_list|)
 operator|!=
 name|NULL
-operator|)
 condition|)
 block|{
 name|fputs
@@ -1462,7 +1419,30 @@ argument_list|,
 name|spoolfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|standardin
+condition|)
+name|fputs
+argument_list|(
+literal|"at> "
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|standardin
+condition|)
+name|fputs
+argument_list|(
+literal|"<EOT>\n"
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+comment|/* clean up the final output */
 comment|/* 	 * Close all files and change the mode of the spoolfile. 	 */
 name|fclose
 argument_list|(
@@ -1483,23 +1463,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy the user's environment to the spoolfile. Depending on the value of  * "shell" we convert the environment values so they correspond to the syntax   * of the Cshell (1) or the Bourne shell (0). This thing DOES work, although   * it may look a bit kludgey.  */
+comment|/*  * Copy the user's environment to the spoolfile in the syntax of the  * Bourne shell.  After the environment is set up, the proper shell  * will be invoked.  */
 end_comment
 
 begin_macro
 name|copyenvironment
 argument_list|(
-argument|shell
-argument_list|,
 argument|spoolfile
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|shell
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|FILE
@@ -1524,46 +1496,6 @@ init|=
 name|environ
 decl_stmt|;
 comment|/* pointer to an environment setting */
-if|if
-condition|(
-name|shell
-operator|==
-name|CSHELL
-condition|)
-block|{
-name|fprintf
-argument_list|(
-operator|*
-name|spoolfile
-argument_list|,
-literal|"if ($?histchars) then\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-operator|*
-name|spoolfile
-argument_list|,
-literal|"set xxhist=$histchars\nendif\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-operator|*
-name|spoolfile
-argument_list|,
-literal|"set histchars=''\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-operator|*
-name|spoolfile
-argument_list|,
-literal|"set noglob\n"
-argument_list|)
-expr_stmt|;
-block|}
 while|while
 condition|(
 operator|*
@@ -1578,16 +1510,31 @@ expr_stmt|;
 comment|/* 		 * We don't want the termcap or terminal entry so skip them. 		 */
 if|if
 condition|(
+operator|(
 name|strncmp
 argument_list|(
 name|tmp
 argument_list|,
-literal|"TERM"
+literal|"TERM="
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 operator|==
 literal|0
+operator|)
+operator|||
+operator|(
+name|strncmp
+argument_list|(
+name|tmp
+argument_list|,
+literal|"TERMCAP="
+argument_list|,
+literal|8
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 operator|++
@@ -1595,21 +1542,7 @@ name|environptr
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * Set up the proper syntax. ("setenv xx yy" for the Cshell 		 * and "xx = 'yy'" for the Bourne shell). 		 */
-if|if
-condition|(
-name|shell
-operator|==
-name|CSHELL
-condition|)
-name|fputs
-argument_list|(
-literal|"setenv "
-argument_list|,
-operator|*
-name|spoolfile
-argument_list|)
-expr_stmt|;
+comment|/* 		 * Set up the proper syntax. 		 */
 while|while
 condition|(
 operator|*
@@ -1627,13 +1560,6 @@ operator|*
 name|spoolfile
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|shell
-operator|==
-name|BOURNE
-condition|)
-block|{
 name|fputc
 argument_list|(
 literal|'='
@@ -1642,18 +1568,9 @@ operator|*
 name|spoolfile
 argument_list|)
 expr_stmt|;
-block|}
-name|fputs
+name|fputc
 argument_list|(
-operator|(
-name|shell
-operator|==
-name|CSHELL
-operator|)
-condition|?
-literal|" \""
-else|:
-literal|"'"
+literal|'\''
 argument_list|,
 operator|*
 name|spoolfile
@@ -1716,28 +1633,13 @@ expr_stmt|;
 block|}
 name|fputc
 argument_list|(
-operator|(
-name|shell
-operator|==
-name|CSHELL
-operator|)
-condition|?
-literal|'"'
-else|:
 literal|'\''
 argument_list|,
 operator|*
 name|spoolfile
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If it's the Bourne shell, we need to "export" environment 		 * settings. 		 */
-if|if
-condition|(
-name|shell
-operator|==
-name|BOURNE
-condition|)
-block|{
+comment|/* 		 * We need to "export" environment settings. 		 */
 name|fprintf
 argument_list|(
 operator|*
@@ -1768,7 +1670,6 @@ operator|*
 name|spoolfile
 argument_list|)
 expr_stmt|;
-block|}
 name|fputc
 argument_list|(
 literal|'\n'
@@ -1781,47 +1682,6 @@ operator|++
 name|environptr
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|shell
-operator|==
-name|CSHELL
-condition|)
-block|{
-name|fprintf
-argument_list|(
-operator|*
-name|spoolfile
-argument_list|,
-literal|"unset noglob\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-operator|*
-name|spoolfile
-argument_list|,
-literal|"if ($?xxhist) then\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-operator|*
-name|spoolfile
-argument_list|,
-literal|"set histchars=$xxhist\nelse\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-operator|*
-name|spoolfile
-argument_list|,
-literal|"unset histchars\nendif\n"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * My god, it worked! (I hope) 	 */
 return|return;
 block|}
 end_block
@@ -2105,7 +1965,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Calculate the day of year that the job will be executed.  */
+comment|/*  * Calculate the day of year that the job will be executed.  * The av,ac arguments are ptrs to argv,argc; updated as necessary.  */
 end_comment
 
 begin_macro
@@ -2113,17 +1973,11 @@ name|makedayofyear
 argument_list|(
 argument|dateindex
 argument_list|,
-argument|argv
+argument|av
+argument_list|,
+argument|ac
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|argv
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2131,8 +1985,39 @@ name|dateindex
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+modifier|*
+name|av
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|ac
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
+name|char
+modifier|*
+modifier|*
+name|argv
+init|=
+operator|*
+name|av
+decl_stmt|;
+comment|/* imitate argc,argv and update args at end */
+name|int
+name|argc
+init|=
+operator|*
+name|ac
+decl_stmt|;
 name|char
 modifier|*
 name|ptr
@@ -2224,9 +2109,9 @@ block|{
 comment|/* 		 * If a day of month isn't specified, print a message 		 * and exit. 		 */
 if|if
 condition|(
-operator|!
-operator|*
-name|argv
+name|argc
+operator|<=
+literal|0
 condition|)
 block|{
 name|fprintf
@@ -2378,28 +2263,45 @@ expr_stmt|;
 operator|++
 name|argv
 expr_stmt|;
+operator|--
+name|argc
+expr_stmt|;
 block|}
 comment|/* 	 * If 'week' is specified, add 7 to the day of year. 	 */
 if|if
 condition|(
-name|strncmp
+operator|(
+name|argc
+operator|>
+literal|0
+operator|)
+operator|&&
+operator|(
+name|strcmp
 argument_list|(
 operator|*
 name|argv
 argument_list|,
 literal|"week"
-argument_list|,
-literal|4
 argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
+block|{
 name|attime
 operator|.
 name|yday
 operator|+=
 literal|7
 expr_stmt|;
+operator|++
+name|argv
+expr_stmt|;
+operator|--
+name|argc
+expr_stmt|;
+block|}
 comment|/* 	 * Now that all that is done, see if the requested execution time 	 * has already passed for this year, and if it has, set execution 	 * for next year. 	 */
 if|if
 condition|(
@@ -2410,6 +2312,17 @@ operator|++
 name|attime
 operator|.
 name|year
+expr_stmt|;
+comment|/* 	 * Finally, reflect the updated argc,argv to the caller 	 */
+operator|*
+name|av
+operator|=
+name|argv
+expr_stmt|;
+operator|*
+name|ac
+operator|=
+name|argc
 expr_stmt|;
 block|}
 end_block
@@ -2739,8 +2652,7 @@ return|;
 block|}
 return|return
 operator|(
-operator|-
-literal|1
+name|NODATEFOUND
 operator|)
 return|;
 block|}
@@ -3232,10 +3144,32 @@ case|:
 case|case
 literal|'N'
 case|:
+if|if
+condition|(
+operator|(
+name|val
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|val
+operator|==
+name|HALFDAY
+operator|)
+condition|)
 name|val
 operator|=
 name|HALFDAY
 expr_stmt|;
+else|else
+name|val
+operator|=
+name|FULLDAY
+operator|+
+literal|1
+expr_stmt|;
+comment|/* illegal */
 break|break;
 case|case
 literal|'M'
@@ -3243,10 +3177,32 @@ case|:
 case|case
 literal|'m'
 case|:
+if|if
+condition|(
+operator|(
+name|val
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|val
+operator|==
+name|HALFDAY
+operator|)
+condition|)
 name|val
 operator|=
 literal|0
 expr_stmt|;
+else|else
+name|val
+operator|=
+name|FULLDAY
+operator|+
+literal|1
+expr_stmt|;
+comment|/* illegal */
 break|break;
 case|case
 literal|'\0'
@@ -3334,7 +3290,7 @@ name|hour
 operator|=
 name|val
 operator|/
-literal|100
+name|HOUR
 expr_stmt|;
 name|attime
 operator|->
@@ -3342,7 +3298,7 @@ name|min
 operator|=
 name|val
 operator|%
-literal|100
+name|HOUR
 expr_stmt|;
 block|}
 end_block
@@ -3452,14 +3408,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: at [-c] [-s] [-m] "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"time [filename]\n"
+literal|"usage: at [-csm] time [date] [filename]\n"
 argument_list|)
 expr_stmt|;
 name|exit
