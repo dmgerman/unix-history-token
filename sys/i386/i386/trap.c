@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -549,6 +555,77 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ddb_on_nmi
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ddb_on_nmi
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ddb_on_nmi
+argument_list|,
+literal|0
+argument_list|,
+literal|"Go to DDB on NMI"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+name|int
+name|panic_on_nmi
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|panic_on_nmi
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|panic_on_nmi
+argument_list|,
+literal|0
+argument_list|,
+literal|"Panic on NMI"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -1340,7 +1417,12 @@ block|{
 ifdef|#
 directive|ifdef
 name|DDB
-comment|/* NMI can be hooked up to a pushbutton for debugging */
+comment|/* 				 * NMI can be hooked up to a pushbutton 				 * for debugging. 				 */
+if|if
+condition|(
+name|ddb_on_nmi
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"NMI ... going to debugger\n"
@@ -1356,16 +1438,23 @@ operator|&
 name|frame
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* DDB */
 return|return;
 block|}
+elseif|else
+if|if
+condition|(
+name|panic_on_nmi
+condition|)
 name|panic
 argument_list|(
 literal|"NMI indicates hardware failure"
 argument_list|)
 expr_stmt|;
+break|break;
 endif|#
 directive|endif
 comment|/* POWERFAIL_NMI */
@@ -1834,7 +1923,12 @@ block|{
 ifdef|#
 directive|ifdef
 name|DDB
-comment|/* NMI can be hooked up to a pushbutton for debugging */
+comment|/* 				 * NMI can be hooked up to a pushbutton 				 * for debugging. 				 */
+if|if
+condition|(
+name|ddb_on_nmi
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"NMI ... going to debugger\n"
@@ -1850,11 +1944,20 @@ operator|&
 name|frame
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* DDB */
 return|return;
 block|}
+elseif|else
+if|if
+condition|(
+name|panic_on_nmi
+operator|==
+literal|0
+condition|)
+return|return;
 comment|/* FALL THROUGH */
 endif|#
 directive|endif
