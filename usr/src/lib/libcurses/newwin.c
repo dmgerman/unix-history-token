@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newwin.c	5.14 (Berkeley) %G%"
+literal|"@(#)newwin.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -293,6 +293,10 @@ name|hash
 operator|=
 name|__hash
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|lp
 operator|->
 name|line
