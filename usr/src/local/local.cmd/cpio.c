@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpio.c	4.2	(Berkeley)	%G%"
+literal|"@(#)cpio.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2507,7 +2507,7 @@ name|sscanf
 argument_list|(
 name|Chdr
 argument_list|,
-literal|"%6o%6ho%6ho%6ho%6ho%6ho%6ho%6ho%11lo%6ho%11lo"
+literal|"%6ho%6ho%6ho%6ho%6ho%6ho%6ho%6ho%11lo%6ho%11lo"
 argument_list|,
 operator|&
 name|Hdr
