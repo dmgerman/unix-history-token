@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.17 (Berkeley) %G%"
+literal|"@(#)ps.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -335,6 +341,12 @@ define|#
 directive|define
 name|X_BUFFERS
 value|28
+literal|"_fscale"
+block|,
+define|#
+directive|define
+name|X_FSCALE
+value|29
 literal|""
 block|}
 decl_stmt|;
@@ -829,7 +841,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|double
+name|fixpt_t
 name|ccpu
 decl_stmt|;
 end_decl_stmt
@@ -856,6 +868,8 @@ name|int
 name|nproc
 decl_stmt|,
 name|ntext
+decl_stmt|,
+name|fscale
 decl_stmt|;
 end_decl_stmt
 
@@ -3858,6 +3872,18 @@ operator|.
 name|n_value
 argument_list|)
 expr_stmt|;
+name|fscale
+operator|=
+name|getw
+argument_list|(
+name|nl
+index|[
+name|X_FSCALE
+index|]
+operator|.
+name|n_value
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -6244,6 +6270,16 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|fxtofl
+parameter_list|(
+name|fixpt
+parameter_list|)
+value|((double) fixpt / fscale)
+end_define
+
 begin_function
 name|double
 name|pcpu
@@ -6287,18 +6323,24 @@ return|return
 operator|(
 literal|100.0
 operator|*
+name|fxtofl
+argument_list|(
 name|mproc
 operator|->
 name|p_pctcpu
+argument_list|)
 operator|)
 return|;
 return|return
 operator|(
 literal|100.0
 operator|*
+name|fxtofl
+argument_list|(
 name|mproc
 operator|->
 name|p_pctcpu
+argument_list|)
 operator|/
 operator|(
 literal|1.0
@@ -6309,7 +6351,10 @@ name|time
 operator|*
 name|log
 argument_list|(
+name|fxtofl
+argument_list|(
 name|ccpu
+argument_list|)
 argument_list|)
 argument_list|)
 operator|)
@@ -6317,6 +6362,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|fxtofl
+end_undef
 
 begin_macro
 name|getu
