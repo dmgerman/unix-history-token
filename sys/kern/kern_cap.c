@@ -113,16 +113,20 @@ begin_comment
 comment|/*  * Syscalls to allow a process to retrieve capabilities associated with  * files, if permitted.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|__cap_get_fd
-argument_list|(
-argument|struct proc *p
-argument_list|,
-argument|struct __cap_get_fd_args *uap
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|__cap_get_fd_args
+modifier|*
+name|uap
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -130,18 +134,22 @@ name|ENOSYS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|__cap_get_file
-argument_list|(
-argument|struct proc *p
-argument_list|,
-argument|struct __cap_get_file_args *uap
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|__cap_get_file_args
+modifier|*
+name|uap
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -149,22 +157,26 @@ name|ENOSYS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Syscalls to allow a process to set capabilities associated with files,  * if permitted.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|__cap_set_fd
-argument_list|(
-argument|struct proc *p
-argument_list|,
-argument|struct __cap_set_fd_args *uap
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|__cap_set_fd_args
+modifier|*
+name|uap
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -172,18 +184,22 @@ name|ENOSYS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|__cap_set_file
-argument_list|(
-argument|struct proc *p
-argument_list|,
-argument|struct __cap_set_file_args *uap
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|__cap_set_file_args
+modifier|*
+name|uap
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -191,7 +207,7 @@ name|ENOSYS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
