@@ -3275,6 +3275,9 @@ block|{
 case|case
 name|AF_INET
 case|:
+case|case
+name|AF_INET6
+case|:
 name|getinetproto
 argument_list|(
 name|proto
