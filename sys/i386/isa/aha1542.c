@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *	$Id: aha1542.c,v 1.11 1993/10/15 09:43:51 rgrimes Exp $  */
+comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *	$Id: aha1542.c,v 1.12 1993/10/16 12:27:20 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -4024,7 +4024,7 @@ name|unit
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If we are on a 1542C or 1542CF find out if the extended bios 	 * is enabled, if it is disable it, or else it will screw us up later 	 */
+comment|/* 	 * If we are a 1542C or 1542CF disable the extended bios so that the 	 * mailbox interface is unlocked. 	 * No need to check the extended bios flags as some of the 	 * extensions that cause us problems are not flagged in that byte. 	 */
 if|if
 condition|(
 operator|(
@@ -4080,18 +4080,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* AHADEBUG */
-if|if
-condition|(
-name|extbios
-operator|.
-name|flags
-operator|&
-literal|0x8
-condition|)
-block|{
 name|printf
 argument_list|(
-literal|"aha%d: disabling bios enhanced features\n"
+literal|"aha%d: 1542C/CF detected, unlocking mailbox\n"
 argument_list|)
 expr_stmt|;
 name|aha_cmd
@@ -4115,7 +4106,6 @@ operator|.
 name|mailboxlock
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/***********************************************\ 	* Setup dma channel from jumpers and save int	* 	* level						* 	\***********************************************/
 ifdef|#
