@@ -2243,6 +2243,7 @@ literal|"Message verification failed"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/* put the entire message back into the *messagep variable */
 name|fp
 operator|=
@@ -2474,7 +2475,6 @@ argument_list|(
 name|fname
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
