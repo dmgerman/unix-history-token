@@ -1945,7 +1945,7 @@ block|}
 comment|/* Latin small letter y with diaeresis */
 endif|#
 directive|endif
-comment|/* MEYMAP_SIZE> 128 */
+comment|/* KEYMAP_SIZE> 128 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2043,11 +2043,7 @@ comment|/* Meta-Control-g */
 block|{
 name|ISFUNC
 block|,
-operator|(
-name|Function
-operator|*
-operator|)
-literal|0x0
+name|rl_backward_kill_word
 block|}
 block|,
 comment|/* Meta-Control-h */
@@ -2232,11 +2228,7 @@ comment|/* Meta-Control-z */
 block|{
 name|ISFUNC
 block|,
-operator|(
-name|Function
-operator|*
-operator|)
-literal|0x0
+name|rl_complete
 block|}
 block|,
 comment|/* Meta-Control-[ */
@@ -3108,11 +3100,7 @@ comment|/* Meta-} */
 block|{
 name|ISFUNC
 block|,
-operator|(
-name|Function
-operator|*
-operator|)
-literal|0x0
+name|rl_tilde_expand
 block|}
 block|,
 comment|/* Meta-~ */

@@ -45,6 +45,13 @@ directive|include
 file|"readline.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|rl_explicit_arg
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Non-zero means try to blink the matching open parenthesis when the    close parenthesis is inserted. */
 end_comment
@@ -119,10 +126,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|rl_explicit_arg
-decl_stmt|;
 if|if
 condition|(
 name|rl_explicit_arg
@@ -189,7 +192,10 @@ name|match_point
 operator|<
 literal|0
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|FD_ZERO
 argument_list|(
 operator|&
@@ -273,6 +279,9 @@ endif|#
 directive|endif
 comment|/* !FD_SET */
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_block
 

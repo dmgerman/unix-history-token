@@ -326,6 +326,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Return an array of tokens, much as the shell might.  The tokens are    parsed out of STRING. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|history_tokenize
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Extract a string segment consisting of the FIRST through LAST    arguments present in STRING.  Arguments are broken up as in    the shell. */
 end_comment
 
@@ -349,6 +363,67 @@ name|history_total_bytes
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Exported history variables. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|history_stifled
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|history_length
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|max_input_history
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|history_expansion_char
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|history_subst_char
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|history_comment_char
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|history_no_expand_chars
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|history_base
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
