@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.15 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.16 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.15 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.16 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -274,7 +274,8 @@ decl_stmt|,
 name|qdcount
 decl_stmt|,
 name|buflen
-decl_stmt|,
+decl_stmt|;
+name|bool
 name|seenlocal
 decl_stmt|;
 name|u_short
@@ -493,7 +494,7 @@ literal|0
 expr_stmt|;
 name|seenlocal
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 name|buflen
 operator|=
@@ -671,20 +672,20 @@ name|n
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|strcasecmp
 argument_list|(
 name|bp
 argument_list|,
 name|localhost
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|seenlocal
-operator|==
-literal|0
 operator|||
 name|pref
 operator|<
@@ -696,7 +697,7 @@ name|pref
 expr_stmt|;
 name|seenlocal
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 continue|continue;
 block|}
@@ -828,6 +829,20 @@ block|}
 name|nmx
 operator|=
 literal|1
+expr_stmt|;
+name|prefer
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|weight
+index|[
+literal|0
+index|]
+operator|=
+literal|0
 expr_stmt|;
 block|}
 comment|/* sort the records */
