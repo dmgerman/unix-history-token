@@ -3519,15 +3519,6 @@ begin_struct
 struct|struct
 name|sigpending_args
 block|{
-name|SIGSETOR
-argument_list|(
-name|siglist
-argument_list|,
-name|td
-operator|->
-name|td_siglist
-argument_list|)
-expr_stmt|;
 name|sigset_t
 modifier|*
 name|set
@@ -4744,7 +4735,7 @@ name|nsap
 argument_list|,
 name|osap
 argument_list|,
-literal|1
+name|KSA_OSIGSET
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
