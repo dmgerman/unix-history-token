@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c 3.7 %G%"
+literal|"@(#)pc.c 3.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -733,7 +733,7 @@ literal|'l'
 case|:
 name|lpc
 operator|=
-literal|"/usr/src/lib/libpc/pclib"
+literal|"/usr/src/lib/libpc/libpc"
 expr_stmt|;
 continue|continue;
 block|}
