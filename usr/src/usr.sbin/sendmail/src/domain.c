@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.25 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.26 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.25 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.26 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +95,24 @@ include|#
 directive|include
 file|<netdb.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BSD4_4
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__dn_skipname
+value|dn_skipname
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -1276,123 +1294,6 @@ block|}
 block|}
 block|}
 end_block
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BSD
-end_ifndef
-
-begin_comment
-comment|/*  * Skip over a compressed domain name. Return the size or -1.  */
-end_comment
-
-begin_macro
-name|__dn_skipname
-argument_list|(
-argument|comp_dn
-argument_list|,
-argument|eom
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|u_char
-modifier|*
-name|comp_dn
-decl_stmt|,
-modifier|*
-name|eom
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|register
-name|u_char
-modifier|*
-name|cp
-decl_stmt|;
-specifier|register
-name|int
-name|n
-decl_stmt|;
-name|cp
-operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
-name|comp_dn
-expr_stmt|;
-while|while
-condition|(
-name|cp
-operator|<
-name|eom
-operator|&&
-operator|(
-name|n
-operator|=
-operator|*
-name|cp
-operator|++
-operator|)
-condition|)
-block|{
-comment|/* 		 * check for indirection 		 */
-switch|switch
-condition|(
-name|n
-operator|&
-name|INDIR_MASK
-condition|)
-block|{
-case|case
-literal|0
-case|:
-comment|/* normal case, n == len */
-name|cp
-operator|+=
-name|n
-expr_stmt|;
-continue|continue;
-default|default:
-comment|/* illegal type */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-case|case
-name|INDIR_MASK
-case|:
-comment|/* indirection */
-name|cp
-operator|++
-expr_stmt|;
-block|}
-break|break;
-block|}
-return|return
-operator|(
-name|cp
-operator|-
-name|comp_dn
-operator|)
-return|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not BSD */
-end_comment
 
 begin_else
 else|#
