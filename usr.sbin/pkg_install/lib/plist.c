@@ -774,14 +774,13 @@ if|if
 condition|(
 name|arg
 condition|)
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 operator|*
 name|arg
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|sp
 expr_stmt|;
 if|if
@@ -1231,22 +1230,18 @@ operator|==
 name|FAIL
 condition|)
 block|{
-name|cleanup
+name|warnx
 argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|errx
-argument_list|(
-literal|2
-argument_list|,
-literal|"%s: bad command '%s'"
+literal|"%s: unknown command '%s' (package tools out of date?)"
 argument_list|,
 name|__func__
 argument_list|,
 name|pline
 argument_list|)
 expr_stmt|;
+goto|goto
+name|bottom
+goto|;
 block|}
 if|if
 condition|(

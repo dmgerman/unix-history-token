@@ -125,7 +125,7 @@ condition|)
 operator|*
 name|str
 operator|=
-name|copy_string_plus_newline
+name|copy_string_adds_newline
 argument_list|(
 name|s
 operator|+
@@ -185,7 +185,7 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|copy_string_plus_newline
+name|copy_string_adds_newline
 parameter_list|(
 specifier|const
 name|char

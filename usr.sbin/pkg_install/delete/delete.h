@@ -51,13 +51,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|Boolean
-name|Force
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|Boolean
 name|Recursive
 decl_stmt|;
 end_decl_stmt

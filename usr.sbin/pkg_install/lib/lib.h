@@ -165,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|REMOVE_CMD
-value|"rm"
+value|"/bin/rm"
 end_define
 
 begin_comment
@@ -176,7 +176,7 @@ begin_define
 define|#
 directive|define
 name|RMDIR_CMD
-value|"rmdir"
+value|"/bin/rmdir"
 end_define
 
 begin_comment
@@ -293,6 +293,43 @@ name|MTREE_FNAME
 value|"+MTREE_DIRS"
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|500036
+end_if
+
+begin_define
+define|#
+directive|define
+name|INDEX_FNAME
+value|"INDEX-5"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|INDEX_FNAME
+value|"INDEX"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -323,7 +360,7 @@ begin_define
 define|#
 directive|define
 name|PKG_INSTALL_VERSION
-value|20030417
+value|20040629
 end_define
 
 begin_define
@@ -428,6 +465,10 @@ name|MATCH_EXACT
 block|,
 name|MATCH_GLOB
 block|,
+name|MATCH_NGLOB
+block|,
+name|MATCH_EREGEX
+block|,
 name|MATCH_REGEX
 block|}
 enum|;
@@ -500,10 +541,12 @@ decl_stmt|,
 modifier|*
 name|tail
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|origin
@@ -673,7 +716,7 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|copy_string_plus_newline
+name|copy_string_adds_newline
 parameter_list|(
 specifier|const
 name|char
@@ -1375,6 +1418,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|pattern_match
+parameter_list|(
+name|match_t
+name|MatchType
+parameter_list|,
+name|char
+modifier|*
+name|pattern
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|pkgname
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Dependencies */
 end_comment
@@ -1439,6 +1501,21 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|version_cmp
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

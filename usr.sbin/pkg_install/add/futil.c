@@ -141,7 +141,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"mkdir %s"
+literal|"/bin/mkdir %s"
 argument_list|,
 name|dir
 argument_list|)
@@ -245,7 +245,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"cd %s&& chmod -R %s %s"
+literal|"cd %s&& /bin/chmod -R %s %s"
 argument_list|,
 name|cd_to
 argument_list|,
@@ -274,7 +274,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"cd %s&& chown -R %s:%s %s"
+literal|"cd %s&& /usr/sbin/chown -R %s:%s %s"
 argument_list|,
 name|cd_to
 argument_list|,
@@ -307,7 +307,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"cd %s&& chown -R %s %s"
+literal|"cd %s&& /usr/sbin/chown -R %s %s"
 argument_list|,
 name|cd_to
 argument_list|,
@@ -336,7 +336,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"cd %s&& chgrp -R %s %s"
+literal|"cd %s&& /usr/bin/chgrp -R %s %s"
 argument_list|,
 name|cd_to
 argument_list|,

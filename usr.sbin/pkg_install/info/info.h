@@ -180,6 +180,20 @@ name|SHOW_PTREV
 value|0x10000
 end_define
 
+begin_define
+define|#
+directive|define
+name|SHOW_DEPEND
+value|0x20000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHOW_PKGNAME
+value|0x40000
+end_define
+
 begin_struct
 struct|struct
 name|which_entry
@@ -230,6 +244,20 @@ begin_decl_stmt
 specifier|extern
 name|Boolean
 name|Quiet
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|QUIET
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|UseBlkSz
 decl_stmt|;
 end_decl_stmt
 

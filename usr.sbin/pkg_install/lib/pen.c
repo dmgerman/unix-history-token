@@ -573,7 +573,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Requested space: %d bytes, free space: %qd bytes in %s\n"
+literal|"Requested space: %d bytes, free space: %lld bytes in %s\n"
 argument_list|,
 operator|(
 name|int
@@ -789,7 +789,7 @@ literal|'/'
 operator|&&
 name|vsystem
 argument_list|(
-literal|"rm -rf %s"
+literal|"/bin/rm -rf %s"
 argument_list|,
 name|PenLocation
 argument_list|)

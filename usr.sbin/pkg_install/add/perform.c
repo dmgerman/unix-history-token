@@ -252,8 +252,6 @@ name|inPlace
 decl_stmt|,
 name|conflictsfound
 decl_stmt|,
-name|i
-decl_stmt|,
 name|errcode
 decl_stmt|;
 comment|/* support for separate pre/post install scripts */
@@ -575,7 +573,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unable to make playpen for %qd bytes"
+literal|"unable to make playpen for %lld bytes"
 argument_list|,
 operator|(
 name|long
@@ -737,7 +735,7 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"mkdir -p %s"
+literal|"/bin/mkdir -p %s"
 argument_list|,
 name|p
 operator|->
@@ -819,7 +817,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"projected size of %qd exceeds available free space.\n"
+literal|"projected size of %lld exceeds available free space.\n"
 literal|"Please set your PKG_TMPDIR variable to point to a location with more\n"
 literal|"free space and try again"
 argument_list|,
@@ -1015,6 +1013,8 @@ name|Plist
 operator|.
 name|name
 argument_list|)
+operator|>
+literal|0
 operator|||
 name|matchbyorigin
 argument_list|(
@@ -1079,6 +1079,9 @@ operator|==
 name|PLIST_CONFLICTS
 condition|)
 block|{
+name|int
+name|i
+decl_stmt|;
 name|conflict
 index|[
 literal|0
@@ -1153,6 +1156,8 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|>
+literal|0
 condition|)
 block|{
 name|warnx
@@ -1298,13 +1303,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|isinstalledpkg
 argument_list|(
 name|p
 operator|->
 name|name
 argument_list|)
+operator|<=
+literal|0
 operator|&&
 operator|!
 operator|(
@@ -1375,10 +1381,28 @@ name|ext
 operator|==
 name|NULL
 condition|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|500039
+name|ext
+operator|=
+literal|".tbz"
+expr_stmt|;
+else|#
+directive|else
 name|ext
 operator|=
 literal|".tgz"
 expr_stmt|;
+endif|#
+directive|endif
 name|snprintf
 argument_list|(
 name|path
@@ -1442,7 +1466,9 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"pkg_add %s'%s'"
+literal|"%s %s'%s'"
+argument_list|,
+name|PkgAddCmd
 argument_list|,
 name|Verbose
 condition|?
@@ -1568,7 +1594,9 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"(pwd; cat +CONTENTS) | pkg_add %s-S"
+literal|"(pwd; /bin/cat +CONTENTS) | %s %s-S"
+argument_list|,
+name|PkgAddCmd
 argument_list|,
 name|Verbose
 condition|?
@@ -1698,7 +1726,7 @@ condition|)
 block|{
 name|vsystem
 argument_list|(
-literal|"chmod +x %s"
+literal|"/bin/chmod +x %s"
 argument_list|,
 name|REQUIRE_FNAME
 argument_list|)
@@ -1850,7 +1878,7 @@ condition|)
 block|{
 name|vsystem
 argument_list|(
-literal|"chmod +x %s"
+literal|"/bin/chmod +x %s"
 argument_list|,
 name|pre_script
 argument_list|)
@@ -2026,7 +2054,7 @@ condition|)
 block|{
 name|vsystem
 argument_list|(
-literal|"chmod +x %s"
+literal|"/bin/chmod +x %s"
 argument_list|,
 name|post_script
 argument_list|)
@@ -2177,7 +2205,7 @@ block|}
 comment|/* Make sure pkg_info can read the entry */
 name|vsystem
 argument_list|(
-literal|"chmod a+rx %s"
+literal|"/bin/chmod a+rx %s"
 argument_list|,
 name|LogDir
 argument_list|)

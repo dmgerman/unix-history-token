@@ -57,13 +57,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|Boolean
-name|Force
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|char
 modifier|*
 name|Mode
@@ -99,6 +92,14 @@ specifier|extern
 name|char
 modifier|*
 name|PkgName
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|PkgAddCmd
 decl_stmt|;
 end_decl_stmt
 

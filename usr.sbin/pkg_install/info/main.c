@@ -41,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"acdDe:fgGhiIkl:LmoO:pPqrRst:vVW:x"
+literal|"abcdDe:EfgGhiIjkl:LmoO:pPqQrRst:vVW:xX"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,22 @@ end_decl_stmt
 begin_decl_stmt
 name|Boolean
 name|Quiet
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|QUIET
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|UseBlkSz
 init|=
 name|FALSE
 decl_stmt|;
@@ -247,6 +263,14 @@ name|MATCH_ALL
 expr_stmt|;
 break|break;
 case|case
+literal|'b'
+case|:
+name|UseBlkSz
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'v'
 case|:
 name|Verbose
@@ -271,6 +295,14 @@ operator||
 name|SHOW_DISPLAY
 operator||
 name|SHOW_MTREE
+expr_stmt|;
+break|break;
+case|case
+literal|'E'
+case|:
+name|Flags
+operator||=
+name|SHOW_PKGNAME
 expr_stmt|;
 break|break;
 case|case
@@ -346,6 +378,14 @@ name|SHOW_INSTALL
 expr_stmt|;
 break|break;
 case|case
+literal|'j'
+case|:
+name|Flags
+operator||=
+name|SHOW_REQUIRE
+expr_stmt|;
+break|break;
+case|case
 literal|'k'
 case|:
 name|Flags
@@ -358,7 +398,7 @@ literal|'r'
 case|:
 name|Flags
 operator||=
-name|SHOW_REQUIRE
+name|SHOW_DEPEND
 expr_stmt|;
 break|break;
 case|case
@@ -450,6 +490,18 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'Q'
+case|:
+name|Quiet
+operator|=
+name|TRUE
+expr_stmt|;
+name|QUIET
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'t'
 case|:
 name|strlcpy
@@ -471,6 +523,14 @@ case|:
 name|MatchType
 operator|=
 name|MATCH_REGEX
+expr_stmt|;
+break|break;
+case|case
+literal|'X'
+case|:
+name|MatchType
+operator|=
+name|MATCH_EREGEX
 expr_stmt|;
 break|break;
 case|case
@@ -631,6 +691,10 @@ name|MatchType
 operator|!=
 name|MATCH_REGEX
 operator|&&
+name|MatchType
+operator|!=
+name|MATCH_EREGEX
+operator|&&
 operator|!
 name|isfile
 argument_list|(
@@ -766,13 +830,13 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_info [-cdDfgGiIkLmopPqrRsvVx] [-e package] [-l prefix]"
+literal|"usage: pkg_info [-bcdDEfgGiIjkLmopPqQrRsvVxX] [-e package] [-l prefix]"
 argument_list|,
 literal|"                [-t template] -a | pkg-name ..."
 argument_list|,
-literal|"       pkg_info [-q] -W filename"
+literal|"       pkg_info [-qQ] -W filename"
 argument_list|,
-literal|"       pkg_info [-q] -O origin"
+literal|"       pkg_info [-qQ] -O origin"
 argument_list|,
 literal|"       pkg_info"
 argument_list|)
