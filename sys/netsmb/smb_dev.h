@@ -15,6 +15,29 @@ directive|define
 name|_NETSMB_DEV_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -93,7 +116,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* keep only ane share at this VC */
+comment|/* keep only one share at this VC */
 end_comment
 
 begin_define
@@ -507,33 +530,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LK_SHARED
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|IF_QEMPTY
-parameter_list|(
-name|ifq
-parameter_list|)
-value|((ifq)->ifq_len == 0)
-end_define
 
 begin_define
 define|#
