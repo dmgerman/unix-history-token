@@ -87,7 +87,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Not all systems have S_IFMT, but we probably want to use it if we    do.  See ChangeLog for a more detailed discussion. */
+comment|/* Not all systems have S_IFMT, but we want to use it if we have it.    The S_IFMT code below looks right (it masks and compares).  The    non-S_IFMT code looks bogus (are there really systems on which    S_IFBLK, S_IFLNK,&c, each have their own bit?  I suspect it was    written for OS/2 using the IBM C/C++ Tools 2.01 compiler).     Of course POSIX systems will have S_IS*, so maybe the issue is    semi-moot.  */
 end_comment
 
 begin_if
@@ -934,6 +934,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|char
+modifier|*
+name|getcwd
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -1384,75 +1392,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|STDC_HEADERS
-operator|||
-name|HAVE_STRING_H
-end_if
-
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
-
-begin_comment
-comment|/* An ANSI string.h and pre-ANSI memory.h might conflict. */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|STDC_HEADERS
-operator|&&
-name|HAVE_MEMORY_H
-end_if
-
-begin_include
-include|#
-directive|include
-file|<memory.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not STDC_HEADERS and HAVE_MEMORY_H */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not STDC_HEADERS and not HAVE_STRING_H */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
-end_include
-
-begin_comment
-comment|/* memory.h and strings.h conflict on some systems. */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not STDC_HEADERS and not HAVE_STRING_H */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -1643,46 +1587,6 @@ directive|define
 name|EXIT_FAILURE
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USG
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|POSIX
-argument_list|)
-end_if
-
-begin_function_decl
-name|char
-modifier|*
-name|getcwd
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|char
-modifier|*
-name|getwd
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#
@@ -2339,6 +2243,111 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__CYGWIN32__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Under Windows NT, filenames are case-insensitive, and both / and \    are path component separators.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOLD_FN_CHAR
+parameter_list|(
+name|c
+parameter_list|)
+value|(WNT_filename_classes[(unsigned char) (c)])
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|WNT_filename_classes
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|FILENAMES_CASE_INSENSITIVE
+value|1
+end_define
+
+begin_comment
+comment|/* Is the character C a path name separator?  Under    Windows NT, you can use either / or \.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISDIRSEP
+parameter_list|(
+name|c
+parameter_list|)
+value|(FOLD_FN_CHAR(c) == '/')
+end_define
+
+begin_comment
+comment|/* Like strcmp, but with the appropriate tweaks for file names.    Under Windows NT, filenames are case-insensitive but case-preserving,    and both \ and / are path element separators.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|fncmp
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|n1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|n2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Fold characters in FILENAME to their canonical forms.      If FOLD_FN_CHAR is not #defined, the system provides a default    definition for this.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|fnfold
+parameter_list|(
+name|char
+modifier|*
+name|FILENAME
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined (__CYGWIN32__) || defined (WIN32) */
+end_comment
+
 begin_comment
 comment|/* Some file systems are case-insensitive.  If FOLD_FN_CHAR is    #defined, it maps the character C onto its "canonical" form.  In a    case-insensitive system, it would map all alphanumeric characters    to lower case.  Under Windows NT, / and \ are both path component    separators, so FOLD_FN_CHAR would map them both to /.  */
 end_comment
@@ -2407,21 +2416,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* On some systems, lines in text files should be terminated with CRLF,    not just LF, and the read and write routines do this translation    for you.  LINES_CRLF_TERMINATED is #defined on such systems.    - OPEN_BINARY is the flag to pass to the open function for      untranslated I/O.    - FOPEN_BINARY_READ is the string to pass to fopen to get      untranslated reading.    - FOPEN_BINARY_WRITE is the string to pass to fopen to get      untranslated writing.  */
+comment|/* On some systems, we have to be careful about writing/reading files    in text or binary mode (so in text mode the system can handle CRLF    vs. LF, VMS text file conventions,&c).  We decide to just always    be careful.  That way we don't have to worry about whether text and    binary differ on this system.  We just have to worry about whether    the system has O_BINARY and "rb".  The latter is easy; all ANSI C    libraries have it, SunOS4 has it, and CVS has used it unguarded    some places for a while now without complaints (e.g. "rb" in    server.c (server_updated), since CVS 1.8).  The former is just an    #ifdef.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|LINES_CRLF_TERMINATED
-end_if
-
-begin_define
-define|#
-directive|define
-name|OPEN_BINARY
-value|(O_BINARY)
-end_define
 
 begin_define
 define|#
@@ -2437,6 +2433,19 @@ name|FOPEN_BINARY_WRITE
 value|("wb")
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|O_BINARY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|OPEN_BINARY
+value|(O_BINARY)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -2447,20 +2456,6 @@ define|#
 directive|define
 name|OPEN_BINARY
 value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOPEN_BINARY_READ
-value|("r")
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOPEN_BINARY_WRITE
-value|("w")
 end_define
 
 begin_endif

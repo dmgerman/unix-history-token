@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * A simple ndbm-emulator for CVS.  It parses a text file of the format:  *   * key	value  *   * at dbm_open time, and loads the entire file into memory.  As such, it is  * probably only good for fairly small modules files.  Ours is about 30K in  * size, and this code works fine.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * A simple ndbm-emulator for CVS.  It parses a text file of the format:  *   * key	value  *   * at dbm_open time, and loads the entire file into memory.  As such, it is  * probably only good for fairly small modules files.  Ours is about 30K in  * size, and this code works fine.  */
 end_comment
 
 begin_include
@@ -43,6 +43,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Returns NULL on error in which case errno has been set to indicate    the error.  Can also call error() itself.  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -942,6 +946,9 @@ name|len
 decl_stmt|,
 name|cont
 decl_stmt|;
+name|int
+name|line_length
+decl_stmt|;
 name|value_allocated
 operator|=
 literal|1
@@ -959,6 +966,9 @@ name|cont
 operator|=
 literal|0
 init|;
+operator|(
+name|line_length
+operator|=
 name|getline
 argument_list|(
 operator|&
@@ -969,6 +979,7 @@ name|line_len
 argument_list|,
 name|fp
 argument_list|)
+operator|)
 operator|>=
 literal|0
 condition|;
@@ -1305,6 +1316,28 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|line_length
+operator|<
+literal|0
+operator|&&
+operator|!
+name|feof
+argument_list|(
+name|fp
+argument_list|)
+condition|)
+comment|/* FIXME: should give the name of the file.  */
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot read file in mydbm_load_file"
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|line

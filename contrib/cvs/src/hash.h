@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  */
 end_comment
 
 begin_comment
@@ -215,7 +215,47 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|insert_before
+name|PROTO
+argument_list|(
+operator|(
+name|List
+operator|*
+name|list
+operator|,
+name|Node
+operator|*
+name|marker
+operator|,
+name|Node
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|addnode
+name|PROTO
+argument_list|(
+operator|(
+name|List
+operator|*
+name|list
+operator|,
+name|Node
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|addnode_at_front
 name|PROTO
 argument_list|(
 operator|(

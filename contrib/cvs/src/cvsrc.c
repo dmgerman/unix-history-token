@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *    Copyright (c) 1993 david d zuhn  *  *    written by david d `zoo' zuhn while at Cygnus Support  *  *    You may distribute under the terms of the GNU General Public License  *    as specified in the README file that comes with the CVS 1.4 kit.  *  */
+comment|/*  * Copyright (c) 1993 david d zuhn  *   * Written by david d `zoo' zuhn while at Cygnus Support  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *  */
 end_comment
 
 begin_include
@@ -322,6 +322,29 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|line_length
+operator|<
+literal|0
+operator|&&
+operator|!
+name|feof
+argument_list|(
+name|cvsrcfile
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot read %s"
+argument_list|,
+name|homeinit
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|cvsrcfile

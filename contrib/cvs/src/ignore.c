@@ -1143,7 +1143,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* FIXME: This list of dirs to ignore stuff seems not to be used.  */
+comment|/* FIXME: This list of dirs to ignore stuff seems not to be used.    Really?  send_dirent_proc and update_dirent_proc both call    ignore_directory and do_module calls ign_dir_add.  No doubt could    use some documentation/testsuite work.  */
 end_comment
 
 begin_decl_stmt
@@ -1176,7 +1176,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* add a directory to list of dirs to ignore */
+comment|/* Add a directory to list of dirs to ignore.  */
 end_comment
 
 begin_function
@@ -1190,7 +1190,7 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-comment|/* make sure we've got the space for the entry */
+comment|/* Make sure we've got the space for the entry.  */
 if|if
 condition|(
 name|dir_ign_current
@@ -1211,10 +1211,6 @@ operator|*
 operator|)
 name|xrealloc
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|dir_ign_list
 argument_list|,
 operator|(
@@ -1246,7 +1242,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* this function returns 1 (true) if the given directory name is part of  * the list of directories to ignore  */
+comment|/* Return nonzero if NAME is part of the list of directories to ignore.  */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Find Names  *   * Finds all the pertinent file names, both from the administration and from the  * repository  *   * Find Dirs  *   * Finds all pertinent sub-directories of the checked out instantiation and the  * repository (and optionally the attic)  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Find Names  *   * Finds all the pertinent file names, both from the administration and from the  * repository  *   * Find Dirs  *   * Finds all pertinent sub-directories of the checked out instantiation and the  * repository (and optionally the attic)  */
 end_comment
 
 begin_include
@@ -788,6 +788,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* This is an old working directory, in which subdirectory                information is not recorded in the Entries file.  Find                the subdirectories the hard way, and, if possible, add                it to the Entries file for next time.  */
+comment|/* FIXME-maybe: find_dirs is bogus for this usage because 	       it skips CVSATTIC and CVSLCK directories--those names 	       should be special only in the repository.  However, in 	       the interests of not perturbing this code, we probably 	       should leave well enough alone unless we want to write 	       a sanity.sh test case (which would operate by manually 	       hacking on the CVS/Entries file).  */
 if|if
 condition|(
 name|find_dirs
@@ -1140,6 +1141,64 @@ name|DIR
 modifier|*
 name|dirp
 decl_stmt|;
+name|int
+name|skip_emptydir
+init|=
+literal|0
+decl_stmt|;
+comment|/* First figure out whether we need to skip directories named        Emptydir.  Except in the CVSNULLREPOS case, Emptydir is just        a normal directory name.  */
+if|if
+condition|(
+name|isabsolute
+argument_list|(
+name|dir
+argument_list|)
+operator|&&
+name|strncmp
+argument_list|(
+name|dir
+argument_list|,
+name|CVSroot_directory
+argument_list|,
+name|strlen
+argument_list|(
+name|CVSroot_directory
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|ISDIRSEP
+argument_list|(
+name|dir
+index|[
+name|strlen
+argument_list|(
+name|CVSroot_directory
+argument_list|)
+index|]
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|dir
+operator|+
+name|strlen
+argument_list|(
+name|CVSroot_directory
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+name|CVSROOTADM
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|skip_emptydir
+operator|=
+literal|1
+expr_stmt|;
 comment|/* set up to read the dir */
 if|if
 condition|(
@@ -1249,6 +1308,22 @@ name|d_name
 argument_list|)
 operator|!=
 name|NULL
+condition|)
+continue|continue;
+if|if
+condition|(
+name|skip_emptydir
+operator|&&
+name|strcmp
+argument_list|(
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|CVSNULLREPOS
+argument_list|)
+operator|==
+literal|0
 condition|)
 continue|continue;
 ifdef|#

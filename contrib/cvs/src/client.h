@@ -104,10 +104,25 @@ name|SERVER_SUPPORT
 argument_list|)
 end_if
 
+begin_comment
+comment|/* Whether the connection should be encrypted.  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|cvsencrypt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Whether the connection should use per-packet authentication.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cvsauthenticate
 decl_stmt|;
 end_decl_stmt
 
@@ -146,6 +161,32 @@ begin_comment
 comment|/* HAVE_KERBEROS */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GSSAPI
+end_ifdef
+
+begin_comment
+comment|/* Set this to turn on GSSAPI encryption.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cvs_gssapi_encrypt
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_GSSAPI */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -153,6 +194,35 @@ end_endif
 
 begin_comment
 comment|/* ENCRYPTION */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GSSAPI
+end_ifdef
+
+begin_comment
+comment|/* We can't declare the arguments without including gssapi.h, and I    don't want to do that in every file.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|struct
+name|buffer
+modifier|*
+name|cvs_gssapi_wrap_buffer_initialize
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_GSSAPI */
 end_comment
 
 begin_endif
@@ -206,7 +276,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|connect_to_pserver
 name|PROTO
 argument_list|(
@@ -221,6 +291,9 @@ name|fromfdp
 operator|,
 name|int
 name|verify_only
+operator|,
+name|int
+name|do_gssapi
 operator|)
 argument_list|)
 decl_stmt|;
@@ -257,11 +330,26 @@ begin_comment
 comment|/* AUTH_CLIENT_SUPPORT */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|AUTH_SERVER_SUPPORT
-end_ifdef
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|SERVER_SUPPORT
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_GSSAPI
+argument_list|)
+operator|)
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -561,6 +649,26 @@ operator|(
 name|char
 operator|*
 name|string
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|send_a_repository
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

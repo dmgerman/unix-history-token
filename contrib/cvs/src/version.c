@@ -14,7 +14,7 @@ name|char
 modifier|*
 name|version_string
 init|=
-literal|"\nConcurrent Versions System (CVS) 1.9.10"
+literal|"\nConcurrent Versions System (CVS) 1.9.23"
 decl_stmt|;
 end_decl_stmt
 

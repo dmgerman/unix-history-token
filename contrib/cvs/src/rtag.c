@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Rtag  *   * Add or delete a symbolic name to an RCS file, or a collection of RCS files.  * Uses the modules database, if necessary.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Rtag  *   * Add or delete a symbolic name to an RCS file, or a collection of RCS files.  * Uses the modules database, if necessary.  */
 end_comment
 
 begin_include
@@ -447,9 +447,13 @@ literal|"\t-d\tDelete the given Tag.\n"
 block|,
 literal|"\t-b\tMake the tag a \"branch\" tag, allowing concurrent development.\n"
 block|,
-literal|"\t-[rD]\tExisting tag or Date.\n"
+literal|"\t-r rev\tExisting revision/tag.\n"
+block|,
+literal|"\t-D\tExisting date.\n"
 block|,
 literal|"\t-F\tMove tag if it already exists\n"
+block|,
+literal|"(Specify the --help global option for a list of other help options)\n"
 block|,
 name|NULL
 block|}
@@ -2245,12 +2249,16 @@ expr_stmt|;
 block|}
 name|run_setup
 argument_list|(
-literal|"%s %s %s %s"
-argument_list|,
 name|filter
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|run_arg
+argument_list|(
 name|symtag
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|run_arg
+argument_list|(
 name|delete_flag
 condition|?
 literal|"del"
@@ -2260,7 +2268,10 @@ condition|?
 literal|"mov"
 else|:
 literal|"add"
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|run_arg
+argument_list|(
 name|repository
 argument_list|)
 expr_stmt|;
@@ -2674,6 +2685,21 @@ argument_list|,
 name|numtag
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|retcode
+operator|==
+literal|0
+condition|)
+name|RCS_rewrite
+argument_list|(
+name|rcsfile
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2728,7 +2754,7 @@ block|{
 name|int
 name|isbranch
 init|=
-name|RCS_isbranch
+name|RCS_nodeisbranch
 argument_list|(
 name|finfo
 operator|->
@@ -2856,6 +2882,21 @@ argument_list|,
 name|symtag
 argument_list|,
 name|rev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|retcode
+operator|==
+literal|0
+condition|)
+name|RCS_rewrite
+argument_list|(
+name|rcsfile
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -3049,8 +3090,6 @@ argument_list|(
 name|rcsfile
 argument_list|,
 name|symtag
-argument_list|,
-literal|1
 argument_list|)
 operator|)
 operator|!=
@@ -3090,6 +3129,15 @@ literal|1
 operator|)
 return|;
 block|}
+name|RCS_rewrite
+argument_list|(
+name|rcsfile
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
