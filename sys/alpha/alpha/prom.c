@@ -139,7 +139,12 @@ name|promcnputc
 block|,
 name|NULL
 block|,
-name|NODEV
+name|makedev
+argument_list|(
+literal|97
+argument_list|,
+literal|0
+argument_list|)
 block|,
 name|CN_NORMAL
 block|}
