@@ -89,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|_BSD_SEGSZ_T_
-value|__int32_t
+value|__int64_t
 end_define
 
 begin_comment
