@@ -2500,6 +2500,10 @@ condition|(
 name|dev
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"devclass_alloc_unit: %s%d already exists, using next available unit number\n"
