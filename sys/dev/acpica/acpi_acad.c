@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/power.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"acpi.h"
 end_include
 
@@ -279,15 +285,15 @@ operator|=
 name|newstatus
 expr_stmt|;
 comment|/* set system power profile based on AC adapter status */
-name|powerprofile_set_state
+name|power_profile_set_state
 argument_list|(
 name|sc
 operator|->
 name|status
 condition|?
-name|POWERPROFILE_PERFORMANCE
+name|POWER_PROFILE_PERFORMANCE
 else|:
-name|POWERPROFILE_ECONOMY
+name|POWER_PROFILE_ECONOMY
 argument_list|)
 expr_stmt|;
 name|ACPI_VPRINT

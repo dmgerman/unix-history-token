@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/power.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"acpi.h"
 end_include
 
@@ -263,7 +269,7 @@ define|#
 directive|define
 name|TZ_FLAG_GETPROFILE
 value|(1<<1)
-comment|/* fetch powerprofile in timeout */
+comment|/* fetch power_profile in timeout */
 name|struct
 name|timespec
 name|tz_cooling_started
@@ -470,7 +476,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|acpi_tz_powerprofile
+name|acpi_tz_power_profile
 parameter_list|(
 name|void
 modifier|*
@@ -1167,9 +1173,9 @@ expr_stmt|;
 comment|/*      * Register our power profile event handler, and flag it for a manual      * invocation by our timeout.  We defer it like this so that the rest      * of the subsystem has time to come up.      */
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|powerprofile_change
+name|power_profile_change
 argument_list|,
-name|acpi_tz_powerprofile
+name|acpi_tz_power_profile
 argument_list|,
 name|sc
 argument_list|,
@@ -3195,7 +3201,7 @@ operator|&
 name|TZ_FLAG_GETPROFILE
 condition|)
 block|{
-name|acpi_tz_powerprofile
+name|acpi_tz_power_profile
 argument_list|(
 operator|(
 name|void
@@ -3231,7 +3237,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|acpi_tz_powerprofile
+name|acpi_tz_power_profile
 parameter_list|(
 name|void
 modifier|*
@@ -3259,6 +3265,27 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+name|int
+name|state
+decl_stmt|;
+name|state
+operator|=
+name|power_profile_get_state
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|state
+operator|!=
+name|POWER_PROFILE_PERFORMANCE
+operator|&&
+name|state
+operator|!=
+name|POWER_PROFILE_ECONOMY
+condition|)
+block|{
+return|return;
+block|}
 name|ACPI_LOCK
 expr_stmt|;
 comment|/* check that we haven't decided there's no _SCP method */
@@ -3288,10 +3315,9 @@ operator|.
 name|Value
 operator|=
 operator|(
-name|powerprofile_get_state
-argument_list|()
+name|state
 operator|==
-name|POWERPROFILE_PERFORMANCE
+name|POWER_PROFILE_PERFORMANCE
 operator|)
 condition|?
 literal|0
