@@ -3,6 +3,10 @@ begin_comment
 comment|/* header for the des routines that we will use */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|unsigned
