@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)kdbparam.h	7.1 (Berkeley) %G%  */
+comment|/*  *	@(#)kdbparam.h	7.2 (Berkeley) %G%  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/vm.h>
-end_include
 
 begin_define
 define|#
@@ -28,6 +22,25 @@ define|#
 directive|define
 name|OFFMODE
 value|"+%R"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KDB_IPL
+value|0xf
+end_define
+
+begin_comment
+comment|/* highest priority software interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|setsoftkdb
+parameter_list|()
+value|mtpr(SIRR, KDB_IPL)
 end_define
 
 begin_define

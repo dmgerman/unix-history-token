@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)kdb_machdep.c	7.1 (Berkeley) %G%	*/
+comment|/*	@(#)kdb_machdep.c	7.2 (Berkeley) %G%	*/
 end_comment
 
 begin_include
@@ -72,57 +72,44 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vax/cpu.h"
+file|"cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/mtpr.h"
+file|"mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/psl.h"
+file|"psl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/pte.h"
+file|"pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/reg.h"
+file|"reg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/trap.h"
+file|"trap.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|KDB_IPL
-value|0xf
-end_define
-
-begin_comment
-comment|/* highest priority software interrupt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|setsoftkdb
-parameter_list|()
-value|mtpr(SIRR, KDB_IPL)
-end_define
+begin_include
+include|#
+directive|include
+file|"kdbparam.h"
+end_include
 
 begin_define
 define|#
@@ -379,7 +366,7 @@ begin_define
 define|#
 directive|define
 name|ESC
-value|CTRL([)
+value|`\033'
 end_define
 
 begin_comment
@@ -473,7 +460,7 @@ name|c
 operator|!=
 name|CTRL
 argument_list|(
-name|k
+literal|'k'
 argument_list|)
 operator|)
 condition|)
@@ -516,6 +503,17 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_function
+specifier|static
+name|int
+name|movpsl
+parameter_list|()
+block|{
+asm|asm("	movpsl	r0");
+comment|/* XXX */
+block|}
+end_function
 
 begin_define
 define|#
@@ -1621,12 +1619,12 @@ name|pcb_r11
 expr_stmt|;
 name|locr0
 index|[
-name|R12
+name|AP
 index|]
 operator|=
 name|pcb
 operator|->
-name|pcb_r12
+name|pcb_ap
 expr_stmt|;
 name|locr0
 index|[
@@ -1663,24 +1661,6 @@ operator|=
 name|pcb
 operator|->
 name|pcb_psl
-expr_stmt|;
-name|locr0
-index|[
-name|RACH
-index|]
-operator|=
-name|pcb
-operator|->
-name|pcb_ach
-expr_stmt|;
-name|locr0
-index|[
-name|RACL
-index|]
-operator|=
-name|pcb
-operator|->
-name|pcb_acl
 expr_stmt|;
 block|}
 end_block

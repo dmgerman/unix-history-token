@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)kdb_opset.c	7.1 (Berkeley) %G%  */
+comment|/*  *	@(#)kdb_opset.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -28,6 +28,10 @@ name|pcb_p1lr
 block|,
 literal|"p1br"
 block|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|pcb
 operator|.
@@ -42,6 +46,10 @@ name|pcb_p0lr
 block|,
 literal|"p0br"
 block|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|pcb
 operator|.
@@ -871,6 +879,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CORE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEW
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|ESCD
 value|0xfd
 end_define
@@ -1173,6 +1195,17 @@ literal|"112.0"
 block|,
 literal|"120.0"
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|type
+decl_stmt|,
+name|space
+decl_stmt|,
+name|incp
 decl_stmt|;
 end_decl_stmt
 
@@ -2265,6 +2298,7 @@ comment|/*  * Read one single character, and advance the dot  */
 end_comment
 
 begin_function
+specifier|static
 name|u_char
 name|snarfuchar
 parameter_list|()
@@ -2693,6 +2727,7 @@ comment|/*  * get a register name  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|insregname
