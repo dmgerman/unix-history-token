@@ -482,7 +482,7 @@ name|pp_last_sent
 decl_stmt|;
 comment|/* time last packet has been sent */
 name|struct
-name|callout_handle
+name|callout
 name|ch
 index|[
 name|IDX_COUNT
@@ -490,10 +490,15 @@ index|]
 decl_stmt|;
 comment|/* per-proto and if callouts */
 name|struct
-name|callout_handle
+name|callout
 name|pap_my_to_ch
 decl_stmt|;
 comment|/* PAP needs one more... */
+name|struct
+name|callout
+name|keepalive_callout
+decl_stmt|;
+comment|/* keepalive callout */
 name|struct
 name|slcp
 name|lcp
@@ -611,6 +616,28 @@ decl_stmt|;
 name|int
 name|pp_loweri
 decl_stmt|;
+comment|/* Lock */
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+comment|/* if_start () wrapper */
+name|void
+function_decl|(
+modifier|*
+name|if_start
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+name|struct
+name|callout
+name|ifstart_callout
+decl_stmt|;
+comment|/* if_start () scheduler */
 block|}
 struct|;
 end_struct
