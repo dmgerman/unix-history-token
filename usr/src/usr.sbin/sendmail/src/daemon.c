@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.19 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.20 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +96,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.19 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.20 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -681,8 +681,29 @@ begin_block
 block|{
 specifier|register
 name|int
+name|i
+decl_stmt|,
 name|s
 decl_stmt|;
+specifier|register
+name|struct
+name|hostent
+modifier|*
+name|hp
+init|=
+operator|(
+expr|struct
+name|hostent
+operator|*
+operator|)
+name|NULL
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|inet_ntoa
+parameter_list|()
+function_decl|;
 name|int
 name|sav_errno
 decl_stmt|;
@@ -785,17 +806,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|register
-name|struct
-name|hostent
-modifier|*
 name|hp
-init|=
+operator|=
 name|gethostbyname
 argument_list|(
 name|host
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|hp
@@ -844,6 +861,10 @@ name|hp
 operator|->
 name|h_length
 argument_list|)
+expr_stmt|;
+name|i
+operator|=
+literal|1
 expr_stmt|;
 block|}
 comment|/* 	**  Determine the port number. 	*/
@@ -905,6 +926,8 @@ name|s_port
 expr_stmt|;
 block|}
 comment|/* 	**  Try to actually open the connection. 	*/
+name|again
+label|:
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -919,9 +942,18 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"makeconnection (%s)\n"
+literal|"makeconnection (%s [%s])\n"
 argument_list|,
 name|host
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|SendmailAddress
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1130,6 +1162,46 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hp
+operator|&&
+name|hp
+operator|->
+name|h_addr_list
+index|[
+name|i
+index|]
+condition|)
+block|{
+name|bcopy
+argument_list|(
+name|hp
+operator|->
+name|h_addr_list
+index|[
+name|i
+operator|++
+index|]
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|SendmailAddress
+operator|.
+name|sin_addr
+argument_list|,
+name|hp
+operator|->
+name|h_length
+argument_list|)
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
 comment|/* failure, decide if temporary or not */
 name|failure
 label|:
