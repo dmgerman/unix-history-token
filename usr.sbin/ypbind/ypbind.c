@@ -455,7 +455,9 @@ name|handle_children
 name|__P
 argument_list|(
 operator|(
-name|int
+expr|struct
+name|_dom_binding
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2296,7 +2298,7 @@ condition|)
 block|{
 name|handle_children
 argument_list|(
-name|READFD
+name|ypdb
 argument_list|)
 expr_stmt|;
 name|children
@@ -2366,17 +2368,19 @@ comment|/* The clnt_broadcast() callback mechanism sucks. */
 end_comment
 
 begin_comment
-comment|/*  * Receive results from broadcaster. Don't worry about passing  * bogus info to rpc_received() -- it can handle it.  */
+comment|/*  * Receive results from broadcaster. Don't worry about passing  * bogus info to rpc_received() -- it can handle it. Note that we  * must be sure to invalidate the dom_pipe_fds descriptors here:  * since descriptors can be re-used, we have to make sure we  * don't mistake one of the RPC descriptors for one of the pipes.  * What's weird is that forgetting to invalidate the pipe descriptors  * doesn't always result in an error (otherwise I would have caught  * the mistake much sooner), even though logically it should.  */
 end_comment
 
 begin_function
 name|void
 name|handle_children
 parameter_list|(
-name|i
+name|ypdb
 parameter_list|)
-name|int
-name|i
+name|struct
+name|_dom_binding
+modifier|*
+name|ypdb
 decl_stmt|;
 block|{
 name|char
@@ -2395,7 +2399,7 @@ if|if
 condition|(
 name|read
 argument_list|(
-name|i
+name|READFD
 argument_list|,
 operator|&
 name|buf
@@ -2424,7 +2428,7 @@ if|if
 condition|(
 name|read
 argument_list|(
-name|i
+name|READFD
 argument_list|,
 operator|&
 name|addr
@@ -2452,12 +2456,12 @@ argument_list|)
 expr_stmt|;
 name|close
 argument_list|(
-name|i
+name|READFD
 argument_list|)
 expr_stmt|;
 name|FD_CLR
 argument_list|(
-name|i
+name|READFD
 argument_list|,
 operator|&
 name|fdsr
@@ -2465,11 +2469,18 @@ argument_list|)
 expr_stmt|;
 name|FD_CLR
 argument_list|(
-name|i
+name|READFD
 argument_list|,
 operator|&
 name|svc_fdset
 argument_list|)
+expr_stmt|;
+name|READFD
+operator|=
+name|WRITEFD
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|rpc_received
 argument_list|(
@@ -3342,6 +3353,29 @@ name|close
 argument_list|(
 name|READFD
 argument_list|)
+expr_stmt|;
+name|FD_CLR
+argument_list|(
+name|READFD
+argument_list|,
+operator|&
+name|fdsr
+argument_list|)
+expr_stmt|;
+name|FD_CLR
+argument_list|(
+name|READFD
+argument_list|,
+operator|&
+name|svc_fdset
+argument_list|)
+expr_stmt|;
+name|READFD
+operator|=
+name|WRITEFD
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 block|}
 block|}
