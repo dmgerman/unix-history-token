@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expand.c	8.1 (Berkeley) %G%"
+literal|"@(#)expand.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2306,6 +2306,13 @@ name|saveherefd
 init|=
 name|herefd
 decl_stmt|;
+name|struct
+name|nodelist
+modifier|*
+name|saveargbackq
+init|=
+name|argbackq
+decl_stmt|;
 name|herefd
 operator|=
 operator|-
@@ -2326,6 +2333,10 @@ expr_stmt|;
 name|herefd
 operator|=
 name|saveherefd
+expr_stmt|;
+name|argbackq
+operator|=
+name|saveargbackq
 expr_stmt|;
 name|startp
 operator|=
