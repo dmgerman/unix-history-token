@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	8.3 (Berkeley) %G%"
+literal|"@(#)pstat.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5605,11 +5605,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-10s %4s %*s %10s %10s %10s\n"
+literal|"%-11s %*s %8s %8s %8s  %s\n"
 argument_list|,
 literal|"Device"
-argument_list|,
-literal|"Type"
 argument_list|,
 name|hlen
 argument_list|,
@@ -5617,9 +5615,11 @@ name|header
 argument_list|,
 literal|"Used"
 argument_list|,
-literal|"Available"
+literal|"Avail"
 argument_list|,
 literal|"Capacity"
+argument_list|,
+literal|"Type"
 argument_list|)
 expr_stmt|;
 name|div
@@ -5663,7 +5663,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"/dev/%-5s %4s %*d "
+literal|"/dev/%-6s %*d "
 argument_list|,
 name|devname
 argument_list|(
@@ -5676,21 +5676,6 @@ name|sw_dev
 argument_list|,
 name|S_IFBLK
 argument_list|)
-argument_list|,
-operator|(
-name|sw
-index|[
-name|i
-index|]
-operator|.
-name|sw_flags
-operator|&
-name|SW_SEQUENTIAL
-operator|)
-condition|?
-literal|"Seq"
-else|:
-literal|"Int"
 argument_list|,
 name|hlen
 argument_list|,
@@ -5774,7 +5759,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%10d %10d %9.0f%%\n"
+literal|"%8d %8d %5.0f%%    %s\n"
 argument_list|,
 name|used
 operator|/
@@ -5795,6 +5780,21 @@ operator|)
 name|xsize
 operator|*
 literal|100.0
+argument_list|,
+operator|(
+name|sw
+index|[
+name|i
+index|]
+operator|.
+name|sw_flags
+operator|&
+name|SW_SEQUENTIAL
+operator|)
+condition|?
+literal|"Sequential"
+else|:
+literal|"Interleaved"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5840,7 +5840,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-10s      %*d %10d %10d %9.0f%%\n"
+literal|"%-11s %*d %8d %8d %5.0f%%\n"
 argument_list|,
 literal|"Total"
 argument_list|,
