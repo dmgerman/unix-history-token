@@ -84,6 +84,9 @@ name|u_int64_t
 name|pcb_bspstore
 decl_stmt|;
 name|u_int64_t
+name|pcb_lc
+decl_stmt|;
+name|u_int64_t
 name|pcb_unat
 decl_stmt|;
 comment|/* ar.unat for r4..r7 */
