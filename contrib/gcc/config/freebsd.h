@@ -167,7 +167,7 @@ name|NO_DOLLAR_IN_LABEL
 end_undef
 
 begin_comment
-comment|/* Use more efficient ``thunks'' to implement C++ vtables.  XXX note that     this setting is claimed to have a few bugs by the EGCS maintainers.  They    believe the bugs will be worked out in EGCS 1.2.  */
+comment|/* Do not use ``thunks'' to implement C++ vtables.  This method still has    fatal bugs.  Also, GCC 3.0 will have a new C++ ABI that may not even    support `thunks'.  */
 end_comment
 
 begin_undef
@@ -175,13 +175,6 @@ undef|#
 directive|undef
 name|DEFAULT_VTABLE_THUNKS
 end_undef
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_VTABLE_THUNKS
-value|1
-end_define
 
 begin_comment
 comment|/* This is BSD, so we want the DBX format.  */
