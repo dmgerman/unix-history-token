@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.39 1997/07/01 06:37:34 charnier Exp $ */
+comment|/* $Id: main.c,v 1.40 1997/07/02 06:28:32 charnier Exp $ */
 end_comment
 
 begin_include
@@ -234,7 +234,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ac:D:f:h:HilLmMnNo:pPqRrT:vV:"
+literal|"abc:D:f:h:HilLmMnNo:pPqRrT:vV:"
 argument_list|)
 operator|)
 operator|!=
@@ -273,6 +273,16 @@ case|:
 name|fs
 operator|.
 name|fs_auto_retry
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+name|fs
+operator|.
+name|fs_linux_bug
 operator|=
 literal|1
 expr_stmt|;
