@@ -147,14 +147,6 @@ define|\
 value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT)
 end_define
 
-begin_define
-define|#
-directive|define
-name|_DIST_XDEV
-define|\
-value|(DIST_XF86_BIN | DIST_XF86_LIB | DIST_XF86_PROG | DIST_XF86_MAN | DIST_XF86_SET | DIST_XF86_SERVER | DIST_XF86_FONTS)
-end_define
-
 begin_comment
 comment|/* Subtypes for DES distribution */
 end_comment
