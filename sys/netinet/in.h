@@ -639,8 +639,37 @@ begin_comment
 comment|/* Next Hop Resolution */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPPROTO_MOBILE
+value|55
+end_define
+
 begin_comment
-comment|/* 55-57: Unassigned */
+comment|/* IP Mobility */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_TLSP
+value|56
+end_define
+
+begin_comment
+comment|/* Transport Layer Security */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_SKIP
+value|57
+end_define
+
+begin_comment
+comment|/* SKIP */
 end_comment
 
 begin_define
@@ -2449,6 +2478,28 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|in_hosteq
+parameter_list|(
+name|s
+parameter_list|,
+name|t
+parameter_list|)
+value|((s).s_addr == (t).s_addr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|in_nullhost
+parameter_list|(
+name|x
+parameter_list|)
+value|((x).s_addr == INADDR_ANY)
+end_define
 
 begin_define
 define|#

@@ -156,6 +156,7 @@ name|_KERNEL
 end_ifdef
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|ns_ifaddr
 modifier|*
@@ -168,23 +169,23 @@ name|struct
 name|ns_ifaddr
 modifier|*
 name|ns_iaonnetof
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nsintr
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|void
-name|nsintr
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|extern
 name|struct
 name|ifqueue
 name|nsintrq

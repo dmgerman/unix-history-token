@@ -423,6 +423,8 @@ argument_list|(
 name|m
 argument_list|,
 name|off
+argument_list|,
+name|proto
 argument_list|)
 expr_stmt|;
 block|}
@@ -613,12 +615,15 @@ case|case
 name|ETHERTYPE_IP
 case|:
 comment|/* shouldn't need a schednetisr(), as */
+case|case
+name|WCCP_PROTOCOL_TYPE
+case|:
+comment|/* we are in ip_input */
 name|ifq
 operator|=
 operator|&
 name|ipintrq
 expr_stmt|;
-comment|/* we are in ip_input */
 break|break;
 ifdef|#
 directive|ifdef
@@ -740,7 +745,7 @@ operator|)
 operator|&
 name|af
 expr_stmt|;
-name|BPF_MTAP
+name|bpf_mtap
 argument_list|(
 operator|&
 operator|(
@@ -779,7 +784,7 @@ name|ifq
 argument_list|)
 condition|)
 block|{
-name|_IF_DROP
+name|IF_DROP
 argument_list|(
 name|ifq
 argument_list|)
@@ -1217,7 +1222,7 @@ operator|)
 operator|&
 name|af
 expr_stmt|;
-name|BPF_MTAP
+name|bpf_mtap
 argument_list|(
 operator|&
 operator|(
@@ -1261,7 +1266,7 @@ name|ifq
 argument_list|)
 condition|)
 block|{
-name|_IF_DROP
+name|IF_DROP
 argument_list|(
 name|ifq
 argument_list|)

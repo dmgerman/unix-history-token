@@ -91,6 +91,12 @@ name|int
 name|called
 decl_stmt|;
 comment|/* infinite recursion preventer */
+name|struct
+name|resource
+modifier|*
+name|r_unit
+decl_stmt|;
+comment|/* resource allocated for this unit */
 block|}
 struct|;
 end_struct
@@ -109,7 +115,12 @@ decl_stmt|;
 comment|/* protocol type of payload typically  				   Ether protocol type*/
 comment|/*   *  from here on: fields are optional, presence indicated by flags   * 	u_int_16 checksum	checksum (one-complements of GRE header 				and payload 				Present if (ck_pres | rt_pres == 1). 				Valid if (ck_pres == 1). 	u_int_16 offset		offset from start of routing filed to 				first octet of active SRE (see below). 				Present if (ck_pres | rt_pres == 1). 				Valid if (rt_pres == 1). 	u_int_32 key		inserted by encapsulator e.g. for 				authentication 				Present if (key_pres ==1 ). 	u_int_32 seq_num	Sequence number to allow for packet order 				Present if (seq_pres ==1 ). 	struct gre_sre[] routing Routing fileds (see below) 				Present if (rt_pres == 1)  */
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -126,7 +137,12 @@ name|gre_h
 name|gi_g
 decl_stmt|;
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -228,6 +244,17 @@ comment|/* Strict Source Route */
 end_comment
 
 begin_comment
+comment|/*  * CISCO uses special type for GRE tunnel created as part of WCCP  * connection, while in fact those packets are just IPv4 encapsulated  * into GRE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WCCP_PROTOCOL_TYPE
+value|0x883E
+end_define
+
+begin_comment
 comment|/*  * gre_sre defines a Source route Entry. These are needed if packets  * should be routed over more than one tunnel hop by hop  */
 end_comment
 
@@ -296,7 +323,12 @@ name|osrc
 decl_stmt|;
 comment|/* original source addr, if S-bit set */
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -313,7 +345,12 @@ name|mobile_h
 name|mh
 decl_stmt|;
 block|}
-name|__packed
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
