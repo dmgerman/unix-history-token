@@ -233,6 +233,7 @@ decl_stmt|;
 name|uint32_t
 name|flags
 decl_stmt|;
+comment|/* 1 = lockfile in sector 0 */
 name|uint8_t
 name|hash
 index|[
@@ -518,6 +519,7 @@ name|g_bde_softc
 modifier|*
 name|sc
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|ptr
