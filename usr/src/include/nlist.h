@@ -1,39 +1,122 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nlist.h	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)nlist.h	5.6 (Berkeley) %G%  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NLIST_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NLIST_H_
+end_define
+
 begin_comment
-comment|/*  * Format of a symbol table entry; this file is included by<a.out.h>  * and should be used if you aren't interested the a.out header  * or relocation information.  */
+comment|/*  * Symbol table entry format.  The #ifdef's are so that programs including  * nlist.h can initialize nlist structures statically.  */
 end_comment
 
 begin_struct
 struct|struct
 name|nlist
 block|{
+ifdef|#
+directive|ifdef
+name|_AOUT_INCLUDE_
+union|union
+block|{
 name|char
 modifier|*
 name|n_name
 decl_stmt|;
-comment|/* for use when in-core */
+comment|/* symbol name (in memory) */
+name|long
+name|n_strx
+decl_stmt|;
+comment|/* file string table offset (on disk) */
+block|}
+name|n_un
+union|;
+else|#
+directive|else
+name|char
+modifier|*
+name|n_name
+decl_stmt|;
+comment|/* symbol name (in memory) */
+endif|#
+directive|endif
+define|#
+directive|define
+name|N_UNDF
+value|0x00
+comment|/* undefined */
+define|#
+directive|define
+name|N_ABS
+value|0x02
+comment|/* absolute address */
+define|#
+directive|define
+name|N_TEXT
+value|0x04
+comment|/* text segment */
+define|#
+directive|define
+name|N_DATA
+value|0x06
+comment|/* data segment */
+define|#
+directive|define
+name|N_BSS
+value|0x08
+comment|/* bss segment */
+define|#
+directive|define
+name|N_COMM
+value|0x12
+comment|/* common reference */
+define|#
+directive|define
+name|N_FN
+value|0x1e
+comment|/* file name */
+define|#
+directive|define
+name|N_EXT
+value|0x01
+comment|/* external (global) bit, OR'ed in */
+define|#
+directive|define
+name|N_TYPE
+value|0x1e
+comment|/* mask for all the type bits */
 name|unsigned
 name|char
 name|n_type
 decl_stmt|;
-comment|/* type flag, i.e. N_TEXT etc; see below */
+comment|/* type defines */
 name|char
 name|n_other
 decl_stmt|;
-comment|/* unused */
+comment|/* spare */
+define|#
+directive|define
+name|n_hash
+value|n_desc
+comment|/* used internally by ld(1); XXX */
 name|short
 name|n_desc
 decl_stmt|;
-comment|/* see<stab.h> */
+comment|/* used by stab entries */
 name|unsigned
 name|long
 name|n_value
 decl_stmt|;
-comment|/* value of this symbol (or sdb offset) */
+comment|/* address/value of the symbol */
 block|}
 struct|;
 end_struct
@@ -41,142 +124,24 @@ end_struct
 begin_define
 define|#
 directive|define
-name|n_hash
-value|n_desc
+name|N_FORMAT
+value|"%08x"
 end_define
 
 begin_comment
-comment|/* used internally by ld */
-end_comment
-
-begin_comment
-comment|/*  * Simple values for n_type.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_UNDF
-value|0x0
-end_define
-
-begin_comment
-comment|/* undefined */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_ABS
-value|0x2
-end_define
-
-begin_comment
-comment|/* absolute */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_TEXT
-value|0x4
-end_define
-
-begin_comment
-comment|/* text */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_DATA
-value|0x6
-end_define
-
-begin_comment
-comment|/* data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_BSS
-value|0x8
-end_define
-
-begin_comment
-comment|/* bss */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_COMM
-value|0x12
-end_define
-
-begin_comment
-comment|/* common (internal to ld) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_FN
-value|0x1e
-end_define
-
-begin_comment
-comment|/* file name symbol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_EXT
-value|01
-end_define
-
-begin_comment
-comment|/* external bit, or'ed in */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_TYPE
-value|0x1e
-end_define
-
-begin_comment
-comment|/* mask for all the type bits */
-end_comment
-
-begin_comment
-comment|/*  * Sdb entries have some of the N_STAB bits set.  * These are given in<stab.h>  */
+comment|/* namelist value format; XXX */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|N_STAB
-value|0xe0
+value|0x0e0
 end_define
 
 begin_comment
-comment|/* if any of these bits set, a SDB entry */
+comment|/* mask for debugger symbols -- stab(5) */
 end_comment
-
-begin_comment
-comment|/*  * Format for namelist values.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_FORMAT
-value|"%08x"
-end_define
 
 begin_include
 include|#
@@ -206,6 +171,15 @@ end_decl_stmt
 begin_macro
 name|__END_DECLS
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_NLIST_H_ */
+end_comment
 
 end_unit
 
