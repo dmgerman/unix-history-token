@@ -1781,6 +1781,11 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|struct
+name|ksegrp
+modifier|*
+name|kg
+decl_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -1885,11 +1890,15 @@ operator|->
 name|p_comm
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|kg
+operator|=
 name|td
 operator|->
 name|td_ksegrp
+expr_stmt|;
+if|if
+condition|(
+name|kg
 operator|->
 name|kg_slptime
 operator|>
@@ -1898,12 +1907,10 @@ condition|)
 comment|/* XXXKSE */
 name|updatepri
 argument_list|(
-name|td
+name|kg
 argument_list|)
 expr_stmt|;
-name|td
-operator|->
-name|td_ksegrp
+name|kg
 operator|->
 name|kg_slptime
 operator|=

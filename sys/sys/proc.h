@@ -3626,7 +3626,7 @@ name|void
 name|updatepri
 parameter_list|(
 name|struct
-name|thread
+name|ksegrp
 modifier|*
 parameter_list|)
 function_decl|;
