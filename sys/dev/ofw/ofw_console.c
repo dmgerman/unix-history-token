@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_ddb.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_comconsole.h"
 end_include
 
@@ -39,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
 end_include
 
 begin_include
@@ -216,7 +216,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DDB
+name|KDB
 argument_list|)
 operator|&&
 name|defined
@@ -1231,7 +1231,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DDB
+name|KDB
 argument_list|)
 operator|&&
 name|defined
@@ -1240,7 +1240,7 @@ name|ALT_BREAK_TO_DEBUGGER
 argument_list|)
 if|if
 condition|(
-name|db_alt_break
+name|kdb_alt_break
 argument_list|(
 name|ch
 argument_list|,
@@ -1248,8 +1248,10 @@ operator|&
 name|alt_break_state
 argument_list|)
 condition|)
-name|breakpoint
-argument_list|()
+name|kdb_enter
+argument_list|(
+literal|"Break sequence on console"
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -1295,7 +1297,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DDB
+name|KDB
 argument_list|)
 operator|&&
 name|defined
@@ -1304,7 +1306,7 @@ name|ALT_BREAK_TO_DEBUGGER
 argument_list|)
 if|if
 condition|(
-name|db_alt_break
+name|kdb_alt_break
 argument_list|(
 name|ch
 argument_list|,
@@ -1312,8 +1314,10 @@ operator|&
 name|alt_break_state
 argument_list|)
 condition|)
-name|breakpoint
-argument_list|()
+name|kdb_enter
+argument_list|(
+literal|"Break sequence on console"
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
