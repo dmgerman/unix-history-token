@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.14 1996/11/26 02:24:42 peter Exp $"
+literal|"$Id: syslogd.c,v 1.15 1996/11/26 02:35:08 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4955,6 +4955,12 @@ case|:
 case|case
 name|F_FORW
 case|:
+case|case
+name|F_CONSOLE
+case|:
+case|case
+name|F_TTY
+case|:
 operator|(
 name|void
 operator|)
@@ -4965,13 +4971,6 @@ operator|->
 name|f_file
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|F_CONSOLE
-case|:
-case|case
-name|F_TTY
-case|:
 break|break;
 block|}
 name|next
@@ -6189,7 +6188,7 @@ condition|)
 block|{
 name|f
 operator|->
-name|f_file
+name|f_type
 operator|=
 name|F_UNUSED
 expr_stmt|;
@@ -6233,13 +6232,6 @@ operator|->
 name|f_type
 operator|=
 name|F_TTY
-expr_stmt|;
-name|close
-argument_list|(
-name|f
-operator|->
-name|f_file
-argument_list|)
 expr_stmt|;
 operator|(
 name|void
