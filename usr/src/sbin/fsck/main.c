@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.6 (Berkeley) %G%"
+literal|"@(#)main.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9122,7 +9122,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|int
 name|fragmap
 decl_stmt|;
 end_decl_stmt

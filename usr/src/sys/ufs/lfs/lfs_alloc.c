@@ -9,7 +9,7 @@ name|char
 name|vers
 index|[]
 init|=
-literal|"@(#)lfs_alloc.c 1.4 %G%"
+literal|"@(#)lfs_alloc.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3335,7 +3335,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|int
 name|fragmap
 decl_stmt|;
 end_decl_stmt
@@ -3380,9 +3380,9 @@ name|fragtbl
 index|[
 name|fragmap
 index|]
+argument_list|)
 operator|<<
 literal|1
-argument_list|)
 expr_stmt|;
 name|fragmap
 operator|<<=

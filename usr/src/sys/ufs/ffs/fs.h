@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	1.2	%G%	*/
+comment|/*	fs.h	1.3	%G%	*/
 end_comment
 
 begin_comment
@@ -603,6 +603,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|fragtbl
 index|[]

@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* @(#)ffs_tables.c 1.1 %G% */
+comment|/* @(#)ffs_tables.c 1.2 %G% */
 end_comment
 
 begin_include
@@ -22,6 +22,7 @@ comment|/*  * Table giving parity for characters and indicating  * character cla
 end_comment
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|partab
 index|[]
@@ -618,6 +619,7 @@ literal|4
 end_if
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|fragtbl
 index|[
@@ -1154,6 +1156,7 @@ literal|8
 end_if
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|fragtbl
 index|[
