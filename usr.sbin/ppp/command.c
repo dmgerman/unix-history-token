@@ -4166,6 +4166,25 @@ block|,
 literal|"nat proxy server host[:port] ..."
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|NO_FW_PUNCH
+block|{
+literal|"punch_fw"
+block|,
+name|NULL
+block|,
+name|nat_PunchFW
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"firewall control"
+block|,
+literal|"nat punch_fw [base count]"
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|"same_ports"
 block|,
