@@ -32756,6 +32756,14 @@ argument_list|,
 name|before_insn
 argument_list|)
 expr_stmt|;
+comment|/* It is possible that the expansion created lots of new registers.      Iterate over the sequence we just created and record them all.  We      must do this before inserting the sequence.  */
+name|loop_regs_update
+argument_list|(
+name|loop
+argument_list|,
+name|seq
+argument_list|)
+expr_stmt|;
 name|loop_insn_emit_before
 argument_list|(
 name|loop
@@ -32763,14 +32771,6 @@ argument_list|,
 name|before_bb
 argument_list|,
 name|before_insn
-argument_list|,
-name|seq
-argument_list|)
-expr_stmt|;
-comment|/* It is possible that the expansion created lots of new registers.      Iterate over the sequence we just created and record them all.  */
-name|loop_regs_update
-argument_list|(
-name|loop
 argument_list|,
 name|seq
 argument_list|)
@@ -32873,15 +32873,15 @@ operator|->
 name|sink
 argument_list|)
 expr_stmt|;
-name|loop_insn_sink
+comment|/* It is possible that the expansion created lots of new registers.      Iterate over the sequence we just created and record them all.  We      must do this before inserting the sequence.  */
+name|loop_regs_update
 argument_list|(
 name|loop
 argument_list|,
 name|seq
 argument_list|)
 expr_stmt|;
-comment|/* It is possible that the expansion created lots of new registers.      Iterate over the sequence we just created and record them all.  */
-name|loop_regs_update
+name|loop_insn_sink
 argument_list|(
 name|loop
 argument_list|,
@@ -32958,15 +32958,15 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-name|loop_insn_hoist
+comment|/* It is possible that the expansion created lots of new registers.      Iterate over the sequence we just created and record them all.  We      must do this before inserting the sequence.  */
+name|loop_regs_update
 argument_list|(
 name|loop
 argument_list|,
 name|seq
 argument_list|)
 expr_stmt|;
-comment|/* It is possible that the expansion created lots of new registers.      Iterate over the sequence we just created and record them all.  */
-name|loop_regs_update
+name|loop_insn_hoist
 argument_list|(
 name|loop
 argument_list|,

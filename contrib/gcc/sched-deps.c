@@ -4190,12 +4190,20 @@ decl_stmt|,
 name|pending_mem
 decl_stmt|;
 name|regset_head
-name|tmp
+name|tmp_uses
+decl_stmt|,
+name|tmp_sets
 decl_stmt|;
 name|INIT_REG_SET
 argument_list|(
 operator|&
-name|tmp
+name|tmp_uses
+argument_list|)
+expr_stmt|;
+name|INIT_REG_SET
+argument_list|(
+operator|&
+name|tmp_sets
 argument_list|)
 expr_stmt|;
 call|(
@@ -4208,7 +4216,15 @@ argument_list|(
 name|insn
 argument_list|,
 operator|&
-name|tmp
+name|deps
+operator|->
+name|reg_conditional_sets
+argument_list|,
+operator|&
+name|tmp_uses
+argument_list|,
+operator|&
+name|tmp_sets
 argument_list|)
 expr_stmt|;
 name|IOR_REG_SET
@@ -4216,13 +4232,27 @@ argument_list|(
 name|reg_pending_uses
 argument_list|,
 operator|&
-name|tmp
+name|tmp_uses
+argument_list|)
+expr_stmt|;
+name|IOR_REG_SET
+argument_list|(
+name|reg_pending_sets
+argument_list|,
+operator|&
+name|tmp_sets
 argument_list|)
 expr_stmt|;
 name|CLEAR_REG_SET
 argument_list|(
 operator|&
-name|tmp
+name|tmp_uses
+argument_list|)
+expr_stmt|;
+name|CLEAR_REG_SET
+argument_list|(
+operator|&
+name|tmp_sets
 argument_list|)
 expr_stmt|;
 comment|/* All memory writes and volatile reads must happen before the 	     jump.  Non-volatile reads must happen before the jump iff 	     the result is needed by the above register used mask.  */
@@ -4592,6 +4622,14 @@ argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
+name|CLEAR_REG_SET
+argument_list|(
+operator|&
+name|deps
+operator|->
+name|reg_conditional_sets
+argument_list|)
+expr_stmt|;
 name|reg_pending_barrier
 operator|=
 name|false
@@ -4647,7 +4685,7 @@ literal|0
 argument_list|,
 argument|i
 argument_list|,
-argument|{ 	      struct deps_reg *reg_last =&deps->reg_last[i]; 	      add_dependence_list (insn, reg_last->sets, REG_DEP_OUTPUT); 	      add_dependence_list (insn, reg_last->clobbers, REG_DEP_OUTPUT); 	      add_dependence_list (insn, reg_last->uses, REG_DEP_ANTI); 	      reg_last->sets = alloc_INSN_LIST (insn, reg_last->sets); 	    }
+argument|{ 	      struct deps_reg *reg_last =&deps->reg_last[i]; 	      add_dependence_list (insn, reg_last->sets, REG_DEP_OUTPUT); 	      add_dependence_list (insn, reg_last->clobbers, REG_DEP_OUTPUT); 	      add_dependence_list (insn, reg_last->uses, REG_DEP_ANTI); 	      reg_last->sets = alloc_INSN_LIST (insn, reg_last->sets); 	      SET_REGNO_REG_SET (&deps->reg_conditional_sets, i); 	    }
 argument_list|)
 empty_stmt|;
 block|}
@@ -4695,7 +4733,7 @@ argument|{ 	      struct deps_reg *reg_last =&deps->reg_last[i]; 	      add_depe
 literal|0
 argument|; 	      reg_last->clobbers_length =
 literal|0
-argument|; 	    }
+argument|; 	      CLEAR_REGNO_REG_SET (&deps->reg_conditional_sets, i); 	    }
 argument_list|)
 empty_stmt|;
 block|}
@@ -5964,6 +6002,14 @@ operator|->
 name|reg_last_in_use
 argument_list|)
 expr_stmt|;
+name|INIT_REG_SET
+argument_list|(
+operator|&
+name|deps
+operator|->
+name|reg_conditional_sets
+argument_list|)
+expr_stmt|;
 name|deps
 operator|->
 name|pending_read_insns
@@ -6110,6 +6156,14 @@ operator|&
 name|deps
 operator|->
 name|reg_last_in_use
+argument_list|)
+expr_stmt|;
+name|CLEAR_REG_SET
+argument_list|(
+operator|&
+name|deps
+operator|->
+name|reg_conditional_sets
 argument_list|)
 expr_stmt|;
 name|free

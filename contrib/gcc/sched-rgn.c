@@ -7565,6 +7565,10 @@ operator|(
 name|rtx
 operator|,
 name|regset
+operator|,
+name|regset
+operator|,
+name|regset
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8716,7 +8720,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* INSN is a JUMP_INSN.  Store the set of registers that must be considered    to be set by this jump in SET.  */
+comment|/* INSN is a JUMP_INSN, COND_SET is the set of registers that are    conditionally set before INSN.  Store the set of registers that    must be considered as used by this jump in USED and that of    registers that must be considered as set in SET.  */
 end_comment
 
 begin_function
@@ -8726,10 +8730,22 @@ name|compute_jump_reg_dependencies
 parameter_list|(
 name|insn
 parameter_list|,
+name|cond_set
+parameter_list|,
+name|used
+parameter_list|,
 name|set
 parameter_list|)
 name|rtx
 name|insn
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|regset
+name|cond_set
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|regset
+name|used
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|regset

@@ -15678,7 +15678,7 @@ name|success
 operator|=
 literal|1
 expr_stmt|;
-comment|/* If we've failed to do replacement, have a single SET, and don't already 	 have a note, add a REG_EQUAL note to not lose information.  */
+comment|/* If we've failed to do replacement, have a single SET, don't already 	 have a note, and have no special SET, add a REG_EQUAL note to not 	 lose information.  */
 if|if
 condition|(
 operator|!
@@ -15691,6 +15691,30 @@ operator|&&
 name|set
 operator|!=
 literal|0
+operator|&&
+name|GET_CODE
+argument_list|(
+name|XEXP
+argument_list|(
+name|set
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+operator|!=
+name|ZERO_EXTRACT
+operator|&&
+name|GET_CODE
+argument_list|(
+name|XEXP
+argument_list|(
+name|set
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+operator|!=
+name|SIGN_EXTRACT
 condition|)
 name|note
 operator|=

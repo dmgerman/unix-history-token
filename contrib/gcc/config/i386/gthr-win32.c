@@ -21,6 +21,7 @@ begin_define
 define|#
 directive|define
 name|__GTHREAD_HIDE_WIN32API
+value|1
 end_define
 
 begin_endif

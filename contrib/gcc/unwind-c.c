@@ -266,13 +266,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|PERSONALITY_FUNCTION
-value|__gcc_personality_v0
-end_define
-
 begin_function_decl
 name|_Unwind_Reason_Code
 name|PERSONALITY_FUNCTION

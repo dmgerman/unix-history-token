@@ -1360,11 +1360,15 @@ argument_list|)
 expr_stmt|;
 name|in_system_header
 operator|=
+operator|(
+name|warn_system_headers
+operator|&&
 name|new_map
 operator|->
 name|sysp
 operator|!=
 literal|0
+operator|)
 expr_stmt|;
 name|input_filename
 operator|=

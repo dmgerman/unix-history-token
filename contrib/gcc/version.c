@@ -21,7 +21,7 @@ name|char
 name|version_string
 index|[]
 init|=
-literal|"3.3.1 20030711 (prerelease)"
+literal|"3.3.1"
 decl_stmt|;
 end_decl_stmt
 

@@ -10560,11 +10560,14 @@ expr_stmt|;
 if|if
 condition|(
 name|optimize
-condition|)
+operator|&&
 name|purge_all_dead_edges
 argument_list|(
 literal|0
 argument_list|)
+condition|)
+name|delete_unreachable_blocks
+argument_list|()
 expr_stmt|;
 name|reg_scan
 argument_list|(

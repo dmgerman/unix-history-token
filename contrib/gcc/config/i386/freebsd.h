@@ -56,19 +56,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|SET_ASM_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SET_ASM_OP
-value|"\t.set\t"
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|DBX_REGISTER_NUMBER
 end_undef
 
@@ -264,7 +251,7 @@ define|#
 directive|define
 name|SUBTARGET_OVERRIDE_OPTIONS
 define|\
-value|do {							\     real_format_for_mode[XFmode - QFmode]		\       =&ieee_extended_intel_96_round_53_format;	\     real_format_for_mode[TFmode - QFmode]		\       =&ieee_extended_intel_96_round_53_format;	\   } while (0)
+value|do {							\     if (!TARGET_64BIT) {				\       real_format_for_mode[XFmode - QFmode]		\ 	=&ieee_extended_intel_96_round_53_format;	\       real_format_for_mode[TFmode - QFmode]		\ 	=&ieee_extended_intel_96_round_53_format;	\     }							\   } while (0)
 end_define
 
 end_unit

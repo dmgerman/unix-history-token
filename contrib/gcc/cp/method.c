@@ -2504,7 +2504,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Assign to each of thedirect base classes.  */
+comment|/* Assign to each of the direct base classes.  */
 for|for
 control|(
 name|i

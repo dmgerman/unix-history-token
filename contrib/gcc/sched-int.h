@@ -109,6 +109,10 @@ comment|/* Element N is set for each register that has any nonzero element      
 name|regset_head
 name|reg_last_in_use
 decl_stmt|;
+comment|/* Element N is set for each register that is conditionally set.  */
+name|regset_head
+name|reg_conditional_sets
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -216,7 +220,7 @@ name|rtx
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Called when computing dependencies for a JUMP_INSN.  This function      should store the set of registers that must be considered as set by      the jump in the regset.  */
+comment|/* Called when computing dependencies for a JUMP_INSN.  This function      should store the set of registers that must be considered as used      and the set of registers that must be considered as set by the jump.  */
 name|void
 argument_list|(
 argument|*compute_jump_reg_dependencies
@@ -225,6 +229,10 @@ name|PARAMS
 argument_list|(
 operator|(
 name|rtx
+operator|,
+name|regset
+operator|,
+name|regset
 operator|,
 name|regset
 operator|)

@@ -852,10 +852,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|unregister_specialization
+name|reregister_specialization
 name|PARAMS
 argument_list|(
 operator|(
+name|tree
+operator|,
 name|tree
 operator|,
 name|tree
@@ -3968,24 +3970,23 @@ block|}
 end_function
 
 begin_comment
-comment|/* Unregister the specialization SPEC as a specialization of TMPL.    Returns nonzero if the SPEC was listed as a specialization of    TMPL.  */
+comment|/* Unregister the specialization SPEC as a specialization of TMPL.    Replace it with NEW_SPEC, if NEW_SPEC is non-NULL.  Returns true    if the SPEC was listed as a specialization of TMPL.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|unregister_specialization
+name|reregister_specialization
 parameter_list|(
+name|tree
 name|spec
 parameter_list|,
+name|tree
 name|tmpl
+parameter_list|,
+name|tree
+name|new_spec
 parameter_list|)
-name|tree
-name|spec
-decl_stmt|;
-name|tree
-name|tmpl
-decl_stmt|;
 block|{
 name|tree
 modifier|*
@@ -4026,6 +4027,11 @@ operator|==
 name|spec
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|new_spec
+condition|)
 operator|*
 name|s
 operator|=
@@ -4034,6 +4040,15 @@ argument_list|(
 operator|*
 name|s
 argument_list|)
+expr_stmt|;
+else|else
+name|TREE_VALUE
+argument_list|(
+operator|*
+name|s
+argument_list|)
+operator|=
+name|new_spec
 expr_stmt|;
 return|return
 literal|1
@@ -13960,6 +13975,44 @@ argument_list|(
 name|template
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|template
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|template
+argument_list|)
+operator|==
+name|TYPE_DECL
+operator|&&
+name|IS_AGGR_TYPE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|template
+argument_list|)
+argument_list|)
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|template
+argument_list|)
+argument_list|)
+operator|!=
+name|TEMPLATE_TYPE_PARM
+condition|)
+block|{
+name|d1
+operator|=
+name|template
+expr_stmt|;
+goto|goto
+name|type_decl
+goto|;
+block|}
 block|}
 elseif|else
 if|if
@@ -13982,12 +14035,16 @@ condition|)
 block|{
 name|tree
 name|type
-init|=
+decl_stmt|;
+name|type_decl
+label|:
+name|type
+operator|=
 name|TREE_TYPE
 argument_list|(
 name|d1
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* If we are declaring a constructor, say A<T>::A<T>, we will get 	 an implicit typename for the second A.  Deal with it.  */
 if|if
 condition|(
@@ -16847,8 +16904,18 @@ argument_list|)
 operator|!=
 name|TEMPLATE_DECL
 condition|)
-comment|/* duplicate_decls will take care of this case.  */
-empty_stmt|;
+name|reregister_specialization
+argument_list|(
+name|new_friend
+argument_list|,
+name|most_general_template
+argument_list|(
+name|old_decl
+argument_list|)
+argument_list|,
+name|old_decl
+argument_list|)
+expr_stmt|;
 else|else
 block|{
 name|tree
@@ -21572,6 +21639,19 @@ operator|=
 name|complete_type
 argument_list|(
 name|type
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|DECL_SELF_REFERENCE_P
+argument_list|(
+name|t
+argument_list|)
+condition|)
+name|SET_DECL_SELF_REFERENCE_P
+argument_list|(
+name|r
 argument_list|)
 expr_stmt|;
 name|TREE_TYPE
@@ -32940,7 +33020,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given two class template specialization list nodes PAT1 and PAT2, return:     1 if PAT1 is more specialized than PAT2 as described in [temp.class.order].    -1 if PAT2 is more specialized than PAT1.    0 if neither is more specialized.  */
+comment|/* Given two class template specialization list nodes PAT1 and PAT2, return:     1 if PAT1 is more specialized than PAT2 as described in [temp.class.order].    -1 if PAT2 is more specialized than PAT1.    0 if neither is more specialized.     FULL_ARGS is the full set of template arguments that triggers this    partial ordering.  */
 end_comment
 
 begin_function
@@ -32950,11 +33030,15 @@ parameter_list|(
 name|pat1
 parameter_list|,
 name|pat2
+parameter_list|,
+name|full_args
 parameter_list|)
 name|tree
 name|pat1
 decl_stmt|,
 name|pat2
+decl_stmt|,
+name|full_args
 decl_stmt|;
 block|{
 name|tree
@@ -32979,9 +33063,14 @@ argument_list|(
 name|pat1
 argument_list|)
 argument_list|,
+name|add_outermost_template_args
+argument_list|(
+name|full_args
+argument_list|,
 name|TREE_PURPOSE
 argument_list|(
 name|pat2
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -33006,9 +33095,14 @@ argument_list|(
 name|pat2
 argument_list|)
 argument_list|,
+name|add_outermost_template_args
+argument_list|(
+name|full_args
+argument_list|,
 name|TREE_PURPOSE
 argument_list|(
 name|pat1
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -34011,6 +34105,8 @@ argument_list|(
 name|champ
 argument_list|,
 name|t
+argument_list|,
+name|args
 argument_list|)
 expr_stmt|;
 if|if
@@ -34078,6 +34174,8 @@ argument_list|(
 name|champ
 argument_list|,
 name|t
+argument_list|,
+name|args
 argument_list|)
 expr_stmt|;
 if|if
@@ -35040,11 +35138,13 @@ argument_list|)
 expr_stmt|;
 name|unregistered
 operator|=
-name|unregister_specialization
+name|reregister_specialization
 argument_list|(
 name|decl
 argument_list|,
 name|gen_tmpl
+argument_list|,
+name|NULL_TREE
 argument_list|)
 expr_stmt|;
 comment|/* If the DECL was not unregistered then something peculiar is      happening: we created a specialization but did not call      register_specialization for it.  */
