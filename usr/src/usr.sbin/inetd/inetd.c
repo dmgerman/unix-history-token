@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	8.3 (Berkeley) %G%"
+literal|"@(#)inetd.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1550,6 +1550,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|sep
+operator|->
+name|se_wait
+operator|&&
 name|sep
 operator|->
 name|se_socktype
@@ -1857,6 +1862,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|sep
+operator|->
+name|se_wait
+operator|&&
 name|sep
 operator|->
 name|se_socktype
@@ -2253,6 +2263,11 @@ block|}
 block|}
 if|if
 condition|(
+operator|!
+name|sep
+operator|->
+name|se_wait
+operator|&&
 name|sep
 operator|->
 name|se_socktype
