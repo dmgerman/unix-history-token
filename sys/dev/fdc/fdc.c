@@ -4482,7 +4482,7 @@ name|settle
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * SEEK to where we want to be 	 * 	 * Enhanced controllers do implied seeks for read&write as long as 	 * we do not need multiple steps per track. 	 */
+comment|/* 	 * SEEK to where we want to be 	 * 	 * Enhanced controllers do implied seeks for read&write as long as 	 * we do not need multiple steps per track. 	 */
 if|if
 condition|(
 name|cylinder
@@ -5774,7 +5774,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Enqueue a requst.  */
+comment|/*  * Enqueue a request.  */
 end_comment
 
 begin_function
