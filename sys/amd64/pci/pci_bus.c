@@ -337,6 +337,14 @@ literal|"Intel 82810E (i810E GMCH) Host To Hub bridge"
 expr_stmt|;
 break|break;
 case|case
+literal|0x11308086
+case|:
+name|s
+operator|=
+literal|"Intel 82815 (i815 GMCH) Host To Hub bridge"
+expr_stmt|;
+break|break;
+case|case
 literal|0x71808086
 case|:
 name|s
