@@ -1111,7 +1111,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Please insert a FreeBSD live filesystem CDROM and press return"
+literal|"Please insert a FreeBSD live filesystem CD/DVD and press return"
 argument_list|)
 expr_stmt|;
 if|if
