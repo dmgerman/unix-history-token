@@ -1588,15 +1588,23 @@ operator|->
 name|ic_caps
 operator|=
 name|IEEE80211_C_WEP
+comment|/* wep supported */
 operator||
 name|IEEE80211_C_IBSS
+comment|/* ibss, nee adhoc, mode */
 operator||
 name|IEEE80211_C_HOSTAP
+comment|/* hostap mode */
 operator||
 name|IEEE80211_C_MONITOR
+comment|/* monitor mode */
 operator||
 name|IEEE80211_C_SHPREAMBLE
+comment|/* short preamble supported */
+operator||
+name|IEEE80211_C_RCVMGT
 expr_stmt|;
+comment|/* recv management frames */
 comment|/* get mac address from hardware */
 name|ath_hal_getmac
 argument_list|(
