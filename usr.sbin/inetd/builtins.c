@@ -1518,6 +1518,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|sockaddr_in6
 name|sin6
@@ -1525,6 +1528,8 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|sockaddr_storage
 name|ss

@@ -8007,9 +8007,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+else|else
 endif|#
 directive|endif
-else|else
 block|{
 comment|/* default to v4 bind if not v6 bind */
 if|if
