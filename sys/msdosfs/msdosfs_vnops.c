@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.40 1997/02/26 14:23:16 bde Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.41 1997/04/10 14:56:49 bde Exp $ */
 end_comment
 
 begin_comment
@@ -6186,32 +6186,6 @@ name|a_vp
 argument_list|)
 expr_stmt|;
 comment|/* directory to delete	 */
-comment|/* 	 * Don't let "rmdir ." go thru. 	 */
-if|if
-condition|(
-name|ddep
-operator|==
-name|dep
-condition|)
-block|{
-name|vrele
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|)
-expr_stmt|;
-name|vput
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
 comment|/* 	 * Be sure the directory being deleted is empty. 	 */
 if|if
 condition|(
