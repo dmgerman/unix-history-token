@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumprmt.c	8.1 (Berkeley) %G%"
+literal|"@(#)dumprmt.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -404,19 +410,11 @@ name|void
 name|rmtconnaborted
 parameter_list|()
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rdump: Lost connection to remote host.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Lost connection to remote host."
 argument_list|)
 expr_stmt|;
 block|}
@@ -491,23 +489,13 @@ name|sp
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rdump: shell/tcp: unknown service\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"shell/tcp: unknown service"
 argument_list|)
 expr_stmt|;
-block|}
 name|pwd
 operator|=
 name|getpwuid
@@ -522,23 +510,13 @@ name|pwd
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rdump: who are you?\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"who are you?"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -825,14 +803,9 @@ literal|'-'
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"rdump: invalid user name %s\n"
+literal|"invalid user name: %s"
 argument_list|,
 name|cp0
 argument_list|)
