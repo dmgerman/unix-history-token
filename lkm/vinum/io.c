@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: io.c,v 1.16 1998/08/10 23:47:21 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: io.c,v 1.19 1998/10/30 00:38:15 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -294,6 +294,36 @@ block|{
 comment|/* already in use? */
 if|#
 directive|if
+literal|1
+name|printf
+argument_list|(
+literal|"open_drive %s: use count %d, ignoring\n"
+argument_list|,
+comment|/* XXX where does this come from? */
+name|drive
+operator|->
+name|devicename
+argument_list|,
+name|drive
+operator|->
+name|vp
+operator|->
+name|v_usecount
+argument_list|)
+expr_stmt|;
+name|drive
+operator|->
+name|vp
+operator|->
+name|v_usecount
+operator|=
+literal|1
+expr_stmt|;
+comment|/* will this work? */
+else|#
+directive|else
+if|#
+directive|if
 name|__FreeBSD__
 operator|==
 literal|2
@@ -355,6 +385,8 @@ comment|/* XXX */
 return|return
 name|EBUSY
 return|;
+endif|#
+directive|endif
 block|}
 name|error
 operator|=
@@ -1073,6 +1105,41 @@ operator|->
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|drive
+operator|->
+name|vp
+operator|->
+name|v_usecount
+condition|)
+block|{
+comment|/* XXX shouldn't happen */
+name|printf
+argument_list|(
+literal|"close_drive %s: use count still %d\n"
+argument_list|,
+name|drive
+operator|->
+name|devicename
+argument_list|,
+name|drive
+operator|->
+name|vp
+operator|->
+name|v_usecount
+argument_list|)
+expr_stmt|;
+name|drive
+operator|->
+name|vp
+operator|->
+name|v_usecount
+operator|=
+literal|0
+expr_stmt|;
+comment|/* will this work? */
+block|}
 name|drive
 operator|->
 name|vp
@@ -1156,7 +1223,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Transfer drive data.  Usually called from one of these defines;   * #define read_drive(a, b, c, d) driveio (a, b, c, d, B_READ)  * #define write_drive(a, b, c, d) driveio (a, b, c, d, B_WRITE)  *  * Return error number  */
+comment|/* Transfer drive data.  Usually called from one of these defines;  * #define read_drive(a, b, c, d) driveio (a, b, c, d, B_READ)  * #define write_drive(a, b, c, d) driveio (a, b, c, d, B_WRITE)  *  * Return error number  */
 end_comment
 
 begin_function
@@ -3762,6 +3829,43 @@ name|driveno
 index|]
 expr_stmt|;
 comment|/* point to drive */
+if|if
+condition|(
+operator|(
+name|drive
+operator|->
+name|devicename
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+operator|)
+comment|/* XXX we keep getting these nameless drives */
+operator|||
+operator|(
+name|drive
+operator|->
+name|label
+operator|.
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+operator|)
+condition|)
+block|{
+comment|/* XXX we keep getting these nameless drives */
+name|free_drive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
+comment|/* get rid of it */
+break|break;
+block|}
 if|if
 condition|(
 name|drive
