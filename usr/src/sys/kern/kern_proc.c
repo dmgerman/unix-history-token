@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.46	82/10/31	*/
+comment|/*	kern_proc.c	4.47	82/11/02	*/
 end_comment
 
 begin_include
@@ -1571,6 +1571,7 @@ name|CLSIZE
 operator|*
 name|NBPG
 control|)
+block|{
 name|bp
 operator|=
 name|baddr
@@ -1590,8 +1591,7 @@ name|CLSIZE
 operator|*
 name|NBPG
 argument_list|)
-block|)
-empty_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -1622,17 +1622,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+block|}
 goto|goto
 name|bad
 goto|;
 block|}
-end_block
-
-begin_comment
 comment|/* 	 * copy back arglist 	 */
-end_comment
-
-begin_expr_stmt
 name|ucp
 operator|=
 name|USRSTACK
@@ -1641,9 +1636,6 @@ name|nc
 operator|-
 name|NBPW
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ap
 operator|=
 name|ucp
@@ -1656,9 +1648,6 @@ literal|3
 operator|*
 name|NBPW
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|u
 operator|.
 name|u_ar0
@@ -1668,9 +1657,6 @@ index|]
 operator|=
 name|ap
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -1686,16 +1672,10 @@ operator|-
 name|ne
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|nc
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 init|;
@@ -1849,9 +1829,6 @@ literal|0377
 condition|)
 do|;
 block|}
-end_for
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -1865,9 +1842,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -1881,20 +1855,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|setregs
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|bad
 label|:
-end_label
-
-begin_if
 if|if
 condition|(
 name|bp
@@ -1904,9 +1869,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|bno
@@ -1935,32 +1897,29 @@ argument_list|,
 name|bno
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|iput
 argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  * Read in and set up memory for executed file.  */
 end_comment
 
 begin_expr_stmt
-unit|getxfile
-operator|(
+name|getxfile
+argument_list|(
 name|ip
-operator|,
+argument_list|,
 name|nargc
-operator|,
+argument_list|,
 name|uid
-operator|,
+argument_list|,
 name|gid
-operator|)
+argument_list|)
 specifier|register
 expr|struct
 name|inode
