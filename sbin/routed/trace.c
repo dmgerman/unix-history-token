@@ -142,8 +142,6 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|ftrace
-init|=
-name|stdout
 decl_stmt|;
 end_decl_stmt
 
