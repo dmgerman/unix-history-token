@@ -396,12 +396,19 @@ name|NFS_MAXCWND
 value|(NFS_CWNDSCALE * 32)
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFS_NBACKOFF
+value|8
+end_define
+
 begin_decl_stmt
 specifier|static
 name|int
 name|nfs_backoff
 index|[
-literal|8
+name|NFS_NBACKOFF
 index|]
 init|=
 block|{
@@ -4641,7 +4648,9 @@ if|if
 condition|(
 name|trylater_cnt
 operator|<
-literal|7
+name|NFS_NBACKOFF
+operator|-
+literal|1
 condition|)
 name|trylater_cnt
 operator|++
@@ -4986,7 +4995,7 @@ name|nmp
 operator|->
 name|nm_timeouts
 operator|<
-literal|8
+name|NFS_NBACKOFF
 condition|)
 name|nmp
 operator|->
