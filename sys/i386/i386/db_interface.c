@@ -233,7 +233,7 @@ decl_stmt|;
 comment|/* 	 * XXX try to do nothing if the console is in graphics mode. 	 * Handle trace traps (and hardware breakpoints...) by ignoring 	 * them except for forgetting about them.  Return 0 for other 	 * traps to say that we haven't done anything.  The trap handler 	 * will usually panic.  We should handle breakpoint traps for 	 * our breakpoints by disarming our breakpoints and fixing up 	 * %eip. 	 */
 if|if
 condition|(
-name|cn_unavailable
+name|cnunavailable
 argument_list|()
 operator|!=
 literal|0
@@ -1073,7 +1073,7 @@ decl_stmt|;
 comment|/* 	 * XXX 	 * Do nothing if the console is in graphics mode.  This is 	 * OK if the call is for the debugger hotkey but not if the call 	 * is a weak form of panicing. 	 */
 if|if
 condition|(
-name|cn_unavailable
+name|cnunavailable
 argument_list|()
 operator|!=
 literal|0

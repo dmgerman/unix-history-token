@@ -406,7 +406,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cn_unavailable
+name|cnunavailable
 parameter_list|(
 name|void
 parameter_list|)
