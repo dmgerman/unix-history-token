@@ -1176,10 +1176,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
-name|O_NONBLOCK
-expr_stmt|;
 if|if
 condition|(
 name|fcntl
@@ -1191,8 +1187,7 @@ index|]
 argument_list|,
 name|F_SETFL
 argument_list|,
-operator|&
-name|i
+name|O_NONBLOCK
 argument_list|)
 operator|!=
 literal|0
@@ -1219,8 +1214,7 @@ index|]
 argument_list|,
 name|F_SETFL
 argument_list|,
-operator|&
-name|i
+name|O_NONBLOCK
 argument_list|)
 operator|!=
 literal|0
@@ -1298,7 +1292,7 @@ directive|if
 literal|0
 comment|/* 	 * XXXRW: We disable the write test in the case of datagram sockets, 	 * as kqueue can't tell when the remote socket receive buffer is 	 * full, whereas the UNIX domain socket implementation can tell and 	 * returns ENOBUFS. 	 */
 comment|/* 	 * Create a UNIX domain datagram socket, and attach/test/detach a 	 * write filter on it. 	 */
-block|if (socketpair(PF_UNIX, SOCK_DGRAM, 0, sv) == -1) 		fail(errno, "socketpair", "PF_UNIX, SOCK_DGRAM", NULL);  	i = O_NONBLOCK; 	if (fcntl(sv[0], F_SETFL,&i) != 0) 		fail(errno, "fcntl", "PF_UNIX, SOCK_DGRAM", "O_NONBLOCK"); 	if (fcntl(sv[1], F_SETFL,&i) != 0) 		fail(errno, "fcntl", "PF_UNIX, SOCK_DGRAM", "O_NONBLOCK");  	test_evfilt_write(kq, sv, "PF_UNIX, SOCK_DGRAM");  	if (close(sv[0]) == -1) 		fail(errno, "close", "PF_UNIX/SOCK_DGRAM", "sv[0]"); 	if (close(sv[1]) == -1) 		fail(errno, "close", "PF_UNIX/SOCK_DGRAM", "sv[1]");
+block|if (socketpair(PF_UNIX, SOCK_DGRAM, 0, sv) == -1) 		fail(errno, "socketpair", "PF_UNIX, SOCK_DGRAM", NULL);  	if (fcntl(sv[0], F_SETFL, O_NONBLOCK) != 0) 		fail(errno, "fcntl", "PF_UNIX, SOCK_DGRAM", "O_NONBLOCK"); 	if (fcntl(sv[1], F_SETFL, O_NONBLOCK) != 0) 		fail(errno, "fcntl", "PF_UNIX, SOCK_DGRAM", "O_NONBLOCK");  	test_evfilt_write(kq, sv, "PF_UNIX, SOCK_DGRAM");  	if (close(sv[0]) == -1) 		fail(errno, "close", "PF_UNIX/SOCK_DGRAM", "sv[0]"); 	if (close(sv[1]) == -1) 		fail(errno, "close", "PF_UNIX/SOCK_DGRAM", "sv[1]");
 endif|#
 directive|endif
 comment|/* 	 * Create a UNIX domain stream socket, and attach/test/detach a 	 * read filter on it. 	 */
@@ -1329,10 +1323,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
-name|O_NONBLOCK
-expr_stmt|;
 if|if
 condition|(
 name|fcntl
@@ -1344,8 +1334,7 @@ index|]
 argument_list|,
 name|F_SETFL
 argument_list|,
-operator|&
-name|i
+name|O_NONBLOCK
 argument_list|)
 operator|!=
 literal|0
@@ -1372,8 +1361,7 @@ index|]
 argument_list|,
 name|F_SETFL
 argument_list|,
-operator|&
-name|i
+name|O_NONBLOCK
 argument_list|)
 operator|!=
 literal|0
@@ -1474,10 +1462,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
-name|O_NONBLOCK
-expr_stmt|;
 if|if
 condition|(
 name|fcntl
@@ -1489,8 +1473,7 @@ index|]
 argument_list|,
 name|F_SETFL
 argument_list|,
-operator|&
-name|i
+name|O_NONBLOCK
 argument_list|)
 operator|!=
 literal|0
@@ -1517,8 +1500,7 @@ index|]
 argument_list|,
 name|F_SETFL
 argument_list|,
-operator|&
-name|i
+name|O_NONBLOCK
 argument_list|)
 operator|!=
 literal|0
