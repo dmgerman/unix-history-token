@@ -835,7 +835,7 @@ condition|)
 block|{
 name|fatal_add_cleanup
 argument_list|(
-name|krb4_cleanup_proc
+name|krb5_cleanup_proc
 argument_list|,
 name|NULL
 argument_list|)
