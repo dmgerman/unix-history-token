@@ -2835,24 +2835,6 @@ name|WITNESS_NCHILDREN
 value|2
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|witness_spin_check
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|int
 name|witness_watch
