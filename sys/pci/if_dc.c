@@ -12914,6 +12914,7 @@ name|dc_tx_cnt
 operator|==
 literal|0
 condition|)
+block|{
 name|mii_tick
 argument_list|(
 name|mii
@@ -12936,6 +12937,7 @@ name|dc_link
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
