@@ -3061,6 +3061,16 @@ goto|goto
 name|failure
 goto|;
 block|}
+comment|/* timeout / interrupt before connection completley established? */
+if|if
+condition|(
+name|f
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|failure
+goto|;
 if|if
 condition|(
 operator|!
