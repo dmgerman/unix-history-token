@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.20 (Berkeley) %G%"
+literal|"@(#)fts.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1170,29 +1170,6 @@ name|fts_instr
 operator|=
 name|FTS_NOINSTR
 expr_stmt|;
-comment|/* If used fts_link pointer for cycle detection, restore it. */
-if|if
-condition|(
-name|sp
-operator|->
-name|fts_savelink
-condition|)
-block|{
-name|p
-operator|->
-name|fts_link
-operator|=
-name|sp
-operator|->
-name|fts_savelink
-expr_stmt|;
-name|sp
-operator|->
-name|fts_savelink
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 comment|/* Any type of file may be re-visited; re-stat and re-turn. */
 if|if
 condition|(
@@ -2889,7 +2866,7 @@ init|;
 name|t
 operator|->
 name|fts_level
-operator|>
+operator|>=
 name|FTS_ROOTLEVEL
 condition|;
 name|t
@@ -2917,17 +2894,9 @@ operator|.
 name|st_dev
 condition|)
 block|{
-name|sp
-operator|->
-name|fts_savelink
-operator|=
 name|p
 operator|->
-name|fts_link
-expr_stmt|;
-name|p
-operator|->
-name|fts_link
+name|fts_cycle
 operator|=
 name|t
 expr_stmt|;
