@@ -137,6 +137,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WI_RID_MICROWAVE_OVEN
+value|0xFC25
+end_define
+
+begin_define
+define|#
+directive|define
 name|WI_RID_P2_CRYPT_KEY2
 value|0xFC26
 end_define
@@ -153,6 +160,13 @@ define|#
 directive|define
 name|WI_RID_P2_ENCRYPTION
 value|0xFC28
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_RID_ROAMING_MODE
+value|0xFC2D
 end_define
 
 begin_define
@@ -319,7 +333,16 @@ name|u_int16_t
 name|wi_pm_enabled
 decl_stmt|;
 name|u_int16_t
+name|wi_mor_enabled
+decl_stmt|;
+name|u_int16_t
 name|wi_max_sleep
+decl_stmt|;
+name|u_int16_t
+name|wi_authtype
+decl_stmt|;
+name|u_int16_t
+name|wi_roaming
 decl_stmt|;
 name|char
 name|wi_node_name
@@ -637,15 +660,83 @@ end_define
 begin_define
 define|#
 directive|define
+name|WI_DEFAULT_ROAMING
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_DEFAULT_AUTHTYPE
+value|1
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|OS_STRING_NAME
+value|"NetBSD"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|OS_STRING_NAME
+value|"FreeBSD"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__OpenBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|OS_STRING_NAME
+value|"OpenBSD"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
 name|WI_DEFAULT_NODENAME
-value|"FreeBSD WaveLAN/IEEE node"
+value|OS_STRING_NAME " WaveLAN/IEEE node"
 end_define
 
 begin_define
 define|#
 directive|define
 name|WI_DEFAULT_IBSS
-value|"FreeBSD IBSS"
+value|OS_STRING_NAME " IBSS"
 end_define
 
 begin_define
@@ -2063,6 +2154,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|WI_RID_AUTH_CNTL
+value|0xFC2A
+end_define
 
 begin_comment
 comment|/*  * Multicast addresses to be put in filter. We're  * allowed up to 16 addresses in the filter.  */
