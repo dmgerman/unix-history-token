@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.6 (Berkeley) %G%"
+literal|"@(#)io.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
 end_include
 
 begin_include
@@ -1816,8 +1822,6 @@ begin_macro
 name|msg
 argument_list|(
 argument|fmt
-argument_list|,
-argument|args
 argument_list|)
 end_macro
 
@@ -1828,20 +1832,36 @@ name|fmt
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|args
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
-name|doadd
+name|va_list
+name|ap
+decl_stmt|;
+name|va_start
 argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vsprintf
+argument_list|(
+name|Msgbuf
+index|[
+name|Newpos
+index|]
+argument_list|,
 name|fmt
 argument_list|,
-operator|&
-name|args
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 name|endmsg
@@ -1862,8 +1882,6 @@ begin_macro
 name|addmsg
 argument_list|(
 argument|fmt
-argument_list|,
-argument|args
 argument_list|)
 end_macro
 
@@ -1874,20 +1892,36 @@ name|fmt
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|args
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
-name|doadd
+name|va_list
+name|ap
+decl_stmt|;
+name|va_start
 argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vsprintf
+argument_list|(
+name|Msgbuf
+index|[
+name|Newpos
+index|]
+argument_list|,
 name|fmt
 argument_list|,
-operator|&
-name|args
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 block|}
@@ -2165,6 +2199,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_comment
 comment|/*  * doadd:  *	Perform an add onto the message buffer  */
 end_comment
@@ -2250,6 +2290,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * do_wait:  *	Wait for the user to type ' ' before doing anything else  */
