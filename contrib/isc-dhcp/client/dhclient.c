@@ -33,10 +33,6 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
 begin_include
 include|#
 directive|include
