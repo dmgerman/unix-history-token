@@ -4113,6 +4113,9 @@ case|case
 name|XPT_PATH_INQ
 case|:
 case|case
+name|XPT_ENG_INQ
+case|:
+case|case
 name|XPT_SCAN_LUN
 case|:
 name|ccb
@@ -4484,21 +4487,10 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-case|case
-name|XPT_ENG_INQ
-case|:
-case|case
-name|XPT_ENG_EXEC
-case|:
-name|error
-operator|=
-name|ENOTSUP
-expr_stmt|;
-break|break;
 default|default:
 name|error
 operator|=
-name|EINVAL
+name|ENOTSUP
 expr_stmt|;
 break|break;
 block|}
@@ -24902,6 +24894,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|int
+name|device_tagenb
+decl_stmt|;
 comment|/* 		 * If we are transitioning from tags to no-tags or 		 * vice-versa, we need to carefully freeze and restart 		 * the queue so that we don't overlap tagged and non-tagged 		 * commands.  We also temporarily stop tags if there is 		 * a change in transfer negotiation settings to allow 		 * "tag-less" negotiation. 		 */
 if|if
 condition|(
