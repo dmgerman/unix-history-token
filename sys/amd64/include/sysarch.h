@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  * Architecture specific syscalls (i386)  */
+comment|/*  * Architecture specific syscalls (AMD64)  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,67 @@ define|#
 directive|define
 name|_MACHINE_SYSARCH_H_
 end_define
+
+begin_define
+define|#
+directive|define
+name|AMD64_GET_FSBASE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMD64_SET_FSBASE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMD64_GET_GSBASE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|AMD64_SET_GSBASE
+value|3
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* these wrappers need to be implemented in libc first */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_endif
+unit|__BEGIN_DECLS unsigned long amd64_get_fsbase(void); unsigned long amd64_set_fsbase(unsigned long); unsigned long amd64_get_gsbase(void); unsigned long amd64_set_gsbase(unsigned long); __END_DECLS
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -1946,6 +1946,42 @@ name|td
 operator|->
 name|td_frame
 decl_stmt|;
+name|struct
+name|pcb
+modifier|*
+name|pcb
+init|=
+name|td
+operator|->
+name|td_pcb
+decl_stmt|;
+name|pcb
+operator|->
+name|pcb_fsbase
+operator|=
+literal|0
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_gsbase
+operator|=
+literal|0
+expr_stmt|;
+name|wrmsr
+argument_list|(
+name|MSR_FSBASE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|wrmsr
+argument_list|(
+name|MSR_KGSBASE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* User value while we're in the kernel */
 name|bzero
 argument_list|(
 operator|(
@@ -2719,6 +2755,11 @@ decl_stmt|,
 name|IDTVEC
 argument_list|(
 name|xmm
+argument_list|)
+decl_stmt|,
+name|IDTVEC
+argument_list|(
+name|dblfault
 argument_list|)
 decl_stmt|,
 name|IDTVEC
@@ -5115,12 +5156,10 @@ name|wrmsr
 argument_list|(
 name|MSR_FSBASE
 argument_list|,
-operator|(
-name|u_int64_t
-operator|)
-name|pc
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* User value */
 name|wrmsr
 argument_list|(
 name|MSR_GSBASE
@@ -5135,12 +5174,10 @@ name|wrmsr
 argument_list|(
 name|MSR_KGSBASE
 argument_list|,
-operator|(
-name|u_int64_t
-operator|)
-name|pc
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* User value while we're in the kernel */
 name|pcpu_init
 argument_list|(
 name|pc
@@ -5225,7 +5262,7 @@ argument_list|(
 name|rsvd
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5242,7 +5279,7 @@ argument_list|(
 name|div
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5276,7 +5313,7 @@ argument_list|(
 name|nmi
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5310,7 +5347,7 @@ argument_list|(
 name|ofl
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5327,7 +5364,7 @@ argument_list|(
 name|bnd
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5344,7 +5381,7 @@ argument_list|(
 name|ill
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5361,7 +5398,7 @@ argument_list|(
 name|dna
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5372,11 +5409,11 @@ name|setidt
 argument_list|(
 literal|8
 argument_list|,
-operator|(
-name|inthand_t
-operator|*
-operator|)
-name|dblfault_handler
+operator|&
+name|IDTVEC
+argument_list|(
+name|dblfault
+argument_list|)
 argument_list|,
 name|SDT_SYSIGT
 argument_list|,
@@ -5395,7 +5432,7 @@ argument_list|(
 name|fpusegm
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5412,7 +5449,7 @@ argument_list|(
 name|tss
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5429,7 +5466,7 @@ argument_list|(
 name|missing
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5446,7 +5483,7 @@ argument_list|(
 name|stk
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5463,7 +5500,7 @@ argument_list|(
 name|prot
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5497,7 +5534,7 @@ argument_list|(
 name|rsvd
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5514,7 +5551,7 @@ argument_list|(
 name|fpu
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5531,7 +5568,7 @@ argument_list|(
 name|align
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5548,7 +5585,7 @@ argument_list|(
 name|mchk
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5565,7 +5602,7 @@ argument_list|(
 name|xmm
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -5582,7 +5619,7 @@ argument_list|(
 name|int0x80_syscall
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_UPL
 argument_list|,
@@ -5673,8 +5710,6 @@ expr|struct
 name|pcb
 argument_list|)
 expr_stmt|;
-comment|/* XXX we need to update tss_rsp0 in cpu_switch */
-comment|/* XXX maybe not yet, everything is still running in supervisor mode */
 comment|/* doublefault stack space, runs on ist1 */
 name|common_tss
 operator|.

@@ -65,6 +65,12 @@ decl_stmt|;
 name|register_t
 name|pcb_rflags
 decl_stmt|;
+name|register_t
+name|pcb_fsbase
+decl_stmt|;
+name|register_t
+name|pcb_gsbase
+decl_stmt|;
 name|struct
 name|savefpu
 name|pcb_save
