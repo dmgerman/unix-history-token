@@ -1968,7 +1968,10 @@ specifier|extern
 name|struct
 name|vnodeops
 name|ufs_vnodeops
-decl_stmt|,
+decl_stmt|;
+specifier|extern
+name|struct
+name|vnodeops
 name|nfsv2_vnodeops
 decl_stmt|;
 if|if
