@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.h	7.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -86,16 +86,15 @@ parameter_list|()
 function_decl|;
 comment|/* device */
 name|struct
-name|proc
-modifier|*
+name|selinfo
 name|t_rsel
 decl_stmt|;
-comment|/* tty */
+comment|/* tty read/oob select */
 name|struct
-name|proc
-modifier|*
+name|selinfo
 name|t_wsel
 decl_stmt|;
+comment|/* tty write select */
 name|caddr_t
 name|T_LINEP
 decl_stmt|;
@@ -424,28 +423,6 @@ end_define
 
 begin_comment
 comment|/* tandem queue blocked */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TS_RCOLL
-value|0x000800
-end_define
-
-begin_comment
-comment|/* collision in read select */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TS_WCOLL
-value|0x001000
-end_define
-
-begin_comment
-comment|/* collision in write select */
 end_comment
 
 begin_define
