@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ffs_softdep.c	9.28 (McKusick) 8/8/98  *	$Id: ffs_softdep.c,v 1.20 1999/01/07 16:14:10 bde Exp $  */
+comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ffs_softdep.c	9.32 (McKusick) 2/17/99  *	$Id: ffs_softdep.c,v 1.21 1999/01/22 09:07:32 dg Exp $  */
 end_comment
 
 begin_comment
@@ -13750,16 +13750,26 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|LIST_REMOVE
-argument_list|(
-name|aip
-argument_list|,
-name|ai_next
-argument_list|)
-expr_stmt|;
 name|handle_allocindir_partdone
 argument_list|(
 name|aip
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|aip
+operator|==
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|indirdep
+operator|->
+name|ir_donehd
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"disk_write_complete: not gone"
 argument_list|)
 expr_stmt|;
 block|}
