@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.40 (Berkeley) %G%"
+literal|"@(#)main.c	6.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -906,12 +906,35 @@ name|FALSE
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|OPTIONS
+value|"b:C:cd:e:F:f:h:Iimno:p:q:r:sTtvx"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|OPTIONS
 value|"b:C:cd:e:F:f:h:Iimno:p:q:r:sTtv"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_while
 while|while
@@ -2297,6 +2320,16 @@ break|break;
 endif|#
 directive|endif
 comment|/* DBM */
+ifdef|#
+directive|ifdef
+name|__alpha
+case|case
+literal|'x'
+case|:
+comment|/* random flag that DEC OSF/1 mailx passes */
+break|break;
+endif|#
+directive|endif
 default|default:
 name|ExitStat
 operator|=
@@ -4542,11 +4575,19 @@ block|}
 union|;
 end_union
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__hpux
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__alpha
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -5134,7 +5175,7 @@ name|frzbrk
 argument_list|)
 operator|==
 operator|(
-name|caddr_t
+name|BRK_TYPE
 operator|)
 operator|-
 literal|1
