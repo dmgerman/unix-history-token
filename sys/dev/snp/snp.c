@@ -3029,6 +3029,12 @@ case|case
 name|MOD_LOAD
 case|:
 comment|/* XXX error checking. */
+name|clone_setup
+argument_list|(
+operator|&
+name|snpclones
+argument_list|)
+expr_stmt|;
 name|eh_tag
 operator|=
 name|EVENTHANDLER_REGISTER

@@ -563,6 +563,12 @@ operator|&
 name|taphead
 argument_list|)
 expr_stmt|;
+name|clone_setup
+argument_list|(
+operator|&
+name|tapclones
+argument_list|)
+expr_stmt|;
 name|eh_tag
 operator|=
 name|EVENTHANDLER_REGISTER

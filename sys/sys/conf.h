@@ -1256,6 +1256,19 @@ end_define
 
 begin_function_decl
 name|void
+name|clone_setup
+parameter_list|(
+name|struct
+name|clonedevs
+modifier|*
+modifier|*
+name|cdp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|clone_cleanup
 parameter_list|(
 name|struct

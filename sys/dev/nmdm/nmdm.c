@@ -2650,6 +2650,12 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+name|clone_setup
+argument_list|(
+operator|&
+name|nmdmclones
+argument_list|)
+expr_stmt|;
 name|tag
 operator|=
 name|EVENTHANDLER_REGISTER
