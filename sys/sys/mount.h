@@ -2873,6 +2873,20 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|lgetfh
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|fhandle_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|getfh
 parameter_list|(
 specifier|const
