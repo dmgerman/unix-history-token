@@ -2765,8 +2765,17 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|{ c = (char*) (x); x = y; y = c; }
-name|ptrswap
+value|{ c = x; x = y; y = c; }
+define|#
+directive|define
+name|fptrswap
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|{ c = (char*) (x); x = y; y = (struct font *) c; }
+name|fptrswap
 argument_list|(
 name|fontbase
 index|[
