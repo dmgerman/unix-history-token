@@ -1485,7 +1485,17 @@ name|SSL3_ST_SR_CLNT_HELLO_C
 expr_stmt|;
 else|else
 block|{
-comment|/* could be sent for a DH cert, even if we 				 * have not asked for it :-) */
+if|if
+condition|(
+name|s
+operator|->
+name|s3
+operator|->
+name|tmp
+operator|.
+name|cert_request
+condition|)
+block|{
 name|ret
 operator|=
 name|ssl3_get_client_certificate
@@ -1502,6 +1512,7 @@ condition|)
 goto|goto
 name|end
 goto|;
+block|}
 name|s
 operator|->
 name|init_num
