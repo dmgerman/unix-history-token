@@ -68,7 +68,8 @@ file|<rpcsvc/rstat.h>
 end_include
 
 begin_function
-name|int
+name|enum
+name|clnt_stat
 name|rstat
 parameter_list|(
 name|host
