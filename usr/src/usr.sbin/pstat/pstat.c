@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	8.5 (Berkeley) %G%"
+literal|"@(#)pstat.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1379,7 +1379,7 @@ case|case
 name|MOUNT_NONE
 case|:
 case|case
-name|MOUNT_PC
+name|MOUNT_MSDOS
 case|:
 default|default:
 break|break;
@@ -1434,7 +1434,7 @@ case|case
 name|MOUNT_NONE
 case|:
 case|case
-name|MOUNT_PC
+name|MOUNT_MSDOS
 case|:
 default|default:
 break|break;
@@ -2588,7 +2588,7 @@ literal|"mfs"
 expr_stmt|;
 break|break;
 case|case
-name|MOUNT_PC
+name|MOUNT_MSDOS
 case|:
 name|type
 operator|=
