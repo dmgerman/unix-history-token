@@ -232,7 +232,7 @@ operator|.
 name|icps_error
 operator|++
 expr_stmt|;
-comment|/* 	 * Don't send error if not the first fragment of message. 	 * Don't EVER error if the old packet protocol was ICMP. 	 * (Could do ECHO, etc, but not error indications.) 	 */
+comment|/* 	 * Don't send error if not the first fragment of message. 	 * Don't error if the old packet protocol was ICMP 	 * error message, only known informational types. 	 */
 if|if
 condition|(
 name|oip
@@ -260,6 +260,28 @@ operator|&&
 name|type
 operator|!=
 name|ICMP_REDIRECT
+operator|&&
+operator|!
+name|ICMP_INFOTYPE
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|icmp
+operator|*
+operator|)
+operator|(
+operator|(
+name|caddr_t
+operator|)
+name|oip
+operator|+
+name|oiplen
+operator|)
+operator|)
+operator|->
+name|icmp_type
+argument_list|)
 condition|)
 block|{
 name|icmpstat
