@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.36 (Berkeley) %G%"
+literal|"@(#)alias.c	8.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1664,6 +1664,16 @@ if|if
 condition|(
 operator|!
 name|automatic
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|MF_OPTIONAL
+argument_list|,
+name|map
+operator|->
+name|map_mflags
+argument_list|)
 condition|)
 name|message
 argument_list|(
