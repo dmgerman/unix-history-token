@@ -336,6 +336,9 @@ name|size
 decl_stmt|;
 comment|/* virtual size */
 name|u_char
+name|needs_wakeup
+decl_stmt|;
+name|u_char
 name|system_map
 decl_stmt|;
 comment|/* Am I a system map? */
@@ -693,6 +696,29 @@ name|file
 parameter_list|,
 name|int
 name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vm_map_unlock_and_wait
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|,
+name|boolean_t
+name|user_wait
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_map_wakeup
+parameter_list|(
+name|vm_map_t
+name|map
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1579,8 +1579,6 @@ comment|/*  *	vm_map_unlock_and_wait:  */
 end_comment
 
 begin_function
-specifier|static
-name|__inline
 name|int
 name|vm_map_unlock_and_wait
 parameter_list|(
@@ -1640,8 +1638,6 @@ comment|/*  *	vm_map_wakeup:  */
 end_comment
 
 begin_function
-specifier|static
-name|__inline
 name|void
 name|vm_map_wakeup
 parameter_list|(
@@ -1792,6 +1788,12 @@ operator|&
 name|map
 operator|->
 name|header
+expr_stmt|;
+name|map
+operator|->
+name|needs_wakeup
+operator|=
+name|FALSE
 expr_stmt|;
 name|map
 operator|->
