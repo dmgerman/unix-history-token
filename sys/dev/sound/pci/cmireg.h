@@ -486,6 +486,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CMPCI_REG_N4SPK3D
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|CMPCI_REG_W_SPDIF_48L
 value|0x01000000
 end_define
@@ -493,8 +500,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|CMPCI_REG_SPDIF_48K
-value|0x00008000
+name|CMPCI_REG_XCHGDAC
+value|0x00400000
 end_define
 
 begin_define
@@ -502,6 +509,13 @@ define|#
 directive|define
 name|CMPCI_REG_FM_ENABLE
 value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMPCI_REG_SPDIF_48K
+value|0x00008000
 end_define
 
 begin_define
@@ -845,6 +859,34 @@ parameter_list|,
 name|x
 parameter_list|)
 value|cmpci_adjust((x), 0xc0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMPCI_REG_MIXER1
+value|0x24
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMPCI_SPK4
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMPCI_REAR2FRONT
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMPCI_X3DEN
+value|0x02
 end_define
 
 begin_define
