@@ -782,13 +782,6 @@ literal|"free proc with> 1 ksegrp"
 operator|)
 argument_list|)
 expr_stmt|;
-name|td
-operator|=
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
