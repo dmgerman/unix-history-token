@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	5.18 (Berkeley) %G%"
+literal|"@(#)ctime.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,18 +149,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ASTERISK
-value|*
-end_define
-
-begin_define
-define|#
-directive|define
 name|P
 parameter_list|(
 name|s
 parameter_list|)
-value|(/ASTERISK s ASTERISK/)
+value|()
 end_define
 
 begin_define
