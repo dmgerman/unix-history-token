@@ -1178,7 +1178,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"Concurrent Versions System (CVS) 1.11.2.1-20021024-FreeBSD"
+value|"Concurrent Versions System (CVS) 1.11.2.1-20021201-FreeBSD"
 end_define
 
 begin_comment
