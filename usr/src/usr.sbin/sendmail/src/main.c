@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.116 (Berkeley) %G%"
+literal|"@(#)main.c	8.117 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4924,6 +4924,10 @@ operator|->
 name|e_errormode
 operator|=
 name|EM_QUIET
+expr_stmt|;
+name|PostMasterCopy
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 else|else
