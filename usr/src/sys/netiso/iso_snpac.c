@@ -16,7 +16,7 @@ comment|/* $Source: /usr/argo/sys/netiso/RCS/iso_snpac.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)iso_snpac.c	7.5 (Berkeley) %G% */
+comment|/*	@(#)iso_snpac.c	7.6 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -2989,15 +2989,23 @@ end_comment
 begin_macro
 name|snpac_addrt
 argument_list|(
+argument|ifp
+argument_list|,
 argument|host
 argument_list|,
 argument|gateway
 argument_list|,
-argument|source
-argument_list|,
 argument|netmask
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -3007,9 +3015,6 @@ name|host
 decl_stmt|,
 modifier|*
 name|gateway
-decl_stmt|,
-modifier|*
-name|source
 decl_stmt|,
 modifier|*
 name|netmask
@@ -3082,13 +3087,6 @@ argument_list|)
 expr_stmt|;
 name|zap_isoaddr
 argument_list|(
-name|src
-argument_list|,
-name|source
-argument_list|)
-expr_stmt|;
-name|zap_isoaddr
-argument_list|(
 name|msk
 argument_list|,
 name|netmask
@@ -3120,7 +3118,7 @@ name|RTF_DONE
 argument_list|,
 name|S
 argument_list|(
-name|src
+name|gte
 argument_list|)
 argument_list|,
 operator|&
@@ -3156,7 +3154,7 @@ name|RTF_HOST
 argument_list|,
 name|S
 argument_list|(
-name|src
+name|gte
 argument_list|)
 argument_list|,
 operator|&
