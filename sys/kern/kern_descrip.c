@@ -886,6 +886,9 @@ name|cmd
 condition|)
 block|{
 case|case
+name|F_SETLKW
+case|:
+case|case
 name|F_SETLK
 case|:
 case|case
