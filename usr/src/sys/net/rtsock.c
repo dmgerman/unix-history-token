@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -188,6 +188,9 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 if|if
 condition|(
 name|req
@@ -298,6 +301,11 @@ name|any_count
 operator|--
 expr_stmt|;
 block|}
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|raw_usrreq
@@ -351,6 +359,11 @@ operator|)
 name|rp
 argument_list|,
 name|M_PCB
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -418,6 +431,11 @@ operator||=
 name|SO_USELOOPBACK
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -470,6 +488,8 @@ name|struct
 name|rt_msghdr
 modifier|*
 name|rtm
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|struct
@@ -625,8 +645,18 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
 name|rtm
-operator|=
+argument_list|)
+operator|||
+name|len
+operator|!=
 name|mtod
 argument_list|(
 name|m
@@ -635,12 +665,6 @@ expr|struct
 name|rt_msghdr
 operator|*
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|<
-name|rtm
 operator|->
 name|rtm_msglen
 condition|)
