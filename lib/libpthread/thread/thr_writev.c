@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_writev.c,v 1.5 1998/04/29 09:59:34 jb Exp $  *  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_writev.c,v 1.6 1998/05/25 21:45:52 jb Exp $  *  */
 end_comment
 
 begin_include
@@ -72,7 +72,12 @@ name|int
 name|blocking
 decl_stmt|;
 name|int
-name|status
+name|idx
+init|=
+literal|0
+decl_stmt|;
+name|ssize_t
+name|cnt
 decl_stmt|;
 name|ssize_t
 name|n
@@ -88,7 +93,91 @@ decl_stmt|;
 name|struct
 name|iovec
 name|liov
+index|[
+literal|20
+index|]
 decl_stmt|;
+name|struct
+name|iovec
+modifier|*
+name|p_iov
+init|=
+name|liov
+decl_stmt|;
+comment|/* Check if the array size exceeds to compiled in size: */
+if|if
+condition|(
+name|iovcnt
+operator|>
+operator|(
+sizeof|sizeof
+argument_list|(
+name|liov
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|iovec
+argument_list|)
+operator|)
+condition|)
+block|{
+comment|/* Allocate memory for the local array: */
+if|if
+condition|(
+operator|(
+name|p_iov
+operator|=
+operator|(
+expr|struct
+name|iovec
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|iovcnt
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|iovec
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Insufficient memory: */
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+block|}
+comment|/* Copy the caller's array so that it can be modified locally: */
+name|memcpy
+argument_list|(
+name|p_iov
+argument_list|,
+name|iov
+argument_list|,
+name|iovcnt
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|iovec
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Lock the file descriptor for write: */
 if|if
 condition|(
@@ -112,23 +201,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Make a local copy of the caller's iov: */
-name|liov
-operator|.
-name|iov_base
-operator|=
-name|iov
-operator|->
-name|iov_base
-expr_stmt|;
-name|liov
-operator|.
-name|iov_len
-operator|=
-name|iov
-operator|->
-name|iov_len
-expr_stmt|;
 comment|/* Check if file operations are to block */
 name|blocking
 operator|=
@@ -163,11 +235,14 @@ argument_list|(
 name|fd
 argument_list|,
 operator|&
-name|liov
+name|p_iov
+index|[
+name|idx
+index|]
 argument_list|,
 name|iovcnt
 operator|-
-name|num
+name|idx
 argument_list|)
 expr_stmt|;
 comment|/* Check if one or more bytes were written: */
@@ -178,24 +253,77 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* Update the local iov: */
-name|liov
-operator|.
-name|iov_base
-operator|+=
-name|n
-expr_stmt|;
-name|liov
-operator|.
-name|iov_len
-operator|+=
-name|n
-expr_stmt|;
 comment|/* 				 * Keep a count of the number of bytes 				 * written: 				 */
 name|num
 operator|+=
 name|n
 expr_stmt|;
+comment|/* 				 * Enter a loop to check if a short write 				 * occurred and move the index to the 				 * array entry where the short write 				 * ended: 				 */
+name|cnt
+operator|=
+name|n
+expr_stmt|;
+while|while
+condition|(
+name|cnt
+operator|>
+literal|0
+operator|&&
+name|idx
+operator|<
+name|iovcnt
+condition|)
+block|{
+comment|/* 					 * If the residual count exceeds 					 * the size of this vector, then 					 * it was completely written: 					 */
+if|if
+condition|(
+name|cnt
+operator|>=
+name|p_iov
+index|[
+name|idx
+index|]
+operator|.
+name|iov_len
+condition|)
+comment|/* 						 * Decrement the residual 						 * count and increment the 						 * index to the next array 						 * entry: 						 */
+name|cnt
+operator|-=
+name|p_iov
+index|[
+name|idx
+operator|++
+index|]
+operator|.
+name|iov_len
+expr_stmt|;
+else|else
+block|{
+comment|/* 						 * This entry was only 						 * partially written, so 						 * adjust it's length 						 * and base pointer ready 						 * for the next write: 						 */
+name|p_iov
+index|[
+name|idx
+index|]
+operator|.
+name|iov_len
+operator|-=
+name|cnt
+expr_stmt|;
+name|p_iov
+index|[
+name|idx
+index|]
+operator|.
+name|iov_base
+operator|+=
+name|cnt
+expr_stmt|;
+name|cnt
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
 block|}
 comment|/* 			 * If performing a blocking write, check if the 			 * write would have blocked or if some bytes 			 * were written but there are still more to 			 * write: 			 */
 if|if
@@ -219,7 +347,7 @@ name|EAGAIN
 operator|)
 operator|)
 operator|||
-name|num
+name|idx
 operator|<
 name|iovcnt
 operator|)
@@ -295,8 +423,8 @@ block|}
 elseif|else
 if|if
 condition|(
-name|num
-operator|>=
+name|idx
+operator|==
 name|iovcnt
 condition|)
 comment|/* Return the number of bytes written: */
@@ -313,6 +441,18 @@ name|FD_RDWR
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* If memory was allocated for the array, free it: */
+if|if
+condition|(
+name|p_iov
+operator|!=
+name|liov
+condition|)
+name|free
+argument_list|(
+name|p_iov
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ret
