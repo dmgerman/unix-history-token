@@ -734,6 +734,16 @@ block|{
 block|{
 name|USB_VENDOR_MUSTEK
 block|,
+name|USB_PRODUCT_MUSTEK_BEARPAW1200TA
+block|}
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_MUSTEK
+block|,
 name|USB_PRODUCT_MUSTEK_600USB
 block|}
 block|,
