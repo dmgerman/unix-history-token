@@ -3459,25 +3459,6 @@ name|struct
 name|uio
 name|olduio
 decl_stmt|;
-comment|/* 	 * review: manage iov more precisely 	 */
-if|if
-condition|(
-name|uio
-operator|->
-name|uio_iovcnt
-operator|!=
-literal|1
-condition|)
-block|{
-name|SMBERROR
-argument_list|(
-literal|"can't handle iovcnt> 1\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|EIO
-return|;
-block|}
 name|tsize
 operator|=
 name|uio
@@ -3547,6 +3528,7 @@ condition|(
 name|error
 condition|)
 block|{
+comment|/* 		 * Errors can happen on the copyin, the rpc, etc.  So they 		 * imply resid is unreliable.  The only safe thing is 		 * to pretend zero bytes made it.  We needn't restore the 		 * iovs because callers don't depend on them in error 		 * paths - uio_resid and uio_offset are what matter. 		 */
 operator|*
 name|uio
 operator|=
