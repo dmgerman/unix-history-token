@@ -1027,6 +1027,20 @@ argument_list|(
 literal|"Generating /etc/fstab file\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|fstab
+argument_list|,
+literal|"# Device\t\tMountpoint\tFStype\tOptions\t\tDump?\tfsck pass#\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fstab
+argument_list|,
+literal|"#\t\t\t\t\t\t\t\t\t(0=no) (0=no fsck)\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1044,7 +1058,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"/dev/%s\t\t\t%s\t\t%s\t%s %d %d\n"
+literal|"/dev/%s\t\t%s\t%s\t%s\t\t%d\t%d\n"
 argument_list|,
 name|name_of
 argument_list|(
@@ -1104,7 +1118,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"proc\t\t\t\t/proc\t\tprocfs\trw 0 0\n"
+literal|"proc\t\t/proc\tprocfs\t\trw\t0\t0\n"
 argument_list|)
 expr_stmt|;
 comment|/* Now look for the CDROMs */
@@ -1149,7 +1163,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"/dev/%s\t\t\t/cdrom\t\tcd9660\tro,noauto 0 0\n"
+literal|"/dev/%s\t\t/cdrom\tcd9660\t\tro,noauto\t0\t0\n"
 argument_list|,
 name|devs
 index|[
@@ -1211,7 +1225,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"/dev/%s\t\t\t%s\t\tcd9660\tro,noauto 0 0\n"
+literal|"/dev/%s\t\t%s\tcd9660\t\tro,noauto\t0\t0\n"
 argument_list|,
 name|devs
 index|[

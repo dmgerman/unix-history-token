@@ -125,7 +125,7 @@ block|}
 comment|/* We know the tape is already in the drive, so go for it */
 name|msgNotify
 argument_list|(
-literal|"Attempting to extract from %s..."
+literal|"Extracting distributions from %s..."
 argument_list|,
 name|dev
 operator|->
