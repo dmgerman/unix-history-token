@@ -986,12 +986,7 @@ name|edst
 argument_list|)
 condition|)
 block|{
-comment|/* this must be impossible, so we bark */
-name|printf
-argument_list|(
-literal|"nd6_storelladdr failed\n"
-argument_list|)
-expr_stmt|;
+comment|/* Something bad happened */
 return|return
 operator|(
 literal|0
