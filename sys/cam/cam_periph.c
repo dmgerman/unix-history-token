@@ -120,12 +120,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/scsi/scsi_da.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cam/scsi/scsi_pass.h>
 end_include
 

@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/conf.h>
 end_include
 
@@ -111,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|<cam/cam_xpt_periph.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/cam_queue.h>
 end_include
 
 begin_include

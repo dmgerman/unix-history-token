@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/conf.h>
 end_include
 
@@ -109,18 +103,6 @@ begin_include
 include|#
 directive|include
 file|<cam/scsi/scsi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/scsi/scsi_message.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/scsi/scsi_da.h>
 end_include
 
 begin_include
