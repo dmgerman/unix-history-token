@@ -396,7 +396,8 @@ block|,
 comment|/* 7 */
 literal|"SMC91C100"
 block|,
-name|NULL
+comment|/* 8 */
+literal|"SMC91C100FD"
 block|,
 name|NULL
 block|,

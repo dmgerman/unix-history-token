@@ -1322,6 +1322,13 @@ name|CHIP_91100
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|CHIP_91100FD
+value|8
+end_define
+
 begin_comment
 comment|/* When packets are stuffed into the card or sucked out of the card  * they are set up more or less as follows:  *  * Addr msbyte   lsbyte  * 00   SSSSSSSS SSSSSSSS - STATUS-WORD 16 bit TX or RX status  * 02   RRRRR             - RESERVED (unused)  * 02        CCC CCCCCCCC - BYTE COUNT (RX: always even, TX: bit 0 ignored)  * 04   DDDDDDDD DDDDDDDD - DESTINATION ADDRESS  * 06   DDDDDDDD DDDDDDDD        (48 bit Ethernet MAC Address)  * 08   DDDDDDDD DDDDDDDD  * 0A   SSSSSSSS SSSSSSSS - SOURCE ADDRESS  * 0C   SSSSSSSS SSSSSSSS        (48 bit Ethernet MAC Address)  * 0E   SSSSSSSS SSSSSSSS  * 10   PPPPPPPP PPPPPPPP  * ..   PPPPPPPP PPPPPPPP  * C-2  CCCCCCCC          - CONTROL BYTE  * C-2           PPPPPPPP - Last data byte (If odd length)  *  * The STATUS_WORD is derived from the EPH_STATUS_REG_W register  * during transmit and is composed of another set of bits described  * below during receive.  */
 end_comment
