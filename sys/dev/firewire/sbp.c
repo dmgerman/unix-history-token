@@ -5950,6 +5950,10 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|SBP_DEBUG
+argument_list|(
+literal|0
+argument_list|)
 name|printf
 argument_list|(
 literal|"%s: orb pointer active\n"
@@ -5957,6 +5961,7 @@ argument_list|,
 name|__FUNCTION__
 argument_list|)
 expr_stmt|;
+name|END_DEBUG
 name|sdev
 operator|->
 name|flags
