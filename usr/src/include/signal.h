@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -144,23 +144,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_macro
-name|void
-argument_list|(
-argument|*signal __P((int, void (*) __P((int))))
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_ifndef
 ifndef|#
