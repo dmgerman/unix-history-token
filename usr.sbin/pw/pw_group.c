@@ -1790,7 +1790,7 @@ name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Group Name: %-10s   #%lu\n"
+literal|"Group Name: %-15s   #%lu\n"
 literal|"   Members: "
 argument_list|,
 name|grp
