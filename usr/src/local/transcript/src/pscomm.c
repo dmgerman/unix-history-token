@@ -347,30 +347,6 @@ begin_decl_stmt
 name|private
 name|char
 modifier|*
-name|bannerfirst
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|private
-name|char
-modifier|*
-name|bannerlast
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|private
-name|char
-modifier|*
-name|verboselog
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|private
-name|char
-modifier|*
 name|reverse
 decl_stmt|;
 end_decl_stmt
@@ -441,7 +417,11 @@ name|char
 name|abortbuf
 index|[]
 init|=
-literal|"\003"
+block|{
+name|PS_INT
+block|,
+literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -455,7 +435,11 @@ name|char
 name|statusbuf
 index|[]
 init|=
-literal|"\024"
+block|{
+name|PS_STATUS
+block|,
+literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -469,7 +453,11 @@ name|char
 name|eofbuf
 index|[]
 init|=
-literal|"\004"
+block|{
+name|PS_EOF
+block|,
+literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -550,15 +538,6 @@ end_decl_stmt
 begin_comment
 comment|/* ioctl FLUSH arg */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|private
@@ -675,30 +654,24 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 specifier|register
 name|int
 name|cnt
 decl_stmt|,
 name|wc
 decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
 name|mbp
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|av
 decl_stmt|;
 name|long
 name|clock
@@ -711,18 +684,6 @@ literal|11
 index|]
 decl_stmt|;
 comment|/* first few bytes of stdin ?magic number and type */
-name|int
-name|noReverse
-init|=
-literal|0
-decl_stmt|;
-comment|/* flag if we should never page reverse */
-name|int
-name|canReverse
-init|=
-literal|0
-decl_stmt|;
-comment|/* flag if we can page-reverse the ps file */
 name|int
 name|reversing
 init|=
@@ -755,9 +716,6 @@ name|int
 name|format
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|VOIDC
 name|signal
@@ -796,43 +754,103 @@ comment|/* the argv (see header comments) comes from the spooler daemon */
 comment|/* itself, so it should be canonical, but at least one 4.2-based */
 comment|/* system uses -nlogin -hhost (insead of -n login -h host) so I */
 comment|/* check for both */
-name|av
+name|BannerFirst
 operator|=
-name|argv
-expr_stmt|;
-name|prog
-operator|=
-operator|*
-name|av
-expr_stmt|;
-while|while
-condition|(
-operator|--
-name|argc
-condition|)
-block|{
-if|if
-condition|(
-operator|*
 operator|(
 name|cp
 operator|=
+name|envget
+argument_list|(
+literal|"BANNERFIRST"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|?
+name|atoi
+argument_list|(
+name|cp
+argument_list|)
+else|:
+literal|0
+expr_stmt|;
+name|BannerLast
+operator|=
+operator|(
+name|cp
+operator|=
+name|envget
+argument_list|(
+literal|"BANNERLAST"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|?
+name|atoi
+argument_list|(
+name|cp
+argument_list|)
+else|:
+literal|0
+expr_stmt|;
+name|VerboseLog
+operator|=
+operator|(
+name|cp
+operator|=
+name|envget
+argument_list|(
+literal|"VERBOSELOG"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|?
+name|atoi
+argument_list|(
+name|cp
+argument_list|)
+else|:
+literal|1
+expr_stmt|;
+name|reverse
+operator|=
+name|envget
+argument_list|(
+literal|"REVERSE"
+argument_list|)
+expr_stmt|;
+comment|/* name of the filter itself */
+name|prog
+operator|=
+operator|*
+name|argv
+expr_stmt|;
+while|while
+condition|(
 operator|*
 operator|++
-name|av
-operator|)
+name|argv
+condition|)
+if|if
+condition|(
+operator|*
+operator|*
+name|argv
 operator|==
 literal|'-'
 condition|)
 block|{
 switch|switch
 condition|(
-operator|*
-operator|(
-name|cp
-operator|+
+name|argv
+index|[
+literal|0
+index|]
+index|[
 literal|1
-operator|)
+index|]
 condition|)
 block|{
 case|case
@@ -845,10 +863,8 @@ expr_stmt|;
 name|pname
 operator|=
 operator|*
-operator|(
 operator|++
-name|av
-operator|)
+name|argv
 expr_stmt|;
 break|break;
 case|case
@@ -861,10 +877,8 @@ expr_stmt|;
 name|name
 operator|=
 operator|*
-operator|(
 operator|++
-name|av
-operator|)
+name|argv
 expr_stmt|;
 break|break;
 case|case
@@ -877,10 +891,8 @@ expr_stmt|;
 name|host
 operator|=
 operator|*
-operator|(
 operator|++
-name|av
-operator|)
+name|argv
 expr_stmt|;
 break|break;
 case|case
@@ -893,10 +905,8 @@ expr_stmt|;
 name|prog
 operator|=
 operator|*
-operator|(
 operator|++
-name|av
-operator|)
+name|argv
 expr_stmt|;
 break|break;
 case|case
@@ -906,9 +916,9 @@ comment|/* never reverse */
 name|argc
 operator|--
 expr_stmt|;
-name|noReverse
+name|reverse
 operator|=
-literal|1
+name|NULL
 expr_stmt|;
 break|break;
 default|default:
@@ -921,7 +931,8 @@ literal|"%s: unknown option: %s\n"
 argument_list|,
 name|prog
 argument_list|,
-name|cp
+operator|*
+name|argv
 argument_list|)
 expr_stmt|;
 break|break;
@@ -930,9 +941,9 @@ block|}
 else|else
 name|accountingfile
 operator|=
-name|cp
+operator|*
+name|argv
 expr_stmt|;
-block|}
 name|debugp
 argument_list|(
 operator|(
@@ -951,89 +962,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* do printer-specific options processing */
-name|VerboseLog
-operator|=
-literal|1
-expr_stmt|;
-name|BannerFirst
-operator|=
-name|BannerLast
-operator|=
-literal|0
-expr_stmt|;
-name|reverse
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|bannerfirst
-operator|=
-name|envget
-argument_list|(
-literal|"BANNERFIRST"
-argument_list|)
-condition|)
-block|{
-name|BannerFirst
-operator|=
-name|atoi
-argument_list|(
-name|bannerfirst
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|bannerlast
-operator|=
-name|envget
-argument_list|(
-literal|"BANNERLAST"
-argument_list|)
-condition|)
-block|{
-name|BannerLast
-operator|=
-name|atoi
-argument_list|(
-name|bannerlast
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|verboselog
-operator|=
-name|envget
-argument_list|(
-literal|"VERBOSELOG"
-argument_list|)
-condition|)
-block|{
-name|VerboseLog
-operator|=
-name|atoi
-argument_list|(
-name|verboselog
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|noReverse
-condition|)
-block|{
-name|reverse
-operator|=
-name|envget
-argument_list|(
-literal|"REVERSE"
-argument_list|)
-expr_stmt|;
-comment|/* name of the filter itself */
-block|}
 if|if
 condition|(
 name|VerboseLog
@@ -1108,25 +1036,20 @@ name|BannerLast
 operator|,
 name|VerboseLog
 operator|,
-operator|(
-operator|(
 name|reverse
 operator|==
 name|NULL
-operator|)
 condition|?
 literal|"norev"
 else|:
 name|reverse
 operator|)
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* IMPORTANT: in the case of cascaded filters, */
 comment|/* stdin may be a pipe! (and hence we cannot seek!) */
-if|if
+switch|switch
 condition|(
-operator|(
 name|cnt
 operator|=
 name|read
@@ -1140,13 +1063,11 @@ name|magic
 argument_list|,
 literal|11
 argument_list|)
-operator|)
-operator|!=
-literal|11
 condition|)
-goto|goto
-name|badfile
-goto|;
+block|{
+case|case
+literal|11
+case|:
 name|debugp
 argument_list|(
 operator|(
@@ -1177,16 +1098,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|canReverse
-operator|=
-name|TRUE
-expr_stmt|;
 goto|goto
 name|go_ahead
 goto|;
-block|}
-elseif|else
+default|default:
 if|if
 condition|(
 name|strncmp
@@ -1201,30 +1116,88 @@ operator|==
 literal|0
 condition|)
 block|{
-name|canReverse
+name|reverse
 operator|=
-name|FALSE
+name|NULL
 expr_stmt|;
 goto|goto
 name|go_ahead
 goto|;
 block|}
-comment|/* here is where you might test for other file type      * e.g., PRESS, imPRESS, DVI, Mac-generated, etc.      */
-comment|/* final sanity check on the text file, to guard      * against arbitrary binary data      */
-for|for
-control|(
-name|i
-operator|=
+break|break;
+case|case
 literal|0
-init|;
-name|i
-operator|<
-literal|11
-condition|;
-name|i
-operator|++
-control|)
-block|{
+case|:
+name|debugp
+argument_list|(
+operator|(
+name|stderr
+operator|,
+literal|"%s: EOF reading magic number\n"
+operator|,
+name|prog
+operator|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: empty file\n"
+argument_list|,
+name|prog
+argument_list|)
+expr_stmt|;
+goto|goto
+name|badfile
+goto|;
+case|case
+operator|-
+literal|1
+case|:
+name|debugp
+argument_list|(
+operator|(
+name|stderr
+operator|,
+literal|"%s: error reading magic number\n"
+operator|,
+name|prog
+operator|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: error reading magic number\n"
+argument_list|,
+name|prog
+argument_list|)
+expr_stmt|;
+name|badfile
+label|:
+name|VOIDC
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+decl_stmt|;
+name|exit
+argument_list|(
+name|THROW_AWAY
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * here is where you might test for other file type      * e.g., PRESS, imPRESS, DVI, Mac-generated, etc.      */
+comment|/*      * final sanity check on the text file, to guard      * against arbitrary binary data      */
+while|while
+condition|(
+operator|--
+name|cnt
+operator|>=
+literal|0
+condition|)
 if|if
 condition|(
 operator|!
@@ -1232,17 +1205,16 @@ name|isascii
 argument_list|(
 name|magic
 index|[
-name|i
+name|cnt
 index|]
 argument_list|)
 operator|||
-operator|(
 operator|!
 name|isprint
 argument_list|(
 name|magic
 index|[
-name|i
+name|cnt
 index|]
 argument_list|)
 operator|&&
@@ -1251,10 +1223,9 @@ name|isspace
 argument_list|(
 name|magic
 index|[
-name|i
+name|cnt
 index|]
 argument_list|)
-operator|)
 condition|)
 block|{
 name|fprintf
@@ -1301,13 +1272,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 name|exit
 argument_list|(
 name|THROW_AWAY
 argument_list|)
 expr_stmt|;
-block|}
 name|format
 operator|=
 literal|1
@@ -1316,34 +1285,6 @@ goto|goto
 name|lastchance
 goto|;
 block|}
-block|}
-goto|goto
-name|format_text
-goto|;
-name|badfile
-label|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad magic number, EOF\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|VOIDC
-name|fflush
-argument_list|(
-name|stderr
-argument_list|)
-decl_stmt|;
-name|exit
-argument_list|(
-name|THROW_AWAY
-argument_list|)
-expr_stmt|;
-name|format_text
-label|:
 comment|/* exec dumb formatter to make a listing */
 name|debugp
 argument_list|(
@@ -1368,17 +1309,14 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
-name|rewind
-argument_list|(
-name|stdin
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pipe
 argument_list|(
 name|fdpipe
 argument_list|)
+operator|<
+literal|0
 condition|)
 name|pexit2
 argument_list|(
@@ -1424,8 +1362,9 @@ name|close
 argument_list|(
 literal|1
 argument_list|)
+operator|<
+literal|0
 operator|||
-operator|(
 name|dup
 argument_list|(
 name|fdpipe
@@ -1435,7 +1374,6 @@ index|]
 argument_list|)
 operator|!=
 literal|1
-operator|)
 operator|||
 name|close
 argument_list|(
@@ -1444,6 +1382,8 @@ index|[
 literal|1
 index|]
 argument_list|)
+operator|<
+literal|0
 operator|||
 name|close
 argument_list|(
@@ -1452,8 +1392,9 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|<
+literal|0
 condition|)
-block|{
 name|pexit2
 argument_list|(
 name|prog
@@ -1463,7 +1404,6 @@ argument_list|,
 name|THROW_AWAY
 argument_list|)
 expr_stmt|;
-block|}
 name|execl
 argument_list|(
 name|envget
@@ -1488,16 +1428,16 @@ name|THROW_AWAY
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* parent continues */
-comment|/* set up stdin to be pipe */
+comment|/* parent continues, set up stdin to be pipe */
 if|if
 condition|(
 name|close
 argument_list|(
 literal|0
 argument_list|)
+operator|<
+literal|0
 operator|||
-operator|(
 name|dup
 argument_list|(
 name|fdpipe
@@ -1507,7 +1447,6 @@ index|]
 argument_list|)
 operator|!=
 literal|0
-operator|)
 operator|||
 name|close
 argument_list|(
@@ -1516,6 +1455,8 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|<
+literal|0
 operator|||
 name|close
 argument_list|(
@@ -1524,8 +1465,9 @@ index|[
 literal|1
 index|]
 argument_list|)
+operator|<
+literal|0
 condition|)
-block|{
 name|pexit2
 argument_list|(
 name|prog
@@ -1535,7 +1477,6 @@ argument_list|,
 name|THROW_AWAY
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* fall through to spooler with new stdin */
 comment|/* can't seek here but we should be at the right place */
 name|streamin
@@ -1547,11 +1488,6 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
-name|canReverse
-operator|=
-name|TRUE
-expr_stmt|;
-comment|/* we know we can reverse pstext output */
 name|go_ahead
 label|:
 comment|/* do page reversal if specified */
@@ -1559,15 +1495,9 @@ if|if
 condition|(
 name|reversing
 operator|=
-operator|(
-operator|(
 name|reverse
 operator|!=
 name|NULL
-operator|)
-operator|&&
-name|canReverse
-operator|)
 condition|)
 block|{
 name|debugp
@@ -1605,6 +1535,8 @@ name|pipe
 argument_list|(
 name|fdpipe
 argument_list|)
+operator|<
+literal|0
 condition|)
 name|pexit2
 argument_list|(
@@ -1650,8 +1582,9 @@ name|close
 argument_list|(
 literal|1
 argument_list|)
+operator|<
+literal|0
 operator|||
-operator|(
 name|dup
 argument_list|(
 name|fdpipe
@@ -1661,7 +1594,6 @@ index|]
 argument_list|)
 operator|!=
 literal|1
-operator|)
 operator|||
 name|close
 argument_list|(
@@ -1670,6 +1602,8 @@ index|[
 literal|1
 index|]
 argument_list|)
+operator|<
+literal|0
 operator|||
 name|close
 argument_list|(
@@ -1678,8 +1612,9 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|<
+literal|0
 condition|)
-block|{
 name|pexit2
 argument_list|(
 name|prog
@@ -1689,7 +1624,6 @@ argument_list|,
 name|THROW_AWAY
 argument_list|)
 expr_stmt|;
-block|}
 name|execl
 argument_list|(
 name|reverse
@@ -1718,8 +1652,9 @@ name|close
 argument_list|(
 literal|0
 argument_list|)
+operator|<
+literal|0
 operator|||
-operator|(
 name|dup
 argument_list|(
 name|fdpipe
@@ -1729,7 +1664,6 @@ index|]
 argument_list|)
 operator|!=
 literal|0
-operator|)
 operator|||
 name|close
 argument_list|(
@@ -1738,6 +1672,8 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|<
+literal|0
 operator|||
 name|close
 argument_list|(
@@ -1746,8 +1682,9 @@ index|[
 literal|1
 index|]
 argument_list|)
+operator|<
+literal|0
 condition|)
-block|{
 name|pexit2
 argument_list|(
 name|prog
@@ -1757,9 +1694,7 @@ argument_list|,
 name|THROW_AWAY
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* fall through to spooler with new stdin */
-comment|/* VOIDC lseek(0,0L,0); */
 name|streamin
 operator|=
 name|fdopen
@@ -1771,18 +1706,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|TRUE
-condition|)
-block|{
-if|if
-condition|(
+operator|!
 name|revdone
 condition|)
-break|break;
 name|pause
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 name|VOIDC
 name|signal
@@ -1806,8 +1735,7 @@ expr_stmt|;
 block|}
 name|lastchance
 label|:
-empty_stmt|;
-comment|/* establish an input stream from the printer --      * the printcap entry specifies "rw" and we get      * invoked with stdout == the device, so we      * dup stdout, and reopen it for reading;      * this seems to work fine...      */
+comment|/*      * establish an input stream from the printer --      * the printcap entry specifies "rw" and we get      * invoked with stdout == the device, so we      * dup stdout, and reopen it for reading;      * this seems to work fine...      */
 name|fdinput
 operator|=
 name|fileno
@@ -1851,7 +1779,6 @@ name|name
 operator|&&
 name|accountingfile
 operator|&&
-operator|(
 name|access
 argument_list|(
 name|accountingfile
@@ -1860,9 +1787,8 @@ name|W_OK
 argument_list|)
 operator|==
 literal|0
-operator|)
 expr_stmt|;
-comment|/* get control of the "status" message file.      * we copy the current one to ".status" so we can restore it      * on exit (to be clean).      * Our ability to use this is publicized nowhere in the      * 4.2 lpr documentation, so things might go bad for us.      * We will use it to report that printer errors condition      * has been detected, and the printer should be checked.      * Unfortunately, this notice may persist through      * the end of the print job, but this is no big deal.      */
+comment|/*      * get control of the "status" message file.      * we copy the current one to ".status" so we can restore it      * on exit (to be clean).      * Our ability to use this is publicized nowhere in the      * 4.2 lpr documentation, so things might go bad for us.      * We will use it to report that printer errors condition      * has been detected, and the printer should be checked.      * Unfortunately, this notice may persist through      * the end of the print job, but this is no big deal.      */
 name|BackupStatus
 argument_list|(
 literal|".status"
@@ -1888,7 +1814,6 @@ argument_list|,
 name|THROW_AWAY
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|cpid
@@ -2071,14 +1996,10 @@ argument_list|)
 decl_stmt|;
 while|while
 condition|(
-name|TRUE
-condition|)
-block|{
-if|if
-condition|(
+operator|!
 name|goahead
 condition|)
-break|break;
+block|{
 name|debugp
 argument_list|(
 operator|(
@@ -2133,7 +2054,7 @@ name|sprintf
 argument_list|(
 name|mybuf
 argument_list|,
-literal|"Not Responding for %d minutes"
+literal|"not responding for %d minutes"
 argument_list|,
 operator|(
 name|cnt
@@ -2195,7 +2116,7 @@ name|mybuf
 argument_list|,
 name|getpages
 argument_list|,
-literal|"\004"
+name|eofbuf
 argument_list|)
 expr_stmt|;
 name|VOIDC
@@ -2310,14 +2231,10 @@ argument_list|)
 decl_stmt|;
 while|while
 condition|(
-name|TRUE
-condition|)
-block|{
-if|if
-condition|(
+operator|!
 name|goahead
 condition|)
-break|break;
+block|{
 name|pause
 argument_list|()
 expr_stmt|;
@@ -2351,7 +2268,7 @@ name|sprintf
 argument_list|(
 name|mybuf
 argument_list|,
-literal|"Not Responding for %d minutes"
+literal|"not responding for %d minutes"
 argument_list|,
 operator|(
 name|cnt
@@ -2419,15 +2336,11 @@ block|}
 comment|/* ship the magic number! */
 if|if
 condition|(
-operator|(
 operator|!
 name|format
-operator|)
 operator|&&
-operator|(
 operator|!
 name|reversing
-operator|)
 condition|)
 block|{
 name|VOIDC
@@ -2772,10 +2685,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* wait to sync with listener EMT signal 	 * to indicate it got an EOF from the printer 	 */
-while|while
-condition|(
-name|TRUE
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 if|if
 condition|(
@@ -2859,7 +2773,7 @@ name|mybuf
 argument_list|,
 name|getpages
 argument_list|,
-literal|"\004"
+name|eofbuf
 argument_list|)
 expr_stmt|;
 name|VOIDC
@@ -2987,7 +2901,6 @@ argument_list|,
 name|prog
 argument_list|,
 operator|(
-name|VOIDC
 name|time
 argument_list|(
 operator|&
@@ -3052,17 +2965,6 @@ name|int
 name|sc
 decl_stmt|;
 comment|/* pattern match count for sscanf */
-name|char
-modifier|*
-name|outname
-decl_stmt|;
-comment|/* file name for job output */
-name|int
-name|havejobout
-init|=
-name|FALSE
-decl_stmt|;
-comment|/* flag if jobout != stderr */
 name|int
 name|ppid
 decl_stmt|;
@@ -3116,8 +3018,7 @@ comment|/* get jobout from environment if there, otherwise use stderr */
 if|if
 condition|(
 operator|(
-operator|(
-name|outname
+name|cp
 operator|=
 name|envget
 argument_list|(
@@ -3126,33 +3027,23 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
-operator|)
 operator|||
-operator|(
 operator|(
 name|jobout
 operator|=
 name|fopen
 argument_list|(
-name|outname
+name|cp
 argument_list|,
 literal|"w"
 argument_list|)
 operator|)
 operator|==
 name|NULL
-operator|)
 condition|)
-block|{
 name|jobout
 operator|=
 name|stderr
-expr_stmt|;
-block|}
-else|else
-name|havejobout
-operator|=
-name|TRUE
 expr_stmt|;
 name|pc1
 operator|=
@@ -3190,19 +3081,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* listen for first status (idle?) */
+for|for
+control|(
 name|pb
 operator|=
 name|pbuf
-expr_stmt|;
-operator|*
-name|pb
-operator|=
-literal|'\0'
-expr_stmt|;
-while|while
-condition|(
-name|TRUE
-condition|)
+init|;
+condition|;
+control|)
 block|{
 name|r
 operator|=
@@ -3241,6 +3127,7 @@ literal|20
 argument_list|)
 expr_stmt|;
 comment|/* printer may be coming up */
+continue|continue;
 comment|/* RestoreStatus(); */
 comment|/* exit(TRY_AGAIN); */
 block|}
@@ -3255,7 +3142,6 @@ operator|==
 literal|'\n'
 condition|)
 break|break;
-comment|/* newline */
 operator|*
 name|pb
 operator|++
@@ -3404,10 +3290,9 @@ operator|&
 literal|0377
 operator|)
 operator|==
-literal|004
+name|PS_EOF
 condition|)
 break|break;
-comment|/* PS_EOF */
 operator|*
 name|pb
 operator|++
@@ -3557,11 +3442,9 @@ operator|&
 literal|0377
 operator|)
 operator|==
-literal|004
+name|PS_EOF
 condition|)
 break|break;
-comment|/* PS_EOF */
-elseif|else
 if|if
 condition|(
 name|r
@@ -3736,10 +3619,9 @@ operator|&
 literal|0377
 operator|)
 operator|==
-literal|004
+name|PS_EOF
 condition|)
 break|break;
-comment|/* PS_EOF */
 operator|*
 name|pb
 operator|++
@@ -3944,28 +3826,12 @@ expr_stmt|;
 block|}
 block|}
 comment|/* all done -- let sender know */
-if|if
-condition|(
-name|havejobout
-condition|)
-name|VOIDC
-name|fclose
-argument_list|(
-name|jobout
-argument_list|)
-decl_stmt|;
-name|VOIDC
-name|fclose
-argument_list|(
-name|psin
-argument_list|)
-decl_stmt|;
+comment|/* no need to close files */
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* to parent */
 block|}
 block|}
 end_function
@@ -4030,7 +3896,6 @@ operator|)
 operator|>
 literal|0
 condition|)
-block|{
 name|VOIDC
 name|write
 argument_list|(
@@ -4041,7 +3906,6 @@ argument_list|,
 name|cnt
 argument_list|)
 decl_stmt|;
-block|}
 name|VOIDC
 name|close
 argument_list|(
