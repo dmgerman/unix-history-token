@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mptable.c,v 1.2 1997/04/30 23:54:55 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mptable.c,v 1.3 1997/05/10 17:46:57 fsmp Exp $  */
 end_comment
 
 begin_comment
@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|VDELTA
-value|10
+value|11
 end_define
 
 begin_comment
@@ -4589,31 +4589,38 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"options		NCPU=%d\t\t\t# number of CPUs\n"
+literal|"#options		NCPU=%d\t\t\t# number of CPUs\n"
 argument_list|,
 name|ncpu
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"options		NBUS=%d\t\t\t# number of busses\n"
+literal|"#options		NBUS=%d\t\t\t# number of busses\n"
 argument_list|,
 name|nbus
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"options		NAPIC=%d\t\t\t# number of IO APICs\n"
+literal|"#options		NAPIC=%d\t\t\t# number of IO APICs\n"
 argument_list|,
 name|napic
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"options		NINTR=%d\t\t# number of INTs\n"
+literal|"#options		NINTR=%d\t\t# number of INTs\n"
 argument_list|,
+operator|(
+name|nintr
+operator|<
 literal|24
-comment|/**nintr*/
+operator|)
+condition|?
+literal|24
+else|:
+name|nintr
 argument_list|)
 expr_stmt|;
 name|printf
