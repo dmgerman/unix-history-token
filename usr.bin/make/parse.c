@@ -6206,6 +6206,12 @@ block|}
 name|lineno
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|!=
+literal|'\n'
+condition|)
 name|Buf_AddByte
 argument_list|(
 name|buf
@@ -6213,7 +6219,7 @@ argument_list|,
 operator|(
 name|Byte
 operator|)
-name|c
+literal|'\0'
 argument_list|)
 expr_stmt|;
 name|Buf_AddByte
