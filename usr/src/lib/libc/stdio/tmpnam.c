@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmpnam.c	5.1 (Berkeley) %G%"
+literal|"@(#)tmpnam.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -65,14 +71,9 @@ specifier|static
 name|char
 name|buf
 index|[
-name|MAXPATHLEN
+name|L_tmpnam
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|mktemp
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|s
@@ -86,11 +87,13 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"%s/XXXXXX"
+name|L_tmpnam
+argument_list|,
+literal|"%s/tmp.XXXXXX"
 argument_list|,
 name|P_tmpdir
 argument_list|)
