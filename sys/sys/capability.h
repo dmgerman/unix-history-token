@@ -982,6 +982,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Non-POSIX.1e functions  *  * Do the two cap_t's represent equal capability sets?  */
+end_comment
+
+begin_function_decl
+name|int
+name|cap_equal_np
+parameter_list|(
+name|cap_t
+parameter_list|,
+name|cap_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Is the first cap set a subset of the second? */
+end_comment
+
+begin_function_decl
+name|int
+name|cap_subset_np
+parameter_list|(
+name|cap_t
+parameter_list|,
+name|cap_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
