@@ -1426,7 +1426,9 @@ name|gr
 operator|=
 name|getgrgid
 argument_list|(
-name|id
+name|pw
+operator|->
+name|pw_gid
 argument_list|)
 condition|)
 operator|(
