@@ -139,7 +139,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: setextattr [-fhq] attrnamespace"
+literal|"usage: setextattr [-fhnq] attrnamespace"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -358,6 +358,11 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|flag_null
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|flag_quiet
 init|=
 literal|0
@@ -449,7 +454,7 @@ name|EASET
 expr_stmt|;
 name|options
 operator|=
-literal|"fhq"
+literal|"fhnq"
 expr_stmt|;
 name|minargc
 operator|=
@@ -548,6 +553,14 @@ case|case
 literal|'h'
 case|:
 name|flag_nofollow
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|flag_null
 operator|=
 literal|1
 expr_stmt|;
@@ -796,6 +809,8 @@ name|strlen
 argument_list|(
 name|buf
 argument_list|)
+operator|+
+name|flag_null
 argument_list|)
 expr_stmt|;
 else|else
@@ -818,6 +833,8 @@ name|strlen
 argument_list|(
 name|buf
 argument_list|)
+operator|+
+name|flag_null
 argument_list|)
 expr_stmt|;
 if|if
