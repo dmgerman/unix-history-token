@@ -1838,6 +1838,39 @@ argument_list|)
 expr_stmt|;
 name|hba
 operator|->
+name|fc_fw_major
+operator|=
+name|ISP_FW_MAJORX
+argument_list|(
+name|isp
+operator|->
+name|isp_fwrev
+argument_list|)
+expr_stmt|;
+name|hba
+operator|->
+name|fc_fw_minor
+operator|=
+name|ISP_FW_MINORX
+argument_list|(
+name|isp
+operator|->
+name|isp_fwrev
+argument_list|)
+expr_stmt|;
+name|hba
+operator|->
+name|fc_fw_micro
+operator|=
+name|ISP_FW_MICROX
+argument_list|(
+name|isp
+operator|->
+name|isp_fwrev
+argument_list|)
+expr_stmt|;
+name|hba
+operator|->
 name|fc_speed
 operator|=
 name|FCPARAM
@@ -1879,7 +1912,7 @@ name|isp_loopid
 expr_stmt|;
 name|hba
 operator|->
-name|active_node_wwn
+name|nvram_node_wwn
 operator|=
 name|FCPARAM
 argument_list|(
@@ -1890,7 +1923,7 @@ name|isp_nodewwn
 expr_stmt|;
 name|hba
 operator|->
-name|active_port_wwn
+name|nvram_port_wwn
 operator|=
 name|FCPARAM
 argument_list|(
@@ -1898,6 +1931,24 @@ name|isp
 argument_list|)
 operator|->
 name|isp_portwwn
+expr_stmt|;
+name|hba
+operator|->
+name|active_node_wwn
+operator|=
+name|ISP_NODEWWN
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
+name|hba
+operator|->
+name|active_port_wwn
+operator|=
+name|ISP_PORTWWN
+argument_list|(
+name|isp
+argument_list|)
 expr_stmt|;
 name|ISP_UNLOCK
 argument_list|(
@@ -3104,7 +3155,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|rls_lun_statep
 parameter_list|(
@@ -3134,7 +3185,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|isp_psema_sig_rqe
 parameter_list|(
@@ -3225,7 +3276,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|isp_cv_wait_timed_rqe
 parameter_list|(
@@ -3280,7 +3331,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|isp_cv_signal_rqe
 parameter_list|(
@@ -3325,7 +3376,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|isp_vsema_rqe
 parameter_list|(
@@ -3395,7 +3446,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|atio_private_data_t
 modifier|*
 name|isp_get_atpd
