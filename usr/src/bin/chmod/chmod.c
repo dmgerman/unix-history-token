@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chmod.c	5.4 (Berkeley) %G%"
+literal|"@(#)chmod.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -258,7 +258,7 @@ expr_stmt|;
 comment|/* do stat for directory arguments */
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|p
 argument_list|,
@@ -271,10 +271,8 @@ condition|)
 block|{
 name|status
 operator|+=
-name|error
+name|Perror
 argument_list|(
-literal|"can't access %s"
-argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
@@ -284,10 +282,14 @@ if|if
 condition|(
 name|rflag
 operator|&&
+operator|(
 name|st
 operator|.
 name|st_mode
 operator|&
+name|S_IFMT
+operator|)
+operator|==
 name|S_IFDIR
 condition|)
 block|{
@@ -303,6 +305,38 @@ name|st
 operator|.
 name|st_mode
 argument_list|)
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|(
+name|st
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|==
+name|S_IFLNK
+operator|&&
+name|stat
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|status
+operator|+=
+name|Perror
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -326,10 +360,8 @@ condition|)
 block|{
 name|status
 operator|+=
-name|error
+name|Perror
 argument_list|(
-literal|"can't change %s"
-argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
@@ -420,10 +452,8 @@ argument_list|)
 operator|<
 literal|0
 operator|&&
-name|error
+name|Perror
 argument_list|(
-literal|"can't change %s"
-argument_list|,
 name|dir
 argument_list|)
 condition|)
@@ -441,14 +471,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-return|return
-operator|(
+block|{
 name|Perror
 argument_list|(
 name|dir
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -462,14 +496,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
 name|Perror
 argument_list|(
 name|dir
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
 operator|)
 return|;
+block|}
 name|dp
 operator|=
 name|readdir
@@ -527,10 +565,8 @@ condition|)
 block|{
 name|ecode
 operator|=
-name|error
+name|Perror
 argument_list|(
-literal|"can't access %s"
-argument_list|,
 name|dp
 operator|->
 name|d_name
@@ -545,10 +581,14 @@ continue|continue;
 block|}
 if|if
 condition|(
+operator|(
 name|st
 operator|.
 name|st_mode
 operator|&
+name|S_IFMT
+operator|)
+operator|==
 name|S_IFDIR
 condition|)
 block|{
@@ -577,6 +617,19 @@ continue|continue;
 block|}
 if|if
 condition|(
+operator|(
+name|st
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|==
+name|S_IFLNK
+condition|)
+continue|continue;
+if|if
+condition|(
 name|chmod
 argument_list|(
 name|dp
@@ -596,10 +649,8 @@ operator|&&
 operator|(
 name|ecode
 operator|=
-name|error
+name|Perror
 argument_list|(
-literal|"can't change %s"
-argument_list|,
 name|dp
 operator|->
 name|d_name
@@ -766,6 +817,12 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+operator|!
+name|fflag
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -778,9 +835,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
-literal|1
+operator|!
+name|fflag
 operator|)
 return|;
 block|}
