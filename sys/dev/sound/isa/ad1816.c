@@ -3174,7 +3174,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|mss
+name|ad1816
 argument_list|,
 name|isa
 argument_list|,
