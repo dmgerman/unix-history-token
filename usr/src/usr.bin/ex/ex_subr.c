@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_subr.c	7.2	%G%"
+literal|"@(#)ex_subr.c	7.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2958,11 +2958,6 @@ argument_list|(
 literal|' '
 argument_list|)
 block|;
-name|edited
-operator|=
-literal|0
-block|;
-comment|/* for temp file errors, for example */
 if|if
 condition|(
 name|e

@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmds2.c	7.1	%G%"
+literal|"@(#)ex_cmds2.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -365,27 +365,6 @@ end_macro
 
 begin_block
 block|{
-if|if
-condition|(
-name|laste
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|VMUNIX
-name|tlaste
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-name|laste
-operator|=
-literal|0
-expr_stmt|;
-name|sync
-argument_list|()
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|vcatch
