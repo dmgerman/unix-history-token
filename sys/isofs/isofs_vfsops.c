@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: isofs_vfsops.c,v 1.3 1993/10/24 04:29:08 rgrimes Exp $  */
+comment|/*  *	$Id: isofs_vfsops.c,v 1.4 1993/11/25 01:32:30 wollman Exp $  */
 end_comment
 
 begin_include
@@ -157,6 +157,26 @@ directive|define
 name|ROOTNAME
 value|"root_device"
 end_define
+
+begin_function_decl
+specifier|static
+name|int
+name|iso_mountfs
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -1002,6 +1022,7 @@ comment|/*  * Common code for mount and mountroot  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iso_mountfs
 parameter_list|(

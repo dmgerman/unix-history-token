@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tcp_usrreq.c	7.15 (Berkeley) 6/28/90  *	$Id: tcp_usrreq.c,v 1.2 1993/10/16 18:26:36 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tcp_usrreq.c	7.15 (Berkeley) 6/28/90  *	$Id: tcp_usrreq.c,v 1.3 1993/11/25 01:35:20 wollman Exp $  */
 end_comment
 
 begin_include
@@ -154,15 +154,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|struct
-name|tcpcb
-modifier|*
-name|tcp_newtcpcb
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Process a TCP user request for TCP tb.  If this is a send request  * then m is the mbuf chain of send data.  If this is a timer expiration  * (called from the software clock routine), then timertype tells which timer.  */
 end_comment
@@ -184,6 +175,8 @@ parameter_list|,
 name|nam
 parameter_list|,
 name|control
+parameter_list|,
+name|dummy
 parameter_list|)
 name|struct
 name|socket
@@ -205,6 +198,14 @@ modifier|*
 name|control
 decl_stmt|;
 end_function
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|dummy
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1373,66 +1374,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCP_SMALLSPACE
-end_ifdef
-
-begin_decl_stmt
-name|u_long
-name|tcp_sendspace
-init|=
-literal|1024
-operator|*
-literal|4
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_long
-name|tcp_recvspace
-init|=
-literal|1024
-operator|*
-literal|4
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|u_long
-name|tcp_sendspace
-init|=
-literal|1024
-operator|*
-literal|16
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_long
-name|tcp_recvspace
-init|=
-literal|1024
-operator|*
-literal|16
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TCP_SMALLSPACE */
-end_comment
 
 begin_comment
 comment|/*  * Attach TCP protocol to socket, allocating  * internet protocol control block, tcp control block,  * bufer space, and entering LISTEN state if to accept connections.  */

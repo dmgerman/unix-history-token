@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *      for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.2 1993/10/16 13:46:13 rgrimes Exp $  */
+comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *      for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.3 1993/11/25 01:31:43 wollman Exp $  */
 end_comment
 
 begin_decl_stmt
@@ -201,9 +201,9 @@ name|b
 parameter_list|,
 name|c
 parameter_list|,
-name|d
+name|xd
 parameter_list|)
-value|{if (mcd_data[unit].debug) {printf("mcd%d st=%02x: ",unit,mcd_data[unit].status); printf(fmt,a,b,c,d);}}
+value|{if (mcd_data[unit].debug) {printf("mcd%d st=%02x: ",unit,mcd_data[unit].status); printf(fmt,a,b,c,xd);}}
 end_define
 
 begin_endif
@@ -847,13 +847,9 @@ specifier|static
 name|void
 name|mcd_doread
 parameter_list|(
-name|int
-name|state
+name|caddr_t
 parameter_list|,
-name|struct
-name|mcd_mbx
-modifier|*
-name|mbxin
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2090,8 +2086,14 @@ expr_stmt|;
 comment|/* calling the read routine */
 name|mcd_doread
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|MCD_S_BEGIN
 argument_list|,
+operator|(
+name|int
+operator|)
 operator|&
 operator|(
 name|cd
@@ -4077,20 +4079,42 @@ name|mbxsave
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Good thing Alphas come with real CD players...  */
+end_comment
+
 begin_function
 specifier|static
 name|void
 name|mcd_doread
 parameter_list|(
+name|caddr_t
+name|xstate
+parameter_list|,
+name|int
+name|xmbxin
+parameter_list|)
+block|{
 name|int
 name|state
-parameter_list|,
+init|=
+operator|(
+name|int
+operator|)
+name|xstate
+decl_stmt|;
 name|struct
 name|mcd_mbx
 modifier|*
 name|mbxin
-parameter_list|)
-block|{
+init|=
+operator|(
+expr|struct
+name|mcd_mbx
+operator|*
+operator|)
+name|xmbxin
+decl_stmt|;
 name|struct
 name|mcd_mbx
 modifier|*
@@ -4216,6 +4240,9 @@ name|untimeout
 argument_list|(
 name|mcd_doread
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|MCD_S_WAITSTAT
 argument_list|)
 expr_stmt|;
@@ -4411,6 +4438,9 @@ name|untimeout
 argument_list|(
 name|mcd_doread
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|MCD_S_WAITMODE
 argument_list|)
 expr_stmt|;
@@ -4688,6 +4718,9 @@ name|untimeout
 argument_list|(
 name|mcd_doread
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|MCD_S_WAITREAD
 argument_list|)
 expr_stmt|;

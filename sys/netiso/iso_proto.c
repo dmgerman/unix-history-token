@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)iso_proto.c	7.8 (Berkeley) 5/6/91  *	$Id$  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)iso_proto.c	7.8 (Berkeley) 5/6/91  *	$Id: iso_proto.c,v 1.2 1993/10/16 21:05:25 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -24,13 +24,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"systm.h"
 end_include
 
 begin_include
@@ -63,11 +63,15 @@ directive|include
 file|"iso.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|clnp_output
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
 name|clnp_init
 argument_list|()
 decl_stmt|,
@@ -110,7 +114,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|tpclnp_ctlinput
 parameter_list|()
 function_decl|;
@@ -131,7 +135,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|int
+name|void
 name|tp_init
 argument_list|()
 decl_stmt|,
@@ -143,43 +147,63 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
+begin_function_decl
+name|void
 name|cons_init
-argument_list|()
-decl_stmt|,
-name|tpcons_input
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+name|int
+name|tpcons_input
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|esis_input
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
 name|esis_ctlinput
 argument_list|()
 decl_stmt|,
 name|esis_init
 argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
 name|esis_usrreq
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cltp_input
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
+name|cltp_ctlinput
+argument_list|()
+decl_stmt|,
+name|cltp_init
 argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cltp_input
-argument_list|()
-decl_stmt|,
-name|cltp_ctlinput
-argument_list|()
-decl_stmt|,
-name|cltp_init
-argument_list|()
-decl_stmt|,
 name|cltp_usrreq
 argument_list|()
 decl_stmt|,
@@ -488,8 +512,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|ISO
 end_endif
+
+begin_comment
+comment|/* ISO */
+end_comment
 
 end_unit
 

@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 	$Id: isofs_bmap.c,v 1.2 1993/07/20 03:27:26 jkh Exp $  */
+comment|/*  * 	$Id: isofs_bmap.c,v 1.3 1993/11/25 01:32:21 wollman Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include

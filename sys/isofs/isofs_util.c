@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: isofs_util.c,v 1.2 1993/07/20 03:27:33 jkh Exp $  */
+comment|/*  *	$Id: isofs_util.c,v 1.3 1993/11/25 01:32:28 wollman Exp $  */
 end_comment
 
 begin_include
@@ -64,7 +64,8 @@ literal|0x80
 condition|)
 name|val
 operator||=
-literal|0xffffff00
+operator|~
+literal|0xff
 expr_stmt|;
 return|return
 operator|(

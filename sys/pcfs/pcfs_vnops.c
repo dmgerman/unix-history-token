@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_vnops.c,v 1.2 1993/10/16 19:29:39 rgrimes Exp $  */
+comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_vnops.c,v 1.3 1993/11/25 01:37:14 wollman Exp $  */
 end_comment
 
 begin_include
@@ -1454,7 +1454,7 @@ name|dep
 operator|->
 name|de_flag
 operator|&=
-literal|0xffff0000
+literal|0xffff0000UL
 expr_stmt|;
 name|dep
 operator|->
@@ -3047,6 +3047,14 @@ name|dep
 argument_list|,
 operator|&
 name|time
+argument_list|,
+name|pmp
+operator|->
+name|pm_mountp
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_SYNCHRONOUS
 argument_list|)
 return|;
 block|}
@@ -3528,10 +3536,6 @@ argument_list|(
 name|fdep
 argument_list|,
 name|tddep
-argument_list|,
-name|tndp
-operator|->
-name|ni_cred
 argument_list|)
 expr_stmt|;
 name|tddep

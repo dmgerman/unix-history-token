@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from: unknown  *	$Id: tp_driver.c,v 1.3 1993/10/16 21:05:37 rgrimes Exp $  */
+comment|/*  *	from: unknown  *	$Id: tp_driver.c,v 1.4 1993/11/25 01:36:00 wollman Exp $  */
 end_comment
 
 begin_define
@@ -253,11 +253,12 @@ argument_list|()
 decl_stmt|,
 name|tp_netcmd
 argument_list|()
-decl_stmt|,
-name|tp_send
-argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_typedef
 typedef|typedef

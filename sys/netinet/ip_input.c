@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ip_input.c	7.19 (Berkeley) 5/25/91  *	$Id: ip_input.c,v 1.5 1993/11/18 00:08:20 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ip_input.c	7.19 (Berkeley) 5/25/91  *	$Id: ip_input.c,v 1.6 1993/11/25 01:35:08 wollman Exp $  */
 end_comment
 
 begin_include
@@ -117,159 +117,6 @@ directive|include
 file|"ip_icmp.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IPFORWARDING
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GATEWAY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IPFORWARDING
-value|1
-end_define
-
-begin_comment
-comment|/* forward IP packets not for us */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not GATEWAY */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPFORWARDING
-value|0
-end_define
-
-begin_comment
-comment|/* don't forward IP packets not for us */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not GATEWAY */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not IPFORWARDING */
-end_comment
-
-begin_comment
-comment|/*  * NB: RFC 1122, ``Requirements for Internet Hosts: Communication Layers'',  * absolutely forbids hosts (which are not acting as gateways) from sending  * ICMP redirects.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IPSENDREDIRECTS
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GATEWAY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IPSENDREDIRECTS
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not GATEWAY */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPSENDREDIRECTS
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not GATEWAY */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not IPSENDREDIRECTS */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ipforwarding
-init|=
-name|IPFORWARDING
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ipsendredirects
-init|=
-name|IPSENDREDIRECTS
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|ipprintfs
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -338,71 +185,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
+begin_function_decl
+specifier|static
 name|struct
-name|domain
-name|inetdomain
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|protosw
-name|inetsw
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_char
-name|ip_protox
-index|[
-name|IPPROTO_MAX
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ipqmaxlen
-init|=
-name|IFQ_MAXLEN
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|in_ifaddr
+name|ip
 modifier|*
-name|in_ifaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* first inet address */
-end_comment
-
-begin_decl_stmt
+name|ip_reass
+parameter_list|(
 name|struct
-name|ipstat
-name|ipstat
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+name|ipasfrag
+modifier|*
+parameter_list|,
 name|struct
 name|ipq
-name|ipq
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_short
-name|ip_id
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * We need to save the IP options in case a protocol wants to respond  * to an incoming packet over the same route if the packet got here  * using IP source routing.  This allows connection establishment and  * maintenance when the remote end is on a network that is not known  * to us.  */
@@ -457,30 +256,12 @@ name|ip_srcrt
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GATEWAY
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|int
 name|if_index
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|u_long
-modifier|*
-name|ip_ifmatrix
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * IP initialization: fill in IP protocol switch table.  * All protocols not implemented in kernel go to raw IP protocol handler.  */
@@ -493,7 +274,7 @@ parameter_list|()
 block|{
 specifier|register
 name|struct
-name|protosw
+name|in_protosw
 modifier|*
 name|pr
 decl_stmt|;
@@ -503,6 +284,11 @@ name|i
 decl_stmt|;
 name|pr
 operator|=
+operator|(
+expr|struct
+name|in_protosw
+operator|*
+operator|)
 name|pffindproto
 argument_list|(
 name|PF_INET
@@ -549,12 +335,22 @@ for|for
 control|(
 name|pr
 operator|=
+operator|(
+expr|struct
+name|in_protosw
+operator|*
+operator|)
 name|inetdomain
 operator|.
 name|dom_protosw
 init|;
 name|pr
 operator|<
+operator|(
+expr|struct
+name|in_protosw
+operator|*
+operator|)
 name|inetdomain
 operator|.
 name|dom_protoswNPROTOSW
@@ -670,38 +466,6 @@ endif|#
 directive|endif
 block|}
 end_function
-
-begin_function_decl
-name|struct
-name|ip
-modifier|*
-name|ip_reass
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|struct
-name|sockaddr_in
-name|ipaddr
-init|=
-block|{
-sizeof|sizeof
-argument_list|(
-name|ipaddr
-argument_list|)
-block|,
-name|AF_INET
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|route
-name|ipforward_rt
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Ip input routine.  Checksum and byte swap header.  If fragmented  * try to reassemble.  Process options.  Pass to next level.  */
@@ -1620,6 +1384,7 @@ comment|/*  * Take incoming datagram fragment and try to  * reassemble it into w
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|ip
 modifier|*
@@ -4354,109 +4119,6 @@ literal|2
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-name|u_char
-name|inetctlerrmap
-index|[
-name|PRC_NCMDS
-index|]
-init|=
-block|{
-literal|0
-block|,
-comment|/* ifdown */
-literal|0
-block|,
-comment|/* routedead */
-literal|0
-block|,
-comment|/* #2 */
-literal|0
-block|,
-comment|/* quench2 */
-literal|0
-block|,
-comment|/* quench */
-name|EMSGSIZE
-block|,
-comment|/* msgsize */
-name|EHOSTDOWN
-block|,
-comment|/* hostdead */
-name|EHOSTUNREACH
-block|,
-comment|/* hostunreach */
-name|EHOSTUNREACH
-block|,
-comment|/* unreachnet */
-name|EHOSTUNREACH
-block|,
-comment|/* unreachhost */
-name|ECONNREFUSED
-block|,
-comment|/* unreachproto */
-name|ECONNREFUSED
-block|,
-comment|/* unreachport */
-name|EMSGSIZE
-block|,
-comment|/* old needfrag */
-name|EHOSTUNREACH
-block|,
-comment|/* srcfail */
-name|EHOSTUNREACH
-block|,
-comment|/* netunknown */
-name|EHOSTUNREACH
-block|,
-comment|/* hostunknown */
-name|EHOSTUNREACH
-block|,
-comment|/* isolated */
-name|ECONNREFUSED
-block|,
-comment|/* net admin. prohibited */
-name|ECONNREFUSED
-block|,
-comment|/* host admin. prohibited */
-name|EHOSTUNREACH
-block|,
-comment|/* tos net unreachable */
-name|EHOSTUNREACH
-block|,
-comment|/* tos host unreachable */
-literal|0
-block|,
-comment|/* redirect net */
-literal|0
-block|,
-comment|/* redirect host */
-literal|0
-block|,
-comment|/* redirect tosnet */
-literal|0
-block|,
-comment|/* redirect toshost */
-literal|0
-block|,
-comment|/* time exceeded */
-literal|0
-block|,
-comment|/* reassembly timeout */
-name|ENOPROTOOPT
-block|,
-comment|/* parameter problem */
-name|ENOPROTOOPT
-block|,
-comment|/* required option missing */
-literal|0
-block|,
-comment|/* MTU changed */
-comment|/* NB: this means that this error will only 	   get propagated by in_mtunotify(), which 	   doesn't bother to check. */
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Forward a packet.  If some error occurs return the sender  * an icmp packet.  Note we can't always generate a meaningful  * icmp message because icmp doesn't have a large enough repertoire  * of codes and types.  *  * If not forwarding, just drop the packet.  This could be confusing  * if ipforwarding was zero but some routing protocol was advancing  * us as a gateway to somewhere.  However, we must let the routing  * protocol deal with that.  *  * The srcrt parameter indicates whether the packet is being forwarded  * via a source route.  */

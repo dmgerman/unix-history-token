@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tp_iso.c	7.11 (Berkeley) 5/6/91  *	$Id: tp_iso.c,v 1.3 1993/10/16 21:05:47 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tp_iso.c	7.11 (Berkeley) 5/6/91  *	$Id: tp_iso.c,v 1.4 1993/11/25 01:36:08 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -146,6 +146,39 @@ include|#
 directive|include
 file|"cltp_var.h"
 end_include
+
+begin_function_decl
+name|int
+name|clnp_output
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_function_decl
+name|void
+name|tpclnp_ctlinput
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_function_decl
+name|int
+name|tp_driver
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_comment
 comment|/*  * CALLED FROM:  * 	pr_usrreq() on PRU_BIND, PRU_CONNECT, PRU_ACCEPT, and PRU_PEERADDR  * FUNCTION, ARGUMENTS:  * 	The argument (which) takes the value TP_LOCAL or TP_FOREIGN.  */
@@ -2100,7 +2133,7 @@ comment|/*  * CALLED FROM:  *  The network layer through the protosw table.  * F
 end_comment
 
 begin_function
-name|ProtoHook
+name|void
 name|tpclnp_ctlinput
 parameter_list|(
 name|cmd
@@ -2167,9 +2200,7 @@ name|cmd
 operator|>
 name|PRC_NCMDS
 condition|)
-return|return
-literal|0
-return|;
+return|return;
 if|if
 condition|(
 name|siso
@@ -2178,9 +2209,7 @@ name|siso_family
 operator|!=
 name|AF_ISO
 condition|)
-return|return
-literal|0
-return|;
+return|return;
 switch|switch
 condition|(
 name|cmd
@@ -2304,9 +2333,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return
-literal|0
-return|;
+return|return;
 block|}
 end_function
 

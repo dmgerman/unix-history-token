@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)termios.h	7.22 (Berkeley) 5/7/91  *	$Id: termios.h,v 1.3 1993/10/16 17:17:57 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1988, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)termios.h	7.22 (Berkeley) 5/7/91  *	$Id: termios.h,v 1.4 1993/11/14 22:38:32 ache Exp $  */
 end_comment
 
 begin_comment
@@ -801,7 +801,7 @@ begin_define
 define|#
 directive|define
 name|ECHOKE
-value|0x00000001
+value|0x00000001UL
 end_define
 
 begin_comment
@@ -821,7 +821,7 @@ begin_define
 define|#
 directive|define
 name|ECHOE
-value|0x00000002
+value|0x00000002UL
 end_define
 
 begin_comment
@@ -832,7 +832,7 @@ begin_define
 define|#
 directive|define
 name|ECHOK
-value|0x00000004
+value|0x00000004UL
 end_define
 
 begin_comment
@@ -843,7 +843,7 @@ begin_define
 define|#
 directive|define
 name|ECHO
-value|0x00000008
+value|0x00000008UL
 end_define
 
 begin_comment
@@ -854,7 +854,7 @@ begin_define
 define|#
 directive|define
 name|ECHONL
-value|0x00000010
+value|0x00000010UL
 end_define
 
 begin_comment
@@ -871,7 +871,7 @@ begin_define
 define|#
 directive|define
 name|ECHOPRT
-value|0x00000020
+value|0x00000020UL
 end_define
 
 begin_comment
@@ -882,7 +882,7 @@ begin_define
 define|#
 directive|define
 name|ECHOCTL
-value|0x00000040
+value|0x00000040UL
 end_define
 
 begin_comment
@@ -902,7 +902,7 @@ begin_define
 define|#
 directive|define
 name|ISIG
-value|0x00000080
+value|0x00000080UL
 end_define
 
 begin_comment
@@ -913,7 +913,7 @@ begin_define
 define|#
 directive|define
 name|ICANON
-value|0x00000100
+value|0x00000100UL
 end_define
 
 begin_comment
@@ -930,7 +930,7 @@ begin_define
 define|#
 directive|define
 name|ALTWERASE
-value|0x00000200
+value|0x00000200UL
 end_define
 
 begin_comment
@@ -950,7 +950,7 @@ begin_define
 define|#
 directive|define
 name|IEXTEN
-value|0x00000400
+value|0x00000400UL
 end_define
 
 begin_comment
@@ -961,7 +961,7 @@ begin_define
 define|#
 directive|define
 name|EXTPROC
-value|0x00000800
+value|0x00000800UL
 end_define
 
 begin_comment
@@ -972,7 +972,7 @@ begin_define
 define|#
 directive|define
 name|TOSTOP
-value|0x00400000
+value|0x00400000UL
 end_define
 
 begin_comment
@@ -989,7 +989,7 @@ begin_define
 define|#
 directive|define
 name|FLUSHO
-value|0x00800000
+value|0x00800000UL
 end_define
 
 begin_comment
@@ -1000,7 +1000,7 @@ begin_define
 define|#
 directive|define
 name|MDMBUF
-value|0x00100000
+value|0x00100000UL
 end_define
 
 begin_comment
@@ -1011,7 +1011,7 @@ begin_define
 define|#
 directive|define
 name|NOKERNINFO
-value|0x02000000
+value|0x02000000UL
 end_define
 
 begin_comment
@@ -1022,7 +1022,7 @@ begin_define
 define|#
 directive|define
 name|PENDIN
-value|0x20000000
+value|0x20000000UL
 end_define
 
 begin_comment
@@ -1042,7 +1042,7 @@ begin_define
 define|#
 directive|define
 name|NOFLSH
-value|0x80000000
+value|0x80000000UL
 end_define
 
 begin_comment

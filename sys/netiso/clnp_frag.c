@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_frag.c	7.12 (Berkeley) 5/6/91  *	$Id: clnp_frag.c,v 1.3 1993/10/16 21:04:46 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_frag.c	7.12 (Berkeley) 5/6/91  *	$Id: clnp_frag.c,v 1.4 1993/11/25 01:35:41 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -145,7 +145,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_fragment  *  * PURPOSE:			Fragment a datagram, and send the itty bitty pieces  *					out over an interface.  *  * RETURNS:			success - 0  *					failure - unix error code  *  * SIDE EFFECTS:	  *  * NOTES:			If there is an error sending the packet, clnp_discard  *					is called to discard the packet and send an ER. If  *					clnp_fragment was called from clnp_output, then  *					we generated the packet, and should not send an   *					ER -- clnp_emit_er will check for this. Otherwise,  *					the packet was fragmented during forwarding. In this  *					case, we ought to send an ER back.  */
+comment|/*  * FUNCTION:	clnp_fragment  *  * PURPOSE:	Fragment a datagram, and send the itty bitty pieces  *		out over an interface.  *  * RETURNS:	success - 0  *		failure - unix error code  *  * SIDE EFFECTS:	  *  * NOTES: 	If there is an error sending the packet, clnp_discard  *		is called to discard the packet and send an ER. If  *		clnp_fragment was called from clnp_output, then  *		we generated the packet, and should not send an   *		ER -- clnp_emit_er will check for this. Otherwise,  *		the packet was fragmented during forwarding. In this  *		case, we ought to send an ER back.  */
 end_comment
 
 begin_function
@@ -868,7 +868,7 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|TROLL
-comment|/* 			 *	Tough situation: if the error occured on the last  			 *	fragment, we can not send an ER, as the if_output 			 *	routine consumed the packet. If the error occured 			 *	on any intermediate packets, we can send an ER 			 *	because we still have the original header in (m). 			 */
+comment|/* 			 * Tough situation: if the error occured on the last  			 * fragment, we can not send an ER, as the if_output 			 * routine consumed the packet. If the error occured 			 * on any intermediate packets, we can send an ER 			 * because we still have the original header in (m). 			 */
 if|if
 condition|(
 name|error
@@ -881,7 +881,7 @@ operator|!=
 name|hdr
 condition|)
 block|{
-comment|/*  					 *	The error was not on the last fragment. We must 					 *	free hdr and m before returning 					 */
+comment|/*  			 * The error was not on the last fragment. We must 			 * free hdr and m before returning 			 */
 name|clnp_discard
 argument_list|(
 name|hdr
@@ -905,7 +905,7 @@ comment|/* bump segment offset, trim data mbuf, and decrement count left */
 ifdef|#
 directive|ifdef
 name|TROLL
-comment|/* 			 *	Decrement frag_size by some fraction. This will cause the 			 *	next fragment to start 'early', thus duplicating the end 			 *	of the current fragment.  troll.tr_dup_size controls 			 *	the fraction. If positive, it specifies the fraction. If 			 *	negative, a random fraction is used. 			 */
+comment|/* 	 * Decrement frag_size by some fraction. This will cause the 	 * next fragment to start 'early', thus duplicating the end 	 * of the current fragment.  troll.tr_dup_size controls 	 * the fraction. If positive, it specifies the fraction. If 	 * negative, a random fraction is used. 	 */
 if|if
 condition|(
 operator|(

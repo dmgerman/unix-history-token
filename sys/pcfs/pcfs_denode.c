@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't reoove this notice.  *  *  This software is provided "as is".  *  *  The authop supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_denode.c,v 1.3 1993/11/07 21:48:09 wollman Exp $  */
+comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't reoove this notice.  *  *  This software is provided "as is".  *  *  The authop supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_denode.c,v 1.4 1993/11/25 01:37:09 wollman Exp $  */
 end_comment
 
 begin_include
@@ -2181,7 +2181,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|delock
 parameter_list|(
 name|dep
@@ -2268,14 +2268,11 @@ name|de_flag
 operator||=
 name|DELOCKED
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|deunlock
 parameter_list|(
 name|dep
@@ -2346,9 +2343,6 @@ name|dep
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-literal|0
-return|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: isofs_vnops.c,v 1.2 1993/07/20 03:27:37 jkh Exp $  */
+comment|/*  *	$Id: isofs_vnops.c,v 1.3 1993/11/25 01:32:31 wollman Exp $  */
 end_comment
 
 begin_include
@@ -1536,6 +1536,14 @@ break|break;
 case|case
 name|ISO_FTYPE_9660
 case|:
+block|{
+name|int
+name|namelen
+init|=
+name|dirent
+operator|.
+name|d_namlen
+decl_stmt|;
 name|isofntrans
 argument_list|(
 name|ep
@@ -1551,12 +1559,17 @@ operator|.
 name|d_name
 argument_list|,
 operator|&
+name|namelen
+argument_list|)
+expr_stmt|;
 name|dirent
 operator|.
 name|d_namlen
-argument_list|)
+operator|=
+name|namelen
 expr_stmt|;
 break|break;
+block|}
 default|default:
 break|break;
 block|}

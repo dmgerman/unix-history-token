@@ -2227,6 +2227,9 @@ name|B_READ
 else|:
 name|B_WRITE
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|snd_raw_buf_phys
 index|[
 name|dev
@@ -2235,11 +2238,17 @@ index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|sound_buffsizes
 index|[
 name|dev
 index|]
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|chan
 argument_list|)
 expr_stmt|;
@@ -2371,6 +2380,9 @@ name|B_READ
 else|:
 name|B_WRITE
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|physaddr
 argument_list|,
 name|count

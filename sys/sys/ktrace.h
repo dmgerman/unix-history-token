@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ktrace.h	7.4 (Berkeley) 5/7/91  *	$Id: ktrace.h,v 1.2 1993/10/16 17:17:01 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ktrace.h	7.4 (Berkeley) 5/7/91  *	$Id: ktrace.h,v 1.3 1993/11/07 17:52:42 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -24,7 +24,7 @@ begin_define
 define|#
 directive|define
 name|KTROP_SET
-value|0
+value|0UL
 end_define
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|KTROP_CLEAR
-value|1
+value|1UL
 end_define
 
 begin_comment
@@ -46,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|KTROP_CLEARFILE
-value|2
+value|2UL
 end_define
 
 begin_comment
@@ -75,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|KTRFLAG_DESCEND
-value|4
+value|4UL
 end_define
 
 begin_comment
@@ -283,42 +283,42 @@ begin_define
 define|#
 directive|define
 name|KTRFAC_MASK
-value|0x00ffffff
+value|0x00ffffffUL
 end_define
 
 begin_define
 define|#
 directive|define
 name|KTRFAC_SYSCALL
-value|(1<<KTR_SYSCALL)
+value|(1UL<<KTR_SYSCALL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KTRFAC_SYSRET
-value|(1<<KTR_SYSRET)
+value|(1UL<<KTR_SYSRET)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KTRFAC_NAMEI
-value|(1<<KTR_NAMEI)
+value|(1UL<<KTR_NAMEI)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KTRFAC_GENIO
-value|(1<<KTR_GENIO)
+value|(1UL<<KTR_GENIO)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KTRFAC_PSIG
-value|(1<<KTR_PSIG)
+value|(1UL<<KTR_PSIG)
 end_define
 
 begin_comment
@@ -329,7 +329,7 @@ begin_define
 define|#
 directive|define
 name|KTRFAC_ROOT
-value|0x80000000
+value|0x80000000UL
 end_define
 
 begin_comment
@@ -340,18 +340,152 @@ begin_define
 define|#
 directive|define
 name|KTRFAC_INHERIT
-value|0x40000000
+value|0x40000000UL
 end_define
 
 begin_comment
 comment|/* pass trace flags to children */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|KERNEL
-end_ifndef
+end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|vnode
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|iovec
+struct_decl|;
+end_struct_decl
+
+begin_enum_decl
+enum_decl|enum
+name|uio_rw
+enum_decl|;
+end_enum_decl
+
+begin_comment
+comment|/* XXX GCC extension */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|ktrsyscall
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ktrsysret
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ktrnamei
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ktrgenio
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|enum
+name|uio_rw
+parameter_list|,
+name|struct
+name|iovec
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ktrpsig
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not KERNEL */
+end_comment
 
 begin_include
 include|#

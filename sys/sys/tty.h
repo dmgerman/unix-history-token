@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tty.h	7.10 (Berkeley) 6/26/91  *	$Id: tty.h,v 1.5 1993/11/14 23:29:50 ache Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tty.h	7.10 (Berkeley) 6/26/91  *	$Id: tty.h,v 1.6 1993/11/25 01:38:07 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -413,7 +413,7 @@ begin_define
 define|#
 directive|define
 name|TS_TIMEOUT
-value|0x000001
+value|0x000001UL
 end_define
 
 begin_comment
@@ -424,7 +424,7 @@ begin_define
 define|#
 directive|define
 name|TS_WOPEN
-value|0x000002
+value|0x000002UL
 end_define
 
 begin_comment
@@ -435,7 +435,7 @@ begin_define
 define|#
 directive|define
 name|TS_ISOPEN
-value|0x000004
+value|0x000004UL
 end_define
 
 begin_comment
@@ -446,7 +446,7 @@ begin_define
 define|#
 directive|define
 name|TS_FLUSH
-value|0x000008
+value|0x000008UL
 end_define
 
 begin_comment
@@ -457,7 +457,7 @@ begin_define
 define|#
 directive|define
 name|TS_CARR_ON
-value|0x000010
+value|0x000010UL
 end_define
 
 begin_comment
@@ -468,7 +468,7 @@ begin_define
 define|#
 directive|define
 name|TS_BUSY
-value|0x000020
+value|0x000020UL
 end_define
 
 begin_comment
@@ -479,7 +479,7 @@ begin_define
 define|#
 directive|define
 name|TS_ASLEEP
-value|0x000040
+value|0x000040UL
 end_define
 
 begin_comment
@@ -490,7 +490,7 @@ begin_define
 define|#
 directive|define
 name|TS_XCLUDE
-value|0x000080
+value|0x000080UL
 end_define
 
 begin_comment
@@ -501,7 +501,7 @@ begin_define
 define|#
 directive|define
 name|TS_TTSTOP
-value|0x000100
+value|0x000100UL
 end_define
 
 begin_comment
@@ -509,14 +509,14 @@ comment|/* output stopped by ctl-s */
 end_comment
 
 begin_comment
-comment|/* was	TS_HUPCLS	0x000200 	 * hang up upon last close */
+comment|/* was	TS_HUPCLS	0x000200UL 	 * hang up upon last close */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TS_TBLOCK
-value|0x000400
+value|0x000400UL
 end_define
 
 begin_comment
@@ -527,7 +527,7 @@ begin_define
 define|#
 directive|define
 name|TS_RCOLL
-value|0x000800
+value|0x000800UL
 end_define
 
 begin_comment
@@ -538,7 +538,7 @@ begin_define
 define|#
 directive|define
 name|TS_WCOLL
-value|0x001000
+value|0x001000UL
 end_define
 
 begin_comment
@@ -549,7 +549,7 @@ begin_define
 define|#
 directive|define
 name|TS_ASYNC
-value|0x004000
+value|0x004000UL
 end_define
 
 begin_comment
@@ -564,7 +564,7 @@ begin_define
 define|#
 directive|define
 name|TS_BKSL
-value|0x010000
+value|0x010000UL
 end_define
 
 begin_comment
@@ -575,7 +575,7 @@ begin_define
 define|#
 directive|define
 name|TS_ERASE
-value|0x040000
+value|0x040000UL
 end_define
 
 begin_comment
@@ -586,7 +586,7 @@ begin_define
 define|#
 directive|define
 name|TS_LNCH
-value|0x080000
+value|0x080000UL
 end_define
 
 begin_comment
@@ -597,7 +597,7 @@ begin_define
 define|#
 directive|define
 name|TS_TYPEN
-value|0x100000
+value|0x100000UL
 end_define
 
 begin_comment
@@ -608,7 +608,7 @@ begin_define
 define|#
 directive|define
 name|TS_CNTTB
-value|0x200000
+value|0x200000UL
 end_define
 
 begin_comment
@@ -623,7 +623,7 @@ begin_define
 define|#
 directive|define
 name|TS_CAR_OFLOW
-value|0x0400000
+value|0x0400000UL
 end_define
 
 begin_comment
@@ -634,7 +634,7 @@ begin_define
 define|#
 directive|define
 name|TS_DTR_IFLOW
-value|0x2000000
+value|0x2000000UL
 end_define
 
 begin_comment
@@ -645,7 +645,7 @@ begin_define
 define|#
 directive|define
 name|TS_RTS_IFLOW
-value|0x4000000
+value|0x4000000UL
 end_define
 
 begin_comment
@@ -741,7 +741,7 @@ begin_define
 define|#
 directive|define
 name|TTY_CHARMASK
-value|0x000000ff
+value|0x000000ffUL
 end_define
 
 begin_comment
@@ -752,7 +752,7 @@ begin_define
 define|#
 directive|define
 name|TTY_QUOTE
-value|0x00000100
+value|0x00000100UL
 end_define
 
 begin_comment
@@ -763,7 +763,7 @@ begin_define
 define|#
 directive|define
 name|TTY_ERRORMASK
-value|0xff000000
+value|0xff000000UL
 end_define
 
 begin_comment
@@ -774,7 +774,7 @@ begin_define
 define|#
 directive|define
 name|TTY_FE
-value|0x01000000
+value|0x01000000UL
 end_define
 
 begin_comment
@@ -785,7 +785,7 @@ begin_define
 define|#
 directive|define
 name|TTY_PE
-value|0x02000000
+value|0x02000000UL
 end_define
 
 begin_comment
@@ -1368,8 +1368,92 @@ end_comment
 begin_function_decl
 specifier|extern
 name|int
+name|putc
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|ringb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|getc
 parameter_list|(
+name|struct
+name|ringb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|nextc
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|ringb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ungetc
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|ringb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|unputc
+parameter_list|(
+name|struct
+name|ringb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|initrb
+parameter_list|(
+name|struct
+name|ringb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|catb
+parameter_list|(
+name|struct
+name|ringb
+modifier|*
+parameter_list|,
 name|struct
 name|ringb
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tp_input.c	7.19 (Berkeley) 6/27/91  *	$Id: tp_input.c,v 1.2 1993/10/16 21:05:44 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tp_input.c	7.19 (Berkeley) 6/27/91  *	$Id: tp_input.c,v 1.3 1993/11/25 01:36:05 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -1108,6 +1108,9 @@ name|m
 argument_list|,
 name|tpcb
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|cons_channel
 argument_list|)
 expr_stmt|;
@@ -1198,8 +1201,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|!CONS
 end_endif
+
+begin_comment
+comment|/* !CONS */
+end_comment
 
 begin_comment
 comment|/*   * NAME: 	tp_input()  *  * CALLED FROM:  *  net layer input routine  *  * FUNCTION and ARGUMENTS:  *  Process an incoming TPDU (m), finding the associated tpcb if there  *  is one. Create the appropriate type of event and call the driver.  *  (faddr) and (laddr) are the foreign and local addresses.  *   * 	When tp_input() is called we KNOW that the ENTIRE TP HEADER  * 	has been m_pullup-ed.  *  * RETURN VALUE: Nada  *    * SIDE EFFECTS:  *	When using COSNS it may affect the state of the net-level pcb  *  * NOTE:  *  The initial value of acktime is 2 so that we will never  *  have a 0 value for tp_peer_acktime.  It gets used in the  *  computation of the retransmission timer value, and so it  *  mustn't be zero.  *  2 seems like a reasonable minimum.  */
@@ -3516,7 +3522,7 @@ else|else
 comment|/* we've now made the error reporting thing check for 			multiple channels and not close out if more than 			one in use */
 endif|#
 directive|endif
-endif|old_history
+comment|/* old_history */
 block|{
 name|CHECK
 argument_list|(
@@ -4984,7 +4990,7 @@ name|tpdu_AKseqX
 expr_stmt|;
 endif|#
 directive|endif
-endif|BYTE_ORDER
+comment|/* BYTE_ORDER */
 block|}
 else|else
 block|{
@@ -5126,7 +5132,7 @@ name|tpdu_XAKseqX
 expr_stmt|;
 endif|#
 directive|endif
-endif|BYTE_ORDER
+comment|/* BYTE_ORDER */
 block|}
 else|else
 block|{
@@ -5221,7 +5227,7 @@ name|tpdu_XPDseqX
 expr_stmt|;
 endif|#
 directive|endif
-endif|BYTE_ORDER
+comment|/* BYTE_ORDER */
 block|}
 else|else
 block|{
@@ -5423,7 +5429,7 @@ name|tpdu_DTeotX
 expr_stmt|;
 endif|#
 directive|endif
-endif|BYTE_ORDER
+comment|/* BYTE_ORDER */
 block|}
 else|else
 block|{

@@ -4,11 +4,11 @@ comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.a
 end_comment
 
 begin_comment
-comment|/* $Revision: 2.6 $ */
+comment|/* $Revision: 1.13 $ */
 end_comment
 
 begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  * major changes by Julian Elischer (julian@jules.dialix.oz.au) May 1993  *  *      $Id: st.c,v 2.6 93/10/21 03:24:38 julian Exp Locker: julian $  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  * major changes by Julian Elischer (julian@jules.dialix.oz.au) May 1993  *  *      $Id: st.c,v 1.13 1993/11/18 05:03:05 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -3104,6 +3104,10 @@ expr_stmt|;
 comment|/* 	 * If the user hasn't already specified fixed or variable-length 	 * blocks and the block size (zero if variable-length), we'll 	 * have to try to figure them out ourselves. 	 * 	 * Our first shot at a method is, "The quirks made me do it!" 	 */
 switch|switch
 condition|(
+call|(
+name|int
+call|)
+argument_list|(
 name|st
 operator|->
 name|quirks
@@ -3113,6 +3117,7 @@ name|ST_Q_FORCE_FIXED_MODE
 operator||
 name|ST_Q_FORCE_VAR_MODE
 operator|)
+argument_list|)
 condition|)
 block|{
 case|case
@@ -3295,6 +3300,9 @@ block|}
 comment|/* 	 * If the tape density mandates (or even suggests) use of fixed 	 * or variable-length blocks, comply. 	 */
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|st
 operator|->
 name|density
@@ -3529,6 +3537,9 @@ label|:
 comment|/* 	 * Decide whether or not to write two file marks to signify end- 	 * of-data.  Make the decision as a function of density.  If 	 * the decision is not to use a second file mark, the SCSI BLANK 	 * CHECK condition code will be recognized as end-of-data when 	 * first read. 	 * (I think this should be a by-product of fixed/variable..julian) 	 */
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|st
 operator|->
 name|density
@@ -6332,6 +6343,9 @@ index|]
 decl_stmt|;
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|what
 condition|)
 block|{
@@ -6680,6 +6694,9 @@ return|;
 block|}
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|number
 condition|)
 block|{
@@ -6848,6 +6865,10 @@ index|]
 decl_stmt|;
 switch|switch
 condition|(
+call|(
+name|int
+call|)
+argument_list|(
 name|st
 operator|->
 name|flags
@@ -6859,6 +6880,7 @@ name|ST_FM_WRITTEN
 operator||
 name|ST_2FM_AT_EOD
 operator|)
+argument_list|)
 condition|)
 block|{
 default|default:
@@ -7971,6 +7993,9 @@ do|do
 block|{
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|st
 operator|->
 name|blksiz

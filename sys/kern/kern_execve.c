@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman  * 4. The name of the developer may be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_execve.c,v 1.4 1993/12/11 06:55:33 davidg Exp davidg $  */
+comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman  * 4. The name of the developer may be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_execve.c,v 1.10 1993/12/12 12:23:19 davidg Exp $  */
 end_comment
 
 begin_include
@@ -109,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|"vm/vm_kern.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vm/vm_user.h"
 end_include
 
 begin_include
@@ -372,6 +378,10 @@ name|vm_allocate
 argument_list|(
 name|kernel_map
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|*
+operator|)
 operator|&
 name|iparams
 operator|->
@@ -482,6 +492,9 @@ name|vm_deallocate
 argument_list|(
 name|kernel_map
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
 name|iparams
 operator|->
 name|stringbase
@@ -550,6 +563,10 @@ argument_list|(
 name|kernel_map
 argument_list|,
 comment|/* map */
+operator|(
+name|vm_offset_t
+operator|*
+operator|)
 operator|&
 name|image_header
 argument_list|,
@@ -562,10 +579,13 @@ argument_list|,
 comment|/* protection */
 name|VM_PROT_READ
 argument_list|,
-comment|/* maximum protection */
+comment|/* max protection */
 name|MAP_FILE
 argument_list|,
 comment|/* flags */
+operator|(
+name|caddr_t
+operator|)
 name|vnodep
 argument_list|,
 comment|/* vnode */
@@ -580,7 +600,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mmap filed: %d\n"
+literal|"mmap failed: %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -692,6 +712,9 @@ name|vm_deallocate
 argument_list|(
 name|kernel_map
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
 name|image_header
 argument_list|,
 name|NBPG
@@ -1069,6 +1092,9 @@ name|vm_deallocate
 argument_list|(
 name|kernel_map
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
 name|iparams
 operator|->
 name|stringbase
@@ -1087,6 +1113,9 @@ name|vm_deallocate
 argument_list|(
 name|kernel_map
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
 name|image_header
 argument_list|,
 name|NBPG
@@ -1143,6 +1172,9 @@ name|vm_deallocate
 argument_list|(
 name|kernel_map
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
 name|iparams
 operator|->
 name|stringbase
@@ -1178,6 +1210,11 @@ name|vm_deallocate
 argument_list|(
 name|kernel_map
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|iparams
+operator|->
 name|image_header
 argument_list|,
 name|NBPG
@@ -1322,6 +1359,10 @@ name|vmspace
 operator|->
 name|vm_map
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|*
+operator|)
 operator|&
 name|stack_addr
 argument_list|,
