@@ -1898,18 +1898,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Interlock for scanning list of vnodes attached to a mountpoint  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|mntvnode_mtx
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define

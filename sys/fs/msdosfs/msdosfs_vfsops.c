@@ -3788,10 +3788,9 @@ comment|/* update fats here */
 block|}
 block|}
 comment|/* 	 * Write back each (modified) denode. 	 */
-name|mtx_lock
+name|MNT_ILOCK
 argument_list|(
-operator|&
-name|mntvnode_mtx
+name|mp
 argument_list|)
 expr_stmt|;
 name|loop
@@ -3859,10 +3858,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|mtx_unlock
+name|MNT_IUNLOCK
 argument_list|(
-operator|&
-name|mntvnode_mtx
+name|mp
 argument_list|)
 expr_stmt|;
 name|dep
@@ -3920,10 +3918,9 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|MNT_ILOCK
 argument_list|(
-operator|&
-name|mntvnode_mtx
+name|mp
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -3948,10 +3945,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|mtx_lock
+name|MNT_ILOCK
 argument_list|(
-operator|&
-name|mntvnode_mtx
+name|mp
 argument_list|)
 expr_stmt|;
 if|if
@@ -4000,17 +3996,15 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|MNT_ILOCK
 argument_list|(
-operator|&
-name|mntvnode_mtx
+name|mp
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|MNT_IUNLOCK
 argument_list|(
-operator|&
-name|mntvnode_mtx
+name|mp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Flush filesystem control info. 	 */

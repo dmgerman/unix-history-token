@@ -1049,10 +1049,9 @@ name|bad
 init|=
 literal|0
 decl_stmt|;
-name|mtx_lock
+name|MNT_ILOCK
 argument_list|(
-operator|&
-name|mntvnode_mtx
+name|mp
 argument_list|)
 expr_stmt|;
 for|for
@@ -1160,10 +1159,9 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|MNT_IUNLOCK
 argument_list|(
-operator|&
-name|mntvnode_mtx
+name|mp
 argument_list|)
 expr_stmt|;
 block|}

@@ -375,6 +375,11 @@ name|lock
 name|mnt_lock
 decl_stmt|;
 comment|/* mount structure lock */
+name|struct
+name|mtx
+name|mnt_mtx
+decl_stmt|;
+comment|/* mount structure interlock */
 name|int
 name|mnt_writeopcount
 decl_stmt|;
@@ -449,6 +454,26 @@ comment|/* # of vnodes on this mount */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|MNT_ILOCK
+parameter_list|(
+name|mp
+parameter_list|)
+value|mtx_lock(&(mp)->mnt_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MNT_IUNLOCK
+parameter_list|(
+name|mp
+parameter_list|)
+value|mtx_unlock(&(mp)->mnt_mtx)
+end_define
 
 begin_endif
 endif|#

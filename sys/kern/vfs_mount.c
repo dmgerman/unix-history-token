@@ -330,17 +330,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* For any iteration/modification of mnt_vnodelist */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|mtx
-name|mntvnode_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * The vnode of the system's root (/ in the filesystem, without chroot  * active.)  */
 end_comment
 
@@ -3035,6 +3024,20 @@ name|mnt_nvnodelistsize
 operator|=
 literal|0
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|mnt_mtx
+argument_list|,
+literal|"struct mount mtx"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|lockinit
 argument_list|(
 operator|&
@@ -4846,6 +4849,20 @@ operator|->
 name|mnt_nvnodelistsize
 operator|=
 literal|0
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|mnt_mtx
+argument_list|,
+literal|"struct mount mtx"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
 expr_stmt|;
 name|lockinit
 argument_list|(
@@ -6669,6 +6686,14 @@ operator|->
 name|mnt_lock
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|mnt_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|coveredvp
@@ -6849,6 +6874,20 @@ argument_list|,
 name|M_WAITOK
 operator||
 name|M_ZERO
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|mp
+operator|->
+name|mnt_mtx
+argument_list|,
+literal|"struct mount mtx"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|lockinit
