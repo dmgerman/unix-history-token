@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.105 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.106 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2613,8 +2613,8 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|SCANF
 name|char
 name|wordbuf

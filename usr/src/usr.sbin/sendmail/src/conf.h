@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.190 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.191 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -720,23 +720,12 @@ name|_PATH_UNIX
 value|"/stand/vmunix"
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/etc/mail/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -794,23 +783,12 @@ name|_PATH_UNIX
 value|"/hp-ux"
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -1364,23 +1342,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/etc/mail/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -2028,23 +1995,12 @@ begin_comment
 comment|/* get OSF/1 defines below */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/var/adm/sendmail/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -2328,23 +2284,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/etc/sendmail/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -2983,23 +2928,12 @@ directive|undef
 name|WIFEXITED
 end_undef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -3101,23 +3035,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -3217,23 +3140,12 @@ name|_PATH_UNIX
 value|"/unix"
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -3515,23 +3427,12 @@ name|_PATH_UNIX
 value|"/unix"
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -3833,23 +3734,12 @@ begin_comment
 comment|/* use<sys/vfs.h> statfs() implementation */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -4413,24 +4303,6 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_SENDMAILCF
-value|"/usr/lib/sendmail.cf"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|LA_TYPE
 end_ifndef
 
@@ -4499,6 +4371,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|_PATH_VENDOR_CF
+value|"/usr/lib/sendmail.cf"
+end_define
 
 begin_undef
 undef|#
@@ -4896,23 +4775,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -5042,23 +4910,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -5232,23 +5089,12 @@ begin_comment
 comment|/* alternate field name */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -5420,23 +5266,12 @@ name|_PATH_UNIX
 value|"/unix"
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/usr/ucblib/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -5742,23 +5577,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -6021,23 +5845,12 @@ name|_PATH_UNIX
 value|"/unix"
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -6438,23 +6251,12 @@ name|_PATH_UNIX
 value|"/stand/unix"
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/etc/mail/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -6723,23 +6525,12 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/usr/lib/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -7115,23 +6906,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|_PATH_SENDMAILCF
+name|_PATH_VENDOR_CF
 value|"/usr/ucblib/sendmail.cf"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -8888,24 +8668,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  If we are going to link scanf anyway, use it in readcf */
+comment|/* **  Default to using scanf in readcf. */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HASUNAME
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|SCANF
-argument_list|)
-end_if
+end_ifndef
 
 begin_define
 define|#
