@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kbms_if.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kbms_if.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../include/fix_machine_type.h"
+file|<machine/fix_machine_type.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/adrsmap.h"
+file|<machine/adrsmap.h>
 end_include
 
 begin_include
@@ -34,13 +34,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../sio/scc.h"
+file|<news3400/sio/scc.h>
 end_include
 
 begin_if
@@ -60,13 +60,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../iop/mouse.h"
+file|<news3400/iop/mouse.h>
 end_include
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -12,91 +12,91 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../include/fix_machine_type.h"
+file|<machine/fix_machine_type.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/dir.h"
+file|<sys/dir.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/map.h"
+file|<sys/map.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/msgbuf.h"
+file|<sys/msgbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/syscall.h"
+file|<sys/syscall.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/signal.h"
+file|<sys/signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm.h"
+file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/reg.h"
+file|<machine/reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/pte.h"
+file|<machine/pte.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/pmap.h"
+file|<machine/pmap.h>
 end_include
 
 begin_function
