@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vipw.c	4.2 (Berkeley) %G%"
+literal|"@(#)vipw.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -693,6 +693,12 @@ argument_list|(
 literal|"rename"
 argument_list|)
 expr_stmt|;
+else|else
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|fprintf
@@ -710,6 +716,11 @@ label|:
 name|unlink
 argument_list|(
 name|temp
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
