@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fclose.c	5.1 (Berkeley) %G%"
+literal|"@(#)fclose.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,7 +107,7 @@ name|_flags
 operator|&
 name|__SWR
 condition|?
-name|fflush
+name|__sflush
 argument_list|(
 name|fp
 argument_list|)
