@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.167 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.168 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/* **  CONF.H -- All user-configurable parameters for sendmail */
+comment|/* **  CONF.H -- All user-configurable parameters for sendmail ** **	Send updates to sendmail@CS.Berkeley.EDU so they will be **	included in the next release. */
 end_comment
 
 begin_struct_decl
@@ -525,12 +525,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/********************************************************************** **  Operating system configuration. ** **	Unless you are porting to a new OS, you shouldn't have to **	change these. **********************************************************************/
-end_comment
+begin_escape
+end_escape
 
 begin_comment
-comment|/* **  Per-Operating System defines */
+comment|/********************************************************************** **  Operating system configuration. ** **	Unless you are porting to a new OS, you shouldn't have to **	change these. **********************************************************************/
 end_comment
 
 begin_comment
@@ -599,6 +598,17 @@ name|e
 parameter_list|)
 value|setresuid(-1, e, -1)
 end_define
+
+begin_define
+define|#
+directive|define
+name|IP_SRCROUTE
+value|1
+end_define
+
+begin_comment
+comment|/* can check IP source routing */
+end_comment
 
 begin_define
 define|#
@@ -871,12 +881,6 @@ begin_comment
 comment|/* does not have getusershell(3) call */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IP_SRCROUTE
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -887,11 +891,6 @@ end_define
 begin_comment
 comment|/* Something is broken with getsockopt() */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1022,6 +1021,17 @@ end_define
 
 begin_comment
 comment|/* does not have getusershell(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_SRCROUTE
+value|1
+end_define
+
+begin_comment
+comment|/* can check IP source routing */
 end_comment
 
 begin_define
@@ -1210,6 +1220,17 @@ end_define
 
 begin_comment
 comment|/* DOES have getusershell(3) call in libc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_SRCROUTE
+value|1
+end_define
+
+begin_comment
+comment|/* can check IP source routing */
 end_comment
 
 begin_define
@@ -2042,6 +2063,17 @@ end_define
 
 begin_comment
 comment|/* has initgroups(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_SRCROUTE
+value|1
+end_define
+
+begin_comment
+comment|/* can check IP source routing */
 end_comment
 
 begin_ifndef
@@ -3713,6 +3745,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_SRCROUTE
+value|0
+end_define
+
+begin_comment
+comment|/* Something is broken with getsockopt() */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LA_TYPE
 value|LA_FLOAT
 end_define
@@ -3814,28 +3857,6 @@ end_define
 
 begin_comment
 comment|/* TCP/IP implementation is broken */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IP_SRCROUTE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IP_SRCROUTE
-value|0
-end_define
-
-begin_comment
-comment|/* Something is broken with getsockopt() */
 end_comment
 
 begin_endif
@@ -5431,6 +5452,17 @@ directive|define
 name|__svr4__
 end_define
 
+begin_define
+define|#
+directive|define
+name|IP_SRCROUTE
+value|0
+end_define
+
+begin_comment
+comment|/* Something is broken with getsockopt() */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -6765,6 +6797,28 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|IP_SRCROUTE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IP_SRCROUTE
+value|1
+end_define
+
+begin_comment
+comment|/* can check IP source routing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HASSETRLIMIT
 end_ifndef
 
@@ -7720,6 +7774,9 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/********************************************************************** **  Remaining definitions should never have to be changed.  They are **  primarily to provide back compatibility for older systems -- for **  example, it includes some POSIX compatibility definitions **********************************************************************/
