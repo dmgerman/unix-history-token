@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.41 91/04/06$  *  *	@(#)ultrix_compat.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.41 91/04/06$  *  *	@(#)ultrix_compat.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -331,7 +331,9 @@ literal|"ULTRIX system call %d not implemented\n"
 argument_list|,
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|V0
 index|]
