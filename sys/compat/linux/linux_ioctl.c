@@ -5182,6 +5182,12 @@ name|CD_CURRENT_POSITION
 expr_stmt|;
 name|bsdsc
 operator|.
+name|track
+operator|=
+literal|0
+expr_stmt|;
+name|bsdsc
+operator|.
 name|data_len
 operator|=
 sizeof|sizeof
