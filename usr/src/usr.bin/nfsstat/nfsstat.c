@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsstat.c	5.3 (Berkeley) %G%"
+literal|"@(#)nfsstat.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -722,6 +722,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"Rpc Counts:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"%9.9s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s\n"
 argument_list|,
 literal|"Getattr"
@@ -877,11 +882,47 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Rpc retries\n%11d\n"
+literal|"Rpc Info:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%9.9s %9.9s %9.9s %9.9s %9.9s\n"
+argument_list|,
+literal|"TimedOut"
+argument_list|,
+literal|"Invalid"
+argument_list|,
+literal|"X Replies"
+argument_list|,
+literal|"Retries"
+argument_list|,
+literal|"Requests"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%9d %9d %9d %9d %9d\n"
+argument_list|,
+name|nfsstats
+operator|.
+name|rpctimeouts
+argument_list|,
+name|nfsstats
+operator|.
+name|rpcinvalid
+argument_list|,
+name|nfsstats
+operator|.
+name|rpcunexpected
 argument_list|,
 name|nfsstats
 operator|.
 name|rpcretries
+argument_list|,
+name|nfsstats
+operator|.
+name|rpcrequests
 argument_list|)
 expr_stmt|;
 name|printf
@@ -967,7 +1008,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%9.9s %9.9s\n"
+literal|"%9.9s %9.9s %9.9s %9.9s"
+argument_list|,
+literal|"BioRLHits"
+argument_list|,
+literal|"Misses"
+argument_list|,
+literal|"BioD Hits"
+argument_list|,
+literal|"Misses"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %9.9s %9.9s\n"
 argument_list|,
 literal|"DirE Hits"
 argument_list|,
@@ -976,7 +1030,36 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%9d %9d\n"
+literal|"%9d %9d %9d %9d"
+argument_list|,
+name|nfsstats
+operator|.
+name|biocache_readlinks
+operator|-
+name|nfsstats
+operator|.
+name|readlink_bios
+argument_list|,
+name|nfsstats
+operator|.
+name|readlink_bios
+argument_list|,
+name|nfsstats
+operator|.
+name|biocache_readdirs
+operator|-
+name|nfsstats
+operator|.
+name|readdir_bios
+argument_list|,
+name|nfsstats
+operator|.
+name|readdir_bios
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %9d %9d\n"
 argument_list|,
 name|nfsstats
 operator|.
@@ -989,7 +1072,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Server Info:\n"
+literal|"\nServer Info:\n"
 argument_list|)
 expr_stmt|;
 name|printf
