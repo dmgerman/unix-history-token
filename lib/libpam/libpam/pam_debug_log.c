@@ -174,9 +174,14 @@ name|fmtbuf
 argument_list|,
 literal|"%.*s: %s: %s\n"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|period
 operator|-
 name|modname
+argument_list|)
 argument_list|,
 name|modname
 argument_list|,
