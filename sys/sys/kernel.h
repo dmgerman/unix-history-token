@@ -390,6 +390,11 @@ init|=
 literal|0xb200000
 block|,
 comment|/* Find dump devices */
+name|SI_SUB_VINUM
+init|=
+literal|0xb300000
+block|,
+comment|/* Configure vinum */
 name|SI_SUB_MOUNT_ROOT
 init|=
 literal|0xb400000
