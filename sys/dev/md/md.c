@@ -2236,6 +2236,14 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|devstat_remove_entry
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|stats
+argument_list|)
+expr_stmt|;
 comment|/* XXX: LOCK(unique unit numbers) */
 name|LIST_REMOVE
 argument_list|(
