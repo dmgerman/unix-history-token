@@ -1475,6 +1475,19 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|void
+name|cpu_pause
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("pause");
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
 name|register_t
 name|intr_disable
 parameter_list|(
