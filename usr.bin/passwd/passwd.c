@@ -51,7 +51,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: passwd.c,v 1.3 1995/01/31 08:34:05 wpaul Exp $"
+literal|"$Id: passwd.c,v 1.4 1995/06/16 03:33:10 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,15 +211,7 @@ end_define
 
 begin_decl_stmt
 name|int
-name|use_yp_passwd
-init|=
-literal|0
-decl_stmt|,
-name|opt_shell
-init|=
-literal|0
-decl_stmt|,
-name|opt_fullname
+name|_use_yp
 init|=
 literal|0
 decl_stmt|;
@@ -387,75 +379,11 @@ argument_list|,
 operator|(
 name|prog_name
 operator|=
-literal|"ypchpass"
-operator|)
-argument_list|)
-condition|)
-name|use_yp_passwd
-operator|=
-name|opt_shell
-operator|=
-name|opt_fullname
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|strstr
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-operator|(
-name|prog_name
-operator|=
-literal|"ypchsh"
-operator|)
-argument_list|)
-condition|)
-name|opt_shell
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|strstr
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-operator|(
-name|prog_name
-operator|=
-literal|"ypchfn"
-operator|)
-argument_list|)
-condition|)
-name|opt_fullname
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|strstr
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-operator|(
-name|prog_name
-operator|=
 literal|"yppasswd"
 operator|)
 argument_list|)
 condition|)
-name|use_yp_passwd
+name|_use_yp
 operator|=
 literal|1
 expr_stmt|;
@@ -530,25 +458,7 @@ case|case
 literal|'y'
 case|:
 comment|/* Change NIS password */
-name|use_yp_passwd
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'s'
-case|:
-comment|/* Change NIS shell field */
-name|opt_shell
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'f'
-case|:
-comment|/* Change NIS GECOS field */
-name|opt_fullname
+name|_use_yp
 operator|=
 literal|1
 expr_stmt|;
@@ -939,7 +849,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"        [-l] [-y] [-f] [-s] [user]\n"
+literal|"        [-l] [-y] [user]\n"
 argument_list|)
 expr_stmt|;
 else|#
@@ -951,7 +861,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: passwd [-l] [-y] [-f] [-s] [user] \n"
+literal|"usage: passwd [-l] [-y] [user] \n"
 argument_list|)
 expr_stmt|;
 endif|#

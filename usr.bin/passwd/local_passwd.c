@@ -231,18 +231,17 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|nis
+condition|)
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Changing %s password for %s.\n"
-argument_list|,
-name|nis
-condition|?
-literal|"YP"
-else|:
-literal|"local"
+literal|"Changing local password for %s.\n"
 argument_list|,
 name|pw
 operator|->
