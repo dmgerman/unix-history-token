@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: opts.c,v 5.2.2.4 1992/08/02 10:42:21 jsp Exp $  *  */
+comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: opts.c,v 1.2 1998/12/27 06:24:48 ezk Exp $  *  */
 end_comment
 
 begin_ifdef
@@ -197,7 +197,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * FORWARD DEFINITSION:  */
+comment|/*  * FORWARD DEFINITION:  */
 end_comment
 
 begin_function_decl
@@ -307,9 +307,13 @@ name|char
 modifier|*
 name|opt_host
 init|=
-name|hostname
+name|nullstr
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX: was the global hostname */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -4269,7 +4273,7 @@ comment|/* 	   * Done with this variable 	   */
 break|break;
 block|}
 block|}
-comment|/*        * Check that the search was succesful        */
+comment|/*        * Check that the search was successful        */
 if|if
 condition|(
 operator|!
@@ -4458,7 +4462,7 @@ name|opt
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Save the exansion      */
+comment|/*      * Save the expansion      */
 operator|*
 name|p
 operator|->
@@ -4863,6 +4867,16 @@ name|fo
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* set hostname */
+name|opt_host
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|am_get_hostname
+argument_list|()
+expr_stmt|;
 comment|/*    * Set key, map& path before expansion    */
 name|opt_key
 operator|=
@@ -4985,7 +4999,7 @@ name|ok
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/*    * Normalise remote host name.    * 1.  Expand variables    * 2.  Normalize relative to host tables    * 3.  Strip local domains from the remote host    *     name before using it in other expansions.    *     This makes mount point names and other things    *     much shorter, while allowing cross domain    *     sharing of mount maps.    */
+comment|/*    * Normalize remote host name.    * 1.  Expand variables    * 2.  Normalize relative to host tables    * 3.  Strip local domains from the remote host    *     name before using it in other expansions.    *     This makes mount point names and other things    *     much shorter, while allowing cross domain    *     sharing of mount maps.    */
 name|apply_opts
 argument_list|(
 name|expand_opts
