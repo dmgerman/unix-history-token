@@ -7333,7 +7333,7 @@ name|dst
 operator|.
 name|sin6_family
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* prepare the register head to send to the mrouting daemon */

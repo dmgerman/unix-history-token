@@ -3518,7 +3518,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 comment|/* build the command */

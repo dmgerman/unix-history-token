@@ -461,7 +461,7 @@ literal|10
 condition|)
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 name|digi_delay
@@ -813,7 +813,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 block|}

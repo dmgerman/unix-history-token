@@ -9735,7 +9735,7 @@ name|intptr_t
 operator|)
 name|iocb
 operator|!=
-name|NULL
+literal|0
 operator|)
 condition|)
 block|{

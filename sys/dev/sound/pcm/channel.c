@@ -5683,7 +5683,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|hwfmt
 operator|=

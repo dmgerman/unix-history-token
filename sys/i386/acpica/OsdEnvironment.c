@@ -33,7 +33,7 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 block|}
@@ -48,7 +48,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 block|}

@@ -6936,9 +6936,9 @@ expr_stmt|;
 comment|/* barrier to ensure completion of previous write before we write the flag */
 name|bus_space_barrier
 argument_list|(
-name|NULL
+literal|0
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -6966,9 +6966,9 @@ expr_stmt|;
 comment|/* barrier to ensure completion of previous write before we notify the controller */
 name|bus_space_barrier
 argument_list|(
-name|NULL
+literal|0
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 literal|0
 argument_list|,

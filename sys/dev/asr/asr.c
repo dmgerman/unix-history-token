@@ -6800,7 +6800,7 @@ parameter_list|,
 name|Size
 parameter_list|)
 define|\
-value|I2O_FLAGS_COUNT_setCount(				   \&(((PI2O_SG_ELEMENT)(SGL))->u.Simple[Index].FlagsCount), \ 	  Size);						   \ 	I2O_FLAGS_COUNT_setFlags(				   \&(((PI2O_SG_ELEMENT)(SGL))->u.Simple[Index].FlagsCount), \ 	  I2O_SGL_FLAGS_SIMPLE_ADDRESS_ELEMENT | (Flags));	   \ 	I2O_SGE_SIMPLE_ELEMENT_setPhysicalAddress(		   \&(((PI2O_SG_ELEMENT)(SGL))->u.Simple[Index]),		   \ 	  (Buffer == NULL) ? NULL : KVTOPHYS(Buffer))
+value|I2O_FLAGS_COUNT_setCount(				   \&(((PI2O_SG_ELEMENT)(SGL))->u.Simple[Index].FlagsCount), \ 	  Size);						   \ 	I2O_FLAGS_COUNT_setFlags(				   \&(((PI2O_SG_ELEMENT)(SGL))->u.Simple[Index].FlagsCount), \ 	  I2O_SGL_FLAGS_SIMPLE_ADDRESS_ELEMENT | (Flags));	   \ 	I2O_SGE_SIMPLE_ELEMENT_setPhysicalAddress(		   \&(((PI2O_SG_ELEMENT)(SGL))->u.Simple[Index]),		   \ 	  (Buffer == NULL) ? 0 : KVTOPHYS(Buffer))
 end_define
 
 begin_comment

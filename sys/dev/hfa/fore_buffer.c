@@ -1144,7 +1144,7 @@ name|bdp
 operator|->
 name|bsd_buffer
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 comment|/* 				 * Unable to assign dma address - free up 				 * this descriptor's buffer 				 */
@@ -1545,7 +1545,7 @@ name|bdp
 operator|->
 name|bsd_buffer
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 comment|/* 				 * Unable to assign dma address - free up 				 * this descriptor's buffer 				 */

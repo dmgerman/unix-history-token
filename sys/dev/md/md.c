@@ -1431,7 +1431,7 @@ index|[
 name|idx
 index|]
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|lip
 index|[

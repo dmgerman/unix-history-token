@@ -4093,7 +4093,7 @@ operator|&
 name|IPV6_FLOWINFO_MASK
 operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|inp
 operator|->
@@ -4879,7 +4879,7 @@ argument_list|,
 name|AF_INET6
 argument_list|)
 operator|!=
-name|NULL
+literal|0
 decl_stmt|;
 endif|#
 directive|endif

@@ -575,7 +575,7 @@ argument_list|)
 condition|)
 block|{
 return|return
-name|NULL
+literal|0
 return|;
 block|}
 name|free

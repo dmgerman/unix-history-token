@@ -485,7 +485,7 @@ name|sc
 operator|->
 name|acpi_wakeaddr
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 return|return

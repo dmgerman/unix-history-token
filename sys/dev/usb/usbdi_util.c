@@ -1441,7 +1441,7 @@ if|if
 condition|(
 name|id
 operator|==
-name|NULL
+literal|0
 condition|)
 return|return
 operator|(

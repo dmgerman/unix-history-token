@@ -5207,7 +5207,7 @@ if|if
 condition|(
 name|error
 operator|!=
-name|NULL
+literal|0
 condition|)
 break|break;
 name|error
@@ -5224,7 +5224,7 @@ if|if
 condition|(
 name|error
 operator|!=
-name|NULL
+literal|0
 condition|)
 break|break;
 name|error
@@ -6423,7 +6423,7 @@ if|if
 condition|(
 name|error
 operator|!=
-name|NULL
+literal|0
 condition|)
 break|break;
 name|error
@@ -6440,7 +6440,7 @@ if|if
 condition|(
 name|error
 operator|!=
-name|NULL
+literal|0
 condition|)
 break|break;
 if|if
@@ -10149,7 +10149,7 @@ name|dst
 operator|->
 name|sin6_family
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

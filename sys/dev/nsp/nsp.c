@@ -3581,7 +3581,7 @@ name|sc
 operator|->
 name|sc_memh
 operator|!=
-name|NULL
+literal|0
 operator|&&
 operator|(
 name|nsp_io_control
@@ -3613,7 +3613,7 @@ name|sc
 operator|->
 name|sc_memh
 operator|!=
-name|NULL
+literal|0
 operator|&&
 operator|(
 name|nsp_io_control

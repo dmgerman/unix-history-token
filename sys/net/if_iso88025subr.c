@@ -1045,7 +1045,7 @@ argument_list|)
 operator|->
 name|trld_rcf
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|rif_len
 operator|=
