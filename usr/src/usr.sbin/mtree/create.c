@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)create.c	5.2 (Berkeley) %G%"
+literal|"@(#)create.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -782,6 +782,12 @@ begin_comment
 comment|/* default owner, group */
 end_comment
 
+begin_decl_stmt
+name|u_int
+name|type
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|pwalk
 argument_list|(
@@ -881,7 +887,7 @@ operator|)
 operator|->
 name|type
 operator|!=
-name|F_FILE
+name|type
 condition|)
 block|{
 name|LABEL
@@ -1587,20 +1593,39 @@ argument_list|(
 literal|"/set nlink=1\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dflag
+condition|)
+block|{
+name|type
+operator|=
+name|F_DIR
+expr_stmt|;
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"/set type=%s\n\n"
-argument_list|,
-name|dflag
-condition|?
-literal|"dir"
-else|:
-literal|"file"
+literal|"/set type=dir\n\n"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|type
+operator|=
+name|F_FILE
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"/set type=file\n\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
