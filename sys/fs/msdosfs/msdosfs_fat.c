@@ -70,31 +70,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<msdosfs/bpb.h>
+file|<fs/msdosfs/bpb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<msdosfs/msdosfsmount.h>
+file|<fs/msdosfs/msdosfsmount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<msdosfs/direntry.h>
+file|<fs/msdosfs/direntry.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<msdosfs/denode.h>
+file|<fs/msdosfs/denode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<msdosfs/fat.h>
+file|<fs/msdosfs/fat.h>
 end_include
 
 begin_comment

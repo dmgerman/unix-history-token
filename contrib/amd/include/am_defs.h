@@ -3167,13 +3167,43 @@ directive|include
 file|<msdosfs/msdosfsmount.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not HAVE_MSDOSFS_MSDOSFSMOUNT_H */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FS_MSDOSFS_MSDOSFSMOUNT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<fs/msdosfs/msdosfsmount.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_MSDOSFS_MSDOSFSMOUNT_H */
+comment|/* HAVE_FS_MSDOSFS_MSDOSFSMOUNT_H */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not HAVE_MSDOSFS_MSDOSFSMOUNT_H */
 end_comment
 
 begin_comment

@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<msdosfs/msdosfsmount.h>
+file|<fs/msdosfs/msdosfsmount.h>
 end_include
 
 begin_include

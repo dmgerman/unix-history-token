@@ -4768,10 +4768,18 @@ begin_comment
 comment|/* Define if you have the<msdosfs/msdosfsmount.h> header file.  */
 end_comment
 
+begin_comment
+comment|/* #undef HAVE_MSDOSFS_MSDOSFSMOUNT_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<fs/msdosfs/msdosfsmount.h> header file.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|HAVE_MSDOSFS_MSDOSFSMOUNT_H
+name|HAVE_FS_MSDOSFS_MSDOSFSMOUNT_H
 value|1
 end_define
 
