@@ -23,6 +23,16 @@ directive|include
 file|<sysexits.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)sccs.c 1.3 delta %G% 00:27:33 get %H% %T%"
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|sccsprog
