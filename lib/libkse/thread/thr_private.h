@@ -2355,6 +2355,17 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|SCLASS
+name|int
+name|_thr_active_threads
+name|SCLASS_PRESET
+argument_list|(
+literal|1
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Default thread attributes: */
 end_comment
