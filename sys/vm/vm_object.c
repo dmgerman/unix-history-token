@@ -5290,8 +5290,6 @@ comment|/* 			 * Object now shadows whatever backing_object did. 			 * Note that
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|object
-operator|->
 name|backing_object
 operator|->
 name|shadow_head
@@ -5301,15 +5299,11 @@ argument_list|,
 name|shadow_list
 argument_list|)
 expr_stmt|;
-name|object
-operator|->
 name|backing_object
 operator|->
 name|shadow_count
 operator|--
 expr_stmt|;
-name|object
-operator|->
 name|backing_object
 operator|->
 name|generation
