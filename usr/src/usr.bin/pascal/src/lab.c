@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lab.c 1.3 %G%"
+literal|"@(#)lab.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -357,7 +357,7 @@ literal|1
 condition|)
 block|{
 comment|/* 				 *	stab the label for separate compilation. 				 *	make label number = label name. 				 */
-name|stabglab
+name|stabglabel
 argument_list|(
 name|p
 operator|->

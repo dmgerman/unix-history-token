@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)type.c 1.3 %G%"
+literal|"@(#)type.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -270,7 +270,7 @@ operator|==
 literal|1
 condition|)
 block|{
-name|stabtname
+name|stabgtype
 argument_list|(
 name|tid
 argument_list|,

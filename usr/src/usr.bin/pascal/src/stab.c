@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c 1.2 %G%"
+literal|"@(#)stab.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,13 +46,13 @@ file|<stab.h>
 end_include
 
 begin_comment
-comment|/*  *  the file "p.a.out" has an additional symbol definition for "a.out.h"  *	that is used by the separate compilation facility --  *	eventually, "a.out.h" must be updated to include this   */
+comment|/*      *  additional symbol definition for<stab.h>      *	that is used by the separate compilation facility --      *	eventually,<stab.h> should be updated to include this       */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"p.a.out.h"
+file|"pstab.h"
 end_include
 
 begin_include
@@ -145,25 +145,13 @@ condition|)
 block|{
 name|putprintf
 argument_list|(
-literal|"	.stabs	\""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-name|NAMEFORMAT
-argument_list|,
-literal|1
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"\",0x%x,0,0,0x%x"
+literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
+argument_list|,
+name|name
+argument_list|,
+name|N_PC
 argument_list|,
 name|N_PGVAR
 argument_list|,
@@ -650,27 +638,15 @@ condition|)
 block|{
 name|putprintf
 argument_list|(
-literal|"	.stabs	\""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-name|NAMEFORMAT
-argument_list|,
-literal|1
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"\",0x%x,0,0,0x%x"
+literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
-name|N_PGFUN
+name|name
+argument_list|,
+name|N_PC
+argument_list|,
+name|N_PGFUNC
 argument_list|,
 name|ABS
 argument_list|(
@@ -689,27 +665,15 @@ condition|)
 block|{
 name|putprintf
 argument_list|(
-literal|"	.stabs	\""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-name|NAMEFORMAT
-argument_list|,
-literal|1
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"\",0x%x,0,0,0x%x"
+literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
-name|N_PGPRC
+name|name
+argument_list|,
+name|N_PC
+argument_list|,
+name|N_PGPROC
 argument_list|,
 name|ABS
 argument_list|(
@@ -870,25 +834,13 @@ decl_stmt|;
 comment|/* 	     *	for separate compilation 	     */
 name|putprintf
 argument_list|(
-literal|"	.stabs	\""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-name|NAMEFORMAT
-argument_list|,
-literal|1
-argument_list|,
-name|filename
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"\",0x%x,0,0,0"
+literal|"	.stabs	\"%s\",0x%x,0,0x%x,0"
 argument_list|,
 literal|0
+argument_list|,
+name|filename
+argument_list|,
+name|N_PC
 argument_list|,
 name|N_PSO
 argument_list|)
@@ -990,27 +942,16 @@ block|{
 name|int
 name|label
 decl_stmt|;
+comment|/* 	     *	for separate compilation 	     */
 name|putprintf
 argument_list|(
-literal|"	.stabs	\""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-name|NAMEFORMAT
-argument_list|,
-literal|1
-argument_list|,
-name|filename
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"\",0x%x,0,0,0"
+literal|"	.stabs	\"%s\",0x%x,0,0x%x,0"
 argument_list|,
 literal|0
+argument_list|,
+name|filename
+argument_list|,
+name|N_PC
 argument_list|,
 name|N_PSOL
 argument_list|)
@@ -1098,7 +1039,7 @@ comment|/*      *	global labels      */
 end_comment
 
 begin_macro
-name|stabglab
+name|stabglabel
 argument_list|(
 argument|label
 argument_list|,
@@ -1123,29 +1064,15 @@ begin_block
 block|{
 name|putprintf
 argument_list|(
-literal|"	.stabs	\""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-name|PREFIXFORMAT
-argument_list|,
-literal|1
-argument_list|,
-name|PLABELPREFIX
-argument_list|,
-name|label
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"\",0x%x,0,0,0x%x"
+literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
-name|N_PGLAB
+name|label
+argument_list|,
+name|N_PC
+argument_list|,
+name|N_PGLABEL
 argument_list|,
 name|ABS
 argument_list|(
@@ -1161,20 +1088,20 @@ comment|/*      *	global constants      */
 end_comment
 
 begin_macro
-name|stabcname
+name|stabgconst
 argument_list|(
-argument|name
+argument|const
 argument_list|,
 argument|line
 argument_list|)
 end_macro
 
-begin_decl_stmt
+begin_expr_stmt
 name|char
-modifier|*
-name|name
-decl_stmt|;
-end_decl_stmt
+operator|*
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -1186,27 +1113,15 @@ begin_block
 block|{
 name|putprintf
 argument_list|(
-literal|"	.stabs	\""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-name|NAMEFORMAT
-argument_list|,
-literal|1
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"\",0x%x,0,0,0x%x"
+literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
-name|N_PGCON
+specifier|const
+argument_list|,
+name|N_PC
+argument_list|,
+name|N_PGCONST
 argument_list|,
 name|ABS
 argument_list|(
@@ -1222,9 +1137,9 @@ comment|/*      *	global types      */
 end_comment
 
 begin_macro
-name|stabtname
+name|stabgtype
 argument_list|(
-argument|name
+argument|type
 argument_list|,
 argument|line
 argument_list|)
@@ -1233,7 +1148,7 @@ end_macro
 begin_decl_stmt
 name|char
 modifier|*
-name|name
+name|type
 decl_stmt|;
 end_decl_stmt
 
@@ -1247,27 +1162,15 @@ begin_block
 block|{
 name|putprintf
 argument_list|(
-literal|"	.stabs	\""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-name|NAMEFORMAT
-argument_list|,
-literal|1
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"\",0x%x,0,0,0x%x"
+literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
-name|N_PGTYP
+name|type
+argument_list|,
+name|N_PC
+argument_list|,
+name|N_PGTYPE
 argument_list|,
 name|ABS
 argument_list|(
@@ -1326,7 +1229,7 @@ condition|)
 block|{
 name|type
 operator|=
-name|N_PEFUN
+name|N_PEFUNC
 expr_stmt|;
 block|}
 elseif|else
@@ -1339,7 +1242,7 @@ condition|)
 block|{
 name|type
 operator|=
-name|N_PEPRC
+name|N_PEPROC
 expr_stmt|;
 block|}
 else|else
@@ -1348,25 +1251,13 @@ return|return;
 block|}
 name|putprintf
 argument_list|(
-literal|"	.stabs	\""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-name|NAMEFORMAT
-argument_list|,
-literal|1
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"\",0x%x,0,0,0x%x"
+literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
+argument_list|,
+name|name
+argument_list|,
+name|N_PC
 argument_list|,
 name|type
 argument_list|,

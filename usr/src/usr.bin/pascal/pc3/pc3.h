@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	static	char sccsid[] = "@(#)pc3.h 1.2 %G%"; */
+comment|/*	static	char sccsid[] = "@(#)pc3.h 1.3 %G%"; */
 end_comment
 
 begin_comment
@@ -20,11 +20,10 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* pointer to string table */
-name|unsigned
-name|char
-name|type
+name|short
+name|desc
 decl_stmt|;
-comment|/* symbol type */
+comment|/* symbol description */
 name|int
 name|lookup
 decl_stmt|;
