@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.21 1994/10/23 21:27:59 wollman Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.22 1994/10/28 13:19:36 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -15,12 +15,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<st.h>
 end_include
 
 begin_include
@@ -1100,11 +1094,6 @@ name|xfer_block_wait
 decl_stmt|;
 comment|/* is a process waiting? */
 block|}
-modifier|*
-name|st_data
-index|[
-name|NST
-index|]
 struct|;
 end_struct
 
@@ -1256,6 +1245,24 @@ name|ST_PER_MOUNT
 value|(ST_INFO_VALID | ST_BLOCK_SET | ST_WRITTEN | \ 			ST_FIXEDBLOCKS | ST_READONLY | \ 			ST_FM_WRITTEN | ST_2FM_AT_EOD | ST_PER_ACTION)
 end_define
 
+begin_struct
+struct|struct
+name|st_driver
+block|{
+name|u_int32
+name|size
+decl_stmt|;
+name|struct
+name|st_data
+modifier|*
+modifier|*
+name|st_data
+decl_stmt|;
+block|}
+name|st_driver
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|static
 name|u_int32
@@ -1324,6 +1331,8 @@ block|{
 return|return
 name|scsi_externalize
 argument_list|(
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|kdc
@@ -1465,6 +1474,10 @@ name|struct
 name|st_data
 modifier|*
 name|st
+decl_stmt|,
+modifier|*
+modifier|*
+name|strealloc
 decl_stmt|;
 name|SC_DEBUG
 argument_list|(
@@ -1477,7 +1490,8 @@ literal|"stattach: "
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check we have the resources for another drive 	 */
+comment|/* 	 * allocate the resources for another drive 	 * if we have already allocate a st_data pointer we must 	 * copy the old pointers into a new region that is 	 * larger and release the old region, aka realloc 	 */
+comment|/* XXX 	 * This if will always be true for now, but future code may 	 * preallocate more units to reduce overhead.  This would be 	 * done by changing the malloc to be (next_st_unit * x) and 	 * the st_driver.size++ to be +x 	 */
 name|unit
 operator|=
 name|next_st_unit
@@ -1487,28 +1501,125 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NST
+name|st_driver
+operator|.
+name|size
+condition|)
+block|{
+name|strealloc
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|st_driver
+operator|.
+name|st_data
+argument_list|)
+operator|*
+name|next_st_unit
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strealloc
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Too many scsi tapes..(%d> %d) reconfigure kernel\n"
+literal|"st%ld: malloc failed for strealloc\n"
 argument_list|,
-operator|(
 name|unit
-operator|+
-literal|1
-operator|)
-argument_list|,
-name|NST
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
+block|}
+comment|/* Make sure we have something to copy before we copy it */
+name|bzero
+argument_list|(
+name|strealloc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|st_driver
+operator|.
+name|st_data
+argument_list|)
+operator|*
+name|next_st_unit
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|st_driver
+operator|.
+name|size
+condition|)
+block|{
+name|bcopy
+argument_list|(
+name|st_driver
+operator|.
+name|st_data
+argument_list|,
+name|strealloc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|st_driver
+operator|.
+name|st_data
+argument_list|)
+operator|*
+name|st_driver
+operator|.
+name|size
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|st_driver
+operator|.
+name|st_data
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+block|}
+name|st_driver
+operator|.
+name|st_data
+operator|=
+name|strealloc
+expr_stmt|;
+name|st_driver
+operator|.
+name|st_data
+index|[
+name|unit
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+name|st_driver
+operator|.
+name|size
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -1517,30 +1628,22 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: Already has storage!\n"
+literal|"st%ld: Already has storage!\n"
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
-name|sc_link
-operator|->
-name|device
-operator|=
-operator|&
-name|st_switch
-expr_stmt|;
-name|sc_link
-operator|->
-name|dev_unit
-operator|=
-name|unit
-expr_stmt|;
+comment|/* 	 * allocate the per drive data area 	 */
 name|st
 operator|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -1567,7 +1670,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: malloc failed in st.c\n"
+literal|"st%ld: malloc failed for st_data\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1593,6 +1696,19 @@ operator|->
 name|sc_link
 operator|=
 name|sc_link
+expr_stmt|;
+name|sc_link
+operator|->
+name|device
+operator|=
+operator|&
+name|st_switch
+expr_stmt|;
+name|sc_link
+operator|->
+name|dev_unit
+operator|=
+name|unit
 expr_stmt|;
 comment|/* 	 * Check if the drive is a known criminal and take 	 * Any steps needed to bring it into line 	 */
 ifdef|#
@@ -1764,6 +1880,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -2455,7 +2573,9 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NST
+name|st_driver
+operator|.
+name|size
 condition|)
 block|{
 return|return
@@ -2466,6 +2586,8 @@ return|;
 block|}
 name|st
 operator|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -2515,7 +2637,9 @@ name|dev
 operator|,
 name|unit
 operator|,
-name|NST
+name|st_driver
+operator|.
+name|size
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2741,6 +2865,8 @@ argument_list|)
 expr_stmt|;
 name|st
 operator|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -2933,6 +3059,8 @@ argument_list|)
 expr_stmt|;
 name|st
 operator|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -3267,6 +3395,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -3397,6 +3527,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -3931,6 +4063,8 @@ block|{
 operator|(
 operator|*
 operator|(
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|UNIT
@@ -4005,6 +4139,8 @@ argument_list|)
 expr_stmt|;
 name|st
 operator|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -4256,6 +4392,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -4821,6 +4959,8 @@ argument_list|)
 expr_stmt|;
 name|st
 operator|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -5600,6 +5740,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -5801,6 +5943,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -6021,6 +6165,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -6415,6 +6561,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -6706,6 +6854,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -7045,6 +7195,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -7228,6 +7380,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -7367,6 +7521,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -7534,6 +7690,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -7679,6 +7837,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -7919,6 +8079,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
@@ -8477,6 +8639,8 @@ name|st_data
 modifier|*
 name|st
 init|=
+name|st_driver
+operator|.
 name|st_data
 index|[
 name|unit
