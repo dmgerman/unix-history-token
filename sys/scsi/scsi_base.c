@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.1 1993/11/18 05:02:51 rgrimes Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.2 1993/11/25 06:30:58 davidg Exp $  */
 end_comment
 
 begin_define
@@ -20,13 +20,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|"systm.h"
 end_include
 
 begin_include
@@ -70,6 +70,30 @@ include|#
 directive|include
 file|<scsi/scsiconf.h>
 end_include
+
+begin_function_decl
+specifier|static
+name|errval
+name|sc_err1
+parameter_list|(
+name|struct
+name|scsi_xfer
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|errval
+name|scsi_interpret_sense
+parameter_list|(
+name|struct
+name|scsi_xfer
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -127,7 +151,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ddb.h>
+file|"ddb.h"
 end_include
 
 begin_if
@@ -137,13 +161,6 @@ name|NDDB
 operator|>
 literal|0
 end_if
-
-begin_function_decl
-name|int
-name|Debugger
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_else
 else|#
@@ -288,11 +305,18 @@ name|flags
 operator||=
 name|SDEV_WAITING
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|sc_link
 argument_list|,
 name|PRIBIO
+argument_list|,
+literal|"scsiget"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -491,6 +515,9 @@ name|SDEV_WAITING
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|sc_link
 argument_list|)
 expr_stmt|;
@@ -1370,6 +1397,9 @@ block|{
 comment|/* 		 * if it's a normal upper level request, then ask 		 * the upper level code to handle error checking 		 * rather than doing it here at interrupt time 		 */
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|xs
 argument_list|)
 expr_stmt|;
@@ -1644,7 +1674,7 @@ operator|<
 operator|(
 name|caddr_t
 operator|)
-literal|0xfe000000
+literal|0xfe000000UL
 operator|)
 condition|)
 block|{
@@ -1694,6 +1724,10 @@ comment|/* I think waiting is ok */
 comment|/*XXX */
 switch|switch
 condition|(
+call|(
+name|int
+call|)
+argument_list|(
 name|flags
 operator|&
 operator|(
@@ -1701,6 +1735,7 @@ name|SCSI_DATA_IN
 operator||
 name|SCSI_DATA_OUT
 operator|)
+argument_list|)
 condition|)
 block|{
 case|case
@@ -1864,15 +1899,24 @@ operator|&
 name|ITSDONE
 operator|)
 condition|)
-name|sleep
+block|{
+name|tsleep
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|xs
 argument_list|,
 name|PRIBIO
 operator|+
 literal|1
+argument_list|,
+literal|"scsicmd"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -1974,6 +2018,10 @@ condition|)
 block|{
 switch|switch
 condition|(
+call|(
+name|int
+call|)
+argument_list|(
 name|flags
 operator|&
 operator|(
@@ -1981,6 +2029,7 @@ name|SCSI_DATA_IN
 operator||
 name|SCSI_DATA_OUT
 operator|)
+argument_list|)
 condition|)
 block|{
 case|case
@@ -2065,6 +2114,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|errval
 name|sc_err1
 parameter_list|(
@@ -2108,6 +2158,9 @@ expr_stmt|;
 comment|/* 	 * If it has a buf, we might be working with 	 * a request from the buffer cache or some other 	 * piece of code that requires us to process 	 * errors at inetrrupt time. We have probably 	 * been called by scsi_done() 	 */
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|xs
 operator|->
 name|error
@@ -2241,6 +2294,7 @@ case|case
 name|XS_BUSY
 case|:
 comment|/*should somehow arange for a 1 sec delay here (how?) */
+comment|/* XXX tsleep(&localvar, priority, "foo", hz); 		   that's how! */
 case|case
 name|XS_TIMEOUT
 case|:
@@ -2334,6 +2388,7 @@ comment|/*  * Look at the returned sense and act on the error, determining  * th
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|scsi_interpret_sense
 parameter_list|(
@@ -2821,6 +2876,9 @@ condition|)
 block|{
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|key
 condition|)
 block|{
@@ -2871,6 +2929,9 @@ expr_stmt|;
 block|}
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|key
 condition|)
 block|{

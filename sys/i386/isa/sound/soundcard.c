@@ -315,7 +315,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|int
+name|long
 name|get_time
 parameter_list|()
 block|{
@@ -1626,7 +1626,7 @@ name|unsigned
 name|long
 name|mem_start
 init|=
-literal|0xefffffff
+literal|0xefffffffUL
 decl_stmt|;
 name|struct
 name|address_info
@@ -2027,11 +2027,15 @@ name|timer_running
 condition|)
 name|untimeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|sequencer_timer
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* XXX should fix */
 name|timer_running
 operator|=
 literal|0
@@ -2231,7 +2235,8 @@ index|[
 name|dev
 index|]
 operator|&=
-literal|0xfffff000
+operator|~
+literal|0xfff
 expr_stmt|;
 comment|/* Truncate to n*4k */
 if|if

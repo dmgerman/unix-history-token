@@ -6,19 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -233,6 +233,9 @@ name|status
 expr_stmt|;
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|xs
 operator|->
 name|error
@@ -907,7 +910,7 @@ operator|(
 name|unsigned
 name|int
 operator|)
-literal|0xfe000000
+literal|0xfe000000UL
 condition|)
 block|{
 name|screq
@@ -1103,7 +1106,7 @@ operator|(
 name|unsigned
 name|int
 operator|)
-literal|0xfe000000
+literal|0xfe000000UL
 condition|)
 block|{
 name|bcopy

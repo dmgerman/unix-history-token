@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.5 1993/11/18 05:02:48 rgrimes Exp $  */
+comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.6 1993/11/25 01:37:31 wollman Exp $  */
 end_comment
 
 begin_include
@@ -80,6 +80,18 @@ include|#
 directive|include
 file|<scsi/scsiconf.h>
 end_include
+
+begin_function_decl
+specifier|static
+name|errval
+name|ch_mode_sense
+parameter_list|(
+name|u_int32
+parameter_list|,
+name|u_int32
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -868,6 +880,9 @@ name|sc_link
 expr_stmt|;
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|cmd
 condition|)
 block|{
@@ -1854,6 +1869,7 @@ comment|/*  * Get the scsi driver to send a full inquiry to the  * device and us
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|ch_mode_sense
 parameter_list|(
@@ -2110,6 +2126,9 @@ name|b
 decl_stmt|;
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|pc
 condition|)
 block|{

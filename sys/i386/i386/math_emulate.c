@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.4 1993/10/16 14:15:04 rgrimes Exp $  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.5 1993/11/25 01:30:57 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -3421,7 +3421,7 @@ name|I387
 operator|.
 name|swd
 operator|&
-literal|0xffffc7ff
+literal|0xffffc7ffUL
 expr_stmt|;
 name|I387
 operator|.
@@ -3462,7 +3462,7 @@ name|I387
 operator|.
 name|swd
 operator|&
-literal|0xffffc7ff
+literal|0xffffc7ffUL
 expr_stmt|;
 name|I387
 operator|.
@@ -5698,7 +5698,7 @@ operator|--
 expr_stmt|;
 name|mask
 operator|=
-literal|0x80000000
+literal|0x80000000UL
 expr_stmt|;
 block|}
 name|tmp
@@ -6771,7 +6771,7 @@ operator|<<
 literal|8
 operator|)
 operator||
-literal|0x80000000
+literal|0x80000000UL
 expr_stmt|;
 name|b
 operator|->
@@ -6882,7 +6882,7 @@ name|b
 operator|->
 name|b
 operator|=
-literal|0x80000000
+literal|0x80000000UL
 operator||
 operator|(
 name|a
@@ -6954,7 +6954,7 @@ operator|->
 name|exponent
 operator|)
 condition|?
-literal|0x80000000
+literal|0x80000000UL
 else|:
 literal|0
 expr_stmt|;
@@ -6995,7 +6995,7 @@ condition|)
 operator|*
 name|b
 operator||=
-literal|0x80000000
+literal|0x80000000UL
 expr_stmt|;
 operator|*
 name|b
@@ -7012,6 +7012,9 @@ literal|0x007fffff
 expr_stmt|;
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|ROUNDING
 condition|)
 block|{
@@ -7134,7 +7137,7 @@ operator|->
 name|exponent
 operator|)
 condition|?
-literal|0x80000000
+literal|0x80000000UL
 else|:
 literal|0
 expr_stmt|;
@@ -7179,7 +7182,7 @@ name|b
 operator|->
 name|b
 operator||=
-literal|0x80000000
+literal|0x80000000UL
 expr_stmt|;
 name|b
 operator|->
@@ -7221,6 +7224,9 @@ literal|0x001fffff
 expr_stmt|;
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|ROUNDING
 condition|)
 block|{
@@ -7474,6 +7480,9 @@ asm|__asm__("shrdl %2,%1,%0" 		:"=r" (b->a),"=r" (b->b) 		:"c" ((char) shift),"0
 asm|__asm__("shrl %1,%0" 		:"=r" (b->b) 		:"c" ((char) shift),"0" (b->b));
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|ROUNDING
 condition|)
 block|{
@@ -7792,6 +7801,9 @@ asm|__asm__("shrdl %2,%1,%0" 		:"=r" (b->a),"=r" (b->b) 		:"c" ((char) shift),"0
 asm|__asm__("shrl %1,%0" 		:"=r" (b->b) 		:"c" ((char) shift),"0" (b->b));
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|ROUNDING
 condition|)
 block|{

@@ -193,7 +193,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|do { if (uiomove(target, count, source)) { \ 		printf ("sb: Bad copyin()!\n"); \ 	} } while(0)
+value|do { if (uiomove(target, count, (struct uio *)source)) { \ 		printf ("sb: Bad copyin()!\n"); \ 	} } while(0)
 end_define
 
 begin_comment
@@ -214,7 +214,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|do { if (uiomove(source, count, target)) { \ 		printf ("sb: Bad copyout()!\n"); \ 	} } while(0)
+value|do { if (uiomove(source, count, (struct uio *)target)) { \ 		printf ("sb: Bad copyout()!\n"); \ 	} } while(0)
 end_define
 
 begin_comment
@@ -232,7 +232,7 @@ name|addr
 parameter_list|,
 name|offs
 parameter_list|)
-value|{uiomove((char*)&(target), 1, addr);}
+value|{uiomove((char*)&(target), 1, (struct uio *)addr);}
 end_define
 
 begin_define
@@ -246,7 +246,7 @@ name|addr
 parameter_list|,
 name|offs
 parameter_list|)
-value|{uiomove((char*)&(target), 2, addr);}
+value|{uiomove((char*)&(target), 2, (struct uio *)addr);}
 end_define
 
 begin_define
@@ -260,7 +260,7 @@ name|addr
 parameter_list|,
 name|offs
 parameter_list|)
-value|{uiomove((char*)&(target), 4, addr);}
+value|{uiomove((char*)&(target), 4, (struct uio *)addr);}
 end_define
 
 begin_define
@@ -274,7 +274,7 @@ name|offs
 parameter_list|,
 name|data
 parameter_list|)
-value|{uiomove((char*)&(data), 4, addr);}
+value|{uiomove((char*)&(data), 4, (struct uio *)addr);}
 end_define
 
 begin_comment
@@ -485,6 +485,16 @@ name|GET_TIME
 parameter_list|()
 value|get_time()
 end_define
+
+begin_function_decl
+specifier|extern
+name|long
+name|get_time
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*#define GET_TIME()	(lbolt)*/

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: aha1542.c,v 1.15 1993/11/18 05:02:12 rgrimes Exp $  */
+comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: aha1542.c,v 1.16 1993/11/25 01:31:22 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -116,53 +116,11 @@ directive|include
 file|"ddb.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NDDB
-operator|>
-literal|0
-end_if
-
-begin_function_decl
-name|int
-name|Debugger
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* NDDB */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Debugger
-parameter_list|()
-value|panic("should call debugger here (adaptec.c)")
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NDDB */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|hz
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"kernel.h"
+end_include
 
 begin_else
 else|#
@@ -2883,6 +2841,9 @@ name|untimeout
 argument_list|(
 name|aha_timeout
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|ccb
 argument_list|)
 expr_stmt|;
@@ -3245,7 +3206,9 @@ name|unit
 argument_list|)
 expr_stmt|;
 name|Debugger
-argument_list|()
+argument_list|(
+literal|"aha1542"
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -5319,6 +5282,9 @@ name|untimeout
 argument_list|(
 name|aha_timeout
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|ccb
 argument_list|)
 expr_stmt|;
@@ -5982,7 +5948,9 @@ literal|"\nadapter not taking commands.. frozen?!\n"
 argument_list|)
 expr_stmt|;
 name|Debugger
-argument_list|()
+argument_list|(
+literal|"aha1542"
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * If it has been through before, then 	 * a previous abort has failed, don't 	 * try abort again 	 */

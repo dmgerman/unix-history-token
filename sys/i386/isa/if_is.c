@@ -2120,6 +2120,9 @@ expr|struct
 name|trailer_header
 argument_list|)
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|trailer_header
 operator|.
