@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)asc.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)asc.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3618,6 +3618,14 @@ block|}
 if|if
 condition|(
 name|len
+operator|&&
+operator|(
+name|state
+operator|->
+name|flags
+operator|&
+name|DMA_IN_PROGRESS
+operator|)
 condition|)
 block|{
 comment|/* save number of bytes still to be sent or received */
@@ -3626,6 +3634,13 @@ operator|->
 name|dmaresid
 operator|=
 name|len
+expr_stmt|;
+name|state
+operator|->
+name|flags
+operator|&=
+operator|~
+name|DMA_IN_PROGRESS
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3687,6 +3702,7 @@ argument_list|,
 name|fifo
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 name|len
 operator|=
 name|state
@@ -3739,9 +3755,7 @@ operator|->
 name|script
 expr_stmt|;
 block|}
-else|else
-block|{
-comment|/* setup state to resume to */
+elseif|else
 if|if
 condition|(
 name|state
@@ -3751,6 +3765,21 @@ operator|&
 name|DMA_IN
 condition|)
 block|{
+if|if
+condition|(
+name|len
+condition|)
+name|printf
+argument_list|(
+literal|"asc_intr: 1: len %d (fifo %d)\n"
+argument_list|,
+name|len
+argument_list|,
+name|fifo
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+comment|/* setup state to resume to */
 if|if
 condition|(
 name|state
@@ -3766,8 +3795,6 @@ name|state
 operator|->
 name|dmalen
 expr_stmt|;
-name|do_in
-label|:
 name|state
 operator|->
 name|flags
@@ -3775,6 +3802,8 @@ operator|&=
 operator|~
 name|DMA_IN_PROGRESS
 expr_stmt|;
+name|do_in
+label|:
 call|(
 modifier|*
 name|asc
@@ -3853,7 +3882,21 @@ operator|&
 name|DMA_OUT
 condition|)
 block|{
-comment|/* 				 * If this is the last chunk, the next expected 				 * state is to get status. 				 */
+if|if
+condition|(
+name|len
+condition|)
+name|printf
+argument_list|(
+literal|"asc_intr: 2: len %d (fifo %d)\n"
+argument_list|,
+name|len
+argument_list|,
+name|fifo
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+comment|/* 			 * If this is the last chunk, the next expected 			 * state is to get status. 			 */
 if|if
 condition|(
 name|state
@@ -3963,7 +4006,6 @@ name|asc
 operator|->
 name|script
 expr_stmt|;
-block|}
 comment|/* setup to receive a message */
 name|asc
 operator|->
