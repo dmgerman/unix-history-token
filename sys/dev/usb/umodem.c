@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -3485,11 +3491,9 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"umodem_detach: sc=%p flags=%d\n"
+literal|"umodem_detach: sc=%p\n"
 operator|,
 name|sc
-operator|,
-name|flags
 operator|)
 argument_list|)
 expr_stmt|;
