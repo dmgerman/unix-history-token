@@ -4354,9 +4354,11 @@ block|}
 comment|/* 			 * got a non space char; contract out spaces 			 */
 while|while
 condition|(
-name|ops
-operator|<
 name|ips
+operator|-
+name|ops
+operator|>
+literal|1
 condition|)
 block|{
 comment|/* 				 * use as many ochar as will fit 				 */
@@ -4496,9 +4498,11 @@ condition|)
 block|{
 while|while
 condition|(
-name|ops
-operator|<
 name|ips
+operator|-
+name|ops
+operator|>
+literal|1
 condition|)
 block|{
 comment|/* 				 * use as many ochar as will fit 				 */
