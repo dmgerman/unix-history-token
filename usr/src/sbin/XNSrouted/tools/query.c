@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)query.c	5.4 (Berkeley) %G%"
+literal|"@(#)query.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,6 +174,7 @@ end_decl_stmt
 
 begin_function_decl
 name|char
+modifier|*
 name|ns_ntoa
 parameter_list|()
 function_decl|;
