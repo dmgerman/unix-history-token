@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cleanerd.c	5.5 (Berkeley) %G%"
+literal|"@(#)cleanerd.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1125,9 +1125,6 @@ argument_list|(
 literal|"lfs_segclean failed"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
 name|printf
 argument_list|(
 literal|"Completed cleaning segment %d\n"
@@ -1137,8 +1134,6 @@ operator|->
 name|sl_id
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|free
 argument_list|(
