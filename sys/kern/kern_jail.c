@@ -2117,6 +2117,12 @@ block|{
 if|if
 condition|(
 name|jail_getfsstatroot_only
+operator|&&
+name|cred
+operator|->
+name|cr_prison
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
