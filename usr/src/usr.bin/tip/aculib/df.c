@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	df.c	4.2	81/10/09	*/
+comment|/*	df.c	4.3	81/10/21	*/
 end_comment
 
 begin_comment
@@ -78,9 +78,9 @@ return|return
 operator|(
 name|df_dialer
 argument_list|(
-name|acu
-argument_list|,
 name|num
+argument_list|,
+name|acu
 argument_list|,
 literal|0
 argument_list|)
@@ -125,9 +125,9 @@ return|return
 operator|(
 name|df_dialer
 argument_list|(
-name|acu
-argument_list|,
 name|num
+argument_list|,
+name|acu
 argument_list|,
 literal|1
 argument_list|)
@@ -189,12 +189,17 @@ name|c
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TIOCMSET
 name|int
 name|st
 init|=
 name|MST
 decl_stmt|;
 comment|/* Secondary Transmit flag, for speed select */
+endif|#
+directive|endif
 name|ioctl
 argument_list|(
 name|f
