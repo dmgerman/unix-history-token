@@ -77,20 +77,6 @@ name|itlb_slot
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|dtlb_slot_max
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|itlb_slot_max
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Return a 'boothowto' value corresponding to the kernel arguments in  * (kargs) and any relevant environment variables.  */
 end_comment
@@ -960,12 +946,6 @@ decl_stmt|;
 name|int
 name|howto
 decl_stmt|;
-name|int
-name|dtlb_slots
-decl_stmt|;
-name|int
-name|itlb_slots
-decl_stmt|;
 name|howto
 operator|=
 name|md_getboothowto
@@ -1123,18 +1103,6 @@ name|kernend
 operator|=
 literal|0
 expr_stmt|;
-name|dtlb_slots
-operator|=
-name|dtlb_slot_max
-operator|-
-name|dtlb_slot
-expr_stmt|;
-name|itlb_slots
-operator|=
-name|itlb_slot_max
-operator|-
-name|itlb_slot
-expr_stmt|;
 name|kfp
 operator|=
 name|file_findfile
@@ -1201,10 +1169,10 @@ argument_list|,
 name|MODINFOMD_DTLB_SLOTS
 argument_list|,
 sizeof|sizeof
-name|dtlb_slots
+name|dtlb_slot
 argument_list|,
 operator|&
-name|dtlb_slots
+name|dtlb_slot
 argument_list|)
 expr_stmt|;
 name|file_addmetadata
@@ -1214,10 +1182,10 @@ argument_list|,
 name|MODINFOMD_ITLB_SLOTS
 argument_list|,
 sizeof|sizeof
-name|itlb_slots
+name|itlb_slot
 argument_list|,
 operator|&
-name|itlb_slots
+name|itlb_slot
 argument_list|)
 expr_stmt|;
 name|file_addmetadata
@@ -1226,7 +1194,7 @@ name|kfp
 argument_list|,
 name|MODINFOMD_DTLB
 argument_list|,
-name|dtlb_slots
+name|dtlb_slot
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1243,7 +1211,7 @@ name|kfp
 argument_list|,
 name|MODINFOMD_ITLB
 argument_list|,
-name|itlb_slots
+name|itlb_slot
 operator|*
 sizeof|sizeof
 argument_list|(
