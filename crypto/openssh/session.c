@@ -173,6 +173,31 @@ begin_comment
 comment|/* __FreeBSD__ */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_LOGIN_CAP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|USE_PAM
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libgen.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -822,10 +847,6 @@ decl_stmt|,
 name|data_len
 decl_stmt|,
 name|dlen
-decl_stmt|;
-name|struct
-name|stat
-name|st
 decl_stmt|;
 name|s
 operator|=
@@ -2147,9 +2168,12 @@ name|pw
 operator|->
 name|pw_name
 argument_list|,
+name|basename
+argument_list|(
 name|s
 operator|->
 name|tty
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|do_pam_setcred
@@ -2525,10 +2549,18 @@ decl_stmt|;
 name|char
 modifier|*
 name|time_string
-decl_stmt|,
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|USE_PAM
+name|char
 modifier|*
 name|newcommand
+init|=
+name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|buf
 index|[
@@ -2541,6 +2573,9 @@ index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|USE_PAM
 name|socklen_t
 name|fromlen
 decl_stmt|;
@@ -2548,6 +2583,8 @@ name|struct
 name|sockaddr_storage
 name|from
 decl_stmt|;
+endif|#
+directive|endif
 name|time_t
 name|last_login_time
 decl_stmt|;
@@ -2560,12 +2597,17 @@ name|s
 operator|->
 name|pw
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|USE_PAM
 name|pid_t
 name|pid
 init|=
 name|getpid
 argument_list|()
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|HAVE_LOGIN_CAP
@@ -2597,6 +2639,10 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* __FreeBSD__ */
+ifndef|#
+directive|ifndef
+name|USE_PAM
+comment|/* 	 * Let PAM handle utmp / wtmp. 	 */
 comment|/* 	 * Get IP address of client. If the connection is not a socket, let 	 * the address be 0.0.0.0. 	 */
 name|memset
 argument_list|(
@@ -2661,6 +2707,8 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* Get the time and hostname when the user last logged in. */
 if|if
 condition|(
@@ -2697,6 +2745,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|USE_PAM
 comment|/* Record that there was a login on that tty from the remote host. */
 name|record_login
 argument_list|(
@@ -2732,6 +2783,8 @@ operator|&
 name|from
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|USE_PAM
@@ -2817,6 +2870,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_LOGIN_CAP */
+ifndef|#
+directive|ifndef
+name|USE_PAM
 comment|/* 	 * If the password change time is set and has passed, give the 	 * user a password expiry notice and chance to change it. 	 */
 if|if
 condition|(
@@ -2912,6 +2968,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|HAVE_LOGIN_CAP
@@ -3042,9 +3100,12 @@ name|auth_ttyok
 argument_list|(
 name|lc
 argument_list|,
+name|basename
+argument_list|(
 name|s
 operator|->
 name|tty
+argument_list|)
 argument_list|)
 condition|)
 block|{
