@@ -55,7 +55,7 @@ expr_stmt|;
 comment|/* list of all contested locks */
 comment|/* #ifdef MUTEX_PROFILING */
 name|u_int64_t
-name|cycles
+name|acqtime
 decl_stmt|;
 specifier|const
 name|char
