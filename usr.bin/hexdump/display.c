@@ -980,8 +980,9 @@ decl_stmt|;
 block|{
 specifier|static
 name|char
+specifier|const
+modifier|*
 name|spec
-index|[]
 init|=
 literal|" -0+#"
 decl_stmt|;
