@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rvcat.c	4.5 (Berkeley) %G%"
+literal|"@(#)rvcat.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -387,6 +387,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|varian
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -397,6 +399,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|BYTES_PER_LINE
+init|=
+literal|264
 decl_stmt|;
 end_decl_stmt
 
@@ -407,6 +411,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|PAGE_LINES
+init|=
+literal|1700
 decl_stmt|;
 end_decl_stmt
 
@@ -417,6 +423,10 @@ end_comment
 begin_decl_stmt
 name|int
 name|BUFFER_SIZE
+init|=
+name|NLINES
+operator|*
+literal|264
 decl_stmt|;
 end_decl_stmt
 
@@ -1356,11 +1366,6 @@ name|NLINES
 operator|*
 name|BYTES_PER_LINE
 expr_stmt|;
-name|varian
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Default is the varian */
 break|break;
 case|case
 literal|'y'

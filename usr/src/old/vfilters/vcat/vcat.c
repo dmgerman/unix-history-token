@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vcat.c	4.5 (Berkeley) %G%"
+literal|"@(#)vcat.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -370,6 +370,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|BYTES_PER_LINE
+init|=
+literal|880
 decl_stmt|;
 end_decl_stmt
 
@@ -380,6 +382,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|PAGE_LINES
+init|=
+literal|2400
 decl_stmt|;
 end_decl_stmt
 
@@ -390,6 +394,10 @@ end_comment
 begin_decl_stmt
 name|int
 name|BUFFER_SIZE
+init|=
+name|NLINES
+operator|*
+literal|880
 decl_stmt|;
 end_decl_stmt
 
