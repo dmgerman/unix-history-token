@@ -4,7 +4,7 @@ comment|/*********************************************************** 		Copyright
 end_comment
 
 begin_comment
-comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - Madison  *	@(#)eonvar.h	7.3 (Berkeley) %G%  */
+comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - Madison  *	@(#)eonvar.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -416,6 +416,10 @@ name|int
 name|el_flags
 decl_stmt|;
 comment|/* cache valid ? */
+name|int
+name|el_snpaoffset
+decl_stmt|;
+comment|/* IP address contained in dst nsap */
 name|struct
 name|rtentry
 modifier|*
