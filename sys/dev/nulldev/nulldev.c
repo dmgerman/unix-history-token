@@ -89,15 +89,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_read_t
-name|nullwrite
+name|d_write_t
+name|null_write
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_read_t
-name|zeroread
+name|zero_read
 decl_stmt|;
 end_decl_stmt
 
@@ -151,7 +151,7 @@ operator|)
 name|nullop
 block|,
 comment|/* write */
-name|nullwrite
+name|null_write
 block|,
 comment|/* ioctl */
 name|noioctl
@@ -209,10 +209,10 @@ operator|)
 name|nullop
 block|,
 comment|/* read */
-name|zeroread
+name|zero_read
 block|,
 comment|/* write */
-name|nullwrite
+name|null_write
 block|,
 comment|/* ioctl */
 name|noioctl
@@ -259,7 +259,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
-name|nullwrite
+name|null_write
 parameter_list|(
 name|dev_t
 name|dev
@@ -288,7 +288,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|zeroread
+name|zero_read
 parameter_list|(
 name|dev_t
 name|dev
