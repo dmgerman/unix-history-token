@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.c	6.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.c	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -522,6 +522,10 @@ block|,
 literal|16.0
 block|,
 literal|32.0
+block|,
+literal|32.0
+block|,
+literal|32.0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -563,10 +567,34 @@ condition|(
 name|timer
 condition|)
 block|{
-comment|/* 	 * 2 MSL timeout in shutdown went off.  Delete connection 	 * control block. 	 */
+comment|/* 	 * 2 MSL timeout in shutdown went off.  If we're closed but 	 * still waiting for peer to close and connection has been idle 	 * too long, or if 2MSL time is up from TIME_WAIT, delete connection 	 * control block.  Otherwise, check again in a bit. 	 */
 case|case
 name|TCPT_2MSL
 case|:
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|!=
+name|TCPS_TIME_WAIT
+operator|&&
+name|tp
+operator|->
+name|t_idle
+operator|<=
+name|TCPTV_MAXIDLE
+condition|)
+name|tp
+operator|->
+name|t_timer
+index|[
+name|TCPT_2MSL
+index|]
+operator|=
+name|TCPTV_KEEP
+expr_stmt|;
+else|else
 name|tp
 operator|=
 name|tcp_close
@@ -613,7 +641,7 @@ name|t_rxtshift
 operator|>
 name|TCP_MAXRXTSHIFT
 operator|/
-literal|2
+literal|3
 condition|)
 name|in_rtchange
 argument_list|(
