@@ -2491,7 +2491,9 @@ operator|(
 name|i
 operator|=
 name|find_input_area
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 operator|)
 operator|==
 operator|-
