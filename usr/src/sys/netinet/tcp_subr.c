@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_subr.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_subr.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -942,18 +942,18 @@ name|t_inpcb
 operator|=
 name|inp
 expr_stmt|;
-comment|/* 	 * Init srtt to 0, so we can tell that we have no rtt estimate. 	 * Set rttvar so that srtt + 2 * rttvar gives reasonable initial 	 * retransmit time. 	 */
+comment|/* 	 * Init srtt to TCPTV_SRTTBASE (0), so we can tell that we have no 	 * rtt estimate.  Set rttvar so that srtt + 2 * rttvar gives 	 * reasonable initial retransmit time. 	 */
 name|tp
 operator|->
 name|t_srtt
 operator|=
-literal|0
+name|TCPTV_SRTTBASE
 expr_stmt|;
 name|tp
 operator|->
 name|t_rttvar
 operator|=
-name|TCPTV_SRTTBASE
+name|TCPTV_SRTTDFLT
 operator|<<
 literal|2
 expr_stmt|;
