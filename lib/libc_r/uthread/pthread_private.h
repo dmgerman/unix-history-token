@@ -821,6 +821,32 @@ name|PTHREAD_STACK_DEFAULT
 value|65536
 end_define
 
+begin_comment
+comment|/* Size of red zone at the end of each stack. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_STACK_GUARD
+value|4096
+end_define
+
+begin_comment
+comment|/*  * Maximum size of initial thread's stack.  This perhaps deserves to be larger  * than the stacks of other threads, since many applications are likely to run  * almost entirely on this stack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_STACK_INITIAL
+value|0x100000
+end_define
+
+begin_comment
+comment|/* Address immediately beyond the beginning of the initial thread stack. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1462,6 +1488,25 @@ name|int
 name|lineno
 decl_stmt|;
 comment|/* Source line number.      */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Spare thread stack. */
+end_comment
+
+begin_struct
+struct|struct
+name|stack
+block|{
+name|SLIST_ENTRY
+argument_list|(
+argument|stack
+argument_list|)
+name|qe
+expr_stmt|;
+comment|/* Queue entry for this stack. */
 block|}
 struct|;
 end_struct
@@ -2249,6 +2294,54 @@ directive|ifdef
 name|GLOBAL_PTHREAD_PRIVATE
 init|=
 name|NULL
+endif|#
+directive|endif
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Spare stack queue.  Stacks of default size are cached in order to reduce  * thread creation time.  Spare stacks are used in LIFO order to increase cache  * locality.  */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|SLIST_HEAD
+argument_list|(,
+name|stack
+argument_list|)
+name|_stackq
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Base address of next unallocated default-size stack.  Stacks are allocated  * contiguously, starting below the beginning of the main stack.  When a new  * stack is created, a guard page is created just above it in order to (usually)  * detect attempts by the adjacent stack to trounce the next thread stack. */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|void
+modifier|*
+name|_next_stack
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+comment|/* main stack top   - main stack size       - stack size            - (red zone + main stack red zone) */
+init|=
+operator|(
+name|void
+operator|*
+operator|)
+name|USRSTACK
+operator|-
+name|PTHREAD_STACK_INITIAL
+operator|-
+name|PTHREAD_STACK_DEFAULT
+operator|-
+operator|(
+literal|2
+operator|*
+name|PTHREAD_STACK_GUARD
+operator|)
 endif|#
 directive|endif
 decl_stmt|;

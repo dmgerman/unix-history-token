@@ -79,6 +79,24 @@ directive|include
 file|<sys/ttycom.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mman.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -725,6 +743,47 @@ name|_sched_switch_hook
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Initialize the thread stack cache: */
+name|SLIST_INIT
+argument_list|(
+operator|&
+name|_stackq
+argument_list|)
+expr_stmt|;
+comment|/* Create the red zone for the main stack. */
+if|if
+condition|(
+name|mmap
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|USRSTACK
+operator|-
+name|PTHREAD_STACK_INITIAL
+argument_list|,
+name|PTHREAD_STACK_GUARD
+argument_list|,
+literal|0
+argument_list|,
+name|MAP_ANON
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+name|MAP_FAILED
+condition|)
+block|{
+name|PANIC
+argument_list|(
+literal|"Cannot allocate red zone for initial thread"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 * Write a magic value to the thread structure 		 * to help identify valid ones: 		 */
 name|_thread_initial
 operator|->
