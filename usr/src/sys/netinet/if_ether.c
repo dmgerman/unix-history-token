@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ether.c	6.4	84/03/22	*/
+comment|/*	if_ether.c	6.5	84/07/08	*/
 end_comment
 
 begin_comment
@@ -780,8 +780,9 @@ operator|=
 operator|*
 name|destip
 expr_stmt|;
-return|return
 operator|(
+name|void
+operator|)
 name|looutput
 argument_list|(
 operator|&
@@ -797,6 +798,11 @@ operator|)
 operator|&
 name|sin
 argument_list|)
+expr_stmt|;
+comment|/* 		 * We really don't want to indicate failure, 		 * but the packet has already been sent and freed. 		 */
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
