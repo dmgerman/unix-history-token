@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pwd_mkdb.c	5.6 (Berkeley) %G%"
+literal|"@(#)pwd_mkdb.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -442,7 +442,7 @@ name|dbopen
 argument_list|(
 name|buf
 argument_list|,
-name|O_WRONLY
+name|O_RDWR
 operator||
 name|O_CREAT
 operator||
@@ -488,7 +488,7 @@ name|dbopen
 argument_list|(
 name|buf
 argument_list|,
-name|O_WRONLY
+name|O_RDWR
 operator||
 name|O_CREAT
 operator||
