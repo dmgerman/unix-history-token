@@ -1386,6 +1386,10 @@ name|alignment
 decl_stmt|;
 comment|/* DMA engine alignment */
 name|u_int32_t
+name|boundary
+decl_stmt|;
+comment|/* DMA engine boundary */
+name|u_int32_t
 name|max_iosize
 decl_stmt|;
 comment|/* DMA engine max IO size */

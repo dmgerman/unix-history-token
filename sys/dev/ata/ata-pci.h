@@ -1383,6 +1383,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SIIBUG
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIS_SOUTH
 value|1
 end_define
