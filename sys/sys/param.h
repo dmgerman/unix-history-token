@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|BSD
-value|199506
+value|199507
 end_define
 
 begin_comment
