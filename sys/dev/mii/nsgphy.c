@@ -1243,7 +1243,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 		 * Only retry autonegotiation every 5 seconds. 		 * Actually, for gigE PHYs, we should wait longer, since 		 * 5 seconds is the mimimum time the documentation 		 * says to wait for a 1000mbps link to be established. 		 */
+comment|/* 		 * Only retry autonegotiation every 17 seconds. 		 * Actually, for gigE PHYs, we should wait longer, since 		 * 5 seconds is the mimimum time the documentation 		 * says to wait for a 1000mbps link to be established. 		 */
 if|if
 condition|(
 operator|++
@@ -1251,7 +1251,7 @@ name|sc
 operator|->
 name|mii_ticks
 operator|!=
-literal|10
+literal|17
 condition|)
 return|return
 operator|(

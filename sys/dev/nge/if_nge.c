@@ -6604,7 +6604,7 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+block|}
 name|sc
 operator|->
 name|nge_stat_ch
@@ -6618,7 +6618,6 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-block|}
 name|splx
 argument_list|(
 name|s
@@ -6839,6 +6838,10 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|notyet
+comment|/* mii_tick should only be called once per second */
 if|if
 condition|(
 name|status
@@ -6858,6 +6861,8 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 comment|/* Re-enable interrupts. */
 name|CSR_WRITE_4
@@ -7543,6 +7548,19 @@ comment|/* 	 * Cancel pending I/O and free all RX/TX buffers. 	 */
 name|nge_stop
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|nge_stat_ch
+operator|=
+name|timeout
+argument_list|(
+name|nge_tick
+argument_list|,
+name|sc
+argument_list|,
+name|hz
 argument_list|)
 expr_stmt|;
 name|mii
