@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.24 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -484,7 +484,7 @@ name|unctrl
 parameter_list|(
 name|c
 parameter_list|)
-value|__unctrl[(c)& 0x7f]
+value|__unctrl[(c)& 0x80]
 end_define
 
 begin_define
@@ -494,7 +494,7 @@ name|unctrllen
 parameter_list|(
 name|ch
 parameter_list|)
-value|__unctrllen[(ch)& 0x7f]
+value|__unctrllen[(ch)& 0x80]
 end_define
 
 begin_decl_stmt
@@ -503,7 +503,7 @@ name|char
 modifier|*
 name|__unctrl
 index|[
-literal|0x80
+literal|256
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -517,7 +517,7 @@ specifier|extern
 name|char
 name|__unctrllen
 index|[
-literal|0x80
+literal|256
 index|]
 decl_stmt|;
 end_decl_stmt
