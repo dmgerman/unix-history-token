@@ -55,15 +55,33 @@ begin_define
 define|#
 directive|define
 name|GPLUSPLUS_INCLUDE_DIR
-value|"/usr/include/g++"
+value|PREFIX"/include/g++"
 end_define
 
 begin_define
 define|#
 directive|define
 name|GCC_INCLUDE_DIR
-value|"/usr/include"
+value|PREFIX"/include"
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CROSS_COMPILE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CROSS_INCLUDE_DIR
+value|PREFIX"/include"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Under FreeBSD, the normal location of the compiler back ends is the    /usr/libexec directory.     ``cc --print-search-dirs'' gives:    install: STANDARD_EXEC_PREFIX/(null)    programs: /usr/libexec/<OBJFORMAT>/:MD_EXEC_PREFIX    libraries: MD_EXEC_PREFIX:MD_STARTFILE_PREFIX:STANDARD_STARTFILE_PREFIX     We really don't need a "STANDARD_EXEC_PREFIX".  However w/o it,    "--print-search-dirs" reports "install: /usr/local/lib/gcc-lib/(null)".    It is not harmful, but is just plain wrong.  So we define a    "STANDARD_EXEC_PREFIX" to not be misleading.  */
@@ -95,14 +113,14 @@ begin_define
 define|#
 directive|define
 name|STANDARD_EXEC_PREFIX
-value|"/usr/libexec/"
+value|PREFIX"/libexec/"
 end_define
 
 begin_define
 define|#
 directive|define
 name|MD_EXEC_PREFIX
-value|"/usr/libexec/"
+value|PREFIX"/libexec/"
 end_define
 
 begin_comment
@@ -129,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|STANDARD_STARTFILE_PREFIX
-value|"/usr/lib/"
+value|PREFIX"/lib/"
 end_define
 
 begin_comment

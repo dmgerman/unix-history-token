@@ -11256,11 +11256,6 @@ expr_stmt|;
 if|if
 condition|(
 name|temp
-operator|&&
-operator|*
-name|cross_compile
-operator|==
-literal|'0'
 condition|)
 block|{
 specifier|const
@@ -13457,7 +13452,8 @@ argument_list|(
 operator|&
 name|exec_prefixes
 argument_list|,
-literal|"/usr/libexec/aout/"
+name|PREFIX
+literal|"/libexec/aout/"
 argument_list|,
 literal|"BINUTILS"
 argument_list|,
@@ -13477,7 +13473,8 @@ argument_list|(
 operator|&
 name|exec_prefixes
 argument_list|,
-literal|"/usr/libexec/elf/"
+name|PREFIX
+literal|"/libexec/elf/"
 argument_list|,
 literal|"BINUTILS"
 argument_list|,
