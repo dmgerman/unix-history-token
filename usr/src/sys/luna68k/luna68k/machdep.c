@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * OMRON: $Id: machdep.c,v 1.3 92/06/14 06:17:12 moti Exp $  *  * from: hp300/hp300/machdep.c	7.28 (Berkeley) 6/5/92  *  *	@(#)machdep.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * OMRON: $Id: machdep.c,v 1.3 92/06/14 06:17:12 moti Exp $  *  * from: hp300/hp300/machdep.c	7.28 (Berkeley) 6/5/92  *  *	@(#)machdep.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3145,6 +3145,11 @@ asm|asm("	stop	#0x2700");
 block|}
 else|else
 block|{
+name|printf
+argument_list|(
+literal|"\r\n\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|howto
