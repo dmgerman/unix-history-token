@@ -1999,14 +1999,6 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
@@ -2044,20 +2036,18 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* Is someone already single threading? */
 if|if
 condition|(
 name|p
 operator|->
 name|p_singlethread
 condition|)
-block|{
-comment|/* 		 * Someone is already single threading! 		 */
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|force_exit
@@ -2136,6 +2126,12 @@ operator|==
 name|SNGLE_EXIT
 condition|)
 block|{
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2154,6 +2150,12 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* Should suicide. */
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 block|}
 case|case
 name|TDS_SLP
@@ -2166,28 +2168,22 @@ name|td_flags
 operator|&
 name|TDF_CVWAITQ
 condition|)
-block|{
 name|cv_abort
 argument_list|(
 name|td2
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|abortsleep
 argument_list|(
 name|td2
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
-comment|/* etc. XXXKSE */
-default|default:
-empty_stmt|;
+comment|/* case TDS RUNNABLE: XXXKSE maybe raise priority? */
 block|}
 block|}
-comment|/* 		 * XXXKSE-- idea 		 * It's possible that we can just wake up when 		 * there are no runnable KSEs, because that would 		 * indicate that only this thread is runnable and 		 * there are no running KSEs in userland. 		 * -- 		 * Wake us up when everyone else has suspended. 		 * (or died) 		 */
+comment|/* 		 * Wake us up when everyone else has suspended. 		 * In the mean time we suspend as well. 		 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -2333,7 +2329,7 @@ literal|"singlethread not set"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * The only suspension in action is 			 * a single-threading. Treat it ever 			 * so slightly different if it is 			 * in a special situation. 			 * XXX Should be safe to access unlocked  			 * as it can only be set to be true by us. 			 */
+comment|/* 			 * The only suspension in action is a 			 * single-threading. Single threader need not stop. 			 * XXX Should be safe to access unlocked  			 * as it can only be set to be true by us. 			 */
 if|if
 condition|(
 name|p
@@ -2342,7 +2338,6 @@ name|p_singlethread
 operator|==
 name|td
 condition|)
-block|{
 return|return
 operator|(
 literal|0
@@ -2350,18 +2345,15 @@ operator|)
 return|;
 comment|/* Exempt from stopping. */
 block|}
-block|}
 if|if
 condition|(
 name|return_instead
 condition|)
-block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 comment|/* 		 * If the process is waiting for us to exit, 		 * this thread should just suicide. 		 * Assumes that P_SINGLE_EXIT implies P_STOPPED_SNGL. 		 */
 if|if
 condition|(
