@@ -928,7 +928,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|BADSIG
+name|SIG_ERR
 value|((__sighandler_t) -1)
 end_define
 
