@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Print Log Information  *   * This line exists solely to test some pcl-cvs/ChangeLog stuff.  You  * can delete it, if indeed it's still here when you read it.  -Karl  *  * Prints the RCS "log" (rlog) information for the specified files.  With no  * argument, prints the log information for all the files in the directory  * (recursive by default).  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Print Log Information  *   * Prints the RCS "log" (rlog) information for the specified files.  With no  * argument, prints the log information for all the files in the directory  * (recursive by default).  */
 end_comment
 
 begin_include
@@ -900,19 +900,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|send_file_names
-argument_list|(
-name|argc
-operator|-
-name|i
-argument_list|,
-name|argv
-operator|+
-name|i
-argument_list|,
-name|SEND_EXPAND_WILD
-argument_list|)
-expr_stmt|;
 name|send_files
 argument_list|(
 name|argc
@@ -928,6 +915,19 @@ argument_list|,
 literal|0
 argument_list|,
 name|SEND_NO_CONTENTS
+argument_list|)
+expr_stmt|;
+name|send_file_names
+argument_list|(
+name|argc
+operator|-
+name|i
+argument_list|,
+name|argv
+operator|+
+name|i
+argument_list|,
+name|SEND_EXPAND_WILD
 argument_list|)
 expr_stmt|;
 name|send_to_server
@@ -2339,6 +2339,10 @@ condition|(
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp2
 argument_list|)
@@ -2368,6 +2372,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -3003,6 +3011,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|r
 operator|->
 name|first
@@ -3159,6 +3171,10 @@ name|NULL
 operator|||
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|r
 operator|->
 name|first
@@ -3292,6 +3308,10 @@ name|NULL
 operator|||
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|r
 operator|->
 name|last
@@ -5945,6 +5965,10 @@ literal|0
 init|;
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|v1
 index|[
 name|d1
@@ -5973,6 +5997,10 @@ literal|0
 init|;
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|v2
 index|[
 name|d2

@@ -9,16 +9,12 @@ directive|include
 file|"cvs.h"
 end_include
 
-begin_comment
-comment|/* NOTE: remember to remove `Halibut' when patching this code. */
-end_comment
-
 begin_decl_stmt
 name|char
 modifier|*
 name|version_string
 init|=
-literal|"\nConcurrent Versions System (CVS) 1.10 `Halibut'"
+literal|"\nConcurrent Versions System (CVS) 1.10.7"
 decl_stmt|;
 end_decl_stmt
 

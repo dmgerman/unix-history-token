@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -2221,8 +2221,23 @@ literal|0
 condition|)
 block|{
 comment|/* Since following error() exits, delete the temp file 		   now.  */
+if|if
+condition|(
 name|unlink_file
 argument_list|(
+name|fname
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot remove %s"
+argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
@@ -2465,8 +2480,23 @@ name|fname
 argument_list|)
 expr_stmt|;
 comment|/* Delete the temp file  */
+if|if
+condition|(
 name|unlink_file
 argument_list|(
+name|fname
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot remove %s"
+argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;

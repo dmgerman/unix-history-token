@@ -697,8 +697,29 @@ name|CVSADM_ENT
 argument_list|)
 expr_stmt|;
 comment|/* now, remove the log file */
+if|if
+condition|(
 name|unlink_file
 argument_list|(
+name|CVSADM_ENTLOG
+argument_list|)
+operator|<
+literal|0
+operator|&&
+operator|!
+name|existence_error
+argument_list|(
+name|errno
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot remove %s"
+argument_list|,
 name|CVSADM_ENTLOG
 argument_list|)
 expr_stmt|;
@@ -734,9 +755,6 @@ if|if
 condition|(
 name|trace
 condition|)
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 operator|(
 name|void
 operator|)
@@ -744,35 +762,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%c-> Scratch_Entry(%s)\n"
+literal|"%s-> Scratch_Entry(%s)\n"
 argument_list|,
-operator|(
-name|server_active
-operator|)
-condition|?
-literal|'S'
-else|:
-literal|' '
+name|CLIENT_SERVER_STR
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-> Scratch_Entry(%s)\n"
-argument_list|,
-name|fname
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* hashlookup to see if it is there */
 if|if
 condition|(
@@ -981,9 +977,6 @@ condition|(
 name|trace
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 operator|(
 name|void
 operator|)
@@ -991,15 +984,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%c-> Register(%s, %s, %s%s%s, %s, %s %s)\n"
+literal|"%s-> Register(%s, %s, %s%s%s, %s, %s %s)\n"
 argument_list|,
-operator|(
-name|server_active
-operator|)
-condition|?
-literal|'S'
-else|:
-literal|' '
+name|CLIENT_SERVER_STR
 argument_list|,
 name|fname
 argument_list|,
@@ -1038,56 +1025,6 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-> Register(%s, %s, %s%s%s, %s, %s %s)\n"
-argument_list|,
-name|fname
-argument_list|,
-name|vn
-argument_list|,
-name|ts
-condition|?
-name|ts
-else|:
-literal|""
-argument_list|,
-name|ts_conflict
-condition|?
-literal|"+"
-else|:
-literal|""
-argument_list|,
-name|ts_conflict
-condition|?
-name|ts_conflict
-else|:
-literal|""
-argument_list|,
-name|options
-argument_list|,
-name|tag
-condition|?
-name|tag
-else|:
-literal|""
-argument_list|,
-name|date
-condition|?
-name|date
-else|:
-literal|""
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|entnode
 operator|=
@@ -1131,13 +1068,35 @@ name|CVSADM_ENTLOG
 expr_stmt|;
 name|entfile
 operator|=
-name|open_file
+name|CVS_FOPEN
 argument_list|(
 name|entfilename
 argument_list|,
 literal|"a"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|entfile
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Warning, not error, as in write_entries.  */
+comment|/* FIXME-update-dir: should be including update_dir in message.  */
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot open %s"
+argument_list|,
+name|entfilename
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|fprintf
@@ -2227,9 +2186,25 @@ name|ent
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|fpin
+argument_list|)
+operator|<
+literal|0
+condition|)
+comment|/* FIXME-update-dir: should include update_dir in message.  */
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot close %s"
+argument_list|,
+name|CVSADM_ENT
 argument_list|)
 expr_stmt|;
 block|}
@@ -2335,9 +2310,25 @@ name|do_rewrite
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|fpin
+argument_list|)
+operator|<
+literal|0
+condition|)
+comment|/* FIXME-update-dir: should include update_dir in message.  */
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot close %s"
+argument_list|,
+name|CVSADM_ENTLOG
 argument_list|)
 expr_stmt|;
 block|}

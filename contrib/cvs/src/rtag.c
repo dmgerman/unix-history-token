@@ -431,7 +431,7 @@ name|rtag_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [-aflRnF] [-b] [-d] [-r tag|-D date] tag modules...\n"
+literal|"Usage: %s %s [-aflRnF] [-b] [-d] [-r rev|-D date] tag modules...\n"
 block|,
 literal|"\t-a\tClear tag from removed files that would not otherwise be tagged.\n"
 block|,
@@ -1888,11 +1888,35 @@ condition|(
 name|delete_flag
 condition|)
 block|{
+comment|/* Deleting a tag which did not exist is a noop and 		   should not be logged.  */
 name|addit
 operator|=
 literal|0
 expr_stmt|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|delete_flag
+condition|)
+block|{
+name|free
+argument_list|(
+name|p
+operator|->
+name|data
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|data
+operator|=
+name|xstrdup
+argument_list|(
+name|oversion
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -2197,6 +2221,10 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -2644,6 +2672,10 @@ name|numtag
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|numtag
 argument_list|)

@@ -7,6 +7,10 @@ begin_comment
 comment|/* These functions were moved out of subr.c because they need different    definitions under operating systems (like, say, Windows NT) with different    file system semantics.  */
 end_comment
 
+begin_comment
+comment|/*  * $FreeBSD$  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -69,9 +73,6 @@ if|if
 condition|(
 name|trace
 condition|)
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 operator|(
 name|void
 operator|)
@@ -79,39 +80,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%c-> copy(%s,%s)\n"
+literal|"%s-> copy(%s,%s)\n"
 argument_list|,
-operator|(
-name|server_active
-operator|)
-condition|?
-literal|'S'
-else|:
-literal|' '
+name|CLIENT_SERVER_STR
 argument_list|,
 name|from
 argument_list|,
 name|to
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-> copy(%s,%s)\n"
-argument_list|,
-name|from
-argument_list|,
-name|to
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|noexec
@@ -1502,9 +1479,6 @@ if|if
 condition|(
 name|trace
 condition|)
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 operator|(
 name|void
 operator|)
@@ -1512,15 +1486,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%c-> chmod(%s,%o)\n"
+literal|"%s-> chmod(%s,%o)\n"
 argument_list|,
-operator|(
-name|server_active
-operator|)
-condition|?
-literal|'S'
-else|:
-literal|' '
+name|CLIENT_SERVER_STR
 argument_list|,
 name|fname
 argument_list|,
@@ -1531,28 +1499,6 @@ operator|)
 name|mode
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-> chmod(%s,%o)\n"
-argument_list|,
-name|fname
-argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
-name|mode
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|noexec
@@ -1610,9 +1556,6 @@ if|if
 condition|(
 name|trace
 condition|)
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 operator|(
 name|void
 operator|)
@@ -1620,39 +1563,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%c-> rename(%s,%s)\n"
+literal|"%s-> rename(%s,%s)\n"
 argument_list|,
-operator|(
-name|server_active
-operator|)
-condition|?
-literal|'S'
-else|:
-literal|' '
+name|CLIENT_SERVER_STR
 argument_list|,
 name|from
 argument_list|,
 name|to
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-> rename(%s,%s)\n"
-argument_list|,
-name|from
-argument_list|,
-name|to
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|noexec
@@ -1705,9 +1624,6 @@ if|if
 condition|(
 name|trace
 condition|)
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 operator|(
 name|void
 operator|)
@@ -1715,35 +1631,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%c-> unlink(%s)\n"
+literal|"%s-> unlink(%s)\n"
 argument_list|,
-operator|(
-name|server_active
-operator|)
-condition|?
-literal|'S'
-else|:
-literal|' '
+name|CLIENT_SERVER_STR
 argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-> unlink(%s)\n"
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|noexec
@@ -1952,6 +1846,10 @@ return|return
 operator|-
 literal|1
 return|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2093,6 +1991,36 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|errno
+operator|!=
+literal|0
+condition|)
+block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
+name|closedir
+argument_list|(
+name|dirp
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 name|closedir
 argument_list|(
@@ -2685,6 +2613,87 @@ begin_comment
 comment|/* There are at least three functions for generating temporary    filenames.  We use tempnam (SVID 3) if possible, else mktemp (BSD    4.3), and as last resort tmpnam (POSIX). Reason is that tempnam and    mktemp both allow to specify the directory in which the temporary    file will be created.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
+begin_function
+name|char
+modifier|*
+name|cvs_temp_name
+parameter_list|()
+block|{
+name|char
+modifier|*
+name|value
+decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
+name|value
+operator|=
+name|xmalloc
+argument_list|(
+name|strlen
+argument_list|(
+name|Tmpdir
+argument_list|)
+operator|+
+literal|40
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|value
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|Tmpdir
+argument_list|,
+literal|"cvsXXXXXX"
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+name|mkstemp
+argument_list|(
+name|value
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|retval
+operator|==
+operator|-
+literal|1
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot generate temporary filename"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|retval
+argument_list|)
+expr_stmt|;
+return|return
+name|value
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2848,6 +2857,11 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

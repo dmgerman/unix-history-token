@@ -330,25 +330,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%c-> unlink (%s)\n"
+literal|"%s-> unlink (%s)\n"
 argument_list|,
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
-operator|(
-name|server_active
-operator|)
-condition|?
-literal|'S'
-else|:
-literal|' '
+name|CLIENT_SERVER_STR
 argument_list|,
-else|#
-directive|else
-literal|' '
-argument_list|,
-endif|#
-directive|endif
 name|tocvsPath
 argument_list|)
 expr_stmt|;

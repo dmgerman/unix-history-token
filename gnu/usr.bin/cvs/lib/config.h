@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* config.h.  Generated automatically by configure.  */
 end_comment
 
@@ -221,6 +225,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_GSSAPI */
+end_comment
+
+begin_comment
+comment|/* Define if GSS_C_NT_HOSTBASED_SERVICE is defined in the gssapi.h    header file.  Only relevant when using GSSAPI.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GSS_C_NT_HOSTBASED_SERVICE */
 end_comment
 
 begin_comment
@@ -613,6 +625,30 @@ directive|define
 name|HAVE_FCNTL_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the<gssapi.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GSSAPI_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<gssapi/gssapi.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GSSAPI_GSSAPI_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<gssapi/gssapi_generic.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GSSAPI_GSSAPI_GENERIC_H */
+end_comment
 
 begin_comment
 comment|/* Define if you have the<io.h> header file.  */

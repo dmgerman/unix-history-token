@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Mark D. Baushke  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Name of Root  *   * Determine the path to the CVSROOT and set "Root" accordingly.  * If this looks like of modified clone of Name_Repository() in  * repos.c, it is...   */
+comment|/*  * Copyright (c) 1992, Mark D. Baushke  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Name of Root  *   * Determine the path to the CVSROOT and set "Root" accordingly.  */
 end_comment
 
 begin_include
@@ -37,6 +37,8 @@ block|,
 literal|"gserver"
 block|,
 literal|"ext"
+block|,
+literal|"fork"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -930,6 +932,17 @@ block|}
 end_function
 
 begin_comment
+comment|/* This global variable holds the global -d option.  It is NULL if -d    was not used, which means that we must get the CVSroot information    from the CVSROOT environment variable or from a CVS/Root file.  */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|CVSroot_cmdline
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Parse a CVSROOT variable into its constituent parts -- method,  * username, hostname, directory.  The prototypical CVSROOT variable  * looks like:  *  * :method:user@host:path  *  * Some methods may omit fields; local, for example, doesn't need user  * and host.  *  * Returns zero on success, non-zero on failure. */
 end_comment
 
@@ -997,74 +1010,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* the directory name */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AUTH_SERVER_SUPPORT
-end_ifdef
-
-begin_comment
-comment|/* Die if CVSroot_directory and Pserver_Repos don't match. */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|check_root_consistent
-parameter_list|()
-block|{
-comment|/* FIXME: Should be using a deferred error, as the rest of        serve_root does.  As it is now the call to error could conceivably        cause deadlock, as noted in server_cleanup.  Best solution would        presumably be to write some code so that error() automatically        defers the error in those cases where that is needed.  */
-comment|/* FIXME?  Possible that the wording should be more clear (e.g.           Root says "%s" but pserver protocol says "%s"        or something which would aid people who are writing implementations        of the client side of the CVS protocol.  I don't see any security        problem with revealing that information.  */
-if|if
-condition|(
-operator|(
-name|Pserver_Repos
-operator|!=
-name|NULL
-operator|)
-operator|&&
-operator|(
-name|CVSroot_directory
-operator|!=
-name|NULL
-operator|)
-condition|)
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|Pserver_Repos
-argument_list|,
-name|CVSroot_directory
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"repository mismatch: \"%s\" vs \"%s\""
-argument_list|,
-name|Pserver_Repos
-argument_list|,
-name|CVSroot_directory
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AUTH_SERVER_SUPPORT */
 end_comment
 
 begin_function
@@ -1144,7 +1089,7 @@ init|=
 operator|++
 name|cvsroot_copy
 decl_stmt|;
-comment|/* Access method specified, as in 	 * "cvs -d :pserver:user@host:/path", 	 * "cvs -d :local:e:\path", or 	 * "cvs -d :kserver:user@host:/path". 	 * We need to get past that part of CVSroot before parsing the 	 * rest of it. 	 */
+comment|/* Access method specified, as in 	 * "cvs -d :pserver:user@host:/path", 	 * "cvs -d :local:e:\path", 	 * "cvs -d :kserver:user@host:/path", or 	 * "cvs -d :fork:/path". 	 * We need to get past that part of CVSroot before parsing the 	 * rest of it. 	 */
 if|if
 condition|(
 operator|!
@@ -1281,6 +1226,22 @@ name|CVSroot_method
 operator|=
 name|ext_method
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|method
+argument_list|,
+literal|"fork"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|CVSroot_method
+operator|=
+name|fork_method
+expr_stmt|;
 else|else
 block|{
 name|error
@@ -1348,9 +1309,17 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|CVSroot_method
 operator|!=
 name|local_method
+operator|)
+operator|&&
+operator|(
+name|CVSroot_method
+operator|!=
+name|fork_method
+operator|)
 condition|)
 block|{
 comment|/* Check to see if there is a username in the string. */
@@ -1439,15 +1408,6 @@ name|CVSroot_directory
 operator|=
 name|cvsroot_copy
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AUTH_SERVER_SUPPORT
-name|check_root_consistent
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* AUTH_SERVER_SUPPORT */
 if|#
 directive|if
 operator|!
@@ -1539,6 +1499,9 @@ block|{
 case|case
 name|local_method
 case|:
+case|case
+name|fork_method
+case|:
 if|if
 condition|(
 name|CVSroot_username
@@ -1561,7 +1524,15 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"when using local access method"
+literal|"when using %s access method"
+argument_list|,
+name|CVSroot_method
+operator|==
+name|local_method
+condition|?
+literal|"local"
+else|:
+literal|"fork"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1638,13 +1609,15 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-endif|#
-directive|endif
+else|#
+directive|else
 name|check_hostname
 operator|=
 literal|1
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|gserver_method
 case|:
@@ -1683,13 +1656,15 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-endif|#
-directive|endif
+else|#
+directive|else
 name|check_hostname
 operator|=
 literal|1
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|server_method
 case|:
@@ -1763,7 +1738,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set up the global CVSroot* variables as if we're using the local    repository DIR. */
+comment|/* Set up the global CVSroot* variables as if we're using the local    repository DIR.  DIR must point to storage which will last for the    rest of the CVS invocation (for example, the caller might malloc it    and never free it, or free it just before exiting CVS).  */
 end_comment
 
 begin_function
@@ -1779,10 +1754,7 @@ decl_stmt|;
 block|{
 name|CVSroot_original
 operator|=
-name|xstrdup
-argument_list|(
 name|dir
-argument_list|)
 expr_stmt|;
 name|CVSroot_method
 operator|=
@@ -1792,15 +1764,6 @@ name|CVSroot_directory
 operator|=
 name|CVSroot_original
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AUTH_SERVER_SUPPORT
-name|check_root_consistent
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* AUTH_SERVER_SUPPORT */
 name|CVSroot_username
 operator|=
 name|NULL
@@ -1823,7 +1786,7 @@ name|DEBUG
 end_ifdef
 
 begin_comment
-comment|/* This is for testing the parsing function. */
+comment|/* This is for testing the parsing function.  Use       gcc -I. -I.. -I../lib -DDEBUG root.c -o root     to compile.  */
 end_comment
 
 begin_include
@@ -1860,6 +1823,77 @@ end_decl_stmt
 begin_comment
 comment|/* XXX is this used??? */
 end_comment
+
+begin_comment
+comment|/* Toy versions of various functions when debugging under unix.  Yes,    these make various bad assumptions, but they're pretty easy to    debug when something goes wrong.  */
+end_comment
+
+begin_decl_stmt
+name|void
+name|error_exit
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+block|{
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_function
+name|char
+modifier|*
+name|xstrdup
+parameter_list|(
+name|str
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|str
+decl_stmt|;
+block|{
+return|return
+name|strdup
+argument_list|(
+name|str
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|isabsolute
+parameter_list|(
+name|dir
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|dir
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|dir
+operator|&&
+operator|(
+operator|*
+name|dir
+operator|==
+literal|'/'
+operator|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -1922,7 +1956,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Parsing failed."
+literal|"%s: Parsing failed.\n"
 argument_list|,
 name|program_name
 argument_list|)

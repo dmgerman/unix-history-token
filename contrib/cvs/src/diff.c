@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Difference  *   * Run diff against versions in the repository.  Options that are specified are  * passed on directly to "rcsdiff".  *   * Without any file arguments, runs diff against all the currently modified  * files.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Difference  *   * Run diff against versions in the repository.  Options that are specified are  * passed on directly to "rcsdiff".  *   * Without any file arguments, runs diff against all the currently modified  * files.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -175,6 +175,14 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Global variables.  Would be cleaner if we just put this stuff in a    struct like log.c does.  */
+end_comment
+
+begin_comment
+comment|/* Command line tags, from -r option.  Points into argv.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -185,6 +193,10 @@ modifier|*
 name|diff_rev2
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Command line dates, from -D option.  Malloc'd.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -895,7 +907,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/*      * Note that we catch all the valid arguments here, so that we can      * intercept the -r arguments for doing revision diffs; and -l/-R for a      * non-recursive/recursive diff.      */
-comment|/* For server, need to be able to do this command more than once        (according to the protocol spec, even if the current client        doesn't use it).  */
+comment|/* Clean out our global variables (multiroot can call us multiple        times and the server can too, if the client sends several        diff commands).  */
 if|if
 condition|(
 name|opts
@@ -921,6 +933,22 @@ literal|0
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+name|diff_rev1
+operator|=
+name|NULL
+expr_stmt|;
+name|diff_rev2
+operator|=
+name|NULL
+expr_stmt|;
+name|diff_date1
+operator|=
+name|NULL
+expr_stmt|;
+name|diff_date2
+operator|=
+name|NULL
 expr_stmt|;
 name|optind
 operator|=
@@ -1176,7 +1204,7 @@ argument_list|,
 operator|&
 name|opts_allocated
 argument_list|,
-literal|" -D"
+literal|" --ifdef="
 argument_list|)
 expr_stmt|;
 name|strcat_and_allocate
@@ -1585,15 +1613,6 @@ argument_list|(
 name|diff_date2
 argument_list|)
 expr_stmt|;
-name|send_file_names
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|,
-name|SEND_EXPAND_WILD
-argument_list|)
-expr_stmt|;
 comment|/* Send the current files unless diffing two revs from the archive */
 if|if
 condition|(
@@ -1632,6 +1651,15 @@ argument_list|,
 name|SEND_NO_CONTENTS
 argument_list|)
 expr_stmt|;
+name|send_file_names
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|SEND_EXPAND_WILD
+argument_list|)
+expr_stmt|;
 name|send_to_server
 argument_list|(
 literal|"diff\012"
@@ -1648,6 +1676,10 @@ name|free
 argument_list|(
 name|options
 argument_list|)
+expr_stmt|;
+name|options
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -1762,6 +1794,32 @@ comment|/* clean up */
 name|free
 argument_list|(
 name|options
+argument_list|)
+expr_stmt|;
+name|options
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|diff_date1
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|diff_date1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|diff_date2
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|diff_date2
 argument_list|)
 expr_stmt|;
 return|return
@@ -1978,7 +2036,6 @@ name|head
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/*XXX*/
 if|if
 condition|(
 name|head
@@ -2036,7 +2093,6 @@ name|vn_rcs
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/*XXX*/
 name|freevers_ts
 argument_list|(
 operator|&

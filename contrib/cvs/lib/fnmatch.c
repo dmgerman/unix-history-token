@@ -24,30 +24,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Some file systems are case-insensitive.  If FOLD_FN_CHAR is    #defined, it maps the character C onto its "canonical" form.  In a    case-insensitive system, it would map all alphanumeric characters    to lower case.  Under Windows NT, / and \ are both path component    separators, so FOLD_FN_CHAR would map them both to /.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FOLD_FN_CHAR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FOLD_FN_CHAR
-parameter_list|(
-name|c
-parameter_list|)
-value|(c)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"system.h"
+end_include
 
 begin_comment
 comment|/* IGNORE(@ */
@@ -295,10 +276,16 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|FOLD_FN_CHAR
+argument_list|(
 operator|*
 name|n
+argument_list|)
 operator|!=
+name|FOLD_FN_CHAR
+argument_list|(
 name|c
+argument_list|)
 condition|)
 return|return
 name|FNM_NOMATCH
@@ -450,10 +437,16 @@ name|c
 operator|==
 literal|'['
 operator|||
+name|FOLD_FN_CHAR
+argument_list|(
 operator|*
 name|n
+argument_list|)
 operator|==
+name|FOLD_FN_CHAR
+argument_list|(
 name|c1
+argument_list|)
 operator|)
 operator|&&
 name|fnmatch

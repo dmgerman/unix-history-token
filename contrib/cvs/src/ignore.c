@@ -236,6 +236,7 @@ operator|=
 name|get_homedir
 argument_list|()
 expr_stmt|;
+comment|/* If we can't find a home directory, ignore ~/.cvsignore.  This may        make tracking down problems a bit of a pain, but on the other        hand it might be obnoxious to complain when CVS will function        just fine without .cvsignore (and many users won't even know what        .cvsignore is).  */
 if|if
 condition|(
 name|home_dir
@@ -612,6 +613,10 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ign
 argument_list|)
@@ -631,6 +636,10 @@ operator|)
 operator|||
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|(
 name|ign
@@ -871,6 +880,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|mark
 argument_list|)
@@ -1444,7 +1457,18 @@ name|dirp
 operator|==
 name|NULL
 condition|)
+block|{
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot open current directory"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|ign_add_file
 argument_list|(
 name|CVSDOTIGNORE
@@ -1458,6 +1482,10 @@ name|CVSDOTWRAPPER
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -1774,7 +1802,26 @@ argument_list|,
 name|xdir
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|errno
+operator|!=
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"error reading current directory"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * The functions in this file provide an interface for performing   * operations directly on RCS files.   */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * The functions in this file provide an interface for performing   * operations directly on RCS files.   *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -464,6 +464,12 @@ name|size_t
 name|len
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+condition|)
 name|cvs_output
 argument_list|(
 name|text
