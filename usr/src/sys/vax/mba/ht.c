@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.22	82/05/12	*/
+comment|/*	ht.c	4.23	82/07/13	*/
 end_comment
 
 begin_include
@@ -1419,7 +1419,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -1451,7 +1451,7 @@ return|;
 block|}
 if|if
 condition|(
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -1504,7 +1504,7 @@ name|sc
 operator|->
 name|sc_nxrec
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -1579,7 +1579,7 @@ operator|->
 name|sc_blkno
 operator|)
 operator|==
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -1699,7 +1699,7 @@ if|if
 condition|(
 name|blkno
 operator|<
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -1713,7 +1713,7 @@ name|htfc
 operator|=
 name|blkno
 operator|-
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -1735,7 +1735,7 @@ name|htaddr
 operator|->
 name|htfc
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2159,7 +2159,7 @@ name|sc
 operator|->
 name|sc_nxrec
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2567,7 +2567,7 @@ name|sc
 operator|->
 name|sc_blkno
 operator|>
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2579,7 +2579,7 @@ name|sc
 operator|->
 name|sc_nxrec
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2603,7 +2603,7 @@ name|sc
 operator|->
 name|sc_blkno
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2628,7 +2628,7 @@ name|sc
 operator|->
 name|sc_blkno
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|bp
 operator|->
@@ -2833,7 +2833,7 @@ name|sc
 operator|->
 name|sc_blkno
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|a
 argument_list|)
@@ -2842,7 +2842,7 @@ name|sc
 operator|->
 name|sc_nxrec
 operator|=
-name|dbtofsb
+name|bdbtofsb
 argument_list|(
 name|a
 argument_list|)
