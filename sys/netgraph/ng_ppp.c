@@ -2606,8 +2606,10 @@ operator|<
 literal|4
 condition|)
 block|{
-name|NG_FREE_META
+name|NG_FREE_DATA
 argument_list|(
+name|m
+argument_list|,
 name|meta
 argument_list|)
 expr_stmt|;
@@ -2699,11 +2701,20 @@ name|linkNum
 operator|!=
 name|NG_PPP_BUNDLE_LINKNUM
 condition|)
+block|{
+name|NG_FREE_DATA
+argument_list|(
+name|m
+argument_list|,
+name|meta
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 break|break;
 comment|/* Incoming data */
 case|case
@@ -3617,9 +3628,9 @@ index|]
 expr_stmt|;
 break|break;
 block|}
-comment|/* For unknown/inactive protocols, forward out the bypass hook */
 name|bypass
 label|:
+comment|/* For unknown/inactive protocols, forward out the bypass hook */
 if|if
 condition|(
 name|outHook
@@ -3674,11 +3685,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|NG_FREE_META
+argument_list|(
+name|meta
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOBUFS
 operator|)
 return|;
+block|}
 name|outHook
 operator|=
 name|priv
@@ -3800,11 +3818,20 @@ index|]
 operator|.
 name|enableLink
 condition|)
+block|{
+name|NG_FREE_DATA
+argument_list|(
+name|m
+argument_list|,
+name|meta
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|priv
