@@ -15558,6 +15558,11 @@ name|td
 argument_list|)
 condition|)
 block|{
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EINTR
