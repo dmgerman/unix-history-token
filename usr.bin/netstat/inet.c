@@ -1706,7 +1706,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"Some %s sockets may have been created or deleted"
+literal|"Some %s sockets may have been created or deleted.\n"
 argument_list|,
 name|name
 argument_list|)
