@@ -1,11 +1,23 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  */
+comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  */
 end_comment
 
 begin_comment
 comment|/* Shared between kernel& process */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYS_CDIO_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYS_CDIO_H
+end_define
 
 begin_struct
 struct|struct
@@ -532,6 +544,48 @@ directive|define
 name|CDIOCEJECT
 value|_IO('c',24)
 end_define
+
+begin_struct
+struct|struct
+name|ioc_play_msf
+block|{
+name|u_char
+name|start_m
+decl_stmt|;
+name|u_char
+name|start_s
+decl_stmt|;
+name|u_char
+name|start_f
+decl_stmt|;
+name|u_char
+name|end_m
+decl_stmt|;
+name|u_char
+name|end_s
+decl_stmt|;
+name|u_char
+name|end_f
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CDIOCPLAYMSF
+value|_IOW('c',25,struct ioc_play_msf)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYS_CDIO_H */
+end_comment
 
 end_unit
 
