@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.35 (Berkeley) %G%"
+literal|"@(#)setup.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1894,6 +1894,21 @@ name|super
 operator|/
 name|dev_bsize
 expr_stmt|;
+if|if
+condition|(
+name|bflag
+condition|)
+block|{
+name|havesb
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 comment|/* 	 * Set all possible fields that could differ, then do check 	 * of whole super block against an alternate super block. 	 * When an alternate super-block is specified this check is skipped. 	 */
 name|getblk
 argument_list|(
@@ -1928,21 +1943,6 @@ operator|(
 literal|0
 operator|)
 return|;
-if|if
-condition|(
-name|bflag
-condition|)
-block|{
-name|havesb
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 name|altsblock
 operator|.
 name|fs_link
