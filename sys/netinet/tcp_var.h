@@ -836,6 +836,10 @@ comment|/* addresses */
 name|u_int32_t
 name|sc_tsrecent
 decl_stmt|;
+name|u_int32_t
+name|sc_flowlabel
+decl_stmt|;
+comment|/* IPv6 flowlabel */
 name|tcp_cc
 name|sc_cc_send
 decl_stmt|;
