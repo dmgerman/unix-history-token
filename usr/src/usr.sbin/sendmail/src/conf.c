@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.2 (Berkeley) %G%"
+literal|"@(#)conf.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -426,16 +426,16 @@ name|passwd
 modifier|*
 name|defpwent
 decl_stmt|;
-if|if
-condition|(
+specifier|static
+name|char
+name|defuserbuf
+index|[
+literal|40
+index|]
+decl_stmt|;
 name|DefUser
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|DefUser
-argument_list|)
+operator|=
+name|defuserbuf
 expr_stmt|;
 if|if
 condition|(
@@ -450,20 +450,20 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|DefUser
-operator|=
-name|newstr
+name|strcpy
 argument_list|(
+name|defuserbuf
+argument_list|,
 name|defpwent
 operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
 else|else
-name|DefUser
-operator|=
-name|newstr
+name|strcpy
 argument_list|(
+name|defuserbuf
+argument_list|,
 literal|"nobody"
 argument_list|)
 expr_stmt|;
