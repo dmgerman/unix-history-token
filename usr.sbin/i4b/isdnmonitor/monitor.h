@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   Copyright (c) 1998 Martin Husemann. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - network monitor protocl definition  *	-----------------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Sun May 30 15:50:10 1999]  *  *	-mh	created  *	-hm	checking in  *	-hm	ported to HPUX 10.10  *  *---------------------------------------------------------------------------*/
+comment|/*  *   Copyright (c) 1998,1999 Martin Husemann. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - network monitor protocol definition  *	------------------------------------------------  *  *	$Id: monitor.h,v 1.16 1999/12/13 21:25:26 hm Exp $  *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 21:52:18 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MONITOR_H
+name|_MONITOR_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MONITOR_H
+name|_MONITOR_H_
 end_define
 
 begin_define
@@ -54,7 +54,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_WIN32
+name|WIN32
 end_ifdef
 
 begin_define
@@ -67,7 +67,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|u_in32_t
+name|u_int32_t
 value|DWORD
 end_define
 
@@ -81,15 +81,8 @@ comment|/*  * The monitor client connects to the isdnd daemon process via a tcp/
 end_comment
 
 begin_comment
-comment|/* All data packets transfered are declared as arrays of BYTE */
+comment|/* All data packets transfered are declared as arrays of u_int8_t */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|BYTE
-value|u_int8_t
-end_define
 
 begin_comment
 comment|/* max stringlength used in this protocol */
@@ -132,15 +125,11 @@ begin_define
 define|#
 directive|define
 name|MPROT_REL
-value|1
+value|5
 end_define
 
 begin_comment
 comment|/* release no */
-end_comment
-
-begin_comment
-comment|/*  * We intend to keep different versions of monitor client and isdnd  * interoperable as long as possible. We do not, however, even try  * to do this during early alpha or beta release phases. If you run  * developement versions at this stage, make sure all your clients  * and servers run the same version!  */
 end_comment
 
 begin_comment
@@ -295,7 +284,7 @@ begin_define
 define|#
 directive|define
 name|I4B_MON_IDATA_SIZE
-value|I4B_MON_EVNT_HDR+10
+value|I4B_MON_EVNT_HDR+12
 end_define
 
 begin_define
@@ -345,8 +334,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I4B_MON_IDATA_CLACCESS
+name|I4B_MON_IDATA_NUMENTR
 value|I4B_MON_EVNT_HDR+6
+end_define
+
+begin_comment
+comment|/* 2 byte: number of controllers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_IDATA_CLACCESS
+value|I4B_MON_EVNT_HDR+8
 end_define
 
 begin_comment
@@ -420,7 +420,51 @@ comment|/* 2 byte: number of b channels on this controller */
 end_comment
 
 begin_comment
-comment|/* The client sets it's protocol version and event mask (usualy once after  * connection establishement) */
+comment|/* followed by this for every entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_IDEV_SIZE
+value|I4B_MON_EVNT_HDR+I4B_MAX_MON_STRING+2
+end_define
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_IDEV_CODE
+value|2
+end_define
+
+begin_comment
+comment|/* event code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_IDEV_NAME
+value|I4B_MON_EVNT_HDR+0
+end_define
+
+begin_comment
+comment|/* string: name of device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_IDEV_STATE
+value|I4B_MON_EVNT_HDR+I4B_MAX_MON_STRING+0
+end_define
+
+begin_comment
+comment|/* 2 byte: state of device */
+end_comment
+
+begin_comment
+comment|/*  * The client sets it's protocol version and event mask (usually once after  * connection establishement)  */
 end_comment
 
 begin_define
@@ -497,7 +541,7 @@ comment|/* no parameters */
 end_comment
 
 begin_comment
-comment|/* in response to a I4B_MON_DUMPRIGHTS_CODE command, the daemon sends  * this event: */
+comment|/*  * in response to a I4B_MON_DUMPRIGHTS_CODE command, the daemon sends  * this event:  */
 end_comment
 
 begin_define
@@ -618,7 +662,7 @@ comment|/* no parameters */
 end_comment
 
 begin_comment
-comment|/* in response to a I4B_MON_DUMPMCONS_CODE command, the daemon sends  * this event: */
+comment|/*  * in response to a I4B_MON_DUMPMCONS_CODE command, the daemon sends  * this event:  */
 end_comment
 
 begin_define
@@ -731,18 +775,29 @@ begin_define
 define|#
 directive|define
 name|I4B_MON_HANGUP_SIZE
-value|I4B_MON_CMD_HDR+4
+value|I4B_MON_CMD_HDR+8
 end_define
 
 begin_define
 define|#
 directive|define
-name|I4B_MON_HANGUP_CHANNEL
+name|I4B_MON_HANGUP_CTRL
 value|I4B_MON_CMD_HDR+0
 end_define
 
 begin_comment
-comment|/* channel to drop */
+comment|/* controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_HANGUP_CHANNEL
+value|I4B_MON_CMD_HDR+4
+end_define
+
+begin_comment
+comment|/* channel */
 end_comment
 
 begin_comment
@@ -818,7 +873,7 @@ begin_define
 define|#
 directive|define
 name|I4B_MON_CHRG_SIZE
-value|I4B_MON_EVNT_HDR+16
+value|I4B_MON_EVNT_HDR+20
 end_define
 
 begin_define
@@ -835,7 +890,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I4B_MON_CHRG_CHANNEL
+name|I4B_MON_CHRG_CTRL
 value|I4B_MON_EVNT_HDR+4
 end_define
 
@@ -846,8 +901,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I4B_MON_CHRG_UNITS
+name|I4B_MON_CHRG_CHANNEL
 value|I4B_MON_EVNT_HDR+8
+end_define
+
+begin_comment
+comment|/* 4 byte: channel charged */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_CHRG_UNITS
+value|I4B_MON_EVNT_HDR+12
 end_define
 
 begin_comment
@@ -858,7 +924,7 @@ begin_define
 define|#
 directive|define
 name|I4B_MON_CHRG_ESTIMATED
-value|I4B_MON_EVNT_HDR+12
+value|I4B_MON_EVNT_HDR+16
 end_define
 
 begin_comment
@@ -880,7 +946,7 @@ begin_define
 define|#
 directive|define
 name|I4B_MON_CONNECT_SIZE
-value|I4B_MON_EVNT_HDR+12+4*I4B_MAX_MON_STRING
+value|I4B_MON_EVNT_HDR+16+4*I4B_MAX_MON_STRING
 end_define
 
 begin_define
@@ -908,7 +974,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I4B_MON_CONNECT_CHANNEL
+name|I4B_MON_CONNECT_CTRL
 value|I4B_MON_EVNT_HDR+8
 end_define
 
@@ -919,8 +985,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I4B_MON_CONNECT_CFGNAME
+name|I4B_MON_CONNECT_CHANNEL
 value|I4B_MON_EVNT_HDR+12
+end_define
+
+begin_comment
+comment|/* 4 byte: channel connected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_CONNECT_CFGNAME
+value|I4B_MON_EVNT_HDR+16
 end_define
 
 begin_comment
@@ -931,7 +1008,7 @@ begin_define
 define|#
 directive|define
 name|I4B_MON_CONNECT_DEVNAME
-value|I4B_MON_EVNT_HDR+12+I4B_MAX_MON_STRING
+value|I4B_MON_EVNT_HDR+16+I4B_MAX_MON_STRING
 end_define
 
 begin_comment
@@ -942,7 +1019,7 @@ begin_define
 define|#
 directive|define
 name|I4B_MON_CONNECT_REMPHONE
-value|I4B_MON_EVNT_HDR+12+2*I4B_MAX_MON_STRING
+value|I4B_MON_EVNT_HDR+16+2*I4B_MAX_MON_STRING
 end_define
 
 begin_comment
@@ -953,7 +1030,7 @@ begin_define
 define|#
 directive|define
 name|I4B_MON_CONNECT_LOCPHONE
-value|I4B_MON_EVNT_HDR+12+3*I4B_MAX_MON_STRING
+value|I4B_MON_EVNT_HDR+16+3*I4B_MAX_MON_STRING
 end_define
 
 begin_comment
@@ -975,7 +1052,7 @@ begin_define
 define|#
 directive|define
 name|I4B_MON_DISCONNECT_SIZE
-value|I4B_MON_EVNT_HDR+8
+value|I4B_MON_EVNT_HDR+12
 end_define
 
 begin_define
@@ -992,8 +1069,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I4B_MON_DISCONNECT_CHANNEL
+name|I4B_MON_DISCONNECT_CTRL
 value|I4B_MON_EVNT_HDR+4
+end_define
+
+begin_comment
+comment|/* 4 byte: channel disconnected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_DISCONNECT_CHANNEL
+value|I4B_MON_EVNT_HDR+8
 end_define
 
 begin_comment
@@ -1015,7 +1103,7 @@ begin_define
 define|#
 directive|define
 name|I4B_MON_UPDOWN_SIZE
-value|I4B_MON_EVNT_HDR+12
+value|I4B_MON_EVNT_HDR+16
 end_define
 
 begin_define
@@ -1032,7 +1120,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I4B_MON_UPDOWN_CHANNEL
+name|I4B_MON_UPDOWN_CTRL
 value|I4B_MON_EVNT_HDR+4
 end_define
 
@@ -1043,12 +1131,231 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I4B_MON_UPDOWN_ISUP
+name|I4B_MON_UPDOWN_CHANNEL
 value|I4B_MON_EVNT_HDR+8
 end_define
 
 begin_comment
+comment|/* 4 byte: channel disconnected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_UPDOWN_ISUP
+value|I4B_MON_EVNT_HDR+12
+end_define
+
+begin_comment
 comment|/* 4 byte: interface is up */
+end_comment
+
+begin_comment
+comment|/* The daemon sends a L1/L2 status change event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_L12STAT_CODE
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_L12STAT_SIZE
+value|I4B_MON_EVNT_HDR+16
+end_define
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_L12STAT_TSTAMP
+value|I4B_MON_EVNT_HDR+0
+end_define
+
+begin_comment
+comment|/* 4 byte: time stamp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_L12STAT_CTRL
+value|I4B_MON_EVNT_HDR+4
+end_define
+
+begin_comment
+comment|/* 4 byte: controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_L12STAT_LAYER
+value|I4B_MON_EVNT_HDR+8
+end_define
+
+begin_comment
+comment|/* 4 byte: layer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_L12STAT_STATE
+value|I4B_MON_EVNT_HDR+12
+end_define
+
+begin_comment
+comment|/* 4 byte: state */
+end_comment
+
+begin_comment
+comment|/* The daemon sends a TEI change event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_TEI_CODE
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_TEI_SIZE
+value|I4B_MON_EVNT_HDR+12
+end_define
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_TEI_TSTAMP
+value|I4B_MON_EVNT_HDR+0
+end_define
+
+begin_comment
+comment|/* 4 byte: time stamp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_TEI_CTRL
+value|I4B_MON_EVNT_HDR+4
+end_define
+
+begin_comment
+comment|/* 4 byte: controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_TEI_TEI
+value|I4B_MON_EVNT_HDR+8
+end_define
+
+begin_comment
+comment|/* 4 byte: tei */
+end_comment
+
+begin_comment
+comment|/* The daemon sends an accounting message event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_ACCT_CODE
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_ACCT_SIZE
+value|I4B_MON_EVNT_HDR+28
+end_define
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_ACCT_TSTAMP
+value|I4B_MON_EVNT_HDR+0
+end_define
+
+begin_comment
+comment|/* 4 byte: time stamp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_ACCT_CTRL
+value|I4B_MON_EVNT_HDR+4
+end_define
+
+begin_comment
+comment|/* 4 byte: controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_ACCT_CHAN
+value|I4B_MON_EVNT_HDR+8
+end_define
+
+begin_comment
+comment|/* 4 byte: channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_ACCT_OBYTES
+value|I4B_MON_EVNT_HDR+12
+end_define
+
+begin_comment
+comment|/* 4 byte: outbytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_ACCT_OBPS
+value|I4B_MON_EVNT_HDR+16
+end_define
+
+begin_comment
+comment|/* 4 byte: outbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_ACCT_IBYTES
+value|I4B_MON_EVNT_HDR+20
+end_define
+
+begin_comment
+comment|/* 4 byte: inbytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4B_MON_ACCT_IBPS
+value|I4B_MON_EVNT_HDR+24
+end_define
+
+begin_comment
+comment|/* 4 byte: inbps */
 end_comment
 
 begin_comment
@@ -1112,7 +1419,7 @@ name|off
 parameter_list|,
 name|val
 parameter_list|)
-value|{ ((BYTE*)(r))[off] = (val)& 0x00ff; }
+value|{ ((u_int8_t*)(r))[off] = (val)& 0x00ff; }
 end_define
 
 begin_define
@@ -1156,7 +1463,7 @@ name|r
 parameter_list|,
 name|off
 parameter_list|)
-value|(((BYTE*)(r))[off])
+value|(((u_int8_t*)(r))[off])
 end_define
 
 begin_define
@@ -1168,7 +1475,7 @@ name|r
 parameter_list|,
 name|off
 parameter_list|)
-value|((((BYTE*)(r))[off])<< 8) | (((BYTE*)(r))[off+1])
+value|((((u_int8_t*)(r))[off])<< 8) | (((u_int8_t*)(r))[off+1])
 end_define
 
 begin_define
@@ -1180,11 +1487,11 @@ name|r
 parameter_list|,
 name|off
 parameter_list|)
-value|((((BYTE*)(r))[off])<< 24) | ((((BYTE*)(r))[off+1])<< 16) | ((((BYTE*)(r))[off+2])<< 8) | (((BYTE*)(r))[off+3])
+value|((((u_int8_t*)(r))[off])<< 24) | ((((u_int8_t*)(r))[off+1])<< 16) | ((((u_int8_t*)(r))[off+2])<< 8) | (((u_int8_t*)(r))[off+3])
 end_define
 
 begin_comment
-comment|/* put a string into recor r at offset off, make sure it's not to long  * and proper terminate it */
+comment|/*  * put a string into record r at offset off, make sure it's not to long  * and proper terminate it  */
 end_comment
 
 begin_define
@@ -1198,7 +1505,7 @@ name|off
 parameter_list|,
 name|str
 parameter_list|)
-value|{		\ 	strncpy((r)+(off), (str), I4B_MAX_MON_STRING);	\ 	(r)[(off)+I4B_MAX_MON_STRING-1] = (BYTE)0; 		}
+value|{		\ 	strncpy((r)+(off), (str), I4B_MAX_MON_STRING);	\ 	(r)[(off)+I4B_MAX_MON_STRING-1] = (u_int8_t)0;     }
 end_define
 
 begin_endif
@@ -1207,7 +1514,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* MONITOR_H */
+comment|/* _MONITOR_H_ */
 end_comment
 
 end_unit

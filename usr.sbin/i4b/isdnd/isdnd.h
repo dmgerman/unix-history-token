@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - main header file  *	-----------------------------  *  * $FreeBSD$   *  *      last edit-date: [Thu May 20 14:44:18 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - main header file  *	-----------------------------  *  *	$Id: isdnd.h,v 1.72 1999/12/13 21:25:24 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 21:46:50 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -37,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -55,6 +67,18 @@ begin_include
 include|#
 directive|include
 file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_ifdef
@@ -91,6 +115,16 @@ include|#
 directive|include
 file|<signal.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_comment
+comment|/* TAILQ_ macros */
+end_comment
 
 begin_include
 include|#
@@ -726,7 +760,13 @@ name|LL_CHD
 block|,
 comment|/* informational - everything regarding call handling	*/
 name|LL_DBG
+block|,
 comment|/* debug messages - everything which helps debugging	*/
+name|LL_MER
+block|,
+comment|/* monitor error messages - not sent to remote          */
+name|LL_PKT
+comment|/* packet logging - log the first few packets		*/
 block|}
 enum|;
 end_enum
@@ -1519,6 +1559,10 @@ name|card_type
 decl_stmt|;
 comment|/* manufacturer (CARD_XXXX) 	*/
 name|int
+name|protocol
+decl_stmt|;
+comment|/* ISDN D-channel protocol 	*/
+name|int
 name|state
 decl_stmt|;
 comment|/* controller state		*/
@@ -1563,6 +1607,14 @@ name|int
 name|tei
 decl_stmt|;
 comment|/* tei or -1 if invalid		*/
+name|int
+name|l1stat
+decl_stmt|;
+comment|/* layer 1 state		*/
+name|int
+name|l2stat
+decl_stmt|;
+comment|/* layer 2 state		*/
 block|}
 name|isdn_ctrl_state_t
 typedef|;
@@ -1612,6 +1664,13 @@ begin_struct
 struct|struct
 name|monitor_rights
 block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|monitor_rights
+argument_list|)
+name|list
+expr_stmt|;
+comment|/* a list of this structures */
 name|char
 name|name
 index|[
@@ -1662,6 +1721,36 @@ end_decl_stmt
 
 begin_comment
 comment|/* file handle, /dev/i4b */
+end_comment
+
+begin_decl_stmt
+name|char
+name|mailto
+index|[
+name|MAXPATHLEN
+index|]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* panic mail address */
+end_comment
+
+begin_decl_stmt
+name|char
+name|mailer
+index|[
+name|MAXPATHLEN
+index|]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* panic mail address */
 end_comment
 
 begin_decl_stmt
@@ -2301,6 +2390,24 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|mailto
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|mailer
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 modifier|*
 name|configfile
 decl_stmt|;
@@ -2866,16 +2973,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|hangup_channel
-parameter_list|(
-name|int
-name|channel
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|do_exit
 parameter_list|(
 name|int
@@ -3134,6 +3231,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|init_controller_protocol
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|init_log
 parameter_list|(
 name|void
@@ -3352,6 +3458,17 @@ name|void
 name|msg_proceeding_ind
 parameter_list|(
 name|msg_proceeding_ind_t
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|msg_packet_ind
+parameter_list|(
+name|msg_packet_ind_t
 modifier|*
 name|mp
 parameter_list|)
@@ -3647,6 +3764,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|error_exit
+parameter_list|(
+name|int
+name|exitval
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* montior server module */
 end_comment
@@ -3900,28 +4034,49 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* controller.c */
-end_comment
-
 begin_function_decl
-name|int
-name|init_controller_state
+name|void
+name|monitor_evnt_l12stat
 parameter_list|(
 name|int
 name|controller
 parameter_list|,
 name|int
-name|ctrl_type
+name|layer
 parameter_list|,
 name|int
-name|card_type
+name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|monitor_evnt_tei
+parameter_list|(
+name|int
+name|controller
 parameter_list|,
 name|int
 name|tei
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|monitor_evnt_acct
+parameter_list|(
+name|cfg_entry_t
+modifier|*
+name|cep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* controller.c */
+end_comment
 
 begin_function_decl
 name|void

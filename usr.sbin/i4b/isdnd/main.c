@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - main program entry  *	-------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Fri Jul 30 08:14:10 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - main program entry  *	-------------------------------  *  *	$Id: main.c,v 1.49 1999/12/13 21:25:25 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 21:47:35 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -392,13 +398,22 @@ argument_list|,
 literal|"    -u<time>     length of a charging unit in seconds\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|I4B_EXTERNAL_MONITOR
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"    -m            inhibit network/local monitoring\n"
+literal|"    -m            inhibit network/local monitoring (protocol %02d.%02d)\n"
+argument_list|,
+name|MPROT_VERSION
+argument_list|,
+name|MPROT_REL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|fprintf
 argument_list|(
 name|stderr
@@ -461,6 +476,13 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -493,6 +515,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|I4B_EXTERNAL_MONITOR
 case|case
 literal|'m'
 case|:
@@ -501,6 +526,8 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 literal|'c'
 case|:
@@ -1110,6 +1137,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* set controller ISDN protocol */
+name|init_controller_protocol
+argument_list|()
+expr_stmt|;
 comment|/* init active controllers, if any */
 name|signal
 argument_list|(
@@ -1485,6 +1516,164 @@ block|}
 end_function
 
 begin_comment
+comment|/*---------------------------------------------------------------------------*  *	program exit  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|void
+name|error_exit
+parameter_list|(
+name|int
+name|exitval
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|close_allactive
+argument_list|()
+expr_stmt|;
+name|unlink
+argument_list|(
+name|PIDFILE
+argument_list|)
+expr_stmt|;
+name|log
+argument_list|(
+name|LL_DMN
+argument_list|,
+literal|"fatal error, daemon terminating, exitval = %d"
+argument_list|,
+name|exitval
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_CURSES
+if|if
+condition|(
+name|do_fullscreen
+condition|)
+name|endwin
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|I4B_EXTERNAL_MONITOR
+name|monitor_exit
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|mailto
+index|[
+literal|0
+index|]
+operator|&&
+name|mailer
+index|[
+literal|0
+index|]
+condition|)
+block|{
+define|#
+directive|define
+name|EXITBL
+value|2048
+name|char
+name|ebuffer
+index|[
+name|EXITBL
+index|]
+decl_stmt|;
+name|char
+name|sbuffer
+index|[
+name|EXITBL
+index|]
+decl_stmt|;
+name|va_list
+name|ap
+decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|vsnprintf
+argument_list|(
+name|ebuffer
+argument_list|,
+name|EXITBL
+operator|-
+literal|1
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+comment|/* remove handler */
+name|sprintf
+argument_list|(
+name|sbuffer
+argument_list|,
+literal|"%s%s%s%s%s%s%s%s"
+argument_list|,
+literal|"cat<< ENDOFDATA | "
+argument_list|,
+name|mailer
+argument_list|,
+literal|" -s \"i4b isdnd: fatal error, terminating\" "
+argument_list|,
+name|mailto
+argument_list|,
+literal|"\nThe isdnd terminated because of a fatal error:\n\n"
+argument_list|,
+name|ebuffer
+argument_list|,
+literal|"\n\nYours sincerely,\n   the isdnd\n"
+argument_list|,
+literal|"\nENDOFDATA\n"
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+name|sbuffer
+argument_list|)
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+name|exitval
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	main loop  *---------------------------------------------------------------------------*/
 end_comment
 
@@ -1828,14 +2017,18 @@ name|log
 argument_list|(
 name|LL_ERR
 argument_list|,
-literal|"ERROR, select error on isdn device, errno = %d!"
+literal|"mloop: ERROR, select error on isdn device, errno = %d!"
 argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-name|do_exit
+name|error_exit
 argument_list|(
 literal|1
+argument_list|,
+literal|"mloop: ERROR, select error on isdn device, errno = %d!"
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 block|}
@@ -2177,6 +2370,19 @@ name|msg_rd_buf
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|MSG_PACKET_IND
+case|:
+name|msg_packet_ind
+argument_list|(
+operator|(
+name|msg_packet_ind_t
+operator|*
+operator|)
+name|msg_rd_buf
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|log
 argument_list|(
@@ -2236,6 +2442,14 @@ expr_stmt|;
 name|close_allactive
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|I4B_EXTERNAL_MONITOR
+name|monitor_clear_rights
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|entrycount
 operator|=
 operator|-
@@ -2267,9 +2481,13 @@ argument_list|,
 name|config_error_flag
 argument_list|)
 expr_stmt|;
-name|do_exit
+name|error_exit
 argument_list|(
 literal|1
+argument_list|,
+literal|"rereadconfig: there were %d error(s) in the configuration file, terminating!"
+argument_list|,
+name|config_error_flag
 argument_list|)
 expr_stmt|;
 block|}
@@ -2373,9 +2591,16 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|do_exit
+name|error_exit
 argument_list|(
 literal|1
+argument_list|,
+literal|"reopenfiles: acct rename failed, cause = %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2405,9 +2630,13 @@ argument_list|,
 name|acctfile
 argument_list|)
 expr_stmt|;
-name|do_exit
+name|error_exit
 argument_list|(
 literal|1
+argument_list|,
+literal|"ERROR, can't open acctfile %s for writing, terminating!"
+argument_list|,
+name|acctfile
 argument_list|)
 expr_stmt|;
 block|}
@@ -2489,9 +2718,16 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|do_exit
+name|error_exit
 argument_list|(
 literal|1
+argument_list|,
+literal|"reopenfiles: log rename failed, cause = %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2526,9 +2762,18 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
+name|error_exit
 argument_list|(
 literal|1
+argument_list|,
+literal|"reopenfiles: ERROR, cannot open logfile %s: %s\n"
+argument_list|,
+name|logfile
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - misc support routines  *	----------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Mon Jul  5 15:29:22 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - misc support routines  *	----------------------------------  *  *	$Id: support.c,v 1.63 1999/12/13 21:25:25 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 21:49:05 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -100,9 +100,16 @@ name|log
 argument_list|(
 name|LL_DBG
 argument_list|,
-literal|"find_active_entry_by_driver: entry %d, cdid is CDID_UNUSED!"
+literal|"find_active_entry_by_driver: entry %d [%s%d], cdid=CDID_UNUSED !"
 argument_list|,
 name|i
+argument_list|,
+name|bdrivername
+argument_list|(
+name|drivertype
+argument_list|)
+argument_list|,
+name|driverunit
 argument_list|)
 operator|)
 argument_list|)
@@ -132,9 +139,16 @@ name|log
 argument_list|(
 name|LL_DBG
 argument_list|,
-literal|"find_active_entry_by_driver: entry %d, cdid is CDID_RESERVED!"
+literal|"find_active_entry_by_driver: entry %d [%s%d], cdid=CDID_RESERVED!"
 argument_list|,
 name|i
+argument_list|,
+name|bdrivername
+argument_list|(
+name|drivertype
+argument_list|)
+argument_list|,
+name|driverunit
 argument_list|)
 operator|)
 argument_list|)
@@ -2055,9 +2069,16 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|do_exit
+name|error_exit
 argument_list|(
 literal|1
+argument_list|,
+literal|"find_matching_entry_incoming: ioctl I4B_UPDOWN_IND failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2363,387 +2384,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*---------------------------------------------------------------------------*  *	get name of a controller  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-specifier|const
-name|char
-modifier|*
-name|name_of_controller
-parameter_list|(
-name|int
-name|ctrl_type
-parameter_list|,
-name|int
-name|card_type
-parameter_list|)
-block|{
-specifier|static
-name|char
-modifier|*
-name|passive_card
-index|[]
-init|=
-block|{
-literal|"Teles S0/8"
-block|,
-literal|"Teles S0/16"
-block|,
-literal|"Teles S0/16.3"
-block|,
-literal|"AVM A1 or Fritz!Card"
-block|,
-literal|"Teles S0/16.3 PnP"
-block|,
-literal|"Creatix S0 PnP"
-block|,
-literal|"USRobotics Sportster ISDN TA"
-block|,
-literal|"Dr. Neuhaus NICCY Go@"
-block|,
-literal|"Sedlbauer win speed"
-block|,
-literal|"Dynalink IS64PH"
-block|,
-literal|"ISDN Master, MasterII or Blaster"
-block|,
-literal|"AVM PCMCIA Fritz!Card"
-block|,
-literal|"ELSA QuickStep 1000pro/ISA"
-block|,
-literal|"ELSA QuickStep 1000pro/PCI"
-block|,
-literal|"Siemens I-Talk"
-block|,
-literal|"ELSA MicroLink ISDN/MC"
-block|,
-literal|"ELSA MicroLink MCall"
-block|,
-literal|"ITK ix1 micro"
-block|,
-literal|"AVM Fritz!Card PCI"
-block|,
-literal|"ELSA PCC-16"
-block|,
-literal|"AVM Fritz!Card PnP"
-block|,
-literal|"Siemens I-Surf 2.0 PnP"
-block|,
-literal|"Asuscom ISDNlink 128K PnP"
-block|}
-decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|daic_card
-index|[]
-init|=
-block|{
-literal|"EICON.Diehl S"
-block|,
-literal|"EICON.Diehl SX/SXn"
-block|,
-literal|"EICON.Diehl SCOM"
-block|,
-literal|"EICON.Diehl QUADRO"
-block|, 	}
-decl_stmt|;
-if|if
-condition|(
-name|ctrl_type
-operator|==
-name|CTRL_PASSIVE
-condition|)
-block|{
-name|int
-name|index
-init|=
-name|card_type
-operator|-
-name|CARD_TYPEP_8
-decl_stmt|;
-if|if
-condition|(
-name|index
-operator|>=
-literal|0
-operator|&&
-name|index
-operator|<
-operator|(
-sizeof|sizeof
-name|passive_card
-operator|/
-sizeof|sizeof
-name|passive_card
-index|[
-literal|0
-index|]
-operator|)
-condition|)
-return|return
-name|passive_card
-index|[
-name|index
-index|]
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|ctrl_type
-operator|==
-name|CTRL_DAIC
-condition|)
-block|{
-name|int
-name|index
-init|=
-name|card_type
-operator|-
-name|CARD_TYPEA_DAIC_S
-decl_stmt|;
-if|if
-condition|(
-name|index
-operator|>=
-literal|0
-operator|&&
-name|index
-operator|<
-operator|(
-sizeof|sizeof
-name|daic_card
-operator|/
-sizeof|sizeof
-name|daic_card
-index|[
-literal|0
-index|]
-operator|)
-condition|)
-return|return
-name|daic_card
-index|[
-name|index
-index|]
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|ctrl_type
-operator|==
-name|CTRL_TINADD
-condition|)
-block|{
-return|return
-literal|"Stollmann tina-dd"
-return|;
-block|}
-return|return
-literal|"unknown card type"
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*---------------------------------------------------------------------------*  *	init controller state array  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-name|void
-name|init_controller
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-name|int
-name|max
-init|=
-literal|1
-decl_stmt|;
-name|msg_ctrl_info_req_t
-name|mcir
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|max
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|mcir
-operator|.
-name|controller
-operator|=
-name|i
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ioctl
-argument_list|(
-name|isdnfd
-argument_list|,
-name|I4B_CTRL_INFO_REQ
-argument_list|,
-operator|&
-name|mcir
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-name|log
-argument_list|(
-name|LL_ERR
-argument_list|,
-literal|"init_controller: ioctl I4B_CTRL_INFO_REQ failed: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|do_exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|(
-name|ncontroller
-operator|=
-name|max
-operator|=
-name|mcir
-operator|.
-name|ncontroller
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|log
-argument_list|(
-name|LL_ERR
-argument_list|,
-literal|"init_controller: no ISDN controller found!"
-argument_list|)
-expr_stmt|;
-name|do_exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|mcir
-operator|.
-name|ctrl_type
-operator|==
-operator|-
-literal|1
-operator|||
-name|mcir
-operator|.
-name|card_type
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|log
-argument_list|(
-name|LL_ERR
-argument_list|,
-literal|"init_controller: ctrl/card is invalid!"
-argument_list|)
-expr_stmt|;
-name|do_exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* init controller tab */
-if|if
-condition|(
-operator|(
-name|init_controller_state
-argument_list|(
-name|i
-argument_list|,
-name|mcir
-operator|.
-name|ctrl_type
-argument_list|,
-name|mcir
-operator|.
-name|card_type
-argument_list|,
-name|mcir
-operator|.
-name|tei
-argument_list|)
-operator|)
-operator|==
-name|ERROR
-condition|)
-block|{
-name|log
-argument_list|(
-name|LL_ERR
-argument_list|,
-literal|"init_controller: init_controller_state for controller %d failed"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-name|do_exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|DBGL
-argument_list|(
-name|DL_RCCF
-argument_list|,
-operator|(
-name|log
-argument_list|(
-name|LL_DBG
-argument_list|,
-literal|"init_controller: found %d ISDN controller(s)"
-argument_list|,
-name|max
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3178,9 +2818,16 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|do_exit
+name|error_exit
 argument_list|(
 literal|1
+argument_list|,
+literal|"ioctl I4B_TIMEOUT_UPD failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3486,9 +3133,16 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|do_exit
+name|error_exit
 argument_list|(
 literal|1
+argument_list|,
+literal|"if_up: ioctl I4B_UPDOWN_IND failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3622,9 +3276,16 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|do_exit
+name|error_exit
 argument_list|(
 literal|1
+argument_list|,
+literal|"if_down: ioctl I4B_UPDOWN_IND failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3790,9 +3451,16 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|do_exit
+name|error_exit
 argument_list|(
 literal|1
+argument_list|,
+literal|"dialresponse: ioctl I4B_DIALOUT_RESP failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

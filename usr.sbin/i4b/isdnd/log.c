@@ -1,61 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - logging routines  *	-----------------------------  *  * $FreeBSD$   *  *      last edit-date: [Sun Feb 14 10:11:18 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - logging routines  *	-----------------------------  *  *	$Id: log.c,v 1.23 1999/12/13 21:25:25 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 21:47:28 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<regex.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/i4b_ioctl.h>
-end_include
 
 begin_include
 include|#
@@ -137,34 +83,48 @@ block|,
 name|LOG_ERR
 block|}
 block|,
-comment|/* error conditions */
+comment|/* error conditions			*/
 block|{
 literal|"WRN"
 block|,
 name|LOG_WARNING
 block|}
 block|,
-comment|/* warning conditions, nonfatal */
+comment|/* warning conditions, nonfatal		*/
 block|{
 literal|"DMN"
 block|,
 name|LOG_NOTICE
 block|}
 block|,
-comment|/* normal but significant condition, daemon*/
+comment|/* significant conditions of the daemon	*/
 block|{
 literal|"CHD"
 block|,
 name|LOG_INFO
 block|}
 block|,
-comment|/* informational, call handling */
+comment|/* informational, call handling		*/
 block|{
 literal|"DBG"
 block|,
 name|LOG_DEBUG
 block|}
-comment|/* debug messages */
+block|,
+comment|/* debug messages 			*/
+block|{
+literal|"MER"
+block|,
+name|LOG_ERR
+block|}
+block|,
+comment|/* monitor error conditions		*/
+block|{
+literal|"PKT"
+block|,
+name|LOG_INFO
+block|}
+comment|/* packet logging 			*/
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -546,6 +506,58 @@ index|]
 operator|.
 name|text
 argument_list|,
+comment|/*  * FreeBSD-current integrated ncurses. Since then it is no longer possible  * to write to the last column in the logfilewindow without causing an  * automatic newline to occur resulting in a blank line in that window.  */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+include|#
+directive|include
+file|<osreldate.h>
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|400009
+warning|#
+directive|warning
+literal|"FreeBSD ncurses is buggy: write to last column = auto newline!"
+name|COLS
+operator|-
+operator|(
+operator|(
+name|strlen
+argument_list|(
+name|dp
+argument_list|)
+operator|)
+operator|+
+operator|(
+name|strlen
+argument_list|(
+name|logtab
+index|[
+name|what
+index|]
+operator|.
+name|text
+argument_list|)
+operator|)
+operator|+
+literal|3
+operator|)
+argument_list|,
+name|buffer
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|COLS
 operator|-
 operator|(
@@ -570,21 +582,39 @@ operator|)
 operator|+
 literal|2
 operator|)
-argument_list|,
+operator|,
 name|buffer
-argument_list|)
-expr_stmt|;
+block|)
+empty_stmt|;
+endif|#
+directive|endif
 name|wrefresh
 argument_list|(
 name|lower_w
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|I4B_EXTERNAL_MONITOR
+end_ifdef
+
+begin_if
+if|if
+condition|(
+name|what
+operator|!=
+name|LL_MER
+condition|)
+comment|/* don't send monitor errs, endless loop !!! */
 name|monitor_evnt_log
 argument_list|(
 name|logtab
@@ -604,8 +634,14 @@ argument_list|,
 name|buffer
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_if
 if|if
 condition|(
 name|uselogfile
@@ -677,9 +713,15 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_if
 if|#
 directive|if
 name|DEBUG
+end_if
+
+begin_if
 if|if
 condition|(
 name|what
@@ -694,18 +736,18 @@ argument_list|(
 name|buffer
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_if
 
 begin_comment
+unit|}
 comment|/*---------------------------------------------------------------------------*  *	return ptr to static area containing date/time  *---------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|char
-modifier|*
+begin_expr_stmt
+unit|char
+operator|*
 name|getlogdatetime
-parameter_list|()
+argument_list|()
 block|{
 specifier|static
 name|char
@@ -713,23 +755,23 @@ name|logdatetime
 index|[
 literal|41
 index|]
-decl_stmt|;
+block|;
 name|time_t
 name|tim
-decl_stmt|;
+block|;
 specifier|register
-name|struct
+expr|struct
 name|tm
-modifier|*
+operator|*
 name|tp
-decl_stmt|;
+block|;
 name|tim
 operator|=
 name|time
 argument_list|(
 name|NULL
 argument_list|)
-expr_stmt|;
+block|;
 name|tp
 operator|=
 name|localtime
@@ -737,7 +779,7 @@ argument_list|(
 operator|&
 name|tim
 argument_list|)
-expr_stmt|;
+block|;
 name|strftime
 argument_list|(
 name|logdatetime
@@ -748,14 +790,14 @@ name|I4B_TIME_FORMAT
 argument_list|,
 name|tp
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 operator|(
 name|logdatetime
 operator|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	check for a match in the regexp array  *---------------------------------------------------------------------------*/
