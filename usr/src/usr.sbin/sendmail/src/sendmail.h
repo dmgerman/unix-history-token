@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.86		%G%"
+literal|"@(#)sendmail.h	3.87		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -242,10 +242,6 @@ modifier|*
 name|q_mailer
 decl_stmt|;
 comment|/* mailer to use */
-name|short
-name|q_rmailer
-decl_stmt|;
-comment|/* real mailer (before mapping) */
 name|u_short
 name|q_flags
 decl_stmt|;
@@ -561,6 +557,17 @@ end_define
 
 begin_comment
 comment|/* need Message-Id: field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_CANONICAL
+value|000004000L
+end_define
+
+begin_comment
+comment|/* make addresses canonical "u@dom" */
 end_comment
 
 begin_define
@@ -911,6 +918,12 @@ name|ADDRESS
 name|e_from
 decl_stmt|;
 comment|/* the person it is from */
+name|char
+modifier|*
+modifier|*
+name|e_fromdomain
+decl_stmt|;
+comment|/* the domain part of the sender */
 name|ADDRESS
 modifier|*
 name|e_returnto

@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.30
+literal|3.31
 operator|%
 name|G
 operator|%
@@ -1532,6 +1532,10 @@ block|,
 literal|'X'
 block|,
 name|M_FULLSMTP
+block|,
+literal|'C'
+block|,
+name|M_CANONICAL
 block|,
 literal|'\0'
 block|,

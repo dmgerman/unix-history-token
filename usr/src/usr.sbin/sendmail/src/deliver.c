@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.112
+literal|3.113
 operator|%
 name|G
 operator|%
@@ -1987,7 +1987,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"openmailer:\n"
+literal|"openmailer:"
 argument_list|)
 expr_stmt|;
 name|printav
@@ -3084,6 +3084,8 @@ init|=
 name|macvalue
 argument_list|(
 literal|'g'
+argument_list|,
+name|CurEnv
 argument_list|)
 decl_stmt|;
 name|char
@@ -3244,12 +3246,6 @@ specifier|extern
 name|char
 modifier|*
 name|capitalize
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|hvalue
 parameter_list|()
 function_decl|;
 specifier|extern

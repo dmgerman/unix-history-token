@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.54
+literal|3.55
 operator|%
 name|G
 operator|%
@@ -144,6 +144,13 @@ name|NULL
 operator|)
 return|;
 comment|/* 	**  Apply rewriting rules. 	**	Ruleset 0 does basic parsing.  It must resolve. 	*/
+name|rewrite
+argument_list|(
+name|pvp
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
 name|rewrite
 argument_list|(
 name|pvp
@@ -3142,454 +3149,92 @@ name|printf
 argument_list|(
 literal|"%s: mailer %d (%s), host `%s', user `%s'\n"
 argument_list|,
-name|a
-operator|->
-name|q_paddr
+argument|a->q_paddr
 argument_list|,
-name|a
-operator|->
-name|q_mailer
-operator|->
-name|m_mno
-argument_list|,
-name|a
-operator|->
-name|q_mailer
-operator|->
-name|m_name
-argument_list|,
-name|a
-operator|->
-name|q_host
-argument_list|,
-name|a
-operator|->
-name|q_user
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|indent
-init|;
-name|i
-operator|>
+argument|for (i = indent; i>
 literal|0
-condition|;
-name|i
-operator|--
-control|)
-name|printf
-argument_list|(
+argument|; i--) 			printf(
 literal|"\t"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument|); 		printf(
 literal|"\tnext=%x, flags=%o, rmailer %d, alias=%x, sibling=%x, child=%x\n"
-argument_list|,
-name|a
-operator|->
-name|q_next
-argument_list|,
-name|a
-operator|->
-name|q_flags
-argument_list|,
-name|a
-operator|->
-name|q_rmailer
-argument_list|,
-name|a
-operator|->
-name|q_alias
-argument_list|,
-name|a
-operator|->
-name|q_sibling
-argument_list|,
-name|a
-operator|->
-name|q_child
-argument_list|)
-expr_stmt|;
+argument|, 		       a->q_next, a->q_flags, a->q_rmailer, a->q_alias, 		       a->q_sibling, a->q_child);
 comment|/* follow the chain if appropriate */
-if|if
-condition|(
-operator|!
-name|follow
-condition|)
-return|return;
-name|indent
-operator|++
-expr_stmt|;
-name|printaddr
-argument_list|(
-name|a
-operator|->
-name|q_child
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|indent
-operator|--
-expr_stmt|;
-name|a
-operator|=
-name|a
-operator|->
-name|q_sibling
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|first
-condition|)
-name|printf
-argument_list|(
+argument|if (!follow) 			return; 		 		indent++; 		printaddr(a->q_child, TRUE); 		indent--; 		a = a->q_sibling; 	} 	if (first) 		printf(
 literal|"[NULL]\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_endif
+argument|); }
 endif|#
 directive|endif
 endif|DEBUG
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		senderaddress -- if set, uses the sender rewriting rules **			rather than the recipient rewriting rules. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|remotename
-parameter_list|(
-name|name
-parameter_list|,
-name|m
-parameter_list|,
-name|senderaddress
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|struct
-name|mailer
-modifier|*
-name|m
-decl_stmt|;
-name|bool
-name|senderaddress
-decl_stmt|;
-block|{
-specifier|register
-name|char
-modifier|*
-modifier|*
-name|pvp
-decl_stmt|;
-name|char
-modifier|*
-name|fancy
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|macvalue
-parameter_list|()
-function_decl|;
-name|char
-modifier|*
-name|oldg
-init|=
-name|macvalue
-argument_list|(
+argument|char * remotename(name, m, senderaddress) 	char *name; 	struct mailer *m; 	bool senderaddress; { 	register char **pvp; 	char *fancy; 	extern char *macvalue(); 	char *oldg = macvalue(
 literal|'g'
-argument_list|)
-decl_stmt|;
-specifier|static
-name|char
-name|buf
-index|[
-name|MAXNAME
-index|]
-decl_stmt|;
-name|char
-name|lbuf
-index|[
-name|MAXNAME
-index|]
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|prescan
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|crackaddr
-parameter_list|()
-function_decl|;
+argument|, CurEnv); 	static char buf[MAXNAME]; 	char lbuf[MAXNAME]; 	extern char **prescan(); 	extern char *crackaddr();
 ifdef|#
 directive|ifdef
 name|DEBUG
-if|if
-condition|(
-name|tTd
-argument_list|(
+argument|if (tTd(
 literal|12
-argument_list|,
+argument|,
 literal|1
-argument_list|)
-condition|)
-name|printf
-argument_list|(
+argument|)) 		printf(
 literal|"remotename(%s)\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
+argument|, name);
 endif|#
 directive|endif
 endif|DEBUG
-comment|/* 	**  First put this address into canonical form. 	**	First turn it into a macro. 	**	Then run it through ruleset 1 or 2, depending on whether 	**		it is a sender or a recipient address. 	**	If the mailer defines a rewriting set, run it through 	**		there next. 	*/
-comment|/* save away the extraneous pretty stuff */
-name|fancy
-operator|=
-name|crackaddr
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
-comment|/* now run through ruleset four */
-name|pvp
-operator|=
-name|prescan
-argument_list|(
-name|name
-argument_list|,
+comment|/* 	**  Do a heuristic crack of this name to extract any comment info. 	**	This will leave the name as a comment and a $g macro. 	*/
+argument|fancy = crackaddr(name);
+comment|/* 	**  Turn the name into canonical form. 	**	Normally this will be RFC 822 style, i.e., "user@domain". 	**	If this only resolves to "user", and the "C" flag is 	**	specified in the sending mailer, then the sender's 	**	domain will be appended. 	*/
+argument|pvp = prescan(name,
 literal|'\0'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pvp
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|name
-operator|)
-return|;
-if|if
-condition|(
-name|senderaddress
-condition|)
-block|{
-name|rewrite
-argument_list|(
-name|pvp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|m_s_rwset
-operator|>
+argument|); 	if (pvp == NULL) 		return (name); 	rewrite(pvp,
+literal|3
+argument|); 	if (CurEnv->e_fromdomain != NULL) 	{
+comment|/* append from domain to this address */
+argument|register char **pxp = pvp;  		while (*pxp != NULL&& strcmp(*pxp,
+literal|"@"
+argument|) !=
 literal|0
-condition|)
-name|rewrite
-argument_list|(
-name|pvp
-argument_list|,
-name|m
-operator|->
-name|m_s_rwset
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|rewrite
-argument_list|(
-name|pvp
-argument_list|,
+argument|) 			pxp++; 		if (*pxp == NULL) 		{ 			register char **qxq = CurEnv->e_fromdomain;  			while (*qxq != NULL) 				*pxp++ = *qxq++; 		} 	}
+comment|/* 	**  Now do more specific rewriting. 	**	Rewrite using ruleset 1 or 2 depending on whether this is 	**		a sender address or not. 	**	Then run it through any receiving-mailer-specific rulesets. 	*/
+argument|if (senderaddress) 	{ 		rewrite(pvp,
+literal|1
+argument|); 		if (m->m_s_rwset>
+literal|0
+argument|) 			rewrite(pvp, m->m_s_rwset); 	} 	else 	{ 		rewrite(pvp,
 literal|2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|m_r_rwset
-operator|>
+argument|); 		if (m->m_r_rwset>
 literal|0
-condition|)
-name|rewrite
-argument_list|(
-name|pvp
-argument_list|,
-name|m
-operator|->
-name|m_r_rwset
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* now add any comment info we had before back */
-name|cataddr
-argument_list|(
-name|pvp
-argument_list|,
-name|lbuf
-argument_list|,
-sizeof|sizeof
-name|lbuf
-argument_list|)
-expr_stmt|;
-name|define
-argument_list|(
+argument|) 			rewrite(pvp, m->m_r_rwset); 	}
+comment|/* 	**  Now restore the comment information we had at the beginning. 	*/
+argument|cataddr(pvp, lbuf, sizeof lbuf); 	define(
 literal|'g'
-argument_list|,
-name|lbuf
-argument_list|)
-expr_stmt|;
-name|expand
-argument_list|(
-name|fancy
-argument_list|,
-name|buf
-argument_list|,
-operator|&
-name|buf
-index|[
-sizeof|sizeof
-name|buf
-operator|-
+argument|, lbuf); 	expand(fancy, buf,&buf[sizeof buf -
 literal|1
-index|]
-argument_list|,
-name|CurEnv
-argument_list|)
-expr_stmt|;
-name|define
-argument_list|(
+argument|], CurEnv); 	define(
 literal|'g'
-argument_list|,
-name|oldg
-argument_list|)
-expr_stmt|;
+argument|, oldg);
 ifdef|#
 directive|ifdef
 name|DEBUG
-if|if
-condition|(
-name|tTd
-argument_list|(
+argument|if (tTd(
 literal|12
-argument_list|,
+argument|,
 literal|1
-argument_list|)
-condition|)
-name|printf
-argument_list|(
+argument|)) 		printf(
 literal|"remotename => `%s'\n"
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
+argument|, buf);
 endif|#
 directive|endif
 endif|DEBUG
-return|return
-operator|(
-name|buf
-operator|)
-return|;
-block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  CANONNAME -- make name canonical ** **	This is used for SMTP and misc. printing.  Given a print **	address, it strips out comments, etc., and puts on exactly **	one set of brackets. ** **	Parameters: **		name -- the name to make canonical. ** **	Returns: **		pointer to canonical name. ** **	Side Effects: **		none. ** **	Warning: **		result is saved in static buf; future calls will trash it. */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|canonname
-parameter_list|(
-name|name
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|{
-specifier|static
-name|char
-name|nbuf
-index|[
-name|MAXNAME
-index|]
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-modifier|*
-name|pvp
-decl_stmt|;
-name|pvp
-operator|=
-name|prescan
-argument_list|(
-name|name
-argument_list|,
+argument|return (buf); }
+comment|/* **  CANONNAME -- make name canonical ** **	This is used for SMTP and misc. printing.  Given a print **	address, it strips out comments, etc. ** **	Parameters: **		name -- the name to make canonical. ** **	Returns: **		pointer to canonical name. ** **	Side Effects: **		none. ** **	Warning: **		result is saved in static buf; future calls will trash it. */
+argument|char * canonname(name) 	char *name; { 	static char nbuf[MAXNAME]; 	register char **pvp;  	pvp = prescan(name,
 literal|'\0'
-argument_list|)
-expr_stmt|;
-name|rewrite
-argument_list|(
-name|pvp
-argument_list|,
+argument|); 	rewrite(pvp,
 literal|3
-argument_list|)
-expr_stmt|;
-name|cataddr
-argument_list|(
-name|pvp
-argument_list|,
-name|nbuf
-argument_list|,
-sizeof|sizeof
-name|nbuf
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|nbuf
-operator|)
-return|;
-block|}
-end_function
+argument|); 	cataddr(pvp, nbuf, sizeof nbuf); 	return (nbuf); }
+end_block
 
 end_unit
 

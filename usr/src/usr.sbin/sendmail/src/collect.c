@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.51
+literal|3.52
 operator|%
 name|G
 operator|%
@@ -71,12 +71,6 @@ specifier|extern
 name|char
 modifier|*
 name|hvalue
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|macvalue
 parameter_list|()
 function_decl|;
 specifier|extern
