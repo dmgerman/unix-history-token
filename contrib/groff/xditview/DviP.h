@@ -476,6 +476,9 @@ name|fill_type
 decl_stmt|;
 name|Pixmap
 name|gray
+index|[
+literal|8
+index|]
 decl_stmt|;
 name|int
 name|backing_store

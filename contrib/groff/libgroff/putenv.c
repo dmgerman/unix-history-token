@@ -145,12 +145,11 @@ begin_function
 name|int
 name|putenv
 parameter_list|(
-name|string
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
