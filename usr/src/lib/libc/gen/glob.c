@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.19 (Berkeley) %G%"
+literal|"@(#)glob.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1822,9 +1822,6 @@ name|Char
 modifier|*
 name|bufnext
 decl_stmt|,
-modifier|*
-name|bufend
-decl_stmt|,
 name|patbuf
 index|[
 name|MAXPATHLEN
@@ -1858,12 +1855,6 @@ expr_stmt|;
 name|bufnext
 operator|=
 name|patbuf
-expr_stmt|;
-name|bufend
-operator|=
-name|bufnext
-operator|+
-name|MAXPATHLEN
 expr_stmt|;
 comment|/* We don't need to check for buffer overflow any more. */
 while|while
