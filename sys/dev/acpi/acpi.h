@@ -16,7 +16,7 @@ name|_DEV_ACPI_ACPI_H_
 end_define
 
 begin_comment
-comment|/* PowerResource control */
+comment|/*   * PowerResource control   */
 end_comment
 
 begin_struct
@@ -35,6 +35,14 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* _PR[0-2] */
+name|u_int8_t
+name|state
+decl_stmt|;
+comment|/* D0 to D3 */
+name|u_int8_t
+name|next_state
+decl_stmt|;
+comment|/* initialized with D0 */
 define|#
 directive|define
 name|ACPI_D_STATE_D0
@@ -55,15 +63,11 @@ define|#
 directive|define
 name|ACPI_D_STATE_UNKNOWN
 value|255
-name|u_int8_t
-name|state
-decl_stmt|;
-comment|/* D0 to D3 */
-name|u_int8_t
-name|next_state
-decl_stmt|;
-comment|/* initialized with D0 */
 comment|/* _PRW */
+name|u_int8_t
+name|wake_cap
+decl_stmt|;
+comment|/* wake capability */
 define|#
 directive|define
 name|ACPI_D_WAKECAP_DISABLE
@@ -81,10 +85,6 @@ directive|define
 name|ACPI_D_WAKECAP_DEFAULT
 value|1
 comment|/* XXX default enable for testing */
-name|u_int8_t
-name|wake_cap
-decl_stmt|;
-comment|/* wake capability */
 name|boolean_t
 name|gpe_enabled
 decl_stmt|;
@@ -103,7 +103,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Device Power Management Chind Object Type */
+comment|/* Device Power Management Chained Object Type */
 end_comment
 
 begin_define
@@ -177,6 +177,10 @@ name|aml_name
 modifier|*
 name|name
 decl_stmt|;
+name|u_int8_t
+name|state
+decl_stmt|;
+comment|/* OFF or ON */
 define|#
 directive|define
 name|ACPI_POWER_RESOURCE_ON
@@ -185,10 +189,6 @@ define|#
 directive|define
 name|ACPI_POWER_RESOURCE_OFF
 value|0
-name|u_int8_t
-name|state
-decl_stmt|;
-comment|/* OFF or ON */
 define|#
 directive|define
 name|ACPI_PR_MAX
@@ -216,7 +216,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*Event Structure */
+comment|/*  * Event Structure   */
 end_comment
 
 begin_struct
@@ -229,6 +229,9 @@ argument|acpi_event
 argument_list|)
 name|ae_q
 expr_stmt|;
+name|int
+name|ae_type
+decl_stmt|;
 define|#
 directive|define
 name|ACPI_EVENT_TYPE_FIXEDREG
@@ -242,9 +245,6 @@ directive|define
 name|ACPI_EVENT_TYPE_EC
 value|2
 name|int
-name|ae_type
-decl_stmt|;
-name|int
 name|ae_arg
 decl_stmt|;
 block|}
@@ -252,7 +252,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* softc */
+comment|/*   * Softc  */
 end_comment
 
 begin_typedef
@@ -336,6 +336,11 @@ name|struct
 name|acpi_system_state_package
 name|system_state_package
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|acpi_thread
+decl_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -357,131 +362,150 @@ argument|acpi_event
 argument_list|)
 name|event
 expr_stmt|;
-name|struct
-name|proc
-modifier|*
-name|acpi_thread
-decl_stmt|;
 block|}
 name|acpi_softc_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* Device State */
+comment|/*   * Device State   */
 end_comment
 
 begin_function_decl
+specifier|extern
 name|u_int8_t
 name|acpi_get_current_device_state
 parameter_list|(
 name|struct
 name|aml_name
 modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
 name|acpi_set_device_state
 parameter_list|(
 name|acpi_softc_t
 modifier|*
+name|sc
 parameter_list|,
 name|struct
 name|aml_name
 modifier|*
+name|name
 parameter_list|,
 name|u_int8_t
+name|state
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
 name|acpi_set_device_wakecap
 parameter_list|(
 name|acpi_softc_t
 modifier|*
+name|sc
 parameter_list|,
 name|struct
 name|aml_name
 modifier|*
+name|name
 parameter_list|,
 name|u_int8_t
+name|cap
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* PowerResource State */
+comment|/*   * PowerResource State   */
 end_comment
 
 begin_function_decl
+specifier|extern
 name|void
 name|acpi_powerres_init
 parameter_list|(
 name|acpi_softc_t
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
 name|acpi_powerres_debug
 parameter_list|(
 name|acpi_softc_t
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|u_int8_t
 name|acpi_get_current_powerres_state
 parameter_list|(
 name|struct
 name|aml_name
 modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
 name|acpi_set_powerres_state
 parameter_list|(
 name|acpi_softc_t
 modifier|*
+name|sc
 parameter_list|,
 name|struct
 name|aml_name
 modifier|*
+name|name
 parameter_list|,
 name|u_int8_t
+name|state
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
 name|acpi_powerres_set_sleeping_state
 parameter_list|(
 name|acpi_softc_t
 modifier|*
+name|sc
 parameter_list|,
 name|u_int8_t
+name|state
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* GPE enable bit manipulation */
+comment|/*   * GPE enable bit manipulation   */
 end_comment
 
 begin_function_decl
+specifier|extern
 name|void
 name|acpi_gpe_enable_bit
 parameter_list|(
@@ -496,22 +520,59 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*Event queue*/
+comment|/*  * Event queue  */
 end_comment
 
 begin_function_decl
+specifier|extern
 name|void
 name|acpi_queue_event
 parameter_list|(
 name|acpi_softc_t
 modifier|*
+name|sc
 parameter_list|,
 name|int
+name|type
 parameter_list|,
 name|int
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Debugging, console output  *  * XXX this should really be using device_printf  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|acpi_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEVPRINTF
+parameter_list|(
+name|args
+modifier|...
+parameter_list|)
+value|printf("acpi0: " args)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUGPRINT
+parameter_list|(
+name|args
+modifier|...
+parameter_list|)
+value|do { if (acpi_debug) ACPI_DEVPRINTF(args);} while(0)
+end_define
 
 begin_endif
 endif|#

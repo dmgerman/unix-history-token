@@ -303,7 +303,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * These data cannot be in acpi_softc because they should be initialized  * before probing device.  */
+comment|/*  * These items cannot be in acpi_softc because they are be initialized  * before probing for the device.  */
 end_comment
 
 begin_decl_stmt
@@ -337,7 +337,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Character device stuff */
+comment|/* Character device */
 end_comment
 
 begin_decl_stmt
@@ -382,46 +382,32 @@ name|cdevsw
 name|acpi_cdevsw
 init|=
 block|{
-comment|/* open */
 name|acpiopen
 block|,
-comment|/* close */
 name|acpiclose
 block|,
-comment|/* read */
 name|noread
 block|,
-comment|/* write */
 name|nowrite
 block|,
-comment|/* ioctl */
 name|acpiioctl
 block|,
-comment|/* poll */
 name|nopoll
 block|,
-comment|/* mmap */
 name|acpimmap
 block|,
-comment|/* strategy */
 name|nostrategy
 block|,
-comment|/* name */
 literal|"acpi"
 block|,
-comment|/* maj */
 name|CDEV_MAJOR
 block|,
-comment|/* dump */
 name|nodump
 block|,
-comment|/* psize */
 name|nopsize
 block|,
-comment|/* flags */
 literal|0
 block|,
-comment|/* bmaj */
 operator|-
 literal|1
 block|}
@@ -429,20 +415,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ACPI registers stuff */
+comment|/*   * ACPI register I/O   */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 value|1
 end_define
 
@@ -681,7 +667,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Miscellous utility functions */
+comment|/*   * Miscellous utility functions   */
 end_comment
 
 begin_function_decl
@@ -739,7 +725,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* System sleeping state stuff */
+comment|/*   * System sleeping state  */
 end_comment
 
 begin_function_decl
@@ -818,7 +804,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* ACPI event stuff */
+comment|/*   * ACPI events  */
 end_comment
 
 begin_function_decl
@@ -882,7 +868,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* New-bus dependent code */
+comment|/*  * Bus interface   */
 end_comment
 
 begin_function_decl
@@ -938,7 +924,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*Thread stuff*/
+comment|/*  * Event thread  */
 end_comment
 
 begin_function_decl
@@ -1029,28 +1015,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|ACPI_DEVPRINTF
-parameter_list|(
-name|args
-modifier|...
-parameter_list|)
-value|printf("acpi0: " args)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_DEBUGPRINT
-parameter_list|(
-name|args
-modifier|...
-parameter_list|)
-value|do {					\ 	if (acpi_debug) {						\ 		ACPI_DEVPRINTF(args);					\ 	}								\ } while(0)
-end_define
 
 begin_comment
 comment|/*  * ACPI pmap subsystem  */
@@ -1706,7 +1670,7 @@ index|]
 operator|(
 name|sc
 operator|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 operator|,
 operator|&
 name|value
@@ -1746,7 +1710,7 @@ index|]
 operator|(
 name|sc
 operator|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 operator|,
 operator|&
 name|value
@@ -1826,13 +1790,6 @@ break|break;
 case|case
 literal|3
 case|:
-if|#
-directive|if
-literal|0
-block|val  = bus_space_read_2(bst, bsh, 0); 		val |= bus_space_read_1(bst, bsh, 2)<< 16;
-else|#
-directive|else
-comment|/* or can we do this? */
 name|val
 operator|=
 name|bus_space_read_4
@@ -1848,8 +1805,6 @@ name|val
 operator|&=
 literal|0x00ffffff
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|4
@@ -2164,7 +2119,7 @@ if|if
 condition|(
 name|io
 operator|==
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 condition|)
 block|{
 name|acpi_register_input
@@ -2300,7 +2255,7 @@ if|if
 condition|(
 name|io
 operator|==
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 condition|)
 block|{
 name|acpi_register_input
@@ -2442,7 +2397,7 @@ if|if
 condition|(
 name|io
 operator|==
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 condition|)
 block|{
 name|acpi_register_input
@@ -2583,7 +2538,7 @@ if|if
 condition|(
 name|io
 operator|==
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 condition|)
 block|{
 name|acpi_register_input
@@ -2666,7 +2621,7 @@ if|if
 condition|(
 name|io
 operator|==
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 condition|)
 block|{
 name|acpi_register_input
@@ -2754,7 +2709,7 @@ if|if
 condition|(
 name|io
 operator|==
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 condition|)
 block|{
 name|acpi_register_input
@@ -2851,7 +2806,7 @@ if|if
 condition|(
 name|io
 operator|==
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 condition|)
 block|{
 name|acpi_register_input
@@ -2952,7 +2907,7 @@ if|if
 condition|(
 name|io
 operator|==
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 condition|)
 block|{
 name|acpi_register_input
@@ -3049,7 +3004,7 @@ if|if
 condition|(
 name|io
 operator|==
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 condition|)
 block|{
 name|acpi_register_input
@@ -3223,7 +3178,7 @@ name|struct
 name|acpi_system_state_package
 name|ssp
 decl_stmt|;
-comment|/* 	 * XXX IBM TP laptops are expecting "Microsoft Windows*" as 	 * \_OS_ string, so we create it anyway :-( 	 */
+comment|/* 	 * Some systems (eg. IBM laptops) expect "Microsoft Windows*" as 	 * \_OS_ string, so we create it anyway. 	 */
 name|aml_new_name_group
 argument_list|(
 name|AML_NAME_GROUP_OS_DEFINED
@@ -3277,7 +3232,7 @@ name|string
 operator|=
 literal|"Microsoft Windows NG"
 expr_stmt|;
-comment|/* make namespace up */
+comment|/*  	 * Create namespace.  	 */
 name|dsdp
 operator|=
 name|sc
@@ -3340,7 +3295,7 @@ operator|=
 name|aml_get_rootname
 argument_list|()
 expr_stmt|;
-comment|/* shut up during the parsing */
+comment|/*  	 * Suppress debugging during AML parsing. 	 */
 name|debug
 operator|=
 name|aml_debug
@@ -3387,7 +3342,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* get sleeping type values from ACPI namespace */
+comment|/*  	 * Get sleeping type values from ACPI namespace. 	 */
 name|sc
 operator|->
 name|system_state
@@ -3801,7 +3756,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* 	 * FACS has no checksum (modified by both OS and BIOS) and in many 	 * cases,It is in NVS area. 	 */
+comment|/* 	 * FACS has no checksum (modified by both OS and BIOS) and in many 	 * cases, it is in nonvolatile storage. 	 */
 if|if
 condition|(
 name|strncmp
@@ -4133,6 +4088,7 @@ name|u_long
 name|ef
 decl_stmt|;
 comment|/* XXX should be MI */
+comment|/* XXX should always be called with interrupts enabled! */
 name|ef
 operator|=
 name|read_eflags
@@ -4153,7 +4109,7 @@ name|acpi_io_pm1_status
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|val_a
@@ -4213,7 +4169,7 @@ name|acpi_io_pm1_status
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|val_a
@@ -4250,7 +4206,7 @@ name|acpi_io_pm1_control
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|val_a
@@ -4321,7 +4277,7 @@ name|acpi_io_pm1_control
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|val_a
@@ -4366,7 +4322,7 @@ name|acpi_io_pm1_status
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|val_a
@@ -4482,12 +4438,12 @@ argument_list|,
 name|ACPI_S_STATE_S5
 argument_list|)
 expr_stmt|;
-comment|/*XXX Disable GPE intrrupt,or power on again in some machine*/
+comment|/* XXX Disable GPE intrrupt,or power on again in some machine */
 name|acpi_io_gpe0_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|vala
@@ -4497,7 +4453,7 @@ name|acpi_io_gpe1_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|vala
@@ -4645,7 +4601,7 @@ operator|=
 name|state
 expr_stmt|;
 block|}
-comment|/* 	 * XXX currently supported S1 and S5 only. 	 */
+comment|/* 	 * XXX currently support S1 and S5 only. 	 */
 switch|switch
 condition|(
 name|state
@@ -4862,7 +4818,7 @@ name|aml_local_stack_pop
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* XXX These shouldn't be here, but tentatively implemented. 	 * Sample application of aml_apply_foreach_found_objects(). 	 * We try to find and evaluate all of objects which have specified 	 * string. As the result, Battery Information, Battery Status and 	 * Power source will be reported. 	 */
+comment|/*  	 * XXX These shouldn't be here, but tentatively implemented. 	 * Sample application of aml_apply_foreach_found_objects(). 	 * We try to find and evaluate all of objects which have specified 	 * string. As the result, Battery Information, Battery Status and 	 * Power source will be reported. 	 */
 name|aml_apply_foreach_found_objects
 argument_list|(
 name|NULL
@@ -4894,7 +4850,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ACPI event stuff  */
+comment|/*  * ACPI events  */
 end_comment
 
 begin_function
@@ -4962,7 +4918,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/*If there is ACPI userland daemon, 			  this event should be 			  passed to it,so that user can determine power policy 			  and process some on userland (Not yet)*/
+comment|/* 			 * If there is ACPI userland daemon, 			 * this event should be passed to it 			 * so that the user can determine power policy. 			 */
 name|acpi_queue_event
 argument_list|(
 name|sc
@@ -5200,7 +5156,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Shut up */
-comment|/* Power Management 1 Status Registers */
+comment|/*  	 * Power Management 1 Status Registers  	 */
 name|status_a
 operator|=
 name|status_b
@@ -5215,7 +5171,7 @@ name|acpi_io_pm1_status
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|status_a
@@ -5224,12 +5180,12 @@ operator|&
 name|status_b
 argument_list|)
 expr_stmt|;
-comment|/* Get Current Interrupt Mask */
+comment|/*  	 * Get current interrupt mask 	 */
 name|acpi_io_pm1_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|enable_a
@@ -5238,7 +5194,7 @@ operator|&
 name|enable_b
 argument_list|)
 expr_stmt|;
-comment|/* Disable events and re-enable again */
+comment|/*  	 * Disable events and re-enable again 	 */
 if|if
 condition|(
 operator|(
@@ -5291,7 +5247,7 @@ name|acpi_io_pm1_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|val_a
@@ -5317,7 +5273,7 @@ name|acpi_io_pm1_status
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|val_a
@@ -5331,7 +5287,7 @@ name|acpi_io_pm1_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|enable_a
@@ -5346,7 +5302,7 @@ literal|0
 expr_stmt|;
 comment|/* Shut up again */
 block|}
-comment|/* General-Purpose Events 0 Status Registers */
+comment|/*  	 * General-Purpose Events 0 Status Registers 	 */
 name|status_0
 operator|=
 name|enable_0
@@ -5357,24 +5313,24 @@ name|acpi_io_gpe0_status
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|status_0
 argument_list|)
 expr_stmt|;
-comment|/* Get Current Interrupt Mask */
+comment|/*  	 * Get current interrupt mask  	 */
 name|acpi_io_gpe0_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|enable_0
 argument_list|)
 expr_stmt|;
-comment|/* Disable events and re-enable again */
+comment|/*  	 * Disable events and re-enable again  	 */
 if|if
 condition|(
 operator|(
@@ -5415,7 +5371,7 @@ name|acpi_io_gpe0_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|val_a
@@ -5427,14 +5383,14 @@ literal|0
 comment|/* Clear interrupt status */
 block|val_a = enable_0;
 comment|/* XXX */
-block|acpi_io_gpe0_status(sc, ACPI_REGISTERS_OUTPUT,&val_a);
+block|acpi_io_gpe0_status(sc, ACPI_REGISTER_OUTPUT,&val_a);
 comment|/* Re-enable interrupt */
-block|acpi_io_gpe0_enable(sc, ACPI_REGISTERS_OUTPUT,&enable_0);  		acpi_debug = 0;
+block|acpi_io_gpe0_enable(sc, ACPI_REGISTER_OUTPUT,&enable_0);  		acpi_debug = 0;
 comment|/* Shut up again */
 endif|#
 directive|endif
 block|}
-comment|/* General-Purpose Events 1 Status Registers */
+comment|/* 	 * General-Purpose Events 1 Status Registers 	 */
 name|status_1
 operator|=
 name|enable_1
@@ -5445,24 +5401,24 @@ name|acpi_io_gpe1_status
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|status_1
 argument_list|)
 expr_stmt|;
-comment|/* Get Current Interrupt Mask */
+comment|/* 	  Get current interrupt mask 	*/
 name|acpi_io_gpe1_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|enable_1
 argument_list|)
 expr_stmt|;
-comment|/* Disable events and re-enable again */
+comment|/* 	 * Disable events and re-enable again 	 */
 if|if
 condition|(
 operator|(
@@ -5503,7 +5459,7 @@ name|acpi_io_gpe1_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|val_a
@@ -5519,7 +5475,7 @@ name|acpi_io_gpe1_status
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|val_a
@@ -5530,7 +5486,7 @@ name|acpi_io_gpe1_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|enable_1
@@ -5774,7 +5730,7 @@ name|acpi_io_pm1_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|status_a
@@ -5835,7 +5791,7 @@ name|acpi_io_pm1_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|status_a
@@ -5887,7 +5843,7 @@ name|acpi_io_gpe0_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|status_a
@@ -5897,7 +5853,7 @@ name|acpi_io_gpe1_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|status_b
@@ -5910,7 +5866,7 @@ name|acpi_io_pm1_status
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|status_a
@@ -5923,7 +5879,7 @@ name|acpi_io_pm1_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|status_a
@@ -5936,7 +5892,7 @@ name|acpi_io_gpe0_status
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|status_a
@@ -5946,7 +5902,7 @@ name|acpi_io_gpe0_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|status_a
@@ -5956,7 +5912,7 @@ name|acpi_io_gpe1_status
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|status_a
@@ -5966,7 +5922,7 @@ name|acpi_io_gpe1_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|status_a
@@ -5976,7 +5932,7 @@ name|acpi_io_pm1_control
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|status_a
@@ -5989,7 +5945,7 @@ name|acpi_io_pm2_control
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|status_a
@@ -5999,7 +5955,7 @@ name|acpi_io_pm_timer
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|status_a
@@ -6039,7 +5995,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Character device stuff  */
+comment|/*  * Character device  */
 end_comment
 
 begin_function
@@ -6315,7 +6271,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * New-bus dependent code  */
+comment|/*  * Bus interface  */
 end_comment
 
 begin_decl_stmt
@@ -6944,8 +6900,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|acpi_softc
+name|acpi_softc_t
 modifier|*
 name|sc
 init|=
@@ -7611,7 +7566,7 @@ name|acpi_io_gpe0_status
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|bit
@@ -7621,7 +7576,7 @@ name|acpi_io_gpe0_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|status
@@ -7642,7 +7597,7 @@ name|acpi_io_gpe0_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|status
@@ -7671,7 +7626,7 @@ name|acpi_io_gpe1_status
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|bit
@@ -7681,7 +7636,7 @@ name|acpi_io_gpe1_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_INPUT
+name|ACPI_REGISTER_INPUT
 argument_list|,
 operator|&
 name|status
@@ -7695,7 +7650,7 @@ name|acpi_io_gpe1_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ACPI_REGISTERS_OUTPUT
+name|ACPI_REGISTER_OUTPUT
 argument_list|,
 operator|&
 name|status
