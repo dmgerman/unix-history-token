@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1983 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmdir.c	5.1 (Berkeley) %G%"
+literal|"@(#)rmdir.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * Remove directory  */
@@ -74,8 +80,6 @@ decl_stmt|;
 block|{
 name|int
 name|errors
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -88,12 +92,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s directory ...\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"usage: rmdir directory ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -102,17 +101,22 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-while|while
-condition|(
-operator|--
-name|argc
-condition|)
+for|for
+control|(
+name|errors
+operator|=
+literal|0
+init|;
+operator|*
+operator|++
+name|argv
+condition|;
+control|)
 if|if
 condition|(
 name|rmdir
 argument_list|(
 operator|*
-operator|++
 name|argv
 argument_list|)
 operator|<
@@ -132,16 +136,14 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|errors
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|exit
 argument_list|(
 name|errors
-operator|!=
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
