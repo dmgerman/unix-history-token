@@ -5120,47 +5120,48 @@ begin_comment
 comment|/*  * We need to handle DMA for target mode differently from initiator mode.  *   * DMA mapping and construction and submission of CTIO Request Entries  * and rendevous for completion are very tightly coupled because we start  * out by knowing (per platform) how much data we have to move, but we  * don't know, up front, how many DMA mapping segments will have to be used  * cover that data, so we don't know how many CTIO Request Entries we  * will end up using. Further, for performance reasons we may want to  * (on the last CTIO for Fibre Channel), send status too (if all went well).  *  * The standard vector still goes through isp_pci_dmasetup, but the callback  * for the DMA mapping routines comes here instead with the whole transfer  * mapped and a pointer to a partially filled in already allocated request  * queue entry. We finish the job.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|tdma_mk
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|bus_dma_segment_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|tdma_mkfc
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|bus_dma_segment_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|STATUS_WITH_DATA
+value|1
+end_define
 
 begin_function
 specifier|static
@@ -5222,6 +5223,11 @@ name|send_status
 decl_stmt|;
 name|int32_t
 name|resid
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 name|mp
 operator|=
@@ -5305,22 +5311,6 @@ name|rqs_seqno
 operator|=
 literal|1
 expr_stmt|;
-name|ISP_TDQE
-argument_list|(
-name|mp
-operator|->
-name|isp
-argument_list|,
-literal|"tdma_mk[no data]"
-argument_list|,
-operator|*
-name|mp
-operator|->
-name|iptrp
-argument_list|,
-name|cto
-argument_list|)
-expr_stmt|;
 name|isp_prt
 argument_list|(
 name|mp
@@ -5329,7 +5319,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO[%x] lun%d->iid%d flgs 0x%x sts 0x%x ssts 0x%x res %d"
+literal|"CTIO[%x] lun%d iid%d tag %x flgs %x sts %x ssts %x res %d"
 argument_list|,
 name|cto
 operator|->
@@ -5347,6 +5337,10 @@ name|ct_iid
 argument_list|,
 name|cto
 operator|->
+name|ct_tag_val
+argument_list|,
+name|cto
+operator|->
 name|ct_flags
 argument_list|,
 name|cto
@@ -5360,6 +5354,22 @@ argument_list|,
 name|cto
 operator|->
 name|ct_resid
+argument_list|)
+expr_stmt|;
+name|ISP_TDQE
+argument_list|(
+name|mp
+operator|->
+name|isp
+argument_list|,
+literal|"tdma_mk[no data]"
+argument_list|,
+operator|*
+name|mp
+operator|->
+name|iptrp
+argument_list|,
+name|cto
 argument_list|)
 expr_stmt|;
 name|ISP_SWIZ_CTIO
@@ -5391,6 +5401,69 @@ block|{
 name|nctios
 operator|++
 expr_stmt|;
+block|}
+comment|/* 	 * Check to see that we don't overflow. 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+operator|,
+name|j
+operator|=
+operator|*
+name|mp
+operator|->
+name|iptrp
+init|;
+name|i
+operator|<
+name|nctios
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|j
+operator|=
+name|ISP_NXT_QENTRY
+argument_list|(
+name|j
+argument_list|,
+name|RQUEST_QUEUE_LEN
+argument_list|(
+name|isp
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|==
+name|mp
+operator|->
+name|optr
+condition|)
+block|{
+name|isp_prt
+argument_list|(
+name|mp
+operator|->
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Request Queue Overflow [tdma_mk]"
+argument_list|)
+expr_stmt|;
+name|mp
+operator|->
+name|error
+operator|=
+name|MUSHERR_NOQENTRIES
+expr_stmt|;
+return|return;
+block|}
 block|}
 comment|/* 	 * Save syshandle, and potentially any SCSI status, which we'll 	 * reinsert on the last CTIO we're going to send. 	 */
 name|handle
@@ -5467,12 +5540,17 @@ name|cto
 operator|->
 name|ct_scsi_status
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|sflags |= CT_NODATA;
+ifndef|#
+directive|ifndef
+name|STATUS_WITH_DATA
+name|sflags
+operator||=
+name|CT_NO_DATA
+expr_stmt|;
 comment|/* 		 * We can't do a status at the same time as a data CTIO, so 		 * we need to synthesize an extra CTIO at this level. 		 */
-block|nctios++;
+name|nctios
+operator|++
+expr_stmt|;
 endif|#
 directive|endif
 block|}
@@ -5706,7 +5784,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * We're the last in a sequence of CTIOs, so mark 			 * this CTIO and save the handle to the CCB such that 			 * when this CTIO completes we can free dma resources 			 * and do whatever else we need to do to finish the 			 * rest of the command. 			 */
+comment|/* 			 * We're the last in a sequence of CTIOs, so mark 			 * this CTIO and save the handle to the CCB such that 			 * when this CTIO completes we can free dma resources 			 * and do whatever else we need to do to finish the 			 * rest of the command. We *don't* give this to the 			 * firmware to work on- the caller will do that. 			 */
 name|cto
 operator|->
 name|ct_syshandle
@@ -5758,7 +5836,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO[%x] lun%d for ID %d ct_flags 0x%x "
+literal|"CTIO[%x] lun%d iid %d tag %x ct_flags %x "
 literal|"scsi status %x resid %d"
 argument_list|,
 name|cto
@@ -5774,6 +5852,10 @@ argument_list|,
 name|cto
 operator|->
 name|ct_iid
+argument_list|,
+name|cto
+operator|->
+name|ct_tag_val
 argument_list|,
 name|cto
 operator|->
@@ -5799,7 +5881,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"CTIO[%x] lun%d for ID%d ct_flags 0x%x"
+literal|"CTIO[%x] lun%d iid%d tag %x ct_flags 0x%x"
 argument_list|,
 name|cto
 operator|->
@@ -5814,6 +5896,10 @@ argument_list|,
 name|cto
 operator|->
 name|ct_iid
+argument_list|,
+name|cto
+operator|->
+name|ct_tag_val
 argument_list|,
 name|cto
 operator|->
@@ -5937,6 +6023,13 @@ name|mp
 operator|->
 name|iptrp
 argument_list|)
+expr_stmt|;
+name|j
+operator|=
+operator|*
+name|mp
+operator|->
+name|iptrp
 expr_stmt|;
 operator|*
 name|mp
@@ -6128,7 +6221,7 @@ name|ct_dataseg
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Now swizzle the old one for the consumption of the 			 * chip. 			 */
+comment|/* 			 * Now swizzle the old one for the consumption 			 * of the chip and give it to the firmware to 			 * work on while we do the next. 			 */
 name|ISP_SWIZ_CTIO
 argument_list|(
 name|mp
@@ -6138,6 +6231,15 @@ argument_list|,
 name|octo
 argument_list|,
 name|octo
+argument_list|)
+expr_stmt|;
+name|ISP_ADD_REQUEST
+argument_list|(
+name|mp
+operator|->
+name|isp
+argument_list|,
+name|j
 argument_list|)
 expr_stmt|;
 block|}
@@ -8118,12 +8220,6 @@ literal|0
 operator|)
 condition|)
 block|{
-name|rq
-operator|->
-name|req_seg_count
-operator|=
-literal|1
-expr_stmt|;
 name|mp
 operator|=
 operator|&
@@ -8147,6 +8243,7 @@ name|rq
 operator|=
 name|rq
 expr_stmt|;
+comment|/* really a ct_entry_t or ct2_entry_t */
 name|mp
 operator|->
 name|iptrp
