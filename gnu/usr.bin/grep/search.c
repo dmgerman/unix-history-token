@@ -2723,6 +2723,14 @@ name|MB_CUR_MAX
 operator|>
 literal|1
 operator|&&
+name|offset
+operator|+
+name|beg
+operator|-
+name|buf
+operator|<
+name|size
+operator|&&
 name|mb_properties
 index|[
 name|offset
