@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfsmount.h,v 1.13 1998/02/18 09:28:47 jkh Exp $ */
+comment|/*	$Id: msdosfsmount.h,v 1.14 1998/02/22 15:09:54 ache Exp $ */
 end_comment
 
 begin_comment
@@ -202,6 +202,13 @@ literal|128
 index|]
 decl_stmt|;
 comment|/* Local->Unicode table */
+name|u_int8_t
+name|pm_ul
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* Local upper->lower table */
 block|}
 struct|;
 end_struct
@@ -589,6 +596,13 @@ literal|128
 index|]
 decl_stmt|;
 comment|/* Local->Unicode table */
+name|u_int8_t
+name|ul
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* Local upper->lower table */
 block|}
 struct|;
 end_struct
@@ -663,6 +677,17 @@ begin_comment
 comment|/* Local->Unicode table is loaded */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MSDOSFSMNT_ULTABLE
+value|0x20
+end_define
+
+begin_comment
+comment|/* Local upper->lower table is loaded */
+end_comment
+
 begin_comment
 comment|/* All flags above: */
 end_comment
@@ -674,7 +699,7 @@ name|MSDOSFSMNT_MNTOPT
 define|\
 value|(MSDOSFSMNT_SHORTNAME|MSDOSFSMNT_LONGNAME|MSDOSFSMNT_NOWIN95 \
 comment|/*|MSDOSFSMNT_GEMDOSFS*/
-value||MSDOSFSMNT_U2WTABLE)
+value||MSDOSFSMNT_U2WTABLE|MSDOSFSMNT_ULTABLE)
 end_define
 
 begin_define
