@@ -3846,7 +3846,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"driver is using old-style compatability shims\n"
+literal|"driver is using old-style compatibility shims\n"
 argument_list|)
 expr_stmt|;
 return|return
