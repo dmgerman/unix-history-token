@@ -1,32 +1,166 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubareg.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubareg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * VAX UNIBUS adapter registers  */
+comment|/*  * VAX UNIBUS adapter definitions  */
 end_comment
 
 begin_comment
-comment|/*  * size of unibus address space in pages  */
+comment|/*  * "UNIBUS" adaptor types.  * This code is used for both UNIBUSes and Q-buses  * with different types of adaptors.  * Definition of a type includes support code for that type.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|VAX780
+operator|||
+name|VAX8600
+end_if
+
+begin_define
+define|#
+directive|define
+name|DW780
+value|1
+end_define
+
+begin_comment
+comment|/* has adaptor regs, sr: 780/785/8600 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX750
+end_if
+
+begin_define
+define|#
+directive|define
+name|DW750
+value|2
+end_define
+
+begin_comment
+comment|/* has adaptor regs, no sr: 750, 730 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX730
+end_if
+
+begin_define
+define|#
+directive|define
+name|DW730
+value|3
+end_define
+
+begin_comment
+comment|/* has adaptor regs, no sr: 750, 730 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX630
+end_if
+
+begin_define
+define|#
+directive|define
+name|QBA
+value|4
+end_define
+
+begin_comment
+comment|/* 22-bit Q-bus, no adaptor regs: uVAX II */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX8200
+operator|||
+name|VAX8500
+operator|||
+name|VAX8800
+end_if
+
+begin_define
+define|#
+directive|define
+name|DWBUA
+value|5
+end_define
+
+begin_comment
+comment|/* BI UNIBUS adaptor: 8200/8500/8800 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Size of unibus memory address space in pages  * (also number of map registers).  * QBAPAGES should be 8192, but umem needs to be expanded.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UBAPAGES
-value|512
+value|496
 end_define
-
-begin_comment
-comment|/*  * Number of UNIBUS map registers.  We can't use the last 8k of UNIBUS  * address space for i/o transfers since it is used by the devices,  * hence have slightly less than 256K of UNIBUS address space.  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|NUBMREG
 value|496
+end_define
+
+begin_define
+define|#
+directive|define
+name|QBAPAGES
+value|UBAPAGES
+end_define
+
+begin_comment
+comment|/* for now; should be 8192 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UBAIOPAGES
+value|16
 end_define
 
 begin_ifndef
@@ -36,7 +170,7 @@ name|LOCORE
 end_ifndef
 
 begin_comment
-comment|/*  * UBA hardware registers  */
+comment|/*  * DW780/DW750 hardware registers  */
 end_comment
 
 begin_struct
@@ -103,14 +237,14 @@ name|struct
 name|pte
 name|uba_map
 index|[
-name|NUBMREG
+name|UBAPAGES
 index|]
 decl_stmt|;
 comment|/* unibus map register */
 name|int
 name|pad3
 index|[
-literal|16
+name|UBAIOPAGES
 index|]
 decl_stmt|;
 comment|/* no maps for device address space */
@@ -123,19 +257,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VAX780
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|VAX8600
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DW780
+end_ifdef
 
 begin_comment
 comment|/* uba_cnfgr */
@@ -530,19 +656,11 @@ begin_comment
 comment|/* uba_dpr */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VAX780
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|VAX8600
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DW780
+end_ifdef
 
 begin_define
 define|#
@@ -633,11 +751,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|VAX750
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DW750
+end_ifdef
 
 begin_define
 define|#
@@ -727,20 +845,9 @@ end_comment
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|VAX8600
-argument_list|)
+name|DW780
 operator|||
-name|defined
-argument_list|(
-name|VAX780
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|VAX750
-argument_list|)
+name|DW750
 end_if
 
 begin_define
@@ -755,32 +862,10 @@ parameter_list|)
 value|{ \ 	switch (cpu) { \ 	case VAX_8600: case VAX_780: UBA_PURGE780((uba), (bdp)); break; \ 	case VAX_750: UBA_PURGE750((uba), (bdp)); break; \ 	} \ }
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|VAX8600
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|VAX780
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|VAX750
-argument_list|)
-end_if
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -892,13 +977,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NBDP630
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAXNBDP
 value|15
 end_define
@@ -916,9 +994,97 @@ end_if
 begin_define
 define|#
 directive|define
-name|UMEM630
-value|((u_short *)(0x1ffc2000))
+name|QBAMAP630
+value|((struct pte *)0x20088000)
 end_define
+
+begin_define
+define|#
+directive|define
+name|QMEM630
+value|0x30000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|QIOPAGE630
+value|0x20000000
+end_define
+
+begin_comment
+comment|/*  * Q-bus control registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QIPCR
+value|0x1f40
+end_define
+
+begin_comment
+comment|/* from start of iopage */
+end_comment
+
+begin_comment
+comment|/* bits in QIPCR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Q_DBIRQ
+value|0x0001
+end_define
+
+begin_comment
+comment|/* doorbell interrupt request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Q_LMEAE
+value|0x0020
+end_define
+
+begin_comment
+comment|/* local mem external access enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Q_DBIIE
+value|0x0040
+end_define
+
+begin_comment
+comment|/* doorbell interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Q_AUXHLT
+value|0x0100
+end_define
+
+begin_comment
+comment|/* auxiliary processor halt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Q_DMAQPE
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Q22 bus address space parity error */
+end_comment
 
 begin_endif
 endif|#
@@ -935,7 +1101,7 @@ begin_define
 define|#
 directive|define
 name|UMEM730
-value|((u_short *)(0xfc0000))
+value|0xfc0000
 end_define
 
 begin_endif
@@ -956,7 +1122,7 @@ name|UMEM750
 parameter_list|(
 name|i
 parameter_list|)
-value|((u_short *)(0xfc0000-(i)*0x40000))
+value|(0xfc0000-(i)*0x40000)
 end_define
 
 begin_endif
@@ -977,7 +1143,7 @@ name|UMEM780
 parameter_list|(
 name|i
 parameter_list|)
-value|((u_short *)(0x20100000+(i)*0x40000))
+value|(0x20100000+(i)*0x40000)
 end_define
 
 begin_endif
@@ -998,7 +1164,7 @@ name|UMEMA8600
 parameter_list|(
 name|i
 parameter_list|)
-value|((u_short *)(0x20100000+(i)*0x40000))
+value|(0x20100000+(i)*0x40000)
 end_define
 
 begin_define
@@ -1008,7 +1174,7 @@ name|UMEMB8600
 parameter_list|(
 name|i
 parameter_list|)
-value|((u_short *)(0x22100000+(i)*0x40000))
+value|(0x22100000+(i)*0x40000)
 end_define
 
 begin_endif
@@ -1017,7 +1183,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Macro to offset a UNIBUS device address, often expressed as  * something like 0172520 by forcing it into the last 8K of UNIBUS memory  * space.  */
+comment|/*  * Macro to offset a UNIBUS device address, often expressed as  * something like 0172520, by forcing it into the last 8K  * of UNIBUS memory space.  */
 end_comment
 
 begin_define
@@ -1027,7 +1193,7 @@ name|ubdevreg
 parameter_list|(
 name|addr
 parameter_list|)
-value|(0760000|((addr)&017777))
+value|((addr)& 017777)
 end_define
 
 end_unit

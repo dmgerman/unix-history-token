@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -39,7 +39,13 @@ name|uba_regs
 modifier|*
 name|iff_uba
 decl_stmt|;
-comment|/* uba regs, in vm */
+comment|/* uba adaptor regs, in vm */
+name|struct
+name|pte
+modifier|*
+name|iff_ubamr
+decl_stmt|;
+comment|/* uba map regs, in vm */
 name|short
 name|iff_flags
 decl_stmt|;
@@ -218,6 +224,13 @@ define|#
 directive|define
 name|ifu_uba
 value|ifu_info.iff_uba
+end_define
+
+begin_define
+define|#
+directive|define
+name|ifu_ubamr
+value|ifu_info.iff_ubamr
 end_define
 
 begin_define

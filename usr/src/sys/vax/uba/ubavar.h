@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubavar.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubavar.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -21,18 +21,40 @@ begin_struct
 struct|struct
 name|uba_hd
 block|{
+name|int
+name|uh_type
+decl_stmt|;
+comment|/* type of adaptor */
 name|struct
 name|uba_regs
 modifier|*
 name|uh_uba
 decl_stmt|;
-comment|/* virt addr of uba */
+comment|/* virt addr of uba adaptor regs */
 name|struct
 name|uba_regs
 modifier|*
 name|uh_physuba
 decl_stmt|;
-comment|/* phys addr of uba */
+comment|/* phys addr of uba adaptor regs */
+name|struct
+name|pte
+modifier|*
+name|uh_mr
+decl_stmt|;
+comment|/* start of page map */
+name|int
+name|uh_memsize
+decl_stmt|;
+comment|/* size of uba memory, pages */
+name|caddr_t
+name|uh_mem
+decl_stmt|;
+comment|/* start of uba memory address space */
+name|caddr_t
+name|uh_iopage
+decl_stmt|;
+comment|/* start of uba io page */
 name|int
 function_decl|(
 modifier|*
@@ -115,12 +137,6 @@ comment|/* buffered data path regs free */
 block|}
 struct|;
 end_struct
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
 
 begin_comment
 comment|/*  * Per-controller structure.  * (E.g. one for each disk and tape controller, and other things  * which use and release buffered data paths.)  *  * If a controller has devices attached, then there are  * cross-referenced uba_drive structures.  * This structure is the one which is queued in unibus resource wait,  * and saves the information about unibus resources which are used.  * The queue of devices waiting to transfer is also attached here.  */
@@ -265,11 +281,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Per-driver structure.  *  * Each unibus driver defines entries for a set of routines  * as well as an array of types which are acceptable to it.  * These are used at boot time by the configuration program.  */
@@ -524,7 +535,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * UNIbus device address space is mapped by UMEMmap  * into virtual address umem[][].  */
+comment|/*  * UNIbus device address space is mapped by UMEMmap  * into virtual address umem[][].  * The IO page is mapped to the last 8K of each.  * This should be enlarged for the Q22 bus.  */
 end_comment
 
 begin_decl_stmt
@@ -561,7 +572,7 @@ comment|/* uba device addr space */
 end_comment
 
 begin_comment
-comment|/*  * Since some VAXen vector their unibus interrupts  * just adjacent to the system control block, we must  * allocate space there when running on ``any'' cpu.  This space is  * used for the vectors for uba0 and uba1 on all cpu's.  */
+comment|/*  * Since some VAXen vector their unibus interrupts  * just adjacent to the system control block, we must  * allocate space there when running on ``any'' cpu.  This space is  * used for the vectors for uba0 and uba1 on all cpu's but 8600's.  */
 end_comment
 
 begin_function_decl
@@ -624,7 +635,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * On 780's, we must set the scb vectors for the nexus of the  * UNIbus adaptors to vector to locore unibus adaptor interrupt dispatchers  * which make 780's look like the other VAXen.  */
+comment|/*  * On DW780's, we must set the scb vectors for the nexus of the  * UNIbus adaptors to vector to locore unibus adaptor interrupt dispatchers  * which make 780's look like the other VAXen.  */
 end_comment
 
 begin_extern
