@@ -1905,7 +1905,7 @@ name|sym_zero
 operator|.
 name|st_shndx
 operator|=
-name|SHN_ABS
+name|SHN_UNDEF
 expr_stmt|;
 name|dbg
 argument_list|(
