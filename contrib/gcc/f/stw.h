@@ -187,7 +187,7 @@ name|ffewhereColumn
 name|col_
 decl_stmt|;
 comment|/* was seen in source file. */
-name|char
+name|int
 name|uses_
 decl_stmt|;
 comment|/* # uses (new+use-kill calls). */

@@ -1237,6 +1237,24 @@ block|}
 end_expr_stmt
 
 begin_function
+name|void
+name|push_back
+parameter_list|(
+name|charT
+name|__c
+parameter_list|)
+block|{
+name|append
+argument_list|(
+literal|1
+argument_list|,
+name|__c
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|basic_string
 modifier|&
 name|assign
