@@ -353,8 +353,7 @@ condition|)
 comment|/* Error (errno set) */
 name|i
 operator|=
-operator|-
-literal|1
+name|errno
 expr_stmt|;
 elseif|else
 if|if
@@ -396,22 +395,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|i
-operator|=
 name|WEXITSTATUS
 argument_list|(
 name|i
 argument_list|)
-operator|)
-operator|!=
-literal|0
 condition|)
-name|errno
+name|i
 operator|=
 name|EIO
 expr_stmt|;
-comment|/* set SOMETHING */
 block|}
 return|return
 name|i
@@ -721,9 +713,6 @@ argument_list|,
 name|PWF_PASSWD
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|rc
 operator|=
 name|fileupdate
@@ -743,8 +732,11 @@ name|l
 argument_list|,
 name|mode
 argument_list|)
-operator|)
-operator|!=
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|==
 literal|0
 condition|)
 block|{
@@ -764,9 +756,6 @@ argument_list|,
 name|PWF_MASTER
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|rc
 operator|=
 name|fileupdate
@@ -786,7 +775,10 @@ name|l
 argument_list|,
 name|mode
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
 operator|!=
 literal|0
 condition|)
@@ -803,8 +795,6 @@ name|pwdb
 argument_list|(
 name|NULL
 argument_list|)
-operator|==
-literal|0
 expr_stmt|;
 else|else
 name|rc
@@ -817,8 +807,6 @@ name|user
 argument_list|,
 name|NULL
 argument_list|)
-operator|==
-literal|0
 expr_stmt|;
 block|}
 block|}

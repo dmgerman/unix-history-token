@@ -267,7 +267,7 @@ name|pfxlen
 operator|<=
 literal|1
 condition|)
-name|errno
+name|rc
 operator|=
 name|EINVAL
 expr_stmt|;
@@ -290,10 +290,15 @@ decl_stmt|;
 if|if
 condition|(
 name|infd
-operator|!=
+operator|==
 operator|-
 literal|1
 condition|)
+name|rc
+operator|=
+name|errno
+expr_stmt|;
+else|else
 block|{
 name|FILE
 modifier|*
@@ -312,11 +317,18 @@ name|infp
 operator|==
 name|NULL
 condition|)
+block|{
+name|rc
+operator|=
+name|errno
+expr_stmt|;
+comment|/* Assumes fopen(3) sets errno from open(2) */
 name|close
 argument_list|(
 name|infd
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|int
@@ -362,10 +374,15 @@ expr_stmt|;
 if|if
 condition|(
 name|outfd
-operator|!=
+operator|==
 operator|-
 literal|1
 condition|)
+name|rc
+operator|=
+name|errno
+expr_stmt|;
+else|else
 block|{
 name|FILE
 modifier|*
@@ -384,11 +401,17 @@ name|outfp
 operator|==
 name|NULL
 condition|)
+block|{
+name|rc
+operator|=
+name|errno
+expr_stmt|;
 name|close
 argument_list|(
 name|outfd
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|int
@@ -623,17 +646,11 @@ name|updmode
 operator|!=
 name|updated
 condition|)
-name|errno
+comment|/* -1 return means: 							 * update,delete=no user entry 							 * create=entry exists 							 */
+name|rc
 operator|=
-operator|(
-name|updmode
-operator|==
-name|UPD_CREATE
-operator|)
-condition|?
-name|EEXIST
-else|:
-name|ENOENT
+operator|-
+literal|1
 expr_stmt|;
 else|else
 block|{
@@ -652,19 +669,21 @@ name|outfp
 argument_list|)
 expr_stmt|;
 comment|/* 							 * Flush the file and check for the result 							 */
-name|rc
-operator|=
+if|if
+condition|(
 name|fflush
 argument_list|(
 name|outfp
 argument_list|)
-operator|!=
+operator|==
 name|EOF
-expr_stmt|;
-if|if
-condition|(
-name|rc
 condition|)
+name|rc
+operator|=
+name|errno
+expr_stmt|;
+comment|/* Failed to update */
+else|else
 block|{
 comment|/* 								 * Copy data back into the 								 * original file and truncate 								 */
 name|rewind
@@ -697,7 +716,7 @@ argument_list|,
 name|infp
 argument_list|)
 expr_stmt|;
-comment|/*                                                                  * If there was a problem with copying                                                                  * we will just rename 'file.new'                                                                   * to 'file'. 								 * This is a gross hack, but we may have 								 * corrupted the original file 								 * Unfortunately, it will lose the inode                                                                  * and hence the lock. 								 */
+comment|/* 								 * If there was a problem with copying 								 * we will just rename 'file.new'  								 * to 'file'. 								 * This is a gross hack, but we may have 								 * corrupted the original file 								 * Unfortunately, it will lose the inode 								 * and hence the lock. 								 */
 if|if
 condition|(
 name|fflush
@@ -712,12 +731,6 @@ argument_list|(
 name|infp
 argument_list|)
 condition|)
-block|{
-name|rc
-operator|=
-name|errno
-expr_stmt|;
-comment|/* Preserve errno for return */
 name|rename
 argument_list|(
 name|file
@@ -725,7 +738,6 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|ftruncate
 argument_list|(
