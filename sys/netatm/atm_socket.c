@@ -212,13 +212,6 @@ argument_list|(
 literal|"atm_sock_init: unable to initialize atm_pcb_zone"
 argument_list|)
 expr_stmt|;
-name|uma_zone_set_max
-argument_list|(
-name|atm_pcb_zone
-argument_list|,
-literal|100
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -467,13 +467,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|uma_zone_set_max
-argument_list|(
+if|if
+condition|(
 name|sigpvc_vc_zone
-argument_list|,
-literal|50
-argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 comment|/* 	 * Register ourselves with system 	 */
 name|err
 operator|=

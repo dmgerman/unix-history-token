@@ -253,13 +253,6 @@ argument_list|(
 literal|"uniip_start: uma_zcreate"
 argument_list|)
 expr_stmt|;
-name|uma_zone_set_max
-argument_list|(
-name|uniip_zone
-argument_list|,
-literal|100
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Tell arp to initialize stuff 	 */
 name|err
 operator|=

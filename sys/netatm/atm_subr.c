@@ -382,13 +382,6 @@ argument_list|(
 literal|"atm_initialize: unable to create attributes zone"
 argument_list|)
 expr_stmt|;
-name|uma_zone_set_max
-argument_list|(
-name|atm_attributes_zone
-argument_list|,
-literal|100
-argument_list|)
-expr_stmt|;
 name|atm_stackq_zone
 operator|=
 name|uma_zcreate
@@ -423,13 +416,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"atm_initialize: unable to create stackq zone"
-argument_list|)
-expr_stmt|;
-name|uma_zone_set_max
-argument_list|(
-name|atm_stackq_zone
-argument_list|,
-literal|10
 argument_list|)
 expr_stmt|;
 name|atm_intrq

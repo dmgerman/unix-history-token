@@ -770,11 +770,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|uma_zone_set_max
-argument_list|(
+if|if
+condition|(
 name|spanscls_zone
-argument_list|,
-literal|100
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"spanscls_zone"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fill in union fields 	 */

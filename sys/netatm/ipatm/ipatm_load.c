@@ -920,13 +920,6 @@ argument_list|(
 literal|"ipatm_start: unable to create ipatm_vc_zone"
 argument_list|)
 expr_stmt|;
-name|uma_zone_set_max
-argument_list|(
-name|ipatm_vc_zone
-argument_list|,
-literal|100
-argument_list|)
-expr_stmt|;
 name|ipatm_nif_zone
 operator|=
 name|uma_zcreate
@@ -961,13 +954,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"ipatm_start: unable to create ipatm_nif_zone"
-argument_list|)
-expr_stmt|;
-name|uma_zone_set_max
-argument_list|(
-name|ipatm_nif_zone
-argument_list|,
-literal|52
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Register ourselves as a network convergence module 	 */

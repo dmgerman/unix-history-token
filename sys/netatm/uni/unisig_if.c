@@ -578,27 +578,6 @@ argument_list|(
 literal|"unisig_start: uma_zcreate failed to create ie zone"
 argument_list|)
 expr_stmt|;
-name|uma_zone_set_max
-argument_list|(
-name|unisig_vc_zone
-argument_list|,
-literal|50
-argument_list|)
-expr_stmt|;
-name|uma_zone_set_max
-argument_list|(
-name|unisig_msg_zone
-argument_list|,
-literal|50
-argument_list|)
-expr_stmt|;
-name|uma_zone_set_max
-argument_list|(
-name|unisig_ie_zone
-argument_list|,
-literal|50
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Register ourselves with system 	 */
 name|err
 operator|=

@@ -399,13 +399,6 @@ argument_list|(
 literal|"uniarp_start: uma_zcreate"
 argument_list|)
 expr_stmt|;
-name|uma_zone_set_max
-argument_list|(
-name|uniarp_zone
-argument_list|,
-literal|200
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Register our endpoint 	 */
 name|err
 operator|=
