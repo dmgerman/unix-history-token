@@ -3677,7 +3677,6 @@ name|frame
 operator|.
 name|tf_edx
 expr_stmt|;
-comment|/* 		 * XXX: This grabs the process lock.  A bad thing in 		 * the system call path. 		 */
 name|STOPEVENT
 argument_list|(
 name|p
@@ -3911,7 +3910,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * XXX: This grabs the process lock.  A bad thing in 	 * the system call path. 	 */
 comment|/* 	 * This works because errno is findable through the 	 * register set.  If we ever support an emulation where this 	 * is not the case, this code will need to be revisited. 	 */
 name|STOPEVENT
 argument_list|(
