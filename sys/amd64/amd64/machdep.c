@@ -3745,6 +3745,12 @@ name|_udatasel
 expr_stmt|;
 name|regs
 operator|->
+name|tf_fs
+operator|=
+name|_udatasel
+expr_stmt|;
+name|regs
+operator|->
 name|tf_ss
 operator|=
 name|_udatasel
