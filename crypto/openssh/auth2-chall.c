@@ -137,7 +137,7 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|KbdintDevice
-name|pam_device
+name|sshpam_device
 decl_stmt|;
 end_decl_stmt
 
@@ -188,7 +188,7 @@ ifdef|#
 directive|ifdef
 name|USE_PAM
 operator|&
-name|pam_device
+name|sshpam_device
 block|,
 endif|#
 directive|endif
@@ -1533,6 +1533,29 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BSD_AUTH
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|USE_PAM
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SKEY
+argument_list|)
+name|int
+name|n
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|BSD_AUTH
@@ -1547,7 +1570,7 @@ directive|ifdef
 name|USE_PAM
 specifier|extern
 name|KbdintDevice
-name|mm_pam_device
+name|mm_sshpam_device
 decl_stmt|;
 endif|#
 directive|endif
@@ -1560,11 +1583,6 @@ name|mm_skey_device
 decl_stmt|;
 endif|#
 directive|endif
-name|int
-name|n
-init|=
-literal|0
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|BSD_AUTH
@@ -1589,7 +1607,7 @@ operator|++
 index|]
 operator|=
 operator|&
-name|mm_pam_device
+name|mm_sshpam_device
 expr_stmt|;
 endif|#
 directive|endif

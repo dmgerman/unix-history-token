@@ -219,26 +219,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_NETDB_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -327,6 +307,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|__USE_GNU
+end_define
+
+begin_comment
+comment|/* before unistd.h, activate extra prototypes for glibc */
+end_comment
 
 begin_include
 include|#
@@ -713,6 +703,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_STRTIO_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/strtio.h>
+end_include
+
+begin_comment
+comment|/* for TIOCCBRK on HP-UX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -754,6 +765,26 @@ include|#
 directive|include
 file|<arpa/inet.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_NETDB_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -891,12 +922,6 @@ begin_include
 include|#
 directive|include
 file|"openbsd-compat/openbsd-compat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"openbsd-compat/bsd-cygwin_util.h"
 end_include
 
 begin_include

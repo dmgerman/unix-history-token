@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: hostfile.c,v 1.30 2002/07/24 16:11:18 markus Exp $"
+literal|"$OpenBSD: hostfile.c,v 1.31 2003/04/08 20:21:28 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -209,7 +209,7 @@ name|n
 argument_list|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Warning: %s, line %d: keysize mismatch for host %s: "
 literal|"actual %d vs. announced %d."
@@ -232,7 +232,7 @@ argument_list|,
 name|bits
 argument_list|)
 expr_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"Warning: replace %d with %d in %s, line %d."
 argument_list|,

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: canohost.c,v 1.35 2002/11/26 02:38:54 stevesk Exp $"
+literal|"$OpenBSD: canohost.c,v 1.37 2003/06/02 09:17:34 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -68,7 +68,7 @@ name|int
 name|socket
 parameter_list|,
 name|int
-name|verify_reverse_mapping
+name|use_dns
 parameter_list|)
 block|{
 name|struct
@@ -357,6 +357,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|use_dns
+condition|)
+return|return
+name|xstrdup
+argument_list|(
+name|ntop
+argument_list|)
+return|;
+if|if
+condition|(
 name|from
 operator|.
 name|ss_family
@@ -410,12 +421,6 @@ literal|0
 condition|)
 block|{
 comment|/* Host name not found.  Use ip address. */
-if|#
-directive|if
-literal|0
-block|log("Could not reverse map address %.100s.", ntop);
-endif|#
-directive|endif
 return|return
 name|xstrdup
 argument_list|(
@@ -423,19 +428,72 @@ name|ntop
 argument_list|)
 return|;
 block|}
-comment|/* Got host name. */
-name|name
-index|[
+comment|/* 	 * if reverse lookup result looks like a numeric hostname, 	 * someone is trying to trick us by PTR record like following: 	 *	1.1.1.10.in-addr.arpa.	IN PTR	2.3.4.5 	 */
+name|memset
+argument_list|(
+operator|&
+name|hints
+argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 argument_list|(
-name|name
+name|hints
 argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
+argument_list|)
 expr_stmt|;
+name|hints
+operator|.
+name|ai_socktype
+operator|=
+name|SOCK_DGRAM
+expr_stmt|;
+comment|/*dummy*/
+name|hints
+operator|.
+name|ai_flags
+operator|=
+name|AI_NUMERICHOST
+expr_stmt|;
+if|if
+condition|(
+name|getaddrinfo
+argument_list|(
+name|name
+argument_list|,
+literal|"0"
+argument_list|,
+operator|&
+name|hints
+argument_list|,
+operator|&
+name|ai
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|logit
+argument_list|(
+literal|"Nasty PTR record \"%s\" is set up for %s, ignoring"
+argument_list|,
+name|name
+argument_list|,
+name|ntop
+argument_list|)
+expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|ai
+argument_list|)
+expr_stmt|;
+return|return
+name|xstrdup
+argument_list|(
+name|ntop
+argument_list|)
+return|;
+block|}
 comment|/* 	 * Convert it to all lowercase (which is expected by the rest 	 * of this software). 	 */
 for|for
 control|(
@@ -474,17 +532,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|verify_reverse_mapping
-condition|)
-return|return
-name|xstrdup
-argument_list|(
-name|name
-argument_list|)
-return|;
 comment|/* 	 * Map it back to an IP address and check that the given 	 * address actually is an address of this host.  This is 	 * necessary because anyone with access to a name server can 	 * define arbitrary names for an IP address. Mapping from 	 * name to IP address can be trusted better (but can still be 	 * fooled if the intruder has access to the name server of 	 * the domain). 	 */
 name|memset
 argument_list|(
@@ -531,7 +578,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"reverse mapping checking getaddrinfo for %.700s "
 literal|"failed - POSSIBLE BREAKIN ATTEMPT!"
@@ -616,7 +663,7 @@ name|ai
 condition|)
 block|{
 comment|/* Address not found for the host name. */
-name|log
+name|logit
 argument_list|(
 literal|"Address %.100s maps to %.600s, but this does not "
 literal|"map back to the address - POSSIBLE BREAKIN ATTEMPT!"
@@ -663,6 +710,9 @@ modifier|*
 name|ipaddr
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|IP_OPTIONS
 name|u_char
 name|options
 index|[
@@ -794,7 +844,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"Connection from %.100s with IP options:%.800s"
 argument_list|,
@@ -813,6 +863,9 @@ name|text
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* IP_OPTIONS */
 block|}
 end_function
 
@@ -827,7 +880,7 @@ modifier|*
 name|get_canonical_hostname
 parameter_list|(
 name|int
-name|verify_reverse_mapping
+name|use_dns
 parameter_list|)
 block|{
 specifier|static
@@ -839,7 +892,7 @@ name|NULL
 decl_stmt|;
 specifier|static
 name|int
-name|verify_reverse_mapping_done
+name|use_dns_done
 init|=
 literal|0
 decl_stmt|;
@@ -853,9 +906,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|verify_reverse_mapping_done
+name|use_dns_done
 operator|!=
-name|verify_reverse_mapping
+name|use_dns
 condition|)
 name|xfree
 argument_list|(
@@ -880,7 +933,7 @@ argument_list|(
 name|packet_get_connection_in
 argument_list|()
 argument_list|,
-name|verify_reverse_mapping
+name|use_dns
 argument_list|)
 expr_stmt|;
 else|else
@@ -891,9 +944,9 @@ argument_list|(
 literal|"UNKNOWN"
 argument_list|)
 expr_stmt|;
-name|verify_reverse_mapping_done
+name|use_dns_done
 operator|=
-name|verify_reverse_mapping
+name|use_dns
 expr_stmt|;
 return|return
 name|canonical_host_name
@@ -1265,7 +1318,7 @@ name|u_int
 name|utmp_len
 parameter_list|,
 name|int
-name|verify_reverse_mapping
+name|use_dns
 parameter_list|)
 block|{
 specifier|static
@@ -1286,7 +1339,7 @@ name|remote
 operator|=
 name|get_canonical_hostname
 argument_list|(
-name|verify_reverse_mapping
+name|use_dns
 argument_list|)
 expr_stmt|;
 if|if

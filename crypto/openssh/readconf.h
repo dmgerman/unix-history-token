@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readconf.h,v 1.46 2003/04/01 10:22:21 markus Exp $	*/
+comment|/*	$OpenBSD: readconf.h,v 1.55 2003/09/01 18:15:50 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -81,10 +81,6 @@ name|use_privileged_port
 decl_stmt|;
 comment|/* Don't use privileged port if false. */
 name|int
-name|rhosts_authentication
-decl_stmt|;
-comment|/* Try rhosts authentication. */
-name|int
 name|rhosts_rsa_authentication
 decl_stmt|;
 comment|/* Try rhosts with RSA 						 * authentication. */
@@ -104,49 +100,14 @@ name|int
 name|challenge_response_authentication
 decl_stmt|;
 comment|/* Try S/Key or TIS, authentication. */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KRB4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|KRB5
-argument_list|)
 name|int
-name|kerberos_authentication
+name|gss_authentication
 decl_stmt|;
-comment|/* Try Kerberos authentication. */
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AFS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|KRB5
-argument_list|)
+comment|/* Try GSS authentication */
 name|int
-name|kerberos_tgt_passing
+name|gss_deleg_creds
 decl_stmt|;
-comment|/* Try Kerberos TGT passing. */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|AFS
-name|int
-name|afs_token_passing
-decl_stmt|;
-comment|/* Try AFS token passing. */
-endif|#
-directive|endif
+comment|/* Delegate GSS credentials */
 name|int
 name|password_authentication
 decl_stmt|;
@@ -193,9 +154,16 @@ name|port
 decl_stmt|;
 comment|/* Port to connect. */
 name|int
+name|address_family
+decl_stmt|;
+name|int
 name|connection_attempts
 decl_stmt|;
 comment|/* Max attempts (seconds) before 					 * giving up */
+name|int
+name|connection_timeout
+decl_stmt|;
+comment|/* Max time (seconds) before 				 	 * aborting connection attempt */
 name|int
 name|number_of_password_prompts
 decl_stmt|;
@@ -280,6 +248,10 @@ name|smartcard_device
 decl_stmt|;
 comment|/* Smartcard reader device */
 name|int
+name|verify_host_key_dns
+decl_stmt|;
+comment|/* Verify host key using DNS */
+name|int
 name|num_identity_files
 decl_stmt|;
 comment|/* Number of files for RSA/DSA identities. */
@@ -322,6 +294,9 @@ name|clear_forwardings
 decl_stmt|;
 name|int
 name|enable_ssh_keysign
+decl_stmt|;
+name|int
+name|rekey_limit
 decl_stmt|;
 name|int
 name|no_host_authentication_for_localhost

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: log.h,v 1.8 2002/07/19 15:43:33 markus Exp $	*/
+comment|/*	$OpenBSD: log.h,v 1.9 2003/04/08 20:21:28 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -161,8 +161,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|log
-value|ssh_log
+name|logit
+value|ssh_logit
 end_define
 
 begin_define
@@ -247,7 +247,7 @@ end_empty_stmt
 
 begin_function_decl
 name|void
-name|log
+name|logit
 parameter_list|(
 specifier|const
 name|char

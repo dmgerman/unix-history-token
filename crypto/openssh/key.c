@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: key.c,v 1.51 2003/02/12 09:33:04 markus Exp $"
+literal|"$OpenBSD: key.c,v 1.54 2003/07/09 13:58:19 avsm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -794,7 +794,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|u_char
 modifier|*
 name|key_fingerprint_raw
@@ -1144,9 +1143,12 @@ argument_list|,
 name|dgst_raw_len
 operator|*
 literal|3
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Remove the trailing ':' character */
 name|retval
 index|[
 operator|(
@@ -2328,6 +2330,9 @@ name|key_from_blob
 argument_list|(
 name|blob
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|n
 argument_list|)
 expr_stmt|;
@@ -3511,7 +3516,7 @@ name|u_char
 modifier|*
 name|blob
 parameter_list|,
-name|int
+name|u_int
 name|blen
 parameter_list|)
 block|{

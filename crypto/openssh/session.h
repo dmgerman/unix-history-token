@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: session.h,v 1.19 2002/06/30 21:59:45 deraadt Exp $	*/
+comment|/*	$OpenBSD: session.h,v 1.20 2003/08/22 10:56:09 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -253,6 +253,33 @@ parameter_list|(
 name|struct
 name|passwd
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|child_set_env
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+modifier|*
+name|envp
+parameter_list|,
+name|u_int
+modifier|*
+name|envsizep
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|value
 parameter_list|)
 function_decl|;
 end_function_decl

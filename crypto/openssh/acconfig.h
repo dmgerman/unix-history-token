@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: acconfig.h,v 1.149 2003/03/10 00:38:10 djm Exp $ */
+comment|/* $Id: acconfig.h,v 1.166 2003/09/16 01:52:19 dtucker Exp $ */
 end_comment
 
 begin_comment
 comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1999-2003 Damien Miller.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -31,11 +35,26 @@ begin_expr_stmt
 unit|@
 name|TOP
 expr|@
+comment|/* Define if your platform breaks doing a seteuid before a setuid */
+undef|#
+directive|undef
+name|SETEUID_BREAKS_SETUID
+comment|/* Define if your setreuid() is broken */
+undef|#
+directive|undef
+name|BROKEN_SETREUID
+comment|/* Define if your setregid() is broken */
+undef|#
+directive|undef
+name|BROKEN_SETREGID
 comment|/* Define to a Set Process Title type if your system is */
 comment|/* supported by bsd-setproctitle.c */
 undef|#
 directive|undef
 name|SPT_TYPE
+undef|#
+directive|undef
+name|SPT_PADCHAR
 comment|/* setgroups() NOOP allowed */
 undef|#
 directive|undef
@@ -129,6 +148,10 @@ comment|/* Define if you want to enable AIX4's authenticate function */
 undef|#
 directive|undef
 name|WITH_AIXAUTHENTICATE
+comment|/* Define if your AIX loginfailed() function takes 4 arguments (AIX>= 5.2) */
+undef|#
+directive|undef
+name|AIX_LOGINFAILED_4ARG
 comment|/* Define if you have/want arrays (cluster-wide session managment, not C arrays) */
 undef|#
 directive|undef
@@ -313,6 +336,10 @@ comment|/* Define if compiler implements __func__ */
 undef|#
 directive|undef
 name|HAVE___func__
+comment|/* Define this is you want GSSAPI support in the version 2 protocol */
+undef|#
+directive|undef
+name|GSSAPI
 comment|/* Define if you want Kerberos 5 support */
 undef|#
 directive|undef
@@ -321,14 +348,6 @@ comment|/* Define this if you are using the Heimdal version of Kerberos V5 */
 undef|#
 directive|undef
 name|HEIMDAL
-comment|/* Define if you want Kerberos 4 support */
-undef|#
-directive|undef
-name|KRB4
-comment|/* Define if you want AFS support */
-undef|#
-directive|undef
-name|AFS
 comment|/* Define if you want S/Key support */
 undef|#
 directive|undef
@@ -470,10 +489,6 @@ comment|/* Specify location of ssh.pid */
 undef|#
 directive|undef
 name|_PATH_SSH_PIDDIR
-comment|/* Use IPv4 for connection by default, IPv6 can still if explicity asked */
-undef|#
-directive|undef
-name|IPV4_DEFAULT
 comment|/* getaddrinfo is broken (if present) */
 undef|#
 directive|undef
@@ -514,6 +529,10 @@ comment|/* Define in your struct dirent expects you to allocate extra space for 
 undef|#
 directive|undef
 name|BROKEN_ONE_BYTE_DIRENT_D_NAME
+comment|/* Define if your system has /etc/default/login */
+undef|#
+directive|undef
+name|HAVE_ETC_DEFAULT_LOGIN
 comment|/* Define if your getopt(3) defines and uses optreset */
 undef|#
 directive|undef
@@ -566,21 +585,40 @@ comment|/* Silly mkstemp() */
 undef|#
 directive|undef
 name|HAVE_STRICT_MKSTEMP
-comment|/* Setproctitle emulation */
-undef|#
-directive|undef
-name|SETPROCTITLE_STRATEGY
-undef|#
-directive|undef
-name|SETPROCTITLE_PS_PADDING
 comment|/* Some systems put this outside of libc */
 undef|#
 directive|undef
 name|HAVE_NANOSLEEP
-comment|/* Pushing STREAMS modules incorrectly acquires a controlling TTY */
+comment|/* Define if sshd somehow reacquires a controlling TTY after setsid() */
 undef|#
 directive|undef
-name|STREAMS_PUSH_ACQUIRES_CTTY
+name|SSHD_ACQUIRES_CTTY
+comment|/* Define if cmsg_type is not passed correctly */
+undef|#
+directive|undef
+name|BROKEN_CMSG_TYPE
+comment|/* Strings used in /etc/passwd to denote locked account */
+undef|#
+directive|undef
+name|LOCKED_PASSWD_STRING
+undef|#
+directive|undef
+name|LOCKED_PASSWD_PREFIX
+undef|#
+directive|undef
+name|LOCKED_PASSWD_SUBSTR
+comment|/* Define if DNS support is to be activated */
+undef|#
+directive|undef
+name|DNS
+comment|/* Define if getrrsetbyname() exists */
+undef|#
+directive|undef
+name|HAVE_GETRRSETBYNAME
+comment|/* Define if HEADER.ad exists in arpa/nameser.h */
+undef|#
+directive|undef
+name|HAVE_HEADER_AD
 expr|@
 name|BOTTOM
 expr|@

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: bufaux.c,v 1.28 2002/10/23 10:40:16 markus Exp $"
+literal|"$OpenBSD: bufaux.c,v 1.29 2003/04/08 20:21:28 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -414,7 +414,7 @@ name|uc
 init|=
 name|buf
 decl_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"negativ!"
 argument_list|)
@@ -633,12 +633,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_U_INT64_T
-end_ifdef
-
 begin_function
 name|u_int64_t
 name|buffer_get_int64
@@ -675,11 +669,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Stores integers in the buffer, msb first.  */
@@ -759,12 +748,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_U_INT64_T
-end_ifdef
-
 begin_function
 name|void
 name|buffer_put_int64
@@ -801,11 +784,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Returns an arbitrary binary string from the buffer.  The string cannot  * be longer than 256k.  The returned value points to memory allocated  * with xmalloc; it is the responsibility of the calling function to free  * the data.  If length_ptr is non-NULL, the length of the returned data  * will be stored there.  A null character will be automatically appended  * to the returned string, and is not counted in length.  */
