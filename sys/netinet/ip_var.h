@@ -710,6 +710,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ipproto_register
+parameter_list|(
+name|u_char
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ipproto_unregister
+parameter_list|(
+name|u_char
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|mbuf
 modifier|*
