@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -331,12 +337,6 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mutex.h>
 end_include
 
 begin_include
@@ -1316,19 +1316,21 @@ name|cpuhead
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|mtx
+begin_expr_stmt
+name|MUTEX_DECLARE
+argument_list|(,
 name|sched_lock
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-name|struct
-name|mtx
+begin_expr_stmt
+name|MUTEX_DECLARE
+argument_list|(,
 name|Giant
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -2071,6 +2073,8 @@ argument_list|,
 literal|"sched lock"
 argument_list|,
 name|MTX_SPIN
+operator||
+name|MTX_COLD
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4807,12 +4811,6 @@ begin_comment
 comment|/*  * Hook to idle the CPU when possible.  This currently only works in  * the !SMP case, as there is no clean way to ensure that a CPU will be  * woken when there is work available for it.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -4848,18 +4846,15 @@ comment|/*  * Note that we have to be careful here to avoid a race between check
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|cpu_idle
 parameter_list|(
 name|void
-modifier|*
-name|junk
-parameter_list|,
-name|int
-name|count
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|SMP
 if|if
 condition|(
 name|cpu_idle_hlt
@@ -4884,56 +4879,10 @@ expr_stmt|;
 asm|__asm __volatile("hlt");
 block|}
 block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|cpu_idle_register
-parameter_list|(
-name|void
-modifier|*
-name|junk
-parameter_list|)
-block|{
-name|EVENTHANDLER_FAST_REGISTER
-argument_list|(
-name|idle_event
-argument_list|,
-name|cpu_idle
-argument_list|,
-name|NULL
-argument_list|,
-name|IDLE_PRI_LAST
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_macro
-name|SYSINIT
-argument_list|(
-argument|cpu_idle_register
-argument_list|,
-argument|SI_SUB_SCHED_IDLE
-argument_list|,
-argument|SI_ORDER_SECOND
-argument_list|,
-argument|cpu_idle_register
-argument_list|,
-argument|NULL
-argument_list|)
-end_macro
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-comment|/* !SMP */
-end_comment
+block|}
+end_function
 
 begin_comment
 comment|/*  * Clear registers on exec  */
@@ -9843,9 +9792,11 @@ argument_list|(
 operator|&
 name|clock_lock
 argument_list|,
-literal|"clk interrupt lock"
+literal|"clk"
 argument_list|,
 name|MTX_SPIN
+operator||
+name|MTX_COLD
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the console before we print anything out. 	 */
@@ -9874,6 +9825,8 @@ argument_list|,
 literal|"Giant"
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_COLD
 argument_list|)
 expr_stmt|;
 ifdef|#
