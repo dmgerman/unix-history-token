@@ -547,7 +547,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Cd:ps:u:vN"
+literal|"CNd:ps:u:v"
 argument_list|)
 operator|)
 operator|!=
@@ -569,18 +569,28 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'N'
+case|:
+comment|/* do not wait for lock	*/
+name|nblock
+operator|=
+name|LOCK_NB
+expr_stmt|;
+comment|/* will fail if locked */
+break|break;
+case|case
 literal|'d'
 case|:
-name|strncpy
+name|strlcpy
 argument_list|(
 name|prefix
 argument_list|,
 name|optarg
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|prefix
-operator|-
-literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -624,15 +634,6 @@ case|case
 literal|'v'
 case|:
 comment|/* backward compatible */
-break|break;
-case|case
-literal|'N'
-case|:
-comment|/* do not wait for lock	*/
-name|nblock
-operator|=
-name|LOCK_NB
-expr_stmt|;
 break|break;
 default|default:
 name|usage
