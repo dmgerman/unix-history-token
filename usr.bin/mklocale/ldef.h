@@ -21,7 +21,8 @@ decl_stmt|;
 name|rune_t
 name|map
 decl_stmt|;
-name|u_long
+name|unsigned
+name|long
 modifier|*
 name|types
 decl_stmt|;
@@ -40,7 +41,8 @@ typedef|typedef
 struct|struct
 name|rune_map
 block|{
-name|u_long
+name|unsigned
+name|long
 name|map
 index|[
 name|_CACHED_RUNES
