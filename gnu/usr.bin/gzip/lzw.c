@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lzw.c,v 0.8 1993/04/25 08:09:58 jloup Exp $"
+literal|"$Id: lzw.c,v 0.9 1993/06/10 13:27:31 jloup Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,12 +40,6 @@ begin_include
 include|#
 directive|include
 file|"lzw.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_decl_stmt

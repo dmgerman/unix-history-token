@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: unlzw.c,v 0.13 1993/05/27 10:32:55 jloup Exp $"
+literal|"$Id: unlzw.c,v 0.15 1993/06/10 13:28:35 jloup Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,12 +23,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -1293,6 +1287,13 @@ name|insize
 operator|+=
 name|rsize
 expr_stmt|;
+name|bytes_in
+operator|+=
+operator|(
+name|ulg
+operator|)
+name|rsize
+expr_stmt|;
 block|}
 name|inbits
 operator|=
@@ -1657,10 +1658,21 @@ name|write_buf
 argument_list|(
 name|out
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|outbuf
 argument_list|,
 name|outpos
 argument_list|)
+expr_stmt|;
+name|bytes_out
+operator|+=
+operator|(
+name|ulg
+operator|)
+name|outpos
 expr_stmt|;
 block|}
 name|error
@@ -1804,15 +1816,28 @@ condition|(
 operator|!
 name|test
 condition|)
+block|{
 name|write_buf
 argument_list|(
 name|out
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|outbuf
 argument_list|,
 name|outpos
 argument_list|)
 expr_stmt|;
+name|bytes_out
+operator|+=
+operator|(
+name|ulg
+operator|)
+name|outpos
+expr_stmt|;
+block|}
 name|outpos
 operator|=
 literal|0
@@ -1904,10 +1929,6 @@ name|incode
 expr_stmt|;
 comment|/* Remember previous code.	*/
 block|}
-name|bytes_in
-operator|+=
-name|rsize
-expr_stmt|;
 block|}
 do|while
 condition|(
@@ -1925,15 +1946,28 @@ name|outpos
 operator|>
 literal|0
 condition|)
+block|{
 name|write_buf
 argument_list|(
 name|out
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|outbuf
 argument_list|,
 name|outpos
 argument_list|)
 expr_stmt|;
+name|bytes_out
+operator|+=
+operator|(
+name|ulg
+operator|)
+name|outpos
+expr_stmt|;
+block|}
 return|return
 name|OK
 return|;

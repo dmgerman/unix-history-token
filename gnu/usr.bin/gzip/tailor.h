@@ -8,7 +8,7 @@ comment|/* The target dependent definitions should be defined here only.  * The 
 end_comment
 
 begin_comment
-comment|/* $Id: tailor.h,v 0.16 1993/06/01 12:46:03 jloup Exp $ */
+comment|/* $Id: tailor.h,v 0.18 1993/06/14 19:32:20 jloup Exp $ */
 end_comment
 
 begin_if
@@ -30,6 +30,32 @@ begin_define
 define|#
 directive|define
 name|MSDOS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__OS2__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OS2
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|OS2
 end_define
 
 begin_endif
@@ -109,6 +135,12 @@ begin_define
 define|#
 directive|define
 name|NO_UTIME
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_OFF_T
 end_define
 
 begin_else
@@ -366,18 +398,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_SYS_UTIME_H
-end_define
-
-begin_define
-define|#
-directive|define
-name|NO_UTIME_H
-end_define
-
-begin_define
-define|#
-directive|define
 name|casemap
 parameter_list|(
 name|c
@@ -417,6 +437,18 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|HAVE_SYS_UTIME_H
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_UTIME_H
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAXSEG_64K
 end_define
 
@@ -447,6 +479,18 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|HAVE_SYS_UTIME_H
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_UTIME_H
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIRENT
 end_define
 
@@ -461,6 +505,65 @@ name|argv
 parameter_list|)
 define|\
 value|{_response(&argc,&argv); _wildcard(&argc,&argv);}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__BORLANDC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DIRENT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ZTC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NO_DIR
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_UTIME_H
+end_define
+
+begin_include
+include|#
+directive|include
+file|<dos.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|EXPAND
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+define|\
+value|{response_expand(&argc,&argv);}
 end_define
 
 begin_endif
@@ -836,13 +939,6 @@ directive|define
 name|HAVE_UNISTD_H
 end_define
 
-begin_define
-define|#
-directive|define
-name|RETSIGTYPE
-value|int
-end_define
-
 begin_else
 else|#
 directive|else
@@ -928,6 +1024,16 @@ name|argv
 parameter_list|)
 value|_expand_args(&argc,&argv);
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|O_BINARY
+end_undef
+
+begin_comment
+comment|/* disable useless --ascii option */
+end_comment
 
 begin_endif
 endif|#
@@ -1262,6 +1368,12 @@ begin_comment
 comment|/* temporary, subject to change */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIGTERM
+end_ifdef
+
 begin_undef
 undef|#
 directive|undef
@@ -1271,6 +1383,11 @@ end_undef
 begin_comment
 comment|/* We don't want a signal handler for SIGTERM */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1459,6 +1576,74 @@ directive|define
 name|MAX_SUFFIX
 value|30
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAKE_LEGAL_NAME
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NO_MULTIPLE_DOTS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAKE_LEGAL_NAME
+parameter_list|(
+name|name
+parameter_list|)
+value|make_simple_name(name)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAKE_LEGAL_NAME
+parameter_list|(
+name|name
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MIN_PART
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MIN_PART
+value|3
+end_define
+
+begin_comment
+comment|/* keep at least MIN_PART chars between dots in a file name. */
+end_comment
 
 begin_endif
 endif|#

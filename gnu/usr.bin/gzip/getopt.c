@@ -134,6 +134,27 @@ begin_comment
 comment|/* not __GNUC__ */
 end_comment
 
+begin_comment
+comment|/* This tells Alpha OSF/1 not to define a getopt prototype in<stdio.h>.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NO_PROTO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NO_PROTO
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: util.c,v 0.14 1993/05/27 10:31:52 jloup Exp $"
+literal|"$Id: util.c,v 0.15 1993/06/15 09:04:13 jloup Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,12 +23,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -149,6 +143,104 @@ end_decl_stmt
 begin_comment
 comment|/* crc table, defined below */
 end_comment
+
+begin_comment
+comment|/* ===========================================================================  * Copy input to output unchanged: zcat == cat with --force.  * IN assertion: insize bytes have already been read in inbuf.  */
+end_comment
+
+begin_function
+name|int
+name|copy
+parameter_list|(
+name|in
+parameter_list|,
+name|out
+parameter_list|)
+name|int
+name|in
+decl_stmt|,
+name|out
+decl_stmt|;
+comment|/* input and output file descriptors */
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+name|insize
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|int
+operator|)
+name|insize
+operator|!=
+name|EOF
+condition|)
+block|{
+name|write_buf
+argument_list|(
+name|out
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|inbuf
+argument_list|,
+name|insize
+argument_list|)
+expr_stmt|;
+name|bytes_out
+operator|+=
+name|insize
+expr_stmt|;
+name|insize
+operator|=
+name|read
+argument_list|(
+name|in
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|inbuf
+argument_list|,
+name|INBUFSIZ
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|insize
+operator|==
+name|EOF
+operator|&&
+name|errno
+operator|!=
+literal|0
+condition|)
+block|{
+name|read_error
+argument_list|()
+expr_stmt|;
+block|}
+name|bytes_in
+operator|=
+name|bytes_out
+expr_stmt|;
+return|return
+name|OK
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* ===========================================================================  * Run a set of bytes through the crc shift register.  If s is a NULL  * pointer, then initialize the crc shift register contents instead.  * Return the current crc in either case.  */
@@ -287,13 +379,19 @@ block|}
 end_function
 
 begin_comment
-comment|/* ===========================================================================  * Fill the input buffer. This is called only when the buffer is empty  * and at least one byte is really needed.  */
+comment|/* ===========================================================================  * Fill the input buffer. This is called only when the buffer is empty.  */
 end_comment
 
 begin_function
 name|int
 name|fill_inbuf
-parameter_list|()
+parameter_list|(
+name|eof_ok
+parameter_list|)
+name|int
+name|eof_ok
+decl_stmt|;
+comment|/* set if EOF acceptable as a result */
 block|{
 name|int
 name|len
@@ -358,6 +456,13 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|eof_ok
+condition|)
+return|return
+name|EOF
+return|;
 name|read_error
 argument_list|()
 expr_stmt|;
@@ -749,6 +854,74 @@ expr_stmt|;
 return|return
 name|fname
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/* ========================================================================  * Make a file name legal for file systems not allowing file names with  * multiple dots or starting with a dot (such as MSDOS), by changing  * all dots except the last one into underlines.  A target dependent  * function can be used instead of this simple function by defining the macro  * MAKE_LEGAL_NAME in tailor.h and providing the function in a target  * dependent module.  */
+end_comment
+
+begin_function
+name|void
+name|make_simple_name
+parameter_list|(
+name|name
+parameter_list|)
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|{
+name|char
+modifier|*
+name|p
+init|=
+name|strrchr
+argument_list|(
+name|name
+argument_list|,
+literal|'.'
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+return|return;
+if|if
+condition|(
+name|p
+operator|==
+name|name
+condition|)
+name|p
+operator|++
+expr_stmt|;
+do|do
+block|{
+if|if
+condition|(
+operator|*
+operator|--
+name|p
+operator|==
+literal|'.'
+condition|)
+operator|*
+name|p
+operator|=
+literal|'_'
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|p
+operator|!=
+name|name
+condition|)
+do|;
 block|}
 end_function
 
@@ -1489,7 +1662,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ========================================================================  * Display compression ratio on stderr.  */
+comment|/* ========================================================================  * Display compression ratio on the given stream on 6 characters.  */
 end_comment
 
 begin_function
@@ -1499,12 +1672,18 @@ parameter_list|(
 name|num
 parameter_list|,
 name|den
+parameter_list|,
+name|file
 parameter_list|)
 name|long
 name|num
 decl_stmt|;
 name|long
 name|den
+decl_stmt|;
+name|FILE
+modifier|*
+name|file
 decl_stmt|;
 block|{
 name|long
@@ -1566,7 +1745,7 @@ name|putc
 argument_list|(
 literal|'-'
 argument_list|,
-name|stderr
+name|file
 argument_list|)
 expr_stmt|;
 name|ratio
@@ -1575,11 +1754,21 @@ operator|-
 name|ratio
 expr_stmt|;
 block|}
+else|else
+block|{
+name|putc
+argument_list|(
+literal|' '
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
-name|stderr
+name|file
 argument_list|,
-literal|"%2ld.%ld%%"
+literal|"%2ld.%1ld%%"
 argument_list|,
 name|ratio
 operator|/

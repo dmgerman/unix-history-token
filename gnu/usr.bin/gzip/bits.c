@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: bits.c,v 0.8 1993/02/04 13:21:06 jloup Exp $"
+literal|"$Id: bits.c,v 0.9 1993/06/11 10:16:58 jloup Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,8 +131,6 @@ name|unsigned
 name|size
 operator|)
 argument_list|)
-operator|=
-name|file_read
 expr_stmt|;
 end_expr_stmt
 

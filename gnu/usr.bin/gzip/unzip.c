@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: unzip.c,v 0.12 1993/05/28 17:56:23 jloup Exp $"
+literal|"$Id: unzip.c,v 0.13 1993/06/10 13:29:00 jloup Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,12 +27,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#

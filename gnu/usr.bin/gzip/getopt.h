@@ -122,14 +122,6 @@ modifier|*
 name|shortopts
 parameter_list|)
 function_decl|;
-else|#
-directive|else
-comment|/* not __GNU_LIBRARY__ */
-specifier|extern
-name|int
-name|getopt
-parameter_list|()
-function_decl|;
 endif|#
 directive|endif
 comment|/* not __GNU_LIBRARY__ */

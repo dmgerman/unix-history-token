@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"tailor.h"
 end_include
 
@@ -43,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: trees.c,v 0.11 1993/03/26 14:55:43 jloup Exp $"
+literal|"$Id: trees.c,v 0.12 1993/06/10 13:27:54 jloup Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -47,7 +47,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: deflate.c,v 0.13 1993/05/25 16:25:40 jloup Exp $"
+literal|"$Id: deflate.c,v 0.14 1993/06/12 20:11:10 jloup Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -427,7 +427,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Attempt to find a better match only when the current match is strictly  * smaller than this value.  */
+comment|/* Attempt to find a better match only when the current match is strictly  * smaller than this value. This mechanism is used only for compression  * levels>= 4.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|max_insert_length
+value|max_lazy_match
+end_define
+
+begin_comment
+comment|/* Insert new strings in the hash table only if the match length  * is not greater than this length. This saves time but degrades compression.  * max_insert_length is used only for compression levels<= 3.  */
+end_comment
+
+begin_decl_stmt
+name|local
+name|int
+name|compr_level
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* compression level (1..9) */
 end_comment
 
 begin_decl_stmt
@@ -532,28 +554,28 @@ literal|4
 block|,
 literal|4
 block|,
-literal|16
-block|,
-literal|16
-block|}
-block|,
-comment|/* maximum speed */
-comment|/* 2 */
-block|{
-literal|6
-block|,
 literal|8
 block|,
-literal|16
+literal|4
+block|}
+block|,
+comment|/* maximum speed, no lazy matches */
+comment|/* 2 */
+block|{
+literal|4
+block|,
+literal|5
 block|,
 literal|16
+block|,
+literal|8
 block|}
 block|,
 comment|/* 3 */
 block|{
-literal|8
+literal|4
 block|,
-literal|16
+literal|6
 block|,
 literal|32
 block|,
@@ -562,16 +584,28 @@ block|}
 block|,
 comment|/* 4 */
 block|{
+literal|4
+block|,
+literal|4
+block|,
+literal|16
+block|,
+literal|16
+block|}
+block|,
+comment|/* lazy matches */
+comment|/* 5 */
+block|{
 literal|8
 block|,
 literal|16
 block|,
-literal|64
+literal|32
 block|,
-literal|64
+literal|32
 block|}
 block|,
-comment|/* 5 */
+comment|/* 6 */
 block|{
 literal|8
 block|,
@@ -582,7 +616,7 @@ block|,
 literal|128
 block|}
 block|,
-comment|/* 6 */
+comment|/* 7 */
 block|{
 literal|8
 block|,
@@ -591,17 +625,6 @@ block|,
 literal|128
 block|,
 literal|256
-block|}
-block|,
-comment|/* 7 */
-block|{
-literal|8
-block|,
-literal|64
-block|,
-literal|128
-block|,
-literal|512
 block|}
 block|,
 comment|/* 8 */
@@ -634,7 +657,7 @@ comment|/* maximum compression */
 end_comment
 
 begin_comment
-comment|/* Note: the current code requires max_lazy>= MIN_MATCH and max_chain>= 4  * but these restrictions can easily be removed at a small cost.  */
+comment|/* Note: the deflate() code requires max_lazy>= MIN_MATCH and max_chain>= 4  * For deflate_fast() (levels<= 3) good is ignored and lazy has a different  * meaning.  */
 end_comment
 
 begin_define
@@ -656,6 +679,19 @@ begin_decl_stmt
 name|local
 name|void
 name|fill_window
+name|OF
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|local
+name|ulg
+name|deflate_fast
 name|OF
 argument_list|(
 operator|(
@@ -809,6 +845,10 @@ name|error
 argument_list|(
 literal|"bad pack level"
 argument_list|)
+expr_stmt|;
+name|compr_level
+operator|=
+name|pack_level
 expr_stmt|;
 comment|/* Initialize the hash table. */
 if|#
@@ -2130,18 +2170,13 @@ value|flush_block(block_start>= 0L ? (char*)&window[(unsigned)block_start] : \  
 end_define
 
 begin_comment
-comment|/* ===========================================================================  * Processes a new input file and return its compressed length.  */
+comment|/* ===========================================================================  * Processes a new input file and return its compressed length. This  * function does not perform lazy evaluationof matches and inserts  * new strings in the dictionary only for unmatched strings. It is used  * only for the fast compression options.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NO_LAZY
-end_ifdef
-
 begin_function
+name|local
 name|ulg
-name|deflate
+name|deflate_fast
 parameter_list|()
 block|{
 name|IPos
@@ -2246,6 +2281,14 @@ name|lookahead
 operator|-=
 name|match_length
 expr_stmt|;
+comment|/* Insert new strings in the hash table only if the match length              * is not too large. This saves time but degrades compression.              */
+if|if
+condition|(
+name|match_length
+operator|<=
+name|max_insert_length
+condition|)
+block|{
 name|match_length
 operator|--
 expr_stmt|;
@@ -2262,7 +2305,7 @@ argument_list|,
 name|hash_head
 argument_list|)
 expr_stmt|;
-comment|/* strstart never exceeds WSIZE-MAX_MATCH, so there are                  * always MIN_MATCH bytes ahead. If lookahead< MIN_MATCH                  * these bytes are garbage, but it does not matter since the                  * next lookahead bytes will always be emitted as literals.                  */
+comment|/* strstart never exceeds WSIZE-MAX_MATCH, so there are                      * always MIN_MATCH bytes ahead. If lookahead< MIN_MATCH                      * these bytes are garbage, but it does not matter since                      * the next lookahead bytes will be emitted as literals.                      */
 block|}
 do|while
 condition|(
@@ -2272,10 +2315,73 @@ operator|!=
 literal|0
 condition|)
 do|;
+name|strstart
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
+name|strstart
+operator|+=
+name|match_length
+expr_stmt|;
+name|match_length
+operator|=
+literal|0
+expr_stmt|;
+name|ins_h
+operator|=
+name|window
+index|[
+name|strstart
+index|]
+expr_stmt|;
+name|UPDATE_HASH
+argument_list|(
+name|ins_h
+argument_list|,
+name|window
+index|[
+name|strstart
+operator|+
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|MIN_MATCH
+operator|!=
+literal|3
+name|Call
+name|UPDATE_HASH
+argument_list|()
+name|MIN_MATCH
+operator|-
+literal|3
+name|more
+name|times
+endif|#
+directive|endif
+block|}
 block|}
 else|else
 block|{
 comment|/* No match, output a literal byte */
+name|Tracevv
+argument_list|(
+operator|(
+name|stderr
+operator|,
+literal|"%c"
+operator|,
+name|window
+index|[
+name|strstart
+index|]
+operator|)
+argument_list|)
+expr_stmt|;
 name|flush
 operator|=
 name|ct_tally
@@ -2291,10 +2397,10 @@ expr_stmt|;
 name|lookahead
 operator|--
 expr_stmt|;
-block|}
 name|strstart
 operator|++
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|flush
@@ -2331,15 +2437,6 @@ return|;
 comment|/* eof */
 block|}
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* LAZY */
-end_comment
 
 begin_comment
 comment|/* ===========================================================================  * Same as above, but achieves better compression. We use a lazy  * evaluation for matches: a match is finally adopted only if there is  * no better match at the next window position.  */
@@ -2387,6 +2484,17 @@ decl_stmt|;
 comment|/* byte length of input file, for debug only */
 endif|#
 directive|endif
+if|if
+condition|(
+name|compr_level
+operator|<=
+literal|3
+condition|)
+return|return
+name|deflate_fast
+argument_list|()
+return|;
+comment|/* optimized for speed */
 comment|/* Process the input block. */
 while|while
 condition|(
@@ -2693,15 +2801,6 @@ return|;
 comment|/* eof */
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LAZY */
-end_comment
 
 end_unit
 

@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.1.1"
+value|"1.2.2"
 end_define
 
 begin_define
@@ -21,7 +21,7 @@ begin_define
 define|#
 directive|define
 name|REVDATE
-value|"1 Jun 93"
+value|"17 Jun 93"
 end_define
 
 begin_comment
@@ -46,7 +46,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* $Id: revision.h,v 0.20 1993/06/01 14:03:17 jloup Exp $ */
+comment|/* $Id: revision.h,v 0.23 1993/06/16 15:03:51 jloup Exp $ */
 end_comment
 
 end_unit

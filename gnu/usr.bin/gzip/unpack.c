@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: unpack.c,v 1.3 1993/05/28 17:56:07 jloup Exp $"
+literal|"$Id: unpack.c,v 1.4 1993/06/11 19:25:36 jloup Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,12 +23,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -86,35 +80,12 @@ begin_comment
 comment|/* Number of literals, excluding the End of Block (EOB) code */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMALL_MEM
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MAX_PEEK
-value|10
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|MAX_PEEK
 value|12
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Maximum number of 'peek' bits used to optimize traversal of the  * Huffman tree.  */
@@ -215,23 +186,40 @@ begin_comment
 comment|/* Number of peek bits currently used */
 end_comment
 
-begin_decl_stmt
-name|local
-name|uch
+begin_comment
+comment|/* local uch prefix_len[1<< MAX_PEEK]; */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|prefix_len
-index|[
-literal|1
-operator|<<
-name|MAX_PEEK
-index|]
-decl_stmt|;
-end_decl_stmt
+value|outbuf
+end_define
 
 begin_comment
 comment|/* For each bit pattern b of peek_bits bits, prefix_len[b] is the length  * of the Huffman code starting with a prefix of b (upper bits), or 0  * if all codes of prefix b have more than peek_bits bits. It is not  * necessary to have a huge table (large MAX_PEEK) because most of the  * codes encountered in the input stream are short codes (by construction).  * So for most codes a single lookup will be necessary.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|1
+operator|<<
+name|MAX_PEEK
+operator|>
+name|OUTBUFSIZ
+end_if
+
 begin_decl_stmt
+name|error
+name|cannot
+name|overlay
+name|prefix_len
+name|and
+name|outbuf
+endif|#
+directive|endif
 name|local
 name|ulg
 name|bitbuf
