@@ -727,6 +727,16 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+block|{
+name|USB_VENDOR_SONY
+block|,
+name|USB_PRODUCT_SONY_CLIE_50
+block|}
+block|,
+literal|0
+block|}
+block|,
 comment|/*	{{ USB_VENDOR_SONY, USB_PRODUCT_SONY_CLIE_25 }, PALM4 },*/
 block|}
 decl_stmt|;
