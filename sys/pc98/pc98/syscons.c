@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
 comment|/*-  * Copyright (c) 1992-1995 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.13.2.27 1998/02/04 10:32:28 kato Exp $  */
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.13.2.28 1998/03/05 03:33:08 kato Exp $  */
 end_comment
 
 begin_include
@@ -13403,6 +13403,38 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* should we stop the screen saver? */
+if|if
+condition|(
+name|panicstr
+condition|)
+name|scrn_time_stamp
+operator|=
+name|mono_time
+operator|.
+name|tv_sec
+expr_stmt|;
+if|if
+condition|(
+name|mono_time
+operator|.
+name|tv_sec
+operator|<=
+name|scrn_time_stamp
+operator|+
+name|scrn_blank_time
+condition|)
+if|if
+condition|(
+name|scrn_blanked
+operator|>
+literal|0
+condition|)
+name|stop_scrn_saver
+argument_list|(
+name|current_saver
+argument_list|)
+expr_stmt|;
 comment|/* should we just return ? */
 if|if
 condition|(
@@ -13437,38 +13469,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* should we stop the screen saver? */
-if|if
-condition|(
-name|panicstr
-condition|)
-name|scrn_time_stamp
-operator|=
-name|mono_time
-operator|.
-name|tv_sec
-expr_stmt|;
-if|if
-condition|(
-name|mono_time
-operator|.
-name|tv_sec
-operator|<=
-name|scrn_time_stamp
-operator|+
-name|scrn_blank_time
-condition|)
-if|if
-condition|(
-name|scrn_blanked
-operator|>
-literal|0
-condition|)
-name|stop_scrn_saver
-argument_list|(
-name|current_saver
-argument_list|)
-expr_stmt|;
 name|scp
 operator|=
 name|cur_console
