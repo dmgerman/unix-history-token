@@ -461,7 +461,7 @@ comment|/* !LOCORE */
 end_comment
 
 begin_comment
-comment|/*  * Simple assembly macros to get and release spin locks  */
+comment|/*  * Simple assembly macros to get and release spin locks.  */
 end_comment
 
 begin_if
@@ -548,7 +548,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|pushf;								\ 	cli;								\ 	movl	lck+MTX_LOCK,%eax;					\ 	cmpl	_curproc,%eax;						\ 	jne	7f;							\ 	incl	lck+MTX_RECURSE;					\ 	jmp	8f;							\ 7:	movl	$ MTX_UNOWNED,%eax;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;      				\ 	jnz	9b;							\ 	popl	lck+MTX_SAVEINTR;					\ 	jmp	9f;							\ 8:	add	$4,%esp;						\ 9:
+value|pushf;								\ 	cli;								\ 	movl	lck+MTX_LOCK,%eax;					\ 	cmpl	_curproc,%eax;						\ 	jne	7f;							\ 	incl	lck+MTX_RECURSE;					\ 	jmp	8f;							\ 7:	movl	$ MTX_UNOWNED,%eax;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;      				\ 	jnz	7b;							\ 	popl	lck+MTX_SAVEINTR;					\ 	jmp	9f;							\ 8:	add	$4,%esp;						\ 9:
 end_define
 
 begin_define
