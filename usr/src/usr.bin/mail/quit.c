@@ -913,6 +913,7 @@ argument_list|)
 operator|!=
 name|NOSTR
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -940,6 +941,17 @@ name|fbuf
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+name|fchmod
+argument_list|(
+name|fileno
+argument_list|(
+name|obuf
+argument_list|)
+argument_list|,
+literal|0600
+argument_list|)
+expr_stmt|;
 block|}
 for|for
 control|(
