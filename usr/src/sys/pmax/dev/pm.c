@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pm.c	7.1 (Berkeley) %G%  *  *  devGraphics.c --  *  *     	This file contains machine-dependent routines for the graphics device.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.    *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devGraphics.c,  *	v 9.2 90/02/13 22:16:24 shirriff Exp $ SPRITE (DECWRL)";  */
+comment|/*   * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pm.c	7.2 (Berkeley) %G%  *  *  devGraphics.c --  *  *     	This file contains machine-dependent routines for the graphics device.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.    *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devGraphics.c,  *	v 9.2 90/02/13 22:16:24 shirriff Exp $ SPRITE (DECWRL)";  */
 end_comment
 
 begin_include
@@ -174,8 +174,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|proc
-modifier|*
+name|selinfo
 name|pm_selp
 decl_stmt|;
 end_decl_stmt
@@ -1753,8 +1752,11 @@ name|eTail
 operator|=
 name|i
 expr_stmt|;
-name|pmwakeup
-argument_list|()
+name|selwakeup
+argument_list|(
+operator|&
+name|pm_selp
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2476,8 +2478,11 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|pmwakeup
-argument_list|()
+name|selwakeup
+argument_list|(
+operator|&
+name|pm_selp
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2729,8 +2734,11 @@ name|eTail
 operator|=
 name|i
 expr_stmt|;
-name|pmwakeup
-argument_list|()
+name|selwakeup
+argument_list|(
+operator|&
+name|pm_selp
+argument_list|)
 expr_stmt|;
 name|lastRep
 operator|=
@@ -4596,6 +4604,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|flag
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -4608,6 +4618,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|flag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -4644,9 +4662,13 @@ operator|(
 literal|1
 operator|)
 return|;
+name|selrecord
+argument_list|(
+name|p
+argument_list|,
+operator|&
 name|pm_selp
-operator|=
-name|curproc
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -4658,32 +4680,7 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
-name|pmwakeup
-argument_list|()
-block|{
-if|if
-condition|(
-name|pm_selp
-condition|)
-block|{
-name|selwakeup
-argument_list|(
-name|pm_selp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|pm_selp
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_expr_stmt
-
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
