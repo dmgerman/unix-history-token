@@ -527,10 +527,6 @@ name|double
 name|exp__D
 argument_list|()
 decl_stmt|,
-name|huge
-init|=
-literal|1e300
-decl_stmt|,
 name|tiny
 init|=
 literal|1e-300
@@ -594,9 +590,9 @@ name|_IEEE
 condition|)
 return|return
 operator|(
-name|huge
+name|HUGE_VAL
 operator|*
-name|huge
+name|HUGE_VAL
 operator|)
 return|;
 else|else
