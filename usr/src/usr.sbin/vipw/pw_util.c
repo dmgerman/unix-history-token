@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pw_util.c	5.3 (Berkeley) %G%"
+literal|"@(#)pw_util.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,7 +131,7 @@ name|struct
 name|rlimit
 name|rlim
 decl_stmt|;
-comment|/* Unlimited cpu, file size. */
+comment|/* Unlimited resource limits. */
 name|rlim
 operator|.
 name|rlim_cur
@@ -164,6 +164,39 @@ operator|&
 name|rlim
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setrlimit
+argument_list|(
+name|RLIMIT_STACK
+argument_list|,
+operator|&
+name|rlim
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setrlimit
+argument_list|(
+name|RLIMIT_DATA
+argument_list|,
+operator|&
+name|rlim
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setrlimit
+argument_list|(
+name|RLIMIT_RSS
+argument_list|,
+operator|&
+name|rlim
+argument_list|)
+expr_stmt|;
 comment|/* Don't drop core (not really necessary, but GP's). */
 name|rlim
 operator|.
@@ -186,7 +219,17 @@ operator|&
 name|rlim
 argument_list|)
 expr_stmt|;
-comment|/* Turn off usual signals. */
+comment|/* Turn off signals. */
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -203,6 +246,16 @@ operator|)
 name|signal
 argument_list|(
 name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGPIPE
 argument_list|,
 name|SIG_IGN
 argument_list|)
@@ -233,6 +286,16 @@ operator|)
 name|signal
 argument_list|(
 name|SIGTSTP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGTTOU
 argument_list|,
 name|SIG_IGN
 argument_list|)
