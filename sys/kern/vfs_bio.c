@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.106 1996/11/28 04:26:04 dyson Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.107 1996/11/30 22:41:40 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -4122,19 +4122,36 @@ operator|&
 operator|~
 name|PAGE_MASK
 expr_stmt|;
+comment|/* 	 * we assume that buffer_map is not at address 0 	 */
+name|addr
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|maxsize
+operator|!=
+name|bp
+operator|->
+name|b_kvasize
+condition|)
+block|{
 name|bfreekva
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * See if we have buffer kva space 	 */
+comment|/* 		 * See if we have buffer kva space 		 */
 if|if
 condition|(
 name|vm_map_findspace
 argument_list|(
 name|buffer_map
 argument_list|,
-literal|0
+name|vm_map_min
+argument_list|(
+name|buffer_map
+argument_list|)
 argument_list|,
 name|maxsize
 argument_list|,
@@ -4157,6 +4174,7 @@ expr_stmt|;
 goto|goto
 name|trytofreespace
 goto|;
+block|}
 block|}
 comment|/* 	 * See if we are below are allocated minimum 	 */
 if|if
@@ -4186,6 +4204,11 @@ name|trytofreespace
 goto|;
 block|}
 comment|/* 	 * create a map entry for the buffer -- in essence 	 * reserving the kva space. 	 */
+if|if
+condition|(
+name|addr
+condition|)
+block|{
 name|vm_map_insert
 argument_list|(
 name|buffer_map
@@ -4209,15 +4232,6 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_data
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|addr
-expr_stmt|;
-name|bp
-operator|->
 name|b_kvabase
 operator|=
 operator|(
@@ -4230,6 +4244,15 @@ operator|->
 name|b_kvasize
 operator|=
 name|maxsize
+expr_stmt|;
+block|}
+name|bp
+operator|->
+name|b_data
+operator|=
+name|bp
+operator|->
+name|b_kvabase
 expr_stmt|;
 return|return
 operator|(
