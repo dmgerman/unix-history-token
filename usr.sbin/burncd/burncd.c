@@ -3002,7 +3002,7 @@ name|void
 name|do_format
 parameter_list|(
 name|int
-name|fd
+name|the_fd
 parameter_list|,
 name|int
 name|force
@@ -3035,7 +3035,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-name|fd
+name|the_fd
 argument_list|,
 name|CDRIOCREADFORMATCAPS
 argument_list|,
@@ -3386,7 +3386,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-name|fd
+name|the_fd
 argument_list|,
 name|CDRIOCFORMAT
 argument_list|,
@@ -3418,7 +3418,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-name|fd
+name|the_fd
 argument_list|,
 name|CDRIOCGETPROGRESS
 argument_list|,
