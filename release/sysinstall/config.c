@@ -2978,7 +2978,7 @@ argument_list|)
 condition|)
 name|write_root_xprofile
 argument_list|(
-literal|"gnome-session&\nexec sawfish"
+literal|"exec gnome-session\n"
 argument_list|)
 expr_stmt|;
 block|}
