@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_disksubr.c	8.5 (Berkeley) 1/21/94  * $Id: ufs_disksubr.c,v 1.34 1998/02/20 13:37:40 bde Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_disksubr.c	8.5 (Berkeley) 1/21/94  * $Id: ufs_disksubr.c,v 1.35 1998/07/28 18:25:51 bde Exp $  */
 end_comment
 
 begin_include
@@ -78,6 +78,23 @@ name|buf
 modifier|*
 name|bn
 decl_stmt|;
+name|struct
+name|buf
+modifier|*
+name|be
+decl_stmt|;
+name|be
+operator|=
+name|TAILQ_LAST
+argument_list|(
+operator|&
+name|bufq
+operator|->
+name|queue
+argument_list|,
+name|buf_queue
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If the queue is empty or we are an 	 * ordered transaction, then it's easy. 	 */
 if|if
 condition|(
@@ -125,42 +142,23 @@ block|{
 comment|/* 		 * A certain portion of the list is 		 * "locked" to preserve ordering, so 		 * we can only insert after the insert 		 * point. 		 */
 name|bq
 operator|=
-name|TAILQ_NEXT
-argument_list|(
 name|bufq
 operator|->
 name|insert_point
-argument_list|,
-name|b_act
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bq
-operator|==
-name|NULL
-condition|)
+block|}
+else|else
 block|{
-name|bufq_insert_tail
-argument_list|(
-name|bufq
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
-comment|/* 	 * If we lie before the first (currently active) request, then we 	 * must add ourselves to the second request list. 	 */
+comment|/* 		 * If we lie before the last removed (currently active) 		 * request, and are not inserting ourselves into the 		 * "locked" portion of the list, then we must add ourselves 		 * to the second request list. 		 */
 if|if
 condition|(
 name|bp
 operator|->
 name|b_pblkno
 operator|<
-name|bq
+name|bufq
 operator|->
-name|b_pblkno
+name|last_pblkno
 condition|)
 block|{
 name|bq
@@ -169,7 +167,7 @@ name|bufq
 operator|->
 name|switch_point
 expr_stmt|;
-comment|/* 		 * If we are starting a new secondary list, then it's easy. 		 */
+comment|/* 			 * If we are starting a new secondary list, 			 * then it's easy. 			 */
 if|if
 condition|(
 name|bq
@@ -192,6 +190,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 			 * If we lie ahead of the current switch point, 			 * insert us before the switch point and move 			 * the switch point. 			 */
 if|if
 condition|(
 name|bp
@@ -221,7 +220,83 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 	 * Request is at/after the current request... 	 * sort in the first request list. 	 */
+else|else
+block|{
+if|if
+condition|(
+name|bufq
+operator|->
+name|switch_point
+operator|!=
+name|NULL
+condition|)
+name|be
+operator|=
+name|TAILQ_PREV
+argument_list|(
+name|bufq
+operator|->
+name|switch_point
+argument_list|,
+name|buf_queue
+argument_list|,
+name|b_act
+argument_list|)
+expr_stmt|;
+comment|/* 			 * If we lie between last_pblkno and bq, 			 * insert before bq. 			 */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_pblkno
+operator|<
+name|bq
+operator|->
+name|b_pblkno
+condition|)
+block|{
+name|TAILQ_INSERT_BEFORE
+argument_list|(
+name|bq
+argument_list|,
+name|bp
+argument_list|,
+name|b_act
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
+block|}
+comment|/* 	 * Request is at/after our current position in the list. 	 * Optimize for sequential I/O by seeing if we go at the tail. 	 */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_pblkno
+operator|>
+name|be
+operator|->
+name|b_pblkno
+condition|)
+block|{
+name|TAILQ_INSERT_AFTER
+argument_list|(
+operator|&
+name|bufq
+operator|->
+name|queue
+argument_list|,
+name|be
+argument_list|,
+name|bp
+argument_list|,
+name|b_act
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* Otherwise, insertion sort */
 while|while
 condition|(
 operator|(
