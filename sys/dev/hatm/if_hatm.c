@@ -13561,20 +13561,6 @@ name|utopia
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Give any waiters on closing a VCC a chance. They will stop 	 * to wait if they see that IFF_RUNNING disappeared. 	 */
-while|while
-condition|(
-operator|!
-operator|(
-name|cv_waitq_empty
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|vcc_cv
-argument_list|)
-operator|)
-condition|)
-block|{
 name|cv_broadcast
 argument_list|(
 operator|&
@@ -13583,26 +13569,6 @@ operator|->
 name|vcc_cv
 argument_list|)
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
-block|}
-while|while
-condition|(
-operator|!
-operator|(
-name|cv_waitq_empty
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|cv_rcclose
-argument_list|)
-operator|)
-condition|)
-block|{
 name|cv_broadcast
 argument_list|(
 operator|&
@@ -13611,7 +13577,6 @@ operator|->
 name|cv_rcclose
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Now free all resources. 	 */
 comment|/* 	 * Free the large mbufs that are given to the card. 	 */
 for|for

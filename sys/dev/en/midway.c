@@ -6158,18 +6158,6 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Unstop all waiters 	 */
-while|while
-condition|(
-operator|!
-name|cv_waitq_empty
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|cv_close
-argument_list|)
-condition|)
-block|{
 name|cv_broadcast
 argument_list|(
 operator|&
@@ -6178,12 +6166,6 @@ operator|->
 name|cv_close
 argument_list|)
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
