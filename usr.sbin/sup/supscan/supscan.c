@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 Carnegie Mellon University  * All Rights Reserv
 end_comment
 
 begin_comment
-comment|/*  * supscan -- SUP Scan File Builder  *  * Usage: supscan [ -v ] collection [ basedir ]  *	  supscan [ -v ] -f dirfile  *	  supscan [ -v ] -s  *	-f	"file" -- use dirfile instead of system coll.dir  *	-s	"system" -- perform scan for system supfile  *	-v	"verbose" -- print messages as you go  *	collection	-- name of the desired collection if not -s  *	basedir		-- name of the base directory, if not  *			   the default or recorded in coll.dir  *	dirfile		-- name of replacement for system coll.dir.  *  **********************************************************************  * HISTORY  * $Log: supscan.c,v $  * Revision 1.1.1.1  1993/08/21  00:46:35  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:19  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.14  92/08/11  12:08:30  mrt  * 	Picked up Brad's deliniting and variable argument changes  * 	[92/08/10            mrt]  *   * Revision 1.13  92/02/08  18:04:44  dlc  * 	Once again revised localhost().  Do not use gethostbyname() at  * 	all, but assume that the host names in the coll.host file are at  * 	least a prefix of the fully qualified name.  Modcoll (and related  * 	scripts) will maintain this fact.  * 	[92/02/08            dlc]  *   * Revision 1.12  91/08/17  23:35:31  dlc  * 	Changes to localhost() function:  * 		- Use host name in kernel for local host name; assume it is  * 		  fully qualified.  * 		- If gethostbyname() of host to see if we are the repository  * 		  fails, with TRY_AGAIN or NO_RECOVERY, then use the "host"  * 		  parameter.  Print a diagnostic in this case.  * 	[91/08/17            dlc]  *   * Revision 1.11  90/04/04  10:53:01  dlc  * 	Changed localhost to retry getting the local host name 4 times with  * 	30 second sleep intervals before aborting; after 4 tries, things are  * 	probably too messed up for the supscan to do anything useful  * 	[90/04/04            dlc]  *   * Revision 1.10  89/08/03  19:49:33  mja  * 	Updated to use v*printf() in place of _doprnt().  * 	[89/04/19            mja]  *   * Revision 1.9  89/06/18  14:41:37  gm0w  * 	Fixed up some notify messages of errors to use "SUP:" prefix.  * 	[89/06/18            gm0w]  *   * 13-May-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Changed goaway to longjmp back to top-level to scan next  *	collection. [V7.6]  *  * 19-Feb-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added -f<filename> switch to scan all (or part) of the  *	collections in a file of collection/base-directory pairs.  *	[V7.5]  *  * 27-Dec-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Removed nameserver support (which means to use a new  *	datafile).  *  * 09-Sep-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Use case-insensitive hostname comparison.  *  * 28-Jun-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code for "release" support. [V6.4]  *  * 05-Jan-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Changed collection setup errors to be non-fatal. [V5.3]  *  * 29-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Moved most of the scanning code to scan.c. [V4.2]  *  * 02-Nov-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added "-s" option.  *  * 22-Sep-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Merged 4.1 and 4.2 versions together.  *  * 04-Jun-85  Steven Shafer (sas) at Carnegie-Mellon University  *	Created for 4.2 BSD.  *  **********************************************************************  */
+comment|/*  * supscan -- SUP Scan File Builder  *  * Usage: supscan [ -v ] collection [ -r release ] [ basedir ]  *	  supscan [ -v ] -f dirfile  *	  supscan [ -v ] -s  *	-f	"file"     -- use dirfile instead of system coll.dir  *	-r	"release"  -- scan only the specified release. Multiple  *			      releases can be specified.  *	-s	"system"   -- perform scan for system supfile  *	-v	"verbose"  -- print messages as you go  *	collection	   -- name of the desired collection if not -s  *	basedir		   -- name of the base directory, if not  *			      the default or recorded in coll.dir  *	dirfile		   -- name of replacement for system coll.dir.  *  **********************************************************************  * HISTORY  * $Log: supscan.c,v $  * Revision 1.1.1.1  1995/12/26 04:54:48  peter  * Import the unmodified version of the sup that we are using.  * The heritage of this version is not clear.  It appears to be NetBSD  * derived from some time ago.  *  * Revision 1.1.1.1  1993/08/21  00:46:35  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:19  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.14  92/08/11  12:08:30  mrt  * 	Picked up Brad's deliniting and variable argument changes  * 	[92/08/10            mrt]  *   * Revision 1.13  92/02/08  18:04:44  dlc  * 	Once again revised localhost().  Do not use gethostbyname() at  * 	all, but assume that the host names in the coll.host file are at  * 	least a prefix of the fully qualified name.  Modcoll (and related  * 	scripts) will maintain this fact.  * 	[92/02/08            dlc]  *   * Revision 1.12  91/08/17  23:35:31  dlc  * 	Changes to localhost() function:  * 		- Use host name in kernel for local host name; assume it is  * 		  fully qualified.  * 		- If gethostbyname() of host to see if we are the repository  * 		  fails, with TRY_AGAIN or NO_RECOVERY, then use the "host"  * 		  parameter.  Print a diagnostic in this case.  * 	[91/08/17            dlc]  *   * Revision 1.11  90/04/04  10:53:01  dlc  * 	Changed localhost to retry getting the local host name 4 times with  * 	30 second sleep intervals before aborting; after 4 tries, things are  * 	probably too messed up for the supscan to do anything useful  * 	[90/04/04            dlc]  *   * Revision 1.10  89/08/03  19:49:33  mja  * 	Updated to use v*printf() in place of _doprnt().  * 	[89/04/19            mja]  *   * Revision 1.9  89/06/18  14:41:37  gm0w  * 	Fixed up some notify messages of errors to use "SUP:" prefix.  * 	[89/06/18            gm0w]  *   * 13-May-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Changed goaway to longjmp back to top-level to scan next  *	collection. [V7.6]  *  * 19-Feb-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added -f<filename> switch to scan all (or part) of the  *	collections in a file of collection/base-directory pairs.  *	[V7.5]  *  * 27-Dec-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Removed nameserver support (which means to use a new  *	datafile).  *  * 09-Sep-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Use case-insensitive hostname comparison.  *  * 28-Jun-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code for "release" support. [V6.4]  *  * 05-Jan-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Changed collection setup errors to be non-fatal. [V5.3]  *  * 29-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Moved most of the scanning code to scan.c. [V4.2]  *  * 02-Nov-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added "-s" option.  *  * 22-Sep-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Merged 4.1 and 4.2 versions together.  *  * 04-Jun-85  Steven Shafer (sas) at Carnegie-Mellon University  *	Created for 4.2 BSD.  *  **********************************************************************  */
 end_comment
 
 begin_include
@@ -222,6 +222,32 @@ comment|/* collection pathname prefix */
 end_comment
 
 begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|releases
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* releases to scan */
+end_comment
+
+begin_decl_stmt
+name|int
+name|numreleases
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of releases  */
+end_comment
+
+begin_decl_stmt
 name|long
 name|lasttime
 init|=
@@ -422,10 +448,12 @@ name|sjbuf
 argument_list|)
 condition|)
 block|{
-name|makescanlists
-argument_list|()
-expr_stmt|;
 comment|/* record names in scan files */
+name|makescanlists
+argument_list|(
+name|releases
+argument_list|)
+expr_stmt|;
 name|scantime
 operator|=
 name|time
@@ -547,21 +575,19 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: supscan [ -v ] collection [ basedir ]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       supscan [ -v ] -f dirfile\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       supscan [ -v ] -s\n"
+literal|"Usage: supscan [ -v ] [ -r release ] collection [ basedir ]\n"
+literal|"       supscan [ -v ] [ -r release ] -f dirfile\n"
+literal|"       supscan [ -v ] [ -r release ] -s\n"
+literal|"       supscan [ -v ] [ -r release ] -s\n"
+literal|"        -f \"file\"    -- use dirfile instead of system coll.dir\n"
+literal|"        -r \"release\" -- scan only the specified release. Multiple\n"
+literal|"                        releases can be specified.\n"
+literal|"        -s \"system\"  -- perform scan for system supfile\n"
+literal|"        -v \"verbose\" -- print messages as you go\n"
+literal|"        collection   -- name of the desired collection if not -s\n"
+literal|"        basedir      -- name of the base directory, if not\n"
+literal|"                        the default or recorded in coll.dir\n"
+literal|"        dirfile      -- name of replacement for system coll.dir.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -704,6 +730,105 @@ name|argv
 index|[
 literal|1
 index|]
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+if|if
+condition|(
+name|argc
+operator|==
+literal|2
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+operator|--
+name|argc
+expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|numreleases
+operator|++
+expr_stmt|;
+name|releases
+operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|realloc
+argument_list|(
+name|releases
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|releases
+argument_list|)
+operator|*
+operator|(
+name|numreleases
+operator|+
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|releases
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"supscan: cannot malloc!\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|releases
+index|[
+name|numreleases
+operator|-
+literal|1
+index|]
+operator|=
+name|argv
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|releases
+index|[
+name|numreleases
+index|]
+operator|=
+name|NULL
 expr_stmt|;
 break|break;
 case|case
