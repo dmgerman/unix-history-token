@@ -696,6 +696,54 @@ literal|"OPUS"
 block|}
 block|,
 block|{
+literal|0x11
+block|,
+literal|"OS/2 BM: hidden DOS with 12-bit FAT"
+block|}
+block|,
+block|{
+literal|0x12
+block|,
+literal|"Compaq diagnostics"
+block|}
+block|,
+block|{
+literal|0x14
+block|,
+literal|"OS/2 BM: hidden DOS with 16-bit FAT (< 32MB)"
+block|}
+block|,
+block|{
+literal|0x16
+block|,
+literal|"OS/2 BM: hidden DOS with 16-bit FAT (>= 32MB)"
+block|}
+block|,
+block|{
+literal|0x17
+block|,
+literal|"OS/2 BM: hidden IFS (e.g. HPFS)"
+block|}
+block|,
+block|{
+literal|0x18
+block|,
+literal|"AST Windows swapfile"
+block|}
+block|,
+block|{
+literal|0x24
+block|,
+literal|"NEC DOS"
+block|}
+block|,
+block|{
+literal|0x3C
+block|,
+literal|"PartitionMagic recovery"
+block|}
+block|,
+block|{
 literal|0x39
 block|,
 literal|"plan9"
@@ -705,6 +753,24 @@ block|{
 literal|0x40
 block|,
 literal|"VENIX 286"
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|"Linux/MINIX (sharing disk with DRDOS)"
+block|}
+block|,
+block|{
+literal|0x42
+block|,
+literal|"SFS or Linux swap (sharing disk with DRDOS)"
+block|}
+block|,
+block|{
+literal|0x43
+block|,
+literal|"Linux native (sharing disk with DRDOS)"
 block|}
 block|,
 block|{
@@ -744,10 +810,35 @@ literal|"CP/M or Microport SysV/AT"
 block|}
 block|,
 block|{
+literal|0x53
+block|,
+literal|"DM6 Aux3"
+block|}
+block|,
+block|{
+literal|0x54
+block|,
+literal|"DM6"
+block|}
+block|,
+block|{
+literal|0x55
+block|,
+literal|"EZ-Drive (disk manager)"
+block|}
+block|,
+block|{
 literal|0x56
 block|,
 literal|"GB"
 block|}
+block|,
+block|{
+literal|0x5c
+block|,
+literal|"Priam Edisk (disk manager)"
+block|}
+comment|/* according to S. Widlake */
 block|,
 block|{
 literal|0x61
@@ -774,9 +865,33 @@ literal|"Novell Netware 3.xx"
 block|}
 block|,
 block|{
+literal|0x70
+block|,
+literal|"DiskSecure Multi-Boot"
+block|}
+block|,
+block|{
 literal|0x75
 block|,
 literal|"PCIX"
+block|}
+block|,
+block|{
+literal|0x77
+block|,
+literal|"QNX4.x"
+block|}
+block|,
+block|{
+literal|0x78
+block|,
+literal|"QNX4.x 2nd part"
+block|}
+block|,
+block|{
+literal|0x79
+block|,
+literal|"QNX4.x 3rd part"
 block|}
 block|,
 block|{
@@ -801,6 +916,30 @@ block|{
 literal|0x83
 block|,
 literal|"Linux filesystem"
+block|}
+block|,
+block|{
+literal|0x84
+block|,
+literal|"OS/2 hidden C: drive"
+block|}
+block|,
+block|{
+literal|0x85
+block|,
+literal|"Linux extended"
+block|}
+block|,
+block|{
+literal|0x86
+block|,
+literal|"NTFS volume set??"
+block|}
+block|,
+block|{
+literal|0x87
+block|,
+literal|"NTFS volume set??"
 block|}
 block|,
 block|{
@@ -852,6 +991,12 @@ literal|"NetBSD"
 block|}
 block|,
 block|{
+literal|0xAC
+block|,
+literal|"IBM JFS"
+block|}
+block|,
+block|{
 literal|0xB7
 block|,
 literal|"BSDI BSD/386 filesystem"
@@ -861,6 +1006,36 @@ block|{
 literal|0xB8
 block|,
 literal|"BSDI BSD/386 swap"
+block|}
+block|,
+block|{
+literal|0xBE
+block|,
+literal|"Solaris x86 boot"
+block|}
+block|,
+block|{
+literal|0xC1
+block|,
+literal|"DRDOS/sec with 12-bit FAT"
+block|}
+block|,
+block|{
+literal|0xC4
+block|,
+literal|"DRDOS/sec with 16-bit FAT (< 32MB)"
+block|}
+block|,
+block|{
+literal|0xC6
+block|,
+literal|"DRDOS/sec with 16-bit FAT (>= 32MB)"
+block|}
+block|,
+block|{
+literal|0xC7
+block|,
+literal|"Syrinx"
 block|}
 block|,
 block|{
@@ -888,6 +1063,24 @@ literal|"Speed"
 block|}
 block|,
 block|{
+literal|0xEB
+block|,
+literal|"BeOS file system"
+block|}
+block|,
+block|{
+literal|0xEE
+block|,
+literal|"EFI GPT"
+block|}
+block|,
+block|{
+literal|0xEF
+block|,
+literal|"EFI System Partition"
+block|}
+block|,
+block|{
 literal|0xF1
 block|,
 literal|"Speed"
@@ -903,6 +1096,12 @@ block|{
 literal|0xF4
 block|,
 literal|"Speed"
+block|}
+block|,
+block|{
+literal|0xFE
+block|,
+literal|"SpeedStor>1024 cyl. or LANstep"
 block|}
 block|,
 block|{
