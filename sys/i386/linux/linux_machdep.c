@@ -1462,6 +1462,20 @@ name|CLONE_PID
 value|0x1000
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLONE_THREAD
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREADING_FLAGS
+value|(CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND)
+end_define
+
 begin_function
 name|int
 name|linux_clone
@@ -1640,6 +1654,23 @@ condition|)
 name|ff
 operator||=
 name|RFFDG
+expr_stmt|;
+comment|/* 	 * Attempt to detect when linux_clone(2) is used for creating 	 * kernel threads. Unfortunately despite the existence of the 	 * CLONE_THREAD flag, version of linuxthreads package used in 	 * most popular distros as of beginning of 2005 doesn't make 	 * any use of it. Therefore, this detection relay fully on 	 * empirical observation that linuxthreads sets certain 	 * combination of flags, so that we can make more or less 	 * precise detection and notify the FreeBSD kernel that several 	 * processes are in fact part of the same threading group, so 	 * that special treatment is necessary for signal delivery 	 * between those processes and fd locking. 	 */
+if|if
+condition|(
+operator|(
+name|args
+operator|->
+name|flags
+operator|&
+literal|0xffffff00
+operator|)
+operator|==
+name|THREADING_FLAGS
+condition|)
+name|ff
+operator||=
+name|RFTHREAD
 expr_stmt|;
 name|error
 operator|=
