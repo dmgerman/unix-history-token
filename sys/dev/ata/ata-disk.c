@@ -1108,36 +1108,26 @@ argument_list|(
 name|atadev
 argument_list|)
 expr_stmt|;
-comment|/* if this disk belongs to an ATA RAID dont print the probe */
+comment|/* only print probe banner if we are not part of a RAID array */
 if|if
 condition|(
+operator|!
 name|ata_raiddisk_attach
 argument_list|(
 name|adp
 argument_list|)
 condition|)
-name|adp
-operator|->
-name|flags
-operator||=
-name|AD_F_RAID_SUBDISK
-expr_stmt|;
-else|else
-block|{
 if|if
 condition|(
 name|atadev
 operator|->
 name|driver
 condition|)
-block|{
 name|ad_print
 argument_list|(
 name|adp
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
