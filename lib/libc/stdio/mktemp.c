@@ -402,6 +402,8 @@ decl_stmt|;
 if|if
 condition|(
 name|doopen
+operator|!=
+name|NULL
 operator|&&
 name|domkdir
 condition|)
@@ -424,6 +426,8 @@ name|path
 init|;
 operator|*
 name|trv
+operator|!=
+literal|'\0'
 condition|;
 operator|++
 name|trv
@@ -504,6 +508,8 @@ comment|/* 	 * check the target directory. 	 */
 if|if
 condition|(
 name|doopen
+operator|!=
+name|NULL
 operator|||
 name|domkdir
 condition|)
@@ -511,18 +517,14 @@ block|{
 for|for
 control|(
 init|;
+name|trv
+operator|>
+name|path
 condition|;
 operator|--
 name|trv
 control|)
 block|{
-if|if
-condition|(
-name|trv
-operator|<=
-name|path
-condition|)
-break|break;
 if|if
 condition|(
 operator|*
@@ -687,10 +689,6 @@ operator|(
 name|errno
 operator|==
 name|ENOENT
-condition|?
-literal|1
-else|:
-literal|0
 operator|)
 return|;
 comment|/* If we have a collision, cycle through the space of filenames */
@@ -735,10 +733,11 @@ name|pad
 operator|==
 name|NULL
 operator|||
-operator|!
 operator|*
 operator|++
 name|pad
+operator|==
+literal|'\0'
 condition|)
 operator|*
 name|trv
