@@ -23,6 +23,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -2714,6 +2720,7 @@ argument_list|(
 operator|(
 name|unsigned
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3176,11 +3183,20 @@ else|#
 directive|else
 end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|sparc
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
 
 begin_include
 include|#
