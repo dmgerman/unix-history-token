@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.17 (Berkeley) %G%"
+literal|"@(#)trees.c	4.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2318,11 +2318,11 @@ argument|, opst[p->in.op] ); 			return; 			} 		if ( t1 == ENUMTY ) t1 = INT; 		i
 literal|0
 argument|){ 			werror(
 literal|"illegal combination of pointer and integer, op %s"
-argument|, 				opst[p->in.op] ); 			} 		} 	else { 		d1 = p->in.left->fn.cdim; 		d2 = p->in.right->fn.cdim; 		for( ;; ){ 			if( t1 == t2 ) {; 				if( p->in.left->fn.csiz != p->in.right->fn.csiz ) { 					werror(
+argument|, 				opst[p->in.op] ); 			} 		} 	else { 		if( t1 == t2 ) { 			if( p->in.left->fn.csiz != p->in.right->fn.csiz ) { 				werror(
 literal|"illegal structure pointer combination"
-argument|); 					} 				return; 				} 			if( ISARY(t1) || ISPTR(t1) ){ 				if( !ISARY(t2)&& !ISPTR(t2) ) break; 				if( ISARY(t1)&& ISARY(t2)&& dimtab[d1] != dimtab[d2] ){ 					werror(
+argument|); 				return; 				} 			d1 = p->in.left->fn.cdim; 			d2 = p->in.right->fn.cdim; 			for( ;; ){ 				if( ISARY(t1) ){ 					if( dimtab[d1] != dimtab[d2] ){ 						werror(
 literal|"illegal array size combination"
-argument|); 					return; 					} 				if( ISARY(t1) ) ++d1; 				if( ISARY(t2) ) ++d2; 				} 			else break; 			t1 = DECREF(t1); 			t2 = DECREF(t2); 			} 		werror(
+argument|); 						return; 						} 					++d1; 					++d2; 					} 				else if( !ISPTR(t1) ) break; 				t1 = DECREF(t1); 				} 			} 		else 			werror(
 literal|"illegal pointer combination"
 argument|); 		}  	}  NODE * stref( p ) register NODE *p; {  	TWORD t; 	int d, s, dsc, align; 	OFFSZ off; 	register struct symtab *q;
 comment|/* make p->x */
