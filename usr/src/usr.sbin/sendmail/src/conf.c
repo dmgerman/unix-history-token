@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.24 (Berkeley) %G%"
+literal|"@(#)conf.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -582,22 +582,36 @@ name|NULL
 condition|)
 name|myname
 operator|=
+name|newstr
+argument_list|(
 name|pw
 operator|->
 name|pw_name
+argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|pw
+name|myname
 operator|=
-name|getpwnam
+name|newstr
 argument_list|(
 name|myname
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|pw
+operator|=
+name|getpwnam
+argument_list|(
+name|myname
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|||
 name|getuid
 argument_list|()
 operator|!=
@@ -622,9 +636,12 @@ name|NULL
 condition|)
 name|myname
 operator|=
+name|newstr
+argument_list|(
 name|pw
 operator|->
 name|pw_name
+argument_list|)
 expr_stmt|;
 block|}
 block|}
