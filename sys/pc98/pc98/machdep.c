@@ -6239,7 +6239,7 @@ argument_list|)
 operator|-
 literal|1
 block|,
-comment|/* length - all address space */
+comment|/* length  */
 name|SDT_SYS386TSS
 block|,
 comment|/* segment type */
@@ -7283,6 +7283,14 @@ operator|+
 name|pa
 argument_list|,
 name|pa
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Map the page at address zero for the bios code to use. 	 * Note that page zero is not in the general page pool. 	 */
+name|pmap_kenter
+argument_list|(
+name|KERNBASE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * if basemem != 640, map pages r/w into vm86 page table so  	 * that the bios can scribble on it. 	 */
@@ -8431,7 +8439,7 @@ if|if
 condition|(
 name|pa
 operator|>=
-literal|0x100000
+name|KERNLOAD
 operator|&&
 name|pa
 operator|<
