@@ -1643,6 +1643,12 @@ directive|endif
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1653,54 +1659,11 @@ begin_comment
 comment|/* XXX: There should be a non-static version of this. */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|printf_caddr_t
-parameter_list|(
-name|void
-modifier|*
-name|data
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|data
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_decl_stmt
-specifier|static
-name|char
-name|preempt_warning
-index|[]
-init|=
-literal|"WARNING: Kernel preemption is disabled, expect reduced performance.\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|SYSINIT
-argument_list|(
-argument|preempt_warning
-argument_list|,
-argument|SI_SUB_COPYRIGHT
-argument_list|,
-argument|SI_ORDER_ANY
-argument_list|,
-argument|printf_caddr_t
-argument_list|,
-argument|preempt_warning
-argument_list|)
-end_macro
+begin_endif
+unit|static void printf_caddr_t(void *data) { 	printf("%s", (char *)data); } static char preempt_warning[] =     "WARNING: Kernel preemption is disabled, expect reduced performance.\n"; SYSINIT(preempt_warning, SI_SUB_COPYRIGHT, SI_ORDER_ANY, printf_caddr_t,     preempt_warning)
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
