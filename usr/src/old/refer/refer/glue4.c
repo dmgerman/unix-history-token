@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glue4.c	4.1 (Berkeley) %G%"
+literal|"@(#)glue4.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,14 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|gfile
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|grepcall
@@ -86,11 +94,6 @@ name|inb
 index|[
 literal|500
 index|]
-decl_stmt|;
-specifier|extern
-name|char
-name|gfile
-index|[]
 decl_stmt|;
 name|FILE
 modifier|*

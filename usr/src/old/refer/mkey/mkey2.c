@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkey2.c	4.1 (Berkeley) %G%"
+literal|"@(#)mkey2.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,11 +118,7 @@ name|s
 decl_stmt|;
 specifier|extern
 name|int
-name|minlen
-decl_stmt|,
 name|keycount
-decl_stmt|,
-name|labels
 decl_stmt|;
 name|int
 name|c
@@ -134,11 +130,6 @@ function_decl|;
 specifier|extern
 name|int
 name|wholefile
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|iglist
 decl_stmt|;
 name|alph
 operator|=
@@ -313,6 +304,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|minlen
+decl_stmt|;
 name|int
 name|n
 decl_stmt|;
@@ -464,6 +459,11 @@ decl_stmt|;
 specifier|extern
 name|int
 name|wholefile
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|iglist
 decl_stmt|;
 if|if
 condition|(
@@ -675,6 +675,14 @@ end_macro
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|labels
+decl_stmt|;
+specifier|extern
+name|int
+name|wholefile
+decl_stmt|;
 if|if
 condition|(
 name|isalpha

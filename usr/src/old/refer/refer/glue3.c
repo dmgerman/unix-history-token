@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glue3.c	4.1 (Berkeley) %G%"
+literal|"@(#)glue3.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -398,8 +398,13 @@ index|[
 literal|5
 index|]
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|outlen
 expr_stmt|;
+comment|/* Horrid kludge, see option parsing 					   in huntmain() in glue1.c. */
 name|argv
 index|[
 literal|6
@@ -433,8 +438,13 @@ index|[
 literal|10
 index|]
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|onelen
 expr_stmt|;
+comment|/* Horrid kludge again */
 name|argv
 index|[
 literal|11

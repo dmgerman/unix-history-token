@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)inv5.c	4.2 (Berkeley) %G%"
+literal|"@(#)inv5.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,13 +74,6 @@ name|int
 modifier|*
 name|hpt_s
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|getfun
-function_decl|)
-parameter_list|()
-function_decl|;
 name|long
 modifier|*
 name|hpt_l
@@ -237,19 +230,6 @@ argument_list|(
 name|fa
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|iflong
-condition|)
-name|getfun
-operator|=
-name|getl
-expr_stmt|;
-else|else
-name|getfun
-operator|=
-name|getw
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -268,6 +248,7 @@ if|if
 condition|(
 name|iflong
 condition|)
+block|{
 name|lp
 operator|=
 name|hpt_l
@@ -275,7 +256,43 @@ index|[
 name|i
 index|]
 expr_stmt|;
+name|fseek
+argument_list|(
+name|fb
+argument_list|,
+name|lp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|k
+operator|=
+name|getl
+argument_list|(
+name|fb
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+name|fprintf
+argument_list|(
+name|ft
+argument_list|,
+literal|"%04d %06ld\n"
+argument_list|,
+name|i
+argument_list|,
+name|k
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|lp
 operator|=
 name|hpt_s
@@ -297,10 +314,7 @@ condition|(
 operator|(
 name|k
 operator|=
-call|(
-modifier|*
-name|getfun
-call|)
+name|getw
 argument_list|(
 name|fb
 argument_list|)
@@ -320,6 +334,7 @@ argument_list|,
 name|k
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|fclose
 argument_list|(
