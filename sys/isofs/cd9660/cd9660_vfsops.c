@@ -755,7 +755,6 @@ name|ndp
 parameter_list|,
 name|td
 parameter_list|)
-specifier|register
 name|struct
 name|mount
 modifier|*
@@ -975,7 +974,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/*        	 * Verify that user has necessary permissions on the device, 	 * or has superuser abilities 	 */
+comment|/* 	 * Verify that user has necessary permissions on the device, 	 * or has superuser abilities 	 */
 name|accessmode
 operator|=
 name|VREAD
@@ -1189,7 +1188,6 @@ name|td
 parameter_list|,
 name|argp
 parameter_list|)
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -1211,7 +1209,6 @@ modifier|*
 name|argp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|iso_mnt
 modifier|*
@@ -2588,7 +2585,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|iso_mnt
 modifier|*
@@ -2857,7 +2853,6 @@ name|mount
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
 name|struct
 name|statfs
 modifier|*
@@ -2869,7 +2864,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|iso_mnt
 modifier|*
@@ -3031,7 +3025,6 @@ name|fhp
 parameter_list|,
 name|vpp
 parameter_list|)
-specifier|register
 name|struct
 name|mount
 modifier|*
@@ -3061,7 +3054,6 @@ operator|*
 operator|)
 name|fhp
 decl_stmt|;
-specifier|register
 name|struct
 name|iso_node
 modifier|*
@@ -3437,7 +3429,7 @@ name|i_number
 operator|=
 name|ino
 expr_stmt|;
-comment|/* 	 * Check to be sure that it did not show up. We have to put it 	 * on the hash chain as the cleanup from vput expects to find  	 * it there. 	 */
+comment|/* 	 * Check to be sure that it did not show up. We have to put it 	 * on the hash chain as the cleanup from vput expects to find 	 * it there. 	 */
 if|if
 condition|(
 operator|(
@@ -4107,7 +4099,6 @@ modifier|*
 name|fhp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|iso_node
 modifier|*
@@ -4118,7 +4109,6 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-specifier|register
 name|struct
 name|ifid
 modifier|*

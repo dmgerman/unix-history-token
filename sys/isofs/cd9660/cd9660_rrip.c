@@ -542,12 +542,10 @@ modifier|*
 name|ana
 decl_stmt|;
 block|{
-specifier|register
 name|ISO_RRIP_SLINK_COMPONENT
 modifier|*
 name|pcomp
 decl_stmt|;
-specifier|register
 name|ISO_RRIP_SLINK_COMPONENT
 modifier|*
 name|pcompe
@@ -2129,17 +2127,14 @@ modifier|*
 name|table
 decl_stmt|;
 block|{
-specifier|register
 name|RRIP_TABLE
 modifier|*
 name|ptable
 decl_stmt|;
-specifier|register
 name|ISO_SUSP_HEADER
 modifier|*
 name|phead
 decl_stmt|;
-specifier|register
 name|ISO_SUSP_HEADER
 modifier|*
 name|pend
@@ -2772,7 +2767,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Get Alternate Name.  */
+comment|/*  * Get Alternate Name.  */
 end_comment
 
 begin_decl_stmt
@@ -3054,7 +3049,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Get Symbolic Link.  */
+comment|/*  * Get Symbolic Link.  */
 end_comment
 
 begin_decl_stmt

@@ -94,21 +94,18 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
 name|vdp
 decl_stmt|;
 comment|/* vnode for directory being searched */
-specifier|register
 name|struct
 name|iso_node
 modifier|*
 name|dp
 decl_stmt|;
 comment|/* inode for directory being searched */
-specifier|register
 name|struct
 name|iso_mnt
 modifier|*
@@ -1473,7 +1470,6 @@ name|iso_node
 modifier|*
 name|ip
 decl_stmt|;
-specifier|register
 name|struct
 name|iso_mnt
 modifier|*

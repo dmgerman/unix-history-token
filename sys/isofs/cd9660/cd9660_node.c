@@ -542,14 +542,12 @@ name|cd9660_ihashrem
 parameter_list|(
 name|ip
 parameter_list|)
-specifier|register
 name|struct
 name|iso_node
 modifier|*
 name|ip
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|iso_node
 modifier|*
@@ -649,7 +647,6 @@ name|ap
 operator|->
 name|a_td
 decl_stmt|;
-specifier|register
 name|struct
 name|iso_node
 modifier|*
@@ -741,7 +738,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -751,7 +747,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|iso_node
 modifier|*
