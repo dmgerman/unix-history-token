@@ -353,6 +353,14 @@ operator|.
 name|stripeoffset
 expr_stmt|;
 comment|/* subdisk containing the parity stripe */
+if|if
+condition|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_raid5
+condition|)
 name|m
 operator|.
 name|psdno
@@ -385,6 +393,18 @@ operator|%
 name|plex
 operator|->
 name|subdisks
+expr_stmt|;
+else|else
+comment|/* RAID-4 */
+name|m
+operator|.
+name|psdno
+operator|=
+name|plex
+operator|->
+name|subdisks
+operator|-
+literal|1
 expr_stmt|;
 comment|/* 	 * The number of the subdisk in which 	 * the start is located. 	 */
 name|m
