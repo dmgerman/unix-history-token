@@ -3317,7 +3317,6 @@ condition|)
 break|break;
 if|if
 condition|(
-operator|*
 name|timeout
 operator|!=
 name|NULL
