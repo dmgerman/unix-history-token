@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trace.h	4.3	81/03/03	*/
+comment|/*	trace.h	4.4	81/03/09	*/
 end_comment
 
 begin_comment
@@ -293,6 +293,65 @@ directive|define
 name|TRCSIZ
 value|4096
 end_define
+
+begin_comment
+comment|/*  * Specifications of the vtrace() system call, which takes one argument.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VTRACE
+value|64+51
+end_define
+
+begin_define
+define|#
+directive|define
+name|VTR_DISABLE
+value|0
+end_define
+
+begin_comment
+comment|/* set a trace flag to 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VTR_ENABLE
+value|1
+end_define
+
+begin_comment
+comment|/* set a trace flag to 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VTR_VALUE
+value|2
+end_define
+
+begin_comment
+comment|/* return value of a trace flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VTR_UALARM
+value|3
+end_define
+
+begin_comment
+comment|/* set alarm to go off (sig 16) */
+end_comment
+
+begin_comment
+comment|/* in specified number of hz */
+end_comment
 
 begin_ifdef
 ifdef|#
