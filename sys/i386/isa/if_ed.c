@@ -4262,7 +4262,7 @@ name|isa16bit
 operator|=
 name|isa16bit
 expr_stmt|;
-comment|/* 	 * Initialize GA page start/stop registers. Probably only needed if 	 * doing DMA, but what the hell. 	 */
+comment|/* 	if (bcmp(test_pattern, test_buffer, sizeof(test_pattern)) == 0) { 	 * Initialize GA page start/stop registers. Probably only needed if 	 * doing DMA, but what the hell. 	 */
 name|outb
 argument_list|(
 name|sc
@@ -4773,6 +4773,24 @@ name|test_pattern
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bcmp
+argument_list|(
+name|test_pattern
+argument_list|,
+name|test_buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|test_pattern
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* could be either an NE1000 or a Linksys ethernet controller */
 name|linksys
 operator|=
 name|ed_get_Linksys
@@ -4819,23 +4837,25 @@ operator|=
 literal|"Linksys"
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|bcmp
-argument_list|(
-name|test_pattern
-argument_list|,
-name|test_buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|test_pattern
-argument_list|)
-argument_list|)
-condition|)
+else|else
 block|{
-comment|/* not an NE1000 - try NE2000 */
+name|sc
+operator|->
+name|type
+operator|=
+name|ED_TYPE_NE1000
+expr_stmt|;
+name|sc
+operator|->
+name|type_str
+operator|=
+literal|"NE1000"
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* neither an NE1000 nor a Linksys - try NE2000 */
 name|outb
 argument_list|(
 name|sc
@@ -4925,13 +4945,10 @@ argument_list|(
 name|test_pattern
 argument_list|)
 argument_list|)
-condition|)
-return|return
-operator|(
+operator|==
 literal|0
-operator|)
-return|;
-comment|/* not an NE2000 either */
+condition|)
+block|{
 name|sc
 operator|->
 name|type
@@ -4947,18 +4964,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sc
-operator|->
-name|type
-operator|=
-name|ED_TYPE_NE1000
-expr_stmt|;
-name|sc
-operator|->
-name|type_str
-operator|=
-literal|"NE1000"
-expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 block|}
 comment|/* 8k of memory plus an additional 8k if 16bit */
 name|memsize
