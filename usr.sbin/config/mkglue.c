@@ -1883,9 +1883,16 @@ argument_list|,
 literal|"\ #define	BUILD_VECTORS \\\n\ 	BUILD_VECTOR(clk, 0,0,0, _high_imask, _clkintr,1,1,       al);\\\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"BUILD_VECTOR(rtc, 0,8,1, _stat_imask, _rtcintr,2,1_AND_2, ah);\\\n"
+argument_list|)
+expr_stmt|;
 name|count
 operator|=
-literal|1
+literal|2
 expr_stmt|;
 for|for
 control|(
