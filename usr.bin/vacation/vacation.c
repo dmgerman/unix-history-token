@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vacation.c,v 1.5 1997/02/22 19:57:39 peter Exp $"
+literal|"$Id: vacation.c,v 1.6 1997/03/29 04:33:44 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1983,7 +1983,7 @@ expr_stmt|;
 block|}
 name|i
 operator|=
-name|vfork
+name|fork
 argument_list|()
 expr_stmt|;
 if|if
