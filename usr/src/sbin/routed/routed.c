@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)routed.c	4.7 %G%"
+literal|"@(#)routed.c	4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
