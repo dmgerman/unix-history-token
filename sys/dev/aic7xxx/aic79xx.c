@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core routines and tables shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2003 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: aic79xx.c,v 1.16 2003/05/26 21:43:29 gibbs Exp $  *  * $FreeBSD$  */
+comment|/*  * Core routines and tables shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2003 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.c#196 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -21828,13 +21828,16 @@ comment|/* This will reset most registers to 0, but not all */
 name|ahd_reset
 argument_list|(
 name|ahd
+argument_list|,
+comment|/*reinit*/
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Reset the controller and record some information about it  * that is only available just after a reset.  */
+comment|/*  * Reset the controller and record some information about it  * that is only available just after a reset.  If "reinit" is  * non-zero, this reset occured after initial configuration  * and the caller requests that the chip be fully reinitialized  * to a runable state.  Chip interrupts are *not* enabled after  * a reinitialization.  The caller must enable interrupts via  * ahd_intr_enable().  */
 end_comment
 
 begin_function
@@ -21845,6 +21848,9 @@ name|struct
 name|ahd_softc
 modifier|*
 name|ahd
+parameter_list|,
+name|int
+name|reinit
 parameter_list|)
 block|{
 name|u_int
@@ -22140,10 +22146,8 @@ expr_stmt|;
 comment|/* 	 * If a recovery action has forced a chip reset, 	 * re-initialize the chip to our liking. 	 */
 if|if
 condition|(
-name|ahd
-operator|->
-name|init_level
-operator|>
+name|reinit
+operator|!=
 literal|0
 condition|)
 name|ahd_chip_init
@@ -29988,21 +29992,40 @@ modifier|*
 name|ahd
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|uint8_t *ptr; 	int	 i;  	ahd_pause_and_flushwork(ahd);  	if (LIST_FIRST(&ahd->pending_scbs) != NULL) 		return (EBUSY);
-if|#
-directive|if
-name|AHD_TARGET_MODE
-comment|/* 	 * XXX What about ATIOs that have not yet been serviced? 	 * Perhaps we should just refuse to be suspended if we 	 * are acting in a target role. 	 */
-block|if (ahd->pending_device != NULL) 		return (EBUSY);
-endif|#
-directive|endif
-comment|/* Save volatile registers */
-block|ahd->suspend_state.channel[0].scsiseq = ahd_inb(ahd, SCSISEQ0); 	ahd->suspend_state.channel[0].sxfrctl0 = ahd_inb(ahd, SXFRCTL0); 	ahd->suspend_state.channel[0].sxfrctl1 = ahd_inb(ahd, SXFRCTL1); 	ahd->suspend_state.channel[0].simode0 = ahd_inb(ahd, SIMODE0); 	ahd->suspend_state.channel[0].simode1 = ahd_inb(ahd, SIMODE1); 	ahd->suspend_state.channel[0].seltimer = ahd_inb(ahd, SELTIMER); 	ahd->suspend_state.channel[0].seqctl = ahd_inb(ahd, SEQCTL0); 	ahd->suspend_state.dscommand0 = ahd_inb(ahd, DSCOMMAND0); 	ahd->suspend_state.dspcistatus = ahd_inb(ahd, DSPCISTATUS);  	if ((ahd->features& AHD_DT) != 0) { 		u_int sfunct;  		sfunct = ahd_inb(ahd, SFUNCT)& ~ALT_MODE; 		ahd_outb(ahd, SFUNCT, sfunct | ALT_MODE); 		ahd->suspend_state.optionmode = ahd_inb(ahd, OPTIONMODE); 		ahd_outb(ahd, SFUNCT, sfunct); 		ahd->suspend_state.crccontrol1 = ahd_inb(ahd, CRCCONTROL1); 	}  	if ((ahd->features& AHD_MULTI_FUNC) != 0) 		ahd->suspend_state.scbbaddr = ahd_inb(ahd, SCBBADDR);  	if ((ahd->features& AHD_ULTRA2) != 0) 		ahd->suspend_state.dff_thrsh = ahd_inb(ahd, DFF_THRSH);  	ptr = ahd->suspend_state.scratch_ram; 	for (i = 0; i< 64; i++) 		*ptr++ = ahd_inb(ahd, SRAM_BASE + i);  	if ((ahd->features& AHD_MORE_SRAM) != 0) { 		for (i = 0; i< 16; i++) 			*ptr++ = ahd_inb(ahd, TARG_OFFSET + i); 	}  	ptr = ahd->suspend_state.btt; 	for (i = 0;i< AHD_NUM_TARGETS; i++) { 		int j;  		for (j = 0;j< AHD_NUM_LUNS_NONPKT; j++) { 			u_int tcl;  			tcl = BUILD_TCL_RAW(i, 'A', j); 			*ptr = ahd_find_busy_tcl(ahd, tcl); 		} 	} 	ahd_shutdown(ahd);
-endif|#
-directive|endif
+name|ahd_pause_and_flushwork
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|ahd
+operator|->
+name|pending_scbs
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ahd_unpause
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
+block|}
+name|ahd_shutdown
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -30021,14 +30044,26 @@ modifier|*
 name|ahd
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|uint8_t *ptr; 	int	 i;  	ahd_reset(ahd);  	ahd_build_free_scb_list(ahd);
-comment|/* Restore volatile registers */
-block|ahd_outb(ahd, SCSISEQ0, ahd->suspend_state.channel[0].scsiseq); 	ahd_outb(ahd, SXFRCTL0, ahd->suspend_state.channel[0].sxfrctl0); 	ahd_outb(ahd, SXFRCTL1, ahd->suspend_state.channel[0].sxfrctl1); 	ahd_outb(ahd, SIMODE0, ahd->suspend_state.channel[0].simode0); 	ahd_outb(ahd, SIMODE1, ahd->suspend_state.channel[0].simode1); 	ahd_outb(ahd, SELTIMER, ahd->suspend_state.channel[0].seltimer); 	ahd_outb(ahd, SEQCTL0, ahd->suspend_state.channel[0].seqctl); 	if ((ahd->features& AHD_ULTRA2) != 0) 		ahd_outb(ahd, SCSIID_ULTRA2, ahd->our_id); 	else 		ahd_outb(ahd, SCSIID, ahd->our_id);  	ahd_outb(ahd, DSCOMMAND0, ahd->suspend_state.dscommand0); 	ahd_outb(ahd, DSPCISTATUS, ahd->suspend_state.dspcistatus);  	if ((ahd->features& AHD_DT) != 0) { 		u_int sfunct;  		sfunct = ahd_inb(ahd, SFUNCT)& ~ALT_MODE; 		ahd_outb(ahd, SFUNCT, sfunct | ALT_MODE); 		ahd_outb(ahd, OPTIONMODE, ahd->suspend_state.optionmode); 		ahd_outb(ahd, SFUNCT, sfunct); 		ahd_outb(ahd, CRCCONTROL1, ahd->suspend_state.crccontrol1); 	}  	if ((ahd->features& AHD_MULTI_FUNC) != 0) 		ahd_outb(ahd, SCBBADDR, ahd->suspend_state.scbbaddr);  	if ((ahd->features& AHD_ULTRA2) != 0) 		ahd_outb(ahd, DFF_THRSH, ahd->suspend_state.dff_thrsh);  	ptr = ahd->suspend_state.scratch_ram; 	for (i = 0; i< 64; i++) 		ahd_outb(ahd, SRAM_BASE + i, *ptr++);  	if ((ahd->features& AHD_MORE_SRAM) != 0) { 		for (i = 0; i< 16; i++) 			ahd_outb(ahd, TARG_OFFSET + i, *ptr++); 	}  	ptr = ahd->suspend_state.btt; 	for (i = 0;i< AHD_NUM_TARGETS; i++) { 		int j;  		for (j = 0;j< AHD_NUM_LUNS; j++) { 			u_int tcl;  			tcl = BUILD_TCL(i<< 4, j); 			ahd_busy_tcl(ahd, tcl, *ptr); 		} 	}
-endif|#
-directive|endif
+name|ahd_reset
+argument_list|(
+name|ahd
+argument_list|,
+comment|/*reinit*/
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|ahd_intr_enable
+argument_list|(
+name|ahd
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|ahd_restart
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -33131,6 +33166,9 @@ expr_stmt|;
 name|ahd_reset
 argument_list|(
 name|ahd
+argument_list|,
+comment|/*reinit*/
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|ahd_intr_enable
@@ -41323,6 +41361,11 @@ argument_list|(
 name|ahd
 argument_list|)
 expr_stmt|;
+name|ahd_restart
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|ahd_unlock
 argument_list|(
 name|ahd
@@ -42491,6 +42534,12 @@ argument_list|(
 name|ahd
 argument_list|)
 expr_stmt|;
+name|ahd_restart
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
+comment|/* 				 * Unpaused.  The extra unpause 				 * that follows is harmless. 				 */
 block|}
 block|}
 name|ahd_unpause

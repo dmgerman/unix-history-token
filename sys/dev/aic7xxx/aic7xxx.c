@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core routines and tables shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx.c#130 $  *  * $FreeBSD$  */
+comment|/*  * Core routines and tables shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx.c#132 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -17425,6 +17425,9 @@ comment|/* This will reset most registers to 0, but not all */
 name|ahc_reset
 argument_list|(
 name|ahc
+argument_list|,
+comment|/*reinit*/
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|ahc_outb
@@ -17480,7 +17483,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reset the controller and record some information about it  * that is only available just after a reset.  */
+comment|/*  * Reset the controller and record some information about it  * that is only available just after a reset.  If "reinit" is  * non-zero, this reset occured after initial configuration  * and the caller requests that the chip be fully reinitialized  * to a runable state.  Chip interrupts are *not* enabled after  * a reinitialization.  The caller must enable interrupts via  * ahc_intr_enable().  */
 end_comment
 
 begin_function
@@ -17491,6 +17494,9 @@ name|struct
 name|ahc_softc
 modifier|*
 name|ahc
+parameter_list|,
+name|int
+name|reinit
 parameter_list|)
 block|{
 name|u_int
@@ -17836,10 +17842,8 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|ahc
-operator|->
-name|init_level
-operator|>
+name|reinit
+operator|!=
 literal|0
 condition|)
 comment|/* 		 * If a recovery action has forced a chip reset, 		 * re-initialize the chip to our liking. 		 */
@@ -20758,11 +20762,6 @@ name|int
 name|wait
 decl_stmt|;
 comment|/* 		 * Wait for up to 500ms for our transceivers 		 * to settle.  If the adapter does not have 		 * a cable attached, the transceivers may 		 * never settle, so don't complain if we 		 * fail here. 		 */
-name|ahc_pause
-argument_list|(
-name|ahc
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|wait
@@ -20796,12 +20795,12 @@ argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
-name|ahc_unpause
+block|}
+name|ahc_restart
 argument_list|(
 name|ahc
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -22821,6 +22820,21 @@ name|ahc
 parameter_list|)
 block|{
 name|ahc_reset
+argument_list|(
+name|ahc
+argument_list|,
+comment|/*reinit*/
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|ahc_intr_enable
+argument_list|(
+name|ahc
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|ahc_restart
 argument_list|(
 name|ahc
 argument_list|)
@@ -28326,11 +28340,6 @@ operator||
 name|FASTMODE
 argument_list|)
 expr_stmt|;
-name|ahc_restart
-argument_list|(
-name|ahc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -31232,7 +31241,7 @@ argument_list|(
 name|ahc
 argument_list|)
 expr_stmt|;
-name|ahc_unpause
+name|ahc_restart
 argument_list|(
 name|ahc
 argument_list|)
@@ -31255,6 +31264,11 @@ name|CAM_FUNC_NOTAVAIL
 expr_stmt|;
 return|return;
 block|}
+name|ahc_restart
+argument_list|(
+name|ahc
+argument_list|)
+expr_stmt|;
 name|ahc_unlock
 argument_list|(
 name|ahc
@@ -32426,11 +32440,6 @@ name|flags
 operator||=
 name|AHC_INITIATORROLE
 expr_stmt|;
-name|ahc_pause
-argument_list|(
-name|ahc
-argument_list|)
-expr_stmt|;
 comment|/* 				 * Returning to a configuration that 				 * fit previously will always succeed. 				 */
 operator|(
 name|void
@@ -32440,6 +32449,12 @@ argument_list|(
 name|ahc
 argument_list|)
 expr_stmt|;
+name|ahc_restart
+argument_list|(
+name|ahc
+argument_list|)
+expr_stmt|;
+comment|/* 				 * Unpaused.  The extra unpause 				 * that follows is harmless. 				 */
 block|}
 block|}
 name|ahc_unpause
