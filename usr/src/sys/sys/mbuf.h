@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mbuf.h	7.16 (Berkeley) %G%  */
+comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mbuf.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -593,6 +593,21 @@ value|M_WAITOK
 end_define
 
 begin_comment
+comment|/*  * mbuf utility macros:  *  *	MBUFLOCK(code)  * prevents a section of code from from being interrupted by network  * drivers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBUFLOCK
+parameter_list|(
+name|code
+parameter_list|)
+define|\
+value|{ int ms = splimp(); \ 	  { code } \ 	  splx(ms); \ 	}
+end_define
+
+begin_comment
 comment|/*  * mbuf allocation/deallocation macros:  *  *	MGET(struct mbuf *m, int how, int type)  * allocates an mbuf and initializes it to contain internal data.  *  *	MGETHDR(struct mbuf *m, int how, int type)  * allocates an mbuf and initializes it to contain a packet header  * and internal data.  */
 end_comment
 
@@ -607,7 +622,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|{ \ 	MALLOC((m), struct mbuf *, MSIZE, mbtypes[type], (how)); \ 	if (m) { \ 		(m)->m_type = (type); \ 		mbstat.m_mtypes[type]++; \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_dat; \ 		(m)->m_flags = 0; \ 	} else \ 		(m) = m_retry((how), (type)); \ }
+value|{ \ 	MALLOC((m), struct mbuf *, MSIZE, mbtypes[type], (how)); \ 	if (m) { \ 		(m)->m_type = (type); \ 		MBUFLOCK(mbstat.m_mtypes[type]++;) \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_dat; \ 		(m)->m_flags = 0; \ 	} else \ 		(m) = m_retry((how), (type)); \ }
 end_define
 
 begin_define
@@ -621,7 +636,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|{ \ 	MALLOC((m), struct mbuf *, MSIZE, mbtypes[type], (how)); \ 	if (m) { \ 		(m)->m_type = (type); \ 		mbstat.m_mtypes[type]++; \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_pktdat; \ 		(m)->m_flags = M_PKTHDR; \ 	} else \ 		(m) = m_retryhdr((how), (type)); \ }
+value|{ \ 	MALLOC((m), struct mbuf *, MSIZE, mbtypes[type], (how)); \ 	if (m) { \ 		(m)->m_type = (type); \ 		MBUFLOCK(mbstat.m_mtypes[type]++;) \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_pktdat; \ 		(m)->m_flags = M_PKTHDR; \ 	} else \ 		(m) = m_retryhdr((how), (type)); \ }
 end_define
 
 begin_comment
@@ -657,7 +672,7 @@ parameter_list|,
 name|how
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 		(void)m_clalloc(1, (how)); \ 	  if ((p) = (caddr_t)mclfree) { \ 		++mclrefcnt[mtocl(p)]; \ 		mbstat.m_clfree--; \ 		mclfree = ((union mcluster *)(p))->mcl_next; \ 	  } \ 	  splx(ms); \ 	}
+value|MBUFLOCK( \ 		(void)m_clalloc(1, (how)); \ 	  if ((p) = (caddr_t)mclfree) { \ 		++mclrefcnt[mtocl(p)]; \ 		mbstat.m_clfree--; \ 		mclfree = ((union mcluster *)(p))->mcl_next; \ 	  } \ 	)
 end_define
 
 begin_define
@@ -681,7 +696,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if (--mclrefcnt[mtocl(p)] == 0) { \ 		((union mcluster *)(p))->mcl_next = mclfree; \ 		mclfree = (union mcluster *)(p); \ 		mbstat.m_clfree++; \ 	  } \ 	  splx(ms); \ 	}
+value|MBUFLOCK ( \ 	  if (--mclrefcnt[mtocl(p)] == 0) { \ 		((union mcluster *)(p))->mcl_next = mclfree; \ 		mclfree = (union mcluster *)(p); \ 		mbstat.m_clfree++; \ 	  } \ 	)
 end_define
 
 begin_comment
@@ -704,7 +719,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|{ mbstat.m_mtypes[(m)->m_type]--; \ 	  if ((m)->m_flags& M_EXT) { \ 		if ((m)->m_ext.ext_free) \ 			(*((m)->m_ext.ext_free))((m)->m_ext.ext_buf, \ 			    (m)->m_ext.ext_size); \ 		else \ 			MCLFREE((m)->m_ext.ext_buf); \ 	  } \ 	  (n) = (m)->m_next; \ 	  FREE((m), mbtypes[(m)->m_type]); \ 	}
+value|{ MBUFLOCK(mbstat.m_mtypes[(m)->m_type]--;) \ 	  if ((m)->m_flags& M_EXT) { \ 		if ((m)->m_ext.ext_free) \ 			(*((m)->m_ext.ext_free))((m)->m_ext.ext_buf, \ 			    (m)->m_ext.ext_size); \ 		else \ 			MCLFREE((m)->m_ext.ext_buf); \ 	  } \ 	  (n) = (m)->m_next; \ 	  FREE((m), mbtypes[(m)->m_type]); \ 	}
 end_define
 
 begin_else
@@ -726,7 +741,7 @@ parameter_list|,
 name|nn
 parameter_list|)
 define|\
-value|{ mbstat.m_mtypes[(m)->m_type]--; \ 	  if ((m)->m_flags& M_EXT) { \ 		MCLFREE((m)->m_ext.ext_buf); \ 	  } \ 	  (nn) = (m)->m_next; \ 	  FREE((m), mbtypes[(m)->m_type]); \ 	}
+value|{ MBUFLOCK(mbstat.m_mtypes[(m)->m_type]--;) \ 	  if ((m)->m_flags& M_EXT) { \ 		MCLFREE((m)->m_ext.ext_buf); \ 	  } \ 	  (nn) = (m)->m_next; \ 	  FREE((m), mbtypes[(m)->m_type]); \ 	}
 end_define
 
 begin_endif
@@ -847,7 +862,7 @@ name|m
 parameter_list|,
 name|t
 parameter_list|)
-value|{ \ 	mbstat.m_mtypes[(m)->m_type]--; \ 	mbstat.m_mtypes[t]++; \ 	(m)->m_type = t;\ }
+value|{ \ 	MBUFLOCK(mbstat.m_mtypes[(m)->m_type]--; mbstat.m_mtypes[t]++;) \ 	(m)->m_type = t;\ }
 end_define
 
 begin_comment
@@ -965,6 +980,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|nmbclusters
 decl_stmt|;
