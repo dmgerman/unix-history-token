@@ -1924,7 +1924,7 @@ operator|->
 name|pp_name
 operator|!=
 name|NULL
-operator|&&
+operator|||
 name|ent
 operator|->
 name|pp_vendor
