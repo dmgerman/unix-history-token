@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.19 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1194,6 +1194,8 @@ expr_stmt|;
 block|}
 block|}
 else|else
+block|{
+comment|/* try aliasing */
 name|alias
 argument_list|(
 name|a
@@ -1201,6 +1203,32 @@ argument_list|,
 name|sendq
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USERDB
+comment|/* if not  aliased, look it up in the user database */
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QDONTSEND
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+name|udbexpand
+argument_list|(
+name|a
+argument_list|,
+name|sendq
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 block|}
 comment|/* 	**  If the user is local and still being sent, verify that 	**  the address is good.  If it is, try to forward. 	**  If the address is already good, we have a forwarding 	**  loop.  This can be broken by just sending directly to 	**  the user (which is probably correct anyway). 	*/
 if|if

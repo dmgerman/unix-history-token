@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.23 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2945,6 +2945,18 @@ case|case
 literal|'t'
 case|:
 comment|/* time zone name */
+break|break;
+case|case
+literal|'U'
+case|:
+comment|/* location of user database */
+name|UdbFileName
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'u'
