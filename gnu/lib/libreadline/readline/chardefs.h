@@ -171,7 +171,7 @@ begin_define
 define|#
 directive|define
 name|meta_character_threshold
-value|255
+value|0x07f
 end_define
 
 begin_comment
@@ -193,7 +193,7 @@ begin_define
 define|#
 directive|define
 name|meta_character_bit
-value|0x100
+value|0x080
 end_define
 
 begin_comment
