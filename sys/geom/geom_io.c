@@ -467,7 +467,7 @@ condition|)
 block|{
 name|bp2
 operator|->
-name|bio_linkage
+name|bio_parent
 operator|=
 name|bp
 expr_stmt|;

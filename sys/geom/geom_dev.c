@@ -1634,7 +1634,7 @@ name|bp
 operator|=
 name|bp2
 operator|->
-name|bio_linkage
+name|bio_parent
 expr_stmt|;
 name|bp
 operator|->

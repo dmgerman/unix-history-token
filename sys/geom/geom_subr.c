@@ -2452,7 +2452,7 @@ name|bp2
 operator|=
 name|bp
 operator|->
-name|bio_linkage
+name|bio_parent
 expr_stmt|;
 if|if
 condition|(

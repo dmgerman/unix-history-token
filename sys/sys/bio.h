@@ -145,16 +145,22 @@ name|u_int
 name|bio_children
 decl_stmt|;
 comment|/* Number of spawned bios */
+name|struct
+name|bio
+modifier|*
+name|bio_parent
+decl_stmt|;
+comment|/* Pointer to parent */
+name|struct
+name|bintime
+name|bio_t0
+decl_stmt|;
+comment|/* Time request started */
 comment|/* XXX: these go away when bio chaining is introduced */
 name|daddr_t
 name|bio_pblkno
 decl_stmt|;
 comment|/* physical block number */
-name|struct
-name|bio
-modifier|*
-name|bio_linkage
-decl_stmt|;
 block|}
 struct|;
 end_struct
