@@ -657,8 +657,7 @@ modifier|*
 name|uc
 parameter_list|)
 block|{
-empty|# XXX this is declared in a MD include file, i386/include/ucontext.h but
-empty|# is used in MI code.
+comment|/*  * XXX this is declared in a MD include file, i386/include/ucontext.h but  * is used in MI code.  */
 ifdef|#
 directive|ifdef
 name|__i386__
@@ -708,8 +707,7 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-empty|# XXX this is declared in a MD include file, i386/include/ucontext.h but
-empty|# is used in MI code.
+comment|/*  * XXX this is declared in a MD include file, i386/include/ucontext.h but  * is used in MI code.  */
 ifdef|#
 directive|ifdef
 name|__i386__
