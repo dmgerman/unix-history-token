@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (C) 1992, 1993, 1994 Søren Schmidt  *  *  This program is free software; you may redistribute it and/or   *  modify it, provided that it retain the above copyright notice   *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   *  *	Søren Schmidt 		Email:	sos@login.dkuug.dk  *	Tritonvej 36		UUCP:	...uunet!dkuug!login!sos  *	DK9210 Aalborg SO	Phone:  +45 9814 8076  *  *	from:@(#)console.h	1.1 940105  *	$Id: console.h,v 1.1 1994/07/03 20:49:53 sos Exp $  */
+comment|/*-  * Copyright (c) 1991-1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id$  */
 end_comment
 
 begin_ifndef
@@ -1408,6 +1408,596 @@ end_define
 begin_comment
 comment|/* kbd reset 			*/
 end_comment
+
+begin_comment
+comment|/* video mode definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_B40x25
+value|0
+end_define
+
+begin_comment
+comment|/* black& white 40 columns */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_C40x25
+value|1
+end_define
+
+begin_comment
+comment|/* color 40 columns */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_B80x25
+value|2
+end_define
+
+begin_comment
+comment|/* black& white 80 columns */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_C80x25
+value|3
+end_define
+
+begin_comment
+comment|/* color 80 columns */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_BG320
+value|4
+end_define
+
+begin_comment
+comment|/* black& white graphics 320x200 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_CG320
+value|5
+end_define
+
+begin_comment
+comment|/* color graphics 320x200 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_BG640
+value|6
+end_define
+
+begin_comment
+comment|/* black& white graphics 640x200 hi-res */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_EGAMONO80x25
+value|7
+end_define
+
+begin_comment
+comment|/* ega-mono 80x25 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_CG320_D
+value|13
+end_define
+
+begin_comment
+comment|/* ega mode D */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_CG640_E
+value|14
+end_define
+
+begin_comment
+comment|/* ega mode E */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_EGAMONOAPA
+value|15
+end_define
+
+begin_comment
+comment|/* ega mode F */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_CG640x350
+value|16
+end_define
+
+begin_comment
+comment|/* ega mode 10 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_ENHMONOAPA2
+value|17
+end_define
+
+begin_comment
+comment|/* ega mode F with extended memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_ENH_CG640
+value|18
+end_define
+
+begin_comment
+comment|/* ega mode 10* */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_ENH_B40x25
+value|19
+end_define
+
+begin_comment
+comment|/* ega enhanced black& white 40 columns */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_ENH_C40x25
+value|20
+end_define
+
+begin_comment
+comment|/* ega enhanced color 40 columns */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_ENH_B80x25
+value|21
+end_define
+
+begin_comment
+comment|/* ega enhanced black& white 80 columns */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_ENH_C80x25
+value|22
+end_define
+
+begin_comment
+comment|/* ega enhanced color 80 columns */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VGA_C40x25
+value|23
+end_define
+
+begin_comment
+comment|/* vga 8x16 font on color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VGA_C80x25
+value|24
+end_define
+
+begin_comment
+comment|/* vga 8x16 font on color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VGA_C80x50
+value|30
+end_define
+
+begin_comment
+comment|/* vga 8x8 font on color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VGA_M80x25
+value|25
+end_define
+
+begin_comment
+comment|/* vga 8x16 font on mono */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VGA_M80x50
+value|31
+end_define
+
+begin_comment
+comment|/* vga 8x8 font on color */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VGA11
+value|26
+end_define
+
+begin_comment
+comment|/* vga 640x480 2 colors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_BG640x480
+value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_VGA12
+value|27
+end_define
+
+begin_comment
+comment|/* vga 640x480 16 colors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_CG640x480
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_VGA13
+value|28
+end_define
+
+begin_comment
+comment|/* vga 640x200 256 colors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VGA_CG320
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_ENH_B80x43
+value|0x70
+end_define
+
+begin_comment
+comment|/* ega black& white 80x43 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_ENH_C80x43
+value|0x71
+end_define
+
+begin_comment
+comment|/* ega color 80x43 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HGC_P0
+value|0xe0
+end_define
+
+begin_comment
+comment|/* hercules graphics - page 0 @ B0000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HGC_P1
+value|0xe1
+end_define
+
+begin_comment
+comment|/* hercules graphics - page 1 @ B8000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_MCA_MODE
+value|0xff
+end_define
+
+begin_comment
+comment|/* monochrome adapter mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SW_B40x25
+value|_IO('S', M_B40x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_C40x25
+value|_IO('S', M_C40x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_B80x25
+value|_IO('S', M_B80x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_C80x25
+value|_IO('S', M_C80x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_BG320
+value|_IO('S', M_BG320)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_CG320
+value|_IO('S', M_CG320)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_BG640
+value|_IO('S', M_BG640)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_EGAMONO80x25
+value|_IO('S', M_EGAMONO80x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_CG320_D
+value|_IO('S', M_CG320_D)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_CG640_E
+value|_IO('S', M_CG640_E)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_EGAMONOAPA
+value|_IO('S', M_EGAMONOAPA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_CG640x350
+value|_IO('S', M_CG640x350)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_ENH_MONOAPA2
+value|_IO('S', M_ENHMONOAPA2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_ENH_CG640
+value|_IO('S', M_ENH_CG640)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_ENH_B40x25
+value|_IO('S', M_ENH_B40x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_ENH_C40x25
+value|_IO('S', M_ENH_C40x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_ENH_B80x25
+value|_IO('S', M_ENH_B80x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_ENH_C80x25
+value|_IO('S', M_ENH_C80x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_ENH_B80x43
+value|_IO('S', M_ENH_B80x43)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_ENH_C80x43
+value|_IO('S', M_ENH_C80x43)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_MCAMODE
+value|_IO('S', M_MCA_MODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VGA_C40x25
+value|_IO('S', M_VGA_C40x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VGA_C80x25
+value|_IO('S', M_VGA_C80x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VGA_C80x50
+value|_IO('S', M_VGA_C80x50)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VGA_M80x25
+value|_IO('S', M_VGA_M80x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VGA_M80x50
+value|_IO('S', M_VGA_M80x50)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VGA11
+value|_IO('S', M_VGA11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_BG640x480
+value|_IO('S', M_VGA11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VGA12
+value|_IO('S', M_VGA12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_CG640x480
+value|_IO('S', M_VGA12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VGA13
+value|_IO('S', M_VGA13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_VGA_CG320
+value|_IO('S', M_VGA13)
+end_define
 
 begin_endif
 endif|#
