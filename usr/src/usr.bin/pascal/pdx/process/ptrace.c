@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ptrace.c 1.1 %G%"
+literal|"@(#)ptrace.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -277,6 +277,8 @@ name|pstart
 argument_list|(
 argument|p
 argument_list|,
+argument|cmd
+argument_list|,
 argument|argv
 argument_list|,
 argument|infile
@@ -289,6 +291,13 @@ begin_decl_stmt
 name|PROCESS
 modifier|*
 name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|cmd
 decl_stmt|;
 end_decl_stmt
 
@@ -490,10 +499,7 @@ expr_stmt|;
 block|}
 name|execvp
 argument_list|(
-name|argv
-index|[
-literal|0
-index|]
+name|cmd
 argument_list|,
 name|argv
 argument_list|)
@@ -526,21 +532,6 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|status
-operator|!=
-name|STOPPED
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"program could not begin execution"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_block
 
