@@ -795,6 +795,9 @@ name|acpi_printcpu
 argument_list|()
 expr_stmt|;
 block|}
+name|wbinbd
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|state
@@ -852,9 +855,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|wbinvd
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 init|;
