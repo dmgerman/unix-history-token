@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.33 89/08/23$  *  *	@(#)hpux_compat.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.33 89/08/23$  *  *	@(#)hpux_compat.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2617,7 +2617,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|int
+name|off_t
 modifier|*
 name|retval
 decl_stmt|;
@@ -2704,11 +2704,8 @@ comment|/* else fall into... */
 case|case
 literal|1
 case|:
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_off
+operator|*
+name|retval
 operator|=
 name|limp
 operator|->
@@ -2731,11 +2728,8 @@ index|[
 name|RLIMIT_DATA
 index|]
 expr_stmt|;
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_off
+operator|*
+name|retval
 operator|=
 name|ctob
 argument_list|(
@@ -6261,7 +6255,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|int
+name|time_t
 modifier|*
 name|retval
 decl_stmt|;
@@ -6303,11 +6297,8 @@ name|long
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_time
+operator|*
+name|retval
 operator|=
 name|time
 operator|.
@@ -6887,7 +6878,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|int
+name|time_t
 modifier|*
 name|retval
 decl_stmt|;
@@ -6987,11 +6978,8 @@ name|error
 operator|==
 literal|0
 condition|)
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_time
+operator|*
+name|retval
 operator|=
 name|scale50
 argument_list|(
