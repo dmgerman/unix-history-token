@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)snake.c	5.1 (Berkeley) %G%"
+literal|"@(#)snake.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3432,7 +3432,7 @@ condition|(
 name|w
 condition|)
 block|{
-name|sprintf
+name|strcpy
 argument_list|(
 name|str
 argument_list|,
@@ -3452,7 +3452,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|strcpy
 argument_list|(
 name|str
 argument_list|,
