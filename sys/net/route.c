@@ -3016,6 +3016,15 @@ operator|->
 name|rt_rmx
 expr_stmt|;
 comment|/* copy metrics */
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_pksent
+operator|=
+literal|0
+expr_stmt|;
+comment|/* reset packet counter */
 if|if
 condition|(
 operator|(
