@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)runcont.c 1.4 %G%"
+literal|"@(#)runcont.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,6 +131,16 @@ end_decl_stmt
 begin_decl_stmt
 name|LOCAL
 name|PROCESS
+name|pbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|PROCESS
+modifier|*
+name|process
+init|=
+operator|&
 name|pbuf
 decl_stmt|;
 end_decl_stmt
@@ -413,11 +423,6 @@ name|argc
 index|]
 operator|=
 name|NIL
-expr_stmt|;
-name|process
-operator|=
-operator|&
-name|pbuf
 expr_stmt|;
 name|initcache
 argument_list|(
