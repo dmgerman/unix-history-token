@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_input.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_input.c	7.9 (Berkeley) %G% */
+comment|/*	@(#)clnp_input.c	7.10 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -1996,37 +1996,6 @@ break|break;
 case|case
 name|CLNP_DT
 case|:
-if|if
-condition|(
-name|need_afrin
-condition|)
-block|{
-comment|/* NOTE: do this before TP gets the packet so tp ack can use info*/
-name|IFDEBUG
-argument_list|(
-argument|D_INPUT
-argument_list|)
-name|printf
-argument_list|(
-literal|"clnp_input: Calling tpclnp_ctlinput(%s)\n"
-argument_list|,
-name|clnp_iso_addrp
-argument_list|(
-operator|&
-name|src
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ENDDEBUG
-name|tpclnp_ctlinput1
-argument_list|(
-name|PRC_QUENCH2
-argument_list|,
-operator|&
-name|src
-argument_list|)
-decl_stmt|;
-block|}
 operator|(
 operator|*
 name|isosw
@@ -2051,6 +2020,8 @@ operator|,
 name|clnp
 operator|->
 name|cnf_hdr_len
+operator|,
+name|need_afrin
 operator|)
 expr_stmt|;
 break|break;
