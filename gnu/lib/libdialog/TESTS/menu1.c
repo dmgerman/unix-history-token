@@ -305,11 +305,10 @@ parameter_list|(
 name|int
 name|argc
 parameter_list|,
-name|unsigned
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 parameter_list|)
 block|{
 name|int
