@@ -1170,21 +1170,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mpt_notify
-parameter_list|(
-name|mpt_softc_t
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|u_int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|mpt_set_config_regs
 parameter_list|(
 name|mpt_softc_t
