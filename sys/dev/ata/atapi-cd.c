@@ -6781,7 +6781,7 @@ index|[
 literal|9
 index|]
 operator|=
-literal|0xf8
+literal|0x10
 expr_stmt|;
 block|}
 block|}
