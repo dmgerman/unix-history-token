@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca) All rights res
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_epreg.h,v 1.17 1996/09/08 10:44:10 phk Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_epreg.h,v 1.17.2.1 1996/11/12 09:08:33 phk Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -28,28 +28,6 @@ name|int
 name|ep_io_addr
 decl_stmt|;
 comment|/* i/o bus address		 */
-define|#
-directive|define
-name|MAX_MBS
-value|8
-comment|/* # of mbufs we keep around	 */
-name|struct
-name|mbuf
-modifier|*
-name|mb
-index|[
-name|MAX_MBS
-index|]
-decl_stmt|;
-comment|/* spare mbuf storage.		 */
-name|int
-name|next_mb
-decl_stmt|;
-comment|/* Which mbuf to use next. 	 */
-name|int
-name|last_mb
-decl_stmt|;
-comment|/* Last mbuf.			 */
 name|struct
 name|mbuf
 modifier|*
@@ -57,26 +35,6 @@ name|top
 decl_stmt|,
 modifier|*
 name|mcur
-decl_stmt|;
-name|short
-name|tx_start_thresh
-decl_stmt|;
-comment|/* Current TX_start_thresh.	 */
-name|short
-name|tx_rate
-decl_stmt|;
-name|short
-name|tx_counter
-decl_stmt|;
-name|short
-name|rx_early_thresh
-decl_stmt|;
-comment|/* Current RX_early_thresh.     */
-name|short
-name|rx_latency
-decl_stmt|;
-name|short
-name|rx_avg_pkt
 decl_stmt|;
 name|short
 name|cur_len
@@ -101,14 +59,6 @@ define|#
 directive|define
 name|F_RX_FIRST
 value|0x1
-define|#
-directive|define
-name|F_WAIT_TRAIL
-value|0x2
-define|#
-directive|define
-name|F_RX_TRAILER
-value|0x4
 define|#
 directive|define
 name|F_PROMISC
@@ -213,25 +163,18 @@ begin_define
 define|#
 directive|define
 name|RX_INIT_EARLY_THRESH
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIN_RX_EARLY_THRESHF
-value|16
+value|208
 end_define
 
 begin_comment
-comment|/* not less than ether_header */
+comment|/* not less than MINCLSIZE */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MIN_RX_EARLY_THRESHL
-value|4
+name|RX_NEXT_EARLY_THRESH
+value|500
 end_define
 
 begin_define
