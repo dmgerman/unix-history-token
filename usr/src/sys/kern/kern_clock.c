@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.55	83/05/30	*/
+comment|/*	kern_clock.c	4.56	83/06/14	*/
 end_comment
 
 begin_include
@@ -1000,14 +1000,27 @@ name|a
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If trapped user-mode, give it a profiling tick. 	 */
+comment|/* 	 * If trapped user-mode and profiling, give it 	 * a profiling tick. 	 */
 if|if
 condition|(
 name|USERMODE
 argument_list|(
 name|ps
 argument_list|)
-operator|&&
+condition|)
+block|{
+specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+if|if
+condition|(
 name|u
 operator|.
 name|u_prof
@@ -1015,9 +1028,7 @@ operator|.
 name|pr_scale
 condition|)
 block|{
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_flag
 operator||=
@@ -1026,6 +1037,63 @@ expr_stmt|;
 name|aston
 argument_list|()
 expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|vax
+comment|/* 		 * Check to see if process has accumulated 		 * more than 10 minutes of user time.  If so 		 * reduce priority to give others a chance. 		 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_uid
+operator|&&
+name|p
+operator|->
+name|p_nice
+operator|==
+name|NZERO
+operator|&&
+name|u
+operator|.
+name|u_ru
+operator|.
+name|ru_utime
+operator|.
+name|tv_sec
+operator|>
+literal|10
+operator|*
+literal|60
+condition|)
+block|{
+name|p
+operator|->
+name|p_nice
+operator|=
+name|NZERO
+operator|+
+literal|4
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setpri
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_pri
+operator|=
+name|p
+operator|->
+name|p_usrpri
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 block|}
 comment|/*  * Bump a timeval by a small number of usec's.  */
