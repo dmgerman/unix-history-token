@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.54	82/05/26	*/
+comment|/*	machdep.c	4.52.1.1	82/06/14	*/
 end_comment
 
 begin_include
