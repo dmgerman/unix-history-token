@@ -1,7 +1,31 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char printf_id[] = "@(#) printf.c:2.2 6/5/79";*/
+comment|/* The pwb version this is based on */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|printf_id
+index|[]
+init|=
+literal|"@(#) printf.c:2.2 6/5/79"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The local sccs version within ex */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)printf.c	4.2 %G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_include
 include|#
