@@ -742,7 +742,7 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"Toto! This doesn't look like Kansas anymore!"
+literal|"unable to return to working directory %s!"
 argument_list|)
 expr_stmt|;
 block|}
@@ -874,7 +874,7 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"Toto! This doesn't look like Kansas anymore!"
+literal|"unable to return to working directory %s!"
 argument_list|)
 expr_stmt|;
 block|}
