@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.113 (Berkeley) %G%"
+literal|"@(#)main.c	8.114 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1892,17 +1892,6 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
-name|setclass
-argument_list|(
-literal|'m'
-argument_list|,
-operator|&
-name|p
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
 block|}
 while|while
 condition|(
@@ -3223,6 +3212,35 @@ begin_expr_stmt
 name|vendor_post_defaults
 argument_list|(
 name|CurEnv
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* set up the $=m class now, after .cf has a chance to redefine $m */
+end_comment
+
+begin_expr_stmt
+name|expand
+argument_list|(
+literal|"\201m"
+argument_list|,
+name|jbuf
+argument_list|,
+sizeof|sizeof
+name|jbuf
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|setclass
+argument_list|(
+literal|'m'
+argument_list|,
+name|jbuf
 argument_list|)
 expr_stmt|;
 end_expr_stmt
