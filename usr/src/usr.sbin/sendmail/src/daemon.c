@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.20 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.21 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +96,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.20 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.21 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1562,6 +1562,20 @@ argument_list|(
 name|hbuf
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MXDOMAIN
+name|getcanonname
+argument_list|(
+name|hbuf
+argument_list|,
+name|hbsize
+argument_list|)
+expr_stmt|;
+return|return;
+else|#
+directive|else
+else|MXDOMAIN
 name|hp
 operator|=
 name|gethostbyname
@@ -1569,6 +1583,8 @@ argument_list|(
 name|hbuf
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -1597,8 +1613,9 @@ name|hp
 operator|->
 name|h_name
 index|[
-operator|--
-name|i
+name|hbsize
+operator|-
+literal|1
 index|]
 operator|=
 literal|'\0'
