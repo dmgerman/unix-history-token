@@ -1886,6 +1886,17 @@ operator|->
 name|ac_printf
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|aac_common
+operator|->
+name|ac_printf
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|AAC_QNOTIFY
 argument_list|(
 name|sc
