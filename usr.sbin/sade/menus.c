@@ -1518,7 +1518,7 @@ block|,
 literal|"Press F1 for Installation Guide"
 block|,
 comment|/* help line */
-literal|"install"
+literal|"INSTALL"
 block|,
 comment|/* help file */
 block|{
@@ -2268,7 +2268,7 @@ literal|"of the following CDROM drives as your installation drive."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
-literal|"install"
+literal|"INSTALL"
 block|,
 block|{
 block|{
@@ -2328,7 +2328,7 @@ literal|"distribution files."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
-literal|"install"
+literal|"INSTALL"
 block|,
 block|{
 block|{
@@ -2357,7 +2357,7 @@ literal|"guaranteed to carry the full range of possible distributions."
 block|,
 literal|"Select a site that's close!"
 block|,
-literal|"install"
+literal|"INSTALL"
 block|,
 block|{
 block|{
@@ -3783,7 +3783,7 @@ literal|"select one of the following tape devices detected on your system."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
-literal|"install"
+literal|"INSTALL"
 block|,
 block|{
 block|{
@@ -7155,7 +7155,7 @@ literal|"to install it from and how you wish to allocate disk storage to FreeBSD
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
-literal|"install"
+literal|"INSTALL"
 block|,
 block|{
 block|{
