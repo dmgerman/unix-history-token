@@ -3791,16 +3791,7 @@ return|return
 operator|(
 name|VOP_POLL
 argument_list|(
-operator|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-name|fp
-operator|->
-name|f_data
-operator|)
+name|vp
 argument_list|,
 name|events
 argument_list|,
