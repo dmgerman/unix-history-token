@@ -359,9 +359,12 @@ begin_comment
 comment|// Define if C99 features such as lldiv_t, llabs, lldiv should be exposed.
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_USE_C99 */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_USE_C99
+value|1
+end_define
 
 begin_comment
 comment|// Define if code specialized for wchar_t should be used.
@@ -2037,17 +2040,23 @@ begin_comment
 comment|/* Define if you have the strtof function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_STRTOF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_STRTOF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the strtold function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_STRTOLD */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_STRTOLD
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the swprintf function.  */
@@ -2388,9 +2397,12 @@ begin_comment
 comment|/* Define if you have the wcstof function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_WCSTOF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_WCSTOF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wcstok function.  */
@@ -2675,9 +2687,12 @@ begin_comment
 comment|/* Define if you have the<sys/stat.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE_SYS_STAT_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_SYS_STAT_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<sys/types.h> header file.  */
