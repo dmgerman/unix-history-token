@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.76 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.77 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -6024,7 +6024,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Vnode op for read and write  */
+comment|/*  * Vnode op for reading directories.  *   * The routine below assumes that the on-disk format of a directory  * is the same as that defined by<sys/dirent.h>. If the on-disk  * format changes, then it will be necessary to do a conversion  * from the on-disk format that read returns to the format defined  * by<sys/dirent.h>.  */
 end_comment
 
 begin_function
