@@ -1537,6 +1537,14 @@ name|ip
 operator|->
 name|ip_tos
 expr_stmt|;
+comment|/* Configured in_ifx overrides mbuf's */
+if|if
+condition|(
+name|i_ifx
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1563,6 +1571,7 @@ name|rcvif
 operator|->
 name|if_index
 expr_stmt|;
+block|}
 else|else
 name|r
 operator|->
