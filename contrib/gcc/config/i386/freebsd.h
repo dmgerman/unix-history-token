@@ -250,7 +250,7 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{ "profiler-epilogue",	 MASK_PROFILER_EPILOGUE},		\      { "no-profiler-epilogue",	-MASK_PROFILER_EPILOGUE},		\      { "aout",			 MASK_AOUT},				\      { "no-aout",		-MASK_AOUT},				\      { "underscores",		 MASK_UNDERSCORES},			\      { "no-underscores",	-MASK_UNDERSCORES},
+value|{ "profiler-epilogue",	 MASK_PROFILER_EPILOGUE, "Function profiler epilogue"}, \   { "no-profiler-epilogue",	-MASK_PROFILER_EPILOGUE, "No function profiler epilogue"}, \   { "aout",			 MASK_AOUT, "Generate an a.out (vs. ELF) binary"}, \   { "no-aout",			-MASK_AOUT, "Do not generate an a.out binary"}, \   { "underscores",		 MASK_UNDERSCORES, "Add leading underscores to symbols"}, \   { "no-underscores",		-MASK_UNDERSCORES, "Do not add leading underscores to symbols"},
 end_define
 
 begin_comment
