@@ -49,6 +49,10 @@ name|device_t
 name|dev
 decl_stmt|;
 name|struct
+name|mtx
+name|sc_mtx
+decl_stmt|;
+name|struct
 name|resource
 modifier|*
 name|iobase
@@ -232,7 +236,7 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|EP_READ_1
+name|CSR_READ_1
 parameter_list|(
 name|sc
 parameter_list|,
@@ -244,7 +248,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EP_READ_2
+name|CSR_READ_2
 parameter_list|(
 name|sc
 parameter_list|,
@@ -256,7 +260,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EP_WRITE_1
+name|CSR_WRITE_1
 parameter_list|(
 name|sc
 parameter_list|,
@@ -271,7 +275,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EP_WRITE_2
+name|CSR_WRITE_2
 parameter_list|(
 name|sc
 parameter_list|,
@@ -286,7 +290,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EP_WRITE_MULTI_1
+name|CSR_WRITE_MULTI_1
 parameter_list|(
 name|sc
 parameter_list|,
@@ -303,7 +307,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EP_WRITE_MULTI_2
+name|CSR_WRITE_MULTI_2
 parameter_list|(
 name|sc
 parameter_list|,
@@ -320,7 +324,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EP_WRITE_MULTI_4
+name|CSR_WRITE_MULTI_4
 parameter_list|(
 name|sc
 parameter_list|,
@@ -337,7 +341,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EP_READ_MULTI_1
+name|CSR_READ_MULTI_1
 parameter_list|(
 name|sc
 parameter_list|,
@@ -354,7 +358,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EP_READ_MULTI_2
+name|CSR_READ_MULTI_2
 parameter_list|(
 name|sc
 parameter_list|,
@@ -371,7 +375,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EP_READ_MULTI_4
+name|CSR_READ_MULTI_4
 parameter_list|(
 name|sc
 parameter_list|,
@@ -383,6 +387,26 @@ name|count
 parameter_list|)
 define|\
 value|bus_space_read_multi_4(sc->bst, sc->bsh, off, addr, count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EP_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sc_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EP_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sc_mtx)
 end_define
 
 end_unit

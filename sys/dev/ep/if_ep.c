@@ -180,7 +180,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|void
-name|ep_if_init
+name|epinit
 parameter_list|(
 name|void
 modifier|*
@@ -191,7 +191,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ep_if_ioctl
+name|epioctl
 parameter_list|(
 name|struct
 name|ifnet
@@ -207,7 +207,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ep_if_start
+name|epstart
 parameter_list|(
 name|struct
 name|ifnet
@@ -219,10 +219,34 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ep_if_watchdog
+name|epwatchdog
 parameter_list|(
 name|struct
 name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|epstart_body
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|epinit_body
+parameter_list|(
+name|struct
+name|ep_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -432,7 +456,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -468,7 +492,7 @@ operator|*
 name|result
 operator|)
 operator|=
-name|EP_READ_2
+name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
@@ -859,7 +883,7 @@ argument_list|)
 expr_stmt|;
 name|config
 operator|=
-name|EP_READ_2
+name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
@@ -931,7 +955,7 @@ name|sc
 operator|->
 name|ep_connector
 operator|=
-name|EP_READ_2
+name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1064,6 +1088,25 @@ name|gone
 operator|=
 literal|0
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+name|MTX_NETWORK_LOCK
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ep_get_macaddr
@@ -1094,6 +1137,14 @@ operator|->
 name|dev
 argument_list|,
 literal|"Unable to get Ethernet address!\n"
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -1134,7 +1185,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1237,25 +1288,25 @@ name|ifp
 operator|->
 name|if_start
 operator|=
-name|ep_if_start
+name|epstart
 expr_stmt|;
 name|ifp
 operator|->
 name|if_ioctl
 operator|=
-name|ep_if_ioctl
+name|epioctl
 expr_stmt|;
 name|ifp
 operator|->
 name|if_watchdog
 operator|=
-name|ep_if_watchdog
+name|epwatchdog
 expr_stmt|;
 name|ifp
 operator|->
 name|if_init
 operator|=
-name|ep_if_init
+name|epinit
 expr_stmt|;
 name|ifp
 operator|->
@@ -1590,6 +1641,14 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1598,14 +1657,10 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * The order in here seems important. Otherwise we may not receive  * interrupts. ?!  */
-end_comment
-
 begin_function
 specifier|static
 name|void
-name|ep_if_init
+name|epinit
 parameter_list|(
 name|void
 modifier|*
@@ -1619,6 +1674,39 @@ name|sc
 init|=
 name|xsc
 decl_stmt|;
+name|EP_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|epinit_body
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|EP_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * The order in here seems important. Otherwise we may not receive  * interrupts. ?!  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|epinit_body
+parameter_list|(
+name|struct
+name|ep_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
 name|struct
 name|ifnet
 modifier|*
@@ -1632,8 +1720,6 @@ operator|.
 name|ac_if
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|i
 decl_stmt|;
 if|if
@@ -1643,29 +1729,14 @@ operator|->
 name|gone
 condition|)
 return|return;
-name|s
-operator|=
-name|splimp
-argument_list|()
+name|EP_BUSY_WAIT
 expr_stmt|;
-while|while
-condition|(
-name|EP_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|EP_STATUS
-argument_list|)
-operator|&
-name|S_COMMAND_IN_PROGRESS
-condition|)
-empty_stmt|;
 name|GO_WINDOW
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1679,7 +1750,7 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1694,7 +1765,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Disable the card */
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1704,7 +1775,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Enable the card */
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1732,7 +1803,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|EP_WRITE_1
+name|CSR_WRITE_1
 argument_list|(
 name|sc
 argument_list|,
@@ -1750,7 +1821,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1759,7 +1830,7 @@ argument_list|,
 name|RX_RESET
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1768,18 +1839,8 @@ argument_list|,
 name|TX_RESET
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|EP_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|EP_STATUS
-argument_list|)
-operator|&
-name|S_COMMAND_IN_PROGRESS
-condition|)
-empty_stmt|;
+name|EP_BUSY_WAIT
+expr_stmt|;
 comment|/* Window 1 is operating window */
 name|GO_WINDOW
 argument_list|(
@@ -1799,7 +1860,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|EP_READ_1
+name|CSR_READ_1
 argument_list|(
 name|sc
 argument_list|,
@@ -1807,7 +1868,7 @@ name|EP_W1_TX_STATUS
 argument_list|)
 expr_stmt|;
 comment|/* get rid of stray intr's */
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1818,7 +1879,7 @@ operator||
 literal|0xff
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1829,7 +1890,7 @@ operator||
 name|S_5_INTS
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1848,7 +1909,7 @@ name|if_flags
 operator|&
 name|IFF_PROMISC
 condition|)
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1858,15 +1919,15 @@ name|SET_RX_FILTER
 operator||
 name|FIL_INDIVIDUAL
 operator||
-name|FIL_GROUP
+name|FIL_MULTICAST
 operator||
 name|FIL_BRDCST
 operator||
-name|FIL_ALL
+name|FIL_PROMISC
 argument_list|)
 expr_stmt|;
 else|else
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1876,7 +1937,7 @@ name|SET_RX_FILTER
 operator||
 name|FIL_INDIVIDUAL
 operator||
-name|FIL_GROUP
+name|FIL_MULTICAST
 operator||
 name|FIL_BRDCST
 argument_list|)
@@ -1895,7 +1956,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1904,7 +1965,7 @@ argument_list|,
 name|RX_ENABLE
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1986,7 +2047,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -1997,7 +2058,7 @@ operator||
 name|RX_INIT_EARLY_THRESH
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2014,14 +2075,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|ep_if_start
+name|epstart_body
 argument_list|(
 name|ifp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -2030,7 +2086,47 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ep_if_start
+name|epstart
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+name|struct
+name|ep_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|sc
+operator|=
+name|ifp
+operator|->
+name|if_softc
+expr_stmt|;
+name|EP_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|epstart_body
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|EP_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|epstart_body
 parameter_list|(
 name|struct
 name|ifnet
@@ -2055,8 +2151,6 @@ modifier|*
 name|m0
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|pad
 decl_stmt|;
 name|sc
@@ -2072,18 +2166,8 @@ operator|->
 name|gone
 condition|)
 return|return;
-while|while
-condition|(
-name|EP_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|EP_STATUS
-argument_list|)
-operator|&
-name|S_COMMAND_IN_PROGRESS
-condition|)
-empty_stmt|;
+name|EP_BUSY_WAIT
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -2176,7 +2260,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|EP_READ_2
+name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2191,7 +2275,7 @@ literal|4
 condition|)
 block|{
 comment|/* no room in FIFO */
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2211,7 +2295,7 @@ expr_stmt|;
 comment|/* make sure */
 if|if
 condition|(
-name|EP_READ_2
+name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2241,11 +2325,13 @@ argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 block|}
 else|else
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2256,12 +2342,8 @@ operator||
 name|EP_THRESH_DISABLE
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-name|EP_WRITE_2
+comment|/* XXX 4.x and earlier would splhigh here */
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2271,7 +2353,7 @@ name|len
 argument_list|)
 expr_stmt|;
 comment|/* Second dword meaningless */
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2315,7 +2397,7 @@ name|m_len
 operator|>
 literal|3
 condition|)
-name|EP_WRITE_MULTI_4
+name|CSR_WRITE_MULTI_4
 argument_list|(
 name|sc
 argument_list|,
@@ -2344,7 +2426,7 @@ name|m_len
 operator|&
 literal|3
 condition|)
-name|EP_WRITE_MULTI_1
+name|CSR_WRITE_MULTI_1
 argument_list|(
 name|sc
 argument_list|,
@@ -2405,7 +2487,7 @@ name|m_len
 operator|>
 literal|1
 condition|)
-name|EP_WRITE_MULTI_2
+name|CSR_WRITE_MULTI_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2434,7 +2516,7 @@ name|m_len
 operator|&
 literal|1
 condition|)
-name|EP_WRITE_1
+name|CSR_WRITE_1
 argument_list|(
 name|sc
 argument_list|,
@@ -2465,7 +2547,7 @@ condition|(
 name|pad
 operator|--
 condition|)
-name|EP_WRITE_1
+name|CSR_WRITE_1
 argument_list|(
 name|sc
 argument_list|,
@@ -2475,11 +2557,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Padding */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+comment|/* XXX and drop splhigh here */
 name|BPF_MTAP
 argument_list|(
 name|ifp
@@ -2508,7 +2586,7 @@ name|readcheck
 label|:
 if|if
 condition|(
-name|EP_READ_2
+name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2527,7 +2605,7 @@ name|if_snd
 operator|.
 name|ifq_head
 condition|)
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2538,11 +2616,17 @@ operator||
 literal|8
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 goto|goto
 name|startagain
 goto|;
+name|done
+label|:
+empty_stmt|;
+return|return;
 block|}
 end_function
 
@@ -2568,14 +2652,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
-name|x
-decl_stmt|;
-name|x
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|sc
 operator|=
 operator|(
@@ -2585,6 +2661,12 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
+name|EP_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* XXX 4.x splbio'd here to reduce interruptability */
 comment|/* 	 * quick fix: Try to detect an interrupt when the card goes away. 	 */
 if|if
 condition|(
@@ -2592,7 +2674,7 @@ name|sc
 operator|->
 name|gone
 operator|||
-name|EP_READ_2
+name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2602,9 +2684,9 @@ operator|==
 literal|0xffff
 condition|)
 block|{
-name|splx
+name|EP_UNLOCK
 argument_list|(
-name|x
+name|sc
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2618,7 +2700,7 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2635,7 +2717,7 @@ condition|(
 operator|(
 name|status
 operator|=
-name|EP_READ_2
+name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2647,7 +2729,7 @@ name|S_5_INTS
 condition|)
 block|{
 comment|/* first acknowledge all interrupt sources */
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2703,14 +2785,14 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|EP_READ_2
+name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
 name|EP_W1_FREE_TX
 argument_list|)
 expr_stmt|;
-name|ep_if_start
+name|epstart_body
 argument_list|(
 name|ifp
 argument_list|)
@@ -2752,7 +2834,7 @@ name|printf
 argument_list|(
 literal|"\tFIFO Diagnostic: %x\n"
 argument_list|,
-name|EP_READ_2
+name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2834,14 +2916,14 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-name|ep_if_init
+name|epinit_body
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|splx
+name|EP_UNLOCK
 argument_list|(
-name|x
+name|sc
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2865,7 +2947,7 @@ condition|(
 operator|(
 name|status
 operator|=
-name|EP_READ_1
+name|CSR_READ_1
 argument_list|(
 name|sc
 argument_list|,
@@ -2897,7 +2979,7 @@ name|TXS_MAX_COLLISION
 operator|)
 condition|)
 block|{
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2946,7 +3028,7 @@ name|ifp
 operator|->
 name|if_oerrors
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2964,7 +3046,7 @@ name|if_snd
 operator|.
 name|ifq_head
 condition|)
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -2977,7 +3059,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* pops up the next status */
-name|EP_WRITE_1
+name|CSR_WRITE_1
 argument_list|(
 name|sc
 argument_list|,
@@ -3000,14 +3082,14 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|EP_READ_2
+name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
 name|EP_W1_FREE_TX
 argument_list|)
 expr_stmt|;
-name|ep_if_start
+name|epstart_body
 argument_list|(
 name|ifp
 argument_list|)
@@ -3015,7 +3097,7 @@ expr_stmt|;
 block|}
 comment|/* end TX_COMPLETE */
 block|}
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3030,7 +3112,7 @@ condition|(
 operator|(
 name|status
 operator|=
-name|EP_READ_2
+name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3044,7 +3126,7 @@ goto|goto
 name|rescan
 goto|;
 comment|/* re-enable Ints */
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3055,9 +3137,9 @@ operator||
 name|S_5_INTS
 argument_list|)
 expr_stmt|;
-name|splx
+name|EP_UNLOCK
 argument_list|(
-name|x
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -3101,6 +3183,7 @@ decl_stmt|;
 name|short
 name|rx_fifo
 decl_stmt|;
+comment|/* XXX Must be called with sc locked */
 name|ifp
 operator|=
 operator|&
@@ -3112,7 +3195,7 @@ name|ac_if
 expr_stmt|;
 name|status
 operator|=
-name|EP_READ_2
+name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3246,7 +3329,7 @@ operator|+=
 name|EOFF
 expr_stmt|;
 comment|/* Read what should be the header. */
-name|EP_READ_MULTI_2
+name|CSR_READ_MULTI_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3414,7 +3497,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* default for EISA configured cards */
-name|EP_READ_MULTI_4
+name|CSR_READ_MULTI_4
 argument_list|(
 name|sc
 argument_list|,
@@ -3459,7 +3542,7 @@ name|lenthisone
 operator|&
 literal|3
 condition|)
-name|EP_READ_MULTI_1
+name|CSR_READ_MULTI_1
 argument_list|(
 name|sc
 argument_list|,
@@ -3494,7 +3577,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|EP_READ_MULTI_2
+name|CSR_READ_MULTI_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3550,7 +3633,7 @@ operator|-
 literal|1
 operator|)
 operator|=
-name|EP_READ_1
+name|CSR_READ_1
 argument_list|(
 name|sc
 argument_list|,
@@ -3597,7 +3680,7 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|EP_READ_2
+name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3617,7 +3700,7 @@ goto|goto
 name|read_again
 goto|;
 block|}
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3630,7 +3713,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3674,6 +3757,12 @@ name|sc
 operator|->
 name|cur_len
 expr_stmt|;
+comment|/* 	 * Drop locks before calling if_input() since it may re-enter 	 * ep_start() in the netisr case.  This would result in a 	 * lock reversal.  Better performance might be obtained by 	 * chaining all packets received, dropping the lock, and then 	 * calling if_input() on each one. 	 */
+name|EP_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -3686,25 +3775,20 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
+name|EP_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|top
 operator|=
 literal|0
 expr_stmt|;
-while|while
-condition|(
-name|EP_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|EP_STATUS
-argument_list|)
-operator|&
-name|S_COMMAND_IN_PROGRESS
-condition|)
-empty_stmt|;
-name|EP_WRITE_2
+name|EP_BUSY_WAIT
+expr_stmt|;
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3718,7 +3802,7 @@ expr_stmt|;
 return|return;
 name|out
 label|:
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3765,19 +3849,9 @@ argument_list|,
 name|F_RX_FIRST
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|EP_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|EP_STATUS
-argument_list|)
-operator|&
-name|S_COMMAND_IN_PROGRESS
-condition|)
-empty_stmt|;
-name|EP_WRITE_2
+name|EP_BUSY_WAIT
+expr_stmt|;
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3823,7 +3897,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3837,7 +3911,7 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3884,7 +3958,7 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3911,7 +3985,7 @@ name|i
 operator|=
 name|ACF_CONNECTOR_BNC
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3969,7 +4043,7 @@ argument_list|)
 expr_stmt|;
 name|j
 operator|=
-name|EP_READ_2
+name|CSR_READ_2
 argument_list|(
 name|sc
 argument_list|,
@@ -3978,7 +4052,7 @@ argument_list|)
 operator|&
 literal|0x3fff
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -4042,7 +4116,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ep_if_ioctl
+name|epioctl
 parameter_list|(
 name|struct
 name|ifnet
@@ -4078,17 +4152,10 @@ operator|)
 name|data
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 init|=
 literal|0
 decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -4097,6 +4164,11 @@ block|{
 case|case
 name|SIOCSIFFLAGS
 case|:
+name|EP_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4135,7 +4207,12 @@ expr_stmt|;
 block|}
 else|else
 comment|/* reinitialize card on any parameter change */
-name|ep_if_init
+name|epinit_body
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|EP_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -4238,14 +4315,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4257,7 +4326,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ep_if_watchdog
+name|epwatchdog
 parameter_list|(
 name|struct
 name|ifnet
@@ -4274,7 +4343,6 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-comment|/* 	printf("ep: watchdog\n");  	log(LOG_ERR, "ep%d: watchdog\n", ifp->if_unit); 	ifp->if_oerrors++; */
 if|if
 condition|(
 name|sc
@@ -4289,7 +4357,7 @@ operator|&=
 operator|~
 name|IFF_OACTIVE
 expr_stmt|;
-name|ep_if_start
+name|epstart
 argument_list|(
 name|ifp
 argument_list|)
@@ -4322,7 +4390,7 @@ operator|->
 name|gone
 condition|)
 return|return;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -4331,7 +4399,7 @@ argument_list|,
 name|RX_DISABLE
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -4340,19 +4408,9 @@ argument_list|,
 name|RX_DISCARD_TOP_PACK
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|EP_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|EP_STATUS
-argument_list|)
-operator|&
-name|S_COMMAND_IN_PROGRESS
-condition|)
-empty_stmt|;
-name|EP_WRITE_2
+name|EP_BUSY_WAIT
+expr_stmt|;
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -4361,7 +4419,7 @@ argument_list|,
 name|TX_DISABLE
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -4375,7 +4433,7 @@ argument_list|(
 literal|800
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -4384,19 +4442,9 @@ argument_list|,
 name|RX_RESET
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|EP_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|EP_STATUS
-argument_list|)
-operator|&
-name|S_COMMAND_IN_PROGRESS
-condition|)
-empty_stmt|;
-name|EP_WRITE_2
+name|EP_BUSY_WAIT
+expr_stmt|;
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -4405,19 +4453,9 @@ argument_list|,
 name|TX_RESET
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|EP_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|EP_STATUS
-argument_list|)
-operator|&
-name|S_COMMAND_IN_PROGRESS
-condition|)
-empty_stmt|;
-name|EP_WRITE_2
+name|EP_BUSY_WAIT
+expr_stmt|;
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -4426,7 +4464,7 @@ argument_list|,
 name|C_INTR_LATCH
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -4435,7 +4473,7 @@ argument_list|,
 name|SET_RD_0_MASK
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -4444,7 +4482,7 @@ argument_list|,
 name|SET_INTR_MASK
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,

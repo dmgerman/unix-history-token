@@ -92,17 +92,6 @@ name|EP_MAX_BOARDS
 value|16
 end_define
 
-begin_comment
-comment|/*  * This `ID' port is a mere hack.  There's currently no chance to register  * it with config's idea of the ports that are in use.  *  * "After the automatic configuration is completed, the IDS is in its initial  * state (ID-WAIT), and it monitors all write access to I/O port 01x0h, where  * 'x' is any hex digit.  If a zero is written to any one of these ports, then  * that address is remembered and becomes the ID port.  A second zero written  * to that port resets the ID sequence to its initial state.  The IDS watches  * for the ID sequence to be written to the ID port."  *  * We prefer 0x110 over 0x100 so to not conflict with the Plaque&Pray  * ports.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EP_ID_PORT
-value|0x110
-end_define
-
 begin_define
 define|#
 directive|define
@@ -187,7 +176,7 @@ name|is_eeprom_busy
 parameter_list|(
 name|sc
 parameter_list|)
-value|(EP_READ_2(sc, EP_W0_EEPROM_COMMAND)&EEPROM_BUSY)
+value|(CSR_READ_2(sc, EP_W0_EEPROM_COMMAND)&EEPROM_BUSY)
 end_define
 
 begin_define
@@ -197,7 +186,7 @@ name|GO_WINDOW
 parameter_list|(
 name|x
 parameter_list|)
-value|EP_WRITE_2(sc, EP_COMMAND, WINDOW_SELECT|(x))
+value|CSR_WRITE_2(sc, EP_COMMAND, WINDOW_SELECT|(x))
 end_define
 
 begin_comment
@@ -1068,97 +1057,6 @@ name|REQ_INTR
 value|(u_short) (0xc<<11)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SET_INTR_MASK
-value|(u_short) (0xe<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_RD_0_MASK
-value|(u_short) (0xf<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_RX_FILTER
-value|(u_short) (0x10<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIL_INDIVIDUAL
-value|(u_short) (0x1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIL_GROUP
-value|(u_short) (0x2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIL_BRDCST
-value|(u_short) (0x4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIL_ALL
-value|(u_short) (0x8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_RX_EARLY_THRESH
-value|(u_short) (0x11<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_TX_AVAIL_THRESH
-value|(u_short) (0x12<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_TX_START_THRESH
-value|(u_short) (0x13<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|STATS_ENABLE
-value|(u_short) (0x15<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|STATS_DISABLE
-value|(u_short) (0x16<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|STOP_TRANSCEIVER
-value|(u_short) (0x17<<11)
-end_define
-
 begin_comment
 comment|/*  * The following C_* acknowledge the various interrupts. Some of them don't  * do anything.  See the manual.  */
 end_comment
@@ -1229,13 +1127,93 @@ end_define
 begin_define
 define|#
 directive|define
-name|C_MASK
-value|(u_short) 0xFF
+name|SET_INTR_MASK
+value|(u_short) (0xe<<11)
 end_define
 
-begin_comment
-comment|/* mask of C_* */
-end_comment
+begin_define
+define|#
+directive|define
+name|SET_RD_0_MASK
+value|(u_short) (0xf<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_RX_FILTER
+value|(u_short) (0x10<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIL_INDIVIDUAL
+value|(u_short) (0x1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIL_MULTICAST
+value|(u_short) (0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIL_BRDCST
+value|(u_short) (0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIL_PROMISC
+value|(u_short) (0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_RX_EARLY_THRESH
+value|(u_short) (0x11<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_TX_AVAIL_THRESH
+value|(u_short) (0x12<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_TX_START_THRESH
+value|(u_short) (0x13<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STATS_ENABLE
+value|(u_short) (0x15<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STATS_DISABLE
+value|(u_short) (0x16<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STOP_TRANSCEIVER
+value|(u_short) (0x17<<11)
+end_define
 
 begin_comment
 comment|/*  * Status register. All windows.  *  *     15-13:  Window number(0-7).  *     12:     Command_in_progress.  *     11:     reserved.  *     10:     reserved.  *     9:      reserved.  *     8:      reserved.  *     7:      Update Statistics.  *     6:      Interrupt Requested.  *     5:      RX Early.  *     4:      RX Complete.  *     3:      TX Available.  *     2:      TX Complete.  *     1:      Adapter Failure.  *     0:      Interrupt Latch.  */
@@ -1322,6 +1300,13 @@ name|S_COMMAND_IN_PROGRESS
 value|(u_short) (0x1000)
 end_define
 
+begin_define
+define|#
+directive|define
+name|EP_BUSY_WAIT
+value|while (CSR_READ_2(sc, EP_STATUS)& S_COMMAND_IN_PROGRESS)
+end_define
+
 begin_comment
 comment|/* Address Config. Register.  * Window 0/Port 06  */
 end_comment
@@ -1367,7 +1352,7 @@ name|sc
 parameter_list|,
 name|irq
 parameter_list|)
-value|EP_WRITE_2((sc), EP_W0_RESOURCE_CFG, \                               ((EP_READ_2((sc), EP_W0_RESOURCE_CFG)& 0x0fff) | \                               ((u_short)(irq)<<12))  )
+value|CSR_WRITE_2((sc), EP_W0_RESOURCE_CFG, \ 			((CSR_READ_2((sc), EP_W0_RESOURCE_CFG)& 0x0fff) | \ 			((u_short)(irq)<<12))  )
 end_define
 
 begin_comment
@@ -1541,8 +1526,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|JABBER_GUARD_ENABLE
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINKBEAT_ENABLE
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
 name|ENABLE_UTP
-value|0xc0
+value|(JABBER_GUARD_ENABLE | LINKBEAT_ENABLE)
 end_define
 
 begin_define
@@ -1611,17 +1610,6 @@ define|#
 directive|define
 name|RX_BYTES_MASK
 value|(u_short) (0x07ff)
-end_define
-
-begin_comment
-comment|/*  * Config flags  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EP_FLAGS_100TX
-value|0x1
 end_define
 
 end_unit

@@ -726,7 +726,7 @@ argument_list|)
 expr_stmt|;
 comment|/* ROM size = 0, ROM base = 0 */
 comment|/* For now, ignore AUTO SELECT feature of 3C589B and later. */
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -738,7 +738,7 @@ literal|0xc000
 argument_list|)
 expr_stmt|;
 comment|/* Fake IRQ must be 3 */
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -757,7 +757,7 @@ operator||
 literal|0x3000
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -785,7 +785,7 @@ argument_list|(
 literal|3
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -799,7 +799,7 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -808,7 +808,7 @@ argument_list|,
 literal|0xc040
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -817,7 +817,7 @@ argument_list|,
 name|RX_RESET
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -826,24 +826,14 @@ argument_list|,
 name|TX_RESET
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|EP_READ_2
-argument_list|(
-name|sc
-argument_list|,
-name|EP_STATUS
-argument_list|)
-operator|&
-name|S_COMMAND_IN_PROGRESS
-condition|)
-empty_stmt|;
+name|EP_BUSY_WAIT
+expr_stmt|;
 name|DELAY
 argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-name|EP_WRITE_2
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -898,6 +888,8 @@ operator|->
 name|irq
 argument_list|,
 name|INTR_TYPE_NET
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|ep_intr
 argument_list|,
