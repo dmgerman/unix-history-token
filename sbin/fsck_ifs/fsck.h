@@ -606,6 +606,16 @@ end_comment
 
 begin_decl_stmt
 name|char
+name|fflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* force fs check (ignore clean flag) */
+end_comment
+
+begin_decl_stmt
+name|char
 name|nflag
 decl_stmt|;
 end_decl_stmt
