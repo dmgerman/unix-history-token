@@ -321,6 +321,15 @@ directive|include
 file|<machine/unwind.h>
 end_include
 
+begin_function_decl
+name|void
+name|ia64_probe_sapics
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1114,6 +1123,10 @@ name|bufinit
 argument_list|()
 expr_stmt|;
 name|vm_pager_bufferinit
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Traverse the MADT to discover IOSAPIC and Local SAPIC 	 * information. 	 */
+name|ia64_probe_sapics
 argument_list|()
 expr_stmt|;
 block|}
@@ -3467,7 +3480,6 @@ name|end
 decl_stmt|,
 name|now
 decl_stmt|;
-comment|/* 	 * XXX This can't cope with rollovers. 	 */
 name|start
 operator|=
 name|ia64_get_itc
@@ -3499,6 +3511,16 @@ condition|(
 name|now
 operator|<
 name|end
+operator|||
+operator|(
+name|now
+operator|>
+name|start
+operator|&&
+name|end
+operator|<
+name|start
+operator|)
 condition|)
 do|;
 block|}
