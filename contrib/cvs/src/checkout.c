@@ -1592,7 +1592,7 @@ decl_stmt|;
 comment|/* strip the last_component */
 name|where_location
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|where
 argument_list|)

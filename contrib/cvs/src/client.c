@@ -1390,6 +1390,14 @@ block|{
 comment|/* We're at the beginning of the string.  Look at the                CVSADM files in cwd.  */
 name|this_root
 operator|=
+operator|(
+name|CVSroot_cmdline
+condition|?
+name|xstrdup
+argument_list|(
+name|CVSroot_cmdline
+argument_list|)
+else|:
 name|Name_Root
 argument_list|(
 operator|(
@@ -1404,6 +1412,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
+operator|)
 expr_stmt|;
 block|}
 comment|/* Now check the value for root. */
@@ -5453,6 +5462,20 @@ name|dir_name
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|command_name
+argument_list|,
+literal|"export"
+argument_list|)
+operator|==
+literal|0
+condition|)
+comment|/* Don't create CVSADM directories if this is export.  */
+empty_stmt|;
 elseif|else
 if|if
 condition|(
@@ -14410,6 +14433,15 @@ argument_list|,
 literal|"shutting down buffer to server"
 argument_list|)
 expr_stmt|;
+name|buf_free
+argument_list|(
+name|to_server
+argument_list|)
+expr_stmt|;
+name|to_server
+operator|=
+name|NULL
+expr_stmt|;
 name|status
 operator|=
 name|buf_shutdown
@@ -14434,13 +14466,12 @@ argument_list|)
 expr_stmt|;
 name|buf_free
 argument_list|(
-name|to_server
-argument_list|)
-expr_stmt|;
-name|buf_free
-argument_list|(
 name|from_server
 argument_list|)
+expr_stmt|;
+name|from_server
+operator|=
+name|NULL
 expr_stmt|;
 name|server_started
 operator|=
@@ -14874,7 +14905,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* get the port number for a client to connect to based on the port  * and method of a cvsroot_t.  *  * we do this here instead of in parse_cvsroot so that we can keep network  * code confined to a localized area and also to delay the lookup until the  * last possible moment so it remains possible to run cvs client commands that  * skip opening connections to the server (i.e. skip network operations entirely)  *  * and yes, I know none of the the commands do that now, but here's to planning  * for the future, eh?  cheers.  *  * FIXME - We could cache the port lookup safely right now as we never change  * it for a single root on the fly, but we'd have to un'const some other  * functions  */
+comment|/* get the port number for a client to connect to based on the port  * and method of a cvsroot_t.  *  * we do this here instead of in parse_cvsroot so that we can keep network  * code confined to a localized area and also to delay the lookup until the  * last possible moment so it remains possible to run cvs client commands that  * skip opening connections to the server (i.e. skip network operations  * entirely)  *  * and yes, I know none of the commands do that now, but here's to planning  * for the future, eh?  cheers.  *  * FIXME - We could cache the port lookup safely right now as we never change  * it for a single root on the fly, but we'd have to un'const some other  * functions - REMOVE_FIXME? This may be unecessary.  We're talking about,  * what, usually one, sometimes two lookups of the port per invocation.  I  * think twice is by far the rarer of the two cases - only the login function  * will need to do it to save the canonical CVSROOT. -DRP  */
 end_comment
 
 begin_function
@@ -15607,6 +15638,15 @@ argument_list|,
 literal|"shutting down buffer to server"
 argument_list|)
 expr_stmt|;
+name|buf_free
+argument_list|(
+name|to_server
+argument_list|)
+expr_stmt|;
+name|to_server
+operator|=
+name|NULL
+expr_stmt|;
 name|status
 operator|=
 name|buf_shutdown
@@ -15631,13 +15671,12 @@ argument_list|)
 expr_stmt|;
 name|buf_free
 argument_list|(
-name|to_server
-argument_list|)
-expr_stmt|;
-name|buf_free
-argument_list|(
 name|from_server
 argument_list|)
+expr_stmt|;
+name|from_server
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Don't need to set server_started = 0 since we don't set it to 1 	 * until returning from this call. 	 */
 block|}
@@ -15730,15 +15769,27 @@ block|{
 ifdef|#
 directive|ifdef
 name|HAVE_GSSAPI
+name|FILE
+modifier|*
+name|fp
+init|=
+name|stdio_buffer_get_file
+argument_list|(
+name|lto_server
+argument_list|)
+decl_stmt|;
 name|int
 name|fd
 init|=
-operator|(
-name|int
-operator|)
-name|lto_server
-operator|->
-name|closure
+name|fp
+condition|?
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+else|:
+operator|-
+literal|1
 decl_stmt|;
 name|struct
 name|stat
@@ -15746,6 +15797,13 @@ name|s
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|fd
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
 name|fstat
 argument_list|(
 name|fd
@@ -15755,6 +15813,7 @@ name|s
 argument_list|)
 operator|<
 literal|0
+operator|)
 operator|||
 operator|!
 name|S_ISSOCK
@@ -21969,7 +22028,7 @@ name|W_LOCAL
 argument_list|,
 name|aflag
 argument_list|,
-literal|0
+name|LOCK_NONE
 argument_list|,
 operator|(
 name|char
