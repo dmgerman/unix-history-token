@@ -3392,6 +3392,8 @@ block|}
 if|if
 condition|(
 name|newaddr
+operator|&&
+name|setaddr
 condition|)
 block|{
 name|strncpy
