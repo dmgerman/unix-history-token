@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)parse.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)parse.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -135,14 +148,11 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s\n"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -175,14 +185,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"hexdump: line too long.\n"
+literal|"line too long"
 argument_list|)
 expr_stmt|;
 while|while
@@ -1783,8 +1788,10 @@ operator|&&
 name|nconv
 operator|++
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"byte count with multiple conversion characters"
 argument_list|)
 expr_stmt|;
@@ -2182,8 +2189,10 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s: bad byte count"
 argument_list|,
 name|s
@@ -2197,9 +2206,11 @@ name|void
 name|badsfmt
 parameter_list|()
 block|{
-name|err
+name|errx
 argument_list|(
-literal|"%%s: requires a precision or a byte count\n"
+literal|1
+argument_list|,
+literal|"%%s: requires a precision or a byte count"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2216,9 +2227,11 @@ modifier|*
 name|fmt
 decl_stmt|;
 block|{
-name|err
+name|errx
 argument_list|(
-literal|"\"%s\": bad format\n"
+literal|1
+argument_list|,
+literal|"\"%s\": bad format"
 argument_list|,
 name|fmt
 argument_list|)
@@ -2237,9 +2250,11 @@ modifier|*
 name|ch
 decl_stmt|;
 block|{
-name|err
+name|errx
 argument_list|(
-literal|"%%%s: bad conversion character\n"
+literal|1
+argument_list|,
+literal|"%%%s: bad conversion character"
 argument_list|,
 name|ch
 argument_list|)

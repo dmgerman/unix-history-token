@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)odsyntax.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)odsyntax.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +50,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -44,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -361,14 +380,9 @@ case|case
 literal|'?'
 case|:
 default|default:
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"od: od(1) has been deprecated for hexdump(1).\n"
+literal|"od(1) has been deprecated for hexdump(1)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -377,14 +391,9 @@ name|ch
 operator|!=
 literal|'?'
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"od: hexdump(1) compatibility doesn't support the -%c option%s\n"
+literal|"hexdump(1) compatibility doesn't support the -%c option%s"
 argument_list|,
 name|ch
 argument_list|,
@@ -392,9 +401,9 @@ name|ch
 operator|==
 literal|'s'
 condition|?
-literal|"; see strings(1)."
+literal|"; see strings(1)"
 else|:
-literal|"."
+literal|""
 argument_list|)
 expr_stmt|;
 name|usage
