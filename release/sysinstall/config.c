@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.51.2.55 1997/08/18 21:48:03 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.51.2.56 1997/09/17 16:35:32 pst Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -2628,6 +2628,10 @@ decl_stmt|,
 modifier|*
 name|execfile
 decl_stmt|;
+name|char
+modifier|*
+name|moused
+decl_stmt|;
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -2689,20 +2693,38 @@ block|{
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
-if|if
+name|moused
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_MOUSED
+argument_list|)
+expr_stmt|;
+while|while
 condition|(
 operator|!
-name|file_readable
+name|moused
+operator|||
+name|strcmp
 argument_list|(
-literal|"/dev/mouse"
-argument_list|)
-operator|&&
-operator|!
-name|msgYesNo
-argument_list|(
-literal|"Does this system have a mouse attached to it?"
+name|moused
+argument_list|,
+literal|"YES"
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"The X server may access the mouse in two ways: direct access\n"
+literal|"or indirect access via the mouse daemon.  You have not\n"
+literal|"configured the mouse daemon.  Would you like to configure it\n"
+literal|"now?  If you intend to let the X server access the mouse\n"
+literal|"directly, choose \"No\" at this time."
+argument_list|)
+condition|)
+break|break;
 name|dmenuOpenSimple
 argument_list|(
 operator|&
@@ -2714,11 +2736,43 @@ expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-name|systemExecute
+name|moused
+operator|=
+name|variable_get
 argument_list|(
-name|execfile
+name|VAR_MOUSED
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|moused
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|moused
+argument_list|,
+literal|"YES"
+argument_list|)
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"You have configured and been running the mouse daemon.\n"
+literal|"Choose \"/dev/sysmouse\" as the mouse port and \"SysMouse\" or\n"
+literal|"\"MouseSystems\" as the mouse protocol in the X configuration\n"
+literal|"utility."
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|systemExecute(execfile);
+endif|#
+directive|endif
 return|return
 name|DITEM_SUCCESS
 operator||
