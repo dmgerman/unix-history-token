@@ -2509,7 +2509,7 @@ name|suser_cred
 argument_list|(
 name|cred
 argument_list|,
-name|SUSER_ALLOWJAIL
+literal|0
 argument_list|)
 condition|)
 block|{
