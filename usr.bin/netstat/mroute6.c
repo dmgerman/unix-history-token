@@ -218,7 +218,7 @@ block|{
 name|printf
 argument_list|(
 literal|"No IPv6 multicast routing compiled into this"
-literal|"system.\n"
+literal|" system.\n"
 argument_list|)
 expr_stmt|;
 return|return;
