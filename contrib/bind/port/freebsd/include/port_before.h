@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -181,7 +185,7 @@ begin_define
 define|#
 directive|define
 name|GETGROUPLIST_ARGS
-value|const char *name, int basegid, int *groups, \ 			  int *ngroups
+value|const char *name, gid_t basegid, gid_t *groups, \ 			  int *ngroups
 end_define
 
 begin_define
