@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_sa.c,v 1.13 1999/01/11 18:26:25 mjacob Exp $  */
+comment|/*  * Implementation of SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_sa.c,v 1.14 1999/01/12 08:15:47 mjacob Exp $  */
 end_comment
 
 begin_include
@@ -467,12 +467,12 @@ block|,
 comment|/* force variable mode */
 name|SA_QUIRK_2FM
 init|=
-literal|0x05
+literal|0x08
 block|,
 comment|/* Two File Marks at EOD */
 name|SA_QUIRK_NORRLS
 init|=
-literal|0x06
+literal|0x10
 comment|/* Don't attempt RESERVE/RELEASE */
 block|}
 name|sa_quirks
@@ -708,6 +708,66 @@ block|,
 name|SA_QUIRK_FIXED
 block|,
 literal|512
+block|}
+block|,
+block|{
+block|{
+name|T_SEQUENTIAL
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"HP"
+block|,
+literal|"HP-88780*"
+block|,
+literal|"*"
+block|}
+block|,
+name|SA_QUIRK_VARIABLE
+operator||
+name|SA_QUIRK_2FM
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|T_SEQUENTIAL
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"KENNEDY"
+block|,
+literal|"*"
+block|,
+literal|"*"
+block|}
+block|,
+name|SA_QUIRK_VARIABLE
+operator||
+name|SA_QUIRK_2FM
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|T_SEQUENTIAL
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"M4 DATA"
+block|,
+literal|"123107 SCSI*"
+block|,
+literal|"*"
+block|}
+block|,
+name|SA_QUIRK_VARIABLE
+operator||
+name|SA_QUIRK_2FM
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2415,13 +2475,13 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * Mask interrupts so that the pack cannot be invalidated until 	 * after we are in the queue.  Otherwise, we might not properly 	 * clean up one of the buffers. 	 */
+comment|/* 	 * Mask interrupts so that the device cannot be invalidated until 	 * after we are in the queue.  Otherwise, we might not properly 	 * clean up one of the buffers. 	 */
 name|s
 operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Place it in the queue of disk activities for this disk 	 */
+comment|/* 	 * Place it at the end of the queue. 	 */
 name|bufq_insert_tail
 argument_list|(
 operator|&
@@ -2442,7 +2502,6 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/* XXX priority */
 literal|1
 argument_list|)
 expr_stmt|;
@@ -5896,7 +5955,6 @@ name|scsi_test_unit_ready
 argument_list|(
 name|csio
 argument_list|,
-comment|/*retries*/
 literal|1
 argument_list|,
 name|sadone
@@ -5905,7 +5963,6 @@ name|MSG_SIMPLE_Q_TAG
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-comment|/*timeout*/
 literal|5000
 argument_list|)
 expr_stmt|;
@@ -5913,13 +5970,10 @@ name|cam_periph_runccb
 argument_list|(
 name|ccb
 argument_list|,
-comment|/*error handler*/
 name|NULL
 argument_list|,
-comment|/*cam_flags*/
 literal|0
 argument_list|,
-comment|/*sense_flags*/
 literal|0
 argument_list|,
 operator|&
@@ -5951,16 +6005,12 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*relsim_flags*/
 literal|0
 argument_list|,
-comment|/*reduction*/
 literal|0
 argument_list|,
-comment|/*timeout*/
 literal|0
 argument_list|,
-comment|/*getcount_only*/
 literal|0
 argument_list|)
 expr_stmt|;
@@ -6047,6 +6097,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+comment|/* it is safe to retry this */
 name|scsi_read_block_limits
 argument_list|(
 name|csio
@@ -6893,7 +6944,6 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
 name|cam_release_devq
 argument_list|(
 name|ccb
@@ -6902,20 +6952,15 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*relsim_flags*/
 literal|0
 argument_list|,
-comment|/*reduction*/
 literal|0
 argument_list|,
-comment|/*timeout*/
 literal|0
 argument_list|,
-comment|/*getcount_only*/
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 name|xpt_release_ccb
@@ -7921,6 +7966,7 @@ name|ncomp_page
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* it is safe to retry this */
 name|scsi_mode_sense
 argument_list|(
 operator|&
@@ -7928,22 +7974,16 @@ name|ccb
 operator|->
 name|csio
 argument_list|,
-comment|/*retries*/
-literal|1
+literal|5
 argument_list|,
-comment|/*cbfcnp*/
 name|sadone
 argument_list|,
-comment|/*tag_action*/
 name|MSG_SIMPLE_Q_TAG
 argument_list|,
-comment|/*dbd*/
 name|FALSE
 argument_list|,
-comment|/*page_code*/
 name|SMS_PAGE_CTRL_CURRENT
 argument_list|,
-comment|/*page*/
 operator|(
 name|params_to_get
 operator|&
@@ -7954,16 +7994,12 @@ name|SA_DATA_COMPRESSION_PAGE
 else|:
 name|SMS_VENDOR_SPECIFIC_PAGE
 argument_list|,
-comment|/*param_buf*/
 name|mode_buffer
 argument_list|,
-comment|/*param_len*/
 name|mode_buffer_len
 argument_list|,
-comment|/*sense_len*/
 name|SSD_FULL_SIZE
 argument_list|,
-comment|/*timeout*/
 literal|5000
 argument_list|)
 expr_stmt|;
@@ -7975,10 +8011,8 @@ name|ccb
 argument_list|,
 name|saerror
 argument_list|,
-comment|/*cam_flags*/
 literal|0
 argument_list|,
-comment|/*sense_flags*/
 name|SF_NO_PRINT
 argument_list|,
 operator|&
@@ -8009,16 +8043,12 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/* relsim_flags */
 literal|0
 argument_list|,
-comment|/* opening_reduction */
 literal|0
 argument_list|,
-comment|/* timeout */
 literal|0
 argument_list|,
-comment|/* getcount_only */
 name|FALSE
 argument_list|)
 expr_stmt|;
@@ -9530,10 +9560,10 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* It is safe to retry this operation */
 name|scsi_prevent
 argument_list|(
 operator|&
@@ -9541,10 +9571,8 @@ name|ccb
 operator|->
 name|csio
 argument_list|,
-comment|/*retries*/
-literal|0
+literal|5
 argument_list|,
-comment|/*cbcfp*/
 name|sadone
 argument_list|,
 name|MSG_SIMPLE_Q_TAG
@@ -9564,10 +9592,8 @@ name|ccb
 argument_list|,
 name|saerror
 argument_list|,
-comment|/*cam_flags*/
 literal|0
 argument_list|,
-comment|/*sense_flags*/
 literal|0
 argument_list|,
 operator|&
@@ -9598,17 +9624,13 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*relsim_flags*/
 literal|0
 argument_list|,
-comment|/*reduction*/
 literal|0
 argument_list|,
-comment|/*timeout*/
 literal|0
 argument_list|,
-comment|/*getcount_only*/
-literal|0
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -9692,6 +9714,7 @@ comment|/*priority*/
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* It is safe to retry this operation */
 name|scsi_rewind
 argument_list|(
 operator|&
@@ -9699,15 +9722,12 @@ name|ccb
 operator|->
 name|csio
 argument_list|,
-comment|/*retries*/
-literal|1
+literal|5
 argument_list|,
-comment|/*cbcfp*/
 name|sadone
 argument_list|,
 name|MSG_SIMPLE_Q_TAG
 argument_list|,
-comment|/*immediate*/
 name|FALSE
 argument_list|,
 name|SSD_FULL_SIZE
@@ -9729,10 +9749,8 @@ name|ccb
 argument_list|,
 name|saerror
 argument_list|,
-comment|/*cam_flags*/
 literal|0
 argument_list|,
-comment|/*sense_flags*/
 literal|0
 argument_list|,
 operator|&
@@ -9763,17 +9781,13 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*relsim_flags*/
 literal|0
 argument_list|,
-comment|/*reduction*/
 literal|0
 argument_list|,
-comment|/*timeout*/
 literal|0
 argument_list|,
-comment|/*getcount_only*/
-literal|0
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|xpt_release_ccb
@@ -9840,6 +9854,7 @@ comment|/*priority*/
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* This cannot be retried */
 name|scsi_space
 argument_list|(
 operator|&
@@ -9847,10 +9862,8 @@ name|ccb
 operator|->
 name|csio
 argument_list|,
-comment|/*retries*/
-literal|1
+literal|0
 argument_list|,
-comment|/*cbcfp*/
 name|sadone
 argument_list|,
 name|MSG_SIMPLE_Q_TAG
@@ -9878,10 +9891,8 @@ name|ccb
 argument_list|,
 name|saerror
 argument_list|,
-comment|/*cam_flags*/
 literal|0
 argument_list|,
-comment|/*sense_flags*/
 literal|0
 argument_list|,
 operator|&
@@ -9912,17 +9923,13 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*relsim_flags*/
 literal|0
 argument_list|,
-comment|/*reduction*/
 literal|0
 argument_list|,
-comment|/*timeout*/
 literal|0
 argument_list|,
-comment|/*getcount_only*/
-literal|0
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|xpt_release_ccb
@@ -9930,6 +9937,7 @@ argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX: If a spacing operation has failed, we need to invalidate 	 * XXX: this mount. 	 */
 return|return
 operator|(
 name|error
@@ -9989,6 +9997,7 @@ comment|/*priority*/
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* this *must* not be retried */
 name|scsi_write_filemarks
 argument_list|(
 operator|&
@@ -9996,7 +10005,7 @@ name|ccb
 operator|->
 name|csio
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|sadone
 argument_list|,
@@ -10059,10 +10068,10 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXXX: Actually, we need to get back the actual number of filemarks 	 * XXXX: written (there can be a residual). 	 */
+comment|/* 	 * XXXXX: Get back the actual number of filemarks written 	 * (there can be a residual). 	 */
 if|if
 condition|(
 name|error
@@ -10526,6 +10535,7 @@ comment|/*priority*/
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* It is safe to retry this operation */
 name|scsi_load_unload
 argument_list|(
 operator|&
@@ -10533,29 +10543,29 @@ name|ccb
 operator|->
 name|csio
 argument_list|,
-comment|/*retries*/
-literal|1
+literal|5
 argument_list|,
-comment|/*cbfcnp*/
 name|sadone
 argument_list|,
 name|MSG_SIMPLE_Q_TAG
 argument_list|,
-comment|/*immediate*/
 name|FALSE
 argument_list|,
-comment|/*eot*/
 name|FALSE
 argument_list|,
-comment|/*reten*/
 name|TRUE
 argument_list|,
-comment|/*load*/
 name|TRUE
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|60000
+operator|(
+name|SA_ERASE_TIMEOUT
+operator|)
+operator|*
+literal|60
+operator|*
+literal|1000
 argument_list|)
 expr_stmt|;
 name|error
@@ -10566,10 +10576,8 @@ name|ccb
 argument_list|,
 name|saerror
 argument_list|,
-comment|/*cam_flags*/
 literal|0
 argument_list|,
-comment|/*sense_flags*/
 literal|0
 argument_list|,
 operator|&
@@ -10600,17 +10608,13 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*relsim_flags*/
 literal|0
 argument_list|,
-comment|/*reduction*/
 literal|0
 argument_list|,
-comment|/*timeout*/
 literal|0
 argument_list|,
-comment|/*getcount_only*/
-literal|0
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|xpt_release_ccb
@@ -10653,7 +10657,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|sflags
+name|sflag
 decl_stmt|;
 name|softc
 operator|=
@@ -10690,12 +10694,12 @@ argument_list|,
 name|CAM_DEBUG_INFO
 argument_list|)
 condition|)
-name|sflags
+name|sflag
 operator|=
 name|SF_RETRY_UA
 expr_stmt|;
 else|else
-name|sflags
+name|sflag
 operator|=
 name|SF_RETRY_UA
 operator||
@@ -10707,10 +10711,10 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* It is safe to retry this operation */
 name|scsi_reserve_release_unit
 argument_list|(
 operator|&
@@ -10718,25 +10722,18 @@ name|ccb
 operator|->
 name|csio
 argument_list|,
-comment|/*retries*/
-literal|1
+literal|5
 argument_list|,
-comment|/*cbfcnp*/
 name|sadone
 argument_list|,
-comment|/*tag_action*/
 name|MSG_SIMPLE_Q_TAG
 argument_list|,
-comment|/*third_party*/
 name|FALSE
 argument_list|,
-comment|/*third_party_id*/
 literal|0
 argument_list|,
-comment|/*sense_len*/
 name|SSD_FULL_SIZE
 argument_list|,
-comment|/*timeout*/
 literal|5000
 argument_list|,
 name|reserve
@@ -10751,11 +10748,9 @@ name|ccb
 argument_list|,
 name|saerror
 argument_list|,
-comment|/*cam_flags*/
 literal|0
 argument_list|,
-comment|/*sense_flags*/
-name|sflags
+name|sflag
 argument_list|,
 operator|&
 name|softc
@@ -10785,17 +10780,13 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*relsim_flags*/
 literal|0
 argument_list|,
-comment|/*reduction*/
 literal|0
 argument_list|,
-comment|/*timeout*/
 literal|0
 argument_list|,
-comment|/*getcount_only*/
-literal|0
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|xpt_release_ccb
@@ -10878,6 +10869,7 @@ comment|/*priority*/
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* It is safe to retry this operation */
 name|scsi_load_unload
 argument_list|(
 operator|&
@@ -10885,21 +10877,16 @@ name|ccb
 operator|->
 name|csio
 argument_list|,
-comment|/*retries*/
-literal|1
+literal|5
 argument_list|,
-comment|/*cbfcnp*/
 name|sadone
 argument_list|,
 name|MSG_SIMPLE_Q_TAG
 argument_list|,
-comment|/*immediate*/
 name|FALSE
 argument_list|,
-comment|/*eot*/
 name|FALSE
 argument_list|,
-comment|/*reten*/
 name|FALSE
 argument_list|,
 name|load
@@ -10917,10 +10904,8 @@ name|ccb
 argument_list|,
 name|saerror
 argument_list|,
-comment|/*cam_flags*/
 literal|0
 argument_list|,
-comment|/*sense_flags*/
 literal|0
 argument_list|,
 operator|&
@@ -10951,17 +10936,13 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/*relsim_flags*/
 literal|0
 argument_list|,
-comment|/*reduction*/
 literal|0
 argument_list|,
-comment|/*timeout*/
 literal|0
 argument_list|,
-comment|/*getcount_only*/
-literal|0
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|xpt_release_ccb
