@@ -3902,6 +3902,8 @@ argument_list|)
 expr_stmt|;
 name|setproctitle
 argument_list|(
+literal|"%s"
+argument_list|,
 name|proctitle
 argument_list|)
 expr_stmt|;
@@ -4010,6 +4012,8 @@ argument_list|)
 expr_stmt|;
 name|setproctitle
 argument_list|(
+literal|"%s"
+argument_list|,
 name|proctitle
 argument_list|)
 expr_stmt|;
@@ -8469,6 +8473,8 @@ argument_list|)
 expr_stmt|;
 name|setproctitle
 argument_list|(
+literal|"%s"
+argument_list|,
 name|proctitle
 argument_list|)
 expr_stmt|;
