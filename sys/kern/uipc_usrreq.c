@@ -848,6 +848,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|==
+name|curthread
+argument_list|,
+operator|(
+literal|"uipc_connect: td != curthread"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|unp
@@ -870,7 +881,7 @@ name|so
 argument_list|,
 name|nam
 argument_list|,
-name|curthread
+name|td
 argument_list|)
 expr_stmt|;
 name|UNP_UNLOCK
