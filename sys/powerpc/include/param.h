@@ -66,7 +66,7 @@ begin_define
 define|#
 directive|define
 name|_MACHINE
-value|"powerpc"
+value|powerpc
 end_define
 
 begin_endif
@@ -84,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|_MACHINE_ARCH
-value|"powerpc"
+value|powerpc
 end_define
 
 begin_endif
