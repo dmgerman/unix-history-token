@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -467,6 +479,29 @@ argument_list|(
 name|ifp
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|error
+operator|=
+name|mac_check_ifnet_transmit
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|senderr
+argument_list|(
+name|error
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -1733,6 +1768,18 @@ condition|)
 goto|goto
 name|dropanyway
 goto|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_mbuf_from_ifnet
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Discard non local unicast packets when interface 	 * is in promiscuous mode. 	 */
 if|if
 condition|(
