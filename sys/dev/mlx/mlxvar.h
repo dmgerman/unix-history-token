@@ -840,6 +840,7 @@ name|mlxd_drive
 decl_stmt|;
 name|struct
 name|disk
+modifier|*
 name|mlxd_disk
 decl_stmt|;
 name|int

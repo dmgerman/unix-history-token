@@ -756,6 +756,7 @@ name|amrd_drive
 decl_stmt|;
 name|struct
 name|disk
+modifier|*
 name|amrd_disk
 decl_stmt|;
 name|int

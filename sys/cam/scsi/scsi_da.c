@@ -443,6 +443,7 @@ name|params
 decl_stmt|;
 name|struct
 name|disk
+modifier|*
 name|disk
 decl_stmt|;
 name|union
@@ -1650,7 +1651,7 @@ block|{
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_sectorsize
 operator|=
 name|softc
@@ -1662,7 +1663,7 @@ expr_stmt|;
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_mediasize
 operator|=
 name|softc
@@ -1684,7 +1685,7 @@ comment|/* XXX: these are not actually "firmware" values, so they may be wrong *
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_fwsectors
 operator|=
 name|softc
@@ -1696,7 +1697,7 @@ expr_stmt|;
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_fwheads
 operator|=
 name|softc
@@ -1708,7 +1709,7 @@ expr_stmt|;
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_devstat
 operator|->
 name|block_size
@@ -1722,7 +1723,7 @@ expr_stmt|;
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_devstat
 operator|->
 name|flags
@@ -1951,7 +1952,7 @@ argument_list|,
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_devstat
 argument_list|)
 expr_stmt|;
@@ -2140,7 +2141,7 @@ comment|/* 		 * If we've got removeable media, mark the blocksize as 		 * unavai
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_devstat
 operator|->
 name|flags
@@ -3157,7 +3158,6 @@ expr_stmt|;
 block|}
 name|disk_destroy
 argument_list|(
-operator|&
 name|softc
 operator|->
 name|disk
@@ -4233,7 +4233,14 @@ comment|/* 	 * Register this media as a disk 	 */
 name|softc
 operator|->
 name|disk
-operator|.
+operator|=
+name|disk_alloc
+argument_list|()
+expr_stmt|;
+name|softc
+operator|->
+name|disk
+operator|->
 name|d_open
 operator|=
 name|daopen
@@ -4241,7 +4248,7 @@ expr_stmt|;
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_close
 operator|=
 name|daclose
@@ -4249,7 +4256,7 @@ expr_stmt|;
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_strategy
 operator|=
 name|dastrategy
@@ -4257,7 +4264,7 @@ expr_stmt|;
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_dump
 operator|=
 name|dadump
@@ -4265,7 +4272,7 @@ expr_stmt|;
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_name
 operator|=
 literal|"da"
@@ -4273,7 +4280,7 @@ expr_stmt|;
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_drv1
 operator|=
 name|periph
@@ -4281,28 +4288,37 @@ expr_stmt|;
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_maxsize
 operator|=
 name|DFLTPHYS
 expr_stmt|;
 comment|/* XXX: probably not arbitrary */
-name|disk_create
-argument_list|(
+name|softc
+operator|->
+name|disk
+operator|->
+name|d_unit
+operator|=
 name|periph
 operator|->
 name|unit_number
-argument_list|,
-operator|&
+expr_stmt|;
+name|softc
+operator|->
+name|disk
+operator|->
+name|d_flags
+operator|=
+name|DISKFLAG_NEEDSGIANT
+expr_stmt|;
+name|disk_create
+argument_list|(
 name|softc
 operator|->
 name|disk
 argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
+name|DISK_VERSION
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Add async callbacks for bus reset and 	 * bus device reset calls.  I don't bother 	 * checking if this fails as, in most cases, 	 * the system will function just fine without 	 * them and the only alternative would be to 	 * not attach the device on failure. 	 */
@@ -6693,7 +6709,7 @@ argument_list|,
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_devstat
 argument_list|)
 expr_stmt|;
@@ -6875,7 +6891,7 @@ argument_list|,
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_devstat
 argument_list|)
 expr_stmt|;
@@ -7021,7 +7037,7 @@ argument_list|,
 name|softc
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_devstat
 argument_list|)
 expr_stmt|;

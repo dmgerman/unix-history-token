@@ -12434,13 +12434,13 @@ argument_list|,
 name|disk
 operator|->
 name|ad_disk
-operator|.
+operator|->
 name|d_name
 argument_list|,
 name|disk
 operator|->
 name|ad_disk
-operator|.
+operator|->
 name|d_unit
 argument_list|)
 expr_stmt|;

@@ -258,6 +258,7 @@ name|ad_container
 decl_stmt|;
 name|struct
 name|disk
+modifier|*
 name|ad_disk
 decl_stmt|;
 name|int

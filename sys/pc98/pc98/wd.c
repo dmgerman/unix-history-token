@@ -646,6 +646,7 @@ decl_stmt|;
 comment|/* handle for DMA services */
 name|struct
 name|disk
+modifier|*
 name|disk
 decl_stmt|;
 block|}
@@ -2612,7 +2613,14 @@ comment|/* 			 * Register this media as a disk 			 */
 name|du
 operator|->
 name|disk
-operator|.
+operator|=
+name|disk_alloc
+argument_list|()
+expr_stmt|;
+name|du
+operator|->
+name|disk
+operator|->
 name|d_open
 operator|=
 name|wdopen
@@ -2620,7 +2628,7 @@ expr_stmt|;
 name|du
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_strategy
 operator|=
 name|wdstrategy
@@ -2628,7 +2636,7 @@ expr_stmt|;
 name|du
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_drv1
 operator|=
 name|du
@@ -2636,7 +2644,7 @@ expr_stmt|;
 name|du
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_maxsize
 operator|=
 literal|248
@@ -2646,25 +2654,34 @@ expr_stmt|;
 name|du
 operator|->
 name|disk
-operator|.
+operator|->
 name|d_name
 operator|=
 literal|"wd"
 expr_stmt|;
+name|du
+operator|->
+name|disk
+operator|->
+name|d_unit
+operator|=
+name|lunit
+expr_stmt|;
+name|du
+operator|->
+name|disk
+operator|->
+name|d_flags
+operator|=
+name|DISKFLAG_NEEDSGIANT
+expr_stmt|;
 name|disk_create
 argument_list|(
-name|lunit
-argument_list|,
-operator|&
 name|du
 operator|->
 name|disk
 argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
+name|DISK_VERSION
 argument_list|)
 expr_stmt|;
 block|}
@@ -3727,7 +3744,7 @@ argument|,
 literal|1
 argument|);  	wdsleep(du->dk_ctrlr,
 literal|"wdopn1"
-argument|); 	du->dk_flags |= DKFL_LABELLING; 	du->dk_state = WANTOPEN;  	du->disk.d_sectorsize = du->dk_dd.d_secsize; 	du->disk.d_mediasize = du->dk_dd.d_secperunit * du->dk_dd.d_secsize; 	du->disk.d_fwsectors = du->dk_dd.d_nsectors; 	du->disk.d_fwheads = du->dk_dd.d_ntracks;  	du->dk_flags&= ~DKFL_LABELLING; 	wdsleep(du->dk_ctrlr,
+argument|); 	du->dk_flags |= DKFL_LABELLING; 	du->dk_state = WANTOPEN;  	du->disk->d_sectorsize = du->dk_dd.d_secsize; 	du->disk->d_mediasize = du->dk_dd.d_secperunit * du->dk_dd.d_secsize; 	du->disk->d_fwsectors = du->dk_dd.d_nsectors; 	du->disk->d_fwheads = du->dk_dd.d_ntracks;  	du->dk_flags&= ~DKFL_LABELLING; 	wdsleep(du->dk_ctrlr,
 literal|"wdopn2"
 argument|);  	return
 literal|0

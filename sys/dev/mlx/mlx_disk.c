@@ -813,7 +813,14 @@ expr_stmt|;
 name|sc
 operator|->
 name|mlxd_disk
-operator|.
+operator|=
+name|disk_alloc
+argument_list|()
+expr_stmt|;
+name|sc
+operator|->
+name|mlxd_disk
+operator|->
 name|d_open
 operator|=
 name|mlxd_open
@@ -821,7 +828,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|mlxd_disk
-operator|.
+operator|->
 name|d_close
 operator|=
 name|mlxd_close
@@ -829,7 +836,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|mlxd_disk
-operator|.
+operator|->
 name|d_ioctl
 operator|=
 name|mlxd_ioctl
@@ -837,7 +844,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|mlxd_disk
-operator|.
+operator|->
 name|d_strategy
 operator|=
 name|mlxd_strategy
@@ -845,7 +852,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|mlxd_disk
-operator|.
+operator|->
 name|d_name
 operator|=
 literal|"mlxd"
@@ -853,7 +860,17 @@ expr_stmt|;
 name|sc
 operator|->
 name|mlxd_disk
-operator|.
+operator|->
+name|d_unit
+operator|=
+name|sc
+operator|->
+name|mlxd_unit
+expr_stmt|;
+name|sc
+operator|->
+name|mlxd_disk
+operator|->
 name|d_drv1
 operator|=
 name|sc
@@ -861,7 +878,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|mlxd_disk
-operator|.
+operator|->
 name|d_sectorsize
 operator|=
 name|MLX_BLKSIZE
@@ -869,7 +886,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|mlxd_disk
-operator|.
+operator|->
 name|d_mediasize
 operator|=
 name|MLX_BLKSIZE
@@ -886,7 +903,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|mlxd_disk
-operator|.
+operator|->
 name|d_fwsectors
 operator|=
 name|sc
@@ -898,7 +915,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|mlxd_disk
-operator|.
+operator|->
 name|d_fwheads
 operator|=
 name|sc
@@ -906,6 +923,14 @@ operator|->
 name|mlxd_drive
 operator|->
 name|ms_heads
+expr_stmt|;
+name|sc
+operator|->
+name|mlxd_disk
+operator|->
+name|d_flags
+operator|=
+name|DISKFLAG_NEEDSGIANT
 expr_stmt|;
 comment|/*       * Set maximum I/O size to the lesser of the recommended maximum and the practical      * maximum except on v2 cards where the maximum is set to 8 pages.      */
 if|if
@@ -921,7 +946,7 @@ condition|)
 name|sc
 operator|->
 name|mlxd_disk
-operator|.
+operator|->
 name|d_maxsize
 operator|=
 literal|8
@@ -961,7 +986,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|mlxd_disk
-operator|.
+operator|->
 name|d_maxsize
 operator|=
 name|imin
@@ -976,18 +1001,9 @@ name|disk_create
 argument_list|(
 name|sc
 operator|->
-name|mlxd_unit
-argument_list|,
-operator|&
-name|sc
-operator|->
 name|mlxd_disk
 argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
+name|DISK_VERSION
 argument_list|)
 expr_stmt|;
 return|return
@@ -1029,7 +1045,6 @@ argument_list|)
 expr_stmt|;
 name|disk_destroy
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|mlxd_disk

@@ -79,6 +79,7 @@ decl_stmt|;
 comment|/* head of request queue */
 name|struct
 name|disk
+modifier|*
 name|disk
 decl_stmt|;
 comment|/* disklabel/slice stuff */

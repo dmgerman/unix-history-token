@@ -134,6 +134,9 @@ name|devstat
 modifier|*
 name|d_devstat
 decl_stmt|;
+name|int
+name|d_destroyed
+decl_stmt|;
 comment|/* Shared fields */
 name|u_int
 name|d_flags
@@ -211,7 +214,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|DISKFLAG_NOGIANT
+name|DISKFLAG_NEEDSGIANT
 value|0x1
 end_define
 
@@ -230,27 +233,27 @@ value|0x4
 end_define
 
 begin_function_decl
+name|struct
+name|disk
+modifier|*
+name|disk_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|disk_create
 parameter_list|(
-name|int
-name|unit
-parameter_list|,
 name|struct
 name|disk
 modifier|*
 name|disk
 parameter_list|,
 name|int
-name|flags
-parameter_list|,
-name|void
-modifier|*
-name|unused
-parameter_list|,
-name|void
-modifier|*
-name|unused2
+name|version
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -266,6 +269,20 @@ name|disk
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|DISK_VERSION_00
+value|0x58561059
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISK_VERSION
+value|DISK_VERSION_00
+end_define
 
 begin_endif
 endif|#

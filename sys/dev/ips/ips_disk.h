@@ -159,6 +159,7 @@ name|state
 decl_stmt|;
 name|struct
 name|disk
+modifier|*
 name|ipsd_disk
 decl_stmt|;
 name|ips_softc_t

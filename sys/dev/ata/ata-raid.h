@@ -233,6 +233,7 @@ decl_stmt|;
 comment|/* end of locked area for rebuild */
 name|struct
 name|disk
+modifier|*
 name|disk
 decl_stmt|;
 comment|/* disklabel/slice stuff */

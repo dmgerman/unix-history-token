@@ -184,6 +184,7 @@ decl_stmt|;
 comment|/* capabilities page info */
 name|struct
 name|disk
+modifier|*
 name|disk
 decl_stmt|;
 comment|/* virtual drives */
