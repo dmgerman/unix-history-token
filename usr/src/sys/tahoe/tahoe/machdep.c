@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	1.16.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	1.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"malloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mbuf.h"
 end_include
 
@@ -121,12 +127,6 @@ begin_include
 include|#
 directive|include
 file|"quota.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"malloc.h"
 end_include
 
 begin_include
@@ -278,6 +278,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|int
+name|msgbufmapped
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set when safe to use msgbuf */
+end_comment
+
 begin_comment
 comment|/*  * Machine-dependent startup code  */
 end_comment
@@ -387,6 +397,10 @@ name|TBIA
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|msgbufmapped
+operator|=
+literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3138,95 +3152,6 @@ operator|-=
 literal|1000000
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|physstrat
-argument_list|(
-argument|bp
-argument_list|,
-argument|strat
-argument_list|,
-argument|prio
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-argument_list|(
-operator|*
-name|strat
-argument_list|)
-argument_list|()
-decl_stmt|,
-name|prio
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|int
-name|s
-decl_stmt|;
-call|(
-modifier|*
-name|strat
-call|)
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-comment|/* pageout daemon doesn't wait for pushed pages */
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_DIRTY
-condition|)
-return|return;
-name|s
-operator|=
-name|spl8
-argument_list|()
-expr_stmt|;
-while|while
-condition|(
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_DONE
-operator|)
-operator|==
-literal|0
-condition|)
-name|sleep
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|bp
-argument_list|,
-name|prio
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
