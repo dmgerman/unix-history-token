@@ -1605,7 +1605,6 @@ name|new
 operator|=
 operator|(
 operator|(
-operator|(
 name|old
 operator|&
 operator|~
@@ -1623,7 +1622,6 @@ literal|1
 operator|)
 operator|&
 name|GL_BIT_PENDING
-operator|)
 operator|)
 expr_stmt|;
 block|}
