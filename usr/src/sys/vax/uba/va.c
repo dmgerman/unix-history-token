@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	va.c	4.9	81/03/10	*/
+comment|/*	va.c	4.10	81/07/08	*/
 end_comment
 
 begin_include
@@ -328,17 +328,6 @@ name|NVA
 index|]
 struct|;
 end_struct
-
-begin_decl_stmt
-name|struct
-name|uba_device
-modifier|*
-name|vadinfo
-index|[
-name|NVA
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
