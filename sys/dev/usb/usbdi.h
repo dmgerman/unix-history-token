@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.h,v 1.48 2001/01/21 19:00:06 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.h,v 1.49 2001/01/23 17:04:30 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -992,7 +992,7 @@ begin_struct
 struct|struct
 name|usb_task
 block|{
-name|SIMPLEQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|usb_task
 argument_list|)
@@ -1033,6 +1033,35 @@ name|task
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|usb_rem_task
+parameter_list|(
+name|usbd_device_handle
+name|dev
+parameter_list|,
+name|struct
+name|usb_task
+modifier|*
+name|task
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|usb_init_task
+parameter_list|(
+name|t
+parameter_list|,
+name|f
+parameter_list|,
+name|a
+parameter_list|)
+value|((t)->fun = (f), (t)->arg = (a), (t)->onqueue = 0)
+end_define
 
 begin_struct
 struct|struct
