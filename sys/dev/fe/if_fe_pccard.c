@@ -1150,7 +1150,7 @@ block|{
 block|{
 name|FE_DLCR2
 block|,
-literal|0x10
+literal|0x50
 block|,
 literal|0x00
 block|}
@@ -1188,20 +1188,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Ident register says card is type 0x%x\n"
-argument_list|,
-name|fe_inb
-argument_list|(
-name|sc
-argument_list|,
-name|FE_DLCR7
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/*          * See if C-NET(PC)C is on its address.          */
 if|if
 condition|(
@@ -1213,16 +1199,9 @@ argument_list|,
 name|probe_table
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"simple probe failed\n"
-argument_list|)
-expr_stmt|;
 return|return
 name|ENXIO
 return|;
-block|}
 comment|/* Determine the card type.  */
 name|sc
 operator|->
@@ -1258,16 +1237,9 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Bad ethernet\n"
-argument_list|)
-expr_stmt|;
 return|return
 name|ENXIO
 return|;
-block|}
 return|return
 literal|0
 return|;
