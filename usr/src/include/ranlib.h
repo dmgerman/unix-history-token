@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ranlib.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ranlib.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -43,7 +43,7 @@ name|ranlib
 block|{
 union|union
 block|{
-name|off_t
+name|long
 name|ran_strx
 decl_stmt|;
 comment|/* string table index */
@@ -55,7 +55,7 @@ comment|/* in memory symbol name */
 block|}
 name|ran_un
 union|;
-name|off_t
+name|long
 name|ran_off
 decl_stmt|;
 comment|/* archive file offset */
