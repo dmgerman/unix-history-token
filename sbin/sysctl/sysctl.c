@@ -1521,6 +1521,14 @@ operator|*
 operator|)
 name|p
 decl_stmt|;
+name|int
+name|pageKilo
+init|=
+name|getpagesize
+argument_list|()
+operator|/
+literal|1024
+decl_stmt|;
 if|if
 condition|(
 name|l2
@@ -1553,7 +1561,8 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"\nSystem wide totals computed every five seconds:\n"
+literal|"\nSystem wide totals computed every five seconds:"
+literal|" (values in kilobytes)\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1563,7 +1572,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Processes: (RUNQ:\t %hu Disk Wait: %hu Page Wait: %hu Sleep: %hu)\n"
+literal|"Processes:\t\t(RUNQ: %hu Disk Wait: %hu Page Wait: "
+literal|"%hu Sleep: %hu)\n"
 argument_list|,
 name|v
 operator|->
@@ -1584,63 +1594,117 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Virtual Memory:\t\t (Total: %hu Active %hu)\n"
+literal|"Virtual Memory:\t\t(Total: %luK, Active %lldK)\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|v
 operator|->
 name|t_vm
+operator|/
+literal|1024
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|t_avm
+operator|*
+name|pageKilo
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Real Memory:\t\t (Total: %hu Active %hu)\n"
+literal|"Real Memory:\t\t(Total: %lldK Active %lldK)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|t_rm
+operator|*
+name|pageKilo
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|t_arm
+operator|*
+name|pageKilo
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Shared Virtual Memory:\t (Total: %hu Active: %hu)\n"
+literal|"Shared Virtual Memory:\t(Total: %lldK Active: %lldK)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|t_vmshr
+operator|*
+name|pageKilo
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|t_avmshr
+operator|*
+name|pageKilo
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Shared Real Memory:\t (Total: %hu Active: %hu)\n"
+literal|"Shared Real Memory:\t(Total: %lldK Active: %lldK)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|t_rmshr
+operator|*
+name|pageKilo
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|t_armshr
+operator|*
+name|pageKilo
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Free Memory Pages:\t %hu\n"
+literal|"Free Memory Pages:\t%ldK\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|t_free
+operator|*
+name|pageKilo
 argument_list|)
 expr_stmt|;
 return|return
