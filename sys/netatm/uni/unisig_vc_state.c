@@ -2826,14 +2826,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * No--VPI/VCI must have been specified earlier 		 */
+comment|/* 		 * No--VCI must have been specified earlier 		 */
 if|if
 condition|(
-operator|!
-name|uvp
-operator|->
-name|uv_vpi
-operator|||
 operator|!
 name|uvp
 operator|->
