@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.h	4.4	82/02/21	*/
+comment|/*	if_imphost.h	4.5	82/03/09	*/
 end_comment
 
 begin_comment
@@ -83,7 +83,7 @@ name|hp
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	register struct mbuf *n; \ 	hp->h_qcnt++; \ 	if ((n = hp->h_q) == 0) \ 		hp->h_q = m->m_act = m; \ 	else { \ 		m->m_act = n->m_act; \ 		hp->h_q = n->m_act = m; \ 	} \ }
+value|{ \ 	register struct mbuf *n; \ 	(hp)->h_qcnt++; \ 	if ((n = (hp)->h_q) == 0) \ 		(hp)->h_q = (m)->m_act = (m); \ 	else { \ 		(m)->m_act = n->m_act; \ 		(hp)->h_q = n->m_act = (m); \ 	} \ }
 end_define
 
 begin_define
@@ -95,7 +95,7 @@ name|hp
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	if (m = hp->h_q) { \ 		if (m->m_act == m) \ 			hp->h_q = 0; \ 		else { \ 			m = m->m_act; \ 			hp->h_q->m_act = m->m_act; \ 		} \ 		hp->h_qcnt--; \ 	} \ }
+value|{ \ 	if ((m) = (hp)->h_q) { \ 		if ((m)->m_act == (m)) \ 			(hp)->h_q = 0; \ 		else { \ 			(m) = (m)->m_act; \ 			(hp)->h_q->m_act = (m)->m_act; \ 		} \ 		(hp)->h_qcnt--; \ 		(m)->m_act = 0; \ 	} \ }
 end_define
 
 begin_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.c	4.5	82/02/21	*/
+comment|/*	if_imphost.c	4.6	82/03/09	*/
 end_comment
 
 begin_include
@@ -111,6 +111,12 @@ name|COUNT
 argument_list|(
 name|HOSTLOOKUP
 argument_list|)
+expr_stmt|;
+name|addr
+operator|.
+name|s_lh
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -230,6 +236,12 @@ name|COUNT
 argument_list|(
 name|HOSTENTER
 argument_list|)
+expr_stmt|;
+name|addr
+operator|.
+name|s_lh
+operator|=
+literal|0
 expr_stmt|;
 name|mprev
 operator|=
@@ -566,6 +578,13 @@ name|s_net
 operator|==
 name|net
 condition|)
+block|{
+name|hp
+operator|->
+name|h_refcnt
+operator|=
+literal|0
+expr_stmt|;
 name|hostrelease
 argument_list|(
 name|mtod
@@ -580,6 +599,7 @@ argument_list|,
 name|hp
 argument_list|)
 expr_stmt|;
+block|}
 name|hp
 operator|++
 expr_stmt|;
