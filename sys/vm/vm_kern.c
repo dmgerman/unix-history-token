@@ -240,7 +240,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	kmem_alloc_nofault:  *  *	Same as kmem_alloc_pageable, except that it create a nofault entry.  */
+comment|/*  *	kmem_alloc_nofault:  *  *	Allocate a virtual address range with no underlying object and  *	no initial mapping to physical memory.  Any mapping from this  *	range to physical memory must be explicitly created prior to  *	its use, typically with pmap_qenter().  Any attempt to create  *	a mapping on demand through vm_fault() will result in a panic.   */
 end_comment
 
 begin_function
