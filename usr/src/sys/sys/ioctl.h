@@ -1,69 +1,95 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	6.11 (Berkeley) %G%  */
 end_comment
 
-begin_expr_stmt
-operator|*
-name|Ioctl
-name|definitions
-operator|*
-operator|/
+begin_comment
+comment|/*  * Ioctl definitions  */
+end_comment
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|_IOCTL_
+end_ifndef
+
+begin_define
 define|#
 directive|define
 name|_IOCTL_
+end_define
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|KERNEL
+end_ifdef
+
+begin_include
 include|#
 directive|include
 file|"ttychars.h"
+end_include
+
+begin_include
 include|#
 directive|include
 file|"ttydev.h"
+end_include
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_include
 include|#
 directive|include
 file|<sys/ttychars.h>
+end_include
+
+begin_include
 include|#
 directive|include
 file|<sys/ttydev.h>
+end_include
+
+begin_endif
 endif|#
 directive|endif
-expr|struct
+end_endif
+
+begin_struct
+struct|struct
 name|tchars
 block|{
 name|char
 name|t_intrc
-block|;
+decl_stmt|;
 comment|/* interrupt */
 name|char
 name|t_quitc
-block|;
+decl_stmt|;
 comment|/* quit */
 name|char
 name|t_startc
-block|;
+decl_stmt|;
 comment|/* start output */
 name|char
 name|t_stopc
-block|;
+decl_stmt|;
 comment|/* stop output */
 name|char
 name|t_eofc
-block|;
+decl_stmt|;
 comment|/* end-of-file */
 name|char
 name|t_brkc
-block|;
+decl_stmt|;
 comment|/* input delimiter (like nl) */
 block|}
-expr_stmt|;
-end_expr_stmt
+struct|;
+end_struct
 
 begin_struct
 struct|struct
