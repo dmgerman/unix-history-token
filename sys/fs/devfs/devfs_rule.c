@@ -2632,6 +2632,14 @@ operator|->
 name|d_type
 operator|==
 name|DT_LNK
+operator|||
+name|de
+operator|->
+name|de_dirent
+operator|->
+name|d_type
+operator|==
+name|DT_DIR
 condition|)
 name|pname
 operator|=
