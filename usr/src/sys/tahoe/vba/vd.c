@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)vd.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)vd.c	1.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4952,6 +4952,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|unit
+init|=
+name|vdunit
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
+decl_stmt|;
 name|struct
 name|disklabel
 modifier|*
@@ -4960,12 +4970,7 @@ init|=
 operator|&
 name|dklabel
 index|[
-name|vdunit
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
+name|unit
 index|]
 decl_stmt|;
 name|int
