@@ -1058,10 +1058,8 @@ literal|0
 init|;
 name|i
 operator|<
-name|ni
+name|nrs
 operator|->
-name|ni_rates
-operator|.
 name|rs_nrates
 condition|;
 control|)
@@ -1265,8 +1263,16 @@ operator|->
 name|rs_nrates
 condition|)
 block|{
+comment|/* 				 * A rate in the node's rate set is not 				 * supported.  If this is a basic rate and we 				 * are operating as an AP then this is an error. 				 * Otherwise we just discard/ignore the rate. 				 * Note that this is important for 11b stations 				 * when they want to associate with an 11g AP. 				 */
 if|if
 condition|(
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_HOSTAP
+operator|&&
+operator|(
 name|nrs
 operator|->
 name|rs_rates
@@ -1275,6 +1281,7 @@ name|i
 index|]
 operator|&
 name|IEEE80211_RATE_BASIC
+operator|)
 condition|)
 name|error
 operator|++
