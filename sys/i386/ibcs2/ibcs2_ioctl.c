@@ -2232,12 +2232,9 @@ name|p
 operator|->
 name|p_pid
 operator|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|fd
-argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2286,12 +2283,9 @@ return|;
 block|}
 switch|switch
 condition|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 condition|)
 block|{
 case|case
@@ -2355,12 +2349,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|==
 name|IBCS2_TCGETA
 condition|)
@@ -2384,12 +2375,9 @@ operator|)
 operator|&
 name|st
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|data
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2431,12 +2419,9 @@ operator|)
 operator|&
 name|sts
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|data
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2477,12 +2462,9 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|data
-argument_list|)
 argument_list|,
 operator|(
 name|caddr_t
@@ -2551,12 +2533,9 @@ name|p
 operator|->
 name|p_pid
 operator|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|fd
-argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2596,12 +2575,9 @@ name|fo_ioctl
 argument_list|(
 name|fp
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|-
 name|IBCS2_TCSETA
 operator|+
@@ -2647,12 +2623,9 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|data
-argument_list|)
 argument_list|,
 operator|(
 name|caddr_t
@@ -2685,12 +2658,9 @@ name|fo_ioctl
 argument_list|(
 name|fp
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|-
 name|IBCS2_XCSETA
 operator|+
@@ -2736,12 +2706,9 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|data
-argument_list|)
 argument_list|,
 operator|(
 name|caddr_t
@@ -2774,12 +2741,9 @@ name|fo_ioctl
 argument_list|(
 name|fp
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|-
 name|IBCS2_OXCSETA
 operator|+
@@ -2828,12 +2792,9 @@ condition|(
 operator|(
 name|int
 operator|)
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|data
-argument_list|)
 condition|)
 block|{
 case|case
@@ -2927,12 +2888,9 @@ condition|(
 operator|(
 name|int
 operator|)
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|data
-argument_list|)
 condition|)
 block|{
 case|case
@@ -2999,12 +2957,9 @@ block|}
 case|case
 name|IBCS2_TIOCGWINSZ
 case|:
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|TIOCGWINSZ
 expr_stmt|;
@@ -3026,12 +2981,9 @@ break|break;
 case|case
 name|IBCS2_TIOCSWINSZ
 case|:
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|TIOCSWINSZ
 expr_stmt|;
@@ -3085,12 +3037,9 @@ operator|)
 operator|&
 name|pg_id
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|data
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3109,33 +3058,22 @@ name|struct
 name|setpgid_args
 name|sa
 decl_stmt|;
-name|SCARG
-argument_list|(
-operator|&
 name|sa
-argument_list|,
+operator|.
 name|pid
-argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-name|SCARG
-argument_list|(
-operator|&
 name|sa
-argument_list|,
+operator|.
 name|pgid
-argument_list|)
 operator|=
 operator|(
 name|int
 operator|)
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|data
-argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -3266,12 +3204,9 @@ operator|)
 operator|&
 name|ibcs2_jwinsize
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|data
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3286,16 +3221,13 @@ case|case
 name|IBCS2_KDGKBMODE
 case|:
 comment|/* get keyboard translation mode */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|KDGKBMODE
 expr_stmt|;
-comment|/* printf("ioctl KDGKBMODE = %x\n", SCARG(uap, cmd));*/
+comment|/* printf("ioctl KDGKBMODE = %x\n", uap->cmd);*/
 name|error
 operator|=
 name|ioctl
@@ -3315,12 +3247,9 @@ case|case
 name|IBCS2_KDSKBMODE
 case|:
 comment|/* set keyboard translation mode */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|KDSKBMODE
 expr_stmt|;
@@ -3343,12 +3272,9 @@ case|case
 name|IBCS2_KDMKTONE
 case|:
 comment|/* sound tone */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|KDMKTONE
 expr_stmt|;
@@ -3371,12 +3297,9 @@ case|case
 name|IBCS2_KDGETMODE
 case|:
 comment|/* get text/graphics mode */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|KDGETMODE
 expr_stmt|;
@@ -3399,12 +3322,9 @@ case|case
 name|IBCS2_KDSETMODE
 case|:
 comment|/* set text/graphics mode */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|KDSETMODE
 expr_stmt|;
@@ -3427,12 +3347,9 @@ case|case
 name|IBCS2_KDSBORDER
 case|:
 comment|/* set ega color border */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|KDSBORDER
 expr_stmt|;
@@ -3454,12 +3371,9 @@ break|break;
 case|case
 name|IBCS2_KDGKBSTATE
 case|:
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|KDGKBSTATE
 expr_stmt|;
@@ -3481,12 +3395,9 @@ break|break;
 case|case
 name|IBCS2_KDSETRAD
 case|:
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|KDSETRAD
 expr_stmt|;
@@ -3509,12 +3420,9 @@ case|case
 name|IBCS2_KDENABIO
 case|:
 comment|/* enable direct I/O to ports */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|KDENABIO
 expr_stmt|;
@@ -3537,12 +3445,9 @@ case|case
 name|IBCS2_KDDISABIO
 case|:
 comment|/* disable direct I/O to ports */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|KDDISABIO
 expr_stmt|;
@@ -3565,12 +3470,9 @@ case|case
 name|IBCS2_KIOCSOUND
 case|:
 comment|/* start sound generation */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|KIOCSOUND
 expr_stmt|;
@@ -3593,12 +3495,9 @@ case|case
 name|IBCS2_KDGKBTYPE
 case|:
 comment|/* get keyboard type */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|KDGKBTYPE
 expr_stmt|;
@@ -3621,12 +3520,9 @@ case|case
 name|IBCS2_KDGETLED
 case|:
 comment|/* get keyboard LED status */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|KDGETLED
 expr_stmt|;
@@ -3649,12 +3545,9 @@ case|case
 name|IBCS2_KDSETLED
 case|:
 comment|/* set keyboard LED status */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|KDSETLED
 expr_stmt|;
@@ -3678,12 +3571,9 @@ case|case
 name|IBCS2_GETFKEY
 case|:
 comment|/* Get function key */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|GETFKEY
 expr_stmt|;
@@ -3706,12 +3596,9 @@ case|case
 name|IBCS2_SETFKEY
 case|:
 comment|/* Set function key */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|SETFKEY
 expr_stmt|;
@@ -3734,12 +3621,9 @@ case|case
 name|IBCS2_GIO_SCRNMAP
 case|:
 comment|/* Get screen output map table */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|GIO_SCRNMAP
 expr_stmt|;
@@ -3762,12 +3646,9 @@ case|case
 name|IBCS2_PIO_SCRNMAP
 case|:
 comment|/* Set screen output map table */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|PIO_SCRNMAP
 expr_stmt|;
@@ -3790,12 +3671,9 @@ case|case
 name|IBCS2_GIO_KEYMAP
 case|:
 comment|/* Get keyboard map table */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|GIO_KEYMAP
 expr_stmt|;
@@ -3818,12 +3696,9 @@ case|case
 name|IBCS2_PIO_KEYMAP
 case|:
 comment|/* Set keyboard map table */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|PIO_KEYMAP
 expr_stmt|;
@@ -3868,12 +3743,9 @@ case|case
 name|IBCS2_I_NREAD
 case|:
 comment|/* STREAMS */
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|=
 name|FIONREAD
 expr_stmt|;
@@ -3904,12 +3776,9 @@ name|proc
 operator|->
 name|p_pid
 operator|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

@@ -362,7 +362,7 @@ name|td
 decl_stmt|;
 name|struct
 name|acct_args
-comment|/* { 		syscallarg(char *) path; 	} */
+comment|/* { 		char *path; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -402,12 +402,9 @@ expr_stmt|;
 comment|/* 	 * If accounting is to be started to a file, open that file for 	 * appending and make sure it's a 'normal'. 	 */
 if|if
 condition|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 operator|!=
 name|NULL
 condition|)
@@ -423,12 +420,9 @@ name|NOFOLLOW
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -669,12 +663,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 operator|==
 name|NULL
 condition|)

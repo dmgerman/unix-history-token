@@ -1325,7 +1325,7 @@ name|td
 decl_stmt|;
 name|struct
 name|nmount_args
-comment|/* { 		syscallarg(struct iovec *) iovp; 		syscallarg(unsigned int) iovcnt; 		syscallarg(int) flags; 	} */
+comment|/* { 		struct iovec *iovp; 		unsigned int iovcnt; 		int flags; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -1363,12 +1363,9 @@ name|iovcnt
 decl_stmt|;
 name|iovcnt
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|iovcnt
-argument_list|)
 expr_stmt|;
 name|iovlen
 operator|=
@@ -1523,12 +1520,9 @@ name|vfs_nmount
 argument_list|(
 name|td
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|flags
-argument_list|)
 argument_list|,
 operator|&
 name|auio
@@ -3735,7 +3729,7 @@ name|td
 decl_stmt|;
 name|struct
 name|mount_args
-comment|/* { 		syscallarg(char *) type; 		syscallarg(char *) path; 		syscallarg(int) flags; 		syscallarg(caddr_t) data; 	} */
+comment|/* { 		char *type; 		char *path; 		int flags; 		caddr_t data; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -3778,12 +3772,9 @@ name|error
 operator|=
 name|copyinstr
 argument_list|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|type
-argument_list|)
 argument_list|,
 name|fstype
 argument_list|,
@@ -3802,12 +3793,9 @@ name|error
 operator|=
 name|copyinstr
 argument_list|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|fspath
 argument_list|,
@@ -3832,19 +3820,13 @@ name|fstype
 argument_list|,
 name|fspath
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|flags
-argument_list|)
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|data
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -5668,7 +5650,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|unmount_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) flags; 	} */
+comment|/* { 		char *path; 		int flags; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -5704,12 +5686,9 @@ name|LOCKLEAF
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -5850,12 +5829,9 @@ name|dounmount
 argument_list|(
 name|mp
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|flags
-argument_list|)
 argument_list|,
 name|td
 argument_list|)

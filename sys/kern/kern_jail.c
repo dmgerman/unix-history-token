@@ -244,7 +244,7 @@ name|td
 decl_stmt|;
 name|struct
 name|jail_args
-comment|/* { 		syscallarg(struct jail *) jail; 	} */
+comment|/* { 		struct jail *jail; 	} */
 modifier|*
 name|uap
 decl_stmt|;

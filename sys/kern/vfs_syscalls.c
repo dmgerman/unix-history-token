@@ -784,7 +784,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|quotactl_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) cmd; 		syscallarg(int) uid; 		syscallarg(caddr_t) arg; 	} */
+comment|/* { 		char *path; 		int cmd; 		int uid; 		caddr_t arg; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -829,12 +829,9 @@ name|FOLLOW
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -904,26 +901,17 @@ name|VFS_QUOTACTL
 argument_list|(
 name|mp
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|cmd
-argument_list|)
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|uid
-argument_list|)
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|arg
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -993,7 +981,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|statfs_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(struct statfs *) buf; 	} */
+comment|/* { 		char *path; 		struct statfs *buf; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -1032,12 +1020,9 @@ name|FOLLOW
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -1199,12 +1184,9 @@ name|copyout
 argument_list|(
 name|sp
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|buf
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1268,7 +1250,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|fstatfs_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(struct statfs *) buf; 	} */
+comment|/* { 		int fd; 		struct statfs *buf; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -1309,12 +1291,9 @@ name|td_proc
 operator|->
 name|p_fd
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|fd
-argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -1476,12 +1455,9 @@ name|copyout
 argument_list|(
 name|sp
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|buf
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1544,7 +1520,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|getfsstat_args
-comment|/* { 		syscallarg(struct statfs *) buf; 		syscallarg(long) bufsize; 		syscallarg(int) flags; 	} */
+comment|/* { 		struct statfs *buf; 		long bufsize; 		int flags; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -1576,12 +1552,9 @@ name|error
 decl_stmt|;
 name|maxcount
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|bufsize
-argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
@@ -1594,12 +1567,9 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|buf
-argument_list|)
 expr_stmt|;
 name|count
 operator|=
@@ -1707,12 +1677,9 @@ if|if
 condition|(
 operator|(
 operator|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|flags
-argument_list|)
 operator|&
 operator|(
 name|MNT_LAZY
@@ -1724,12 +1691,9 @@ operator|==
 literal|0
 operator|||
 operator|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|flags
-argument_list|)
 operator|&
 name|MNT_WAIT
 operator|)
@@ -1937,7 +1901,7 @@ name|td
 decl_stmt|;
 name|struct
 name|fchdir_args
-comment|/* { 		syscallarg(int) fd; 	} */
+comment|/* { 		int fd; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -1987,12 +1951,9 @@ name|getvnode
 argument_list|(
 name|fdp
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|fd
-argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -2260,7 +2221,7 @@ name|td
 decl_stmt|;
 name|struct
 name|chdir_args
-comment|/* { 		syscallarg(char *) path; 	} */
+comment|/* { 		char *path; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -2600,7 +2561,7 @@ name|td
 decl_stmt|;
 name|struct
 name|chroot_args
-comment|/* { 		syscallarg(char *) path; 	} */
+comment|/* { 		char *path; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -2662,12 +2623,9 @@ name|LOCKLEAF
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -3042,7 +3000,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|open_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) flags; 		syscallarg(int) mode; 	} */
+comment|/* { 		char *path; 		int flags; 		int mode; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -3973,53 +3931,35 @@ decl_stmt|;
 specifier|register
 name|struct
 name|ocreat_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) mode; 	} */
+comment|/* { 		char *path; 		int mode; 	} */
 modifier|*
 name|uap
 decl_stmt|;
 block|{
 name|struct
 name|open_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) flags; 		syscallarg(int) mode; 	} */
+comment|/* { 		char *path; 		int flags; 		int mode; 	} */
 name|nuap
 decl_stmt|;
-name|SCARG
-argument_list|(
-operator|&
 name|nuap
-argument_list|,
+operator|.
 name|path
-argument_list|)
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 expr_stmt|;
-name|SCARG
-argument_list|(
-operator|&
 name|nuap
-argument_list|,
+operator|.
 name|mode
-argument_list|)
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|mode
-argument_list|)
 expr_stmt|;
-name|SCARG
-argument_list|(
-operator|&
 name|nuap
-argument_list|,
+operator|.
 name|flags
-argument_list|)
 operator|=
 name|O_WRONLY
 operator||
@@ -4103,7 +4043,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|mknod_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) mode; 		syscallarg(int) dev; 	} */
+comment|/* { 		char *path; 		int mode; 		int dev; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -4673,7 +4613,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|mkfifo_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) mode; 	} */
+comment|/* { 		char *path; 		int mode; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -5094,7 +5034,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|link_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(char *) link; 	} */
+comment|/* { 		char *path; 		char *link; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -5531,7 +5471,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|symlink_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(char *) link; 	} */
+comment|/* { 		char *path; 		char *link; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -6007,7 +5947,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|undelete_args
-comment|/* { 		syscallarg(char *) path; 	} */
+comment|/* { 		char *path; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -6042,12 +5982,9 @@ name|DOWHITEOUT
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -6307,7 +6244,7 @@ name|td
 decl_stmt|;
 name|struct
 name|unlink_args
-comment|/* { 		syscallarg(char *) path; 	} */
+comment|/* { 		char *path; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -6318,12 +6255,9 @@ name|kern_unlink
 argument_list|(
 name|td
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|UIO_USERSPACE
 argument_list|)
@@ -6718,7 +6652,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|lseek_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(int) pad; 		syscallarg(off_t) offset; 		syscallarg(int) whence; 	} */
+comment|/* { 		int fd; 		int pad; 		off_t offset; 		int whence; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -6824,21 +6758,15 @@ operator|)
 expr_stmt|;
 name|offset
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|offset
-argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|whence
-argument_list|)
 condition|)
 block|{
 case|case
@@ -7095,63 +7023,42 @@ decl_stmt|;
 specifier|register
 name|struct
 name|olseek_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(long) offset; 		syscallarg(int) whence; 	} */
+comment|/* { 		int fd; 		long offset; 		int whence; 	} */
 modifier|*
 name|uap
 decl_stmt|;
 block|{
 name|struct
 name|lseek_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(int) pad; 		syscallarg(off_t) offset; 		syscallarg(int) whence; 	} */
+comment|/* { 		int fd; 		int pad; 		off_t offset; 		int whence; 	} */
 name|nuap
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|SCARG
-argument_list|(
-operator|&
 name|nuap
-argument_list|,
+operator|.
 name|fd
-argument_list|)
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|fd
-argument_list|)
 expr_stmt|;
-name|SCARG
-argument_list|(
-operator|&
 name|nuap
-argument_list|,
+operator|.
 name|offset
-argument_list|)
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|offset
-argument_list|)
 expr_stmt|;
-name|SCARG
-argument_list|(
-operator|&
 name|nuap
-argument_list|,
+operator|.
 name|whence
-argument_list|)
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|whence
-argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -7379,7 +7286,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|access_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) flags; 	} */
+comment|/* { 		char *path; 		int flags; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -7622,7 +7529,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|eaccess_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) flags; 	} */
+comment|/* { 		char *path; 		int flags; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -7654,12 +7561,9 @@ name|NOOBJ
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -7695,12 +7599,9 @@ name|vn_access
 argument_list|(
 name|vp
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|flags
-argument_list|)
 argument_list|,
 name|td
 operator|->
@@ -7796,7 +7697,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|ostat_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(struct ostat *) ub; 	} */
+comment|/* { 		char *path; 		struct ostat *ub; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -7831,12 +7732,9 @@ name|NOOBJ
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -7920,12 +7818,9 @@ argument_list|(
 operator|&
 name|osb
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|ub
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7993,7 +7888,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|olstat_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(struct ostat *) ub; 	} */
+comment|/* { 		char *path; 		struct ostat *ub; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -8033,12 +7928,9 @@ name|NOOBJ
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -8124,12 +8016,9 @@ argument_list|(
 operator|&
 name|osb
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|ub
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -8373,7 +8262,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|stat_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(struct stat *) ub; 	} */
+comment|/* { 		char *path; 		struct stat *ub; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -8409,12 +8298,9 @@ name|NOOBJ
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -8436,12 +8322,9 @@ name|NOOBJ
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -8518,12 +8401,9 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|ub
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -8591,7 +8471,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|lstat_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(struct stat *) ub; 	} */
+comment|/* { 		char *path; 		struct stat *ub; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -8627,12 +8507,9 @@ name|NOOBJ
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -8709,12 +8586,9 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|ub
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -8941,7 +8815,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|nstat_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(struct nstat *) ub; 	} */
+comment|/* { 		char *path; 		struct nstat *ub; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -8976,12 +8850,9 @@ name|NOOBJ
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -9065,12 +8936,9 @@ argument_list|(
 operator|&
 name|nsb
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|ub
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -9138,7 +9006,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|nlstat_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(struct nstat *) ub; 	} */
+comment|/* { 		char *path; 		struct nstat *ub; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -9178,12 +9046,9 @@ name|NOOBJ
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -9269,12 +9134,9 @@ argument_list|(
 operator|&
 name|nsb
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|ub
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -9340,7 +9202,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|pathconf_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) name; 	} */
+comment|/* { 		char *path; 		int name; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -9367,12 +9229,9 @@ name|NOOBJ
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -9509,7 +9368,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|readlink_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(char *) buf; 		syscallarg(int) count; 	} */
+comment|/* { 		char *path; 		char *buf; 		int count; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -10046,7 +9905,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|chflags_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) flags; 	} */
+comment|/* { 		char *path; 		int flags; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -10069,12 +9928,9 @@ name|FOLLOW
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -10116,12 +9972,9 @@ name|nd
 operator|.
 name|ni_vp
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|flags
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -10157,7 +10010,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|lchflags_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) flags; 	} */
+comment|/* { 		char *path; 		int flags; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -10180,12 +10033,9 @@ name|NOFOLLOW
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -10227,12 +10077,9 @@ name|nd
 operator|.
 name|ni_vp
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|flags
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -10297,7 +10144,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|fchflags_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(int) flags; 	} */
+comment|/* { 		int fd; 		int flags; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -10323,12 +10170,9 @@ name|td_proc
 operator|->
 name|p_fd
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|fd
-argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -10357,12 +10201,9 @@ name|fp
 operator|->
 name|f_data
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|flags
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|fdrop
@@ -10596,7 +10437,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|chmod_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) mode; 	} */
+comment|/* { 		char *path; 		int mode; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -10769,7 +10610,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|lchmod_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) mode; 	} */
+comment|/* { 		char *path; 		int mode; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -10792,12 +10633,9 @@ name|NOFOLLOW
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -10839,12 +10677,9 @@ name|nd
 operator|.
 name|ni_vp
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|mode
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -10909,7 +10744,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|fchmod_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(int) mode; 	} */
+comment|/* { 		int fd; 		int mode; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -10940,12 +10775,9 @@ name|td_proc
 operator|->
 name|p_fd
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|fd
-argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -10985,12 +10817,9 @@ name|fp
 operator|->
 name|f_data
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|mode
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|fdrop
@@ -11240,7 +11069,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|chown_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) uid; 		syscallarg(int) gid; 	} */
+comment|/* { 		char *path; 		int uid; 		int gid; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -11427,7 +11256,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|lchown_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) uid; 		syscallarg(int) gid; 	} */
+comment|/* { 		char *path; 		int uid; 		int gid; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -11613,7 +11442,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|fchown_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(int) uid; 		syscallarg(int) gid; 	} */
+comment|/* { 		int fd; 		int uid; 		int gid; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -11644,12 +11473,9 @@ name|td_proc
 operator|->
 name|p_fd
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|fd
-argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -11689,19 +11515,13 @@ name|fp
 operator|->
 name|f_data
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|uid
-argument_list|)
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|gid
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|fdrop
@@ -12222,7 +12042,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|utimes_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(struct timeval *) tptr; 	} */
+comment|/* { 		char *path; 		struct timeval *tptr; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -12442,7 +12262,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|lutimes_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(struct timeval *) tptr; 	} */
+comment|/* { 		char *path; 		struct timeval *tptr; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -12661,7 +12481,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|futimes_args
-comment|/* { 		syscallarg(int ) fd; 		syscallarg(struct timeval *) tptr; 	} */
+comment|/* { 		int  fd; 		struct timeval *tptr; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -12865,7 +12685,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|truncate_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) pad; 		syscallarg(off_t) length; 	} */
+comment|/* { 		char *path; 		int pad; 		off_t length; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -13218,7 +13038,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|ftruncate_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(int) pad; 		syscallarg(off_t) length; 	} */
+comment|/* { 		int fd; 		int pad; 		off_t length; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -13271,12 +13091,9 @@ name|td_proc
 operator|->
 name|p_fd
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|fd
-argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -13448,12 +13265,9 @@ name|vattr
 operator|.
 name|va_size
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|length
-argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -13565,45 +13379,31 @@ decl_stmt|;
 specifier|register
 name|struct
 name|otruncate_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(long) length; 	} */
+comment|/* { 		char *path; 		long length; 	} */
 modifier|*
 name|uap
 decl_stmt|;
 block|{
 name|struct
 name|truncate_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) pad; 		syscallarg(off_t) length; 	} */
+comment|/* { 		char *path; 		int pad; 		off_t length; 	} */
 name|nuap
 decl_stmt|;
-name|SCARG
-argument_list|(
-operator|&
 name|nuap
-argument_list|,
+operator|.
 name|path
-argument_list|)
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 expr_stmt|;
-name|SCARG
-argument_list|(
-operator|&
 name|nuap
-argument_list|,
+operator|.
 name|length
-argument_list|)
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|length
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -13668,45 +13468,31 @@ decl_stmt|;
 specifier|register
 name|struct
 name|oftruncate_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(long) length; 	} */
+comment|/* { 		int fd; 		long length; 	} */
 modifier|*
 name|uap
 decl_stmt|;
 block|{
 name|struct
 name|ftruncate_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(int) pad; 		syscallarg(off_t) length; 	} */
+comment|/* { 		int fd; 		int pad; 		off_t length; 	} */
 name|nuap
 decl_stmt|;
-name|SCARG
-argument_list|(
-operator|&
 name|nuap
-argument_list|,
+operator|.
 name|fd
-argument_list|)
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|fd
-argument_list|)
 expr_stmt|;
-name|SCARG
-argument_list|(
-operator|&
 name|nuap
-argument_list|,
+operator|.
 name|length
-argument_list|)
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|length
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -13776,7 +13562,7 @@ name|td
 decl_stmt|;
 name|struct
 name|fsync_args
-comment|/* { 		syscallarg(int) fd; 	} */
+comment|/* { 		int fd; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -13817,12 +13603,9 @@ name|td_proc
 operator|->
 name|p_fd
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|fd
-argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -14046,7 +13829,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|rename_args
-comment|/* { 		syscallarg(char *) from; 		syscallarg(char *) to; 	} */
+comment|/* { 		char *from; 		char *to; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -14816,7 +14599,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|mkdir_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) mode; 	} */
+comment|/* { 		char *path; 		int mode; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -15281,7 +15064,7 @@ name|td
 decl_stmt|;
 name|struct
 name|rmdir_args
-comment|/* { 		syscallarg(char *) path; 	} */
+comment|/* { 		char *path; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -15727,7 +15510,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|ogetdirentries_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(char *) buf; 		syscallarg(u_int) count; 		syscallarg(long *) basep; 	} */
+comment|/* { 		int fd; 		char *buf; 		u_int count; 		long *basep; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -15778,12 +15561,9 @@ decl_stmt|;
 comment|/* XXX arbitrary sanity limit on `count'. */
 if|if
 condition|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|count
-argument_list|)
 operator|>
 literal|64
 operator|*
@@ -15807,12 +15587,9 @@ name|td_proc
 operator|->
 name|p_fd
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|fd
-argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -15891,23 +15668,17 @@ name|aiov
 operator|.
 name|iov_base
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|buf
-argument_list|)
 expr_stmt|;
 name|aiov
 operator|.
 name|iov_len
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|count
-argument_list|)
 expr_stmt|;
 name|auio
 operator|.
@@ -15944,12 +15715,9 @@ name|auio
 operator|.
 name|uio_resid
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|count
-argument_list|)
 expr_stmt|;
 name|vn_lock
 argument_list|(
@@ -16088,12 +15856,9 @@ name|kiov
 operator|.
 name|iov_len
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|count
-argument_list|)
 expr_stmt|;
 name|MALLOC
 argument_list|(
@@ -16101,12 +15866,9 @@ name|dirbuf
 argument_list|,
 name|caddr_t
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|count
-argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
@@ -16157,12 +15919,9 @@ condition|)
 block|{
 name|readcnt
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|count
-argument_list|)
 operator|-
 name|kuio
 operator|.
@@ -16325,12 +16084,9 @@ return|;
 block|}
 if|if
 condition|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|count
-argument_list|)
 operator|==
 name|auio
 operator|.
@@ -16474,12 +16230,9 @@ argument_list|(
 operator|&
 name|loff
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|basep
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -16501,12 +16254,9 @@ index|[
 literal|0
 index|]
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|count
-argument_list|)
 operator|-
 name|auio
 operator|.
@@ -16582,7 +16332,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|getdirentries_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(char *) buf; 		syscallarg(u_int) count; 		syscallarg(long *) basep; 	} */
+comment|/* { 		int fd; 		char *buf; 		u_int count; 		long *basep; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -16626,12 +16376,9 @@ name|td_proc
 operator|->
 name|p_fd
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|fd
-argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -16710,23 +16457,17 @@ name|aiov
 operator|.
 name|iov_base
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|buf
-argument_list|)
 expr_stmt|;
 name|aiov
 operator|.
 name|iov_len
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|count
-argument_list|)
 expr_stmt|;
 name|auio
 operator|.
@@ -16763,12 +16504,9 @@ name|auio
 operator|.
 name|uio_resid
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|count
-argument_list|)
 expr_stmt|;
 comment|/* vn_lock(vp, LK_SHARED | LK_RETRY, td); */
 name|vn_lock
@@ -16872,12 +16610,9 @@ return|;
 block|}
 if|if
 condition|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|count
-argument_list|)
 operator|==
 name|auio
 operator|.
@@ -17016,12 +16751,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|basep
-argument_list|)
 operator|!=
 name|NULL
 condition|)
@@ -17033,12 +16765,9 @@ argument_list|(
 operator|&
 name|loff
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|basep
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -17054,12 +16783,9 @@ index|[
 literal|0
 index|]
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|count
-argument_list|)
 operator|-
 name|auio
 operator|.
@@ -17125,7 +16851,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|getdents_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(char *) buf; 		syscallarg(u_int) count; 	} */
+comment|/* { 		int fd; 		char *buf; 		u_int count; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -17217,7 +16943,7 @@ name|td
 decl_stmt|;
 name|struct
 name|umask_args
-comment|/* { 		syscallarg(int) newmask; 	} */
+comment|/* { 		int newmask; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -17260,12 +16986,9 @@ name|fdp
 operator|->
 name|fd_cmask
 operator|=
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|newmask
-argument_list|)
 operator|&
 name|ALLPERMS
 expr_stmt|;
@@ -17333,7 +17056,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|revoke_args
-comment|/* { 		syscallarg(char *) path; 	} */
+comment|/* { 		char *path; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -17372,12 +17095,9 @@ name|LOCKLEAF
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|path
-argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -17997,7 +17717,7 @@ name|td
 decl_stmt|;
 name|struct
 name|fhopen_args
-comment|/* { 		syscallarg(const struct fhandle *) u_fhp; 		syscallarg(int) flags; 	} */
+comment|/* { 		const struct fhandle *u_fhp; 		int flags; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -18094,12 +17814,9 @@ name|fmode
 operator|=
 name|FFLAGS
 argument_list|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|flags
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* why not allow a non-read/write open for our lockd? */
@@ -18134,12 +17851,9 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|u_fhp
-argument_list|)
 argument_list|,
 operator|&
 name|fhp
@@ -18958,7 +18672,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|fhstat_args
-comment|/* { 		syscallarg(struct fhandle *) u_fhp; 		syscallarg(struct stat *) sb; 	} */
+comment|/* { 		struct fhandle *u_fhp; 		struct stat *sb; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -19004,12 +18718,9 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|u_fhp
-argument_list|)
 argument_list|,
 operator|&
 name|fh
@@ -19113,12 +18824,9 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|sb
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -19182,7 +18890,7 @@ name|td
 decl_stmt|;
 name|struct
 name|fhstatfs_args
-comment|/* { 		syscallarg(struct fhandle) *u_fhp; 		syscallarg(struct statfs) *buf; 	} */
+comment|/* { 		struct fhandle *u_fhp; 		struct statfs *buf; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -19236,12 +18944,9 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|u_fhp
-argument_list|)
 argument_list|,
 operator|&
 name|fh
@@ -19433,12 +19138,9 @@ name|copyout
 argument_list|(
 name|sp
 argument_list|,
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|buf
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -19470,7 +19172,7 @@ name|td
 decl_stmt|;
 name|struct
 name|extattrctl_args
-comment|/* { 		syscallarg(const char *) path; 		syscallarg(int) cmd; 		syscallarg(const char *) filename; 		syscallarg(int) attrnamespace; 		syscallarg(const char *) attrname; 	} */
+comment|/* { 		const char *path; 		int cmd; 		const char *filename; 		int attrnamespace; 		const char *attrname; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -20040,7 +19742,7 @@ name|td
 decl_stmt|;
 name|struct
 name|extattr_set_fd_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(int) attrnamespace; 		syscallarg(const char *) attrname; 		syscallarg(void *) data; 		syscallarg(size_t) nbytes; 	} */
+comment|/* { 		int fd; 		int attrnamespace; 		const char *attrname; 		void *data; 		size_t nbytes; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -20170,7 +19872,7 @@ name|td
 decl_stmt|;
 name|struct
 name|extattr_set_file_args
-comment|/* { 		syscallarg(const char *) path; 		syscallarg(int) attrnamespace; 		syscallarg(const char *) attrname; 		syscallarg(void *) data; 		syscallarg(size_t) nbytes; 	} */
+comment|/* { 		const char *path; 		int attrnamespace; 		const char *attrname; 		void *data; 		size_t nbytes; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -20310,7 +20012,7 @@ name|td
 decl_stmt|;
 name|struct
 name|extattr_set_link_args
-comment|/* { 		syscallarg(const char *) path; 		syscallarg(int) attrnamespace; 		syscallarg(const char *) attrname; 		syscallarg(void *) data; 		syscallarg(size_t) nbytes; 	} */
+comment|/* { 		const char *path; 		int attrnamespace; 		const char *attrname; 		void *data; 		size_t nbytes; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -20735,7 +20437,7 @@ name|td
 decl_stmt|;
 name|struct
 name|extattr_get_fd_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(int) attrnamespace; 		syscallarg(const char *) attrname; 		syscallarg(void *) data; 		syscallarg(size_t) nbytes; 	} */
+comment|/* { 		int fd; 		int attrnamespace; 		const char *attrname; 		void *data; 		size_t nbytes; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -20865,7 +20567,7 @@ name|td
 decl_stmt|;
 name|struct
 name|extattr_get_file_args
-comment|/* { 		syscallarg(const char *) path; 		syscallarg(int) attrnamespace; 		syscallarg(const char *) attrname; 		syscallarg(void *) data; 		syscallarg(size_t) nbytes; 	} */
+comment|/* { 		const char *path; 		int attrnamespace; 		const char *attrname; 		void *data; 		size_t nbytes; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -21005,7 +20707,7 @@ name|td
 decl_stmt|;
 name|struct
 name|extattr_get_link_args
-comment|/* { 		syscallarg(const char *) path; 		syscallarg(int) attrnamespace; 		syscallarg(const char *) attrname; 		syscallarg(void *) data; 		syscallarg(size_t) nbytes; 	} */
+comment|/* { 		const char *path; 		int attrnamespace; 		const char *attrname; 		void *data; 		size_t nbytes; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -21305,7 +21007,7 @@ name|td
 decl_stmt|;
 name|struct
 name|extattr_delete_fd_args
-comment|/* { 		syscallarg(int) fd; 		syscallarg(int) attrnamespace; 		syscallarg(const char *) attrname; 	} */
+comment|/* { 		int fd; 		int attrnamespace; 		const char *attrname; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -21436,7 +21138,7 @@ name|td
 decl_stmt|;
 name|struct
 name|extattr_delete_file_args
-comment|/* { 		syscallarg(const char *) path; 		syscallarg(int) attrnamespace; 		syscallarg(const char *) attrname; 	} */
+comment|/* { 		const char *path; 		int attrnamespace; 		const char *attrname; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -21568,7 +21270,7 @@ name|td
 decl_stmt|;
 name|struct
 name|extattr_delete_link_args
-comment|/* { 		syscallarg(const char *) path; 		syscallarg(int) attrnamespace; 		syscallarg(const char *) attrname; 	} */
+comment|/* { 		const char *path; 		int attrnamespace; 		const char *attrname; 	} */
 modifier|*
 name|uap
 decl_stmt|;
