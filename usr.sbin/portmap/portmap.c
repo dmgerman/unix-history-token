@@ -502,6 +502,7 @@ name|nhosts
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|inet_aton
 argument_list|(
 name|hosts
@@ -514,8 +515,6 @@ name|addr
 operator|.
 name|sin_addr
 argument_list|)
-operator|<
-literal|0
 condition|)
 block|{
 name|syslog
