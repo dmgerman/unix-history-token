@@ -826,6 +826,30 @@ comment|/* VersaPad finger down */
 end_comment
 
 begin_comment
+comment|/* Tunables */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|synaptics_support
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.psm.synaptics_support"
+argument_list|,
+operator|&
+name|synaptics_support
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* for backward compatibility */
 end_comment
 
@@ -7784,6 +7808,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|synaptics_support
+operator|&&
 name|sc
 operator|->
 name|hw
@@ -11858,6 +11884,12 @@ case|case
 name|MOUSE_MODEL_SYNAPTICS
 case|:
 comment|/* TouchPad PS/2 absolute mode message format 	     * 	     *  Bits:        7   6   5   4   3   2   1   0 (LSB) 	     *  ------------------------------------------------ 	     *  ipacket[0]:  1   0  W3  W2   0  W1   R   L 	     *  ipacket[1]: Yb  Ya  Y9  Y8  Xb  Xa  X9  X8 	     *  ipacket[2]: Z7  Z6  Z5  Z4  Z3  Z2  Z1  Z0 	     *  ipacket[3]:  1   1  Yc  Xc   0  W0   D   U 	     *  ipacket[4]: X7  X6  X5  X4  X3  X2  X1  X0 	     *  ipacket[5]: Y7  Y6  Y5  Y4  Y3  Y2  Y1  Y0 	     * 	     * Legend: 	     *  L: left physical mouse button 	     *  R: right physical mouse button 	     *  D: down button 	     *  U: up button 	     *  W: "wrist" value 	     *  X: x position 	     *  Y: x position 	     *  Z: pressure 	     * 	     * Absolute reportable limits:    0 - 6143. 	     * Typical bezel limits:       1472 - 5472. 	     * Typical edge marings:       1632 - 5312. 	     * 	     * w = 3 Passthrough Packet 	     * 	     * Byte 2,5,6 == Byte 1,2,3 of "Guest" 	     */
+if|if
+condition|(
+operator|!
+name|synaptics_support
+condition|)
+break|break;
 comment|/* Sanity check for out of sync packets. */
 if|if
 condition|(
@@ -14684,6 +14716,16 @@ decl_stmt|;
 name|KBDC
 name|kbdc
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|synaptics_support
+condition|)
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 name|kbdc
 operator|=
 name|sc
