@@ -920,19 +920,6 @@ literal|2
 argument_list|)
 condition|)
 break|break;
-if|if
-condition|(
-name|from
-operator|!=
-name|host
-condition|)
-name|printf
-argument_list|(
-literal|"%s: "
-argument_list|,
-name|host
-argument_list|)
-expr_stmt|;
 name|do_unlink
 argument_list|(
 name|line
