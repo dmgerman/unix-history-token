@@ -10051,7 +10051,7 @@ name|rcvif
 operator|->
 name|if_type
 operator|==
-name|IFT_8021_VLAN
+name|IFT_L2VLAN
 condition|)
 name|ifv
 operator|=
