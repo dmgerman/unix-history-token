@@ -9,6 +9,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -199,7 +205,7 @@ name|d
 operator|->
 name|p_size
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -210,7 +216,7 @@ name|d
 operator|->
 name|p_offset
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -221,7 +227,7 @@ name|d
 operator|->
 name|p_fsize
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -250,7 +256,7 @@ name|d
 operator|->
 name|p_cpg
 operator|=
-name|g_dec_le2
+name|le16dec
 argument_list|(
 name|ptr
 operator|+
@@ -282,7 +288,7 @@ name|d
 operator|->
 name|d_magic
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -293,7 +299,7 @@ name|d
 operator|->
 name|d_type
 operator|=
-name|g_dec_le2
+name|le16dec
 argument_list|(
 name|ptr
 operator|+
@@ -304,7 +310,7 @@ name|d
 operator|->
 name|d_subtype
 operator|=
-name|g_dec_le2
+name|le16dec
 argument_list|(
 name|ptr
 operator|+
@@ -341,7 +347,7 @@ name|d
 operator|->
 name|d_secsize
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -352,7 +358,7 @@ name|d
 operator|->
 name|d_nsectors
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -363,7 +369,7 @@ name|d
 operator|->
 name|d_ntracks
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -374,7 +380,7 @@ name|d
 operator|->
 name|d_ncylinders
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -385,7 +391,7 @@ name|d
 operator|->
 name|d_secpercyl
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -396,7 +402,7 @@ name|d
 operator|->
 name|d_secperunit
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -407,7 +413,7 @@ name|d
 operator|->
 name|d_sparespertrack
 operator|=
-name|g_dec_le2
+name|le16dec
 argument_list|(
 name|ptr
 operator|+
@@ -418,7 +424,7 @@ name|d
 operator|->
 name|d_sparespercyl
 operator|=
-name|g_dec_le2
+name|le16dec
 argument_list|(
 name|ptr
 operator|+
@@ -429,7 +435,7 @@ name|d
 operator|->
 name|d_acylinders
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -440,7 +446,7 @@ name|d
 operator|->
 name|d_rpm
 operator|=
-name|g_dec_le2
+name|le16dec
 argument_list|(
 name|ptr
 operator|+
@@ -451,7 +457,7 @@ name|d
 operator|->
 name|d_interleave
 operator|=
-name|g_dec_le2
+name|le16dec
 argument_list|(
 name|ptr
 operator|+
@@ -462,7 +468,7 @@ name|d
 operator|->
 name|d_trackskew
 operator|=
-name|g_dec_le2
+name|le16dec
 argument_list|(
 name|ptr
 operator|+
@@ -473,7 +479,7 @@ name|d
 operator|->
 name|d_cylskew
 operator|=
-name|g_dec_le2
+name|le16dec
 argument_list|(
 name|ptr
 operator|+
@@ -484,7 +490,7 @@ name|d
 operator|->
 name|d_headswitch
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -495,7 +501,7 @@ name|d
 operator|->
 name|d_trkseek
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -506,7 +512,7 @@ name|d
 operator|->
 name|d_flags
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -520,7 +526,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -534,7 +540,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -548,7 +554,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -562,7 +568,7 @@ index|[
 literal|3
 index|]
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -576,7 +582,7 @@ index|[
 literal|4
 index|]
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -590,7 +596,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -604,7 +610,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -618,7 +624,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -632,7 +638,7 @@ index|[
 literal|3
 index|]
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -646,7 +652,7 @@ index|[
 literal|4
 index|]
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -657,7 +663,7 @@ name|d
 operator|->
 name|d_magic2
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -668,7 +674,7 @@ name|d
 operator|->
 name|d_checksum
 operator|=
-name|g_dec_le2
+name|le16dec
 argument_list|(
 name|ptr
 operator|+
@@ -679,7 +685,7 @@ name|d
 operator|->
 name|d_npartitions
 operator|=
-name|g_dec_le2
+name|le16dec
 argument_list|(
 name|ptr
 operator|+
@@ -690,7 +696,7 @@ name|d
 operator|->
 name|d_bbsize
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -701,7 +707,7 @@ name|d
 operator|->
 name|d_sbsize
 operator|=
-name|g_dec_le4
+name|le32dec
 argument_list|(
 name|ptr
 operator|+
@@ -758,7 +764,7 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -769,7 +775,7 @@ operator|->
 name|p_size
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -780,7 +786,7 @@ operator|->
 name|p_offset
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -809,7 +815,7 @@ name|d
 operator|->
 name|p_frag
 expr_stmt|;
-name|g_enc_le2
+name|le16enc
 argument_list|(
 name|ptr
 operator|+
@@ -841,7 +847,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -852,7 +858,7 @@ operator|->
 name|d_magic
 argument_list|)
 expr_stmt|;
-name|g_enc_le2
+name|le16enc
 argument_list|(
 name|ptr
 operator|+
@@ -863,7 +869,7 @@ operator|->
 name|d_type
 argument_list|)
 expr_stmt|;
-name|g_enc_le2
+name|le16enc
 argument_list|(
 name|ptr
 operator|+
@@ -900,7 +906,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -911,7 +917,7 @@ operator|->
 name|d_secsize
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -922,7 +928,7 @@ operator|->
 name|d_nsectors
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -933,7 +939,7 @@ operator|->
 name|d_ntracks
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -944,7 +950,7 @@ operator|->
 name|d_ncylinders
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -955,7 +961,7 @@ operator|->
 name|d_secpercyl
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -966,7 +972,7 @@ operator|->
 name|d_secperunit
 argument_list|)
 expr_stmt|;
-name|g_enc_le2
+name|le16enc
 argument_list|(
 name|ptr
 operator|+
@@ -977,7 +983,7 @@ operator|->
 name|d_sparespertrack
 argument_list|)
 expr_stmt|;
-name|g_enc_le2
+name|le16enc
 argument_list|(
 name|ptr
 operator|+
@@ -988,7 +994,7 @@ operator|->
 name|d_sparespercyl
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -999,7 +1005,7 @@ operator|->
 name|d_acylinders
 argument_list|)
 expr_stmt|;
-name|g_enc_le2
+name|le16enc
 argument_list|(
 name|ptr
 operator|+
@@ -1010,7 +1016,7 @@ operator|->
 name|d_rpm
 argument_list|)
 expr_stmt|;
-name|g_enc_le2
+name|le16enc
 argument_list|(
 name|ptr
 operator|+
@@ -1021,7 +1027,7 @@ operator|->
 name|d_interleave
 argument_list|)
 expr_stmt|;
-name|g_enc_le2
+name|le16enc
 argument_list|(
 name|ptr
 operator|+
@@ -1032,7 +1038,7 @@ operator|->
 name|d_trackskew
 argument_list|)
 expr_stmt|;
-name|g_enc_le2
+name|le16enc
 argument_list|(
 name|ptr
 operator|+
@@ -1043,7 +1049,7 @@ operator|->
 name|d_cylskew
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -1054,7 +1060,7 @@ operator|->
 name|d_headswitch
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -1065,7 +1071,7 @@ operator|->
 name|d_trkseek
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -1076,7 +1082,7 @@ operator|->
 name|d_flags
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -1090,7 +1096,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -1104,7 +1110,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -1118,7 +1124,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -1132,7 +1138,7 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -1146,7 +1152,7 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -1160,7 +1166,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -1174,7 +1180,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -1188,7 +1194,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -1202,7 +1208,7 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -1216,7 +1222,7 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -1227,7 +1233,7 @@ operator|->
 name|d_magic2
 argument_list|)
 expr_stmt|;
-name|g_enc_le2
+name|le16enc
 argument_list|(
 name|ptr
 operator|+
@@ -1238,7 +1244,7 @@ operator|->
 name|d_checksum
 argument_list|)
 expr_stmt|;
-name|g_enc_le2
+name|le16enc
 argument_list|(
 name|ptr
 operator|+
@@ -1249,7 +1255,7 @@ operator|->
 name|d_npartitions
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -1260,7 +1266,7 @@ operator|->
 name|d_bbsize
 argument_list|)
 expr_stmt|;
-name|g_enc_le4
+name|le32enc
 argument_list|(
 name|ptr
 operator|+
@@ -2205,7 +2211,7 @@ condition|)
 block|{
 name|sum
 operator|^=
-name|g_dec_le2
+name|le16dec
 argument_list|(
 name|p
 argument_list|)
@@ -2748,7 +2754,7 @@ operator|++
 control|)
 name|sum
 operator|+=
-name|g_dec_le8
+name|le64dec
 argument_list|(
 name|buf
 operator|+
@@ -2757,7 +2763,7 @@ operator|*
 literal|8
 argument_list|)
 expr_stmt|;
-name|g_enc_le8
+name|le64enc
 argument_list|(
 name|buf
 operator|+
@@ -3040,7 +3046,7 @@ operator|++
 control|)
 name|sum
 operator|+=
-name|g_dec_le8
+name|le64dec
 argument_list|(
 name|buf
 operator|+
@@ -3049,7 +3055,7 @@ operator|*
 literal|8
 argument_list|)
 expr_stmt|;
-name|g_enc_le8
+name|le64enc
 argument_list|(
 name|buf
 operator|+

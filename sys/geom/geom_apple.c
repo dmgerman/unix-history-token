@@ -218,7 +218,7 @@ name|sc
 operator|->
 name|dd_bsiz
 operator|=
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|ptr
 operator|+
@@ -229,7 +229,7 @@ name|sc
 operator|->
 name|dd_blkcnt
 operator|=
-name|g_dec_be4
+name|be32dec
 argument_list|(
 name|ptr
 operator|+
@@ -240,7 +240,7 @@ name|sc
 operator|->
 name|dd_drvrcnt
 operator|=
-name|g_dec_be4
+name|be32dec
 argument_list|(
 name|ptr
 operator|+
@@ -293,7 +293,7 @@ name|d
 operator|->
 name|am_mapcnt
 operator|=
-name|g_dec_be4
+name|be32dec
 argument_list|(
 name|ptr
 operator|+
@@ -304,7 +304,7 @@ name|d
 operator|->
 name|am_start
 operator|=
-name|g_dec_be4
+name|be32dec
 argument_list|(
 name|ptr
 operator|+
@@ -315,7 +315,7 @@ name|d
 operator|->
 name|am_partcnt
 operator|=
-name|g_dec_be4
+name|be32dec
 argument_list|(
 name|ptr
 operator|+

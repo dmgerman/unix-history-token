@@ -9,6 +9,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -183,7 +189,7 @@ decl_stmt|;
 comment|/* The second last short is a magic number */
 if|if
 condition|(
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|sec0
 operator|+
@@ -218,7 +224,7 @@ literal|2
 control|)
 name|u
 operator|^=
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|sec0
 operator|+
@@ -238,14 +244,14 @@ operator|)
 return|;
 name|csize
 operator|=
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|sec0
 operator|+
 literal|436
 argument_list|)
 operator|*
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|sec0
 operator|+
@@ -268,7 +274,7 @@ control|)
 block|{
 name|v
 operator|=
-name|g_dec_be4
+name|be32dec
 argument_list|(
 name|sec0
 operator|+
@@ -281,7 +287,7 @@ argument_list|)
 expr_stmt|;
 name|u
 operator|=
-name|g_dec_be4
+name|be32dec
 argument_list|(
 name|sec0
 operator|+
@@ -369,7 +375,7 @@ control|)
 block|{
 name|v
 operator|=
-name|g_dec_be4
+name|be32dec
 argument_list|(
 name|sec0
 operator|+
@@ -382,7 +388,7 @@ argument_list|)
 expr_stmt|;
 name|u
 operator|=
-name|g_dec_be4
+name|be32dec
 argument_list|(
 name|sec0
 operator|+
@@ -447,7 +453,7 @@ name|ms
 operator|->
 name|nalt
 operator|=
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|sec0
 operator|+
@@ -458,7 +464,7 @@ name|ms
 operator|->
 name|nheads
 operator|=
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|sec0
 operator|+
@@ -469,7 +475,7 @@ name|ms
 operator|->
 name|nsects
 operator|=
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|sec0
 operator|+
@@ -898,7 +904,7 @@ literal|"part %d %u %u\n"
 argument_list|,
 name|i
 argument_list|,
-name|g_dec_be4
+name|be32dec
 argument_list|(
 name|buf
 operator|+
@@ -909,7 +915,7 @@ operator|*
 literal|8
 argument_list|)
 argument_list|,
-name|g_dec_be4
+name|be32dec
 argument_list|(
 name|buf
 operator|+
@@ -926,7 +932,7 @@ name|printf
 argument_list|(
 literal|"v_version = %d\n"
 argument_list|,
-name|g_dec_be4
+name|be32dec
 argument_list|(
 name|buf
 operator|+
@@ -938,7 +944,7 @@ name|printf
 argument_list|(
 literal|"v_nparts = %d\n"
 argument_list|,
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|buf
 operator|+
@@ -966,7 +972,7 @@ literal|"v_part[%d] = %d %d\n"
 argument_list|,
 name|i
 argument_list|,
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|buf
 operator|+
@@ -977,7 +983,7 @@ operator|*
 literal|4
 argument_list|)
 argument_list|,
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|buf
 operator|+
@@ -994,7 +1000,7 @@ name|printf
 argument_list|(
 literal|"v_sanity %x\n"
 argument_list|,
-name|g_dec_be4
+name|be32dec
 argument_list|(
 name|buf
 operator|+
@@ -1006,7 +1012,7 @@ name|printf
 argument_list|(
 literal|"v_version = %d\n"
 argument_list|,
-name|g_dec_be4
+name|be32dec
 argument_list|(
 name|buf
 operator|+
@@ -1018,7 +1024,7 @@ name|printf
 argument_list|(
 literal|"v_rpm %d\n"
 argument_list|,
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|buf
 operator|+
@@ -1030,7 +1036,7 @@ name|printf
 argument_list|(
 literal|"v_totalcyl %d\n"
 argument_list|,
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|buf
 operator|+
@@ -1042,7 +1048,7 @@ name|printf
 argument_list|(
 literal|"v_cyl %d\n"
 argument_list|,
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|buf
 operator|+
@@ -1054,7 +1060,7 @@ name|printf
 argument_list|(
 literal|"v_alt %d\n"
 argument_list|,
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|buf
 operator|+
@@ -1066,7 +1072,7 @@ name|printf
 argument_list|(
 literal|"v_head %d\n"
 argument_list|,
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|buf
 operator|+
@@ -1078,7 +1084,7 @@ name|printf
 argument_list|(
 literal|"v_sec %d\n"
 argument_list|,
-name|g_dec_be2
+name|be16dec
 argument_list|(
 name|buf
 operator|+

@@ -192,7 +192,7 @@ name|d
 operator|->
 name|dp_ipl_cyl
 operator|=
-name|g_dec_le2
+name|le16dec
 argument_list|(
 name|ptr
 operator|+
@@ -221,7 +221,7 @@ name|d
 operator|->
 name|dp_scyl
 operator|=
-name|g_dec_le2
+name|le16dec
 argument_list|(
 name|ptr
 operator|+
@@ -250,7 +250,7 @@ name|d
 operator|->
 name|dp_ecyl
 operator|=
-name|g_dec_le2
+name|le16dec
 argument_list|(
 name|ptr
 operator|+
