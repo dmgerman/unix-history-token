@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<gnu/ext2fs/ext2_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<gnu/ext2fs/ext2_fs.h>
 end_include
 
@@ -1965,6 +1971,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|unsigned
 name|long
 name|ext2_count_free_inodes

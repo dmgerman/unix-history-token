@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_I386_BITOPS_H
+name|_SYS_GNU_EXT2FS_I386_BITOPS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_I386_BITOPS_H
+name|_SYS_GNU_EXT2FS_I386_BITOPS_H_
 end_define
 
 begin_comment
@@ -50,7 +50,7 @@ value|(*(struct __dummy *) addr)
 end_define
 
 begin_function
-specifier|extern
+specifier|static
 name|__inline__
 name|int
 name|set_bit
@@ -76,7 +76,7 @@ block|}
 end_function
 
 begin_function
-specifier|extern
+specifier|static
 name|__inline__
 name|int
 name|clear_bit
@@ -102,7 +102,7 @@ block|}
 end_function
 
 begin_function
-specifier|extern
+specifier|static
 name|__inline__
 name|int
 name|change_bit
@@ -132,7 +132,7 @@ comment|/*  * This routine doesn't need to be atomic, but it's faster to code it
 end_comment
 
 begin_function
-specifier|extern
+specifier|static
 name|__inline__
 name|int
 name|test_bit
@@ -162,7 +162,7 @@ comment|/*  * Find-bit routines..  */
 end_comment
 
 begin_function
-specifier|extern
+specifier|static
 specifier|inline
 name|int
 name|find_first_zero_bit
@@ -194,7 +194,7 @@ block|}
 end_function
 
 begin_function
-specifier|extern
+specifier|static
 specifier|inline
 name|int
 name|find_next_zero_bit
@@ -315,7 +315,7 @@ comment|/*  * ffz = Find First Zero in word. Undefined if no zero exists,  * so 
 end_comment
 
 begin_function
-specifier|extern
+specifier|static
 specifier|inline
 name|unsigned
 name|long
@@ -342,7 +342,7 @@ comment|/*  * find the first occurrence of byte 'c', or 1 past the area if none 
 end_comment
 
 begin_function
-specifier|extern
+specifier|static
 specifier|inline
 name|char
 modifier|*
@@ -381,7 +381,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _I386_BITOPS_H */
+comment|/* !_SYS_GNU_EXT2FS_I386_BITOPS_H_ */
 end_comment
 
 end_unit

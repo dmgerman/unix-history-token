@@ -861,6 +861,26 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|unsigned
+name|long
+name|ext2_count_free
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+name|map
+operator|,
+name|unsigned
+name|int
+name|numchars
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|ext2_free_blocks

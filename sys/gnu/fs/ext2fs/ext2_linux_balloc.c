@@ -117,24 +117,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|unsigned
-name|long
-name|ext2_count_free
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|buffer_head
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -2043,6 +2025,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|unsigned
 name|long
 name|ext2_count_free_blocks
@@ -2282,6 +2265,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ext2_check_blocks_bitmap
 parameter_list|(

@@ -37,6 +37,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/namei.h>
 end_include
 
@@ -74,12 +80,6 @@ begin_include
 include|#
 directive|include
 file|<sys/dirent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
 end_include
 
 begin_include
@@ -144,6 +144,51 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|dirchk
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ext2_dirconv2ffs
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ext2_dir_entry
+operator|*
+name|e2dir
+operator|,
+expr|struct
+name|dirent
+operator|*
+name|ffsdir
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ext2_dirbadentry
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|dp
+operator|,
+expr|struct
+name|ext2_dir_entry
+operator|*
+name|de
+operator|,
+name|int
+name|entryoffsetinblock
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -569,6 +614,9 @@ name|error
 operator|=
 name|uiomove
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|dstdp
 argument_list|,
@@ -2477,6 +2525,7 @@ comment|/*  *	changed so that it confirms to ext2_check_dir_entry  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2_dirbadentry
 parameter_list|(
