@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.95 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.96 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.95		%G%"
+literal|"@(#)sendmail.h	8.96		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2930,7 +2930,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/* bit values for map_flags */
+comment|/* bit values for map_mflags */
 end_comment
 
 begin_define
@@ -3096,6 +3096,17 @@ end_define
 
 begin_comment
 comment|/* this map is world writable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_APPEND
+value|0x8000
+end_define
+
+begin_comment
+comment|/* append new entry on rebuiled */
 end_comment
 
 begin_comment
