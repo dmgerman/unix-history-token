@@ -6306,7 +6306,7 @@ name|media
 argument_list|)
 operator|==
 name|IFM_100_TX
-operator|&&
+operator|||
 name|IFM_SUBTYPE
 argument_list|(
 name|media
