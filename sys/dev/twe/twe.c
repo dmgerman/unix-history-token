@@ -618,19 +618,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|twe_request_qlen
-parameter_list|(
-name|struct
-name|twe_request
-modifier|*
-name|tr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|twe_panic
 parameter_list|(
