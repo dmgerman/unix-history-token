@@ -2602,6 +2602,7 @@ comment|/*  * Locate a command in the command hash table.  If "add" is nonzero, 
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|tblentry
 modifier|*

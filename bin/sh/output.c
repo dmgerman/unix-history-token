@@ -562,6 +562,7 @@ block|}
 end_function
 
 begin_decl_stmt
+name|STATIC
 name|char
 name|out_junk
 index|[

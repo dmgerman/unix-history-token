@@ -294,19 +294,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|var
 name|voptind
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|STATIC
 specifier|const
-name|struct
+expr|struct
 name|varinit
 name|varinit
 index|[]
-init|=
+operator|=
 block|{
 ifndef|#
 directive|ifndef
@@ -437,10 +439,11 @@ block|,
 name|NULL
 block|}
 block|}
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|var
 modifier|*

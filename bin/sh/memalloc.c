@@ -261,6 +261,7 @@ value|((char*)(sp) + ALIGN(sizeof(struct stack_block)))
 end_define
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|stack_block
 modifier|*
@@ -269,6 +270,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|stackmark
 modifier|*

@@ -222,6 +222,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|heredoc
 modifier|*
@@ -234,6 +235,7 @@ comment|/* list of here documents to read */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|int
 name|parsebackquote
 decl_stmt|;
@@ -244,6 +246,7 @@ comment|/* nonzero if we are inside backquotes */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|int
 name|doprompt
 decl_stmt|;
@@ -254,6 +257,7 @@ comment|/* if set, prompt the user */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|int
 name|needprompt
 decl_stmt|;
@@ -264,6 +268,7 @@ comment|/* true if interactive and at start of line */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|int
 name|lasttoken
 decl_stmt|;
@@ -285,6 +290,7 @@ comment|/* last token pushed back */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|char
 modifier|*
 name|wordtext
@@ -307,6 +313,7 @@ comment|/* 1 == check for kwds, 2 == also eat newlines */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|nodelist
 modifier|*
@@ -315,6 +322,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|STATIC
 name|union
 name|node
 modifier|*
@@ -323,6 +331,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|heredoc
 modifier|*
@@ -331,6 +340,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|STATIC
 name|int
 name|quoteflag
 decl_stmt|;
@@ -341,6 +351,7 @@ comment|/* set if (part of) last token was quoted */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|int
 name|startlinno
 decl_stmt|;

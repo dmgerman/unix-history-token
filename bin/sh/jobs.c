@@ -234,6 +234,7 @@ file|"mystring.h"
 end_include
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|job
 modifier|*
@@ -246,6 +247,7 @@ comment|/* array of jobs */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|int
 name|njobs
 decl_stmt|;
@@ -276,6 +278,7 @@ name|JOBS
 end_if
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|job
 modifier|*
@@ -288,6 +291,7 @@ comment|/* most recently used job list */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|pid_t
 name|initialpgrp
 decl_stmt|;

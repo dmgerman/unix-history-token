@@ -247,6 +247,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+name|STATIC
 name|char
 modifier|*
 name|expdest
@@ -258,6 +259,7 @@ comment|/* output of current string */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|nodelist
 modifier|*
@@ -270,6 +272,7 @@ comment|/* list of back quote expressions */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|ifsregion
 name|ifsfirst
@@ -281,6 +284,7 @@ comment|/* first struct in list of ifs regions */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|ifsregion
 modifier|*
@@ -293,6 +297,7 @@ comment|/* last struct in list */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|arglist
 name|exparg
@@ -4812,6 +4817,7 @@ comment|/*  * Expand shell metacharacters.  At this point, the only control char
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|char
 modifier|*
 name|expdir
