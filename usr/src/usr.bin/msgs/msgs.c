@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	5.2 (Berkeley) %G%"
+literal|"@(#)msgs.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1770,12 +1770,9 @@ argument_list|,
 name|lastmsg
 argument_list|)
 expr_stmt|;
-name|ftruncate
+name|truncate
 argument_list|(
-name|fileno
-argument_list|(
-name|msgsrc
-argument_list|)
+name|fname
 argument_list|,
 literal|0
 argument_list|)
