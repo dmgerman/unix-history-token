@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)itime.c	5.10 (Berkeley) %G%"
+literal|"@(#)itime.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1068,7 +1068,7 @@ name|ddatep
 decl_stmt|;
 block|{
 name|char
-name|buf
+name|tbuf
 index|[
 name|BUFSIZ
 index|]
@@ -1082,7 +1082,7 @@ condition|(
 operator|(
 name|fgets
 argument_list|(
-name|buf
+name|tbuf
 argument_list|,
 name|BUFSIZ
 argument_list|,
@@ -1090,7 +1090,7 @@ name|df
 argument_list|)
 operator|)
 operator|!=
-name|buf
+name|tbuf
 condition|)
 return|return
 operator|(
@@ -1107,7 +1107,7 @@ name|makedumpdate
 argument_list|(
 name|ddatep
 argument_list|,
-name|buf
+name|tbuf
 argument_list|)
 operator|<
 literal|0
@@ -1176,7 +1176,7 @@ name|makedumpdate
 parameter_list|(
 name|ddp
 parameter_list|,
-name|buf
+name|tbuf
 parameter_list|)
 name|struct
 name|dumpdates
@@ -1185,7 +1185,7 @@ name|ddp
 decl_stmt|;
 name|char
 modifier|*
-name|buf
+name|tbuf
 decl_stmt|;
 block|{
 name|char
@@ -1196,7 +1196,7 @@ index|]
 decl_stmt|;
 name|sscanf
 argument_list|(
-name|buf
+name|tbuf
 argument_list|,
 name|DUMPINFMT
 argument_list|,
