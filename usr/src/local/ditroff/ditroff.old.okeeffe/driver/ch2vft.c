@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ch2vft.c	1.3	84/02/27  *  * Font translation to vfonts (RST format) from character format.  *  *	Use:	ch2vft  [ -i ]  charfile> vfontfile  *  *		Takes input from charfile (which must be in the format written  *	by xxx2ch), converts to rst format and writes to stdout.  If charfile  *	is missing, stdin is read.  The -i flag tells ch2rst to ignore the  *	character codes at the start of each glyph definition, and pack the  *	glyphs in consecutive code positions starting with 0.  */
+comment|/* ch2vft.c	1.4	84/04/07  *  * Font translation to vfonts (RST format) from character format.  *  *	Use:	ch2vft  [ -i  -s ]  charfile> vfontfile  *  *		Takes input from charfile (which must be in the format written  *	by xxx2ch), converts to rst format and writes to stdout.  If charfile  *	is missing, stdin is read.  The -i flag tells ch2rst to ignore the  *	character codes at the start of each glyph definition, and pack the  *	glyphs in consecutive code positions starting with 0.  The -s flag  *	forces ch2vft to include the whole bit-map that defines the glyph.  *	Normally, it is trimmed of white space.  This is usefull for making  *	stipple patterns of fixed size.  */
 end_comment
 
 begin_include
@@ -155,6 +155,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|stipple
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|FILE
 modifier|*
 name|filep
@@ -295,6 +303,14 @@ case|case
 literal|'i'
 case|:
 name|ignorecode
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|stipple
 operator|=
 literal|1
 expr_stmt|;
@@ -950,6 +966,33 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* for length */
+if|if
+condition|(
+name|stipple
+condition|)
+block|{
+comment|/* force whole box if making stipples */
+name|minv
+operator|=
+literal|0
+expr_stmt|;
+name|minh
+operator|=
+literal|0
+expr_stmt|;
+name|maxv
+operator|=
+name|length
+operator|-
+literal|1
+expr_stmt|;
+name|maxh
+operator|=
+name|width
+operator|-
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|refv
