@@ -579,7 +579,7 @@ comment|/*  * Initialization such as command-line processing is done and then th
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -2016,6 +2016,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 

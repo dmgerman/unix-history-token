@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rexecd.c,v 1.17 1999/04/07 08:27:41 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_include
@@ -263,8 +269,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|remote
+index|[
+name|MAXHOSTNAMELEN
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -411,54 +419,18 @@ argument_list|,
 literal|"getpeername"
 argument_list|)
 expr_stmt|;
-name|hp
-operator|=
-name|gethostbyaddr
+name|realhostname
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|from
-operator|.
-name|sin_addr
+name|remote
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|from
-operator|.
-name|sin_addr
+name|remote
 argument_list|)
+operator|-
+literal|1
 argument_list|,
-name|from
-operator|.
-name|sin_family
-argument_list|)
-expr_stmt|;
-name|remote
-operator|=
-name|inet_ntoa
-argument_list|(
-name|from
-operator|.
-name|sin_addr
-argument_list|)
-expr_stmt|;
-name|remote
-operator|=
-operator|(
-name|hp
-operator|!=
-name|NULL
-operator|)
-condition|?
-name|hp
-operator|->
-name|h_name
-else|:
-name|inet_ntoa
-argument_list|(
+operator|&
 name|from
 operator|.
 name|sin_addr
