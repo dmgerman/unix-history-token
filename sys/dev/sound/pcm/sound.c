@@ -201,6 +201,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|USING_MUTEX
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|struct
 name|mtx
 modifier|*
@@ -215,6 +218,8 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}

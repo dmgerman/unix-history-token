@@ -232,6 +232,18 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|USING_MUTEX
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|USING_DEVFS
+end_undef
+
 begin_if
 if|#
 directive|if
@@ -262,6 +274,24 @@ define|#
 directive|define
 name|SND_DYNSYSCTL
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INTR_MPSAFE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INTR_MPSAFE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

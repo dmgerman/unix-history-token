@@ -125,12 +125,23 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USING_DEVFS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|eventhandler_tag
 name|dsp_ehtag
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -585,12 +596,20 @@ name|snddev_info
 modifier|*
 name|d
 decl_stmt|;
+name|intrmask_t
+name|s
+decl_stmt|;
 name|u_int32_t
 name|fmt
 decl_stmt|;
 name|int
 name|devtype
 decl_stmt|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|d
 operator|=
 name|dsp_get_info
@@ -689,6 +708,11 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|EBUSY
 return|;
@@ -749,6 +773,11 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|EBUSY
 return|;
@@ -763,6 +792,11 @@ argument_list|(
 name|d
 operator|->
 name|lock
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -832,6 +866,11 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|EBUSY
 return|;
@@ -865,6 +904,11 @@ argument_list|(
 name|d
 operator|->
 name|lock
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -999,6 +1043,11 @@ name|wrch
 argument_list|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1038,9 +1087,17 @@ name|snddev_info
 modifier|*
 name|d
 decl_stmt|;
+name|intrmask_t
+name|s
+decl_stmt|;
 name|int
 name|exit
 decl_stmt|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|d
 operator|=
 name|dsp_get_info
@@ -1150,6 +1207,11 @@ argument_list|(
 name|d
 operator|->
 name|lock
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -1271,6 +1333,11 @@ name|wrch
 argument_list|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1302,9 +1369,17 @@ decl_stmt|,
 modifier|*
 name|wrch
 decl_stmt|;
+name|intrmask_t
+name|s
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|getchns
 argument_list|(
 name|i_dev
@@ -1364,6 +1439,11 @@ argument_list|,
 name|SD_F_PRIO_RD
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|EINVAL
 return|;
@@ -1405,6 +1485,11 @@ argument_list|,
 name|SD_F_PRIO_RD
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
@@ -1436,9 +1521,17 @@ decl_stmt|,
 modifier|*
 name|wrch
 decl_stmt|;
+name|intrmask_t
+name|s
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|getchns
 argument_list|(
 name|i_dev
@@ -1498,6 +1591,11 @@ argument_list|,
 name|SD_F_PRIO_WR
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|EINVAL
 return|;
@@ -1537,6 +1635,11 @@ argument_list|,
 name|wrch
 argument_list|,
 name|SD_F_PRIO_WR
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -1581,6 +1684,9 @@ name|snddev_info
 modifier|*
 name|d
 decl_stmt|;
+name|intrmask_t
+name|s
+decl_stmt|;
 name|int
 name|kill
 decl_stmt|;
@@ -1599,9 +1705,6 @@ operator|)
 name|arg
 decl_stmt|,
 name|tmp
-decl_stmt|;
-name|u_long
-name|s
 decl_stmt|;
 comment|/* 	 * this is an evil hack to allow broken apps to perform mixer ioctls 	 * on dsp devices. 	 */
 if|if
@@ -1651,6 +1754,11 @@ name|p
 argument_list|)
 return|;
 block|}
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|d
 operator|=
 name|dsp_get_info
@@ -1725,6 +1833,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|EINVAL
 return|;
@@ -1750,11 +1863,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/*      	 * all routines are called with int. blocked. Make sure that      	 * ints are re-enabled when calling slow or blocking functions!      	 */
-name|s
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -4286,11 +4394,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|,
-name|e
-decl_stmt|;
 name|struct
 name|pcm_channel
 modifier|*
@@ -4303,6 +4406,19 @@ name|rdch
 init|=
 name|NULL
 decl_stmt|;
+name|intrmask_t
+name|s
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|,
+name|e
+decl_stmt|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|ret
 operator|=
 literal|0
@@ -4401,6 +4517,11 @@ operator||
 name|SD_F_PRIO_WR
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
@@ -4437,6 +4558,9 @@ decl_stmt|,
 modifier|*
 name|c
 decl_stmt|;
+name|intrmask_t
+name|s
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -4450,6 +4574,11 @@ return|return
 operator|-
 literal|1
 return|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|getchns
 argument_list|(
 name|i_dev
@@ -4469,7 +4598,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * XXX the linux api uses the nprot to select read/write buffer 	 * our vm system doesn't allow this, so force write buffer 	 */
-block|if (wrch&& (nprot& PROT_WRITE)) 		c = wrch; 	else if (rdch&& (nprot& PROT_READ)) 		c = rdch; 	else 		return -1;
+block|if (wrch&& (nprot& PROT_WRITE)) { 		c = wrch; 	} else if (rdch&& (nprot& PROT_READ)) { 		c = rdch; 	} else { 		splx(s); 		return -1; 	}
 else|#
 directive|else
 name|c
@@ -4496,6 +4625,11 @@ argument_list|,
 name|SD_F_PRIO_RD
 operator||
 name|SD_F_PRIO_WR
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -4543,6 +4677,11 @@ argument_list|,
 name|SD_F_PRIO_RD
 operator||
 name|SD_F_PRIO_WR
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -4731,6 +4870,12 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USING_DEVFS
+end_ifdef
 
 begin_function
 specifier|static
@@ -5097,6 +5242,11 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
