@@ -3489,9 +3489,9 @@ name|if_softc
 decl_stmt|;
 name|TRC
 argument_list|(
-argument|printf(
-literal|"ar%d: arioctl.\n"
-argument|, ifp->if_unit);
+argument|if_printf(ifp,
+literal|"arioctl.\n"
+argument|);
 argument_list|)
 name|was_up
 operator|=
@@ -3514,9 +3514,9 @@ argument_list|)
 expr_stmt|;
 name|TRC
 argument_list|(
-argument|printf(
-literal|"ar%d: ioctl: ifsppp.pp_flags = %x, if_flags %x.\n"
-argument|,  		ifp->if_unit, ((struct sppp *)ifp)->pp_flags, ifp->if_flags);
+argument|if_printf(ifp,
+literal|"ioctl: ifsppp.pp_flags = %x, if_flags %x.\n"
+argument|,  		((struct sppp *)ifp)->pp_flags, ifp->if_flags);
 argument_list|)
 if|if
 condition|(
@@ -3548,9 +3548,9 @@ operator|)
 return|;
 name|TRC
 argument_list|(
-argument|printf(
-literal|"ar%d: arioctl %s.\n"
-argument|, ifp->if_unit,  		(cmd == SIOCSIFFLAGS) ?
+argument|if_printf(ifp,
+literal|"arioctl %s.\n"
+argument|, 		(cmd == SIOCSIFFLAGS) ?
 literal|"SIOCSIFFLAGS"
 argument|:
 literal|"SIOCSIFADDR"
