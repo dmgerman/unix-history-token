@@ -226,7 +226,7 @@ name|jb
 parameter_list|,
 name|ra
 parameter_list|)
-value|(jb)[0]._jb[0] = (int)(ra)
+value|do {		\ 	(jb)[0]._jb[0] = (int)(ra);			\ 	(jb)[0]._jb[3] = 0;				\ } while (0)
 end_define
 
 begin_elif
