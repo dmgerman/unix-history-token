@@ -5834,6 +5834,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* usb.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|usbInitialize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* user.c */
 end_comment
 

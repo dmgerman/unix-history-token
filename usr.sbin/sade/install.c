@@ -2486,7 +2486,7 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Does this system have a mouse attached to it?"
+literal|"Does this system have a non-USB mouse attached to it?"
 argument_list|)
 condition|)
 name|dmenuOpenSimple
