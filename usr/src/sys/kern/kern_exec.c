@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	8.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3677,6 +3677,9 @@ argument_list|(
 name|cred
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTRACE
 comment|/* 			 * If process is being ktraced, turn off - unless 			 * root set it. 			 */
 if|if
 condition|(
@@ -3714,6 +3717,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|cred
 operator|->
 name|cr_uid
