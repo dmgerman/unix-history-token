@@ -472,6 +472,10 @@ modifier|*
 name|td_turnstile
 decl_stmt|;
 comment|/* (k) Associated turnstile. */
+name|int
+name|td_tid
+decl_stmt|;
+comment|/* (b) Thread ID. */
 comment|/* Cleared during fork1() or thread_sched_upcall(). */
 define|#
 directive|define
@@ -4558,6 +4562,15 @@ name|struct
 name|ksegrp
 modifier|*
 name|kg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|thread_new_tid
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
