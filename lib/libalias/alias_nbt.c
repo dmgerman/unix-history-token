@@ -77,18 +77,6 @@ directive|include
 file|"alias_local.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|ADJUST_CHECKSUM
-parameter_list|(
-name|acc
-parameter_list|,
-name|cksum
-parameter_list|)
-value|{ \     acc += cksum; \     if (acc< 0) \     { \         acc = -acc; \         acc = (acc>> 16) + (acc& 0xffff); \         acc += acc>> 16; \         cksum = (u_short) ~acc; \     } \     else \     { \         acc = (acc>> 16) + (acc& 0xffff); \         acc += acc>> 16; \         cksum = (u_short) acc; \     } \ }
-end_define
-
 begin_typedef
 typedef|typedef
 struct|struct
