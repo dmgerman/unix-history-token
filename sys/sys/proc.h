@@ -454,7 +454,7 @@ argument_list|)
 name|td_selq
 expr_stmt|;
 comment|/* (p) List of selinfos. */
-comment|/* Cleared during fork1() or thread_sched_upcall() */
+comment|/* Cleared during fork1() or thread_sched_upcall(). */
 define|#
 directive|define
 name|td_startzero
@@ -466,7 +466,7 @@ comment|/* (j) TDF_* flags. */
 name|int
 name|td_inhibitors
 decl_stmt|;
-comment|/* (j) Why can not run */
+comment|/* (j) Why can not run. */
 name|int
 name|td_pflags
 decl_stmt|;
@@ -476,7 +476,7 @@ name|kse
 modifier|*
 name|td_last_kse
 decl_stmt|;
-comment|/* (j) Previous value of td_kse */
+comment|/* (j) Previous value of td_kse. */
 name|struct
 name|kse
 modifier|*
@@ -509,7 +509,7 @@ comment|/* (j) Which cpu we are on. */
 name|short
 name|td_locks
 decl_stmt|;
-comment|/* (k) DEBUG: lockmgr count of locks */
+comment|/* (k) DEBUG: lockmgr count of locks. */
 name|struct
 name|mtx
 modifier|*
@@ -555,7 +555,7 @@ name|kse_thr_mailbox
 modifier|*
 name|td_mailbox
 decl_stmt|;
-comment|/* (*) Userland mailbox address */
+comment|/* (*) Userland mailbox address. */
 name|struct
 name|ucred
 modifier|*
@@ -567,7 +567,7 @@ name|thread
 modifier|*
 name|td_standin
 decl_stmt|;
-comment|/* (*) Use this for an upcall */
+comment|/* (*) Use this for an upcall. */
 name|u_int
 name|td_prticks
 decl_stmt|;
@@ -585,15 +585,15 @@ comment|/* (j) Statclock hits in system mode. */
 name|u_int
 name|td_uuticks
 decl_stmt|;
-comment|/* (*) Statclock in user, for UTS */
+comment|/* (*) Statclock in user, for UTS. */
 name|u_int
 name|td_usticks
 decl_stmt|;
-comment|/* (*) Statclock in kernel, for UTS */
+comment|/* (*) Statclock in kernel, for UTS. */
 name|int
 name|td_intrval
 decl_stmt|;
-comment|/* (*) Return value of TDF_INTERRUPT */
+comment|/* (*) Return value of TDF_INTERRUPT. */
 name|sigset_t
 name|td_oldsigmask
 decl_stmt|;
@@ -610,7 +610,7 @@ name|sigset_t
 modifier|*
 name|td_waitset
 decl_stmt|;
-comment|/* (c) Wait set for sigwait */
+comment|/* (c) Wait set for sigwait. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
@@ -627,7 +627,7 @@ define|#
 directive|define
 name|td_endzero
 value|td_base_pri
-comment|/* Copied during fork1() or thread_sched_upcall() */
+comment|/* Copied during fork1() or thread_sched_upcall(). */
 define|#
 directive|define
 name|td_startcopy
@@ -727,7 +727,7 @@ name|td_sched
 modifier|*
 name|td_sched
 decl_stmt|;
-comment|/* (*) Scheduler specific data */
+comment|/* (*) Scheduler-specific data. */
 block|}
 struct|;
 end_struct
@@ -788,7 +788,7 @@ value|0x000020
 end_define
 
 begin_comment
-comment|/* This is one of the per-CPU idle threads */
+comment|/* This is one of the per-CPU idle threads. */
 end_comment
 
 begin_define
@@ -909,7 +909,7 @@ value|0x040000
 end_define
 
 begin_comment
-comment|/* A scheduler activation based thread */
+comment|/* A scheduler activation based thread. */
 end_comment
 
 begin_define
@@ -1441,7 +1441,7 @@ name|ke_sched
 modifier|*
 name|ke_sched
 decl_stmt|;
-comment|/* (*) Scheduler specific data */
+comment|/* (*) Scheduler-specific data. */
 block|}
 struct|;
 end_struct
@@ -1458,7 +1458,7 @@ value|0x00001
 end_define
 
 begin_comment
-comment|/* For scheduler specific use. */
+comment|/* For scheduler-specific use. */
 end_comment
 
 begin_define
@@ -1469,7 +1469,7 @@ value|0x00002
 end_define
 
 begin_comment
-comment|/* For scheduler specific use. */
+comment|/* For scheduler-specific use. */
 end_comment
 
 begin_define
@@ -1480,7 +1480,7 @@ value|0X00004
 end_define
 
 begin_comment
-comment|/* For scheduler specific use. */
+comment|/* For scheduler-specific use. */
 end_comment
 
 begin_define
@@ -1491,7 +1491,7 @@ value|0x00008
 end_define
 
 begin_comment
-comment|/* For scheduler specific use. */
+comment|/* For scheduler-specific use. */
 end_comment
 
 begin_define
@@ -1579,7 +1579,7 @@ value|0x00001
 end_define
 
 begin_comment
-comment|/* Do upcall now, don't wait */
+comment|/* Do upcall now, don't wait. */
 end_comment
 
 begin_define
@@ -1590,7 +1590,7 @@ value|0x00002
 end_define
 
 begin_comment
-comment|/* Upcall structure is exiting */
+comment|/* Upcall structure is exiting. */
 end_comment
 
 begin_comment
@@ -1661,7 +1661,7 @@ argument|kse_upcall
 argument_list|)
 name|kg_upcalls
 expr_stmt|;
-comment|/* All upcalls in the group */
+comment|/* All upcalls in the group. */
 define|#
 directive|define
 name|kg_startzero
@@ -1691,15 +1691,15 @@ comment|/* (j) Num KSEs on runq. */
 name|int
 name|kg_idle_kses
 decl_stmt|;
-comment|/* (j) Num KSEs on iq */
+comment|/* (j) Num KSEs on iq. */
 name|int
 name|kg_numupcalls
 decl_stmt|;
-comment|/* (j) Num upcalls */
+comment|/* (j) Num upcalls. */
 name|int
 name|kg_upsleeps
 decl_stmt|;
-comment|/* (c) Num threads in kse_release() */
+comment|/* (c) Num threads in kse_release(). */
 name|struct
 name|kse_thr_mailbox
 modifier|*
@@ -1709,7 +1709,7 @@ comment|/* (c) Completed thread mboxes. */
 name|int
 name|kg_nextupcall
 decl_stmt|;
-comment|/* (*) Next upcall time */
+comment|/* (*) Next upcall time. */
 name|int
 name|kg_upquantum
 decl_stmt|;
@@ -1741,7 +1741,7 @@ value|kg_numthreads
 name|int
 name|kg_numthreads
 decl_stmt|;
-comment|/* (j) Num threads in total */
+comment|/* (j) Num threads in total. */
 name|int
 name|kg_kses
 decl_stmt|;
@@ -1751,7 +1751,7 @@ name|kg_sched
 modifier|*
 name|kg_sched
 decl_stmt|;
-comment|/* (*) Scheduler specific data */
+comment|/* (*) Scheduler-specific data. */
 block|}
 struct|;
 end_struct
@@ -2138,7 +2138,7 @@ name|user
 modifier|*
 name|p_uarea
 decl_stmt|;
-comment|/* (k) Kernel VA of u-area (CPU) */
+comment|/* (k) Kernel VA of u-area (CPU). */
 name|u_short
 name|p_acflag
 decl_stmt|;
@@ -2176,7 +2176,7 @@ name|p_sched
 modifier|*
 name|p_sched
 decl_stmt|;
-comment|/* (*) Scheduler specific data */
+comment|/* (*) Scheduler-specific data. */
 block|}
 struct|;
 end_struct
@@ -2328,7 +2328,7 @@ value|0x00400
 end_define
 
 begin_comment
-comment|/* Threads suspending should exit, not wait */
+comment|/* Threads suspending should exit, not wait. */
 end_comment
 
 begin_define
@@ -2350,7 +2350,7 @@ value|0x01000
 end_define
 
 begin_comment
-comment|/* Someone is waiting for us */
+comment|/* Someone is waiting for us. */
 end_comment
 
 begin_define
@@ -2405,7 +2405,7 @@ value|0x20000
 end_define
 
 begin_comment
-comment|/* Stopped due to SIGSTOP/SIGTSTP */
+comment|/* Stopped due to SIGSTOP/SIGTSTP. */
 end_comment
 
 begin_define
@@ -2416,7 +2416,7 @@ value|0x40000
 end_define
 
 begin_comment
-comment|/* Stopped because of tracing */
+comment|/* Stopped because of tracing. */
 end_comment
 
 begin_define
@@ -2453,7 +2453,7 @@ value|0x200000
 end_define
 
 begin_comment
-comment|/* Process pending signals changed */
+comment|/* Process pending signals changed. */
 end_comment
 
 begin_define
