@@ -485,6 +485,10 @@ expr_stmt|;
 comment|/* Do the basic fixed point polynomial evaluation */
 name|polynomial
 argument_list|(
+operator|(
+name|u_int
+operator|*
+operator|)
 operator|&
 operator|(
 name|accum
@@ -530,6 +534,10 @@ expr_stmt|;
 comment|/* Do the basic fixed point polynomial evaluation */
 name|polynomial
 argument_list|(
+operator|(
+name|u_int
+operator|*
+operator|)
 operator|&
 operator|(
 name|negaccum
