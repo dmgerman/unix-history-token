@@ -19772,6 +19772,10 @@ operator|(
 specifier|const
 name|char
 operator|*
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -19782,8 +19786,16 @@ specifier|static
 name|void
 name|switch_to_user
 parameter_list|(
+name|cvs_username
+parameter_list|,
 name|username
 parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|cvs_username
+decl_stmt|;
+comment|/* Only used for error messages. */
 specifier|const
 name|char
 modifier|*
@@ -19818,6 +19830,41 @@ name|username
 argument_list|)
 expr_stmt|;
 comment|/* Don't worry about server_cleanup; server_active isn't set yet.  */
+name|error_exit
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pw
+operator|->
+name|pw_uid
+operator|==
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|HAVE_SYSLOG_H
+comment|/* FIXME: Can the IP address of the connecting client be retrieved 	     * and printed here? 	     */
+name|syslog
+argument_list|(
+name|LOG_DAEMON
+operator||
+name|LOG_ALERT
+argument_list|,
+literal|"attempt to root from account: %s"
+argument_list|,
+name|cvs_username
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|printf
+argument_list|(
+literal|"error 0: root not allowed\n"
+argument_list|)
+expr_stmt|;
 name|error_exit
 argument_list|()
 expr_stmt|;
@@ -21561,6 +21608,8 @@ expr_stmt|;
 comment|/* Switch to run as this user. */
 name|switch_to_user
 argument_list|(
+name|username
+argument_list|,
 name|host_user
 argument_list|)
 expr_stmt|;
@@ -22446,6 +22495,8 @@ expr_stmt|;
 block|}
 name|switch_to_user
 argument_list|(
+literal|"GSSAPI"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
