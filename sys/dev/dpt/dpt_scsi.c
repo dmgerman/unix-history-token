@@ -12,7 +12,7 @@ comment|/**  * IMPORTANT:  *	There are two critical section "levels" used in thi
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.32 1998/08/03 16:45:12 root Exp root $"
+empty|#ident "$Id: dpt_scsi.c,v 1.8 1998/08/05 00:54:36 eivind Exp $"
 end_empty
 
 begin_define
@@ -1755,14 +1755,11 @@ specifier|static
 name|void
 name|dpt_reset_hba
 parameter_list|(
-name|int
-name|minor
-parameter_list|)
-block|{
 name|dpt_softc_t
 modifier|*
 name|dpt
-decl_stmt|;
+parameter_list|)
+block|{
 name|eata_ccb_t
 modifier|*
 name|ccb
@@ -1784,29 +1781,6 @@ name|scsi_xfer
 modifier|*
 name|xs
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|dpt
-operator|=
-name|dpt_minor2softc
-argument_list|(
-name|minor
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"DPT:  Ignoring invalid minor %d in dpt_reset_hba\n"
-argument_list|,
-name|minor
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* Prepare a control block.  The SCSI command part is immaterial */
 name|dccb
 operator|.
@@ -13466,12 +13440,16 @@ directive|ifdef
 name|DPT_FREELIST_IS_STACK
 name|TAILQ_INSERT_HEAD
 argument_list|(
-argument|&dpt->free_ccbs
+operator|&
+name|dpt
+operator|->
+name|free_ccbs
 argument_list|,
-argument|ccb
+name|ccb
 argument_list|,
-argument|links
+name|links
 argument_list|)
+expr_stmt|;
 else|#
 directive|else
 name|TAILQ_INSERT_TAIL
