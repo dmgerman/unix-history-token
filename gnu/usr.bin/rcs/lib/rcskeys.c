@@ -500,7 +500,7 @@ argument_list|)
 operator|>
 name|keylength
 condition|)
-name|error
+name|faterror
 argument_list|(
 literal|"LocalId is too long"
 argument_list|)
