@@ -8614,6 +8614,8 @@ condition|(
 name|have_tag
 condition|)
 block|{
+if|if
+condition|(
 name|vlan_input_tag
 argument_list|(
 name|eh
@@ -8622,6 +8624,15 @@ name|m
 argument_list|,
 name|vlan_tag
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|ifp
+operator|->
+name|if_data
+operator|.
+name|ifi_noproto
+operator|++
 expr_stmt|;
 name|have_tag
 operator|=
