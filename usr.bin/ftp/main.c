@@ -1707,6 +1707,9 @@ name|history
 argument_list|(
 name|hist
 argument_list|,
+operator|&
+name|he
+argument_list|,
 name|H_ENTER
 argument_list|,
 name|buf

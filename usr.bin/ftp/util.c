@@ -4119,6 +4119,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* init editline */
 name|el
 operator|=
 name|el_init
@@ -4128,9 +4129,10 @@ argument_list|,
 name|stdin
 argument_list|,
 name|stdout
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
-comment|/* init editline */
 name|hist
 operator|=
 name|history_init
@@ -4140,6 +4142,9 @@ comment|/* init the builtin history */
 name|history
 argument_list|(
 name|hist
+argument_list|,
+operator|&
+name|he
 argument_list|,
 name|H_EVENT
 argument_list|,

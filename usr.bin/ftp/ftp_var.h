@@ -756,6 +756,16 @@ comment|/* editline(3) history structure */
 end_comment
 
 begin_decl_stmt
+name|HistEvent
+name|he
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* editline(3) history structure */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|cursor_pos
