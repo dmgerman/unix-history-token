@@ -7581,7 +7581,7 @@ name|bus_dma_tag_t
 name|parent
 parameter_list|,
 name|bus_size_t
-name|alignemnt
+name|alignment
 parameter_list|,
 name|bus_size_t
 name|boundary
