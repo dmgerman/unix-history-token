@@ -313,6 +313,13 @@ name|PCCBB_START_MEM
 value|0x84000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCCBB_START_IO
+value|0x1000
+end_define
+
 begin_struct
 struct|struct
 name|pccbb_sclist
@@ -7103,11 +7110,11 @@ if|if
 condition|(
 name|start
 operator|<=
-literal|0x1000
+name|PCCBB_START_IO
 condition|)
 name|start
 operator|=
-literal|0x1000
+name|PCCBB_START_IO
 expr_stmt|;
 if|if
 condition|(
@@ -10128,13 +10135,12 @@ if|if
 condition|(
 name|start
 operator|<
-literal|0x10000000
+name|PCCBB_START_MEM
 condition|)
 name|start
 operator|=
-literal|0x10000000
+name|PCCBB_START_MEM
 expr_stmt|;
-comment|/* XXX tweakable? */
 if|if
 condition|(
 name|end
