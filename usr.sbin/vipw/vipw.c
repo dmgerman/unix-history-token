@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vipw.c,v 1.7 1999/06/26 10:45:06 sheldonh Exp $"
+literal|"$Id: vipw.c,v 1.8 1999/06/26 12:15:39 pb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -370,15 +370,6 @@ argument_list|()
 expr_stmt|;
 name|pw_init
 argument_list|()
-expr_stmt|;
-comment|/* Create with exact permissions. */
-operator|(
-name|void
-operator|)
-name|umask
-argument_list|(
-literal|0
-argument_list|)
 expr_stmt|;
 name|pfd
 operator|=
