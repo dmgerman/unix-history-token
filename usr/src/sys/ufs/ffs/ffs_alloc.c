@@ -9,7 +9,7 @@ name|char
 name|vers
 index|[]
 init|=
-literal|"@(#)ffs_alloc.c 1.16 %G%"
+literal|"@(#)ffs_alloc.c 1.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|"../h/inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/dir.h"
 end_include
 
 begin_include
