@@ -3236,6 +3236,10 @@ if|if
 condition|(
 name|cdp
 operator|->
+name|changer_info
+operator|&&
+name|cdp
+operator|->
 name|slot
 operator|!=
 name|cdp
@@ -3362,6 +3366,10 @@ if|if
 condition|(
 name|cdp
 operator|->
+name|changer_info
+operator|&&
+name|cdp
+operator|->
 name|slot
 operator|!=
 name|cdp
@@ -3451,6 +3459,10 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+name|cdp
+operator|->
+name|changer_info
+operator|&&
 name|cdp
 operator|->
 name|slot
