@@ -9705,6 +9705,21 @@ name|len
 operator|--
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|cont_line
+condition|)
+block|{
+operator|*
+operator|++
+name|cp
+operator|=
+literal|' '
+expr_stmt|;
+name|len
+operator|++
+expr_stmt|;
+block|}
 operator|*
 operator|++
 name|cp
