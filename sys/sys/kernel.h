@@ -107,10 +107,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* 1.2 */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|int
