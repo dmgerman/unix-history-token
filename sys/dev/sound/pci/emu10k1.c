@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/sound/pci/emu10k1.h>
+file|<gnu/dev/sound/pci/emu10k1.h>
 end_include
 
 begin_include
