@@ -111,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|HOST_PAGE_SIZE
-value|NBPG
+value|PAGE_SIZE
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent code for BSD Unix running on i386's, for GDB.    Copyright 1988, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  	$Id: freebsd-nat.c,v 1.6 1995/05/09 13:59:22 rgrimes Exp $ */
+comment|/* Native-dependent code for BSD Unix running on i386's, for GDB.    Copyright 1988, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  	$Id: freebsd-nat.c,v 1.7 1995/05/30 04:57:05 rgrimes Exp $ */
 end_comment
 
 begin_include
@@ -2308,8 +2308,8 @@ block|{
 name|CORE_ADDR
 name|v
 decl_stmt|;
-name|struct
-name|pte
+name|unsigned
+name|int
 name|pte
 decl_stmt|;
 specifier|static
@@ -2437,9 +2437,11 @@ argument_list|)
 operator|<
 literal|0
 operator|||
+operator|(
 name|pte
-operator|.
-name|pg_v
+operator|&
+name|PG_V
+operator|)
 operator|==
 literal|0
 condition|)
@@ -2452,21 +2454,24 @@ return|;
 comment|/* 	 * Read the second-level page table. 	 */
 name|v
 operator|=
-name|i386_ptob
-argument_list|(
+operator|(
 name|pte
-operator|.
-name|pg_pfnum
-argument_list|)
+operator|&
+name|PG_FRAME
+operator|)
 operator|+
 operator|(
 operator|(
 name|addr
-operator|&
-name|PT_MASK
-operator|)
 operator|>>
-name|PG_SHIFT
+name|PAGE_SHIFT
+operator|)
+operator|&
+operator|(
+name|NPTEPG
+operator|-
+literal|1
+operator|)
 operator|)
 operator|*
 sizeof|sizeof
@@ -2495,9 +2500,11 @@ argument_list|)
 operator|<
 literal|0
 operator|||
+operator|(
 name|pte
-operator|.
-name|pg_v
+operator|&
+name|PG_V
+operator|)
 operator|==
 literal|0
 condition|)
@@ -2509,12 +2516,11 @@ operator|)
 return|;
 name|addr
 operator|=
-name|i386_ptob
-argument_list|(
+operator|(
 name|pte
-operator|.
-name|pg_pfnum
-argument_list|)
+operator|&
+name|PG_FRAME
+operator|)
 operator|+
 operator|(
 name|addr
@@ -2839,7 +2845,7 @@ name|min
 argument_list|(
 name|len
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 operator|-
 operator|(
 name|addr
