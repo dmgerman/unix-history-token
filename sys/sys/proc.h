@@ -726,7 +726,7 @@ comment|/* (a) Kernel VA of alternate kstack. */
 name|int
 name|td_altkstack_pages
 decl_stmt|;
-comment|/* (a) Size of the alt kstack */
+comment|/* (a) Size of alternate kstack. */
 name|u_int
 name|td_critnest
 decl_stmt|;
