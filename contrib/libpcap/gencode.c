@@ -2644,7 +2644,10 @@ argument_list|,
 operator|(
 name|bpf_int32
 operator|)
+name|htonl
+argument_list|(
 name|AF_INET
+argument_list|)
 argument_list|)
 operator|)
 return|;
