@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exp.c	5.15 (Berkeley) %G%"
+literal|"@(#)exp.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1149,6 +1149,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|i
 operator|=
 name|isa
@@ -1159,6 +1160,9 @@ name|vp
 argument_list|,
 name|EQOP
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 operator|(
@@ -1376,6 +1380,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|i
 operator|=
 name|isa
@@ -1386,6 +1391,9 @@ name|vp
 argument_list|,
 name|RELOP
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 operator|(

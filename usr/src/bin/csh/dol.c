@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dol.c	5.19 (Berkeley) %G%"
+literal|"@(#)dol.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -464,11 +464,15 @@ name|t
 operator|->
 name|t_dcom
 init|;
+operator|(
 name|p
 operator|=
 operator|*
 name|pp
 operator|++
+operator|)
+operator|!=
+name|NULL
 condition|;
 control|)
 for|for
@@ -1366,9 +1370,13 @@ name|top
 label|:
 if|if
 condition|(
+operator|(
 name|c
 operator|=
 name|Dpeekc
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|Dpeekc
@@ -1444,6 +1452,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
@@ -1455,6 +1464,9 @@ name|QUOTE
 operator||
 name|TRIM
 operator|)
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 goto|goto
 name|quotspec
@@ -1560,6 +1572,14 @@ block|{
 name|nulvec
 block|,
 name|STRargv
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
 block|,
 literal|0
 block|}
@@ -3605,9 +3625,13 @@ name|c
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|c
 operator|=
 name|Dpeekrd
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|Dpeekrd
@@ -3949,9 +3973,13 @@ condition|)
 break|break;
 if|if
 condition|(
+operator|(
 name|c
 operator|&=
 name|TRIM
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 operator|*
@@ -4064,11 +4092,15 @@ name|lbp
 operator|=
 name|lbuf
 init|;
+operator|(
 name|c
 operator|=
 operator|*
 name|lbp
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 block|{

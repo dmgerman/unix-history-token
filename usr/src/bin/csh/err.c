@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	5.12 (Berkeley) %G%"
+literal|"@(#)err.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1161,9 +1161,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|v
 operator|=
 name|pargv
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|pargv
 operator|=
@@ -1176,9 +1180,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|v
 operator|=
 name|gargv
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|gargv
 operator|=

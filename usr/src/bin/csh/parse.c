@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.12 (Berkeley) %G%"
+literal|"@(#)parse.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2990,6 +2990,7 @@ name|POUT
 operator|)
 operator|&&
 operator|(
+operator|(
 name|flags
 operator|&
 name|PERR
@@ -3000,6 +3001,7 @@ operator|||
 name|t
 operator|->
 name|t_drit
+operator|)
 condition|)
 name|seterror
 argument_list|(

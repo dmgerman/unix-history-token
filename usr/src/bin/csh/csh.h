@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.24 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.25 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -184,6 +184,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Make sure a variable is not stored in a register by taking its address  * This is used where variables might be clobbered by longjmp.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNREGISTER
+parameter_list|(
+name|a
+parameter_list|)
+value|(void)&a
+end_define
 
 begin_typedef
 typedef|typedef

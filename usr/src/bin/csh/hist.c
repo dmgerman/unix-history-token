@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hist.c	5.10 (Berkeley) %G%"
+literal|"@(#)hist.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -243,11 +243,15 @@ operator|=
 operator|&
 name|Histlist
 init|;
+operator|(
 name|np
 operator|=
 name|hp
 operator|->
 name|Hnext
+operator|)
+operator|!=
+name|NULL
 condition|;
 control|)
 if|if

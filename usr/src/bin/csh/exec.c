@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	5.21 (Berkeley) %G%"
+literal|"@(#)exec.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,7 +213,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((a) * HSHMUL + (b)& HSHMASK)
+value|(((a) * HSHMUL + (b))& HSHMASK)
 end_define
 
 begin_define
@@ -2070,6 +2070,7 @@ index|]
 operator|==
 literal|'\0'
 operator|||
+operator|(
 name|dp
 operator|->
 name|d_name
@@ -2087,6 +2088,7 @@ literal|2
 index|]
 operator|==
 literal|'\0'
+operator|)
 operator|)
 condition|)
 continue|continue;
@@ -2899,6 +2901,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|vp
 operator|=
 name|adrof1
@@ -2909,6 +2912,9 @@ argument_list|,
 operator|&
 name|aliases
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 operator|(
@@ -3254,6 +3260,7 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
 name|i
 operator|=
 name|iscommand
@@ -3265,6 +3272,9 @@ operator|->
 name|word
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 specifier|register

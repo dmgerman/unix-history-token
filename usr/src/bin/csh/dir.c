@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.19 (Berkeley) %G%"
+literal|"@(#)dir.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -478,12 +478,16 @@ decl_stmt|;
 comment|/* 	     * use PWD if we have it (for subshells) 	     */
 if|if
 condition|(
+operator|(
 name|cwd
 operator|=
 name|getenv
 argument_list|(
 literal|"PWD"
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -2021,6 +2025,7 @@ name|dcwd
 operator|->
 name|di_name
 init|;
+operator|(
 operator|*
 name|p
 operator|++
@@ -2028,6 +2033,9 @@ operator|=
 operator|*
 name|q
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -2054,6 +2062,7 @@ name|q
 operator|=
 name|cp
 init|;
+operator|(
 operator|*
 name|p
 operator|++
@@ -2061,6 +2070,9 @@ operator|=
 operator|*
 name|q
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -2293,6 +2305,7 @@ operator|=
 operator|*
 name|cdp
 init|;
+operator|(
 operator|*
 name|dp
 operator|++
@@ -2300,6 +2313,9 @@ operator|=
 operator|*
 name|p
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -2317,6 +2333,7 @@ name|p
 operator|=
 name|cp
 init|;
+operator|(
 operator|*
 name|dp
 operator|++
@@ -2324,6 +2341,9 @@ operator|=
 operator|*
 name|p
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -2658,6 +2678,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|dp
 operator|=
 name|dfind
@@ -2665,6 +2686,9 @@ argument_list|(
 operator|*
 name|v
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|char
@@ -3421,6 +3445,7 @@ name|p2
 operator|=
 name|p
 init|;
+operator|(
 operator|*
 name|p1
 operator|++
@@ -3428,6 +3453,9 @@ operator|=
 operator|*
 name|p2
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -3524,6 +3552,7 @@ name|p
 operator|+
 literal|1
 init|;
+operator|(
 operator|*
 name|p1
 operator|++
@@ -3531,6 +3560,9 @@ operator|=
 operator|*
 name|p2
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -3742,6 +3774,7 @@ name|p2
 operator|=
 name|cp
 init|;
+operator|(
 operator|*
 name|p1
 operator|++
@@ -3749,6 +3782,9 @@ operator|=
 operator|*
 name|p2
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -3761,6 +3797,7 @@ name|p2
 operator|=
 name|link
 init|;
+operator|(
 operator|*
 name|p1
 operator|++
@@ -3768,6 +3805,9 @@ operator|=
 operator|*
 name|p2
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -3780,6 +3820,7 @@ name|p2
 operator|=
 name|p
 init|;
+operator|(
 operator|*
 name|p1
 operator|++
@@ -3787,6 +3828,9 @@ operator|=
 operator|*
 name|p2
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -3843,6 +3887,7 @@ name|p2
 operator|=
 name|link
 init|;
+operator|(
 operator|*
 name|p1
 operator|++
@@ -3850,6 +3895,9 @@ operator|=
 operator|*
 name|p2
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -3862,6 +3910,7 @@ name|p2
 operator|=
 name|p
 init|;
+operator|(
 operator|*
 name|p1
 operator|++
@@ -3869,6 +3918,9 @@ operator|=
 operator|*
 name|p2
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -3932,6 +3984,7 @@ name|p
 operator|+
 literal|1
 init|;
+operator|(
 operator|*
 name|p1
 operator|++
@@ -3939,6 +3992,9 @@ operator|=
 operator|*
 name|p2
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -4126,6 +4182,7 @@ name|p2
 operator|=
 name|cp
 init|;
+operator|(
 operator|*
 name|p1
 operator|++
@@ -4133,6 +4190,9 @@ operator|=
 operator|*
 name|p2
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -4145,6 +4205,7 @@ name|p2
 operator|=
 name|link
 init|;
+operator|(
 operator|*
 name|p1
 operator|++
@@ -4152,6 +4213,9 @@ operator|=
 operator|*
 name|p2
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -4164,6 +4228,7 @@ name|p2
 operator|=
 name|p
 init|;
+operator|(
 operator|*
 name|p1
 operator|++
@@ -4171,6 +4236,9 @@ operator|=
 operator|*
 name|p2
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -4227,6 +4295,7 @@ name|p2
 operator|=
 name|link
 init|;
+operator|(
 operator|*
 name|p1
 operator|++
@@ -4234,6 +4303,9 @@ operator|=
 operator|*
 name|p2
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -4246,6 +4318,7 @@ name|p2
 operator|=
 name|p
 init|;
+operator|(
 operator|*
 name|p1
 operator|++
@@ -4253,6 +4326,9 @@ operator|=
 operator|*
 name|p2
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -4470,6 +4546,7 @@ break|break;
 block|}
 if|if
 condition|(
+operator|(
 name|sp
 operator|=
 name|Strrchr
@@ -4478,6 +4555,9 @@ name|p2
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|sp

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)set.c	5.19 (Berkeley) %G%"
+literal|"@(#)set.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -440,10 +440,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|op
 operator|=
 operator|*
 name|p
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 operator|*
@@ -877,11 +881,15 @@ directive|endif
 block|}
 do|while
 condition|(
+operator|(
 name|p
 operator|=
 operator|*
 name|v
 operator|++
+operator|)
+operator|!=
+name|NULL
 condition|)
 do|;
 block|}
@@ -1276,10 +1284,14 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|op
 operator|=
 operator|*
 name|p
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 operator|*
 name|p
@@ -1589,11 +1601,15 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+operator|(
 name|p
 operator|=
 operator|*
 name|v
 operator|++
+operator|)
+operator|!=
+name|NULL
 condition|)
 do|;
 block|}
@@ -2621,6 +2637,7 @@ expr_stmt|;
 comment|/* tree hangs off the header's left link */
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 name|p
@@ -2629,6 +2646,9 @@ name|v_link
 index|[
 name|f
 index|]
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -2889,6 +2909,7 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|vp
 operator|=
 name|madrof
@@ -2900,6 +2921,9 @@ name|head
 operator|->
 name|v_left
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|unsetv1
 argument_list|(
@@ -3113,6 +3137,7 @@ name|p
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|pp
 operator|->
 name|v_link
@@ -3121,6 +3146,9 @@ name|f
 index|]
 operator|=
 name|c
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|c
 operator|->
@@ -3575,11 +3603,15 @@ comment|/*      * Ok, from here on, p is the node we're operating on; pp is it's
 for|for
 control|(
 init|;
+operator|(
 name|pp
 operator|=
 name|p
 operator|->
 name|v_parent
+operator|)
+operator|!=
+name|NULL
 condition|;
 name|p
 operator|=

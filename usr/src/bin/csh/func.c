@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c	5.38 (Berkeley) %G%"
+literal|"@(#)func.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3127,6 +3127,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|type
 operator|==
 name|T_GOTO
@@ -3137,7 +3138,9 @@ name|aword
 argument_list|,
 name|goal
 argument_list|)
+operator|)
 operator|||
+operator|(
 name|type
 operator|==
 name|T_SWITCH
@@ -3148,6 +3151,7 @@ name|aword
 argument_list|,
 name|STRdefault
 argument_list|)
+operator|)
 condition|)
 name|level
 operator|=
@@ -3491,6 +3495,7 @@ condition|(
 operator|(
 name|d
 operator|||
+operator|(
 operator|!
 operator|(
 name|kwd
@@ -3508,6 +3513,7 @@ operator|&&
 name|c
 operator|!=
 literal|'\t'
+operator|)
 operator|)
 operator|&&
 name|c
@@ -4241,11 +4247,15 @@ operator|++
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|cp
 operator|=
 operator|*
 name|v
 operator|++
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 specifier|register
@@ -4254,11 +4264,15 @@ name|c
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|cp
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 operator|(
 name|void
@@ -5443,6 +5457,7 @@ name|limits
 index|[]
 init|=
 block|{
+block|{
 name|RLIMIT_CPU
 block|,
 literal|"cputime"
@@ -5450,7 +5465,9 @@ block|,
 literal|1
 block|,
 literal|"seconds"
+block|}
 block|,
+block|{
 name|RLIMIT_FSIZE
 block|,
 literal|"filesize"
@@ -5458,7 +5475,9 @@ block|,
 literal|1024
 block|,
 literal|"kbytes"
+block|}
 block|,
+block|{
 name|RLIMIT_DATA
 block|,
 literal|"datasize"
@@ -5466,7 +5485,9 @@ block|,
 literal|1024
 block|,
 literal|"kbytes"
+block|}
 block|,
+block|{
 name|RLIMIT_STACK
 block|,
 literal|"stacksize"
@@ -5474,7 +5495,9 @@ block|,
 literal|1024
 block|,
 literal|"kbytes"
+block|}
 block|,
+block|{
 name|RLIMIT_CORE
 block|,
 literal|"coredumpsize"
@@ -5482,7 +5505,9 @@ block|,
 literal|1024
 block|,
 literal|"kbytes"
+block|}
 block|,
+block|{
 name|RLIMIT_RSS
 block|,
 literal|"memoryuse"
@@ -5490,7 +5515,9 @@ block|,
 literal|1024
 block|,
 literal|"kbytes"
+block|}
 block|,
+block|{
 name|RLIMIT_MEMLOCK
 block|,
 literal|"memorylocked"
@@ -5498,7 +5525,9 @@ block|,
 literal|1024
 block|,
 literal|"kbytes"
+block|}
 block|,
+block|{
 name|RLIMIT_NPROC
 block|,
 literal|"maxproc"
@@ -5506,7 +5535,9 @@ block|,
 literal|1
 block|,
 literal|""
+block|}
 block|,
+block|{
 name|RLIMIT_NOFILE
 block|,
 literal|"openfiles"
@@ -5514,7 +5545,9 @@ block|,
 literal|1
 block|,
 literal|""
+block|}
 block|,
+block|{
 operator|-
 literal|1
 block|,
@@ -5523,6 +5556,7 @@ block|,
 literal|0
 block|,
 name|NULL
+block|}
 block|}
 struct|;
 end_struct
@@ -6893,6 +6927,11 @@ decl_stmt|;
 name|int
 name|oSHERR
 decl_stmt|;
+name|UNREGISTER
+argument_list|(
+name|v
+argument_list|)
+expr_stmt|;
 name|oevalvec
 operator|=
 name|evalvec

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sem.c	5.22 (Berkeley) %G%"
+literal|"@(#)sem.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -263,6 +263,21 @@ name|nosigchld
 init|=
 literal|0
 decl_stmt|;
+name|UNREGISTER
+argument_list|(
+name|forked
+argument_list|)
+expr_stmt|;
+name|UNREGISTER
+argument_list|(
+name|bifunc
+argument_list|)
+expr_stmt|;
+name|UNREGISTER
+argument_list|(
+name|wanttty
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|t
@@ -802,6 +817,7 @@ name|F_TIME
 operator|)
 operator|||
 operator|(
+operator|(
 name|t
 operator|->
 name|t_dflg
@@ -827,6 +843,7 @@ operator||
 name|F_NICE
 operator||
 name|F_NOHUP
+operator|)
 operator|)
 operator|)
 operator|)
@@ -1281,6 +1298,7 @@ name|F_NOINTERRUPT
 operator|)
 operator|)
 operator|||
+operator|(
 name|gointr
 operator|&&
 name|eq
@@ -1289,6 +1307,7 @@ name|gointr
 argument_list|,
 name|STRminus
 argument_list|)
+operator|)
 expr_stmt|;
 name|pgrp
 operator|=
@@ -2083,9 +2102,13 @@ name|v
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|v
 operator|=
 name|gargv
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|gargv
@@ -2103,9 +2126,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|v
 operator|=
 name|pargv
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|pargv

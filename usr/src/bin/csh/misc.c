@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.18 (Berkeley) %G%"
+literal|"@(#)misc.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -267,6 +267,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|p
 operator|++
@@ -274,6 +275,9 @@ operator|=
 operator|*
 name|s
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 continue|continue;
 return|return
@@ -449,6 +453,7 @@ name|oav
 decl_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|av
 operator|++
@@ -456,6 +461,9 @@ operator|=
 operator|*
 name|bv
 operator|++
+operator|)
+operator|!=
+name|NULL
 condition|)
 continue|continue;
 return|return
@@ -1264,6 +1272,7 @@ name|i
 operator|<
 literal|0
 operator|||
+operator|(
 name|j
 operator|<
 literal|0
@@ -1271,6 +1280,7 @@ operator|&&
 name|i
 operator|>
 literal|2
+operator|)
 condition|)
 return|return
 operator|(
@@ -1700,11 +1710,15 @@ operator|)
 return|;
 while|while
 condition|(
+operator|(
 operator|*
 name|dp
 operator|++
 operator|&=
 name|TRIM
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 continue|continue;
 return|return

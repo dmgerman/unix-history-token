@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	5.23 (Berkeley) %G%"
+literal|"@(#)file.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -853,10 +853,14 @@ name|p
 operator|=
 name|string
 init|;
+operator|(
 name|c
 operator|=
 operator|*
 name|p
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 name|p
 operator|++
@@ -2083,12 +2087,16 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|dirp
 operator|=
 name|readdir
 argument_list|(
 name|dir_fd
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2398,6 +2406,7 @@ name|numitems
 operator|=
 literal|0
 init|;
+operator|(
 name|entry
 operator|=
 name|getentry
@@ -2406,6 +2415,9 @@ name|dir_fd
 argument_list|,
 name|looking_for_lognames
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|;
 control|)
 block|{

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alloc.c	5.13 (Berkeley) %G%"
+literal|"@(#)alloc.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -377,8 +377,16 @@ name|cshout
 argument_list|,
 literal|"Allocated memory from 0x%lx to 0x%lx (%ld).\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|membot
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|memtop
 argument_list|,
 name|memtop

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	5.12 (Berkeley) %G%"
+literal|"@(#)str.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -700,6 +700,7 @@ name|dst
 expr_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|dst
 operator|++
@@ -707,6 +708,9 @@ operator|=
 operator|*
 name|src
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 continue|continue;
 return|return
@@ -860,6 +864,7 @@ name|dst
 expr_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|dst
 operator|++
@@ -867,6 +872,9 @@ operator|=
 operator|*
 name|src
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 continue|continue;
 return|return
@@ -1422,6 +1430,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|p
 operator|++
@@ -1429,6 +1438,9 @@ operator|=
 operator|*
 name|s
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 continue|continue;
 return|return
@@ -1558,6 +1570,7 @@ name|q
 operator|=
 name|cp
 init|;
+operator|(
 operator|*
 name|p
 operator|++
@@ -1565,6 +1578,9 @@ operator|=
 operator|*
 name|q
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -1577,6 +1593,7 @@ name|q
 operator|=
 name|dp
 init|;
+operator|(
 operator|*
 name|p
 operator|++
@@ -1584,6 +1601,9 @@ operator|=
 operator|*
 name|q
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;

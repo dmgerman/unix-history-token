@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.39 (Berkeley) %G%"
+literal|"@(#)glob.c	5.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1220,6 +1220,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|(
 name|b
 operator|=
 name|Strchr
@@ -1228,6 +1229,9 @@ name|s
 argument_list|,
 literal|'{'
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|Char
@@ -1567,11 +1571,15 @@ expr_stmt|;
 comment|/*      * Step 1: expand backquotes.      */
 while|while
 condition|(
+operator|(
 name|s
 operator|=
 operator|*
 name|v
 operator|++
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -2804,11 +2812,15 @@ name|p
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 operator|*
 name|t
 operator|++
+operator|)
+operator|!=
+name|NULL
 condition|)
 while|while
 condition|(
@@ -2848,11 +2860,15 @@ name|p
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 operator|*
 name|t
 operator|++
+operator|)
+operator|!=
+name|NULL
 condition|)
 while|while
 condition|(
@@ -2890,11 +2906,15 @@ name|c
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 operator|*
 name|t
 operator|++
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -2949,11 +2969,15 @@ condition|)
 continue|continue;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|p
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 comment|/* 	     * eat everything inside the matching backquotes 	     */
@@ -4269,6 +4293,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|negate_range
 operator|=
 operator|(
@@ -4277,17 +4302,24 @@ name|pattern
 operator|==
 literal|'^'
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|pattern
 operator|++
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|rangec
 operator|=
 operator|*
 name|pattern
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 if|if
@@ -4564,6 +4596,7 @@ name|q
 operator|=
 name|s1
 init|;
+operator|(
 operator|*
 name|p
 operator|++
@@ -4571,6 +4604,9 @@ operator|=
 operator|*
 name|q
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;
@@ -4583,6 +4619,7 @@ name|q
 operator|=
 name|s2
 init|;
+operator|(
 operator|*
 name|p
 operator|++
@@ -4590,6 +4627,9 @@ operator|=
 operator|*
 name|q
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 control|)
 continue|continue;

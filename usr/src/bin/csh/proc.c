@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c	5.28 (Berkeley) %G%"
+literal|"@(#)proc.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3594,6 +3594,10 @@ name|format
 argument_list|,
 name|sys_siglist
 index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 name|pp
 operator|->
 name|p_reason

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csh.c	5.37 (Berkeley) %G%"
+literal|"@(#)csh.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1779,12 +1779,14 @@ name|loginsh
 operator|||
 name|intact
 operator|||
+operator|(
 name|intty
 operator|&&
 name|isatty
 argument_list|(
 name|SHOUT
 argument_list|)
+operator|)
 condition|)
 name|setintr
 operator|=
@@ -3400,12 +3402,16 @@ block|{
 comment|/* 	 * If $savehist is just set, we use the value of $history 	 * else we use the value in $savehist 	 */
 if|if
 condition|(
+operator|(
 name|shist
 operator|=
 name|adrof
 argument_list|(
 name|STRsavehist
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -3938,9 +3944,13 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|v
 operator|=
 name|pargv
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|pargv
 operator|=
@@ -3953,9 +3963,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|v
 operator|=
 name|gargv
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|gargv
 operator|=
@@ -4255,6 +4269,7 @@ block|}
 comment|/* 	 * Echo not only on VERBOSE, but also with history expansion. If there 	 * is a lexical error then we forego history echo. 	 */
 if|if
 condition|(
+operator|(
 name|lex
 argument_list|(
 operator|&
@@ -4265,6 +4280,7 @@ operator|!
 name|seterr
 operator|&&
 name|intty
+operator|)
 operator|||
 name|adrof
 argument_list|(
@@ -4302,12 +4318,14 @@ if|if
 condition|(
 name|enterhist
 operator|||
+operator|(
 name|catch
 operator|&&
 name|intty
 operator|&&
 operator|!
 name|whyles
+operator|)
 condition|)
 name|savehist
 argument_list|(
@@ -4760,10 +4778,12 @@ operator|<
 name|chktim
 operator|)
 operator|||
+operator|(
 name|loginsh
 operator|&&
 operator|!
 name|new
+operator|)
 condition|)
 continue|continue;
 if|if
@@ -4854,12 +4874,16 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|h
 operator|=
 name|value
 argument_list|(
 name|STRhome
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 operator|(
@@ -4883,6 +4907,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|pw
 operator|=
 name|getpwnam
@@ -4892,6 +4917,9 @@ argument_list|(
 name|home
 argument_list|)
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 operator|(
