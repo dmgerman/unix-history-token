@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmp.c	4.9 (Berkeley) %G%"
+literal|"@(#)cmp.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,88 +91,36 @@ end_include
 begin_define
 define|#
 directive|define
-name|DIFF
-value|1
+name|EXITNODIFF
+value|0
 end_define
-
-begin_comment
-comment|/* found differences */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|ERR
+name|EXITDIFF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXITERR
 value|2
 end_define
-
-begin_comment
-comment|/* error during run */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO
-value|0
-end_define
-
-begin_comment
-comment|/* no/false */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OK
-value|0
-end_define
-
-begin_comment
-comment|/* didn't find differences */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|YES
-value|1
-end_define
-
-begin_comment
-comment|/* yes/true */
-end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
+name|all
+decl_stmt|,
 name|fd1
 decl_stmt|,
 name|fd2
 decl_stmt|,
-comment|/* file descriptors */
 name|silent
-init|=
-name|NO
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* if silent run */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|short
-name|all
-init|=
-name|NO
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if report all differences */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -182,7 +130,6 @@ index|[
 name|MAXBSIZE
 index|]
 decl_stmt|,
-comment|/* read buffers */
 name|buf2
 index|[
 name|MAXBSIZE
@@ -200,10 +147,6 @@ modifier|*
 name|file2
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* file names */
-end_comment
 
 begin_function
 name|main
@@ -248,7 +191,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ls"
+literal|"-ls"
 argument_list|)
 operator|)
 operator|!=
@@ -265,7 +208,7 @@ case|:
 comment|/* print all differences */
 name|all
 operator|=
-name|YES
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -274,9 +217,19 @@ case|:
 comment|/* silent run */
 name|silent
 operator|=
-name|YES
+literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'-'
+case|:
+comment|/* must be after any flags */
+operator|--
+name|optind
+expr_stmt|;
+goto|goto
+name|endargs
+goto|;
 case|case
 literal|'?'
 case|:
@@ -285,6 +238,8 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+name|endargs
+label|:
 name|argv
 operator|+=
 name|optind
@@ -306,23 +261,48 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/* open up files; "-" is stdin */
+if|if
+condition|(
+name|all
+operator|&&
+name|silent
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"cmp: only one of -l and -s may be specified.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXITERR
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
 name|file1
 operator|=
 name|argv
 index|[
 literal|0
 index|]
-expr_stmt|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|file1
 argument_list|,
 literal|"-"
 argument_list|)
-operator|&&
+condition|)
+name|fd1
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|(
 name|fd1
 operator|=
@@ -343,13 +323,26 @@ argument_list|(
 name|file1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
 name|file2
 operator|=
 name|argv
 index|[
 literal|1
 index|]
+argument_list|,
+literal|"-"
+argument_list|)
+condition|)
+name|fd2
+operator|=
+literal|0
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|(
@@ -372,6 +365,26 @@ argument_list|(
 name|file2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fd1
+operator|==
+name|fd2
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"cmp: standard input may only be specified once.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXITERR
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* handle skip arguments */
 if|if
 condition|(
@@ -444,20 +457,12 @@ name|dist
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* length in bytes, to skip */
-end_comment
-
 begin_decl_stmt
 specifier|register
 name|int
 name|fd
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* file descriptor */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -466,19 +471,12 @@ name|fname
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* file name for error */
-end_comment
-
 begin_block
 block|{
 specifier|register
 name|int
 name|rlen
-decl_stmt|;
-comment|/* read length */
-specifier|register
-name|int
+decl_stmt|,
 name|nread
 decl_stmt|;
 for|for
@@ -556,31 +554,25 @@ block|,
 operator|*
 name|C2
 block|;
-comment|/* traveling pointers */
 specifier|register
 name|int
 name|cnt
 block|,
-comment|/* counter */
 name|len1
 block|,
 name|len2
 block|;
-comment|/* read lengths */
 specifier|register
 name|long
 name|byte
 block|,
-comment|/* byte count */
 name|line
 block|;
-comment|/* line count */
-name|short
+name|int
 name|dfound
 operator|=
-name|NO
+literal|0
 block|;
-comment|/* if difference found */
 for|for
 control|(
 name|byte
@@ -649,9 +641,9 @@ name|exit
 argument_list|(
 name|dfound
 condition|?
-name|DIFF
+name|EXITDIFF
 else|:
-name|OK
+name|EXITNODIFF
 argument_list|)
 expr_stmt|;
 default|default:
@@ -713,7 +705,7 @@ name|silent
 condition|)
 name|exit
 argument_list|(
-name|DIFF
+name|EXITDIFF
 argument_list|)
 expr_stmt|;
 if|if
@@ -723,7 +715,7 @@ condition|)
 block|{
 name|dfound
 operator|=
-name|YES
+literal|1
 expr_stmt|;
 for|for
 control|(
@@ -821,7 +813,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|DIFF
+name|EXITDIFF
 argument_list|)
 expr_stmt|;
 block|}
@@ -915,18 +907,15 @@ name|char
 modifier|*
 name|C
 decl_stmt|;
-comment|/* argument string */
 block|{
 specifier|register
 name|u_long
 name|val
 decl_stmt|;
-comment|/* return value */
 specifier|register
 name|int
 name|base
 decl_stmt|;
-comment|/* number base */
 name|base
 operator|=
 operator|(
@@ -996,19 +985,16 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
-name|int
-name|sverrno
-decl_stmt|;
+name|char
+modifier|*
+name|strerror
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 operator|!
 name|silent
 condition|)
-block|{
-name|sverrno
-operator|=
-name|errno
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1016,28 +1002,19 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cmp: %s: "
+literal|"cmp: %s: %s\n"
 argument_list|,
 name|filename
-argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-name|sverrno
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
-name|ERR
+name|EXITERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -1081,7 +1058,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|DIFF
+name|EXITDIFF
 argument_list|)
 expr_stmt|;
 block|}
@@ -1105,7 +1082,7 @@ argument_list|)
 block|;
 name|exit
 argument_list|(
-name|ERR
+name|EXITERR
 argument_list|)
 block|; }
 end_expr_stmt
