@@ -8,7 +8,7 @@ comment|/*  *  dptpci.c:  Pseudo device drivers for DPT on PCI on FreeBSD   *  *
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_pci.c,v 1.1 1998/01/26 06:11:17 julian Exp $"
+empty|#ident "$Id: dpt_pci.c,v 1.2 1998/02/09 02:31:47 eivind Exp $"
 end_empty
 
 begin_include
@@ -183,6 +183,7 @@ comment|/* Function Prototypes */
 end_comment
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|dpt_pci_probe
@@ -197,6 +198,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|dpt_pci_attach
 parameter_list|(
@@ -210,6 +212,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|dpt_pci_shutdown
 parameter_list|(
@@ -266,6 +269,7 @@ comment|/*  * Probe the PCI device.  * Some of this work will have to be duplica
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|dpt_pci_probe
@@ -583,6 +587,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|dpt_pci_attach
 parameter_list|(
@@ -2171,6 +2176,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|dpt_pci_shutdown
 parameter_list|(

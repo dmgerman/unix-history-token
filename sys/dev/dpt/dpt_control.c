@@ -8,7 +8,7 @@ comment|/**  * dpt_control.c: Control Functions and /dev entry points for /dev/d
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_control.c,v 1.21 1998/01/23 02:46:51 ShimonR Exp ShimonR $"
+empty|#ident "$Id: dpt_control.c,v 1.1 1998/01/26 06:11:17 julian Exp $"
 end_empty
 
 begin_include
@@ -181,6 +181,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|dpt_sysinfo_t
 name|dpt_sysinfo
 decl_stmt|;
@@ -255,6 +256,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|dpt_open
 parameter_list|(
@@ -276,6 +278,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|dpt_close
 parameter_list|(
@@ -297,6 +300,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|dpt_write
 parameter_list|(
@@ -315,6 +319,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|dpt_read
 parameter_list|(
@@ -333,6 +338,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|dpt_ioctl
 parameter_list|(
@@ -1857,6 +1863,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|dpt_open
 parameter_list|(
@@ -2015,6 +2022,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|dpt_close
 parameter_list|(
@@ -2107,6 +2115,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|dpt_write
 parameter_list|(
@@ -2345,6 +2354,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|dpt_read
 parameter_list|(
@@ -3045,6 +3055,7 @@ comment|/**  * This is the control syscall interface.  * It should be binary com
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dpt_ioctl
 parameter_list|(

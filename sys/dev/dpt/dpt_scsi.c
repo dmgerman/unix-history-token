@@ -12,7 +12,7 @@ comment|/**  * IMPORTANT:  *	There are two critical section "levels" used in thi
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.29 1998/01/21 04:32:08 ShimonR Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.1 1998/01/26 06:11:17 julian Exp $"
 end_empty
 
 begin_define
@@ -860,6 +860,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|hex_dump
 parameter_list|(
@@ -920,6 +921,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|dpt_inq_t
 modifier|*
 name|dpt_get_board_data
@@ -961,6 +963,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int32_t
 name|dpt_scsi_cmd
 parameter_list|(
@@ -973,6 +976,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|dptminphys
 parameter_list|(
@@ -985,6 +989,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|dpt_sintr
 parameter_list|(
@@ -1005,6 +1010,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|scsi_cmd_name
@@ -1016,6 +1022,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|dpt_rb_t
 name|dpt_register_buffer
 parameter_list|(
@@ -1050,6 +1057,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|dpt_send_buffer
 parameter_list|(
@@ -2304,6 +2312,7 @@ comment|/**  * Schedule a buffer to be sent to another target.  * The work will 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dpt_send_buffer
 parameter_list|(
@@ -2936,6 +2945,7 @@ comment|/**  * Use this function to register a client for a buffer read target o
 end_comment
 
 begin_function
+specifier|static
 name|dpt_rb_t
 name|dpt_register_buffer
 parameter_list|(
@@ -6337,6 +6347,7 @@ comment|/**  * The following function returns a pointer to a buffer which MUST b
 end_comment
 
 begin_function
+specifier|static
 name|dpt_inq_t
 modifier|*
 name|dpt_get_board_data
@@ -8011,6 +8022,7 @@ comment|/**  * This function obtains a CCB for a command and attempts to queue i
 end_comment
 
 begin_function
+specifier|static
 name|int32_t
 name|dpt_scsi_cmd
 parameter_list|(
@@ -9234,6 +9246,7 @@ comment|/**  * This function returns the transfer size in bytes,  * as a functio
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|dptminphys
 parameter_list|(
@@ -10584,6 +10597,7 @@ comment|/*  * This function is the DPT_ISR Software Interrupt Service Routine. W
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|dpt_sintr
 parameter_list|(
@@ -13878,6 +13892,7 @@ comment|/**  * This function dumps bytes to the screen in hex format.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|hex_dump
 parameter_list|(
@@ -14398,6 +14413,7 @@ comment|/**  * This function translates a SCSI command numeric code to a human r
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|scsi_cmd_name
