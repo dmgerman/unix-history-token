@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-arc.h - Macros and type defines for the ARC.    Copyright (C) 1994, 1995, 1997, 1999 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* tc-arc.h - Macros and type defines for the ARC.    Copyright 1994, 1995, 1997, 2000, 2001 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -30,6 +30,53 @@ directive|define
 name|TARGET_ARCH
 value|bfd_arch_arc
 end_define
+
+begin_define
+define|#
+directive|define
+name|DIFF_EXPR_OK
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGISTER_PREFIX
+value|'%'
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LITTLE_ENDIAN
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|LITTLE_ENDIAN
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BIG_ENDIAN
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|BIG_ENDIAN
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -154,50 +201,12 @@ define|\
 value|arc_cons_fix_new (FRAG, WHERE, NBYTES, EXP)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Extra stuff that we need to keep track of for each symbol.  */
-end_comment
-
-begin_comment
-unit|struct arc_tc_sy {
-comment|/* The real name, if the symbol was renamed.  */
-end_comment
-
 begin_define
-unit|char *real_name; };
 define|#
 directive|define
-name|TC_SYMFIELD_TYPE
-value|struct arc_tc_sy
+name|DWARF2_LINE_MIN_INSN_LENGTH
+value|4
 end_define
-
-begin_comment
-comment|/* Finish up the symbol.  */
-end_comment
-
-begin_define
-unit|extern int arc_frob_symbol PARAMS ((symbolS *));
-define|#
-directive|define
-name|tc_frob_symbol
-parameter_list|(
-name|sym
-parameter_list|,
-name|punt
-parameter_list|)
-value|punt = arc_frob_symbol (sym)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

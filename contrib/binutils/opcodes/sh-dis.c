@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Disassemble SH instructions.    Copyright (C) 1993, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Disassemble SH instructions.    Copyright 1993, 1994, 1995, 1997, 1998, 2000    Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"sysdep.h"
 end_include
 
 begin_define
@@ -369,6 +369,7 @@ decl_stmt|,
 modifier|*
 name|opy
 decl_stmt|;
+name|unsigned
 name|int
 name|insn_x
 decl_stmt|,
@@ -787,6 +788,7 @@ name|info
 operator|->
 name|stream
 decl_stmt|;
+name|unsigned
 name|int
 name|nib1
 decl_stmt|,
@@ -797,6 +799,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|dc
+init|=
+name|NULL
 decl_stmt|;
 name|sh_opcode_info
 modifier|*
@@ -2022,7 +2026,10 @@ goto|goto
 name|ok
 goto|;
 case|case
-name|IMM_4
+name|IMM0_4
+case|:
+case|case
+name|IMM1_4
 case|:
 name|imm
 operator|=
@@ -2035,7 +2042,10 @@ goto|goto
 name|ok
 goto|;
 case|case
-name|IMM_4BY2
+name|IMM0_4BY2
+case|:
+case|case
+name|IMM1_4BY2
 case|:
 name|imm
 operator|=
@@ -2050,7 +2060,10 @@ goto|goto
 name|ok
 goto|;
 case|case
-name|IMM_4BY4
+name|IMM0_4BY4
+case|:
+case|case
+name|IMM1_4BY4
 case|:
 name|imm
 operator|=
@@ -2065,7 +2078,10 @@ goto|goto
 name|ok
 goto|;
 case|case
-name|IMM_8
+name|IMM0_8
+case|:
+case|case
+name|IMM1_8
 case|:
 name|imm
 operator|=
@@ -2155,7 +2171,10 @@ goto|goto
 name|ok
 goto|;
 case|case
-name|IMM_8BY2
+name|IMM0_8BY2
+case|:
+case|case
+name|IMM1_8BY2
 case|:
 name|imm
 operator|=
@@ -2181,7 +2200,10 @@ goto|goto
 name|ok
 goto|;
 case|case
-name|IMM_8BY4
+name|IMM0_8BY4
+case|:
+case|case
+name|IMM1_8BY4
 case|:
 name|imm
 operator|=
@@ -2202,43 +2224,6 @@ index|]
 operator|)
 operator|<<
 literal|2
-expr_stmt|;
-goto|goto
-name|ok
-goto|;
-case|case
-name|DISP_8
-case|:
-name|imm
-operator|=
-operator|(
-name|nibs
-index|[
-literal|2
-index|]
-operator|<<
-literal|4
-operator|)
-operator||
-operator|(
-name|nibs
-index|[
-literal|3
-index|]
-operator|)
-expr_stmt|;
-goto|goto
-name|ok
-goto|;
-case|case
-name|DISP_4
-case|:
-name|imm
-operator|=
-name|nibs
-index|[
-literal|3
-index|]
 expr_stmt|;
 goto|goto
 name|ok
@@ -2339,16 +2324,22 @@ expr_stmt|;
 name|rn
 operator||=
 operator|(
+operator|!
+operator|(
 name|rn
 operator|&
 literal|2
 operator|)
+operator|)
 operator|<<
-literal|1
+literal|2
 expr_stmt|;
 break|break;
 case|case
 name|PPI
+case|:
+case|case
+name|REPEAT
 case|:
 goto|goto
 name|fail
@@ -2993,8 +2984,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|d_reg_n
-label|:
 case|case
 name|D_REG_N
 case|:
@@ -3135,7 +3124,7 @@ if|#
 directive|if
 literal|0
 comment|/* This code prints instructions in delay slots on the same line          as the instruction which needs the delay slots.  This can be          confusing, since other disassembler don't work this way, and          it means that the instructions are not all in a line.  So I          disabled it.  Ian.  */
-block|if (!(info->flags& 1)&& (op->name[0] == 'j' 	      || (op->name[0] == 'b'&& (op->name[1] == 'r'  		      || op->name[1] == 's')) 	      || (op->name[0] == 'r'&& op->name[1] == 't') 	      || (op->name[0] == 'b'&& op->name[2] == '.'))) 	{ 	  info->flags |= 1; 	  fprintf_fn (stream, "\t(slot "); 	  print_insn_shx (memaddr + 2, info); 	  info->flags&= ~1; 	  fprintf_fn (stream, ")"); 	  return 4; 	}
+block|if (!(info->flags& 1)&& (op->name[0] == 'j' 	      || (op->name[0] == 'b'&& (op->name[1] == 'r' 		      || op->name[1] == 's')) 	      || (op->name[0] == 'r'&& op->name[1] == 't') 	      || (op->name[0] == 'b'&& op->name[2] == '.'))) 	{ 	  info->flags |= 1; 	  fprintf_fn (stream, "\t(slot "); 	  print_insn_shx (memaddr + 2, info); 	  info->flags&= ~1; 	  fprintf_fn (stream, ")"); 	  return 4; 	}
 endif|#
 directive|endif
 if|if

@@ -1,41 +1,37 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Opcode table for the ARC.    Copyright 1994, 1995, 1997 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).  This file is part of GAS, the GNU Assembler, GDB, the GNU debugger, and the GNU Binutils.  GAS/GDB is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS/GDB is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS or GDB; see the file COPYING.	If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Opcode table for the ARC.    Copyright 1994, 1995, 1997, 2001 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).     This file is part of GAS, the GNU Assembler, GDB, the GNU debugger, and    the GNU Binutils.     GAS/GDB is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS/GDB is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS or GDB; see the file COPYING.	If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* List of the various cpu types.    The tables currently use bit masks to say whether the instruction or    whatever is supported by a particular cpu.  This lets us have one entry    apply to several cpus.     This duplicates bfd_mach_arc_xxx.  For now I wish to isolate this from bfd    and bfd from this.  Also note that these numbers are bit values as we want    to allow for things available on more than one ARC (but not necessarily all    ARCs).  */
-end_comment
-
-begin_comment
-comment|/* The `base' cpu must be 0 (table entries are omitted for the base cpu).    The cpu type is treated independently of endianness.    The complete `mach' number includes endianness.    These values are internal to opcodes/bfd/binutils/gas.  */
+comment|/* List of the various cpu types.    The tables currently use bit masks to say whether the instruction or    whatever is supported by a particular cpu.  This lets us have one entry    apply to several cpus.     The `base' cpu must be 0. The cpu type is treated independently of    endianness. The complete `mach' number includes endianness.    These values are internal to opcodes/bfd/binutils/gas.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ARC_MACH_BASE
+name|ARC_MACH_5
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARC_MACH_UNUSED1
+name|ARC_MACH_6
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARC_MACH_UNUSED2
+name|ARC_MACH_7
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARC_MACH_UNUSED4
+name|ARC_MACH_8
 value|4
 end_define
 
@@ -47,7 +43,7 @@ begin_define
 define|#
 directive|define
 name|ARC_MACH_BIG
-value|8
+value|16
 end_define
 
 begin_comment
@@ -58,7 +54,7 @@ begin_define
 define|#
 directive|define
 name|ARC_MACH_CPU_MASK
-value|7
+value|(ARC_MACH_BIG - 1)
 end_define
 
 begin_comment
@@ -69,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|ARC_MACH_MASK
-value|15
+value|((ARC_MACH_BIG<< 1) - 1)
 end_define
 
 begin_comment
@@ -92,18 +88,18 @@ name|char
 modifier|*
 name|syntax
 decl_stmt|;
-comment|/* syntax of insn */
+comment|/* syntax of insn  */
 name|unsigned
 name|long
 name|mask
 decl_stmt|,
 name|value
 decl_stmt|;
-comment|/* recognize insn if (op&mask)==value */
+comment|/* recognize insn if (op&mask) == value  */
 name|int
 name|flags
 decl_stmt|;
-comment|/* various flag bits */
+comment|/* various flag bits  */
 comment|/* Values for `flags'.  */
 comment|/* Return CPU number, given flag bits.  */
 define|#
@@ -125,25 +121,89 @@ comment|/* First opcode flag bit available after machine mask.  */
 define|#
 directive|define
 name|ARC_OPCODE_FLAG_START
-value|((ARC_MACH_MASK + 1)<< 0)
+value|(ARC_MACH_MASK + 1)
 comment|/* This insn is a conditional branch.  */
 define|#
 directive|define
 name|ARC_OPCODE_COND_BRANCH
 value|(ARC_OPCODE_FLAG_START)
-comment|/* These values are used to optimize assembly and disassembly.  Each insn is      on a list of related insns (same first letter for assembly, same insn code      for disassembly).  */
+define|#
+directive|define
+name|SYNTAX_3OP
+value|(ARC_OPCODE_COND_BRANCH<< 1)
+define|#
+directive|define
+name|SYNTAX_LENGTH
+value|(SYNTAX_3OP                 )
+define|#
+directive|define
+name|SYNTAX_2OP
+value|(SYNTAX_3OP<< 1)
+define|#
+directive|define
+name|OP1_MUST_BE_IMM
+value|(SYNTAX_2OP<< 1)
+define|#
+directive|define
+name|OP1_IMM_IMPLIED
+value|(OP1_MUST_BE_IMM<< 1)
+define|#
+directive|define
+name|SYNTAX_VALID
+value|(OP1_IMM_IMPLIED<< 1)
+define|#
+directive|define
+name|I
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 31)<< 27)
+define|#
+directive|define
+name|A
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& ARC_MASK_REG)<< ARC_SHIFT_REGA)
+define|#
+directive|define
+name|B
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& ARC_MASK_REG)<< ARC_SHIFT_REGB)
+define|#
+directive|define
+name|C
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& ARC_MASK_REG)<< ARC_SHIFT_REGC)
+define|#
+directive|define
+name|R
+parameter_list|(
+name|x
+parameter_list|,
+name|b
+parameter_list|,
+name|m
+parameter_list|)
+value|(((x)& (m))<< (b))
+comment|/* value X, mask M, at bit B */
+comment|/* These values are used to optimize assembly and disassembly.  Each insn    is on a list of related insns (same first letter for assembly, same    insn code for disassembly).  */
 name|struct
 name|arc_opcode
 modifier|*
 name|next_asm
 decl_stmt|;
-comment|/* Next instruction to try during assembly.  */
+comment|/* Next instr to try during assembly.  */
 name|struct
 name|arc_opcode
 modifier|*
 name|next_dis
 decl_stmt|;
-comment|/* Next instruction to try during disassembly.  */
+comment|/* Next instr to try during disassembly.  */
 comment|/* Macros to create the hash values for the lists.  */
 define|#
 directive|define
@@ -161,7 +221,7 @@ name|insn
 parameter_list|)
 define|\
 value|((unsigned int) (insn)>> 27)
-comment|/* Macros to access `next_asm', `next_dis' so users needn't care about the      underlying mechanism.  */
+comment|/* Macros to access `next_asm', `next_dis' so users needn't care about the     underlying mechanism.  */
 define|#
 directive|define
 name|ARC_OPCODE_NEXT_ASM
@@ -180,6 +240,18 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* this is an "insert at front" linked list per Metaware spec    that new definitions override older ones.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|arc_opcode
+modifier|*
+name|arc_ext_opcodes
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|arc_operand_value
@@ -188,21 +260,21 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* eg: "eq" */
+comment|/* eg: "eq"  */
 name|short
 name|value
 decl_stmt|;
-comment|/* eg: 1 */
+comment|/* eg: 1  */
 name|unsigned
 name|char
 name|type
 decl_stmt|;
-comment|/* index into `arc_operands' */
+comment|/* index into `arc_operands'  */
 name|unsigned
 name|char
 name|flags
 decl_stmt|;
-comment|/* various flag bits */
+comment|/* various flag bits  */
 comment|/* Values for `flags'.  */
 comment|/* Return CPU number, given flag bits.  */
 define|#
@@ -226,6 +298,25 @@ end_struct
 
 begin_struct
 struct|struct
+name|arc_ext_operand_value
+block|{
+name|struct
+name|arc_ext_operand_value
+modifier|*
+name|next
+decl_stmt|;
+name|struct
+name|arc_operand_value
+name|operand
+decl_stmt|;
+block|}
+modifier|*
+name|arc_ext_operands
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|arc_operand
 block|{
 comment|/* One of the insn format chars.  */
@@ -238,7 +329,7 @@ name|unsigned
 name|char
 name|bits
 decl_stmt|;
-comment|/* How far the operand is left shifted in the instruction, or      the modifier's flag bit (may be unused for a modifier.  */
+comment|/* How far the operand is left shifted in the instruction, or    the modifier's flag bit (may be unused for a modifier.  */
 name|unsigned
 name|char
 name|shift
@@ -293,6 +384,30 @@ define|#
 directive|define
 name|ARC_OPERAND_FAKE
 value|0x100
+comment|/* separate flags operand for j and jl instructions  */
+define|#
+directive|define
+name|ARC_OPERAND_JUMPFLAGS
+value|0x200
+comment|/* allow warnings and errors to be issued after call to insert_xxxxxx  */
+define|#
+directive|define
+name|ARC_OPERAND_WARN
+value|0x400
+define|#
+directive|define
+name|ARC_OPERAND_ERROR
+value|0x800
+comment|/* this is a load operand */
+define|#
+directive|define
+name|ARC_OPERAND_LOAD
+value|0x8000
+comment|/* this is a store operand */
+define|#
+directive|define
+name|ARC_OPERAND_STORE
+value|0x10000
 comment|/* Modifier values.  */
 comment|/* A dot is required before a suffix.  Eg: .le  */
 define|#
@@ -322,7 +437,20 @@ parameter_list|(
 name|X
 parameter_list|)
 value|((X)& ARC_MOD_BITS)
-comment|/* Insertion function.  This is used by the assembler.  To insert an      operand value into an instruction, check this field.       If it is NULL, execute          i |= (p& ((1<< o->bits) - 1))<< o->shift;      (I is the instruction which we are filling in, O is a pointer to      this structure, and OP is the opcode value; this assumes twos      complement arithmetic).       If this field is not NULL, then simply call it with the      instruction and the operand value.  It will return the new value      of the instruction.  If the ERRMSG argument is not NULL, then if      the operand value is illegal, *ERRMSG will be set to a warning      string (the operand will be inserted in any case).  If the      operand value is legal, *ERRMSG will be unchanged.       REG is non-NULL when inserting a register value.  */
+comment|/* enforce read/write only register restrictions  */
+define|#
+directive|define
+name|ARC_REGISTER_READONLY
+value|0x01
+define|#
+directive|define
+name|ARC_REGISTER_WRITEONLY
+value|0x02
+define|#
+directive|define
+name|ARC_REGISTER_NOSHORT_CUT
+value|0x04
+comment|/* Insertion function.  This is used by the assembler.  To insert an    operand value into an instruction, check this field.     If it is NULL, execute    i |= (p& ((1<< o->bits) - 1))<< o->shift;    (I is the instruction which we are filling in, O is a pointer to    this structure, and OP is the opcode value; this assumes twos    complement arithmetic).        If this field is not NULL, then simply call it with the    instruction and the operand value.  It will return the new value    of the instruction.  If the ERRMSG argument is not NULL, then if    the operand value is illegal, *ERRMSG will be set to a warning    string (the operand will be inserted in any case).  If the    operand value is legal, *ERRMSG will be unchanged.     REG is non-NULL when inserting a register value.  */
 name|arc_insn
 argument_list|(
 argument|*insert
@@ -359,7 +487,7 @@ name|errmsg
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Extraction function.  This is used by the disassembler.  To      extract this operand type from an instruction, check this field.       If it is NULL, compute          op = ((i)>> o->shift)& ((1<< o->bits) - 1); 	 if ((o->flags& ARC_OPERAND_SIGNED) != 0&& (op& (1<< (o->bits - 1))) != 0) 	   op -= 1<< o->bits;      (I is the instruction, O is a pointer to this structure, and OP      is the result; this assumes twos complement arithmetic).       If this field is not NULL, then simply call it with the      instruction value.  It will return the value of the operand.  If      the INVALID argument is not NULL, *INVALID will be set to      non-zero if this operand type can not actually be extracted from      this operand (i.e., the instruction does not match).  If the      operand is valid, *INVALID will not be changed.       INSN is a pointer to an array of two `arc_insn's.  The first element is      the insn, the second is the limm if present.       Operands that have a printable form like registers and suffixes have      their struct arc_operand_value pointer stored in OPVAL.  */
+comment|/* Extraction function.  This is used by the disassembler.  To    extract this operand type from an instruction, check this field.        If it is NULL, compute      op = ((i)>> o->shift)& ((1<< o->bits) - 1);      if ((o->flags& ARC_OPERAND_SIGNED) != 0&& (op& (1<< (o->bits - 1))) != 0)        op -= 1<< o->bits;    (I is the instruction, O is a pointer to this structure, and OP    is the result; this assumes twos complement arithmetic).        If this field is not NULL, then simply call it with the    instruction value.  It will return the value of the operand.  If    the INVALID argument is not NULL, *INVALID will be set to    non-zero if this operand type can not actually be extracted from    this operand (i.e., the instruction does not match).  If the    operand is valid, *INVALID will not be changed.     INSN is a pointer to an array of two `arc_insn's.  The first element is    the insn, the second is the limm if present.     Operands that have a printable form like registers and suffixes have    their struct arc_operand_value pointer stored in OPVAL.  */
 name|long
 argument_list|(
 argument|*extract
@@ -398,7 +526,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Bits that say what version of cpu we have.    These should be passed to arc_init_opcode_tables.    At present, all there is is the cpu type.  */
+comment|/* Bits that say what version of cpu we have. These should be passed to    arc_init_opcode_tables. At present, all there is is the cpu type.  */
 end_comment
 
 begin_comment
@@ -571,7 +699,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-comment|/*const*/
 name|struct
 name|arc_opcode
 name|arc_opcodes
