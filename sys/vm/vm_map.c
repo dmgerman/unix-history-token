@@ -9266,7 +9266,7 @@ condition|)
 block|{
 name|newend
 operator|=
-name|ulmin
+name|MIN
 argument_list|(
 name|entry
 operator|->
@@ -9336,7 +9336,7 @@ condition|)
 block|{
 name|newend
 operator|=
-name|ulmin
+name|MIN
 argument_list|(
 name|entry
 operator|->
