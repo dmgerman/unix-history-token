@@ -531,11 +531,11 @@ name|comment
 argument_list|)
 expr_stmt|;
 block|}
-name|return_VALUE
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -548,11 +548,11 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|return_VALUE
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -563,7 +563,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int acpi_snc_suspend(device_t dev) { 	struct acpi_snc_softc *sc = device_get_softc(dev); 	return_VALUE(0); }  static int acpi_snc_resume(device_t dev) { 	return (0); }
+unit|static int acpi_snc_suspend(device_t dev) { 	struct acpi_snc_softc *sc = device_get_softc(dev); 	return (0); }  static int acpi_snc_resume(device_t dev) { 	return (0); }
 endif|#
 directive|endif
 end_endif
