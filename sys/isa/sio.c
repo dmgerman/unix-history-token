@@ -2875,6 +2875,14 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x98459710
+block|,
+literal|"Netmos Nm9845 PCI Bridge with Dual UART"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x00000000
 block|,
 name|NULL
