@@ -2533,15 +2533,18 @@ name|REJBYTE
 value|0x030
 end_define
 
-begin_comment
-comment|/*  * Since the sequencer cannot read QOUTCNT, we use this memory location  * to make sure that we don't overflow the QOUTFIFO when doing SCB Paging.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|LASTPHASE
+value|0x031
+end_define
 
 begin_define
 define|#
 directive|define
-name|QOUTQCNT
-value|0x031
+name|P_BUSFREE
+value|0x01
 end_define
 
 begin_comment
@@ -2581,7 +2584,7 @@ value|0x034
 end_define
 
 begin_comment
-comment|/* We reserve 6bytes to store outgoing messages */
+comment|/* We reserve 8bytes to store outgoing messages */
 end_comment
 
 begin_define
@@ -2640,57 +2643,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|LASTPHASE
+name|MSG6
 value|0x03b
 end_define
 
 begin_define
 define|#
 directive|define
-name|P_BUSFREE
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARG_1
+name|MSG7
 value|0x03c
-end_define
-
-begin_define
-define|#
-directive|define
-name|RETURN_1
-value|0x03c
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEND_MSG
-value|0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEND_SENSE
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEND_REJ
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCB_PAGEDIN
-value|0x10
 end_define
 
 begin_define
@@ -3006,8 +2967,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|QFULLCNT
+name|ARG_1
 value|0x059
+end_define
+
+begin_define
+define|#
+directive|define
+name|RETURN_1
+value|0x059
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEND_MSG
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEND_SENSE
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEND_REJ
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_PAGEDIN
+value|0x10
 end_define
 
 begin_define
