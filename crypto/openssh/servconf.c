@@ -554,9 +554,9 @@ name|options
 operator|->
 name|permit_root_login
 operator|=
-literal|1
+literal|0
 expr_stmt|;
-comment|/* yes */
+comment|/* no */
 if|if
 condition|(
 name|options
