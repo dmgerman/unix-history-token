@@ -14120,20 +14120,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|free
-argument_list|(
-name|pACB
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 name|trm_check_eeprom
 argument_list|(
 operator|&
@@ -14167,13 +14158,6 @@ block|{
 name|printf
 argument_list|(
 literal|"trm_initAdapter: initial ERROR\n"
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|pACB
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -14343,13 +14327,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|pACB
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -14375,13 +14352,6 @@ argument_list|(
 literal|"trm%d: device_Q == NULL !\n"
 argument_list|,
 name|unit
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|pACB
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -14436,13 +14406,6 @@ name|device_Q
 argument_list|)
 expr_stmt|;
 comment|/* SIM allocate fault*/
-name|free
-argument_list|(
-name|pACB
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -14477,13 +14440,6 @@ operator|->
 name|psim
 argument_list|,
 name|TRUE
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|pACB
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 comment|/*  		 * cam_sim_free(pACB->psim, TRUE);  free_devq  		 * pACB->psim = NULL; 		 */
@@ -14544,13 +14500,6 @@ name|psim
 argument_list|,
 comment|/*free_simq*/
 name|TRUE
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|pACB
-argument_list|,
-name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 comment|/*  		 * cam_sim_free(pACB->psim, TRUE);  free_devq  		 * pACB->psim = NULL; 		 */
