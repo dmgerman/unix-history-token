@@ -468,7 +468,7 @@ parameter_list|(
 name|td
 parameter_list|)
 define|\
-value|((td)->td_priority == PI_REALTIME)
+value|((td)->td_base_pri == PI_REALTIME)
 end_define
 
 begin_define
