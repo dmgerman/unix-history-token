@@ -6193,7 +6193,7 @@ directive|ifdef
 name|DEBUGIO
 name|printf
 argument_list|(
-literal|"matcd%d: Strategy: buf=0x%lx, block#=%lx bcount=%ld\n"
+literal|"matcd%d: Strategy: buf=0x%lx, offset#=%jx bcount=%ld\n"
 argument_list|,
 name|ldrive
 argument_list|,
@@ -6204,12 +6204,11 @@ operator|)
 name|bp
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|intmax_t
 operator|)
 name|bp
 operator|->
-name|bio_blkno
+name|bio_offset
 argument_list|,
 name|bp
 operator|->
@@ -6242,7 +6241,7 @@ name|TOTALDRIVES
 operator|||
 name|bp
 operator|->
-name|bio_blkno
+name|bio_offset
 operator|<
 literal|0
 condition|)
@@ -6362,14 +6361,6 @@ block|}
 endif|#
 directive|endif
 comment|/*NOTEDIT42*/
-name|bp
-operator|->
-name|bio_pblkno
-operator|=
-name|bp
-operator|->
-name|bio_blkno
-expr_stmt|;
 name|bp
 operator|->
 name|bio_resid
@@ -8751,17 +8742,16 @@ directive|ifdef
 name|DEBUGIO
 name|printf
 argument_list|(
-literal|"matcd%d: at Nextblock b_blkno %d\n"
+literal|"matcd%d: at Nextblock b_offset %jd\n"
 argument_list|,
 name|ldrive
 argument_list|,
 operator|(
-name|unsigned
-name|int
+name|intmax_t
 operator|)
 name|bp
 operator|->
-name|bio_blkno
+name|bio_offset
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8769,19 +8759,13 @@ directive|endif
 comment|/*DEBUGIO*/
 name|blknum
 operator|=
-operator|(
 name|bp
 operator|->
-name|bio_blkno
+name|bio_offset
 operator|/
-operator|(
 name|mbx
 operator|->
 name|sz
-operator|/
-name|DEV_BSIZE
-operator|)
-operator|)
 operator|+
 name|mbx
 operator|->
@@ -9220,7 +9204,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"matcd%d: %s while reading block %d [Soft]\n"
+literal|"matcd%d: %s while reading offset %jd [Soft]\n"
 argument_list|,
 name|ldrive
 argument_list|,
@@ -9230,11 +9214,11 @@ name|i
 index|]
 argument_list|,
 operator|(
-name|int
+name|intmax_t
 operator|)
 name|bp
 operator|->
-name|bio_blkno
+name|bio_offset
 argument_list|)
 expr_stmt|;
 name|media_chk
@@ -9346,7 +9330,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"matcd%d: %s while reading block %d\n"
+literal|"matcd%d: %s while reading offset %jd\n"
 argument_list|,
 name|ldrive
 argument_list|,
@@ -9356,11 +9340,11 @@ name|errtyp
 index|]
 argument_list|,
 operator|(
-name|int
+name|intmax_t
 operator|)
 name|bp
 operator|->
-name|bio_blkno
+name|bio_offset
 argument_list|)
 expr_stmt|;
 if|if
