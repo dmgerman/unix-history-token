@@ -15,6 +15,34 @@ directive|define
 name|_NFSCLIENT_NFSMOUNT_H_
 end_define
 
+begin_struct
+struct|struct
+name|nfs_tcp_mountstate
+block|{
+name|int
+name|rpcresid
+decl_stmt|;
+define|#
+directive|define
+name|NFS_TCP_EXPECT_RPCMARKER
+value|0x0001
+comment|/* Expect to see a RPC/TCP marker next */
+define|#
+directive|define
+name|NFS_TCP_FORCE_RECONNECT
+value|0x0002
+comment|/* Force a TCP reconnect */
+name|int
+name|flags
+decl_stmt|;
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Mount structure.  * One allocated on every NFS mount.  * Holds NFS specific information for mount.  */
 end_comment
@@ -194,6 +222,10 @@ name|int
 name|nm_tprintf_delay
 decl_stmt|;
 comment|/* interval for messages */
+name|struct
+name|nfs_tcp_mountstate
+name|nm_nfstcpstate
+decl_stmt|;
 comment|/* NFSv4 */
 name|uint64_t
 name|nm_clientid

@@ -329,7 +329,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|do { \ 	error = nfs_request((v), mreq, (t), (p), (c),&mrep,&md,&dpos); \ 	if (error != 0) { \ 		if (error& NFSERR_RETERR) \ 			error&= ~NFSERR_RETERR; \ 		else \ 			goto nfsmout; \ 	} \ } while (0)
+value|do { \ 	sigset_t oldset; \ 	nfs_set_sigmask(p,&oldset); \ 	error = nfs_request((v), mreq, (t), (p), (c),&mrep,&md,&dpos); \ 	nfs_restore_sigmask(p,&oldset); \ 	if (error != 0) { \ 		if (error& NFSERR_RETERR) \ 			error&= ~NFSERR_RETERR; \ 		else \ 			goto nfsmout; \ 	} \ } while (0)
 end_define
 
 begin_define
