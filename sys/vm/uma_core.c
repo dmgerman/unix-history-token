@@ -227,6 +227,19 @@ name|hashzone
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_UMAHASH
+argument_list|,
+literal|"UMAHash"
+argument_list|,
+literal|"UMA Hash Buckets"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Are we allowed to allocate buckets?  */
 end_comment
@@ -1704,7 +1717,6 @@ name|hash
 operator|->
 name|uh_hashsize
 expr_stmt|;
-comment|/* XXX Shouldn't be abusing DEVBUF here */
 name|hash
 operator|->
 name|uh_slab_hash
@@ -1718,7 +1730,7 @@ name|malloc
 argument_list|(
 name|alloc
 argument_list|,
-name|M_DEVBUF
+name|M_UMAHASH
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -2000,7 +2012,7 @@ name|hash
 operator|->
 name|uh_slab_hash
 argument_list|,
-name|M_DEVBUF
+name|M_UMAHASH
 argument_list|)
 expr_stmt|;
 block|}
