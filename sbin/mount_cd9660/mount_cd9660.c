@@ -611,7 +611,11 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"%s"
+argument_list|,
+name|args
+operator|.
+name|fspec
 argument_list|)
 expr_stmt|;
 name|exit
