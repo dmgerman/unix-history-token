@@ -623,7 +623,7 @@ end_function
 
 begin_struct
 struct|struct
-name|h0h0
+name|g_hh01
 block|{
 name|struct
 name|g_geom
@@ -660,7 +660,7 @@ name|flag
 parameter_list|)
 block|{
 name|struct
-name|h0h0
+name|g_hh01
 modifier|*
 name|hp
 decl_stmt|;
@@ -757,7 +757,7 @@ decl_stmt|,
 name|i
 decl_stmt|;
 name|struct
-name|h0h0
+name|g_hh01
 name|h0h0
 decl_stmt|;
 name|struct
@@ -1116,8 +1116,6 @@ name|cp
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|npart
 decl_stmt|;
 name|u_char
 modifier|*
@@ -1127,9 +1125,6 @@ name|struct
 name|g_sunlabel_softc
 modifier|*
 name|ms
-decl_stmt|;
-name|off_t
-name|mediasize
 decl_stmt|;
 name|struct
 name|g_slicer
@@ -1225,10 +1220,6 @@ name|dumpconf
 operator|=
 name|g_sunlabel_dumpconf
 expr_stmt|;
-name|npart
-operator|=
-literal|0
-expr_stmt|;
 do|do
 block|{
 if|if
@@ -1263,14 +1254,6 @@ operator|<
 literal|512
 condition|)
 break|break;
-name|mediasize
-operator|=
-name|cp
-operator|->
-name|provider
-operator|->
-name|mediasize
-expr_stmt|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
