@@ -155,19 +155,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"\t\t%2d   %2d 0x%-8x %s\n"
+literal|"\t\t%2d %s\n"
 argument_list|,
 name|stat
 operator|.
 name|id
-argument_list|,
-name|stat
-operator|.
-name|refs
-argument_list|,
-name|stat
-operator|.
-name|version
 argument_list|,
 name|stat
 operator|.
@@ -263,13 +255,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\tId Refs Version%*c Name\n"
-argument_list|,
-name|POINTER_WIDTH
-operator|-
-literal|7
-argument_list|,
-literal|' '
+literal|"\t\tId Name\n"
 argument_list|)
 expr_stmt|;
 for|for
