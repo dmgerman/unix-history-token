@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	2.14 (Berkeley) %G%"
+literal|"@(#)scan.c	2.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2506,6 +2506,10 @@ end_macro
 
 begin_block
 block|{
+name|double
+name|atof
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|lxmatch
@@ -2809,7 +2813,11 @@ argument|; 						} 					lxmore( lxchar, LEXDIG );
 comment|/* now have the whole thing... */
 argument|} 				else {
 comment|/* no exponent */
-argument|ungetc( lxchar ,stdin); 					} 				return( isitfloat( yytext ) );  			default: 				ungetc( lxchar ,stdin); 				if( yytext[
+argument|ungetc( lxchar ,stdin); 					} 				dcon = atof( yytext ); 				if( (lxchar = getchar()) ==
+literal|'F'
+argument||| lxchar ==
+literal|'f'
+argument|){ 					fcon = dcon; 					return( FCON ); 					} 				else ungetc( lxchar ,stdin); 				return( DCON );  			default: 				ungetc( lxchar ,stdin); 				if( yytext[
 literal|0
 argument|] ==
 literal|'0'
