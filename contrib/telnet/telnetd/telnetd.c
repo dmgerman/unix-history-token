@@ -504,6 +504,9 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|u_long
+name|ultmp
+decl_stmt|;
 name|struct
 name|sockaddr_storage
 name|from
@@ -537,6 +540,10 @@ literal|1
 decl_stmt|;
 endif|#
 directive|endif
+name|char
+modifier|*
+name|ep
+decl_stmt|;
 name|pfrontp
 operator|=
 name|pbackp
@@ -1000,10 +1007,50 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+define|#
+directive|define
+name|MAXTOS
+value|255
+name|ultmp
+operator|=
+name|strtoul
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ep
+operator|||
+name|ep
+operator|==
+name|optarg
+operator|||
+name|ultmp
+operator|>
+name|MAXTOS
+condition|)
 name|warnx
 argument_list|(
-literal|"TOS option unavailable; -S flag not supported"
+literal|"%s%s%s"
+argument_list|,
+literal|"bad TOS argument '"
+argument_list|,
+name|optarg
+argument_list|,
+literal|"'; will try to use default TOS"
 argument_list|)
+expr_stmt|;
+else|else
+name|tos
+operator|=
+name|ultmp
 expr_stmt|;
 endif|#
 directive|endif
@@ -1744,7 +1791,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" [-a (debug|other|user|valid|off|none)]\n\t"
+literal|" [-4] [-6] [-a (debug|other|user|valid|off|none)]\n\t"
 argument_list|)
 expr_stmt|;
 endif|#
