@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.43.2.2 1995/05/31 10:34:28 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.43.2.3 1995/05/31 20:55:39 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -68,25 +68,6 @@ argument_list|)
 condition|)
 name|systemShutdown
 argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Welcome the user to the system */
-end_comment
-
-begin_function
-name|void
-name|systemWelcome
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"Installation system initializing..\n"
-argument_list|)
 expr_stmt|;
 block|}
 end_function
