@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -700,6 +700,18 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|pid_t
+name|savepid
+init|=
+name|p
+operator|->
+name|p_pid
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|np
+decl_stmt|;
 comment|/* 		 * new process group 		 */
 ifdef|#
 directive|ifdef
@@ -738,6 +750,28 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|np
+operator|=
+name|pfind
+argument_list|(
+name|savepid
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|||
+name|np
+operator|!=
+name|p
+condition|)
+return|return
+operator|(
+name|ESRCH
+operator|)
+return|;
 if|if
 condition|(
 name|mksess
@@ -910,7 +944,11 @@ name|p
 operator|->
 name|p_pgrp
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Adjust eligibility of affected pgrps to participate in job control. 	 * Increment eligibility counts before decrementing, otherwise we 	 * could reach 0 spuriously during the first call. 	 */
 name|fixjobc
 argument_list|(
@@ -957,6 +995,7 @@ operator|)
 operator|->
 name|p_pgrpnxt
 control|)
+block|{
 if|if
 condition|(
 operator|*
@@ -972,17 +1011,25 @@ name|p
 operator|->
 name|p_pgrpnxt
 expr_stmt|;
-goto|goto
-name|done
-goto|;
+break|break;
 block|}
+block|}
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|pp
+operator|==
+name|NULL
+condition|)
 name|panic
 argument_list|(
 literal|"enterpgrp: can't find p on old pgrp"
 argument_list|)
 expr_stmt|;
-name|done
-label|:
+endif|#
+directive|endif
 comment|/* 	 * delete old if empty 	 */
 if|if
 condition|(
@@ -1022,6 +1069,11 @@ name|pg_mem
 operator|=
 name|p
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1074,6 +1126,7 @@ operator|)
 operator|->
 name|p_pgrpnxt
 control|)
+block|{
 if|if
 condition|(
 operator|*
@@ -1089,17 +1142,25 @@ name|p
 operator|->
 name|p_pgrpnxt
 expr_stmt|;
-goto|goto
-name|done
-goto|;
+break|break;
 block|}
+block|}
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|pp
+operator|==
+name|NULL
+condition|)
 name|panic
 argument_list|(
 literal|"leavepgrp: can't find p in pgrp"
 argument_list|)
 expr_stmt|;
-name|done
-label|:
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -1122,6 +1183,11 @@ name|p_pgrp
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1208,6 +1274,7 @@ operator|)
 operator|->
 name|pg_hforw
 control|)
+block|{
 if|if
 condition|(
 operator|*
@@ -1223,17 +1290,25 @@ name|pgrp
 operator|->
 name|pg_hforw
 expr_stmt|;
-goto|goto
-name|done
-goto|;
+break|break;
 block|}
+block|}
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|pgp
+operator|==
+name|NULL
+condition|)
 name|panic
 argument_list|(
 literal|"pgdelete: can't find pgrp on hash chain"
 argument_list|)
 expr_stmt|;
-name|done
-label|:
+endif|#
+directive|endif
 if|if
 condition|(
 operator|--
