@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)quot.c	4.15 (Berkeley) 89/03/05"
+literal|"@(#)quot.c	4.16 (Berkeley) 89/05/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,18 +23,6 @@ end_endif
 begin_comment
 comment|/*  * quot  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_include
 include|#
@@ -58,6 +46,24 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_define
@@ -549,7 +555,9 @@ name|sprintf
 argument_list|(
 name|dev
 argument_list|,
-literal|"/dev/r%s"
+literal|"%s/r%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|cp
 operator|+
