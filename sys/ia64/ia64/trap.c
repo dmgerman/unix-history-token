@@ -3993,7 +3993,7 @@ name|td
 operator|->
 name|td_retval
 index|[
-literal|0
+literal|1
 index|]
 expr_stmt|;
 comment|/* edx */
