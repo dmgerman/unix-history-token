@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd1.c	1.5 %G%"
+literal|"@(#)cmd1.c	1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -742,6 +742,8 @@ argument_list|,
 name|nameof
 argument_list|(
 name|mp
+argument_list|,
+literal|0
 argument_list|)
 argument_list|,
 name|hl
@@ -767,6 +769,8 @@ argument_list|,
 name|nameof
 argument_list|(
 name|mp
+argument_list|,
+literal|0
 argument_list|)
 argument_list|,
 name|hl
