@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttgeneric.c	3.5 83/08/15"
+literal|"@(#)ttgeneric.c	3.6 83/08/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,22 @@ include|#
 directive|include
 file|"tt.h"
 end_include
+
+begin_function_decl
+name|char
+modifier|*
+name|tgetstr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|tgoto
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|char
@@ -100,14 +116,6 @@ name|char
 name|gen_insert
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|char
-modifier|*
-name|tgetstr
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|char

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttinit.c	3.4 83/08/15"
+literal|"@(#)ttinit.c	3.5 83/08/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,11 +126,16 @@ name|t
 operator|=
 name|malloc
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|q
 operator|-
 name|p
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 operator|)
 operator|!=
