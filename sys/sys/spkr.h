@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.h -- interface definitions for speaker ioctl()  *  * v1.1 by Eric S. Raymond (esr@snark.thyrsus.com) Feb 1990  *      modified for 386bsd by Andrew A. Chernov<ache@astral.msk.su>  *      386bsd only clean version, all SYSV stuff removed  */
+comment|/*  * spkr.h -- interface definitions for speaker ioctl()  *  * v1.1 by Eric S. Raymond (esr@snark.thyrsus.com) Feb 1990  *      modified for 386bsd by Andrew A. Chernov<ache@astral.msk.su>  *      386bsd only clean version, all SYSV stuff removed  *  *	$Id$  */
 end_comment
 
 begin_ifndef
@@ -89,10 +89,6 @@ end_endif
 
 begin_comment
 comment|/* _SPKR_H_ */
-end_comment
-
-begin_comment
-comment|/* spkr.h ends here */
 end_comment
 
 end_unit
