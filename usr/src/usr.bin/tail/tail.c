@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tail.c	4.4 (Berkeley) %G%"
+literal|"@(#)tail.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,20 @@ begin_define
 define|#
 directive|define
 name|LBIN
-value|4097
+value|8193
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|BUFSIZ
+end_undef
+
+begin_define
+define|#
+directive|define
+name|BUFSIZ
+value|LBIN-1
 end_define
 
 begin_decl_stmt
@@ -309,6 +322,17 @@ block|{
 case|case
 literal|'b'
 case|:
+if|if
+condition|(
+name|n
+operator|==
+operator|-
+literal|1
+condition|)
+name|n
+operator|=
+literal|1
+expr_stmt|;
 name|n
 operator|<<=
 literal|9
@@ -661,20 +685,14 @@ operator|&
 name|statb
 argument_list|)
 expr_stmt|;
+comment|/* If by lines, back up 1 buffer: else back up as needed */
 name|di
 operator|=
-operator|!
 name|bylines
-operator|&&
-name|n
-operator|<
-name|LBIN
 condition|?
-name|n
+name|BUFSIZ
 else|:
-name|LBIN
-operator|-
-literal|1
+name|n
 expr_stmt|;
 if|if
 condition|(
