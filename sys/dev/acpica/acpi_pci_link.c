@@ -60,7 +60,7 @@ file|<dev/acpica/acpi_pcibvar.h>
 end_include
 
 begin_comment
-comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+comment|/* Hooks for the ACPI CA debugging infrastructure. */
 end_comment
 
 begin_define
@@ -414,9 +414,7 @@ name|pci_link
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|printf
 argument_list|(
 literal|"%s irq %3d: "
@@ -459,7 +457,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|printf
 argument_list|(
 literal|"%3d"
@@ -474,7 +471,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"] "
@@ -570,7 +566,7 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|" %d.%d.%d"
+literal|" %d.%d.%d\n"
 argument_list|,
 name|entry
 operator|->
@@ -601,11 +597,6 @@ operator|->
 name|prt
 operator|.
 name|Pin
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1087,7 +1078,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"too many IRQs %d\n"
+literal|"too many IRQs (%d)\n"
 operator|,
 name|i
 operator|)
@@ -1110,7 +1101,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"Invalid IRQ %d\n"
+literal|"invalid IRQ %d\n"
 operator|,
 name|Interrupts
 index|[
@@ -1372,7 +1363,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"couldn't get current IRQ from PCI interrupt link %s - %s\n"
+literal|"couldn't get current IRQ from interrupt link %s - %s\n"
 operator|,
 name|acpi_name
 argument_list|(
@@ -1614,7 +1605,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"couldn't get current IRQ from PCI interrupt link %s - %s\n"
+literal|"couldn't get current IRQ from interrupt link %s - %s\n"
 operator|,
 name|acpi_name
 argument_list|(
@@ -1660,7 +1651,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"couldn't get PCI interrupt link device _PRS data %s - %s\n"
+literal|"couldn't get interrupt link device _PRS data %s - %s\n"
 operator|,
 name|acpi_name
 argument_list|(
@@ -1765,7 +1756,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"couldn't get possible IRQs from PCI interrupt link %s - %s\n"
+literal|"couldn't get possible IRQs from interrupt link %s - %s\n"
 operator|,
 name|acpi_name
 argument_list|(
@@ -1797,7 +1788,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"PCI interrupt link device _PRS data is corrupted - %s\n"
+literal|"interrupt link device _PRS data is corrupted - %s\n"
 operator|,
 name|acpi_name
 argument_list|(
@@ -1849,7 +1840,6 @@ name|Pointer
 operator|!=
 name|NULL
 condition|)
-block|{
 name|AcpiOsFree
 argument_list|(
 name|buf
@@ -1857,7 +1847,6 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
@@ -1868,13 +1857,11 @@ name|link
 operator|!=
 name|NULL
 condition|)
-block|{
 name|AcpiOsFree
 argument_list|(
 name|link
 argument_list|)
 expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|error
@@ -1927,21 +1914,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|prt
 operator|==
 name|NULL
-operator|)
 operator|||
-operator|(
 name|prt
 operator|->
 name|Source
 operator|==
 name|NULL
-operator|)
 operator|||
-operator|(
 name|prt
 operator|->
 name|Source
@@ -1950,7 +1932,6 @@ literal|0
 index|]
 operator|==
 literal|'\0'
-operator|)
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -1998,7 +1979,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"couldn't get acpi handle - %s\n"
+literal|"couldn't get handle - %s\n"
 operator|,
 name|AcpiFormatException
 argument_list|(
@@ -2058,7 +2039,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 operator|(
 name|sta
 operator|&
@@ -2068,6 +2048,8 @@ operator||
 name|ACPI_STA_FUNCTIONAL
 operator|)
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -2075,7 +2057,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"PCI interrupt link is not functional - %s\n"
+literal|"interrupt link is not functional - %s\n"
 operator|,
 name|acpi_name
 argument_list|(
@@ -2133,7 +2115,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"PCI interrupt link entry already exists - %s\n"
+literal|"interrupt link entry already exists - %s\n"
 operator|,
 name|acpi_name
 argument_list|(
@@ -2249,7 +2231,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"couldn't add prt entry to pci link %s - %s\n"
+literal|"couldn't add _PRT entry to link %s - %s\n"
 operator|,
 name|acpi_name
 argument_list|(
@@ -2293,13 +2275,11 @@ name|entry
 operator|!=
 name|NULL
 condition|)
-block|{
 name|AcpiOsFree
 argument_list|(
 name|entry
 argument_list|)
 expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|error
@@ -2331,13 +2311,11 @@ name|irq
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 for|for
 control|(
 name|i
@@ -2365,13 +2343,11 @@ index|]
 operator|==
 name|irq
 condition|)
-block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 block|}
 comment|/* allow initial IRQ as valid one. */
 if|if
@@ -2382,13 +2358,11 @@ name|initial_irq
 operator|==
 name|irq
 condition|)
-block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 return|return
 operator|(
 literal|0
@@ -2495,7 +2469,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"couldn't get current IRQ from PCI interrupt link %s - %s\n"
+literal|"couldn't get current IRQ from interrupt link %s - %s\n"
 operator|,
 name|acpi_name
 argument_list|(
@@ -2520,13 +2494,11 @@ name|current_irq
 operator|==
 name|irq
 condition|)
-block|{
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
 argument_list|)
 expr_stmt|;
-block|}
 name|bzero
 argument_list|(
 operator|&
@@ -2553,34 +2525,6 @@ operator|.
 name|Id
 condition|)
 block|{
-default|default:
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"Resource is not an IRQ entry %s - %d\n"
-operator|,
-name|acpi_name
-argument_list|(
-name|link
-operator|->
-name|handle
-argument_list|)
-operator|,
-name|link
-operator|->
-name|possible_resources
-operator|.
-name|Id
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_TYPE
-argument_list|)
-expr_stmt|;
 case|case
 name|ACPI_RSTYPE_IRQ
 case|:
@@ -2695,6 +2639,34 @@ operator|=
 name|irq
 expr_stmt|;
 break|break;
+default|default:
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Resource is not an IRQ entry %s - %d\n"
+operator|,
+name|acpi_name
+argument_list|(
+name|link
+operator|->
+name|handle
+argument_list|)
+operator|,
+name|link
+operator|->
+name|possible_resources
+operator|.
+name|Id
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_TYPE
+argument_list|)
+expr_stmt|;
 block|}
 name|error
 operator|=
@@ -2751,7 +2723,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"buffer setup by acpi_AppendBufferResource is corrupted - %s\n"
+literal|"appended buffer for %s is corrupted\n"
 operator|,
 name|acpi_name
 argument_list|(
@@ -2793,7 +2765,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"couldn't set PCI interrupt link device _SRS %s - %s\n"
+literal|"couldn't set link device _SRS %s - %s\n"
 operator|,
 name|acpi_name
 argument_list|(
@@ -2877,12 +2849,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 operator|(
 name|sta
 operator|&
 name|ACPI_STA_ENABLE
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -2890,7 +2863,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"PCI interrupt link is disabled - %s\n"
+literal|"interrupt link %s is disabled\n"
 operator|,
 name|acpi_name
 argument_list|(
@@ -2932,7 +2905,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"couldn't get current IRQ from PCI interrupt link %s - %s\n"
+literal|"couldn't get current IRQ from interrupt link %s - %s\n"
 operator|,
 name|acpi_name
 argument_list|(
@@ -3052,9 +3025,7 @@ name|current_irq
 operator|!=
 literal|0
 condition|)
-block|{
 continue|continue;
-block|}
 name|printf
 argument_list|(
 literal|"%s:\n"
@@ -3307,7 +3278,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|acpi_pci_link_is_irq_exclusive
+name|link_exclusive
 parameter_list|(
 name|ACPI_RESOURCE
 modifier|*
@@ -3319,16 +3290,8 @@ condition|(
 name|res
 operator|==
 name|NULL
-condition|)
-block|{
-return|return
+operator|||
 operator|(
-literal|0
-operator|)
-return|;
-block|}
-if|if
-condition|(
 name|res
 operator|->
 name|Id
@@ -3340,16 +3303,16 @@ operator|->
 name|Id
 operator|!=
 name|ACPI_RSTYPE_EXT_IRQ
+operator|)
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 if|if
 condition|(
+operator|(
 name|res
 operator|->
 name|Id
@@ -3365,16 +3328,9 @@ operator|.
 name|SharedExclusive
 operator|==
 name|ACPI_EXCLUSIVE
-condition|)
-block|{
-return|return
-operator|(
-literal|1
 operator|)
-return|;
-block|}
-if|if
-condition|(
+operator|||
+operator|(
 name|res
 operator|->
 name|Id
@@ -3390,14 +3346,13 @@ operator|.
 name|SharedExclusive
 operator|==
 name|ACPI_EXCLUSIVE
+operator|)
 condition|)
-block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 return|return
 operator|(
 literal|0
@@ -3459,9 +3414,8 @@ name|busno
 operator|!=
 name|busno
 condition|)
-block|{
 continue|continue;
-block|}
+comment|/* Impossible? */
 name|link
 operator|=
 name|entry
@@ -3474,10 +3428,7 @@ name|link
 operator|==
 name|NULL
 condition|)
-block|{
 continue|continue;
-comment|/* impossible... */
-block|}
 if|if
 condition|(
 name|link
@@ -3536,7 +3487,7 @@ expr_stmt|;
 comment|/* higher penalty if exclusive. */
 if|if
 condition|(
-name|acpi_pci_link_is_irq_exclusive
+name|link_exclusive
 argument_list|(
 operator|&
 name|link
@@ -3544,7 +3495,6 @@ operator|->
 name|possible_resources
 argument_list|)
 condition|)
-block|{
 name|irq_penalty
 index|[
 name|irq
@@ -3552,7 +3502,6 @@ index|]
 operator|+=
 literal|100
 expr_stmt|;
-block|}
 comment|/* XXX try to get this IRQ in non-sharable mode. */
 name|rid
 operator|=
@@ -3671,7 +3620,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"---- before setting priority for links ------------\n"
+literal|"ACPI PCI link before setting link priority:\n"
 argument_list|)
 expr_stmt|;
 name|acpi_pci_link_bootdisabled_dump
@@ -3687,14 +3636,12 @@ argument|&acpi_pci_link_entries
 argument_list|,
 argument|links
 argument_list|)
-block|{
 name|link
 operator|->
 name|priority
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|TAILQ_FOREACH
 argument_list|(
 argument|link
@@ -3811,7 +3758,6 @@ argument|&acpi_pci_link_entries
 argument_list|,
 argument|links
 argument_list|)
-block|{
 if|if
 condition|(
 name|link
@@ -3822,13 +3768,10 @@ name|link_pri
 operator|->
 name|priority
 condition|)
-block|{
 name|link
 operator|=
 name|link_pri
 expr_stmt|;
-block|}
-block|}
 comment|/* move to work list. */
 name|TAILQ_REMOVE
 argument_list|(
@@ -3927,7 +3870,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"---- before fixup boot-disabled links -------------\n"
+literal|"ACPI PCI link before fixup for boot-disabled links:\n"
 argument_list|)
 expr_stmt|;
 name|acpi_pci_link_bootdisabled_dump
@@ -3952,9 +3895,7 @@ name|current_irq
 operator|!=
 literal|0
 condition|)
-block|{
 continue|continue;
-block|}
 comment|/* sort IRQs based on their penalty descending. */
 for|for
 control|(
@@ -4103,7 +4044,6 @@ name|references
 expr_stmt|;
 break|break;
 block|}
-comment|/* NG, try next IRQ... */
 block|}
 block|}
 if|if
@@ -4113,7 +4053,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"---- after fixup boot-disabled links --------------\n"
+literal|"ACPI PCI link after fixup for boot-disabled links:\n"
 argument_list|)
 expr_stmt|;
 name|acpi_pci_link_bootdisabled_dump
@@ -4183,13 +4123,11 @@ argument_list|(
 literal|"pci_link"
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|first_time
@@ -4221,14 +4159,12 @@ name|prtbuf
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|prtp
 operator|=
 name|prtbuf
@@ -4241,7 +4177,6 @@ name|prtp
 operator|==
 name|NULL
 condition|)
-block|{
 comment|/* didn't get routing table */
 return|return
 operator|(
@@ -4249,7 +4184,6 @@ operator|-
 literal|1
 operator|)
 return|;
-block|}
 comment|/* scan the PCI Routing Table */
 for|for
 control|(
@@ -4324,7 +4258,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"---- initial configuration ------------------------\n"
+literal|"ACPI PCI link initial configuration:\n"
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -4344,9 +4278,7 @@ name|busno
 operator|!=
 name|busno
 condition|)
-block|{
 continue|continue;
-block|}
 name|acpi_pci_link_entry_dump
 argument_list|(
 name|entry
@@ -4381,9 +4313,7 @@ name|busno
 operator|!=
 name|busno
 condition|)
-block|{
 continue|continue;
-block|}
 name|snprintf
 argument_list|(
 name|prthint
@@ -4475,7 +4405,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"couldn't set IRQ to PCI interrupt link entry %s - %s\n"
+literal|"couldn't set IRQ to link entry %s - %s\n"
 operator|,
 name|acpi_name
 argument_list|(
@@ -4503,7 +4433,6 @@ name|irq
 operator|==
 literal|0
 condition|)
-block|{
 name|entry
 operator|->
 name|pci_link
@@ -4512,7 +4441,6 @@ name|current_irq
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 comment|/* auto arbitration */
 name|acpi_pci_link_update_irq_penalty
@@ -4535,7 +4463,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"---- arbitrated configuration ---------------------\n"
+literal|"ACPI PCI link arbitrated configuration:\n"
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -4555,9 +4483,7 @@ name|busno
 operator|!=
 name|busno
 condition|)
-block|{
 continue|continue;
-block|}
 name|acpi_pci_link_entry_dump
 argument_list|(
 name|entry
@@ -4615,13 +4541,11 @@ argument_list|(
 literal|"pci_link"
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 name|TAILQ_FOREACH
 argument_list|(
 argument|entry
@@ -4639,9 +4563,7 @@ name|pcidev
 operator|!=
 name|dev
 condition|)
-block|{
 continue|continue;
-block|}
 name|error
 operator|=
 name|acpi_pci_link_set_irq
@@ -4670,7 +4592,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_WARN
 operator|,
-literal|"couldn't set IRQ to PCI interrupt link entry %s - %s\n"
+literal|"couldn't set IRQ to link entry %s - %s\n"
 operator|,
 name|acpi_name
 argument_list|(
