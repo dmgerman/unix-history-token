@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.3 (Berkeley) %G%"
+literal|"@(#)table.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,8 +202,6 @@ operator||
 name|TUNSIGNED
 operator||
 name|TULONG
-operator||
-name|TFLOAT
 block|,
 name|SANY
 block|,
@@ -3061,8 +3059,17 @@ name|RLEFT
 operator||
 name|RESCC
 block|,
+ifdef|#
+directive|ifdef
+name|FORT
+literal|"	OF2	AR,TAL\n"
+block|,
+else|#
+directive|else
 literal|"	OF2	AR,AL\n"
 block|,
+endif|#
+directive|endif
 name|ASG
 name|OPFLOAT
 block|,
@@ -3272,7 +3279,7 @@ name|RLEFT
 operator||
 name|RESCC
 block|,
-literal|"	OF2	TAR,AL\n"
+literal|"	OF2	AR,TAL\n"
 block|,
 name|OPFLOAT
 block|,
@@ -3305,40 +3312,6 @@ operator||
 name|RESCC
 block|,
 literal|"	OF3	AR,AL,TA1\n"
-block|,
-else|#
-directive|else
-name|OPFLOAT
-block|,
-name|INAREG
-operator||
-name|INTAREG
-operator||
-name|FORCC
-block|,
-name|SAREG
-operator||
-name|AWD
-block|,
-name|TFLOAT
-block|,
-name|SAREG
-operator||
-name|AWD
-block|,
-name|TFLOAT
-block|,
-name|NAREG
-operator||
-name|NASL
-operator||
-name|NASR
-block|,
-name|RESC1
-operator||
-name|RESCC
-block|,
-literal|"	OF3	AR,AL,A1\n	cvtfd	A1,A1\n"
 block|,
 endif|#
 directive|endif

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)order.c	1.3 (Berkeley) %G%"
+literal|"@(#)order.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1978,6 +1978,10 @@ name|rt
 operator|==
 name|USHORT
 operator|||
+name|rt
+operator|==
+name|FLOAT
+operator|||
 operator|(
 name|ro
 operator|!=
@@ -2455,7 +2459,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
 name|rt
 operator|==
 name|CHAR
@@ -2471,6 +2474,10 @@ operator|||
 name|rt
 operator|==
 name|USHORT
+operator|||
+name|rt
+operator|==
+name|FLOAT
 operator|||
 operator|(
 name|ro
@@ -2488,7 +2495,6 @@ operator|&&
 name|ro
 operator|!=
 name|OREG
-operator|)
 operator|)
 condition|)
 block|{
