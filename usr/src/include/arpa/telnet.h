@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	telnet.h	4.4	82/03/16	*/
+comment|/*	telnet.h	4.5	85/03/24	*/
 end_comment
 
 begin_comment
@@ -440,6 +440,21 @@ begin_comment
 comment|/* supdup protocol */
 end_comment
 
+begin_comment
+comment|/* 22-23 are assigned */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_TTYPE
+value|24
+end_define
+
+begin_comment
+comment|/* terminal type */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -510,11 +525,20 @@ directive|ifdef
 name|TELOPTS
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|NTELOPTS
+value|25
+end_define
+
 begin_decl_stmt
 name|char
 modifier|*
 name|telopts
-index|[]
+index|[
+name|NTELOPTS
+index|]
 init|=
 block|{
 literal|"BINARY"
@@ -560,7 +584,13 @@ block|,
 literal|"DATA ENTRY TERMINAL"
 block|,
 literal|"SUPDUP"
-block|}
+block|,
+literal|"#22"
+block|,
+literal|"#23"
+block|,
+literal|"TTYPE"
+block|, }
 decl_stmt|;
 end_decl_stmt
 
