@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	main.c	1.6	(Berkeley) 83/08/23  *  *	This file contains the main and file system dependent routines  * for processing gremlin files into troff input.  The program watches  * input go by to standard output, only interpretting things between .GS  * and .GE lines.  Default values may be overridden, as in gprint, on the  * command line and are further overridden by commands in the input.  A  * description of the command-line options are listed below.  A space is  * NOT required for the operand of an option.  *  *	command options are:  *  *	-r ss	sets gremlin's roman font to troff font ss.  Also for -i,  *		-b and -s for italics, bold, and special fonts.  This does  *		NOT affect font changes imbedded into strings.  A \fI, for  *		instance, will get the italics font regardless of what -i  *		is set to.  *  *	-1 #	sets point size 1 to #.  also for -2, -3, -4.  Defaults  *		are 12, 16, 24, 36.  *  *	-n #	set narrow line thickness to # pixels.  Also for -m (medium)  *		and -t (thick).  Defaults are 1, 3, and 5 pixels.  *  *	-x #	scale the picture by x (integer or decimal).  *  *	-T dev	Prepare output for "dev" printer.  Default is for the varian  *		and versatec printers.  Devices acceptable are:  ver, var, ip.  *  *	-p	prompt user for fonts, sizes and thicknesses.  */
+comment|/*	main.c	1.7	(Berkeley) 83/09/19  *  *	This file contains the main and file system dependent routines  * for processing gremlin files into troff input.  The program watches  * input go by to standard output, only interpretting things between .GS  * and .GE lines.  Default values may be overridden, as in gprint, on the  * command line and are further overridden by commands in the input.  A  * description of the command-line options are listed below.  A space is  * NOT required for the operand of an option.  *  *	command options are:  *  *	-r ss	sets gremlin's roman font to troff font ss.  Also for -i,  *		-b and -s for italics, bold, and special fonts.  This does  *		NOT affect font changes imbedded into strings.  A \fI, for  *		instance, will get the italics font regardless of what -i  *		is set to.  *  *	-1 #	sets point size 1 to #.  also for -2, -3, -4.  Defaults  *		are 12, 16, 24, 36.  *  *	-n #	set narrow line thickness to # pixels.  Also for -m (medium)  *		and -t (thick).  Defaults are 1, 3, and 5 pixels.  *  *	-x #	scale the picture by x (integer or decimal).  *  *	-T dev	Prepare output for "dev" printer.  Default is for the varian  *		and versatec printers.  Devices acceptable are:  ver, var, ip.  *  *	-p	prompt user for fonts, sizes and thicknesses.  *  *  *		Inside the GS and GE, there are commands similar to command-  *	    line options listed above.  At most one command may reside on each  *	    line, and each command is followed by a parameter separated by white  *	    space.  The commands are as follows, and may be abbreviated down to  *	    one character (with exception of "scale" down to "sc") and may be  *	    upper or lower case.  *  *			   1, 2, 3, 4  -  set size 1, 2, 3, or 4 (followed  *	roman, italics, bold, special  -  set gremlin's fonts to any other  *					  troff font (one or two characters)  *			     scale, x  -  scale is IN ADDITION to the global  *					  scale factor from the -x option.  *		narrow, medium, thick  -  set pixel widths of lines.  *				 file  -  set the file name to read the  *					  gremlin picture from.  *			width, height  -  these two commands override any  *					  scaling factor that is in effect,  *					  and forces the picture to fit into  *					  either the height or width specified,  *					  whichever makes the picture smaller.  *					  The operand for these two commands is  *					  a floating-point number in units of  *					  inches  *  *	Troff number registers used:  g1 through g9.  g1 is the width of the  *	picture, and g2 is the height.  g2-g6 save information, g8 and g9 are  *	used for text processing and g7 is reserved.  */
 end_comment
 
 begin_include
@@ -25,7 +25,7 @@ begin_function_decl
 specifier|extern
 name|char
 modifier|*
-name|calloc
+name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -192,7 +192,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"main.c	1.6	83/08/23"
+literal|"main.c	1.7	83/09/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -2007,6 +2007,22 @@ return|return;
 comment|/* if a request is made to make the */
 comment|/* picture fit into a specific area, */
 comment|/* set the scale to do that. */
+if|if
+condition|(
+operator|(
+name|temp
+operator|=
+name|bottompoint
+operator|-
+name|toppoint
+operator|)
+operator|<
+literal|0.1
+condition|)
+name|temp
+operator|=
+literal|0.1
+expr_stmt|;
 name|temp
 operator|=
 operator|(
@@ -2015,17 +2031,27 @@ operator|!=
 literal|0.0
 operator|)
 condition|?
-name|SCREENtoINCH
-operator|*
-operator|(
-name|bottompoint
-operator|-
-name|toppoint
-operator|)
-operator|/
 name|height
+operator|/
+name|temp
 else|:
 name|BIG
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|troffscale
+operator|=
+name|rightpoint
+operator|-
+name|leftpoint
+operator|)
+operator|<
+literal|0.1
+condition|)
+name|troffscale
+operator|=
+literal|0.1
 expr_stmt|;
 name|troffscale
 operator|=
@@ -2035,15 +2061,9 @@ operator|!=
 literal|0.0
 operator|)
 condition|?
-name|SCREENtoINCH
-operator|*
-operator|(
-name|rightpoint
-operator|-
-name|leftpoint
-operator|)
-operator|/
 name|width
+operator|/
+name|troffscale
 else|:
 name|BIG
 expr_stmt|;
@@ -2109,15 +2129,15 @@ operator|*
 name|troffscale
 expr_stmt|;
 comment|/* save stuff in number registers, */
-comment|/*   register gw = picture width and */
-comment|/*   register gh = picture height, */
+comment|/*   register g1 = picture width and */
+comment|/*   register g2 = picture height, */
 comment|/*   set vertical spacing, no fill, */
 comment|/*   and break (to make sure picture */
 comment|/*   starts on left), and put out the */
 comment|/*   user's ".GS" line. */
 name|printf
 argument_list|(
-literal|".nr gw %d\n.nr gh %d\n"
+literal|".nr g1 %d\n.nr g2 %d\n"
 argument_list|,
 name|xright
 operator|-
@@ -2137,12 +2157,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".nr g1 \\n(.f\n.nr g2 \\n(.s\n"
+literal|".nr g3 \\n(.f\n.nr g4 \\n(.s\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".nr g3 \\n(.v\n.nr g4 \\n(.u\n.nf\n.vs 0"
+literal|".nr g5 \\n(.v\n.nr g6 \\n(.u\n.nf\n.vs 0"
 argument_list|)
 expr_stmt|;
 name|lastx
@@ -2218,12 +2238,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".ft \\n(g1\n.ps \\n(g2\n"
+literal|".ft \\n(g3\n.ps \\n(g4\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".vs \\n(g3u\n.if \\n(g4 .fi\n%s"
+literal|".vs \\n(g5u\n.if \\n(g6 .fi\n%s"
 argument_list|,
 name|inputline
 argument_list|)
@@ -2369,7 +2389,7 @@ name|sscanf
 argument_list|(
 name|line
 argument_list|,
-literal|"%s%s"
+literal|"%80s%80s"
 argument_list|,
 operator|&
 name|str1
@@ -2450,7 +2470,7 @@ operator|-
 literal|'1'
 index|]
 operator|=
-name|calloc
+name|malloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -2485,7 +2505,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|calloc
+name|malloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -2515,7 +2535,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|calloc
+name|malloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -2545,7 +2565,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|calloc
+name|malloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -2587,7 +2607,7 @@ index|[
 literal|3
 index|]
 operator|=
-name|calloc
+name|malloc
 argument_list|(
 name|strlen
 argument_list|(
