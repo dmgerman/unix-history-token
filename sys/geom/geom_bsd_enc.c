@@ -50,12 +50,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -214,15 +208,6 @@ operator|!=
 name|DISKMAGIC
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"HERE %s %d\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -249,15 +234,6 @@ operator|>
 name|maxpart
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"HERE %s %d\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -308,15 +284,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"HERE %s %d\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
