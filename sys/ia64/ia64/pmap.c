@@ -3779,20 +3779,15 @@ comment|/*  *	Routine:	pmap_extract  *	Function:  *		Extract the physical page a
 end_comment
 
 begin_function
-name|vm_offset_t
+name|vm_paddr_t
 name|pmap_extract
 parameter_list|(
-name|pmap
-parameter_list|,
-name|va
-parameter_list|)
-specifier|register
 name|pmap_t
 name|pmap
-decl_stmt|;
+parameter_list|,
 name|vm_offset_t
 name|va
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ia64_lpte
