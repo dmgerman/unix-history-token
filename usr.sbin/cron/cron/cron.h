@@ -794,17 +794,6 @@ define|#
 directive|define
 name|WHEN_REBOOT
 value|0x04
-define|#
-directive|define
-name|RUN_AT
-value|0x08
-define|#
-directive|define
-name|NOT_UNTIL
-value|0x10
-name|time_t
-name|tmval
-decl_stmt|;
 block|}
 name|entry
 typedef|;
