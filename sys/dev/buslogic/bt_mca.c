@@ -722,8 +722,6 @@ argument_list|,
 name|iobase
 argument_list|,
 name|iosize
-argument_list|,
-name|RF_ALLOCATED
 argument_list|)
 expr_stmt|;
 comment|/* And allocate them */
