@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kbdcontrol.c,v 1.19 1998/09/10 12:20:09 yokota Exp $"
+literal|"$Id: kbdcontrol.c,v 1.20 1999/01/11 03:20:24 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2159,22 +2159,47 @@ block|}
 block|}
 end_function
 
-begin_function
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_decl_stmt
 name|void
 name|print_key_definition_line
-parameter_list|(
+argument_list|(
 name|FILE
-modifier|*
+operator|*
 name|fp
-parameter_list|,
+argument_list|,
 name|int
 name|scancode
-parameter_list|,
-name|struct
+argument_list|,
+expr|struct
 name|keyent_t
-modifier|*
+operator|*
 name|key
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+name|void
+name|print_key_definition_line
+argument_list|(
+name|FILE
+operator|*
+name|fp
+argument_list|,
+name|int
+name|scancode
+argument_list|,
+expr|struct
+name|key_t
+operator|*
+name|key
+argument_list|)
+endif|#
+directive|endif
 block|{
 name|int
 name|i
@@ -2312,7 +2337,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 name|void
@@ -4567,6 +4592,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_function
 specifier|static
 name|char
@@ -4994,6 +5025,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__ */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -5006,6 +5046,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
+ifdef|#
+directive|ifdef
+name|__i386__
 literal|"usage: kbdcontrol [-dFKix] [-b  duration.pitch | [quiet.]belltype]"
 argument_list|,
 literal|"                  [-r delay.repeat | speed] [-l mapfile] [-f # string]"
@@ -5013,16 +5056,32 @@ argument_list|,
 literal|"                  [-h size] [-k device] [-L mapfile]"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+literal|"usage: kbdcontrol [-dFx] [-b  duration.pitch | [quiet.]belltype]"
+operator|,
+literal|"                  [-r delay.repeat | speed] [-l mapfile] [-f # string]"
+operator|,
+literal|"                  [-h size] [-L mapfile]"
+block|)
+function|;
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_function
-name|void
+unit|}   void
 name|main
 parameter_list|(
 name|int
@@ -5037,6 +5096,9 @@ block|{
 name|int
 name|opt
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
 while|while
 condition|(
 operator|(
@@ -5055,6 +5117,28 @@ operator|!=
 operator|-
 literal|1
 condition|)
+else|#
+directive|else
+while|while
+condition|(
+operator|(
+name|opt
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"b:df:h:Fl:L:r:x"
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|opt
@@ -5135,6 +5219,9 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|__i386__
 case|case
 literal|'i'
 case|:
@@ -5158,6 +5245,9 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* __i386__ */
 case|case
 literal|'r'
 case|:
