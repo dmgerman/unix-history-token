@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -906,6 +906,62 @@ name|_getlong
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Inline versions of get/put short/long.  * Pointer is advanced; we assume that both arguments  * are lvalues and will already be in registers.  * cp MUST be u_char *.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETSHORT
+parameter_list|(
+name|s
+parameter_list|,
+name|cp
+parameter_list|)
+value|{ \ 	(s) = *(cp)++<< 8; \ 	(s) |= *(cp)++; \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETLONG
+parameter_list|(
+name|l
+parameter_list|,
+name|cp
+parameter_list|)
+value|{ \ 	(l) = *(cp)++<< 8; \ 	(l) |= *(cp)++; (l)<<= 8; \ 	(l) |= *(cp)++; (l)<<= 8; \ 	(l) |= *(cp)++; \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PUTSHORT
+parameter_list|(
+name|s
+parameter_list|,
+name|cp
+parameter_list|)
+value|{ \ 	*(cp)++ = (s)>> 8; \ 	*(cp)++ = (s); \ }
+end_define
+
+begin_comment
+comment|/*  * Warning: PUTLONG destroys its first argument.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PUTLONG
+parameter_list|(
+name|l
+parameter_list|,
+name|cp
+parameter_list|)
+value|{ \ 	(cp)[3] = l; \ 	(cp)[2] = (l>>= 8); \ 	(cp)[1] = (l>>= 8); \ 	(cp)[0] = l>> 8; \ 	(cp) += sizeof(u_long); \ }
+end_define
 
 end_unit
 
