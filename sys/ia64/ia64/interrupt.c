@@ -456,11 +456,9 @@ block|{
 name|u_int32_t
 name|mybit
 init|=
-literal|1
-operator|<<
 name|PCPU_GET
 argument_list|(
-name|cpuid
+name|cpumask
 argument_list|)
 decl_stmt|;
 name|savectx

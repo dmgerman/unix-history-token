@@ -8653,14 +8653,10 @@ argument_list|,
 name|all_cpus
 operator|&
 operator|~
-operator|(
-literal|1
-operator|<<
 name|PCPU_GET
 argument_list|(
-name|cpuid
+name|cpumask
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* fill in our (BSP) APIC version */
@@ -9556,14 +9552,10 @@ argument_list|,
 name|all_cpus
 operator|&
 operator|~
-operator|(
-literal|1
-operator|<<
 name|PCPU_GET
 argument_list|(
-name|cpuid
+name|cpumask
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|printf

@@ -7018,11 +7018,9 @@ name|pm
 operator|->
 name|pm_active
 operator||=
-literal|1
-operator|<<
 name|PCPU_GET
 argument_list|(
-name|cpuid
+name|cpumask
 argument_list|)
 expr_stmt|;
 name|wrpr
