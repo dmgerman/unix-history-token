@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.35 1996/12/21 17:53:38 nate Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.36 1996/12/23 01:24:44 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -43,11 +43,33 @@ operator|>
 literal|0
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINT_PCCARD_HACK
+end_ifndef
+
 begin_error
 error|#
 directive|error
 literal|"Dedicated PCMCIA drivers and generic PCMCIA support can't be mixed"
 end_error
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_warning
+warning|#
+directive|warning
+literal|"Dedicated PCMCIA drivers and generic PCMCIA support can't be mixed"
+end_warning
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
