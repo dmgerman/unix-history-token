@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: scsiio.h,v 1.2 1994/08/02 07:53:30 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -313,6 +313,17 @@ end_define
 
 begin_comment
 comment|/* reset the device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCIOCADDR
+value|_IOW('Q', 8, struct scsi_addr)
+end_define
+
+begin_comment
+comment|/* Change address */
 end_comment
 
 begin_endif
