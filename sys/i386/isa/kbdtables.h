@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: kbdtables.h,v 1.36 1997/10/12 19:57:49 jkh Exp $  */
+comment|/*-  * Copyright (c) 1992-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: kbdtables.h,v 1.37 1998/01/07 08:40:32 yokota Exp $  */
 end_comment
 
 begin_define
@@ -23433,7 +23433,7 @@ argument_list|)
 block|,
 name|S
 argument_list|(
-literal|01
+literal|1
 argument_list|)
 block|,
 name|S
@@ -23443,7 +23443,7 @@ argument_list|)
 block|,
 name|S
 argument_list|(
-literal|01
+literal|1
 argument_list|)
 block|,
 name|S
@@ -23478,7 +23478,7 @@ argument_list|)
 block|,
 name|S
 argument_list|(
-literal|02
+literal|2
 argument_list|)
 block|,
 name|S
@@ -23488,7 +23488,7 @@ argument_list|)
 block|,
 name|S
 argument_list|(
-literal|02
+literal|2
 argument_list|)
 block|,
 name|S
@@ -23523,7 +23523,7 @@ argument_list|)
 block|,
 name|S
 argument_list|(
-literal|03
+literal|3
 argument_list|)
 block|,
 name|S
@@ -23533,7 +23533,7 @@ argument_list|)
 block|,
 name|S
 argument_list|(
-literal|03
+literal|3
 argument_list|)
 block|,
 name|S
@@ -23568,7 +23568,7 @@ argument_list|)
 block|,
 name|S
 argument_list|(
-literal|04
+literal|4
 argument_list|)
 block|,
 name|S
@@ -23578,7 +23578,7 @@ argument_list|)
 block|,
 name|S
 argument_list|(
-literal|04
+literal|4
 argument_list|)
 block|,
 name|S
@@ -23613,7 +23613,7 @@ argument_list|)
 block|,
 name|S
 argument_list|(
-literal|05
+literal|5
 argument_list|)
 block|,
 name|S
@@ -23623,7 +23623,7 @@ argument_list|)
 block|,
 name|S
 argument_list|(
-literal|05
+literal|5
 argument_list|)
 block|,
 name|S
@@ -23658,7 +23658,7 @@ argument_list|)
 block|,
 name|S
 argument_list|(
-literal|06
+literal|6
 argument_list|)
 block|,
 name|S
@@ -23668,7 +23668,7 @@ argument_list|)
 block|,
 name|S
 argument_list|(
-literal|06
+literal|6
 argument_list|)
 block|,
 name|S
@@ -23703,22 +23703,22 @@ argument_list|)
 block|,
 name|S
 argument_list|(
-literal|07
+literal|7
 argument_list|)
 block|,
 name|S
 argument_list|(
-literal|07
+literal|7
 argument_list|)
 block|,
 name|S
 argument_list|(
-literal|07
+literal|7
 argument_list|)
 block|,
 name|S
 argument_list|(
-literal|07
+literal|7
 argument_list|)
 block|,
 literal|0xFF
@@ -23748,22 +23748,22 @@ argument_list|)
 block|,
 name|S
 argument_list|(
-literal|08
+literal|8
 argument_list|)
 block|,
 name|S
 argument_list|(
-literal|08
+literal|8
 argument_list|)
 block|,
 name|S
 argument_list|(
-literal|08
+literal|8
 argument_list|)
 block|,
 name|S
 argument_list|(
-literal|08
+literal|8
 argument_list|)
 block|,
 literal|0xFF
@@ -23793,22 +23793,22 @@ argument_list|)
 block|,
 name|S
 argument_list|(
-literal|09
+literal|9
 argument_list|)
 block|,
 name|S
 argument_list|(
-literal|09
+literal|9
 argument_list|)
 block|,
 name|S
 argument_list|(
-literal|09
+literal|9
 argument_list|)
 block|,
 name|S
 argument_list|(
-literal|09
+literal|9
 argument_list|)
 block|,
 literal|0xFF
