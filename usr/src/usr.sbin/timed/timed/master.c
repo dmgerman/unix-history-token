@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)master.c	1.1 (Berkeley) %G%"
+literal|"@(#)master.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,20 +42,6 @@ include|#
 directive|include
 file|<setjmp.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|OFF
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ON
-value|1
-end_define
 
 begin_decl_stmt
 specifier|extern
@@ -252,6 +238,10 @@ modifier|*
 name|acksend
 argument_list|()
 decl_stmt|;
+name|char
+modifier|*
+name|olddate
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MEASURE
@@ -272,9 +262,9 @@ endif|#
 directive|endif
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
-literal|"timed: THIS MACHINE IS MASTER\n"
+literal|"THIS MACHINE IS MASTER"
 argument_list|)
 expr_stmt|;
 if|if
@@ -545,7 +535,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: ERROR ON SETTIME machine: %s\n"
+literal|"ERROR ON SETTIME machine: %s"
 argument_list|,
 name|hp
 index|[
@@ -559,10 +549,6 @@ name|slvcount
 operator|--
 expr_stmt|;
 block|}
-name|pollingtime
-operator|=
-literal|0
-expr_stmt|;
 block|}
 break|break;
 case|case
@@ -577,10 +563,6 @@ name|msg
 operator|->
 name|tsp_name
 argument_list|)
-expr_stmt|;
-name|pollingtime
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -597,6 +579,11 @@ operator|.
 name|tv_usec
 operator|=
 literal|0
+expr_stmt|;
+name|olddate
+operator|=
+name|date
+argument_list|()
 expr_stmt|;
 operator|(
 name|void
@@ -639,12 +626,11 @@ argument_list|)
 expr_stmt|;
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
-literal|"timed: date changed to: %s\n"
+literal|"date changed from: %s"
 argument_list|,
-name|date
-argument_list|()
+name|olddate
 argument_list|)
 expr_stmt|;
 name|msg
@@ -717,7 +703,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: sendto: %m"
+literal|"sendto: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -757,7 +743,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: error on DATEREQ\n"
+literal|"DATEREQ from uncontrolled machine"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -794,6 +780,11 @@ operator|.
 name|tv_usec
 operator|=
 literal|0
+expr_stmt|;
+name|olddate
+operator|=
+name|date
+argument_list|()
 expr_stmt|;
 operator|(
 name|void
@@ -836,12 +827,15 @@ argument_list|)
 expr_stmt|;
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
-literal|"timed: date changed to: %s\n"
+literal|"date changed by %s from: %s"
 argument_list|,
-name|date
-argument_list|()
+name|msg
+operator|->
+name|tsp_name
+argument_list|,
+name|olddate
 argument_list|)
 expr_stmt|;
 name|spreadtime
@@ -926,7 +920,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: sendto: %m"
+literal|"sendto: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1013,11 +1007,8 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|close
+name|fclose
 argument_list|(
-operator|(
-name|int
-operator|)
 name|fd
 argument_list|)
 expr_stmt|;
@@ -1077,7 +1068,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: election error\n"
+literal|"election error"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1150,16 +1141,6 @@ operator|==
 name|NULL
 condition|)
 break|break;
-operator|(
-name|void
-operator|)
-name|addmach
-argument_list|(
-name|answer
-operator|->
-name|tsp_name
-argument_list|)
-expr_stmt|;
 name|to
 operator|.
 name|tsp_type
@@ -1195,7 +1176,20 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: error on sending QUIT\n"
+literal|"error on sending QUIT"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|addmach
+argument_list|(
+name|answer
+operator|->
+name|tsp_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -1247,11 +1241,8 @@ name|MEASURE
 operator|(
 name|void
 operator|)
-name|close
+name|fclose
 argument_list|(
-operator|(
-name|int
-operator|)
 name|fp
 argument_list|)
 expr_stmt|;
@@ -1327,6 +1318,8 @@ value|8
 specifier|static
 name|int
 name|lines
+init|=
+literal|1
 decl_stmt|;
 name|struct
 name|timeval
@@ -1541,7 +1534,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: measure: %m\n"
+literal|"measure: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1748,10 +1741,6 @@ name|int
 name|i
 decl_stmt|;
 name|struct
-name|timeval
-name|mytime
-decl_stmt|;
-name|struct
 name|tsp
 name|to
 decl_stmt|;
@@ -1819,14 +1808,6 @@ name|tsp_type
 operator|=
 name|TSP_SETTIME
 expr_stmt|;
-name|to
-operator|.
-name|tsp_time
-operator|.
-name|tv_usec
-operator|=
-literal|0
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1845,7 +1826,9 @@ operator|)
 name|gettimeofday
 argument_list|(
 operator|&
-name|mytime
+name|to
+operator|.
+name|tsp_time
 argument_list|,
 operator|(
 expr|struct
@@ -1854,16 +1837,6 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-expr_stmt|;
-name|to
-operator|.
-name|tsp_time
-operator|.
-name|tv_sec
-operator|=
-name|mytime
-operator|.
-name|tv_sec
 expr_stmt|;
 name|answer
 operator|=
@@ -1893,7 +1866,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: ERROR ON SETTIME machine: %s\n"
+literal|"ERROR ON SETTIME machine: %s"
 argument_list|,
 name|hp
 index|[
@@ -2054,7 +2027,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: gethostbyname: %m\n"
+literal|"gethostbyname: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2114,7 +2087,7 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-literal|32
+name|MAXHOSTNAMELEN
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2129,9 +2102,7 @@ index|]
 operator|.
 name|name
 argument_list|,
-name|hptmp
-operator|->
-name|h_name
+name|name
 argument_list|)
 expr_stmt|;
 name|hp
@@ -2160,9 +2131,9 @@ else|else
 block|{
 name|syslog
 argument_list|(
-name|LOG_EMERG
+name|LOG_ALERT
 argument_list|,
-literal|"timed: no more slots in host table\n"
+literal|"no more slots in host table"
 argument_list|)
 expr_stmt|;
 block|}
