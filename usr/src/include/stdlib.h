@@ -699,6 +699,8 @@ name|int
 name|opterr
 decl_stmt|,
 name|optind
+decl_stmt|,
+name|optopt
 decl_stmt|;
 end_decl_stmt
 
