@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uux.c	5.12	(Berkeley) %G%"
+literal|"@(#)uux.c	5.13	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -442,19 +442,11 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"prclCg:x:nzLa:"
+literal|"-prclCg:x:nzLa:"
 argument_list|)
 operator|)
 operator|!=
 name|EOF
-operator|||
-operator|*
-name|argv
-index|[
-name|optind
-index|]
-operator|==
-literal|'-'
 condition|)
 switch|switch
 condition|(
@@ -462,13 +454,9 @@ name|c
 condition|)
 block|{
 case|case
-name|EOF
+literal|'-'
 case|:
-comment|/* getopt doesn't like "-" as an argument... */
-name|optind
-operator|++
-expr_stmt|;
-comment|/* NO BREAK */
+comment|/* FALLTHROUGH */
 case|case
 literal|'p'
 case|:
@@ -628,20 +616,6 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unknown flag %s\n"
-argument_list|,
-name|argv
-index|[
-name|optind
-operator|-
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 name|ap
