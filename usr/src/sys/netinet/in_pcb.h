@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.h	4.2	81/12/03	*/
+comment|/*	in_pcb.h	4.3	82/03/03	*/
 end_comment
 
 begin_comment
@@ -57,6 +57,20 @@ comment|/* pointer to per-protocol pcb */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|INPLOOKUP_WILDCARD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|INPLOOKUP_SETLOCAL
+value|2
+end_define
 
 begin_define
 define|#

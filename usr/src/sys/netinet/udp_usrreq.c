@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.20	82/02/27	*/
+comment|/*	udp_usrreq.c	4.21	82/03/03	*/
 end_comment
 
 begin_include
@@ -466,7 +466,7 @@ name|ui
 operator|->
 name|ui_dport
 argument_list|,
-literal|1
+name|INPLOOKUP_WILDCARD
 argument_list|)
 expr_stmt|;
 if|if
@@ -1210,6 +1210,11 @@ operator|->
 name|inp_laddr
 operator|=
 name|laddr
+expr_stmt|;
+name|in_setsockaddr
+argument_list|(
+name|inp
+argument_list|)
 expr_stmt|;
 block|}
 block|}
