@@ -4848,6 +4848,14 @@ operator|)
 operator|--
 expr_stmt|;
 break|break;
+comment|/* 	 * This macro is close enough to the correct thing; 	 * it should be replaced by real user settable delays 	 * in any event... 	 */
+define|#
+directive|define
+name|mstohz
+parameter_list|(
+name|ms
+parameter_list|)
+value|(((ms) * hz)>> 10)
 case|case
 name|NEWLINE
 case|:
@@ -4911,7 +4919,10 @@ condition|)
 comment|/* vt05 */
 name|c
 operator|=
-literal|6
+name|mstohz
+argument_list|(
+literal|100
+argument_list|)
 expr_stmt|;
 operator|*
 name|colp
@@ -5018,7 +5029,10 @@ condition|)
 comment|/* tn 300 */
 name|c
 operator|=
-literal|5
+name|mstohz
+argument_list|(
+literal|83
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -5030,7 +5044,10 @@ condition|)
 comment|/* ti 700 */
 name|c
 operator|=
-literal|10
+name|mstohz
+argument_list|(
+literal|166
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -5122,6 +5139,12 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_undef
+undef|#
+directive|undef
+name|mstohz
+end_undef
 
 begin_comment
 comment|/*  * Called from device's read routine after it has  * calculated the tty-structure given as argument.  */
