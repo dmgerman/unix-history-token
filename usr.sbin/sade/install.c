@@ -1024,12 +1024,15 @@ operator|&&
 name|whinge
 condition|)
 block|{
-name|msgConfirm
+if|if
+condition|(
+name|msgYesNo
 argument_list|(
-literal|"No swap devices found - you must create at least one\n"
-literal|"swap partition."
+literal|"No swap devices found - you should create at least one\n"
+literal|"swap partition.  Without swap, the install will fail\n"
+literal|"if you do not have enough RAM.  Continue anyway?"
 argument_list|)
-expr_stmt|;
+condition|)
 name|status
 operator|=
 name|FALSE
