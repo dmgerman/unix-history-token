@@ -294,6 +294,8 @@ name|err
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -319,6 +321,8 @@ condition|)
 name|err
 argument_list|(
 literal|2
+argument_list|,
+literal|"%s"
 argument_list|,
 name|name
 argument_list|)
