@@ -86,7 +86,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_ALL
-value|0x00
+value|0x000
 end_define
 
 begin_comment
@@ -97,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_TCP
-value|0x01
+value|0x001
 end_define
 
 begin_comment
@@ -108,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_UDP
-value|0x02
+value|0x002
 end_define
 
 begin_comment
@@ -119,7 +119,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_ICMP
-value|0x03
+value|0x003
 end_define
 
 begin_comment
@@ -130,7 +130,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_KIND
-value|0x03
+value|0x003
 end_define
 
 begin_comment
@@ -141,7 +141,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_ACCEPT
-value|0x04
+value|0x004
 end_define
 
 begin_comment
@@ -152,7 +152,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_SRNG
-value|0x08
+value|0x008
 end_define
 
 begin_comment
@@ -163,7 +163,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_DRNG
-value|0x10
+value|0x010
 end_define
 
 begin_comment
@@ -174,7 +174,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_PRN
-value|0x20
+value|0x020
 end_define
 
 begin_comment
@@ -185,7 +185,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_BIDIR
-value|0x40
+value|0x040
 end_define
 
 begin_comment
@@ -195,8 +195,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_F_TCPSYN
+value|0x080
+end_define
+
+begin_comment
+comment|/* For tcp packets-check SYN only     */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_ICMPRPL
+value|0x100
+end_define
+
+begin_comment
+comment|/* Send back icmp unreachable packet  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_F_MASK
-value|0x7F
+value|0x1FF
 end_define
 
 begin_comment
@@ -299,6 +321,31 @@ value|(IP_FW_BASE_CTL+13)
 end_define
 
 begin_comment
+comment|/*  * Policy flags...  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_P_DENY
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_P_ICMP
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_P_MASK
+value|0x03
+end_define
+
+begin_comment
 comment|/*  * Main firewall chains definitions and global var's definitions.  */
 end_comment
 
@@ -334,7 +381,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_short
 name|ip_fw_policy
 decl_stmt|;
 end_decl_stmt
