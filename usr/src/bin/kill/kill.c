@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kill.c	5.1 (Berkeley) %G%"
+literal|"@(#)kill.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -475,11 +475,7 @@ if|if
 condition|(
 name|kill
 argument_list|(
-name|atoi
-argument_list|(
-operator|*
-name|argv
-argument_list|)
+name|pid
 argument_list|,
 name|numsig
 argument_list|)
