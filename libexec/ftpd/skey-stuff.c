@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Author: Wietse Venema, Eindhoven University of Technology.   *  *	$Id: skey-stuff.c,v 1.3 1996/09/22 21:53:34 wosch Exp $  */
+comment|/* Author: Wietse Venema, Eindhoven University of Technology.   *  *	$Id: skey-stuff.c,v 1.4 1996/10/17 17:06:04 ache Exp $  */
 end_comment
 
 begin_include
@@ -92,6 +92,11 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|sflag
+condition|)
 name|sprintf
 argument_list|(
 name|buf
