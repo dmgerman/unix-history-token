@@ -5860,6 +5860,8 @@ name|th_sport
 argument_list|,
 name|cmd
 argument_list|,
+name|NULL
+argument_list|,
 name|notify
 argument_list|)
 expr_stmt|;
@@ -5941,6 +5943,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|cmd
+argument_list|,
+name|NULL
 argument_list|,
 name|notify
 argument_list|)

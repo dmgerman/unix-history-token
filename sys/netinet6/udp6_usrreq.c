@@ -1560,6 +1560,10 @@ name|sa6_src
 init|=
 name|NULL
 decl_stmt|;
+name|void
+modifier|*
+name|cmdarg
+decl_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -1694,6 +1698,12 @@ name|ip6cp
 operator|->
 name|ip6c_off
 expr_stmt|;
+name|cmdarg
+operator|=
+name|ip6cp
+operator|->
+name|ip6c_cmdarg
+expr_stmt|;
 name|sa6_src
 operator|=
 name|ip6cp
@@ -1708,6 +1718,10 @@ operator|=
 name|NULL
 expr_stmt|;
 name|ip6
+operator|=
+name|NULL
+expr_stmt|;
+name|cmdarg
 operator|=
 name|NULL
 expr_stmt|;
@@ -1800,6 +1814,8 @@ name|uh_sport
 argument_list|,
 name|cmd
 argument_list|,
+name|cmdarg
+argument_list|,
 name|notify
 argument_list|)
 expr_stmt|;
@@ -1828,6 +1844,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|cmd
+argument_list|,
+name|cmdarg
 argument_list|,
 name|notify
 argument_list|)

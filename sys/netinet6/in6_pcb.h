@@ -295,6 +295,9 @@ name|u_int
 operator|,
 name|int
 operator|,
+name|void
+operator|*
+operator|,
 expr|struct
 name|inpcb
 operator|*
