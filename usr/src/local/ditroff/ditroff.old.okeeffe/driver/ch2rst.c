@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ch2rst.c	1.5	85/01/31  *  * Font translation to Imagen-style fonts (RST format) from character format.  *  *	Use:	ch2rst  [ -i  -s ]  charfile> rstfile  *  *		Takes input from charfile (which must be in the format written  *	by one of the xxx2ch programs), converts to rst format and writes to  *	stdout.  If charfile is missing, stdin is read.  The -i flag tells  *	ch2rst to ignore the character codes at the start of each glyph  *	definition, and pack the glyphs in consecutive code positions starting  *	with 0.  The -s flag forces ch2rst to NOT trim off any white space in  *	the glyph map.  This is usefull to make stipples of fixed size.  */
+comment|/*	ch2rst.c	1.6	85/02/15  *  * Font translation to Imagen-style fonts (RST format) from character format.  *  *	Use:	ch2rst  [ -i  -s ]  charfile> rstfile  *  *		Takes input from charfile (which must be in the format written  *	by one of the xxx2ch programs), converts to rst format and writes to  *	stdout.  If charfile is missing, stdin is read.  The -i flag tells  *	ch2rst to ignore the character codes at the start of each glyph  *	definition, and pack the glyphs in consecutive code positions starting  *	with 0.  The -s flag forces ch2rst to NOT trim off any white space in  *	the glyph map.  This is usefull to make stipples of fixed size.  */
 end_comment
 
 begin_include
