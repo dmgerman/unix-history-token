@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.12	%G%	*/
+comment|/*	conf.c	4.13	%G%	*/
 end_comment
 
 begin_include
@@ -3084,86 +3084,6 @@ name|user
 name|u
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|VAX
-operator|==
-literal|780
-end_if
-
-begin_comment
-comment|/*  * This is stupid, and will go away soon.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|mbanum
-index|[]
-init|=
-block|{
-comment|/* mba number of major device */
-literal|0
-block|,
-comment|/* disk */
-literal|1
-block|,
-comment|/* tape */
-literal|9999999
-block|,
-comment|/* unused */
-literal|9999999
-block|,
-comment|/* unused */
-literal|0
-block|,
-comment|/* disk, raw */
-literal|1
-block|,
-comment|/* tape, raw */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pte
-name|MBA0map
-index|[]
-decl_stmt|,
-name|MBA1map
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|mba_info
-name|mbainfo
-index|[]
-init|=
-block|{
-name|MBA0
-block|,
-name|PHYSMBA0
-block|,
-name|MBA0map
-block|,
-name|MBA1
-block|,
-name|PHYSMBA1
-block|,
-name|MBA1map
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
