@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.58 1996/01/30 14:30:43 ache Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.59 1996/01/30 16:12:18 ache Exp $  */
 end_comment
 
 begin_include
@@ -3551,6 +3551,8 @@ init|=
 name|te
 operator|->
 name|starting_track
+decl_stmt|,
+name|readtrack
 decl_stmt|;
 if|if
 condition|(
@@ -3755,35 +3757,36 @@ expr|struct
 name|cd_toc_entry
 argument_list|)
 expr_stmt|;
-comment|/* calculate reading length without leadout entry */
+comment|/* calculate reading track/length without leadout entry */
+name|readtrack
+operator|=
+name|starting_track
+expr_stmt|;
+if|if
+condition|(
+name|readtrack
+operator|==
+name|th
+operator|->
+name|ending_track
+operator|+
+literal|1
+condition|)
+name|readtrack
+operator|--
+expr_stmt|;
 name|readlen
 operator|=
 operator|(
-operator|(
-name|int
-operator|)
 name|th
 operator|->
 name|ending_track
 operator|-
-name|starting_track
-operator|)
+name|readtrack
 operator|+
 literal|1
-expr_stmt|;
-if|if
-condition|(
-name|readlen
-operator|<
-literal|1
-condition|)
-comment|/* read at least one entry */
-name|readlen
-operator|=
-literal|1
-expr_stmt|;
-name|readlen
-operator|*=
+operator|)
+operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -3810,7 +3813,7 @@ name|te
 operator|->
 name|address_format
 argument_list|,
-name|starting_track
+name|readtrack
 argument_list|,
 name|data
 operator|.
