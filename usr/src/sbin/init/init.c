@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.3 (Berkeley) %G%"
+literal|"@(#)init.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|CMDSIZ
-value|70
+value|200
 end_define
 
 begin_comment
