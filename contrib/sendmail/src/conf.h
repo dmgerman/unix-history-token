@@ -4852,7 +4852,7 @@ begin_if
 if|#
 directive|if
 name|__FreeBSD__
-operator|==
+operator|>=
 literal|2
 end_if
 
@@ -4861,10 +4861,6 @@ include|#
 directive|include
 file|<osreldate.h>
 end_include
-
-begin_comment
-comment|/* and this works */
-end_comment
 
 begin_if
 if|#
@@ -4875,7 +4871,7 @@ literal|199512
 end_if
 
 begin_comment
-comment|/* 2.2-current right now */
+comment|/* 2.2-current when it appeared */
 end_comment
 
 begin_include
@@ -4890,6 +4886,34 @@ directive|define
 name|SPT_TYPE
 value|SPT_BUILTIN
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|222000
+end_if
+
+begin_comment
+comment|/* 2.2.2-release and later */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETUSERCONTEXT
+value|1
+end_define
+
+begin_comment
+comment|/* BSDI-style login classes */
+end_comment
 
 begin_endif
 endif|#
