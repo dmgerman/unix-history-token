@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)curses.h	1.13 (Berkeley) %G% */
+comment|/* @(#)curses.h	1.14 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -1009,6 +1009,15 @@ name|c
 parameter_list|)
 value|_unctrl[(c)& 0177]
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|_unctrl
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
