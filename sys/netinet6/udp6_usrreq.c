@@ -553,12 +553,16 @@ name|uh_sum
 operator|==
 literal|0
 condition|)
+block|{
 name|udpstat
 operator|.
 name|udps_nosum
 operator|++
 expr_stmt|;
-elseif|else
+goto|goto
+name|bad
+goto|;
+block|}
 if|if
 condition|(
 name|in6_cksum
