@@ -208,6 +208,17 @@ begin_comment
 comment|/* the correct size for kinfo_proc */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KI_NSPARE
+value|16
+end_define
+
+begin_comment
+comment|/* number of spare longs to define */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -216,10 +227,15 @@ end_endif
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
 operator|||
 name|defined
+argument_list|(
 name|__arm__
+argument_list|)
 end_if
 
 begin_define
@@ -232,6 +248,13 @@ end_define
 begin_comment
 comment|/* the correct size for kinfo_proc */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|KI_NSPARE
+value|15
+end_define
 
 begin_endif
 endif|#
@@ -249,6 +272,13 @@ define|#
 directive|define
 name|KINFO_PROC_SIZE
 value|656
+end_define
+
+begin_define
+define|#
+directive|define
+name|KI_NSPARE
+value|16
 end_define
 
 begin_endif
@@ -315,6 +345,17 @@ end_define
 
 begin_comment
 comment|/* size of returned ki_comm name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KI_EMULNAMELEN
+value|16
+end_define
+
+begin_comment
+comment|/* size of returned ki_emul */
 end_comment
 
 begin_define
@@ -426,6 +467,10 @@ name|short
 name|ki_jobc
 decl_stmt|;
 comment|/* job control counter */
+name|short
+name|ki_spare_short1
+decl_stmt|;
+comment|/* unused (just here for alignment) */
 name|dev_t
 name|ki_tdev
 decl_stmt|;
@@ -470,6 +515,10 @@ name|short
 name|ki_ngroups
 decl_stmt|;
 comment|/* number of groups */
+name|short
+name|ki_spare_short2
+decl_stmt|;
+comment|/* unused (just here for alignment) */
 name|gid_t
 name|ki_groups
 index|[
@@ -622,9 +671,18 @@ index|]
 decl_stmt|;
 comment|/* command name */
 name|char
+name|ki_emul
+index|[
+name|KI_EMULNAMELEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* emulation name */
+name|char
 name|ki_sparestrings
 index|[
-literal|85
+literal|68
 index|]
 decl_stmt|;
 comment|/* spare string space */
@@ -657,13 +715,35 @@ modifier|*
 name|ki_kstack
 decl_stmt|;
 comment|/* kernel virtual addr of stack */
+name|struct
+name|timeval
+name|ki_childstime
+decl_stmt|;
+comment|/* system time used by children */
+name|struct
+name|timeval
+name|ki_childutime
+decl_stmt|;
+comment|/* user time used by children */
+name|segsz_t
+name|ki_ps_segsz1
+decl_stmt|;
+comment|/* used by `ps', for its processing */
+name|float
+name|ki_ps_float1
+decl_stmt|;
+comment|/* used by `ps', for its processing */
+name|int
+name|ki_spare_int1
+decl_stmt|;
+comment|/* unused (just here for alignment) */
 name|long
 name|ki_spare
 index|[
-literal|22
+name|KI_NSPARE
 index|]
 decl_stmt|;
-comment|/* spare constants */
+comment|/* spare room for later growth */
 block|}
 struct|;
 end_struct
