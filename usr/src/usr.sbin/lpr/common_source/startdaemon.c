@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startdaemon.c	5.7 (Berkeley) %G%"
+literal|"@(#)startdaemon.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,7 +86,7 @@ begin_block
 block|{
 name|struct
 name|sockaddr_un
-name|sun
+name|un
 decl_stmt|;
 specifier|register
 name|int
@@ -134,7 +134,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|sun
+name|un
 operator|.
 name|sun_family
 operator|=
@@ -142,7 +142,7 @@ name|AF_UNIX
 expr_stmt|;
 name|strcpy
 argument_list|(
-name|sun
+name|un
 operator|.
 name|sun_path
 argument_list|,
@@ -161,11 +161,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sun
+name|un
 argument_list|,
 name|strlen
 argument_list|(
-name|sun
+name|un
 operator|.
 name|sun_path
 argument_list|)

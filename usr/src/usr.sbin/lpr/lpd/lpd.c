@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpd.c	5.12 (Berkeley) %G%"
+literal|"@(#)lpd.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,7 +131,7 @@ name|fromlen
 decl_stmt|;
 name|struct
 name|sockaddr_un
-name|sun
+name|un
 decl_stmt|,
 name|fromunix
 decl_stmt|;
@@ -484,7 +484,7 @@ argument_list|,
 name|mcleanup
 argument_list|)
 expr_stmt|;
-name|sun
+name|un
 operator|.
 name|sun_family
 operator|=
@@ -492,7 +492,7 @@ name|AF_UNIX
 expr_stmt|;
 name|strcpy
 argument_list|(
-name|sun
+name|un
 operator|.
 name|sun_path
 argument_list|,
@@ -511,11 +511,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sun
+name|un
 argument_list|,
 name|strlen
 argument_list|(
-name|sun
+name|un
 operator|.
 name|sun_path
 argument_list|)
