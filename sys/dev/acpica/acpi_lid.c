@@ -101,6 +101,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|ACPI_SERIAL_DECL
+argument_list|(
+name|lid
+argument_list|,
+literal|"ACPI lid"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -390,6 +400,13 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|lid_status
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 comment|/*      * If a system does not get lid events, it may make sense to change      * the type to ACPI_ALL_NOTIFY.  Some systems generate both a wake and      * runtime notify in that case though.      */
 name|AcpiInstallNotifyHandler
 argument_list|(
@@ -419,11 +436,21 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|return_VALUE
+comment|/* Attempt to get the initial lid switch state. */
+name|AcpiOsQueueForExecution
 argument_list|(
-literal|0
+name|OSD_PRIORITY_LO
+argument_list|,
+name|acpi_lid_notify_status_changed
+argument_list|,
+name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -484,6 +511,11 @@ decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
+name|int
+name|lid_status
+decl_stmt|,
+name|old_status
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
@@ -517,8 +549,6 @@ argument_list|,
 literal|"_LID"
 argument_list|,
 operator|&
-name|sc
-operator|->
 name|lid_status
 argument_list|)
 expr_stmt|;
@@ -531,6 +561,44 @@ argument_list|)
 condition|)
 name|return_VOID
 expr_stmt|;
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|lid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lid_status
+operator|!=
+name|sc
+operator|->
+name|lid_status
+condition|)
+block|{
+name|old_status
+operator|=
+name|sc
+operator|->
+name|lid_status
+expr_stmt|;
+name|sc
+operator|->
+name|lid_status
+operator|=
+name|lid_status
+expr_stmt|;
+comment|/* If this is the initialization pass, skip the notification. */
+if|if
+condition|(
+name|old_status
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|out
+goto|;
+comment|/* Since the status has changed, notify the system. */
 name|acpi_sc
 operator|=
 name|acpi_device_get_parent_softc
@@ -546,8 +614,9 @@ name|acpi_sc
 operator|==
 name|NULL
 condition|)
-name|return_VOID
-expr_stmt|;
+goto|goto
+name|out
+goto|;
 name|ACPI_VPRINT
 argument_list|(
 name|sc
@@ -558,8 +627,6 @@ name|acpi_sc
 argument_list|,
 literal|"Lid %s\n"
 argument_list|,
-name|sc
-operator|->
 name|lid_status
 condition|?
 literal|"opened"
@@ -575,15 +642,11 @@ name|sc
 operator|->
 name|lid_handle
 argument_list|,
-name|sc
-operator|->
 name|lid_status
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sc
-operator|->
 name|lid_status
 operator|==
 literal|0
@@ -605,6 +668,14 @@ argument_list|,
 name|acpi_sc
 operator|->
 name|acpi_lid_switch_sx
+argument_list|)
+expr_stmt|;
+block|}
+name|out
+label|:
+name|ACPI_SERIAL_END
+argument_list|(
+name|lid
 argument_list|)
 expr_stmt|;
 name|return_VOID
