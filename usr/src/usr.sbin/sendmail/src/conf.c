@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	5.4 (Berkeley) %G%"
+literal|"@(#)conf.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1217,6 +1217,8 @@ argument_list|(
 literal|"/dev/kmem"
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1293,8 +1295,9 @@ name|n_value
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 operator|||
 name|read
 argument_list|(
