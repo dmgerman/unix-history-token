@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)ffs_alloc.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)ffs_alloc.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5164,6 +5164,9 @@ argument_list|(
 name|cgp
 argument_list|)
 argument_list|,
+operator|(
+name|daddr_t
+operator|)
 name|fragstoblks
 argument_list|(
 name|fs
@@ -5747,7 +5750,8 @@ operator|)
 name|len
 argument_list|,
 operator|(
-name|caddr_t
+name|u_char
+operator|*
 operator|)
 operator|&
 name|cg_blksfree
@@ -5759,7 +5763,8 @@ name|start
 index|]
 argument_list|,
 operator|(
-name|caddr_t
+name|u_char
+operator|*
 operator|)
 name|fragtbl
 index|[
@@ -5769,7 +5774,7 @@ name|fs_frag
 index|]
 argument_list|,
 call|(
-name|int
+name|u_char
 call|)
 argument_list|(
 literal|1
@@ -5817,7 +5822,8 @@ operator|)
 name|len
 argument_list|,
 operator|(
-name|caddr_t
+name|u_char
+operator|*
 operator|)
 operator|&
 name|cg_blksfree
@@ -5829,7 +5835,8 @@ literal|0
 index|]
 argument_list|,
 operator|(
-name|caddr_t
+name|u_char
+operator|*
 operator|)
 name|fragtbl
 index|[
@@ -5839,7 +5846,7 @@ name|fs_frag
 index|]
 argument_list|,
 call|(
-name|int
+name|u_char
 call|)
 argument_list|(
 literal|1
