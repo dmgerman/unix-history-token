@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: if_cons.c,v 4.7 88/08/11 15:52:55 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/if_cons.c,v $  *	@(#)if_cons.c	7.6 (Berkeley) %G%  *  * cons.c - Connection Oriented Network Service:  * including support for a) user transport-level service,   *	b) COSNS below CLNP, and c) CONS below TP.  #ifndef lint static char *rcsid = "$Header: if_cons.c,v 4.7 88/08/11 15:52:55 nhall Exp $"; #endif lint  */
+comment|/*  * $Header: if_cons.c,v 4.7 88/08/11 15:52:55 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/if_cons.c,v $  *	@(#)if_cons.c	7.7 (Berkeley) %G%  *  * cons.c - Connection Oriented Network Service:  * including support for a) user transport-level service,   *	b) COSNS below CLNP, and c) CONS below TP.  #ifndef lint static char *rcsid = "$Header: if_cons.c,v 4.7 88/08/11 15:52:55 nhall Exp $"; #endif lint  */
 end_comment
 
 begin_ifdef
