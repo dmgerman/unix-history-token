@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: if_devar.h,v 1.21 1997/10/16 22:02:32 matt Exp $	*/
+comment|/*	$NetBSD: if_devar.h,v 1.22 1997/10/20 14:33:01 matt Exp $	*/
 end_comment
 
 begin_comment
@@ -1900,6 +1900,11 @@ directive|define
 name|TULIP_HAVE_SIA100
 value|0x00010000
 comment|/* has LS100 in SIA status */
+define|#
+directive|define
+name|TULIP_HAVE_OKSROM
+value|0x00020000
+comment|/* SROM CRC is OK */
 name|u_int32_t
 name|tulip_intrmask
 decl_stmt|;

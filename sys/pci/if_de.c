@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: if_de.c,v 1.55 1997/10/16 22:02:27 matt Exp $	*/
+comment|/*	$NetBSD: if_de.c,v 1.56 1997/10/20 14:32:46 matt Exp $	*/
 end_comment
 
 begin_comment
@@ -14596,6 +14596,8 @@ operator|->
 name|tulip_features
 operator||=
 name|TULIP_HAVE_ISVSROM
+operator||
+name|TULIP_HAVE_OKSROM
 expr_stmt|;
 block|}
 elseif|else
@@ -14677,6 +14679,30 @@ operator|->
 name|tulip_features
 operator||=
 name|TULIP_HAVE_ISVSROM
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|tulip_chipid
+operator|>=
+name|TULIP_21142
+condition|)
+block|{
+name|sc
+operator|->
+name|tulip_features
+operator||=
+name|TULIP_HAVE_ISVSROM
+expr_stmt|;
+name|sc
+operator|->
+name|tulip_boardsw
+operator|=
+operator|&
+name|tulip_2114x_isv_boardsw
 expr_stmt|;
 block|}
 if|if
@@ -23613,7 +23639,7 @@ literal|"\n"
 endif|#
 directive|endif
 name|TULIP_PRINTF_FMT
-literal|": %s%s pass %d.%d\n"
+literal|": %s%s pass %d.%d%s\n"
 argument_list|,
 name|TULIP_PRINTF_ARGS
 argument_list|,
@@ -23643,6 +23669,24 @@ operator|->
 name|tulip_revinfo
 operator|&
 literal|0x0F
+argument_list|,
+operator|(
+name|sc
+operator|->
+name|tulip_features
+operator|&
+operator|(
+name|TULIP_HAVE_ISVSROM
+operator||
+name|TULIP_HAVE_OKSROM
+operator|)
+operator|)
+operator|==
+name|TULIP_HAVE_ISVSROM
+condition|?
+literal|" (invalid EESPROM checksum)"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|printf
