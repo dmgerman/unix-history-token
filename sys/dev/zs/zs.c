@@ -2193,7 +2193,9 @@ name|t
 operator|.
 name|c_ospeed
 operator|=
-name|TTYDEF_SPEED
+name|tp
+operator|->
+name|t_ospeed
 expr_stmt|;
 name|t
 operator|.
