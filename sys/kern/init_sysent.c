@@ -1125,6 +1125,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|int
+name|ntp_gettime
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ntp_adjtime
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2563,16 +2577,16 @@ block|,
 name|nosys
 block|,
 comment|/* 174 = nosys */
-literal|0
+literal|1
 block|,
-name|nosys
+name|ntp_gettime
 block|,
-comment|/* 175 = nosys */
-literal|0
+comment|/* 175 = ntp_gettime */
+literal|1
 block|,
-name|nosys
+name|ntp_adjtime
 block|,
-comment|/* 176 = nosys */
+comment|/* 176 = ntp_adjtime */
 ifdef|#
 directive|ifdef
 name|MACHVMCOMPAT

@@ -628,12 +628,12 @@ comment|/* 173 = nosys */
 literal|"#174"
 block|,
 comment|/* 174 = nosys */
-literal|"#175"
+literal|"ntp_gettime"
 block|,
-comment|/* 175 = nosys */
-literal|"#176"
+comment|/* 175 = ntp_gettime */
+literal|"ntp_adjtime"
 block|,
-comment|/* 176 = nosys */
+comment|/* 176 = ntp_adjtime */
 ifdef|#
 directive|ifdef
 name|MACHVMCOMPAT
