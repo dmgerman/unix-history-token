@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.19 (Berkeley) %G%"
+literal|"@(#)ls.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -749,7 +749,7 @@ if|if
 condition|(
 name|argc
 condition|)
-name|args
+name|doargs
 argument_list|(
 name|argc
 argument_list|,
@@ -757,7 +757,7 @@ name|argv
 argument_list|)
 expr_stmt|;
 else|else
-name|curdir
+name|dodot
 argument_list|()
 expr_stmt|;
 name|exit
@@ -769,7 +769,7 @@ block|}
 end_function
 
 begin_macro
-name|curdir
+name|dodot
 argument_list|()
 end_macro
 
@@ -830,7 +830,7 @@ if|if
 condition|(
 name|num
 operator|=
-name|buildstats
+name|tabdir
 argument_list|(
 operator|&
 name|local
@@ -842,7 +842,7 @@ operator|&
 name|names
 argument_list|)
 condition|)
-name|ls
+name|displaydir
 argument_list|(
 name|stats
 argument_list|,
@@ -875,7 +875,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|args
+name|doargs
 argument_list|(
 argument|argc
 argument_list|,
@@ -1150,7 +1150,7 @@ condition|(
 name|regcnt
 condition|)
 block|{
-comment|/* 		 * for -f flag -- switch above treats all -f operands as 		 * regular files; this code uses buildstats() to read 		 * them as directories. 		 */
+comment|/* 		 * for -f flag -- switch above treats all -f operands as 		 * regular files; this code uses tabdir() to read 		 * them as directories. 		 */
 if|if
 condition|(
 name|f_specialdir
@@ -1171,7 +1171,7 @@ if|if
 condition|(
 name|num
 operator|=
-name|buildstats
+name|tabdir
 argument_list|(
 name|rstats
 operator|++
@@ -1183,7 +1183,7 @@ operator|&
 name|names
 argument_list|)
 condition|)
-name|ls
+name|displaydir
 argument_list|(
 name|stats
 argument_list|,
@@ -1217,7 +1217,7 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|ls
+name|displaydir
 argument_list|(
 name|rstats
 argument_list|,
@@ -1307,7 +1307,7 @@ operator|++
 name|endofpath
 control|)
 empty_stmt|;
-name|ls_dir
+name|subdir
 argument_list|(
 name|dstats
 argument_list|,
@@ -1362,7 +1362,7 @@ block|}
 end_block
 
 begin_macro
-name|ls
+name|displaydir
 argument_list|(
 argument|stats
 argument_list|,
@@ -1538,7 +1538,7 @@ operator|++
 name|endofpath
 control|)
 empty_stmt|;
-name|ls_dir
+name|subdir
 argument_list|(
 name|lp
 argument_list|,
@@ -1562,7 +1562,7 @@ block|}
 end_block
 
 begin_macro
-name|ls_dir
+name|subdir
 argument_list|(
 argument|lp
 argument_list|,
@@ -1662,7 +1662,7 @@ if|if
 condition|(
 name|num
 operator|=
-name|buildstats
+name|tabdir
 argument_list|(
 name|lp
 argument_list|,
@@ -1673,7 +1673,7 @@ operator|&
 name|names
 argument_list|)
 condition|)
-name|ls
+name|displaydir
 argument_list|(
 name|stats
 argument_list|,
@@ -1738,7 +1738,7 @@ end_block
 
 begin_expr_stmt
 specifier|static
-name|buildstats
+name|tabdir
 argument_list|(
 argument|lp
 argument_list|,
