@@ -15020,9 +15020,15 @@ argument_list|,
 literal|0x00000000
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|tsleep
 argument_list|(
-literal|250000
+name|ch
+argument_list|,
+name|PRIBIO
+argument_list|,
+literal|"siirst"
+argument_list|,
+name|hz
 argument_list|)
 expr_stmt|;
 block|}
