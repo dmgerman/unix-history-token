@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.11 1993/12/12 12:22:57 davidg Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.12 1993/12/19 00:50:09 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -526,13 +526,6 @@ operator|)
 operator|&
 name|frame
 expr_stmt|;
-name|curpcb
-operator|->
-name|pcb_flags
-operator||=
-name|FM_TRAP
-expr_stmt|;
-comment|/* used by sendsig */
 block|}
 name|ucode
 operator|=
@@ -1815,14 +1808,6 @@ name|p
 operator|->
 name|p_pri
 expr_stmt|;
-name|curpcb
-operator|->
-name|pcb_flags
-operator|&=
-operator|~
-name|FM_TRAP
-expr_stmt|;
-comment|/* used by sendsig */
 block|}
 end_function
 
@@ -2136,7 +2121,7 @@ name|frame
 parameter_list|)
 specifier|volatile
 name|struct
-name|syscframe
+name|trapframe
 name|frame
 decl_stmt|;
 block|{
@@ -2232,7 +2217,7 @@ name|ISPL
 argument_list|(
 name|frame
 operator|.
-name|sf_cs
+name|tf_cs
 argument_list|)
 operator|!=
 name|SEL_UPL
@@ -2246,16 +2231,8 @@ name|code
 operator|=
 name|frame
 operator|.
-name|sf_eax
+name|tf_eax
 expr_stmt|;
-name|curpcb
-operator|->
-name|pcb_flags
-operator|&=
-operator|~
-name|FM_TRAP
-expr_stmt|;
-comment|/* used by sendsig */
 name|p
 operator|->
 name|p_regs
@@ -2274,7 +2251,7 @@ name|caddr_t
 operator|)
 name|frame
 operator|.
-name|sf_esp
+name|tf_esp
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -2286,38 +2263,18 @@ name|opc
 operator|=
 name|frame
 operator|.
-name|sf_eip
+name|tf_eip
 operator|-
 literal|7
 expr_stmt|;
-name|callp
-operator|=
-operator|(
-name|code
-operator|>=
-name|nsysent
-operator|)
-condition|?
-operator|&
-name|sysent
-index|[
-literal|63
-index|]
-else|:
-operator|&
-name|sysent
-index|[
-name|code
-index|]
-expr_stmt|;
 if|if
 condition|(
-name|callp
+name|code
 operator|==
-name|sysent
+literal|0
 condition|)
 block|{
-name|i
+name|code
 operator|=
 name|fuword
 argument_list|(
@@ -2331,27 +2288,34 @@ argument_list|(
 name|int
 argument_list|)
 expr_stmt|;
-name|callp
-operator|=
-operator|(
+block|}
+if|if
+condition|(
+name|code
+operator|<
+literal|0
+operator|||
 name|code
 operator|>=
 name|nsysent
-operator|)
-condition|?
+condition|)
+name|callp
+operator|=
 operator|&
 name|sysent
 index|[
-literal|63
+literal|0
 index|]
-else|:
+expr_stmt|;
+else|else
+name|callp
+operator|=
 operator|&
 name|sysent
 index|[
 name|code
 index|]
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2389,13 +2353,13 @@ condition|)
 block|{
 name|frame
 operator|.
-name|sf_eax
+name|tf_eax
 operator|=
 name|error
 expr_stmt|;
 name|frame
 operator|.
-name|sf_eflags
+name|tf_eflags
 operator||=
 name|PSL_C
 expr_stmt|;
@@ -2476,7 +2440,7 @@ index|]
 operator|=
 name|frame
 operator|.
-name|sf_edx
+name|tf_edx
 expr_stmt|;
 comment|/*pg("%d. s %d\n", p->p_pid, code);*/
 name|error
@@ -2503,7 +2467,7 @@ name|ERESTART
 condition|)
 name|frame
 operator|.
-name|sf_eip
+name|tf_eip
 operator|=
 name|opc
 expr_stmt|;
@@ -2523,13 +2487,13 @@ block|{
 comment|/*pg("error %d", error);*/
 name|frame
 operator|.
-name|sf_eax
+name|tf_eax
 operator|=
 name|error
 expr_stmt|;
 name|frame
 operator|.
-name|sf_eflags
+name|tf_eflags
 operator||=
 name|PSL_C
 expr_stmt|;
@@ -2539,7 +2503,7 @@ else|else
 block|{
 name|frame
 operator|.
-name|sf_eax
+name|tf_eax
 operator|=
 name|rval
 index|[
@@ -2548,7 +2512,7 @@ index|]
 expr_stmt|;
 name|frame
 operator|.
-name|sf_edx
+name|tf_edx
 operator|=
 name|rval
 index|[
@@ -2557,7 +2521,7 @@ index|]
 expr_stmt|;
 name|frame
 operator|.
-name|sf_eflags
+name|tf_eflags
 operator|&=
 operator|~
 name|PSL_C
@@ -2721,7 +2685,7 @@ name|addupc
 argument_list|(
 name|frame
 operator|.
-name|sf_eip
+name|tf_eip
 argument_list|,
 operator|&
 name|p
@@ -2741,7 +2705,7 @@ name|addupc
 argument_list|(
 name|frame
 operator|.
-name|sf_eip
+name|tf_eip
 argument_list|,
 operator|&
 name|p
@@ -2807,7 +2771,7 @@ if|if
 condition|(
 name|frame
 operator|.
-name|sf_ss
+name|tf_ss
 operator|!=
 name|_udatasel
 condition|)
@@ -2817,7 +2781,7 @@ literal|"ss %x call %d\n"
 argument_list|,
 name|frame
 operator|.
-name|sf_ss
+name|tf_ss
 argument_list|,
 name|code
 argument_list|)
@@ -2827,7 +2791,7 @@ condition|(
 operator|(
 name|frame
 operator|.
-name|sf_cs
+name|tf_cs
 operator|&
 literal|0xffff
 operator|)
@@ -2840,7 +2804,7 @@ literal|"cs %x call %d\n"
 argument_list|,
 name|frame
 operator|.
-name|sf_cs
+name|tf_cs
 argument_list|,
 name|code
 argument_list|)
@@ -2849,7 +2813,7 @@ if|if
 condition|(
 name|frame
 operator|.
-name|sf_eip
+name|tf_eip
 operator|>
 name|VM_MAXUSER_ADDRESS
 condition|)
@@ -2860,14 +2824,14 @@ literal|"eip %x call %d\n"
 argument_list|,
 name|frame
 operator|.
-name|sf_eip
+name|tf_eip
 argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
 name|frame
 operator|.
-name|sf_eip
+name|tf_eip
 operator|=
 literal|0
 expr_stmt|;
