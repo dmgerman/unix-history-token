@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * prompt.c: Routines for retrieving and setting a prompt.  *  * Header: prompt.c,v 1.2 89/01/18 18:27:02 raeburn Exp  * $Locker:  $  *  * Copyright 1987, 1988 by MIT Student Information Processing Board  *  * For copyright information, see copyright.h.  */
+comment|/*  * prompt.c: Routines for retrieving and setting a prompt.  *  * Header: prompt.c,v 1.2 89/01/18 18:27:02 raeburn Exp  *  * Copyright 1987, 1988 by MIT Student Information Processing Board  *  * For copyright information, see copyright.h.  */
 end_comment
 
 begin_include
