@@ -1329,6 +1329,9 @@ name|ccb_getdev
 modifier|*
 name|cgd
 decl_stmt|;
+name|int
+name|inq_len
+decl_stmt|;
 name|cgd
 operator|=
 operator|(
@@ -1337,6 +1340,16 @@ name|ccb_getdev
 operator|*
 operator|)
 name|arg
+expr_stmt|;
+name|inq_len
+operator|=
+name|cgd
+operator|->
+name|inq_data
+operator|.
+name|additional_length
+operator|+
+literal|4
 expr_stmt|;
 comment|/* 		 * PROBLEM: WE NEED TO LOOK AT BYTES 48-53 TO SEE IF THIS IS 		 * PROBLEM: IS A SAF-TE DEVICE. 		 */
 switch|switch
@@ -1348,8 +1361,6 @@ name|cgd
 operator|->
 name|inq_data
 argument_list|,
-name|cgd
-operator|->
 name|inq_len
 argument_list|)
 condition|)
@@ -3442,17 +3453,6 @@ name|iqd
 init|=
 name|buf
 decl_stmt|;
-if|if
-condition|(
-name|buflen
-operator|==
-literal|0
-condition|)
-name|buflen
-operator|=
-literal|256
-expr_stmt|;
-comment|/* per SPC-2 */
 if|if
 condition|(
 name|buflen
