@@ -6999,7 +6999,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a zeroed cred structure.  */
+comment|/*  * Allocate a zeroed cred structure.  * MPSAFE  */
 end_comment
 
 begin_function
@@ -7072,7 +7072,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Claim another reference to a ucred structure.  */
+comment|/*  * Claim another reference to a ucred structure.  * MPSAFE  */
 end_comment
 
 begin_function
@@ -7115,7 +7115,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free a cred structure.  * Throws away space when ref count gets to 0.  */
+comment|/*  * Free a cred structure.  * Throws away space when ref count gets to 0.  * MPSAFE  */
 end_comment
 
 begin_function
@@ -7262,7 +7262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check to see if this ucred is shared.  */
+comment|/*  * Check to see if this ucred is shared.  * MPSAFE  */
 end_comment
 
 begin_function
@@ -7311,7 +7311,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy a ucred's contents from a template.  Does not block.  */
+comment|/*  * Copy a ucred's contents from a template.  Does not block.  * MPSAFE  */
 end_comment
 
 begin_function
@@ -7421,7 +7421,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dup cred struct to a new held one.  */
+comment|/*  * Dup cred struct to a new held one.  * MPSAFE  */
 end_comment
 
 begin_function
@@ -7514,7 +7514,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Fill in a struct xucred based on a struct ucred.  */
+comment|/*  * Fill in a struct xucred based on a struct ucred.  * MPSAFE  */
 end_comment
 
 begin_function
@@ -7587,7 +7587,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * small routine to swap a thread's current ucred for the correct one  * taken from the process.  */
+comment|/*  * small routine to swap a thread's current ucred for the correct one  * taken from the process.  * MPSAFE  */
 end_comment
 
 begin_function
