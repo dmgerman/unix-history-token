@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.h	4.5	81/02/19	*/
+comment|/*	cons.h	4.6	81/02/23	*/
 end_comment
 
 begin_comment
@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|RXCS_IE
-value|0x40
+value|0x00000040
 end_define
 
 begin_comment
@@ -22,7 +22,7 @@ begin_define
 define|#
 directive|define
 name|RXCS_DONE
-value|0x80
+value|0x00000080
 end_define
 
 begin_comment
@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|RXDB_DATA
-value|0xff
+value|0x000000ff
 end_define
 
 begin_comment
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|RXDB_ID
-value|0xf00
+value|0x00000f00
 end_define
 
 begin_comment
@@ -66,7 +66,7 @@ begin_define
 define|#
 directive|define
 name|TXCS_IE
-value|0x40
+value|0x00000040
 end_define
 
 begin_comment
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|TXCS_RDY
-value|0x80
+value|0x00000080
 end_define
 
 begin_comment
@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|TXDB_DATA
-value|0xff
+value|0x000000ff
 end_define
 
 begin_comment
@@ -99,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|TXDB_ID
-value|0xf00
+value|0x00000f00
 end_define
 
 begin_comment
