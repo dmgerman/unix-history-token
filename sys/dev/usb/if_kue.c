@@ -254,6 +254,22 @@ literal|"KLSI USB ethernet"
 block|}
 block|,
 block|{
+name|USB_VENDOR_ATEN
+block|,
+name|USB_PRODUCT_ATEN_UC10T
+block|,
+literal|"KLSI USB ethernet"
+block|}
+block|,
+block|{
+name|USB_VENDOR_NETGEAR
+block|,
+name|USB_PRODUCT_NETGEAR_EA101
+block|,
+literal|"KLSI USB ethernet"
+block|}
+block|,
+block|{
 name|USB_VENDOR_PERACOM
 block|,
 name|USB_PRODUCT_PERACOM_ENET
@@ -281,6 +297,22 @@ block|{
 name|USB_VENDOR_3COM
 block|,
 name|USB_PRODUCT_3COM_3C19250
+block|,
+literal|"KLSI USB ethernet"
+block|}
+block|,
+block|{
+name|USB_VENDOR_DLINK
+block|,
+name|USB_PRODUCT_DLINK_DSB650C
+block|,
+literal|"KLSI USB ethernet"
+block|}
+block|,
+block|{
+name|USB_VENDOR_SMC
+block|,
+name|USB_PRODUCT_SMC_2102USB
 block|,
 literal|"KLSI USB ethernet"
 block|}

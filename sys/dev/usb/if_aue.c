@@ -272,6 +272,30 @@ literal|"ADMtek AN986 Pegasus 10/100BaseTX"
 block|}
 block|,
 block|{
+name|USB_VENDOR_DLINK
+block|,
+name|USB_PRODUCT_DLINK_DSB650TX
+block|,
+literal|"ADMtek AN986 Pegasus 10/100BaseTX"
+block|}
+block|,
+block|{
+name|USB_VENDOR_DLINK
+block|,
+name|USB_PRODUCT_DLINK_DSB650TX_PNA
+block|,
+literal|"ADMtek AN986 Pegasus 10/100BaseTX"
+block|}
+block|,
+block|{
+name|USB_VENDOR_SMC
+block|,
+name|USB_PRODUCT_SMC_2202USB
+block|,
+literal|"ADMtek AN986 Pegasus 10/100BaseTX"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
