@@ -27,25 +27,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Define if type char is unsigned and you are not using gcc.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__CHAR_UNSIGNED__
-end_ifndef
-
-begin_comment
-comment|/* #undef __CHAR_UNSIGNED__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* Define to empty if the keyword does not work.  */
 end_comment
 
@@ -93,14 +74,6 @@ directive|define
 name|HAVE_UTIME_NULL
 value|1
 end_define
-
-begin_comment
-comment|/* Define as __inline if that's what the C compiler calls it.  */
-end_comment
-
-begin_comment
-comment|/* #undef inline */
-end_comment
 
 begin_comment
 comment|/* Define if on MINIX.  */
@@ -241,26 +214,12 @@ value|1
 end_define
 
 begin_comment
-comment|/* The number of bytes in a int.  */
+comment|/* Define if you want encryption support.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_INT
-value|4
-end_define
 
 begin_comment
-comment|/* The number of bytes in a long.  */
+comment|/* #undef ENCRYPTION */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_LONG
-value|4
-end_define
 
 begin_comment
 comment|/* Define if you have the connect function.  */
@@ -269,6 +228,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_CONNECT */
 end_comment
+
+begin_comment
+comment|/* Define if you have the crypt function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CRYPT
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the fchdir function.  */
@@ -334,6 +304,25 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the getspnam function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETSPNAM */
+end_comment
+
+begin_comment
+comment|/* Define if you have the initgroups function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INITGROUPS
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the krb_get_err_text function.  */
 end_comment
 
@@ -353,6 +342,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the mktemp function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MKTEMP
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the putenv function.  */
 end_comment
 
@@ -364,13 +364,13 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the setvbuf function.  */
+comment|/* Define if you have the readlink function.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_SETVBUF
+name|HAVE_READLINK
 value|1
 end_define
 
@@ -430,6 +430,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the tempnam function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TEMPNAM
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the timezone function.  */
 end_comment
 
@@ -437,6 +448,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_TIMEZONE
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the tzset function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TZSET
 value|1
 end_define
 
@@ -459,6 +481,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_VPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the wait3 function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WAIT3
 value|1
 end_define
 
@@ -654,6 +687,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the crypt library (-lcrypt).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIBCRYPT
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the inet library (-linet).  */
 end_comment
 
@@ -675,6 +719,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_LIBNSL_S */
+end_comment
+
+begin_comment
+comment|/* Define if you have the sec library (-lsec).  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBSEC */
 end_comment
 
 begin_comment
