@@ -151,6 +151,18 @@ name|glob_t
 typedef|;
 end_typedef
 
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|199209
+end_if
+
+begin_comment
+comment|/* Believed to have been introduced in 1003.2-1992 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -216,6 +228,80 @@ end_define
 begin_comment
 comment|/* Don't sort. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_NOESCAPE
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Disable backslash escaping. */
+end_comment
+
+begin_comment
+comment|/* Error values returned by glob(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_NOSPACE
+value|(-1)
+end_define
+
+begin_comment
+comment|/* Malloc call failed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_ABORTED
+value|(-2)
+end_define
+
+begin_comment
+comment|/* Unignored error. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_NOMATCH
+value|(-3)
+end_define
+
+begin_comment
+comment|/* No match and GLOB_NOCHECK was not set. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_NOSYS
+value|(-4)
+end_define
+
+begin_comment
+comment|/* Obsolete: source comptability only. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __POSIX_VISIBLE>= 199209 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -295,7 +381,7 @@ comment|/* limit number of returned paths */
 end_comment
 
 begin_comment
-comment|/* backwards compatibility, this is the old name for this option */
+comment|/* source compatibility, these are the old names */
 end_comment
 
 begin_define
@@ -308,23 +394,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|GLOB_NOSPACE
-value|(-1)
-end_define
-
-begin_comment
-comment|/* Malloc call failed. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|GLOB_ABEND
-value|(-2)
+value|GLOB_ABORTED
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* Unignored error. */
+comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_decl_stmt
