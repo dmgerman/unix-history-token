@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.61 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.62 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3587,6 +3587,13 @@ operator|)
 return|;
 block|}
 comment|/* 	 * set SUID/SGID protections, if no tracing 	 */
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|SUGID
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3674,6 +3681,12 @@ operator|->
 name|cr_gid
 operator|=
 name|gid
+expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator||=
+name|SUGID
 expr_stmt|;
 block|}
 block|}
