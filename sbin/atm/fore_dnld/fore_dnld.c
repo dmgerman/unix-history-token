@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/hfa/fore.h>
 end_include
 
@@ -267,6 +273,7 @@ value|60
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|comm_mode
 init|=
@@ -275,6 +282,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|progname
@@ -282,12 +291,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|tty
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|cc_t
 name|vmin
 decl_stmt|,
@@ -313,6 +324,7 @@ operator|)
 end_if
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|termios
 name|sgtty
@@ -339,6 +351,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|termio
 name|sgtty
@@ -355,6 +368,7 @@ comment|/* !BSD */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|endian
 init|=
@@ -363,6 +377,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|verbose
 init|=
@@ -371,6 +386,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|reset
 init|=
@@ -379,6 +395,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|line
 index|[
@@ -388,14 +405,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+specifier|static
+name|u_int
 name|lineptr
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|Mon960
 modifier|*
 name|Uart
@@ -403,14 +420,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|delay
 parameter_list|(
-name|cnt
-parameter_list|)
 name|int
 name|cnt
-decl_stmt|;
+parameter_list|)
 block|{
 name|usleep
 argument_list|(
@@ -421,16 +437,15 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|unsigned
 name|long
 name|CP_READ
 parameter_list|(
-name|val
-parameter_list|)
 name|unsigned
 name|long
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -454,16 +469,15 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|unsigned
 name|long
 name|CP_WRITE
 parameter_list|(
-name|val
-parameter_list|)
 name|unsigned
 name|long
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -491,15 +505,15 @@ comment|/*  * Print an error message and exit.  *  * Arguments:  *	none  *  * Re
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|error
 parameter_list|(
-name|msg
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|msg
-decl_stmt|;
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -517,18 +531,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a byte for the uart and if printing, display it.  *  * Arguments:  *	prn				Are we displaying characters  *  * Returns:  *	c				Character from uart  */
+comment|/*  * Get a byte for the uart and if printing, display it.  *  * Returns:  *	c				Character from uart  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 name|getbyte
 parameter_list|(
-name|prn
+name|void
 parameter_list|)
-name|int
-name|prn
-decl_stmt|;
 block|{
 name|int
 name|c
@@ -649,21 +661,20 @@ comment|/*  * Loop getting characters from uart into static string until eol. If
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|getline
 parameter_list|(
-name|prn
-parameter_list|)
 name|int
 name|prn
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|c
 init|=
 literal|'\0'
 decl_stmt|;
-name|int
+name|u_int
 name|i
 init|=
 literal|0
@@ -686,9 +697,7 @@ block|{
 name|c
 operator|=
 name|getbyte
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -738,20 +747,16 @@ comment|/*  * Send a byte to the i960  *  * Arguments:  *	c				Character to send
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|xmit_byte
 parameter_list|(
+name|u_char
 name|c
 parameter_list|,
-name|dn
-parameter_list|)
-name|unsigned
-name|char
-name|c
-decl_stmt|;
 name|int
 name|dn
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|val
@@ -780,9 +785,7 @@ operator|&
 name|UART_VALID
 condition|)
 name|getbyte
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -834,37 +837,31 @@ operator|&
 name|UART_VALID
 condition|)
 name|getbyte
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Transmit a line to the i960. Eol must be included as part of text to transmit.  *  * Arguments:  *	line			Character string to transmit  *	len			len of string. This allows us to include NULL's  *					in the string/block to be transmitted.  *  * Returns:  *	none  */
+comment|/*  * Transmit a line to the i960. Eol must be included as part of text to transmit.  *  * Arguments:  *	msg			Character string to transmit  *	len			len of string. This allows us to include NULL's  *					in the string/block to be transmitted.  *  * Returns:  *	none  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|xmit_to_i960
 parameter_list|(
-name|line
-parameter_list|,
-name|len
-parameter_list|,
-name|dn
-parameter_list|)
+specifier|const
 name|char
 modifier|*
-name|line
-decl_stmt|;
+name|msg
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|dn
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -884,7 +881,7 @@ operator|++
 control|)
 name|xmit_byte
 argument_list|(
-name|line
+name|msg
 index|[
 name|i
 index|]
@@ -900,9 +897,12 @@ comment|/*  * Send autobaud sequence to i960 monitor  *  * Arguments:  *	none  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|autobaud
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -934,9 +934,11 @@ comment|/*  * Reset tty to initial state  *  * Arguments:  *	ret		error code for
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|finish
 parameter_list|(
+name|int
 name|ret
 parameter_list|)
 block|{
@@ -991,17 +993,19 @@ comment|/*  * Utility to strip off any leading path information from a filename 
 end_comment
 
 begin_function
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|basename
 parameter_list|(
-name|path
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|path
-decl_stmt|;
+parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -1186,6 +1190,7 @@ comment|/*  * crctab - CRC-16 constant array...  *     from Usenet contribution 
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|short
 name|crctab
@@ -1716,15 +1721,15 @@ comment|/*  * Hacked up xmodem protocol. Transmits the file 'filename' down to t
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|xmitfile
 parameter_list|(
-name|filename
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|fd
@@ -1890,9 +1895,7 @@ operator|(
 name|c
 operator|=
 name|getbyte
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|)
 operator|!=
 name|NAK
@@ -2253,9 +2256,7 @@ comment|/* 			 * Get response from i960 			 */
 name|sendresp
 operator|=
 name|getbyte
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* 			 * If i960 didn't like the sector 			 */
 if|if
@@ -2282,9 +2283,7 @@ condition|)
 if|if
 condition|(
 name|getbyte
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|==
 name|CAN
 condition|)
@@ -2428,9 +2427,7 @@ operator|(
 name|c
 operator|=
 name|getbyte
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|)
 operator|!=
 name|ACK
@@ -2550,26 +2547,21 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|loadmicrocode
 parameter_list|(
-name|ucode
-parameter_list|,
-name|size
-parameter_list|,
-name|ram
-parameter_list|)
 name|u_char
 modifier|*
 name|ucode
-decl_stmt|;
+parameter_list|,
 name|int
 name|size
-decl_stmt|;
+parameter_list|,
 name|u_char
 modifier|*
 name|ram
-decl_stmt|;
+parameter_list|)
 block|{
 struct|struct
 block|{
@@ -2793,13 +2785,17 @@ condition|(
 name|endian
 condition|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|lp
 operator|=
 operator|(
 name|u_long
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|ucode
@@ -2981,21 +2977,19 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sendbinfile
 parameter_list|(
-name|fname
-parameter_list|,
-name|ram
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|fname
-decl_stmt|;
+parameter_list|,
 name|u_char
 modifier|*
 name|ram
-decl_stmt|;
+parameter_list|)
 block|{
 struct|struct
 block|{
@@ -3315,7 +3309,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 comment|/* Swap buffer */
@@ -3570,18 +3564,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|fd
@@ -3640,9 +3630,10 @@ name|int
 name|buf_len
 decl_stmt|;
 comment|/* Size of ioctl buffer */
+specifier|const
 name|char
 modifier|*
-name|devname
+name|dev
 init|=
 literal|"\0"
 decl_stmt|;
@@ -3706,17 +3697,8 @@ name|stat
 name|sbuf
 decl_stmt|;
 comment|/* Used to find if .bin or .objd */
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
 name|progname
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|basename
 argument_list|(
 name|argv
@@ -3791,7 +3773,7 @@ break|break;
 case|case
 literal|'i'
 case|:
-name|devname
+name|dev
 operator|=
 operator|(
 name|char
@@ -3953,7 +3935,7 @@ name|req
 operator|.
 name|air_cfg_intf
 argument_list|,
-name|devname
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Issue ioctl 	 */
@@ -4038,6 +4020,10 @@ operator|=
 operator|(
 expr|struct
 name|air_cfg_rsp
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|buf
@@ -4248,7 +4234,7 @@ argument|) { 				perror (
 literal|"mmap ram"
 argument|); 				fprintf(stderr,
 literal|"%s download failed\n"
-argument|, 					air->acp_intf); 				(void) close(fd); 				continue; 			} 			Mon = (Mon960 *)(ram + MON960_BASE); 			Uart = (Mon960 *)&(Mon->mon_xmitmon);
+argument|, 					air->acp_intf); 				(void) close(fd); 				continue; 			} 			Mon = (Mon960 *)(volatile void *)(ram + MON960_BASE); 			Uart = (Mon960 *)(volatile void *)&(Mon->mon_xmitmon);
 comment|/* 			 * Determine endianess 			 */
 argument|switch ( Mon->mon_bstat ) { 			case BOOT_COLDSTART: 			case BOOT_MONREADY: 			case BOOT_FAILTEST: 			case BOOT_RUNNING: 				break;  			default: 				switch (ntohl(Mon->mon_bstat)) { 				case BOOT_COLDSTART: 				case BOOT_MONREADY: 				case BOOT_FAILTEST: 				case BOOT_RUNNING: 					endian++; 					break;  				default: 					fprintf(stderr,
 literal|"%s unknown status\n"
@@ -4256,7 +4242,7 @@ argument|, 						air->acp_intf); 					(void) close(fd); 					continue; 				} 			
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|if (reset) { 				u_int	*hcr = (u_int *)(ram + PCA200E_HCR_OFFSET); 				PCA200E_HCR_INIT(*hcr, PCA200E_RESET_BD); 				delay(
+argument|if (reset) { 				u_int	*hcr = (u_int *)(void *)(ram + PCA200E_HCR_OFFSET); 				PCA200E_HCR_INIT(*hcr, PCA200E_RESET_BD); 				delay(
 literal|10000
 argument|); 				PCA200E_HCR_CLR(*hcr, PCA200E_RESET_BD); 				delay(
 literal|10000
@@ -4280,15 +4266,15 @@ argument|) { 						perror (
 literal|"select"
 argument|); 						finish( -
 literal|1
-argument|); 				}  				if ( ns ) { 					int	c; 					int	nr;  					nr = read ( fileno(stdin),&c,
+argument|); 				}  				if ( ns ) { 					int c1; 					int	nr;  					nr = read ( fileno(stdin),&c1,
 literal|1
-argument|); 					c&=
+argument|); 					c1&=
 literal|0xff
-argument|; 					if ( !esc_seen ) { 					    if ( c ==
+argument|; 					if ( !esc_seen ) { 					    if ( c1 ==
 literal|27
-argument|) 						esc_seen++; 					    else 						xmit_byte ( c,
+argument|) 						esc_seen++; 					    else 						xmit_byte ( c1,
 literal|0
-argument|); 					} else { 					    if ( c ==
+argument|); 					} else { 					    if ( c1 ==
 literal|27
 argument|)  						finish( -
 literal|1
@@ -4298,13 +4284,11 @@ argument|,
 literal|0
 argument|); 						esc_seen =
 literal|0
-argument|; 					    } 					    xmit_byte ( c,
+argument|; 					    } 					    xmit_byte ( c1,
 literal|0
 argument|); 					} 				}
 comment|/* 				 * Check for data from the i960 				 */
-argument|if ( CP_READ(Uart->mon_xmithost)& UART_VALID ) { 					c = getbyte(
-literal|0
-argument|); 					putchar ( c ); 				} 				if ( strcmp ( line,
+argument|if ( CP_READ(Uart->mon_xmithost)& UART_VALID ) { 					c = getbyte(); 					putchar ( c ); 				} 				if ( strcmp ( line,
 literal|"Mon960"
 argument|)  ==
 literal|0
@@ -4394,7 +4378,7 @@ argument|ucode = pca200e_microcode; 				    ucode_size = pca200e_microcode_size;
 literal|"%s download failed\n"
 argument|, 					air->acp_intf); 				(void) close(fd); 				continue; 			    }
 comment|/* 			     * Download completed - wait around a while for 			     * the driver to initialize the adapter 			     */
-argument|aap = (Aali *)(ram + CP_READ(Mon->mon_appl)); 			     for (i =
+argument|aap = (Aali *)(void *)(ram + CP_READ(Mon->mon_appl)); 			     for (i =
 literal|0
 argument|; i< MAX_CHECK; i++, sleep(
 literal|1
