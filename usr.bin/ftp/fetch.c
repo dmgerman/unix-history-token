@@ -1272,6 +1272,13 @@ condition|(
 name|len
 operator|<
 literal|0
+operator|||
+name|len
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 condition|)
 block|{
 name|warnx
