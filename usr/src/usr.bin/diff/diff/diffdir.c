@@ -107,6 +107,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|dirstatus
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* exit status from diffdir */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|status
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|title
 index|[
@@ -464,6 +482,10 @@ expr_stmt|;
 name|d1
 operator|++
 expr_stmt|;
+name|dirstatus
+operator||=
+literal|1
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -517,6 +539,10 @@ argument_list|)
 expr_stmt|;
 name|d2
 operator|++
+expr_stmt|;
+name|dirstatus
+operator||=
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -679,6 +705,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|status
+operator|=
+name|dirstatus
+expr_stmt|;
 block|}
 end_block
 
@@ -1707,6 +1737,10 @@ name|closem
 goto|;
 name|notsame
 label|:
+name|dirstatus
+operator||=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1891,9 +1925,9 @@ block|{
 name|int
 name|pid
 decl_stmt|,
-name|status
+name|lstatus
 decl_stmt|,
-name|status2
+name|lstatus2
 decl_stmt|,
 name|pv
 index|[
@@ -2137,7 +2171,7 @@ condition|(
 name|wait
 argument_list|(
 operator|&
-name|status
+name|lstatus
 argument_list|)
 operator|!=
 name|pid
@@ -2148,14 +2182,20 @@ condition|(
 name|wait
 argument_list|(
 operator|&
-name|status2
+name|lstatus2
 argument_list|)
 operator|!=
 operator|-
 literal|1
 condition|)
 continue|continue;
-comment|/* 	if ((status>> 8)>= 2) 		done(); */
+comment|/* 	if ((lstatus>> 8)>= 2) 		done(); */
+name|dirstatus
+operator||=
+name|lstatus
+operator|>>
+literal|8
+expr_stmt|;
 block|}
 end_block
 
