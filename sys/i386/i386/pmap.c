@@ -11084,7 +11084,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"bad pte"
+literal|"bad peter"
 argument_list|)
 expr_stmt|;
 block|}
