@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.30.4.5 1996/04/01 00:26:10 gibbs Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.30.4.6 1996/04/04 22:43:59 rich Exp $  */
 end_comment
 
 begin_include
@@ -936,6 +936,64 @@ ifdef|#
 directive|ifdef
 name|NEW_SCSICONF
 block|{
+comment|/* od's must be probed before sd's since some of them identify as T_DIRECT */
+if|#
+directive|if
+name|NOD
+operator|>
+literal|0
+block|{
+name|T_OPTICAL
+block|,
+name|T_REMOV
+block|,
+literal|"MATSHITA"
+block|,
+literal|"PD-1 LF-1000"
+block|,
+literal|"*"
+block|,
+literal|"od"
+block|,
+name|SC_MORE_LUS
+block|}
+block|,
+comment|/* 	 * The SONY SMO is not really supported here, since it 	 * identifies as T_DIRECT, and thus doesn't get assigned 	 * to the od driver. 	 * You need to upgrade to the FreeBSD 2.2 line for this. 	 */
+block|{
+name|T_OPTICAL
+block|,
+name|T_REMOV
+block|,
+literal|"SONY"
+block|,
+literal|"SMO-*"
+block|,
+literal|"*"
+block|,
+literal|"od"
+block|,
+name|SC_MORE_LUS
+block|}
+block|,
+block|{
+name|T_OPTICAL
+block|,
+name|T_REMOV
+block|,
+literal|"*"
+block|,
+literal|"*"
+block|,
+literal|"*"
+block|,
+literal|"od"
+block|,
+name|SC_ONE_LU
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* NOD */
 if|#
 directive|if
 name|NSD
@@ -1281,6 +1339,64 @@ end_comment
 
 begin_block
 block|{
+comment|/* od's must be probed before sd's since some of them identify as T_DIRECT */
+if|#
+directive|if
+name|NOD
+operator|>
+literal|0
+block|{
+name|T_OPTICAL
+operator|,
+name|T_REMOV
+operator|,
+literal|"MATSHITA"
+operator|,
+literal|"PD-1 LF-1000"
+operator|,
+literal|"*"
+operator|,
+literal|"od"
+operator|,
+name|SC_MORE_LUS
+block|}
+operator|,
+comment|/* See comments under NEW_SCSICONF above. */
+block|{
+name|T_OPTICAL
+operator|,
+name|T_REMOV
+operator|,
+literal|"SONY"
+operator|,
+literal|"SMO-*"
+operator|,
+literal|"*"
+operator|,
+literal|"od"
+operator|,
+name|SC_MORE_LUS
+block|}
+operator|,
+block|{
+name|T_OPTICAL
+operator|,
+name|T_REMOV
+operator|,
+literal|"*"
+operator|,
+literal|"*"
+operator|,
+literal|"*"
+operator|,
+literal|"od"
+operator|,
+name|SC_ONE_LU
+block|}
+operator|,
+endif|#
+directive|endif
+comment|/* NOD */
 if|#
 directive|if
 name|NSD
