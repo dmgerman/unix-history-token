@@ -1394,8 +1394,6 @@ name|char
 name|memName
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 comment|/* Current member name while hashing. */
@@ -2648,6 +2646,8 @@ expr_stmt|;
 name|name
 index|[
 name|MAXPATHLEN
+operator|-
+literal|1
 index|]
 operator|=
 literal|'\0'
