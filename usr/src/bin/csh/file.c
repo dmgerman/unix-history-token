@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)file.c 1.1 (Berkeley from Hp Labs) %G%"
+literal|"@(#)file.c 1.2 (Berkeley from Hp Labs) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -236,7 +236,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|sgtty
 operator|.
 name|sg_flags
@@ -246,21 +245,7 @@ name|RAW
 operator||
 name|CBREAK
 operator|)
-operator|)
-operator|||
-operator|(
-operator|(
-name|sgtty
-operator|.
-name|sg_flags
-operator|&
-name|ECHO
-operator|)
-operator|==
-literal|0
-operator|)
 condition|)
-comment|/* not manditory, but nice */
 block|{
 name|sgtty
 operator|.
@@ -272,12 +257,6 @@ name|RAW
 operator||
 name|CBREAK
 operator|)
-expr_stmt|;
-name|sgtty
-operator|.
-name|sg_flags
-operator||=
-name|ECHO
 expr_stmt|;
 name|ioctl
 argument_list|(
