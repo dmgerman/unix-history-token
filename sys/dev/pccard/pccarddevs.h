@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.9 2001/01/20 02:03:53 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.11 2001/03/22 05:51:58 imp Exp   */
 end_comment
 
 begin_comment
@@ -3590,6 +3590,27 @@ define|#
 directive|define
 name|PCCARD_STR_NANOSPEED_PRISM2
 value|"NANOSPEED ROOT-RZ2000 WLAN Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_ZOOM_AIR_4000
+value|{ "Zoom", "Air-4000", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_ZOOM_AIR_4000
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_ZOOM_AIR_4000
+value|"Zoom Air-4000"
 end_define
 
 end_unit
