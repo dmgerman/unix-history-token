@@ -3,32 +3,34 @@ begin_comment
 comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)str.c	8.2 (Berkeley) 4/28/95";
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)str.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,10 +38,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_include
 include|#
@@ -95,108 +93,87 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|backslash
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|STR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|bracket
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|STR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|c_class
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|genclass
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|STR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|genequiv
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|STR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|genrange
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|STR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|genseq
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|STR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -204,13 +181,11 @@ name|next
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|STR
 modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ch
 decl_stmt|;
@@ -458,6 +433,12 @@ operator|(
 literal|1
 operator|)
 return|;
+default|default:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* NOTREACHED */
 block|}
@@ -470,13 +451,11 @@ name|bracket
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|STR
 modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -666,21 +645,20 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
 name|int
-argument_list|(
-argument|*func
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|func
+function_decl|)
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|int
 modifier|*
 name|set
@@ -704,7 +682,9 @@ block|{
 literal|"alnum"
 block|,
 name|isalnum
-block|,  }
+block|,
+name|NULL
+block|}
 block|,
 undef|#
 directive|undef
@@ -713,7 +693,9 @@ block|{
 literal|"alpha"
 block|,
 name|isalpha
-block|,  }
+block|,
+name|NULL
+block|}
 block|,
 undef|#
 directive|undef
@@ -722,7 +704,9 @@ block|{
 literal|"blank"
 block|,
 name|isblank
-block|,  }
+block|,
+name|NULL
+block|}
 block|,
 undef|#
 directive|undef
@@ -731,7 +715,9 @@ block|{
 literal|"cntrl"
 block|,
 name|iscntrl
-block|,  }
+block|,
+name|NULL
+block|}
 block|,
 undef|#
 directive|undef
@@ -740,7 +726,9 @@ block|{
 literal|"digit"
 block|,
 name|isdigit
-block|,  }
+block|,
+name|NULL
+block|}
 block|,
 undef|#
 directive|undef
@@ -749,7 +737,9 @@ block|{
 literal|"graph"
 block|,
 name|isgraph
-block|,  }
+block|,
+name|NULL
+block|}
 block|,
 undef|#
 directive|undef
@@ -758,7 +748,9 @@ block|{
 literal|"lower"
 block|,
 name|islower
-block|,  }
+block|,
+name|NULL
+block|}
 block|,
 undef|#
 directive|undef
@@ -767,7 +759,9 @@ block|{
 literal|"print"
 block|,
 name|isprint
-block|,  }
+block|,
+name|NULL
+block|}
 block|,
 undef|#
 directive|undef
@@ -776,7 +770,9 @@ block|{
 literal|"punct"
 block|,
 name|ispunct
-block|,  }
+block|,
+name|NULL
+block|}
 block|,
 undef|#
 directive|undef
@@ -785,7 +781,9 @@ block|{
 literal|"space"
 block|,
 name|isspace
-block|,  }
+block|,
+name|NULL
+block|}
 block|,
 undef|#
 directive|undef
@@ -794,7 +792,9 @@ block|{
 literal|"upper"
 block|,
 name|isupper
-block|,  }
+block|,
+name|NULL
+block|}
 block|,
 undef|#
 directive|undef
@@ -803,7 +803,9 @@ block|{
 literal|"xdigit"
 block|,
 name|isxdigit
-block|, }
+block|,
+name|NULL
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -820,7 +822,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|cnt
 decl_stmt|,
@@ -828,11 +829,8 @@ argument_list|(
 operator|*
 name|func
 argument_list|)
-name|__P
 argument_list|(
-operator|(
 name|int
-operator|)
 argument_list|)
 decl_stmt|;
 name|CLASS
@@ -1039,6 +1037,7 @@ name|strcmp
 argument_list|(
 operator|(
 operator|(
+specifier|const
 name|CLASS
 operator|*
 operator|)
@@ -1049,6 +1048,7 @@ name|name
 argument_list|,
 operator|(
 operator|(
+specifier|const
 name|CLASS
 operator|*
 operator|)
@@ -1483,13 +1483,11 @@ name|backslash
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|STR
 modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|ch
 decl_stmt|,
