@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)db.h	8.1 (Berkeley) 6/2/93  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)db.h	8.2 (Berkeley) 9/7/93  */
 end_comment
 
 begin_ifndef
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -273,13 +279,93 @@ name|DBTYPE
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * !!!  * The following flags are included in the dbopen(3) call as part of the  * open(2) flags.  In order to avoid conflicts with the open flags, start  * at the top of the 16 or 32-bit number space and work our way down.  If  * the open flags were significantly expanded in the future, it could be  * a problem.  Wish I'd left another flags word in the dbopen call.  *  * !!!  * None of this stuff is implemented yet.  The only reason that it's here  * is so that the access methods can skip copying the key/data pair when  * the DB_LOCK flag isn't set.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|UINT_MAX
+operator|>
+literal|65535
+end_if
+
 begin_define
 define|#
 directive|define
-name|__USE_OPEN_FLAGS
-define|\
-value|(O_CREAT|O_EXCL|O_EXLOCK|O_RDONLY|O_RDWR|O_SHLOCK|O_TRUNC)
+name|DB_LOCK
+value|0x20000000
 end_define
+
+begin_comment
+comment|/* Do locking. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DB_SHMEM
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Use shared memory. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DB_TXN
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Do transactions. */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DB_LOCK
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Do locking. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DB_SHMEM
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* Use shared memory. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DB_TXN
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Do transactions. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Access method description structure. */
@@ -293,7 +379,7 @@ block|{
 name|DBTYPE
 name|type
 decl_stmt|;
-comment|/* underlying db type */
+comment|/* Underlying db type. */
 name|int
 argument_list|(
 argument|*close
@@ -655,7 +741,7 @@ name|BLSWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{ \ 	u_long _tmp = a; \ 	((char *)&a)[0] = ((char *)&_tmp)[3]; \ 	((char *)&a)[1] = ((char *)&_tmp)[2]; \ 	((char *)&a)[2] = ((char *)&_tmp)[1]; \ 	((char *)&a)[3] = ((char *)&_tmp)[0]; \ }
+value|{							\ 	u_long _tmp = a;						\ 	((char *)&a)[0] = ((char *)&_tmp)[3];				\ 	((char *)&a)[1] = ((char *)&_tmp)[2];				\ 	((char *)&a)[2] = ((char *)&_tmp)[1];				\ 	((char *)&a)[3] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
@@ -665,7 +751,7 @@ name|BLPSWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{ \ 	u_long _tmp = *(u_long *)a; \ 	((char *)a)[0] = ((char *)&_tmp)[3]; \ 	((char *)a)[1] = ((char *)&_tmp)[2]; \ 	((char *)a)[2] = ((char *)&_tmp)[1]; \ 	((char *)a)[3] = ((char *)&_tmp)[0]; \ }
+value|{							\ 	u_long _tmp = *(u_long *)a;					\ 	((char *)a)[0] = ((char *)&_tmp)[3];				\ 	((char *)a)[1] = ((char *)&_tmp)[2];				\ 	((char *)a)[2] = ((char *)&_tmp)[1];				\ 	((char *)a)[3] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
@@ -677,7 +763,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ \ 	((char *)&(b))[0] = ((char *)&(a))[3]; \ 	((char *)&(b))[1] = ((char *)&(a))[2]; \ 	((char *)&(b))[2] = ((char *)&(a))[1]; \ 	((char *)&(b))[3] = ((char *)&(a))[0]; \ }
+value|{						\ 	((char *)&(b))[0] = ((char *)&(a))[3];				\ 	((char *)&(b))[1] = ((char *)&(a))[2];				\ 	((char *)&(b))[2] = ((char *)&(a))[1];				\ 	((char *)&(b))[3] = ((char *)&(a))[0];				\ }
 end_define
 
 begin_comment
@@ -691,7 +777,7 @@ name|BSSWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{ \ 	u_short _tmp = a; \ 	((char *)&a)[0] = ((char *)&_tmp)[1]; \ 	((char *)&a)[1] = ((char *)&_tmp)[0]; \ }
+value|{							\ 	u_short _tmp = a;						\ 	((char *)&a)[0] = ((char *)&_tmp)[1];				\ 	((char *)&a)[1] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
@@ -701,7 +787,7 @@ name|BSPSWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{ \ 	u_short _tmp = *(u_short *)a; \ 	((char *)a)[0] = ((char *)&_tmp)[1]; \ 	((char *)a)[1] = ((char *)&_tmp)[0]; \ }
+value|{							\ 	u_short _tmp = *(u_short *)a;					\ 	((char *)a)[0] = ((char *)&_tmp)[1];				\ 	((char *)a)[1] = ((char *)&_tmp)[0];				\ }
 end_define
 
 begin_define
@@ -713,7 +799,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ \ 	((char *)&(b))[0] = ((char *)&(a))[1]; \ 	((char *)&(b))[1] = ((char *)&(a))[0]; \ }
+value|{						\ 	((char *)&(b))[0] = ((char *)&(a))[1];				\ 	((char *)&(b))[1] = ((char *)&(a))[0];				\ }
 end_define
 
 begin_decl_stmt
@@ -766,6 +852,8 @@ operator|,
 specifier|const
 name|BTREEINFO
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -789,6 +877,8 @@ operator|,
 specifier|const
 name|HASHINFO
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -812,6 +902,8 @@ operator|,
 specifier|const
 name|RECNOINFO
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
