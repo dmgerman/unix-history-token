@@ -156,6 +156,20 @@ modifier|*
 name|i_dirhash
 decl_stmt|;
 comment|/* Hashing for large directories */
+comment|/* 	 * Data for extended attribute modification.  	 */
+name|u_char
+modifier|*
+name|i_ea_area
+decl_stmt|;
+comment|/* Pointer to malloced copy of EA area */
+name|unsigned
+name|i_ea_len
+decl_stmt|;
+comment|/* Length of i_ea_area */
+name|int
+name|i_ea_error
+decl_stmt|;
+comment|/* First errno in transaction */
 comment|/* 	 * Copies from the on-disk dinode itself. 	 */
 name|u_int16_t
 name|i_mode
