@@ -270,6 +270,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.stripe.debug"
+argument_list|,
+operator|&
+name|g_stripe_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_stripe
@@ -4394,6 +4405,20 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* Skip providers with 0 sectorsize. */
+if|if
+condition|(
+name|pp
+operator|->
+name|sectorsize
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|gp
 operator|=
 name|g_new_geomf
@@ -5967,7 +5992,22 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Nothing here. */
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"%s<Number>%u</Number>\n"
+argument_list|,
+name|indent
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|cp
+operator|->
+name|index
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
