@@ -1911,7 +1911,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|i
