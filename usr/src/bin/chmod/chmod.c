@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chmod.c	5.17 (Berkeley) %G%"
+literal|"@(#)chmod.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,20 +190,23 @@ case|case
 literal|'R'
 case|:
 name|rflag
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
 literal|'f'
 case|:
+comment|/* no longer documented */
 name|fflag
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
-comment|/* "-[rwx]" are valid file modes */
 case|case
 literal|'r'
 case|:
+comment|/* "-[rwx]" are valid file modes */
 case|case
 literal|'w'
 case|:
@@ -659,7 +662,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chmod: chmod [-fR] mode file ...\n"
+literal|"chmod: chmod [-R] mode file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
