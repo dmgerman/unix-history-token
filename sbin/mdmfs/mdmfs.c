@@ -2170,10 +2170,16 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-w word too long (%d>= %d)"
+literal|"-w word too long (%ld>= %ld)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|rv
 argument_list|,
+operator|(
+name|long
+operator|)
 name|strl
 argument_list|)
 expr_stmt|;
