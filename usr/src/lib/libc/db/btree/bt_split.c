@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	5.5 (Berkeley) %G%"
+literal|"@(#)bt_split.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2980,7 +2980,10 @@ condition|(
 name|half
 operator|<
 name|nbytes
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|skip
 operator|!=
 name|off
@@ -3001,6 +3004,7 @@ else|else
 operator|++
 name|bigkeycnt
 expr_stmt|;
+block|}
 else|else
 name|half
 operator|-=
