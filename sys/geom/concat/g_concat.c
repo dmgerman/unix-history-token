@@ -3753,8 +3753,12 @@ condition|)
 return|return;
 if|if
 condition|(
-name|gp
-operator|!=
+name|pp
+operator|==
+name|NULL
+operator|&&
+name|cp
+operator|==
 name|NULL
 condition|)
 block|{
