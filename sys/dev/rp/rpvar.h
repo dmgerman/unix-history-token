@@ -167,6 +167,16 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Actually not used */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|notdef
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -174,6 +184,15 @@ name|termios
 name|deftermios
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notdef */
+end_comment
 
 end_unit
 
