@@ -3302,11 +3302,9 @@ name|uma_boot_free
 operator|!=
 literal|0
 operator|&&
-name|zone
-operator|->
-name|uz_ppera
-operator|==
-literal|1
+name|bytes
+operator|<=
+name|PAGE_SIZE
 condition|)
 block|{
 name|uma_slab_t
@@ -3355,11 +3353,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|zone
-operator|->
-name|uz_ppera
+name|bytes
 operator|>
-literal|1
+name|PAGE_SIZE
 condition|)
 name|panic
 argument_list|(
@@ -6244,6 +6240,9 @@ decl_stmt|;
 name|uma_slab_t
 name|slab
 decl_stmt|;
+name|int
+name|max
+decl_stmt|;
 comment|/* 	 * Try this zone's free list first so we don't allocate extra buckets. 	 */
 if|if
 condition|(
@@ -6364,6 +6363,19 @@ operator|->
 name|uz_fills
 operator|++
 expr_stmt|;
+name|max
+operator|=
+name|MIN
+argument_list|(
+name|bucket
+operator|->
+name|ub_entries
+argument_list|,
+name|zone
+operator|->
+name|uz_count
+argument_list|)
+expr_stmt|;
 comment|/* Try to keep the buckets totally full */
 while|while
 condition|(
@@ -6371,9 +6383,7 @@ name|bucket
 operator|->
 name|ub_cnt
 operator|<
-name|bucket
-operator|->
-name|ub_entries
+name|max
 operator|&&
 operator|(
 name|slab
@@ -6399,9 +6409,7 @@ name|bucket
 operator|->
 name|ub_cnt
 operator|<
-name|bucket
-operator|->
-name|ub_entries
+name|max
 condition|)
 block|{
 name|bucket
