@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shutdown.c	5.11 (Berkeley) %G%"
+literal|"@(#)shutdown.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1069,13 +1069,6 @@ specifier|static
 name|int
 name|first
 decl_stmt|;
-specifier|static
-name|char
-name|hostname
-index|[
-name|MAXHOSTNAMELEN
-index|]
-decl_stmt|;
 name|FILE
 modifier|*
 name|pf
@@ -1095,7 +1088,6 @@ operator|!
 name|first
 operator|++
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -1106,20 +1098,6 @@ argument_list|,
 name|timeout
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|gethostname
-argument_list|(
-name|hostname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hostname
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
