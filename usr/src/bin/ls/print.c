@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.3 (Berkeley) %G%"
+literal|"@(#)print.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,8 +76,61 @@ directive|include
 file|"ls.h"
 end_include
 
+begin_expr_stmt
+name|printscol
+argument_list|(
+name|stats
+argument_list|,
+name|num
+argument_list|)
+specifier|register
+name|LS
+operator|*
+name|stats
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|int
+name|num
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+for|for
+control|(
+init|;
+name|num
+operator|--
+condition|;
+operator|++
+name|stats
+control|)
+block|{
+operator|(
+name|void
+operator|)
+name|printaname
+argument_list|(
+name|stats
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_block
+
 begin_macro
-name|printdir
+name|printlong
 argument_list|(
 argument|stats
 argument_list|,
@@ -92,10 +145,6 @@ name|stats
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* the statted, sorted directory */
-end_comment
-
 begin_decl_stmt
 specifier|register
 name|int
@@ -105,107 +154,15 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-name|lengthfcn
-function_decl|)
-parameter_list|()
-function_decl|;
 specifier|register
-name|int
-name|entry
-decl_stmt|;
 name|long
 name|blocks
 decl_stmt|;
-comment|/* sum of blocks in longform listing */
+comment|/* sum of blocks */
+specifier|register
 name|int
 name|i
 decl_stmt|;
-comment|/* subscript to stats */
-name|int
-name|maxlen
-decl_stmt|;
-comment|/* length of longest name string */
-name|int
-name|colwidth
-decl_stmt|;
-comment|/* width of a printing column */
-name|int
-name|numcols
-decl_stmt|;
-comment|/* number of columns */
-name|int
-name|collength
-decl_stmt|;
-comment|/* lines in longest column */
-name|int
-name|base
-decl_stmt|;
-comment|/* subscript for leftmost column */
-name|int
-name|offset
-decl_stmt|;
-comment|/* delta from base to next column */
-name|int
-name|chcnt
-decl_stmt|;
-comment|/* character count printed */
-if|if
-condition|(
-name|f_singlecol
-condition|)
-block|{
-for|for
-control|(
-name|entry
-operator|=
-literal|0
-init|;
-name|entry
-operator|<
-name|num
-condition|;
-operator|++
-name|entry
-control|)
-block|{
-operator|(
-name|void
-operator|)
-name|printaname
-argument_list|(
-operator|&
-name|stats
-index|[
-name|entry
-index|]
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
-block|}
-return|return;
-block|}
-if|if
-condition|(
-name|f_longform
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|f_firsttime
-condition|)
-block|{
 for|for
 control|(
 name|i
@@ -242,23 +199,16 @@ argument_list|(
 literal|"total %ld\n"
 argument_list|,
 name|blocks
-operator|/
-literal|2
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
-name|i
-operator|=
-literal|0
 init|;
-name|i
-operator|<
 name|num
+operator|--
 condition|;
 operator|++
-name|i
+name|stats
 control|)
 block|{
 if|if
@@ -273,10 +223,7 @@ argument_list|(
 literal|"%6lu "
 argument_list|,
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_ino
@@ -294,10 +241,7 @@ argument_list|(
 literal|"%4ld "
 argument_list|,
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_blocks
@@ -308,10 +252,7 @@ expr_stmt|;
 name|printperms
 argument_list|(
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_mode
@@ -325,10 +266,7 @@ argument_list|(
 literal|"%3d "
 argument_list|,
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_nlink
@@ -337,10 +275,7 @@ expr_stmt|;
 name|printowner
 argument_list|(
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_uid
@@ -353,10 +288,7 @@ condition|)
 name|printgrp
 argument_list|(
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_gid
@@ -367,10 +299,7 @@ condition|(
 name|S_ISCHR
 argument_list|(
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_mode
@@ -379,10 +308,7 @@ operator|||
 name|S_ISBLK
 argument_list|(
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_mode
@@ -398,10 +324,7 @@ argument_list|,
 name|major
 argument_list|(
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_rdev
@@ -410,10 +333,7 @@ argument_list|,
 name|minor
 argument_list|(
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_rdev
@@ -429,10 +349,7 @@ argument_list|(
 literal|"%8ld "
 argument_list|,
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_size
@@ -445,10 +362,7 @@ condition|)
 name|printtime
 argument_list|(
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_atime
@@ -462,10 +376,7 @@ condition|)
 name|printtime
 argument_list|(
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_ctime
@@ -475,10 +386,7 @@ else|else
 name|printtime
 argument_list|(
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_mtime
@@ -492,10 +400,7 @@ argument_list|(
 literal|"%s"
 argument_list|,
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|name
 argument_list|)
 expr_stmt|;
@@ -509,10 +414,7 @@ operator|)
 name|printtype
 argument_list|(
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_mode
@@ -523,10 +425,7 @@ condition|(
 name|S_ISLNK
 argument_list|(
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|lstat
 operator|.
 name|st_mode
@@ -535,10 +434,7 @@ condition|)
 name|printlink
 argument_list|(
 name|stats
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|name
 argument_list|)
 expr_stmt|;
@@ -551,8 +447,76 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
+end_block
+
+begin_macro
+name|printcol
+argument_list|(
+argument|stats
+argument_list|,
+argument|num
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|LS
+modifier|*
+name|stats
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|int
+name|num
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|extern
+name|int
+argument_list|(
+operator|*
+name|lengthfcn
+argument_list|)
+argument_list|()
+decl_stmt|,
+name|termwidth
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/* subscript to stats */
+name|int
+name|maxlen
+decl_stmt|;
+comment|/* length of longest name string */
+name|int
+name|colwidth
+decl_stmt|;
+comment|/* width of a printing column */
+name|int
+name|numcols
+decl_stmt|;
+comment|/* number of columns */
+name|int
+name|collength
+decl_stmt|;
+comment|/* lines in longest column */
+name|int
+name|base
+decl_stmt|;
+comment|/* subscript for leftmost column */
+name|int
+name|offset
+decl_stmt|;
+comment|/* delta from base to next column */
+name|int
+name|chcnt
+decl_stmt|;
+comment|/* character count printed */
 comment|/* 	 * assume tabs every 8 columns WARNING: bad code (hard coded 	 * constants) follows: 	 */
 comment|/* figure out max width */
 name|maxlen
@@ -828,14 +792,14 @@ end_comment
 begin_macro
 name|printaname
 argument_list|(
-argument|entry
+argument|lp
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|LS
 modifier|*
-name|entry
+name|lp
 decl_stmt|;
 end_decl_stmt
 
@@ -843,9 +807,11 @@ begin_block
 block|{
 name|int
 name|chcnt
-init|=
-literal|0
 decl_stmt|;
+name|chcnt
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|f_inode
@@ -856,7 +822,7 @@ name|printf
 argument_list|(
 literal|"%5lu "
 argument_list|,
-name|entry
+name|lp
 operator|->
 name|lstat
 operator|.
@@ -873,7 +839,7 @@ name|printf
 argument_list|(
 literal|"%4ld "
 argument_list|,
-name|entry
+name|lp
 operator|->
 name|lstat
 operator|.
@@ -888,7 +854,7 @@ name|printf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|entry
+name|lp
 operator|->
 name|name
 argument_list|)
@@ -901,7 +867,7 @@ name|chcnt
 operator|+=
 name|printtype
 argument_list|(
-name|entry
+name|lp
 operator|->
 name|lstat
 operator|.
