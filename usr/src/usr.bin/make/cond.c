@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cond.c	5.4 (Berkeley) %G%"
+literal|"@(#)cond.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3182,24 +3182,10 @@ name|int
 name|level
 decl_stmt|;
 comment|/* Level at which to report errors. */
-comment|/*      * Set the error level. When SPECIAL_CHAR is #, there is an ambiguity      * because of the need to keep # as the comment character. In such a case      * it is impossible to tell, for example, if the user has simply begun      * a commented sentence with "else" or has forgotten the initial "if".      * For this reason, we make the errors only warnings. If the lead-in      * character is anything else, however, we can be certain the user      * is in error.      */
-if|#
-directive|if
-name|SPECIAL_CHAR
-operator|==
-literal|'#'
-name|level
-operator|=
-name|PARSE_WARNING
-expr_stmt|;
-else|#
-directive|else
 name|level
 operator|=
 name|PARSE_FATAL
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|line

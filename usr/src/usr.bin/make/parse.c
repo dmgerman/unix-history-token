@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.3 (Berkeley) %G%"
+literal|"@(#)parse.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4395,9 +4395,7 @@ name|Parse_Error
 argument_list|(
 name|PARSE_FATAL
 argument_list|,
-literal|"Unclosed %cinclude filename. '%c' expected"
-argument_list|,
-name|SPECIAL_CHAR
+literal|"Unclosed .include filename. '%c' expected"
 argument_list|,
 name|endc
 argument_list|)
@@ -4935,7 +4933,7 @@ operator|||
 operator|(
 name|c
 operator|==
-name|SPECIAL_CHAR
+literal|'.'
 operator|)
 condition|)
 block|{
@@ -5294,7 +5292,7 @@ index|[
 literal|0
 index|]
 operator|==
-name|SPECIAL_CHAR
+literal|'.'
 condition|)
 block|{
 comment|/* 	     * The line might be a conditional. Ask the conditional module 	     * about it and act accordingly 	     */
@@ -5328,7 +5326,7 @@ condition|(
 operator|(
 name|c
 operator|!=
-name|SPECIAL_CHAR
+literal|'.'
 operator|)
 operator|&&
 operator|(
@@ -5660,7 +5658,7 @@ condition|(
 operator|*
 name|line
 operator|==
-name|SPECIAL_CHAR
+literal|'.'
 condition|)
 block|{
 comment|/* 		 * Lines that begin with the special character are either 		 * include or undef directives. 		 */
@@ -5797,7 +5795,7 @@ operator|==
 literal|'#'
 condition|)
 block|{
-comment|/* 		 * If we're this far, the line must be a comment, even if 		 * SPECIAL_CHAR is '#' 		 */
+comment|/* If we're this far, the line must be a comment. */
 goto|goto
 name|nextLine
 goto|;
