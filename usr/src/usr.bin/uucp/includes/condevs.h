@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1985 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)condevs.h	4.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1985 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)condevs.h	4.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -157,7 +157,6 @@ end_function_decl
 begin_endif
 endif|#
 directive|endif
-endif|DATAKIT
 end_endif
 
 begin_ifdef
@@ -179,7 +178,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|DN11
 end_endif
 
 begin_ifdef
@@ -204,7 +202,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|HAYES
 end_endif
 
 begin_ifdef
@@ -229,7 +226,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|HAYES2400
 end_endif
 
 begin_ifdef
@@ -255,7 +251,6 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|HAYESQ
 end_endif
 
 begin_ifdef
@@ -277,7 +272,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|NOVATION
 end_endif
 
 begin_ifdef
@@ -299,7 +293,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|CDs224
 end_endif
 
 begin_ifdef
@@ -321,7 +314,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|DF02
 end_endif
 
 begin_ifdef
@@ -346,7 +338,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|DF112
 end_endif
 
 begin_ifdef
@@ -365,7 +356,6 @@ end_function_decl
 begin_endif
 endif|#
 directive|endif
-endif|PNET
 end_endif
 
 begin_ifdef
@@ -387,7 +377,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|VENTEL
 end_endif
 
 begin_ifdef
@@ -409,7 +398,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|PENRIL
 end_endif
 
 begin_ifdef
@@ -438,7 +426,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|UNETTCP
 end_endif
 
 begin_ifdef
@@ -460,7 +447,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|BSDTCP
 end_endif
 
 begin_ifdef
@@ -482,7 +468,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|VADIC
 end_endif
 
 begin_ifdef
@@ -504,7 +489,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|VA212
 end_endif
 
 begin_ifdef
@@ -526,7 +510,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|VA811S
 end_endif
 
 begin_ifdef
@@ -548,7 +531,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|VA820
 end_endif
 
 begin_ifdef
@@ -612,7 +594,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|MICOM
 end_endif
 
 begin_ifdef
@@ -634,7 +615,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|SYTEK
 end_endif
 
 begin_ifdef
@@ -656,7 +636,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|ATT2224
 end_endif
 
 end_unit

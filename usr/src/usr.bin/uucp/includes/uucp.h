@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1985 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)uucp.h	5.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1985 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)uucp.h	5.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -288,8 +288,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|USR2400&& !HAYES
 end_endif
+
+begin_comment
+comment|/* USR2400&& !HAYES */
+end_comment
 
 begin_if
 if|#
@@ -434,7 +437,6 @@ end_undef
 begin_endif
 endif|#
 directive|endif
-endif|BRL4_2
 end_endif
 
 begin_comment
@@ -486,7 +488,6 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|(BSD4_3 ||BRL4_2)&& !BSDINETD
 end_endif
 
 begin_comment
@@ -1433,7 +1434,6 @@ end_include
 begin_else
 else|#
 directive|else
-else|USG
 end_else
 
 begin_struct
@@ -1474,7 +1474,6 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|USG
 end_endif
 
 begin_ifdef
@@ -1766,26 +1765,11 @@ begin_comment
 comment|/* This horrible gross kludge is the only way I know to  * convince lint that signal(SIGINT,SIG_IGN) is legal. It hates SIG_IGN.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIG_IGN
-end_ifdef
-
 begin_undef
 undef|#
 directive|undef
 name|SIG_IGN
 end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SIG_IGN */
-end_comment
 
 begin_define
 define|#
@@ -1802,23 +1786,11 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_undef
 undef|#
 directive|undef
 name|DEBUG
 end_undef
-
-begin_endif
-endif|#
-directive|endif
-endif|DEBUG
-end_endif
 
 begin_define
 define|#
