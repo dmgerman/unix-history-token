@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.83 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.84 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1267,6 +1267,10 @@ argument_list|,
 name|cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 name|panic
@@ -1633,6 +1637,10 @@ argument_list|,
 name|cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 name|panic
@@ -4579,6 +4587,10 @@ operator|)
 name|fs
 operator|->
 name|fs_sbsize
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4808,6 +4820,10 @@ name|i
 argument_list|)
 argument_list|,
 name|size
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
