@@ -4620,6 +4620,13 @@ argument_list|,
 literal|"Can't get memory for prefetch mem\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|barlist
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -4849,6 +4856,13 @@ argument_list|,
 literal|"Can't get memory for non-prefetch mem\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|barlist
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -5060,6 +5074,13 @@ argument_list|,
 literal|"Can't get memory for IO ports\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|barlist
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -5191,6 +5212,13 @@ argument_list|(
 name|cbdev
 argument_list|,
 literal|"Can't get memory for irq\n"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|barlist
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
