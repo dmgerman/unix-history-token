@@ -1220,7 +1220,7 @@ name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"NumberOfTableEntries=%d\n"
+literal|"NumberOfTableEntries=%ld\n"
 argument_list|,
 name|ST
 operator|->
@@ -2197,7 +2197,7 @@ name|sprintf
 argument_list|(
 name|lbuf
 argument_list|,
-literal|"%d %06x %013x %013x %4s %d  %d  %d  %d %d %-3s %d %06x\n"
+literal|"%d %06x %013lx %013lx %4s %d  %d  %d  %d %d %-3s %d %06x\n"
 argument_list|,
 name|buf
 operator|.
