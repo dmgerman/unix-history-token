@@ -3252,6 +3252,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|unit
 argument_list|,
 name|hz
@@ -4621,6 +4624,9 @@ literal|"psm%d: unable to allocate the IRQ resource (%d).\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|int
+operator|)
 name|irq
 argument_list|)
 expr_stmt|;
@@ -5672,6 +5678,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|unit
 argument_list|,
@@ -8735,6 +8744,9 @@ operator|=
 operator|(
 name|int
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|arg
 expr_stmt|;
 name|sc
@@ -8819,6 +8831,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|unit
 argument_list|,
@@ -12438,6 +12453,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|unit
 argument_list|,
