@@ -37,14 +37,6 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-end_if
-
 begin_include
 include|#
 directive|include
@@ -56,11 +48,6 @@ include|#
 directive|include
 file|<sys/mutex.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -88,64 +75,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_define
-define|#
-directive|define
-name|AS_LOCK
-parameter_list|(
-name|as
-parameter_list|)
-value|s = splhigh()
-end_define
-
-begin_define
-define|#
-directive|define
-name|AS_UNLOCK
-parameter_list|(
-name|as
-parameter_list|)
-value|splx(s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AS_LOCK_DECL
-value|int s
-end_define
-
-begin_define
-define|#
-directive|define
-name|msleep
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|,
-name|e
-parameter_list|)
-value|tsleep(a, c, d, e)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -166,17 +95,6 @@ parameter_list|)
 value|mtx_unlock(&(as)->as_mtx)
 end_define
 
-begin_define
-define|#
-directive|define
-name|AS_LOCK_DECL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Simple counting semaphore implemented using a mutex.  (Subsequently used  * in the OSI code to implement a mutex.  Go figure.)  */
 end_comment
@@ -185,17 +103,10 @@ begin_struct
 struct|struct
 name|acpi_semaphore
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 name|struct
 name|mtx
 name|as_mtx
 decl_stmt|;
-endif|#
-directive|endif
 name|UINT32
 name|as_units
 decl_stmt|;
@@ -382,11 +293,6 @@ argument_list|(
 name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 name|mtx_init
 argument_list|(
 operator|&
@@ -401,8 +307,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|as
 operator|->
 name|as_units
@@ -519,11 +423,6 @@ name|as
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -532,8 +431,6 @@ operator|->
 name|as_mtx
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|free
 argument_list|(
 name|Handle
@@ -601,8 +498,6 @@ name|currenttv
 decl_stmt|,
 name|timelefttv
 decl_stmt|;
-name|AS_LOCK_DECL
-expr_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
@@ -835,11 +730,6 @@ name|AE_TIME
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -860,8 +750,6 @@ name|tmo
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|as
 operator|->
 name|as_pendings
@@ -1198,8 +1086,6 @@ operator|*
 operator|)
 name|Handle
 decl_stmt|;
-name|AS_LOCK_DECL
-expr_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
