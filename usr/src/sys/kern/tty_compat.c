@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_compat.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_compat.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -796,7 +796,7 @@ name|t_rprntc
 expr_stmt|;
 name|cc
 index|[
-name|VFLUSHO
+name|VDISCARD
 index|]
 operator|=
 name|ltc
@@ -881,7 +881,7 @@ name|t_flushc
 operator|=
 name|cc
 index|[
-name|VFLUSHO
+name|VDISCARD
 index|]
 expr_stmt|;
 name|ltc
