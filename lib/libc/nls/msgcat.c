@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msgcat.c,v 1.13 1998/04/30 10:14:55 ache Exp $ */
+comment|/*	$Id: msgcat.c,v 1.14 1998/04/30 11:06:12 ache Exp $ */
 end_comment
 
 begin_comment
@@ -600,8 +600,6 @@ operator|(
 name|loadCat
 argument_list|(
 name|catpath
-argument_list|,
-name|type
 argument_list|)
 operator|)
 return|;
@@ -1324,16 +1322,11 @@ name|nl_catd
 name|loadCat
 parameter_list|(
 name|catpath
-parameter_list|,
-name|type
 parameter_list|)
 name|__const
 name|char
 modifier|*
 name|catpath
-decl_stmt|;
-name|int
-name|type
 decl_stmt|;
 block|{
 name|MCHeaderT
@@ -1383,7 +1376,7 @@ name|cat
 operator|->
 name|loadType
 operator|=
-name|type
+name|MCLoadBySet
 expr_stmt|;
 if|if
 condition|(
