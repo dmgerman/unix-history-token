@@ -115,6 +115,12 @@ name|sadb_x_policy
 struct_decl|;
 end_struct_decl
 
+begin_union_decl
+union_decl|union
+name|sockaddr_union
+union_decl|;
+end_union_decl
+
 begin_function_decl
 specifier|extern
 name|struct
@@ -428,6 +434,36 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* to keep compatibility with FAST_IPSEC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEY_ALLOCSA
+parameter_list|(
+name|dst
+parameter_list|,
+name|proto
+parameter_list|,
+name|spi
+parameter_list|)
+define|\
+value|key_allocsa(((struct sockaddr *)(dst))->sa_family,\ 		    (caddr_t)&(((struct sockaddr_in *)(dst))->sin_addr),\ 		    (caddr_t)&(((struct sockaddr_in *)(dst))->sin_addr),\ 		    proto, spi)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEY_FREESAV
+parameter_list|(
+name|psav
+parameter_list|)
+define|\
+value|key_freesav(*psav)
+end_define
 
 begin_ifdef
 ifdef|#
