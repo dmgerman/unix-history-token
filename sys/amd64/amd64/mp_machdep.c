@@ -1742,8 +1742,8 @@ comment|/* set up FPU state on the AP */
 name|fpuinit
 argument_list|()
 expr_stmt|;
-comment|/* set up SSE registers */
-name|enable_sse
+comment|/* set up SSE/NX registers */
+name|initializecpu
 argument_list|()
 expr_stmt|;
 comment|/* A quick check from sanity claus */

@@ -517,16 +517,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|initializecpu
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -4607,14 +4597,6 @@ error|#
 directive|error
 literal|"have you forgotten the isa device?"
 error|;
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-comment|/* Not till we test the features bit */
-comment|/* Turn on PTE NX (no execute) bit */
-block|msr = rdmsr(MSR_EFER) | EFER_NXE; 	wrmsr(MSR_EFER, msr);
 endif|#
 directive|endif
 name|proc0

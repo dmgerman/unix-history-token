@@ -431,6 +431,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|pt_entry_t
+name|pg_nx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|u_int64_t
 name|KPTphys
@@ -7770,9 +7776,6 @@ name|newpte
 operator||=
 name|PG_RW
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PG_NX
 if|if
 condition|(
 operator|(
@@ -7785,10 +7788,8 @@ literal|0
 condition|)
 name|newpte
 operator||=
-name|PG_NX
+name|pg_nx
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|wired

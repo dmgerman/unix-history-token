@@ -65,14 +65,17 @@ directive|include
 file|<machine/specialreg.h>
 end_include
 
-begin_function_decl
-name|void
-name|initializecpu
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -124,12 +127,42 @@ end_comment
 
 begin_decl_stmt
 name|u_int
+name|cpu_feature2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Feature flags */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|amd_feature
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Feature flags */
+end_comment
+
+begin_decl_stmt
+name|u_int
 name|cpu_high
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Highest arg to CPUID */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|cpu_exthigh
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Highest arg to extended CPUID */
 end_comment
 
 begin_decl_stmt
@@ -176,16 +209,19 @@ comment|/* SSE enabled */
 end_comment
 
 begin_comment
-comment|/*  * Initialize CR4 (Control register 4) to enable SSE instructions.  */
+comment|/*  * Initialize CPU control registers  */
 end_comment
 
 begin_function
 name|void
-name|enable_sse
+name|initializecpu
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|uint64_t
+name|msr
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -218,27 +254,38 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_function
-name|void
-name|initializecpu
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-switch|switch
+if|if
 condition|(
-name|cpu
+operator|(
+name|amd_feature
+operator|&
+name|AMDID_NX
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
-default|default:
-break|break;
-block|}
-name|enable_sse
-argument_list|()
+name|msr
+operator|=
+name|rdmsr
+argument_list|(
+name|MSR_EFER
+argument_list|)
+operator||
+name|EFER_NXE
 expr_stmt|;
+name|wrmsr
+argument_list|(
+name|MSR_EFER
+argument_list|,
+name|msr
+argument_list|)
+expr_stmt|;
+name|pg_nx
+operator|=
+name|PG_NX
+expr_stmt|;
+block|}
 block|}
 end_function
 

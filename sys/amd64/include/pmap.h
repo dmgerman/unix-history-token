@@ -155,6 +155,17 @@ begin_comment
 comment|/*    \				*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PG_NX
+value|(1ul<<63)
+end_define
+
+begin_comment
+comment|/* No-execute */
+end_comment
+
 begin_comment
 comment|/* Our various interpretations of the above */
 end_comment
@@ -752,6 +763,13 @@ name|pde
 parameter_list|)
 value|pte_store((pdep), (pde))
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|pt_entry_t
+name|pg_nx
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
