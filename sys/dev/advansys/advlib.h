@@ -31,6 +31,12 @@ name|cam_path
 struct_decl|;
 end_struct_decl
 
+begin_union_decl
+union_decl|union
+name|ccb
+union_decl|;
+end_union_decl
+
 begin_typedef
 typedef|typedef
 name|u_int8_t
