@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec   * SCSI controllers.  This is used to implement product specific   * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.2 1995/01/16 16:33:47 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec   * SCSI controllers.  This is used to implement product specific   * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.3 1995/02/03 17:15:12 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -83,41 +83,68 @@ end_struct
 
 begin_typedef
 typedef|typedef
-enum|enum
-block|{
-name|AHC_274
-block|,
-comment|/* Single Channel */
-name|AHC_274T
-block|,
-comment|/* Twin Channel */
-name|AHC_274W
-block|,
-comment|/* Wide Channel */
-name|AHC_284
-block|,
-comment|/* VL Single Channel */
-name|AHC_284T
-block|,
-comment|/* VL Twin Channel */
-name|AHC_284W
-block|,
-comment|/* VL Wide Channel - Do these exist?? */
-name|AHC_294
-block|,
-comment|/* PCI Single Channel */
-name|AHC_294T
-block|,
-comment|/* PCI Twin Channel */
-name|AHC_294W
-comment|/* PCI Wide Channel */
-block|}
+name|u_char
 name|ahc_type
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|AHC_WIDE
+value|0x02
+end_define
+
 begin_comment
-comment|/*  * The driver keeps up to four scb structures per card in memory.  Only the  * first 26 bytes of the structure are valid for the hardware, the rest used  * for driver level bookeeping.  The "__attribute ((packed))" tags ensure that  * gcc does not attempt to pad the long ints in the structure to word  * boundaries since the first 26 bytes of this structure must have the correct  * offsets for the hardware to find them.  The driver is further optimized  * so that we only have to download the first 19 bytes since as long  * as we always use S/G, the last fields should be zero anyway.    */
+comment|/* Wide Channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHC_TWIN
+value|0x08
+end_define
+
+begin_comment
+comment|/* Twin Channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHC_274
+value|0x10
+end_define
+
+begin_comment
+comment|/* EISA Based Controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHC_284
+value|0x20
+end_define
+
+begin_comment
+comment|/* VL/ISA Based Controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHC_294
+value|0x40
+end_define
+
+begin_comment
+comment|/* PCI Based Controller */
+end_comment
+
+begin_comment
+comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  Only the  * first 26 bytes of the structure are valid for the hardware, the rest used  * for driver level bookeeping.  The "__attribute ((packed))" tags ensure that  * gcc does not attempt to pad the long ints in the structure to word  * boundaries since the first 26 bytes of this structure must have the correct  * offsets for the hardware to find them.  The driver is further optimized  * so that we only have to download the first 19 bytes since as long  * as we always use S/G, the last fields should be zero anyway.    */
 end_comment
 
 begin_struct
@@ -141,18 +168,14 @@ value|0x40
 comment|/* Initiate Sync Negotiation */
 define|#
 directive|define
-name|SCB_NEEDDMA
-value|0x08
-comment|/* SCB needs to be DMA'd from 						 * from host memory 						 */
-define|#
-directive|define
 name|SCB_TE
 value|0x20
 comment|/* Tag enable */
 define|#
 directive|define
-name|SCB_WAITING
-value|0x06
+name|SCB_NEEDDMA
+value|0x08
+comment|/* SCB needs to be DMA'd from 						 * from host memory 						 */
 define|#
 directive|define
 name|SCB_DIS
@@ -424,6 +447,10 @@ name|u_short
 name|wdtrpending
 decl_stmt|;
 comment|/* Pending WDTR to these targets */
+name|u_short
+name|tagenable
+decl_stmt|;
+comment|/* Targets that can handle tagqueing */
 name|int
 name|numscbs
 decl_stmt|;

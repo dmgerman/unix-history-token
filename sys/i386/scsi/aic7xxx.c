@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.    * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * i386/pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:   *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.13 1995/01/27 17:37:05 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.    * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:   *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.14 1995/02/03 17:15:11 gibbs Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * TODO:  * 	Add target reset capabilities  *	Implement Target Mode  *	Implement Tagged Queuing  *  *	This driver is very stable, and seems to offer performance  *	comprable to the 1742 FreeBSD driver.  I have not experienced  *	any timeouts since the timeout code was written, so in that   *	sense, it is untested.  */
+comment|/*  * TODO:  * 	Add target reset capabilities  *	Implement Target Mode  *  *	This driver is very stable, and seems to offer performance  *	comprable to the 1742 FreeBSD driver.  I have not experienced  *	any timeouts since the timeout code was written, so in that   *	sense, it is untested.  */
 end_comment
 
 begin_include
@@ -72,6 +72,13 @@ define|#
 directive|define
 name|PAGESIZ
 value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_TAGS
+value|4;
 end_define
 
 begin_include
@@ -227,7 +234,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Different debugging levels - only one so-far */
+comment|/* Different debugging levels */
 end_comment
 
 begin_define
@@ -237,11 +244,29 @@ name|AHC_SHOWMISC
 value|0x0001
 end_define
 
+begin_define
+define|#
+directive|define
+name|AHC_SHOWCMDS
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_SHOWSCBS
+value|0x0004
+end_define
+
+begin_comment
+comment|/*#define AHC_DEBUG*/
+end_comment
+
 begin_decl_stmt
 name|int
 name|ahc_debug
 init|=
-name|AHC_SHOWMISC
+name|AHC_SHOWCMDS
 decl_stmt|;
 end_decl_stmt
 
@@ -1607,7 +1632,7 @@ begin_define
 define|#
 directive|define
 name|HA_MSG_LEN
-value|0xc36ul
+value|0xc34ul
 end_define
 
 begin_comment
@@ -1618,7 +1643,7 @@ begin_define
 define|#
 directive|define
 name|HA_MSG_START
-value|0xc37ul
+value|0xc35ul
 end_define
 
 begin_comment
@@ -1633,14 +1658,14 @@ begin_define
 define|#
 directive|define
 name|HA_ARG_1
-value|0xc4cul
+value|0xc4aul
 end_define
 
 begin_define
 define|#
 directive|define
 name|HA_RETURN_1
-value|0xc4cul
+value|0xc4aul
 end_define
 
 begin_define
@@ -1661,21 +1686,21 @@ begin_define
 define|#
 directive|define
 name|HA_SIGSTATE
-value|0xc4dul
+value|0xc4bul
 end_define
 
 begin_define
 define|#
 directive|define
 name|HA_SCBCOUNT
-value|0xc56ul
+value|0xc52ul
 end_define
 
 begin_define
 define|#
 directive|define
 name|HA_FLAGS
-value|0xc57ul
+value|0xc53ul
 end_define
 
 begin_define
@@ -1724,14 +1749,21 @@ begin_define
 define|#
 directive|define
 name|HA_ACTIVE0
-value|0xc58ul
+value|0xc54ul
 end_define
 
 begin_define
 define|#
 directive|define
 name|HA_ACTIVE1
-value|0xc59ul
+value|0xc55ul
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVED_TCL
+value|0xc56ul
 end_define
 
 begin_define
@@ -1827,7 +1859,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AHCDEBUG
+name|AHC_DEBUG
 end_ifdef
 
 begin_function
@@ -1844,7 +1876,7 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"scb:%x control:%x tcl:%x cmdlen:%d cmdpointer:%x\n"
+literal|"scb:0x%x control:0x%x tcl:0x%x cmdlen:%d cmdpointer:0x%x\n"
 argument_list|,
 name|scb
 argument_list|,
@@ -1867,7 +1899,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"        datlen:%d data:%x res:%x segs:%x segp:%x\n"
+literal|"        datlen:%d data:0x%x res:0x%x segs:0x%x segp:0x%x\n"
 argument_list|,
 name|scb
 operator|->
@@ -2023,6 +2055,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2050,11 +2087,6 @@ directive|define
 name|ILLHADDR
 value|0x01
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 specifier|static
@@ -2461,10 +2493,10 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|AHCDEBUG
+name|AHC_DEBUG
 endif|#
 directive|endif
-comment|/* AHCDEBUG */
+comment|/* AHC_DEBUG */
 return|return;
 block|}
 block|}
@@ -2485,10 +2517,10 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|AHCDEBUG
+name|AHC_DEBUG
 endif|#
 directive|endif
-comment|/* AHCDEBUG */
+comment|/* AHC_DEBUG */
 block|}
 end_function
 
@@ -2595,20 +2627,8 @@ condition|(
 name|ahc
 operator|->
 name|type
-operator|==
-name|AHC_274T
-operator|||
-name|ahc
-operator|->
-name|type
-operator|==
-name|AHC_284T
-operator|||
-name|ahc
-operator|->
-name|type
-operator|==
-name|AHC_294T
+operator|&
+name|AHC_TWIN
 condition|)
 block|{
 comment|/* Configure the second scsi bus */
@@ -3009,7 +3029,8 @@ case|:
 name|panic
 argument_list|(
 literal|"ahc%d: No IDENTIFY message from reconnecting "
-literal|"target %d\n"
+literal|"target %d at seqaddr = 0x%lx "
+literal|"SAVED_TCL == 0x%x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3025,6 +3046,31 @@ literal|4
 operator|)
 operator|&
 literal|0xf
+argument_list|,
+operator|(
+name|inb
+argument_list|(
+name|SEQADDR1
+operator|+
+name|iobase
+argument_list|)
+operator|<<
+literal|8
+operator|)
+operator||
+name|inb
+argument_list|(
+name|SEQADDR0
+operator|+
+name|iobase
+argument_list|)
+argument_list|,
+name|inb
+argument_list|(
+name|SAVED_TCL
+operator|+
+name|iobase
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3076,7 +3122,23 @@ name|target
 argument_list|,
 name|tcl
 operator|&
-literal|0x07
+literal|0x08
+condition|?
+literal|'B'
+else|:
+literal|'A'
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"SAVED_TCL == 0x%x\n"
+argument_list|,
+name|inb
+argument_list|(
+name|SAVED_TCL
+operator|+
+name|iobase
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3785,7 +3847,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|AHCDEBUG
+name|AHC_DEBUG
 if|if
 condition|(
 name|xs
@@ -3870,7 +3932,7 @@ name|SCSI_CHECK
 case|:
 ifdef|#
 directive|ifdef
-name|AHCDEBUG
+name|AHC_DEBUG
 name|printf
 argument_list|(
 literal|"ahc%d: target %d, lun %d (%s%d) "
@@ -3952,6 +4014,13 @@ name|sense_cmd
 operator|)
 decl_stmt|;
 name|u_char
+name|control
+init|=
+name|scb
+operator|->
+name|control
+decl_stmt|;
+name|u_char
 name|tcl
 init|=
 name|scb
@@ -3965,7 +4034,7 @@ name|active
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|AHCDEBUG
+name|AHC_DEBUG
 name|printf
 argument_list|(
 literal|"ahc%d: target %d, lun %d "
@@ -4020,6 +4089,12 @@ operator|->
 name|control
 operator|=
 name|SCB_NEEDDMA
+operator||
+operator|(
+name|control
+operator|&
+name|SCB_TE
+operator|)
 expr_stmt|;
 name|sc
 operator|->
@@ -4207,6 +4282,24 @@ literal|"ahc%d: Target Busy\n"
 argument_list|,
 name|unit
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SCSI_QUEUE_FULL
+case|:
+comment|/* 				 * Stick this command into the "waiting" 				 * slot to be retarted on the next command 				 * complete 				 */
+name|printf
+argument_list|(
+literal|"ahc%d: Queue Full\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|xs
+operator|->
+name|error
+operator|=
+name|XS_BUSY
 expr_stmt|;
 break|break;
 default|default:
@@ -4843,7 +4936,7 @@ name|xs
 operator|->
 name|error
 operator|=
-literal|0
+name|XS_NOERROR
 expr_stmt|;
 block|}
 name|xs
@@ -4852,6 +4945,125 @@ name|flags
 operator||=
 name|ITSDONE
 expr_stmt|;
+if|if
+condition|(
+name|xs
+operator|->
+name|cmd
+operator|->
+name|opcode
+operator|==
+literal|0x12
+operator|&&
+name|xs
+operator|->
+name|error
+operator|==
+name|XS_NOERROR
+condition|)
+block|{
+name|struct
+name|ahc_data
+modifier|*
+name|ahc
+init|=
+name|ahcdata
+index|[
+name|unit
+index|]
+decl_stmt|;
+name|struct
+name|scsi_inquiry_data
+modifier|*
+name|inq_data
+decl_stmt|;
+name|u_short
+name|mask
+init|=
+literal|0x01
+operator|<<
+operator|(
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|target
+operator||
+operator|(
+name|scb
+operator|->
+name|target_channel_lun
+operator|&
+literal|0x08
+operator|)
+operator|)
+decl_stmt|;
+comment|/* 		 * Sneak a look at the results of the SCSI Inquiry 		 * command and see if we can do Tagged queing.  This 		 * should really be done by the higher level drivers. 		 */
+name|inq_data
+operator|=
+operator|(
+expr|struct
+name|scsi_inquiry_data
+operator|*
+operator|)
+name|xs
+operator|->
+name|data
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|inq_data
+operator|->
+name|device
+operator|&
+name|SID_TYPE
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|inq_data
+operator|->
+name|flags
+operator|&
+name|SID_CmdQue
+operator|)
+operator|&&
+operator|!
+operator|(
+name|ahc
+operator|->
+name|tagenable
+operator|&
+name|mask
+operator|)
+condition|)
+block|{
+comment|/* 			 * Disk type device and can tag 			 */
+name|printf
+argument_list|(
+literal|"ahc%d: target %d Tagged Queuing Device\n"
+argument_list|,
+name|unit
+argument_list|,
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|target
+argument_list|)
+expr_stmt|;
+name|ahc
+operator|->
+name|tagenable
+operator||=
+name|mask
+expr_stmt|;
+block|}
+block|}
 name|ahc_free_scb
 argument_list|(
 name|unit
@@ -4913,7 +5125,7 @@ decl_stmt|;
 comment|/* 	 * Assume we have a board at this stage 	 * Find out the configured interupt and the card type. 	 */
 ifdef|#
 directive|ifdef
-name|AHCDEBUG
+name|AHC_DEBUG
 name|printf
 argument_list|(
 literal|"ahc%d: scb %d bytes; SCB_SIZE %d bytes, ahc_dma %d bytes\n"
@@ -4937,7 +5149,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* AHCDEBUG */
+comment|/* AHC_DEBUG */
 name|printf
 argument_list|(
 literal|"ahc%d: reading board settings\n"
@@ -4952,6 +5164,11 @@ operator|+
 name|iobase
 argument_list|,
 name|CHIPRST
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -5010,6 +5227,14 @@ break|break;
 case|case
 name|AHC_294
 case|:
+block|{
+define|#
+directive|define
+name|DFTHRESH
+value|0xc0
+name|u_char
+name|threshold
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"ahc%d: 294x "
@@ -5029,19 +5254,26 @@ name|maxscbs
 operator|=
 literal|0x10
 expr_stmt|;
-define|#
-directive|define
+name|threshold
+operator|=
+name|inb
+argument_list|(
+name|DSPCISTATUS
+operator|+
+name|iobase
+argument_list|)
+expr_stmt|;
+name|threshold
+operator||=
 name|DFTHRESH
-value|3
+expr_stmt|;
 name|outb
 argument_list|(
 name|DSPCISTATUS
 operator|+
 name|iobase
 argument_list|,
-name|DFTHRESH
-operator|<<
-literal|6
+name|threshold
 argument_list|)
 expr_stmt|;
 comment|/* XXX Hard coded SCSI ID for now */
@@ -5053,11 +5285,7 @@ name|iobase
 argument_list|,
 literal|0x07
 operator||
-operator|(
 name|DFTHRESH
-operator|<<
-literal|6
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* In case we are a wide card */
@@ -5073,6 +5301,7 @@ literal|0x07
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 default|default:
 block|}
 empty_stmt|;
@@ -5154,8 +5383,8 @@ expr_stmt|;
 name|ahc
 operator|->
 name|type
-operator|+=
-literal|2
+operator||=
+name|AHC_WIDE
 expr_stmt|;
 name|outb
 argument_list|(
@@ -5221,8 +5450,8 @@ expr_stmt|;
 name|ahc
 operator|->
 name|type
-operator|+=
-literal|1
+operator||=
+name|AHC_TWIN
 expr_stmt|;
 name|outb
 argument_list|(
@@ -5247,7 +5476,108 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* Number of SCBs that will be used.  Supposedly some newer rev 	 * aic7770s have more than four so maybe we can detect this in 	 * the future.  Aic7870s have 16 SCBs. 	 */
+comment|/*  	 * Number of SCBs that will be used. Rev E aic7770s and 	 * aic7870s have 16.  The rest have 4. 	 */
+if|if
+condition|(
+name|ahc
+operator|->
+name|type
+operator|&
+name|AHC_274
+operator|||
+name|ahc
+operator|->
+name|type
+operator|&
+name|AHC_284
+condition|)
+block|{
+comment|/*  		 * See if we have a Rev E or higher 		 * aic7770.  If so, use 16 SCBs. 		 * Anything below a Rev E will have a 		 * R/O autoflush diable configuration bit. 		 */
+name|u_char
+name|sblkctl
+decl_stmt|,
+name|sblkctl_orig
+decl_stmt|;
+name|sblkctl_orig
+operator|=
+name|inb
+argument_list|(
+name|SBLKCTL
+operator|+
+name|iobase
+argument_list|)
+expr_stmt|;
+name|sblkctl
+operator|=
+name|sblkctl_orig
+operator|^
+name|AUTOFLUSHDIS
+expr_stmt|;
+name|outb
+argument_list|(
+name|SBLKCTL
+operator|+
+name|iobase
+argument_list|,
+name|sblkctl
+argument_list|)
+expr_stmt|;
+name|sblkctl
+operator|=
+name|inb
+argument_list|(
+name|SBLKCTL
+operator|+
+name|iobase
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblkctl
+operator|!=
+name|sblkctl_orig
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"aic7770>= Rev E, "
+argument_list|)
+expr_stmt|;
+name|ahc
+operator|->
+name|maxscbs
+operator|=
+literal|0x10
+expr_stmt|;
+comment|/* 			 * Ensure autoflush is enabled 			 */
+name|sblkctl
+operator|&=
+operator|~
+name|AUTOFLUSHDIS
+expr_stmt|;
+name|outb
+argument_list|(
+name|SBLKCTL
+operator|+
+name|iobase
+argument_list|,
+name|sblkctl
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"aic7770<= Rev C, "
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"aic7870, "
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%d SCBs\n"
@@ -5259,11 +5589,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|ahc
 operator|->
 name|type
-operator|<
+operator|&
 name|AHC_294
+operator|)
 condition|)
 block|{
 comment|/* The 294x cards are PCI, so we get their interrupt from the PCI 	 * BIOS.  It doesn't look like the ISA mapped interrupt is reported 	 * correctly this way either. 	 */
@@ -5385,11 +5718,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|ahc
 operator|->
 name|type
-operator|<
+operator|&
 name|AHC_294
+operator|)
 condition|)
 name|outb
 argument_list|(
@@ -5406,20 +5742,8 @@ condition|(
 name|ahc
 operator|->
 name|type
-operator|==
-name|AHC_274T
-operator|||
-name|ahc
-operator|->
-name|type
-operator|==
-name|AHC_284T
-operator|||
-name|ahc
-operator|->
-name|type
-operator|==
-name|AHC_294T
+operator|&
+name|AHC_TWIN
 condition|)
 block|{
 comment|/*  		 * The device is gated to channel B after a chip reset, 		 * so set those values first 		 */
@@ -5637,6 +5961,24 @@ name|target_settings
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*  	 * If we are not a WIDE device, forget WDTR.  This 	 * makes the driver work on some cards that don't 	 * leave these fields cleared when the BIOS is not 	 * installed. 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|ahc
+operator|->
+name|type
+operator|&
+name|AHC_WIDE
+operator|)
+condition|)
+name|ahc
+operator|->
+name|needwdtr_orig
+operator|=
+literal|0
+expr_stmt|;
 name|ahc
 operator|->
 name|needsdtr
@@ -5662,6 +6004,12 @@ expr_stmt|;
 name|ahc
 operator|->
 name|wdtrpending
+operator|=
+literal|0
+expr_stmt|;
+name|ahc
+operator|->
+name|tagenable
 operator|=
 literal|0
 expr_stmt|;
@@ -6041,39 +6389,6 @@ condition|(
 operator|(
 name|ahc
 operator|->
-name|needsdtr
-operator|&
-name|mask
-operator|)
-operator|&&
-operator|!
-operator|(
-name|ahc
-operator|->
-name|sdtrpending
-operator|&
-name|mask
-operator|)
-condition|)
-block|{
-name|scb
-operator|->
-name|control
-operator||=
-name|SCB_NEEDSDTR
-expr_stmt|;
-name|ahc
-operator|->
-name|sdtrpending
-operator||=
-name|mask
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|(
-name|ahc
-operator|->
 name|needwdtr
 operator|&
 name|mask
@@ -6102,6 +6417,55 @@ operator||=
 name|mask
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|ahc
+operator|->
+name|needsdtr
+operator|&
+name|mask
+operator|)
+operator|&&
+operator|!
+operator|(
+name|ahc
+operator|->
+name|sdtrpending
+operator|&
+name|mask
+operator|)
+condition|)
+block|{
+name|scb
+operator|->
+name|control
+operator||=
+name|SCB_NEEDSDTR
+expr_stmt|;
+name|ahc
+operator|->
+name|sdtrpending
+operator||=
+name|mask
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ahc
+operator|->
+name|tagenable
+operator|&
+name|mask
+condition|)
+name|scb
+operator|->
+name|control
+operator||=
+name|SCB_TE
+expr_stmt|;
 name|scb
 operator|->
 name|target_channel_lun
@@ -6455,7 +6819,7 @@ comment|/*  else No data xfer, use non S/G values  	 *  the SG_segment_count and
 comment|/*                                         * Usually return SUCCESSFULLY QUEUED          */
 ifdef|#
 directive|ifdef
-name|AHCDEBUG
+name|AHC_DEBUG
 if|if
 condition|(
 name|xs
@@ -7635,20 +7999,8 @@ condition|(
 name|ahc
 operator|->
 name|type
-operator|==
-name|AHC_274W
-operator|||
-name|ahc
-operator|->
-name|type
-operator|==
-name|AHC_284W
-operator|||
-name|ahc
-operator|->
-name|type
-operator|==
-name|AHC_294W
+operator|&
+name|AHC_WIDE
 condition|)
 block|{
 name|ahc
@@ -7876,7 +8228,7 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ahc%d: target %d, lun %d (%s%d) timed out "
+literal|"ahc%d: target %d, lun %d (%s%d) timed out\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -7917,12 +8269,27 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|AHCDEBUG
+name|AHC_DEBUG
 if|if
 condition|(
 name|ahc_debug
 operator|&
-name|AHC_SHOWMISC
+name|AHC_SHOWCMDS
+condition|)
+block|{
+name|show_scsi_cmd
+argument_list|(
+name|ecb
+operator|->
+name|xs
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ahc_debug
+operator|&
+name|AHC_SHOWSCBS
 condition|)
 name|ahc_print_active_scb
 argument_list|(
@@ -7931,7 +8298,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*AHCDEBUG */
+comment|/*AHC_DEBUG */
 comment|/*          * If it's immediate, don't try abort it          */
 if|if
 condition|(
