@@ -137,18 +137,6 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int acpi_enable_disable(int enable) { 	if (ioctl(acpifd, enable, NULL) == -1) { 		if (enable == ACPIIO_ENABLE) 			err(EX_IOERR, "enable failed"); 		else 			err(EX_IOERR, "disable failed"); 	}  	return (0); }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
@@ -536,7 +524,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"usage: %s [-deh] [-i batt] [-s 1-5]\n"
+literal|"usage: %s [-h] [-i batt] [-s 1-5]\n"
 argument_list|,
 name|prog
 argument_list|)
@@ -609,7 +597,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dehi:s:"
+literal|"hi:s:"
 argument_list|)
 operator|)
 operator|!=
@@ -634,12 +622,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-literal|0
-block|case 'd': 			acpi_enable_disable(ACPIIO_DISABLE); 			break; 		case 'e': 			acpi_enable_disable(ACPIIO_ENABLE); 			break;
-endif|#
-directive|endif
 case|case
 literal|'s'
 case|:
