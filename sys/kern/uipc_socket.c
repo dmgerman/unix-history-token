@@ -742,9 +742,7 @@ if|if
 condition|(
 name|jailed
 argument_list|(
-name|td
-operator|->
-name|td_ucred
+name|cred
 argument_list|)
 operator|&&
 name|jail_socket_unixiproute_only
@@ -853,9 +851,7 @@ directive|ifdef
 name|MAC
 name|mac_create_socket
 argument_list|(
-name|td
-operator|->
-name|td_ucred
+name|cred
 argument_list|,
 name|so
 argument_list|)
