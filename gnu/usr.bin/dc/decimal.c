@@ -380,7 +380,7 @@ return|;
 block|}
 else|else
 return|return
-name|decimal_round_digits
+name|decimal_trunc_digits
 argument_list|(
 name|b
 argument_list|,
@@ -3635,19 +3635,7 @@ name|DECIMAL_ZERO
 argument_list|)
 return|;
 block|}
-if|if
-condition|(
-name|lengthr
-operator|<=
-operator|(
-name|length1
-operator|-
-name|length2
-operator|)
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
+comment|/*   if (lengthr<= (length1 - length2))     abort(); */
 comment|/* My reasoning says this cannot happen, I hope */
 for|for
 control|(
