@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clrtobot.c	5.1 (Berkeley) %G%"
+literal|"@(#)clrtobot.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,7 +197,7 @@ index|[
 name|y
 index|]
 index|[
-name|startx
+literal|0
 index|]
 argument_list|)
 expr_stmt|;
