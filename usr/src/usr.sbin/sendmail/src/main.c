@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.37 (Berkeley) %G%"
+literal|"@(#)main.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1210,6 +1210,7 @@ condition|)
 block|{
 operator|*
 name|q
+operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -1218,6 +1219,15 @@ operator|=
 name|newstr
 argument_list|(
 name|jbuf
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'m'
+argument_list|,
+name|q
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 block|}
