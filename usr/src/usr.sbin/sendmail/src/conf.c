@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.113 (Berkeley) %G%"
+literal|"@(#)conf.c	8.114 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -472,7 +472,7 @@ operator|=
 literal|9
 expr_stmt|;
 comment|/* option L */
-name|settimeouts
+name|inittimeouts
 argument_list|(
 name|NULL
 argument_list|)
