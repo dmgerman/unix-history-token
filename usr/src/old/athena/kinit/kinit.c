@@ -28,7 +28,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<mit-copyright.h>
+file|<kerberos/mit-copyright.h>
 end_include
 
 begin_include
@@ -46,37 +46,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<krb.h>
+file|<kerberos/krb.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|LEN
-value|64
-end_define
-
-begin_comment
-comment|/* just guessing */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|PC
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BSD42
-end_ifdef
 
 begin_include
 include|#
@@ -90,56 +61,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ultrix
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LEN
-value|64
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|LEN
 value|MAXHOSTNAMELEN
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(ultrix) || defined(sun) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* BSD42 */
-end_comment
 
 begin_define
 define|#
@@ -149,7 +76,18 @@ value|96
 end_define
 
 begin_comment
-comment|/* lifetime of ticket in 5-minute units */
+comment|/* tick lifetime in 5-min units<8hrs> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_LIFE
+value|255
+end_define
+
+begin_comment
+comment|/* maximum life in 5-min units */
 end_comment
 
 begin_decl_stmt
@@ -446,7 +384,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"MIT Project Athena (%s)\n"
+literal|"MIT Project Athena/UC Berkeley (%s)\n"
 argument_list|,
 name|buf
 argument_list|)
@@ -505,9 +443,11 @@ argument_list|(
 literal|"Kerberos name: "
 argument_list|)
 expr_stmt|;
-name|gets
+name|getstr
 argument_list|(
 name|aname
+argument_list|,
+name|ANAME_SZ
 argument_list|)
 expr_stmt|;
 if|if
@@ -557,9 +497,11 @@ argument_list|(
 literal|"Kerberos instance: "
 argument_list|)
 expr_stmt|;
-name|gets
+name|getstr
 argument_list|(
 name|inst
+argument_list|,
+name|INST_SZ
 argument_list|)
 expr_stmt|;
 if|if
@@ -597,9 +539,11 @@ argument_list|(
 literal|"Kerberos realm: "
 argument_list|)
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 name|realm
+argument_list|,
+name|REALM_SZ
 argument_list|)
 expr_stmt|;
 if|if
@@ -637,9 +581,11 @@ argument_list|(
 literal|"Kerberos ticket lifetime (minutes): "
 argument_list|)
 expr_stmt|;
-name|gets
+name|getstr
 argument_list|(
 name|buf
+argument_list|,
+name|LEN
 argument_list|)
 expr_stmt|;
 name|lifetime
@@ -670,11 +616,11 @@ if|if
 condition|(
 name|lifetime
 operator|>
-literal|255
+name|MAX_LIFE
 condition|)
 name|lifetime
 operator|=
-literal|255
+name|MAX_LIFE
 expr_stmt|;
 block|}
 if|if
@@ -706,6 +652,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"Getting initial ticket for %s.%s@%s\n"
+argument_list|,
+name|aname
+argument_list|,
+name|inst
+argument_list|,
+name|realm
+argument_list|)
+expr_stmt|;
 name|k_errno
 operator|=
 name|krb_get_pw_in_tkt
@@ -797,6 +754,56 @@ name|exit
 argument_list|(
 literal|1
 argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
+name|getstr
+argument_list|(
+name|p
+argument_list|,
+name|len
+argument_list|)
+specifier|register
+name|char
+operator|*
+name|p
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|len
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+while|while
+condition|(
+operator|(
+operator|(
+operator|*
+name|p
+operator|++
+operator|=
+name|getchar
+argument_list|()
+operator|)
+operator|!=
+literal|'\n'
+operator|)
+operator|&&
+operator|--
+name|len
+condition|)
+empty_stmt|;
+operator|*
+operator|--
+name|p
+operator|=
+literal|'\0'
 expr_stmt|;
 block|}
 end_block
