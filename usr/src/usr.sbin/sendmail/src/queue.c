@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.44 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.45 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.44 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.45 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -600,6 +600,10 @@ name|FILE
 modifier|*
 name|dfp
 decl_stmt|;
+name|struct
+name|stat
+name|stbuf
+decl_stmt|;
 extern|extern putbody(
 block|)
 empty_stmt|;
@@ -672,6 +676,34 @@ argument_list|,
 name|geteuid
 argument_list|()
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|stbuf
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|e
+operator|->
+name|e_dfino
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+else|else
+name|e
+operator|->
+name|e_dfino
+operator|=
+name|stbuf
+operator|.
+name|st_ino
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -768,6 +800,60 @@ argument_list|,
 name|e
 operator|->
 name|e_ctime
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* output inode number of data file */
+end_comment
+
+begin_expr_stmt
+name|fprintf
+argument_list|(
+name|tfp
+argument_list|,
+literal|"I%ld\n"
+argument_list|,
+name|e
+operator|->
+name|e_dfino
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* output last delivery time */
+end_comment
+
+begin_expr_stmt
+name|fprintf
+argument_list|(
+name|tfp
+argument_list|,
+literal|"K%ld\n"
+argument_list|,
+name|e
+operator|->
+name|e_dtime
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* output number of delivery attempts */
+end_comment
+
+begin_expr_stmt
+name|fprintf
+argument_list|(
+name|tfp
+argument_list|,
+literal|"N%d\n"
+argument_list|,
+name|e
+operator|->
+name|e_ntries
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5271,6 +5357,60 @@ name|atol
 argument_list|(
 operator|&
 name|bp
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'I'
+case|:
+comment|/* data file's inode number */
+name|e
+operator|->
+name|e_dfino
+operator|=
+name|atol
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'K'
+case|:
+comment|/* time of last deliver attempt */
+name|e
+operator|->
+name|e_dtime
+operator|=
+name|atol
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+comment|/* number of delivery attempts */
+name|e
+operator|->
+name|e_ntries
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|buf
 index|[
 literal|1
 index|]

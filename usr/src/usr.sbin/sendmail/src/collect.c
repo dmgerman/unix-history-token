@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.19 (Berkeley) %G%"
+literal|"@(#)collect.c	8.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -322,6 +322,10 @@ operator|!
 name|headeronly
 condition|)
 block|{
+name|struct
+name|stat
+name|stbuf
+decl_stmt|;
 name|e
 operator|->
 name|e_df
@@ -387,6 +391,37 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fileno
+argument_list|(
+name|tf
+argument_list|)
+argument_list|,
+operator|&
+name|stbuf
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|e
+operator|->
+name|e_dfino
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+else|else
+name|e
+operator|->
+name|e_dfino
+operator|=
+name|stbuf
+operator|.
+name|st_ino
+expr_stmt|;
 name|HasEightBits
 operator|=
 name|FALSE
