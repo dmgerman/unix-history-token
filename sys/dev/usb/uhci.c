@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.147 2001/11/21 02:38:36 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.148 2001/11/21 12:25:55 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -3040,7 +3040,7 @@ decl_stmt|;
 name|u_int32_t
 name|n
 decl_stmt|;
-comment|/*  	 * XXX 	 * Since we are allocating a buffer we can assume that we will 	 * need TDs for it.  Since we don't want to alolocate those from 	 * an interrupt context, we allocate them here and free them again. 	 * This is no guarantee that we'll get the TDs next time... 	 */
+comment|/*  	 * XXX 	 * Since we are allocating a buffer we can assume that we will 	 * need TDs for it.  Since we don't want to allocate those from 	 * an interrupt context, we allocate them here and free them again. 	 * This is no guarantee that we'll get the TDs next time... 	 */
 name|n
 operator|=
 name|size
