@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)CONFIG.c	5.3 (Berkeley) %G%"
+literal|"@(#)CONFIG.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,8 +48,8 @@ end_comment
 
 begin_decl_stmt
 name|char
-modifier|*
 name|err_file
+index|[]
 init|=
 literal|"LIBDATA/ERRORSTRINGS"
 decl_stmt|;
@@ -74,8 +74,8 @@ end_comment
 
 begin_decl_stmt
 name|char
-modifier|*
 name|how_file
+index|[]
 init|=
 literal|"LIBDATA/HOWFILE\0"
 decl_stmt|;
