@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1983, 1993, 1994  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/* $Id: ruptime.c,v 1.4 1995/07/22 22:28:31 joerg Exp $ */
+comment|/* $Id: ruptime.c,v 1.5 1995/08/07 19:17:40 wollman Exp $ */
 end_comment
 
 begin_ifndef
@@ -798,7 +798,7 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"no hosts in %s."
 argument_list|,
