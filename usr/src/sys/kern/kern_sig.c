@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -3200,6 +3200,13 @@ operator|=
 name|code
 expr_stmt|;
 comment|/* XXX for core dump/debugger */
+name|ps
+operator|->
+name|ps_sig
+operator|=
+name|signum
+expr_stmt|;
+comment|/* XXX to verify code */
 name|psignal
 argument_list|(
 name|p
@@ -3904,12 +3911,19 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * If traced, always stop, and stay 			 * stopped until released by the parent. 			 */
+comment|/* 			 * If traced, always stop, and stay 			 * stopped until released by the parent. 			 * 			 * Note that we must clear the pending signal 			 * before we call trace_req since that routine 			 * might cause a fault, calling tsleep and 			 * leading us back here again with the same signal. 			 * Then we would be deadlocked because the tracer 			 * would still be blocked on the ipc struct from 			 * the initial request. 			 */
 name|p
 operator|->
 name|p_xstat
 operator|=
 name|signum
+expr_stmt|;
+name|p
+operator|->
+name|p_siglist
+operator|&=
+operator|~
+name|mask
 expr_stmt|;
 name|psignal
 argument_list|(
@@ -3946,29 +3960,7 @@ operator|&
 name|P_TRACED
 condition|)
 do|;
-comment|/* 			 * If the traced bit got turned off, go back up 			 * to the top to rescan signals.  This ensures 			 * that p_sig* and ps_sigact are consistent. 			 */
-if|if
-condition|(
-operator|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_TRACED
-operator|)
-operator|==
-literal|0
-condition|)
-continue|continue;
 comment|/* 			 * If parent wants us to take the signal, 			 * then it will leave it in p->p_xstat; 			 * otherwise we just look for signals again. 			 */
-name|p
-operator|->
-name|p_siglist
-operator|&=
-operator|~
-name|mask
-expr_stmt|;
-comment|/* clear the old signal */
 name|signum
 operator|=
 name|p
@@ -4003,6 +3995,20 @@ operator|->
 name|p_sigmask
 operator|&
 name|mask
+condition|)
+continue|continue;
+comment|/* 			 * If the traced bit got turned off, go back up 			 * to the top to rescan signals.  This ensures 			 * that p_sig* and ps_sigact are consistent. 			 */
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_TRACED
+operator|)
+operator|==
+literal|0
 condition|)
 continue|continue;
 block|}
@@ -4500,6 +4506,12 @@ expr_stmt|;
 name|ps
 operator|->
 name|ps_code
+operator|=
+literal|0
+expr_stmt|;
+name|ps
+operator|->
+name|ps_sig
 operator|=
 literal|0
 expr_stmt|;
