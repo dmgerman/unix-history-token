@@ -41,6 +41,14 @@ begin_comment
 comment|/*  * System defined signals.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|||
+name|__XSI_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -51,6 +59,11 @@ end_define
 begin_comment
 comment|/* hangup */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -63,6 +76,14 @@ begin_comment
 comment|/* interrupt */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|||
+name|__XSI_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -73,6 +94,11 @@ end_define
 begin_comment
 comment|/* quit */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -85,6 +111,12 @@ begin_comment
 comment|/* illegal instr. (not reset when caught) */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__XSI_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -96,6 +128,11 @@ begin_comment
 comment|/* trace trap (not reset when caught) */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -106,6 +143,12 @@ end_define
 begin_comment
 comment|/* abort() */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -129,6 +172,11 @@ begin_comment
 comment|/* EMT instruction */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -139,6 +187,14 @@ end_define
 begin_comment
 comment|/* floating point exception */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|||
+name|__XSI_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -151,6 +207,21 @@ begin_comment
 comment|/* kill (cannot be caught or ignored) */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+operator|||
+name|__XSI_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -161,6 +232,11 @@ end_define
 begin_comment
 comment|/* bus error */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -173,6 +249,12 @@ begin_comment
 comment|/* segmentation violation */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -183,6 +265,19 @@ end_define
 begin_comment
 comment|/* non-existent system call invoked */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|||
+name|__XSI_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -206,6 +301,11 @@ begin_comment
 comment|/* alarm clock */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -217,6 +317,16 @@ begin_comment
 comment|/* software termination signal from kill */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+operator|||
+name|__XSI_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -227,6 +337,19 @@ end_define
 begin_comment
 comment|/* urgent condition on IO channel */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|||
+name|__XSI_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -294,6 +417,17 @@ begin_comment
 comment|/* like TTIN if (tp->t_local&LTOSTOP) */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -304,6 +438,17 @@ end_define
 begin_comment
 comment|/* input/output possible signal */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__XSI_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -349,6 +494,17 @@ begin_comment
 comment|/* profiling time alarm */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -370,6 +526,19 @@ end_define
 begin_comment
 comment|/* information request */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|||
+name|__XSI_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -393,8 +562,38 @@ begin_comment
 comment|/* user defined signal 2 */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * XXX missing SIGRTMIN, SIGRTMAX.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIG_DFL
+value|((__sighandler_t *)0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIG_IGN
+value|((__sighandler_t *)1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIG_ERR
+value|((__sighandler_t *)-1)
+end_define
+
+begin_comment
+comment|/*  * XXX missing SIG_HOLD.  */
 end_comment
 
 begin_comment
@@ -447,31 +646,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|SIG_DFL
-value|((__sighandler_t *)0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIG_IGN
-value|((__sighandler_t *)1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIG_ERR
-value|((__sighandler_t *)-1)
-end_define
-
-begin_comment
-comment|/*  * XXX missing SIG_HOLD.  */
-end_comment
 
 begin_if
 if|#
@@ -697,12 +871,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_struct_decl
-struct_decl|struct
-name|__siginfo
-struct_decl|;
-end_struct_decl
-
 begin_if
 if|#
 directive|if
@@ -710,6 +878,12 @@ name|__POSIX_VISIBLE
 operator|||
 name|__XSI_VISIBLE
 end_if
+
+begin_struct_decl
+struct_decl|struct
+name|__siginfo
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/*  * Signal vector "template" used in sigaction call.  */
@@ -907,6 +1081,10 @@ directive|if
 name|__BSD_VISIBLE
 end_if
 
+begin_comment
+comment|/* XXX dubious. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1022,6 +1200,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_typedef
+typedef|typedef
+name|__sighandler_t
+modifier|*
+name|sig_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* type of pointer to a signal function */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|void
@@ -1039,17 +1235,10 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|__sighandler_t
-modifier|*
-name|sig_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* type of pointer to a signal function */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -1112,10 +1301,6 @@ value|(MINSIGSTKSZ + 32768)
 comment|/* recommended stack size */
 endif|#
 directive|endif
-comment|/*  * Forward declaration for __ucontext so that sigreturn can use it  * without having to include<ucontext.h>.  *  * XXX the specification requires all of ucontext_t, mcontext_t.  */
-struct_decl|struct
-name|__ucontext
-struct_decl|;
 if|#
 directive|if
 name|__BSD_VISIBLE
