@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.12 1998/02/21 15:51:51 kato Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.13 1998/06/08 08:55:45 kato Exp $  */
 end_comment
 
 begin_comment
@@ -2448,7 +2448,8 @@ parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-name|u_long
+name|unsigned
+name|long
 name|cmd
 decl_stmt|;
 name|caddr_t
@@ -2471,7 +2472,15 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"spkrioctl: entering with dev = %x, cmd = %x\n"
+literal|"spkrioctl: entering with dev = %lx, cmd = %lx\n"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|dev
+argument_list|,
+name|cmd
 argument_list|)
 expr_stmt|;
 endif|#
