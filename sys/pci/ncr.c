@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.21 1995/02/14 06:20:03 phk Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@dentaro.gun.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.22 1995/02/14 22:48:01 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@dentaro.gun.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NCR_PATCHLEVEL
-value|"pl12 95/02/09"
+value|"pl13 95/02/09"
 end_define
 
 begin_define
@@ -538,6 +538,83 @@ begin_comment
 comment|/*========================================================== ** **	Access to the controller chip. ** **========================================================== */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NCR_IOMAPPED
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INB
+parameter_list|(
+name|r
+parameter_list|)
+value|inb (np->port + offsetof(struct ncr_reg, r))
+end_define
+
+begin_define
+define|#
+directive|define
+name|INW
+parameter_list|(
+name|r
+parameter_list|)
+value|inw (np->port + offsetof(struct ncr_reg, r))
+end_define
+
+begin_define
+define|#
+directive|define
+name|INL
+parameter_list|(
+name|r
+parameter_list|)
+value|inl (np->port + offsetof(struct ncr_reg, r))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OUTB
+parameter_list|(
+name|r
+parameter_list|,
+name|val
+parameter_list|)
+value|outb (np->port+offsetof(struct ncr_reg,r),(val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OUTW
+parameter_list|(
+name|r
+parameter_list|,
+name|val
+parameter_list|)
+value|outw (np->port+offsetof(struct ncr_reg,r),(val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OUTL
+parameter_list|(
+name|r
+parameter_list|,
+name|val
+parameter_list|)
+value|outl (np->port+offsetof(struct ncr_reg,r),(val))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -603,6 +680,11 @@ name|val
 parameter_list|)
 value|np->reg->r = val
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*========================================================== ** **	Command control block states. ** **========================================================== */
@@ -2183,6 +2265,9 @@ comment|/* 	**	lockout of execption handler call while starting command. 	*/
 name|u_char
 name|lock
 decl_stmt|;
+name|u_short
+name|port
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3138,7 +3223,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.21 1995/02/14 06:20:03 phk Exp $\n"
+literal|"\n$Id: ncr.c,v 1.22 1995/02/14 22:48:01 se Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -3283,6 +3368,13 @@ define|#
 directive|define
 name|NCR_810_ID
 value|(0x00011000ul)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCR_815_ID
+value|(0x00041000ul)
 end_define
 
 begin_define
@@ -8537,6 +8629,12 @@ name|pa
 operator|->
 name|pa_id
 operator|!=
+name|NCR_815_ID
+operator|&&
+name|pa
+operator|->
+name|pa_id
+operator|!=
 name|NCR_825_ID
 condition|)
 return|return
@@ -8581,6 +8679,14 @@ case|:
 return|return
 operator|(
 literal|"ncr 53c810 scsi"
+operator|)
+return|;
+case|case
+name|NCR_815_ID
+case|:
+return|return
+operator|(
+literal|"ncr 53c815 scsi"
 operator|)
 return|;
 case|case
@@ -8848,7 +8954,28 @@ name|unit
 operator|=
 name|unit
 expr_stmt|;
-comment|/* 	**	Enables: 	**		response to memory addresses. 	**		devices bus master ability. 	** 	**	DISABLEs: 	**		response to io addresses. 	**		usage of "Write and invalidate" cycles. 	*/
+comment|/* 	**	Enables: 	**		response to memory addresses. 	**		devices bus master ability. 	** 	**	DISABLEs: 	**		response to io addresses (unless IOMAPPED) 	**		usage of "Write and invalidate" cycles. 	*/
+ifdef|#
+directive|ifdef
+name|NCR_IOMAPPED
+operator|(
+name|void
+operator|)
+name|pci_conf_write
+argument_list|(
+name|config_id
+argument_list|,
+name|PCI_COMMAND_STATUS_REG
+argument_list|,
+name|PCI_COMMAND_IO_ENABLE
+operator||
+name|PCI_COMMAND_MEM_ENABLE
+operator||
+name|PCI_COMMAND_MASTER_ENABLE
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 operator|(
 name|void
 operator|)
@@ -8863,6 +8990,8 @@ operator||
 name|PCI_COMMAND_MASTER_ENABLE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	**	Try to map the controller chip to 	**	virtual and physical memory. 	*/
 if|if
 condition|(
@@ -8885,6 +9014,28 @@ name|paddr
 argument_list|)
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|NCR_IOMAPPED
+comment|/* 	**	Try to map the controller chip into iospace. 	*/
+if|if
+condition|(
+operator|!
+name|pci_map_port
+argument_list|(
+name|config_id
+argument_list|,
+literal|0x10
+argument_list|,
+operator|&
+name|np
+operator|->
+name|port
+argument_list|)
+condition|)
+return|return;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* !__NetBSD__ */
@@ -8914,16 +9065,6 @@ block|{
 endif|#
 directive|endif
 case|case
-name|NCR_810_ID
-case|:
-name|np
-operator|->
-name|maxwide
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-case|case
 name|NCR_825_ID
 case|:
 name|np
@@ -8931,6 +9072,14 @@ operator|->
 name|maxwide
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+default|default:
+name|np
+operator|->
+name|maxwide
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 block|}
@@ -10838,12 +10987,12 @@ argument|, 			(unsigned) datalen); 		return (-
 literal|1
 argument|); 	};  	return (segment); }
 comment|/*========================================================== ** ** **	Test the pci bus snoop logic :-( ** **	Has to be called with interrupts disabled. ** ** **========================================================== */
-argument|static int ncr_regtest (struct ncb* np) { 	register volatile u_long data
-argument_list|,
-argument|*addr;
 ifndef|#
 directive|ifndef
 name|NCR_IOMAPPED
+argument|static int ncr_regtest (struct ncb* np) { 	register volatile u_long data
+argument_list|,
+argument|*addr;
 comment|/* 	**	ncr registers may NOT be cached. 	**	write 0xffffffff to a read only register area, 	**	and try to read it back. 	*/
 argument|addr = (u_long*)&np->reg->nc_dstat; 	data =
 literal|0xffffffff
@@ -10869,10 +11018,10 @@ argument|, 			(unsigned) data); 		return (
 literal|0x10
 argument|); 	}; 	return (
 literal|0
-argument|);
+argument|); }
 endif|#
 directive|endif
-argument|}  static int ncr_snooptest (struct ncb* np) { 	u_long	ncr_rd
+argument|static int ncr_snooptest (struct ncb* np) { 	u_long	ncr_rd
 argument_list|,
 argument|ncr_wr
 argument_list|,
