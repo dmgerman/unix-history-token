@@ -326,7 +326,7 @@ begin_decl_stmt
 name|u_int
 name|T_secs
 init|=
-literal|0
+literal|120
 decl_stmt|;
 end_decl_stmt
 
