@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -55,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/aic/aic6360reg.h>
 end_include
 
 begin_include
