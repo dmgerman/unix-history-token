@@ -323,9 +323,6 @@ name|buffer_head
 modifier|*
 name|block_bitmap
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 name|block_group
@@ -1067,8 +1064,6 @@ expr_stmt|;
 name|mark_buffer_dirty
 argument_list|(
 name|bh
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/**** 	if (sb->s_flags& MS_SYNCHRONOUS) { 		ll_rw_block (WRITE, 1,&bh); 		wait_on_buffer (bh); 	} ****/
@@ -2018,8 +2013,6 @@ expr_stmt|;
 name|mark_buffer_dirty
 argument_list|(
 name|bh2
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|es

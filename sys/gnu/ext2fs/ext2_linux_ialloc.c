@@ -1331,8 +1331,6 @@ expr_stmt|;
 name|mark_buffer_dirty
 argument_list|(
 name|bh
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|brelse
@@ -1829,7 +1827,7 @@ goto|goto
 name|repeat
 goto|;
 block|}
-comment|/* Linux now does the following: 		mark_buffer_dirty(bh, 1); 		if (sb->s_flags& MS_SYNCHRONOUS) { 			ll_rw_block (WRITE, 1,&bh); 			wait_on_buffer (bh); 		} */
+comment|/* Linux now does the following: 		mark_buffer_dirty(bh); 		if (sb->s_flags& MS_SYNCHRONOUS) { 			ll_rw_block (WRITE, 1,&bh); 			wait_on_buffer (bh); 		} */
 name|mark_buffer_dirty
 argument_list|(
 name|bh

@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/quota.h>
 end_include
 
@@ -135,6 +141,12 @@ begin_include
 include|#
 directive|include
 file|<gnu/ext2fs/ext2_fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<gnu/ext2fs/ext2_extern.h>
 end_include
 
 begin_include
@@ -396,7 +408,7 @@ comment|/*  *	raw ext2 inode to dinode  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|ext2_ei2di
 parameter_list|(
 name|ei
@@ -614,7 +626,7 @@ comment|/*  *	dinode to raw ext2 inode  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|ext2_di2ei
 parameter_list|(
 name|di

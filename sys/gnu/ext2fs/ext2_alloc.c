@@ -269,11 +269,6 @@ decl_stmt|;
 name|daddr_t
 name|bno
 decl_stmt|;
-name|int
-name|cg
-decl_stmt|,
-name|error
-decl_stmt|;
 operator|*
 name|bnp
 operator|=
@@ -1604,8 +1599,6 @@ name|a_mode
 decl_stmt|;
 name|ino_t
 name|ino
-decl_stmt|,
-name|ipref
 decl_stmt|;
 name|int
 name|i
@@ -1885,12 +1878,6 @@ name|daddr_t
 name|blocknr
 decl_stmt|;
 block|{
-specifier|register
-name|struct
-name|ext2_sb_info
-modifier|*
-name|fs
-decl_stmt|;
 name|int
 name|tmp
 decl_stmt|;

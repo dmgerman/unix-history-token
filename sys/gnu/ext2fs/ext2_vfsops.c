@@ -2108,10 +2108,6 @@ modifier|*
 name|fs
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
-name|size
-decl_stmt|,
 name|error
 decl_stmt|;
 if|if
@@ -2582,9 +2578,6 @@ decl_stmt|;
 name|struct
 name|partinfo
 name|dpart
-decl_stmt|;
-name|caddr_t
-name|base
 decl_stmt|;
 name|int
 name|havepart
@@ -3612,8 +3605,6 @@ modifier|*
 name|ump
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|error
 decl_stmt|;
 if|if
@@ -5164,15 +5155,7 @@ modifier|*
 name|bp
 decl_stmt|;
 name|int
-name|blks
-decl_stmt|;
-name|caddr_t
-name|space
-decl_stmt|;
-name|int
 name|i
-decl_stmt|,
-name|size
 decl_stmt|,
 name|error
 init|=
