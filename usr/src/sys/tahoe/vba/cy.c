@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cy.c	1.9	87/01/11	*/
+comment|/*	cy.c	1.10	87/01/30	*/
 end_comment
 
 begin_include
@@ -1564,6 +1564,12 @@ argument_list|,
 name|ycunit
 argument_list|)
 expr_stmt|;
+name|yc
+operator|->
+name|yc_openf
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -1593,6 +1599,12 @@ literal|"yc%d: no write ring\n"
 argument_list|,
 name|ycunit
 argument_list|)
+expr_stmt|;
+name|yc
+operator|->
+name|yc_openf
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
