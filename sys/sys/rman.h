@@ -33,83 +33,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * We use a linked list rather than a bitmap because we need to be able to  * represent potentially huge objects (like all of a processor's physical  * address space).  That is also why the indices are defined to have type  * `unsigned long' -- that being the largest integral type in Standard C.  */
-end_comment
-
-begin_expr_stmt
-name|CIRCLEQ_HEAD
-argument_list|(
-name|resource_head
-argument_list|,
-name|resource
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_struct
-struct|struct
-name|resource
-block|{
-name|CIRCLEQ_ENTRY
-argument_list|(
-argument|resource
-argument_list|)
-name|r_link
-expr_stmt|;
-name|LIST_ENTRY
-argument_list|(
-argument|resource
-argument_list|)
-name|r_sharelink
-expr_stmt|;
-name|LIST_HEAD
-argument_list|(,
-name|resource
-argument_list|)
-operator|*
-name|r_sharehead
-expr_stmt|;
-name|u_long
-name|r_start
-decl_stmt|;
-comment|/* index of the first entry in this resource */
-name|u_long
-name|r_end
-decl_stmt|;
-comment|/* index of the last entry (inclusive) */
-name|u_int
-name|r_flags
-decl_stmt|;
-name|void
-modifier|*
-name|r_virtual
-decl_stmt|;
-comment|/* virtual address of this resource */
-name|bus_space_tag_t
-name|r_bustag
-decl_stmt|;
-comment|/* bus_space tag */
-name|bus_space_handle_t
-name|r_bushandle
-decl_stmt|;
-comment|/* bus_space handle */
-name|struct
-name|device
-modifier|*
-name|r_dev
-decl_stmt|;
-comment|/* device which has allocated this resource */
-name|struct
-name|rman
-modifier|*
-name|r_rm
-decl_stmt|;
-comment|/* resource manager from whence this came */
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -233,6 +156,175 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/*  * String length exported to userspace for resource names, etc.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RM_TEXTLEN
+value|32
+end_define
+
+begin_comment
+comment|/*  * Userspace-exported structures.  */
+end_comment
+
+begin_struct
+struct|struct
+name|u_resource
+block|{
+name|uintptr_t
+name|r_handle
+decl_stmt|;
+comment|/* resource uniquifier */
+name|uintptr_t
+name|r_parent
+decl_stmt|;
+comment|/* parent rman */
+name|uintptr_t
+name|r_device
+decl_stmt|;
+comment|/* device owning this resource */
+name|char
+name|r_devname
+index|[
+name|RM_TEXTLEN
+index|]
+decl_stmt|;
+comment|/* device name XXX obsolete */
+name|u_long
+name|r_start
+decl_stmt|;
+comment|/* offset in resource space */
+name|u_long
+name|r_size
+decl_stmt|;
+comment|/* size in resource space */
+name|u_int
+name|r_flags
+decl_stmt|;
+comment|/* RF_* flags */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|u_rman
+block|{
+name|uintptr_t
+name|rm_handle
+decl_stmt|;
+comment|/* rman uniquifier */
+name|char
+name|rm_descr
+index|[
+name|RM_TEXTLEN
+index|]
+decl_stmt|;
+comment|/* rman description */
+name|u_long
+name|rm_start
+decl_stmt|;
+comment|/* base of managed region */
+name|u_long
+name|rm_size
+decl_stmt|;
+comment|/* size of managed region */
+name|enum
+name|rman_type
+name|rm_type
+decl_stmt|;
+comment|/* region type */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * We use a linked list rather than a bitmap because we need to be able to  * represent potentially huge objects (like all of a processor's physical  * address space).  That is also why the indices are defined to have type  * `unsigned long' -- that being the largest integral type in Standard C.  */
+end_comment
+
+begin_expr_stmt
+name|CIRCLEQ_HEAD
+argument_list|(
+name|resource_head
+argument_list|,
+name|resource
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|resource
+block|{
+name|CIRCLEQ_ENTRY
+argument_list|(
+argument|resource
+argument_list|)
+name|r_link
+expr_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|resource
+argument_list|)
+name|r_sharelink
+expr_stmt|;
+name|LIST_HEAD
+argument_list|(,
+name|resource
+argument_list|)
+operator|*
+name|r_sharehead
+expr_stmt|;
+name|u_long
+name|r_start
+decl_stmt|;
+comment|/* index of the first entry in this resource */
+name|u_long
+name|r_end
+decl_stmt|;
+comment|/* index of the last entry (inclusive) */
+name|u_int
+name|r_flags
+decl_stmt|;
+name|void
+modifier|*
+name|r_virtual
+decl_stmt|;
+comment|/* virtual address of this resource */
+name|bus_space_tag_t
+name|r_bustag
+decl_stmt|;
+comment|/* bus_space tag */
+name|bus_space_handle_t
+name|r_bushandle
+decl_stmt|;
+comment|/* bus_space handle */
+name|struct
+name|device
+modifier|*
+name|r_dev
+decl_stmt|;
+comment|/* device which has allocated this resource */
+name|struct
+name|rman
+modifier|*
+name|r_rm
+decl_stmt|;
+comment|/* resource manager from whence this came */
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|rman
@@ -286,12 +378,6 @@ name|rman
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_function_decl
 name|int

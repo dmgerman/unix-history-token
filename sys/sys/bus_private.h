@@ -215,6 +215,13 @@ argument_list|)
 name|link
 expr_stmt|;
 comment|/* list of devices in parent */
+name|TAILQ_ENTRY
+argument_list|(
+argument|device
+argument_list|)
+name|devlink
+expr_stmt|;
+comment|/* global device list membership */
 name|device_t
 name|parent
 decl_stmt|;
@@ -300,25 +307,6 @@ comment|/* order from device_add_child_ordered() */
 name|u_char
 name|pad
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVICE_SYSCTLS
-name|struct
-name|sysctl_oid
-name|oid
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|struct
-name|sysctl_oid_list
-name|oidlist
-index|[
-literal|1
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 name|void
 modifier|*
 name|ivars
