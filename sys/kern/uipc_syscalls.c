@@ -1118,6 +1118,17 @@ condition|)
 goto|goto
 name|done2
 goto|;
+if|if
+condition|(
+name|namelen
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 block|}
 name|error
 operator|=
