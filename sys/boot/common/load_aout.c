@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: load_aout.c,v 1.11 1998/12/22 11:41:51 abial Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: load_aout.c,v 1.12 1999/01/22 21:33:52 rnordier Exp $  */
 end_comment
 
 begin_include
@@ -1061,119 +1061,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|AOUT_RELOC
-parameter_list|(
-name|mp
-parameter_list|,
-name|off
-parameter_list|)
-value|((mp)->m_addr + (vm_offset_t)(off))
-end_define
-
-begin_comment
-comment|/*  * The goal here is to find the one symbol in the loaded object  * which fits the format "kld_identifier_<something>.  If there's  * more than one, we fail.  */
-end_comment
-
-begin_comment
-unit|static vm_offset_t aout_findkldident(struct loaded_module *mp, struct exec *ehdr) {
-comment|/* XXX much of this can go when we can address the load area directly */
-end_comment
-
-begin_comment
-unit|vm_offset_t				sp, ep, cand, stringbase, result;     struct _dynamic			dynamic;     struct section_dispatch_table	sdt;     struct nzlist			nzl;     char				*np;     int					match;
-comment|/* Get the _DYNAMIC object, which we assume is first in the data segment */
-end_comment
-
-begin_comment
-unit|archsw.arch_copyout(AOUT_RELOC(mp, ehdr->a_text),&dynamic, sizeof(dynamic));     archsw.arch_copyout(AOUT_RELOC(mp, dynamic.d_un.d_sdt),&sdt, sizeof(struct section_dispatch_table));     dynamic.d_un.d_sdt =&sdt;
-comment|/* fix up SDT pointer */
-end_comment
-
-begin_comment
-unit|if (dynamic.d_version != LD_VERSION_BSD) 	return(0);     stringbase = AOUT_RELOC(mp, LD_STRINGS(&dynamic));
-comment|/* start pointer */
-end_comment
-
-begin_comment
-unit|sp = AOUT_RELOC(mp, LD_SYMBOL(&dynamic));
-comment|/* end pointer */
-end_comment
-
-begin_comment
-unit|ep = sp + LD_STABSZ(&dynamic);
-comment|/*      * Walk the entire table comparing names.      */
-end_comment
-
-begin_comment
-unit|match = 0;     result = 0;     for (cand = sp; cand< ep; cand += sizeof(struct nzlist)) {
-comment|/* get the entry, check for a name */
-end_comment
-
-begin_comment
-unit|archsw.arch_copyout(cand,&nzl, sizeof(struct nzlist));
-comment|/* is this symbol worth looking at? */
-end_comment
-
-begin_comment
-unit|if ((nzl.nz_strx == 0)			||
-comment|/* no name */
-end_comment
-
-begin_comment
-unit|(nzl.nz_value == 0)			||
-comment|/* not a definition */
-end_comment
-
-begin_comment
-unit|((nzl.nz_type == N_UNDF+N_EXT)&&  	     (nzl.nz_value != 0)&&  	     (nzl.nz_other == AUX_FUNC)))
-comment|/* weak function */
-end_comment
-
-begin_comment
-unit|continue;  	np = strdupout(stringbase + nzl.nz_strx); 	match = (np[0] == '_')&& !strncmp(KLD_IDENT_SYMNAME, np + 1, strlen(KLD_IDENT_SYMNAME)); 	free(np); 	if (match) {
-comment|/* duplicates? */
-end_comment
-
-begin_comment
-unit|if (result) 		return(0); 	    result = AOUT_RELOC(mp, nzl.nz_value); 	}     }     return(result); }
-comment|/*  * Perform extra housekeeping associated with loading a KLD module.  *  * XXX if this returns an error, it seems the heap becomes corrupted.  */
-end_comment
-
-begin_comment
-unit|static int aout_fixupkldmod(struct loaded_module *mp, struct exec *ehdr) {     struct kld_module_identifier	kident;     struct kld_module_dependancy	*kdeps;     vm_offset_t				vp;     size_t				dsize;
-comment|/* Find the KLD identifier */
-end_comment
-
-begin_comment
-unit|if ((vp = aout_findkldident(mp, ehdr)) == 0) { 	printf("bad a.out module format\n"); 	return(EFTYPE);     }     archsw.arch_copyout(vp,&kident, sizeof(struct kld_module_identifier));
-comment|/* Name the module using the name from the KLD data */
-end_comment
-
-begin_comment
-unit|if (mod_findmodule(kident.ki_name, NULL) != NULL) { 	printf("module '%s' already loaded\n", kident.ki_name); 	return(EPERM);     }     mp->m_name = strdup(kident.ki_name);
-comment|/* Save the module identifier */
-end_comment
-
-begin_comment
-unit|mod_addmetadata(mp, MODINFOMD_KLDIDENT, sizeof(struct kld_module_identifier),&kident);
-comment|/* Look for dependancy data, add to metadata list */
-end_comment
-
-begin_endif
-unit|if (kident.ki_ndeps> 0) { 	dsize = kident.ki_ndeps * kident.ki_depsize; 	kdeps = malloc(dsize); 	archsw.arch_copyout(AOUT_RELOC(mp, kident.ki_deps), kdeps, dsize); 	mod_addmetadata(mp, MODINFOMD_KLDDEP, dsize, kdeps); 	free(kdeps);     }     return(0); }
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -1,6 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: interp_forth.c,v 1.8 1998/12/22 11:41:51 abial Exp $  */
+comment|/*  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: interp_forth.c,v 1.9 1999/01/04 18:39:24 peter Exp $  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_comment
+comment|/* to pick up __FreeBSD_version */
 end_comment
 
 begin_include
@@ -26,6 +36,14 @@ include|#
 directive|include
 file|"ficl.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|bootprog_rev
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* #define BFORTH_DEBUG */
@@ -71,6 +89,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Eventually, all builtin commands throw codes must be defined  * elsewhere, possibly bootstrap.h. For now, just this code, used  * just in this file, it is getting defined.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BF_PARSE
+value|100
+end_define
 
 begin_comment
 comment|/*  * BootForth   Interface to Ficl Forth interpreter.  */
@@ -221,6 +250,14 @@ name|len
 operator|=
 literal|0
 init|;
+name|cp
+operator|!=
+name|vm
+operator|->
+name|tib
+operator|.
+name|end
+operator|&&
 operator|*
 name|cp
 operator|!=
@@ -341,59 +378,14 @@ argument_list|(
 name|argv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|result
-operator|!=
-literal|0
-condition|)
-block|{
-name|vmTextOut
-argument_list|(
-name|vm
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|vmTextOut
-argument_list|(
-name|vm
-argument_list|,
-literal|": "
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|vmTextOut
-argument_list|(
-name|vm
-argument_list|,
-name|command_errmsg
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* ** Let's deal with it elsewhere ** 	if(result != 0) { 		vmTextOut(vm,argv[0],0); 		vmTextOut(vm,": ",0); 		vmTextOut(vm,command_errmsg,1); 	} 	*/
 block|}
 else|else
 block|{
-name|vmTextOut
-argument_list|(
-name|vm
-argument_list|,
-literal|"parse error\n"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* ** Let's deal with it elsewhere ** 	vmTextOut(vm, "parse error\n", 1); 	*/
 name|result
 operator|=
-literal|1
+name|BF_PARSE
 expr_stmt|;
 block|}
 name|free
@@ -401,13 +393,13 @@ argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
+comment|/* This is going to be thrown!!! */
 name|stackPushINT32
 argument_list|(
 name|vm
 operator|->
 name|pStack
 argument_list|,
-operator|!
 name|result
 argument_list|)
 expr_stmt|;
@@ -431,6 +423,13 @@ modifier|*
 modifier|*
 name|cmdp
 decl_stmt|;
+name|char
+name|create_buf
+index|[
+literal|41
+index|]
+decl_stmt|;
+comment|/* 31 characters-long builtins */
 name|int
 name|fd
 decl_stmt|;
@@ -445,6 +444,17 @@ operator|=
 name|ficlNewVM
 argument_list|()
 expr_stmt|;
+comment|/* Builtin word "creator" */
+name|ficlExec
+argument_list|(
+name|bf_vm
+argument_list|,
+literal|": builtin:>in @ ' swap>in ! create , does> @ execute throw ;"
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* make all commands appear as Forth words */
 name|SET_FOREACH
 argument_list|(
@@ -452,6 +462,7 @@ argument|cmdp
 argument_list|,
 argument|Xcommand_set
 argument_list|)
+block|{
 name|ficlBuild
 argument_list|(
 operator|(
@@ -464,6 +475,64 @@ argument_list|,
 name|bf_command
 argument_list|,
 name|FW_DEFAULT
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|create_buf
+argument_list|,
+literal|"builtin: %s"
+argument_list|,
+operator|(
+operator|*
+name|cmdp
+operator|)
+operator|->
+name|c_name
+argument_list|)
+expr_stmt|;
+name|ficlExec
+argument_list|(
+name|bf_vm
+argument_list|,
+name|create_buf
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Export some version numbers so that code can detect the loader/host version */
+name|ficlSetEnv
+argument_list|(
+literal|"FreeBSD_version"
+argument_list|,
+name|__FreeBSD_version
+argument_list|)
+expr_stmt|;
+name|ficlSetEnv
+argument_list|(
+literal|"loader_version"
+argument_list|,
+operator|(
+name|bootprog_rev
+index|[
+literal|0
+index|]
+operator|-
+literal|'0'
+operator|)
+operator|*
+literal|10
+operator|+
+operator|(
+name|bootprog_rev
+index|[
+literal|2
+index|]
+operator|-
+literal|'0'
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* try to load and run init file if present */
@@ -526,6 +595,9 @@ argument_list|(
 name|bf_vm
 argument_list|,
 name|line
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|DEBUG
@@ -537,6 +609,61 @@ argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|result
+condition|)
+block|{
+case|case
+name|VM_OUTOFTEXT
+case|:
+case|case
+name|VM_ABORTQ
+case|:
+case|case
+name|VM_QUIT
+case|:
+case|case
+name|VM_ERREXIT
+case|:
+break|break;
+case|case
+name|VM_USEREXIT
+case|:
+name|printf
+argument_list|(
+literal|"No where to leave to!\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|VM_ABORT
+case|:
+name|printf
+argument_list|(
+literal|"Aborted!\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|BF_PARSE
+case|:
+name|printf
+argument_list|(
+literal|"Parse error!\n"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+comment|/* Hopefully, all other codes filled this buffer */
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|command_errmsg
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|result
@@ -546,6 +673,21 @@ condition|)
 name|panic
 argument_list|(
 literal|"interpreter exit"
+argument_list|)
+expr_stmt|;
+name|setenv
+argument_list|(
+literal|"interpret"
+argument_list|,
+name|bf_vm
+operator|->
+name|state
+condition|?
+literal|""
+else|:
+literal|"ok"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
