@@ -1598,9 +1598,36 @@ literal|'\0'
 condition|)
 name|printf
 argument_list|(
-literal|"panic: %s\n"
+literal|"panicstr: %s\n"
 argument_list|,
 name|buf
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"panic messages:\n---\n"
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"/sbin/dmesg -M %s | \ 		 /usr/bin/awk '/^(panic:|Fatal trap) / { printing = 1 } \ 			       { if (printing) print $0 }'"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"---\n"
 argument_list|)
 expr_stmt|;
 block|}
