@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pcb.h 1.13 89/04/23$  *  *	@(#)pcb.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pcb.h 1.13 89/04/23$  *  *	@(#)pcb.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<hp300/include/frame.h>
+file|<machine/frame.h>
 end_include
 
 begin_comment
@@ -41,67 +41,31 @@ index|]
 decl_stmt|;
 comment|/* D0-D7, A0-A7 (+C) */
 name|int
-name|pcb_pad
-index|[
-literal|5
-index|]
-decl_stmt|;
-name|int
 name|pcb_cmap2
 decl_stmt|;
-comment|/* temporary copy PTE (+50) */
-name|int
-modifier|*
-name|pcb_sswap
-decl_stmt|;
-comment|/* saved context for swap return (+54) */
-name|short
-name|pcb_sigc
-index|[
-literal|12
-index|]
-decl_stmt|;
-comment|/* signal trampoline code (+58) */
+comment|/* temporary copy PTE */
 name|caddr_t
 name|pcb_onfault
 decl_stmt|;
-comment|/* for copyin/out faults (+70) */
+comment|/* for copyin/out faults */
 name|struct
 name|fpframe
 name|pcb_fpregs
 decl_stmt|;
-comment|/* 68881/2 context save area (+74) */
+comment|/* 68881/2 context save area */
 name|int
 name|pcb_exec
 index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* exec structure for core dumps (+1B8) */
-name|int
-name|pcb_res
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* reserved for future expansion (+1F8) */
+comment|/* exec structure for core dumps */
 block|}
 struct|;
 end_struct
 
 begin_comment
 comment|/* flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCB_AST
-value|0x0001
-end_define
-
-begin_comment
-comment|/* async trap pending */
 end_comment
 
 begin_define
@@ -140,33 +104,6 @@ end_comment
 begin_comment
 comment|/* note: does NOT imply SHPUX */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|aston
-parameter_list|()
-define|\
-value|{ \ 		u.u_pcb.pcb_flags |= PCB_AST; \ 	}
-end_define
-
-begin_define
-define|#
-directive|define
-name|astoff
-parameter_list|()
-define|\
-value|{ \ 		u.u_pcb.pcb_flags&= ~PCB_AST; \ 	}
-end_define
-
-begin_define
-define|#
-directive|define
-name|astpend
-parameter_list|()
-define|\
-value|(u.u_pcb.pcb_flags& PCB_AST)
-end_define
 
 end_unit
 
