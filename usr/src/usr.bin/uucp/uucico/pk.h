@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)pk.h	5.5	%G%	*/
+comment|/*	@(#)pk.h	5.6	(Berkeley)	%G%	*/
 end_comment
 
 begin_struct
@@ -56,15 +56,8 @@ name|WINDOWS
 value|7
 end_define
 
-begin_define
-define|#
-directive|define
-name|TAILSIZE
-value|0
-end_define
-
 begin_comment
-comment|/* Number of trailing nulls after packet    */
+comment|/* number of outstanding un-ack'd packets */
 end_comment
 
 begin_struct
@@ -558,35 +551,8 @@ begin_define
 define|#
 directive|define
 name|NPLINES
-value|20
+value|2
 end_define
-
-begin_comment
-comment|/*  * packet ioctl buf  */
-end_comment
-
-begin_struct
-struct|struct
-name|piocb
-block|{
-name|unsigned
-name|t
-decl_stmt|;
-name|short
-name|psize
-decl_stmt|;
-name|short
-name|mode
-decl_stmt|;
-name|short
-name|state
-decl_stmt|;
-name|char
-name|window
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_decl_stmt
 specifier|extern
