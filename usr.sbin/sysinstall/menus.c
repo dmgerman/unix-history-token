@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.82 1996/07/11 18:37:48 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.83 1996/07/16 17:11:43 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -3129,11 +3129,11 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Network interface information required"
 block|,
-literal|"If you are using PPP over a serial device as opposed\n"
-literal|"to a direct ethernet connection, then you may first need to dial your\n"
-literal|"service provider using the ppp utility we provide for that purpose.\n"
-literal|"If you're using SLIP over a serial device then it's expected that you\n"
-literal|"have a hardwired connection.\n\n"
+literal|"If you are using PPP over a serial device, as opposed to a direct\n"
+literal|"ethernet connection, then you may first need to dial your Internet\n"
+literal|"Service Provider using the ppp utility we provide for that purpose.\n"
+literal|"If you're using SLIP over a serial device then the expectation is\n"
+literal|"that you have a HARDWIRED connection.\n\n"
 literal|"You can also install over a parallel port using a special \"laplink\"\n"
 literal|"cable to another machine running a fairly recent (2.0R or later) version\n"
 literal|"of FreeBSD."
@@ -3184,37 +3184,7 @@ name|mediaSetCDROM
 block|}
 block|,
 block|{
-literal|"2 DOS"
-block|,
-literal|"Install from a DOS partition"
-block|,
-name|NULL
-block|,
-name|mediaSetDOS
-block|}
-block|,
-block|{
-literal|"3 File System"
-block|,
-literal|"Install from an existing filesystem"
-block|,
-name|NULL
-block|,
-name|mediaSetUFS
-block|}
-block|,
-block|{
-literal|"4 Floppy"
-block|,
-literal|"Install from a floppy disk set"
-block|,
-name|NULL
-block|,
-name|mediaSetFloppy
-block|}
-block|,
-block|{
-literal|"5 FTP"
+literal|"2 FTP"
 block|,
 literal|"Install from an FTP server"
 block|,
@@ -3224,7 +3194,7 @@ name|mediaSetFTPActive
 block|}
 block|,
 block|{
-literal|"6 FTP Passive"
+literal|"3 FTP Passive"
 block|,
 literal|"Install from an FTP server through a firewall"
 block|,
@@ -3234,13 +3204,43 @@ name|mediaSetFTPPassive
 block|}
 block|,
 block|{
-literal|"7 NFS"
+literal|"4 DOS"
+block|,
+literal|"Install from a DOS partition"
+block|,
+name|NULL
+block|,
+name|mediaSetDOS
+block|}
+block|,
+block|{
+literal|"5 NFS"
 block|,
 literal|"Install over NFS"
 block|,
 name|NULL
 block|,
 name|mediaSetNFS
+block|}
+block|,
+block|{
+literal|"6 File System"
+block|,
+literal|"Install from an existing filesystem"
+block|,
+name|NULL
+block|,
+name|mediaSetUFS
+block|}
+block|,
+block|{
+literal|"7 Floppy"
+block|,
+literal|"Install from a floppy disk set"
+block|,
+name|NULL
+block|,
+name|mediaSetFloppy
 block|}
 block|,
 block|{
