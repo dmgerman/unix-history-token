@@ -63,15 +63,6 @@ begin_pragma
 pragma|#
 directive|pragma
 name|weak
-name|_exit
-name|=
-name|__exit
-end_pragma
-
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
 name|pthread_exit
 name|=
 name|_pthread_exit
@@ -79,7 +70,7 @@ end_pragma
 
 begin_function
 name|void
-name|__exit
+name|_exit
 parameter_list|(
 name|int
 name|status
@@ -221,7 +212,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Call the _exit syscall: */
-name|__sys__exit
+name|__sys_exit
 argument_list|(
 name|status
 argument_list|)
@@ -327,7 +318,7 @@ argument_list|()
 expr_stmt|;
 else|#
 directive|else
-name|_exit
+name|__sys_exit
 argument_list|(
 literal|1
 argument_list|)

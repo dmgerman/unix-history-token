@@ -131,6 +131,15 @@ decl_stmt|;
 name|int
 name|saved_errno
 decl_stmt|;
+if|if
+condition|(
+name|_thread_initial
+operator|==
+name|NULL
+condition|)
+name|_thread_init
+argument_list|()
+expr_stmt|;
 comment|/* Check if the file descriptor is out of range: */
 if|if
 condition|(

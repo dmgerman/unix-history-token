@@ -4115,13 +4115,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* #include<aio.h> */
+comment|/* #include<sys/aio.h> */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_AIO_H_
+name|_SYS_AIO_H_
 end_ifdef
 
 begin_function_decl
@@ -4832,7 +4832,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|__sys__exit
+name|__sys_exit
 parameter_list|(
 name|int
 parameter_list|)
