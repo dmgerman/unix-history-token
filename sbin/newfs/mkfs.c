@@ -3594,6 +3594,12 @@ name|fs_ronly
 operator|=
 literal|0
 expr_stmt|;
+name|sblock
+operator|.
+name|fs_clean
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Dump out summary information about file system. 	 */
 if|if
 condition|(
