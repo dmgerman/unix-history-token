@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	8.2 (Berkeley) 3/17/94"
+literal|"@(#)tape.c	8.4 (Berkeley) 5/1/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,13 +84,13 @@ end_else
 begin_include
 include|#
 directive|include
-file|<ufs/ffs/fs.h>
+file|<ufs/ufs/dinode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/dinode.h>
+file|<ufs/ffs/fs.h>
 end_include
 
 begin_endif
@@ -2603,7 +2603,7 @@ if|if
 condition|(
 name|nexttape
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|tape
 argument_list|,
@@ -2627,7 +2627,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|tape
 argument_list|,

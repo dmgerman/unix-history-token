@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumpfs.c	8.2 (Berkeley) 2/2/94"
+literal|"@(#)dumpfs.c	8.5 (Berkeley) 4/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,19 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -117,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_union
@@ -277,7 +283,8 @@ literal|""
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -445,6 +452,36 @@ condition|)
 goto|goto
 name|err
 goto|;
+if|if
+condition|(
+name|afs
+operator|.
+name|fs_magic
+operator|!=
+name|FS_MAGIC
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s: superblock has bad magic number, skipped"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|afs
@@ -813,7 +850,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cgrotor\t%d\tfmod\t%d\tronly\t%d\n"
+literal|"cgrotor\t%d\tfmod\t%d\tronly\t%d\tclean\t%d\n"
 argument_list|,
 name|afs
 operator|.
@@ -826,6 +863,10 @@ argument_list|,
 name|afs
 operator|.
 name|fs_ronly
+argument_list|,
+name|afs
+operator|.
+name|fs_clean
 argument_list|)
 expr_stmt|;
 if|if
@@ -848,7 +889,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"insufficient space to maintain rotational tables\n"
+literal|"(no rotational position table)\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1300,21 +1341,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"dumpfs: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1428,14 +1459,9 @@ operator|.
 name|fs_bsize
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"dumpfs: %s: error reading cg\n"
+literal|"%s: error reading cg"
 argument_list|,
 name|name
 argument_list|)

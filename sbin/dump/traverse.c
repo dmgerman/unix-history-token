@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traverse.c	8.2 (Berkeley) 9/23/93"
+literal|"@(#)traverse.c	8.7 (Berkeley) 6/15/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,12 +84,6 @@ end_else
 begin_include
 include|#
 directive|include
-file|<ufs/ffs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/ufs/dir.h>
 end_include
 
@@ -97,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/fs.h>
 end_include
 
 begin_endif
@@ -370,30 +370,6 @@ begin_comment
 comment|/* Auxiliary macro to pick up files changed since previous dump. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FS_44INODEFMT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CHANGEDSINCE
-parameter_list|(
-name|dp
-parameter_list|,
-name|t
-parameter_list|)
-define|\
-value|((dp)->di_mtime.ts_sec>= (t) || (dp)->di_ctime.ts_sec>= (t))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -406,11 +382,6 @@ parameter_list|)
 define|\
 value|((dp)->di_mtime>= (t) || (dp)->di_ctime>= (t))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* The WANTTODUMP macro decides whether a file should be dumped. */
@@ -1545,16 +1516,13 @@ argument_list|(
 name|ino
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|buf
+argument_list|,
 name|dp
 operator|->
 name|di_shortlink
-argument_list|,
-name|buf
 argument_list|,
 operator|(
 name|u_long
@@ -1815,13 +1783,11 @@ name|fs_bsize
 argument_list|)
 expr_stmt|;
 else|else
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|idblk
+argument_list|,
+literal|0
 argument_list|,
 operator|(
 name|int
@@ -2591,8 +2557,9 @@ operator|)
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|msg
 argument_list|(
@@ -2733,9 +2700,11 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Zero buffer, then try to read each sector of buffer separately. 	 */
-name|bzero
+name|memset
 argument_list|(
 name|buf
+argument_list|,
+literal|0
 argument_list|,
 name|size
 argument_list|)
@@ -2782,8 +2751,9 @@ operator|)
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|msg
 argument_list|(

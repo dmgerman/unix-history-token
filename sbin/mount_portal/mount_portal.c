@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_portal.c	8.4 (Berkeley) 3/27/94"
+literal|"@(#)mount_portal.c	8.6 (Berkeley) 4/26/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -233,6 +233,10 @@ condition|(
 name|pid
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|ECHILD
 condition|)
 name|syslog
 argument_list|(
@@ -345,6 +349,8 @@ name|mopts
 argument_list|,
 operator|&
 name|mntflags
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -577,7 +583,7 @@ name|rc
 operator|=
 name|mount
 argument_list|(
-name|MOUNT_PORTAL
+literal|"portal"
 argument_list|,
 name|mountpt
 argument_list|,
@@ -600,9 +606,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 comment|/* 	 * Everything is ready to go - now is a good time to fork 	 */
 name|daemon
 argument_list|(
@@ -611,8 +614,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Start logging (and change name) 	 */
 name|openlog
 argument_list|(
@@ -900,7 +901,11 @@ argument_list|,
 name|so2
 argument_list|)
 expr_stmt|;
-break|break;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 default|default:
 operator|(
 name|void
