@@ -680,6 +680,14 @@ operator|->
 name|pt_tty
 argument_list|)
 expr_stmt|;
+name|pt
+operator|->
+name|pt_tty
+operator|->
+name|t_sc
+operator|=
+name|pt
+expr_stmt|;
 name|devs
 operator|->
 name|si_drv1
@@ -1181,9 +1189,7 @@ name|pt
 init|=
 name|tp
 operator|->
-name|t_dev
-operator|->
-name|si_drv1
+name|t_sc
 decl_stmt|;
 if|if
 condition|(
@@ -1248,9 +1254,7 @@ name|pt
 init|=
 name|tp
 operator|->
-name|t_dev
-operator|->
-name|si_drv1
+name|t_sc
 decl_stmt|;
 if|if
 condition|(
@@ -1938,9 +1942,7 @@ name|pt
 init|=
 name|tp
 operator|->
-name|t_dev
-operator|->
-name|si_drv1
+name|t_sc
 decl_stmt|;
 name|int
 name|flag
