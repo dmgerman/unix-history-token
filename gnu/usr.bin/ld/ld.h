@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ld.h,v 1.6 1993/12/02 00:56:37 jkh Exp $	*/
+comment|/*	$Id: ld.h,v 1.7 1993/12/04 00:52:58 jkh Exp $	*/
 end_comment
 
 begin_comment
@@ -1484,6 +1484,17 @@ name|file_entry
 modifier|*
 name|chain
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SUN_COMPAT
+comment|/* For shared libraries which have a .sa companion */
+name|struct
+name|file_entry
+modifier|*
+name|silly_archive
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 1 if file is a library. */
 name|char
 name|library_flag
@@ -1598,6 +1609,17 @@ end_define
 
 begin_comment
 comment|/* Build a shared object */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SILLYARCHIVE
+value|16
+end_define
+
+begin_comment
+comment|/* Process .sa companions, if any */
 end_comment
 
 begin_decl_stmt
@@ -1922,39 +1944,11 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|digest_symbols
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|load_symbols
 name|__P
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|decode_command
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2016,6 +2010,34 @@ argument_list|(
 operator|(
 name|int
 operator|,
+expr|struct
+name|file_entry
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|enter_file_symbols
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|file_entry
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|read_file_symbols
+name|__P
+argument_list|(
+operator|(
 expr|struct
 name|file_entry
 operator|*
@@ -2324,12 +2346,15 @@ name|concat
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2465,6 +2490,8 @@ operator|*
 operator|,
 name|int
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
