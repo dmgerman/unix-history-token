@@ -4682,7 +4682,9 @@ operator|->
 name|ste_mtx
 argument_list|)
 argument_list|,
+operator|(
 literal|"ste mutex not initialized"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STE_LOCK

@@ -10678,7 +10678,9 @@ operator|->
 name|dc_mtx
 argument_list|)
 argument_list|,
+operator|(
 literal|"dc mutex not initialized"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DC_LOCK

@@ -7424,7 +7424,9 @@ operator|->
 name|xl_mtx
 argument_list|)
 argument_list|,
+operator|(
 literal|"xl mutex not initialized"
+operator|)
 argument_list|)
 expr_stmt|;
 name|XL_LOCK

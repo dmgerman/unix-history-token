@@ -4358,7 +4358,9 @@ operator|->
 name|rl_mtx
 argument_list|)
 argument_list|,
+operator|(
 literal|"rl mutex not initialized"
+operator|)
 argument_list|)
 expr_stmt|;
 name|RL_LOCK

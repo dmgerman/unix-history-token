@@ -6303,7 +6303,9 @@ operator|->
 name|sis_mtx
 argument_list|)
 argument_list|,
+operator|(
 literal|"sis mutex not initialized"
+operator|)
 argument_list|)
 expr_stmt|;
 name|SIS_LOCK

@@ -5418,7 +5418,9 @@ operator|->
 name|tl_mtx
 argument_list|)
 argument_list|,
+operator|(
 literal|"tl mutex not initialized"
+operator|)
 argument_list|)
 expr_stmt|;
 name|TL_LOCK

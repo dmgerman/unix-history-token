@@ -3600,7 +3600,9 @@ operator|->
 name|sf_mtx
 argument_list|)
 argument_list|,
+operator|(
 literal|"sf mutex not initialized"
+operator|)
 argument_list|)
 expr_stmt|;
 name|SF_LOCK
