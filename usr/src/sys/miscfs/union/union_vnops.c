@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994, 1995 Jan-Simon Pendry.  * Copyright (c) 1992, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993, 1994, 1995 Jan-Simon Pendry.  * Copyright (c) 1992, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3010,6 +3010,74 @@ end_function
 
 begin_function
 name|int
+name|union_revoke
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_revoke_args
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+if|if
+condition|(
+name|UPPERVP
+argument_list|(
+name|vp
+argument_list|)
+condition|)
+name|VOP_REVOKE
+argument_list|(
+name|UPPERVP
+argument_list|(
+name|vp
+argument_list|)
+argument_list|,
+name|ap
+operator|->
+name|a_flags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LOWERVP
+argument_list|(
+name|vp
+argument_list|)
+condition|)
+name|VOP_REVOKE
+argument_list|(
+name|UPPERVP
+argument_list|(
+name|vp
+argument_list|)
+argument_list|,
+name|ap
+operator|->
+name|a_flags
+argument_list|)
+expr_stmt|;
+name|vgone
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
 name|union_mmap
 parameter_list|(
 name|ap
@@ -5009,13 +5077,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|VOP_REVOKE
+name|vgone
 argument_list|(
 name|ap
 operator|->
 name|a_vp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -5172,6 +5238,7 @@ name|un_flags
 operator|&
 name|UN_KLOCK
 condition|)
+block|{
 name|vprint
 argument_list|(
 literal|"union: dangling klock"
@@ -5186,6 +5253,7 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -6088,6 +6156,14 @@ name|union_select
 block|}
 block|,
 comment|/* select */
+block|{
+operator|&
+name|vop_revoke_desc
+block|,
+name|union_revoke
+block|}
+block|,
+comment|/* revoke */
 block|{
 operator|&
 name|vop_mmap_desc
