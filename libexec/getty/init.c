@@ -742,6 +742,13 @@ block|}
 block|,
 comment|/* set clocal (no carrier) */
 block|{
+literal|"pl"
+block|,
+literal|0
+block|}
+block|,
+comment|/* use PPP instead of login(1) */
+block|{
 literal|0
 block|}
 block|}
