@@ -39,11 +39,41 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ia64__
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|FREEBSD32_USRSTACK
-value|((1ul<< 32) - PAGE_SIZE)
+value|((1ul<< 32) - IA32_PAGE_SIZE * 2)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_USRSTACK
+value|((1ul<< 32) - IA32_PAGE_SIZE)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|IA32_PAGE_SIZE
+value|4096
 end_define
 
 begin_define

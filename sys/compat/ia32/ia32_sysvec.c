@@ -234,6 +234,12 @@ directive|include
 file|<compat/ia32/ia32_signal.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -251,6 +257,34 @@ include|#
 directive|include
 file|<machine/specialreg.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<i386/include/psl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/include/segments.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/include/specialreg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -480,7 +514,7 @@ name|NULL
 block|,
 name|MINSIGSTKSZ
 block|,
-name|PAGE_SIZE
+name|IA32_PAGE_SIZE
 block|,
 literal|0
 block|,
