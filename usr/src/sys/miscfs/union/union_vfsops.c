@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, 1995 The Regents of the University of California.  * Copyright (c) 1994, 1995 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	8.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994, 1995 The Regents of the University of California.  * Copyright (c) 1994, 1995 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	8.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1231,21 +1231,17 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|loselock
 condition|)
-name|VOP_UNLOCK
+name|vrele
 argument_list|(
 name|um
 operator|->
 name|um_uppervp
-argument_list|,
-literal|0
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
-name|vrele
+else|else
+name|vput
 argument_list|(
 name|um
 operator|->
