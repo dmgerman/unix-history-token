@@ -28,6 +28,13 @@ block|}
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|FHC_CENTRAL
+value|(1<<0)
+end_define
+
 begin_struct
 struct|struct
 name|fhc_softc
@@ -64,7 +71,13 @@ modifier|*
 name|sc_ranges
 decl_stmt|;
 name|int
+name|sc_board
+decl_stmt|;
+name|int
 name|sc_ign
+decl_stmt|;
+name|int
+name|sc_flags
 decl_stmt|;
 block|}
 struct|;
@@ -162,6 +175,7 @@ parameter_list|,
 name|int
 parameter_list|,
 name|driver_intr_t
+modifier|*
 parameter_list|,
 name|void
 modifier|*
