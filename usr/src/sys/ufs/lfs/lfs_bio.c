@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -403,11 +403,26 @@ name|lfs_writing
 operator|=
 literal|1
 expr_stmt|;
+for|for
+control|(
 name|mp
 operator|=
-name|rootfs
-expr_stmt|;
-do|do
+name|mountlist
+operator|.
+name|tqh_first
+init|;
+name|mp
+operator|!=
+name|NULL
+condition|;
+name|mp
+operator|=
+name|mp
+operator|->
+name|mnt_list
+operator|.
+name|tqe_next
+control|)
 block|{
 comment|/* The lock check below is to avoid races with unmount. */
 if|if
@@ -478,20 +493,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|mp
-operator|=
-name|mp
-operator|->
-name|mnt_next
-expr_stmt|;
 block|}
-do|while
-condition|(
-name|mp
-operator|!=
-name|rootfs
-condition|)
-do|;
 name|lfs_writing
 operator|=
 literal|0
