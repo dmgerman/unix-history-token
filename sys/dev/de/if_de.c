@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.55 1997/10/16 22:02:27 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: if_de.c,v 1.72 1997/10/18 18:15:02 peter Exp $ */
 end_comment
 
 begin_comment
@@ -10698,7 +10698,7 @@ index|[
 literal|5
 index|]
 operator|&
-literal|3
+literal|2
 operator|)
 operator|==
 literal|0
