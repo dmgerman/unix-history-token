@@ -6287,7 +6287,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"tl%d: no memory for rx list -- packet dropped!"
+literal|"tl%d: no memory for rx list -- packet dropped!\n"
 argument_list|,
 name|sc
 operator|->
@@ -6321,7 +6321,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"tl%d: no memory for rx list -- packet dropped!"
+literal|"tl%d: no memory for rx list -- packet dropped!\n"
 argument_list|,
 name|sc
 operator|->
@@ -6374,14 +6374,6 @@ name|c
 operator|->
 name|tl_ptr
 operator|->
-name|tlist_cstat
-operator|=
-name|TL_CSTAT_READY
-expr_stmt|;
-name|c
-operator|->
-name|tl_ptr
-operator|->
 name|tlist_fptr
 operator|=
 literal|0
@@ -6413,6 +6405,14 @@ operator|.
 name|tlist_dcnt
 operator|=
 name|MCLBYTES
+expr_stmt|;
+name|c
+operator|->
+name|tl_ptr
+operator|->
+name|tlist_cstat
+operator|=
+name|TL_CSTAT_READY
 expr_stmt|;
 return|return
 operator|(
@@ -6497,17 +6497,10 @@ operator|->
 name|tl_cdata
 operator|.
 name|tl_rx_head
-operator|->
-name|tl_ptr
-operator|->
-name|tlist_cstat
-operator|&
-name|TL_CSTAT_FRAMECMP
+operator|!=
+name|NULL
 condition|)
 block|{
-name|r
-operator|++
-expr_stmt|;
 name|cur_rx
 operator|=
 name|sc
@@ -6515,6 +6508,23 @@ operator|->
 name|tl_cdata
 operator|.
 name|tl_rx_head
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|cur_rx
+operator|->
+name|tl_ptr
+operator|->
+name|tlist_cstat
+operator|&
+name|TL_CSTAT_FRAMECMP
+operator|)
+condition|)
+break|break;
+name|r
+operator|++
 expr_stmt|;
 name|sc
 operator|->
@@ -6817,9 +6827,21 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
+name|struct
+name|tl_chain_data
+modifier|*
+name|cd
+decl_stmt|;
 name|sc
 operator|=
 name|xsc
+expr_stmt|;
+name|cd
+operator|=
+operator|&
+name|sc
+operator|->
+name|tl_cdata
 expr_stmt|;
 comment|/* Flush out the receive queue and ack RXEOF interrupts. */
 name|r
@@ -6852,6 +6874,32 @@ expr_stmt|;
 name|r
 operator|=
 literal|1
+expr_stmt|;
+name|cd
+operator|->
+name|tl_rx_head
+operator|=
+operator|&
+name|cd
+operator|->
+name|tl_rx_chain
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|cd
+operator|->
+name|tl_rx_tail
+operator|=
+operator|&
+name|cd
+operator|->
+name|tl_rx_chain
+index|[
+name|TL_RX_LIST_CNT
+operator|-
+literal|1
+index|]
 expr_stmt|;
 name|CSR_WRITE_4
 argument_list|(
@@ -8176,7 +8224,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"tl%d: no memory for tx list"
+literal|"tl%d: no memory for tx list\n"
 argument_list|,
 name|sc
 operator|->
@@ -8226,7 +8274,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"tl%d: no memory for tx list"
+literal|"tl%d: no memory for tx list\n"
 argument_list|,
 name|sc
 operator|->
