@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, Paul Richards.   *  * All rights reserved.  *  * This software may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with  * its use.  */
+comment|/*-  * Copyright (c) 1995  *	Paul Richards.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Paul Richards.  * 4. The name Paul Richards may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY PAUL RICHARDS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL PAUL RICHARDS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -928,13 +928,14 @@ name|m_len
 operator|=
 name|min
 argument_list|(
-operator|-
 operator|(
-name|desc
-operator|->
-name|md
-operator|->
-name|md2
+name|MCLBYTES
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pkthdr
+argument_list|)
 operator|)
 argument_list|,
 name|pkt_len
@@ -1105,17 +1106,12 @@ name|recv_ring
 operator|+
 name|start_of_packet
 expr_stmt|;
+comment|/*blen = -(start->md->md2);*/
 name|blen
 operator|=
-operator|-
-operator|(
-name|start
-operator|->
-name|md
-operator|->
-name|md2
-operator|)
+name|RECVBUFSIZE
 expr_stmt|;
+comment|/* XXX More PCnet-32 crap */
 name|data
 operator|=
 name|start
@@ -1299,6 +1295,16 @@ name|md1
 operator||=
 name|OWN
 expr_stmt|;
+name|start
+operator|->
+name|md
+operator|->
+name|md2
+operator|=
+operator|-
+name|RECVBUFSIZE
+expr_stmt|;
+comment|/* XXX - shouldn't be necessary */
 name|INC_MD_PTR
 argument_list|(
 argument|start_of_packet
@@ -1321,17 +1327,12 @@ name|buff
 operator|.
 name|data
 expr_stmt|;
+comment|/*blen = -(start->md->md2);*/
 name|blen
 operator|=
-operator|-
-operator|(
-name|start
-operator|->
-name|md
-operator|->
-name|md2
-operator|)
+name|RECVBUFSIZE
 expr_stmt|;
+comment|/* XXX More PCnet-32 crap */
 block|}
 block|}
 return|return
@@ -1634,6 +1635,7 @@ block|}
 block|}
 name|pkt_len
 operator|=
+operator|(
 name|next
 operator|->
 name|md
@@ -1641,6 +1643,7 @@ operator|->
 name|md3
 operator|&
 name|MCNT
+operator|)
 operator|-
 name|FCS_LEN
 expr_stmt|;
@@ -1722,18 +1725,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
-comment|/* 				 * FRAM and CRC are valid only if OFLO is not 				 * set and ENP is 				 */
+elseif|else
 if|if
 condition|(
 name|flags
 operator|&
-operator|(
-name|FRAM
-operator||
 name|ENP
-operator|)
+condition|)
+block|{
+comment|/* 				 * FRAM and CRC are valid only if ENP 				 * is set and OFLO is not. 				 */
+if|if
+condition|(
+name|flags
+operator|&
+name|FRAM
 condition|)
 block|{
 name|LNCSTATS
@@ -1756,11 +1761,7 @@ if|if
 condition|(
 name|flags
 operator|&
-operator|(
 name|CRC
-operator||
-name|ENP
-operator|)
 condition|)
 block|{
 name|LNCSTATS
@@ -1809,6 +1810,16 @@ name|recv_ring
 operator|+
 name|start_of_packet
 expr_stmt|;
+name|start
+operator|->
+name|md
+operator|->
+name|md2
+operator|=
+operator|-
+name|RECVBUFSIZE
+expr_stmt|;
+comment|/* XXX - shouldn't be necessary */
 name|start
 operator|->
 name|md
@@ -3056,62 +3067,7 @@ name|vsw
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
-block|{
-name|int
-name|i
-decl_stmt|;
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"Dumping io space for lnc%d starting at %x\n"
-argument_list|,
-name|isa_dev
-operator|->
-name|id_unit
-argument_list|,
-name|isa_dev
-operator|->
-name|id_iobase
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|32
-condition|;
-name|i
-operator|++
-control|)
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|" %x "
-argument_list|,
-name|inb
-argument_list|(
-name|isa_dev
-operator|->
-name|id_iobase
-operator|+
-name|i
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|DIAGNOSTIC
-comment|/* First check the Vendor Specific Word */
 name|vsw
 operator|=
 name|inw
@@ -3236,7 +3192,7 @@ name|nic
 operator|.
 name|ic
 operator|=
-name|lance_probe
+name|pcnet_probe
 argument_list|(
 name|isa_dev
 operator|->
@@ -3259,6 +3215,19 @@ operator|.
 name|mem_mode
 operator|=
 name|DMA_FIXED
+expr_stmt|;
+comment|/* XXX - For now just use the defines */
+name|sc
+operator|->
+name|nrdre
+operator|=
+name|NRDRE
+expr_stmt|;
+name|sc
+operator|->
+name|ntdre
+operator|=
+name|NTDRE
 expr_stmt|;
 comment|/* Extract MAC address from PROM */
 for|for
@@ -3885,7 +3854,7 @@ name|read_csr
 argument_list|(
 name|unit
 argument_list|,
-name|CSR88
+name|CSR89
 argument_list|)
 expr_stmt|;
 name|chip_id
@@ -3898,7 +3867,7 @@ name|read_csr
 argument_list|(
 name|unit
 argument_list|,
-name|CSR89
+name|CSR88
 argument_list|)
 expr_stmt|;
 if|if
@@ -4178,6 +4147,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|nic
@@ -4185,6 +4155,27 @@ operator|.
 name|mem_mode
 operator|!=
 name|SHMEM
+operator|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|nic
+operator|.
+name|ic
+operator|!=
+name|PCnet_32
+operator|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|nic
+operator|.
+name|ic
+operator|!=
+name|PCnet_PCI
+operator|)
 condition|)
 name|isa_dmacascade
 argument_list|(
@@ -7085,19 +7076,15 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"\nDriver/NIC [%d] state dump\n"
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"Memory access mode: %b\n"
 argument_list|,
 name|sc
@@ -7109,24 +7096,18 @@ argument_list|,
 name|MEM_MODES
 argument_list|)
 expr_stmt|;
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"Host memory\n"
 argument_list|)
 expr_stmt|;
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"-----------\n"
 argument_list|)
 expr_stmt|;
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"Receive ring: base = %x, next = %x\n"
 argument_list|,
 name|sc
@@ -7162,10 +7143,8 @@ condition|;
 name|i
 operator|++
 control|)
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"\t%d:%x md = %x buff = %x\n"
 argument_list|,
 name|i
@@ -7197,10 +7176,8 @@ operator|->
 name|buff
 argument_list|)
 expr_stmt|;
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"Transmit ring: base = %x, next = %x\n"
 argument_list|,
 name|sc
@@ -7236,10 +7213,8 @@ condition|;
 name|i
 operator|++
 control|)
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"\t%d:%x md = %x buff = %x\n"
 argument_list|,
 name|i
@@ -7271,17 +7246,13 @@ operator|->
 name|buff
 argument_list|)
 expr_stmt|;
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"Lance memory (may be on host(DMA) or card(SHMEM))\n"
 argument_list|)
 expr_stmt|;
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"Init block = %x\n"
 argument_list|,
 name|sc
@@ -7289,10 +7260,8 @@ operator|->
 name|init_block
 argument_list|)
 expr_stmt|;
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"\tmode = %b rlen:rdra = %x:%x tlen:tdra = %x:%x\n"
 argument_list|,
 name|sc
@@ -7328,10 +7297,8 @@ operator|->
 name|tdra
 argument_list|)
 expr_stmt|;
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"Receive descriptor ring\n"
 argument_list|)
 expr_stmt|;
@@ -7353,10 +7320,8 @@ condition|;
 name|i
 operator|++
 control|)
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"\t%d buffer = 0x%x%x, BCNT = %d,\tMCNT = %u,\tflags = %b\n"
 argument_list|,
 name|i
@@ -7441,10 +7406,8 @@ argument_list|,
 name|RECV_MD1
 argument_list|)
 expr_stmt|;
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"Transmit descriptor ring\n"
 argument_list|)
 expr_stmt|;
@@ -7466,10 +7429,8 @@ condition|;
 name|i
 operator|++
 control|)
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"\t%d buffer = 0x%x%x, BCNT = %d,\tflags = %b %b\n"
 argument_list|,
 name|i
@@ -7555,10 +7516,8 @@ argument_list|,
 name|TRANS_MD3
 argument_list|)
 expr_stmt|;
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"\nnext_to_send = %x\n"
 argument_list|,
 name|sc
@@ -7566,10 +7525,8 @@ operator|->
 name|next_to_send
 argument_list|)
 expr_stmt|;
-name|log
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
 literal|"\n CSR0 = %b CSR1 = %x CSR2 = %x CSR3 = %x\n\n"
 argument_list|,
 name|read_csr
