@@ -4973,7 +4973,7 @@ name|log
 argument_list|(
 name|LOG_SECURITY
 operator||
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 literal|"drop session, too many entries\n"
 argument_list|)
