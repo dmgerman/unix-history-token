@@ -762,21 +762,6 @@ name|MAXKEYS
 value|(sizeof(keywrds)/sizeof(struct keyblk))
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
