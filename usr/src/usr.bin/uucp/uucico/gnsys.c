@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gnsys.c	5.3 (Berkeley) %G%"
+literal|"@(#)gnsys.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,12 +24,6 @@ begin_include
 include|#
 directive|include
 file|"uucp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_ifdef
@@ -64,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|LSIZE
-value|100
+value|128
 end_define
 
 begin_comment
@@ -83,7 +77,11 @@ comment|/* work file name suffix size */
 end_comment
 
 begin_comment
-comment|/*  *	this routine will return the next system name which has work to be done.  *	"sname" is a string of size DIRSIZ - WSUFSIZE.  *	"pre" is the prefix for work files.  *	"dir" is the directory to search.  *  *	return codes:  *		0  -  no more names  *		1  -  name returned in sname  *		FAIL  -  bad directory  */
+comment|/*LINTLIBRARY*/
+end_comment
+
+begin_comment
+comment|/*  *	this routine will return the next system name which has work to be done.  *	"sname" is a string of size DIRSIZ - WSUFSIZE.  *	"pre" is the prefix for work files.  *	"dir" is the directory to search.  *  *	return codes:  *		1  -  name returned in sname  *		SUCCESS  -  no more names  *		FAIL  -  bad directory  */
 end_comment
 
 begin_macro
@@ -385,7 +383,7 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|SUCCESS
 return|;
 block|}
 while|while
@@ -395,6 +393,7 @@ operator|>
 name|n
 condition|)
 block|{
+comment|/* We only have at most a SYSNSIZE character site name encoded 		 * in the file. However, we would like to use the full sitename 		 * if possible. If the number of chars in list[n] is< SYSNSIZE 		 * then the sitename could not have been truncated and 		 * we don't bother to check. Otherwise, we scan SYSFILE 		 * looking for the fullname and return it if we find it 		 */
 name|strcpy
 argument_list|(
 name|sname
@@ -406,6 +405,121 @@ operator|++
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|sname
+argument_list|)
+operator|>=
+name|SYSNSIZE
+condition|)
+block|{
+specifier|register
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|char
+name|line
+index|[
+name|MAXFULLNAME
+index|]
+decl_stmt|;
+name|fp
+operator|=
+name|fopen
+argument_list|(
+name|SYSFILE
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+name|ASSERT
+argument_list|(
+name|fp
+operator|!=
+name|NULL
+argument_list|,
+name|CANTOPEN
+argument_list|,
+name|SYSFILE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|cfgets
+argument_list|(
+name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+argument_list|,
+name|fp
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|p
+operator|=
+name|index
+argument_list|(
+name|line
+argument_list|,
+literal|' '
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+condition|)
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|sname
+argument_list|,
+name|line
+argument_list|,
+name|SYSNSIZE
+argument_list|)
+operator|==
+name|SAME
+condition|)
+block|{
+name|strncpy
+argument_list|(
+name|sname
+argument_list|,
+name|line
+argument_list|,
+name|MAXBASENAME
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|callok

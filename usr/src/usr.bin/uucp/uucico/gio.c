@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gio.c	5.3 (Berkeley) %G%"
+literal|"@(#)gio.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,17 +38,17 @@ directive|include
 file|<setjmp.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|jmp_buf
 name|Failbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|Retries
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -452,6 +452,10 @@ name|bytes
 operator|=
 literal|0L
 expr_stmt|;
+name|Retries
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USG
@@ -648,6 +652,30 @@ operator|.
 name|time
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Retries
+operator|>
+literal|0
+condition|)
+name|sprintf
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|text
+operator|+
+name|strlen
+argument_list|(
+name|text
+argument_list|)
+argument_list|,
+literal|" %d retries"
+argument_list|,
+name|Retries
+argument_list|)
+expr_stmt|;
 name|DEBUG
 argument_list|(
 literal|1
@@ -727,6 +755,10 @@ return|;
 name|bytes
 operator|=
 literal|0L
+expr_stmt|;
+name|Retries
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -915,6 +947,30 @@ operator|-
 name|t1
 operator|.
 name|time
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Retries
+operator|>
+literal|0
+condition|)
+name|sprintf
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|text
+operator|+
+name|strlen
+argument_list|(
+name|text
+argument_list|)
+argument_list|,
+literal|" %d retries"
+argument_list|,
+name|Retries
 argument_list|)
 expr_stmt|;
 name|DEBUG

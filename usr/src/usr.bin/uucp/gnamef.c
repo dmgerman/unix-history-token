@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gnamef.c	5.3 (Berkeley) %G%"
+literal|"@(#)gnamef.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,12 +24,6 @@ begin_include
 include|#
 directive|include
 file|"uucp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_ifdef
@@ -59,6 +53,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
 
 begin_comment
 comment|/*  *	get next file name from directory  *  *	return codes:  *		0  -  end of directory read  *		1  -  returned name  */

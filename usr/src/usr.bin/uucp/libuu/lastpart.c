@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lastpart.c	5.3 (Berkeley) %G%"
+literal|"@(#)lastpart.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -20,8 +20,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"uucp.h"
+end_include
+
 begin_comment
-comment|/*******  *	char *  *	lastpart(file)	find last part of file name  *	char *file;  *  *	return - pointer to last part  */
+comment|/*LINTLIBRARY*/
+end_comment
+
+begin_comment
+comment|/*  *	find last part of file name  *  *	return - pointer to last part  */
 end_comment
 
 begin_function
@@ -42,11 +52,6 @@ name|char
 modifier|*
 name|c
 decl_stmt|;
-name|char
-modifier|*
-name|rindex
-parameter_list|()
-function_decl|;
 name|c
 operator|=
 name|rindex
@@ -59,11 +64,10 @@ expr_stmt|;
 if|if
 condition|(
 name|c
+operator|++
 condition|)
 return|return
 name|c
-operator|+
-literal|1
 return|;
 else|else
 return|return

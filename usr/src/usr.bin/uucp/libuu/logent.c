@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logent.c	5.4 (Berkeley) %G%"
+literal|"@(#)logent.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,14 +79,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|extern
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|FILE
@@ -122,6 +114,10 @@ operator|=
 literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
 
 begin_comment
 comment|/*  *	make log entry  */
@@ -1080,7 +1076,7 @@ name|fprintf
 argument_list|(
 name|Sp
 argument_list|,
-literal|"(%ld.%02d) %s\n"
+literal|"(%ld.%02u) %s\n"
 argument_list|,
 name|clock
 operator|.

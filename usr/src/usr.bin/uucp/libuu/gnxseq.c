@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gnxseq.c	5.3 (Berkeley) %G%"
+literal|"@(#)gnxseq.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,12 +24,6 @@ begin_include
 include|#
 directive|include
 file|"uucp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_ifdef
@@ -62,22 +56,18 @@ directive|endif
 endif|sane
 end_endif
 
+begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|GNXSEQ
 end_ifdef
 
-begin_function_decl
-specifier|extern
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
-comment|/*******  *	gnxseq(rmtname)		get next conversation sequence number  *	char *rmtname;  *  *	return - 0 no entry |>0 sequence number  */
+comment|/*  *	get next conversation sequence number  *  *	return - 0 no entry |>0 sequence number  */
 end_comment
 
 begin_macro
@@ -321,7 +311,7 @@ literal|0
 expr_stmt|;
 name|name
 index|[
-literal|7
+name|MAXBASENAME
 index|]
 operator|=
 literal|'\0'
@@ -338,11 +328,13 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|strcmp
+name|strncmp
 argument_list|(
 name|rmtname
 argument_list|,
 name|name
+argument_list|,
+name|MAXBASENAME
 argument_list|)
 operator|!=
 name|SAME
