@@ -18,19 +18,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Defining EXTRA_SANITY will enable extra checks which are related  * to internal conditions and consistency in malloc.c. This has a  * noticeable runtime performance hit, and generally will not do you  * any good unless you fiddle with the internals of malloc or want  * to catch random pointer corruption as early as possible.  */
+comment|/*  * Defining MALLOC_EXTRA_SANITY will enable extra checks which are related  * to internal conditions and consistency in malloc.c. This has a  * noticeable runtime performance hit, and generally will not do you  * any good unless you fiddle with the internals of malloc or want  * to catch random pointer corruption as early as possible.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MALLOC_EXTRA_SANITY
+name|MALLOC_MALLOC_EXTRA_SANITY
 end_ifndef
 
 begin_undef
 undef|#
 directive|undef
-name|MALLOC_EXTRA_SANITY
+name|MALLOC_MALLOC_EXTRA_SANITY
 end_undef
 
 begin_endif
@@ -268,7 +268,7 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|THREAD_LOCK
+name|_MALLOC_LOCK
 parameter_list|()
 value|if (__isthreaded) _SPINLOCK(&thread_lock);
 end_define
@@ -276,7 +276,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|THREAD_UNLOCK
+name|_MALLOC_UNLOCK
 parameter_list|()
 value|if (__isthreaded) _SPINUNLOCK(&thread_lock);
 end_define
@@ -762,13 +762,13 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|THREAD_LOCK
+name|_MALLOC_LOCK
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|THREAD_LOCK
+name|_MALLOC_LOCK
 parameter_list|()
 end_define
 
@@ -780,13 +780,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|THREAD_UNLOCK
+name|_MALLOC_UNLOCK
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|THREAD_UNLOCK
+name|_MALLOC_UNLOCK
 parameter_list|()
 end_define
 
@@ -1461,7 +1461,9 @@ operator|<
 name|result
 condition|)
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 if|if
 condition|(
@@ -1473,17 +1475,19 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|EXTRA_SANITY
+name|MALLOC_EXTRA_SANITY
 name|wrterror
 argument_list|(
-literal|"(ES): map_pages fails\n"
+literal|"(ES): map_pages fails.\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EXTRA_SANITY */
+comment|/* MALLOC_EXTRA_SANITY */
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 name|last_index
@@ -1516,11 +1520,14 @@ name|last_index
 argument_list|)
 condition|)
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
-empty_stmt|;
 return|return
+operator|(
 name|result
+operator|)
 return|;
 block|}
 end_function
@@ -1600,17 +1607,12 @@ if|if
 condition|(
 name|new
 operator|==
-operator|(
-expr|struct
-name|pginfo
-operator|*
-operator|*
-operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* Copy the old stuff */
 name|memcpy
@@ -1655,7 +1657,9 @@ name|oldlen
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -1717,14 +1721,14 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|EXTRA_SANITY
+name|MALLOC_EXTRA_SANITY
 name|malloc_junk
 operator|=
 literal|1
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EXTRA_SANITY */
+comment|/* MALLOC_EXTRA_SANITY */
 for|for
 control|(
 name|i
@@ -1988,7 +1992,7 @@ literal|0
 expr_stmt|;
 name|wrtwarning
 argument_list|(
-literal|"unknown char in MALLOC_OPTIONS\n"
+literal|"unknown char in MALLOC_OPTIONS.\n"
 argument_list|)
 expr_stmt|;
 name|malloc_abort
@@ -2075,7 +2079,7 @@ literal|1
 condition|)
 name|wrterror
 argument_list|(
-literal|"mmap(2) failed, check limits\n"
+literal|"mmap(2) failed, check limits.\n"
 argument_list|)
 expr_stmt|;
 comment|/*      * We need a maximum of malloc_pageshift buckets, steal these from the      * front of the page_directory;      */
@@ -2211,7 +2215,7 @@ control|)
 block|{
 ifdef|#
 directive|ifdef
-name|EXTRA_SANITY
+name|MALLOC_EXTRA_SANITY
 if|if
 condition|(
 name|pf
@@ -2222,7 +2226,7 @@ name|malloc_pagemask
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): junk length entry on free_list\n"
+literal|"(ES): junk length entry on free_list.\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2234,7 +2238,7 @@ name|size
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): zero length entry on free_list\n"
+literal|"(ES): zero length entry on free_list.\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2249,7 +2253,7 @@ name|end
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): zero entry on free_list\n"
+literal|"(ES): zero entry on free_list.\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2264,7 +2268,7 @@ name|end
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): sick entry on free_list\n"
+literal|"(ES): sick entry on free_list.\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2288,7 +2292,7 @@ argument_list|)
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): entry on free_list past brk\n"
+literal|"(ES): entry on free_list past brk.\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2307,7 +2311,7 @@ name|MALLOC_FREE
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): non-free first page on free-list\n"
+literal|"(ES): non-free first page on free-list.\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2328,12 +2332,12 @@ name|MALLOC_FREE
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): non-free last page on free-list\n"
+literal|"(ES): non-free last page on free-list.\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EXTRA_SANITY */
+comment|/* MALLOC_EXTRA_SANITY */
 if|if
 condition|(
 name|pf
@@ -2420,7 +2424,7 @@ break|break;
 block|}
 ifdef|#
 directive|ifdef
-name|EXTRA_SANITY
+name|MALLOC_EXTRA_SANITY
 if|if
 condition|(
 name|p
@@ -2437,12 +2441,12 @@ name|MALLOC_FREE
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): allocated non-free page on free-list\n"
+literal|"(ES): allocated non-free page on free-list.\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EXTRA_SANITY */
+comment|/* MALLOC_EXTRA_SANITY */
 name|size
 operator|>>=
 name|malloc_pageshift
@@ -2539,7 +2543,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|p
+operator|)
 return|;
 block|}
 end_function
@@ -2588,7 +2594,9 @@ operator|!
 name|pp
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* Find length of admin structure */
 name|l
@@ -2682,7 +2690,9 @@ name|pp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -2877,7 +2887,9 @@ name|bp
 expr_stmt|;
 comment|/* MALLOC_UNLOCK */
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -2963,7 +2975,9 @@ name|j
 argument_list|)
 condition|)
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 name|bp
 operator|=
@@ -3092,6 +3106,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
 name|u_char
 operator|*
 operator|)
@@ -3100,6 +3115,7 @@ operator|->
 name|page
 operator|+
 name|k
+operator|)
 return|;
 block|}
 end_function
@@ -3142,7 +3158,7 @@ condition|)
 comment|/* Check for overflow */
 name|result
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 elseif|else
 if|if
@@ -3160,7 +3176,7 @@ name|page_dir
 condition|)
 name|result
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 elseif|else
 if|if
@@ -3189,6 +3205,8 @@ condition|(
 name|malloc_zero
 operator|&&
 name|result
+operator|!=
+name|NULL
 condition|)
 name|memset
 argument_list|(
@@ -3200,7 +3218,9 @@ name|size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|result
+operator|)
 return|;
 block|}
 end_function
@@ -3264,11 +3284,13 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"junk pointer, too low to make sense\n"
+literal|"junk pointer, too low to make sense.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 if|if
@@ -3280,11 +3302,13 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"junk pointer, too high to make sense\n"
+literal|"junk pointer, too high to make sense.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 name|mp
@@ -3317,11 +3341,13 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"modified (page-) pointer\n"
+literal|"modified (page-) pointer.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 comment|/* Find the size in bytes */
@@ -3364,9 +3390,11 @@ condition|)
 block|{
 comment|/* .. or can free a page, */
 return|return
+operator|(
 name|ptr
+operator|)
 return|;
-comment|/* don't do anything. */
+comment|/* ..don't do anything else. */
 block|}
 block|}
 elseif|else
@@ -3403,11 +3431,13 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"modified (chunk-) pointer\n"
+literal|"modified (chunk-) pointer.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 comment|/* Find the chunk index in the page */
@@ -3457,11 +3487,13 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"chunk is already free\n"
+literal|"chunk is already free.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 name|osize
@@ -3500,20 +3532,24 @@ condition|)
 block|{
 comment|/* ..(if there is one) */
 return|return
+operator|(
 name|ptr
+operator|)
 return|;
-comment|/* ..Don't do anything */
+comment|/* ..don't do anything else. */
 block|}
 block|}
 else|else
 block|{
 name|wrtwarning
 argument_list|(
-literal|"pointer to wrong page\n"
+literal|"pointer to wrong page.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 name|p
@@ -3571,7 +3607,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|p
+operator|)
 return|;
 block|}
 end_function
@@ -3629,7 +3667,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"page is already free\n"
+literal|"page is already free.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3643,7 +3681,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"pointer to wrong page\n"
+literal|"pointer to wrong page.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3660,7 +3698,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"modified (page-) pointer\n"
+literal|"modified (page-) pointer.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4061,7 +4099,7 @@ else|else
 block|{
 name|wrterror
 argument_list|(
-literal|"freelist is destroyed\n"
+literal|"freelist is destroyed.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4252,7 +4290,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"modified (chunk-) pointer\n"
+literal|"modified (chunk-) pointer.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4281,7 +4319,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"chunk is already free\n"
+literal|"chunk is already free.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4433,7 +4471,7 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EXTRA_SANITY
+name|MALLOC_EXTRA_SANITY
 if|if
 condition|(
 operator|!
@@ -4442,12 +4480,12 @@ name|mp
 condition|)
 name|wrterror
 argument_list|(
-literal|"(ES): Not on queue\n"
+literal|"(ES): Not on queue.\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EXTRA_SANITY */
+comment|/* MALLOC_EXTRA_SANITY */
 block|}
 operator|*
 name|mp
@@ -4532,7 +4570,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"malloc() has never been called\n"
+literal|"malloc() has never been called.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4559,7 +4597,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"junk pointer, too low to make sense\n"
+literal|"junk pointer, too low to make sense.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4573,7 +4611,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"junk pointer, too high to make sense\n"
+literal|"junk pointer, too high to make sense.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4631,7 +4669,7 @@ name|void
 modifier|*
 name|r
 decl_stmt|;
-name|THREAD_LOCK
+name|_MALLOC_LOCK
 argument_list|()
 expr_stmt|;
 name|malloc_func
@@ -4646,13 +4684,13 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"recursive call\n"
+literal|"recursive call.\n"
 argument_list|)
 expr_stmt|;
 name|malloc_active
 operator|--
 expr_stmt|;
-name|THREAD_UNLOCK
+name|_MALLOC_UNLOCK
 argument_list|()
 expr_stmt|;
 name|errno
@@ -4661,7 +4699,7 @@ name|EDOOFUS
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -4714,7 +4752,7 @@ expr_stmt|;
 name|malloc_active
 operator|--
 expr_stmt|;
-name|THREAD_UNLOCK
+name|_MALLOC_UNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -4726,7 +4764,7 @@ name|r
 condition|)
 name|wrterror
 argument_list|(
-literal|"out of memory\n"
+literal|"out of memory.\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4755,7 +4793,7 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
-name|THREAD_LOCK
+name|_MALLOC_LOCK
 argument_list|()
 expr_stmt|;
 name|malloc_func
@@ -4770,13 +4808,13 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"recursive call\n"
+literal|"recursive call.\n"
 argument_list|)
 expr_stmt|;
 name|malloc_active
 operator|--
 expr_stmt|;
-name|THREAD_UNLOCK
+name|_MALLOC_UNLOCK
 argument_list|()
 expr_stmt|;
 name|errno
@@ -4808,7 +4846,7 @@ expr_stmt|;
 name|malloc_active
 operator|--
 expr_stmt|;
-name|THREAD_UNLOCK
+name|_MALLOC_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return;
@@ -4837,7 +4875,7 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-name|THREAD_LOCK
+name|_MALLOC_LOCK
 argument_list|()
 expr_stmt|;
 name|malloc_func
@@ -4852,13 +4890,13 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"recursive call\n"
+literal|"recursive call.\n"
 argument_list|)
 expr_stmt|;
 name|malloc_active
 operator|--
 expr_stmt|;
-name|THREAD_UNLOCK
+name|_MALLOC_UNLOCK
 argument_list|()
 expr_stmt|;
 name|errno
@@ -4867,7 +4905,7 @@ name|EDOOFUS
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -4881,7 +4919,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"malloc() has never been called\n"
+literal|"malloc() has never been called.\n"
 argument_list|)
 expr_stmt|;
 name|ptr
@@ -4997,7 +5035,7 @@ expr_stmt|;
 name|malloc_active
 operator|--
 expr_stmt|;
-name|THREAD_UNLOCK
+name|_MALLOC_UNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -5008,7 +5046,7 @@ name|err
 condition|)
 name|wrterror
 argument_list|(
-literal|"out of memory\n"
+literal|"out of memory.\n"
 argument_list|)
 expr_stmt|;
 if|if
