@@ -1012,7 +1012,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|tsleep
+name|msleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -1021,6 +1021,11 @@ operator|&
 name|so
 operator|->
 name|so_timeo
+argument_list|,
+name|SOCK_MTX
+argument_list|(
+name|so
+argument_list|)
 argument_list|,
 name|PSOCK
 argument_list|,
