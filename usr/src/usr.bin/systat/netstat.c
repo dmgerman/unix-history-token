@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)netstat.c	5.4 (Berkeley) %G%"
+literal|"@(#)netstat.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -344,6 +344,17 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|enter
+argument_list|()
+decl_stmt|,
+name|inetprint
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|char
@@ -635,17 +646,6 @@ expr_stmt|;
 if|if
 condition|(
 name|protos
-operator|==
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"No protocols to display"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|protos
 operator|&
 name|TCP
 condition|)
@@ -682,6 +682,15 @@ name|istcp
 operator|=
 literal|0
 expr_stmt|;
+else|else
+block|{
+name|error
+argument_list|(
+literal|"No protocols to display"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|again
 label|:
 name|lseek
@@ -973,49 +982,38 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|enter
-argument_list|(
+parameter_list|(
 name|inp
-argument_list|,
+parameter_list|,
 name|so
-argument_list|,
+parameter_list|,
 name|state
-argument_list|,
+parameter_list|,
 name|proto
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|inpcb
-operator|*
+modifier|*
 name|inp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|socket
 modifier|*
 name|so
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|state
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|proto
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1247,7 +1245,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* column locations */
@@ -1871,38 +1869,30 @@ begin_comment
 comment|/*  * Pretty print an Internet address (net address + port).  * If the nflag was specified, use numbers instead of names.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|inetprint
-argument_list|(
+parameter_list|(
 name|in
-argument_list|,
+parameter_list|,
 name|port
-argument_list|,
+parameter_list|,
 name|proto
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|in_addr
-operator|*
+modifier|*
 name|in
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|port
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|proto
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|servent
@@ -2040,7 +2030,7 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Construct an Internet address representation.  * If the nflag has been supplied, give   * numeric value, otherwise try for symbolic name.  */
