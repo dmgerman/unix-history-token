@@ -12,21 +12,74 @@ comment|/*-  * Copyright (c) 2003 Nathan L. Binkert<binkertn@umich.edu>  *  * Pe
 end_comment
 
 begin_comment
-comment|/* Values to keep the different chip revisions apart */
+comment|/* Values to keep the different chip revisions apart (SK_CHIPVER). */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SK_GENESIS
-value|0
+value|0x0A
 end_define
 
 begin_define
 define|#
 directive|define
 name|SK_YUKON
-value|1
+value|0xB0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_YUKON_LITE
+value|0xB1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_YUKON_LP
+value|0xB2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_YUKON_FAMILY
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xB0)
+end_define
+
+begin_comment
+comment|/* Known revisions in SK_CONFIG. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_YUKON_LITE_REV_A0
+value|0x0
+end_define
+
+begin_comment
+comment|/* invented, see test in skc_attach. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SK_YUKON_LITE_REV_A1
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_YUKON_LITE_REV_A3
+value|0x7
 end_define
 
 begin_comment
@@ -7529,7 +7582,7 @@ begin_define
 define|#
 directive|define
 name|SK_JSLOTS
-value|384
+value|((SK_RX_RING_CNT * 3) / 2)
 end_define
 
 begin_define
@@ -7755,6 +7808,12 @@ comment|/* controller number */
 name|u_int8_t
 name|sk_type
 decl_stmt|;
+name|u_int8_t
+name|sk_rev
+decl_stmt|;
+name|u_int8_t
+name|spare
+decl_stmt|;
 name|char
 modifier|*
 name|sk_vpd_prodname
@@ -7957,9 +8016,33 @@ argument|sk_jpool_entry
 argument_list|)
 name|sk_jinuse_listhead
 expr_stmt|;
+name|struct
+name|mtx
+name|sk_jlist_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SK_JLIST_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sk_jlist_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_JLIST_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sk_jlist_mtx)
+end_define
 
 begin_define
 define|#
