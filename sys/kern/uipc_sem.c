@@ -2624,8 +2624,7 @@ return|;
 block|}
 return|return
 operator|(
-operator|-
-literal|1
+name|EINVAL
 operator|)
 return|;
 block|}
@@ -3108,12 +3107,6 @@ name|td_proc
 argument_list|,
 name|ks
 argument_list|)
-operator|==
-literal|0
-condition|?
-literal|0
-else|:
-name|EINVAL
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
@@ -3123,8 +3116,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|error
 operator|)
 return|;
 block|}
