@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/mpu401.c  *  * The low level driver for Roland MPU-401 compatible Midi cards.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * mpu401.c,v 1.9 1994/10/01 02:16:49 swallace Exp  */
+comment|/*  * sound/mpu401.c  *  * The low level driver for Roland MPU-401 compatible Midi cards.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Modified:  *  Riccardo Facchetti  24 Mar 1995  *  - Added the Audio Excel DSP 16 initialization routine.  */
 end_comment
 
 begin_define
@@ -30,11 +30,19 @@ end_ifdef
 begin_if
 if|#
 directive|if
+operator|(
 operator|!
 name|defined
 argument_list|(
 name|EXCLUDE_MPU401
 argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|EXCLUDE_MPU_EMU
+argument_list|)
+operator|)
 operator|&&
 operator|!
 name|defined
@@ -42,6 +50,12 @@ argument_list|(
 name|EXCLUDE_MIDI
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|"coproc.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -193,12 +207,8 @@ name|char
 name|data
 parameter_list|)
 function_decl|;
-name|unsigned
-name|short
-name|controls
-index|[
-literal|32
-index|]
+name|int
+name|shared_irq
 decl_stmt|;
 block|}
 struct|;
@@ -366,6 +376,56 @@ name|irq2dev
 index|[
 literal|16
 index|]
+init|=
+block|{
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -616,7 +676,7 @@ parameter_list|(
 name|cmd
 parameter_list|)
 define|\
-value|if (devc->opened& OPEN_READ) \ { \   int len; \   unsigned char obuf[8]; \   cmd; \   seq_input_event(obuf, len); \ }
+value|{ \   int len; \   unsigned char obuf[8]; \   cmd; \   seq_input_event(obuf, len); \ }
 end_define
 
 begin_define
@@ -642,398 +702,6 @@ name|x
 parameter_list|)
 value|len=x
 end_define
-
-begin_function
-specifier|static
-name|void
-name|do_midi_msg
-parameter_list|(
-name|struct
-name|mpu_config
-modifier|*
-name|devc
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-name|msg
-parameter_list|,
-name|int
-name|mlen
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|msg
-index|[
-literal|0
-index|]
-operator|&
-literal|0xf0
-condition|)
-block|{
-case|case
-literal|0x90
-case|:
-if|if
-condition|(
-name|msg
-index|[
-literal|2
-index|]
-operator|!=
-literal|0
-condition|)
-block|{
-name|STORE
-argument_list|(
-name|SEQ_START_NOTE
-argument_list|(
-name|devc
-operator|->
-name|synthno
-argument_list|,
-name|msg
-index|[
-literal|0
-index|]
-operator|&
-literal|0x0f
-argument_list|,
-name|msg
-index|[
-literal|1
-index|]
-argument_list|,
-name|msg
-index|[
-literal|2
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-name|msg
-index|[
-literal|2
-index|]
-operator|=
-literal|64
-expr_stmt|;
-case|case
-literal|0x80
-case|:
-name|STORE
-argument_list|(
-name|SEQ_STOP_NOTE
-argument_list|(
-name|devc
-operator|->
-name|synthno
-argument_list|,
-name|msg
-index|[
-literal|0
-index|]
-operator|&
-literal|0x0f
-argument_list|,
-name|msg
-index|[
-literal|1
-index|]
-argument_list|,
-name|msg
-index|[
-literal|2
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0xA0
-case|:
-name|STORE
-argument_list|(
-name|SEQ_KEY_PRESSURE
-argument_list|(
-name|devc
-operator|->
-name|synthno
-argument_list|,
-name|msg
-index|[
-literal|0
-index|]
-operator|&
-literal|0x0f
-argument_list|,
-name|msg
-index|[
-literal|1
-index|]
-argument_list|,
-name|msg
-index|[
-literal|2
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0xB0
-case|:
-comment|/*  * Fix the controller value (combine MSB and LSB)  */
-if|if
-condition|(
-name|msg
-index|[
-literal|1
-index|]
-operator|<
-literal|64
-condition|)
-block|{
-name|int
-name|ctrl
-init|=
-name|msg
-index|[
-literal|1
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|ctrl
-operator|<
-literal|32
-condition|)
-block|{
-name|devc
-operator|->
-name|controls
-index|[
-name|ctrl
-index|]
-operator|=
-operator|(
-name|msg
-index|[
-literal|2
-index|]
-operator|&
-literal|0x7f
-operator|)
-operator|<<
-literal|7
-expr_stmt|;
-block|}
-else|else
-block|{
-name|ctrl
-operator|-=
-literal|32
-expr_stmt|;
-name|devc
-operator|->
-name|controls
-index|[
-name|ctrl
-index|]
-operator|=
-operator|(
-name|devc
-operator|->
-name|controls
-index|[
-name|ctrl
-index|]
-operator|&
-operator|~
-literal|0x7f
-operator|)
-operator||
-operator|(
-name|msg
-index|[
-literal|2
-index|]
-operator|&
-literal|0x7f
-operator|)
-expr_stmt|;
-block|}
-name|STORE
-argument_list|(
-name|SEQ_CONTROL
-argument_list|(
-name|devc
-operator|->
-name|synthno
-argument_list|,
-name|msg
-index|[
-literal|0
-index|]
-operator|&
-literal|0x0f
-argument_list|,
-name|msg
-index|[
-literal|1
-index|]
-argument_list|,
-name|devc
-operator|->
-name|controls
-index|[
-name|ctrl
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|STORE
-argument_list|(
-name|SEQ_CONTROL
-argument_list|(
-name|devc
-operator|->
-name|synthno
-argument_list|,
-name|msg
-index|[
-literal|0
-index|]
-operator|&
-literal|0x0f
-argument_list|,
-name|msg
-index|[
-literal|1
-index|]
-argument_list|,
-name|msg
-index|[
-literal|2
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0xC0
-case|:
-name|STORE
-argument_list|(
-name|SEQ_SET_PATCH
-argument_list|(
-name|devc
-operator|->
-name|synthno
-argument_list|,
-name|msg
-index|[
-literal|0
-index|]
-operator|&
-literal|0x0f
-argument_list|,
-name|msg
-index|[
-literal|1
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0xD0
-case|:
-name|STORE
-argument_list|(
-name|SEQ_CHN_PRESSURE
-argument_list|(
-name|devc
-operator|->
-name|synthno
-argument_list|,
-name|msg
-index|[
-literal|0
-index|]
-operator|&
-literal|0x0f
-argument_list|,
-name|msg
-index|[
-literal|1
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0xE0
-case|:
-name|STORE
-argument_list|(
-name|SEQ_BENDER
-argument_list|(
-name|devc
-operator|->
-name|synthno
-argument_list|,
-name|msg
-index|[
-literal|0
-index|]
-operator|&
-literal|0x0f
-argument_list|,
-operator|(
-name|msg
-index|[
-literal|1
-index|]
-operator|%
-literal|0x7f
-operator|)
-operator||
-operator|(
-operator|(
-name|msg
-index|[
-literal|2
-index|]
-operator|&
-literal|0x7f
-operator|)
-operator|<<
-literal|7
-operator|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|printk
-argument_list|(
-literal|"MPU: Unknown midi channel message %02x\n"
-argument_list|,
-name|msg
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -1279,6 +947,8 @@ expr_stmt|;
 name|do_midi_msg
 argument_list|(
 name|devc
+operator|->
+name|synthno
 argument_list|,
 name|devc
 operator|->
@@ -1350,7 +1020,7 @@ name|last_status
 operator|=
 name|midic
 expr_stmt|;
-comment|/* printk("midi msg "); */
+comment|/* printk ("midi msg "); */
 name|msg
 operator|-=
 literal|8
@@ -1397,6 +1067,8 @@ expr_stmt|;
 name|do_midi_msg
 argument_list|(
 name|devc
+operator|->
+name|synthno
 argument_list|,
 name|devc
 operator|->
@@ -1486,7 +1158,7 @@ name|m_state
 operator|=
 name|ST_INIT
 expr_stmt|;
-comment|/*  *    Real time messages  */
+comment|/* 	     *    Real time messages 	   */
 case|case
 literal|0xf8
 case|:
@@ -1767,6 +1439,8 @@ expr_stmt|;
 name|do_midi_msg
 argument_list|(
 name|devc
+operator|->
+name|synthno
 argument_list|,
 name|devc
 operator|->
@@ -1826,6 +1500,9 @@ decl_stmt|;
 name|int
 name|busy
 decl_stmt|;
+name|int
+name|n
+decl_stmt|;
 name|DISABLE_INTR
 argument_list|(
 name|flags
@@ -1852,7 +1529,12 @@ if|if
 condition|(
 name|busy
 condition|)
+comment|/* Already inside the scanner */
 return|return;
+name|n
+operator|=
+literal|50
+expr_stmt|;
 while|while
 condition|(
 name|input_avail
@@ -1861,6 +1543,11 @@ name|devc
 operator|->
 name|base
 argument_list|)
+operator|&&
+name|n
+operator|--
+operator|>
+literal|0
 condition|)
 block|{
 name|unsigned
@@ -1927,13 +1614,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
+begin_decl_stmt
 name|void
 name|mpuintr
-parameter_list|(
-name|int
+argument_list|(
+name|INT_HANDLER_PARMS
+argument_list|(
 name|irq
-parameter_list|)
+argument_list|,
+name|dummy
+argument_list|)
+argument_list|)
 block|{
 name|struct
 name|mpu_config
@@ -1986,13 +1677,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printk
-argument_list|(
-literal|"MPU-401: Interrupt #%d?\n"
-argument_list|,
-name|irq
-argument_list|)
-expr_stmt|;
+comment|/* printk ("MPU-401: Interrupt #%d?\n", irq); */
 return|return;
 block|}
 name|devc
@@ -2003,6 +1688,15 @@ index|[
 name|dev
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|input_avail
+argument_list|(
+name|devc
+operator|->
+name|base
+argument_list|)
+condition|)
 if|if
 condition|(
 name|devc
@@ -2025,22 +1719,24 @@ operator|==
 name|MODE_SYNTH
 operator|)
 condition|)
-if|if
-condition|(
-name|input_avail
-argument_list|(
-name|devc
-operator|->
-name|base
-argument_list|)
-condition|)
 name|mpu401_input_loop
 argument_list|(
 name|devc
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+comment|/* Dummy read (just to acknowledge the interrupt) */
+name|read_data
+argument_list|(
+name|devc
+operator|->
+name|base
+argument_list|)
+expr_stmt|;
 block|}
-end_function
+block|}
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -2129,6 +1825,46 @@ name|EBUSY
 argument_list|)
 return|;
 block|}
+comment|/*      *  Verify that the device is really running.      *  Some devices (such as Ensoniq SoundScape don't      *  work before the on board processor (OBP) is initialized      *  by downloadin it's microcode.    */
+if|if
+condition|(
+operator|!
+name|devc
+operator|->
+name|initialized
+condition|)
+block|{
+if|if
+condition|(
+name|mpu401_status
+argument_list|(
+name|devc
+operator|->
+name|base
+argument_list|)
+operator|==
+literal|0xff
+condition|)
+comment|/* Bus float */
+block|{
+name|printk
+argument_list|(
+literal|"MPU-401: Device not initialized properly\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|RET_ERROR
+argument_list|(
+name|EIO
+argument_list|)
+return|;
+block|}
+name|reset_mpu401
+argument_list|(
+name|devc
+argument_list|)
+expr_stmt|;
+block|}
 name|irq2dev
 index|[
 name|devc
@@ -2138,6 +1874,14 @@ index|]
 operator|=
 name|dev
 expr_stmt|;
+if|if
+condition|(
+name|devc
+operator|->
+name|shared_irq
+operator|==
+literal|0
+condition|)
 if|if
 condition|(
 operator|(
@@ -2150,14 +1894,88 @@ operator|->
 name|irq
 argument_list|,
 name|mpuintr
+argument_list|,
+name|midi_devs
+index|[
+name|dev
+index|]
+operator|->
+name|info
+operator|.
+name|name
 argument_list|)
 operator|<
 literal|0
 operator|)
 condition|)
+block|{
 return|return
 name|err
 return|;
+block|}
+if|if
+condition|(
+name|midi_devs
+index|[
+name|dev
+index|]
+operator|->
+name|coproc
+condition|)
+if|if
+condition|(
+operator|(
+name|err
+operator|=
+name|midi_devs
+index|[
+name|dev
+index|]
+operator|->
+name|coproc
+operator|->
+name|open
+argument_list|(
+name|midi_devs
+index|[
+name|dev
+index|]
+operator|->
+name|coproc
+operator|->
+name|devc
+argument_list|,
+name|COPR_MIDI
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|devc
+operator|->
+name|shared_irq
+operator|==
+literal|0
+condition|)
+name|snd_release_irq
+argument_list|(
+name|devc
+operator|->
+name|irq
+argument_list|)
+expr_stmt|;
+name|printk
+argument_list|(
+literal|"MPU-401: Can't access coprocessor device\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|err
+return|;
+block|}
 name|set_uart_mode
 argument_list|(
 name|dev
@@ -2242,6 +2060,14 @@ name|mode
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|devc
+operator|->
+name|shared_irq
+operator|==
+literal|0
+condition|)
 name|snd_release_irq
 argument_list|(
 name|devc
@@ -2255,15 +2081,35 @@ name|inputintr
 operator|=
 name|NULL
 expr_stmt|;
-name|irq2dev
+if|if
+condition|(
+name|midi_devs
 index|[
-name|devc
-operator|->
-name|irq
+name|dev
 index|]
-operator|=
-operator|-
-literal|1
+operator|->
+name|coproc
+condition|)
+name|midi_devs
+index|[
+name|dev
+index|]
+operator|->
+name|coproc
+operator|->
+name|close
+argument_list|(
+name|midi_devs
+index|[
+name|dev
+index|]
+operator|->
+name|coproc
+operator|->
+name|devc
+argument_list|,
+name|COPR_MIDI
+argument_list|)
 expr_stmt|;
 name|devc
 operator|->
@@ -2311,7 +2157,7 @@ if|#
 directive|if
 literal|0
 comment|/*    * Test for input since pending input seems to block the output.    */
-block|if (input_avail (devc->base))     mpu401_input_loop (devc);
+block|if (input_avail (devc->base))     {       mpu401_input_loop (devc);     }
 endif|#
 directive|endif
 comment|/*    * Sometimes it takes about 13000 loops before the output becomes ready    * (After reset). Normally it takes just about 10 loops.    */
@@ -2319,7 +2165,7 @@ for|for
 control|(
 name|timeout
 operator|=
-literal|30000
+literal|3000
 init|;
 name|timeout
 operator|>
@@ -2337,7 +2183,6 @@ name|timeout
 operator|--
 control|)
 empty_stmt|;
-comment|/* 										 * Wait 										 */
 name|DISABLE_INTR
 argument_list|(
 name|flags
@@ -2466,28 +2311,39 @@ name|devc
 argument_list|)
 expr_stmt|;
 comment|/*    * Sometimes it takes about 30000 loops before the output becomes ready    * (After reset). Normally it takes just about 10 loops.    */
-for|for
-control|(
 name|timeout
 operator|=
-literal|500000
-init|;
-name|timeout
-operator|>
-literal|0
-operator|&&
-operator|!
-name|output_ready
-argument_list|(
-name|devc
-operator|->
-name|base
-argument_list|)
-condition|;
+literal|30000
+expr_stmt|;
+name|retry
+label|:
+if|if
+condition|(
 name|timeout
 operator|--
-control|)
-empty_stmt|;
+operator|<=
+literal|0
+condition|)
+block|{
+name|printk
+argument_list|(
+literal|"MPU-401: Command (0x%x) timeout\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|cmd
+operator|->
+name|cmd
+argument_list|)
+expr_stmt|;
+return|return
+name|RET_ERROR
+argument_list|(
+name|EIO
+argument_list|)
+return|;
+block|}
 name|DISABLE_INTR
 argument_list|(
 name|flags
@@ -2504,29 +2360,14 @@ name|base
 argument_list|)
 condition|)
 block|{
-name|printk
-argument_list|(
-literal|"MPU-401: Command (0x%x) timeout\n"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|cmd
-operator|->
-name|cmd
-argument_list|)
-expr_stmt|;
 name|RESTORE_INTR
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-return|return
-name|RET_ERROR
-argument_list|(
-name|EIO
-argument_list|)
-return|;
+goto|goto
+name|retry
+goto|;
 block|}
 name|write_command
 argument_list|(
@@ -2547,7 +2388,7 @@ for|for
 control|(
 name|timeout
 operator|=
-literal|500000
+literal|50000
 init|;
 name|timeout
 operator|>
@@ -2568,6 +2409,7 @@ operator|->
 name|base
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 name|mpu_input_scanner
@@ -2588,6 +2430,7 @@ name|ok
 operator|=
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2599,18 +2442,7 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-name|printk
-argument_list|(
-literal|"MPU: No ACK to command (0x%x)\n"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|cmd
-operator|->
-name|cmd
-argument_list|)
-expr_stmt|;
+comment|/*       printk ("MPU: No ACK to command (0x%x)\n", (int) cmd->cmd); */
 return|return
 name|RET_ERROR
 argument_list|(
@@ -2644,7 +2476,7 @@ for|for
 control|(
 name|timeout
 operator|=
-literal|30000
+literal|3000
 init|;
 name|timeout
 operator|>
@@ -2798,20 +2630,7 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-name|printk
-argument_list|(
-literal|"MPU: No response(%d) to command (0x%x)\n"
-argument_list|,
-name|i
-argument_list|,
-operator|(
-name|int
-operator|)
-name|cmd
-operator|->
-name|cmd
-argument_list|)
-expr_stmt|;
+comment|/* printk ("MPU: No response(%d) to command (0x%x)\n", i, (int) cmd->cmd); */
 return|return
 name|RET_ERROR
 argument_list|(
@@ -3437,12 +3256,14 @@ name|midi_dev
 operator|>
 name|num_midis
 condition|)
+block|{
 return|return
 name|RET_ERROR
 argument_list|(
 name|ENXIO
 argument_list|)
 return|;
+block|}
 name|devc
 operator|=
 operator|&
@@ -3451,6 +3272,46 @@ index|[
 name|midi_dev
 index|]
 expr_stmt|;
+comment|/*      *  Verify that the device is really running.      *  Some devices (such as Ensoniq SoundScape don't      *  work before the on board processor (OBP) is initialized      *  by downloadin it's microcode.    */
+if|if
+condition|(
+operator|!
+name|devc
+operator|->
+name|initialized
+condition|)
+block|{
+if|if
+condition|(
+name|mpu401_status
+argument_list|(
+name|devc
+operator|->
+name|base
+argument_list|)
+operator|==
+literal|0xff
+condition|)
+comment|/* Bus float */
+block|{
+name|printk
+argument_list|(
+literal|"MPU-401: Device not initialized properly\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|RET_ERROR
+argument_list|(
+name|EIO
+argument_list|)
+return|;
+block|}
+name|reset_mpu401
+argument_list|(
+name|devc
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|devc
@@ -3470,12 +3331,6 @@ name|EBUSY
 argument_list|)
 return|;
 block|}
-name|devc
-operator|->
-name|opened
-operator|=
-name|mode
-expr_stmt|;
 name|devc
 operator|->
 name|mode
@@ -3505,6 +3360,14 @@ name|midi_dev
 expr_stmt|;
 if|if
 condition|(
+name|devc
+operator|->
+name|shared_irq
+operator|==
+literal|0
+condition|)
+if|if
+condition|(
 operator|(
 name|err
 operator|=
@@ -3515,14 +3378,94 @@ operator|->
 name|irq
 argument_list|,
 name|mpuintr
+argument_list|,
+name|midi_devs
+index|[
+name|midi_dev
+index|]
+operator|->
+name|info
+operator|.
+name|name
 argument_list|)
 operator|<
 literal|0
 operator|)
 condition|)
+block|{
 return|return
 name|err
 return|;
+block|}
+if|if
+condition|(
+name|midi_devs
+index|[
+name|midi_dev
+index|]
+operator|->
+name|coproc
+condition|)
+if|if
+condition|(
+operator|(
+name|err
+operator|=
+name|midi_devs
+index|[
+name|midi_dev
+index|]
+operator|->
+name|coproc
+operator|->
+name|open
+argument_list|(
+name|midi_devs
+index|[
+name|midi_dev
+index|]
+operator|->
+name|coproc
+operator|->
+name|devc
+argument_list|,
+name|COPR_MIDI
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|devc
+operator|->
+name|shared_irq
+operator|==
+literal|0
+condition|)
+name|snd_release_irq
+argument_list|(
+name|devc
+operator|->
+name|irq
+argument_list|)
+expr_stmt|;
+name|printk
+argument_list|(
+literal|"MPU-401: Can't access coprocessor device\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|err
+return|;
+block|}
+name|devc
+operator|->
+name|opened
+operator|=
+name|mode
+expr_stmt|;
 name|reset_mpu401
 argument_list|(
 name|devc
@@ -3539,22 +3482,22 @@ name|exec_cmd
 argument_list|(
 name|midi_dev
 argument_list|,
-literal|0x34
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Return timing bytes in stop mode */
-name|exec_cmd
-argument_list|(
-name|midi_dev
-argument_list|,
 literal|0x8B
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Enable data in stop mode */
+name|exec_cmd
+argument_list|(
+name|midi_dev
+argument_list|,
+literal|0x34
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Return timing bytes in stop mode */
 block|}
 return|return
 literal|0
@@ -3616,18 +3559,14 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Disable data in stopped mode */
+if|if
+condition|(
 name|devc
 operator|->
-name|opened
-operator|=
+name|shared_irq
+operator|==
 literal|0
-expr_stmt|;
-name|devc
-operator|->
-name|mode
-operator|=
-literal|0
-expr_stmt|;
+condition|)
 name|snd_release_irq
 argument_list|(
 name|devc
@@ -3641,15 +3580,47 @@ name|inputintr
 operator|=
 name|NULL
 expr_stmt|;
-name|irq2dev
+if|if
+condition|(
+name|midi_devs
 index|[
+name|midi_dev
+index|]
+operator|->
+name|coproc
+condition|)
+name|midi_devs
+index|[
+name|midi_dev
+index|]
+operator|->
+name|coproc
+operator|->
+name|close
+argument_list|(
+name|midi_devs
+index|[
+name|midi_dev
+index|]
+operator|->
+name|coproc
+operator|->
+name|devc
+argument_list|,
+name|COPR_MIDI
+argument_list|)
+expr_stmt|;
 name|devc
 operator|->
-name|irq
-index|]
+name|opened
 operator|=
-operator|-
-literal|1
+literal|0
+expr_stmt|;
+name|devc
+operator|->
+name|mode
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -3718,6 +3689,11 @@ block|,
 name|midi_synth_patchmgr
 block|,
 name|midi_synth_bender
+block|,
+name|NULL
+block|,
+comment|/* alloc */
+name|midi_synth_setup_voice
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3751,6 +3727,10 @@ name|SNDCARD_MPU401
 block|}
 block|,
 name|NULL
+block|,
+block|{
+literal|0
+block|}
 block|,
 name|mpu401_open
 block|,
@@ -3828,6 +3808,18 @@ operator|<
 literal|0
 condition|)
 return|return;
+if|if
+condition|(
+operator|(
+name|tmp
+operator|&
+literal|0xf0
+operator|)
+operator|>
+literal|0x20
+condition|)
+comment|/* Why it's larger than 2.x ??? */
+return|return;
 name|devc
 operator|->
 name|version
@@ -3851,7 +3843,15 @@ operator|)
 operator|<
 literal|0
 condition|)
+block|{
+name|devc
+operator|->
+name|version
+operator|=
+literal|0
+expr_stmt|;
 return|return;
+block|}
 name|devc
 operator|->
 name|revision
@@ -3874,9 +3874,6 @@ modifier|*
 name|hw_config
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|unsigned
 name|long
 name|flags
@@ -3889,27 +3886,6 @@ name|mpu_config
 modifier|*
 name|devc
 decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|16
-condition|;
-name|i
-operator|++
-control|)
-name|irq2dev
-index|[
-name|i
-index|]
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|num_midis
@@ -4004,28 +3980,23 @@ name|m_state
 operator|=
 name|ST_INIT
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|32
-condition|;
-name|i
-operator|++
-control|)
 name|devc
 operator|->
-name|controls
-index|[
-name|i
-index|]
+name|shared_irq
 operator|=
-literal|0x2000
+name|hw_config
+operator|->
+name|always_detect
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hw_config
+operator|->
+name|always_detect
+condition|)
+block|{
+comment|/* Verify the hardware again */
 if|if
 condition|(
 operator|!
@@ -4065,6 +4036,7 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|devc
@@ -4262,9 +4234,12 @@ literal|'M'
 else|:
 literal|' '
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 name|printk
 argument_list|(
 literal|"mpu0:<MQX-%d%c MIDI Interface>"
@@ -4276,16 +4251,9 @@ literal|"<MQX-%d%c MIDI Interface>"
 argument|,
 endif|#
 directive|endif
-argument|ports, 	      revision_char);
-ifndef|#
-directive|ifndef
-name|SCO
-argument|sprintf (mpu_synth_info[num_midis].name,
+argument|ports, 	      revision_char);       sprintf (mpu_synth_info[num_midis].name,
 literal|"MQX-%d%c MIDI Interface #%d"
-argument|, 	       ports, 	       revision_char, 	       n_mpu_devs);
-endif|#
-directive|endif
-argument|}   else     {        revision_char = devc->revision ? devc->revision +
+argument|, 	       ports, 	       revision_char, 	       n_mpu_devs);     }   else     {        revision_char = devc->revision ? devc->revision +
 literal|'@'
 argument|:
 literal|' '
@@ -4296,9 +4264,12 @@ literal|'@'
 argument|)) 	revision_char =
 literal|'+'
 argument|;        devc->capabilities |= MPU_CAP_SYNC | MPU_CAP_FSK;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 argument|printk (
 literal|"mpu0:<MPU-401 MIDI Interface %d.%d%c>"
 argument|,
@@ -4315,11 +4286,7 @@ argument|)>>
 literal|4
 argument|, 	      devc->version&
 literal|0x0f
-argument|, 	      revision_char);
-ifndef|#
-directive|ifndef
-name|SCO
-argument|sprintf (mpu_synth_info[num_midis].name,
+argument|, 	      revision_char);       sprintf (mpu_synth_info[num_midis].name,
 literal|"MPU-401 %d.%d%c Midi interface #%d"
 argument|, 	       (devc->version&
 literal|0xf0
@@ -4327,19 +4294,9 @@ argument|)>>
 literal|4
 argument|, 	       devc->version&
 literal|0x0f
-argument|, 	       revision_char, 	       n_mpu_devs);
-endif|#
-directive|endif
-argument|}
-ifndef|#
-directive|ifndef
-name|SCO
-argument|strcpy (mpu401_midi_operations[num_midis].info.name, 	  mpu_synth_info[num_midis].name);
-endif|#
-directive|endif
-argument|mpu401_synth_operations[num_midis].midi_dev = devc->devno = num_midis;   mpu401_synth_operations[devc->devno].info =&mpu_synth_info[devc->devno];    if (devc->capabilities& MPU_CAP_INTLG)
+argument|, 	       revision_char, 	       n_mpu_devs);     }    strcpy (mpu401_midi_operations[num_midis].info.name, 	  mpu_synth_info[num_midis].name);    mpu401_synth_operations[num_midis].midi_dev = devc->devno = num_midis;   mpu401_synth_operations[devc->devno].info =&mpu_synth_info[devc->devno];    if (devc->capabilities& MPU_CAP_INTLG)
 comment|/* Has timer */
-argument|mpu_timer_init (num_midis);    midi_devs[num_midis++] =&mpu401_midi_operations[devc->devno];   return mem_start; }  static int reset_mpu401 (struct mpu_config *devc) {   unsigned long   flags;   int             ok, timeout, n;   int             timeout_limit;
+argument|mpu_timer_init (num_midis);    irq2dev[devc->irq] = num_midis;   midi_devs[num_midis++] =&mpu401_midi_operations[devc->devno];   return mem_start; }  static int reset_mpu401 (struct mpu_config *devc) {   unsigned long   flags;   int             ok, timeout, n;   int             timeout_limit;
 comment|/*    * Send the RESET command. Try again if no success at the first time.    * (If the device is in the UART mode, it will not ack the reset cmd).    */
 argument|ok =
 literal|0
@@ -4374,13 +4331,13 @@ argument|;   devc->uart_mode =
 literal|0
 argument|;    return ok; }  static void set_uart_mode (int dev, struct mpu_config *devc, int arg) {    if (!arg&& devc->version ==
 literal|0
-argument|)     return;    if ((devc->uart_mode ==
+argument|)     {       return;     }    if ((devc->uart_mode ==
 literal|0
 argument|) == (arg ==
 literal|0
-argument|))     return;
+argument|))     {       return;
 comment|/* Already set */
-argument|reset_mpu401 (devc);
+argument|}    reset_mpu401 (devc);
 comment|/* This exits the uart mode */
 argument|if (arg)     {       if (exec_cmd (dev, UART_MODE_ON,
 literal|0
@@ -4394,7 +4351,34 @@ argument|; 	  return; 	}     }   devc->uart_mode = arg;  }  int probe_mpu401 (st
 literal|0
 argument|;   struct mpu_config tmp_devc;    tmp_devc.base = hw_config->io_base;   tmp_devc.irq = hw_config->irq;   tmp_devc.initialized =
 literal|0
-argument|;    ok = reset_mpu401 (&tmp_devc);    return ok; }
+argument|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|EXCLUDE_AEDSP16
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|AEDSP16_MPU401
+argument_list|)
+comment|/*      * Initialize Audio Excel DSP 16 to MPU-401, before any operation.    */
+argument|InitAEDSP16_MPU401 (hw_config);
+endif|#
+directive|endif
+argument|if (hw_config->always_detect)     return
+literal|1
+argument|;    if (INB (hw_config->io_base +
+literal|1
+argument|) ==
+literal|0xff
+argument|)     return
+literal|0
+argument|;
+comment|/* Just bus float? */
+argument|ok = reset_mpu401 (&tmp_devc);    return ok; }
 comment|/*****************************************************  *      Timer stuff  ****************************************************/
 if|#
 directive|if
@@ -4414,7 +4398,7 @@ literal|8
 argument|;
 comment|/* 8*24=192 ppqn */
 argument|static volatile unsigned long next_event_time; static volatile unsigned long curr_ticks, curr_clocks; static unsigned long prev_event_time; static int      metronome_mode;  static unsigned long clocks2ticks (unsigned long clocks) {
-comment|/*  * The MPU-401 supports just a limited set of possible timebase values.  * Since the applications require more choices, the driver has to  * program the HW to do it's best and to convert between the HW and  * actual timebases.  */
+comment|/*      * The MPU-401 supports just a limited set of possible timebase values.      * Since the applications require more choices, the driver has to      * program the HW to do it's best and to convert between the HW and      * actual timebases.    */
 argument|return ((clocks * curr_timebase) + (hw_timebase /
 literal|2
 argument|)) / hw_timebase; }  static void set_timebase (int midi_dev, int val) {   int             hw_val;    if (val<
@@ -4663,9 +4647,7 @@ argument|,
 literal|0
 argument|);
 comment|/* Use SMPTE sync */
-argument|}  	return IOCTL_OUT (arg, timer_mode);       }       break;      case SNDCTL_TMR_START:       if (tmr_running) 	return
-literal|0
-argument|;       start_timer (midi_dev);       return
+argument|}  	return IOCTL_OUT (arg, timer_mode);       }       break;      case SNDCTL_TMR_START:       start_timer (midi_dev);       return
 literal|0
 argument|;       break;      case SNDCTL_TMR_STOP:       tmr_running =
 literal|0

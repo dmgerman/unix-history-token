@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/midibuf.c  *  * Device file manager for /dev/midi#  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * midibuf.c,v 1.6 1994/10/01 02:16:48 swallace Exp  */
+comment|/*  * sound/midibuf.c  *  * Device file manager for /dev/midi#  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -370,6 +370,32 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+if|if
+condition|(
+name|selinfo
+index|[
+name|dev
+index|]
+operator|.
+name|si_pid
+condition|)
+name|selwakeup
+argument_list|(
+operator|&
+name|selinfo
+index|[
+name|dev
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -383,6 +409,32 @@ name|dev
 parameter_list|)
 block|{
 comment|/*    * Currently NOP    */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+if|if
+condition|(
+name|selinfo
+index|[
+name|dev
+index|]
+operator|.
+name|si_pid
+condition|)
+name|selwakeup
+argument_list|(
+operator|&
+name|selinfo
+index|[
+name|dev
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -637,7 +689,7 @@ name|ENXIO
 argument_list|)
 return|;
 block|}
-comment|/*  *    Interrupts disabled. Be careful  */
+comment|/*      *    Interrupts disabled. Be careful    */
 name|DISABLE_INTR
 argument_list|(
 name|flags
@@ -953,7 +1005,7 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/*  * Wait until the queue is empty  */
+comment|/*      * Wait until the queue is empty    */
 if|if
 condition|(
 name|mode
@@ -973,7 +1025,7 @@ argument_list|,
 literal|0xfe
 argument_list|)
 expr_stmt|;
-comment|/* 						 * Active sensing to shut the 						 * devices 						 */
+comment|/* 						   * Active sensing to shut the 						   * devices 						 */
 while|while
 condition|(
 operator|!
@@ -1495,6 +1547,73 @@ name|dev
 operator|>>
 literal|4
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|cmd
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+operator|)
+operator|==
+literal|'C'
+condition|)
+block|{
+if|if
+condition|(
+name|midi_devs
+index|[
+name|dev
+index|]
+operator|->
+name|coproc
+condition|)
+comment|/* Coprocessor ioctl */
+return|return
+name|midi_devs
+index|[
+name|dev
+index|]
+operator|->
+name|coproc
+operator|->
+name|ioctl
+argument_list|(
+name|midi_devs
+index|[
+name|dev
+index|]
+operator|->
+name|coproc
+operator|->
+name|devc
+argument_list|,
+name|cmd
+argument_list|,
+name|arg
+argument_list|,
+literal|0
+argument_list|)
+return|;
+else|else
+name|printk
+argument_list|(
+literal|"/dev/midi%d: No coprocessor for this device\n"
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+name|RET_ERROR
+argument_list|(
+name|EREMOTEIO
+argument_list|)
+return|;
+block|}
+else|else
 switch|switch
 condition|(
 name|cmd
@@ -1620,6 +1739,25 @@ index|]
 argument_list|)
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|selrecord
+argument_list|(
+name|wait
+argument_list|,
+operator|&
+name|selinfo
+index|[
+name|dev
+index|]
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|input_sleep_flag
 index|[
 name|dev
@@ -1640,6 +1778,8 @@ argument_list|,
 name|wait
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -1662,6 +1802,25 @@ index|]
 argument_list|)
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|selrecord
+argument_list|(
+name|wait
+argument_list|,
+operator|&
+name|selinfo
+index|[
+name|dev
+index|]
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|midi_sleep_flag
 index|[
 name|dev
@@ -1682,6 +1841,8 @@ argument_list|,
 name|wait
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;

@@ -6,7 +6,7 @@ name|_PAS2_MIXER_C_
 end_define
 
 begin_comment
-comment|/*  * sound/pas2_mixer.c  *  * Mixer routines for the Pro Audio Spectrum cards.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pas2_mixer.c,v 1.7 1994/10/01 02:16:56 swallace Exp $  */
+comment|/*  * sound/pas2_mixer.c  *  * Mixer routines for the Pro Audio Spectrum cards.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -46,13 +46,20 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/* 				   * * * (what)   */
+comment|/* (what) */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
 name|translat_code
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|pas_model
 decl_stmt|;
 end_decl_stmt
 
@@ -68,7 +75,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   							 * *  * * Default * 							 * recording * source 							 * 							 * *  */
+comment|/* Default recording source */
 end_comment
 
 begin_decl_stmt
@@ -106,45 +113,100 @@ init|=
 block|{
 literal|0x3232
 block|,
-comment|/* 				 * Master Volume 				 */
+comment|/* Master Volume */
 literal|0x3232
 block|,
-comment|/* 				 * Bass 				 */
+comment|/* Bass */
 literal|0x3232
 block|,
-comment|/* 				 * Treble 				 */
+comment|/* Treble */
 literal|0x5050
 block|,
-comment|/* 				 * FM 				 */
+comment|/* FM */
 literal|0x4b4b
 block|,
-comment|/* 				 * PCM 				 */
+comment|/* PCM */
 literal|0x3232
 block|,
-comment|/* 				 * PC Speaker 				 */
+comment|/* PC Speaker */
 literal|0x4b4b
 block|,
-comment|/* 				 * Ext Line 				 */
+comment|/* Ext Line */
 literal|0x4b4b
 block|,
-comment|/* 				 * Mic 				 */
+comment|/* Mic */
 literal|0x4b4b
 block|,
-comment|/* 				 * CD 				 */
+comment|/* CD */
 literal|0x6464
 block|,
-comment|/* 				 * Recording monitor 				 */
+comment|/* Recording monitor */
 literal|0x4b4b
 block|,
-comment|/* 				 * SB PCM 				 */
+comment|/* SB PCM */
 literal|0x6464
+comment|/* Recording level */
 block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*   				 * *  * * Recording level   */
-end_comment
+begin_function
+name|void
+name|mix_write
+parameter_list|(
+name|unsigned
+name|char
+name|data
+parameter_list|,
+name|int
+name|ioaddr
+parameter_list|)
+block|{
+comment|/*    * The Revision D cards have a problem with their MVA508 interface. The    * kludge-o-rama fix is to make a 16-bit quantity with identical LSB and    * MSBs out of the output byte and to do a 16-bit out to the mixer port -    * 1. We need to do this because it isn't timing problem but chip access    * sequence problem.    */
+if|if
+condition|(
+name|pas_model
+operator|==
+name|PAS_16D
+condition|)
+block|{
+name|OUTW
+argument_list|(
+name|data
+operator||
+operator|(
+name|data
+operator|<<
+literal|8
+operator|)
+argument_list|,
+operator|(
+name|ioaddr
+operator|^
+name|translat_code
+operator|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|OUTB
+argument_list|(
+literal|0x80
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|pas_write
+argument_list|(
+name|data
+argument_list|,
+name|ioaddr
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -165,8 +227,8 @@ name|bits
 parameter_list|,
 name|int
 name|mixer
-comment|/* 				 * Input or output mixer      	      	      	      	      	      				 */
 parameter_list|)
+comment|/* Input or output mixer */
 block|{
 name|int
 name|left
@@ -409,7 +471,7 @@ block|{
 case|case
 name|SOUND_MIXER_VOLUME
 case|:
-comment|/* 				 * Master volume (0-63) 				 */
+comment|/* Master volume (0-63) */
 name|levels
 index|[
 name|whichDev
@@ -433,7 +495,7 @@ comment|/*        * Note! Bass and Treble are mono devices. Will use just the le
 case|case
 name|SOUND_MIXER_BASS
 case|:
-comment|/* 				 * Bass (0-12) 				 */
+comment|/* Bass (0-12) */
 name|levels
 index|[
 name|whichDev
@@ -456,7 +518,7 @@ break|break;
 case|case
 name|SOUND_MIXER_TREBLE
 case|:
-comment|/* 				 * Treble (0-12) 				 */
+comment|/* Treble (0-12) */
 name|levels
 index|[
 name|whichDev
@@ -479,7 +541,7 @@ break|break;
 case|case
 name|SOUND_MIXER_SYNTH
 case|:
-comment|/* 				 * Internal synthesizer (0-31) 				 */
+comment|/* Internal synthesizer (0-31) */
 name|levels
 index|[
 name|whichDev
@@ -504,7 +566,7 @@ break|break;
 case|case
 name|SOUND_MIXER_PCM
 case|:
-comment|/* 				 * PAS PCM (0-31) 				 */
+comment|/* PAS PCM (0-31) */
 name|levels
 index|[
 name|whichDev
@@ -529,7 +591,7 @@ break|break;
 case|case
 name|SOUND_MIXER_ALTPCM
 case|:
-comment|/* 				 * SB PCM (0-31) 				 */
+comment|/* SB PCM (0-31) */
 name|levels
 index|[
 name|whichDev
@@ -554,7 +616,7 @@ break|break;
 case|case
 name|SOUND_MIXER_SPEAKER
 case|:
-comment|/* 				 * PC speaker (0-31) 				 */
+comment|/* PC speaker (0-31) */
 name|levels
 index|[
 name|whichDev
@@ -579,7 +641,7 @@ break|break;
 case|case
 name|SOUND_MIXER_LINE
 case|:
-comment|/* 				 * External line (0-31) 				 */
+comment|/* External line (0-31) */
 name|levels
 index|[
 name|whichDev
@@ -604,7 +666,7 @@ break|break;
 case|case
 name|SOUND_MIXER_CD
 case|:
-comment|/* 				 * CD (0-31) 				 */
+comment|/* CD (0-31) */
 name|levels
 index|[
 name|whichDev
@@ -629,7 +691,7 @@ break|break;
 case|case
 name|SOUND_MIXER_MIC
 case|:
-comment|/* 				 * External microphone (0-31) 				 */
+comment|/* External microphone (0-31) */
 name|levels
 index|[
 name|whichDev
@@ -654,7 +716,7 @@ break|break;
 case|case
 name|SOUND_MIXER_IMIX
 case|:
-comment|/* 				 * Recording monitor (0-31) (Only available * 				 * on the Output Mixer) 				 */
+comment|/* Recording monitor (0-31) (Output mixer only) */
 name|levels
 index|[
 name|whichDev
@@ -679,7 +741,7 @@ break|break;
 case|case
 name|SOUND_MIXER_RECLEV
 case|:
-comment|/* 				 * Recording level (0-15) 				 */
+comment|/* Recording level (0-15) */
 name|levels
 index|[
 name|whichDev
@@ -789,7 +851,7 @@ operator|!
 operator|!
 name|level
 return|;
-comment|/* 				 * 0 or 1 				 */
+comment|/* 0 or 1 */
 break|break;
 case|case
 name|SOUND_MIXER_RECSRC
@@ -993,7 +1055,7 @@ argument_list|)
 return|;
 else|else
 block|{
-comment|/* 				 * Read parameters 				 */
+comment|/* 				   * Read parameters 				 */
 switch|switch
 condition|(
 name|cmd
@@ -1069,7 +1131,7 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-comment|/* 						 * No special capabilities 						 */
+comment|/* No special capabilities */
 break|break;
 case|case
 name|SOUND_MIXER_MUTE
@@ -1082,7 +1144,7 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-comment|/* 						 * No mute yet 						 */
+comment|/* No mute yet */
 break|break;
 case|case
 name|SOUND_MIXER_ENHANCE
@@ -1182,6 +1244,8 @@ name|mixer_operations
 name|pas_mixer_operations
 init|=
 block|{
+literal|"Pro Audio Spectrum 16"
+block|,
 name|pas_mixer_ioctl
 block|}
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/pas2_midi.c  *  * The low level driver for the PAS Midi Interface.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * pas2_midi.c,v 1.6 1994/10/01 02:16:55 swallace Exp  */
+comment|/*  * sound/pas2_midi.c  *  * The low level driver for the PAS Midi Interface.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -243,7 +243,7 @@ name|ctrl
 operator||=
 name|M_C_ENA_INPUT_IRQ
 expr_stmt|;
-comment|/* 					 * Enable input 					 */
+comment|/* 					   * Enable input 					 */
 name|input_opened
 operator|=
 literal|1
@@ -389,7 +389,7 @@ operator|>
 literal|13
 operator|)
 condition|)
-comment|/* 									 * Fifo 									 * full 									 */
+comment|/* 									   * Fifo 									   * full 									 */
 block|{
 return|return
 literal|0
@@ -643,6 +643,10 @@ block|,
 operator|&
 name|std_midi_synth
 block|,
+block|{
+literal|0
+block|}
+block|,
 name|pas_midi_open
 block|,
 name|pas_midi_close
@@ -869,17 +873,12 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|stat
-operator|&
-name|M_S_FRAMING_ERROR
-condition|)
-name|printk
-argument_list|(
-literal|"MIDI framing error\n"
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (stat& M_S_FRAMING_ERROR)     printk ("MIDI framing error\n");
+endif|#
+directive|endif
 if|if
 condition|(
 name|stat
@@ -913,7 +912,7 @@ argument_list|,
 name|MIDI_STATUS
 argument_list|)
 expr_stmt|;
-comment|/* 					 * Acknowledge interrupts 					 */
+comment|/* 					   * Acknowledge interrupts 					 */
 block|}
 end_function
 

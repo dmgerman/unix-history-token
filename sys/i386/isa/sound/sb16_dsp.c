@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/sb16_dsp.c  *  * The low level driver for the SoundBlaster DSP chip.  *  * (C) 1993 J. Schubert (jsb@sth.ruhr-uni-bochum.de)  *  * based on SB-driver by (C) Hannu Savolainen  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * sb16_dsp.c,v 1.8 1994/10/01 02:17:02 swallace Exp  */
+comment|/*  * sound/sb16_dsp.c  *  * The low level driver for the SoundBlaster DSP chip.  *  * (C) 1993 J. Schubert (jsb@sth.ruhr-uni-bochum.de)  *  * based on SB-driver by (C) Hannu Savolainen  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_define
@@ -84,6 +84,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|sbc_major
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sbc_minor
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|sb16_dsp_ok
@@ -93,7 +107,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   					 * *  * * Set to 1 after successful * 					 * * initialization   */
+comment|/*   					   * *  * * Set to 1 after successful * 					   * * initialization   */
 end_comment
 
 begin_decl_stmt
@@ -927,6 +941,8 @@ condition|(
 name|ALLOC_DMA_CHN
 argument_list|(
 name|dma8
+argument_list|,
+literal|"SB16 (8bit)"
 argument_list|)
 condition|)
 block|{
@@ -958,6 +974,8 @@ condition|(
 name|ALLOC_DMA_CHN
 argument_list|(
 name|dma16
+argument_list|,
+literal|"SB16 (16bit)"
 argument_list|)
 condition|)
 block|{
@@ -1826,6 +1844,11 @@ literal|0xd0
 argument_list|)
 expr_stmt|;
 block|}
+name|DMAbuf_reset_dma
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1911,12 +1934,6 @@ modifier|*
 name|hw_config
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|sbc_major
-decl_stmt|,
-name|sbc_minor
-decl_stmt|;
 if|if
 condition|(
 name|sbc_major
@@ -1927,9 +1944,6 @@ return|return
 name|mem_start
 return|;
 comment|/* Not a SB16 */
-ifndef|#
-directive|ifndef
-name|SCO
 name|sprintf
 argument_list|(
 name|sb16_dsp_operations
@@ -1943,14 +1957,15 @@ argument_list|,
 name|sbc_minor
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 name|printk
 argument_list|(
-literal|"sbxvi0:<%s>"
+literal|"sbxvo0:<%s>"
 argument_list|,
 name|sb16_dsp_operations
 operator|.
@@ -1999,9 +2014,6 @@ name|hw_config
 operator|->
 name|dma
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_AUTODMA
 name|audio_devs
 index|[
 name|my_dev
@@ -2011,29 +2023,6 @@ name|buffcount
 operator|=
 literal|1
 expr_stmt|;
-else|#
-directive|else
-name|audio_devs
-index|[
-name|my_dev
-index|]
-operator|->
-name|flags
-operator|&=
-operator|~
-name|DMA_AUTOMODE
-expr_stmt|;
-name|audio_devs
-index|[
-name|my_dev
-index|]
-operator|->
-name|buffcount
-operator|=
-name|DSP_BUFFCOUNT
-expr_stmt|;
-endif|#
-directive|endif
 name|audio_devs
 index|[
 name|my_dev
@@ -2074,10 +2063,6 @@ name|struct
 name|address_info
 modifier|*
 name|sb_config
-decl_stmt|;
-specifier|extern
-name|int
-name|sbc_major
 decl_stmt|;
 if|if
 condition|(
@@ -2222,7 +2207,7 @@ name|dma
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  * dsp_showmessage(0xe3,99);  */
+comment|/*      * dsp_showmessage(0xe3,99);    */
 name|sb16_dsp_ok
 operator|=
 literal|1

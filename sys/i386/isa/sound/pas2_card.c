@@ -6,7 +6,7 @@ name|_PAS2_CARD_C_
 end_define
 
 begin_comment
-comment|/*  * sound/pas2_card.c  *  * Detection routine for the Pro Audio Spectrum cards.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * pas2_card.c,v 1.11 1994/10/01 12:42:17 ache Exp  */
+comment|/*  * sound/pas2_card.c  *  * Detection routine for the Pro Audio Spectrum cards.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -71,17 +71,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 name|pas_model
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|char
-name|board_rev_id
 decl_stmt|;
 end_decl_stmt
 
@@ -105,6 +96,21 @@ literal|"Pro AudioSpectrum 16D"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|void
+name|mix_write
+parameter_list|(
+name|unsigned
+name|char
+name|data
+parameter_list|,
+name|int
+name|ioaddr
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * pas_read() and pas_write() are equivalents of INB() and OUTB()  */
@@ -162,69 +168,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * The Revision D cards have a problem with their MVA508 interface. The  * kludge-o-rama fix is to make a 16-bit quantity with identical LSB and  * MSBs out of the output byte and to do a 16-bit out to the mixer port -  * 1.  */
-end_comment
-
-begin_function
-name|void
-name|mix_write
-parameter_list|(
-name|unsigned
-name|char
-name|data
-parameter_list|,
-name|int
-name|ioaddr
-parameter_list|)
-block|{
-if|if
-condition|(
-name|pas_model
-operator|==
-name|PAS_16D
-condition|)
-block|{
-name|outw
-argument_list|(
-operator|(
-name|ioaddr
-operator|^
-name|translat_code
-operator|)
-operator|-
-literal|1
-argument_list|,
-name|data
-operator||
-operator|(
-name|data
-operator|<<
-literal|8
-operator|)
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-literal|0
-argument_list|,
-literal|0x80
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|OUTB
-argument_list|(
-name|data
-argument_list|,
-name|ioaddr
-operator|^
-name|translat_code
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_function
 name|void
 name|pas2_msg
@@ -248,13 +191,17 @@ begin_comment
 comment|/******************* Begin of the Interrupt Handler ********************/
 end_comment
 
-begin_function
+begin_decl_stmt
 name|void
 name|pasintr
-parameter_list|(
-name|int
-name|unused
-parameter_list|)
+argument_list|(
+name|INT_HANDLER_PARMS
+argument_list|(
+name|irq
+argument_list|,
+name|dummy
+argument_list|)
+argument_list|)
 block|{
 name|int
 name|status
@@ -273,7 +220,7 @@ argument_list|,
 name|INTERRUPT_STATUS
 argument_list|)
 expr_stmt|;
-comment|/* 						 * Clear interrupt 						 */
+comment|/* 						   * Clear interrupt 						 */
 if|if
 condition|(
 name|status
@@ -326,7 +273,7 @@ name|I_S_MIDI_IRQ
 expr_stmt|;
 block|}
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 name|int
@@ -363,6 +310,8 @@ argument_list|(
 name|pas_irq
 argument_list|,
 name|pasintr
+argument_list|,
+literal|"PAS16"
 argument_list|)
 operator|)
 operator|<
@@ -558,7 +507,7 @@ operator||
 name|S_M_SB_RESET
 operator||
 name|S_M_MIXER_RESET
-comment|/* 										 * | 										 * S_M_OPL3_DUAL_MONO 	     	     	     	     	     	     	     	     	     	     	     	     	     	     	     	     										 */
+comment|/* 										 * | 										 * S_M_OPL3_DUAL_MONO 										 */
 argument_list|,
 name|SERIAL_MIXER
 argument_list|)
@@ -566,6 +515,13 @@ expr_stmt|;
 name|pas_write
 argument_list|(
 name|I_C_1_BOOT_RESET_ENABLE
+ifdef|#
+directive|ifdef
+name|PAS_JOYSTICK_ENABLE
+operator||
+name|I_C_1_JOYSTICK_ENABLE
+endif|#
+directive|endif
 argument_list|,
 name|IO_CONFIGURATION_1
 argument_list|)
@@ -709,7 +665,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/*  * This fixes the timing problems of the PAS due to the Symphony chipset  * as per Media Vision.  Only define this if your PAS doesn't work correctly.  */
+comment|/*      * This fixes the timing problems of the PAS due to the Symphony chipset      * as per Media Vision.  Only define this if your PAS doesn't work correctly.    */
 ifdef|#
 directive|ifdef
 name|SYMPHONY_PAS
@@ -1109,13 +1065,6 @@ name|hw_config
 argument_list|)
 condition|)
 block|{
-name|board_rev_id
-operator|=
-name|pas_read
-argument_list|(
-name|BOARD_REV_ID
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pas_model
@@ -1141,12 +1090,14 @@ operator|)
 name|pas_model
 index|]
 argument_list|,
-name|board_rev_id
+name|pas_read
+argument_list|(
+name|BOARD_REV_ID
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* __FreeBSD__ */
 name|printk
 argument_list|(
 literal|"<%s rev %d>"
@@ -1167,7 +1118,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __FreeBSD__ */
 block|}
 if|if
 condition|(
