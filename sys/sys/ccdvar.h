@@ -124,6 +124,17 @@ begin_comment
 comment|/* use LCCD of sizes for uniform interleave */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CCDF_PARITY
+value|0x04
+end_define
+
+begin_comment
+comment|/* use parity */
+end_comment
+
 begin_comment
 comment|/* Mask of user-settable ccd flags. */
 end_comment
@@ -132,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|CCDF_USERMASK
-value|(CCDF_SWAP|CCDF_UNIFORM)
+value|(CCDF_SWAP|CCDF_UNIFORM|CCDF_PARITY)
 end_define
 
 begin_comment
