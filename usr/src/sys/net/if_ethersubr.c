@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ethersubr.c	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ethersubr.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1408,42 +1408,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* LLC */
-ifdef|#
-directive|ifdef
-name|RMP
-case|case
-name|AF_RMP
-case|:
-comment|/* 		 *  This is IEEE 802.3 -- the Ethernet `type' field is 		 *  really a `length' field. 		 */
-name|type
-operator|=
-name|m
-operator|->
-name|m_len
-expr_stmt|;
-name|bcopy
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|dst
-operator|->
-name|sa_data
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|edst
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|edst
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 case|case
 name|AF_UNSPEC
 case|:
