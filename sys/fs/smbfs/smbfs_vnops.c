@@ -4932,15 +4932,6 @@ name|start
 operator|+
 name|oadd
 expr_stmt|;
-if|if
-condition|(
-name|end
-operator|<
-name|start
-condition|)
-return|return
-name|EINVAL
-return|;
 block|}
 name|smb_makescred
 argument_list|(
