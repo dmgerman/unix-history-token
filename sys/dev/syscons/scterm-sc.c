@@ -2651,6 +2651,11 @@ case|case
 literal|'C'
 case|:
 comment|/* set cursor type& shape */
+name|i
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2800,11 +2805,6 @@ name|cur_scp
 argument_list|)
 condition|)
 block|{
-name|i
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 name|sc_set_cursor_image
 argument_list|(
 name|sc
@@ -2819,12 +2819,12 @@ operator|->
 name|cur_scp
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'F'
