@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.79
+literal|3.80
 operator|%
 name|G
 operator|%
@@ -974,12 +974,12 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|AliasFile
+name|QueueDir
 operator|=
 literal|"mqueue"
 expr_stmt|;
 else|else
-name|AliasFile
+name|QueueDir
 operator|=
 operator|&
 name|p
