@@ -157,13 +157,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<gnu/i386/isa/dgbios.h>
+file|<dev/dgb/dgbios.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/i386/isa/dgfep.h>
+file|<dev/dgb/dgfep.h>
 end_include
 
 begin_define
@@ -179,7 +179,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<gnu/i386/isa/dgreg.h>
+file|<dev/dgb/dgreg.h>
 end_include
 
 begin_define

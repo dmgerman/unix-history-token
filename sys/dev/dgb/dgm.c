@@ -151,19 +151,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<gnu/i386/isa/dgmfep.h>
+file|<dev/dgb/dgmfep.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/i386/isa/dgmbios.h>
+file|<dev/dgb/dgmbios.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gnu/i386/isa/dgmreg.h>
+file|<dev/dgb/dgmreg.h>
 end_include
 
 begin_define
