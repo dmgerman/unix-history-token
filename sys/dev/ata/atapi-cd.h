@@ -1145,10 +1145,6 @@ directive|define
 name|F_TRACK_OPEN
 value|0x0010
 comment|/* track open for writing */
-name|int32_t
-name|refcnt
-decl_stmt|;
-comment|/* the number of raw opens */
 name|struct
 name|buf_queue_head
 name|buf_queue

@@ -179,10 +179,6 @@ name|lun
 decl_stmt|;
 comment|/* logical device unit */
 name|int32_t
-name|refcnt
-decl_stmt|;
-comment|/* the number of raw opens */
-name|int32_t
 name|transfersize
 decl_stmt|;
 comment|/* max size of each transfer */

@@ -481,28 +481,23 @@ decl_stmt|;
 comment|/* device state flags */
 define|#
 directive|define
-name|F_OPEN
-value|0x0001
-comment|/* the device is opened */
-define|#
-directive|define
 name|F_CTL_WARN
-value|0x0002
+value|0x0001
 comment|/* warned about CTL wrong? */
 define|#
 directive|define
 name|F_WRITEPROTECT
-value|0x0004
+value|0x0002
 comment|/* media is writeprotected */
 define|#
 directive|define
 name|F_DATA_WRITTEN
-value|0x0010
+value|0x0004
 comment|/* data has been written */
 define|#
 directive|define
 name|F_FM_WRITTEN
-value|0x0020
+value|0x0008
 comment|/* filemark has been written */
 define|#
 directive|define

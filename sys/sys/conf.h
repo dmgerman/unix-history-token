@@ -1130,6 +1130,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|count_dev
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+name|dev
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|destroy_dev
 name|__P

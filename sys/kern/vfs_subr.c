@@ -8222,6 +8222,57 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Same as above, but using the dev_t as argument  */
+end_comment
+
+begin_function
+name|int
+name|count_dev
+parameter_list|(
+name|dev
+parameter_list|)
+name|dev_t
+name|dev
+decl_stmt|;
+block|{
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+name|vp
+operator|=
+name|SLIST_FIRST
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|si_hlist
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+name|vcount
+argument_list|(
+name|vp
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Print out a description of a vnode.  */
 end_comment
 
