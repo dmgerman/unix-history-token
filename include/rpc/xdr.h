@@ -249,7 +249,7 @@ modifier|*
 name|x_base
 decl_stmt|;
 comment|/* private used for position info */
-name|int
+name|u_int
 name|x_handy
 decl_stmt|;
 comment|/* extra private word */
