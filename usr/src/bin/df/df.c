@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.14 (Berkeley) %G%"
+literal|"@(#)df.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,6 +111,8 @@ name|int
 name|iflag
 decl_stmt|,
 name|kflag
+decl_stmt|,
+name|nflag
 decl_stmt|;
 end_decl_stmt
 
@@ -204,7 +206,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"iko"
+literal|"ikon"
 argument_list|)
 operator|)
 operator|!=
@@ -231,6 +233,14 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'n'
+case|:
+name|nflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 ifdef|#
 directive|ifdef
 name|COMPAT_43
@@ -253,7 +263,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: df [-ik] [file | file_system ...]\n"
+literal|"usage: df [-ikn] [file | file_system ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -330,6 +340,14 @@ name|getmntinfo
 argument_list|(
 operator|&
 name|mntbuf
+argument_list|,
+operator|(
+name|nflag
+condition|?
+name|MNT_NOWAIT
+else|:
+name|MNT_WAIT
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -453,7 +471,7 @@ name|mntpt
 operator|=
 name|mktemp
 argument_list|(
-literal|"/df.XXXXXX"
+literal|"/tmp/df.XXXXXX"
 argument_list|)
 expr_stmt|;
 name|mdev
@@ -552,6 +570,7 @@ operator|=
 operator|*
 name|argv
 expr_stmt|;
+comment|/* 		 * Statfs does not take a `wait' flag, so we cannot 		 * implement nflag here. 		 */
 if|if
 condition|(
 name|statfs
@@ -624,6 +643,14 @@ name|getmntinfo
 argument_list|(
 operator|&
 name|mntbuf
+argument_list|,
+operator|(
+name|nflag
+condition|?
+name|MNT_NOWAIT
+else|:
+name|MNT_WAIT
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
