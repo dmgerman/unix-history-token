@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -361,19 +361,7 @@ expr_stmt|;
 comment|/* 	if (ac> 1) 		f_log = fopen(av[0], opencode); 		*/
 name|printf
 argument_list|(
-literal|"\n   * * *   S T A R   T R E K   * * *\n\n"
-argument_list|)
-expr_stmt|;
-name|play_with
-argument_list|(
-name|stdin
-argument_list|)
-expr_stmt|;
-name|ungetc
-argument_list|(
-literal|'\n'
-argument_list|,
-name|stdin
+literal|"\n   * * *   S T A R   T R E K   * * *\n\nPress return to continue.\n"
 argument_list|)
 expr_stmt|;
 name|setexit
@@ -428,54 +416,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_expr_stmt
-name|play_with
-argument_list|(
-name|iop
-argument_list|)
-specifier|register
-name|FILE
-operator|*
-name|iop
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-specifier|extern
-name|char
-name|_sibuf
-index|[]
-decl_stmt|;
-name|iop
-operator|->
-name|_cnt
-operator|=
-literal|0
-expr_stmt|;
-name|iop
-operator|->
-name|_base
-operator|=
-name|_sibuf
-expr_stmt|;
-name|iop
-operator|->
-name|_ptr
-operator|=
-name|iop
-operator|->
-name|_base
-expr_stmt|;
-name|iop
-operator|->
-name|_bufsiz
-operator|=
-name|BUFSIZ
-expr_stmt|;
-block|}
-end_block
 
 end_unit
 
