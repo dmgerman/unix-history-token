@@ -786,8 +786,28 @@ condition|)
 return|return
 literal|"VIA 8235 ATA133 controller"
 return|;
+if|if
+condition|(
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x31491106
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+return|return
+literal|"VIA 8237 ATA133 controller"
+return|;
 return|return
 literal|"VIA Apollo ATA controller"
+return|;
+case|case
+literal|0x31491106
+case|:
+return|return
+literal|"VIA 8237 SATA150 controller"
 return|;
 case|case
 literal|0x55131039
@@ -1018,10 +1038,28 @@ return|return
 literal|"AMD 768 ATA100 controller"
 return|;
 case|case
+literal|0x74691022
+case|:
+return|return
+literal|"AMD 8111 ATA133 controller"
+return|;
+case|case
 literal|0x01bc10de
 case|:
 return|return
 literal|"nVIDIA nForce ATA100 controller"
+return|;
+case|case
+literal|0x006510de
+case|:
+return|return
+literal|"nVIDIA nForce2 ATA133 controller"
+return|;
+case|case
+literal|0x00d510de
+case|:
+return|return
+literal|"nVIDIA nForce2 ATA133 controller"
 return|;
 case|case
 literal|0x02111166

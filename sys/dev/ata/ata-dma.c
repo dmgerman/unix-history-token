@@ -3002,9 +3002,92 @@ return|return;
 block|}
 break|break;
 case|case
+literal|0x31491106
+case|:
+comment|/* VIA 8237 SATA part */
+if|if
+condition|(
+name|udmamode
+condition|)
+block|{
+name|error
+operator|=
+name|ata_command
+argument_list|(
+name|atadev
+argument_list|,
+name|ATA_C_SETFEATURES
+argument_list|,
+literal|0
+argument_list|,
+name|ATA_UDMA
+operator|+
+name|udmamode
+argument_list|,
+name|ATA_C_F_SETXFER
+argument_list|,
+name|ATA_WAIT_READY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|ata_prtdev
+argument_list|(
+name|atadev
+argument_list|,
+literal|"%s setting UDMA%d on VIA chip\n"
+argument_list|,
+operator|(
+name|error
+operator|)
+condition|?
+literal|"failed"
+else|:
+literal|"success"
+argument_list|,
+name|udmamode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+block|{
+name|ata_dmacreate
+argument_list|(
+name|atadev
+argument_list|,
+name|apiomode
+argument_list|,
+name|ATA_UDMA
+operator|+
+name|udmamode
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
+comment|/* we could set PIO mode timings, but we assume the BIOS did that */
+break|break;
+case|case
 literal|0x01bc10de
 case|:
 comment|/* nVIDIA nForce */
+case|case
+literal|0x006510de
+case|:
+comment|/* nVIDIA nForce2 */
+case|case
+literal|0x00d510de
+case|:
+comment|/* nVIDIA nForce3 */
+case|case
+literal|0x74691022
+case|:
+comment|/* AMD 8111 */
 case|case
 literal|0x74411022
 case|:
@@ -3113,7 +3196,7 @@ literal|0xc5
 block|,
 literal|0xc6
 block|,
-literal|0x00
+literal|0xc7
 block|}
 block|}
 decl_stmt|;
@@ -3123,6 +3206,11 @@ modifier|*
 name|reg_val
 init|=
 name|NULL
+decl_stmt|;
+name|int
+name|reg_off
+init|=
+literal|0x53
 decl_stmt|;
 name|char
 modifier|*
@@ -3150,9 +3238,19 @@ literal|0x31771106
 argument_list|,
 literal|0
 argument_list|)
+operator|||
+comment|/* 8235 */
+name|ata_find_dev
+argument_list|(
+name|parent
+argument_list|,
+literal|0x31491106
+argument_list|,
+literal|0
+argument_list|)
 condition|)
 block|{
-comment|/* 8235 */
+comment|/* 8237 */
 name|udmamode
 operator|=
 name|imin
@@ -3349,6 +3447,11 @@ if|if
 condition|(
 name|chiptype
 operator|==
+literal|0x74691022
+operator|||
+comment|/* AMD 8111 */
+name|chiptype
+operator|==
 literal|0x74411022
 operator|||
 comment|/* AMD 768 */
@@ -3414,10 +3517,49 @@ if|if
 condition|(
 name|chiptype
 operator|==
+literal|0x00d510de
+operator|||
+comment|/* nForce3 */
+name|chiptype
+operator|==
+literal|0x006510de
+condition|)
+block|{
+comment|/* nForce2*/
+name|udmamode
+operator|=
+name|imin
+argument_list|(
+name|udmamode
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+name|reg_val
+operator|=
+name|via_modes
+index|[
+literal|4
+index|]
+expr_stmt|;
+name|reg_off
+operator|+=
+literal|0x10
+expr_stmt|;
+name|chip
+operator|=
+literal|"nVIDIA"
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|chiptype
+operator|==
 literal|0x01bc10de
 condition|)
 block|{
-comment|/* nVIDIA */
+comment|/* nForce */
 name|udmamode
 operator|=
 name|imin
@@ -3433,6 +3575,10 @@ name|via_modes
 index|[
 literal|4
 index|]
+expr_stmt|;
+name|reg_off
+operator|+=
+literal|0x10
 expr_stmt|;
 name|chip
 operator|=
@@ -3499,7 +3645,7 @@ name|pci_write_config
 argument_list|(
 name|parent
 argument_list|,
-literal|0x53
+name|reg_off
 operator|-
 name|devno
 argument_list|,
@@ -3578,7 +3724,7 @@ name|pci_write_config
 argument_list|(
 name|parent
 argument_list|,
-literal|0x53
+name|reg_off
 operator|-
 name|devno
 argument_list|,
@@ -3657,7 +3803,7 @@ name|pci_write_config
 argument_list|(
 name|parent
 argument_list|,
-literal|0x53
+name|reg_off
 operator|-
 name|devno
 argument_list|,
@@ -3736,7 +3882,7 @@ name|pci_write_config
 argument_list|(
 name|parent
 argument_list|,
-literal|0x53
+name|reg_off
 operator|-
 name|devno
 argument_list|,
@@ -3819,7 +3965,7 @@ name|pci_write_config
 argument_list|(
 name|parent
 argument_list|,
-literal|0x53
+name|reg_off
 operator|-
 name|devno
 argument_list|,
@@ -3832,7 +3978,11 @@ name|pci_write_config
 argument_list|(
 name|parent
 argument_list|,
-literal|0x4b
+operator|(
+name|reg_off
+operator|-
+literal|8
+operator|)
 operator|-
 name|devno
 argument_list|,
