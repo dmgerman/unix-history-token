@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.    * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:   *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.15 1995/02/22 01:43:24 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.    * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:   *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.16 1995/03/07 08:59:28 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -282,7 +282,7 @@ begin_decl_stmt
 name|int
 name|ahc_debug
 init|=
-name|AHC_SHOWCMDS
+name|AHC_SHOWMISC
 decl_stmt|;
 end_decl_stmt
 
@@ -2050,7 +2050,7 @@ name|inb
 argument_list|(
 name|SCBPTR
 operator|+
-name|port
+name|iobase
 argument_list|)
 expr_stmt|;
 name|UNPAUSE_SEQUENCER
@@ -2615,6 +2615,14 @@ name|adapter
 operator|=
 operator|&
 name|ahc_switch
+expr_stmt|;
+name|ahc
+operator|->
+name|sc_link
+operator|.
+name|opennings
+operator|=
+literal|2
 expr_stmt|;
 name|ahc
 operator|->
@@ -3367,7 +3375,47 @@ name|scsi_id
 operator|)
 condition|)
 block|{
-comment|/*  					 * Negate the flag and don't send 					 * an SDTR back to the target 					 */
+comment|/* 					 * Don't send an SDTR back to 					 * the target 					 */
+name|outb
+argument_list|(
+name|HA_RETURN_1
+operator|+
+name|iobase
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 					 * Send our own SDTR in reply 					 */
+ifdef|#
+directive|ifdef
+name|AHC_DEBUG
+if|if
+condition|(
+name|ahc_debug
+operator|&
+name|AHC_SHOWMISC
+condition|)
+name|printf
+argument_list|(
+literal|"Sending SDTR!!\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|outb
+argument_list|(
+name|HA_RETURN_1
+operator|+
+name|iobase
+argument_list|,
+name|SEND_SDTR
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*  				 * Negate the flags 				 */
 name|ahc
 operator|->
 name|needsdtr
@@ -3390,34 +3438,6 @@ operator|<<
 name|scsi_id
 operator|)
 expr_stmt|;
-name|outb
-argument_list|(
-name|HA_RETURN_1
-operator|+
-name|iobase
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 					 * Send our own SDTR in reply 					 */
-name|printf
-argument_list|(
-literal|"Sending SDTR!!\n"
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|HA_RETURN_1
-operator|+
-name|iobase
-argument_list|,
-name|SEND_SDTR
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 block|}
 case|case
@@ -3491,29 +3511,7 @@ name|scsi_id
 operator|)
 condition|)
 block|{
-comment|/*  					 * Negate the flag and don't  					 * send a WDTR back to the  					 * target, since we asked first. 					 */
-name|ahc
-operator|->
-name|needwdtr
-operator|&=
-operator|~
-operator|(
-literal|0x01
-operator|<<
-name|scsi_id
-operator|)
-expr_stmt|;
-name|ahc
-operator|->
-name|wdtrpending
-operator|&=
-operator|~
-operator|(
-literal|0x01
-operator|<<
-name|scsi_id
-operator|)
-expr_stmt|;
+comment|/*  					 * Don't send a WDTR back to the  					 * target, since we asked first. 					 */
 name|outb
 argument_list|(
 name|HA_RETURN_1
@@ -3626,6 +3624,28 @@ name|SEND_WDTR
 argument_list|)
 expr_stmt|;
 block|}
+name|ahc
+operator|->
+name|needwdtr
+operator|&=
+operator|~
+operator|(
+literal|0x01
+operator|<<
+name|scsi_id
+operator|)
+expr_stmt|;
+name|ahc
+operator|->
+name|wdtrpending
+operator|&=
+operator|~
+operator|(
+literal|0x01
+operator|<<
+name|scsi_id
+operator|)
+expr_stmt|;
 name|outb
 argument_list|(
 name|HA_TARG_SCRATCH
@@ -3727,6 +3747,13 @@ operator|&=
 operator|~
 name|mask
 expr_stmt|;
+name|ahc
+operator|->
+name|wdtrpending
+operator|&=
+operator|~
+name|mask
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"ahc%d: target %d refusing "
@@ -3761,6 +3788,13 @@ operator|&=
 operator|~
 name|mask
 expr_stmt|;
+name|ahc
+operator|->
+name|sdtrpending
+operator|&=
+operator|~
+name|mask
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"ahc%d: target %d refusing "
@@ -3774,8 +3808,27 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 comment|/* 					 * Otherwise, we ignore it. 					 */
+ifdef|#
+directive|ifdef
+name|AHC_DEBUG
+if|if
+condition|(
+name|ahc_debug
+operator|&
+name|AHC_SHOWMISC
+condition|)
+name|printf
+argument_list|(
+literal|"Ignored message "
+literal|"reject!!\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
+block|}
 name|outb
 argument_list|(
 name|HA_TARG_SCRATCH
@@ -4106,13 +4159,9 @@ name|scb
 operator|->
 name|control
 operator|=
-name|SCB_NEEDDMA
-operator||
-operator|(
 name|control
 operator|&
 name|SCB_TE
-operator|)
 expr_stmt|;
 name|sc
 operator|->
@@ -4360,7 +4409,7 @@ break|break;
 block|}
 name|clear
 label|:
-comment|/*                              * Clear the upper byte that holds SEQINT status                  * codes and clear the SEQINT bit.                  */
+comment|/*             		 * Clear the upper byte that holds SEQINT status 		 * codes and clear the SEQINT bit. 		 */
 name|outb
 argument_list|(
 name|CLRINT
@@ -4370,7 +4419,7 @@ argument_list|,
 name|CLRSEQINT
 argument_list|)
 expr_stmt|;
-comment|/*                              *  The sequencer is paused immediately on                  *  a SEQINT, so we should restart it when                  *  we leave this section.                   */
+comment|/*             		 *  The sequencer is paused immediately on 		 *  a SEQINT, so we should restart it when 		 *  we leave this section.  		 */
 name|UNPAUSE_SEQUENCER
 argument_list|(
 name|ahc
@@ -5078,6 +5127,21 @@ name|tagenable
 operator||=
 name|mask
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|QUEUE_FULL_SUPPORTED
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|opennings
+operator|+=
+literal|2
+expr_stmt|;
+operator|*
+operator|/
+endif|#
+directive|endif
 block|}
 block|}
 name|ahc_free_scb
@@ -5132,6 +5196,8 @@ name|baseport
 decl_stmt|;
 name|u_char
 name|scsi_conf
+decl_stmt|,
+name|sblkctl
 decl_stmt|;
 name|int
 name|intdef
@@ -5307,21 +5373,23 @@ empty_stmt|;
 comment|/* Determine channel configuration and who we are on the scsi bus. */
 switch|switch
 condition|(
+operator|(
+name|sblkctl
+operator|=
 name|inb
 argument_list|(
 name|SBLKCTL
 operator|+
 name|iobase
 argument_list|)
+operator|&
+literal|0x0f
+operator|)
 condition|)
 block|{
 case|case
 literal|0
 case|:
-case|case
-literal|0xc0
-case|:
-comment|/* 294x Adaptors have the top two bits set */
 name|ahc
 operator|->
 name|our_id
@@ -5349,9 +5417,6 @@ expr_stmt|;
 break|break;
 case|case
 literal|2
-case|:
-case|case
-literal|0xc2
 case|:
 name|ahc
 operator|->
@@ -5397,9 +5462,6 @@ expr_stmt|;
 break|break;
 case|case
 literal|8
-case|:
-case|case
-literal|0xc8
 case|:
 name|ahc
 operator|->
@@ -5475,6 +5537,16 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* 	 * Take the bus led out of diagnostic mode 	 */
+name|outb
+argument_list|(
+name|SBLKCTL
+operator|+
+name|iobase
+argument_list|,
+name|sblkctl
+argument_list|)
+expr_stmt|;
 comment|/*  	 * Number of SCBs that will be used. Rev E aic7770s and 	 * aic7870s have 16.  The rest have 4. 	 */
 if|if
 condition|(
@@ -5490,8 +5562,6 @@ condition|)
 block|{
 comment|/*  		 * See if we have a Rev E or higher 		 * aic7770.  If so, use 16 SCBs. 		 * Anything below a Rev E will have a 		 * R/O autoflush diable configuration bit. 		 */
 name|u_char
-name|sblkctl
-decl_stmt|,
 name|sblkctl_orig
 decl_stmt|;
 name|sblkctl_orig
@@ -5595,7 +5665,7 @@ name|AHC_294
 operator|)
 condition|)
 block|{
-comment|/* The 294x cards are PCI, so we get their interrupt from the PCI 	 * BIOS.  It doesn't look like the ISA mapped interrupt is reported 	 * correctly this way either. 	 */
+comment|/*  	 * The 294x cards are PCI, so we get their interrupt from the PCI 	 * BIOS.  	 */
 name|intdef
 operator|=
 name|inb
@@ -5962,6 +6032,24 @@ name|tagenable
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AHC_DEBUG
+name|printf
+argument_list|(
+literal|"NEEDSDTR == 0x%x\nNEEDWDTR == 0x%x\n"
+argument_list|,
+name|ahc
+operator|->
+name|needsdtr
+argument_list|,
+name|ahc
+operator|->
+name|needwdtr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Set the number of availible SCBs 	 */
 name|outb
 argument_list|(
@@ -6052,7 +6140,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|500
+literal|1000
 argument_list|)
 expr_stmt|;
 name|outb
@@ -7656,6 +7744,11 @@ operator|--
 name|wait
 condition|)
 block|{
+name|DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|inb
@@ -7666,11 +7759,6 @@ operator|&
 name|INT_PEND
 condition|)
 break|break;
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -8076,7 +8164,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|100
+literal|1000
 argument_list|)
 expr_stmt|;
 name|outb
@@ -8258,6 +8346,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|AHC_DEBUG
+ifdef|#
+directive|ifdef
+name|SCSIDEBUG
 if|if
 condition|(
 name|ahc_debug
@@ -8267,12 +8358,14 @@ condition|)
 block|{
 name|show_scsi_cmd
 argument_list|(
-name|ecb
+name|scb
 operator|->
 name|xs
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ahc_debug
