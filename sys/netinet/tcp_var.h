@@ -1067,7 +1067,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* receive buffer space */
+comment|/* timeout for establishing syn */
 end_comment
 
 begin_define
