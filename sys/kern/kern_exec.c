@@ -1804,16 +1804,15 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* Close any file descriptors 0..2 that reference procfs */
-name|setugidsafety
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Make sure file descriptors 0..2 are in use. 		 * 		 * fdcheckstd() may call falloc() which may block to 		 * allocate memory, so temporarily drop the process lock. 		 */
+comment|/* 		 * Close any file descriptors 0..2 that reference procfs, 		 * then make sure file descriptors 0..2 are in use. 		 * 		 * setugidsafety() may call closef() and then pfind() 		 * which may grab the process lock. 		 * fdcheckstd() may call falloc() which may block to 		 * allocate memory, so temporarily drop the process lock. 		 */
 name|PROC_UNLOCK
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|setugidsafety
+argument_list|(
+name|td
 argument_list|)
 expr_stmt|;
 name|error
