@@ -682,7 +682,7 @@ parameter_list|(
 name|td
 parameter_list|)
 define|\
-value|(!SIGISEMPTY((td)->td_siglist)&&				\ 	    (!sigsetmasked(&(td)->td_siglist,&(td)->td_sigmask) ||	\ 	    (td)->td_proc->p_flag& P_TRACED))
+value|(!SIGISEMPTY((td)->td_siglist)&&				\ 	    !sigsetmasked(&(td)->td_siglist,&(td)->td_sigmask))
 end_define
 
 begin_comment
