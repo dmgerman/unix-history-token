@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: defs.h,v 3.8 1995/11/29 22:36:34 fenner Rel $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: defs.h,v 3.8.1.2 1996/09/05 19:00:20 fenner Exp $  */
 end_comment
 
 begin_include
@@ -893,11 +893,61 @@ name|MRT_DEL_MFC
 value|DVMRP_DEL_MFC
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IGMP_PIM
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|IGMP_PIM
 value|0x14
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IGMP_MEMBERSHIP_QUERY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IGMP_MEMBERSHIP_QUERY
+value|IGMP_HOST_MEMBERSHIP_QUERY
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_V1_MEMBERSHIP_REPORT
+value|IGMP_HOST_MEMBERSHIP_REPORT
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_V2_MEMBERSHIP_REPORT
+value|IGMP_HOST_NEW_MEMBERSHIP_REPORT
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_V2_LEAVE_GROUP
+value|IGMP_HOST_LEAVE_MESSAGE
 end_define
 
 begin_endif
@@ -1793,6 +1843,9 @@ operator|(
 name|char
 operator|*
 name|s
+operator|,
+name|int
+name|n
 operator|)
 argument_list|)
 decl_stmt|;
