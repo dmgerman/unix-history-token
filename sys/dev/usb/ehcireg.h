@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ehcireg.h,v 1.13 2001/11/23 01:16:27 augustss Exp $	*/
+comment|/*	$NetBSD: ehcireg.h,v 1.17 2004/06/23 06:45:56 mycroft Exp $	*/
 end_comment
 
 begin_comment
@@ -118,20 +118,73 @@ comment|/* RW Port wake caps (opt)  */
 end_comment
 
 begin_comment
-comment|/* Regs ar EECP + offset */
+comment|/* EHCI Extended Capabilities */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PCI_EHCI_USBLEGSUP
-value|0x00
+name|EHCI_EC_LEGSUP
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCI_EHCI_USBLEGCTLSTS
+name|EHCI_EECP_NEXT
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 8)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_EECP_ID
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xff)
+end_define
+
+begin_comment
+comment|/* Legacy support extended capability */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_LEGSUP_LEGSUP
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_LEGSUP_OSOWNED
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* OS owned semaphore */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_LEGSUP_BIOSOWNED
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* BIOS owned semaphore */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_LEGSUP_USBLEGCTLSTS
 value|0x04
 end_define
 
@@ -189,7 +242,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EHCI_HCS_P_INCICATOR
+name|EHCI_HCS_P_INDICATOR
 parameter_list|(
 name|x
 parameter_list|)
@@ -1254,6 +1307,13 @@ parameter_list|)
 value|(((x)>>  0)& 0xff)
 define|#
 directive|define
+name|EHCI_QTD_SET_STATUS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<<  0)
+define|#
+directive|define
 name|EHCI_QTD_ACTIVE
 value|0x80
 define|#
@@ -1376,7 +1436,14 @@ parameter_list|)
 value|(((x)>> 31)&  0x1)
 define|#
 directive|define
-name|EHCI_QTD_TOGGLE
+name|EHCI_QTD_SET_TOGGLE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 31)
+define|#
+directive|define
+name|EHCI_QTD_TOGGLE_MASK
 value|0x80000000
 name|ehci_physaddr_t
 name|qtd_buffer
@@ -1530,7 +1597,7 @@ parameter_list|)
 value|((x)<< 16)
 define|#
 directive|define
-name|EHCI_QG_MPLMASK
+name|EHCI_QH_MPLMASK
 value|0x07ff0000
 define|#
 directive|define
@@ -1538,7 +1605,7 @@ name|EHCI_QH_GET_CTL
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> 26)& 0x01)
+value|(((x)>> 27)& 0x01)
 comment|/* control endpoint */
 define|#
 directive|define
