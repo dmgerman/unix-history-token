@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.57 1997/06/13 03:59:34 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.58 1997/06/14 00:21:23 ache Exp $  *  */
 end_comment
 
 begin_include
@@ -461,19 +461,6 @@ name|VarLocalAuth
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|plist
-operator|==
-name|SetCommands
-condition|)
-name|fprintf
-argument_list|(
-name|VarTerm
-argument_list|,
-literal|"set "
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|VarTerm
@@ -2758,7 +2745,7 @@ name|LOCAL_AUTH
 block|,
 literal|"Display this message"
 block|,
-literal|"show help|?"
+literal|"show help|? [command]"
 block|,
 operator|(
 name|void
@@ -6354,7 +6341,7 @@ name|LOCAL_NO_AUTH
 block|,
 literal|"Display this message"
 block|,
-literal|"set help|?"
+literal|"set help|? [command]"
 block|,
 operator|(
 name|void
@@ -6923,7 +6910,7 @@ name|LOCAL_NO_AUTH
 block|,
 literal|"Display this message"
 block|,
-literal|"alias help|?"
+literal|"alias help|? [command]"
 block|,
 operator|(
 name|void
