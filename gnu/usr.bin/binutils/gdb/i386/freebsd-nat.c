@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent code for BSD Unix running on i386's, for GDB.    Copyright 1988, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  	$Id: freebsd-nat.c,v 1.2 1994/12/30 23:25:44 jkh Exp $ */
+comment|/* Native-dependent code for BSD Unix running on i386's, for GDB.    Copyright 1988, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  	$Id: freebsd-nat.c,v 1.3 1994/12/31 17:00:09 bde Exp $ */
 end_comment
 
 begin_include
@@ -1297,6 +1297,68 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SETUP_ARBITRARY_FRAME
+end_ifdef
+
+begin_function
+name|FRAME
+name|setup_arbitrary_frame
+parameter_list|(
+name|numargs
+parameter_list|,
+name|args
+parameter_list|)
+name|int
+name|numargs
+decl_stmt|;
+name|unsigned
+name|int
+modifier|*
+name|args
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|numargs
+operator|>
+literal|2
+condition|)
+name|error
+argument_list|(
+literal|"Too many args in frame specification"
+argument_list|)
+expr_stmt|;
+return|return
+name|create_new_frame
+argument_list|(
+operator|(
+name|CORE_ADDR
+operator|)
+name|args
+index|[
+literal|0
+index|]
+argument_list|,
+operator|(
+name|CORE_ADDR
+operator|)
+name|args
+index|[
+literal|1
+index|]
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
