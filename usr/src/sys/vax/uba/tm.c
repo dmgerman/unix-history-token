@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tm.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tm.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * TM11/TE10 tape driver  *  * TODO:  *	test driver with more than one slave  *	test driver with more than one controller  *	test reset code  *	what happens if you offline tape during rewind?  *	test using file system on tape  */
+comment|/*  * TM11/TE10 tape driver  *  * TODO:  *	test driver with more than one controller  *	test reset code  *	what happens if you offline tape during rewind?  *	test using file system on tape  */
 end_comment
 
 begin_include
@@ -360,6 +360,10 @@ name|u_short
 name|sc_erreg
 decl_stmt|;
 comment|/* copy of last erreg */
+name|u_short
+name|sc_ioerreg
+decl_stmt|;
+comment|/* copy of last erreg for I/O command */
 name|u_short
 name|sc_dsreg
 decl_stmt|;
@@ -2148,7 +2152,7 @@ operator|&&
 operator|(
 name|sc
 operator|->
-name|sc_erreg
+name|sc_ioerreg
 operator|&
 operator|(
 name|TMER_HARD
@@ -2664,6 +2668,24 @@ operator|->
 name|sc_timo
 operator|=
 name|INF
+expr_stmt|;
+if|if
+condition|(
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_active
+operator|=
+name|SIO
+condition|)
+name|sc
+operator|->
+name|sc_ioerreg
+operator|=
+name|addr
+operator|->
+name|tmer
 expr_stmt|;
 name|sc
 operator|->
