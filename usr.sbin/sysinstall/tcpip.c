@@ -2143,6 +2143,15 @@ argument_list|(
 literal|"Scanning for DHCP servers..."
 argument_list|)
 expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"dhclient -r %s"
+argument_list|,
+name|devp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 literal|0
