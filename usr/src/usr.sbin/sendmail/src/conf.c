@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.37 (Berkeley) %G%"
+literal|"@(#)conf.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2058,12 +2058,35 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+name|p
+operator|=
+name|buf
+expr_stmt|;
+comment|/* print sendmail: heading for grep */
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|p
+argument_list|,
+literal|"sendmail: "
+argument_list|)
+expr_stmt|;
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* print the argument string */
 operator|(
 name|void
 operator|)
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 name|fmt
 argument_list|,
@@ -2073,20 +2096,6 @@ name|b
 argument_list|,
 name|c
 argument_list|)
-expr_stmt|;
-comment|/* make ps print "(sendmail)" */
-name|p
-operator|=
-name|Argv
-index|[
-literal|0
-index|]
-expr_stmt|;
-operator|*
-name|p
-operator|++
-operator|=
-literal|'-'
 expr_stmt|;
 name|i
 operator|=
@@ -2101,7 +2110,10 @@ name|i
 operator|>
 name|LastArgv
 operator|-
-name|p
+name|Argv
+index|[
+literal|0
+index|]
 operator|-
 literal|2
 condition|)
@@ -2110,7 +2122,10 @@ name|i
 operator|=
 name|LastArgv
 operator|-
-name|p
+name|Argv
+index|[
+literal|0
+index|]
 operator|-
 literal|2
 expr_stmt|;
@@ -2127,14 +2142,20 @@ name|void
 operator|)
 name|strcpy
 argument_list|(
-name|p
+name|Argv
+index|[
+literal|0
+index|]
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
 name|p
-operator|+=
+operator|=
+name|Argv
+index|[
 name|i
+index|]
 expr_stmt|;
 while|while
 condition|(
