@@ -6603,9 +6603,39 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bs
+operator|>
+operator|(
+literal|1024
+operator|*
+literal|1024
+operator|)
+condition|)
 name|printf
 argument_list|(
-literal|"%ld bytes %s in %.2g seconds (%.2g Kbytes/s)\n"
+literal|"%ld bytes %s in %.2f seconds (%.2f Meg/s)\n"
+argument_list|,
+name|bytes
+argument_list|,
+name|direction
+argument_list|,
+name|s
+argument_list|,
+name|bs
+operator|/
+operator|(
+literal|1024.
+operator|*
+literal|1024.
+operator|)
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%ld bytes %s in %.2f seconds (%.2f Kbytes/s)\n"
 argument_list|,
 name|bytes
 argument_list|,
@@ -6623,31 +6653,35 @@ block|}
 end_block
 
 begin_comment
+unit|}
 comment|/* void tvadd(tsum, t0) 	struct timeval *tsum, *t0; {  	tsum->tv_sec += t0->tv_sec; 	tsum->tv_usec += t0->tv_usec; 	if (tsum->tv_usec> 1000000) 		tsum->tv_sec++, tsum->tv_usec -= 1000000; } */
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|tvsub
-parameter_list|(
-name|tdiff
-parameter_list|,
-name|t1
-parameter_list|,
-name|t0
-parameter_list|)
+argument_list|(
+argument|tdiff
+argument_list|,
+argument|t1
+argument_list|,
+argument|t0
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|struct
 name|timeval
 modifier|*
 name|tdiff
 decl_stmt|,
-decl|*
+modifier|*
 name|t1
 decl_stmt|,
 modifier|*
 name|t0
 decl_stmt|;
-end_function
+end_decl_stmt
 
 begin_block
 block|{
