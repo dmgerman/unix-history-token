@@ -116,7 +116,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: getextattr [-fqsx] attrnamespace"
+literal|"usage: getextattr [-fhqsx] attrnamespace"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -139,7 +139,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: setextattr [-fq] attrnamespace"
+literal|"usage: setextattr [-fhq] attrnamespace"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -162,7 +162,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rmextattr [-fq] attrnamespace"
+literal|"usage: rmextattr [-fhq] attrnamespace"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -185,7 +185,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lsextattr [-fq] attrnamespace"
+literal|"usage: lsextattr [-fhq] attrnamespace"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -351,6 +351,11 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|flag_nofollow
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|flag_quiet
 init|=
 literal|0
@@ -417,7 +422,7 @@ name|EAGET
 expr_stmt|;
 name|options
 operator|=
-literal|"fqsx"
+literal|"fhqsx"
 expr_stmt|;
 block|}
 elseif|else
@@ -438,7 +443,7 @@ name|EASET
 expr_stmt|;
 name|options
 operator|=
-literal|"fq"
+literal|"fhq"
 expr_stmt|;
 block|}
 elseif|else
@@ -459,7 +464,7 @@ name|EARM
 expr_stmt|;
 name|options
 operator|=
-literal|"fq"
+literal|"fhq"
 expr_stmt|;
 block|}
 elseif|else
@@ -480,7 +485,7 @@ name|EALS
 expr_stmt|;
 name|options
 operator|=
-literal|"fq"
+literal|"fhq"
 expr_stmt|;
 block|}
 else|else
@@ -517,6 +522,14 @@ case|case
 literal|'f'
 case|:
 name|flag_force
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+name|flag_nofollow
 operator|=
 literal|1
 expr_stmt|;
@@ -698,6 +711,25 @@ block|{
 case|case
 name|EARM
 case|:
+if|if
+condition|(
+name|flag_nofollow
+condition|)
+name|error
+operator|=
+name|extattr_delete_link
+argument_list|(
+name|argv
+index|[
+name|arg_counter
+index|]
+argument_list|,
+name|attrnamespace
+argument_list|,
+name|attrname
+argument_list|)
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|extattr_delete_file
@@ -723,6 +755,32 @@ break|break;
 case|case
 name|EASET
 case|:
+if|if
+condition|(
+name|flag_nofollow
+condition|)
+name|error
+operator|=
+name|extattr_set_link
+argument_list|(
+name|argv
+index|[
+name|arg_counter
+index|]
+argument_list|,
+name|attrnamespace
+argument_list|,
+name|attrname
+argument_list|,
+name|buf
+argument_list|,
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|extattr_set_file
@@ -758,6 +816,29 @@ case|:
 case|case
 name|EAGET
 case|:
+if|if
+condition|(
+name|flag_nofollow
+condition|)
+name|error
+operator|=
+name|extattr_get_link
+argument_list|(
+name|argv
+index|[
+name|arg_counter
+index|]
+argument_list|,
+name|attrnamespace
+argument_list|,
+name|attrname
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|extattr_get_file
@@ -794,6 +875,29 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flag_nofollow
+condition|)
+name|error
+operator|=
+name|extattr_get_link
+argument_list|(
+name|argv
+index|[
+name|arg_counter
+index|]
+argument_list|,
+name|attrnamespace
+argument_list|,
+name|attrname
+argument_list|,
+name|buf
+argument_list|,
+name|buflen
+argument_list|)
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|extattr_get_file
