@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getservbyport.c	5.2 (Berkeley) %G%"
+literal|"@(#)getservbyport.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,13 @@ include|#
 directive|include
 file|<netdb.h>
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|_serv_stayopen
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|struct
@@ -66,7 +73,7 @@ name|p
 decl_stmt|;
 name|setservent
 argument_list|(
-literal|0
+name|_serv_stayopen
 argument_list|)
 expr_stmt|;
 while|while
@@ -105,6 +112,11 @@ literal|0
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+operator|!
+name|_serv_stayopen
+condition|)
 name|endservent
 argument_list|()
 expr_stmt|;

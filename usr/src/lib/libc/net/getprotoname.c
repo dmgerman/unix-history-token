@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getprotoname.c	5.2 (Berkeley) %G%"
+literal|"@(#)getprotoname.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,13 @@ include|#
 directive|include
 file|<netdb.h>
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|_proto_stayopen
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|struct
@@ -68,7 +75,7 @@ name|cp
 decl_stmt|;
 name|setprotoent
 argument_list|(
-literal|0
+name|_proto_stayopen
 argument_list|)
 expr_stmt|;
 while|while
@@ -127,6 +134,11 @@ goto|;
 block|}
 name|found
 label|:
+if|if
+condition|(
+operator|!
+name|_proto_stayopen
+condition|)
 name|endprotoent
 argument_list|()
 expr_stmt|;

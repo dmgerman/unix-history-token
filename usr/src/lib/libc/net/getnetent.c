@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getnetent.c	5.2 (Berkeley) %G%"
+literal|"@(#)getnetent.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,11 +123,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
-name|stayopen
-init|=
-literal|0
+name|_net_stayopen
 decl_stmt|;
 end_decl_stmt
 
@@ -176,7 +173,7 @@ argument_list|(
 name|netf
 argument_list|)
 expr_stmt|;
-name|stayopen
+name|_net_stayopen
 operator||=
 name|f
 expr_stmt|;
@@ -193,9 +190,6 @@ block|{
 if|if
 condition|(
 name|netf
-operator|&&
-operator|!
-name|stayopen
 condition|)
 block|{
 name|fclose
@@ -208,6 +202,10 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|_net_stayopen
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_block
 

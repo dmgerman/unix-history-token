@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getprotoent.c	5.2 (Berkeley) %G%"
+literal|"@(#)getprotoent.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,15 +122,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|stayopen
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|char
@@ -139,6 +130,12 @@ name|any
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|int
+name|_proto_stayopen
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|setprotoent
@@ -176,7 +173,7 @@ argument_list|(
 name|protof
 argument_list|)
 expr_stmt|;
-name|stayopen
+name|_proto_stayopen
 operator||=
 name|f
 expr_stmt|;
@@ -193,9 +190,6 @@ block|{
 if|if
 condition|(
 name|protof
-operator|&&
-operator|!
-name|stayopen
 condition|)
 block|{
 name|fclose
@@ -208,6 +202,10 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|_proto_stayopen
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_block
 

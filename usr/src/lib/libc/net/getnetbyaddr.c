@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getnetbyaddr.c	5.2 (Berkeley) %G%"
+literal|"@(#)getnetbyaddr.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,13 @@ include|#
 directive|include
 file|<netdb.h>
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|_net_stayopen
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|struct
@@ -65,7 +72,7 @@ name|p
 decl_stmt|;
 name|setnetent
 argument_list|(
-literal|0
+name|_net_stayopen
 argument_list|)
 expr_stmt|;
 while|while
@@ -90,6 +97,11 @@ operator|==
 name|net
 condition|)
 break|break;
+if|if
+condition|(
+operator|!
+name|_net_stayopen
+condition|)
 name|endnetent
 argument_list|()
 expr_stmt|;
