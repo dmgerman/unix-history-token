@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.33 1995/10/28 15:39:04 phk Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.34 1995/11/04 17:07:26 bde Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -443,7 +443,9 @@ name|epwatchdog
 name|__P
 argument_list|(
 operator|(
-name|int
+expr|struct
+name|ifnet
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1994,12 +1996,6 @@ name|IFF_SIMPLEX
 expr_stmt|;
 name|ifp
 operator|->
-name|if_init
-operator|=
-name|epinit
-expr_stmt|;
-name|ifp
-operator|->
 name|if_output
 operator|=
 name|ether_output
@@ -2021,12 +2017,6 @@ operator|->
 name|if_watchdog
 operator|=
 name|epwatchdog
-expr_stmt|;
-name|ifp
-operator|->
-name|if_timer
-operator|=
-literal|1
 expr_stmt|;
 name|if_attach
 argument_list|(
@@ -6018,73 +6008,17 @@ end_function
 
 begin_function
 name|void
-name|epreset
-parameter_list|(
-name|unit
-parameter_list|)
-name|int
-name|unit
-decl_stmt|;
-block|{
-name|int
-name|s
-init|=
-name|splimp
-argument_list|()
-decl_stmt|;
-name|epstop
-argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
-name|epinit
-argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
 name|epwatchdog
 parameter_list|(
-name|unit
+name|ifp
 parameter_list|)
-name|int
-name|unit
-decl_stmt|;
-block|{
-name|struct
-name|ep_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|ep_softc
-index|[
-name|unit
-index|]
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-init|=
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
 decl_stmt|;
-comment|/*     printf("ep: watchdog\n");      log(LOG_ERR, "ep%d: watchdog\n", unit);     ++sc->arpcom.ac_if.if_oerrors;     */
-comment|/* epreset(unit); */
+block|{
+comment|/*     printf("ep: watchdog\n");      log(LOG_ERR, "ep%d: watchdog\n", ifp->if_unit);     ifp->if_oerrors++;     */
 name|ifp
 operator|->
 name|if_flags
@@ -6099,14 +6033,10 @@ argument_list|)
 expr_stmt|;
 name|epintr
 argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
-name|if_timer
-operator|=
-literal|1
+name|if_unit
+argument_list|)
 expr_stmt|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_le.c,v 1.22 1995/10/28 15:39:08 phk Exp $  */
+comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_le.c,v 1.23 1995/11/04 17:07:33 bde Exp $  */
 end_comment
 
 begin_comment
@@ -322,7 +322,7 @@ name|LE_RESET
 parameter_list|(
 name|ifp
 parameter_list|)
-value|(((sc)->le_if.if_reset)((sc)->le_if.if_unit))
+value|(((sc)->if_reset)((sc)->le_if.if_unit))
 end_define
 
 begin_else
@@ -344,7 +344,7 @@ name|LE_RESET
 parameter_list|(
 name|ifp
 parameter_list|)
-value|(((sc)->le_if.if_reset)((sc)->le_if.if_unit, 0))
+value|(((sc)->if_reset)((sc)->le_if.if_unit, 0))
 end_define
 
 begin_endif
@@ -821,6 +821,30 @@ name|arpcom
 name|le_ac
 decl_stmt|;
 comment|/* Common Ethernet/ARP Structure */
+name|void
+argument_list|(
+argument|*if_init
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Interface init routine */
+name|void
+argument_list|(
+argument|*if_reset
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Interface reset routine */
 name|caddr_t
 name|le_membase
 decl_stmt|;
@@ -2677,7 +2701,7 @@ case|:
 block|{
 call|(
 modifier|*
-name|ifp
+name|sc
 operator|->
 name|if_init
 call|)
@@ -2795,7 +2819,7 @@ expr_stmt|;
 block|}
 call|(
 modifier|*
-name|ifp
+name|sc
 operator|->
 name|if_init
 call|)
@@ -2901,7 +2925,7 @@ expr_stmt|;
 block|}
 call|(
 modifier|*
-name|ifp
+name|sc
 operator|->
 name|if_init
 call|)
@@ -2920,7 +2944,7 @@ default|default:
 block|{
 call|(
 modifier|*
-name|ifp
+name|sc
 operator|->
 name|if_init
 call|)
@@ -2941,7 +2965,7 @@ case|:
 block|{
 call|(
 modifier|*
-name|ifp
+name|sc
 operator|->
 name|if_init
 call|)
@@ -3012,7 +3036,7 @@ block|{
 comment|/* reset multicast filtering */
 call|(
 modifier|*
-name|ifp
+name|sc
 operator|->
 name|if_init
 call|)
@@ -4341,8 +4365,6 @@ block|}
 comment|/*      * Try to reset the unit      */
 name|sc
 operator|->
-name|le_if
-operator|.
 name|if_init
 operator|=
 name|lemac_init
@@ -4357,8 +4379,6 @@ name|lemac_start
 expr_stmt|;
 name|sc
 operator|->
-name|le_if
-operator|.
 name|if_reset
 operator|=
 name|lemac_reset
@@ -7374,16 +7394,12 @@ literal|0
 return|;
 name|sc
 operator|->
-name|le_if
-operator|.
 name|if_reset
 operator|=
 name|lance_reset
 expr_stmt|;
 name|sc
 operator|->
-name|le_if
-operator|.
 name|if_init
 operator|=
 name|lance_init

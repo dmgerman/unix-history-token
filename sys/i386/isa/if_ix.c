@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ix.c,v 1.13 1995/10/31 18:41:11 phk Exp $  */
+comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ix.c,v 1.14 1995/11/04 17:07:31 bde Exp $  */
 end_comment
 
 begin_include
@@ -826,7 +826,9 @@ specifier|static
 name|void
 name|ixwatchdog
 parameter_list|(
-name|int
+name|struct
+name|ifnet
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2767,12 +2769,6 @@ name|IFF_BROADCAST
 expr_stmt|;
 name|ifp
 operator|->
-name|if_init
-operator|=
-name|ixinit
-expr_stmt|;
-name|ifp
-operator|->
 name|if_output
 operator|=
 name|ether_output
@@ -2794,12 +2790,6 @@ operator|->
 name|if_ioctl
 operator|=
 name|ixioctl
-expr_stmt|;
-name|ifp
-operator|->
-name|if_reset
-operator|=
-name|ixreset
 expr_stmt|;
 name|ifp
 operator|->
@@ -7402,41 +7392,33 @@ begin_function
 name|void
 name|ixwatchdog
 parameter_list|(
-name|int
-name|unit
+name|struct
+name|ifnet
+modifier|*
+name|ifp
 parameter_list|)
 block|{
-name|ix_softc_t
-modifier|*
-name|sc
-init|=
-operator|&
-name|ix_softc
-index|[
-name|unit
-index|]
-decl_stmt|;
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"ix%d: device timeout\n"
 argument_list|,
-name|unit
+name|ifp
+operator|->
+name|if_unit
 argument_list|)
 expr_stmt|;
-name|sc
+name|ifp
 operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
 name|if_oerrors
 operator|++
 expr_stmt|;
 name|ixreset
 argument_list|(
-name|unit
+name|ifp
+operator|->
+name|if_unit
 argument_list|)
 expr_stmt|;
 return|return;

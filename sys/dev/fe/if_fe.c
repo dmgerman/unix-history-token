@@ -728,7 +728,9 @@ begin_function_decl
 name|void
 name|fe_watchdog
 parameter_list|(
-name|int
+name|struct
+name|ifnet
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3979,14 +3981,6 @@ name|sc
 operator|->
 name|sc_if
 operator|.
-name|if_init
-operator|=
-name|fe_init
-expr_stmt|;
-name|sc
-operator|->
-name|sc_if
-operator|.
 name|if_output
 operator|=
 name|ether_output
@@ -4006,14 +4000,6 @@ operator|.
 name|if_ioctl
 operator|=
 name|fe_ioctl
-expr_stmt|;
-name|sc
-operator|->
-name|sc_if
-operator|.
-name|if_reset
-operator|=
-name|fe_reset
 expr_stmt|;
 name|sc
 operator|->
@@ -4755,8 +4741,10 @@ begin_function
 name|void
 name|fe_watchdog
 parameter_list|(
-name|int
-name|unit
+name|struct
+name|ifnet
+modifier|*
+name|ifp
 parameter_list|)
 block|{
 name|struct
@@ -4764,11 +4752,12 @@ name|fe_softc
 modifier|*
 name|sc
 init|=
-operator|&
+operator|(
+expr|struct
 name|fe_softc
-index|[
-name|unit
-index|]
+operator|*
+operator|)
+name|ifp
 decl_stmt|;
 if|#
 directive|if
@@ -4781,7 +4770,9 @@ name|LOG_ERR
 argument_list|,
 literal|"fe%d: transmission timeout (%d+%d)%s\n"
 argument_list|,
-name|unit
+name|ifp
+operator|->
+name|if_unit
 argument_list|,
 name|sc
 operator|->
@@ -4792,10 +4783,8 @@ operator|->
 name|txb_count
 argument_list|,
 operator|(
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_flags
 operator|&
 name|IFF_UP
@@ -4825,10 +4814,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Record how many packets are lost by this accident.  */
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_oerrors
 operator|+=
 name|sc
@@ -4842,10 +4829,8 @@ expr_stmt|;
 comment|/* Put the interface into known initial state.  */
 if|if
 condition|(
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_flags
 operator|&
 name|IFF_UP
@@ -4853,7 +4838,9 @@ condition|)
 block|{
 name|fe_reset
 argument_list|(
-name|unit
+name|ifp
+operator|->
+name|if_unit
 argument_list|)
 expr_stmt|;
 block|}
@@ -4861,7 +4848,9 @@ else|else
 block|{
 name|fe_stop
 argument_list|(
-name|unit
+name|ifp
+operator|->
+name|if_unit
 argument_list|)
 expr_stmt|;
 block|}

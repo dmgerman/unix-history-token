@@ -394,7 +394,9 @@ name|vxwatchdog
 name|__P
 argument_list|(
 operator|(
-name|int
+expr|struct
+name|ifnet
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1081,12 +1083,6 @@ comment|/*| IFF_NOTRAILERS*/
 expr_stmt|;
 name|ifp
 operator|->
-name|if_init
-operator|=
-name|vxinit
-expr_stmt|;
-name|ifp
-operator|->
 name|if_output
 operator|=
 name|ether_output
@@ -1108,12 +1104,6 @@ operator|->
 name|if_watchdog
 operator|=
 name|vxwatchdog
-expr_stmt|;
-name|ifp
-operator|->
-name|if_timer
-operator|=
-literal|1
 expr_stmt|;
 name|if_attach
 argument_list|(
@@ -5079,37 +5069,16 @@ begin_function
 name|void
 name|vxwatchdog
 parameter_list|(
-name|unit
+name|ifp
 parameter_list|)
-name|int
-name|unit
-decl_stmt|;
-block|{
-name|struct
-name|vx_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|vx_softc
-index|[
-name|unit
-index|]
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-init|=
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
 decl_stmt|;
-comment|/*     printf("vx: watchdog\n");      log(LOG_ERR, "vx%d: watchdog\n", unit);     ++sc->arpcom.ac_if.if_oerrors;     */
-comment|/* vxreset(unit); */
+block|{
+comment|/*     printf("vx: watchdog\n");      log(LOG_ERR, "vx%d: watchdog\n", ifp->if_unit);     ifp->if_oerrors++;     */
+comment|/* vxreset(ifp->if_unit); */
 name|ifp
 operator|->
 name|if_flags
@@ -5124,14 +5093,10 @@ argument_list|)
 expr_stmt|;
 name|vxintr
 argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
-name|if_timer
-operator|=
-literal|1
+name|if_unit
+argument_list|)
 expr_stmt|;
 block|}
 end_function

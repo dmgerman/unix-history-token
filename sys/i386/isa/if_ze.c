@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.23 1995/10/28 15:39:12 phk Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.24 1995/11/18 08:39:28 bde Exp $  */
 end_comment
 
 begin_include
@@ -299,6 +299,11 @@ begin_struct
 struct|struct
 name|ze_softc
 block|{
+name|struct
+name|arpcom
+name|arpcom
+decl_stmt|;
+comment|/* ethernet common */
 name|caddr_t
 name|maddr
 decl_stmt|;
@@ -307,11 +312,6 @@ name|iobase
 decl_stmt|,
 name|irq
 decl_stmt|;
-name|struct
-name|arpcom
-name|arpcom
-decl_stmt|;
-comment|/* ethernet common */
 name|char
 modifier|*
 name|type_str
@@ -572,8 +572,10 @@ name|ze_watchdog
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|ifnet
+operator|*
+name|ifp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2322,12 +2324,6 @@ name|ETHERMTU
 expr_stmt|;
 name|ifp
 operator|->
-name|if_init
-operator|=
-name|ze_init
-expr_stmt|;
-name|ifp
-operator|->
 name|if_output
 operator|=
 name|ether_output
@@ -2343,12 +2339,6 @@ operator|->
 name|if_ioctl
 operator|=
 name|ze_ioctl
-expr_stmt|;
-name|ifp
-operator|->
-name|if_reset
-operator|=
-name|ze_reset
 expr_stmt|;
 name|ifp
 operator|->
@@ -2769,10 +2759,12 @@ begin_function
 name|void
 name|ze_watchdog
 parameter_list|(
-name|unit
+name|ifp
 parameter_list|)
-name|int
-name|unit
+name|struct
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 block|{
 if|#
@@ -2783,11 +2775,12 @@ name|ze_softc
 modifier|*
 name|sc
 init|=
-operator|&
+operator|(
+expr|struct
 name|ze_softc
-index|[
-name|unit
-index|]
+operator|*
+operator|)
+name|ifp
 decl_stmt|;
 name|u_char
 name|isr
@@ -2801,12 +2794,8 @@ if|if
 condition|(
 operator|!
 operator|(
-name|sc
+name|ifp
 operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
 name|if_flags
 operator|&
 name|IFF_UP
@@ -2911,7 +2900,9 @@ name|LOG_ERR
 argument_list|,
 literal|"ze%d: device timeout, isr=%02x, imr=%02x, imask=%04x\n"
 argument_list|,
-name|unit
+name|ifp
+operator|->
+name|if_unit
 argument_list|,
 name|isr
 argument_list|,
@@ -2928,14 +2919,18 @@ name|LOG_ERR
 argument_list|,
 literal|"ze%d: device timeout\n"
 argument_list|,
-name|unit
+name|ifp
+operator|->
+name|if_unit
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 name|ze_reset
 argument_list|(
-name|unit
+name|ifp
+operator|->
+name|if_unit
 argument_list|)
 expr_stmt|;
 block|}
