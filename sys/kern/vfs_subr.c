@@ -6661,6 +6661,7 @@ operator|->
 name|v_interlock
 argument_list|)
 expr_stmt|;
+comment|/* Skip this v_writecount check if we're going to panic below. */
 name|KASSERT
 argument_list|(
 name|vp
@@ -6670,6 +6671,12 @@ operator|<
 name|vp
 operator|->
 name|v_usecount
+operator|||
+name|vp
+operator|->
+name|v_usecount
+operator|<
+literal|1
 argument_list|,
 operator|(
 literal|"vrele: missed vn_close"
@@ -6826,6 +6833,7 @@ operator|->
 name|v_interlock
 argument_list|)
 expr_stmt|;
+comment|/* Skip this v_writecount check if we're going to panic below. */
 name|KASSERT
 argument_list|(
 name|vp
@@ -6835,6 +6843,12 @@ operator|<
 name|vp
 operator|->
 name|v_usecount
+operator|||
+name|vp
+operator|->
+name|v_usecount
+operator|<
+literal|1
 argument_list|,
 operator|(
 literal|"vput: missed vn_close"
