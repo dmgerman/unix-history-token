@@ -6411,6 +6411,25 @@ name|fsm_opt
 argument_list|)
 condition|)
 block|{
+name|log_Printf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"Warning: Truncating option length from %d to %d\n"
+argument_list|,
+name|o
+operator|->
+name|hdr
+operator|.
+name|len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|fsm_opt
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|o
 operator|->
 name|hdr
@@ -6421,19 +6440,6 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|fsm_opt
-argument_list|)
-expr_stmt|;
-name|log_Printf
-argument_list|(
-name|LogERROR
-argument_list|,
-literal|"Warning: Truncating option length to %d\n"
-argument_list|,
-name|o
-operator|->
-name|hdr
-operator|.
-name|len
 argument_list|)
 expr_stmt|;
 block|}

@@ -729,7 +729,7 @@ begin_define
 define|#
 directive|define
 name|MAX_FSM_OPT_LEN
-value|20
+value|52
 end_define
 
 begin_struct
