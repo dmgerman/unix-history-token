@@ -5120,6 +5120,84 @@ name|pcicfgregs
 modifier|*
 name|cfg
 decl_stmt|;
+comment|/* a few 'known' devices */
+if|if
+condition|(
+name|pci_get_class
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIC_SERIALBUS
+operator|&&
+name|pci_get_subclass
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIS_SERIALBUS_USB
+condition|)
+block|{
+if|if
+condition|(
+name|pci_get_progif
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0x00
+comment|/* UHCI */
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"UHCI USB controller (vendor"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|pci_get_progif
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0x10
+comment|/* OHCI */
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"OHCI USB controller"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"USB controller"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"unknown card"
+argument_list|)
+expr_stmt|;
+block|}
 name|dinfo
 operator|=
 name|device_get_ivars
@@ -5134,11 +5212,9 @@ name|dinfo
 operator|->
 name|cfg
 expr_stmt|;
-name|device_printf
+name|printf
 argument_list|(
-name|dev
-argument_list|,
-literal|"unknown card (vendor=0x%04x, dev=0x%04x) at %d.%d"
+literal|" (vendor=0x%04x, dev=0x%04x) at %d.%d"
 argument_list|,
 name|cfg
 operator|->

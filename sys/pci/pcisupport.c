@@ -6204,25 +6204,10 @@ operator|(
 literal|"Intel 82440FX (Natoma) PCI and memory controller"
 operator|)
 return|;
-case|case
-literal|0x70208086
-case|:
-return|return
-operator|(
-literal|"Intel 82371SB (PIIX3) USB controller"
-operator|)
-return|;
-ifdef|#
-directive|ifdef
-name|NWH
-case|case
-literal|0x71128086
-case|:
-return|return
-operator|(
-literal|"Intel 82371AB/EB (PIIX4) USB controller"
-operator|)
-return|;
+if|#
+directive|if
+literal|0
+block|case 0x70208086: 		return ("Intel 82371SB (PIIX3) USB controller"); 	case 0x71128086: 		return ("Intel 82371AB/EB (PIIX4) USB controller");
 endif|#
 directive|endif
 case|case
@@ -6379,14 +6364,12 @@ operator|(
 literal|"VIA 82C586B IDE controller"
 operator|)
 return|;
-case|case
-literal|0x30381106
-case|:
-return|return
-operator|(
-literal|"VIA 83C572 USB controller"
-operator|)
-return|;
+if|#
+directive|if
+literal|0
+block|case 0x30381106: 		return ("VIA 83C572 USB controller");
+endif|#
+directive|endif
 comment|/* AMD -- vendor 0x1022 */
 case|case
 literal|0x70061022
@@ -6424,14 +6407,12 @@ operator|(
 literal|"AcerLabs M1541 (Aladdin-V) PCI host bridge"
 operator|)
 return|;
-case|case
-literal|0x523710b9
-case|:
-return|return
-operator|(
-literal|"AcerLabs M5237 (Aladdin-V) USB controller"
-operator|)
-return|;
+if|#
+directive|if
+literal|0
+block|case 0x523710b9: 		return ("AcerLabs M5237 (Aladdin-V) USB controller");
+endif|#
+directive|endif
 case|case
 literal|0x710110b9
 case|:
@@ -6449,17 +6430,10 @@ operator|(
 literal|"OPTi 82C822 host to PCI Bridge"
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|NWH
-case|case
-literal|0xc8611045
-case|:
-return|return
-operator|(
-literal|"OPTi 82C861 (FireLink) USB controller"
-operator|)
-return|;
+if|#
+directive|if
+literal|0
+block|case 0xc8611045: 		return ("OPTi 82C861 (FireLink) USB controller");
 endif|#
 directive|endif
 comment|/* NEC -- vendor 0x1033 */
@@ -6477,31 +6451,19 @@ case|:
 return|return
 name|NULL
 return|;
-case|case
-literal|0x00351033
-case|:
-return|return
-operator|(
-literal|"NEC uPD 9210 USB controller"
-operator|)
-return|;
+if|#
+directive|if
+literal|0
+block|case 0x00351033: 		return ("NEC uPD 9210 USB controller");
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
 comment|/* CMD Tech -- vendor 0x1095 */
-case|case
-literal|0x06701095
-case|:
-return|return
-operator|(
-literal|"CMD Tech 670 (USB0670) USB controller"
-operator|)
-return|;
-case|case
-literal|0x06731095
-case|:
-return|return
-operator|(
-literal|"CMD Tech 673 (USB0673) USB controller"
-operator|)
-return|;
+block|case 0x06701095: 		return ("CMD Tech 670 (USB0670) USB controller"); 	case 0x06731095: 		return ("CMD Tech 673 (USB0673) USB controller");
+endif|#
+directive|endif
 block|}
 empty_stmt|;
 if|if
@@ -6540,67 +6502,16 @@ argument_list|(
 name|dev
 argument_list|)
 return|;
-if|if
-condition|(
-name|pci_get_class
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|PCIC_SERIALBUS
-operator|&&
-name|pci_get_subclass
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|PCIS_SERIALBUS_USB
-condition|)
-block|{
-if|if
-condition|(
-name|pci_get_progif
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x00
+if|#
+directive|if
+literal|0
+block|if (pci_get_class(dev) == PCIC_SERIALBUS&& pci_get_subclass(dev) == PCIS_SERIALBUS_USB) { 		if (pci_get_progif(dev) == 0x00
 comment|/* UHCI */
-condition|)
-block|{
-return|return
-operator|(
-literal|"UHCI USB controller"
-operator|)
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|pci_get_progif
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x10
+block|) { 			return ("UHCI USB controller"); 		} else if (pci_get_progif(dev) == 0x10
 comment|/* OHCI */
-condition|)
-block|{
-return|return
-operator|(
-literal|"OHCI USB controller"
-operator|)
-return|;
-block|}
-else|else
-block|{
-return|return
-operator|(
-literal|"USB controller"
-operator|)
-return|;
-block|}
-block|}
+block|) { 			return ("OHCI USB controller"); 		} else { 			return ("USB controller"); 		} 	}
+endif|#
+directive|endif
 return|return
 name|NULL
 return|;
