@@ -599,6 +599,7 @@ break|break;
 block|}
 endif|#
 directive|endif
+comment|/* INET */
 ifdef|#
 directive|ifdef
 name|INET6
@@ -643,6 +644,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/* INET6 */
 ifdef|#
 directive|ifdef
 name|IPX
@@ -688,6 +690,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/* IPX */
 ifdef|#
 directive|ifdef
 name|NETATALK
@@ -1208,28 +1211,15 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|bcopy
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|type
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
 name|l
 operator|->
 name|llc_snap
 operator|.
 name|ether_type
-argument_list|,
-sizeof|sizeof
+operator|=
+name|htons
 argument_list|(
-name|u_int16_t
-argument_list|)
+name|type
 argument_list|)
 expr_stmt|;
 block|}
@@ -1785,17 +1775,21 @@ name|type
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|l
 operator|->
 name|llc_control
 operator|!=
 name|LLC_UI
+operator|)
 operator|||
+operator|(
 name|l
 operator|->
 name|llc_ssap
 operator|!=
 name|LLC_SNAP_LSAP
+operator|)
 condition|)
 block|{
 name|ifp
