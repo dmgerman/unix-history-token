@@ -40,6 +40,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -180,6 +186,13 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+operator|!
+name|errno
+operator|||
+name|errno
+operator|==
+name|EINTR
+operator|||
 name|time_to_sleep
 operator|.
 name|tv_sec
@@ -378,6 +391,13 @@ operator|!
 name|alarm_termination
 operator|&&
 operator|(
+operator|!
+name|errno
+operator|||
+name|errno
+operator|==
+name|EINTR
+operator|||
 name|time_to_sleep
 operator|.
 name|tv_sec
