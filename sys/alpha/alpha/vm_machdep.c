@@ -246,6 +246,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|user
+modifier|*
+name|up
+decl_stmt|;
+name|struct
+name|trapframe
+modifier|*
+name|p2tf
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -418,25 +428,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * create the child's kernel stack, from scratch. 	 */
-block|{
-name|struct
-name|user
-modifier|*
-name|up
-init|=
-name|p2
-operator|->
-name|p_addr
-decl_stmt|;
-name|struct
-name|trapframe
-modifier|*
-name|p2tf
-decl_stmt|;
-comment|/* 		 * Pick a stack pointer, leaving room for a trapframe; 		 * copy trapframe from parent so return to user mode 		 * will be to right address, with correct registers. 		 */
-name|p2tf
-operator|=
+comment|/* 	 * Create the child's kernel stack, from scratch. 	 * 	 * Pick a stack pointer, leaving room for a trapframe; 	 * copy trapframe from parent so return to user mode 	 * will be to right address, with correct registers. 	 */
 name|p2
 operator|->
 name|p_frame
@@ -481,7 +473,13 @@ name|trapframe
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Set up return-value registers as fork() libc stub expects. 		 */
+comment|/* 	 * Set up return-value registers as fork() libc stub expects. 	 */
+name|p2tf
+operator|=
+name|p2
+operator|->
+name|p_frame
+expr_stmt|;
 name|p2tf
 operator|->
 name|tf_regs
@@ -512,7 +510,13 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* is child (FreeBSD) 	*/
-comment|/* 		 * Arrange for continuation at fork_return(), which 		 * will return to exception_return().  Note that the child 		 * process doesn't stay in the kernel for long! 		 *  		 * This is an inlined version of cpu_set_kpc. 		 */
+comment|/* 	 * Arrange for continuation at fork_return(), which 	 * will return to exception_return().  Note that the child 	 * process doesn't stay in the kernel for long! 	 */
+name|up
+operator|=
+name|p2
+operator|->
+name|p_addr
+expr_stmt|;
 name|up
 operator|->
 name|u_pcb
@@ -585,11 +589,11 @@ name|u_int64_t
 operator|)
 name|fork_trampoline
 expr_stmt|;
-comment|/* ra: assembly magic */
+comment|/* ra: magic */
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* 		 * We start off at a nesting level of 1 within the kernel. 		 */
+comment|/* 	 * We start off at a nesting level of 1 within the kernel. 	 */
 name|p2
 operator|->
 name|p_md
@@ -600,7 +604,6 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 block|}
 end_block
 
