@@ -400,6 +400,112 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * A process is initially started out with NDFILE descriptors stored within  * this structure, selected to be enough for typical applications based on  * the historical limit of 20 open files (and the usage of descriptors by  * shells).  If these descriptors are exhausted, a larger descriptor table  * may be allocated, up to a process' resource limit; the internal arrays  * are then unused.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDFILE
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDSLOTSIZE
+value|sizeof(NDSLOTTYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDENTRIES
+value|(NDSLOTSIZE * __CHAR_BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDSLOT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) / NDENTRIES)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDBIT
+parameter_list|(
+name|x
+parameter_list|)
+value|((NDSLOTTYPE)1<< ((x) % NDENTRIES))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDSLOTS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x) + NDENTRIES - 1) / NDENTRIES)
+end_define
+
+begin_comment
+comment|/*  * Basic allocation of descriptors:  * one of the above, plus arrays for NDFILE descriptors.  */
+end_comment
+
+begin_struct
+struct|struct
+name|filedesc0
+block|{
+name|struct
+name|filedesc
+name|fd_fd
+decl_stmt|;
+comment|/* 	 * These arrays are used when the number of open files is 	 *<= NDFILE, and are then pointed to by the pointers above. 	 */
+name|struct
+name|file
+modifier|*
+name|fd_dfiles
+index|[
+name|NDFILE
+index|]
+decl_stmt|;
+name|char
+name|fd_dfileflags
+index|[
+name|NDFILE
+index|]
+decl_stmt|;
+name|NDSLOTTYPE
+name|fd_dmap
+index|[
+name|NDSLOTS
+argument_list|(
+name|NDFILE
+argument_list|)
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Storage required per open file descriptor.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFILESIZE
+value|(sizeof(struct file *) + sizeof(char))
+end_define
+
+begin_comment
 comment|/*  * Descriptor management.  */
 end_comment
 
