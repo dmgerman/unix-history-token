@@ -243,6 +243,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|onetry
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
@@ -451,6 +457,26 @@ argument_list|)
 condition|)
 block|{
 name|save_scripts
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"-1"
+argument_list|)
+condition|)
+block|{
+name|onetry
 operator|=
 literal|1
 expr_stmt|;
@@ -907,7 +933,7 @@ parameter_list|()
 block|{
 name|error
 argument_list|(
-literal|"Usage: dhclient [-c] [-p<port>] [interface]"
+literal|"Usage: dhclient [-1] [-c] [-p<port>] [interface]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4716,6 +4742,22 @@ name|active
 expr_stmt|;
 block|}
 comment|/* No leases were available, or what was available didn't work, so 	   tell the shell script that we failed to allocate an address, 	   and try again later. */
+if|if
+condition|(
+name|onetry
+condition|)
+block|{
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|note
+argument_list|(
+literal|"Unable to obtain a lease on first try - exiting.\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|note
 argument_list|(
 literal|"No working leases in persistent database - sleeping.\n"
