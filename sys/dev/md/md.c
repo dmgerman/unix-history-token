@@ -303,6 +303,13 @@ end_endif
 
 begin_decl_stmt
 specifier|static
+name|g_init_t
+name|md_drvinit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|mdrootready
 decl_stmt|;
@@ -1414,6 +1421,11 @@ operator|.
 name|name
 operator|=
 literal|"MD"
+block|,
+operator|.
+name|init
+operator|=
+name|md_drvinit
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -5857,9 +5869,11 @@ specifier|static
 name|void
 name|md_drvinit
 parameter_list|(
-name|void
+name|struct
+name|g_class
 modifier|*
-name|unused
+name|mp
+name|__unused
 parameter_list|)
 block|{
 name|caddr_t
@@ -5898,6 +5912,9 @@ directive|endif
 name|mod
 operator|=
 name|NULL
+expr_stmt|;
+name|g_topology_unlock
+argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -6048,6 +6065,9 @@ argument_list|,
 name|MDCTL_NAME
 argument_list|)
 expr_stmt|;
+name|g_topology_lock
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -6083,11 +6103,6 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|md_drvinit
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
