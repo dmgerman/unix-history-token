@@ -1187,9 +1187,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|AL
-operator|&&
-name|DL
+operator|!
+name|__noqch
 condition|)
 name|win
 operator|->

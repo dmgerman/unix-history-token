@@ -2680,6 +2680,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|__set_scroll_region
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|__startwin
 name|__P
 argument_list|(
@@ -2846,6 +2860,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|__noqch
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|__usecs
 decl_stmt|;
 end_decl_stmt
 

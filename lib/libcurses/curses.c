@@ -81,6 +81,18 @@ comment|/*  					 * If terminal doesn't have  					 * insert/delete line capabil
 end_comment
 
 begin_decl_stmt
+name|int
+name|__usecs
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 					 * Use change scroll region, if 					 * no insert/delete capabilities 					 */
+end_comment
+
+begin_decl_stmt
 name|char
 name|AM
 decl_stmt|,
