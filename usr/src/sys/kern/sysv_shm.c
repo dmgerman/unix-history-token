@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department. Originally from University of Wisconsin.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: uipc_shm.c 1.9 89/08/14$  *  *	@(#)sysv_shm.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department. Originally from University of Wisconsin.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: uipc_shm.c 1.9 89/08/14$  *  *	@(#)sysv_shm.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -850,8 +850,6 @@ name|error
 operator|=
 name|ipcaccess
 argument_list|(
-name|cred
-argument_list|,
 operator|&
 name|shp
 operator|->
@@ -862,6 +860,8 @@ operator|->
 name|shmflg
 operator|&
 literal|0777
+argument_list|,
+name|cred
 argument_list|)
 condition|)
 return|return
@@ -925,6 +925,11 @@ name|SHMMMNI
 operator|+
 name|rval
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1051,14 +1056,14 @@ name|error
 operator|=
 name|ipcaccess
 argument_list|(
-name|cred
-argument_list|,
 operator|&
 name|shp
 operator|->
 name|shm_perm
 argument_list|,
 name|IPC_R
+argument_list|,
+name|cred
 argument_list|)
 condition|)
 return|return
@@ -1420,8 +1425,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|error1
-decl_stmt|,
 name|prot
 decl_stmt|,
 name|shmmapin
@@ -1474,10 +1477,6 @@ name|error
 operator|=
 name|ipcaccess
 argument_list|(
-name|u
-operator|.
-name|u_cred
-argument_list|,
 operator|&
 name|shp
 operator|->
@@ -1496,6 +1495,10 @@ else|:
 name|IPC_R
 operator||
 name|IPC_W
+argument_list|,
+name|u
+operator|.
+name|u_cred
 argument_list|)
 condition|)
 return|return
@@ -1699,22 +1702,16 @@ name|shmmapin
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|error1
-operator|=
+operator|(
+name|void
+operator|)
 name|mmfree
 argument_list|(
 name|p
 argument_list|,
 name|mp
 argument_list|)
-condition|)
-return|return
-operator|(
-name|error1
-operator|)
-return|;
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1751,6 +1748,11 @@ name|int
 operator|)
 name|uva
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -2019,19 +2021,9 @@ end_comment
 begin_macro
 name|shmexit
 argument_list|(
-argument|p
-argument_list|,
 argument|mp
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -2043,6 +2035,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+comment|/* XXX */
 return|return
 operator|(
 name|shmufree
