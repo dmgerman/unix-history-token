@@ -1399,10 +1399,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|totused
-index|[
-literal|0
-index|]
+name|totnum
 argument_list|,
 name|nmbufs
 argument_list|)
@@ -1809,10 +1806,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|totused
-index|[
-literal|1
-index|]
+name|totnum
 argument_list|,
 name|nmbclusters
 argument_list|)
