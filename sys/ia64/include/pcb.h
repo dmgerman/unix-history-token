@@ -95,10 +95,6 @@ name|pcb_pr
 decl_stmt|;
 comment|/* predicates */
 name|u_int64_t
-name|pcb_schednest
-decl_stmt|;
-comment|/* sched_lock state */
-name|u_int64_t
 name|pcb_onfault
 decl_stmt|;
 comment|/* for copy faults */
