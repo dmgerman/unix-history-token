@@ -188,7 +188,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_RCP
-value|"/usr/bin/rcp"
+value|"/bin/rcp"
 end_define
 
 begin_define
