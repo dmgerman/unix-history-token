@@ -14,41 +14,6 @@ name|DEFAULT_RCLK
 value|1843200
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_comment
-comment|/* 16 bit baud rate divisor (lower byte in dca_data, upper in dca_ier) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COMBRD
-parameter_list|(
-name|x
-parameter_list|)
-value|(1843200 / (16*(x)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|COMBRD_RSA
-parameter_list|(
-name|x
-parameter_list|)
-value|(14745600 / (16*(x)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* interrupt enable register */
 end_comment
