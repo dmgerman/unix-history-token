@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5042,9 +5042,9 @@ name|MGETHDR
 argument_list|(
 name|om
 argument_list|,
-name|MT_DATA
-argument_list|,
 name|M_WAIT
+argument_list|,
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 if|if
@@ -5094,23 +5094,17 @@ name|u_char
 operator|*
 argument_list|)
 expr_stmt|;
-operator|*
-operator|(
-operator|(
-name|u_long
-operator|*
-operator|)
-name|op
-operator|)
-operator|=
-operator|*
-operator|(
-operator|(
-name|u_long
-operator|*
-operator|)
+name|bcopy
+argument_list|(
 name|ip
-operator|)
+argument_list|,
+name|op
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u_long
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ip
 operator|+=
@@ -5552,9 +5546,9 @@ name|MGETHDR
 argument_list|(
 name|om
 argument_list|,
-name|MT_DATA
-argument_list|,
 name|M_WAIT
+argument_list|,
+name|MT_DATA
 argument_list|)
 expr_stmt|;
 if|if
