@@ -43,7 +43,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,17 +125,6 @@ decl_stmt|;
 endif|#
 directive|endif
 specifier|extern
-name|int
-name|update
-argument_list|()
-decl_stmt|,
-name|quit
-argument_list|()
-decl_stmt|,
-name|log_score
-argument_list|()
-decl_stmt|;
-specifier|extern
 name|char
 modifier|*
 name|default_game
@@ -143,6 +132,17 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|okay_game
+argument_list|()
+decl_stmt|;
+specifier|extern
+name|void
+name|log_score
+argument_list|()
+decl_stmt|,
+name|quit
+argument_list|()
+decl_stmt|,
+name|update
 argument_list|()
 decl_stmt|;
 name|start_time

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timedc.c	2.9 (Berkeley) %G%"
+literal|"@(#)timedc.c	2.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,7 +126,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
+name|void
 name|intr
 parameter_list|()
 function_decl|;
@@ -357,12 +357,10 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|intr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -382,7 +380,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Command parser.  */
