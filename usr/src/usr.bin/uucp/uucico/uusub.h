@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uusub.h	4.1	85/01/22	*/
-end_comment
-
-begin_comment
-comment|/*	uusub is not privided with 4.2bsd  */
+comment|/*-  * Copyright (c) 1985 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)uusub.h	4.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
