@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: login.c,v 1.36 1998/07/22 04:33:12 jdp Exp $"
+literal|"$Id: login.c,v 1.37 1998/07/31 07:22:31 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2306,7 +2306,7 @@ argument_list|(
 operator|(
 name|cnt
 operator|-
-literal|3
+name|backoff
 operator|)
 operator|*
 literal|5
