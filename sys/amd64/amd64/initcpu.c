@@ -271,6 +271,58 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* Must *NOT* be BSS or locore will bzero these after setting them */
+end_comment
+
+begin_decl_stmt
+name|int
+name|cpu
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Are we 386, 386sx, 486, etc? */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|cpu_id
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Stepping ID */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|cpu_feature
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Feature flags */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|cpu_high
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Highest arg to CPUID */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -280,6 +332,8 @@ end_ifdef
 begin_decl_stmt
 name|u_int
 name|cpu_fxsr
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -291,6 +345,21 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|char
+name|cpu_vendor
+index|[
+literal|20
+index|]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* CPU Origin code */
+end_comment
 
 begin_ifdef
 ifdef|#
