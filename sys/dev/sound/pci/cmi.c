@@ -4218,7 +4218,7 @@ name|sc
 operator|->
 name|irq
 argument_list|,
-literal|0
+name|INTR_MPSAFE
 argument_list|,
 name|cmi_intr
 argument_list|,
