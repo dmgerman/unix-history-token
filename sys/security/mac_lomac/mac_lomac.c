@@ -2166,7 +2166,6 @@ name|vattr
 name|va
 decl_stmt|;
 specifier|static
-specifier|const
 name|char
 name|xxx
 index|[]
