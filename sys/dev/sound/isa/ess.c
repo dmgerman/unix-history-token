@@ -4161,6 +4161,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4171,15 +4173,6 @@ condition|)
 return|return
 name|ENXIO
 return|;
-name|bzero
-argument_list|(
-name|sc
-argument_list|,
-sizeof|sizeof
-expr|*
-name|sc
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|parent_dev
