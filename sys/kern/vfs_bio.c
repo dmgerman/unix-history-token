@@ -1241,6 +1241,15 @@ operator|>
 name|hirunningspace
 condition|)
 block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+comment|/* fix race against interrupt/biodone() */
 operator|++
 name|runningbufreq
 expr_stmt|;
@@ -1254,6 +1263,11 @@ argument_list|,
 literal|"wdrain"
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
