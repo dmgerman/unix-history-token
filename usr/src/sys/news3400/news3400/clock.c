@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, and Kazumasa Utashiro of  * Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, and Kazumasa Utashiro of  * Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -36,26 +36,6 @@ end_include
 begin_comment
 comment|/*  * Machine-dependent clock routines.  *  * Startrtclock restarts the real-time clock, which provides  * hardclock interrupts to kern_clock.c.  *  * Inittodr initializes the time of day hardware which provides  * date functions.  Its primary function is to use some file  * system information in case the hardare clock lost state.  *  * Resettodr restores the time of day hardware after a time change.  */
 end_comment
-
-begin_comment
-comment|/*  * Set up the real-time and statistics clocks.  Leave stathz 0 only if  * no alternative timer is available.  *  */
-end_comment
-
-begin_macro
-name|cpu_initclocks
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|startrtclock
-argument_list|()
-expr_stmt|;
-name|enablertclock
-argument_list|()
-expr_stmt|;
-block|}
-end_block
 
 begin_comment
 comment|/*  * We assume newhz is either stathz or profhz, and that neither will  * change after being set up above.  Could recalculate intervals here  * but that would be a drag.  */
@@ -127,6 +107,26 @@ name|INTEN0_TIMINT
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Set up the real-time and statistics clocks.  Leave stathz 0 only if  * no alternative timer is available.  *  */
+end_comment
+
+begin_macro
+name|cpu_initclocks
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|startrtclock
+argument_list|()
+expr_stmt|;
+name|enablertclock
+argument_list|()
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/*  * This code is defunct after 2099.  * Will Unix still be here then??  */
