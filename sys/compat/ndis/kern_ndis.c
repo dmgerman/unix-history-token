@@ -1854,6 +1854,10 @@ if|if
 condition|(
 name|buf
 operator|->
+name|nb_bytecount
+operator|>
+name|buf
+operator|->
 name|nb_size
 condition|)
 name|m
