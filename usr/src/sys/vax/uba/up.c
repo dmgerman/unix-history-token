@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_decl_stmt
 name|int
+name|asdel
+init|=
+literal|500
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|csdel3
 init|=
 literal|100
@@ -14,7 +22,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	%H%	3.3	%G%	*/
+comment|/*	%H%	3.4	%G%	*/
 end_comment
 
 begin_comment
@@ -757,45 +765,13 @@ begin_decl_stmt
 name|int
 name|sdelay
 init|=
-literal|125
+literal|150
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Delay after selecting drive in upcs2 */
 end_comment
-
-begin_decl_stmt
-name|int
-name|iedel1
-init|=
-literal|500
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|iedel2
-init|=
-literal|500
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|iedel3
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|iedel4
-init|=
-literal|500
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -1012,6 +988,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|upustart
 argument_list|(
 name|unit
@@ -1029,6 +1008,9 @@ name|b_active
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|upstart
 argument_list|()
 expr_stmt|;
@@ -1085,6 +1067,11 @@ name|cn
 decl_stmt|,
 name|csn
 decl_stmt|;
+name|int
+name|didie
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|printsw
@@ -1102,7 +1089,9 @@ name|unit
 operator|>=
 name|NUP
 condition|)
-return|return;
+goto|goto
+name|out
+goto|;
 comment|/* 	 * Whether or not it was before, this unit is no longer busy. 	 * Check to see if there is (still or now) a request in this 	 * drives queue, and if there is, select this unit. 	 */
 if|if
 condition|(
@@ -1145,7 +1134,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return;
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 operator|(
@@ -1227,6 +1218,10 @@ operator|->
 name|upof
 operator|=
 name|FMT22
+expr_stmt|;
+name|didie
+operator|=
+literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * We are called from upstrategy when a new request arrives 	 * if we are not already active (with dp->b_active == 0), 	 * and we then set dp->b_active to 1 if we are to SEARCH 	 * for the desired cylinder, or 2 if we are on-cylinder. 	 * If we SEARCH then we will later be called from upintr() 	 * when the search is complete, and will link this disk onto 	 * the uptab.  We then set dp->b_active to 2 so that upintr() 	 * will not call us again. 	 * 	 * NB: Other drives clear the bit in the attention status 	 * (i.e. upas) register corresponding to the drive when they 	 * place the drive on the ready (i.e. uptab) queue.  This does 	 * not work with the Emulex, as the controller hangs the UBA 	 * of the VAX shortly after the upas register is set, for 	 * reasons unknown.  This only occurs in multi-spindle configurations, 	 * but to avoid the problem we use the fact that dp->b_active is 	 * 2 to replace the clearing of the upas bit. 	 */
@@ -1376,6 +1371,10 @@ name|SEARCH
 operator||
 name|GO
 expr_stmt|;
+name|didie
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Mark this unit busy. 	 */
 name|unit
 operator|+=
@@ -1401,7 +1400,9 @@ index|]
 operator|++
 expr_stmt|;
 block|}
-return|return;
+goto|goto
+name|out
+goto|;
 name|done
 label|:
 comment|/* 	 * This unit is ready to go.  Make active == 2 so 	 * we won't get called again (by upintr() because upas&(1<<unit)) 	 * and link us onto the chain of ready disks. 	 */
@@ -1446,6 +1447,13 @@ name|b_actl
 operator|=
 name|dp
 expr_stmt|;
+name|out
+label|:
+return|return
+operator|(
+name|didie
+operator|)
+return|;
 block|}
 end_block
 
@@ -1518,7 +1526,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 operator|(
@@ -1869,6 +1881,9 @@ name|upcs1
 operator|=
 name|cmd
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|csdel3
@@ -1878,6 +1893,8 @@ argument_list|(
 name|csdel3
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * This is a controller busy situation. 	 * Record in dk slot NUP+DK_N (after last drive) 	 * unless there aren't that many slots reserved for 	 * us in which case we record this as a drive busy 	 * (if there is room for that). 	 */
 name|unit
 operator|=
@@ -1930,6 +1947,11 @@ operator|>>
 literal|6
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
@@ -1972,6 +1994,11 @@ operator|->
 name|upas
 operator|&
 literal|0377
+decl_stmt|;
+name|int
+name|needie
+init|=
+literal|1
 decl_stmt|;
 if|if
 condition|(
@@ -2276,6 +2303,10 @@ argument_list|(
 name|idelay
 argument_list|)
 expr_stmt|;
+name|needie
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2396,6 +2427,10 @@ argument_list|(
 literal|25
 argument_list|)
 expr_stmt|;
+name|needie
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|uptab
 operator|.
@@ -2453,12 +2488,6 @@ name|short
 argument_list|)
 operator|)
 expr_stmt|;
-name|upaddr
-operator|->
-name|upcs1
-operator|=
-name|IE
-expr_stmt|;
 name|iodone
 argument_list|(
 name|bp
@@ -2470,10 +2499,16 @@ name|dp
 operator|->
 name|b_actf
 condition|)
+if|if
+condition|(
 name|upustart
 argument_list|(
 name|unit
 argument_list|)
+condition|)
+name|needie
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|as
@@ -2632,10 +2667,25 @@ literal|1
 operator|<<
 name|unit
 expr_stmt|;
+if|if
+condition|(
+name|asdel
+condition|)
+name|DELAY
+argument_list|(
+name|asdel
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|upustart
 argument_list|(
 name|unit
 argument_list|)
+condition|)
+name|needie
+operator|=
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -2700,22 +2750,20 @@ name|b_active
 operator|==
 literal|0
 condition|)
+if|if
+condition|(
 name|upstart
 argument_list|()
+condition|)
+name|needie
+operator|=
+literal|0
 expr_stmt|;
 name|out
 label|:
 if|if
 condition|(
-operator|(
-name|upaddr
-operator|->
-name|upcs1
-operator|&
-name|IE
-operator|)
-operator|==
-literal|0
+name|needie
 condition|)
 name|upaddr
 operator|->
