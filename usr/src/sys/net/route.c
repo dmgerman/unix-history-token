@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -666,18 +666,6 @@ block|}
 block|}
 end_function
 
-begin_decl_stmt
-name|int
-name|ifafree_verbose
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * We are still debugging potential overfreeing of ifaddr's  */
-end_comment
-
 begin_function
 name|void
 name|ifafree
@@ -695,7 +683,7 @@ if|if
 condition|(
 name|ifa
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -707,37 +695,17 @@ condition|(
 name|ifa
 operator|->
 name|ifa_refcnt
-operator|<
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"ifafree: %x ref %d\n"
-argument_list|,
-name|ifa
-argument_list|,
-name|ifa
-operator|->
-name|ifa_refcnt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ifa
-operator|->
-name|ifa_refcnt
 operator|==
 literal|0
-operator|&&
-name|ifafree_verbose
 condition|)
-name|printf
+name|free
 argument_list|(
-literal|"ifafree: %x not freed.\n"
-argument_list|,
 name|ifa
+argument_list|,
+name|M_IFADDR
 argument_list|)
 expr_stmt|;
+else|else
 name|ifa
 operator|->
 name|ifa_refcnt
