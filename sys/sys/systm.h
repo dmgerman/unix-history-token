@@ -575,11 +575,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|logwakeup
+name|log_console
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|uio
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

@@ -60,7 +60,7 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|int
-name|msgbufmapped
+name|msgbuftrigger
 decl_stmt|;
 end_decl_stmt
 

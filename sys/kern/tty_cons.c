@@ -1325,6 +1325,11 @@ name|cn_tab
 operator|->
 name|cn_dev
 expr_stmt|;
+name|log_console
+argument_list|(
+name|uio
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(
