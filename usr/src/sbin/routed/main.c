@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.3 %G%"
+literal|"@(#)main.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -389,17 +389,34 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|cc
+name|t
 operator|=
 literal|0
 init|;
-name|cc
+name|t
 operator|<
-literal|10
+literal|20
 condition|;
-name|cc
+name|t
 operator|++
 control|)
+if|if
+condition|(
+name|t
+operator|!=
+name|s
+condition|)
+ifdef|#
+directive|ifdef
+name|COMPAT
+if|if
+condition|(
+name|t
+operator|!=
+name|snoroute
+condition|)
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
