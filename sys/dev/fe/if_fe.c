@@ -158,11 +158,26 @@ begin_comment
 comment|/* PCCARD suport */
 end_comment
 
+begin_comment
+comment|/* XXX FIXME! doesn't work with new pccard code, must be converted! */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|"card.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
