@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/sh.h,v 3.93 2000/11/19 20:50:43 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/sh.h,v 3.96 2001/03/18 19:06:29 christos Exp $ */
 end_comment
 
 begin_comment
@@ -860,11 +860,20 @@ begin_comment
 comment|/* !PATHSEP */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__HP_CXD_SPP
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -899,7 +908,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __HP_CXD_SPP */
+comment|/* __HP_CXD_SPP&& !__hpux */
 end_comment
 
 begin_comment
@@ -1588,6 +1597,11 @@ operator|||
 name|defined
 argument_list|(
 name|_MINIX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|linux
 argument_list|)
 end_if
 
@@ -3256,7 +3270,7 @@ begin_define
 define|#
 directive|define
 name|MAXHOSTNAMELEN
-value|255
+value|256
 end_define
 
 begin_endif
