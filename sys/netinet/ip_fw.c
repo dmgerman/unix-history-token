@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.91 1998/07/02 05:49:08 julian Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.92 1998/07/06 03:20:13 julian Exp $  */
 end_comment
 
 begin_comment
@@ -1984,6 +1984,18 @@ break|break;
 case|case
 name|IPPROTO_ICMP
 case|:
+if|if
+condition|(
+operator|(
+name|ip
+operator|->
+name|ip_off
+operator|&
+name|IP_OFFMASK
+operator|)
+operator|==
+literal|0
+condition|)
 name|printf
 argument_list|(
 literal|"ICMP:%u.%u "
@@ -1995,6 +2007,12 @@ argument_list|,
 name|icmp
 operator|->
 name|icmp_code
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"ICMP "
 argument_list|)
 expr_stmt|;
 name|print_ip
