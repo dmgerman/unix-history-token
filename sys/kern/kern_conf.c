@@ -1270,9 +1270,7 @@ name|dev
 operator|->
 name|si_name
 argument_list|,
-name|SPECNAMELEN
-operator|+
-literal|1
+literal|32
 argument_list|,
 name|ap
 argument_list|)
