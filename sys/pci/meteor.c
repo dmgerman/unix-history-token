@@ -194,7 +194,7 @@ file|<machine/ioctl_meteor.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|meteor_intr
 name|__P
@@ -476,6 +476,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|meteor_reg_t
 name|meteor
 index|[
@@ -485,6 +486,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|read_intr_wait
 decl_stmt|;
@@ -538,6 +540,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pci_device
 name|met_device
@@ -1336,6 +1339,7 @@ comment|/* interrupt handling routine  	   complete meteor_read() if using inter
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|meteor_intr
 parameter_list|(

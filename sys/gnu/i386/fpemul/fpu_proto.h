@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  *    $Id: fpu_proto.h,v 1.2 1994/04/29 21:16:23 gclarkii Exp $  *  */
+comment|/*  *  *    $Id: fpu_proto.h,v 1.3 1995/03/16 18:11:11 bde Exp $  *  */
 end_comment
 
 begin_comment
@@ -372,16 +372,6 @@ end_comment
 begin_function_decl
 specifier|extern
 name|void
-name|fclex
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|finit
 parameter_list|(
 name|void
@@ -612,18 +602,6 @@ parameter_list|(
 name|FPU_REG
 modifier|*
 name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|poly_add_1
-parameter_list|(
-name|FPU_REG
-modifier|*
-name|src
 parameter_list|)
 function_decl|;
 end_function_decl

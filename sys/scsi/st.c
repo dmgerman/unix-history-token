@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.53 1995/12/10 10:58:30 julian Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.54 1995/12/10 19:52:59 bde Exp $  */
 end_comment
 
 begin_comment
@@ -950,24 +950,28 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|d_open_t
 name|stopen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|d_close_t
 name|stclose
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|d_ioctl_t
 name|stioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|d_strategy_t
 name|ststrategy
 decl_stmt|;
@@ -1604,7 +1608,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"rst%d.0"
+literal|"rst%ld.0"
 argument_list|,
 name|unit
 argument_list|)
@@ -1645,7 +1649,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"nrst%d.0"
+literal|"nrst%ld.0"
 argument_list|,
 name|unit
 argument_list|)
@@ -1686,7 +1690,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"enrst%d.0"
+literal|"enrst%ld.0"
 argument_list|,
 name|unit
 argument_list|)
@@ -1727,7 +1731,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"st%dctl.0"
+literal|"st%ldctl.0"
 argument_list|,
 name|unit
 argument_list|)
@@ -1768,7 +1772,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"rst%d.1"
+literal|"rst%ld.1"
 argument_list|,
 name|unit
 argument_list|)
@@ -1809,7 +1813,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"nrst%d.1"
+literal|"nrst%ld.1"
 argument_list|,
 name|unit
 argument_list|)
@@ -1850,7 +1854,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"enrst%d.1"
+literal|"enrst%ld.1"
 argument_list|,
 name|unit
 argument_list|)
@@ -1891,7 +1895,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"st%dctl.1"
+literal|"st%ldctl.1"
 argument_list|,
 name|unit
 argument_list|)
@@ -1932,7 +1936,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"rst%d.2"
+literal|"rst%ld.2"
 argument_list|,
 name|unit
 argument_list|)
@@ -1973,7 +1977,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"nrst%d.2"
+literal|"nrst%ld.2"
 argument_list|,
 name|unit
 argument_list|)
@@ -2014,7 +2018,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"enrst%d.2"
+literal|"enrst%ld.2"
 argument_list|,
 name|unit
 argument_list|)
@@ -2055,7 +2059,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"st%dctl.2"
+literal|"st%ldctl.2"
 argument_list|,
 name|unit
 argument_list|)
@@ -2096,7 +2100,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"rst%d.3"
+literal|"rst%ld.3"
 argument_list|,
 name|unit
 argument_list|)
@@ -2137,7 +2141,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"nrst%d.3"
+literal|"nrst%ld.3"
 argument_list|,
 name|unit
 argument_list|)
@@ -2178,7 +2182,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"enrst%d.3"
+literal|"enrst%ld.3"
 argument_list|,
 name|unit
 argument_list|)
@@ -2219,7 +2223,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"st%dctl.3"
+literal|"st%ldctl.3"
 argument_list|,
 name|unit
 argument_list|)
@@ -2261,7 +2265,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"rst%d"
+literal|"rst%ld"
 argument_list|,
 name|unit
 argument_list|)
@@ -2289,7 +2293,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"nrst%d"
+literal|"nrst%ld"
 argument_list|,
 name|unit
 argument_list|)
@@ -2317,7 +2321,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"enrst%d"
+literal|"enrst%ld"
 argument_list|,
 name|unit
 argument_list|)

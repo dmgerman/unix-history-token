@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.25 1995/11/14 20:34:16 phk Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.26 1995/12/02 19:38:03 bde Exp $  */
 end_comment
 
 begin_include
@@ -446,6 +446,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mrtstat
 name|mrtstat
@@ -1084,6 +1085,7 @@ value|0x2
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mbuf
 modifier|*
@@ -1095,6 +1097,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_char
 name|nexpire
 index|[
@@ -1104,6 +1107,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vif
 name|viftable
@@ -1207,6 +1211,7 @@ comment|/*  * Define the token bucket filter structures  * tbftable -> each vif 
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|tbf
 name|tbftable
@@ -1232,6 +1237,7 @@ comment|/*  * 'Interfaces' associated with decapsulator (so we can tell  * packe
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ifnet
 name|multicast_decap_if

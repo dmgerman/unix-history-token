@@ -76,46 +76,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|FPU_REG
-name|CONST_2
-init|=
-block|{
-name|SIGN_POS
-block|,
-name|TW_Valid
-block|,
-name|EXP_BIAS
-operator|+
-literal|1
-block|,
-literal|0x00000000
-block|,
-literal|0x80000000
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|FPU_REG
-name|CONST_HALF
-init|=
-block|{
-name|SIGN_POS
-block|,
-name|TW_Valid
-block|,
-name|EXP_BIAS
-operator|-
-literal|1
-block|,
-literal|0x00000000
-block|,
-literal|0x80000000
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|FPU_REG
 name|CONST_L2T
 init|=
@@ -136,6 +97,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|FPU_REG
 name|CONST_L2E
 init|=
@@ -212,6 +174,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|FPU_REG
 name|CONST_LG2
 init|=

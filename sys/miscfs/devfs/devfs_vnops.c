@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.15 1995/10/10 07:12:27 julian Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.16 1995/11/09 08:16:50 bde Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -126,6 +126,7 @@ comment|/*  * Convert a component of a pathname into a pointer to a locked node.
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_lookup
 parameter_list|(
@@ -134,7 +135,6 @@ name|vop_lookup_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_lookup_args {                 struct vnode * a_dvp; directory vnode ptr                 struct vnode ** a_vpp; where to put the result                 struct componentname * a_cnp; the name we want         };*/
 block|{
 name|struct
@@ -1159,6 +1159,7 @@ comment|/*  *  Create a regular file.  *  We must also free the pathname buffer 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_create
 parameter_list|(
@@ -1167,7 +1168,6 @@ name|vop_mknod_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_mknod_args  {                 struct vnode *a_dvp;                 struct vnode **a_vpp;                 struct componentname *a_cnp;                 struct vattr *a_vap;         } */
 block|{
 name|DBPRINT
@@ -1184,6 +1184,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_mknod
 parameter_list|(
@@ -1192,7 +1193,6 @@ name|vop_mknod_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_mknod_args  {                 struct vnode *a_dvp;                 struct vnode **a_vpp;                 struct componentname *a_cnp;                 struct vattr *a_vap;         } */
 block|{
 name|int
@@ -1306,6 +1306,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_open
 parameter_list|(
@@ -1314,7 +1315,6 @@ name|vop_open_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_open_args  {                 struct vnode *a_vp;                 int  a_mode;                 struct ucred *a_cred;                 struct proc *a_p;         } */
 block|{
 name|DBPRINT
@@ -1331,6 +1331,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_close
 parameter_list|(
@@ -1339,7 +1340,6 @@ name|vop_close_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_close_args  {                 struct vnode *a_vp;                 int  a_fflag;                 struct ucred *a_cred;                 struct proc *a_p;         } */
 block|{
 name|DBPRINT
@@ -1356,6 +1356,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_access
 parameter_list|(
@@ -1364,7 +1365,6 @@ name|vop_access_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_access_args  {                 struct vnode *a_vp;                 int  a_mode;                 struct ucred *a_cred;                 struct proc *a_p;         } */
 block|{
 comment|/*  	 *  mode is filled with a combination of VREAD, VWRITE,  	 *  and/or VEXEC bits turned on.  In an octal number these  	 *  are the Y in 0Y00.  	 */
@@ -1550,6 +1550,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_getattr
 parameter_list|(
@@ -1558,7 +1559,6 @@ name|vop_getattr_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_getattr_args {                 struct vnode *a_vp;                 struct vattr *a_vap;                 struct ucred *a_cred;                 struct proc *a_p;         } */
 block|{
 name|struct
@@ -1944,6 +1944,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_setattr
 parameter_list|(
@@ -1952,7 +1953,6 @@ name|vop_setattr_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_setattr_args  {                 struct vnode *a_vp;                 struct vattr *a_vap;                 struct ucred *a_cred;                 struct proc *a_p;         } */
 block|{
 name|struct
@@ -2303,6 +2303,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_read
 parameter_list|(
@@ -2311,7 +2312,6 @@ name|vop_read_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_read_args {                 struct vnode *a_vp;                 struct uio *a_uio;                 int  a_ioflag;                 struct ucred *a_cred;         } */
 block|{
 name|int
@@ -2440,6 +2440,7 @@ comment|/*  *  Write data to a file or directory.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_write
 parameter_list|(
@@ -2448,7 +2449,6 @@ name|vop_write_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_write_args  {                 struct vnode *a_vp;                 struct uio *a_uio;                 int  a_ioflag;                 struct ucred *a_cred;         } */
 block|{
 name|dn_p
@@ -2555,6 +2555,7 @@ comment|/* presently not called from devices anyhow */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_ioctl
 parameter_list|(
@@ -2563,7 +2564,6 @@ name|vop_ioctl_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_ioctl_args  {                 struct vnode *a_vp;                 int  a_command;                 caddr_t  a_data;                 int  a_fflag;                 struct ucred *a_cred;                 struct proc *a_p;         } */
 block|{
 name|DBPRINT
@@ -2580,6 +2580,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_select
 parameter_list|(
@@ -2588,7 +2589,6 @@ name|vop_select_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_select_args {                 struct vnode *a_vp;                 int  a_which;                 int  a_fflags;                 struct ucred *a_cred;                 struct proc *a_p;         } */
 block|{
 name|DBPRINT
@@ -2606,6 +2606,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_mmap
 parameter_list|(
@@ -2614,7 +2615,6 @@ name|vop_mmap_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_mmap_args  {                 struct vnode *a_vp;                 int  a_fflags;                 struct ucred *a_cred;                 struct proc *a_p;         } */
 block|{
 name|DBPRINT
@@ -2635,6 +2635,7 @@ comment|/*  *  Flush the blocks of a file to disk.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_fsync
 parameter_list|(
@@ -2643,7 +2644,6 @@ name|vop_fsync_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_fsync_args {                 struct vnode *a_vp;                 struct ucred *a_cred;                 int  a_waitfor;                 struct proc *a_p;         } */
 block|{
 name|DBPRINT
@@ -2662,6 +2662,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_seek
 parameter_list|(
@@ -2670,7 +2671,6 @@ name|vop_seek_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_seek_args  {                 struct vnode *a_vp;                 off_t  a_oldoff;                 off_t  a_newoff;                 struct ucred *a_cred;         } */
 block|{
 name|int
@@ -2692,6 +2692,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_remove
 parameter_list|(
@@ -2700,7 +2701,6 @@ name|vop_remove_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_remove_args  {                 struct vnode *a_dvp;                 struct vnode *a_vp;                 struct componentname *a_cnp;         } */
 block|{
 name|struct
@@ -3053,6 +3053,7 @@ comment|/*  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_link
 parameter_list|(
@@ -3061,7 +3062,6 @@ name|vop_link_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_link_args  {                 struct vnode *a_tdvp;                 struct vnode *a_vp;                 struct componentname *a_cnp;         } */
 block|{
 name|struct
@@ -3303,6 +3303,7 @@ comment|/*  * Rename system call. Seems overly complicated to me...  * 	rename("
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_rename
 parameter_list|(
@@ -3311,7 +3312,6 @@ name|vop_rename_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_rename_args  {                 struct vnode *a_fdvp;                 struct vnode *a_fvp;                 struct componentname *a_fcnp;                 struct vnode *a_tdvp;                 struct vnode *a_tvp;                 struct componentname *a_tcnp;         } */
 block|{
 name|struct
@@ -4179,6 +4179,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_mkdir
 parameter_list|(
@@ -4187,7 +4188,6 @@ name|vop_mkdir_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_mkdir_args {                 struct vnode *a_dvp;                 struct vnode **a_vpp;                 struct componentname *a_cnp;                 struct vattr *a_vap;         } */
 block|{
 name|DBPRINT
@@ -4204,6 +4204,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_rmdir
 parameter_list|(
@@ -4212,7 +4213,6 @@ name|vop_rmdir_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_rmdir_args {                 struct vnode *a_dvp;                 struct vnode *a_vp;                 struct componentname *a_cnp;         } */
 block|{
 name|DBPRINT
@@ -4229,6 +4229,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_symlink
 parameter_list|(
@@ -4237,7 +4238,6 @@ name|vop_symlink_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_symlink_args {                 struct vnode *a_dvp;                 struct vnode **a_vpp;                 struct componentname *a_cnp;                 struct vattr *a_vap;                 char *a_target;         } */
 block|{
 return|return
@@ -4258,6 +4258,7 @@ comment|/*  * Vnode op for readdir  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_readdir
 parameter_list|(
@@ -4266,7 +4267,6 @@ name|vop_readdir_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_readdir_args {                 struct vnode *a_vp;                 struct uio *a_uio;                 struct ucred *a_cred;         	int *eofflag;         	int *ncookies;         	u_int **cookies;         } */
 block|{
 name|struct
@@ -4711,6 +4711,7 @@ comment|/*  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_readlink
 parameter_list|(
@@ -4719,7 +4720,6 @@ name|vop_readlink_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_readlink_args {                 struct vnode *a_vp;                 struct uio *a_uio;                 struct ucred *a_cred;         } */
 block|{
 name|DBPRINT
@@ -4736,6 +4736,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_abortop
 parameter_list|(
@@ -4744,7 +4745,6 @@ name|vop_abortop_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_abortop_args {                 struct vnode *a_dvp;                 struct componentname *a_cnp;         } */
 block|{
 name|DBPRINT
@@ -4790,6 +4790,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_inactive
 parameter_list|(
@@ -4798,7 +4799,6 @@ name|vop_inactive_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_inactive_args {                 struct vnode *a_vp;         } */
 block|{
 name|DBPRINT
@@ -4815,6 +4815,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_lock
 parameter_list|(
@@ -4823,7 +4824,6 @@ name|vop_lock_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 block|{
 name|DBPRINT
 argument_list|(
@@ -4839,6 +4839,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_unlock
 parameter_list|(
@@ -4847,7 +4848,6 @@ name|vop_unlock_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 block|{
 name|DBPRINT
 argument_list|(
@@ -4863,6 +4863,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_islocked
 parameter_list|(
@@ -4871,7 +4872,6 @@ name|vop_islocked_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_islocked_args {                 struct vnode *a_vp;         } */
 block|{
 name|DBPRINT
@@ -4888,6 +4888,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_bmap
 parameter_list|(
@@ -4896,7 +4897,6 @@ name|vop_bmap_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_bmap_args {                 struct vnode *a_vp;                 daddr_t  a_bn;                 struct vnode **a_vpp;                 daddr_t *a_bnp;                 int *a_runp;                 int *a_runb;         } */
 block|{
 name|DBPRINT
@@ -4913,6 +4913,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_strategy
 parameter_list|(
@@ -4921,7 +4922,6 @@ name|vop_strategy_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_strategy_args {                 struct buf *a_bp;         } */
 block|{
 name|struct
@@ -4973,6 +4973,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_advlock
 parameter_list|(
@@ -4981,7 +4982,6 @@ name|vop_advlock_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_advlock_args {                 struct vnode *a_vp;                 caddr_t  a_id;                 int  a_op;                 struct flock *a_fl;                 int  a_flags;         } */
 block|{
 name|DBPRINT
@@ -4999,6 +4999,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_reclaim
 parameter_list|(
@@ -5007,7 +5008,6 @@ name|vop_reclaim_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_reclaim_args { 		struct vnode *a_vp;         } */
 block|{
 name|dn_p
@@ -5074,6 +5074,7 @@ comment|/*  * Return POSIX pathconf information applicable to special devices.  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_pathconf
 parameter_list|(
@@ -5082,7 +5083,6 @@ name|vop_pathconf_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_pathconf_args {                 struct vnode *a_vp;                 int a_name;                 int *a_retval;         } */
 block|{
 switch|switch
@@ -5198,6 +5198,7 @@ comment|/*  * Print out the contents of a /devfs vnode.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_print
 parameter_list|(
@@ -5206,7 +5207,6 @@ name|vop_print_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_print_args { 		struct vnode *a_vp; 	} */
 block|{
 name|printf
@@ -5223,6 +5223,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_vfree
 parameter_list|(
@@ -5231,7 +5232,6 @@ name|vop_vfree_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/*proto*/
 comment|/*struct vop_vfree_args { 		struct vnode *a_pvp; 		ino_t a_ino; 		int a_mode; 	} */
 block|{
 return|return
@@ -5251,6 +5251,7 @@ comment|/*  * /devfs vnode unsupported operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_enotsupp
 parameter_list|(
@@ -5258,7 +5259,6 @@ name|void
 modifier|*
 name|junk
 parameter_list|)
-comment|/*proto*/
 block|{
 return|return
 operator|(
@@ -5273,6 +5273,7 @@ comment|/*  * /devfs "should never get here" operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_badop
 parameter_list|(
@@ -5280,7 +5281,6 @@ name|void
 modifier|*
 name|junk
 parameter_list|)
-comment|/*proto*/
 block|{
 name|panic
 argument_list|(
@@ -5296,6 +5296,7 @@ comment|/*  * devfs vnode null operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_nullop
 parameter_list|(
@@ -5303,7 +5304,6 @@ name|void
 modifier|*
 name|junk
 parameter_list|)
-comment|/*proto*/
 block|{
 return|return
 operator|(
@@ -5320,7 +5320,6 @@ parameter_list|(
 name|dn_p
 name|dnp
 parameter_list|)
-comment|/*proto*/
 block|{
 name|struct
 name|vnode
@@ -5579,6 +5578,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|devfs_vnodeop_entries
@@ -6086,6 +6086,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|devfs_vnodeop_opv_desc
@@ -6128,6 +6129,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|dev_spec_vnodeop_entries
@@ -6635,6 +6637,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|dev_spec_vnodeop_opv_desc

@@ -313,6 +313,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|vxinit
 name|__P
@@ -325,6 +326,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|vxintr
 name|__P
@@ -337,6 +339,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|vxread
 name|__P
@@ -351,6 +354,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|vxreset
 name|__P
@@ -363,6 +367,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|vxstart
 name|__P
@@ -377,6 +382,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|vxstop
 name|__P
@@ -389,6 +395,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|vxwatchdog
 name|__P
@@ -404,33 +411,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|send_ID_sequence
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|get_eeprom_data
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vx_softc
 name|vx_softc
@@ -1346,6 +1326,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pci_device
 name|vxdevice
@@ -1380,6 +1361,7 @@ comment|/*  * The order in here seems important. Otherwise we may not receive  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vxinit
 parameter_list|(
@@ -2016,6 +1998,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|vxstart
 parameter_list|(
@@ -2593,6 +2576,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|vxintr
 parameter_list|(
@@ -2602,9 +2586,6 @@ name|int
 name|unit
 decl_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|;
 specifier|register
 name|int
 name|status
@@ -2620,23 +2601,6 @@ name|vx_softc
 index|[
 name|unit
 index|]
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
 decl_stmt|;
 name|int
 name|x
@@ -3129,6 +3093,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|vxread
 parameter_list|(
@@ -5032,6 +4997,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|vxreset
 parameter_list|(
@@ -5066,6 +5032,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|vxwatchdog
 parameter_list|(
@@ -5102,6 +5069,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|vxstop
 parameter_list|(
@@ -5224,149 +5192,6 @@ argument_list|,
 name|SET_RX_FILTER
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|send_ID_sequence
-parameter_list|(
-name|port
-parameter_list|)
-name|int
-name|port
-decl_stmt|;
-block|{
-name|int
-name|cx
-decl_stmt|,
-name|al
-decl_stmt|;
-for|for
-control|(
-name|al
-operator|=
-literal|0xff
-operator|,
-name|cx
-operator|=
-literal|0
-init|;
-name|cx
-operator|<
-literal|255
-condition|;
-name|cx
-operator|++
-control|)
-block|{
-name|outb
-argument_list|(
-name|port
-argument_list|,
-name|al
-argument_list|)
-expr_stmt|;
-name|al
-operator|<<=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|al
-operator|&
-literal|0x100
-condition|)
-name|al
-operator|^=
-literal|0xcf
-expr_stmt|;
-block|}
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * We get eeprom data from the id_port given an offset into the eeprom.  * Basically; after the ID_sequence is sent to all of the cards; they enter  * the ID_CMD state where they will accept command requests. 0x80-0xbf loads  * the eeprom data.  We then read the port 16 times and with every read; the  * cards check for contention (ie: if one card writes a 0 bit and another  * writes a 1 bit then the host sees a 0. At the end of the cycle; each card  * compares the data on the bus; if there is a difference then that card goes  * into ID_WAIT state again). In the meantime; one bit of data is returned in  * the AX register which is conveniently returned to us by inb().  Hence; we  * read 16 times getting one bit of data with each read.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|get_eeprom_data
-parameter_list|(
-name|id_port
-parameter_list|,
-name|offset
-parameter_list|)
-name|int
-name|id_port
-decl_stmt|;
-name|int
-name|offset
-decl_stmt|;
-block|{
-name|int
-name|i
-decl_stmt|,
-name|data
-init|=
-literal|0
-decl_stmt|;
-name|outb
-argument_list|(
-name|id_port
-argument_list|,
-literal|0x80
-operator|+
-name|offset
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|16
-condition|;
-name|i
-operator|++
-control|)
-name|data
-operator|=
-operator|(
-name|data
-operator|<<
-literal|1
-operator|)
-operator||
-operator|(
-name|inw
-argument_list|(
-name|id_port
-argument_list|)
-operator|&
-literal|1
-operator|)
-expr_stmt|;
-return|return
-operator|(
-name|data
-operator|)
-return|;
 block|}
 end_function
 

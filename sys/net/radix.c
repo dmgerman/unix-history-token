@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)radix.c	8.4 (Berkeley) 11/2/94  *	$Id: radix.c,v 1.9 1995/05/30 08:08:20 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1988, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)radix.c	8.4 (Berkeley) 11/2/94  *	$Id: radix.c,v 1.10 1995/12/02 19:37:31 bde Exp $  */
 end_comment
 
 begin_comment
@@ -84,7 +84,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -110,7 +110,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|rn_walktree_from
 name|__P
@@ -142,12 +142,130 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|rn_walktree
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|radix_node_head
+operator|*
+operator|,
+name|walktree_f_t
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|radix_node
+modifier|*
+name|rn_delete
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+expr|struct
+name|radix_node_head
+operator|*
+operator|)
+argument_list|)
+decl_stmt|,
+modifier|*
+name|rn_insert
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+expr|struct
+name|radix_node_head
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+expr|struct
+name|radix_node
+index|[
+literal|2
+index|]
+operator|)
+argument_list|)
+decl_stmt|,
+modifier|*
+name|rn_newpair
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|radix_node
+index|[
+literal|2
+index|]
+operator|)
+argument_list|)
+decl_stmt|,
+modifier|*
+name|rn_search
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+expr|struct
+name|radix_node
+operator|*
+operator|)
+argument_list|)
+decl_stmt|,
+modifier|*
+name|rn_search_m
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+expr|struct
+name|radix_node
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|max_keylen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|radix_mask
 modifier|*
@@ -156,6 +274,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|radix_node_head
 modifier|*
@@ -308,6 +427,7 @@ comment|/*  * The data structure for the keys is a radix tree with one way  * br
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -395,6 +515,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -1469,6 +1590,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -1616,6 +1738,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -3596,6 +3719,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -4622,6 +4746,7 @@ comment|/*  * This is the same as rn_walktree() except for the parameters and th
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|rn_walktree_from
 parameter_list|(
@@ -4977,6 +5102,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|int
 name|rn_walktree
 parameter_list|(

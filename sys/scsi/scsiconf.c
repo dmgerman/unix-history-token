@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.40 1995/12/13 15:13:37 julian Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.41 1995/12/13 20:08:53 peter Exp $  */
 end_comment
 
 begin_include
@@ -134,7 +134,7 @@ file|<scsi/scsiconf.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|struct
 name|extend_array
 modifier|*
@@ -149,7 +149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|extend_release
 name|__P
@@ -168,7 +168,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 modifier|*
 name|extend_set
@@ -343,6 +343,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|struct
 name|extend_array
 modifier|*
@@ -390,6 +391,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 modifier|*
 name|extend_set
@@ -587,6 +589,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|extend_release
 parameter_list|(
@@ -633,6 +636,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|extend_array
 modifier|*
@@ -1396,6 +1400,7 @@ comment|/*  * Declarations  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsidevs
 modifier|*
@@ -1421,6 +1426,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsidevs
 modifier|*
@@ -1458,6 +1464,7 @@ comment|/* XXX dufault@hda.com  * This scsi_device doesn't have the scsi_data_si
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_device
 name|probe_switch
@@ -4235,6 +4242,7 @@ comment|/*  * given a target and lu, ask the device what  * it is, and find the 
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|scsidevs
 modifier|*
@@ -5025,6 +5033,7 @@ comment|/*  * Compare name with pattern, return 0 on match.  * Short pattern mat
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|match
 parameter_list|(
@@ -5120,6 +5129,7 @@ comment|/*  * Try make as good a match as possible with  * available sub drivers
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|scsidevs
 modifier|*

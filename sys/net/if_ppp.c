@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.27 1995/11/03 08:42:21 peter Exp $ */
+comment|/* $Id: if_ppp.c,v 1.28 1995/11/13 22:09:39 peter Exp $ */
 end_comment
 
 begin_comment
@@ -286,6 +286,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pppsioctl
 name|__P
@@ -307,6 +308,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|pppintr
 name|__P
@@ -502,6 +504,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|compressor
 modifier|*
@@ -2122,6 +2125,7 @@ comment|/*  * Process an ioctl request to the ppp network interface.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|pppsioctl
 parameter_list|(
@@ -3626,6 +3630,7 @@ comment|/*  * Software interrupt routine, called at splnet.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pppintr
 parameter_list|()

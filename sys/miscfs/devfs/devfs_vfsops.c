@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.5 1995/09/06 09:29:17 julian Exp $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.6 1995/09/07 06:01:35 julian Exp $  *  *  */
 end_comment
 
 begin_include
@@ -79,13 +79,36 @@ directive|include
 file|"devfsdefs.h"
 end_include
 
+begin_function_decl
+specifier|static
+name|int
+name|devfs_statfs
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
+name|struct
+name|statfs
+modifier|*
+name|sbp
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
+specifier|static
 name|int
 name|devfs_init
 parameter_list|(
 name|void
 parameter_list|)
-comment|/*proto*/
 block|{
 name|printf
 argument_list|(
@@ -314,6 +337,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mountdevfs
 parameter_list|(
@@ -327,7 +351,6 @@ name|proc
 modifier|*
 name|p
 parameter_list|)
-comment|/*proto*/
 block|{
 name|int
 name|error
@@ -477,6 +500,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_start
 parameter_list|(
@@ -493,7 +517,6 @@ name|proc
 modifier|*
 name|p
 parameter_list|)
-comment|/*proto*/
 block|{
 name|DBPRINT
 argument_list|(
@@ -513,6 +536,7 @@ comment|/*  *  Unmount the filesystem described by mp.  * Note: vnodes from this
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_unmount
 parameter_list|(
@@ -529,7 +553,6 @@ name|proc
 modifier|*
 name|p
 parameter_list|)
-comment|/*proto*/
 block|{
 name|int
 name|flags
@@ -604,6 +627,7 @@ comment|/* return the address of the root vnode  in *vpp */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_root
 parameter_list|(
@@ -618,7 +642,6 @@ modifier|*
 modifier|*
 name|vpp
 parameter_list|)
-comment|/*proto*/
 block|{
 name|struct
 name|devfsmount
@@ -661,6 +684,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_quotactl
 parameter_list|(
@@ -683,7 +707,6 @@ name|proc
 modifier|*
 name|p
 parameter_list|)
-comment|/*proto*/
 block|{
 name|DBPRINT
 argument_list|(
@@ -699,6 +722,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_statfs
 parameter_list|(
@@ -717,7 +741,6 @@ name|proc
 modifier|*
 name|p
 parameter_list|)
-comment|/*proto*/
 block|{
 name|struct
 name|devfsmount
@@ -892,6 +915,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_sync
 parameter_list|(
@@ -913,7 +937,6 @@ name|proc
 modifier|*
 name|p
 parameter_list|)
-comment|/*proto*/
 block|{
 name|DBPRINT
 argument_list|(
@@ -929,6 +952,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_vget
 parameter_list|(
@@ -946,7 +970,6 @@ modifier|*
 modifier|*
 name|vpp
 parameter_list|)
-comment|/*proto*/
 block|{
 name|DBPRINT
 argument_list|(
@@ -966,6 +989,7 @@ comment|/*************************************************************  * The co
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|devfs_fhtovp
 parameter_list|(
@@ -1000,7 +1024,6 @@ modifier|*
 modifier|*
 name|credanonp
 parameter_list|)
-comment|/*proto*/
 block|{
 name|DBPRINT
 argument_list|(
@@ -1018,6 +1041,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|devfs_vptofh
 parameter_list|(
@@ -1031,7 +1055,6 @@ name|fid
 modifier|*
 name|fhp
 parameter_list|)
-comment|/*proto*/
 block|{
 name|DBPRINT
 argument_list|(
@@ -1049,6 +1072,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vfsops
 name|devfs_vfsops

@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.2 1995/10/31 20:24:14 peter Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.3 1995/11/01 00:58:43 peter Exp $ */
 end_comment
 
 begin_comment
@@ -222,6 +222,7 @@ file|<net/if_pppvar.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|void
 name|pppasyncattach
 name|__P
@@ -245,6 +246,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pppopen
 name|__P
@@ -263,6 +265,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pppclose
 name|__P
@@ -281,6 +284,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pppread
 name|__P
@@ -304,6 +308,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pppwrite
 name|__P
@@ -327,6 +332,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ppptioctl
 name|__P
@@ -355,6 +361,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pppinput
 name|__P
@@ -373,6 +380,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pppstart
 name|__P
@@ -721,6 +729,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|pppopen
 parameter_list|(
@@ -1073,6 +1082,7 @@ comment|/*  * Line specific close routine, called from device close routine  * a
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|pppclose
 parameter_list|(
@@ -1385,6 +1395,7 @@ comment|/*  * Line specific (tty) read routine.  * called at no spl from the dev
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|pppread
 parameter_list|(
@@ -1668,6 +1679,7 @@ comment|/*  * Line specific (tty) write routine.  * called at no spl from the de
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|pppwrite
 parameter_list|(
@@ -2033,6 +2045,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ppptioctl
 parameter_list|(
@@ -3058,6 +3071,7 @@ comment|/*  * Start output on async tty interface.  Get another datagram  * to s
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|pppstart
 parameter_list|(
@@ -4059,6 +4073,7 @@ comment|/*  * Called when character is available from device driver.  * Only gua
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|pppinput
 parameter_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by grefen@convex.com (probably moved by now)  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.26 1995/12/08 11:18:40 julian Exp $  */
+comment|/*  * Written by grefen@convex.com (probably moved by now)  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.27 1995/12/08 23:22:19 phk Exp $  */
 end_comment
 
 begin_include
@@ -121,6 +121,7 @@ file|<scsi/scsiconf.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|ch_getelem
 name|__P
@@ -151,6 +152,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|ch_move
 name|__P
@@ -197,6 +199,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|errval
 name|ch_position
 name|__P
@@ -382,6 +385,7 @@ block|}
 end_function
 
 begin_function_decl
+specifier|static
 name|errval
 name|ch_open
 parameter_list|(
@@ -408,6 +412,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|errval
 name|ch_ioctl
 parameter_list|(
@@ -437,6 +442,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|errval
 name|ch_close
 parameter_list|(
@@ -539,6 +545,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_device
 name|ch_switch
@@ -839,7 +846,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"ch%d"
+literal|"ch%ld"
 argument_list|,
 name|unit
 argument_list|)
@@ -883,6 +890,7 @@ comment|/*  *    open the device.  */
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|ch_open
 parameter_list|(
@@ -1067,6 +1075,7 @@ comment|/*  * close the device.. only called if we are the LAST  * occurence of 
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|ch_close
 parameter_list|(
@@ -1118,6 +1127,7 @@ comment|/*  * Perform special action on behalf of the user  * Knows about the in
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|ch_ioctl
 parameter_list|(
@@ -1501,6 +1511,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|errval
 name|ch_getelem
 parameter_list|(
@@ -1728,6 +1739,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|errval
 name|ch_move
 parameter_list|(
@@ -1958,6 +1970,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|errval
 name|ch_position
 parameter_list|(

@@ -768,6 +768,7 @@ value|18
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sppp
 modifier|*
@@ -844,6 +845,7 @@ value|if ((p)->pp_flags& PP_TIMO) { \ 			untimeout (sppp_cp_timeout, (void*) (p)
 end_define
 
 begin_function_decl
+specifier|static
 name|void
 name|sppp_keepalive
 parameter_list|(
@@ -855,6 +857,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sppp_cp_send
 parameter_list|(
@@ -883,6 +886,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sppp_cisco_send
 parameter_list|(
@@ -904,6 +908,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sppp_lcp_input
 parameter_list|(
@@ -921,6 +926,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sppp_cisco_input
 parameter_list|(
@@ -938,6 +944,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sppp_ipcp_input
 parameter_list|(
@@ -955,6 +962,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sppp_lcp_open
 parameter_list|(
@@ -967,6 +975,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sppp_ipcp_open
 parameter_list|(
@@ -979,6 +988,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|sppp_lcp_conf_parse_options
 parameter_list|(
@@ -1003,6 +1013,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sppp_cp_timeout
 parameter_list|(
@@ -1014,6 +1025,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|sppp_lcp_type_name
@@ -1025,6 +1037,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|sppp_ipcp_type_name
@@ -1036,6 +1049,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sppp_print_bytes
 parameter_list|(
@@ -1045,6 +1059,34 @@ name|p
 parameter_list|,
 name|u_short
 name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|sppp_output
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|dst
+parameter_list|,
+name|struct
+name|rtentry
+modifier|*
+name|rt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1897,6 +1939,7 @@ comment|/*  * Enqueue transmit packet.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|sppp_output
 parameter_list|(
@@ -2374,10 +2417,10 @@ name|PPP_ISO
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 name|nosupport
 label|:
+endif|#
+directive|endif
 default|default:
 name|m_freem
 argument_list|(
@@ -4496,6 +4539,7 @@ comment|/*  * Handle incoming Cisco keepalive protocol packets.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sppp_cisco_input
 parameter_list|(
@@ -4943,6 +4987,7 @@ comment|/*  * Send PPP LCP packet.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sppp_cp_send
 parameter_list|(
@@ -5297,6 +5342,7 @@ comment|/*  * Send Cisco keepalive packet.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sppp_cisco_send
 parameter_list|(
@@ -5970,6 +6016,7 @@ comment|/*  * Analyze the LCP Configure-Request options list  * for the presence
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|sppp_lcp_conf_parse_options
 parameter_list|(
@@ -6254,6 +6301,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sppp_ipcp_input
 parameter_list|(
@@ -6757,6 +6805,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sppp_lcp_open
 parameter_list|(
@@ -6907,6 +6956,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sppp_ipcp_open
 parameter_list|(
@@ -6961,6 +7011,7 @@ comment|/*  * Process PPP control protocol timeouts.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sppp_cp_timeout
 parameter_list|(
@@ -7138,6 +7189,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|sppp_lcp_type_name
@@ -7265,6 +7317,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|sppp_ipcp_type_name
@@ -7360,6 +7413,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sppp_print_bytes
 parameter_list|(
