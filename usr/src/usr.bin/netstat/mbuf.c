@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbuf.c	5.6 (Berkeley) %G%"
+literal|"@(#)mbuf.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,6 +98,18 @@ literal|"data"
 block|}
 block|,
 block|{
+name|MT_OOBDATA
+block|,
+literal|"oob data"
+block|}
+block|,
+block|{
+name|MT_CONTROL
+block|,
+literal|"ancillary data"
+block|}
+block|,
+block|{
 name|MT_HEADER
 block|,
 literal|"packet headers"
@@ -109,24 +121,28 @@ block|,
 literal|"socket structures"
 block|}
 block|,
+comment|/* XXX */
 block|{
 name|MT_PCB
 block|,
 literal|"protocol control blocks"
 block|}
 block|,
+comment|/* XXX */
 block|{
 name|MT_RTABLE
 block|,
 literal|"routing table entries"
 block|}
 block|,
+comment|/* XXX */
 block|{
 name|MT_HTABLE
 block|,
 literal|"IMP host table entries"
 block|}
 block|,
+comment|/* XXX */
 block|{
 name|MT_ATABLE
 block|,
@@ -139,6 +155,7 @@ block|,
 literal|"fragment reassembly queue headers"
 block|}
 block|,
+comment|/* XXX */
 block|{
 name|MT_SONAME
 block|,
@@ -163,6 +180,7 @@ block|,
 literal|"interface addresses"
 block|}
 block|,
+comment|/* XXX */
 block|{
 literal|0
 block|,
@@ -311,29 +329,40 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
-argument_list|(
-literal|"%u/%u mbufs in use:\n"
-argument_list|,
-name|mbstat
-operator|.
-name|m_mbufs
-operator|-
+name|totmbufs
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|mp
+operator|=
+name|mbtypes
+init|;
+name|mp
+operator|->
+name|mt_name
+condition|;
+name|mp
+operator|++
+control|)
+name|totmbufs
+operator|+=
 name|mbstat
 operator|.
 name|m_mtypes
 index|[
-name|MT_FREE
+name|mp
+operator|->
+name|mt_type
 index|]
-argument_list|,
-name|mbstat
-operator|.
-name|m_mbufs
-argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%u mbufs in use:\n"
+argument_list|,
 name|totmbufs
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -387,17 +416,6 @@ operator|->
 name|mt_name
 argument_list|)
 expr_stmt|;
-name|totmbufs
-operator|+=
-name|mbstat
-operator|.
-name|m_mtypes
-index|[
-name|mp
-operator|->
-name|mt_type
-index|]
-expr_stmt|;
 block|}
 name|seen
 index|[
@@ -449,51 +467,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|totmbufs
-operator|+=
-name|mbstat
-operator|.
-name|m_mtypes
-index|[
-name|i
-index|]
-expr_stmt|;
 block|}
-if|if
-condition|(
-name|totmbufs
-operator|!=
-name|mbstat
-operator|.
-name|m_mbufs
-operator|-
-name|mbstat
-operator|.
-name|m_mtypes
-index|[
-name|MT_FREE
-index|]
-condition|)
-name|printf
-argument_list|(
-literal|"*** %u mbufs missing ***\n"
-argument_list|,
-operator|(
-name|mbstat
-operator|.
-name|m_mbufs
-operator|-
-name|mbstat
-operator|.
-name|m_mtypes
-index|[
-name|MT_FREE
-index|]
-operator|)
-operator|-
-name|totmbufs
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"%u/%u mapped pages in use\n"
@@ -513,9 +487,7 @@ argument_list|)
 expr_stmt|;
 name|totmem
 operator|=
-name|mbstat
-operator|.
-name|m_mbufs
+name|totmbufs
 operator|*
 name|MSIZE
 operator|+
@@ -527,15 +499,6 @@ name|CLBYTES
 expr_stmt|;
 name|totfree
 operator|=
-name|mbstat
-operator|.
-name|m_mtypes
-index|[
-name|MT_FREE
-index|]
-operator|*
-name|MSIZE
-operator|+
 name|mbstat
 operator|.
 name|m_clfree
