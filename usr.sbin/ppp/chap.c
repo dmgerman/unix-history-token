@@ -525,7 +525,15 @@ name|dl
 operator|->
 name|bundle
 argument_list|,
-name|PRI_LINK
+name|LINK_QUEUES
+argument_list|(
+operator|&
+name|physical
+operator|->
+name|link
+argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|PROTO_CHAP
 argument_list|)

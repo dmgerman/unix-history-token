@@ -3038,9 +3038,6 @@ name|char
 modifier|*
 name|data
 parameter_list|,
-name|int
-name|emptybuf
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -3196,7 +3193,11 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|emptybuf
+name|c
+operator|->
+name|bufstart
+operator|==
+name|NULL
 condition|)
 name|c
 operator|->

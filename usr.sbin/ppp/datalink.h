@@ -41,43 +41,50 @@ end_define
 begin_define
 define|#
 directive|define
-name|DATALINK_LOGIN
+name|DATALINK_LOGOUT
 value|(5)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DATALINK_READY
+name|DATALINK_LOGIN
 value|(6)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DATALINK_LCP
+name|DATALINK_READY
 value|(7)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DATALINK_AUTH
+name|DATALINK_LCP
 value|(8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DATALINK_CBCP
+name|DATALINK_AUTH
 value|(9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DATALINK_OPEN
+name|DATALINK_CBCP
 value|(10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATALINK_OPEN
+value|(11)
 end_define
 
 begin_define
@@ -197,24 +204,28 @@ index|[
 name|SCRIPT_LEN
 index|]
 decl_stmt|;
-comment|/* dial */
 name|char
 name|login
 index|[
 name|SCRIPT_LEN
 index|]
 decl_stmt|;
-comment|/* login */
+name|char
+name|logout
+index|[
+name|SCRIPT_LEN
+index|]
+decl_stmt|;
 name|char
 name|hangup
 index|[
 name|SCRIPT_LEN
 index|]
 decl_stmt|;
-comment|/* hangup */
 block|}
 name|script
 struct|;
+comment|/* various chat scripts */
 struct|struct
 block|{
 name|char
@@ -457,6 +468,12 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -478,6 +495,12 @@ name|int
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+modifier|*
 parameter_list|,
 name|pid_t
 parameter_list|)

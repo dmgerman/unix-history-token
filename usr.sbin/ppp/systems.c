@@ -1295,6 +1295,11 @@ index|[
 name|LINE_LEN
 index|]
 decl_stmt|;
+name|struct
+name|prompt
+modifier|*
+name|op
+decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -1740,6 +1745,16 @@ operator|!
 name|allowcmd
 operator|)
 condition|)
+block|{
+comment|/*              * Disable any context so that warnings are given to everyone,              * including syslog.              */
+name|op
+operator|=
+name|log_PromptContext
+expr_stmt|;
+name|log_PromptContext
+operator|=
+name|NULL
+expr_stmt|;
 name|command_Run
 argument_list|(
 name|bundle
@@ -1762,6 +1777,11 @@ argument_list|,
 name|cx
 argument_list|)
 expr_stmt|;
+name|log_PromptContext
+operator|=
+name|op
+expr_stmt|;
+block|}
 block|}
 name|fclose
 argument_list|(

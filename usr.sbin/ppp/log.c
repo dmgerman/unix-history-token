@@ -203,6 +203,14 @@ comment|/* Where to log local stuff */
 end_comment
 
 begin_decl_stmt
+name|struct
+name|prompt
+modifier|*
+name|log_PromptContext
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|log_PromptListChanged
 decl_stmt|;
@@ -1193,6 +1201,8 @@ index|]
 decl_stmt|;
 if|if
 condition|(
+name|promptlist
+operator|&&
 operator|(
 name|log_IsKept
 argument_list|(
@@ -1201,8 +1211,6 @@ argument_list|)
 operator|&
 name|LOG_KEPT_LOCAL
 operator|)
-operator|&&
-name|promptlist
 condition|)
 block|{
 if|if
@@ -1260,6 +1268,25 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|log_PromptContext
+operator|&&
+name|lev
+operator|==
+name|LogWARN
+condition|)
+comment|/* Warnings just go to the current prompt */
+name|prompt_vPrintf
+argument_list|(
+name|log_PromptContext
+argument_list|,
+name|nfmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+else|else
 for|for
 control|(
 name|prompt
@@ -1318,7 +1345,7 @@ operator|!=
 name|LogWARN
 operator|||
 operator|!
-name|promptlist
+name|log_PromptContext
 operator|)
 condition|)
 block|{
