@@ -87,8 +87,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ANSI_SOURCE
+end_ifndef
+
 begin_comment
-comment|/*  * sigsetjmp/siglongjmp use the first int to decide if the  * signal mask was saved or not.  */
+comment|/*  * WARNING: sigsetjmp() isn't supported yet, this is a placeholder.  */
 end_comment
 
 begin_typedef
@@ -103,11 +109,14 @@ index|]
 typedef|;
 end_typedef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not ANSI */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -119,11 +128,6 @@ index|]
 typedef|;
 end_typedef
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -132,6 +136,42 @@ end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
+name|int
+name|setjmp
+name|__P
+argument_list|(
+operator|(
+name|jmp_buf
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|longjmp
+name|__P
+argument_list|(
+operator|(
+name|jmp_buf
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ANSI_SOURCE
+end_ifndef
+
+begin_comment
+comment|/*  * WARNING: sigsetjmp() isn't supported yet, this is a placeholder.  */
+end_comment
+
+begin_decl_stmt
 name|int
 name|sigsetjmp
 name|__P
@@ -159,23 +199,30 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_decl_stmt
-name|int
-name|setjmp
-name|__P
+begin_comment
+comment|/* not ANSI */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
 argument_list|(
-operator|(
-name|jmp_buf
-operator|)
+name|_ANSI_SOURCE
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_SOURCE
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|int
@@ -184,20 +231,6 @@ name|__P
 argument_list|(
 operator|(
 name|jmp_buf
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|longjmp
-name|__P
-argument_list|(
-operator|(
-name|jmp_buf
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -217,10 +250,26 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|longjmperror
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* neither ANSI nor POSIX */
+end_comment
 
 begin_macro
 name|__END_DECLS
