@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.68 2000/01/31 20:17:25 augustss Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.71 2000/02/01 05:42:52 augustss Exp $ */
 end_comment
 
 begin_comment
@@ -1785,6 +1785,11 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 name|powerhook_disestablish
 argument_list|(
 name|sc
@@ -2109,6 +2114,11 @@ operator|(
 literal|0
 operator|)
 return|;
+name|s
+operator|=
+name|splusb
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2176,7 +2186,17 @@ operator|=
 name|std
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
+name|s
+operator|=
+name|splusb
+argument_list|()
+expr_stmt|;
 name|std
 operator|=
 name|sc
@@ -2211,11 +2231,6 @@ operator|->
 name|nexttd
 operator|=
 name|NULL
-expr_stmt|;
-name|s
-operator|=
-name|splusb
-argument_list|()
 expr_stmt|;
 name|ohci_hash_add_td
 argument_list|(
@@ -2269,11 +2284,6 @@ argument_list|,
 name|std
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|std
 operator|->
 name|nexttd
@@ -2287,6 +2297,11 @@ operator|->
 name|sc_freetds
 operator|=
 name|std
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -4253,6 +4268,11 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OPENBSD__
+argument_list|)
 name|sc
 operator|->
 name|sc_powerhook
@@ -5661,7 +5681,7 @@ name|done
 operator|&
 name|htole32
 argument_list|(
-name|OHCI_TAILMASK
+name|OHCI_HEADMASK
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6456,13 +6476,6 @@ operator|->
 name|actlen
 operator|=
 literal|0
-expr_stmt|;
-name|ohci_hash_add_td
-argument_list|(
-name|sc
-argument_list|,
-name|data
-argument_list|)
 expr_stmt|;
 name|sed
 operator|->
@@ -8089,7 +8102,7 @@ operator|(
 name|a
 operator|&
 operator|~
-name|OHCI_TAILMASK
+name|OHCI_HEADMASK
 operator|)
 operator|==
 literal|0
@@ -9161,7 +9174,7 @@ operator|.
 name|ed_tailp
 argument_list|)
 operator|&
-name|OHCI_TAILMASK
+name|OHCI_HEADMASK
 operator|)
 operator|!=
 operator|(
@@ -9289,7 +9302,7 @@ operator|.
 name|ed_tailp
 argument_list|)
 operator|&
-name|OHCI_TAILMASK
+name|OHCI_HEADMASK
 operator|)
 operator|!=
 operator|(
@@ -12654,13 +12667,6 @@ name|xfer
 operator|=
 name|xfer
 expr_stmt|;
-name|ohci_hash_add_td
-argument_list|(
-name|sc
-argument_list|,
-name|tdp
-argument_list|)
-expr_stmt|;
 block|}
 name|sed
 operator|->
@@ -13223,13 +13229,6 @@ operator|=
 name|splusb
 argument_list|()
 expr_stmt|;
-name|ohci_hash_add_td
-argument_list|(
-name|sc
-argument_list|,
-name|data
-argument_list|)
-expr_stmt|;
 name|sed
 operator|->
 name|ed
@@ -13458,7 +13457,7 @@ operator|.
 name|ed_tailp
 argument_list|)
 operator|&
-name|OHCI_TAILMASK
+name|OHCI_HEADMASK
 operator|)
 operator|!=
 operator|(
@@ -13499,7 +13498,7 @@ operator|.
 name|ed_tailp
 argument_list|)
 operator|&
-name|OHCI_TAILMASK
+name|OHCI_HEADMASK
 operator|)
 operator|!=
 operator|(

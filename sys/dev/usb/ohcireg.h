@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcireg.h,v 1.13 2000/01/31 20:17:26 augustss Exp $	*/
+comment|/*	$NetBSD: ohcireg.h,v 1.14 2000/01/31 22:35:14 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -933,10 +933,6 @@ value|(0x7ff<< 16)
 name|ohci_physaddr_t
 name|ed_tailp
 decl_stmt|;
-define|#
-directive|define
-name|OHCI_TAILMASK
-value|0xfffffffc
 name|ohci_physaddr_t
 name|ed_headp
 decl_stmt|;
