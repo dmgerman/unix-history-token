@@ -30,14 +30,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/apm_bios.h>
+file|<apm_bios.h>
 end_include
 
 begin_define
 define|#
 directive|define
 name|APMDEV
-value|"/dev/apm"
+value|"/dev/apm0"
 end_define
 
 begin_decl_stmt
@@ -521,7 +521,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Unknown option '%s'."
+literal|"%s: Unknown option '%s'.\n"
 argument_list|,
 name|argv
 index|[
@@ -532,6 +532,11 @@ name|argv
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -612,6 +617,29 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+default|default:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s Unknown option '%s'.\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
