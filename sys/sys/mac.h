@@ -19,6 +19,12 @@ directive|define
 name|_SYS_MAC_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_label.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -571,58 +577,6 @@ end_else
 begin_comment
 comment|/* _KERNEL */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_comment
-comment|/*  * XXXMAC: This shouldn't be exported to userland, but is because of ucred.h  * and various other messes.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAC_MAX_POLICIES
-value|4
-end_define
-
-begin_struct
-struct|struct
-name|label
-block|{
-name|int
-name|l_flags
-decl_stmt|;
-union|union
-block|{
-name|void
-modifier|*
-name|l_ptr
-decl_stmt|;
-name|long
-name|l_long
-decl_stmt|;
-block|}
-name|l_perpolicy
-index|[
-name|MAC_MAX_POLICIES
-index|]
-union|;
-block|}
-struct|;
-end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_comment
 comment|/*  * MAC entry point operations  */
