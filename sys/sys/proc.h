@@ -591,11 +591,15 @@ comment|/* (j) Statclock hits in system mode. */
 name|u_int
 name|td_uuticks
 decl_stmt|;
-comment|/* (*) Statclock hits in user, for UTS */
+comment|/* (*) Statclock in user, for UTS */
 name|u_int
 name|td_usticks
 decl_stmt|;
-comment|/* (*) Statclock hits in kernel, for UTS */
+comment|/* (*) Statclock in kernel, for UTS */
+name|int
+name|td_intrval
+decl_stmt|;
+comment|/* (*) Return value of TDF_INTERRUPT */
 name|u_int
 name|td_critnest
 decl_stmt|;
@@ -814,6 +818,17 @@ end_define
 
 begin_comment
 comment|/* On the sleep queue. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_NOSIGPOST
+value|0x000400
+end_define
+
+begin_comment
+comment|/* Thread doesn't want signals */
 end_comment
 
 begin_define
@@ -2369,6 +2384,17 @@ end_define
 
 begin_comment
 comment|/* Do not kill on memory overcommit. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_SIGEVENT
+value|0x200000
+end_define
+
+begin_comment
+comment|/* Process pending signals changed */
 end_comment
 
 begin_comment
@@ -4414,18 +4440,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|thread_signal_upcall
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|thread
 modifier|*
@@ -4789,6 +4803,23 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_siginfo
+parameter_list|(
+name|int
+name|sig
+parameter_list|,
+name|u_long
+name|code
+parameter_list|,
+name|siginfo_t
+modifier|*
+name|si
 parameter_list|)
 function_decl|;
 end_function_decl

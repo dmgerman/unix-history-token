@@ -33,6 +33,12 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
+
 begin_comment
 comment|/*  * This file defines the structures needed for communication between  * the userland and the kernel when running a KSE-based threading system.  * The only programs that should see this file are the user thread  * scheduler (UTS) and the kernel.  */
 end_comment
@@ -90,6 +96,9 @@ decl_stmt|;
 name|unsigned
 name|int
 name|tm_sticks
+decl_stmt|;
+name|siginfo_t
+name|tm_syncsig
 decl_stmt|;
 name|int
 name|tm_spare
@@ -213,6 +222,13 @@ name|KMF_BOUND
 value|0x08
 end_define
 
+begin_define
+define|#
+directive|define
+name|KMF_WAITSIGEVENT
+value|0x10
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -259,6 +275,8 @@ parameter_list|(
 name|struct
 name|kse_thr_mailbox
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
