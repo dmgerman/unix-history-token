@@ -89,7 +89,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KTR_PERCPU
-specifier|volatile
 name|int
 name|gd_ktr_idx
 decl_stmt|;

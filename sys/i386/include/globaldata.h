@@ -67,7 +67,7 @@ name|globaldata
 modifier|*
 name|gd_prvspace
 decl_stmt|;
-comment|/* self-reference */
+comment|/* Self-reference */
 name|struct
 name|thread
 modifier|*
@@ -131,7 +131,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KTR_PERCPU
-specifier|volatile
 name|int
 name|gd_ktr_idx
 decl_stmt|;
