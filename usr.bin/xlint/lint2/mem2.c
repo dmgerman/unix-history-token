@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: mem2.c,v 1.3 1995/10/02 17:27:11 jpo Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
