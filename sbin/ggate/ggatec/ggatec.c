@@ -1319,6 +1319,9 @@ if|if
 condition|(
 name|bsize
 operator|<
+operator|(
+name|size_t
+operator|)
 name|ggio
 operator|.
 name|gctl_length

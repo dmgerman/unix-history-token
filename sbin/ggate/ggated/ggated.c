@@ -1196,6 +1196,10 @@ expr|struct
 name|sockaddr_in
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|s
 operator|)
 operator|->

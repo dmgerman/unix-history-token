@@ -497,6 +497,9 @@ name|BIO_READ
 case|:
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|ggio
 operator|.
 name|gctl_length

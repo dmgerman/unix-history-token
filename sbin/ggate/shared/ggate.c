@@ -1397,10 +1397,12 @@ name|in_addr
 operator|*
 operator|)
 operator|(
+name|void
+operator|*
+operator|)
 name|hp
 operator|->
 name|h_addr
-operator|)
 operator|)
 operator|->
 name|s_addr
