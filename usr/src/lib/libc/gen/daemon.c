@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.2 (Berkeley) %G%"
+literal|"@(#)daemon.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_macro
@@ -122,7 +134,7 @@ name|devnull
 init|=
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 name|O_RDWR
 argument_list|,
@@ -144,7 +156,7 @@ name|dup2
 argument_list|(
 name|devnull
 argument_list|,
-literal|0
+name|STDIN_FILENO
 argument_list|)
 expr_stmt|;
 operator|(
@@ -154,7 +166,7 @@ name|dup2
 argument_list|(
 name|devnull
 argument_list|,
-literal|1
+name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
 operator|(
@@ -164,7 +176,7 @@ name|dup2
 argument_list|(
 name|devnull
 argument_list|,
-literal|2
+name|STDERR_FILENO
 argument_list|)
 expr_stmt|;
 if|if
