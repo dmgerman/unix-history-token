@@ -987,6 +987,16 @@ block|{
 block|{
 name|USB_VENDOR_EPSON
 block|,
+name|USB_PRODUCT_EPSON_1250
+block|}
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_EPSON
+block|,
 name|USB_PRODUCT_EPSON_1600
 block|}
 block|,
