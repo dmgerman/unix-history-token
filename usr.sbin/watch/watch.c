@@ -1389,13 +1389,11 @@ block|{
 name|int
 name|res
 decl_stmt|,
-name|idata
-decl_stmt|,
 name|rv
+decl_stmt|,
+name|nread
 decl_stmt|;
 name|size_t
-name|nread
-decl_stmt|,
 name|b_size
 init|=
 name|MIN_SIZE
@@ -1764,9 +1762,6 @@ operator|==
 operator|-
 literal|1
 operator|||
-operator|(
-name|unsigned
-operator|)
 name|rv
 operator|!=
 name|nread
@@ -1843,9 +1838,6 @@ operator|==
 operator|-
 literal|1
 operator|||
-operator|(
-name|unsigned
-operator|)
 name|rv
 operator|!=
 name|nread
@@ -1905,7 +1897,7 @@ argument_list|,
 name|FIONREAD
 argument_list|,
 operator|&
-name|idata
+name|nread
 argument_list|)
 operator|)
 operator|!=
@@ -1920,7 +1912,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|idata
+name|nread
 condition|)
 block|{
 case|case
@@ -2007,13 +1999,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|nread
-operator|=
-operator|(
-name|unsigned
-operator|)
-name|idata
-expr_stmt|;
 if|if
 condition|(
 name|nread
@@ -2142,9 +2127,6 @@ operator|==
 operator|-
 literal|1
 operator|||
-operator|(
-name|unsigned
-operator|)
 name|rv
 operator|!=
 name|nread
@@ -2174,9 +2156,6 @@ operator|==
 operator|-
 literal|1
 operator|||
-operator|(
-name|unsigned
-operator|)
 name|rv
 operator|!=
 name|nread
