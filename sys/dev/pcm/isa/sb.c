@@ -95,7 +95,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|irq_proc_t
-name|sbintr
+name|sb_intr
 decl_stmt|;
 end_decl_stmt
 
@@ -223,7 +223,7 @@ name|sb_dsp_ioctl
 block|,
 name|sndselect
 block|,
-name|sbintr
+name|sb_intr
 block|,
 name|sb_callback
 block|,
@@ -929,7 +929,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|sbintr
+name|sb_intr
 parameter_list|(
 name|int
 name|unit
@@ -964,7 +964,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"got sbintr for unit %d, flags 0x%08lx\n"
+literal|"got sb_intr for unit %d, flags 0x%08lx\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -1080,7 +1080,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"sbintr, flags 0x%08lx reason %d\n"
+literal|"sb_intr, flags 0x%08lx reason %d\n"
 argument_list|,
 name|d
 operator|->
