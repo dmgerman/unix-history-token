@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dol.c	5.3 (Berkeley) %G%"
+literal|"@(#)dol.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2419,7 +2419,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Form a shell temporary file (in unit 0) from the words  * of the shell input up to a line the same as "term".  * Unit 0 should have been closed before this call.  */
+comment|/*  * Form a shell temporary file (in unit 0) from the words  * of the shell input up to EOF or a line the same as "term".  * Unit 0 should have been closed before this call.  */
 end_comment
 
 begin_macro
@@ -2637,21 +2637,7 @@ condition|(
 name|c
 operator|<
 literal|0
-condition|)
-block|{
-name|setname
-argument_list|(
-name|term
-argument_list|)
-expr_stmt|;
-name|bferr
-argument_list|(
-literal|"<< terminator not found"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
+operator|||
 name|c
 operator|==
 literal|'\n'
@@ -2696,9 +2682,13 @@ name|lbp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Compare to terminator -- before expansion 		 */
+comment|/* 		 * Check for EOF or compare to terminator -- before expansion 		 */
 if|if
 condition|(
+name|c
+operator|<
+literal|0
+operator|||
 name|eq
 argument_list|(
 name|lbuf
