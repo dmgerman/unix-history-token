@@ -699,7 +699,8 @@ parameter_list|()
 block|{
 name|time_t
 name|tnow
-decl_stmt|,
+decl_stmt|;
+name|int
 name|deltat
 decl_stmt|;
 operator|(
