@@ -21,6 +21,31 @@ directive|include
 file|<machine/tte.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/utrap.h>
+end_include
+
+begin_struct
+struct|struct
+name|md_utrap
+block|{
+name|utrap_entry_t
+modifier|*
+name|ut_precise
+index|[
+name|UT_MAX
+index|]
+decl_stmt|;
+comment|/* must be first */
+name|int
+name|ut_refcnt
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|mdthread
@@ -31,7 +56,13 @@ end_struct
 begin_struct
 struct|struct
 name|mdproc
-block|{ }
+block|{
+name|struct
+name|md_utrap
+modifier|*
+name|md_utrap
+decl_stmt|;
+block|}
 struct|;
 end_struct
 
