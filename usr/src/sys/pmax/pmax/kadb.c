@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)kadb.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)kadb.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -72,6 +72,46 @@ operator|.
 name|pcb_regs
 index|[
 name|V1
+index|]
+block|,
+literal|"a0"
+block|,
+operator|&
+name|kdbpcb
+operator|.
+name|pcb_regs
+index|[
+name|A0
+index|]
+block|,
+literal|"a1"
+block|,
+operator|&
+name|kdbpcb
+operator|.
+name|pcb_regs
+index|[
+name|A1
+index|]
+block|,
+literal|"a2"
+block|,
+operator|&
+name|kdbpcb
+operator|.
+name|pcb_regs
+index|[
+name|A2
+index|]
+block|,
+literal|"a3"
+block|,
+operator|&
+name|kdbpcb
+operator|.
+name|pcb_regs
+index|[
+name|A3
 index|]
 block|,
 literal|"t0"
@@ -1721,21 +1761,6 @@ argument_list|,
 name|MACH_BREAK_SSTEP
 argument_list|)
 expr_stmt|;
-name|kdbprintf
-argument_list|(
-literal|"SS: breakpoint set at %x: %x (pc %x)\n"
-argument_list|,
-name|kdb_ss_addr
-argument_list|,
-name|kdb_ss_instr
-argument_list|,
-name|locr0
-index|[
-name|PC
-index|]
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 return|return;
 block|}
 name|kdb_ss_instr
@@ -1878,21 +1903,6 @@ operator|<
 literal|0
 condition|)
 return|return;
-name|kdbprintf
-argument_list|(
-literal|"SS: breakpoint set at %x: %x (pc %x)\n"
-argument_list|,
-name|kdb_ss_addr
-argument_list|,
-name|kdb_ss_instr
-argument_list|,
-name|locr0
-index|[
-name|PC
-index|]
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 block|}
 end_function
 
@@ -1987,16 +1997,6 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"BREAK %x: %x\n"
-argument_list|,
-name|va
-argument_list|,
-name|instr
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|instr
@@ -3434,6 +3434,8 @@ decl_stmt|,
 name|ra
 decl_stmt|,
 name|va
+decl_stmt|,
+name|subr
 decl_stmt|;
 name|int
 name|a0
@@ -3470,7 +3472,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_extern
-extern|extern MachKernInter(
+extern|extern MachKernIntr(
 end_extern
 
 begin_empty_stmt
@@ -3479,7 +3481,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_extern
-extern|extern MachUserInter(
+extern|extern MachUserIntr(
 end_extern
 
 begin_empty_stmt
@@ -3488,7 +3490,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_extern
-extern|extern MachTLBMissException(
+extern|extern setsoftclock(
 end_extern
 
 begin_empty_stmt
@@ -3590,7 +3592,7 @@ label|:
 end_label
 
 begin_comment
-comment|/* check for current PC in the exception handler code */
+comment|/* check for current PC in the kernel interrupt handler code */
 end_comment
 
 begin_if
@@ -3601,14 +3603,119 @@ operator|>=
 operator|(
 name|unsigned
 operator|)
-name|MachKernGenException
+name|MachKernIntr
 operator|&&
 name|pc
 operator|<
 operator|(
 name|unsigned
 operator|)
-name|MachTLBMissException
+name|MachUserIntr
+condition|)
+block|{
+comment|/* NOTE: the offsets depend on the code in locore.s */
+name|kdbprintf
+argument_list|(
+literal|"interupt\n"
+argument_list|)
+expr_stmt|;
+name|a0
+operator|=
+name|kdbchkget
+argument_list|(
+name|sp
+operator|+
+literal|36
+argument_list|,
+name|DSP
+argument_list|)
+expr_stmt|;
+name|a1
+operator|=
+name|kdbchkget
+argument_list|(
+name|sp
+operator|+
+literal|40
+argument_list|,
+name|DSP
+argument_list|)
+expr_stmt|;
+name|a2
+operator|=
+name|kdbchkget
+argument_list|(
+name|sp
+operator|+
+literal|44
+argument_list|,
+name|DSP
+argument_list|)
+expr_stmt|;
+name|a3
+operator|=
+name|kdbchkget
+argument_list|(
+name|sp
+operator|+
+literal|48
+argument_list|,
+name|DSP
+argument_list|)
+expr_stmt|;
+name|pc
+operator|=
+name|kdbchkget
+argument_list|(
+name|sp
+operator|+
+literal|20
+argument_list|,
+name|DSP
+argument_list|)
+expr_stmt|;
+name|ra
+operator|=
+name|kdbchkget
+argument_list|(
+name|sp
+operator|+
+literal|92
+argument_list|,
+name|DSP
+argument_list|)
+expr_stmt|;
+name|sp
+operator|=
+name|kdbchkget
+argument_list|(
+name|sp
+operator|+
+literal|100
+argument_list|,
+name|DSP
+argument_list|)
+expr_stmt|;
+block|}
+end_if
+
+begin_comment
+comment|/* check for current PC in the exception handler code */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|pc
+operator|>=
+literal|0x80000000
+operator|&&
+name|pc
+operator|<
+operator|(
+name|unsigned
+operator|)
+name|setsoftclock
 condition|)
 block|{
 name|ra
@@ -3636,24 +3743,6 @@ name|int
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_expr_stmt
-name|kdbprintf
-argument_list|(
-literal|"cur PC %X RA %X SP %X\n"
-argument_list|,
-name|va
-argument_list|,
-name|ra
-argument_list|,
-name|sp
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_while
 while|while
@@ -3696,19 +3785,41 @@ begin_comment
 comment|/* skip back over branch& delay slot */
 end_comment
 
-begin_expr_stmt
-name|kdbprintf
+begin_comment
+comment|/* skip over nulls which might separate .o files */
+end_comment
+
+begin_while
+while|while
+condition|(
+operator|(
+name|instr
+operator|=
+name|kdbchkget
 argument_list|(
-literal|"subr PC %X\n"
-argument_list|,
 name|va
+argument_list|,
+name|ISP
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|va
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|int
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+end_while
 
-begin_comment
-comment|/* XXX */
-end_comment
+begin_expr_stmt
+name|subr
+operator|=
+name|va
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* scan forwards to find stack size and any saved registers */
@@ -4066,20 +4177,40 @@ name|done
 label|:
 end_label
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|kdbpsymoff((long)pc, ISYM, "");
+else|#
+directive|else
+end_else
+
 begin_expr_stmt
-name|kdbpsymoff
+name|kdbprintf
 argument_list|(
-operator|(
-name|long
-operator|)
+literal|"%X+%X "
+argument_list|,
+name|subr
+argument_list|,
 name|pc
-argument_list|,
-name|ISYM
-argument_list|,
-literal|""
+operator|-
+name|subr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|kdbprintf
