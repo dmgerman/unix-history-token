@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comp.c	5.5 (Berkeley) %G%"
+literal|"@(#)comp.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,6 +170,7 @@ name|foundend
 operator|=
 name|FALSE
 expr_stmt|;
+comment|/* Try for a Coup Forre, and see what we have. */
 for|for
 control|(
 name|i
@@ -438,6 +439,12 @@ name|TRUE
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|card
+operator|>=
+literal|0
+condition|)
 operator|++
 name|count
 index|[
@@ -445,6 +452,7 @@ name|card
 index|]
 expr_stmt|;
 block|}
+comment|/* No Coup Forre.  Draw to fill hand, then restart, as needed. */
 if|if
 condition|(
 name|pp
@@ -2097,37 +2105,6 @@ argument_list|,
 literal|"PLAY\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|Debug
-condition|)
-name|getmove
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Debug
-operator|||
-name|Movetype
-operator|==
-name|M_DRAW
-condition|)
-block|{
-else|#
-directive|else
-if|if
-condition|(
-name|Movetype
-operator|==
-name|M_DRAW
-condition|)
-block|{
-endif|#
-directive|endif
 name|Movetype
 operator|=
 name|M_PLAY
@@ -2136,7 +2113,6 @@ name|Card_no
 operator|=
 name|nummax
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -2173,37 +2149,6 @@ argument_list|,
 literal|"DISCARD\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|Debug
-condition|)
-name|getmove
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Debug
-operator|||
-name|Movetype
-operator|==
-name|M_DRAW
-condition|)
-block|{
-else|#
-directive|else
-if|if
-condition|(
-name|Movetype
-operator|==
-name|M_DRAW
-condition|)
-block|{
-endif|#
-directive|endif
 name|Movetype
 operator|=
 name|M_DISCARD
@@ -2212,7 +2157,6 @@ name|Card_no
 operator|=
 name|nummin
 expr_stmt|;
-block|}
 block|}
 name|mvprintw
 argument_list|(
@@ -2236,6 +2180,13 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_comment
+comment|/*  * Return true if the given player could conceivably win with his next card.  */
+end_comment
+
+begin_expr_stmt
 name|onecard
 argument_list|(
 name|pp
@@ -2245,6 +2196,9 @@ name|PLAY
 operator|*
 name|pp
 expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 specifier|register
 name|CARD
@@ -2434,6 +2388,9 @@ return|return
 name|FALSE
 return|;
 block|}
+end_block
+
+begin_expr_stmt
 name|canplay
 argument_list|(
 name|pp
@@ -2450,10 +2407,16 @@ operator|,
 operator|*
 name|op
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|register
 name|CARD
 name|card
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 switch|switch
 condition|(
