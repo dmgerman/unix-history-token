@@ -309,18 +309,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static vop_read_t	nfsfifo_read; static vop_write_t	nfsfifo_write; static vop_close_t	nfsfifo_close; static vop_access_t	nfsspec_access;
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|int
@@ -14709,52 +14697,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * nfs special file access vnode op.  * Essentially just get vattr and then imitate iaccess() since the device is  * local to the client.  */
-end_comment
-
-begin_comment
-unit|static int nfsspec_access(struct vop_access_args *ap) { 	struct vattr *vap; 	struct ucred *cred = ap->a_cred; 	struct vnode *vp = ap->a_vp; 	mode_t mode = ap->a_mode; 	struct vattr vattr; 	int error;
-comment|/* 	 * Disallow write attempts on filesystems mounted read-only; 	 * unless the file is a socket, fifo, or a block or character 	 * device resident on the filesystem. 	 */
-end_comment
-
-begin_comment
-unit|if ((mode& VWRITE)&& (vp->v_mount->mnt_flag& MNT_RDONLY)) { 		switch (vp->v_type) { 		case VREG: 		case VDIR: 		case VLNK: 			return (EROFS); 		default: 			break; 		} 	} 	vap =&vattr; 	error = VOP_GETATTR(vp, vap, cred, ap->a_td); 	if (error) 		return (error); 	return (vaccess(vp->v_type, vap->va_mode, vap->va_uid, vap->va_gid, 	    mode, cred, NULL)); }
-comment|/*  * Read wrapper for fifos.  */
-end_comment
-
-begin_comment
-unit|static int nfsfifo_read(struct vop_read_args *ap) { 	struct nfsnode *np = VTONFS(ap->a_vp);
-comment|/* 	 * Set access flag. 	 */
-end_comment
-
-begin_comment
-unit|np->n_flag |= NACC; 	getnanotime(&np->n_atim); 	return (VOCALL(fifo_vnodeop_p, VOFFSET(vop_read), ap)); }
-comment|/*  * Write wrapper for fifos.  */
-end_comment
-
-begin_comment
-unit|static int nfsfifo_write(struct vop_write_args *ap) { 	struct nfsnode *np = VTONFS(ap->a_vp);
-comment|/* 	 * Set update flag. 	 */
-end_comment
-
-begin_comment
-unit|np->n_flag |= NUPD; 	getnanotime(&np->n_mtim); 	return (VOCALL(fifo_vnodeop_p, VOFFSET(vop_write), ap)); }
-comment|/*  * Close wrapper for fifos.  *  * Update the times on the nfsnode then do fifo close.  */
-end_comment
-
-begin_endif
-unit|static int nfsfifo_close(struct vop_close_args *ap) { 	struct vnode *vp = ap->a_vp; 	struct nfsnode *np = VTONFS(vp); 	struct vattr vattr; 	struct timespec ts;  	if (np->n_flag& (NACC | NUPD)) { 		getnanotime(&ts); 		if (np->n_flag& NACC) 			np->n_atim = ts; 		if (np->n_flag& NUPD) 			np->n_mtim = ts; 		np->n_flag |= NCHG; 		if (vrefcnt(vp) == 1&& 		    (vp->v_mount->mnt_flag& MNT_RDONLY) == 0) { 			VATTR_NULL(&vattr); 			if (np->n_flag& NACC) 				vattr.va_atime = np->n_atim; 			if (np->n_flag& NUPD) 				vattr.va_mtime = np->n_mtim; 			vn_lock(vp, LK_EXCLUSIVE | LK_RETRY, ap->a_td); 			(void)VOP_SETATTR(vp,&vattr, ap->a_cred, ap->a_td); 			VOP_UNLOCK(vp, 0, ap->a_td); 		} 	} 	return (VOCALL(fifo_vnodeop_p, VOFFSET(vop_close), ap)); }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Just call nfs_writebp() with the force argument set to 1.  *  * NOTE: B_DONE may or may not be set in a_bp on call.  */

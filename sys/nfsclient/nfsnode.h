@@ -667,18 +667,6 @@ name|buf_ops_nfs
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|extern	vop_t	**fifo_nfs4nodeop_p;
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|vop_t
