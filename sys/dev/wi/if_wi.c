@@ -12726,7 +12726,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|500
+literal|5000
 init|;
 name|i
 operator|>
@@ -12736,7 +12736,7 @@ name|i
 operator|--
 control|)
 block|{
-comment|/* 500ms */
+comment|/* 5000ms */
 if|if
 condition|(
 operator|!
