@@ -5013,6 +5013,17 @@ name|v_rdev
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|dev_lock
 argument_list|()
 expr_stmt|;
