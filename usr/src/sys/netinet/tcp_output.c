@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.34	82/03/15	*/
+comment|/*	tcp_output.c	4.35	82/03/20	*/
 end_comment
 
 begin_include
@@ -270,7 +270,7 @@ argument_list|(
 name|TCP_OUTPUT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Determine length of data that can be transmitted, 	 * and flags that will be used. 	 * If there is some data or critical controls (SYN, RST) 	 * to send, then transmit; otherwise, investigate further. 	 */
+comment|/* 	 * Determine length of data that should be transmitted, 	 * and flags that will be used. 	 * If there is some data or critical controls (SYN, RST) 	 * to send, then transmit; otherwise, investigate further. 	 */
 name|off
 operator|=
 name|tp
@@ -362,9 +362,6 @@ name|TH_FIN
 expr_stmt|;
 if|if
 condition|(
-name|len
-operator|||
-operator|(
 name|flags
 operator|&
 operator|(
@@ -374,11 +371,77 @@ name|TH_RST
 operator||
 name|TH_FIN
 operator|)
-operator|)
 condition|)
 goto|goto
 name|send
 goto|;
+if|if
+condition|(
+name|SEQ_GT
+argument_list|(
+name|tp
+operator|->
+name|snd_up
+argument_list|,
+name|tp
+operator|->
+name|snd_una
+argument_list|)
+condition|)
+goto|goto
+name|send
+goto|;
+comment|/* 	 * Sender silly window avoidance.  If can send all data, 	 * a maximum segment, at least 1/4 of window do it, 	 * or are forced, do it; otherwise don't bother. 	 */
+if|if
+condition|(
+name|len
+condition|)
+block|{
+if|if
+condition|(
+name|len
+operator|==
+name|tp
+operator|->
+name|t_maxseg
+operator|||
+name|off
+operator|+
+name|len
+operator|>=
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_cc
+condition|)
+goto|goto
+name|send
+goto|;
+if|if
+condition|(
+name|len
+operator|*
+literal|4
+operator|>=
+name|tp
+operator|->
+name|snd_wnd
+condition|)
+comment|/* a lot */
+goto|goto
+name|send
+goto|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_force
+condition|)
+goto|goto
+name|send
+goto|;
+block|}
 comment|/* 	 * Send if we owe peer an ACK. 	 */
 if|if
 condition|(
@@ -1217,9 +1280,32 @@ begin_if
 if|if
 condition|(
 name|win
+operator|<
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_hiwat
+operator|/
+literal|4
+condition|)
+comment|/* avoid silly window */
+name|win
+operator|=
+literal|0
+expr_stmt|;
+end_if
+
+begin_if
+if|if
+condition|(
+name|win
 operator|>
 literal|0
 condition|)
+if|#
+directive|if
+name|vax
 name|ti
 operator|->
 name|ti_win
@@ -1233,6 +1319,25 @@ name|win
 argument_list|)
 expr_stmt|;
 end_if
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|ti
+operator|->
+name|ti_win
+operator|=
+name|win
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|if
