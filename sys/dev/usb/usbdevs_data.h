@@ -499,6 +499,18 @@ literal|"mouse"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_MULTITECH
+block|,
+name|USB_PRODUCT_MULTITECH_ATLAS
+block|,
+literal|0
+block|,
+literal|"MultiTech"
+block|,
+literal|"MT5634ZBA-USB modem"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_ADS
 block|,
 name|USB_PRODUCT_ADS_ENET
@@ -986,6 +998,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Macally"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_MULTITECH
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"MultiTech"
 block|,
 name|NULL
 block|, 	}

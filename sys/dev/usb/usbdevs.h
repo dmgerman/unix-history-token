@@ -411,6 +411,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_MULTITECH
+value|0x06e0
+end_define
+
+begin_comment
+comment|/* MultiTech */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_ADS
 value|0x06e1
 end_define
@@ -1037,6 +1048,21 @@ end_define
 
 begin_comment
 comment|/* mouse */
+end_comment
+
+begin_comment
+comment|/* MultiTech Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_MULTITECH_ATLAS
+value|0xf101
+end_define
+
+begin_comment
+comment|/* MT5634ZBA-USB modem */
 end_comment
 
 begin_comment
