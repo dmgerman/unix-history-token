@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	table.h	4.2	84/04/09	*/
+comment|/*	table.h	4.3	84/05/03	*/
 end_comment
 
 begin_comment
@@ -192,7 +192,18 @@ begin_define
 define|#
 directive|define
 name|ROUTEHASHSIZ
-value|19
+value|32
+end_define
+
+begin_comment
+comment|/* must be a power of 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ROUTEHASHMASK
+value|(ROUTEHASHSIZ - 1)
 end_define
 
 begin_comment

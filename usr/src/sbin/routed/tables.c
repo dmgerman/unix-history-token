@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	4.7 (Berkeley) %G%"
+literal|"@(#)tables.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,8 +159,8 @@ operator|&
 name|hosthash
 index|[
 name|hash
-operator|%
-name|ROUTEHASHSIZ
+operator|&
+name|ROUTEHASHMASK
 index|]
 expr_stmt|;
 name|again
@@ -237,8 +237,8 @@ operator|&
 name|nethash
 index|[
 name|hash
-operator|%
-name|ROUTEHASHSIZ
+operator|&
+name|ROUTEHASHMASK
 index|]
 expr_stmt|;
 goto|goto
@@ -348,8 +348,8 @@ operator|&
 name|hosthash
 index|[
 name|hash
-operator|%
-name|ROUTEHASHSIZ
+operator|&
+name|ROUTEHASHMASK
 index|]
 expr_stmt|;
 name|again
@@ -463,8 +463,8 @@ operator|&
 name|nethash
 index|[
 name|hash
-operator|%
-name|ROUTEHASHSIZ
+operator|&
+name|ROUTEHASHMASK
 index|]
 expr_stmt|;
 name|match
@@ -610,8 +610,8 @@ operator|&
 name|hosthash
 index|[
 name|hash
-operator|%
-name|ROUTEHASHSIZ
+operator|&
+name|ROUTEHASHMASK
 index|]
 expr_stmt|;
 block|}
@@ -629,8 +629,8 @@ operator|&
 name|nethash
 index|[
 name|hash
-operator|%
-name|ROUTEHASHSIZ
+operator|&
+name|ROUTEHASHMASK
 index|]
 expr_stmt|;
 block|}
@@ -1176,8 +1176,8 @@ index|[
 name|h
 operator|.
 name|afh_nethash
-operator|%
-name|ROUTEHASHSIZ
+operator|&
+name|ROUTEHASHMASK
 index|]
 expr_stmt|;
 name|rt

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	4.13 (Berkeley) %G%"
+literal|"@(#)af.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -469,6 +469,16 @@ end_decl_stmt
 
 begin_block
 block|{
+name|u_long
+name|i
+init|=
+name|ntohl
+argument_list|(
+name|sin
+operator|->
+name|sin_addr
+argument_list|)
+decl_stmt|;
 define|#
 directive|define
 name|IN_BADCLASS
@@ -480,12 +490,7 @@ if|if
 condition|(
 name|IN_BADCLASS
 argument_list|(
-name|ntohl
-argument_list|(
-name|sin
-operator|->
-name|sin_addr
-argument_list|)
+name|i
 argument_list|)
 condition|)
 return|return
@@ -495,20 +500,15 @@ operator|)
 return|;
 if|if
 condition|(
-name|sin
-operator|->
-name|sin_addr
-operator|.
-name|s_addr
+name|i
 operator|!=
 literal|0
 operator|&&
-name|inet_netof
-argument_list|(
-name|sin
-operator|->
-name|sin_addr
-argument_list|)
+operator|(
+name|i
+operator|&
+literal|0xff000000
+operator|)
 operator|==
 literal|0
 condition|)
