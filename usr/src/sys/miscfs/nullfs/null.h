@@ -65,13 +65,16 @@ name|vnode
 modifier|*
 name|null_lowervp
 decl_stmt|;
-comment|/* Aliased vnode - VREFed once */
+comment|/* VREFed once */
 name|struct
 name|vnode
 modifier|*
 name|null_vnode
 decl_stmt|;
-comment|/* Back pointer to vnode/null_node */
+comment|/* Back pointer */
+name|int
+name|null_isinactive
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -806,6 +806,12 @@ name|loop
 goto|;
 block|}
 empty_stmt|;
+name|a
+operator|->
+name|null_isinactive
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|vp

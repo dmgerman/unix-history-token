@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * All rights reserved.  *  * This code is derived from the null layer of  * John Heidemann from the UCLA Ficus project and  * Jan-Simon Pendry's loopback file system.  *  * %sccs.include.redist.c%  *  *	@(#)null_vnops.c	1.5 (Berkeley) %G%  *  * Ancestors:  *	@(#)lofs_vnops.c	1.2 (Berkeley) 6/18/92  *	$Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  *	...and...  *	@(#)null_vnodeops.c 1.20 92/07/07 UCLA Ficus project  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * All rights reserved.  *  * This code is derived from the null layer of  * John Heidemann from the UCLA Ficus project and  * Jan-Simon Pendry's loopback file system.  *  * %sccs.include.redist.c%  *  *	@(#)null_vnops.c	1.6 (Berkeley) %G%  *  * Ancestors:  *	@(#)lofs_vnops.c	1.2 (Berkeley) 6/18/92  *	$Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  *	...and...  *	@(#)null_vnodeops.c 1.20 92/07/07 UCLA Ficus project  */
 end_comment
 
 begin_comment
@@ -262,9 +262,11 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We're not guaranteed that any but the first vnode 		 * are of our type.  Check for and don't map any 		 * that aren't. 		 */
+comment|/* 		 * We're not guaranteed that any but the first vnode 		 * are of our type.  Check for and don't map any 		 * that aren't.  (Must map first vp or vclean fails.) 		 */
 if|if
 condition|(
+name|i
+operator|&&
 operator|(
 operator|*
 name|this_vp_p
@@ -588,11 +590,9 @@ begin_comment
 comment|/*  * XXX - Ideally inactive does not release the lowervp  * so the null_node can stay around in the cache and be reused.  * Unfortunately, this currently causes "locking against self"  * problems in the UFS, so currently AVOID_CACHING hacks  * around the bug.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|AVOID_CACHING
-end_define
+begin_comment
+comment|/* #define AVOID_CACHING */
+end_comment
 
 begin_function
 name|int
@@ -680,25 +680,41 @@ directive|else
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
+comment|/* NEEDSWORK: goes away */
 if|if
 condition|(
 name|VOP_ISLOCKED
+argument_list|(
+name|NULLVPTOLOWERVP
 argument_list|(
 name|ap
 operator|->
 name|a_vp
 argument_list|)
+argument_list|)
 condition|)
 block|{
 name|panic
 argument_list|(
-literal|"null_inactive: inactive node is locked."
+literal|"null_inactive: inactive's lowervp is locked."
 argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Remember we're inactive so we  	 * don't send locks through. 	 */
+name|VTONULL
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|)
+operator|->
+name|null_isinactive
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Do nothing (and _don't_ bypass). 	 * Wait to vrele lowervp until reclaim, 	 * so that until then our null_node is in the 	 * cache and reusable. 	 * 	 * NEEDSWORK: Someday, consider inactive'ing 	 * the lowervp and then trying to reactivate it 	 * like they do in the name lookup cache code. 	 * That's too much work for now. 	 */
 return|return
 literal|0
@@ -761,6 +777,7 @@ comment|/* After this assignment, this node will not be re-used. */
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
+comment|/* XXX - this is only a bug if it's locked by ourselves */
 if|if
 condition|(
 name|lowervp
@@ -769,7 +786,7 @@ name|v_usecount
 operator|==
 literal|1
 operator|&&
-name|ISLOCKED
+name|VOP_ISLOCKED
 argument_list|(
 name|lowervp
 argument_list|)
@@ -998,6 +1015,18 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|int null_lock(ap) 	struct vop_lock_args *ap; { 	if (VTONULL(ap->a_vp)->null_isinactive) 		return 0; 	else return null_bypass(ap); }  int null_unlock(ap) 	struct vop_lock_args *ap; { 	if (VTONULL(ap->a_vp)->null_isinactive) 		return 0; 	else return null_bypass(ap); }
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Global vfs data structures  */
 end_comment
@@ -1059,6 +1088,12 @@ block|,
 name|null_print
 block|}
 block|,
+if|#
+directive|if
+literal|0
+block|{&vop_lock_desc, null_lock }, 	{&vop_unlock_desc, null_unlock },
+endif|#
+directive|endif
 block|{
 operator|&
 name|vop_bmap_desc
