@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"splash.h"
+file|"opt_syscons.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"opt_syscons.h"
+file|"opt_splash.h"
 end_include
 
 begin_include
@@ -403,13 +403,11 @@ begin_comment
 comment|/* screen saver timeout value */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|NSPLASH
-operator|>
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -857,13 +855,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|NSPLASH
-operator|>
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -1024,7 +1020,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !NSPLASH */
+comment|/* !DEV_SPLASH */
 end_comment
 
 begin_define
@@ -1042,7 +1038,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NSPLASH */
+comment|/* DEV_SPLASH */
 end_comment
 
 begin_function_decl
@@ -1945,11 +1941,9 @@ literal|0
 operator|)
 condition|)
 block|{
-if|#
-directive|if
-name|NSPLASH
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
 if|if
 condition|(
 name|sc
@@ -1995,11 +1989,9 @@ name|initial_mode
 operator|=
 name|M_VESA_800x600
 expr_stmt|;
-if|#
-directive|if
-name|NSPLASH
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
 comment|/* put up the splash again! */
 if|if
 condition|(
@@ -4460,11 +4452,9 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|NSPLASH
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
 if|if
 condition|(
 operator|(
@@ -4488,7 +4478,6 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* NSPLASH */
 name|run_scrn_saver
 operator|=
 name|TRUE
@@ -8535,11 +8524,9 @@ operator|&=
 operator|~
 name|SC_SCRN_IDLE
 expr_stmt|;
-if|#
-directive|if
-name|NSPLASH
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
 if|if
 condition|(
 operator|(
@@ -8580,7 +8567,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NSPLASH */
 if|if
 condition|(
 name|scp
@@ -8940,11 +8926,9 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|NSPLASH
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
 if|if
 condition|(
 operator|(
@@ -8979,7 +8963,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NSPLASH */
 comment|/* should we just return ? */
 if|if
 condition|(
@@ -9050,11 +9033,9 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NSPLASH
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
 comment|/* should we activate the screen saver? */
 if|if
 condition|(
@@ -9100,7 +9081,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NSPLASH */
 if|if
 condition|(
 name|again
@@ -9982,13 +9962,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|NSPLASH
-operator|>
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
+end_ifdef
 
 begin_function
 specifier|static
@@ -10995,7 +10973,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NSPLASH */
+comment|/* DEV_SPLASH */
 end_comment
 
 begin_function
@@ -12605,11 +12583,9 @@ name|int
 name|len
 parameter_list|)
 block|{
-if|#
-directive|if
-name|NSPLASH
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
 comment|/* make screensaver happy */
 if|if
 condition|(
@@ -14696,11 +14672,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|NSPLASH
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
 if|if
 condition|(
 operator|!
@@ -14740,7 +14714,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* NSPLASH */
 block|}
 comment|/* the rest is not necessary, if we have done it once */
 if|if
@@ -14841,11 +14814,9 @@ name|NULL
 condition|)
 return|return;
 comment|/* shouldn't happen */
-if|#
-directive|if
-name|NSPLASH
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
 comment|/* this console is no longer available for the splash screen */
 if|if
 condition|(
@@ -14873,7 +14844,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* NSPLASH */
 if|#
 directive|if
 literal|0
@@ -15142,17 +15112,14 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
-if|#
-directive|if
-name|NSPLASH
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
 name|int
 name|error
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* NSPLASH */
 if|if
 condition|(
 name|scp
@@ -15167,11 +15134,9 @@ block|{
 name|sc_touch_scrn_saver
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|NSPLASH
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
 if|if
 condition|(
 operator|(
@@ -15190,7 +15155,6 @@ name|error
 return|;
 endif|#
 directive|endif
-comment|/* NSPLASH */
 block|}
 name|scp
 operator|->
@@ -17076,11 +17040,9 @@ break|break;
 case|case
 name|SPSC
 case|:
-if|#
-directive|if
-name|NSPLASH
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SPLASH
 comment|/* force activatation/deactivation of the screen saver */
 if|if
 condition|(
@@ -17164,7 +17126,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* NSPLASH */
+comment|/* DEV_SPLASH */
 break|break;
 case|case
 name|RBT
