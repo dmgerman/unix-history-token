@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_nfs.c	8.10 (Berkeley) %G%"
+literal|"@(#)mount_nfs.c	8.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -512,6 +512,8 @@ name|nfs_args
 name|nfsdefargs
 init|=
 block|{
+name|NFS_ARGSVERSION
+block|,
 operator|(
 expr|struct
 name|sockaddr
