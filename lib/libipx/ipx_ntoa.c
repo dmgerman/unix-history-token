@@ -75,6 +75,18 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|spectHex
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|char
 modifier|*
@@ -142,12 +154,6 @@ name|up
 operator|+
 literal|6
 decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|spectHex
-parameter_list|()
-function_decl|;
 name|net
 operator|.
 name|net_e
