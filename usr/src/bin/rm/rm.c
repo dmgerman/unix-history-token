@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rm.c	4.19 (Berkeley) %G%"
+literal|"@(#)rm.c	4.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,10 +91,6 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|realloc
 argument_list|()
 decl_stmt|;
 end_decl_stmt
