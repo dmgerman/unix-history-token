@@ -1515,6 +1515,9 @@ argument_list|,
 operator|(
 name|int
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|arg
 argument_list|)
 expr_stmt|;
@@ -2191,6 +2194,8 @@ condition|)
 name|ieee80211_iterate_nodes
 argument_list|(
 name|ic
+operator|->
+name|ic_sta
 argument_list|,
 name|ath_rate_ctl
 argument_list|,
