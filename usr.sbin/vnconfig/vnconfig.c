@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vnconfig.c,v 1.8 1999/01/26 04:53:09 peter Exp $"
+literal|"$Id: vnconfig.c,v 1.9 1999/03/14 09:20:01 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -683,10 +683,8 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"cannot find or load \"vn\" kernel module"
 argument_list|)
 expr_stmt|;
