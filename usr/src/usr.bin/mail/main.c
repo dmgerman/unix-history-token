@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)main.c	2.10 %G%"
+literal|"@(#)main.c	2.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -992,11 +992,6 @@ expr_stmt|;
 name|fflush
 argument_list|(
 name|stdout
-argument_list|)
-expr_stmt|;
-name|sigrelse
-argument_list|(
-name|SIGINT
 argument_list|)
 expr_stmt|;
 name|longjmp

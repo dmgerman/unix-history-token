@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)tty.c	2.4 %G%"
+literal|"@(#)tty.c	2.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1155,11 +1155,6 @@ begin_block
 block|{
 name|hadcont
 operator|++
-expr_stmt|;
-name|sigrelse
-argument_list|(
-name|SIGCONT
-argument_list|)
 expr_stmt|;
 name|longjmp
 argument_list|(

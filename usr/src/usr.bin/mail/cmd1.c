@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd1.c	2.10 %G%"
+literal|"@(#)cmd1.c	2.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1627,16 +1627,9 @@ end_macro
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|VMUNIX
-name|sigrelse
-argument_list|(
-name|SIGPIPE
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|signal
 argument_list|(
 name|SIGPIPE

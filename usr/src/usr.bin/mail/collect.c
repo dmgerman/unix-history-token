@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)collect.c	2.13 %G%"
+literal|"@(#)collect.c	2.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -302,9 +302,12 @@ else|:
 name|collrub
 argument_list|)
 operator|,
-name|sighold
+name|sigblock
+argument_list|(
+name|mask
 argument_list|(
 name|SIGINT
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_if
@@ -332,9 +335,12 @@ argument_list|,
 name|collrub
 argument_list|)
 operator|,
-name|sighold
+name|sigblock
+argument_list|(
+name|mask
 argument_list|(
 name|SIGHUP
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_if
@@ -625,6 +631,27 @@ init|;
 condition|;
 control|)
 block|{
+name|int
+name|omask
+init|=
+name|sigblock
+argument_list|(
+literal|0
+argument_list|)
+operator|&
+operator|~
+operator|(
+name|mask
+argument_list|(
+name|SIGINT
+argument_list|)
+operator||
+name|mask
+argument_list|(
+name|SIGHUP
+argument_list|)
+operator|)
+decl_stmt|;
 name|setjmp
 argument_list|(
 name|coljmp
@@ -633,14 +660,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VMUNIX
-name|sigrelse
+name|sigsetmask
 argument_list|(
-name|SIGINT
-argument_list|)
-expr_stmt|;
-name|sigrelse
-argument_list|(
-name|SIGHUP
+name|omask
 argument_list|)
 expr_stmt|;
 else|#
@@ -1672,6 +1694,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|sigsetmask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -1758,6 +1788,14 @@ argument_list|(
 name|SIGCONT
 argument_list|,
 name|savecont
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|sigsetmask
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3504,17 +3542,6 @@ argument_list|(
 literal|"\n(Interrupt -- one more to kill letter)\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VMUNIX
-name|sigrelse
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|VMUNIX
 name|longjmp
 argument_list|(
 name|coljmp

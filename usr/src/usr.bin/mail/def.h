@@ -46,7 +46,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	2.10 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	2.11 %G%";  */
 end_comment
 
 begin_comment
@@ -1150,6 +1150,55 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * 4.2bsd signal interface help...  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMUNIX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|sigset
+parameter_list|(
+name|s
+parameter_list|,
+name|a
+parameter_list|)
+value|signal(s, a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mask
+parameter_list|(
+name|s
+parameter_list|)
+value|(1<< ((s) - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigsys
+parameter_list|(
+name|s
+parameter_list|,
+name|a
+parameter_list|)
+value|signal(s, a)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Forward declarations of routine types to keep lint and cc happy.  */
 end_comment
 
@@ -1489,6 +1538,12 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VMUNIX
+end_ifndef
+
 begin_expr_stmt
 name|int
 argument_list|(
@@ -1499,6 +1554,11 @@ argument_list|)
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|struct

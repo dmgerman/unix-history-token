@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	2.11 %G%"
+literal|"@(#)lex.c	2.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1945,16 +1945,9 @@ argument_list|(
 literal|"Interrupt\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|VMUNIX
-name|sigrelse
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|signal
 argument_list|(
 name|s

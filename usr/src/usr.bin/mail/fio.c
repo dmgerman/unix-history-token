@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	2.13 %G%"
+literal|"@(#)fio.c	2.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2038,6 +2038,15 @@ begin_comment
 comment|/* depth of holdsigs() */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|sigmask
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Hold signals SIGHUP - SIGQUIT.  */
 end_comment
@@ -2060,22 +2069,24 @@ operator|++
 operator|==
 literal|0
 condition|)
-for|for
-control|(
-name|i
+name|sigmask
 operator|=
-name|SIGHUP
-init|;
-name|i
-operator|<=
-name|SIGQUIT
-condition|;
-name|i
-operator|++
-control|)
-name|sighold
+name|sigblock
 argument_list|(
-name|i
+name|mask
+argument_list|(
+name|SIGHUP
+argument_list|)
+operator||
+name|mask
+argument_list|(
+name|SIGINT
+argument_list|)
+operator||
+name|mask
+argument_list|(
+name|SIGQUIT
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2103,22 +2114,9 @@ name|sigdepth
 operator|==
 literal|0
 condition|)
-for|for
-control|(
-name|i
-operator|=
-name|SIGHUP
-init|;
-name|i
-operator|<=
-name|SIGQUIT
-condition|;
-name|i
-operator|++
-control|)
-name|sigrelse
+name|sigsetmask
 argument_list|(
-name|i
+name|sigmask
 argument_list|)
 expr_stmt|;
 block|}
