@@ -173,6 +173,13 @@ name|PCI_PRODUCT_QLOGIC_ISP2312
 value|0x2312
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_QLOGIC_ISP6312
+value|0x6312
+end_define
+
 begin_if
 if|#
 directive|if
@@ -539,6 +546,9 @@ name|PCI_PRODUCT_QLOGIC_ISP2300
 case|:
 case|case
 name|PCI_PRODUCT_QLOGIC_ISP2312
+case|:
+case|case
+name|PCI_PRODUCT_QLOGIC_ISP6312
 case|:
 name|rp
 operator|=
