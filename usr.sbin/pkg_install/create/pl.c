@@ -447,7 +447,7 @@ name|cp
 condition|)
 name|vsystem
 argument_list|(
-literal|"mkdir -p %.*s"
+literal|"/bin/mkdir -p %.*s"
 argument_list|,
 name|cp
 operator|-
@@ -476,7 +476,7 @@ begin_define
 define|#
 directive|define
 name|STARTSTRING
-value|"tar cf -"
+value|"/usr/bin/tar cf -"
 end_define
 
 begin_define
@@ -496,7 +496,7 @@ name|PUSHOUT
 parameter_list|()
 comment|/* push out string */
 define|\
-value|if (where_count> (int)sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xpf -"); \ 		    if (system(where_args)) { \ 			cleanup(0); \ 			errx(2, "%s: can't invoke tar pipeline", __func__); \ 		    } \ 		    memset(where_args, 0, maxargs); \  		    last_chdir = NULL; \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	}
+value|if (where_count> (int)sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|/usr/bin/tar xpf -"); \ 		    if (system(where_args)) { \ 			cleanup(0); \ 			errx(2, "%s: can't invoke tar pipeline", __func__); \ 		    } \ 		    memset(where_args, 0, maxargs); \  		    last_chdir = NULL; \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	}
 end_define
 
 begin_comment

@@ -239,17 +239,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|pkg_perform
-parameter_list|(
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|copy_plist
 parameter_list|(

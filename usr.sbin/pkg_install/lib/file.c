@@ -1326,7 +1326,7 @@ name|cmd
 argument_list|,
 name|FILENAME_MAX
 argument_list|,
-literal|"cp -r %s %s"
+literal|"/bin/cp -r %s %s"
 argument_list|,
 name|fname
 argument_list|,
@@ -1340,7 +1340,7 @@ name|cmd
 argument_list|,
 name|FILENAME_MAX
 argument_list|,
-literal|"cp -r %s/%s %s"
+literal|"/bin/cp -r %s/%s %s"
 argument_list|,
 name|dir
 argument_list|,
@@ -1418,7 +1418,7 @@ name|cmd
 argument_list|,
 name|FILENAME_MAX
 argument_list|,
-literal|"mv %s %s"
+literal|"/bin/mv %s %s"
 argument_list|,
 name|fname
 argument_list|,
@@ -1432,7 +1432,7 @@ name|cmd
 argument_list|,
 name|FILENAME_MAX
 argument_list|,
-literal|"mv %s/%s %s"
+literal|"/bin/mv %s/%s %s"
 argument_list|,
 name|dir
 argument_list|,
@@ -1525,7 +1525,7 @@ name|FILENAME_MAX
 operator|*
 literal|3
 argument_list|,
-literal|"tar cf - -C %s %s | tar xpf -"
+literal|"/usr/bin/tar cf - -C %s %s | /usr/bin/tar xpf -"
 argument_list|,
 name|dir
 argument_list|,
@@ -1542,7 +1542,7 @@ name|FILENAME_MAX
 operator|*
 literal|3
 argument_list|,
-literal|"tar cf - %s | tar xpf - -C %s"
+literal|"/usr/bin/tar cf - %s | /usr/bin/tar xpf - -C %s"
 argument_list|,
 name|fname
 argument_list|,
@@ -1699,16 +1699,33 @@ block|}
 block|}
 block|}
 else|else
-comment|/* XXX: need to handle .tgz also */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|500039
 name|comp
 operator|=
 literal|"-j"
 expr_stmt|;
+else|#
+directive|else
+name|comp
+operator|=
+literal|"-z"
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"tar -xp %s -f '%s' %s"
+literal|"/usr/bin/tar -xp %s -f '%s' %s"
 argument_list|,
 name|comp
 argument_list|,

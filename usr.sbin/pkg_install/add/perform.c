@@ -735,7 +735,7 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"mkdir -p %s"
+literal|"/bin/mkdir -p %s"
 argument_list|,
 name|p
 operator|->
@@ -1381,10 +1381,28 @@ name|ext
 operator|==
 name|NULL
 condition|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|500039
 name|ext
 operator|=
 literal|".tbz"
 expr_stmt|;
+else|#
+directive|else
+name|ext
+operator|=
+literal|".tgz"
+expr_stmt|;
+endif|#
+directive|endif
 name|snprintf
 argument_list|(
 name|path
@@ -1448,7 +1466,9 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"pkg_add %s'%s'"
+literal|"%s %s'%s'"
+argument_list|,
+name|PkgAddCmd
 argument_list|,
 name|Verbose
 condition|?
@@ -1574,7 +1594,9 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"(pwd; cat +CONTENTS) | pkg_add %s-S"
+literal|"(pwd; /bin/cat +CONTENTS) | %s %s-S"
+argument_list|,
+name|PkgAddCmd
 argument_list|,
 name|Verbose
 condition|?
@@ -1704,7 +1726,7 @@ condition|)
 block|{
 name|vsystem
 argument_list|(
-literal|"chmod +x %s"
+literal|"/bin/chmod +x %s"
 argument_list|,
 name|REQUIRE_FNAME
 argument_list|)
@@ -1856,7 +1878,7 @@ condition|)
 block|{
 name|vsystem
 argument_list|(
-literal|"chmod +x %s"
+literal|"/bin/chmod +x %s"
 argument_list|,
 name|pre_script
 argument_list|)
@@ -2032,7 +2054,7 @@ condition|)
 block|{
 name|vsystem
 argument_list|(
-literal|"chmod +x %s"
+literal|"/bin/chmod +x %s"
 argument_list|,
 name|post_script
 argument_list|)
@@ -2183,7 +2205,7 @@ block|}
 comment|/* Make sure pkg_info can read the entry */
 name|vsystem
 argument_list|(
-literal|"chmod a+rx %s"
+literal|"/bin/chmod a+rx %s"
 argument_list|,
 name|LogDir
 argument_list|)

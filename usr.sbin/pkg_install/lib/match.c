@@ -222,6 +222,8 @@ decl_stmt|;
 name|Boolean
 modifier|*
 name|lmatched
+init|=
+name|NULL
 decl_stmt|;
 name|store
 operator|=

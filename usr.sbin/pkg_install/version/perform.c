@@ -146,7 +146,7 @@ decl_stmt|;
 name|int
 name|MatchType
 decl_stmt|;
-comment|/*      * Try to find and open the INDEX. We only check IndexFile != NULL      * later, if we actually need the INDEX.      * XXX This should not be hard-coded to INDEX-5.      */
+comment|/*      * Try to find and open the INDEX. We only check IndexFile != NULL      * later, if we actually need the INDEX.      */
 if|if
 condition|(
 operator|*
@@ -160,9 +160,11 @@ name|tmp
 argument_list|,
 name|PATH_MAX
 argument_list|,
-literal|"%s/INDEX-5"
+literal|"%s/%s"
 argument_list|,
 name|PORTS_DIR
+argument_list|,
+name|INDEX_FNAME
 argument_list|)
 expr_stmt|;
 else|else
@@ -619,7 +621,7 @@ name|latest
 operator|=
 name|vpipe
 argument_list|(
-literal|"make -V PKGNAME"
+literal|"/usr/bin/make -V PKGNAME"
 argument_list|,
 name|tmp
 argument_list|)

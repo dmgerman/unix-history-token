@@ -267,10 +267,6 @@ index|]
 init|=
 name|CERTFILE
 decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|X509
 modifier|*
 name|x509
@@ -421,6 +417,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|x509
 operator|=
 name|PEM_read_X509
@@ -433,6 +430,7 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 condition|)
 block|{
 name|sk_X509_push
@@ -926,10 +924,6 @@ literal|1
 index|]
 init|=
 name|KEYFILE
-decl_stmt|;
-name|char
-modifier|*
-name|kp
 decl_stmt|;
 name|key_from_name
 argument_list|(

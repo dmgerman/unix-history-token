@@ -789,7 +789,7 @@ literal|'/'
 operator|&&
 name|vsystem
 argument_list|(
-literal|"rm -rf %s"
+literal|"/bin/rm -rf %s"
 argument_list|,
 name|PenLocation
 argument_list|)

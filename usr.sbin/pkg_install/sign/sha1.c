@@ -667,11 +667,6 @@ name|sha1_checker
 modifier|*
 name|checker
 decl_stmt|;
-name|struct
-name|signature
-modifier|*
-name|old
-decl_stmt|;
 operator|*
 name|sign
 operator|=

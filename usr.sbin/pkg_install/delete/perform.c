@@ -1026,7 +1026,7 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"chmod +x %s"
+literal|"/bin/chmod +x %s"
 argument_list|,
 name|REQUIRE_FNAME
 argument_list|)
@@ -1152,7 +1152,7 @@ else|else
 block|{
 name|vsystem
 argument_list|(
-literal|"chmod +x %s"
+literal|"/bin/chmod +x %s"
 argument_list|,
 name|pre_script
 argument_list|)
@@ -1452,7 +1452,7 @@ else|else
 block|{
 name|vsystem
 argument_list|(
-literal|"chmod +x %s"
+literal|"/bin/chmod +x %s"
 argument_list|,
 name|post_script
 argument_list|)
