@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	6.8 (Berkeley) %G%"
+literal|"@(#)res_comp.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,6 +118,10 @@ name|len
 init|=
 operator|-
 literal|1
+decl_stmt|,
+name|checked
+init|=
+literal|0
 decl_stmt|;
 name|dn
 operator|=
@@ -196,6 +200,12 @@ operator|-
 literal|1
 operator|)
 return|;
+name|checked
+operator|+=
+name|n
+operator|+
+literal|1
+expr_stmt|;
 while|while
 condition|(
 operator|--
@@ -312,6 +322,25 @@ operator|>=
 name|eomorig
 condition|)
 comment|/* out of range */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+name|checked
+operator|+=
+literal|2
+expr_stmt|;
+comment|/* 			 * Check for loops in the compressed name; 			 * if we've looked at the whole message, 			 * there must be a loop. 			 */
+if|if
+condition|(
+name|checked
+operator|>=
+name|eomorig
+operator|-
+name|msg
+condition|)
 return|return
 operator|(
 operator|-
