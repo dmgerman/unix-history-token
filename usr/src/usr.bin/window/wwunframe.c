@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwunframe.c	3.2 83/08/11"
+literal|"@(#)wwunframe.c	3.3 83/08/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,14 +25,6 @@ include|#
 directive|include
 file|"ww.h"
 end_include
-
-begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|wwfmap
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|wwunframe

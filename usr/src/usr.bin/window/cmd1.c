@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	3.1 83/08/11"
+literal|"@(#)cmd1.c	3.2 83/08/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -854,6 +854,7 @@ name|w
 operator|->
 name|ww_hasframe
 condition|)
+block|{
 name|wwframe
 argument_list|(
 name|w
@@ -861,36 +862,12 @@ argument_list|,
 name|framewin
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|w
-operator|=
-name|wwhead
-operator|.
-name|ww_back
-init|;
-name|w
-operator|!=
-operator|&
-name|wwhead
-condition|;
-name|w
-operator|=
-name|w
-operator|->
-name|ww_back
-control|)
-if|if
-condition|(
-name|w
-operator|->
-name|ww_hasframe
-condition|)
 name|labelwin
 argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 

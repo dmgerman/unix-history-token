@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwlabel.c	3.1 83/08/11"
+literal|"@(#)wwlabel.c	3.2 83/08/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,66 +26,32 @@ directive|include
 file|"ww.h"
 end_include
 
-begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|wwfmap
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|U
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|R
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|D
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|L
-value|8
-end_define
-
 begin_comment
 comment|/*  * Label window w on f,  * at 1 line above w and 'where' columns from it's left edge.  * Gross, but it works.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|wwlabel
 argument_list|(
-name|w
+argument|w
 argument_list|,
-name|f
+argument|f
 argument_list|,
-name|where
+argument|where
 argument_list|,
-name|l
+argument|l
 argument_list|,
-name|mode
+argument|mode
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|ww
-operator|*
+modifier|*
 name|w
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -132,6 +98,7 @@ name|ww_char
 modifier|*
 name|ns
 decl_stmt|;
+specifier|register
 name|char
 modifier|*
 name|fmap
@@ -307,9 +274,6 @@ name|p
 condition|;
 name|j
 operator|--
-operator|,
-name|fmap
-operator|++
 control|)
 block|{
 comment|/* can't label if not already framed */
@@ -319,23 +283,6 @@ operator|*
 name|win
 operator|&
 name|WWM_GLS
-operator|||
-operator|(
-operator|*
-name|fmap
-operator|&
-operator|(
-name|U
-operator||
-name|D
-operator|)
-operator|)
-operator|==
-operator|(
-name|U
-operator||
-name|D
-operator|)
 condition|)
 block|{
 name|p
@@ -348,6 +295,9 @@ name|ns
 operator|++
 expr_stmt|;
 name|win
+operator|++
+expr_stmt|;
+name|fmap
 operator|++
 expr_stmt|;
 block|}
@@ -373,6 +323,12 @@ operator|*
 name|p
 operator|++
 expr_stmt|;
+operator|*
+name|fmap
+operator|++
+operator||=
+name|WWF_LABEL
+expr_stmt|;
 name|ns
 operator|++
 expr_stmt|;
@@ -381,6 +337,7 @@ operator|++
 expr_stmt|;
 block|}
 else|else
+block|{
 name|ns
 operator|++
 operator|->
@@ -407,6 +364,13 @@ operator|++
 operator|<<
 name|WWC_MSHIFT
 expr_stmt|;
+operator|*
+name|fmap
+operator|++
+operator||=
+name|WWF_LABEL
+expr_stmt|;
+block|}
 block|}
 return|return
 literal|0

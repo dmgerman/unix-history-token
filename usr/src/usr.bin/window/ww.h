@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.1 83/08/11	  */
+comment|/*  *	@(#)ww.h	3.2 83/08/12	  */
 end_comment
 
 begin_include
@@ -71,125 +71,6 @@ comment|/* column */
 block|}
 struct|;
 end_struct
-
-begin_union
-union|union
-name|ww_char
-block|{
-name|short
-name|c_w
-decl_stmt|;
-comment|/* as a word */
-struct|struct
-block|{
-name|char
-name|C_c
-decl_stmt|;
-comment|/* the character part */
-name|char
-name|C_m
-decl_stmt|;
-comment|/* the mode part */
-block|}
-name|c_un
-struct|;
-block|}
-union|;
-end_union
-
-begin_define
-define|#
-directive|define
-name|c_c
-value|c_un.C_c
-end_define
-
-begin_define
-define|#
-directive|define
-name|c_m
-value|c_un.C_m
-end_define
-
-begin_define
-define|#
-directive|define
-name|WWC_CMASK
-value|0x00ff
-end_define
-
-begin_define
-define|#
-directive|define
-name|WWC_MMASK
-value|0xff00
-end_define
-
-begin_define
-define|#
-directive|define
-name|WWC_MSHIFT
-value|8
-end_define
-
-begin_comment
-comment|/* c_m bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WWM_REV
-value|0x01
-end_define
-
-begin_comment
-comment|/* reverse video */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WWM_BLK
-value|0x02
-end_define
-
-begin_comment
-comment|/* blinking */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WWM_UL
-value|0x04
-end_define
-
-begin_comment
-comment|/* underlined */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WWM_GLS
-value|0x10
-end_define
-
-begin_comment
-comment|/* window only, glass, i.e. transparent */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WWM_COV
-value|0x20
-end_define
-
-begin_comment
-comment|/* window only, covered */
-end_comment
 
 begin_struct
 struct|struct
@@ -300,7 +181,7 @@ index|[
 literal|11
 index|]
 decl_stmt|;
-comment|/* /dev/ttyp? */
+comment|/* "/dev/ttyp?" */
 comment|/* below are things for the user */
 name|char
 name|ww_hasframe
@@ -326,6 +207,158 @@ comment|/* the user supplied label */
 block|}
 struct|;
 end_struct
+
+begin_struct
+struct|struct
+name|ww_tty
+block|{
+name|struct
+name|sgttyb
+name|ww_sgttyb
+decl_stmt|;
+name|struct
+name|tchars
+name|ww_tchars
+decl_stmt|;
+name|struct
+name|ltchars
+name|ww_ltchars
+decl_stmt|;
+name|int
+name|ww_lmode
+decl_stmt|;
+name|int
+name|ww_ldisc
+decl_stmt|;
+name|int
+name|ww_pgrp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_union
+union|union
+name|ww_char
+block|{
+name|short
+name|c_w
+decl_stmt|;
+comment|/* as a word */
+struct|struct
+block|{
+name|char
+name|C_c
+decl_stmt|;
+comment|/* the character part */
+name|char
+name|C_m
+decl_stmt|;
+comment|/* the mode part */
+block|}
+name|c_un
+struct|;
+block|}
+union|;
+end_union
+
+begin_define
+define|#
+directive|define
+name|c_c
+value|c_un.C_c
+end_define
+
+begin_define
+define|#
+directive|define
+name|c_m
+value|c_un.C_m
+end_define
+
+begin_comment
+comment|/* parts of ww_char */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWC_CMASK
+value|0x00ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWC_MMASK
+value|0xff00
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWC_MSHIFT
+value|8
+end_define
+
+begin_comment
+comment|/* c_m bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWM_REV
+value|0x01
+end_define
+
+begin_comment
+comment|/* reverse video */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWM_BLK
+value|0x02
+end_define
+
+begin_comment
+comment|/* blinking */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWM_UL
+value|0x04
+end_define
+
+begin_comment
+comment|/* underlined */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWM_GLS
+value|0x10
+end_define
+
+begin_comment
+comment|/* window only, glass, i.e. transparent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWM_COV
+value|0x20
+end_define
+
+begin_comment
+comment|/* window only, covered */
+end_comment
 
 begin_comment
 comment|/* ww_state values */
@@ -375,35 +408,6 @@ begin_comment
 comment|/* child died */
 end_comment
 
-begin_struct
-struct|struct
-name|ww_tty
-block|{
-name|struct
-name|sgttyb
-name|ww_sgttyb
-decl_stmt|;
-name|struct
-name|tchars
-name|ww_tchars
-decl_stmt|;
-name|struct
-name|ltchars
-name|ww_ltchars
-decl_stmt|;
-name|int
-name|ww_lmode
-decl_stmt|;
-name|int
-name|ww_ldisc
-decl_stmt|;
-name|int
-name|ww_pgrp
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/* flags to wwopen() */
 end_comment
@@ -441,6 +445,70 @@ begin_comment
 comment|/* make it all glass */
 end_comment
 
+begin_comment
+comment|/* flags for wwfmap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWF_U
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWF_R
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWF_D
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWF_L
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWF_MASK
+value|(WWF_U|WWF_R|WWF_D|WWF_L)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWF_LABEL
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|WWF_TOP
+value|0x80
+end_define
+
+begin_comment
+comment|/* special ww_index value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWX_NOBODY
+value|NWW
+end_define
+
 begin_decl_stmt
 name|struct
 name|ww
@@ -461,6 +529,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* last location is for wwnobody */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|ww
@@ -468,23 +540,38 @@ name|wwnobody
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|WWX_NOBODY
-value|NWW
-end_define
-
 begin_decl_stmt
 name|struct
 name|ww_tty
 name|wwoldtty
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the old (saved) terminal settings */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|ww_tty
 name|wwnewtty
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the new (current) terminal settings */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|ww_tty
 name|wwwintty
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* the terminal settings for windows */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -492,6 +579,10 @@ modifier|*
 name|wwterm
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* the terminal name */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -502,6 +593,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* place for the termcap */
+end_comment
+
 begin_decl_stmt
 name|char
 name|wwkeys
@@ -510,6 +605,10 @@ literal|512
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* termcap fields for the function keys */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -525,21 +624,13 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|wwcursorrow
-decl_stmt|,
-name|wwcursorcol
+name|wwdtablesize
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the terminal cursor position */
+comment|/* result of getdtablesize() call */
 end_comment
-
-begin_decl_stmt
-name|int
-name|wwdtablesize
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -554,13 +645,16 @@ comment|/* the screen map */
 end_comment
 
 begin_decl_stmt
-name|union
-name|ww_char
+name|char
 modifier|*
 modifier|*
-name|wwns
+name|wwfmap
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* the frame map */
+end_comment
 
 begin_decl_stmt
 name|union
@@ -571,11 +665,22 @@ name|wwos
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* the old (current) screen */
+end_comment
+
 begin_decl_stmt
-name|int
-name|wwbaud
+name|union
+name|ww_char
+modifier|*
+modifier|*
+name|wwns
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* the new (desired) screen */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -583,6 +688,32 @@ name|wwbaudmap
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* maps stty() baud rate code into number */
+end_comment
+
+begin_decl_stmt
+name|int
+name|wwbaud
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* wwbaudmap[wwoldtty.ww_sgttyb.sg_ospeed] */
+end_comment
+
+begin_decl_stmt
+name|int
+name|wwcursorrow
+decl_stmt|,
+name|wwcursorcol
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* where we want the cursor to be */
+end_comment
 
 begin_comment
 comment|/* statistics */
@@ -599,6 +730,10 @@ name|int
 name|wwnwritec
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* quicky macros */
+end_comment
 
 begin_define
 define|#
@@ -650,6 +785,10 @@ parameter_list|()
 value|putchar(CTRL(g))
 end_define
 
+begin_comment
+comment|/* our functions */
+end_comment
+
 begin_function_decl
 name|struct
 name|ww
@@ -698,6 +837,10 @@ name|wwalloc
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* c library functions */
+end_comment
 
 begin_function_decl
 name|char
