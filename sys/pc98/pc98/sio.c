@@ -4047,6 +4047,12 @@ name|gone
 operator|=
 name|TRUE
 expr_stmt|;
+if|if
+condition|(
+name|com
+operator|->
+name|tp
+condition|)
 name|ttygone
 argument_list|(
 name|com
