@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent code for BSD Unix running on i386's, for GDB.    Copyright 1988, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  	$Id: freebsd-nat.c,v 1.7 1995/05/30 04:57:05 rgrimes Exp $ */
+comment|/* Native-dependent code for BSD Unix running on i386's, for GDB.    Copyright 1988, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  	$Id: freebsd-nat.c,v 1.8 1996/05/02 09:42:45 phk Exp $ */
 end_comment
 
 begin_include
@@ -2410,7 +2410,7 @@ name|unsigned
 operator|)
 name|addr
 operator|>>
-name|PD_SHIFT
+name|PDRSHIFT
 operator|)
 operator|*
 sizeof|sizeof
@@ -2525,7 +2525,7 @@ operator|+
 operator|(
 name|addr
 operator|&
-name|PGOFSET
+name|PAGE_MASK
 operator|)
 expr_stmt|;
 if|#
@@ -2850,7 +2850,7 @@ operator|-
 operator|(
 name|addr
 operator|&
-name|PGOFSET
+name|PAGE_MASK
 operator|)
 argument_list|)
 expr_stmt|;
