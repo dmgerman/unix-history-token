@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)pmap.c	7.2 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  *	@(#)pmap.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1083,6 +1083,11 @@ specifier|extern
 name|vm_offset_t
 name|DIObase
 decl_stmt|;
+specifier|extern
+name|char
+name|kstack
+index|[]
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1191,8 +1196,7 @@ operator|=
 operator|(
 name|vm_offset_t
 operator|)
-operator|&
-name|u
+name|kstack
 expr_stmt|;
 name|vm_object_reference
 argument_list|(
@@ -1228,8 +1232,7 @@ operator|!=
 operator|(
 name|vm_offset_t
 operator|)
-operator|&
-name|u
+name|kstack
 condition|)
 name|bogons
 label|:
