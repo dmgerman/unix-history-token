@@ -625,7 +625,7 @@ argument_list|(
 operator|&
 name|ndis_devhead
 argument_list|)
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
