@@ -1014,6 +1014,22 @@ name|bootfile
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We must not cache the boot block if its size is not exactly 	 * one cluster in order to avoid confusing the buffer cache when 	 * the boot file is read later by ntfs_readntvattr_plain(), which 	 * reads a cluster at a time. 	 */
+if|if
+condition|(
+name|ntfs_cntob
+argument_list|(
+literal|1
+argument_list|)
+operator|!=
+name|BBSIZE
+condition|)
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_NOCACHE
+expr_stmt|;
 name|brelse
 argument_list|(
 name|bp
