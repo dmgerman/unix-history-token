@@ -381,6 +381,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|T_KSTACK_FAULT
+value|51
+end_define
+
+begin_define
+define|#
+directive|define
 name|T_KERNEL
 value|64
 end_define

@@ -472,6 +472,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+name|panic_stack
+index|[
+name|PANIC_STACK_PAGES
+operator|*
+name|PAGE_SIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|kva_md_info
 name|kmi

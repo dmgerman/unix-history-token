@@ -375,6 +375,8 @@ block|,
 literal|"restore physical watchpoint"
 block|,
 literal|"restore virtual watchpoint"
+block|,
+literal|"kernel stack fault"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1028,6 +1030,11 @@ name|T_BREAKPOINT
 operator||
 name|T_KERNEL
 case|:
+case|case
+name|T_KSTACK_FAULT
+operator||
+name|T_KERNEL
+case|:
 if|if
 condition|(
 name|kdb_trap
@@ -1284,7 +1291,7 @@ operator|)
 operator|=
 literal|0x91d03003
 expr_stmt|;
-comment|/* ta %xcc, 2 */
+comment|/* ta %xcc, 3 */
 name|flush
 argument_list|(
 name|tf
