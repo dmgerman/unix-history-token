@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.330 1999/04/19 14:14:12 peter Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.331 1999/04/26 08:57:51 peter Exp $  */
 end_comment
 
 begin_include
@@ -404,6 +404,12 @@ begin_include
 include|#
 directive|include
 file|<machine/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/globaldata.h>
 end_include
 
 begin_endif
@@ -2627,6 +2633,16 @@ name|sf
 operator|.
 name|sf_sc
 operator|.
+name|sc_fs
+operator|=
+name|regs
+operator|->
+name|tf_fs
+expr_stmt|;
+name|sf
+operator|.
+name|sf_sc
+operator|.
 name|sc_isp
 operator|=
 name|regs
@@ -2920,6 +2936,12 @@ expr_stmt|;
 name|regs
 operator|->
 name|tf_es
+operator|=
+name|_udatasel
+expr_stmt|;
+name|regs
+operator|->
+name|tf_fs
 operator|=
 name|_udatasel
 expr_stmt|;
@@ -3238,6 +3260,12 @@ name|tf_es
 operator|=
 name|_udatasel
 expr_stmt|;
+name|tf
+operator|->
+name|tf_fs
+operator|=
+name|_udatasel
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3355,6 +3383,14 @@ operator|=
 name|scp
 operator|->
 name|sc_es
+expr_stmt|;
+name|regs
+operator|->
+name|tf_fs
+operator|=
+name|scp
+operator|->
+name|sc_fs
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3754,6 +3790,12 @@ name|_udatasel
 expr_stmt|;
 name|regs
 operator|->
+name|tf_fs
+operator|=
+name|_udatasel
+expr_stmt|;
+name|regs
+operator|->
 name|tf_cs
 operator|=
 name|_ucodesel
@@ -3765,13 +3807,7 @@ name|tf_ebx
 operator|=
 name|ps_strings
 expr_stmt|;
-comment|/* reset %fs and %gs as well */
-name|pcb
-operator|->
-name|pcb_fs
-operator|=
-name|_udatasel
-expr_stmt|;
+comment|/* reset %gs as well */
 name|pcb
 operator|->
 name|pcb_gs
@@ -3785,8 +3821,11 @@ operator|==
 name|curpcb
 condition|)
 block|{
-asm|__asm("movw %w0,%%fs" : : "r" (_udatasel));
-asm|__asm("movw %w0,%%gs" : : "r" (_udatasel));
+name|load_gs
+argument_list|(
+name|_udatasel
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Initialize the math emulator (if any) for the current process. 	 * Actually, just clear the bit that says that the emulator has 	 * been initialized.  Initialization is delayed until the process 	 * traps to the emulator (if it is done at all) mainly because 	 * emulators don't provide an entry point for initialization. 	 */
 name|p
@@ -3999,7 +4038,7 @@ name|descriptor
 name|gdt
 index|[
 name|NGDT
-operator|+
+operator|*
 name|NCPU
 index|]
 decl_stmt|;
@@ -4085,23 +4124,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|i386tss
-name|common_tss
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* One tss per cpu */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|VM86
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMP
+end_ifndef
 
 begin_decl_stmt
 specifier|extern
@@ -4111,8 +4144,12 @@ name|common_tssd
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
-specifier|extern
 name|int
 name|private_tss
 decl_stmt|;
@@ -4120,17 +4157,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* flag indicating private tss */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|my_tr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* which task register setting */
 end_comment
 
 begin_endif
@@ -4212,16 +4238,7 @@ begin_decl_stmt
 name|struct
 name|soft_segment_descriptor
 name|gdt_segs
-index|[
-ifdef|#
-directive|ifdef
-name|SMP
-name|NGDT
-operator|+
-name|NCPU
-endif|#
-directive|endif
-index|]
+index|[]
 init|=
 block|{
 comment|/* GNULL_SEL	0 Null Descriptor */
@@ -4308,7 +4325,69 @@ literal|1
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GLDT_SEL	3 LDT Descriptor */
+comment|/* GPRIV_SEL	3 SMP Per-Processor Private Data Descriptor */
+block|{
+literal|0x0
+block|,
+comment|/* segment base address  */
+literal|0xfffff
+block|,
+comment|/* length - all address space */
+name|SDT_MEMRWA
+block|,
+comment|/* segment type */
+literal|0
+block|,
+comment|/* segment descriptor priority level */
+literal|1
+block|,
+comment|/* segment descriptor present */
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|,
+comment|/* default 32 vs 16 bit size */
+literal|1
+comment|/* limit granularity (byte/page units)*/
+block|}
+block|,
+comment|/* GPROC0_SEL	4 Proc 0 Tss Descriptor */
+block|{
+literal|0x0
+block|,
+comment|/* segment base address */
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|i386tss
+argument_list|)
+operator|-
+literal|1
+block|,
+comment|/* length - all address space */
+name|SDT_SYS386TSS
+block|,
+comment|/* segment type */
+literal|0
+block|,
+comment|/* segment descriptor priority level */
+literal|1
+block|,
+comment|/* segment descriptor present */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* unused - default 32 vs 16 bit size */
+literal|0
+comment|/* limit granularity (byte/page units)*/
+block|}
+block|,
+comment|/* GLDT_SEL	5 LDT Descriptor */
 block|{
 operator|(
 name|int
@@ -4344,111 +4423,7 @@ literal|0
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GTGATE_SEL	4 Null Descriptor - Placeholder */
-block|{
-literal|0x0
-block|,
-comment|/* segment base address  */
-literal|0x0
-block|,
-comment|/* length - all address space */
-literal|0
-block|,
-comment|/* segment type */
-literal|0
-block|,
-comment|/* segment descriptor priority level */
-literal|0
-block|,
-comment|/* segment descriptor present */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* default 32 vs 16 bit size */
-literal|0
-comment|/* limit granularity (byte/page units)*/
-block|}
-block|,
-comment|/* GPANIC_SEL	5 Panic Tss Descriptor */
-block|{
-operator|(
-name|int
-operator|)
-operator|&
-name|dblfault_tss
-block|,
-comment|/* segment base address  */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|i386tss
-argument_list|)
-operator|-
-literal|1
-block|,
-comment|/* length - all address space */
-name|SDT_SYS386TSS
-block|,
-comment|/* segment type */
-literal|0
-block|,
-comment|/* segment descriptor priority level */
-literal|1
-block|,
-comment|/* segment descriptor present */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* unused - default 32 vs 16 bit size */
-literal|0
-comment|/* limit granularity (byte/page units)*/
-block|}
-block|,
-comment|/* GPROC0_SEL	6 Proc 0 Tss Descriptor */
-block|{
-operator|(
-name|int
-operator|)
-operator|&
-name|common_tss
-block|,
-comment|/* segment base address */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|i386tss
-argument_list|)
-operator|-
-literal|1
-block|,
-comment|/* length - all address space */
-name|SDT_SYS386TSS
-block|,
-comment|/* segment type */
-literal|0
-block|,
-comment|/* segment descriptor priority level */
-literal|1
-block|,
-comment|/* segment descriptor present */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* unused - default 32 vs 16 bit size */
-literal|0
-comment|/* limit granularity (byte/page units)*/
-block|}
-block|,
-comment|/* GUSERLDT_SEL	7 User LDT Descriptor per process */
+comment|/* GUSERLDT_SEL	6 User LDT Descriptor per process */
 block|{
 operator|(
 name|int
@@ -4489,7 +4464,73 @@ literal|0
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GAPMCODE32_SEL 8 APM BIOS 32-bit interface (32bit Code) */
+comment|/* GTGATE_SEL	7 Null Descriptor - Placeholder */
+block|{
+literal|0x0
+block|,
+comment|/* segment base address  */
+literal|0x0
+block|,
+comment|/* length - all address space */
+literal|0
+block|,
+comment|/* segment type */
+literal|0
+block|,
+comment|/* segment descriptor priority level */
+literal|0
+block|,
+comment|/* segment descriptor present */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* default 32 vs 16 bit size */
+literal|0
+comment|/* limit granularity (byte/page units)*/
+block|}
+block|,
+comment|/* GPANIC_SEL	8 Panic Tss Descriptor */
+block|{
+operator|(
+name|int
+operator|)
+operator|&
+name|dblfault_tss
+block|,
+comment|/* segment base address  */
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|i386tss
+argument_list|)
+operator|-
+literal|1
+block|,
+comment|/* length - all address space */
+name|SDT_SYS386TSS
+block|,
+comment|/* segment type */
+literal|0
+block|,
+comment|/* segment descriptor priority level */
+literal|1
+block|,
+comment|/* segment descriptor present */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* unused - default 32 vs 16 bit size */
+literal|0
+comment|/* limit granularity (byte/page units)*/
+block|}
+block|,
+comment|/* GAPMCODE32_SEL 9 APM BIOS 32-bit interface (32bit Code) */
 block|{
 literal|0
 block|,
@@ -4517,7 +4558,7 @@ literal|1
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GAPMCODE16_SEL 9 APM BIOS 32-bit interface (16bit Code) */
+comment|/* GAPMCODE16_SEL 10 APM BIOS 32-bit interface (16bit Code) */
 block|{
 literal|0
 block|,
@@ -4545,7 +4586,7 @@ literal|1
 comment|/* limit granularity (byte/page units)*/
 block|}
 block|,
-comment|/* GAPMDATA_SEL	10 APM BIOS 32-bit interface (Data) */
+comment|/* GAPMDATA_SEL	11 APM BIOS 32-bit interface (Data) */
 block|{
 literal|0
 block|,
@@ -5178,10 +5219,6 @@ name|ISA_HOLE_START
 operator|+
 name|KERNBASE
 expr_stmt|;
-comment|/* 	 * Initialize the console before we print anything out. 	 */
-name|cninit
-argument_list|()
-expr_stmt|;
 comment|/* 	 * make gdt memory segments, the code segment goes up to end of the 	 * page with etext in it, the data segment goes to the end of 	 * the address space 	 */
 comment|/* 	 * XXX text protection is temporarily (?) disabled.  The limit was 	 * i386_btop(round_page(etext)) - 1. 	 */
 name|gdt_segs
@@ -5214,69 +5251,107 @@ literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BDE_DEBUGGER
-define|#
-directive|define
-name|NGDT1
-value|8
-comment|/* avoid overwriting db entries with APM ones */
-else|#
-directive|else
-define|#
-directive|define
-name|NGDT1
-value|(sizeof gdt_segs / sizeof gdt_segs[0])
-endif|#
-directive|endif
-for|for
-control|(
-name|x
-operator|=
-literal|0
-init|;
-name|x
-operator|<
-name|NGDT1
-condition|;
-name|x
-operator|++
-control|)
-name|ssdtosd
-argument_list|(
-operator|&
+name|SMP
 name|gdt_segs
 index|[
-name|x
-index|]
-argument_list|,
-operator|&
-name|gdt
-index|[
-name|x
+name|GPRIV_SEL
 index|]
 operator|.
-name|sd
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VM86
-name|common_tssd
+name|ssd_limit
 operator|=
-name|gdt
+name|i386_btop
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|privatespace
+argument_list|)
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+name|gdt_segs
+index|[
+name|GPRIV_SEL
+index|]
+operator|.
+name|ssd_base
+operator|=
+operator|(
+name|int
+operator|)
+operator|&
+name|SMP_prvspace
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|gdt_segs
 index|[
 name|GPROC0_SEL
 index|]
 operator|.
-name|sd
+name|ssd_base
+operator|=
+operator|(
+name|int
+operator|)
+operator|&
+name|SMP_prvspace
+index|[
+literal|0
+index|]
+operator|.
+name|globaldata
+operator|.
+name|gd_common_tss
+expr_stmt|;
+name|SMP_prvspace
+index|[
+literal|0
+index|]
+operator|.
+name|globaldata
+operator|.
+name|gd_prvspace
+operator|=
+operator|&
+name|SMP_prvspace
+index|[
+literal|0
+index|]
+expr_stmt|;
+else|#
+directive|else
+name|gdt_segs
+index|[
+name|GPRIV_SEL
+index|]
+operator|.
+name|ssd_limit
+operator|=
+name|i386_btop
+argument_list|(
+literal|0
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+name|gdt_segs
+index|[
+name|GPROC0_SEL
+index|]
+operator|.
+name|ssd_base
+operator|=
+operator|(
+name|int
+operator|)
+operator|&
+name|common_tss
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* VM86 */
-ifdef|#
-directive|ifdef
-name|SMP
-comment|/* 	 * Spin these up now.  init_secondary() grabs them.  We could use 	 * #for(x,y,z) / #endfor cpp directives if they existed. 	 */
 for|for
 control|(
 name|x
@@ -5285,39 +5360,40 @@ literal|0
 init|;
 name|x
 operator|<
-name|NCPU
+name|NGDT
 condition|;
 name|x
 operator|++
 control|)
 block|{
-name|gdt_segs
-index|[
-name|NGDT
-operator|+
+ifdef|#
+directive|ifdef
+name|BDE_DEBUGGER
+comment|/* avoid overwriting db entries with APM ones */
+if|if
+condition|(
 name|x
-index|]
-operator|=
-name|gdt_segs
-index|[
-name|GPROC0_SEL
-index|]
-expr_stmt|;
+operator|>=
+name|GAPMCODE32_SEL
+operator|&&
+name|x
+operator|<=
+name|GAPMDATA_SEL
+condition|)
+continue|continue;
+endif|#
+directive|endif
 name|ssdtosd
 argument_list|(
 operator|&
 name|gdt_segs
 index|[
-name|NGDT
-operator|+
 name|x
 index|]
 argument_list|,
 operator|&
 name|gdt
 index|[
-name|NGDT
-operator|+
 name|x
 index|]
 operator|.
@@ -5325,8 +5401,37 @@ name|sd
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
+name|r_gdt
+operator|.
+name|rd_limit
+operator|=
+name|NGDT
+operator|*
+sizeof|sizeof
+argument_list|(
+name|gdt
+index|[
+literal|0
+index|]
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+name|r_gdt
+operator|.
+name|rd_base
+operator|=
+operator|(
+name|int
+operator|)
+name|gdt
+expr_stmt|;
+name|lgdt
+argument_list|(
+operator|&
+name|r_gdt
+argument_list|)
+expr_stmt|;
 comment|/* make ldt memory segments */
 comment|/* 	 * The data segment limit must not cover the user area because we 	 * don't want the user area to be writable in copyout() etc. (page 	 * level protection is lost in kernel mode on 386's).  Also, we 	 * don't want the user area to be writable directly (page level 	 * protection of the user area is not available on 486's with 	 * CR0_WP set, because there is no user-read/kernel-write mode). 	 * 	 * XXX - VM_MAXUSER_ADDRESS is an end address, not a max.  And it 	 * should be spelled ...MAX_USER... 	 */
 define|#
@@ -5403,6 +5508,29 @@ operator|.
 name|sd
 argument_list|)
 expr_stmt|;
+name|_default_ldt
+operator|=
+name|GSEL
+argument_list|(
+name|GLDT_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+expr_stmt|;
+name|lldt
+argument_list|(
+name|_default_ldt
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USER_LDT
+name|currentldt
+operator|=
+name|_default_ldt
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* exceptions */
 for|for
 control|(
@@ -5875,48 +6003,6 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
-include|#
-directive|include
-file|"isa.h"
-if|#
-directive|if
-name|NISA
-operator|>
-literal|0
-name|isa_defaultirq
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-name|rand_initialize
-argument_list|()
-expr_stmt|;
-name|r_gdt
-operator|.
-name|rd_limit
-operator|=
-sizeof|sizeof
-argument_list|(
-name|gdt
-argument_list|)
-operator|-
-literal|1
-expr_stmt|;
-name|r_gdt
-operator|.
-name|rd_base
-operator|=
-operator|(
-name|int
-operator|)
-name|gdt
-expr_stmt|;
-name|lgdt
-argument_list|(
-operator|&
-name|r_gdt
-argument_list|)
-expr_stmt|;
 name|r_idt
 operator|.
 name|rd_limit
@@ -5943,29 +6029,26 @@ operator|&
 name|r_idt
 argument_list|)
 expr_stmt|;
-name|_default_ldt
-operator|=
-name|GSEL
-argument_list|(
-name|GLDT_SEL
-argument_list|,
-name|SEL_KPL
-argument_list|)
+comment|/* 	 * Initialize the console before we print anything out. 	 */
+name|cninit
+argument_list|()
 expr_stmt|;
-name|lldt
-argument_list|(
-name|_default_ldt
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USER_LDT
-name|currentldt
-operator|=
-name|_default_ldt
+include|#
+directive|include
+file|"isa.h"
+if|#
+directive|if
+name|NISA
+operator|>
+literal|0
+name|isa_defaultirq
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|rand_initialize
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DDB
@@ -6121,9 +6204,14 @@ name|private_tss
 operator|=
 literal|0
 expr_stmt|;
-name|my_tr
+name|common_tssd
 operator|=
+name|gdt
+index|[
 name|GPROC0_SEL
+index|]
+operator|.
+name|sd
 expr_stmt|;
 endif|#
 directive|endif
@@ -7247,6 +7335,12 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+name|SET_CURPROC
+argument_list|(
+operator|&
+name|proc0
+argument_list|)
+expr_stmt|;
 comment|/* Sigh, relocate physical addresses left from bootstrap */
 if|if
 condition|(
@@ -7976,6 +8070,14 @@ name|md_regs
 expr_stmt|;
 name|regs
 operator|->
+name|r_fs
+operator|=
+name|tp
+operator|->
+name|tf_fs
+expr_stmt|;
+name|regs
+operator|->
 name|r_es
 operator|=
 name|tp
@@ -8094,14 +8196,6 @@ operator|->
 name|p_addr
 operator|->
 name|u_pcb
-expr_stmt|;
-name|regs
-operator|->
-name|r_fs
-operator|=
-name|pcb
-operator|->
-name|pcb_fs
 expr_stmt|;
 name|regs
 operator|->
@@ -8185,6 +8279,14 @@ operator|)
 return|;
 name|tp
 operator|->
+name|tf_fs
+operator|=
+name|regs
+operator|->
+name|r_fs
+expr_stmt|;
+name|tp
+operator|->
 name|tf_es
 operator|=
 name|regs
@@ -8303,14 +8405,6 @@ operator|->
 name|p_addr
 operator|->
 name|u_pcb
-expr_stmt|;
-name|pcb
-operator|->
-name|pcb_fs
-operator|=
-name|regs
-operator|->
-name|r_fs
 expr_stmt|;
 name|pcb
 operator|->

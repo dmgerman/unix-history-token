@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)reg.h	5.5 (Berkeley) 1/18/91  *	$Id: reg.h,v 1.16 1998/09/14 22:43:40 jdp Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)reg.h	5.5 (Berkeley) 1/18/91  *	$Id: reg.h,v 1.17 1999/04/03 22:19:59 jdp Exp $  */
 end_comment
 
 begin_ifndef
@@ -22,125 +22,125 @@ end_comment
 begin_define
 define|#
 directive|define
-name|tES
+name|tFS
 value|(0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tDS
+name|tES
 value|(1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tEDI
+name|tDS
 value|(2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tESI
+name|tEDI
 value|(3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tEBP
+name|tESI
 value|(4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tISP
+name|tEBP
 value|(5)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tEBX
+name|tISP
 value|(6)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tEDX
+name|tEBX
 value|(7)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tECX
+name|tEDX
 value|(8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tEAX
+name|tECX
 value|(9)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tERR
-value|(11)
+name|tEAX
+value|(10)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tEIP
+name|tERR
 value|(12)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tCS
+name|tEIP
 value|(13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tEFLAGS
+name|tCS
 value|(14)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tESP
+name|tEFLAGS
 value|(15)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tSS
+name|tESP
 value|(16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|tSS
+value|(17)
 end_define
 
 begin_comment
 comment|/*  * Indices for registers in `struct regs' only.  *  * Some registers live in the pcb and are only in an "array" with the  * other registers in application interfaces that copy all the registers  * to or from a `struct regs'.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|tFS
-value|(17)
-end_define
 
 begin_define
 define|#
@@ -157,6 +157,10 @@ begin_struct
 struct|struct
 name|reg
 block|{
+name|unsigned
+name|int
+name|r_fs
+decl_stmt|;
 name|unsigned
 name|int
 name|r_es
@@ -224,10 +228,6 @@ decl_stmt|;
 name|unsigned
 name|int
 name|r_ss
-decl_stmt|;
-name|unsigned
-name|int
-name|r_fs
 decl_stmt|;
 name|unsigned
 name|int

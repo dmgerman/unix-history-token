@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Jonathan Lemon  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: vm86.c,v 1.22 1999/03/18 04:37:18 jlemon Exp $  */
+comment|/*-  * Copyright (c) 1997 Jonathan Lemon  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: vm86.c,v 1.23 1999/03/18 18:43:03 jlemon Exp $  */
 end_comment
 
 begin_include
@@ -124,6 +124,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMP
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -131,6 +137,11 @@ name|segment_descriptor
 name|common_tssd
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -1755,7 +1766,7 @@ literal|"struct vm86_layout exceeds space allocated in locore.s"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Below is the memory layout that we use for the vm86 region. 	 * 	 * +--------+ 	 * |        |  	 * |        | 	 * | page 0 |        	 * |        | +--------+ 	 * |        | | stack  | 	 * +--------+ +--------+<--------- vm86paddr 	 * |        | |Page Tbl| 1M + 64K = 272 entries = 1088 bytes 	 * |        | +--------+ 	 * |        | |  PCB   | size: ~240 bytes 	 * | page 1 | |PCB Ext | size: ~140 bytes (includes TSS) 	 * |        | +--------+ 	 * |        | |int map | 	 * |        | +--------+ 	 * +--------+ |        | 	 * | page 2 | |  I/O   | 	 * +--------+ | bitmap | 	 * | page 3 | |        | 	 * |        | +--------+ 	 * +--------+  	 */
-comment|/* 	 * A rudimentary PCB must be installed, in order to get to the 	 * PCB extension area.  We use the PCB area as a scratchpad for 	 * data storage, the layout of which is shown below. 	 * 	 * pcb_esi	= new PTD entry 0 	 * pcb_ebp	= pointer to frame on vm86 stack 	 * pcb_esp	=    stack frame pointer at time of switch 	 * pcb_ebx	= va of vm86 page table 	 * pcb_eip	=    argument pointer to initial call 	 * pcb_fs	=    saved TSS descriptor, word 0 	 * pcb_gs	=    saved TSS descriptor, word 1 	 */
+comment|/* 	 * A rudimentary PCB must be installed, in order to get to the 	 * PCB extension area.  We use the PCB area as a scratchpad for 	 * data storage, the layout of which is shown below. 	 * 	 * pcb_esi	= new PTD entry 0 	 * pcb_ebp	= pointer to frame on vm86 stack 	 * pcb_esp	=    stack frame pointer at time of switch 	 * pcb_ebx	= va of vm86 page table 	 * pcb_eip	=    argument pointer to initial call 	 * pcb_spare[0]	=    saved TSS descriptor, word 0 	 * pcb_space[1]	=    saved TSS descriptor, word 1 	 */
 define|#
 directive|define
 name|new_ptd
@@ -2885,6 +2896,10 @@ operator|-
 literal|2
 expr_stmt|;
 comment|/* keep aligned */
+name|vmf
+operator|.
+name|kernel_fs
+operator|=
 name|vmf
 operator|.
 name|kernel_es

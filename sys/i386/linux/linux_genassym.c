@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: linux_genassym.c,v 1.7 1998/02/01 18:47:56 bde Exp $ */
+comment|/* $Id: linux_genassym.c,v 1.8 1998/07/29 15:50:41 bde Exp $ */
 end_comment
 
 begin_include
@@ -93,18 +93,6 @@ argument_list|(
 name|linux_sigframe
 argument_list|,
 name|sf_sc
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tLINUX_SC_FS %u\n"
-argument_list|,
-name|OS
-argument_list|(
-name|linux_sigcontext
-argument_list|,
-name|sc_fs
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)genassym.c	5.11 (Berkeley) 5/10/91  *	$Id: genassym.c,v 1.64 1999/02/28 10:53:28 bde Exp $  */
+comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)genassym.c	5.11 (Berkeley) 5/10/91  *	$Id: genassym.c,v 1.65 1999/04/02 17:59:37 alc Exp $  */
 end_comment
 
 begin_include
@@ -164,22 +164,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VM86
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<machine/segments.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -690,18 +679,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_FS %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|pcb
-argument_list|,
-name|pcb_fs
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#define\tPCB_GS %#x\n"
 argument_list|,
 name|OS
@@ -746,6 +723,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|printf
+argument_list|(
+literal|"#define\tPCB_SPARE %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|pcb
+argument_list|,
+name|__pcb_spare
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"#define\tU_PROF %#x\n"
@@ -1359,7 +1348,7 @@ name|OS
 argument_list|(
 name|globaldata
 argument_list|,
-name|curproc
+name|gd_curproc
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1371,7 +1360,7 @@ name|OS
 argument_list|(
 name|globaldata
 argument_list|,
-name|npxproc
+name|gd_npxproc
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1383,7 +1372,7 @@ name|OS
 argument_list|(
 name|globaldata
 argument_list|,
-name|curpcb
+name|gd_curpcb
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1395,7 +1384,7 @@ name|OS
 argument_list|(
 name|globaldata
 argument_list|,
-name|common_tss
+name|gd_common_tss
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1407,7 +1396,7 @@ name|OS
 argument_list|(
 name|globaldata
 argument_list|,
-name|switchtime
+name|gd_switchtime
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1419,7 +1408,7 @@ name|OS
 argument_list|(
 name|globaldata
 argument_list|,
-name|switchticks
+name|gd_switchticks
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1434,31 +1423,7 @@ name|OS
 argument_list|(
 name|globaldata
 argument_list|,
-name|common_tssd
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tGD_PRIVATE_TSS %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|globaldata
-argument_list|,
-name|private_tss
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tGD_MY_TR %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|globaldata
-argument_list|,
-name|my_tr
+name|gd_common_tssd
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1475,7 +1440,7 @@ name|OS
 argument_list|(
 name|globaldata
 argument_list|,
-name|currentldt
+name|gd_currentldt
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1492,7 +1457,7 @@ name|OS
 argument_list|(
 name|globaldata
 argument_list|,
-name|cpuid
+name|gd_cpuid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1504,7 +1469,7 @@ name|OS
 argument_list|(
 name|globaldata
 argument_list|,
-name|cpu_lockid
+name|gd_cpu_lockid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1516,19 +1481,7 @@ name|OS
 argument_list|(
 name|globaldata
 argument_list|,
-name|other_cpus
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tGD_MY_IDLEPTD %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|globaldata
-argument_list|,
-name|my_idlePTD
+name|gd_other_cpus
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1540,55 +1493,7 @@ name|OS
 argument_list|(
 name|globaldata
 argument_list|,
-name|ss_eflags
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tGD_PRV_CMAP1 %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|globaldata
-argument_list|,
-name|prv_CMAP1
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tGD_PRV_CMAP2 %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|globaldata
-argument_list|,
-name|prv_CMAP2
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tGD_PRV_CMAP3 %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|globaldata
-argument_list|,
-name|prv_CMAP3
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tGD_PRV_PMAP1 %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|globaldata
-argument_list|,
-name|prv_PMAP1
+name|gd_ss_eflags
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1600,7 +1505,103 @@ name|OS
 argument_list|(
 name|globaldata
 argument_list|,
-name|inside_intr
+name|gd_inside_intr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tGD_PRV_CMAP1 %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|globaldata
+argument_list|,
+name|gd_prv_CMAP1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tGD_PRV_CMAP2 %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|globaldata
+argument_list|,
+name|gd_prv_CMAP2
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tGD_PRV_CMAP3 %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|globaldata
+argument_list|,
+name|gd_prv_CMAP3
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tGD_PRV_PMAP1 %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|globaldata
+argument_list|,
+name|gd_prv_PMAP1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tGD_PRV_CADDR1 %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|globaldata
+argument_list|,
+name|gd_prv_CADDR1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tGD_PRV_CADDR2 %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|globaldata
+argument_list|,
+name|gd_prv_CADDR2
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tGD_PRV_CADDR3 %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|globaldata
+argument_list|,
+name|gd_prv_CADDR3
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tGD_PRV_PADDR1 %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|globaldata
+argument_list|,
+name|gd_prv_PADDR1
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1613,30 +1614,6 @@ argument_list|(
 name|privatespace
 argument_list|,
 name|globaldata
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPS_PRVPT %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|privatespace
-argument_list|,
-name|prvpt
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPS_LAPIC %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|privatespace
-argument_list|,
-name|lapic
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1656,76 +1633,63 @@ name|printf
 argument_list|(
 literal|"#define\tPS_IDLESTACK_TOP %#x\n"
 argument_list|,
-name|OS
+sizeof|sizeof
 argument_list|(
+expr|struct
 name|privatespace
-argument_list|,
-name|CPAGE1
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPS_CPAGE1 %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|privatespace
-argument_list|,
-name|CPAGE1
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPS_CPAGE2 %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|privatespace
-argument_list|,
-name|CPAGE2
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPS_CPAGE3 %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|privatespace
-argument_list|,
-name|CPAGE3
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPS_PPAGE1 %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|privatespace
-argument_list|,
-name|PPAGE1
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPS_IOAPICS %#x\n"
-argument_list|,
-name|OS
-argument_list|(
-name|privatespace
-argument_list|,
-name|ioapics
 argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|printf
+argument_list|(
+literal|"#define\tKCSEL %#x\n"
+argument_list|,
+name|GSEL
+argument_list|(
+name|GCODE_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tKDSEL %#x\n"
+argument_list|,
+name|GSEL
+argument_list|(
+name|GDATA_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+name|printf
+argument_list|(
+literal|"#define\tKPSEL %#x\n"
+argument_list|,
+name|GSEL
+argument_list|(
+name|GPRIV_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|printf
+argument_list|(
+literal|"#define\tGPROC0_SEL %#x\n"
+argument_list|,
+name|GPROC0_SEL
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

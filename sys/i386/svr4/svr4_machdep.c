@@ -589,8 +589,35 @@ else|else
 endif|#
 directive|endif
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 asm|__asm("movl %%gs,%w0" : "=r" (r[SVR4_X86_GS]));
 asm|__asm("movl %%fs,%w0" : "=r" (r[SVR4_X86_FS]));
+else|#
+directive|else
+name|r
+index|[
+name|SVR4_X86_GS
+index|]
+operator|=
+name|rgs
+argument_list|()
+expr_stmt|;
+name|r
+index|[
+name|SVR4_X86_FS
+index|]
+operator|=
+name|tf
+operator|->
+name|tf_fs
+expr_stmt|;
+endif|#
+directive|endif
 name|r
 index|[
 name|SVR4_X86_ES
@@ -1015,7 +1042,27 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 comment|/* %fs and %gs were restored by the trampoline. */
+else|#
+directive|else
+comment|/* %gs was restored by the trampoline. */
+name|tf
+operator|->
+name|tf_fs
+operator|=
+name|r
+index|[
+name|SVR4_X86_FS
+index|]
+expr_stmt|;
+endif|#
+directive|endif
 name|tf
 operator|->
 name|tf_es
@@ -1980,6 +2027,12 @@ expr_stmt|;
 name|tf
 operator|->
 name|tf_es
+operator|=
+name|_udatasel
+expr_stmt|;
+name|tf
+operator|->
+name|tf_fs
 operator|=
 name|_udatasel
 expr_stmt|;

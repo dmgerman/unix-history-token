@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.43 1998/05/17 22:12:05 tegge Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.44 1998/09/06 22:41:40 tegge Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -605,14 +605,6 @@ begin_decl_stmt
 specifier|extern
 name|u_int
 name|all_cpus
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_char
-name|SMP_ioapic
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -1231,41 +1223,6 @@ specifier|extern
 specifier|volatile
 name|int
 name|smp_idle_loops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 'private' global data in locore.s */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|volatile
-name|u_int
-name|cpuid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|volatile
-name|u_int
-name|cpu_lockid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|inside_intr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|volatile
-name|u_int
-name|other_cpus
 decl_stmt|;
 end_decl_stmt
 
