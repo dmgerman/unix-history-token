@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -19,28 +20,18 @@ literal|"@(#) Copyright (c) 1983, 1988, 1993, 1994\n\ 	The Regents of the Univer
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* not lint */
+comment|/* static char sccsid[] = "@(#)syslogd.c	8.3 (Berkeley) 4/4/94"; */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	8.3 (Berkeley) 4/4/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,6 +264,7 @@ file|<sys/syslog.h>
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|LogName
@@ -282,6 +274,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|ConfFile
@@ -291,6 +284,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|PidFile
@@ -300,6 +294,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|ctty
 index|[]
@@ -1062,6 +1057,8 @@ decl_stmt|,
 name|klogm
 decl_stmt|,
 name|len
+decl_stmt|,
+name|noudp
 decl_stmt|;
 name|struct
 name|sockaddr_un
@@ -1090,6 +1087,10 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|noudp
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1101,7 +1102,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"df:m:p:"
+literal|"df:Im:p:"
 argument_list|)
 operator|)
 operator|!=
@@ -1127,6 +1128,15 @@ comment|/* configuration file */
 name|ConfFile
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'I'
+case|:
+comment|/* disable logging from UDP packets */
+name|noudp
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1462,6 +1472,11 @@ literal|1
 expr_stmt|;
 name|finet
 operator|=
+name|noudp
+condition|?
+operator|-
+literal|1
+else|:
 name|socket
 argument_list|(
 name|AF_INET
@@ -2034,14 +2049,12 @@ name|void
 name|usage
 parameter_list|()
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: syslogd [-f conffile] [-m markinterval] [-p logpath]\n"
+literal|"usage: syslogd [-di] [-f conffile] [-m markinterval]"
+literal|" [-p logpath]\n"
 argument_list|)
 expr_stmt|;
 name|exit
