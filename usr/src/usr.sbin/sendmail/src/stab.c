@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stab.c	3.1	%G%"
+literal|"@(#)stab.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,13 +66,18 @@ modifier|*
 name|newstr
 parameter_list|()
 function_decl|;
+specifier|extern
+name|bool
+name|sameword
+parameter_list|()
+function_decl|;
 while|while
 condition|(
 name|s
 operator|!=
 name|NULL
 operator|&&
-name|strcmp
+name|sameword
 argument_list|(
 name|name
 argument_list|,
@@ -80,8 +85,6 @@ name|s
 operator|->
 name|s_name
 argument_list|)
-operator|!=
-literal|'\0'
 condition|)
 block|{
 name|ps
@@ -134,6 +137,13 @@ operator|=
 name|newstr
 argument_list|(
 name|name
+argument_list|)
+expr_stmt|;
+name|makelower
+argument_list|(
+name|s
+operator|->
+name|s_name
 argument_list|)
 expr_stmt|;
 name|s
