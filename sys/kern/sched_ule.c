@@ -240,24 +240,10 @@ name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-literal|"SCHED"
+literal|"Scheduler"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|ULE_NAME
-value|"ule"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ULE_NAME_LEN
-value|3
-end_define
 
 begin_expr_stmt
 name|SYSCTL_STRING
@@ -270,11 +256,11 @@ name|name
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-name|ULE_NAME
+literal|"ule"
 argument_list|,
-name|ULE_NAME_LEN
+literal|0
 argument_list|,
-literal|"System is using the ULE scheduler"
+literal|"Scheduler name"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
