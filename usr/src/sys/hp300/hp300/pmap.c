@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.6 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -6012,18 +6012,16 @@ begin_comment
 comment|/*  *	pmap_zero_page zeros the specified (machine independent)  *	page by mapping the page into virtual memory and using  *	bzero to clear its contents, one machine dependent page  *	at a time.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|pmap_zero_page
-argument_list|(
+parameter_list|(
 name|phys
-argument_list|)
+parameter_list|)
 specifier|register
 name|vm_offset_t
 name|phys
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -6073,28 +6071,26 @@ name|hppagesperpage
 condition|)
 do|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	pmap_copy_page copies the specified (machine independent)  *	page by mapping the page into virtual memory and using  *	bcopy to copy the page, one machine dependent page at a  *	time.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|pmap_copy_page
-argument_list|(
+parameter_list|(
 name|src
-argument_list|,
+parameter_list|,
 name|dst
-argument_list|)
+parameter_list|)
 specifier|register
 name|vm_offset_t
 name|src
-operator|,
+decl_stmt|,
 name|dst
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -6153,46 +6149,35 @@ name|hppagesperpage
 condition|)
 do|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	Routine:	pmap_pageable  *	Function:  *		Make the specified pages (by pmap, offset)  *		pageable (or not) as requested.  *  *		A page which is not pageable may not take  *		a fault; therefore, its page table entry  *		must remain valid for the duration.  *  *		This routine is merely advisory; pmap_enter  *		will specify that these pages are to be wired  *		down (or not) as appropriate.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|pmap_pageable
-argument_list|(
-argument|pmap
-argument_list|,
-argument|sva
-argument_list|,
-argument|eva
-argument_list|,
-argument|pageable
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pmap
+parameter_list|,
+name|sva
+parameter_list|,
+name|eva
+parameter_list|,
+name|pageable
+parameter_list|)
 name|pmap_t
 name|pmap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_offset_t
 name|sva
 decl_stmt|,
 name|eva
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean_t
 name|pageable
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -6415,7 +6400,7 @@ endif|#
 directive|endif
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	Clear the modify bits on the specified physical page.  */
