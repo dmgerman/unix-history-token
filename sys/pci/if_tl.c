@@ -2016,6 +2016,18 @@ name|byte
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+decl_stmt|;
 name|tl_dio_write8
 argument_list|(
 name|sc
@@ -2038,13 +2050,11 @@ name|EEPROM_CTL_WRITE
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"tl%d: failed to send write command, status: %x\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tl_unit
+literal|"failed to send write command, status: %x\n"
 argument_list|,
 name|tl_dio_read8
 argument_list|(
@@ -2071,13 +2081,11 @@ name|addr
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"tl%d: failed to send address, status: %x\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tl_unit
+literal|"failed to send address, status: %x\n"
 argument_list|,
 name|tl_dio_read8
 argument_list|(
@@ -2108,13 +2116,11 @@ name|EEPROM_CTL_READ
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"tl%d: failed to send write command, status: %x\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tl_unit
+literal|"failed to send write command, status: %x\n"
 argument_list|,
 name|tl_dio_read8
 argument_list|(
@@ -4433,11 +4439,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"tl%d: unknown device!?\n"
+name|dev
 argument_list|,
-name|unit
+literal|"unknown device!?\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4512,11 +4518,11 @@ name|PCIM_CMD_PORTEN
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"tl%d: failed to enable I/O ports!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to enable I/O ports!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4604,11 +4610,11 @@ name|PCIM_CMD_MEMEN
 operator|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"tl%d: failed to enable memory mapping!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to enable memory mapping!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4694,11 +4700,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"tl%d: couldn't map ports/memory\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map ports/memory\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4815,11 +4821,11 @@ operator|->
 name|tl_res
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"tl%d: couldn't map interrupt\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4883,11 +4889,11 @@ operator|->
 name|tl_res
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"tl%d: couldn't set up irq\n"
+name|dev
 argument_list|,
-name|unit
+literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4968,11 +4974,11 @@ operator|->
 name|tl_res
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"tl%d: no memory for list buffers!\n"
+name|dev
 argument_list|,
-name|unit
+literal|"no memory for list buffers!\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4995,12 +5001,6 @@ expr|struct
 name|tl_list_data
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|tl_unit
-operator|=
-name|unit
 expr_stmt|;
 name|sc
 operator|->
@@ -5141,11 +5141,11 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"tl%d: failed to read station address\n"
+name|dev
 argument_list|,
-name|unit
+literal|"failed to read station address\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -5215,11 +5215,11 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * A ThunderLAN chip was detected. Inform the world. 	 */
-name|printf
+name|device_printf
 argument_list|(
-literal|"tl%d: Ethernet address: %6D\n"
+name|dev
 argument_list|,
-name|unit
+literal|"Ethernet address: %6D\n"
 argument_list|,
 name|sc
 operator|->
@@ -5249,9 +5249,7 @@ name|ifp
 operator|->
 name|if_unit
 operator|=
-name|sc
-operator|->
-name|tl_unit
+name|unit
 expr_stmt|;
 name|ifp
 operator|->
@@ -6991,13 +6989,16 @@ if|if
 condition|(
 name|type
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"tl%d: adapter check: %x\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|tl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"adapter check: %x\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -7090,13 +7091,16 @@ argument_list|,
 name|netsts
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"tl%d: network status: %x\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
-name|tl_unit
+name|arpcom
+operator|.
+name|ac_if
+argument_list|,
+literal|"network status: %x\n"
 argument_list|,
 name|netsts
 argument_list|)
@@ -7231,13 +7235,11 @@ case|:
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-name|printf
+name|if_printf
 argument_list|(
-literal|"tl%d: got an invalid interrupt!\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tl_unit
+literal|"got an invalid interrupt!\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7332,13 +7334,11 @@ operator|(
 name|TL_INTR_DUMMY
 operator|)
 case|:
-name|printf
+name|if_printf
 argument_list|(
-literal|"tl%d: got a dummy interrupt\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tl_unit
+literal|"got a dummy interrupt\n"
 argument_list|)
 expr_stmt|;
 name|r
@@ -7403,13 +7403,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"tl%d: bogus interrupt type\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"bogus interrupt type\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7692,14 +7690,12 @@ expr_stmt|;
 name|tx_thresh
 operator|++
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"tl%d: tx underrun -- increasing "
-literal|"tx threshold to %d bytes\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tl_unit
+literal|"tx underrun -- increasing "
+literal|"tx threshold to %d bytes\n"
 argument_list|,
 operator|(
 literal|64
@@ -7830,6 +7826,18 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+decl_stmt|;
 comment|/*  	 * Start packing the mbufs in this chain into 	 * the fragment pointers. Stop when we run out  	 * of fragments or hit the end of the mbuf chain. 	 */
 name|m
 operator|=
@@ -7954,13 +7962,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"tl%d: no memory for tx list\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tl_unit
+literal|"no memory for tx list\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8004,13 +8010,11 @@ argument_list|(
 name|m_new
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"tl%d: no memory for tx list\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tl_unit
+literal|"no memory for tx list\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8120,14 +8124,11 @@ name|frag
 operator|==
 name|TL_MAXFRAGS
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"tl%d: all frags filled but "
-literal|"frame still to small!\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tl_unit
+literal|"all frags filled but frame still to small!\n"
 argument_list|)
 expr_stmt|;
 name|f
@@ -8753,14 +8754,11 @@ operator|==
 name|ENOBUFS
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"tl%d: initialization failed: no "
-literal|"memory for rx buffers\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tl_unit
+literal|"initialization failed: no memory for rx buffers\n"
 argument_list|)
 expr_stmt|;
 name|tl_stop
@@ -9455,13 +9453,11 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"tl%d: device timeout\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|tl_unit
+literal|"device timeout\n"
 argument_list|)
 expr_stmt|;
 name|ifp

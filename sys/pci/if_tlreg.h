@@ -285,10 +285,6 @@ name|tl_dinfo
 decl_stmt|;
 comment|/* ThunderLAN adapter info */
 name|u_int8_t
-name|tl_unit
-decl_stmt|;
-comment|/* interface number */
-name|u_int8_t
 name|tl_eeaddr
 decl_stmt|;
 name|struct
