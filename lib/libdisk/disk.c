@@ -558,6 +558,9 @@ name|n
 decl_stmt|,
 modifier|*
 name|t
+decl_stmt|,
+modifier|*
+name|sn
 decl_stmt|;
 name|off_t
 name|o
@@ -1106,14 +1109,6 @@ operator|(
 name|o
 operator|!=
 literal|0
-operator|&&
-operator|(
-name|len
-operator|%
-name|o
-operator|)
-operator|==
-literal|0
 operator|)
 condition|?
 name|len
@@ -1235,7 +1230,7 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
-comment|/* Type {SUN, BSD, MBR, GPT} */
+comment|/* Type {SUN, BSD, MBR, PC98, GPT} */
 name|n
 operator|=
 name|strsep
@@ -1360,6 +1355,24 @@ operator|==
 name|NULL
 condition|)
 break|break;
+comment|/* XXX: Slice name may include a space. */
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|a
+argument_list|,
+literal|"sn"
+argument_list|)
+condition|)
+block|{
+name|sn
+operator|=
+name|p
+expr_stmt|;
+break|break;
+block|}
 name|b
 operator|=
 name|strsep
@@ -1976,7 +1989,7 @@ name|ty
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|sn
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2013,7 +2026,7 @@ name|ty
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|sn
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2036,7 +2049,7 @@ name|ty
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|sn
 argument_list|)
 expr_stmt|;
 break|break;
