@@ -439,6 +439,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
+operator||
+name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -5262,7 +5264,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 	 * An interrupt allocation is requested because the page 	 * queues lock is held.  	 */
 name|mnew
 operator|=
 name|vm_page_alloc
@@ -5271,7 +5272,7 @@ name|object
 argument_list|,
 name|pindex
 argument_list|,
-name|VM_ALLOC_INTERRUPT
+name|VM_ALLOC_NORMAL
 argument_list|)
 expr_stmt|;
 if|if

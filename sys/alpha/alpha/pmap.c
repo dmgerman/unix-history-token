@@ -3581,7 +3581,23 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|PMAP_UNLOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|VM_WAIT
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+name|PMAP_LOCK
+argument_list|(
+name|pmap
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Indicate the need to retry.  While waiting, the page table 		 * page may have been allocated. 		 */
 return|return
@@ -3711,9 +3727,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_unhold
 argument_list|(
 name|m
@@ -3723,9 +3736,6 @@ name|vm_page_free
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -4824,8 +4834,20 @@ name|pv_ptem
 operator|=
 name|mpte
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
+name|PMAP_LOCK_ASSERT
+argument_list|(
+name|pmap
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -4859,9 +4881,6 @@ name|md
 operator|.
 name|pv_list_count
 operator|++
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -5937,6 +5956,14 @@ name|mpte
 operator|=
 name|NULL
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+name|PMAP_LOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
 comment|/* 	 * In the case that a page table page is not 	 * resident, we are creating it here. 	 */
 if|if
 condition|(
@@ -6131,14 +6158,6 @@ block|{
 name|int
 name|err
 decl_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|PMAP_LOCK
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 name|err
 operator|=
 name|pmap_remove_pte
@@ -6149,14 +6168,6 @@ name|pte
 argument_list|,
 name|va
 argument_list|)
-expr_stmt|;
-name|PMAP_UNLOCK
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -6305,6 +6316,14 @@ name|alpha_pal_imb
 argument_list|()
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
+name|PMAP_UNLOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6337,6 +6356,14 @@ decl_stmt|;
 name|int
 name|managed
 decl_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+name|PMAP_LOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
 comment|/* 	 * In the case that a page table page is not 	 * resident, we are creating it here. 	 */
 if|if
 condition|(
@@ -6503,9 +6530,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|pmap_unwire_pte_hold
 argument_list|(
 name|pmap
@@ -6515,17 +6539,14 @@ argument_list|,
 name|mpte
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|mpte
+operator|=
+name|NULL
 expr_stmt|;
 block|}
-name|alpha_pal_imb
-argument_list|()
-expr_stmt|;
-comment|/* XXX overkill? */
-return|return
-literal|0
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* 	 * Enter on the PV list if part of our managed memory. Note that we 	 * raise IPL while manipulating pv_table since pmap_enter can be 	 * called at interrupt time. 	 */
 name|managed
@@ -6599,10 +6620,20 @@ name|PG_URE
 operator||
 name|managed
 expr_stmt|;
+name|out
+label|:
 name|alpha_pal_imb
 argument_list|()
 expr_stmt|;
 comment|/* XXX overkill? */
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
+name|PMAP_UNLOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
 return|return
 name|mpte
 return|;
