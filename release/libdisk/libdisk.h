@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.18 1995/05/30 08:28:12 rgrimes Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.18.2.1 1995/06/03 08:40:31 jkh Exp $  *  */
 end_comment
 
 begin_define
@@ -60,15 +60,12 @@ define|#
 directive|define
 name|DISK_ON_TRACK
 value|1
-name|u_long
-name|real_cyl
-decl_stmt|;
-name|u_long
-name|real_hd
-decl_stmt|;
-name|u_long
-name|real_sect
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|u_long		real_cyl; 	u_long		real_hd; 	u_long		real_sect;
+endif|#
+directive|endif
 name|u_long
 name|bios_cyl
 decl_stmt|;
@@ -272,32 +269,21 @@ begin_comment
 comment|/* Print the content of the tree to stdout 	 */
 end_comment
 
-begin_function_decl
-name|struct
-name|disk
-modifier|*
-name|Set_Phys_Geom
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-name|disk
-parameter_list|,
-name|u_long
-name|cyl
-parameter_list|,
-name|u_long
-name|heads
-parameter_list|,
-name|u_long
-name|sects
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_comment
+unit|struct disk * Set_Phys_Geom(struct disk *disk, u_long cyl, u_long heads, u_long sects);
 comment|/* Use a different physical geometry.  Makes sense for ST506 disks only. 	 * The tree returned is read from the disk, using this geometry. 	 */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void

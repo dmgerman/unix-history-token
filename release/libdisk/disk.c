@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.19 1995/05/30 08:28:11 rgrimes Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.19.2.1 1995/06/03 08:40:28 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -1090,23 +1090,12 @@ operator|->
 name|flags
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"  real_geom=%lu/%lu/%lu"
-argument_list|,
-name|d
-operator|->
-name|real_cyl
-argument_list|,
-name|d
-operator|->
-name|real_hd
-argument_list|,
-name|d
-operator|->
-name|real_sect
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("  real_geom=%lu/%lu/%lu",d->real_cyl,d->real_hd,d->real_sect);
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"  bios_geom=%lu/%lu/%lu\n"
@@ -1405,30 +1394,17 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
-name|Collapse_Disk
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-name|d
-parameter_list|)
-block|{
-while|while
-condition|(
-name|Collapse_Chunk
-argument_list|(
-name|d
-argument_list|,
-name|d
-operator|->
-name|chunks
-argument_list|)
-condition|)
-empty_stmt|;
-block|}
-end_function
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|void Collapse_Disk(struct disk *d) {  	while(Collapse_Chunk(d,d->chunks)) 		; }
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
