@@ -78,6 +78,10 @@ name|int
 name|c
 decl_stmt|,
 name|n
+decl_stmt|,
+name|increment
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -219,6 +223,13 @@ name|n
 operator|=
 name|n2
 expr_stmt|;
+if|if
+condition|(
+name|increment
+condition|)
+name|n
+operator|++
+expr_stmt|;
 continue|continue;
 case|case
 literal|'>'
@@ -265,6 +276,10 @@ continue|continue;
 case|case
 literal|'i'
 case|:
+name|increment
+operator|=
+literal|1
+expr_stmt|;
 name|n
 operator|++
 expr_stmt|;
