@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.18 (Berkeley) %G%"
+literal|"@(#)main.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -636,6 +636,18 @@ operator|->
 name|fs_type
 argument_list|,
 name|FSTAB_RQ
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|fsp
+operator|->
+name|fs_vfstype
+argument_list|,
+literal|"ufs"
 argument_list|)
 condition|)
 continue|continue;
