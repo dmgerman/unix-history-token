@@ -8414,6 +8414,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|ifp
+operator|->
+name|if_capabilities
+operator|=
+name|ifp
+operator|->
+name|if_capenable
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|adapter
@@ -8428,16 +8438,14 @@ block|{
 name|ifp
 operator|->
 name|if_capabilities
-operator|=
+operator||=
 name|IFCAP_HWCSUM
 expr_stmt|;
 name|ifp
 operator|->
 name|if_capenable
-operator|=
-name|ifp
-operator|->
-name|if_capabilities
+operator||=
+name|IFCAP_HWCSUM
 expr_stmt|;
 block|}
 comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
