@@ -1923,7 +1923,7 @@ literal|0
 condition|)
 name|statclock_process
 argument_list|(
-name|curthread
+name|curkse
 argument_list|,
 name|TRAPF_PC
 argument_list|(
