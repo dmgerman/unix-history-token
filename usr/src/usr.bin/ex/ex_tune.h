@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	ex_tune.h	7.6	84/04/10	*/
+comment|/*	ex_tune.h	7.7	84/10/22	*/
 end_comment
 
 begin_comment
@@ -514,7 +514,7 @@ begin_define
 define|#
 directive|define
 name|TUBELINES
-value|66
+value|70
 end_define
 
 begin_define
@@ -528,11 +528,11 @@ begin_define
 define|#
 directive|define
 name|TUBESIZE
-value|6600
+value|7000
 end_define
 
 begin_comment
-comment|/* 66 * 100 */
+comment|/* 70 * 100 */
 end_comment
 
 begin_endif
