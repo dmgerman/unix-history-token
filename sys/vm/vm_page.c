@@ -1290,8 +1290,6 @@ argument_list|(
 name|mem
 argument_list|,
 name|PG_WRITEABLE
-operator||
-name|PG_MAPPED
 argument_list|)
 expr_stmt|;
 block|}

@@ -2731,8 +2731,6 @@ name|fs
 operator|.
 name|m
 argument_list|,
-name|PG_MAPPED
-operator||
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
@@ -3359,8 +3357,6 @@ argument_list|(
 name|dst_m
 argument_list|,
 name|PG_WRITEABLE
-operator||
-name|PG_MAPPED
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Mark it no longer busy, and put it on the active list. 		 */

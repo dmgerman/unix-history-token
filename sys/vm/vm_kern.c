@@ -1245,8 +1245,6 @@ name|vm_page_flag_set
 argument_list|(
 name|m
 argument_list|,
-name|PG_MAPPED
-operator||
 name|PG_WRITEABLE
 operator||
 name|PG_REFERENCED
