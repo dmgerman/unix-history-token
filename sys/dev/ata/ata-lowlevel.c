@@ -2416,7 +2416,14 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|10000
+literal|100000
+argument_list|)
+expr_stmt|;
+name|ATA_IDX_INB
+argument_list|(
+name|ch
+argument_list|,
+name|ATA_ERROR
 argument_list|)
 expr_stmt|;
 comment|/* wait for BUSY to go inactive */
