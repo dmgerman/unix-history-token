@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -198,6 +198,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* != 0 waits for remote at system init */
+end_comment
+
+begin_decl_stmt
+name|int
+name|kgdb_debug_panic
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* != 0 waits for remote on panic */
 end_comment
 
 begin_decl_stmt
@@ -706,6 +718,75 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Trap into kgdb to Wait for debugger to connect,   * noting on the console why nothing else is going on.  */
+end_comment
+
+begin_macro
+name|kgdb_connect
+argument_list|(
+argument|verbose
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|verbose
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+if|if
+condition|(
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|"kgdb waiting..."
+argument_list|)
+expr_stmt|;
+comment|/* trap into kgdb */
+asm|asm("trap #15;");
+if|if
+condition|(
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|"connected.\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Decide what to do on panic.  */
+end_comment
+
+begin_macro
+name|kgdb_panic
+argument_list|()
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|kgdb_active
+operator|==
+literal|0
+operator|&&
+name|kgdb_debug_panic
+condition|)
+name|kgdb_connect
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
 comment|/*  * Definitions exported from gdb.  */
 end_comment
 
@@ -938,12 +1019,47 @@ return|;
 block|}
 name|kgdb_getc
 operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|inlen
+operator|=
+literal|0
+init|;
 name|constab
 index|[
+name|inlen
+index|]
+operator|.
+name|cn_probe
+condition|;
+name|inlen
+operator|++
+control|)
+if|if
+condition|(
+name|major
+argument_list|(
+name|constab
+index|[
+name|inlen
+index|]
+operator|.
+name|cn_dev
+argument_list|)
+operator|==
 name|major
 argument_list|(
 name|kgdb_dev
 argument_list|)
+condition|)
+block|{
+name|kgdb_getc
+operator|=
+name|constab
+index|[
+name|inlen
 index|]
 operator|.
 name|cn_getc
@@ -952,14 +1068,13 @@ name|kgdb_putc
 operator|=
 name|constab
 index|[
-name|major
-argument_list|(
-name|kgdb_dev
-argument_list|)
+name|inlen
 index|]
 operator|.
 name|cn_putc
 expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|kgdb_getc
