@@ -176,8 +176,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LOGIN_SETMAC
+value|0x0100
+end_define
+
+begin_comment
+comment|/* set user default MAC label */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LOGIN_SETALL
-value|0x00ff
+value|0x01ff
 end_define
 
 begin_comment
