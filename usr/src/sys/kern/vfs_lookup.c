@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vfs_lookup.c	6.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vfs_lookup.c	6.30 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1151,7 +1151,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"nami: null cache ino"
+literal|"namei: null cache ino"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1417,31 +1417,6 @@ else|else
 block|{
 if|if
 condition|(
-operator|(
-name|dp
-operator|->
-name|i_flag
-operator|&
-operator|(
-name|ICHG
-operator||
-name|IMOD
-operator|)
-operator|)
-operator|||
-name|dp
-operator|->
-name|i_ctime
-operator|>=
-name|u
-operator|.
-name|u_ncache
-operator|.
-name|nc_time
-condition|)
-block|{
-if|if
-condition|(
 name|u
 operator|.
 name|u_ncache
@@ -1460,31 +1435,6 @@ name|nc_prevoffset
 operator|=
 literal|0
 expr_stmt|;
-else|else
-name|u
-operator|.
-name|u_ncache
-operator|.
-name|nc_prevoffset
-operator|&=
-operator|~
-operator|(
-name|DIRBLKSIZ
-operator|-
-literal|1
-operator|)
-expr_stmt|;
-name|u
-operator|.
-name|u_ncache
-operator|.
-name|nc_time
-operator|=
-name|time
-operator|.
-name|tv_sec
-expr_stmt|;
-block|}
 name|ndp
 operator|->
 name|ni_offset
@@ -2195,6 +2145,13 @@ operator|=
 name|ndp
 operator|->
 name|ni_offset
+operator|&
+operator|~
+operator|(
+name|DIRBLKSIZ
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 name|u
 operator|.
@@ -2215,16 +2172,6 @@ operator|=
 name|dp
 operator|->
 name|i_dev
-expr_stmt|;
-name|u
-operator|.
-name|u_ncache
-operator|.
-name|nc_time
-operator|=
-name|time
-operator|.
-name|tv_sec
 expr_stmt|;
 block|}
 comment|/* 	 * Save directory entry's inode number and reclen in ndp->ni_dent, 	 * and release directory buffer. 	 */
@@ -2805,7 +2752,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"nami: duplicating cache"
+literal|"namei: duplicating cache"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Free the cache slot at head of lru chain. 		 */
