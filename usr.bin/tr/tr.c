@@ -56,6 +56,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -737,6 +743,16 @@ name|sflag
 decl_stmt|,
 name|isstring2
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|cflag
 operator|=
 name|dflag
