@@ -7810,10 +7810,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|warning
-argument_list|(
 name|tfaff
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -7896,10 +7894,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|warning
-argument_list|(
 name|tfaff
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
