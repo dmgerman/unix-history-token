@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)expand.c	4.3 (Berkeley) 83/10/10"
+literal|"@(#)expand.c	4.4 (Berkeley) 83/10/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -1349,15 +1349,13 @@ name|patherr1
 goto|;
 if|if
 condition|(
-operator|(
+operator|!
+name|ISDIR
+argument_list|(
 name|stb
 operator|.
 name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|!=
-name|S_IFDIR
+argument_list|)
 condition|)
 block|{
 name|errno
@@ -2189,15 +2187,12 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-operator|(
+name|ISDIR
+argument_list|(
 name|stb
 operator|.
 name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|==
-name|S_IFDIR
+argument_list|)
 condition|)
 if|if
 condition|(
@@ -2841,20 +2836,17 @@ operator|++
 condition|;
 control|)
 empty_stmt|;
-name|s1
+name|s2
+operator|=
 operator|--
+name|s1
 expr_stmt|;
 if|if
 condition|(
 name|s3
-operator|==
+operator|!=
 name|NULL
 condition|)
-return|return
-operator|(
-name|s1
-operator|)
-return|;
 while|while
 condition|(
 operator|*
@@ -2868,9 +2860,7 @@ condition|)
 empty_stmt|;
 return|return
 operator|(
-name|s1
-operator|-
-literal|1
+name|s2
 operator|)
 return|;
 block|}

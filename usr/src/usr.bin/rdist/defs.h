@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.4	83/10/12	*/
+comment|/*	defs.h	4.5	83/10/20	*/
 end_comment
 
 begin_include
@@ -104,57 +104,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARROW
+name|SM
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|DCOLON
+name|ARROW
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|NAME
+name|DCOLON
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|INSTALL
+name|NAME
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|NOTIFY
+name|INSTALL
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCEPT
+name|NOTIFY
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPTION
+name|EXCEPT
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|VAR
+name|OPTION
 value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR
+value|12
 end_define
 
 begin_comment
@@ -230,28 +237,45 @@ begin_define
 define|#
 directive|define
 name|VERIFY
-value|1
+value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
 name|WHOLE
-value|2
+value|0x2
 end_define
 
 begin_define
 define|#
 directive|define
 name|YOUNGER
-value|4
+value|0x4
 end_define
 
 begin_define
 define|#
 directive|define
 name|STRIP
-value|8
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|REMOVE
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISDIR
+parameter_list|(
+name|m
+parameter_list|)
+value|(((m)& S_IFMT) == S_IFDIR)
 end_define
 
 begin_define

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)docmd.c	4.4 (Berkeley) 83/10/12"
+literal|"@(#)docmd.c	4.5 (Berkeley) 83/10/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -325,15 +325,45 @@ name|c
 operator|->
 name|b_next
 control|)
+block|{
 if|if
 condition|(
 name|c
 operator|->
 name|b_type
-operator|==
+operator|!=
 name|INSTALL
 condition|)
-block|{
+continue|continue;
+name|n
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|b_name
+operator|==
+name|NULL
+condition|)
+name|install
+argument_list|(
+name|f
+operator|->
+name|b_name
+argument_list|,
+name|f
+operator|->
+name|b_name
+argument_list|,
+literal|0
+argument_list|,
+name|c
+operator|->
+name|b_options
+argument_list|)
+expr_stmt|;
+else|else
 name|install
 argument_list|(
 name|f
@@ -350,9 +380,6 @@ name|c
 operator|->
 name|b_options
 argument_list|)
-expr_stmt|;
-name|n
-operator|++
 expr_stmt|;
 block|}
 if|if
@@ -704,7 +731,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%s%s %s %s\n"
+literal|"%s%s%s%s %s %s\n"
 argument_list|,
 name|opts
 operator|&
@@ -727,6 +754,14 @@ operator|&
 name|YOUNGER
 condition|?
 literal|" -y"
+else|:
+literal|""
+argument_list|,
+name|opts
+operator|&
+name|REMOVE
+condition|?
+literal|" -r"
 else|:
 literal|""
 argument_list|,
@@ -801,6 +836,28 @@ name|opts
 operator||=
 name|STRIP
 expr_stmt|;
+if|if
+condition|(
+name|opts
+operator|&
+name|REMOVE
+condition|)
+block|{
+name|opts
+operator|&=
+operator|~
+name|REMOVE
+expr_stmt|;
+name|rmchk
+argument_list|(
+name|src
+argument_list|,
+name|NULL
+argument_list|,
+name|opts
+argument_list|)
+expr_stmt|;
+block|}
 name|sendf
 argument_list|(
 name|src

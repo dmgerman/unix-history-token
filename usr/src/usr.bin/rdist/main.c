@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.5 (Berkeley) 83/10/12"
+literal|"@(#)main.c	4.6 (Berkeley) 83/10/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -492,6 +492,14 @@ literal|'q'
 case|:
 name|qflag
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|options
+operator||=
+name|REMOVE
 expr_stmt|;
 break|break;
 case|case
