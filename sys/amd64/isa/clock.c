@@ -3162,7 +3162,7 @@ literal|2u
 operator|)
 operator|)
 operator|&&
-name|i8254_intsrc
+name|i8254_pending
 operator|!=
 name|NULL
 operator|&&
