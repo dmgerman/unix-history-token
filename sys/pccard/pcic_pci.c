@@ -1144,6 +1144,9 @@ operator|>=
 name|pci_parallel
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|PCI_CARDBUS_CARD
 name|devcntl
 operator|&=
 operator|~
@@ -1175,6 +1178,8 @@ name|syscntl
 operator||=
 name|TI113X_SYSCNTL_INTRTIE
 expr_stmt|;
+endif|#
+directive|endif
 name|syscntl
 operator|&=
 operator|~
