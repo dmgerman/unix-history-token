@@ -2008,13 +2008,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|device_set_desc
-argument_list|(
-name|self
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|sc
