@@ -2239,6 +2239,11 @@ argument_list|,
 name|mem
 argument_list|)
 expr_stmt|;
+operator|*
+name|descp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|err
