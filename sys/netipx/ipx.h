@@ -508,6 +508,7 @@ name|ipx_sna
 decl_stmt|;
 comment|/* Source Network Address */
 block|}
+name|__packed
 struct|;
 end_struct
 
