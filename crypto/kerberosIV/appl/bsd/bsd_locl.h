@@ -7,17 +7,32 @@ begin_comment
 comment|/* $Id: bsd_locl.h,v 1.109.2.1 1999/07/22 03:13:49 assar Exp $ */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|LOGALL
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERBEROS
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|KERBEROS
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1378,21 +1393,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|int
-name|cnt
-decl_stmt|;
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-block|}
-name|BUF
-typedef|;
-end_typedef
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|typedef struct {         int cnt;         char *buf; } BUF;
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|char
@@ -1646,54 +1657,6 @@ name|int
 name|LEFT_JUSTIFIED
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|int
-name|des_enc_read
-parameter_list|(
-name|int
-name|fd
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|len
-parameter_list|,
-name|des_key_schedule
-name|sched
-parameter_list|,
-name|des_cblock
-modifier|*
-name|iv
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|des_enc_write
-parameter_list|(
-name|int
-name|fd
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|len
-parameter_list|,
-name|des_key_schedule
-name|sched
-parameter_list|,
-name|des_cblock
-modifier|*
-name|iv
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* used in des_read and des_write */
