@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.25	82/07/16	*/
+comment|/*	systm.h	4.26	82/09/04	*/
 end_comment
 
 begin_comment
@@ -56,26 +56,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* time of day in 60th not in time */
-end_comment
-
-begin_decl_stmt
-name|time_t
-name|time
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* time in sec from 1970 */
-end_comment
-
-begin_decl_stmt
-name|time_t
-name|bootime
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* time at which booted */
 end_comment
 
 begin_decl_stmt
