@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.59 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.60 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -127,18 +127,6 @@ begin_include
 include|#
 directive|include
 file|"../ufs/ufsmount.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/lock.h"
 end_include
 
 begin_include
@@ -2605,10 +2593,6 @@ name|int
 name|syncprt
 decl_stmt|;
 comment|/* LFS */
-specifier|extern
-name|lock_data_t
-name|lfs_sync_lock
-decl_stmt|;
 comment|/*  * Go through the disk queues to initiate sandbagged IO;  * go through the inodes to write those that have been modified;  * initiate the writing of the super block if it has been modified.  *  * Note: we are always called with the filesystem marked `MPBUSY'.  */
 name|int
 name|STOPNOW
@@ -2628,6 +2612,12 @@ name|int
 name|waitfor
 decl_stmt|;
 block|{
+specifier|static
+name|int
+name|sync_lock
+decl_stmt|,
+name|sync_want
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2636,12 +2626,43 @@ argument_list|(
 literal|"lfs_sync\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Concurrent syncs aren't possible because the meta data blocks are 	 * only marked dirty, not busy! 	 */
-name|lock_write
+comment|/* 	 * Meta data blocks are only marked dirty, not busy, so LFS syncs 	 * must be single threaded. 	 */
+while|while
+condition|(
+name|sync_lock
+condition|)
+block|{
+name|sync_want
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|=
+name|tsleep
 argument_list|(
 operator|&
-name|lfs_sync_lock
+name|sync_lock
+argument_list|,
+name|PLOCK
+operator||
+name|PCATCH
+argument_list|,
+literal|"lfs sync"
+argument_list|,
+literal|0
 argument_list|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+name|sync_lock
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -2650,7 +2671,7 @@ condition|)
 name|bufstats
 argument_list|()
 expr_stmt|;
-comment|/*  	 * If we do roll forward, then all syncs do not have to be checkpoints. 	 * Until then, make sure they are. 	 */
+comment|/* All syncs must be checkpoints until roll-forward is implemented. */
 name|STOPNOW
 operator|=
 literal|1
@@ -2664,12 +2685,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|lock_done
-argument_list|(
-operator|&
-name|lfs_sync_lock
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|QUOTA
@@ -2680,6 +2695,26 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|sync_lock
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|sync_want
+condition|)
+block|{
+name|sync_want
+operator|=
+literal|0
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|sync_lock
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
