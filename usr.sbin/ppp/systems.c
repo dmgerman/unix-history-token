@@ -1477,7 +1477,7 @@ decl_stmt|;
 name|char
 name|filename
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|int

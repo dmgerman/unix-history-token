@@ -3562,6 +3562,8 @@ name|char
 name|name
 index|[
 name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 specifier|static

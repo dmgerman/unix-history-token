@@ -31,7 +31,7 @@ decl_stmt|;
 name|char
 name|sockname
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 comment|/* Points to local socket path */

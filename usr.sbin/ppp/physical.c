@@ -1735,12 +1735,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|char
-name|fn
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -1782,7 +1776,11 @@ name|link
 operator|.
 name|name
 argument_list|,
-name|fn
+name|p
+operator|->
+name|name
+operator|.
+name|base
 argument_list|)
 expr_stmt|;
 block|}
@@ -1804,7 +1802,7 @@ decl_stmt|;
 name|char
 name|fn
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 if|if
@@ -6388,7 +6386,7 @@ decl_stmt|;
 name|char
 name|fn
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 if|if

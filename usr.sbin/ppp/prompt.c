@@ -295,6 +295,8 @@ name|char
 name|shostname
 index|[
 name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 specifier|const
@@ -440,6 +442,11 @@ argument_list|,
 sizeof|sizeof
 name|shostname
 argument_list|)
+operator|||
+operator|*
+name|shostname
+operator|==
+literal|'\0'
 condition|)
 name|strcpy
 argument_list|(

@@ -3220,7 +3220,7 @@ decl_stmt|;
 name|char
 name|pidfile
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|snprintf
@@ -3311,7 +3311,7 @@ block|{
 name|char
 name|pidfile
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|snprintf
