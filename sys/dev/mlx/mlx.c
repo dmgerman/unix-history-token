@@ -8795,9 +8795,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|bcopy
 argument_list|(
 name|mu
