@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.36 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.37 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -77,6 +77,18 @@ begin_include
 include|#
 directive|include
 file|"map.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../ufs/quota.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../ufs/inode.h"
 end_include
 
 begin_include
@@ -3176,6 +3188,9 @@ name|enum
 name|vtype
 name|type
 decl_stmt|;
+name|u_short
+name|mode
+decl_stmt|;
 name|long
 name|rdev
 decl_stmt|;
@@ -3258,6 +3273,30 @@ argument_list|(
 name|fp
 operator|->
 name|fa_type
+argument_list|)
+expr_stmt|;
+name|mode
+operator|=
+name|fxdr_unsigned
+argument_list|(
+name|u_short
+argument_list|,
+name|fp
+operator|->
+name|fa_mode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|VNON
+condition|)
+name|type
+operator|=
+name|IFTOVT
+argument_list|(
+name|mode
 argument_list|)
 expr_stmt|;
 name|rdev
@@ -3518,12 +3557,11 @@ name|vap
 operator|->
 name|va_mode
 operator|=
-name|nfstov_mode
-argument_list|(
-name|fp
-operator|->
-name|fa_mode
-argument_list|)
+operator|(
+name|mode
+operator|&
+literal|07777
+operator|)
 expr_stmt|;
 name|vap
 operator|->
