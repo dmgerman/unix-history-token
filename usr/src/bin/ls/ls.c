@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.64 (Berkeley) %G%"
+literal|"@(#)ls.c	5.65 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1417,13 +1417,14 @@ decl_stmt|,
 name|maxlen
 decl_stmt|,
 name|maxnlink
-decl_stmt|,
-name|maxsize
 decl_stmt|;
 name|u_long
 name|maxuser
 decl_stmt|,
 name|maxflags
+decl_stmt|;
+name|quad_t
+name|maxsize
 decl_stmt|;
 name|int
 name|entries
