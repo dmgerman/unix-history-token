@@ -6501,6 +6501,14 @@ literal|"vrele: null vp"
 operator|)
 argument_list|)
 expr_stmt|;
+name|simple_lock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|vp
@@ -6514,14 +6522,6 @@ argument_list|,
 operator|(
 literal|"vrele: missed vn_close"
 operator|)
-argument_list|)
-expr_stmt|;
-name|simple_lock
-argument_list|(
-operator|&
-name|vp
-operator|->
-name|v_interlock
 argument_list|)
 expr_stmt|;
 if|if
@@ -6666,6 +6666,14 @@ literal|"vput: null vp"
 operator|)
 argument_list|)
 expr_stmt|;
+name|simple_lock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|vp
@@ -6679,14 +6687,6 @@ argument_list|,
 operator|(
 literal|"vput: missed vn_close"
 operator|)
-argument_list|)
-expr_stmt|;
-name|simple_lock
-argument_list|(
-operator|&
-name|vp
-operator|->
-name|v_interlock
 argument_list|)
 expr_stmt|;
 if|if
