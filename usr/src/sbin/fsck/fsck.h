@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fsck.h	5.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fsck.h	5.19 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -646,12 +646,42 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|cvtflag
+name|cvtlevel
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* convert to old file system format */
+comment|/* convert to newer file system format */
+end_comment
+
+begin_decl_stmt
+name|int
+name|doinglevel1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* converting to new cylinder group format */
+end_comment
+
+begin_decl_stmt
+name|int
+name|doinglevel2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* converting to new inode format */
+end_comment
+
+begin_decl_stmt
+name|int
+name|newinofmt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* filesystem has new inode format */
 end_comment
 
 begin_decl_stmt
@@ -764,6 +794,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* ptr to inode state table */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|typemap
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ptr to inode type table */
 end_comment
 
 begin_decl_stmt
