@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lab.c 1.10 %G%"
+literal|"@(#)lab.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -607,9 +607,10 @@ argument_list|,
 name|bn
 argument_list|)
 expr_stmt|;
+comment|/* 		 *	this is a jmp because it's a jump to a global 		 *	and the assembler doesn't change jbr's into jmp's 		 *	if the destination is a global symbol. 		 */
 name|putprintf
 argument_list|(
-literal|"	jbr	%s"
+literal|"	jmp	%s"
 argument_list|,
 literal|0
 argument_list|,
