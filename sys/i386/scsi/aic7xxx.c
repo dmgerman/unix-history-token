@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.36 1995/08/15 08:54:21 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.37 1995/08/23 23:03:17 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -175,6 +175,24 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ahc_done
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
+operator|,
+expr|struct
+name|scb
+operator|*
+name|scbp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ahc_timeout_done
 name|__P
 argument_list|(
 operator|(
@@ -2910,6 +2928,8 @@ parameter_list|,
 name|iobase
 parameter_list|,
 name|type
+parameter_list|,
+name|flags
 parameter_list|)
 name|int
 name|unit
@@ -2919,6 +2939,9 @@ name|iobase
 decl_stmt|;
 name|ahc_type
 name|type
+decl_stmt|;
+name|ahc_flag
+name|flags
 decl_stmt|;
 block|{
 comment|/*          * find unit and check we have that many defined          */
@@ -3026,6 +3049,12 @@ operator|->
 name|type
 operator|=
 name|type
+expr_stmt|;
+name|ahc
+operator|->
+name|flags
+operator|=
+name|flags
 expr_stmt|;
 comment|/*          * Try to initialize a unit at this location          * reset the AIC-7770, read its registers,          * and fill in the dev structure accordingly          */
 if|if
@@ -3151,10 +3180,15 @@ operator|&
 literal|0x0f
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"ahc%d: target %d synchronous at %sMB/s, "
-literal|"offset = 0x%x\n"
+literal|"ahc%d: target %d synchronous at %sMB/s,"
+literal|" offset = 0x%x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3170,13 +3204,7 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-comment|/* XXX Conditional on bootverbose??? */
-ifdef|#
-directive|ifdef
-name|AHC_DEBUG
-endif|#
-directive|endif
-comment|/* AHC_DEBUG */
+block|}
 return|return;
 block|}
 block|}
@@ -3186,6 +3214,11 @@ name|scsirate
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"ahc%d: target %d using asyncronous transfers\n"
@@ -3195,12 +3228,7 @@ argument_list|,
 name|target
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AHC_DEBUG
-endif|#
-directive|endif
-comment|/* AHC_DEBUG */
+block|}
 block|}
 end_function
 
@@ -3332,6 +3360,10 @@ operator|=
 literal|15
 expr_stmt|;
 comment|/* 	 * ask the adapter what subunits are present 	 */
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"ahc%d: Probing channel A\n"
@@ -3433,6 +3465,10 @@ name|maxtarg
 operator|=
 literal|15
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"ahc%d: Probing Channel B\n"
@@ -4104,20 +4140,6 @@ operator|+
 name|iobase
 argument_list|)
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"ahc%d:%c:%d: Warning - message "
-literal|"rejected by target: 0x%x\n"
-argument_list|,
-name|unit
-argument_list|,
-name|channel
-argument_list|,
-name|target
-argument_list|,
-name|rejbyte
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4132,7 +4154,7 @@ block|{
 comment|/* Tagged Message */
 name|printf
 argument_list|(
-literal|"ahc%d:%c:%d: Tagged message "
+literal|"\nahc%d:%c:%d: Tagged message "
 literal|"rejected.  Disabling tagged "
 literal|"commands for this target.\n"
 argument_list|,
@@ -4151,6 +4173,21 @@ operator|~
 name|targ_mask
 expr_stmt|;
 block|}
+else|else
+name|printf
+argument_list|(
+literal|"ahc%d:%c:%d: Warning - message "
+literal|"rejected by target: 0x%x\n"
+argument_list|,
+name|unit
+argument_list|,
+name|channel
+argument_list|,
+name|target
+argument_list|,
+name|rejbyte
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 case|case
@@ -4507,6 +4544,10 @@ break|break;
 case|case
 name|BUS_16_BIT
 case|:
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"ahc%d: target "
@@ -4523,16 +4564,13 @@ operator||=
 literal|0x80
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 block|}
 else|else
 block|{
 comment|/* 					 * Send our own WDTR in reply 					 */
-name|printf
-argument_list|(
-literal|"Will Send WDTR!!\n"
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|bus_width
@@ -4557,6 +4595,10 @@ expr_stmt|;
 case|case
 name|BUS_16_BIT
 case|:
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"ahc%d: target "
@@ -4572,6 +4614,8 @@ name|scratch
 operator||=
 literal|0x80
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 name|outb
@@ -6823,7 +6867,7 @@ name|intdef
 decl_stmt|,
 name|max_targ
 init|=
-literal|16
+literal|15
 decl_stmt|,
 name|wait
 decl_stmt|,
@@ -6872,6 +6916,10 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* AHC_DEBUG */
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"ahc%d: reading board settings\n"
@@ -7127,8 +7175,8 @@ condition|(
 name|ahc
 operator|->
 name|type
-operator|!=
-name|AHC_AIC7850
+operator|&
+name|AHC_AIC7870
 condition|)
 block|{
 name|unsigned
@@ -7149,6 +7197,10 @@ name|checksum
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"ahc%d: Reading SEEPROM..."
@@ -7196,6 +7248,12 @@ operator|*
 operator|)
 operator|&
 name|sc
+argument_list|,
+name|ahc
+operator|->
+name|flags
+operator|&
+name|AHC_CHNLB
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7297,6 +7355,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"done.\n"
@@ -7347,6 +7409,38 @@ name|ahc
 operator|->
 name|type
 operator|==
+name|AHC_394
+condition|)
+name|printf
+argument_list|(
+literal|"ahc%d: 3940 "
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ahc
+operator|->
+name|type
+operator|==
+name|AHC_294
+condition|)
+name|printf
+argument_list|(
+literal|"ahc%d: 2940 "
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ahc
+operator|->
+name|type
+operator|==
 name|AHC_AIC7850
 condition|)
 block|{
@@ -7364,45 +7458,10 @@ operator|=
 literal|0x03
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|ahc
-operator|->
-name|type
-operator|==
-name|AHC_AIC7870
-condition|)
-name|printf
-argument_list|(
-literal|"ahc%d: aic7870 "
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|ahc
-operator|->
-name|type
-operator|==
-name|AHC_394
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ahc%d: 3940 "
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-comment|/* XXX Test this! ahc->maxscbs = 0xff; */
-block|}
 else|else
 name|printf
 argument_list|(
-literal|"ahc%d: 2940 "
+literal|"ahc%d: aic7870 "
 argument_list|,
 name|unit
 argument_list|)
@@ -7481,6 +7540,34 @@ operator|&
 name|HSCSIID
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|ahc
+operator|->
+name|type
+operator|==
+name|AHC_394
+condition|)
+name|printf
+argument_list|(
+literal|"Channel %c, SCSI Id=%d, "
+argument_list|,
+name|ahc
+operator|->
+name|flags
+operator|&
+name|AHC_CHNLB
+condition|?
+literal|'B'
+else|:
+literal|'A'
+argument_list|,
+name|ahc
+operator|->
+name|our_id
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"Single Channel, SCSI Id=%d, "
@@ -7520,6 +7607,34 @@ operator|&
 name|HWSCSIID
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|ahc
+operator|->
+name|type
+operator|==
+name|AHC_394
+condition|)
+name|printf
+argument_list|(
+literal|"Wide Channel %c, SCSI Id=%d, "
+argument_list|,
+name|ahc
+operator|->
+name|flags
+operator|&
+name|AHC_CHNLB
+condition|?
+literal|'B'
+else|:
+literal|'A'
+argument_list|,
+name|ahc
+operator|->
+name|our_id
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"Wide Channel, SCSI Id=%d, "
@@ -7737,6 +7852,93 @@ argument_list|(
 literal|"aic7870, "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ahc
+operator|->
+name|flags
+operator|&
+name|AHC_EXTSCB
+condition|)
+block|{
+comment|/* 		 * This adapter has external SCB memory. 		 * Walk the SCBs to determine how many there are. 		 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|AHC_SCB_MAX
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|outb
+argument_list|(
+name|SCBPTR
+operator|+
+name|iobase
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|SCBARRAY
+operator|+
+name|iobase
+argument_list|,
+literal|0xaa
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|inb
+argument_list|(
+name|SCBARRAY
+operator|+
+name|iobase
+argument_list|)
+operator|==
+literal|0xaa
+condition|)
+block|{
+name|outb
+argument_list|(
+name|SCBARRAY
+operator|+
+name|iobase
+argument_list|,
+literal|0x55
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|inb
+argument_list|(
+name|SCBARRAY
+operator|+
+name|iobase
+argument_list|)
+operator|==
+literal|0x55
+condition|)
+block|{
+continue|continue;
+block|}
+block|}
+break|break;
+block|}
+name|ahc
+operator|->
+name|maxscbs
+operator|=
+name|i
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%d SCBs\n"
@@ -7756,6 +7958,8 @@ name|type
 operator|&
 name|AHC_AIC78X0
 operator|)
+operator|&&
+name|bootverbose
 condition|)
 block|{
 if|if
@@ -7794,7 +7998,7 @@ name|AHC_AIC78X0
 operator|)
 condition|)
 block|{
-comment|/* 	 * The 294x cards are PCI, so we get their interrupt from the PCI 	 * BIOS. 	 */
+comment|/* 	 * The AIC78X0 cards are PCI, so we get their interrupt from the PCI 	 * BIOS. 	 */
 name|intdef
 operator|=
 name|inb
@@ -7961,7 +8165,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|10000
+literal|1000
 argument_list|)
 expr_stmt|;
 name|outb
@@ -8048,7 +8252,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|10000
+literal|1000
 argument_list|)
 expr_stmt|;
 name|outb
@@ -8133,7 +8337,7 @@ operator|)
 condition|)
 name|max_targ
 operator|=
-literal|8
+literal|7
 expr_stmt|;
 for|for
 control|(
@@ -8142,7 +8346,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|max_targ
 condition|;
 name|i
@@ -8509,6 +8713,10 @@ name|SCB_LIST_NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Load the Sequencer program and Enable the adapter. 	 * Place the aic7xxx in fastmode which makes a big 	 * difference when doing many small block transfers.          */
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"ahc%d: Downloading Sequencer Program..."
@@ -8521,6 +8729,10 @@ argument_list|(
 name|iobase
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Done\n"
@@ -10939,10 +11151,14 @@ name|ahc
 decl_stmt|;
 name|int
 name|s
-init|=
+decl_stmt|,
+name|h
+decl_stmt|;
+name|s
+operator|=
 name|splbio
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 name|unit
 operator|=
 name|scb
@@ -11001,6 +11217,61 @@ operator|->
 name|dev_unit
 argument_list|)
 expr_stmt|;
+name|h
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ahc
+operator|->
+name|in_timeout
+condition|)
+block|{
+name|scb
+operator|->
+name|next
+operator|=
+name|ahc
+operator|->
+name|timedout_scb
+expr_stmt|;
+name|ahc
+operator|->
+name|timedout_scb
+operator|=
+name|scb
+expr_stmt|;
+name|splx
+argument_list|(
+name|h
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+else|else
+name|ahc
+operator|->
+name|in_timeout
+operator|=
+literal|1
+expr_stmt|;
+name|splx
+argument_list|(
+name|h
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|scb
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|SCSIDEBUG
@@ -11030,7 +11301,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*AHC_DEBUG */
-comment|/*          * If it's immediate, don't try to abort it          */
+comment|/* 		 * If it's immediate, don't try to abort it 		 */
 if|if
 condition|(
 name|scb
@@ -11049,20 +11320,16 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* I MEAN IT ! */
-name|ahc_done
+name|ahc_timeout_done
 argument_list|(
 name|unit
 argument_list|,
 name|scb
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
+else|else
+block|{
 comment|/* abort the operation that has timed out */
 name|ahc_scb_timeout
 argument_list|(
@@ -11072,6 +11339,42 @@ name|ahc
 argument_list|,
 name|scb
 argument_list|)
+expr_stmt|;
+block|}
+name|h
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
+name|scb
+operator|=
+name|ahc
+operator|->
+name|timedout_scb
+expr_stmt|;
+if|if
+condition|(
+name|scb
+condition|)
+name|ahc
+operator|->
+name|timedout_scb
+operator|=
+name|scb
+operator|->
+name|next
+expr_stmt|;
+name|splx
+argument_list|(
+name|h
+argument_list|)
+expr_stmt|;
+block|}
+name|ahc
+operator|->
+name|in_timeout
+operator|=
+literal|0
 expr_stmt|;
 name|splx
 argument_list|(
@@ -11262,7 +11565,7 @@ operator|)
 name|scbp
 argument_list|)
 expr_stmt|;
-name|ahc_done
+name|ahc_timeout_done
 argument_list|(
 name|unit
 argument_list|,
@@ -11536,7 +11839,7 @@ operator|)
 name|scbp
 argument_list|)
 expr_stmt|;
-name|ahc_done
+name|ahc_timeout_done
 argument_list|(
 name|unit
 argument_list|,
@@ -11807,7 +12110,7 @@ operator|)
 name|scbp
 argument_list|)
 expr_stmt|;
-name|ahc_done
+name|ahc_timeout_done
 argument_list|(
 name|unit
 argument_list|,
@@ -12364,6 +12667,115 @@ name|target
 operator|)
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ahc_timeout_done
+parameter_list|(
+name|unit
+parameter_list|,
+name|scbp
+parameter_list|)
+name|int
+name|unit
+decl_stmt|;
+name|struct
+name|scb
+modifier|*
+name|scbp
+decl_stmt|;
+block|{
+name|struct
+name|ahc_data
+modifier|*
+name|ahc
+init|=
+name|ahcdata
+index|[
+name|unit
+index|]
+decl_stmt|;
+name|struct
+name|scb
+modifier|*
+modifier|*
+name|prev_scb
+decl_stmt|;
+name|struct
+name|scb
+modifier|*
+name|cur_scb
+decl_stmt|;
+name|int
+name|h
+decl_stmt|;
+name|h
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
+name|prev_scb
+operator|=
+operator|&
+name|ahc
+operator|->
+name|timedout_scb
+expr_stmt|;
+name|cur_scb
+operator|=
+name|ahc
+operator|->
+name|timedout_scb
+expr_stmt|;
+while|while
+condition|(
+name|cur_scb
+condition|)
+block|{
+if|if
+condition|(
+name|cur_scb
+operator|==
+name|scbp
+condition|)
+block|{
+operator|*
+name|prev_scb
+operator|=
+name|cur_scb
+operator|->
+name|next
+expr_stmt|;
+break|break;
+block|}
+name|prev_scb
+operator|=
+operator|&
+name|cur_scb
+operator|->
+name|next
+expr_stmt|;
+name|cur_scb
+operator|=
+name|cur_scb
+operator|->
+name|next
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|h
+argument_list|)
+expr_stmt|;
+name|ahc_done
+argument_list|(
+name|unit
+argument_list|,
+name|scbp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
