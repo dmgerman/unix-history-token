@@ -2785,9 +2785,10 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|msgNoYes
 argument_list|(
-literal|"Does this system have a USB mouse attached to it?"
+literal|"Does this system have a non-USB mouse attached to it?"
 argument_list|)
 condition|)
 name|dmenuOpenSimple
