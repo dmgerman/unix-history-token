@@ -225,6 +225,11 @@ name|Username
 index|[
 literal|64
 index|]
+decl_stmt|,
+name|Logname
+index|[
+literal|64
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -236,6 +241,8 @@ index|[]
 init|=
 block|{
 name|Username
+block|,
+name|Logname
 block|,
 name|NULL
 block|, }
@@ -654,11 +661,6 @@ name|passwd
 index|[
 literal|64
 index|]
-decl_stmt|,
-name|ubuf
-index|[
-literal|64
-index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -865,9 +867,9 @@ argument_list|)
 expr_stmt|;
 name|sprintf
 argument_list|(
-name|ubuf
+name|Logname
 argument_list|,
-literal|"-u%s"
+literal|"LOGNAME=%s"
 argument_list|,
 name|pw
 operator|->
@@ -946,8 +948,6 @@ operator|->
 name|pw_shell
 argument_list|,
 literal|"uucico"
-argument_list|,
-name|ubuf
 argument_list|,
 name|NULL
 argument_list|)
