@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	5.2 (Berkeley) %G%"
+literal|"@(#)finger.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3431,6 +3431,57 @@ name|p
 operator|++
 operator|=
 literal|'2'
+expr_stmt|;
+operator|*
+name|p
+operator|++
+operator|=
+literal|'-'
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|4
+condition|;
+name|i
+operator|++
+control|)
+operator|*
+name|p
+operator|++
+operator|=
+operator|*
+name|s
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|5
+case|:
+operator|*
+name|p
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+operator|*
+name|p
+operator|++
+operator|=
+literal|'x'
+expr_stmt|;
+operator|*
+name|p
+operator|++
+operator|=
+operator|*
+name|s
+operator|++
 expr_stmt|;
 operator|*
 name|p
