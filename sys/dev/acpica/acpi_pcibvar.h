@@ -15,6 +15,12 @@ directive|define
 name|_ACPI_PCIBVAR_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_function_decl
 name|void
 name|acpi_pci_link_add_reference
@@ -101,6 +107,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_ACPI_PCIBVAR_H_ */
+end_comment
 
 end_unit
 
