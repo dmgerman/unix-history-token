@@ -4417,9 +4417,6 @@ name|shell
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|HAVE_LOGIN_CAP
 if|if
 condition|(
 name|getenv
@@ -4427,6 +4424,18 @@ argument_list|(
 literal|"TZ"
 argument_list|)
 condition|)
+ifdef|#
+directive|ifdef
+name|HAVE_LOGIN_CAP
+if|if
+condition|(
+name|options
+operator|.
+name|use_login
+condition|)
+endif|#
+directive|endif
+comment|/* HAVE_LOGIN_CAP */
 name|child_set_env
 argument_list|(
 operator|&
@@ -4443,9 +4452,6 @@ literal|"TZ"
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !HAVE_LOGIN_CAP */
 comment|/* Set custom environment options from RSA authentication. */
 if|if
 condition|(
@@ -4608,15 +4614,24 @@ operator|->
 name|tty
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|HAVE_LOGIN_CAP
 if|if
 condition|(
 name|s
 operator|->
 name|term
 condition|)
+ifdef|#
+directive|ifdef
+name|HAVE_LOGIN_CAP
+if|if
+condition|(
+name|options
+operator|.
+name|use_login
+condition|)
+endif|#
+directive|endif
+comment|/* HAVE_LOGIN_CAP */
 name|child_set_env
 argument_list|(
 operator|&
@@ -4632,9 +4647,6 @@ operator|->
 name|term
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !HAVE_LOGIN_CAP */
 if|if
 condition|(
 name|s
