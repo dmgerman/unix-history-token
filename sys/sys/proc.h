@@ -297,7 +297,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(PROC ONLY)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never chagnes   *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proc tree lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - either by curproc or a lock which prevents the lock from  *              going way, such a (d,e).  *      l - the attaching proc or attaching proc parent.  *      m - Giant  *      n - not locked, lazy  */
+comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never chagnes   *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proc tree lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - either by curproc or a lock which prevents the lock from  *          going away, such as (d,e)  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  */
 end_comment
 
 begin_struct
@@ -343,7 +343,7 @@ name|pstats
 modifier|*
 name|p_stats
 decl_stmt|;
-comment|/* (b) Accounting/statistics (PROC ONLY). */
+comment|/* (b) Accounting/statistics (CPU). */
 name|struct
 name|plimit
 modifier|*
@@ -361,7 +361,7 @@ name|procsig
 modifier|*
 name|p_procsig
 decl_stmt|;
-comment|/* (c) Signal actions, state (PROC ONLY). */
+comment|/* (c) Signal actions, state (CPU). */
 define|#
 directive|define
 name|p_sigacts
@@ -447,7 +447,7 @@ comment|/* (c) Save parent pid during ptrace. XXX */
 name|int
 name|p_dupfd
 decl_stmt|;
-comment|/* (c) Sideways return value from fdopen. XXX */
+comment|/* (c) Sideways ret value from fdopen. XXX */
 name|struct
 name|vmspace
 modifier|*
@@ -466,7 +466,7 @@ comment|/* (j) Ticks of cpu time. */
 name|fixpt_t
 name|p_pctcpu
 decl_stmt|;
-comment|/* (j) %cpu for this process during p_swtime */
+comment|/* (j) %cpu during p_swtime. */
 name|struct
 name|callout
 name|p_slpcallout
@@ -516,7 +516,7 @@ comment|/* (c) Previous system time in microsec. */
 name|u_int64_t
 name|p_iu
 decl_stmt|;
-comment|/* (c) Previous interrupt time in usec. */
+comment|/* (c) Previous interrupt time in microsec. */
 name|u_int64_t
 name|p_uticks
 decl_stmt|;
@@ -557,7 +557,7 @@ name|struct
 name|mtx
 name|p_mtx
 decl_stmt|;
-comment|/* (k) Process structure lock. */
+comment|/* (k) Lock for this struct. */
 name|u_char
 name|p_oncpu
 decl_stmt|;
@@ -679,7 +679,7 @@ comment|/* (c) Current signal mask. */
 name|stack_t
 name|p_sigstk
 decl_stmt|;
-comment|/* (c) Stack pointer and on-stack state variable. */
+comment|/* (c) Stack pointer and on-stack flag. */
 name|int
 name|p_magic
 decl_stmt|;
@@ -691,7 +691,7 @@ comment|/* (j) Process priority. */
 name|u_char
 name|p_usrpri
 decl_stmt|;
-comment|/* (j) User-priority based on p_cpu and p_nice. */
+comment|/* (j) User priority based on p_cpu and p_nice. */
 name|u_char
 name|p_nativepri
 decl_stmt|;
@@ -708,7 +708,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* (b) Process name */
+comment|/* (b) Process name. */
 name|struct
 name|pgrp
 modifier|*
@@ -748,7 +748,7 @@ name|user
 modifier|*
 name|p_addr
 decl_stmt|;
-comment|/* (k) Kernel virtual addr of u-area (PROC ONLY). */
+comment|/* (k) Kernel virtual addr of u-area (CPU). */
 name|struct
 name|mdproc
 name|p_md
@@ -757,7 +757,7 @@ comment|/* (k) Any machine-dependent fields. */
 name|u_short
 name|p_xstat
 decl_stmt|;
-comment|/* (c) Exit status for wait; also stop signal. */
+comment|/* (c) Exit status for wait; also stop sig. */
 name|u_short
 name|p_acflag
 decl_stmt|;
@@ -1564,7 +1564,7 @@ name|e
 parameter_list|,
 name|v
 parameter_list|)
-value|do {						\ 	if ((p)->p_stops& (e)) {					\ 		mtx_enter(&Giant, MTX_DEF);				\ 		stopevent(p,e,v);					\ 		mtx_exit(&Giant, MTX_DEF);				\ 	}								\ } while (0)
+value|do {						\ 	if ((p)->p_stops& (e)) {					\ 		mtx_enter(&Giant, MTX_DEF);				\ 		stopevent((p), (e), (v));				\ 		mtx_exit(&Giant, MTX_DEF);				\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -1638,7 +1638,7 @@ name|PHOLD
 parameter_list|(
 name|p
 parameter_list|)
-value|do {							\ 	PROC_LOCK(p);							\ 	if ((p)->p_lock++ == 0&& ((p)->p_flag& P_INMEM) == 0) {	\ 		PROC_UNLOCK(p);						\ 		faultin(p);						\ 	} else								\ 		PROC_UNLOCK(p);						\ } while(0)
+value|do {							\ 	PROC_LOCK(p);							\ 	if ((p)->p_lock++ == 0&& ((p)->p_flag& P_INMEM) == 0) {	\ 		PROC_UNLOCK(p);						\ 		faultin(p);						\ 	} else								\ 		PROC_UNLOCK(p);						\ } while (0)
 end_define
 
 begin_define
@@ -1648,7 +1648,7 @@ name|PRELE
 parameter_list|(
 name|p
 parameter_list|)
-value|do {							\ 	PROC_LOCK(p);							\ 	(--(p)->p_lock);						\ 	PROC_UNLOCK(p);							\ } while(0)
+value|do {							\ 	PROC_LOCK(p);							\ 	(--(p)->p_lock);						\ 	PROC_UNLOCK(p);							\ } while (0)
 end_define
 
 begin_define
@@ -1939,7 +1939,7 @@ parameter_list|(
 name|e
 parameter_list|)
 define|\
-value|min((e), INVERSE_ESTCPU_WEIGHT * (NICE_WEIGHT * (PRIO_MAX - PRIO_MIN) \ 	     - PPQ) + INVERSE_ESTCPU_WEIGHT - 1)
+value|min((e), INVERSE_ESTCPU_WEIGHT * (NICE_WEIGHT * (PRIO_MAX - PRIO_MIN) - \ 	     PPQ) + INVERSE_ESTCPU_WEIGHT - 1)
 end_define
 
 begin_define
@@ -1950,7 +1950,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* 1 / (priorities per estcpu level) */
+comment|/* 1 / (priorities per estcpu level). */
 end_comment
 
 begin_define
@@ -1961,7 +1961,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* priorities per nice level */
+comment|/* Priorities per nice level. */
 end_comment
 
 begin_define
@@ -1972,7 +1972,7 @@ value|(128 / NQS)
 end_define
 
 begin_comment
-comment|/* priorities per queue */
+comment|/* Priorities per queue. */
 end_comment
 
 begin_struct_decl
