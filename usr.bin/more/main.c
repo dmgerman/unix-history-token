@@ -52,6 +52,32 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: main.c,v 1.12 1999/06/01 20:02:33 hoek Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_comment
 comment|/*  * Entry point, initialization, miscellaneous routines.  */
 end_comment
@@ -59,7 +85,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -71,7 +97,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_include
@@ -95,7 +127,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -107,18 +139,6 @@ end_include
 begin_decl_stmt
 name|int
 name|ispipe
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|new_file
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|is_tty
 decl_stmt|;
 end_decl_stmt
 
@@ -135,12 +155,6 @@ name|current_name
 decl_stmt|,
 modifier|*
 name|next_name
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|off_t
-name|prev_pos
 decl_stmt|;
 end_decl_stmt
 
@@ -173,12 +187,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|curr_ac
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|quitting
 decl_stmt|;
 end_decl_stmt
 
@@ -219,7 +227,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Edit a new file.  * Filename "-" means standard input.  * No filename means the "current" file, from the command line.  */
+comment|/*  * Edit a new file.  * Filename "-" means standard input.  * No filename means the "current" file, from the command line.  If called  * with the same filename in succession, filename will be closed and reopened.  */
 end_comment
 
 begin_expr_stmt
@@ -251,6 +259,8 @@ name|m
 decl_stmt|;
 name|off_t
 name|initial_pos
+decl_stmt|,
+name|prev_pos
 decl_stmt|,
 name|position
 argument_list|()
@@ -403,7 +413,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Can view standard input only once"
+literal|"can view standard input only once"
 argument_list|)
 expr_stmt|;
 return|return
@@ -569,10 +579,6 @@ argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
-name|new_file
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|previous_file
@@ -680,7 +686,10 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|is_tty
+name|isatty
+argument_list|(
+name|STDOUT_FILENO
+argument_list|)
 condition|)
 block|{
 name|int
@@ -1077,17 +1086,13 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * Set up terminal, etc. 	 */
-name|is_tty
-operator|=
-name|isatty
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
-name|is_tty
+name|isatty
+argument_list|(
+name|STDOUT_FILENO
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * Output is not a tty. 		 * Just copy the input file(s) to output. 		 */
@@ -1344,10 +1349,6 @@ end_macro
 begin_block
 block|{
 comment|/* 	 * Put cursor at bottom left corner, clear the line, 	 * reset the terminal modes, and exit. 	 */
-name|quitting
-operator|=
-literal|1
-expr_stmt|;
 name|lower_left
 argument_list|()
 expr_stmt|;

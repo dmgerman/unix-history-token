@@ -28,6 +28,32 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: input.c,v 1.3 1999/05/30 18:06:53 hoek Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_comment
 comment|/*  * High level routines dealing with getting lines of input  * from the file being viewed.  *  * When we speak of "lines" here, we mean PRINTABLE lines;  * lines processed with respect to the screen width.  * We use the term "raw line" to refer to lines simply  * delimited by newlines; not processed with respect to screen width.  */
 end_comment
@@ -41,8 +67,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|<less.h>
+file|"less.h"
 end_include
+
+begin_decl_stmt
+name|int
+name|horiz_off
+init|=
+name|NO_HORIZ_OFF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # characters scrolled off left of screen */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -74,7 +112,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the next line.  * A "current" position is passed and a "new" position is returned.  * The current position is the position of the first character of  * a line.  The new position is the position of the first character  * of the NEXT line.  The line obtained is the line starting at curr_pos.  */
+comment|/*  * Get the next printable line.  *  * A "current" position is passed and a "new" position is returned.  * The current position is the position of the first character of  * a line.  The new position is the position of the first character  * of the NEXT line.  The line obtained is the line starting at curr_pos.  * It is placed into the global line buffer ("line").  */
 end_comment
 
 begin_function
@@ -163,7 +201,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Append the char to the line and get the next char. 		 */
+comment|/* 		 * Append the char to the line and get the next char. 		 * The pappend() will throw away any unimportant chars 		 * (ie. not underlines or bolds) as per horiz_off. 		 * 		 * XXX line.c needs to be rewritten... 		 */
 if|if
 condition|(
 name|pappend
@@ -173,6 +211,42 @@ argument_list|)
 condition|)
 block|{
 comment|/* 			 * The char won't fit in the line; the line 			 * is too long to print in the screen width. 			 * End the line here. 			 */
+if|if
+condition|(
+name|horiz_off
+operator|!=
+name|NO_HORIZ_OFF
+condition|)
+block|{
+comment|/* Throw away left-over characters on line */
+name|c
+operator|=
+name|ch_forw_get
+argument_list|()
+expr_stmt|;
+while|while
+condition|(
+name|c
+operator|!=
+literal|'\n'
+operator|&&
+name|c
+operator|!=
+name|EOI
+condition|)
+name|c
+operator|=
+name|ch_forw_get
+argument_list|()
+expr_stmt|;
+name|new_pos
+operator|=
+name|ch_tell
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
 name|new_pos
 operator|=
 name|ch_tell
@@ -180,6 +254,7 @@ argument_list|()
 operator|-
 literal|1
 expr_stmt|;
+block|}
 break|break;
 block|}
 name|c
@@ -254,7 +329,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the previous line.  * A "current" position is passed and a "new" position is returned.  * The current position is the position of the first character of  * a line.  The new position is the position of the first character  * of the PREVIOUS line.  The line obtained is the one starting at new_pos.  */
+comment|/*  * Get the previous line.  *  * A "current" position is passed and a "new" position is returned.  * The current position is the position of the first character of  * a line.  The new position is the position of the first character  * of the PREVIOUS line.  The line obtained is the one starting at new_pos.  * It is placed into the global line buffer ("line").  */
 end_comment
 
 begin_function
@@ -493,7 +568,14 @@ name|c
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Got a full printable line, but we haven't 			 * reached our curr_pos yet.  Discard the line 			 * and start a new one. 			 */
+if|if
+condition|(
+name|horiz_off
+operator|==
+name|NO_HORIZ_OFF
+condition|)
+block|{
+comment|/* 				 * Got a full printable line, but we haven't 				 * reached our curr_pos yet.  Discard the line 				 * and start a new one. 				 */
 operator|(
 name|void
 operator|)
@@ -514,6 +596,10 @@ expr_stmt|;
 goto|goto
 name|loop
 goto|;
+block|}
+else|else
+break|break;
+comment|/* Got everything we need */
 block|}
 block|}
 do|while

@@ -28,6 +28,32 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: line.c,v 1.5 1999/05/30 18:06:55 hoek Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_comment
 comment|/*  * Routines to manipulate the "line buffer".  * The line buffer holds a line of output as it is being built  * in preparation for output to the screen.  * We keep track of the PRINTABLE length of the line as it is being built.  */
 end_comment
@@ -47,7 +73,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<less.h>
+file|"less.h"
 end_include
 
 begin_decl_stmt
@@ -55,13 +81,13 @@ specifier|static
 name|char
 name|linebuf
 index|[
-literal|1024
+literal|8192
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Buffer which holds the current output line */
+comment|/* Buffer to hold the current output line */
 end_comment
 
 begin_decl_stmt
@@ -99,7 +125,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Currently in normal/underline/bold/etc mode? */
+comment|/* Current normal/underline/bold/etc mode */
 end_comment
 
 begin_define
@@ -110,7 +136,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Not in underline, boldface or whatever mode */
+comment|/* Not in underline/boldface/whatever mode */
 end_comment
 
 begin_define
@@ -231,6 +257,13 @@ name|sc_height
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|horiz_off
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Rewind the line buffer.  */
 end_comment
@@ -254,13 +287,22 @@ name|LN_NORMAL
 expr_stmt|;
 name|column
 operator|=
+operator|(
+name|horiz_off
+operator|==
+name|NO_HORIZ_OFF
+operator|)
+condition|?
 literal|0
+else|:
+operator|-
+name|horiz_off
 expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * Append a character to the line buffer.  * Expand tabs into spaces, handle underlining, boldfacing, etc.  * Returns 0 if ok, 1 if couldn't fit in buffer.  */
+comment|/*  * Append a character to the line buffer.  * Expand tabs into spaces, handle underlining, boldfacing, etc.  * Returns 0 if ok, 1 if couldn't fit in buffer.  Characters before horiz_off  * will be added to the buffer but will not count against the line size.  *  * XXX This function sucks.  */
 end_comment
 
 begin_define
@@ -409,7 +451,7 @@ argument_list|)
 operator|-
 literal|12
 condition|)
-comment|/* 		 * Almost out of room in the line buffer. 		 * Don't take any chances. 		 * {{ Linebuf is supposed to be big enough that this 		 *    will never happen, but may need to be made 		 *    bigger for wide screens or lots of backspaces. }} 		 */
+comment|/* 		 * Almost out of room in the line buffer. 		 * Don't take any chances. 		 * {{ Linebuf is supposed to be big enough that this 		 *    will never happen, but may need to be made 		 *    bigger for really long lines. }} 		 */
 return|return
 operator|(
 literal|1
@@ -1070,6 +1112,36 @@ literal|'\t'
 condition|)
 block|{
 comment|/* 		 * Expand a tab into spaces. 		 */
+if|if
+condition|(
+name|horiz_off
+operator|!=
+name|NO_HORIZ_OFF
+condition|)
+do|do
+block|{
+name|NEW_COLUMN
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|(
+operator|(
+name|column
+operator|+
+name|horiz_off
+operator|)
+operator|%
+name|tabstop
+operator|)
+operator|!=
+literal|0
+condition|)
+do|;
+else|else
 do|do
 block|{
 name|NEW_COLUMN
@@ -1303,7 +1375,7 @@ literal|1
 index|]
 condition|)
 block|{
-comment|/* 			 * Overflowed the input buffer. 			 * Pretend the line ended here. 			 * {{ The line buffer is supposed to be big 			 *    enough that this never happens. }} 			 */
+comment|/* 			 * Overflowed the input buffer. 			 * Pretend the line ended here. 			 * {{ The line buffer is supposed to be big 			 *    enough that this never happens, but it's 			 *    statically allocated, so that's really just 			 *    a pipe dream.  This causes no end of trouble. 			 *    The line.c needs to be rewritten. }} 			 */
 name|new_pos
 operator|=
 name|ch_tell

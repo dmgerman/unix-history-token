@@ -252,6 +252,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Remove any NULL_POSITION markers from the top of the table, moving  * the bottom part up, if necessary.  */
+end_comment
+
 begin_macro
 name|copytable
 argument_list|()
@@ -436,7 +440,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * See if the byte at a specified position is currently on the screen.  * Check the position table to see if the position falls within its range.  * Return the position table entry if found, -1 if not.  */
+comment|/*  * See if the byte at a specified position is currently on the screen.  * Check the position table to see if the position falls within its range.  * Return the position table entry if found, -1 if not.  *  * This function doesn't really work when horizontal scrolling is enabled.  * I suspect it may not work in a few other cases, too.  */
 end_comment
 
 begin_macro
