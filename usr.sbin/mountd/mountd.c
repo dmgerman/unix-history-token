@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.24 1997/09/12 16:25:24 jlemon Exp $"
+literal|"$Id: mountd.c,v 1.25 1997/12/09 18:43:44 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1589,7 +1589,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"2dnrl"
+literal|"2dlnr"
 argument_list|)
 operator|)
 operator|!=
@@ -1650,7 +1650,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: mountd [-d] [-r] [-n] [-l] [export_file]\n"
+literal|"Usage: mountd [-d] [-l] [-r] [-n] [export_file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
