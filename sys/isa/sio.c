@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.1 1998/09/24 02:07:28 jkh Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: sio.c,v 1.216 1998/09/26 13:59:26 peter Exp $  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	from: i386/isa sio.c,v 1.215  */
 end_comment
 
 begin_include
@@ -46,56 +46,6 @@ define|#
 directive|define
 name|NPNP
 value|0
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EXTRA_SIO
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|NPNP
-operator|>
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SIO
-value|2
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SIO
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|NSIOTOT
-value|(NSIO + EXTRA_SIO)
 end_define
 
 begin_comment
@@ -165,6 +115,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/interrupt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -225,6 +181,12 @@ begin_include
 include|#
 directive|include
 file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/ipl.h>
 end_include
 
 begin_include
@@ -364,6 +326,56 @@ begin_comment
 comment|/* SMP */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXTRA_SIO
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|NPNP
+operator|>
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|EXTRA_SIO
+value|MAX_PNP_CARDS
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|EXTRA_SIO
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|NSIOTOT
+value|(NSIO + EXTRA_SIO)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -374,13 +386,6 @@ end_define
 begin_comment
 comment|/* helps separate urgent events from input */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|RB_I_HIGH_WATER
-value|(TTYHOG - 2 * RS_IBUFSIZE)
-end_define
 
 begin_define
 define|#
@@ -1131,51 +1136,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * XXX public functions in drivers should be declared in headers produced  * by `config', not here.  */
-end_comment
-
-begin_comment
-comment|/* Interrupt handling entry point. */
-end_comment
-
-begin_decl_stmt
-name|void
-name|siopoll
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Device switch entry points. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sioreset
-value|noreset
-end_define
-
-begin_define
-define|#
-directive|define
-name|siommap
-value|nommap
-end_define
-
-begin_define
-define|#
-directive|define
-name|siostrategy
-value|nostrategy
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1326,6 +1286,13 @@ operator|*
 name|t
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|swihand_t
+name|siopoll
 decl_stmt|;
 end_decl_stmt
 
@@ -1618,6 +1585,12 @@ name|NULL
 block|,
 operator|-
 literal|1
+block|,
+name|nodump
+block|,
+name|nopsize
+block|,
+name|D_TTY
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1673,6 +1646,13 @@ begin_decl_stmt
 specifier|static
 name|Port_t
 name|siogdbiobase
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bool_t
+name|sio_registered
 decl_stmt|;
 end_decl_stmt
 
@@ -4929,6 +4909,24 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|sio_registered
+condition|)
+block|{
+name|register_swi
+argument_list|(
+name|SWI_TTY
+argument_list|,
+name|siopoll
+argument_list|)
+expr_stmt|;
+name|sio_registered
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEVFS
@@ -4951,7 +4949,7 @@ name|GID_WHEEL
 argument_list|,
 literal|0600
 argument_list|,
-literal|"ttyd%n"
+literal|"ttyd%r"
 argument_list|,
 name|unit
 argument_list|)
@@ -4977,7 +4975,7 @@ name|GID_WHEEL
 argument_list|,
 literal|0600
 argument_list|,
-literal|"ttyid%n"
+literal|"ttyid%r"
 argument_list|,
 name|unit
 argument_list|)
@@ -5003,7 +5001,7 @@ name|GID_WHEEL
 argument_list|,
 literal|0600
 argument_list|,
-literal|"ttyld%n"
+literal|"ttyld%r"
 argument_list|,
 name|unit
 argument_list|)
@@ -5029,7 +5027,7 @@ name|GID_DIALER
 argument_list|,
 literal|0660
 argument_list|,
-literal|"cuaa%n"
+literal|"cuaa%r"
 argument_list|,
 name|unit
 argument_list|)
@@ -5057,7 +5055,7 @@ name|GID_DIALER
 argument_list|,
 literal|0660
 argument_list|,
-literal|"cuaia%n"
+literal|"cuaia%r"
 argument_list|,
 name|unit
 argument_list|)
@@ -5085,7 +5083,7 @@ name|GID_DIALER
 argument_list|,
 literal|0660
 argument_list|,
-literal|"cuala%n"
+literal|"cuala%r"
 argument_list|,
 name|unit
 argument_list|)
@@ -5518,6 +5516,34 @@ name|com
 operator|->
 name|it_in
 expr_stmt|;
+name|tp
+operator|->
+name|t_ififosize
+operator|=
+literal|2
+operator|*
+name|RS_IBUFSIZE
+expr_stmt|;
+name|tp
+operator|->
+name|t_ispeedwat
+operator|=
+operator|(
+name|speed_t
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+name|tp
+operator|->
+name|t_ospeedwat
+operator|=
+operator|(
+name|speed_t
+operator|)
+operator|-
+literal|1
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5580,11 +5606,6 @@ goto|goto
 name|out
 goto|;
 comment|/* 		 * XXX we should goto open_top if comparam() slept. 		 */
-name|ttsetwater
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 name|iobase
 operator|=
 name|com
@@ -8826,6 +8847,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|siopoll
 parameter_list|()
@@ -9302,8 +9324,10 @@ operator|.
 name|c_cc
 operator|+
 name|incc
-operator|>=
-name|RB_I_HIGH_WATER
+operator|>
+name|tp
+operator|->
+name|t_ihiwat
 operator|&&
 operator|(
 name|com
@@ -14253,19 +14277,9 @@ operator|>
 literal|0
 end_if
 
-begin_struct
+begin_decl_stmt
 specifier|static
-struct|struct
-name|siopnp_ids
-block|{
-name|u_long
-name|vend_id
-decl_stmt|;
-name|char
-modifier|*
-name|id_str
-decl_stmt|;
-block|}
+name|pnpid_t
 name|siopnp_ids
 index|[]
 init|=
@@ -14289,6 +14303,12 @@ literal|"Supra1290"
 block|}
 block|,
 block|{
+literal|0x7121b04e
+block|,
+literal|"SupraExpress 56i Sp"
+block|}
+block|,
+block|{
 literal|0x11007256
 block|,
 literal|"USR0011"
@@ -14304,8 +14324,8 @@ block|{
 literal|0
 block|}
 block|}
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -14399,10 +14419,9 @@ name|u_long
 name|vend_id
 parameter_list|)
 block|{
-name|struct
-name|siopnp_ids
+name|pnpid_t
 modifier|*
-name|ids
+name|id
 decl_stmt|;
 name|char
 modifier|*
@@ -14412,17 +14431,17 @@ name|NULL
 decl_stmt|;
 for|for
 control|(
-name|ids
+name|id
 operator|=
 name|siopnp_ids
 init|;
-name|ids
+name|id
 operator|->
 name|vend_id
 operator|!=
 literal|0
 condition|;
-name|ids
+name|id
 operator|++
 control|)
 block|{
@@ -14430,14 +14449,14 @@ if|if
 condition|(
 name|vend_id
 operator|==
-name|ids
+name|id
 operator|->
 name|vend_id
 condition|)
 block|{
 name|s
 operator|=
-name|ids
+name|id
 operator|->
 name|id_str
 expr_stmt|;
@@ -14478,7 +14497,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"CSN %d is disabled.\n"
+literal|"CSN %lu is disabled.\n"
 argument_list|,
 name|csn
 argument_list|)
