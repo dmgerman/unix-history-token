@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PTHREAD_PRIVATE_H
+name|_THR_PRIVATE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_PTHREAD_PRIVATE_H
+name|_THR_PRIVATE_H
 end_define
 
 begin_comment
@@ -5072,7 +5072,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_PTHREAD_PRIVATE_H */
+comment|/* !_THR_PRIVATE_H */
 end_comment
 
 end_unit

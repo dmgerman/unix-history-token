@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pthread_private.h"
+file|"thr_private.h"
 end_include
 
 begin_function_decl
