@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.15 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2582,7 +2582,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%so:\n\t-cp ../%so .\n"
+literal|"%so:\n\t-cp ../%so .\n\n"
 argument_list|,
 name|tail
 argument_list|(
