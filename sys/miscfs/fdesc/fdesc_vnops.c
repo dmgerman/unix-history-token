@@ -1807,23 +1807,21 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+name|DTYPE_PIPE
+case|:
+case|case
 name|DTYPE_SOCKET
 case|:
 name|error
 operator|=
-name|soo_stat
+name|fo_stat
 argument_list|(
-operator|(
-expr|struct
-name|socket
-operator|*
-operator|)
 name|fp
-operator|->
-name|f_data
 argument_list|,
 operator|&
 name|stb
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1844,6 +1842,7 @@ name|va_type
 operator|=
 name|VSOCK
 expr_stmt|;
+comment|/* XXX pipe? */
 name|vap
 operator|->
 name|va_mode
