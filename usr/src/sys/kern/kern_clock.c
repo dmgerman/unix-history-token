@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.5	%G%	*/
+comment|/*	kern_clock.c	4.6	%G%	*/
 end_comment
 
 begin_include
@@ -753,17 +753,6 @@ operator|>=
 name|HZ
 condition|)
 block|{
-if|#
-directive|if
-name|VAX
-operator|==
-literal|780
-specifier|extern
-name|int
-name|hangcnt
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|BASEPRI
@@ -787,17 +776,11 @@ argument_list|()
 expr_stmt|;
 if|#
 directive|if
-name|VAX
-operator|==
-literal|780
-comment|/* 		 * machdep.c:unhang uses hangcnt to make sure uba 		 * doesn't forget to interrupt (this has been observed). 		 * This prevents an accumulation of< 5 second uba failures 		 * from summing to a uba reset. 		 */
-if|if
-condition|(
-name|hangcnt
-condition|)
-name|hangcnt
-operator|--
+name|VAX780
+name|ubawatch
+argument_list|()
 expr_stmt|;
+comment|/* should be a timeout */
 endif|#
 directive|endif
 name|runrun
@@ -1392,6 +1375,9 @@ name|p1
 decl_stmt|,
 modifier|*
 name|p2
+decl_stmt|,
+modifier|*
+name|p3
 decl_stmt|;
 specifier|register
 name|int
@@ -1442,23 +1428,6 @@ name|p1
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|p1
-operator|>=
-operator|&
-name|callout
-index|[
-name|NCALL
-operator|-
-literal|1
-index|]
-condition|)
-name|panic
-argument_list|(
-literal|"Timeout table overflow"
-argument_list|)
-expr_stmt|;
 name|p1
 operator|->
 name|c_time
@@ -1469,6 +1438,16 @@ name|p2
 operator|=
 name|p1
 expr_stmt|;
+name|p3
+operator|=
+operator|&
+name|callout
+index|[
+name|NCALL
+operator|-
+literal|2
+index|]
+expr_stmt|;
 while|while
 condition|(
 name|p2
@@ -1477,9 +1456,22 @@ name|c_func
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|p2
+operator|>=
+name|p3
+condition|)
+name|panic
+argument_list|(
+literal|"Timeout table overflow"
+argument_list|)
+expr_stmt|;
 name|p2
 operator|++
 expr_stmt|;
+block|}
 while|while
 condition|(
 name|p2
