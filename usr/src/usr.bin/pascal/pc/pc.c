@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c 3.4 %G%"
+literal|"@(#)pc.c 3.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -685,7 +685,7 @@ literal|'0'
 case|:
 name|pc0
 operator|=
-literal|"/vb/grad/peter/pc/pc0/src/a.out"
+literal|"/usr/src/new/pc0/a.out"
 expr_stmt|;
 continue|continue;
 case|case
@@ -709,7 +709,7 @@ literal|'3'
 case|:
 name|pc3
 operator|=
-literal|"/usr/new/pc3"
+literal|"/usr/src/new/pc3/a.out"
 expr_stmt|;
 continue|continue;
 case|case
