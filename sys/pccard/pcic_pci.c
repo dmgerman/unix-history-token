@@ -4772,6 +4772,13 @@ operator|=
 name|PCIC_CARDBUS_POWER
 expr_stmt|;
 block|}
+comment|/* All memory mapped cardbus bridges have these registers */
+name|sc
+operator|->
+name|flags
+operator||=
+name|PCIC_YENTA_HIGH_MEMORY
+expr_stmt|;
 name|sp
 operator|->
 name|slt

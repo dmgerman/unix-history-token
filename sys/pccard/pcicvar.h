@@ -135,6 +135,11 @@ directive|define
 name|PCIC_CARDBUS_POWER
 value|0x00000040
 comment|/* Cardbus power regs */
+define|#
+directive|define
+name|PCIC_YENTA_HIGH_MEMORY
+value|0x0080
+comment|/* Can do high memory mapping */
 name|enum
 name|pcic_intr_way
 name|csc_route

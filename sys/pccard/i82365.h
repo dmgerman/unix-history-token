@@ -515,6 +515,46 @@ name|PCIC_TIME_RECOV1
 value|0x3f
 end_define
 
+begin_comment
+comment|/* Yenta only registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_MEMORY_HIGH0
+value|0x40
+end_define
+
+begin_comment
+comment|/* A31..A25 of mapping addres for */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_MEMORY_HIGH1
+value|0x41
+end_define
+
+begin_comment
+comment|/* the memory windows. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_MEMORY_HIGH2
+value|0x42
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_MEMORY_HIGH3
+value|0x43
+end_define
+
 begin_define
 define|#
 directive|define
