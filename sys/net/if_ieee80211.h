@@ -473,6 +473,13 @@ name|IEEE80211_CAPINFO_PRIVACY
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_CAPINFO_BITS
+value|"\20\01ESS\02IBSS\03POLLABLE\04POLLREQ\5PRIVACY"
+end_define
+
 begin_comment
 comment|/*  * Management information elements  */
 end_comment
