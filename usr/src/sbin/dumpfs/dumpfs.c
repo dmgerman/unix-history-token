@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumpfs.c	8.4 (Berkeley) %G%"
+literal|"@(#)dumpfs.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -850,7 +850,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cgrotor\t%d\tfmod\t%d\tronly\t%d\n"
+literal|"cgrotor\t%d\tfmod\t%d\tronly\t%d\tclean\t%d\n"
 argument_list|,
 name|afs
 operator|.
@@ -863,6 +863,10 @@ argument_list|,
 name|afs
 operator|.
 name|fs_ronly
+argument_list|,
+name|afs
+operator|.
+name|fs_clean
 argument_list|)
 expr_stmt|;
 if|if
@@ -885,7 +889,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"insufficient space to maintain rotational tables\n"
+literal|"(no rotational position table)\n"
 argument_list|)
 expr_stmt|;
 for|for
