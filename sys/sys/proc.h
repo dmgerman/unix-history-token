@@ -552,6 +552,16 @@ modifier|*
 name|td_ucred
 decl_stmt|;
 comment|/* (k) Reference to credentials. */
+name|void
+function_decl|(
+modifier|*
+name|td_switchin
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* (k) switchin special func */
 define|#
 directive|define
 name|td_endzero
