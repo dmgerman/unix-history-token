@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.10 (Berkeley) 81/02/28"
+literal|"@(#)login.c	4.11 (Berkeley) 81/07/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -1860,6 +1860,13 @@ argument_list|(
 name|SIGINT
 argument_list|,
 name|SIG_DFL
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTSTP
+argument_list|,
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 name|execlp
