@@ -48,7 +48,7 @@ name|char
 modifier|*
 name|default_bootfiles
 init|=
-literal|"kernel;kernel.old"
+literal|"/boot/modules/kernel.ko"
 decl_stmt|;
 end_decl_stmt
 
