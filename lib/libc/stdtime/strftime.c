@@ -617,13 +617,12 @@ continue|continue;
 case|case
 literal|'c'
 case|:
+comment|/* NOTE: c_fmt is intentionally ignored */
 name|pt
 operator|=
 name|_fmt
 argument_list|(
-name|Locale
-operator|->
-name|c_fmt
+literal|"%a %Ef %T %Y"
 argument_list|,
 name|t
 argument_list|,
