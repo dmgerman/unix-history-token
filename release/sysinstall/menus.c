@@ -1837,6 +1837,17 @@ name|FALSE
 return|;
 if|if
 condition|(
+name|isDebug
+condition|)
+name|msgDebug
+argument_list|(
+literal|"The evil link value is `%s'\n"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|strcmp
 argument_list|(
