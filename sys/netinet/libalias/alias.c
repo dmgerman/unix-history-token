@@ -4126,7 +4126,7 @@ name|u_short
 modifier|*
 name|sptr
 decl_stmt|;
-comment|/* Save original destination address, if this is a proxy packet.    Also modify packet to include destination encoding. */
+comment|/* Save original destination address, if this is a proxy packet.    Also modify packet to include destination encoding.  This may    change the size of IP header. */
 if|if
 condition|(
 name|proxy_type
@@ -4158,6 +4158,29 @@ name|maxpacketsize
 argument_list|,
 name|proxy_type
 argument_list|)
+expr_stmt|;
+name|tc
+operator|=
+operator|(
+expr|struct
+name|tcphdr
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|pip
+operator|+
+operator|(
+name|pip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+operator|)
+operator|)
 expr_stmt|;
 block|}
 comment|/* Get alias address and port */
