@@ -119,7 +119,7 @@ name|flags
 operator|&
 name|PAM_SILENT
 operator|)
-operator|||
+operator|&&
 operator|!
 name|openpam_get_option
 argument_list|(
@@ -172,7 +172,7 @@ argument_list|(
 operator|&
 name|fmtbuf
 argument_list|,
-literal|"%.*s: %s: %s"
+literal|"%.*s: %s: %s\n"
 argument_list|,
 name|period
 operator|-
