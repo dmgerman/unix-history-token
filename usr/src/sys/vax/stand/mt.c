@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mt.c	4.3	82/11/13	*/
+comment|/*	mt.c	4.4	82/12/17	*/
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"../machine/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/pte.h"
+file|"../h/param.h"
 end_include
 
 begin_include
