@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.12 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,6 +142,130 @@ directive|include
 file|"extern.h"
 end_include
 
+begin_comment
+comment|/*  * This table is indexed by the log base 2 of the block size.  * It returns the maximum file size allowed in a file system  * with the specified block size.  For block sizes smaller than  * 8K, the size is limited by tha maximum number of blocks that  * can be reached by triply indirect blocks:  *	NDADDR + INOPB(bsize) + INOPB(bsize)^2 + INOPB(bsize)^3  * For block size of 8K or larger, the file size is limited by the  * number of blocks that can be represented in the file system.  Since  * we use negative block numbers to represent indirect blocks, we can  * have a maximum of 2^31 blocks.  */
+end_comment
+
+begin_decl_stmt
+name|u_quad_t
+name|maxtable
+index|[]
+init|=
+block|{
+comment|/*    1 */
+operator|-
+literal|1
+block|,
+comment|/*    2 */
+operator|-
+literal|1
+block|,
+comment|/*    4 */
+operator|-
+literal|1
+block|,
+comment|/*    8 */
+operator|-
+literal|1
+block|,
+comment|/*   16 */
+operator|-
+literal|1
+block|,
+comment|/*   32 */
+operator|-
+literal|1
+block|,
+comment|/*   64 */
+operator|-
+literal|1
+block|,
+comment|/*  128 */
+operator|-
+literal|1
+block|,
+comment|/*  256 */
+operator|-
+literal|1
+block|,
+comment|/*  512 */
+name|NDADDR
+operator|+
+literal|128
+operator|+
+literal|128
+operator|*
+literal|128
+operator|+
+literal|128
+operator|*
+literal|128
+operator|*
+literal|128
+block|,
+comment|/* 1024 */
+name|NDADDR
+operator|+
+literal|256
+operator|+
+literal|256
+operator|*
+literal|256
+operator|+
+literal|256
+operator|*
+literal|256
+operator|*
+literal|256
+block|,
+comment|/* 2048 */
+name|NDADDR
+operator|+
+literal|512
+operator|+
+literal|512
+operator|*
+literal|512
+operator|+
+literal|512
+operator|*
+literal|512
+operator|*
+literal|512
+block|,
+comment|/* 4096 */
+name|NDADDR
+operator|+
+literal|1024
+operator|+
+literal|1024
+operator|*
+literal|1024
+operator|+
+literal|1024
+operator|*
+literal|1024
+operator|*
+literal|1024
+block|,
+comment|/* 8192 */
+literal|2
+operator|^
+literal|31
+block|,
+comment|/* 16 K */
+literal|2
+operator|^
+literal|31
+block|,
+comment|/* 32 K */
+literal|2
+operator|^
+literal|31
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -210,6 +334,9 @@ literal|0
 block|,
 comment|/* lfs_minfree */
 name|MINFREE
+block|,
+comment|/* lfs_maxfilesize */
+literal|0
 block|,
 comment|/* lfs_dbpseg */
 name|DFL_LFSSEG
@@ -682,10 +809,6 @@ name|off
 decl_stmt|;
 comment|/* Offset at which to write */
 name|int
-name|sb_to_sum
-decl_stmt|;
-comment|/* offset between superblock and summary */
-name|int
 name|sb_interval
 decl_stmt|;
 comment|/* number of segs between super blocks */
@@ -701,10 +824,6 @@ name|int
 name|sum_size
 decl_stmt|;
 comment|/* Size of the summary block */
-name|int
-name|wbytes
-decl_stmt|;
-comment|/* Number of bytes returned by write */
 name|lfsp
 operator|=
 operator|&
@@ -962,6 +1081,21 @@ operator|/
 name|lfsp
 operator|->
 name|lfs_ssize
+expr_stmt|;
+name|lfsp
+operator|->
+name|lfs_maxfilesize
+operator|=
+name|maxtable
+index|[
+name|lfsp
+operator|->
+name|lfs_bshift
+index|]
+operator|<<
+name|lfsp
+operator|->
+name|lfs_bshift
 expr_stmt|;
 comment|/*  	 * The number of free blocks is set from the total data size (lfs_dsize) 	 * minus one block for each segment (for the segment summary).  Then  	 * we'll subtract off the room for the superblocks, ifile entries and 	 * segment usage table. 	 */
 name|lfsp
@@ -2958,14 +3092,12 @@ begin_comment
 comment|/* name with length<= MAXNAMLEN */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|lfsinit
-argument_list|()
-end_macro
-
-begin_block
-block|{ }
-end_block
+parameter_list|()
+block|{}
+end_function
 
 begin_function
 specifier|static
