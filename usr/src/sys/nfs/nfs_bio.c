@@ -103,15 +103,11 @@ begin_decl_stmt
 name|struct
 name|buf
 modifier|*
-name|nfsincore
+name|incore
 argument_list|()
 decl_stmt|,
 modifier|*
 name|nfs_getcacheblk
-argument_list|()
-decl_stmt|,
-modifier|*
-name|nfsgetblk
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -915,7 +911,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|nfsincore
+name|incore
 argument_list|(
 name|vp
 argument_list|,
@@ -1005,7 +1001,7 @@ condition|(
 operator|(
 name|bp
 operator|=
-name|nfsincore
+name|incore
 argument_list|(
 name|vp
 argument_list|,
@@ -1533,7 +1529,7 @@ operator|->
 name|n_direofoffset
 operator|&&
 operator|!
-name|nfsincore
+name|incore
 argument_list|(
 name|vp
 argument_list|,
@@ -2933,7 +2929,7 @@ condition|)
 block|{
 name|bp
 operator|=
-name|nfsgetblk
+name|getblk
 argument_list|(
 name|vp
 argument_list|,
@@ -2986,7 +2982,7 @@ operator|)
 return|;
 name|bp
 operator|=
-name|nfsgetblk
+name|getblk
 argument_list|(
 name|vp
 argument_list|,
@@ -3006,7 +3002,7 @@ block|}
 else|else
 name|bp
 operator|=
-name|nfsgetblk
+name|getblk
 argument_list|(
 name|vp
 argument_list|,
@@ -3231,7 +3227,7 @@ name|NFLUSHINPROG
 expr_stmt|;
 name|error
 operator|=
-name|nfsvinvalbuf
+name|vinvalbuf
 argument_list|(
 name|vp
 argument_list|,
@@ -3313,7 +3309,7 @@ return|;
 block|}
 name|error
 operator|=
-name|nfsvinvalbuf
+name|vinvalbuf
 argument_list|(
 name|vp
 argument_list|,
