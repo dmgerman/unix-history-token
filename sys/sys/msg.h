@@ -284,6 +284,34 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_struct
+struct|struct
+name|msg
+block|{
+name|struct
+name|msg
+modifier|*
+name|msg_next
+decl_stmt|;
+comment|/* next msg in the chain */
+name|long
+name|msg_type
+decl_stmt|;
+comment|/* type of this message */
+comment|/*>0 -> type of this message */
+comment|/* 0 -> free header */
+name|u_short
+name|msg_ts
+decl_stmt|;
+comment|/* size of this message */
+name|short
+name|msg_spot
+decl_stmt|;
+comment|/* location of start of msg in buffer */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Based on the configuration parameters described in an SVR2 (yes, two)  * config(1m) man page.  *  * Each message is broken up and stored in segments that are msgssz bytes  * long.  For efficiency reasons, this should be a power of two.  Also,  * it doesn't make sense if it is less than 8 or greater than about 256.  * Consequently, msginit in kern/sysv_msg.c checks that msgssz is a power of  * two between 8 and 1024 inclusive (and panic's if it isn't).  */
 end_comment
