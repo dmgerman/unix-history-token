@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mac.h>
 end_include
 
@@ -885,6 +891,13 @@ name|ipqlock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|callout
+name|ipport_tick_callout
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -1373,6 +1386,31 @@ name|maxfragsperpacket
 operator|=
 literal|16
 expr_stmt|;
+comment|/* Start ipport_tick. */
+name|callout_init
+argument_list|(
+operator|&
+name|ipport_tick_callout
+argument_list|,
+name|CALLOUT_MPSAFE
+argument_list|)
+expr_stmt|;
+name|ipport_tick
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|shutdown_pre_sync
+argument_list|,
+name|ip_fini
+argument_list|,
+name|NULL
+argument_list|,
+name|SHUTDOWN_PRI_DEFAULT
+argument_list|)
+expr_stmt|;
 comment|/* Initialize various other remaining things. */
 name|ip_id
 operator|=
@@ -1410,6 +1448,26 @@ operator|&
 name|ipintrq
 argument_list|,
 name|NETISR_MPSAFE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ip_fini
+parameter_list|(
+name|xtp
+parameter_list|)
+name|void
+modifier|*
+name|xtp
+decl_stmt|;
+block|{
+name|callout_stop
+argument_list|(
+operator|&
+name|ipport_tick_callout
 argument_list|)
 expr_stmt|;
 block|}
