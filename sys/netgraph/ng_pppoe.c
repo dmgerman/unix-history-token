@@ -3338,11 +3338,7 @@ argument_list|(
 name|sp
 argument_list|,
 operator|&
-name|sp
-operator|->
-name|neg
-operator|->
-name|service
+name|uniqtag
 operator|.
 name|hdr
 argument_list|)
@@ -3352,7 +3348,11 @@ argument_list|(
 name|sp
 argument_list|,
 operator|&
-name|uniqtag
+name|sp
+operator|->
+name|neg
+operator|->
+name|service
 operator|.
 name|hdr
 argument_list|)
@@ -3976,15 +3976,10 @@ name|insert_tag
 argument_list|(
 name|sp
 argument_list|,
-operator|&
-name|neg
-operator|->
-name|service
-operator|.
-name|hdr
+name|utag
 argument_list|)
 expr_stmt|;
-comment|/* Service */
+comment|/* Host Unique */
 if|if
 condition|(
 operator|(
@@ -4031,10 +4026,15 @@ name|insert_tag
 argument_list|(
 name|sp
 argument_list|,
-name|utag
+operator|&
+name|neg
+operator|->
+name|service
+operator|.
+name|hdr
 argument_list|)
 expr_stmt|;
-comment|/* Host Unique */
+comment|/* Service */
 name|scan_tags
 argument_list|(
 name|sp
