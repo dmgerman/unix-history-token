@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)buf_subs.c	1.1 (Berkeley) %G%"
+literal|"@(#)buf_subs.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -641,12 +641,21 @@ name|exit_val
 operator|!=
 literal|0
 condition|)
+block|{
+name|warn
+argument_list|(
+literal|0
+argument_list|,
+literal|"Cannot append to an archive that may have flaws."
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 comment|/* 	 * if the user did not specify a write blocksize, inherit the size used 	 * in the last archive volume read. (If a is set we still use rdblksz 	 * until next volume, cannot shift sizes within a single volume). 	 */
 if|if
 condition|(
@@ -860,7 +869,7 @@ name|warn
 argument_list|(
 literal|1
 argument_list|,
-literal|"Unable to position at the end of the archive, append failed"
+literal|"Unable to rewrite archive trailer, cannot append."
 argument_list|)
 expr_stmt|;
 return|return
@@ -1029,7 +1038,7 @@ operator|)
 condition|)
 name|warn
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 literal|"Archive read error limit (%d) reached"
 argument_list|,
