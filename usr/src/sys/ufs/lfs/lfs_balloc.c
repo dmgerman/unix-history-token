@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_balloc.c	6.2	84/08/29	*/
+comment|/*	lfs_balloc.c	6.3	85/03/19	*/
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"conf.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_tb.c	6.3	84/08/29	*/
+comment|/*	tty_tb.c	6.4	85/03/19	*/
 end_comment
 
 begin_include
@@ -69,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|"file.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"conf.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	6.8	85/02/16	*/
+comment|/*	kern_descrip.c	6.9	85/03/19	*/
 end_comment
 
 begin_include
@@ -43,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|"proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"conf.h"
 end_include
 
 begin_include
