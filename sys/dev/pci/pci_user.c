@@ -197,12 +197,37 @@ name|pci_ioctl
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
 begin_define
 define|#
 directive|define
 name|PCI_CDEV
 value|78
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PCI_CDEV
+value|MAJOR_AUTO
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
