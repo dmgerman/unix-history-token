@@ -510,7 +510,18 @@ name|LOCK_EX
 operator||
 name|LOCK_NB
 argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EWOULDBLOCK
+condition|)
+block|{
 name|errx
 argument_list|(
 literal|1
@@ -518,6 +529,18 @@ argument_list|,
 literal|"the password db file is busy"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"could not lock the passwd file: "
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 		 * If the password file was replaced while we were trying to 		 * get the lock, our hardlink count will be 0 and we have to 		 * close and retry. 		 */
 if|if
 condition|(
@@ -528,14 +551,15 @@ argument_list|,
 operator|&
 name|st
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"fstat() failed"
+literal|"fstat() failed: "
 argument_list|)
 expr_stmt|;
 if|if
