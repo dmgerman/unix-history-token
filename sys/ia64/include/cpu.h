@@ -405,9 +405,7 @@ begin_function_decl
 name|void
 name|ia64_init
 parameter_list|(
-name|u_int64_t
-parameter_list|,
-name|u_int64_t
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -738,6 +738,19 @@ value|((sizeof(phys_avail) / sizeof(vm_offset_t)) - 2)
 end_define
 
 begin_function_decl
+name|void
+name|mi_startup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX should be in a MI header */
+end_comment
+
+begin_function_decl
 specifier|static
 name|void
 name|identifycpu
@@ -2109,11 +2122,7 @@ begin_function
 name|void
 name|ia64_init
 parameter_list|(
-name|u_int64_t
-name|arg1
-parameter_list|,
-name|u_int64_t
-name|arg2
+name|void
 parameter_list|)
 block|{
 name|int
@@ -3326,6 +3335,27 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Save our current context so that we have a known (maybe even 	 * sane) context as the initial context for new threads that are 	 * forked from us. If any of those threads (including thread0) 	 * does something wrong, we may be lucky and return here where 	 * we're ready for them with a nice panic. 	 */
+if|if
+condition|(
+operator|!
+name|savectx
+argument_list|(
+name|thread0
+operator|.
+name|td_pcb
+argument_list|)
+condition|)
+name|mi_startup
+argument_list|()
+expr_stmt|;
+comment|/* We should not get here. */
+name|panic
+argument_list|(
+literal|"ia64_init: Whooaa there!"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
