@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -46,6 +52,7 @@ file|<netinet/in.h>
 end_include
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -135,18 +142,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"can't open socket"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"multicast membership test program; "
@@ -252,7 +254,7 @@ name|sscanf
 argument_list|(
 name|lineptr
 argument_list|,
-literal|"%u.%u.%u.%u %u.%u.%u.%u %u"
+literal|"%u.%u.%u.%u %u.%u.%u.%u"
 argument_list|,
 operator|&
 name|g1
@@ -395,7 +397,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"can't join group"
 argument_list|)
@@ -439,7 +441,7 @@ name|sscanf
 argument_list|(
 name|lineptr
 argument_list|,
-literal|"%u.%u.%u.%u %u.%u.%u.%u %u"
+literal|"%u.%u.%u.%u %u.%u.%u.%u"
 argument_list|,
 operator|&
 name|g1
@@ -582,7 +584,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"can't leave group"
 argument_list|)
@@ -751,9 +753,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"can't add ether adress"
+literal|"can't add ether address"
 argument_list|)
 expr_stmt|;
 else|else
@@ -920,9 +922,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"can't delete ether adress"
+literal|"can't delete ether address"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1001,7 +1003,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"can't get interface flags"
 argument_list|)
@@ -1055,7 +1057,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"can't set"
 argument_list|)
@@ -1140,7 +1142,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"can't get interface flags"
 argument_list|)
@@ -1194,7 +1196,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"can't set"
 argument_list|)
@@ -1237,6 +1239,11 @@ break|break;
 block|}
 block|}
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
