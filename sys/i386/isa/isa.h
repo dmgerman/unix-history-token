@@ -430,6 +430,33 @@ begin_comment
 comment|/* !RAM_BEGIN */
 end_comment
 
+begin_comment
+comment|/*  * IRQs  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IRQ_NPX
+value|13
+end_define
+
+begin_comment
+comment|/*  * Npx MD defines  */
+end_comment
+
+begin_comment
+comment|/* full reset on some systems, NOP on others */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|npx_full_reset
+parameter_list|()
+value|outb(IO_NPX + 1, 0)
+end_define
+
 begin_endif
 endif|#
 directive|endif

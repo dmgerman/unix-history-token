@@ -414,6 +414,32 @@ begin_comment
 comment|/* !RAM_BEGIN */
 end_comment
 
+begin_comment
+comment|/*  * IRQs  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IRQ_NPX
+value|8
+end_define
+
+begin_comment
+comment|/*  * Npx MD defines  */
+end_comment
+
+begin_comment
+comment|/* full reset of npx: not needed on pc98 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|npx_full_reset
+parameter_list|()
+end_define
+
 begin_define
 define|#
 directive|define
