@@ -4389,6 +4389,9 @@ operator|->
 name|next
 control|)
 block|{
+ifndef|#
+directive|ifndef
+name|__ia64__
 if|if
 condition|(
 name|c1
@@ -4415,6 +4418,24 @@ operator|->
 name|next
 control|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|c1
+operator|->
+name|type
+operator|==
+name|part
+condition|)
+block|{
+name|c2
+operator|=
+name|c1
+expr_stmt|;
+block|{
+endif|#
+directive|endif
 if|if
 condition|(
 name|c2
@@ -4903,9 +4924,6 @@ operator||
 name|DITEM_RESTORE
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|char
 modifier|*
@@ -4967,13 +4985,7 @@ return|return
 literal|"<unknown>"
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Initialize various user-settable values to their defaults */
-end_comment
-
-begin_function
 name|int
 name|installVarDefaults
 parameter_list|(
@@ -5225,13 +5237,7 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Load the environment up from various system configuration files */
-end_comment
-
-begin_function
 name|void
 name|installEnvironment
 parameter_list|(
@@ -5254,13 +5260,7 @@ literal|"/etc/resolv.conf"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* Copy the boot floppy contents into /stand */
-end_comment
-
-begin_function
 name|Boolean
 name|copySelf
 parameter_list|(
@@ -5338,9 +5338,6 @@ return|return
 name|TRUE
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|create_termcap
