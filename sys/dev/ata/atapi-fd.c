@@ -326,6 +326,8 @@ argument_list|,
 name|M_AFD
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -344,17 +346,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|bzero
-argument_list|(
-name|fdp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|afd_softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|bioq_init
 argument_list|(
 operator|&

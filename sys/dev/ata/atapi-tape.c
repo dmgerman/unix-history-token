@@ -454,6 +454,8 @@ argument_list|,
 name|M_AST
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -472,17 +474,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|bzero
-argument_list|(
-name|stp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ast_softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|bioq_init
 argument_list|(
 operator|&

@@ -9655,6 +9655,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 condition|)
@@ -9666,17 +9668,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|bzero
-argument_list|(
-name|ata_delayed_attach
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|intr_config_hook
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|ata_delayed_attach
 operator|->
 name|ich_func

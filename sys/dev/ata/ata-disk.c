@@ -369,6 +369,8 @@ argument_list|,
 name|M_AD
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 condition|)
@@ -384,17 +386,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|bzero
-argument_list|(
-name|adp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ad_softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|scp
 operator|->
 name|dev_softc
@@ -1954,6 +1945,8 @@ argument_list|,
 name|M_AD
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 condition|)
@@ -1970,17 +1963,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* setup request */
-name|bzero
-argument_list|(
-name|request
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ad_request
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|request
 operator|->
 name|device
