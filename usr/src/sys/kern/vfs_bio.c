@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * This module is believed to contain source code proprietary to AT&T.  * Use and redistribution is subject to the Berkeley Software License  * Agreement and your Software Agreement with AT&T (Western Electric).  *  *	@(#)vfs_bio.c	7.49 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * This module is believed to contain source code proprietary to AT&T.  * Use and redistribution is subject to the Berkeley Software License  * Agreement and your Software Agreement with AT&T (Western Electric).  *  *	@(#)vfs_bio.c	7.50 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -405,8 +405,6 @@ end_endif
 
 begin_block
 block|{
-name|USES_VOP_STRATEGY
-expr_stmt|;
 name|struct
 name|proc
 modifier|*
@@ -689,8 +687,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_STRATEGY
-expr_stmt|;
 name|struct
 name|proc
 modifier|*
@@ -1103,8 +1099,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|USES_VOP_STRATEGY
-expr_stmt|;
 name|struct
 name|proc
 modifier|*
@@ -1370,8 +1364,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|USES_VOP_IOCTL
-expr_stmt|;
 name|struct
 name|proc
 modifier|*
