@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpio.c	4.1	(Berkeley)	%G%"
+literal|"@(#)cpio.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2625,7 +2625,7 @@ condition|)
 block|{
 name|err
 argument_list|(
-literal|"Out of phase--get help"
+literal|"Out of phase--get help\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2832,7 +2832,7 @@ condition|)
 block|{
 name|err
 argument_list|(
-literal|"Out of phase--get MERT help"
+literal|"Out of phase--get MERT help\n"
 argument_list|)
 expr_stmt|;
 name|exit
