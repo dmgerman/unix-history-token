@@ -572,7 +572,7 @@ comment|/* number of timeouts	*/
 end_comment
 
 begin_comment
-comment|/*  * Define the token bucket filter structures  * tbftable -> each vif has one of these for storing info   */
+comment|/*  * Define the token bucket filter structures  * tbftable -> each vif has one of these for storing info  */
 end_comment
 
 begin_decl_stmt
@@ -5179,7 +5179,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*       * Find the entry for which the upcall was made and update      */
+comment|/*      * Find the entry for which the upcall was made and update      */
 name|hash
 operator|=
 name|MFCHASH
@@ -6788,7 +6788,7 @@ condition|)
 goto|goto
 name|fail1
 goto|;
-comment|/*  	     * Send message to routing daemon to install  	     * a route into the kernel table 	     */
+comment|/* 	     * Send message to routing daemon to install 	     * a route into the kernel table 	     */
 name|im
 operator|=
 name|mtod
@@ -8830,7 +8830,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * adds a packet to the queue at the interface  */
+comment|/*  * adds a packet to the queue at the interface  */
 end_comment
 
 begin_function
@@ -8925,7 +8925,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * processes the queue at the interface  */
+comment|/*  * processes the queue at the interface  */
 end_comment
 
 begin_function
@@ -9616,7 +9616,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * End of token bucket filter modifications   */
+comment|/*  * End of token bucket filter modifications  */
 end_comment
 
 begin_function
@@ -11539,7 +11539,7 @@ decl_stmt|;
 name|MFC_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
-comment|/*      * Compute the measured time interval       */
+comment|/*      * Compute the measured time interval      */
 name|delta
 operator|=
 operator|*
@@ -13732,7 +13732,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*      * If the packet is at least as big as a REGISTER, go agead      * and grab the PIM REGISTER header size, to avoid another      * possible m_pullup() later.      *       * PIM_MINLEN       == pimhdr + u_int32_t == 4 + 4 = 8      * PIM_REG_MINLEN   == pimhdr + reghdr + encap_iphdr == 4 + 4 + 20 = 28      */
+comment|/*      * If the packet is at least as big as a REGISTER, go agead      * and grab the PIM REGISTER header size, to avoid another      * possible m_pullup() later.      *      * PIM_MINLEN       == pimhdr + u_int32_t == 4 + 4 = 8      * PIM_REG_MINLEN   == pimhdr + reghdr + encap_iphdr == 4 + 4 + 20 = 28      */
 name|minlen
 operator|=
 name|iphlen
@@ -14353,7 +14353,7 @@ name|PIM_MINLEN
 operator|)
 expr_stmt|;
 block|}
-comment|/* 	 * Decapsulate the inner IP packet and loopback to forward it 	 * as a normal multicast packet. Also, make a copy of the  	 *     outer_iphdr + pimhdr + reghdr + encap_iphdr 	 * to pass to the daemon later, so it can take the appropriate 	 * actions (e.g., send back PIM_REGISTER_STOP). 	 * XXX: here m->m_data points to the outer IP header. 	 */
+comment|/* 	 * Decapsulate the inner IP packet and loopback to forward it 	 * as a normal multicast packet. Also, make a copy of the 	 *     outer_iphdr + pimhdr + reghdr + encap_iphdr 	 * to pass to the daemon later, so it can take the appropriate 	 * actions (e.g., send back PIM_REGISTER_STOP). 	 * XXX: here m->m_data points to the outer IP header. 	 */
 name|mcp
 operator|=
 name|m_copy

@@ -496,7 +496,7 @@ value|(MRT_MFC_FLAGS_ALL |		     \ 					 MRT_MFC_RP |			     \ 					 MRT_MFC_BW_
 end_define
 
 begin_comment
-comment|/*  * Structure for installing or delivering an upcall if the  * measured bandwidth is above or below a threshold.  *  * User programs (e.g. daemons) may have a need to know when the  * bandwidth used by some data flow is above or below some threshold.  * This interface allows the userland to specify the threshold (in  * bytes and/or packets) and the measurement interval. Flows are  * all packet with the same source and destination IP address.  * At the moment the code is only used for multicast destinations  * but there is nothing that prevents its use for unicast.  *  * The measurement interval cannot be shorter than some Tmin (currently, 3s).  * The threshold is set in packets and/or bytes per_interval.  *  * Measurement works as follows:  *  * For>= measurements:   * The first packet marks the start of a measurement interval.  * During an interval we count packets and bytes, and when we  * pass the threshold we deliver an upcall and we are done.  * The first packet after the end of the interval resets the  * count and restarts the measurement.  *  * For<= measurement:  * We start a timer to fire at the end of the interval, and  * then for each incoming packet we count packets and bytes.  * When the timer fires, we compare the value with the threshold,  * schedule an upcall if we are below, and restart the measurement  * (reschedule timer and zero counters).  */
+comment|/*  * Structure for installing or delivering an upcall if the  * measured bandwidth is above or below a threshold.  *  * User programs (e.g. daemons) may have a need to know when the  * bandwidth used by some data flow is above or below some threshold.  * This interface allows the userland to specify the threshold (in  * bytes and/or packets) and the measurement interval. Flows are  * all packet with the same source and destination IP address.  * At the moment the code is only used for multicast destinations  * but there is nothing that prevents its use for unicast.  *  * The measurement interval cannot be shorter than some Tmin (currently, 3s).  * The threshold is set in packets and/or bytes per_interval.  *  * Measurement works as follows:  *  * For>= measurements:  * The first packet marks the start of a measurement interval.  * During an interval we count packets and bytes, and when we  * pass the threshold we deliver an upcall and we are done.  * The first packet after the end of the interval resets the  * count and restarts the measurement.  *  * For<= measurement:  * We start a timer to fire at the end of the interval, and  * then for each incoming packet we count packets and bytes.  * When the timer fires, we compare the value with the threshold,  * schedule an upcall if we are below, and restart the measurement  * (reschedule timer and zero counters).  */
 end_comment
 
 begin_struct
@@ -646,7 +646,7 @@ comment|/* upcall Q overflow		   */
 name|u_long
 name|mrts_cache_cleanups
 decl_stmt|;
-comment|/* # entries with no upcalls 	   */
+comment|/* # entries with no upcalls	   */
 name|u_long
 name|mrts_drop_sel
 decl_stmt|;
@@ -806,7 +806,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The kernel's multicast forwarding cache entry structure   * (A field for the type of service (mfc_tos) is to be added   * at a future point)  */
+comment|/*  * The kernel's multicast forwarding cache entry structure  * (A field for the type of service (mfc_tos) is to be added  * at a future point)  */
 end_comment
 
 begin_struct
@@ -1051,7 +1051,7 @@ comment|/* max. no of pkts in upcall Q */
 end_comment
 
 begin_comment
-comment|/*  * Token Bucket filter code   */
+comment|/*  * Token Bucket filter code  */
 end_comment
 
 begin_define
@@ -1062,7 +1062,7 @@ value|10000
 end_define
 
 begin_comment
-comment|/* 10K bytes size 		*/
+comment|/* 10K bytes size		*/
 end_comment
 
 begin_define
@@ -1073,7 +1073,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* max # of pkts in queue 	*/
+comment|/* max # of pkts in queue	*/
 end_comment
 
 begin_comment
@@ -1088,11 +1088,11 @@ name|struct
 name|timeval
 name|tbf_last_pkt_t
 decl_stmt|;
-comment|/* arr. time of last pkt 	*/
+comment|/* arr. time of last pkt	*/
 name|u_long
 name|tbf_n_tok
 decl_stmt|;
-comment|/* no of tokens in bucket 	*/
+comment|/* no of tokens in bucket	*/
 name|u_long
 name|tbf_q_len
 decl_stmt|;

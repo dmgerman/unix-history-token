@@ -1829,7 +1829,7 @@ name|icmp_ip
 operator|.
 name|ip_dst
 expr_stmt|;
-comment|/* 		 * MTU discovery: 		 * If we got a needfrag and there is a host route to the 		 * original destination, and the MTU is not locked, then 		 * set the MTU in the route to the suggested new value 		 * (if given) and then notify as usual.  The ULPs will 		 * notice that the MTU has changed and adapt accordingly. 		 * If no new MTU was suggested, then we guess a new one 		 * less than the current value.  If the new MTU is  		 * unreasonably small (defined by sysctl tcp_minmss), then 		 * we don't update the MTU value. 		 * 		 * XXX: All this should be done in tcp_mtudisc() because 		 * the way we do it now, everyone can send us bogus ICMP 		 * MSGSIZE packets for any destination. By doing this far 		 * higher in the chain we have a matching tcp connection. 		 * Thus spoofing is much harder. However there is no easy 		 * non-hackish way to pass the new MTU up to tcp_mtudisc(). 		 * Also see next XXX regarding IPv4 AH TCP. 		 */
+comment|/* 		 * MTU discovery: 		 * If we got a needfrag and there is a host route to the 		 * original destination, and the MTU is not locked, then 		 * set the MTU in the route to the suggested new value 		 * (if given) and then notify as usual.  The ULPs will 		 * notice that the MTU has changed and adapt accordingly. 		 * If no new MTU was suggested, then we guess a new one 		 * less than the current value.  If the new MTU is 		 * unreasonably small (defined by sysctl tcp_minmss), then 		 * we don't update the MTU value. 		 * 		 * XXX: All this should be done in tcp_mtudisc() because 		 * the way we do it now, everyone can send us bogus ICMP 		 * MSGSIZE packets for any destination. By doing this far 		 * higher in the chain we have a matching tcp connection. 		 * Thus spoofing is much harder. However there is no easy 		 * non-hackish way to pass the new MTU up to tcp_mtudisc(). 		 * Also see next XXX regarding IPv4 AH TCP. 		 */
 if|if
 condition|(
 name|code
@@ -3057,7 +3057,7 @@ name|match
 goto|;
 block|}
 block|}
-comment|/*  	 * If the packet was transiting through us, use the address of 	 * the interface that is the closest to the packet source. 	 * When we don't have a route back to the packet source, stop here 	 * and drop the packet. 	 */
+comment|/* 	 * If the packet was transiting through us, use the address of 	 * the interface that is the closest to the packet source. 	 * When we don't have a route back to the packet source, stop here 	 * and drop the packet. 	 */
 name|ia
 operator|=
 name|ip_rtaddr
@@ -3961,7 +3961,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * badport_bandlim() - check for ICMP bandwidth limit  *  *	Return 0 if it is ok to send an ICMP error response, -1 if we have  *	hit our bandwidth limit and it is not ok.    *  *	If icmplim is<= 0, the feature is disabled and 0 is returned.  *  *	For now we separate the TCP and UDP subsystems w/ different 'which'  *	values.  We may eventually remove this separation (and simplify the  *	code further).  *  *	Note that the printing of the error message is delayed so we can  *	properly print the icmp error rate that the system was trying to do  *	(i.e. 22000/100 pps, etc...).  This can cause long delays in printing  *	the 'final' error, but it doesn't make sense to solve the printing   *	delay with more complex code.  */
+comment|/*  * badport_bandlim() - check for ICMP bandwidth limit  *  *	Return 0 if it is ok to send an ICMP error response, -1 if we have  *	hit our bandwidth limit and it is not ok.  *  *	If icmplim is<= 0, the feature is disabled and 0 is returned.  *  *	For now we separate the TCP and UDP subsystems w/ different 'which'  *	values.  We may eventually remove this separation (and simplify the  *	code further).  *  *	Note that the printing of the error message is delayed so we can  *	properly print the icmp error rate that the system was trying to do  *	(i.e. 22000/100 pps, etc...).  This can cause long delays in printing  *	the 'final' error, but it doesn't make sense to solve the printing  *	delay with more complex code.  */
 end_comment
 
 begin_function

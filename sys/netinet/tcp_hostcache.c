@@ -629,7 +629,7 @@ parameter_list|(
 name|ip
 parameter_list|)
 define|\
-value|(((ip)->s_addr ^ ((ip)->s_addr>> 7) ^ ((ip)->s_addr>> 17))& 	\ 	  tcp_hostcache.hashmask)
+value|(((ip)->s_addr ^ ((ip)->s_addr>> 7) ^ ((ip)->s_addr>> 17))&	\ 	  tcp_hostcache.hashmask)
 end_define
 
 begin_comment
@@ -1113,7 +1113,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal function: insert an entry into the hostcache or return NULL  * if unable to allocate a new one.  *   * If an entry has been returned, the caller becomes responsible for  * unlocking the bucket row after he is done reading/modifying the entry.  */
+comment|/*  * Internal function: insert an entry into the hostcache or return NULL  * if unable to allocate a new one.  *  * If an entry has been returned, the caller becomes responsible for  * unlocking the bucket row after he is done reading/modifying the entry.  */
 end_comment
 
 begin_function

@@ -5492,7 +5492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the wrapper function for in_setsockaddr.  We just pass down   * the pcbinfo for in_setsockaddr to lock.  We don't want to do the locking   * here because in_setsockaddr will call malloc and might block.  */
+comment|/*  * This is the wrapper function for in_setsockaddr.  We just pass down  * the pcbinfo for in_setsockaddr to lock.  We don't want to do the locking  * here because in_setsockaddr will call malloc and might block.  */
 end_comment
 
 begin_function

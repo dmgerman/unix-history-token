@@ -845,7 +845,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|((tcp_syncache.hash_secret ^					\ 	  (inc)->inc_faddr.s_addr ^					\ 	  ((inc)->inc_faddr.s_addr>> 16) ^ 				\ 	  (inc)->inc_fport ^ (inc)->inc_lport)& mask)
+value|((tcp_syncache.hash_secret ^					\ 	  (inc)->inc_faddr.s_addr ^					\ 	  ((inc)->inc_faddr.s_addr>> 16) ^				\ 	  (inc)->inc_fport ^ (inc)->inc_lport)& mask)
 end_define
 
 begin_define
@@ -858,7 +858,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|((tcp_syncache.hash_secret ^					\ 	  (inc)->inc6_faddr.s6_addr32[0] ^ 				\ 	  (inc)->inc6_faddr.s6_addr32[3] ^ 				\ 	  (inc)->inc_fport ^ (inc)->inc_lport)& mask)
+value|((tcp_syncache.hash_secret ^					\ 	  (inc)->inc6_faddr.s6_addr32[0] ^				\ 	  (inc)->inc6_faddr.s6_addr32[3] ^				\ 	  (inc)->inc_fport ^ (inc)->inc_lport)& mask)
 end_define
 
 begin_define
@@ -2649,7 +2649,7 @@ name|struct
 name|sockaddr_in6
 name|sin6
 decl_stmt|;
-comment|/* 		 * Inherit socket options from the listening socket. 		 * Note that in6p_inputopts are not (and should not be) 		 * copied, since it stores previously received options and is 		 * used to detect if each new option is different than the 		 * previous one and hence should be passed to a user.                  * If we copied in6p_inputopts, a user would not be able to 		 * receive options just after calling the accept system call. 		 */
+comment|/* 		 * Inherit socket options from the listening socket. 		 * Note that in6p_inputopts are not (and should not be) 		 * copied, since it stores previously received options and is 		 * used to detect if each new option is different than the 		 * previous one and hence should be passed to a user. 		 * If we copied in6p_inputopts, a user would not be able to 		 * receive options just after calling the accept system call. 		 */
 name|inp
 operator|->
 name|inp_flags
@@ -3357,7 +3357,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * There is no syncache entry, so see if this ACK is  		 * a returning syncookie.  To do this, first: 		 *  A. See if this socket has had a syncache entry dropped in 		 *     the past.  We don't want to accept a bogus syncookie  		 *     if we've never received a SYN. 		 *  B. check that the syncookie is valid.  If it is, then 		 *     cobble up a fake syncache entry, and return. 		 */
+comment|/* 		 * There is no syncache entry, so see if this ACK is 		 * a returning syncookie.  To do this, first: 		 *  A. See if this socket has had a syncache entry dropped in 		 *     the past.  We don't want to accept a bogus syncookie 		 *     if we've never received a SYN. 		 *  B. check that the syncookie is valid.  If it is, then 		 *     cobble up a fake syncache entry, and return. 		 */
 if|if
 condition|(
 operator|!
@@ -3815,7 +3815,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * The zone allocator couldn't provide more entries. 		 * Treat this as if the cache was full; drop the oldest  		 * entry and insert the new one. 		 */
+comment|/* 		 * The zone allocator couldn't provide more entries. 		 * Treat this as if the cache was full; drop the oldest 		 * entry and insert the new one. 		 */
 comment|/* NB: guarded by INP_INFO_WLOCK(&tcbinfo) */
 for|for
 control|(
@@ -5972,7 +5972,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*  * Consider the problem of a recreated (and retransmitted) cookie.  If the  * original SYN was accepted, the connection is established.  The second   * SYN is inflight, and if it arrives with an ISN that falls within the   * receive window, the connection is killed.    *  * However, since cookies have other problems, this may not be worth  * worrying about.  */
+comment|/*  * Consider the problem of a recreated (and retransmitted) cookie.  If the  * original SYN was accepted, the connection is established.  The second  * SYN is inflight, and if it arrives with an ISN that falls within the  * receive window, the connection is killed.  *  * However, since cookies have other problems, this may not be worth  * worrying about.  */
 specifier|static
 name|u_int32_t
 name|syncookie_generate

@@ -190,7 +190,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Hash table for IP addresses.  */
+comment|/*  * Hash table for IP addresses.  */
 end_comment
 
 begin_extern

@@ -2403,7 +2403,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* 		 * first retransmit; record ssthresh and cwnd so they can 	 	 * be recovered if this turns out to be a "bad" retransmit. 		 * A retransmit is considered "bad" if an ACK for this  		 * segment is received within RTT/2 interval; the assumption 		 * here is that the ACK was already in flight.  See  		 * "On Estimating End-to-End Network Path Properties" by 		 * Allman and Paxson for more details. 		 */
+comment|/* 		 * first retransmit; record ssthresh and cwnd so they can 		 * be recovered if this turns out to be a "bad" retransmit. 		 * A retransmit is considered "bad" if an ACK for this 		 * segment is received within RTT/2 interval; the assumption 		 * here is that the ACK was already in flight.  See 		 * "On Estimating End-to-End Network Path Properties" by 		 * Allman and Paxson for more details. 		 */
 name|tp
 operator|->
 name|snd_cwnd_prev
@@ -2525,7 +2525,7 @@ argument_list|,
 name|TCPTV_REXMTMAX
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Disable rfc1323 and rfc1644 if we havn't got any response to 	 * our third SYN to work-around some broken terminal servers  	 * (most of which have hopefully been retired) that have bad VJ  	 * header compression code which trashes TCP segments containing  	 * unknown-to-them TCP options. 	 */
+comment|/* 	 * Disable rfc1323 and rfc1644 if we havn't got any response to 	 * our third SYN to work-around some broken terminal servers 	 * (most of which have hopefully been retired) that have bad VJ 	 * header compression code which trashes TCP segments containing 	 * unknown-to-them TCP options. 	 */
 if|if
 condition|(
 operator|(

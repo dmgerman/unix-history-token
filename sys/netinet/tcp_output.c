@@ -622,7 +622,7 @@ operator|->
 name|t_rxtcur
 condition|)
 block|{
-comment|/* 		 * We have been idle for "a while" and no acks are 		 * expected to clock out any data we send -- 		 * slow start to get ack "clock" running again. 		 *        		 * Set the slow-start flight size depending on whether 		 * this is a local network or not. 		 */
+comment|/* 		 * We have been idle for "a while" and no acks are 		 * expected to clock out any data we send -- 		 * slow start to get ack "clock" running again. 		 * 		 * Set the slow-start flight size depending on whether 		 * this is a local network or not. 		 */
 name|int
 name|ss
 init|=
@@ -789,7 +789,7 @@ name|t_state
 index|]
 expr_stmt|;
 comment|/* 	 * Send any SACK-generated retransmissions.  If we're explicitly trying 	 * to send out new data (when sendalot is 1), bypass this function. 	 * If we retransmit in fast recovery mode, decrement snd_cwnd, since 	 * we're replacing a (future) new transmission with a retransmission 	 * now, and we previously incremented snd_cwnd in tcp_input(). 	 */
-comment|/*  	 * Still in sack recovery , reset rxmit flag to zero. 	 */
+comment|/* 	 * Still in sack recovery , reset rxmit flag to zero. 	 */
 name|sack_rxmit
 operator|=
 literal|0
@@ -857,7 +857,7 @@ name|snd_recover
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * (At least) part of sack hole extends beyond  			 * snd_recover. Check to see if we can rexmit data  			 * for this hole. 			 */
+comment|/* 			 * (At least) part of sack hole extends beyond 			 * snd_recover. Check to see if we can rexmit data 			 * for this hole. 			 */
 if|if
 condition|(
 name|SEQ_GEQ
@@ -872,7 +872,7 @@ name|snd_recover
 argument_list|)
 condition|)
 block|{
-comment|/*  				 * Can't rexmit any more data for this hole. 				 * That data will be rexmitted in the next  				 * sack recovery episode, when snd_recover  				 * moves past p->rxmit. 				 */
+comment|/* 				 * Can't rexmit any more data for this hole. 				 * That data will be rexmitted in the next 				 * sack recovery episode, when snd_recover 				 * moves past p->rxmit. 				 */
 name|p
 operator|=
 name|NULL
@@ -1069,7 +1069,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If snd_nxt == snd_max and we have transmitted a FIN, the  	 * offset will be> 0 even if so_snd.sb_cc is 0, resulting in 	 * a negative length.  This can also occur when TCP opens up 	 * its congestion window while receiving additional duplicate 	 * acks after fast-retransmit because TCP will reset snd_nxt 	 * to snd_max after the fast-retransmit. 	 * 	 * In the normal retransmit-FIN-only case, however, snd_nxt will 	 * be set to snd_una, the offset will be 0, and the length may 	 * wind up 0. 	 *  	 * If sack_rxmit is true we are retransmitting from the scoreboard 	 * in which case len is already set.  	 */
+comment|/* 	 * If snd_nxt == snd_max and we have transmitted a FIN, the 	 * offset will be> 0 even if so_snd.sb_cc is 0, resulting in 	 * a negative length.  This can also occur when TCP opens up 	 * its congestion window while receiving additional duplicate 	 * acks after fast-retransmit because TCP will reset snd_nxt 	 * to snd_max after the fast-retransmit. 	 * 	 * In the normal retransmit-FIN-only case, however, snd_nxt will 	 * be set to snd_una, the offset will be 0, and the length may 	 * wind up 0. 	 * 	 * If sack_rxmit is true we are retransmitting from the scoreboard 	 * in which case len is already set. 	 */
 if|if
 condition|(
 operator|!
@@ -1885,7 +1885,7 @@ name|optlen
 operator|=
 name|TCPOLEN_MAXSEG
 expr_stmt|;
-comment|/*                          * If this is the first SYN of connection (not a SYN                          * ACK), include SACK_PERMIT_HDR option.  If this is a                          * SYN ACK, include SACK_PERMIT_HDR option if peer has                          * already done so. This is only for active connect, 			 * since the syncache takes care of the passive connect.                          */
+comment|/* 			 * If this is the first SYN of connection (not a SYN 			 * ACK), include SACK_PERMIT_HDR option.  If this is a 			 * SYN ACK, include SACK_PERMIT_HDR option if peer has 			 * already done so. This is only for active connect, 			 * since the syncache takes care of the passive connect. 			 */
 if|if
 condition|(
 name|tp
@@ -2002,7 +2002,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * Send a timestamp and echo-reply if this is a SYN and our side 	 * wants to use timestamps (TF_REQ_TSTMP is set) or both our side 	 * and our peer have sent timestamps in our SYN's.  	 */
+comment|/* 	 * Send a timestamp and echo-reply if this is a SYN and our side 	 * wants to use timestamps (TF_REQ_TSTMP is set) or both our side 	 * and our peer have sent timestamps in our SYN's. 	 */
 if|if
 condition|(
 operator|(
@@ -2282,7 +2282,7 @@ literal|4
 expr_stmt|;
 comment|/* including leading NOPs */
 block|}
-comment|/* 	 * Send `CC-family' options if our side wants to use them (TF_REQ_CC), 	 * options are allowed (!TF_NOOPT) and it's not a RST.  	 */
+comment|/* 	 * Send `CC-family' options if our side wants to use them (TF_REQ_CC), 	 * options are allowed (!TF_NOOPT) and it's not a RST. 	 */
 if|if
 condition|(
 operator|(

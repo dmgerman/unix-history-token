@@ -8,7 +8,7 @@ comment|/*  * Copyright 1998 Niels Provos<provos@citi.umich.edu>  * All rights r
 end_comment
 
 begin_comment
-comment|/*   * seed = random 15bit  * n = prime, g0 = generator to n,  * j = random so that gcd(j,n-1) == 1  * g = g0^j mod n will be a generator again.  *  * X[0] = random seed.  * X[n] = a*X[n-1]+b mod m is a Linear Congruential Generator  * with a = 7^(even random) mod m,   *      b = random with gcd(b,m) == 1  *      m = 31104 and a maximal period of m-1.  *  * The transaction id is determined by:  * id[n] = seed xor (g^X[n] mod n)  *  * Effectivly the id is restricted to the lower 15 bits, thus  * yielding two different cycles by toggling the msb on and off.  * This avoids reuse issues caused by reseeding.  */
+comment|/*  * seed = random 15bit  * n = prime, g0 = generator to n,  * j = random so that gcd(j,n-1) == 1  * g = g0^j mod n will be a generator again.  *  * X[0] = random seed.  * X[n] = a*X[n-1]+b mod m is a Linear Congruential Generator  * with a = 7^(even random) mod m,  *      b = random with gcd(b,m) == 1  *      m = 31104 and a maximal period of m-1.  *  * The transaction id is determined by:  * id[n] = seed xor (g^X[n] mod n)  *  * Effectivly the id is restricted to the lower 15 bits, thus  * yielding two different cycles by toggling the msb on and off.  * This avoids reuse issues caused by reseeding.  */
 end_comment
 
 begin_include
@@ -342,7 +342,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Initalizes the seed and chooses a suitable generator. Also toggles   * the msb flag. The msb flag is used to generate two distinct  * cycles of random numbers and thus avoiding reuse of ids.  *  * This function is called from id_randomid() when needed, an   * application does not have to worry about it.  */
+comment|/*  * Initalizes the seed and chooses a suitable generator. Also toggles  * the msb flag. The msb flag is used to generate two distinct  * cycles of random numbers and thus avoiding reuse of ids.  *  * This function is called from id_randomid() when needed, an  * application does not have to worry about it.  */
 end_comment
 
 begin_function
@@ -512,7 +512,7 @@ name|tmp
 operator|>>
 literal|16
 expr_stmt|;
-comment|/*  	 * Do a fast gcd(j,RU_N-1), so we can find a j with 	 * gcd(j, RU_N-1) == 1, giving a new generator for 	 * RU_GEN^j mod RU_N 	 */
+comment|/* 	 * Do a fast gcd(j,RU_N-1), so we can find a j with 	 * gcd(j, RU_N-1) == 1, giving a new generator for 	 * RU_GEN^j mod RU_N 	 */
 while|while
 condition|(
 name|noprime

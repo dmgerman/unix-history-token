@@ -2788,7 +2788,7 @@ literal|0
 condition|)
 block|{
 comment|/* IPv6 support is not yet */
-comment|/* 		 * Transparently forwarded. Pretend to be the destination. 		 * already got one like this?  		 */
+comment|/* 		 * Transparently forwarded. Pretend to be the destination. 		 * already got one like this? 		 */
 name|inp
 operator|=
 name|in_pcblookup_hash
@@ -4967,7 +4967,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 				 * Recalculate the transmit timer / rtt. 				 * 				 * Some boxes send broken timestamp replies 				 * during the SYN+ACK phase, ignore  				 * timestamps of 0 or we could calculate a 				 * huge RTT and blow up the retransmit timer. 				 */
+comment|/* 				 * Recalculate the transmit timer / rtt. 				 * 				 * Some boxes send broken timestamp replies 				 * during the SYN+ACK phase, ignore 				 * timestamps of 0 or we could calculate a 				 * huge RTT and blow up the retransmit timer. 				 */
 if|if
 condition|(
 operator|(
@@ -5912,7 +5912,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 	 * Received initial SYN in SYN-SENT[*] state => 		 	 * simultaneous open.  If segment contains CC option 		 	 * and there is a cached CC, apply TAO test. 		 	 * If it succeeds, connection is * half-synchronized. 		 	 * Otherwise, do 3-way handshake: 		 	 *        SYN-SENT -> SYN-RECEIVED 		 	 *        SYN-SENT* -> SYN-RECEIVED* 		 	 * If there was no CC option, clear cached CC value. 		 	 */
+comment|/* 			 * Received initial SYN in SYN-SENT[*] state => 			 * simultaneous open.  If segment contains CC option 			 * and there is a cached CC, apply TAO test. 			 * If it succeeds, connection is * half-synchronized. 			 * Otherwise, do 3-way handshake: 			 *        SYN-SENT -> SYN-RECEIVED 			 *        SYN-SENT* -> SYN-RECEIVED* 			 * If there was no CC option, clear cached CC value. 			 */
 name|tp
 operator|->
 name|t_flags
@@ -6292,7 +6292,7 @@ block|}
 break|break;
 comment|/* continue normal processing */
 block|}
-comment|/* 	 * States other than LISTEN or SYN_SENT. 	 * First check the RST flag and sequence number since reset segments 	 * are exempt from the timestamp and connection count tests.  This 	 * fixes a bug introduced by the Stevens, vol. 2, p. 960 bugfix 	 * below which allowed reset segments in half the sequence space 	 * to fall though and be processed (which gives forged reset 	 * segments with a random sequence number a 50 percent chance of 	 * killing a connection). 	 * Then check timestamp, if present. 	 * Then check the connection count, if present. 	 * Then check that at least some bytes of segment are within 	 * receive window.  If segment begins before rcv_nxt, 	 * drop leading data (and SYN); if nothing left, just ack. 	 * 	 * 	 * If the RST bit is set, check the sequence number to see 	 * if this is a valid reset segment. 	 * RFC 793 page 37: 	 *   In all states except SYN-SENT, all reset (RST) segments 	 *   are validated by checking their SEQ-fields.  A reset is 	 *   valid if its sequence number is in the window. 	 * Note: this does not take into account delayed ACKs, so 	 *   we should test against last_ack_sent instead of rcv_nxt. 	 *   The sequence number in the reset segment is normally an 	 *   echo of our outgoing acknowlegement numbers, but some hosts 	 *   send a reset with the sequence number at the rightmost edge 	 *   of our receive window, and we have to handle this case. 	 * Note 2: Paul Watson's paper "Slipping in the Window" has shown 	 *   that brute force RST attacks are possible.  To combat this, 	 *   we use a much stricter check while in the ESTABLISHED state, 	 *   only accepting RSTs where the sequence number is equal to 	 *   last_ack_sent.  In all other states (the states in which a 	 *   RST is more likely), the more permissive check is used.  	 * If we have multiple segments in flight, the intial reset 	 * segment sequence numbers will be to the left of last_ack_sent, 	 * but they will eventually catch up. 	 * In any case, it never made sense to trim reset segments to 	 * fit the receive window since RFC 1122 says: 	 *   4.2.2.12  RST Segment: RFC-793 Section 3.4 	 * 	 *    A TCP SHOULD allow a received RST segment to include data. 	 * 	 *    DISCUSSION 	 *         It has been suggested that a RST segment could contain 	 *         ASCII text that encoded and explained the cause of the 	 *         RST.  No standard has yet been established for such 	 *         data. 	 * 	 * If the reset segment passes the sequence number test examine 	 * the state: 	 *    SYN_RECEIVED STATE: 	 *	If passive open, return to LISTEN state. 	 *	If active open, inform user that connection was refused. 	 *    ESTABLISHED, FIN_WAIT_1, FIN_WAIT_2, CLOSE_WAIT STATES: 	 *	Inform user that connection was reset, and close tcb. 	 *    CLOSING, LAST_ACK STATES: 	 *	Close the tcb. 	 *    TIME_WAIT STATE: 	 *	Drop the segment - see Stevens, vol. 2, p. 964 and 	 *      RFC 1337. 	 */
+comment|/* 	 * States other than LISTEN or SYN_SENT. 	 * First check the RST flag and sequence number since reset segments 	 * are exempt from the timestamp and connection count tests.  This 	 * fixes a bug introduced by the Stevens, vol. 2, p. 960 bugfix 	 * below which allowed reset segments in half the sequence space 	 * to fall though and be processed (which gives forged reset 	 * segments with a random sequence number a 50 percent chance of 	 * killing a connection). 	 * Then check timestamp, if present. 	 * Then check the connection count, if present. 	 * Then check that at least some bytes of segment are within 	 * receive window.  If segment begins before rcv_nxt, 	 * drop leading data (and SYN); if nothing left, just ack. 	 * 	 * 	 * If the RST bit is set, check the sequence number to see 	 * if this is a valid reset segment. 	 * RFC 793 page 37: 	 *   In all states except SYN-SENT, all reset (RST) segments 	 *   are validated by checking their SEQ-fields.  A reset is 	 *   valid if its sequence number is in the window. 	 * Note: this does not take into account delayed ACKs, so 	 *   we should test against last_ack_sent instead of rcv_nxt. 	 *   The sequence number in the reset segment is normally an 	 *   echo of our outgoing acknowlegement numbers, but some hosts 	 *   send a reset with the sequence number at the rightmost edge 	 *   of our receive window, and we have to handle this case. 	 * Note 2: Paul Watson's paper "Slipping in the Window" has shown 	 *   that brute force RST attacks are possible.  To combat this, 	 *   we use a much stricter check while in the ESTABLISHED state, 	 *   only accepting RSTs where the sequence number is equal to 	 *   last_ack_sent.  In all other states (the states in which a 	 *   RST is more likely), the more permissive check is used. 	 * If we have multiple segments in flight, the intial reset 	 * segment sequence numbers will be to the left of last_ack_sent, 	 * but they will eventually catch up. 	 * In any case, it never made sense to trim reset segments to 	 * fit the receive window since RFC 1122 says: 	 *   4.2.2.12  RST Segment: RFC-793 Section 3.4 	 * 	 *    A TCP SHOULD allow a received RST segment to include data. 	 * 	 *    DISCUSSION 	 *         It has been suggested that a RST segment could contain 	 *         ASCII text that encoded and explained the cause of the 	 *         RST.  No standard has yet been established for such 	 *         data. 	 * 	 * If the reset segment passes the sequence number test examine 	 * the state: 	 *    SYN_RECEIVED STATE: 	 *	If passive open, return to LISTEN state. 	 *	If active open, inform user that connection was refused. 	 *    ESTABLISHED, FIN_WAIT_1, FIN_WAIT_2, CLOSE_WAIT STATES: 	 *	Inform user that connection was reset, and close tcb. 	 *    CLOSING, LAST_ACK STATES: 	 *	Close the tcb. 	 *    TIME_WAIT STATE: 	 *	Drop the segment - see Stevens, vol. 2, p. 964 and 	 *      RFC 1337. 	 */
 if|if
 condition|(
 name|thflags
@@ -7419,7 +7419,7 @@ decl_stmt|;
 name|u_int
 name|win
 decl_stmt|;
-comment|/* 					 * If we're doing sack, check to  					 * see if we're already in sack  					 * recovery. If we're not doing sack, 					 * check to see if we're in newreno 					 * recovery. 					 */
+comment|/* 					 * If we're doing sack, check to 					 * see if we're already in sack 					 * recovery. If we're not doing sack, 					 * check to see if we're in newreno 					 * recovery. 					 */
 if|if
 condition|(
 name|tp
@@ -8197,7 +8197,7 @@ literal|0
 expr_stmt|;
 comment|/* XXX probably not required */
 block|}
-comment|/* 		 * If we have a timestamp reply, update smoothed 		 * round trip time.  If no timestamp is present but 		 * transmit timer is running and timed sequence 		 * number was acked, update smoothed round trip time. 		 * Since we now have an rtt measurement, cancel the 		 * timer backoff (cf., Phil Karn's retransmit alg.). 		 * Recompute the initial retransmit timer. 		 * 		 * Some boxes send broken timestamp replies 		 * during the SYN+ACK phase, ignore  		 * timestamps of 0 or we could calculate a 		 * huge RTT and blow up the retransmit timer. 		 */
+comment|/* 		 * If we have a timestamp reply, update smoothed 		 * round trip time.  If no timestamp is present but 		 * transmit timer is running and timed sequence 		 * number was acked, update smoothed round trip time. 		 * Since we now have an rtt measurement, cancel the 		 * timer backoff (cf., Phil Karn's retransmit alg.). 		 * Recompute the initial retransmit timer. 		 * 		 * Some boxes send broken timestamp replies 		 * during the SYN+ACK phase, ignore 		 * timestamps of 0 or we could calculate a 		 * huge RTT and blow up the retransmit timer. 		 */
 if|if
 condition|(
 operator|(
@@ -12549,7 +12549,7 @@ condition|)
 goto|goto
 name|drop
 goto|;
-comment|/* 	 * If segment contains a SYN and CC [not CC.NEW] option: 	 * 	if connection duration> MSL, drop packet and send RST; 	 * 	 *	if SEG.CC> CCrecv then is new SYN. 	 *	    Complete close and delete TCPCB.  Then reprocess 	 *	    segment, hoping to find new TCPCB in LISTEN state; 	 * 	 *	else must be old SYN; drop it. 	 * else do normal processing. 	 */
+comment|/* 	 * If segment contains a SYN and CC [not CC.NEW] option: 	 *	if connection duration> MSL, drop packet and send RST; 	 * 	 *	if SEG.CC> CCrecv then is new SYN. 	 *	    Complete close and delete TCPCB.  Then reprocess 	 *	    segment, hoping to find new TCPCB in LISTEN state; 	 * 	 *	else must be old SYN; drop it. 	 * else do normal processing. 	 */
 if|if
 condition|(
 operator|(

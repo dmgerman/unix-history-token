@@ -1948,7 +1948,7 @@ expr_stmt|;
 name|TCPDEBUG1
 argument_list|()
 expr_stmt|;
-comment|/*  	 * We inline in_setpeeraddr and COMMON_END here, so that we can 	 * copy the data of interest and defer the malloc until after we 	 * release the lock. 	 */
+comment|/* 	 * We inline in_setpeeraddr and COMMON_END here, so that we can 	 * copy the data of interest and defer the malloc until after we 	 * release the lock. 	 */
 name|port
 operator|=
 name|inp
@@ -2132,7 +2132,7 @@ expr_stmt|;
 name|TCPDEBUG1
 argument_list|()
 expr_stmt|;
-comment|/*  	 * We inline in6_mapped_peeraddr and COMMON_END here, so that we can 	 * copy the data of interest and defer the malloc until after we 	 * release the lock. 	 */
+comment|/* 	 * We inline in6_mapped_peeraddr and COMMON_END here, so that we can 	 * copy the data of interest and defer the malloc until after we 	 * release the lock. 	 */
 if|if
 condition|(
 name|inp
@@ -2241,7 +2241,7 @@ comment|/* INET6 */
 end_comment
 
 begin_comment
-comment|/*  * This is the wrapper function for in_setsockaddr. We just pass down   * the pcbinfo for in_setsockaddr to lock. We don't want to do the locking   * here because in_setsockaddr will call malloc and can block.  */
+comment|/*  * This is the wrapper function for in_setsockaddr. We just pass down  * the pcbinfo for in_setsockaddr to lock. We don't want to do the locking  * here because in_setsockaddr will call malloc and can block.  */
 end_comment
 
 begin_function
