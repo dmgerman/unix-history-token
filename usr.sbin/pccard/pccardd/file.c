@@ -186,6 +186,9 @@ comment|/* 14 */
 literal|"function"
 block|,
 comment|/* 15 */
+literal|"logstr"
+block|,
+comment|/* 16 */
 literal|0
 block|}
 decl_stmt|;
@@ -294,6 +297,13 @@ define|#
 directive|define
 name|KWD_FUNCTION
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|KWD_LOGSTR
+value|16
 end_define
 
 begin_comment
@@ -575,15 +585,7 @@ decl_stmt|,
 modifier|*
 name|cmd_next
 decl_stmt|;
-comment|/* free characters */
-if|if
-condition|(
-name|cp
-operator|->
-name|manuf
-operator|!=
-name|NULL
-condition|)
+comment|/* free strings */
 name|free
 argument_list|(
 name|cp
@@ -591,14 +593,6 @@ operator|->
 name|manuf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cp
-operator|->
-name|version
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|cp
@@ -606,14 +600,6 @@ operator|->
 name|version
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cp
-operator|->
-name|add_info1
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|cp
@@ -621,19 +607,18 @@ operator|->
 name|add_info1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cp
-operator|->
-name|add_info2
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|cp
 operator|->
 name|add_info2
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|cp
+operator|->
+name|logstr
 argument_list|)
 expr_stmt|;
 comment|/* free structures */
@@ -1937,6 +1922,26 @@ name|vers
 expr_stmt|;
 name|cp
 operator|->
+name|logstr
+operator|=
+name|NULL
+expr_stmt|;
+name|asprintf
+argument_list|(
+operator|&
+name|cp
+operator|->
+name|logstr
+argument_list|,
+literal|"%s (%s)"
+argument_list|,
+name|man
+argument_list|,
+name|vers
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
 name|func_id
 operator|=
 literal|0
@@ -1954,6 +1959,12 @@ expr_stmt|;
 name|cp
 operator|->
 name|version
+operator|=
+name|NULL
+expr_stmt|;
+name|cp
+operator|->
+name|logstr
 operator|=
 name|NULL
 expr_stmt|;
@@ -2411,6 +2422,27 @@ operator|->
 name|iosize
 operator|=
 name|iosize
+expr_stmt|;
+break|break;
+case|case
+name|KWD_LOGSTR
+case|:
+name|free
+argument_list|(
+name|cp
+operator|->
+name|logstr
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|logstr
+operator|=
+name|newstr
+argument_list|(
+name|next_tok
+argument_list|()
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
