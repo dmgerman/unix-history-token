@@ -31,7 +31,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_disksubr.c	8.5 (Berkeley) 1/21/94  * $Id: ufs_disksubr.c,v 1.16 1995/08/07 11:55:32 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_disksubr.c	8.5 (Berkeley) 1/21/94  * $Id: ufs_disksubr.c,v 1.17 1995/08/07 14:20:27 davidg Exp $  */
 end_comment
 
 begin_include
@@ -292,7 +292,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Attempt to read a disk label from a device using the indicated stategy  * routine.  The label must be partly set up before this: secpercyl and  * anything required in the strategy routine (e.g., sector size) must be  * filled in before calling us.  Returns NULL on success and an error  * string on failure.  */
+comment|/*  * Attempt to read a disk label from a device using the indicated strategy  * routine.  The label must be partly set up before this: secpercyl and  * anything required in the strategy routine (e.g., sector size) must be  * filled in before calling us.  Returns NULL on success and an error  * string on failure.  */
 end_comment
 
 begin_function
@@ -562,65 +562,47 @@ name|PRE_DISKSLICE_COMPAT
 end_ifdef
 
 begin_comment
-comment|/*  * Attempt to read a disk label from a device using the indicated stategy  * routine.  The label must be partly set up before this: secpercyl and  * anything required in the strategy routine (e.g., sector size) must be  * filled in before calling us.  Returns NULL on success and an error  * string on failure.  * If Machine Specific Partitions (MSP) are not found, then it will proceed  * as if the BSD partition starts at 0  * The MBR on an IBM PC is an example of an MSP.  */
+comment|/*  * Attempt to read a disk label from a device using the indicated strategy  * routine.  The label must be partly set up before this: secpercyl and  * anything required in the strategy routine (e.g., sector size) must be  * filled in before calling us.  Returns NULL on success and an error  * string on failure.  * If Machine Specific Partitions (MSP) are not found, then it will proceed  * as if the BSD partition starts at 0  * The MBR on an IBM PC is an example of an MSP.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|char
 modifier|*
 name|readdisklabel
-argument_list|(
+parameter_list|(
 name|dev
-argument_list|,
+parameter_list|,
 name|strat
-argument_list|,
+parameter_list|,
 name|lp
-argument_list|,
+parameter_list|,
 name|dp
-argument_list|,
+parameter_list|,
 name|bdp
-argument_list|)
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-function_decl|(
+name|d_strategy_t
 modifier|*
 name|strat
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|disklabel
 modifier|*
 name|lp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|dos_partition
 modifier|*
 name|dp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|dkbad
 modifier|*
 name|bdp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1180,7 +1162,7 @@ name|msg
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -1561,6 +1543,8 @@ name|bp
 operator|->
 name|b_flags
 operator|=
+name|B_BUSY
+operator||
 name|B_READ
 expr_stmt|;
 call|(
@@ -1678,6 +1662,8 @@ name|bp
 operator|->
 name|b_flags
 operator|=
+name|B_BUSY
+operator||
 name|B_WRITE
 expr_stmt|;
 call|(
@@ -1706,6 +1692,14 @@ name|ESRCH
 expr_stmt|;
 name|done
 label|:
+name|bp
+operator|->
+name|b_flags
+operator|=
+name|B_INVAL
+operator||
+name|B_AGE
+expr_stmt|;
 name|brelse
 argument_list|(
 name|bp
@@ -1729,41 +1723,29 @@ begin_comment
 comment|/*  * Write disk label back to device after modification.  * For FreeBSD 2.0(x86) this routine will refuse to install a label if  * there is no DOS MSP. (this can be changed)  *  * Assumptions for THIS VERSION:  * The given disklabel pointer is actually that which is controlling this  * Device, so that by fiddling it, readMSPtolabel() can ensure that  * it can read from the MSP if it exists,  * This assumption will cease as soon as ther is a better way of ensuring  * that a read is done to the whole raw device.  * MSP defines a BSD part, label is in block 1 (2nd block) of this  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|int
 name|writedisklabel
-argument_list|(
+parameter_list|(
 name|dev
-argument_list|,
+parameter_list|,
 name|strat
-argument_list|,
+parameter_list|,
 name|lp
-argument_list|)
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-function_decl|(
+name|d_strategy_t
 modifier|*
 name|strat
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|disklabel
 modifier|*
 name|lp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|buf
@@ -2034,6 +2016,8 @@ name|bp
 operator|->
 name|b_flags
 operator|=
+name|B_BUSY
+operator||
 name|B_READ
 expr_stmt|;
 call|(
@@ -2158,6 +2142,8 @@ name|bp
 operator|->
 name|b_flags
 operator|=
+name|B_BUSY
+operator||
 name|B_WRITE
 expr_stmt|;
 call|(
@@ -2215,6 +2201,8 @@ name|bp
 operator|->
 name|b_flags
 operator|=
+name|B_BUSY
+operator||
 name|B_WRITE
 expr_stmt|;
 call|(
@@ -2255,18 +2243,28 @@ if|if
 condition|(
 name|bp
 condition|)
+block|{
+name|bp
+operator|->
+name|b_flags
+operator|=
+name|B_INVAL
+operator||
+name|B_AGE
+expr_stmt|;
 name|brelse
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
