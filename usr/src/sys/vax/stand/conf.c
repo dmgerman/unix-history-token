@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.5	%G%	*/
+comment|/*	conf.c	4.6	81/03/15	*/
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mba.h"
+file|"../h/mbareg.h"
 end_include
 
 begin_include
@@ -201,14 +201,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|VAX
-operator|==
-literal|780
-end_if
-
 begin_decl_stmt
 name|int
 name|hpstrategy
@@ -232,11 +224,6 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|int
 name|upstrategy
@@ -256,6 +243,19 @@ name|tmopen
 argument_list|()
 decl_stmt|,
 name|tmclose
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tsstrategy
+argument_list|()
+decl_stmt|,
+name|tsopen
+argument_list|()
+decl_stmt|,
+name|tsclose
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -277,11 +277,6 @@ name|devsw
 index|[]
 init|=
 block|{
-if|#
-directive|if
-name|VAX
-operator|==
-literal|780
 literal|"hp"
 block|,
 name|hpstrategy
@@ -298,8 +293,6 @@ name|htopen
 block|,
 name|htclose
 block|,
-endif|#
-directive|endif
 literal|"up"
 block|,
 name|upstrategy
@@ -316,7 +309,7 @@ name|tmopen
 block|,
 name|tmclose
 block|,
-literal|"rk"
+literal|"hk"
 block|,
 name|rkstrategy
 block|,
@@ -324,6 +317,14 @@ name|rkopen
 block|,
 name|nullsys
 block|,
+literal|"ts"
+block|,
+name|tsstragety
+block|,
+name|tsopen
+block|,
+name|tsclose
+block|,
 literal|0
 block|,
 literal|0
@@ -334,63 +335,6 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|VAX
-operator|==
-literal|780
-end_if
-
-begin_decl_stmt
-name|int
-name|mbanum
-index|[]
-init|=
-block|{
-comment|/* mba number of major device */
-literal|0
-block|,
-comment|/* disk */
-literal|1
-block|,
-comment|/* tape */
-operator|-
-literal|1
-block|,
-comment|/* unused */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-modifier|*
-name|mbaloc
-index|[]
-init|=
-block|{
-comment|/* physical location of mba */
-operator|(
-name|int
-operator|*
-operator|)
-name|PHYSMBA0
-block|,
-operator|(
-name|int
-operator|*
-operator|)
-name|PHYSMBA1
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
