@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	errno.h	6.1	83/07/29	*/
+comment|/*	errno.h	6.2	85/06/02	*/
 end_comment
 
 begin_comment
