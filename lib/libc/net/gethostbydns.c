@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostbydns.c,v 1.4.4.4 1996/06/06 00:05:42 nate Exp $"
+literal|"$Id: gethostbydns.c,v 1.4.4.5 1996/11/20 18:36:37 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1698,6 +1698,12 @@ name|NULL
 operator|)
 return|;
 block|}
+name|host
+operator|.
+name|h_length
+operator|=
+name|INT32SZ
+expr_stmt|;
 comment|/* 	 * if there aren't any dots, it could be a user-level alias. 	 * this is also done in res_query() since we are not the only 	 * function that looks up host names. 	 */
 if|if
 condition|(
