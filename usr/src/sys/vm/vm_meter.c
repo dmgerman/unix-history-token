@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -684,7 +684,7 @@ condition|)
 continue|continue;
 break|break;
 block|}
-comment|/* 		 * Note active objects. 		 */
+comment|/* 		 * Note active objects. 		 * 		 * XXX don't count shadow objects with no resident pages. 		 * This eliminates the forced shadows caused by MAP_PRIVATE. 		 * Right now we require that such an object completely shadow 		 * the original, to catch just those cases. 		 */
 name|paging
 operator|=
 literal|0
@@ -732,20 +732,54 @@ name|entry
 operator|->
 name|is_sub_map
 operator|||
+operator|(
+name|object
+operator|=
 name|entry
 operator|->
 name|object
 operator|.
 name|vm_object
+operator|)
 operator|==
 name|NULL
 condition|)
 continue|continue;
-name|entry
-operator|->
+while|while
+condition|(
 name|object
-operator|.
-name|vm_object
+operator|->
+name|shadow
+operator|&&
+name|object
+operator|->
+name|resident_page_count
+operator|==
+literal|0
+operator|&&
+name|object
+operator|->
+name|shadow_offset
+operator|==
+literal|0
+operator|&&
+name|object
+operator|->
+name|size
+operator|==
+name|object
+operator|->
+name|shadow
+operator|->
+name|size
+condition|)
+name|object
+operator|=
+name|object
+operator|->
+name|shadow
+expr_stmt|;
+name|object
 operator|->
 name|flags
 operator||=
@@ -753,11 +787,7 @@ name|OBJ_ACTIVE
 expr_stmt|;
 name|paging
 operator||=
-name|entry
-operator|->
 name|object
-operator|.
-name|vm_object
 operator|->
 name|paging_in_progress
 expr_stmt|;
