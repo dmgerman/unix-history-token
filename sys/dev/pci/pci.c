@@ -4171,7 +4171,7 @@ operator|~
 name|PCIM_MFDEV
 operator|)
 operator|>
-literal|2
+name|PCI_MAXHDRTYPE
 condition|)
 continue|continue;
 if|if

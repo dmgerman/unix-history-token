@@ -39,6 +39,13 @@ name|PCI_REGMAX
 value|255
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCI_MAXHDRTYPE
+value|2
+end_define
+
 begin_comment
 comment|/* PCI config header registers for all devices */
 end_comment
@@ -1661,42 +1668,6 @@ end_define
 begin_comment
 comment|/* Received a Split Comp w/Error msg */
 end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* some PCI vendor definitions (only used to identify ancient devices !!! */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIV_INTEL
-value|0x8086
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCID_INTEL_SATURN
-value|0x0483
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCID_INTEL_ORION
-value|0x84c4
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
