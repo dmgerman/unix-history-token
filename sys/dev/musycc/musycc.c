@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -7945,7 +7951,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sizeof(struct groupr) = %d, should be 1572\n"
+literal|"sizeof(struct groupr) = %zd, should be 1572\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7973,7 +7979,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sizeof(struct globalr) = %d, should be 1572\n"
+literal|"sizeof(struct globalr) = %zd, should be 1572\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -8001,7 +8007,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sizeof(struct mycg) = %d, should be<= 2048\n"
+literal|"sizeof(struct mycg) = %zd, should be<= 2048\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -8202,7 +8208,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"We have %d pad bytes in mycg\n"
+literal|"We have %zd pad bytes in mycg\n"
 argument_list|,
 literal|2048
 operator|-
@@ -8535,7 +8541,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"f%d: device %p virtual %p physical %08x\n"
+literal|"f%d: device %p virtual %p physical %08jx\n"
 argument_list|,
 name|i
 argument_list|,
@@ -8553,6 +8559,9 @@ index|[
 name|i
 index|]
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|csc
 operator|->
 name|physbase
