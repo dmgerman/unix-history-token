@@ -1978,6 +1978,14 @@ name|cnt
 operator|=
 name|nbyte
 expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|f_type
+operator|==
+name|DTYPE_VNODE
+condition|)
 name|bwillwrite
 argument_list|()
 expr_stmt|;
