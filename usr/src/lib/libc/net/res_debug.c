@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.4 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1510,7 +1510,7 @@ if|if
 condition|(
 name|c
 operator|&
-literal|1
+literal|0200
 condition|)
 name|fprintf
 argument_list|(
@@ -1522,7 +1522,7 @@ name|n
 argument_list|)
 expr_stmt|;
 name|c
-operator|>>=
+operator|<<=
 literal|1
 expr_stmt|;
 block|}
