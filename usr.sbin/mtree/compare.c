@@ -198,7 +198,7 @@ define|#
 directive|define
 name|LABEL
 define|\
-value|if (!label++) { \ 		len = printf("%s: ", RP(p)); \ 		if (len> INDENTNAMELEN) { \ 			tab = "\t"; \ 			(void)printf("\n"); \ 		} else { \ 			tab = ""; \ 			(void)printf("%*s", INDENTNAMELEN - (int)len, ""); \ 		} \ 	}
+value|if (!label++) { \ 		len = printf("%s changed\n", RP(p)); \ 		tab = "\t"; \ 	}
 end_define
 
 begin_function
@@ -403,7 +403,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\ttype (%s, %s)\n"
+literal|"\ttype expected %s found %s\n"
 argument_list|,
 name|ftype
 argument_list|(
@@ -422,6 +422,11 @@ name|st_mode
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|label
+operator|)
+return|;
 block|}
 break|break;
 block|}
@@ -456,7 +461,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%suser (%lu, %lu"
+literal|"%suser expected %lu found %lu"
 argument_list|,
 name|tab
 argument_list|,
@@ -502,7 +507,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", not modified: %s)\n"
+literal|" not modified: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -516,7 +521,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", modified)\n"
+literal|" modified\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -525,7 +530,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|")\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|tab
@@ -563,7 +568,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%sgid (%lu, %lu"
+literal|"%sgid expected %lu found %lu"
 argument_list|,
 name|tab
 argument_list|,
@@ -609,7 +614,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", not modified: %s)\n"
+literal|" not modified: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -623,7 +628,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", modified)\n"
+literal|" modified\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -632,7 +637,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|")\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|tab
@@ -647,6 +652,16 @@ operator|->
 name|flags
 operator|&
 name|F_MODE
+operator|&&
+operator|!
+name|S_ISLNK
+argument_list|(
+name|p
+operator|->
+name|fts_statp
+operator|->
+name|st_mode
+argument_list|)
 operator|&&
 name|s
 operator|->
@@ -670,7 +685,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%spermissions (%#o, %#o"
+literal|"%spermissions expected %#o found %#o"
 argument_list|,
 name|tab
 argument_list|,
@@ -709,7 +724,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", not modified: %s)\n"
+literal|" not modified: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -723,7 +738,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", modified)\n"
+literal|" modified\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -732,7 +747,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|")\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|tab
@@ -772,7 +787,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%slink count (%u, %u)\n"
+literal|"%slink_count expected %u found %u\n"
 argument_list|,
 name|tab
 argument_list|,
@@ -809,6 +824,16 @@ operator|->
 name|fts_statp
 operator|->
 name|st_size
+operator|&&
+operator|!
+name|S_ISDIR
+argument_list|(
+name|p
+operator|->
+name|fts_statp
+operator|->
+name|st_mode
+argument_list|)
 condition|)
 block|{
 name|LABEL
@@ -818,7 +843,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%ssize (%qd, %qd)\n"
+literal|"%ssize expected %qd found %qd\n"
 argument_list|,
 name|tab
 argument_list|,
@@ -891,7 +916,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%smodification time (%.24s, "
+literal|"%smodification time expected %.24s "
 argument_list|,
 name|tab
 argument_list|,
@@ -911,7 +936,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%.24s)\n"
+literal|"found %.24s\n"
 argument_list|,
 name|ctime
 argument_list|(
@@ -1061,7 +1086,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%scksum (%lu, %lu)\n"
+literal|"%scksum expected %lu found %lu\n"
 argument_list|,
 name|tab
 argument_list|,
@@ -1117,7 +1142,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%sflags (\"%s\" is not "
+literal|"%sflags expected \"%s\""
 argument_list|,
 name|tab
 argument_list|,
@@ -1145,7 +1170,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\"%s\""
+literal|" found \"%s\""
 argument_list|,
 name|fflags
 argument_list|)
@@ -1177,7 +1202,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", not modified: %s)\n"
+literal|" not modified: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1191,7 +1216,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", modified)\n"
+literal|" modified\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1200,7 +1225,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|")\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|tab
@@ -1250,7 +1275,7 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%sMD5File: %s: %s\n"
+literal|"%sMD5: %s: %s\n"
 argument_list|,
 name|tab
 argument_list|,
@@ -1286,7 +1311,7 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%sMD5 (%s, %s)\n"
+literal|"%sMD5 expected %s found %s\n"
 argument_list|,
 name|tab
 argument_list|,
@@ -1348,7 +1373,7 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%sSHA1_File: %s: %s\n"
+literal|"%sSHA-1: %s: %s\n"
 argument_list|,
 name|tab
 argument_list|,
@@ -1384,7 +1409,7 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%sSHA-1 (%s, %s)\n"
+literal|"%sSHA-1 expected %s found %s\n"
 argument_list|,
 name|tab
 argument_list|,
@@ -1446,7 +1471,7 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%sRIPEMD160_File: %s: %s\n"
+literal|"%sRIPEMD160: %s: %s\n"
 argument_list|,
 name|tab
 argument_list|,
@@ -1482,7 +1507,7 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%sRIPEMD160 (%s, %s)\n"
+literal|"%sRIPEMD160 expected %s found %s\n"
 argument_list|,
 name|tab
 argument_list|,
@@ -1534,7 +1559,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%slink ref (%s, %s)\n"
+literal|"%slink_ref expected %s found %s\n"
 argument_list|,
 name|tab
 argument_list|,

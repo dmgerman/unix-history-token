@@ -273,6 +273,8 @@ begin_decl_stmt
 specifier|static
 name|u_long
 name|flags
+init|=
+literal|0xffffffff
 decl_stmt|;
 end_decl_stmt
 
@@ -1764,7 +1766,8 @@ decl_stmt|;
 name|u_long
 name|saveflags
 init|=
-literal|0
+operator|*
+name|pflags
 decl_stmt|;
 name|u_short
 name|maxgid
@@ -2077,7 +2080,7 @@ name|sflags
 expr_stmt|;
 name|maxflags
 operator|=
-name|u
+name|f
 index|[
 name|FLAGS2IDX
 argument_list|(
@@ -2149,6 +2152,21 @@ operator|*
 name|pmode
 operator|!=
 name|savemode
+operator|)
+operator|)
+operator|||
+operator|(
+operator|(
+name|keys
+operator|&
+name|F_FLAGS
+operator|)
+operator|&&
+operator|(
+operator|*
+name|pflags
+operator|!=
+name|saveflags
 operator|)
 operator|)
 operator|||
@@ -2345,8 +2363,6 @@ condition|(
 name|keys
 operator|&
 name|F_FLAGS
-operator|&&
-name|saveflags
 condition|)
 block|{
 name|fflags
