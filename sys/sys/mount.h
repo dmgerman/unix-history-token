@@ -2293,7 +2293,6 @@ name|void
 name|vfs_mountroot
 parameter_list|(
 name|void
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

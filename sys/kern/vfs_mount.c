@@ -5897,9 +5897,6 @@ name|void
 name|vfs_mountroot
 parameter_list|(
 name|void
-modifier|*
-name|foo
-name|__unused
 parameter_list|)
 block|{
 name|char

@@ -2066,9 +2066,7 @@ operator|->
 name|td_proc
 expr_stmt|;
 name|vfs_mountroot
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* Get the vnode for '/'.  Set p->p_fd->fd_cdir to reference it. */
 if|if
