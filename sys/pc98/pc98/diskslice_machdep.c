@@ -1718,9 +1718,9 @@ operator|->
 name|b_dev
 argument_list|)
 argument_list|,
-literal|"da"
+literal|"rda"
 argument_list|,
-literal|2
+literal|3
 argument_list|)
 operator|==
 literal|0
@@ -1736,9 +1736,9 @@ operator|->
 name|b_dev
 argument_list|)
 argument_list|,
-literal|"wd"
+literal|"rwd"
 argument_list|,
-literal|2
+literal|3
 argument_list|)
 operator|==
 literal|0
