@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)copy.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)copy.c	7.1 (Berkeley) 6/5/86  */
 end_comment
 
 begin_comment
@@ -15,17 +15,6 @@ name|int
 name|from
 decl_stmt|,
 name|to
-decl_stmt|;
-name|char
-name|fbuf
-index|[
-literal|50
-index|]
-decl_stmt|,
-name|tbuf
-index|[
-literal|50
-index|]
 decl_stmt|;
 name|char
 name|buffer
@@ -47,8 +36,6 @@ name|getdev
 argument_list|(
 literal|"From"
 argument_list|,
-name|fbuf
-argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -57,8 +44,6 @@ operator|=
 name|getdev
 argument_list|(
 literal|"To"
-argument_list|,
-name|tbuf
 argument_list|,
 literal|1
 argument_list|)
@@ -74,6 +59,7 @@ name|record
 operator|++
 control|)
 block|{
+specifier|register
 name|int
 name|rcc
 decl_stmt|,
@@ -219,26 +205,19 @@ comment|/* can't call exit here */
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|getdev
 argument_list|(
 argument|prompt
 argument_list|,
-argument|buf
-argument_list|,
 argument|mode
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|prompt
-decl_stmt|,
-modifier|*
-name|buf
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -248,9 +227,14 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|100
+index|]
 decl_stmt|;
 do|do
 block|{
