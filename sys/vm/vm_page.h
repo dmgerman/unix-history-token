@@ -199,35 +199,6 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * shared mutex array for vm_page_buckets[]   */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BUCKET_HASH_SIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|BUCKET_HASH_SIZE
-value|16
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|BUCKET_HASH_MASK
-value|(BUCKET_HASH_SIZE - 1)
-end_define
-
-begin_comment
 comment|/*  * Page coloring parameters  */
 end_comment
 
