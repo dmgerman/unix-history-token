@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.14 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1428,7 +1428,6 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
-specifier|static
 name|char
 name|cbuf
 index|[
@@ -1436,7 +1435,6 @@ literal|5
 index|]
 decl_stmt|;
 comment|/* holds hop count */
-specifier|static
 name|char
 name|pbuf
 index|[
@@ -1539,7 +1537,10 @@ name|define
 argument_list|(
 literal|'p'
 argument_list|,
+name|newstr
+argument_list|(
 name|pbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -1563,7 +1564,10 @@ name|define
 argument_list|(
 literal|'c'
 argument_list|,
+name|newstr
+argument_list|(
 name|cbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -1681,7 +1685,6 @@ specifier|auto
 name|time_t
 name|now
 decl_stmt|;
-specifier|static
 name|char
 name|tbuf
 index|[
@@ -1689,7 +1692,6 @@ literal|20
 index|]
 decl_stmt|;
 comment|/* holds "current" time */
-specifier|static
 name|char
 name|dbuf
 index|[
@@ -1767,7 +1769,10 @@ name|define
 argument_list|(
 literal|'t'
 argument_list|,
+name|newstr
+argument_list|(
 name|tbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
@@ -1810,7 +1815,10 @@ name|define
 argument_list|(
 literal|'d'
 argument_list|,
+name|newstr
+argument_list|(
 name|dbuf
+argument_list|)
 argument_list|,
 name|e
 argument_list|)
