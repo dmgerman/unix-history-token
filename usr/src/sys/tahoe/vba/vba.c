@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vba.c	1.8	87/06/06	*/
+comment|/*	vba.c	1.9	87/06/30	*/
 end_comment
 
 begin_comment
@@ -165,6 +165,8 @@ name|vb_flags
 operator|=
 name|flags
 expr_stmt|;
+if|if
+condition|(
 name|vbmapalloc
 argument_list|(
 name|btoc
@@ -184,7 +186,21 @@ name|vb
 operator|->
 name|vb_utl
 argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"vbmap exhausted\n"
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|n
 operator|=
 name|roundup
@@ -224,6 +240,26 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vb
+operator|->
+name|vb_rawbuf
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"no memory for device buffer\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -357,6 +393,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 

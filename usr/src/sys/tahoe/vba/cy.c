@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cy.c	1.13	87/04/09	*/
+comment|/*	cy.c	1.14	87/06/30	*/
 end_comment
 
 begin_include
@@ -826,6 +826,8 @@ name|ctlr
 operator|*
 name|CYMAXIO
 expr_stmt|;
+if|if
+condition|(
 name|vbainit
 argument_list|(
 operator|&
@@ -837,7 +839,23 @@ name|CYMAXIO
 argument_list|,
 name|VB_20BIT
 argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"cy%d: vbainit failed\n"
+argument_list|,
+name|ctlr
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|br
 operator|=
 literal|0x13
