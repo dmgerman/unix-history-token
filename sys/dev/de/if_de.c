@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.80 1998/09/25 18:06:53 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.96 1999/01/28 17:32:02 dillon Exp $ */
+comment|/*	$Id: if_de.c,v 1.97 1999/01/29 08:29:05 bde Exp $ */
 end_comment
 
 begin_comment
@@ -12163,9 +12163,6 @@ name|shp
 operator|->
 name|sh_ieee802_address
 argument_list|,
-operator|(
-name|v_caddr_t
-operator|)
 name|sc
 operator|->
 name|tulip_enaddr
