@@ -77,7 +77,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* opaque handle on symbols */
+comment|/* const opaque handle on symbols */
 end_comment
 
 begin_define
