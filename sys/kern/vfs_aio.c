@@ -1303,20 +1303,12 @@ begin_decl_stmt
 specifier|static
 name|vm_zone_t
 name|kaio_zone
-init|=
-literal|0
 decl_stmt|,
 name|aiop_zone
-init|=
-literal|0
 decl_stmt|,
 name|aiocb_zone
-init|=
-literal|0
 decl_stmt|,
 name|aiol_zone
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1324,8 +1316,6 @@ begin_decl_stmt
 specifier|static
 name|vm_zone_t
 name|aiolio_zone
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -7522,7 +7512,7 @@ operator|==
 name|LIO_WRITE
 condition|)
 block|{
-name|curproc
+name|p
 operator|->
 name|p_stats
 operator|->
@@ -7553,7 +7543,7 @@ operator|==
 name|LIO_READ
 condition|)
 block|{
-name|curproc
+name|p
 operator|->
 name|p_stats
 operator|->
@@ -10111,7 +10101,7 @@ operator|==
 name|LIO_WRITE
 condition|)
 block|{
-name|curproc
+name|p
 operator|->
 name|p_stats
 operator|->
@@ -10142,7 +10132,7 @@ operator|==
 name|LIO_READ
 condition|)
 block|{
-name|curproc
+name|p
 operator|->
 name|p_stats
 operator|->
@@ -10962,7 +10952,7 @@ operator|==
 name|LIO_WRITE
 condition|)
 block|{
-name|curproc
+name|p
 operator|->
 name|p_stats
 operator|->
@@ -10993,7 +10983,7 @@ operator|==
 name|LIO_READ
 condition|)
 block|{
-name|curproc
+name|p
 operator|->
 name|p_stats
 operator|->
