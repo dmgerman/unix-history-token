@@ -2262,8 +2262,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP_HA_SCSI_12160
+name|ISP_HA_SCSI_10160
 value|0xb
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_HA_SCSI_12160
+value|0xc
 end_define
 
 begin_define
@@ -2344,6 +2351,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|IS_10160
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type == ISP_HA_SCSI_10160)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_12160
 parameter_list|(
 name|isp
@@ -2364,6 +2381,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|IS_1X160
+parameter_list|(
+name|isp
+parameter_list|)
+value|(IS_10160(isp) || IS_12160(isp))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_DUALBUS
 parameter_list|(
 name|isp
@@ -2378,7 +2405,7 @@ name|IS_ULTRA2
 parameter_list|(
 name|isp
 parameter_list|)
-value|(IS_1080(isp) || IS_1280(isp) || IS_12160(isp))
+value|(IS_1080(isp) || IS_1280(isp) || IS_1X160(isp))
 end_define
 
 begin_define
@@ -2388,7 +2415,7 @@ name|IS_ULTRA3
 parameter_list|(
 name|isp
 parameter_list|)
-value|(IS_12160(isp))
+value|(IS_1X160(isp))
 end_define
 
 begin_define

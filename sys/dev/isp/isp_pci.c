@@ -660,6 +660,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|PCI_PRODUCT_QLOGIC_ISP10160
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_QLOGIC_ISP10160
+value|0x1016
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|PCI_PRODUCT_QLOGIC_ISP12160
 end_ifndef
 
@@ -797,6 +815,14 @@ directive|define
 name|PCI_QLOGIC_ISP1080
 define|\
 value|((PCI_PRODUCT_QLOGIC_ISP1080<< 16) | PCI_VENDOR_QLOGIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_QLOGIC_ISP10160
+define|\
+value|((PCI_PRODUCT_QLOGIC_ISP10160<< 16) | PCI_VENDOR_QLOGIC)
 end_define
 
 begin_define
@@ -1120,6 +1146,17 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Qlogic ISP 1280 PCI SCSI Adapter"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PCI_QLOGIC_ISP10160
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Qlogic ISP 10160 PCI SCSI Adapter"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1975,6 +2012,44 @@ name|psize
 operator|=
 literal|2
 operator|*
+sizeof|sizeof
+argument_list|(
+name|sdparam
+argument_list|)
+expr_stmt|;
+name|pcs
+operator|->
+name|pci_poff
+index|[
+name|DMA_BLOCK
+operator|>>
+name|_BLK_REG_SHFT
+index|]
+operator|=
+name|ISP1080_DMA_REGS_OFF
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCI_QLOGIC_ISP10160
+condition|)
+block|{
+name|mdvp
+operator|=
+operator|&
+name|mdvec_12160
+expr_stmt|;
+name|basetype
+operator|=
+name|ISP_HA_SCSI_10160
+expr_stmt|;
+name|psize
+operator|=
 sizeof|sizeof
 argument_list|(
 name|sdparam
