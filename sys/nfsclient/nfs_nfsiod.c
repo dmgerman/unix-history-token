@@ -309,7 +309,6 @@ comment|/* Maximum number of nfsiod kthreads */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|unsigned
 name|int
 name|nfs_iodmax
@@ -1271,8 +1270,19 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|nfs_numasync
+comment|/* Someone may be waiting for the last nfsiod to terminate. */
+if|if
+condition|(
 operator|--
+name|nfs_numasync
+operator|==
+literal|0
+condition|)
+name|wakeup
+argument_list|(
+operator|&
+name|nfs_numasync
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -684,6 +684,34 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Release hash table resources  */
+end_comment
+
+begin_function
+name|void
+name|nfs_nhuninit
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|hashdestroy
+argument_list|(
+name|nfsnodehashtbl
+argument_list|,
+name|M_NFSHASH
+argument_list|,
+name|nfsnodehash
+argument_list|)
+expr_stmt|;
+name|uma_zdestroy
+argument_list|(
+name|nfsnode_zone
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Look up a vnode/nfsnode by file handle.  * Callers must check for mount points!!  * In all cases, a pointer to a  * nfsnode structure is returned.  */
 end_comment
 
