@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_swap.c	6.4	85/01/29	*/
+comment|/*	vm_swap.c	6.5	85/05/22	*/
 end_comment
 
 begin_include
@@ -424,6 +424,13 @@ name|u
 operator|.
 name|u_nd
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|suser
+argument_list|()
+condition|)
+return|return;
 name|ndp
 operator|->
 name|ni_nameiop
