@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_types.h>
 end_include
 
@@ -45,20 +51,9 @@ name|__uint8_t
 name|d_namlen
 decl_stmt|;
 comment|/* length of string in d_name */
-ifdef|#
-directive|ifdef
-name|_POSIX_SOURCE
-name|char
-name|d_name
-index|[
-literal|255
-operator|+
-literal|1
-index|]
-decl_stmt|;
-comment|/* name must be no longer than this */
-else|#
-directive|else
+if|#
+directive|if
+name|__BSD_VISIBLE
 define|#
 directive|define
 name|MAXNAMLEN
@@ -72,11 +67,28 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* name must be no longer than this */
+else|#
+directive|else
+name|char
+name|d_name
+index|[
+literal|255
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* name must be no longer than this */
 endif|#
 directive|endif
 block|}
 struct|;
 end_struct
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/*  * File types  */
@@ -170,7 +182,7 @@ value|((dirtype)<< 12)
 end_define
 
 begin_comment
-comment|/*  * The _GENERIC_DIRSIZ macro gives the minimum record length which will hold  * the directory entry.  This requires the amount of space in struct direct  * without the d_name field, plus enough space for the name with a terminating  * null byte (dp->d_namlen+1), rounded up to a 4 byte boundary.  */
+comment|/*  * The _GENERIC_DIRSIZ macro gives the minimum record length which will hold  * the directory entry.  This requires the amount of space in struct direct  * without the d_name field, plus enough space for the name with a terminating  * null byte (dp->d_namlen+1), rounded up to a 4 byte boundary.  *  * XXX although this macro is in the implementation namespace, it requires  * a manifest constant that is not.  */
 end_comment
 
 begin_define
@@ -183,6 +195,15 @@ parameter_list|)
 define|\
 value|((sizeof (struct dirent) - (MAXNAMLEN+1)) + (((dp)->d_namlen+1 + 3)&~ 3))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
 
 begin_ifdef
 ifdef|#
