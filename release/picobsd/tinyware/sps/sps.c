@@ -78,8 +78,6 @@ literal|4
 index|]
 decl_stmt|,
 name|i
-init|=
-literal|0
 decl_stmt|,
 name|num
 decl_stmt|,
@@ -162,6 +160,8 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|perror
@@ -203,6 +203,8 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|perror
@@ -296,11 +298,13 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|perror
 argument_list|(
-literal|"sysctl info"
+literal|"sysctl cmd info"
 argument_list|)
 expr_stmt|;
 name|exit
