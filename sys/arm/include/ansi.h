@@ -77,17 +77,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_BSD_SUSECONDS_T_
-value|int
-end_define
-
-begin_comment
-comment|/* suseconds_t */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|_BSD_TIME_T_
 value|long
 end_define

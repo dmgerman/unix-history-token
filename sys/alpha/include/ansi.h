@@ -85,17 +85,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_BSD_SUSECONDS_T_
-value|int
-end_define
-
-begin_comment
-comment|/* suseconds_t */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|_BSD_TIME_T_
 value|int
 end_define
@@ -115,16 +104,38 @@ begin_comment
 comment|/* timer_t */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+name|__GNUC__
+operator|&&
+operator|(
+name|__GNUC__
+operator|>
+literal|2
+operator|||
+name|__GNUC_MINOR__
+operator|>
+literal|95
+operator|)
+end_if
+
 begin_define
 define|#
 directive|define
-name|_BSD_USECONDS_T_
-value|unsigned int
+name|_BSD_VA_LIST_
+value|__builtin_va_list
 end_define
 
 begin_comment
-comment|/* useconds_t */
+comment|/* internally known to gcc */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_typedef
 typedef|typedef
@@ -154,6 +165,15 @@ end_define
 
 begin_comment
 comment|/* va_list */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*__GNUC__*/
 end_comment
 
 begin_comment

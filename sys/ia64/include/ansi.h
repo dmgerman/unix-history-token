@@ -115,28 +115,6 @@ begin_comment
 comment|/* timer_t */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|_BSD_SUSECONDS_T_
-value|int
-end_define
-
-begin_comment
-comment|/* suseconds_t */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_BSD_USECONDS_T_
-value|unsigned int
-end_define
-
-begin_comment
-comment|/* useconds_t */
-end_comment
-
 begin_comment
 comment|/*  * Types which are fundamental to the implementation and must be used  * in more than one standard header although they are only declared in  * one (perhaps nonstandard) header are defined here.  Standard headers  * use _BSD_XXX_T_ without undef'ing it.  */
 end_comment
