@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.85 1995/04/02 04:21:09 ache Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.86 1995/04/02 19:28:58 ache Exp $  */
 end_comment
 
 begin_include
@@ -577,6 +577,10 @@ begin_struct
 struct|struct
 name|com_s
 block|{
+name|int
+name|unit
+decl_stmt|;
+comment|/* unit	number */
 name|u_char
 name|state
 decl_stmt|;
@@ -2543,6 +2547,12 @@ argument_list|)
 expr_stmt|;
 name|com
 operator|->
+name|unit
+operator|=
+name|unit
+expr_stmt|;
+name|com
+operator|->
 name|cfcr_image
 operator|=
 name|CFCR_8BITS
@@ -4205,14 +4215,9 @@ name|unit
 decl_stmt|;
 name|unit
 operator|=
-name|DEV_TO_UNIT
-argument_list|(
 name|com
 operator|->
-name|tp
-operator|->
-name|t_dev
-argument_list|)
+name|unit
 expr_stmt|;
 name|iobase
 operator|=
@@ -4650,14 +4655,9 @@ name|CS_DTR_OFF
 expr_stmt|;
 name|kdc_sio
 index|[
-name|DEV_TO_UNIT
-argument_list|(
 name|com
 operator|->
-name|tp
-operator|->
-name|t_dev
-argument_list|)
+name|unit
 index|]
 operator|.
 name|kdc_state
@@ -4926,6 +4926,43 @@ name|LSR_BI
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DDB
+if|if
+condition|(
+operator|(
+name|line_status
+operator|&
+name|LSR_BI
+operator|)
+operator|&&
+operator|(
+name|COMCONSOLE
+operator|||
+name|boothowto
+operator|&
+name|RB_SERIAL
+operator|)
+operator|&&
+name|com
+operator|->
+name|unit
+operator|==
+name|comconsole
+condition|)
+block|{
+name|Debugger
+argument_list|(
+literal|"serial console break"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|cont
+goto|;
+block|}
+endif|#
+directive|endif
 comment|/* 				  Don't store PE if IGNPAR and BI if IGNBRK, 				  this hack allows "raw" tty optimization 				  works even if IGN* is set. 				*/
 if|if
 condition|(
