@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	%H%	3.13	%G%	*/
+comment|/*	%H%	3.14	%G%	*/
 end_comment
 
 begin_define
@@ -11,7 +11,11 @@ value|spl6
 end_define
 
 begin_comment
-comment|/*  * Emulex UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * NB: This device is very sensitive: be aware that the code is the way  *     it is for good reason and that there are delay loops here which may  *     have to be lengthened if your processor is faster and which should  *     probably be shortened if your processor is slower.  *  * This driver has been tested on a SC-11B Controller, configured  * with the following internal switch settings:  *	SW1-1	5/19 surfaces	(off, 19 surfaces on Ampex 9300)  *	SW1-2	chksum enable	(off, checksum disabled)  *	SW1-3	volume select	(off, 815 cylinders)  *	SW1-4	sector select	(on, 32 sectors)  *	SW1-5	unused		(off)  *	SW1-6	port select	(on, single port)  *	SW1-7	npr delay	(off, disable)  *	SW1-8	ecc test mode	(off, disable)  * and top mounted switches:  *	SW2-1	extend opcodes	(off=open, disable)  *	SW2-2	extend diag	(off=open, disable)  *	SW2-3	4 wd dma burst	(off=open, disable)  *	SW2-4	unused		(off=open)  *  * The controller transfers data much more rapidly with SW2-3 set,  * but we have previously experienced problems with it set this way.  * We intend to try this again in the near future.  *  *	wnj	June 14, 1980  */
+comment|/* block clock, for delay loop's sake */
+end_comment
+
+begin_comment
+comment|/*  * Emulex UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * NB: This device is very sensitive: be aware that the code is the way  *     it is for good reason and that there are delay loops here which may  *     have to be lengthened if your processor is faster and which should  *     probably be shortened if your processor is slower.  *  * This driver has been tested on a SC-11B Controller, configured  * with the following internal switch settings:  *	SW1-1	5/19 surfaces	(off, 19 surfaces on Ampex 9300)  *	SW1-2	chksum enable	(off, checksum disabled)  *	SW1-3	volume select	(off, 815 cylinders)  *	SW1-4	sector select	(on, 32 sectors)  *	SW1-5	unused		(off)  *	SW1-6	port select	(on, single port)  *	SW1-7	npr delay	(off, disable)  *	SW1-8	ecc test mode	(off, disable)  * and top mounted switches:  *	SW2-1	extend opcodes	(off=open, disable)  *	SW2-2	extend diag	(off=open, disable)  *	SW2-3	4 wd dma burst	(off=open, disable)  *	SW2-4	unused		(off=open)  *  * The controller transfers data much more rapidly with SW2-3 set,  * but we have previously experienced problems with it set this way.  * We intend to try this again in the near future.  *  * NB: OUR SYSTEM CURRENTLY GETS UBA ERRORS WHEN RUNNING THIS DRIVER  *     AND THE BUS OCCASIONALLY HANGS, NECESSITATING THE DEVIE RESET  *     CODE WHICH RE-INITS THE UNIBUS.  YECHHH.  */
 end_comment
 
 begin_include
@@ -24,6 +28,12 @@ begin_include
 include|#
 directive|include
 file|"../h/systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/dk.h"
 end_include
 
 begin_include
@@ -94,14 +104,14 @@ begin_define
 define|#
 directive|define
 name|DK_N
-value|1
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|DK_NMAX
-value|2
+value|3
 end_define
 
 begin_define
@@ -252,13 +262,13 @@ value|19
 end_define
 
 begin_comment
-comment|/*  * Constants controlling on-cylinder SEARCH usage.  *  * 	SDIST/2 msec		time needed to start transfer  * 	IDIST/2 msec		slop for interrupt latency  * 	RDIST/2 msec		tolerable rotational latency when on-cylinder  *  * If we are no closer than SDIST sectors and no further than SDIST+RDIST  * and in the driver then we take it as it is.  Otherwise we do a SEARCH  * requesting an interrupt SDIST+IDIST sectors in advance.  */
+comment|/*  * Constants controlling on-cylinder SEARCH usage.  *  * 	upSDIST/2 msec		time needed to start transfer  * 	upRDIST/2 msec		tolerable rotational latency when on-cylinder  *  * If we are no closer than upSDIST sectors and no further than upSDIST+upRDIST  * and in the driver then we take it as it is.  Otherwise we do a SEARCH  * requesting an interrupt upSDIST sectors in advance.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|_SDIST
+name|_upSDIST
 value|6
 end_define
 
@@ -269,46 +279,27 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_RDIST
+name|_upRDIST
 value|6
 end_define
 
 begin_comment
-comment|/* 2.5 msec */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_IDIST
-value|1
-end_define
-
-begin_comment
-comment|/* 0.5 msec */
+comment|/* 3.0 msec */
 end_comment
 
 begin_decl_stmt
 name|int
-name|SDIST
+name|upSDIST
 init|=
-name|_SDIST
+name|_upSDIST
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|RDIST
+name|upRDIST
 init|=
-name|_RDIST
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|IDIST
-init|=
-name|_IDIST
+name|_upRDIST
 decl_stmt|;
 end_decl_stmt
 
@@ -1379,7 +1370,7 @@ condition|)
 goto|goto
 name|done
 goto|;
-comment|/* 	 * Do enough of the disk address decoding to determine 	 * which cylinder and sector the request is on. 	 * If we are on the correct cylinder and the desired sector 	 * lies between SDIST and SDIST+RDIST sectors ahead of us, then 	 * we don't bother to SEARCH but just begin the transfer asap. 	 * Otherwise ask for a interrupt SDIST+IDIST sectors ahead. 	 */
+comment|/* 	 * Do enough of the disk address decoding to determine 	 * which cylinder and sector the request is on. 	 * If we are on the correct cylinder and the desired sector 	 * lies between upSDIST and upSDIST+upRDIST sectors ahead of us, then 	 * we don't bother to SEARCH but just begin the transfer asap. 	 * Otherwise ask for a interrupt upSDIST sectors ahead. 	 */
 name|bn
 operator|=
 name|dkblock
@@ -1410,7 +1401,7 @@ name|sn
 operator|+
 name|NSECT
 operator|-
-name|SDIST
+name|upSDIST
 operator|)
 operator|%
 name|NSECT
@@ -1466,7 +1457,7 @@ name|csn
 operator|>
 name|NSECT
 operator|-
-name|RDIST
+name|upRDIST
 condition|)
 goto|goto
 name|done

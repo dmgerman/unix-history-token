@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	3.4	%G%	*/
+comment|/*	hp.c	3.5	%G%	*/
 end_comment
 
 begin_comment
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"../h/systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/dk.h"
 end_include
 
 begin_include
@@ -205,16 +211,38 @@ end_define
 begin_define
 define|#
 directive|define
-name|SDIST
-value|2
+name|_hpSDIST
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|RDIST
+name|_hpRDIST
 value|6
 end_define
+
+begin_decl_stmt
+name|int
+name|hpSDIST
+init|=
+name|_hpSDIST
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|hpRDIST
+init|=
+name|_hpRDIST
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|hpseek
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -494,6 +522,13 @@ define|#
 directive|define
 name|OFFSET
 value|014
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEEK
+value|04
 end_define
 
 begin_define
@@ -1121,7 +1156,7 @@ name|sn
 operator|+
 name|NRMSECT
 operator|-
-name|SDIST
+name|hpSDIST
 operator|)
 operator|%
 name|NRMSECT
@@ -1146,7 +1181,7 @@ name|sn
 operator|+
 name|NSECT
 operator|-
-name|SDIST
+name|hpSDIST
 operator|)
 operator|%
 name|NSECT
@@ -1167,6 +1202,14 @@ condition|)
 goto|goto
 name|search
 goto|;
+elseif|else
+if|if
+condition|(
+name|hpseek
+condition|)
+goto|goto
+name|done
+goto|;
 name|csn
 operator|=
 operator|(
@@ -1183,8 +1226,6 @@ operator|)
 operator|-
 name|sn
 operator|+
-name|SDIST
-operator|-
 literal|1
 expr_stmt|;
 if|if
@@ -1203,7 +1244,7 @@ name|csn
 operator|>
 name|NSECT
 operator|-
-name|RDIST
+name|hpRDIST
 condition|)
 goto|goto
 name|done
@@ -1216,6 +1257,20 @@ name|hpdc
 operator|=
 name|cn
 expr_stmt|;
+if|if
+condition|(
+name|hpseek
+condition|)
+name|hpaddr
+operator|->
+name|hpcs1
+operator|=
+name|SEEK
+operator||
+name|GO
+expr_stmt|;
+else|else
+block|{
 name|hpaddr
 operator|->
 name|hpda
@@ -1230,6 +1285,7 @@ name|SEARCH
 operator||
 name|GO
 expr_stmt|;
+block|}
 comment|/* 	unit += DK_N; 	dk_busy |= 1<<unit; 	dk_numb[unit] += 1; */
 return|return;
 name|done

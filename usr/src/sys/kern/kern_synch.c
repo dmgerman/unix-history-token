@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	3.11	%G%	*/
+comment|/*	kern_synch.c	3.12	%G%	*/
 end_comment
 
 begin_include
@@ -1572,14 +1572,6 @@ name|rpp
 operator|->
 name|p_aveflt
 operator|=
-name|rip
-operator|->
-name|p_aveflt
-expr_stmt|;
-name|rate
-operator|.
-name|v_pgin
-operator|+=
 name|rip
 operator|->
 name|p_aveflt

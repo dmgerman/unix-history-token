@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.11	%G%	*/
+comment|/*	kern_proc.c	3.12	%G%	*/
 end_comment
 
 begin_include
@@ -319,7 +319,7 @@ name|bno
 operator|=
 name|malloc
 argument_list|(
-name|swapmap
+name|argmap
 argument_list|,
 name|ctod
 argument_list|(
@@ -560,7 +560,7 @@ name|bp
 operator|=
 name|getblk
 argument_list|(
-name|swapdev
+name|argdev
 argument_list|,
 call|(
 name|daddr_t
@@ -568,8 +568,6 @@ call|)
 argument_list|(
 name|dbtofsb
 argument_list|(
-name|swplo
-operator|+
 name|bno
 argument_list|)
 operator|+
@@ -674,12 +672,10 @@ name|bp
 operator|=
 name|baddr
 argument_list|(
-name|swapdev
+name|argdev
 argument_list|,
 name|dbtofsb
 argument_list|(
-name|swplo
-operator|+
 name|bno
 argument_list|)
 operator|+
@@ -851,7 +847,7 @@ name|bp
 operator|=
 name|bread
 argument_list|(
-name|swapdev
+name|argdev
 argument_list|,
 call|(
 name|daddr_t
@@ -859,8 +855,6 @@ call|)
 argument_list|(
 name|dbtofsb
 argument_list|(
-name|swplo
-operator|+
 name|bno
 argument_list|)
 operator|+
@@ -974,7 +968,7 @@ name|bno
 condition|)
 name|mfree
 argument_list|(
-name|swapmap
+name|argmap
 argument_list|,
 name|ctod
 argument_list|(
@@ -2285,14 +2279,6 @@ operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
-name|rate
-operator|.
-name|v_pgin
-operator|-=
-name|p
-operator|->
-name|p_aveflt
-expr_stmt|;
 name|p
 operator|->
 name|p_aveflt
@@ -2482,10 +2468,11 @@ expr_stmt|;
 name|multprog
 operator|--
 expr_stmt|;
-name|spl7
-argument_list|()
+comment|/*	spl7();			/* clock will get mad because of overlaying */
+name|noproc
+operator|=
+literal|1
 expr_stmt|;
-comment|/* clock will get mad because of overlaying */
 name|p
 operator|->
 name|p_stat
@@ -2743,42 +2730,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * Protect this process from future 			 * tty signals, and clear TSTP/TTIN/TTOU if pending. 			 */
-name|q
-operator|->
-name|p_pgrp
-operator|=
-name|q
-operator|->
-name|p_pid
-expr_stmt|;
-define|#
-directive|define
-name|bit
-parameter_list|(
-name|a
-parameter_list|)
-value|(1<<(a-1))
-name|q
-operator|->
-name|p_sig
-operator|&=
-operator|~
-operator|(
-name|bit
+name|spgrp
 argument_list|(
-name|SIGTSTP
+name|q
+argument_list|,
+operator|-
+literal|1
 argument_list|)
-operator||
-name|bit
-argument_list|(
-name|SIGTTIN
-argument_list|)
-operator||
-name|bit
-argument_list|(
-name|SIGTTOU
-argument_list|)
-operator|)
 expr_stmt|;
 block|}
 name|wakeup

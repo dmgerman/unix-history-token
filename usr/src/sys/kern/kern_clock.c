@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	3.11	%G%	*/
+comment|/*	%H%	3.12	kern_clock.c	*/
 end_comment
 
 begin_include
@@ -167,6 +167,8 @@ name|s
 decl_stmt|;
 name|int
 name|a
+decl_stmt|,
+name|cpstate
 decl_stmt|;
 comment|/* 	 * reprime clock 	 */
 name|clkreld
@@ -424,12 +426,6 @@ operator|=
 name|s
 expr_stmt|;
 block|}
-name|a
-operator|=
-name|dk_busy
-operator|&
-literal|07
-expr_stmt|;
 if|if
 condition|(
 name|USERMODE
@@ -455,24 +451,29 @@ name|p_nice
 operator|>
 name|NZERO
 condition|)
-name|a
-operator|+=
-literal|8
+name|cpstate
+operator|=
+name|CP_NICE
+expr_stmt|;
+else|else
+name|cpstate
+operator|=
+name|CP_USER
 expr_stmt|;
 block|}
 else|else
 block|{
-name|a
-operator|+=
-literal|16
+name|cpstate
+operator|=
+name|CP_SYS
 expr_stmt|;
 if|if
 condition|(
 name|noproc
 condition|)
-name|a
-operator|+=
-literal|8
+name|cpstate
+operator|=
+name|CP_IDLE
 expr_stmt|;
 else|else
 name|u
@@ -485,7 +486,16 @@ expr_stmt|;
 block|}
 name|dk_time
 index|[
-name|a
+name|cpstate
+index|]
+index|[
+name|dk_busy
+operator|&
+operator|(
+name|DK_NSTATES
+operator|-
+literal|1
+operator|)
 index|]
 operator|++
 expr_stmt|;

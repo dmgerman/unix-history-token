@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	3.5	%G%	*/
+comment|/*	init_main.c	3.6	%G%	*/
 end_comment
 
 begin_include
@@ -738,6 +738,11 @@ name|bdevsw
 modifier|*
 name|bdp
 decl_stmt|;
+name|struct
+name|swdevt
+modifier|*
+name|swp
+decl_stmt|;
 name|bfreelist
 operator|.
 name|b_forw
@@ -879,6 +884,51 @@ name|nblkdev
 operator|++
 expr_stmt|;
 block|}
+comment|/* 	 * Count swap devices, and adjust total swap space available. 	 * Some of this space will not be available until a vswapon() 	 * system is issued, usually when the system goes multi-user. 	 */
+name|nswdev
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|swp
+operator|=
+name|swdevt
+init|;
+name|swp
+operator|->
+name|sw_dev
+condition|;
+name|swp
+operator|++
+control|)
+name|nswdev
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|nswdev
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"binit"
+argument_list|)
+expr_stmt|;
+name|nswap
+operator|*=
+name|nswdev
+expr_stmt|;
+name|maxpgio
+operator|*=
+name|nswdev
+expr_stmt|;
+name|swfree
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
