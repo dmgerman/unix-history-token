@@ -2686,7 +2686,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|ATA_WAIT_READY
+name|ATA_WAIT_INTR
 argument_list|)
 condition|)
 block|{
@@ -4061,11 +4061,10 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|ATA_UNLOCK_CH
+argument_list|(
 name|ch
-operator|->
-name|active
-operator|=
-name|ATA_IDLE
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -7369,6 +7368,7 @@ operator|->
 name|channel
 argument_list|)
 expr_stmt|;
+comment|/* XXX SOS */
 block|}
 end_function
 
