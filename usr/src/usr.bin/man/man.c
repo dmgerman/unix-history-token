@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	5.14 (Berkeley) %G%"
+literal|"@(#)man.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -447,11 +447,13 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|p
-operator|+=
-literal|4
-expr_stmt|;
-comment|/* 				 * allocate for the rest of the PAGER 				 * environment variable, a space, and the EOS. 				 */
+name|char
+modifier|*
+name|opager
+init|=
+name|pager
+decl_stmt|;
+comment|/* 				 * allocate space to add the "-s" 				 */
 if|if
 condition|(
 operator|!
@@ -466,12 +468,12 @@ call|)
 argument_list|(
 name|strlen
 argument_list|(
-name|p
+name|opager
 argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|DEF_PAGER
+literal|"-s"
 argument_list|)
 operator|+
 literal|1
@@ -502,9 +504,9 @@ name|pager
 argument_list|,
 literal|"%s %s"
 argument_list|,
-name|DEF_PAGER
+name|opager
 argument_list|,
-name|p
+literal|"-s"
 argument_list|)
 expr_stmt|;
 block|}
