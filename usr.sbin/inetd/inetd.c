@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.49 1999/05/11 12:50:14 des Exp $"
+literal|"$Id: inetd.c,v 1.50 1999/06/17 09:16:08 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -511,7 +511,7 @@ begin_decl_stmt
 name|int
 name|maxchild
 init|=
-name|MAXCPM
+name|MAXCHILD
 decl_stmt|;
 end_decl_stmt
 
@@ -519,7 +519,7 @@ begin_decl_stmt
 name|int
 name|maxcpm
 init|=
-name|MAXCHILD
+name|MAXCPM
 decl_stmt|;
 end_decl_stmt
 
@@ -1296,7 +1296,7 @@ comment|/* 1 if should fork before call */
 name|int
 name|bi_maxchild
 decl_stmt|;
-comment|/* max number of children (default) */
+comment|/* max number of children (-1=default) */
 name|void
 function_decl|(
 modifier|*
@@ -1318,7 +1318,8 @@ name|SOCK_STREAM
 block|,
 literal|1
 block|,
-literal|0
+operator|-
+literal|1
 block|,
 name|echo_stream
 block|}
@@ -1330,7 +1331,7 @@ name|SOCK_DGRAM
 block|,
 literal|0
 block|,
-literal|0
+literal|1
 block|,
 name|echo_dg
 block|}
@@ -1343,7 +1344,8 @@ name|SOCK_STREAM
 block|,
 literal|1
 block|,
-literal|0
+operator|-
+literal|1
 block|,
 name|discard_stream
 block|}
@@ -1355,7 +1357,7 @@ name|SOCK_DGRAM
 block|,
 literal|0
 block|,
-literal|0
+literal|1
 block|,
 name|discard_dg
 block|}
@@ -1368,7 +1370,8 @@ name|SOCK_STREAM
 block|,
 literal|0
 block|,
-literal|0
+operator|-
+literal|1
 block|,
 name|machtime_stream
 block|}
@@ -1380,7 +1383,7 @@ name|SOCK_DGRAM
 block|,
 literal|0
 block|,
-literal|0
+literal|1
 block|,
 name|machtime_dg
 block|}
@@ -1393,7 +1396,8 @@ name|SOCK_STREAM
 block|,
 literal|0
 block|,
-literal|0
+operator|-
+literal|1
 block|,
 name|daytime_stream
 block|}
@@ -1405,7 +1409,7 @@ name|SOCK_DGRAM
 block|,
 literal|0
 block|,
-literal|0
+literal|1
 block|,
 name|daytime_dg
 block|}
@@ -1418,7 +1422,8 @@ name|SOCK_STREAM
 block|,
 literal|1
 block|,
-literal|0
+operator|-
+literal|1
 block|,
 name|chargen_stream
 block|}
@@ -1430,7 +1435,7 @@ name|SOCK_DGRAM
 block|,
 literal|0
 block|,
-literal|0
+literal|1
 block|,
 name|chargen_dg
 block|}
@@ -1442,7 +1447,8 @@ name|SOCK_STREAM
 block|,
 literal|1
 block|,
-literal|0
+operator|-
+literal|1
 block|,
 operator|(
 name|void
@@ -1461,7 +1467,8 @@ name|SOCK_STREAM
 block|,
 literal|1
 block|,
-literal|0
+operator|-
+literal|1
 block|,
 name|ident_stream
 block|}
@@ -6989,13 +6996,15 @@ name|sep
 operator|->
 name|se_maxchild
 operator|=
-name|maxchild
+operator|-
+literal|1
 expr_stmt|;
 name|sep
 operator|->
 name|se_maxcpm
 operator|=
-name|maxcpm
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -7064,6 +7073,33 @@ goto|goto
 name|more
 goto|;
 block|}
+if|if
+condition|(
+name|debug
+condition|)
+if|if
+condition|(
+operator|!
+name|sep
+operator|->
+name|se_accept
+operator|&&
+name|val
+operator|!=
+literal|1
+condition|)
+name|warnx
+argument_list|(
+literal|"maxchild=%lu for wait service %s"
+literal|" not recommended"
+argument_list|,
+name|val
+argument_list|,
+name|sep
+operator|->
+name|se_service
+argument_list|)
+expr_stmt|;
 name|sep
 operator|->
 name|se_maxchild
@@ -7411,6 +7447,20 @@ if|if
 condition|(
 name|sep
 operator|->
+name|se_maxcpm
+operator|<
+literal|0
+condition|)
+name|sep
+operator|->
+name|se_maxcpm
+operator|=
+name|maxcpm
+expr_stmt|;
+if|if
+condition|(
+name|sep
+operator|->
 name|se_maxchild
 operator|<
 literal|0
@@ -7422,6 +7472,14 @@ condition|(
 name|sep
 operator|->
 name|se_bi
+operator|&&
+name|sep
+operator|->
+name|se_bi
+operator|->
+name|bi_maxchild
+operator|>=
+literal|0
 condition|)
 name|sep
 operator|->
@@ -7433,17 +7491,30 @@ name|se_bi
 operator|->
 name|bi_maxchild
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sep
+operator|->
+name|se_accept
+condition|)
+name|sep
+operator|->
+name|se_maxchild
+operator|=
+name|maxchild
+operator|>
+literal|0
+condition|?
+name|maxchild
+else|:
+literal|0
+expr_stmt|;
 else|else
 name|sep
 operator|->
 name|se_maxchild
 operator|=
-name|sep
-operator|->
-name|se_accept
-condition|?
-literal|0
-else|:
 literal|1
 expr_stmt|;
 block|}
