@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * dummy swapgeneric.c: not used in new config system.  *  *	@(#)swapgeneric.c	8.1 (Berkeley) %G%  */
+comment|/*  * fake swapgeneric.c -- should do this differently.  *  *	@(#)swapgeneric.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -39,13 +39,117 @@ index|[]
 init|=
 block|{
 block|{
-name|NODEV
+name|makedev
+argument_list|(
+literal|7
+argument_list|,
+literal|1
+argument_list|)
 block|,
 literal|0
 block|,
 literal|0
 block|}
 block|,
+comment|/* sd0b */
+block|{
+name|makedev
+argument_list|(
+literal|7
+argument_list|,
+literal|9
+argument_list|)
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* sd1b */
+block|{
+name|makedev
+argument_list|(
+literal|7
+argument_list|,
+literal|17
+argument_list|)
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* sd2b */
+block|{
+name|makedev
+argument_list|(
+literal|7
+argument_list|,
+literal|25
+argument_list|)
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* sd3b */
+block|{
+name|makedev
+argument_list|(
+literal|7
+argument_list|,
+literal|33
+argument_list|)
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* sd4b */
+block|{
+name|makedev
+argument_list|(
+literal|7
+argument_list|,
+literal|41
+argument_list|)
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* sd5b */
+block|{
+name|makedev
+argument_list|(
+literal|7
+argument_list|,
+literal|49
+argument_list|)
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* sd6b */
+block|{
+name|makedev
+argument_list|(
+literal|7
+argument_list|,
+literal|57
+argument_list|)
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* sd7b */
 block|{
 name|NODEV
 block|,
