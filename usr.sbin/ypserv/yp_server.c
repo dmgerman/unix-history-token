@@ -88,7 +88,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_server.c,v 1.5 1997/03/15 06:06:06 wpaul Exp wpaul $"
+literal|"$Id: yp_server.c,v 1.21 1997/04/10 14:12:51 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1474,43 +1474,6 @@ operator|->
 name|rq_xprt
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The FreeBSD ypxfr(8) program will not talk to a ypserv(8) 	 * or rpc.ypxfrd(8) unless it's using a reserved port, but we  	 * may as well check that the process calling this procedure 	 * is also using one. 	 * 	 * yp_access() may also do a reserved port test, but only 	 * if the YP_SECURE flag is set in the map. For this procedure, 	 * the check should be unconditional. 	 */
-if|if
-condition|(
-name|ntohs
-argument_list|(
-name|rqhost
-operator|->
-name|sin_port
-argument_list|)
-operator|>=
-name|IPPORT_RESERVED
-condition|)
-block|{
-name|yp_error
-argument_list|(
-literal|"ypxfr request from non-reserved port (%s:%d) -- \ rejecting"
-argument_list|,
-name|inet_ntoa
-argument_list|(
-name|rqhost
-operator|->
-name|sin_addr
-argument_list|)
-argument_list|,
-name|ntohs
-argument_list|(
-name|rqhost
-operator|->
-name|sin_port
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|YPXFR_RETURN
-argument_list|(
-argument|YPXFR_REFUSED
-argument_list|)
-block|}
 ifdef|#
 directive|ifdef
 name|DB_CACHE
