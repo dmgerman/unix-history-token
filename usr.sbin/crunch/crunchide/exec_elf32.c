@@ -176,6 +176,16 @@ parameter_list|)
 value|((data == ELFDATA2MSB) ? be32toh(x) : le32toh(x))
 end_define
 
+begin_define
+define|#
+directive|define
+name|htoxew
+parameter_list|(
+name|x
+parameter_list|)
+value|((data == ELFDATA2MSB) ? htobe32(x) : htole32(x))
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -200,6 +210,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((data == ELFDATA2MSB) ? be64toh(x) : le64toh(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|htoxew
+parameter_list|(
+name|x
+parameter_list|)
+value|((data == ELFDATA2MSB) ? htobe64(x) : htole64(x))
 end_define
 
 begin_endif
@@ -1769,53 +1789,10 @@ index|]
 operator|.
 name|r_info
 operator|=
-if|#
-directive|if
-operator|(
-name|ELFSIZE
-operator|==
-literal|32
-operator|)
-comment|/* XXX */
-name|symfwmap
-index|[
-name|ELF_R_SYM
+name|htoxew
 argument_list|(
-name|xe32toh
+name|ELF_R_INFO
 argument_list|(
-name|relap
-index|[
-name|ewi
-index|]
-operator|.
-name|r_info
-argument_list|)
-argument_list|)
-index|]
-operator|<<
-literal|8
-operator||
-name|ELF_R_TYPE
-argument_list|(
-name|xe32toh
-argument_list|(
-name|relap
-index|[
-name|ewi
-index|]
-operator|.
-name|r_info
-argument_list|)
-argument_list|)
-expr_stmt|;
-elif|#
-directive|elif
-operator|(
-name|ELFSIZE
-operator|==
-literal|64
-operator|)
-comment|/* XXX */
 name|symfwmap
 index|[
 name|ELF_R_SYM
@@ -1831,9 +1808,7 @@ name|r_info
 argument_list|)
 argument_list|)
 index|]
-operator|<<
-literal|32
-operator||
+argument_list|,
 name|ELF_R_TYPE
 argument_list|(
 name|xewtoh
@@ -1846,10 +1821,9 @@ operator|.
 name|r_info
 argument_list|)
 argument_list|)
+argument_list|)
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* XXX */
 block|}
 block|}
 comment|/* any rel tables */
@@ -1908,53 +1882,10 @@ index|]
 operator|.
 name|r_info
 operator|=
-if|#
-directive|if
-operator|(
-name|ELFSIZE
-operator|==
-literal|32
-operator|)
-comment|/* XXX */
-name|symfwmap
-index|[
-name|ELF_R_SYM
+name|htoxew
 argument_list|(
-name|xe32toh
+name|ELF_R_INFO
 argument_list|(
-name|relp
-index|[
-name|ewi
-index|]
-operator|.
-name|r_info
-argument_list|)
-argument_list|)
-index|]
-operator|<<
-literal|8
-operator||
-name|ELF_R_TYPE
-argument_list|(
-name|xe32toh
-argument_list|(
-name|relp
-index|[
-name|ewi
-index|]
-operator|.
-name|r_info
-argument_list|)
-argument_list|)
-expr_stmt|;
-elif|#
-directive|elif
-operator|(
-name|ELFSIZE
-operator|==
-literal|64
-operator|)
-comment|/* XXX */
 name|symfwmap
 index|[
 name|ELF_R_SYM
@@ -1970,9 +1901,7 @@ name|r_info
 argument_list|)
 argument_list|)
 index|]
-operator|<<
-literal|32
-operator||
+argument_list|,
 name|ELF_R_TYPE
 argument_list|(
 name|xewtoh
@@ -1985,10 +1914,9 @@ operator|.
 name|r_info
 argument_list|)
 argument_list|)
+argument_list|)
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* XXX */
 block|}
 block|}
 comment|/* 	 * write new tables to the file 	 */
