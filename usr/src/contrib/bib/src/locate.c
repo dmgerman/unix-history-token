@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)locate.c	2.4	%G%"
+literal|"@(#)locate.c	2.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -839,6 +839,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|total
 operator|+=
 name|refs
@@ -869,6 +870,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+block|}
 block|}
 name|allrefs
 operator|=
