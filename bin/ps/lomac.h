@@ -5,15 +5,6 @@ end_comment
 
 begin_function_decl
 name|void
-name|lomac_start
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|lomac_stop
 parameter_list|(
 name|void

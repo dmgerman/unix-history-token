@@ -3,6 +3,20 @@ begin_comment
 comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,8 +25,8 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
-name|char
 specifier|const
+name|char
 name|copyright
 index|[]
 init|=
@@ -29,17 +43,17 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
 unit|static char sccsid[] = "@(#)ps.c	8.4 (Berkeley) 4/2/94";
@@ -47,25 +61,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_include
 include|#
@@ -77,18 +80,6 @@ begin_include
 include|#
 directive|include
 file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resource.h>
 end_include
 
 begin_include
@@ -124,12 +115,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
@@ -154,13 +139,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nlist.h>
+file|<paths.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<pwd.h>
 end_include
 
 begin_include
@@ -185,12 +170,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
 end_include
 
 begin_include
@@ -223,6 +202,7 @@ comment|/* username separators */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|KINFO
 modifier|*
 name|kinfo
@@ -234,9 +214,6 @@ name|struct
 name|varent
 modifier|*
 name|vhead
-decl_stmt|,
-modifier|*
-name|vtail
 decl_stmt|;
 end_decl_stmt
 
@@ -349,6 +326,7 @@ directive|endif
 end_endif
 
 begin_enum
+specifier|static
 enum|enum
 name|sort
 block|{
@@ -366,6 +344,7 @@ end_enum
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -496,6 +475,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|char
 name|dfmt
 index|[]
@@ -505,6 +485,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|jfmt
 index|[]
@@ -514,6 +495,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|lfmt
 index|[]
@@ -523,6 +505,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|o1
 index|[]
@@ -532,6 +515,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|o2
 index|[]
@@ -541,6 +525,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|ufmt
 index|[]
@@ -550,6 +535,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|vfmt
 index|[]
@@ -559,6 +545,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|Zfmt
 index|[]
@@ -568,6 +555,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|kvm_t
 modifier|*
 name|kd
@@ -620,7 +608,7 @@ name|flag
 decl_stmt|,
 name|i
 decl_stmt|,
-name|fmt
+name|_fmt
 decl_stmt|,
 name|lineno
 decl_stmt|,
@@ -642,16 +630,18 @@ decl_stmt|,
 name|nuids
 decl_stmt|;
 name|char
+name|errbuf
+index|[
+name|_POSIX2_LINE_MAX
+index|]
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|nlistf
 decl_stmt|,
 modifier|*
 name|memf
-decl_stmt|,
-name|errbuf
-index|[
-name|_POSIX2_LINE_MAX
-index|]
 decl_stmt|;
 operator|(
 name|void
@@ -758,7 +748,7 @@ argument_list|)
 expr_stmt|;
 name|all
 operator|=
-name|fmt
+name|_fmt
 operator|=
 name|prtheader
 operator|=
@@ -911,7 +901,7 @@ argument_list|(
 name|jfmt
 argument_list|)
 expr_stmt|;
-name|fmt
+name|_fmt
 operator|=
 literal|1
 expr_stmt|;
@@ -942,7 +932,7 @@ argument_list|(
 name|lfmt
 argument_list|)
 expr_stmt|;
-name|fmt
+name|_fmt
 operator|=
 literal|1
 expr_stmt|;
@@ -1016,7 +1006,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|fmt
+name|_fmt
 operator|=
 literal|1
 expr_stmt|;
@@ -1029,7 +1019,7 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
-name|fmt
+name|_fmt
 operator|=
 literal|1
 expr_stmt|;
@@ -1147,7 +1137,10 @@ literal|0
 condition|)
 name|ttypath
 operator|=
+name|strdup
+argument_list|(
 name|_PATH_CONSOLE
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -1262,7 +1255,7 @@ name|sortby
 operator|=
 name|SORTCPU
 expr_stmt|;
-name|fmt
+name|_fmt
 operator|=
 literal|1
 expr_stmt|;
@@ -1286,7 +1279,7 @@ name|sortby
 operator|=
 name|SORTMEM
 expr_stmt|;
-name|fmt
+name|_fmt
 operator|=
 literal|1
 expr_stmt|;
@@ -1482,7 +1475,7 @@ begin_if
 if|if
 condition|(
 operator|!
-name|fmt
+name|_fmt
 condition|)
 name|parsefmt
 argument_list|(
@@ -2059,9 +2052,10 @@ operator|*
 name|moreuids
 block|;
 name|int
-name|l
-block|,
 name|alloc
+block|;
+name|size_t
+name|l
 block|;
 name|alloc
 operator|=
@@ -2118,6 +2112,9 @@ name|warnx
 argument_list|(
 literal|"%.*s: name too long"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|l
 argument_list|,
 name|arg
@@ -2557,6 +2554,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -2592,13 +2590,11 @@ name|int
 name|maxlen
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|s
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|s
 operator|=
 name|fmt_argv
@@ -2621,7 +2617,10 @@ name|comm
 argument_list|,
 name|maxlen
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|s
 operator|==
 name|NULL
 condition|)
@@ -2713,6 +2712,8 @@ name|ki
 operator|->
 name|ki_args
 operator|=
+name|strdup
+argument_list|(
 name|fmt
 argument_list|(
 name|kvm_getargv
@@ -2727,6 +2728,7 @@ name|ki_comm
 argument_list|,
 name|MAXCOMLEN
 argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -2735,26 +2737,9 @@ condition|(
 name|needcomm
 condition|)
 block|{
-name|ki
-operator|->
-name|ki_args
-operator|=
-name|malloc
+name|asprintf
 argument_list|(
-name|strlen
-argument_list|(
-name|ki
-operator|->
-name|ki_p
-operator|->
-name|ki_comm
-argument_list|)
-operator|+
-literal|3
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
+operator|&
 name|ki
 operator|->
 name|ki_args
@@ -2792,6 +2777,8 @@ name|ki
 operator|->
 name|ki_env
 operator|=
+name|strdup
+argument_list|(
 name|fmt
 argument_list|(
 name|kvm_getenvv
@@ -2805,6 +2792,7 @@ operator|)
 name|NULL
 argument_list|,
 literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2882,6 +2870,7 @@ operator|(
 name|getpcpu
 argument_list|(
 operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)
@@ -2891,6 +2880,7 @@ operator|-
 name|getpcpu
 argument_list|(
 operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)
@@ -2909,6 +2899,7 @@ operator|(
 name|VSIZE
 argument_list|(
 operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)
@@ -2918,6 +2909,7 @@ operator|-
 name|VSIZE
 argument_list|(
 operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)
@@ -2927,25 +2919,33 @@ operator|)
 return|;
 name|i
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
-operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)
 name|a
-operator|)
+argument_list|)
 operator|->
 name|ki_p
 operator|->
 name|ki_tdev
 operator|-
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
-operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)
 name|b
-operator|)
+argument_list|)
 operator|->
 name|ki_p
 operator|->
@@ -2961,6 +2961,7 @@ name|i
 operator|=
 operator|(
 operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)
@@ -2973,6 +2974,7 @@ name|ki_pid
 operator|-
 operator|(
 operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)

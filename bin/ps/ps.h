@@ -98,16 +98,19 @@ typedef|typedef
 struct|struct
 name|var
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
 comment|/* name(s) of variable */
+specifier|const
 name|char
 modifier|*
 name|header
 decl_stmt|;
 comment|/* default header */
+specifier|const
 name|char
 modifier|*
 name|alias
@@ -169,7 +172,7 @@ name|width
 decl_stmt|;
 comment|/* printing width */
 comment|/* 	 * The following (optional) elements are hooks for passing information 	 * to the generic output routine pvar (which prints simple elements 	 * from the well known kinfo_proc structure). 	 */
-name|int
+name|off_t
 name|off
 decl_stmt|;
 comment|/* offset in structure */
@@ -178,16 +181,12 @@ name|type
 name|type
 decl_stmt|;
 comment|/* type of element */
+specifier|const
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
 comment|/* printf format */
-name|char
-modifier|*
-name|time
-decl_stmt|;
-comment|/* time format */
 name|short
 name|dwidth
 decl_stmt|;
