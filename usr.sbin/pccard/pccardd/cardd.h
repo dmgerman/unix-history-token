@@ -826,8 +826,12 @@ begin_define
 define|#
 directive|define
 name|IOPORTS
-value|0x400
+value|0x1000
 end_define
+
+begin_comment
+comment|/* allow most of the low ports */
+end_comment
 
 begin_define
 define|#
