@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.129 2000/12/16 16:09:24 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.130 2000/12/18 15:55:30 tsutsui Exp $	*/
 end_comment
 
 begin_comment
@@ -12004,11 +12004,14 @@ name|len
 operator|=
 name|UHCI_TD_GET_MAXLEN
 argument_list|(
+name|le32toh
+argument_list|(
 name|std
 operator|->
 name|td
 operator|.
 name|td_token
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
