@@ -332,7 +332,18 @@ operator|==
 name|chan
 condition|)
 block|{
-comment|// printf("wakeup %s\n", thr[i].name);
+name|printf
+argument_list|(
+literal|"wakeup %s\n"
+argument_list|,
+name|thr
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
 name|atomic_clear_int
 argument_list|(
 operator|&
@@ -519,7 +530,19 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|// printf("tsleep %s %p %s\n", tp->name, chan, wmesg);
+name|printf
+argument_list|(
+literal|"tsleep %s %p %s\n"
+argument_list|,
+name|tp
+operator|->
+name|name
+argument_list|,
+name|chan
+argument_list|,
+name|wmesg
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -552,7 +575,7 @@ name|tv
 operator|.
 name|tv_sec
 operator|=
-literal|10
+literal|3
 expr_stmt|;
 name|tv
 operator|.
@@ -621,22 +644,12 @@ expr_stmt|;
 name|secrethandshake
 argument_list|()
 expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|j
 condition|)
-break|break;
-name|atomic_set_int
-argument_list|(
-operator|&
-name|sleeping
-argument_list|,
-literal|1
-operator|<<
-name|i
-argument_list|)
-expr_stmt|;
-block|}
 name|i
 operator|=
 name|read
@@ -692,7 +705,7 @@ argument_list|()
 expr_stmt|;
 name|usleep
 argument_list|(
-literal|100000
+literal|500000
 argument_list|)
 expr_stmt|;
 name|secrethandshake
@@ -1334,9 +1347,16 @@ name|mtx
 modifier|*
 name|mp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|bla
+name|__unused
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|yak
 name|__unused
 parameter_list|,
 name|int

@@ -87,6 +87,7 @@ name|void
 modifier|*
 name|bio_data
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|bio_attribute
@@ -429,6 +430,11 @@ name|struct
 name|mtx
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
