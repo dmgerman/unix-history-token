@@ -4,7 +4,7 @@ comment|/* obj-aout.h, a.out object file format for gas, the assembler.    Copyr
 end_comment
 
 begin_comment
-comment|/*  * $Id: obj-aout.h,v 1.1 1993/10/02 20:58:55 pk Exp $  */
+comment|/*  * $Id: obj-aout.h,v 1.1 1993/11/03 00:53:50 paul Exp $  */
 end_comment
 
 begin_comment
@@ -95,6 +95,17 @@ end_endif
 begin_comment
 comment|/* DEFAULT_MAGIC_NUMBER_FOR_OBJECT_FILE */
 end_comment
+
+begin_comment
+comment|/* First character of operand in `.type' directives */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_OPERAND_FMT
+value|'@'
+end_define
 
 begin_comment
 comment|/* SYMBOL TABLE */

@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tc-i386.c,v 1.3 1993/10/27 00:14:50 pk Exp $"
+literal|"$Id: tc-i386.c,v 1.1 1993/11/03 00:54:23 paul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6359,30 +6359,11 @@ ifdef|#
 directive|ifdef
 name|PIC
 comment|/* 			 * Remember # of opcode bytes to put in pcrel_adjust 			 * for use in _GLOBAL_OFFSET_TABLE_ expressions. 			 */
-name|long
-name|opoffset
+name|int
+name|nopbytes
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|flagseen
-index|[
-literal|'k'
-index|]
-condition|)
-name|opoffset
-operator|=
-name|obstack_next_free
-argument_list|(
-operator|&
-name|frags
-argument_list|)
-operator|-
-name|frag_now
-operator|->
-name|fr_literal
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* First the prefix bytes. */
@@ -6415,6 +6396,10 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|nopbytes
+operator|+=
+literal|1
+expr_stmt|;
 name|md_number_to_chars
 argument_list|(
 name|p
@@ -6441,6 +6426,10 @@ name|base_opcode
 argument_list|)
 condition|)
 block|{
+name|nopbytes
+operator|+=
+literal|1
+expr_stmt|;
 name|FRAG_APPEND_1_CHAR
 argument_list|(
 name|t
@@ -6466,6 +6455,10 @@ name|frag_more
 argument_list|(
 literal|2
 argument_list|)
+expr_stmt|;
+name|nopbytes
+operator|+=
+literal|2
 expr_stmt|;
 comment|/* put out high byte first: can't use md_number_to_chars! */
 operator|*
@@ -6511,6 +6504,10 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
+name|nopbytes
+operator|+=
+literal|4
+expr_stmt|;
 operator|*
 name|p
 operator|++
@@ -6527,6 +6524,7 @@ literal|0xff
 expr_stmt|;
 block|}
 else|else
+block|{
 name|p
 operator|=
 name|frag_more
@@ -6534,6 +6532,11 @@ argument_list|(
 literal|3
 argument_list|)
 expr_stmt|;
+name|nopbytes
+operator|+=
+literal|3
+expr_stmt|;
+block|}
 operator|*
 name|p
 operator|++
@@ -6590,6 +6593,10 @@ name|frag_more
 argument_list|(
 literal|1
 argument_list|)
+expr_stmt|;
+name|nopbytes
+operator|+=
+literal|1
 expr_stmt|;
 comment|/* md_number_to_chars (p, i.rm, 1); */
 name|md_number_to_chars
@@ -6652,6 +6659,10 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|nopbytes
+operator|+=
+literal|1
+expr_stmt|;
 comment|/* md_number_to_chars (p, i.bi, 1); */
 name|md_number_to_chars
 argument_list|(
@@ -6688,32 +6699,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|PIC
-if|if
-condition|(
-name|flagseen
-index|[
-literal|'k'
-index|]
-condition|)
-name|opoffset
-operator|=
-name|obstack_next_free
-argument_list|(
-operator|&
-name|frags
-argument_list|)
-operator|-
-name|frag_now
-operator|->
-name|fr_literal
-operator|-
-name|opoffset
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|i
@@ -6969,11 +6954,7 @@ name|fixP
 operator|->
 name|fx_pcrel_adjust
 operator|=
-name|opoffset
-expr_stmt|;
-name|opoffset
-operator|=
-literal|0
+name|nopbytes
 expr_stmt|;
 block|}
 endif|#
@@ -7273,11 +7254,7 @@ name|fixP
 operator|->
 name|fx_pcrel_adjust
 operator|=
-name|opoffset
-expr_stmt|;
-name|opoffset
-operator|=
-literal|0
+name|nopbytes
 expr_stmt|;
 block|}
 endif|#
@@ -8663,7 +8640,7 @@ index|[
 name|this_operand
 index|]
 operator|=
-name|RELOC_GLOB_DAT
+name|RELOC_GOTOFF
 expr_stmt|;
 operator|*
 name|cp
@@ -8718,7 +8695,7 @@ index|[
 name|this_operand
 index|]
 operator|=
-name|RELOC_GLOB_DAT
+name|RELOC_GOT
 expr_stmt|;
 operator|*
 name|cp
@@ -8786,7 +8763,7 @@ index|[
 name|this_operand
 index|]
 operator|==
-name|RELOC_GLOB_DAT
+name|RELOC_GOTOFF
 condition|)
 name|exp
 operator|->
@@ -10745,7 +10722,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-name|RELOC_GLOB_DAT
+name|RELOC_GOT
 case|:
 name|extra_bits
 operator|=
@@ -10768,6 +10745,10 @@ name|sy_number
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|extrn_bit
+operator|&&
+operator|!
 name|S_IS_EXTERNAL
 argument_list|(
 name|fixP
@@ -10775,9 +10756,67 @@ operator|->
 name|fx_addsy
 argument_list|)
 condition|)
+name|as_warn
+argument_list|(
+literal|"GOT relocation burb: `%s' should be global"
+argument_list|,
+name|S_GET_NAME
+argument_list|(
+name|fixP
+operator|->
+name|fx_addsy
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|extrn_bit
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+name|RELOC_GOTOFF
+case|:
+name|extra_bits
+operator|=
+operator|(
+literal|1
+operator|<<
+literal|4
+operator|)
+operator|&
+literal|0x10
+expr_stmt|;
+comment|/* r_baserel */
+name|r_symbolnum
+operator|=
+name|fixP
+operator|->
+name|fx_addsy
+operator|->
+name|sy_number
+expr_stmt|;
+if|if
+condition|(
+name|extrn_bit
+operator|||
+name|S_IS_EXTERNAL
+argument_list|(
+name|fixP
+operator|->
+name|fx_addsy
+argument_list|)
+condition|)
+name|as_warn
+argument_list|(
+literal|"GOT relocation burb: `%s' should be static"
+argument_list|,
+name|S_GET_NAME
+argument_list|(
+name|fixP
+operator|->
+name|fx_addsy
+argument_list|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

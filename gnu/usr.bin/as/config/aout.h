@@ -159,6 +159,16 @@ directive|endif
 comment|/* not TC_SPARC */
 name|NO_RELOC
 block|,
+ifdef|#
+directive|ifdef
+name|TC_I386
+comment|/* Used internally by gas */
+name|RELOC_GOT
+block|,
+name|RELOC_GOTOFF
+block|,
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* not TC_I860 */

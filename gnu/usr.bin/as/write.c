@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: write.c,v 1.6 1993/10/27 00:14:14 pk Exp $"
+literal|"$Id: write.c,v 1.2 1993/11/03 00:52:28 paul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4259,6 +4259,18 @@ operator|->
 name|fx_r_type
 operator|!=
 name|RELOC_GLOB_DAT
+operator|&&
+name|fixP
+operator|->
+name|fx_r_type
+operator|!=
+name|RELOC_GOT
+operator|&&
+name|fixP
+operator|->
+name|fx_r_type
+operator|!=
+name|RELOC_GOTOFF
 operator|&&
 operator|(
 name|fixP
