@@ -5438,6 +5438,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|wlinit
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 break|break;

@@ -851,7 +851,7 @@ name|strcat
 argument_list|(
 name|sitepath
 argument_list|,
-literal|"/packages-3.3/"
+literal|"/packages-3.3-release/"
 argument_list|)
 expr_stmt|;
 elseif|else
