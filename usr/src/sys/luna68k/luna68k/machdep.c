@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * from: hp300/hp300/machdep.c	7.35 (Berkeley) 12/28/92  *  *	@(#)machdep.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * from: hp300/hp300/machdep.c   7.36 (Berkeley) 2/10/93  *  *	@(#)machdep.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -174,6 +174,23 @@ include|#
 directive|include
 file|<vm/vm_kern.h>
 end_include
+
+begin_comment
+comment|/* the following is used externally (sysctl_hw) */
+end_comment
+
+begin_decl_stmt
+name|char
+name|machine
+index|[]
+init|=
+literal|"luna68k"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* cpu "architecture" */
+end_comment
 
 begin_decl_stmt
 name|vm_map_t
@@ -1158,6 +1175,37 @@ directive|endif
 block|}
 end_block
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|machine
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|cpu_model
+index|[
+literal|120
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|ostype
+index|[]
+decl_stmt|,
+name|osrelease
+index|[]
+decl_stmt|,
+name|version
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|identifyfpu
 argument_list|()
@@ -1184,13 +1232,23 @@ literal|"startup"
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|sprintf
 argument_list|(
-literal|"LUNA(20Mhz MC68030 CPU, 20Mhz MC6888%d FPU)\n"
+name|cpu_model
+argument_list|,
+literal|"LUNA-I (20MHz MC68030 CPU+MMU, 20MHz MC6888%d FPU)"
 argument_list|,
 name|fpptype
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|cpu_model
+argument_list|)
+expr_stmt|;
+comment|/* 	printf("LUNA(20Mhz MC68030 CPU, 20Mhz MC6888%d FPU)\n",fpptype);  */
 block|}
 end_block
 
