@@ -1,6 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_define
+define|#
+directive|define
+name|UPECCDEBUG
+end_define
+
 begin_comment
-comment|/*	up.c	4.41	82/01/17	*/
+comment|/*	up.c	4.39	81/05/11	*/
 end_comment
 
 begin_include
@@ -279,6 +285,51 @@ block|,
 endif|#
 directive|endif
 block|}
+struct|,
+name|am_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=cyl 0 thru 31 */
+literal|33440
+block|,
+literal|32
+block|,
+comment|/* B=cyl 32 thru 97 */
+literal|524288
+block|,
+literal|0
+block|,
+comment|/* C=cyl 0 thru 1023 */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|181760
+block|,
+literal|668
+block|,
+comment|/* G=cyl 668 thru 1022 */
+literal|291346
+block|,
+literal|98
+block|,
+comment|/* H=cyl 98 thru 667 */
+block|}
 struct|;
 end_struct
 
@@ -486,6 +537,19 @@ block|,
 name|fj_sizes
 block|,
 comment|/* fujitsu 160m */
+literal|32
+block|,
+literal|16
+block|,
+literal|32
+operator|*
+literal|16
+block|,
+literal|1024
+block|,
+name|am_sizes
+block|,
+comment|/* fujitsu 160m */
 block|}
 struct|;
 end_struct
@@ -632,11 +696,6 @@ expr_stmt|;
 name|br
 operator|=
 name|cvec
-expr_stmt|;
-name|upintr
-argument_list|(
-literal|0
-argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -896,6 +955,22 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* fujitsu hack */
+elseif|else
+if|if
+condition|(
+name|upaddr
+operator|->
+name|uphr
+operator|==
+literal|15
+condition|)
+name|ui
+operator|->
+name|ui_type
+operator|=
+literal|2
+expr_stmt|;
+comment|/* ampex hack */
 name|upaddr
 operator|->
 name|upcs2
@@ -959,9 +1034,6 @@ name|long
 name|bn
 decl_stmt|,
 name|sz
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 name|sz
 operator|=
@@ -1073,8 +1145,9 @@ index|]
 operator|.
 name|cyloff
 expr_stmt|;
-name|s
-operator|=
+operator|(
+name|void
+operator|)
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -1144,10 +1217,11 @@ name|ui_mi
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
+operator|(
+name|void
+operator|)
+name|spl0
+argument_list|()
 expr_stmt|;
 return|return;
 name|bad
