@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: if_cons.c,v 4.7 88/08/11 15:52:55 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/if_cons.c,v $  *  * cons.c - Connection Oriented Network Service:  * including support for a) user transport-level service,   *	b) COSNS below CLNP, and c) CONS below TP.  #ifndef lint static char *rcsid = "$Header: if_cons.c,v 4.7 88/08/11 15:52:55 nhall Exp $"; #endif lint  */
+comment|/*  * $Header: if_cons.c,v 4.7 88/08/11 15:52:55 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/if_cons.c,v $  *	@(#)if_cons.c	7.6 (Berkeley) %G%  *  * cons.c - Connection Oriented Network Service:  * including support for a) user transport-level service,   *	b) COSNS below CLNP, and c) CONS below TP.  #ifndef lint static char *rcsid = "$Header: if_cons.c,v 4.7 88/08/11 15:52:55 nhall Exp $"; #endif lint  */
 end_comment
 
 begin_ifdef
@@ -935,8 +935,6 @@ argument_list|,
 name|tp8878_A_incoming
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pk_protolisten
 argument_list|(
 literal|0
@@ -946,6 +944,8 @@ argument_list|,
 name|tp_incoming
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1196,6 +1196,15 @@ decl_stmt|;
 name|int
 name|cmd
 decl_stmt|;
+if|if
+condition|(
+name|m0
+operator|==
+literal|0
+condition|)
+goto|goto
+name|dead
+goto|;
 switch|switch
 condition|(
 name|m0
@@ -1262,8 +1271,16 @@ operator|=
 name|PRC_CONS_SEND_DONE
 expr_stmt|;
 break|break;
+name|dead
+label|:
 case|case
 name|RESET
+case|:
+case|case
+name|CLEAR
+case|:
+case|case
+name|CLEAR_CONF
 case|:
 name|cmd
 operator|=
@@ -1801,8 +1818,6 @@ decl_stmt|;
 specifier|register
 name|caddr_t
 name|ptr
-init|=
-name|buf
 decl_stmt|;
 specifier|register
 name|int
@@ -1854,6 +1869,10 @@ name|m
 argument_list|,
 name|caddr_t
 argument_list|)
+expr_stmt|;
+name|ptr
+operator|=
+name|buf
 expr_stmt|;
 name|IFDEBUG
 argument_list|(
@@ -2389,7 +2408,19 @@ name|char
 modifier|*
 name|lim
 init|=
-name|in
+name|siso
+operator|->
+name|siso_data
+operator|+
+name|siso
+operator|->
+name|siso_nlen
+decl_stmt|;
+name|char
+modifier|*
+name|olim
+init|=
+name|out
 operator|+
 literal|15
 decl_stmt|;
@@ -2437,6 +2468,10 @@ condition|(
 name|nibble
 operator|!=
 literal|0x3f
+operator|&&
+name|out
+operator|<
+name|olim
 condition|)
 operator|*
 name|out
