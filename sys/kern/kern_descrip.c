@@ -7124,16 +7124,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|i
-operator|=
-literal|0
-expr_stmt|;
-name|fpp
-operator|=
-name|fdp
-operator|->
-name|fd_ofiles
-expr_stmt|;
 for|for
 control|(
 name|i
