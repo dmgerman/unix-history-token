@@ -19317,10 +19317,10 @@ operator|&
 name|nd
 argument_list|,
 name|LOOKUP
-operator||
-name|LOCKLEAF
 argument_list|,
 name|FOLLOW
+operator||
+name|LOCKLEAF
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
