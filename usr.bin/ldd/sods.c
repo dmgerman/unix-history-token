@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -264,17 +270,6 @@ begin_function_decl
 specifier|static
 endif|#
 directive|endif
-name|void
-name|dump_file
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|void
 name|dump_rels
@@ -845,6 +840,7 @@ name|IS_ELF
 argument_list|(
 operator|*
 operator|(
+specifier|const
 name|Elf32_Ehdr
 operator|*
 operator|)
@@ -1399,6 +1395,10 @@ index|[
 literal|0
 index|]
 operator|==
+call|(
+name|size_t
+call|)
+argument_list|(
 name|sdt
 operator|->
 name|sdt_hash
@@ -1406,6 +1406,7 @@ operator|-
 name|sdt
 operator|->
 name|sdt_rel
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|rtsym_base
@@ -1452,6 +1453,10 @@ index|[
 literal|0
 index|]
 operator|==
+call|(
+name|size_t
+call|)
+argument_list|(
 name|sdt
 operator|->
 name|sdt_strings
@@ -1459,6 +1464,7 @@ operator|-
 name|sdt
 operator|->
 name|sdt_nzlist
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1684,10 +1690,18 @@ if|if
 condition|(
 name|origin
 operator|<=
+operator|(
+name|unsigned
+name|long
+operator|)
 name|r
 operator|->
 name|r_address
 operator|&&
+operator|(
+name|unsigned
+name|long
+operator|)
 name|r
 operator|->
 name|r_address
