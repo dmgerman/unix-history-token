@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* * ---------------------------------------------------------------------------- * "THE BEER-WARE LICENSE" (Revision 42): *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you * can do whatever you want with this stuff. If we meet some day, and you think * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp * ---------------------------------------------------------------------------- * * $Id: libdisk.h,v 1.22.2.1 1996/11/28 21:51:12 phk Exp $ * */
+comment|/* * ---------------------------------------------------------------------------- * "THE BEER-WARE LICENSE" (Revision 42): *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you * can do whatever you want with this stuff. If we meet some day, and you think * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp * ---------------------------------------------------------------------------- * * $Id: libdisk.h,v 1.22.2.2 1997/01/24 21:08:30 jkh Exp $ * */
 end_comment
 
 begin_define
@@ -31,7 +31,7 @@ block|,
 name|part
 block|,
 name|unused
-block|, }
+block|}
 name|chunk_e
 typedef|;
 end_typedef
@@ -515,12 +515,12 @@ parameter_list|,
 specifier|const
 name|u_char
 modifier|*
-name|boot1
+name|_boot1
 parameter_list|,
 specifier|const
 name|u_char
 modifier|*
-name|boot2
+name|_boot2
 parameter_list|)
 function_decl|;
 end_function_decl
