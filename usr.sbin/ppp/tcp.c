@@ -217,17 +217,6 @@ expr_stmt|;
 name|dest
 operator|.
 name|sin_addr
-operator|.
-name|s_addr
-operator|=
-name|inet_addr
-argument_list|(
-name|host
-argument_list|)
-expr_stmt|;
-name|dest
-operator|.
-name|sin_addr
 operator|=
 name|GetIpAddr
 argument_list|(
