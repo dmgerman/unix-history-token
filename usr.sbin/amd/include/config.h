@@ -2228,6 +2228,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if `dirmask' is member of `pcfs_args_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PCFS_ARGS_T_DIRMASK
+value|1
+end_define
+
+begin_comment
 comment|/* Define if `secondswest' is member of `pcfs_args_t'. */
 end_comment
 
