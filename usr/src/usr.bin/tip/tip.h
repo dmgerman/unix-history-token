@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tip.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tip.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -621,9 +621,15 @@ name|zz_number
 decl_stmt|;
 name|short
 name|zz_boolean
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|char
 name|zz_character
+index|[
+literal|4
+index|]
 decl_stmt|;
 name|int
 modifier|*
@@ -647,21 +653,27 @@ end_define
 begin_define
 define|#
 directive|define
-name|boolean
-parameter_list|(
-name|v
-parameter_list|)
-value|((((zzhack *)(&(v))))->zz_boolean)
-end_define
-
-begin_define
-define|#
-directive|define
 name|number
 parameter_list|(
 name|v
 parameter_list|)
 value|((((zzhack *)(&(v))))->zz_number)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|boolean
+parameter_list|(
+name|v
+parameter_list|)
+value|((((zzhack *)(&(v))))->zz_boolean[0])
 end_define
 
 begin_define
@@ -671,8 +683,38 @@ name|character
 parameter_list|(
 name|v
 parameter_list|)
-value|((((zzhack *)(&(v))))->zz_character)
+value|((((zzhack *)(&(v))))->zz_character[0])
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|boolean
+parameter_list|(
+name|v
+parameter_list|)
+value|((((zzhack *)(&(v))))->zz_boolean[1])
+end_define
+
+begin_define
+define|#
+directive|define
+name|character
+parameter_list|(
+name|v
+parameter_list|)
+value|((((zzhack *)(&(v))))->zz_character[3])
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
