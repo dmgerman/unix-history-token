@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
 end_include
 
@@ -36,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -49,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
 end_include
 
 begin_include
