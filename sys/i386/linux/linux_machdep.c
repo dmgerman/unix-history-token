@@ -2077,6 +2077,13 @@ name|mmap_args
 comment|/* { 		caddr_t addr; 		size_t len; 		int prot; 		int flags; 		int fd; 		long pad; 		off_t pos; 	} */
 name|bsd_args
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|bsd_args
 operator|.
 name|flags
@@ -2337,7 +2344,9 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"-> (%p, %d, %d, 0x%08x, %d, %d)\n"
+literal|"-> %s(%p, %d, %d, 0x%08x, %d, 0x%x)\n"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|void
@@ -2373,8 +2382,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return
-operator|(
+name|error
+operator|=
 name|mmap
 argument_list|(
 name|td
@@ -2382,6 +2391,41 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|ldebug
+argument_list|(
+name|mmap
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"-> %s() return: 0x%x (0x%08x)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|td
+operator|->
+name|td_retval
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
