@@ -9602,6 +9602,20 @@ name|datalink
 modifier|*
 name|dl
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|holdsession
+operator|&&
+name|bundle_IsDead
+argument_list|(
+name|bundle
+argument_list|)
+condition|)
+block|{
+comment|/*      * No need to lose our session after all... we're going away anyway      *      * We should really stop the timer and pause if holdsession is set and      * the bundle's dead, but that leaves other resources lying about :-(      */
+return|return;
+block|}
 name|orig
 operator|=
 name|getpid
