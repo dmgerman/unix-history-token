@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.26 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2849,6 +2849,28 @@ name|MAX_CONTROL
 value|' '
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXRULERECURSION
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXRULERECURSION
+value|50
+end_define
+
+begin_comment
+comment|/* max recursion depth */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -3142,7 +3164,7 @@ condition|(
 name|reclevel
 operator|++
 operator|>
-literal|50
+name|MAXRULERECURSION
 condition|)
 block|{
 name|syserr
