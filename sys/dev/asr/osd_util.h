@@ -16,7 +16,7 @@ name|__OSD_UTIL_H
 end_define
 
 begin_comment
-comment|/*File - OSD_UTIL.H  ****************************************************************************  *  *Description:  *  *      This file contains defines and function prototypes that are  *operating system dependent.  The resources defined in this file  *are not specific to any particular application.  *  *Copyright Distributed Processing Technology, Corp.  *        140 Candace Dr.  *        Maitland, Fl. 32751   USA  *        Phone: (407) 830-5522  Fax: (407) 260-5366  *        All Rights Reserved  *  *Author:       Doug Anderson  *Date:         1/7/94  *  *Editors:  *  *Remarks:  *  *  *****************************************************************************/
+comment|/*File - OSD_UTIL.H  ****************************************************************************  *  *Description:  *  *	This file contains defines and function prototypes that are  *operating system dependent.  The resources defined in this file  *are not specific to any particular application.  *  *Copyright Distributed Processing Technology, Corp.  *	  140 Candace Dr.  *	  Maitland, Fl. 32751	USA  *	  Phone: (407) 830-5522	 Fax: (407) 260-5366  *	  All Rights Reserved  *  *Author:	Doug Anderson  *Date:		1/7/94  *  *Editors:  *  *Remarks:  *  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -36,47 +36,47 @@ comment|/*----------------------------- */
 end_comment
 
 begin_comment
-comment|/*#define	              _DPT_MSDOS      */
+comment|/*#define		      _DPT_MSDOS      */
 end_comment
 
 begin_comment
-comment|/*#define	              _DPT_WIN_3X     */
+comment|/*#define		      _DPT_WIN_3X     */
 end_comment
 
 begin_comment
-comment|/*#define	              _DPT_WIN_4X     */
+comment|/*#define		      _DPT_WIN_4X     */
 end_comment
 
 begin_comment
-comment|/*#define	              _DPT_WIN_NT     */
+comment|/*#define		      _DPT_WIN_NT     */
 end_comment
 
 begin_comment
-comment|/*#define	              _DPT_NETWARE    */
+comment|/*#define		      _DPT_NETWARE    */
 end_comment
 
 begin_comment
-comment|/*#define	              _DPT_OS2        */
+comment|/*#define		      _DPT_OS2	      */
 end_comment
 
 begin_comment
-comment|/*#define	              _DPT_SCO        */
+comment|/*#define		      _DPT_SCO	      */
 end_comment
 
 begin_comment
-comment|/*#define	              _DPT_UNIXWARE   */
+comment|/*#define		      _DPT_UNIXWARE   */
 end_comment
 
 begin_comment
-comment|/*#define	              _DPT_SOLARIS    */
+comment|/*#define		      _DPT_SOLARIS    */
 end_comment
 
 begin_comment
-comment|/*#define	              _DPT_NEXTSTEP   */
+comment|/*#define		      _DPT_NEXTSTEP   */
 end_comment
 
 begin_comment
-comment|/*#define	              _DPT_BANYAN     */
+comment|/*#define		      _DPT_BANYAN     */
 end_comment
 
 begin_comment
@@ -494,7 +494,7 @@ comment|/* chunk when accessing mis-aligned */
 end_comment
 
 begin_comment
-comment|/* data                             */
+comment|/* data			      */
 end_comment
 
 begin_if
@@ -588,11 +588,11 @@ comment|/*-------------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/* Under Solaris the compiler refuses to accept code like:           */
+comment|/* Under Solaris the compiler refuses to accept code like:	     */
 end_comment
 
 begin_comment
-comment|/*   { {"DPT"}, 0, NULL .... },                                      */
+comment|/*   { {"DPT"}, 0, NULL .... },					     */
 end_comment
 
 begin_comment
@@ -600,11 +600,11 @@ comment|/* and complains about the {"DPT"} part by saying "cannot use { }    */
 end_comment
 
 begin_comment
-comment|/* to initialize char*".                                             */
+comment|/* to initialize char*".					     */
 end_comment
 
 begin_comment
-comment|/*                                                                   */
+comment|/*								     */
 end_comment
 
 begin_comment
@@ -612,19 +612,19 @@ comment|/* By defining these ugly macros we can get around this and also     */
 end_comment
 
 begin_comment
-comment|/* not have to copy and #ifdef large sections of code.  I know that  */
+comment|/* not have to copy and #ifdef large sections of code.	I know that  */
 end_comment
 
 begin_comment
-comment|/* these macros are *really* ugly, but they should help reduce       */
+comment|/* these macros are *really* ugly, but they should help reduce	     */
 end_comment
 
 begin_comment
-comment|/* maintenance in the long run.                                      */
+comment|/* maintenance in the long run.					     */
 end_comment
 
 begin_comment
-comment|/*                                                                   */
+comment|/*								     */
 end_comment
 
 begin_comment
@@ -632,7 +632,7 @@ comment|/* In the meantime, just pray that we can all move to Win32 as soon  */
 end_comment
 
 begin_comment
-comment|/* as possible...                                                    */
+comment|/* as possible...						     */
 end_comment
 
 begin_comment
@@ -975,7 +975,7 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* !osdSwap4 */
-comment|/* The following functions ALWAYS swap regardless of the *    * presence of DPT_BIG_ENDIAN                            */
+comment|/* The following functions ALWAYS swap regardless of the *    * presence of DPT_BIG_ENDIAN				   */
 name|uSHORT
 name|trueSwap2
 parameter_list|(
@@ -995,7 +995,7 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* netware */
-comment|/*-------------------------------------*  * Network order swap functions        *  *                                     *  * These functions/macros will be used *  * by the structure insert()/extract() *  * functions.                          *  *  * We will enclose all structure       *  * portability modifications inside    *  * #ifdefs.  When we are ready, we     *  * will #define	DPT_PORTABLE to begin  *  * using the modifications.            *  *-------------------------------------*/
+comment|/*-------------------------------------*  * Network order swap functions	       *  *				       *  * These functions/macros will be used *  * by the structure insert()/extract() *  * functions.			       *  *  * We will enclose all structure       *  * portability modifications inside    *  * #ifdefs.  When we are ready, we     *  * will #define DPT_PORTABLE to begin  *  * using the modifications.	       *  *-------------------------------------*/
 name|uLONG
 name|netSwap4
 parameter_list|(

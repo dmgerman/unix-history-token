@@ -437,11 +437,11 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* typedef SCSI_REQUEST_BLOCK     OS_REQUEST_T; */
+comment|/* typedef SCSI_REQUEST_BLOCK	  OS_REQUEST_T; */
 end_comment
 
 begin_comment
-comment|/* typedef PSCSI_REQUEST_BLOCK    pOS_REQUEST_T; */
+comment|/* typedef PSCSI_REQUEST_BLOCK	  pOS_REQUEST_T; */
 end_comment
 
 begin_define
@@ -520,7 +520,7 @@ comment|/*  * Copyright (c) 1996-2000 Distributed Processing Technology Corporat
 end_comment
 
 begin_comment
-comment|/*  *      Define some generalized portability macros  *      These macros follow the following parameterization:  *          _F_getXXX(pointer,primaryElement<,offset>,referredElement)  *          _F_setXXX(pointer,primaryElement<,offset>,referredElement,newValue)  *      These parameters are shortened to u, w, x, y and z to reduce clutter.  */
+comment|/*  *	Define some generalized portability macros  *	These macros follow the following parameterization:  *	    _F_getXXX(pointer,primaryElement<,offset>,referredElement)  *	    _F_setXXX(pointer,primaryElement<,offset>,referredElement,newValue)  *	These parameters are shortened to u, w, x, y and z to reduce clutter.  */
 end_comment
 
 begin_if
@@ -572,7 +572,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|(*((U16 __FAR__ *)(&((w)->x)))\&= 0xFFFF - I2O_TID_MASK);\                               (*((U16 __FAR__ *)(&((w)->x)))\                                |=(U16)(z)&I2O_TID_MASK)
+value|(*((U16 __FAR__ *)(&((w)->x)))\&= 0xFFFF - I2O_TID_MASK);\ 			      (*((U16 __FAR__ *)(&((w)->x)))\ 			       |=(U16)(z)&I2O_TID_MASK)
 end_define
 
 begin_comment
@@ -590,7 +590,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((*(U16 __FAR__ *)(((U8 __FAR__ *)(&((w)->x)))\                                + (I2O_TID_SZ/8)))\>> (I2O_TID_SZ-((I2O_TID_SZ/8)*8)))
+value|((*(U16 __FAR__ *)(((U8 __FAR__ *)(&((w)->x)))\ 			       + (I2O_TID_SZ/8)))\>> (I2O_TID_SZ-((I2O_TID_SZ/8)*8)))
 end_define
 
 begin_define
@@ -606,7 +606,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|((*((U16 __FAR__ *)(((U8 __FAR__ *)(&((w)->x)))\                                + (I2O_TID_SZ/8))))&= (0xFFFF>> I2O_TID_SZ));\                               ((*((U16 __FAR__ *)(((U8 __FAR__ *)(&((w)->x)))\                                + (I2O_TID_SZ/8)))) |= (z)\<< (I2O_TID_SZ-((I2O_TID_SZ/8)*8)))
+value|((*((U16 __FAR__ *)(((U8 __FAR__ *)(&((w)->x)))\ 			       + (I2O_TID_SZ/8))))&= (0xFFFF>> I2O_TID_SZ));\ 			      ((*((U16 __FAR__ *)(((U8 __FAR__ *)(&((w)->x)))\ 			       + (I2O_TID_SZ/8)))) |= (z)\<< (I2O_TID_SZ-((I2O_TID_SZ/8)*8)))
 end_define
 
 begin_comment
@@ -624,7 +624,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(*(((U8 __FAR__ *)(&((w)->x)))\                                + ((I2O_TID_SZ+I2O_TID_SZ)/8)))
+value|(*(((U8 __FAR__ *)(&((w)->x)))\ 			       + ((I2O_TID_SZ+I2O_TID_SZ)/8)))
 end_define
 
 begin_define
@@ -669,7 +669,7 @@ value|(*((U32 __FAR__ *)(&((w)->x)))&I2O_SG_COUNT_MASK)
 end_define
 
 begin_comment
-comment|/*  * The following is less efficient because of compiler inefficiencies:  *  * # define _F_setCount(w,x,y,z)  *((U16 __FAR__ *)(&((w)->x))) = (U16)(z);\  *                              ((U8 __FAR__ *)(&((w)->x)))[2]= (U8)((z)>>16L)  *  * so we will use the apparently more code intensive:  */
+comment|/*  * The following is less efficient because of compiler inefficiencies:  *  * # define _F_setCount(w,x,y,z)  *((U16 __FAR__ *)(&((w)->x))) = (U16)(z);\  *				((U8 __FAR__ *)(&((w)->x)))[2]= (U8)((z)>>16L)  *  * so we will use the apparently more code intensive:  */
 end_comment
 
 begin_define
@@ -685,7 +685,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|(*((U32 __FAR__ *)(&((w)->x)))\&= 0xFFFFFFFFL - I2O_SG_COUNT_MASK);\                               (*((U32 __FAR__ *)(&((w)->x)))\                                |= (z)& I2O_SG_COUNT_MASK)
+value|(*((U32 __FAR__ *)(&((w)->x)))\&= 0xFFFFFFFFL - I2O_SG_COUNT_MASK);\ 			      (*((U32 __FAR__ *)(&((w)->x)))\ 			       |= (z)& I2O_SG_COUNT_MASK)
 end_define
 
 begin_comment
@@ -703,7 +703,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(*(((U8 __FAR__ *)(&((w)->x)))\                                + (I2O_SG_COUNT_SZ/8)))
+value|(*(((U8 __FAR__ *)(&((w)->x)))\ 			       + (I2O_SG_COUNT_SZ/8)))
 end_define
 
 begin_define
@@ -1770,7 +1770,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *      Define some specific portability macros  *      These macros follow the following parameterization:  *              XXX_getYYY (pointer)  *              XXX_setYYY (pointer, newValue)  *      These parameters are shortened to x and y to reduce clutter.  */
+comment|/*  *	Define some specific portability macros  *	These macros follow the following parameterization:  *		XXX_getYYY (pointer)  *		XXX_setYYY (pointer, newValue)  *	These parameters are shortened to x and y to reduce clutter.  */
 end_comment
 
 begin_comment
@@ -3250,7 +3250,7 @@ value|_F_get12bit(x,SegmentNumber,SegmentNumber,y)
 end_define
 
 begin_comment
-comment|/*      later  * I2O_EXEC_SYS_ENABLE_MESSAGE  */
+comment|/*	later  * I2O_EXEC_SYS_ENABLE_MESSAGE  */
 end_comment
 
 begin_comment
@@ -3446,11 +3446,11 @@ value|_F_set12bit(x,IOP_ID,0,IOP_ID,y)
 end_define
 
 begin_comment
-comment|/*   BF                          reserved3:I2O_RESERVED_4BITS;	*/
+comment|/*   BF				 reserved3:I2O_RESERVED_4BITS;	*/
 end_comment
 
 begin_comment
-comment|/*   BF                          reserved1:I2O_RESERVED_16BITS;	*/
+comment|/*   BF				 reserved1:I2O_RESERVED_16BITS; */
 end_comment
 
 begin_define
@@ -4137,7 +4137,7 @@ value|_F_set12bit(x,TableEntrySize,2,LocalTID,y)
 end_define
 
 begin_comment
-comment|/*    BF                  4        reserved:I2O_4BIT_VERSION_SZ; */
+comment|/*    BF		  4	   reserved:I2O_4BIT_VERSION_SZ; */
 end_comment
 
 begin_define
@@ -4296,7 +4296,7 @@ value|_F_setFunc(x,UserTID,BiosInfo,y)
 end_define
 
 begin_comment
-comment|/*  2 ulong   U8                    8      IdentityTag[I2O_IDENTITY_TAG_SZ]; */
+comment|/*  2 ulong   U8		    8	   IdentityTag[I2O_IDENTITY_TAG_SZ]; */
 end_comment
 
 begin_define
@@ -4520,11 +4520,11 @@ comment|/*  *  I2O_EXEC_LCT_NOTIFY_MESSAGE  */
 end_comment
 
 begin_comment
-comment|/*    I2O_MESSAGE_FRAME           StdMessageFrame; */
+comment|/*    I2O_MESSAGE_FRAME		  StdMessageFrame; */
 end_comment
 
 begin_comment
-comment|/*    I2O_TRANSACTION_CONTEXT     TransactionContext; */
+comment|/*    I2O_TRANSACTION_CONTEXT	  TransactionContext; */
 end_comment
 
 begin_define
@@ -4576,7 +4576,7 @@ value|setLU4((&(x)->LastReportedChangeIndicator),0,y)
 end_define
 
 begin_comment
-comment|/*    I2O_SG_ELEMENT              SGL; */
+comment|/*    I2O_SG_ELEMENT		  SGL; */
 end_comment
 
 begin_comment
@@ -4584,11 +4584,11 @@ comment|/*  *  I2O_UTIL_PARAMS_GET_MESSAGE  */
 end_comment
 
 begin_comment
-comment|/*     I2O_MESSAGE_FRAME          StdMessageFrame;	*/
+comment|/*     I2O_MESSAGE_FRAME	  StdMessageFrame;	*/
 end_comment
 
 begin_comment
-comment|/*     I2O_TRANSACTION_CONTEXT    TransactionContext;	*/
+comment|/*     I2O_TRANSACTION_CONTEXT	  TransactionContext;	*/
 end_comment
 
 begin_define
@@ -4616,7 +4616,7 @@ value|setLU4((&(x)->OperationFlags),0,y)
 end_define
 
 begin_comment
-comment|/*     I2O_SG_ELEMENT             SGL;			*/
+comment|/*     I2O_SG_ELEMENT		  SGL;			*/
 end_comment
 
 begin_comment
@@ -4783,7 +4783,7 @@ value|setLU4((&(x)->Identifier),0,y)
 end_define
 
 begin_comment
-comment|/*     U8         LunInfo[8]; */
+comment|/*     U8	  LunInfo[8]; */
 end_comment
 
 begin_comment
@@ -4815,7 +4815,7 @@ value|setU1((&(x)->LunInfo[0]),1,y)
 end_define
 
 begin_comment
-comment|/*  *       I2O_DPT_EXEC_IOP_BUFFERS_SCALAR  */
+comment|/*  *	 I2O_DPT_EXEC_IOP_BUFFERS_SCALAR  */
 end_comment
 
 begin_define
@@ -4871,23 +4871,23 @@ comment|/* typedef struct _I2O_PRIVATE_MESSAGE_FRAME { */
 end_comment
 
 begin_comment
-comment|/*    I2O_MESSAGE_FRAME           StdMessageFrame; */
+comment|/*    I2O_MESSAGE_FRAME		  StdMessageFrame; */
 end_comment
 
 begin_comment
-comment|/*    I2O_TRANSACTION_CONTEXT     TransactionContext; */
+comment|/*    I2O_TRANSACTION_CONTEXT	  TransactionContext; */
 end_comment
 
 begin_comment
-comment|/*    U16                         XFunctionCode; */
+comment|/*    U16			  XFunctionCode; */
 end_comment
 
 begin_comment
-comment|/*    U16                         OrganizationID; */
+comment|/*    U16			  OrganizationID; */
 end_comment
 
 begin_comment
-comment|/*                                PrivatePayload[]; */
+comment|/*				  PrivatePayload[]; */
 end_comment
 
 begin_comment
@@ -4973,7 +4973,7 @@ literal|0
 end_if
 
 begin_comment
-unit|typedef struct _PRIVATE_SCSI_SCB_EXECUTE_MESSAGE { 	I2O_PRIVATE_MESSAGE_FRAME PRIVATE_SCSI_SCB_EXECUTE_MESSAGE; 	BF                        TID:16;
+unit|typedef struct _PRIVATE_SCSI_SCB_EXECUTE_MESSAGE { 	I2O_PRIVATE_MESSAGE_FRAME PRIVATE_SCSI_SCB_EXECUTE_MESSAGE; 	BF			  TID:16;
 comment|/* Upper four bits currently are zero */
 end_comment
 
@@ -4982,18 +4982,18 @@ comment|/* Command is interpreted by the host */
 end_comment
 
 begin_comment
-unit|BF                        Interpret:1;
+unit|BF			  Interpret:1;
 comment|/* if TRUE, deal with Physical Firmware Array information */
 end_comment
 
 begin_endif
-unit|BF                        Physical:1; 	BF                        Reserved1:14; 	U8                        CDBLength; 	U8                        Reserved; 	I2O_SCB_FLAGS             SCBFlags; 	U8                        CDB[  I2O_SCSI_CDB_LENGTH=16  ]; 	U32                       ByteCount; 	I2O_SG_ELEMENT            SGL; } PRIVATE_SCSI_SCB_EXECUTE_MESSAGE, * PPRIVATE_SCSI_SCB_EXECUTE_MESSAGE;
+unit|BF			  Physical:1; 	BF			  Reserved1:14; 	U8			  CDBLength; 	U8			  Reserved; 	I2O_SCB_FLAGS		  SCBFlags; 	U8			  CDB[	I2O_SCSI_CDB_LENGTH=16	]; 	U32			  ByteCount; 	I2O_SG_ELEMENT		  SGL; } PRIVATE_SCSI_SCB_EXECUTE_MESSAGE, * PPRIVATE_SCSI_SCB_EXECUTE_MESSAGE;
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*  *       PRIVATE_SCSI_SCB_EXECUTE_MESSAGE  */
+comment|/*  *	 PRIVATE_SCSI_SCB_EXECUTE_MESSAGE  */
 end_comment
 
 begin_define
@@ -5820,11 +5820,11 @@ comment|/*  define for these */
 end_comment
 
 begin_comment
-comment|/*     U8                      CDB[16];	*/
+comment|/*     U8		       CDB[16]; */
 end_comment
 
 begin_comment
-comment|/*     I2O_SG_ELEMENT          SGL;	*/
+comment|/*     I2O_SG_ELEMENT	       SGL;	*/
 end_comment
 
 begin_comment
@@ -5987,7 +5987,7 @@ value|_F_get8bit(x,Severity,1,FailureCode,y)
 end_define
 
 begin_comment
-comment|/*  * #define	I2O_FAILURE_REPLY_MESSAGE_FRAME_getFailingHostUnitID(x)\  *               _F_get16bit(x,reserved,1,FailingHostUnitID)  * #define	I2O_FAILURE_REPLY_MESSAGE_FRAME_setFailingHostUnitID(x,y)\  *               _F_set16bit(x,reserved,1,FailingHostUnitID,y)  */
+comment|/*  * #define	I2O_FAILURE_REPLY_MESSAGE_FRAME_getFailingHostUnitID(x)\  *		 _F_get16bit(x,reserved,1,FailingHostUnitID)  * #define	I2O_FAILURE_REPLY_MESSAGE_FRAME_setFailingHostUnitID(x,y)\  *		 _F_set16bit(x,reserved,1,FailingHostUnitID,y)  */
 end_comment
 
 begin_define

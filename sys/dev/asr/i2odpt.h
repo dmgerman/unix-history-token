@@ -31,7 +31,7 @@ comment|/* For Private Messages */
 end_comment
 
 begin_comment
-comment|/*  *      PrivateMessageFrame.StdMessageFrame.Function = I2O_PRIVATE_MESSAGE  *      PrivateMessageFrame.XFunctionCode = I2O_SCSI_SCB_EXEC  */
+comment|/*  *	PrivateMessageFrame.StdMessageFrame.Function = I2O_PRIVATE_MESSAGE  *	PrivateMessageFrame.XFunctionCode = I2O_SCSI_SCB_EXEC  */
 end_comment
 
 begin_typedef
@@ -116,7 +116,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Flash access and programming messages  *      PrivateMessageFrame.StdMessageFrame.Function = I2O_PRIVATE_MESSAGE  *      PrivateMessageFrame.XFunctionCode = PRIVATE_FLAGS_REGION_*  *  *      SIZE    returns the total size of a region of flash  *      READ    copies a region (or portion thereof) into the buffer specified  *              by the SGL  *      WRITE   writes a region (or portion thereof) using the data specified  *              by the SGL  *  * Flash regions  *  *      0               operational-mode firmware  *      1               software (bios/utility)  *      2               oem nvram defaults  *      3               hba serial number  *      4               boot-mode firmware  *  * Any combination of RegionOffset and ByteCount can be specified providing  * they fit within the size of the specified region.  *  * Flash messages should be targeted to the Executive TID 0x000  */
+comment|/*  * Flash access and programming messages  *	PrivateMessageFrame.StdMessageFrame.Function = I2O_PRIVATE_MESSAGE  *	PrivateMessageFrame.XFunctionCode = PRIVATE_FLAGS_REGION_*  *  *	SIZE	returns the total size of a region of flash  *	READ	copies a region (or portion thereof) into the buffer specified  *		by the SGL  *	WRITE	writes a region (or portion thereof) using the data specified  *		by the SGL  *  * Flash regions  *  *	0		operational-mode firmware  *	1		software (bios/utility)  *	2		oem nvram defaults  *	3		hba serial number  *	4		boot-mode firmware  *  * Any combination of RegionOffset and ByteCount can be specified providing  * they fit within the size of the specified region.  *  * Flash messages should be targeted to the Executive TID 0x000  */
 end_comment
 
 begin_define
@@ -618,7 +618,7 @@ comment|/* offset from base address to header   */
 name|U32
 name|SerialOutputSize
 decl_stmt|;
-comment|/* size of data buffer in bytes         */
+comment|/* size of data buffer in bytes	    */
 name|U32
 name|SerialHeaderSize
 decl_stmt|;
@@ -626,7 +626,7 @@ comment|/* size of data buffer header in bytes  */
 name|U32
 name|SerialFlagsSupported
 decl_stmt|;
-comment|/* Mask of debug flags supported        */
+comment|/* Mask of debug flags supported	    */
 block|}
 name|I2O_DPT_EXEC_IOP_BUFFERS_SCALAR
 operator|,

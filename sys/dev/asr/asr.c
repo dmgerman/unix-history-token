@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996-2000 Distributed Processing Technology Corporation  * Copyright (c) 2000-2001 Adaptec Corporation  * All rights reserved.  *  * TERMS AND CONDITIONS OF USE  *  * Redistribution and use in source form, with or without modification, are  * permitted provided that redistributions of source code must retain the  * above copyright notice, this list of conditions and the following disclaimer.  *  * This software is provided `as is' by Adaptec and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose, are disclaimed. In no  * event shall Adaptec be liable for any direct, indirect, incidental, special,  * exemplary or consequential damages (including, but not limited to,  * procurement of substitute goods or services; loss of use, data, or profits;  * or business interruptions) however caused and on any theory of liability,  * whether in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this driver software, even  * if advised of the possibility of such damage.  *  * SCSI I2O host adapter driver  *  *      V1.08 2001/08/21 Mark_Salyzyn@adaptec.com  *              - The 2000S and 2005S do not initialize on some machines,  *		  increased timeout to 255ms from 50ms for the StatusGet  *		  command.  *      V1.07 2001/05/22 Mark_Salyzyn@adaptec.com  *              - I knew this one was too good to be true. The error return  *                on ioctl commands needs to be compared to CAM_REQ_CMP, not  *                to the bit masked status.  *      V1.06 2001/05/08 Mark_Salyzyn@adaptec.com  *              - The 2005S that was supported is affectionately called the  *                Conjoined BAR Firmware. In order to support RAID-5 in a  *                16MB low-cost configuration, Firmware was forced to go  *                to a Split BAR Firmware. This requires a separate IOP and  *                Messaging base address.  *      V1.05 2001/04/25 Mark_Salyzyn@adaptec.com  *              - Handle support for 2005S Zero Channel RAID solution.  *              - System locked up if the Adapter locked up. Do not try  *                to send other commands if the resetIOP command fails. The  *                fail outstanding command discovery loop was flawed as the  *                removal of the command from the list prevented discovering  *                all the commands.  *              - Comment changes to clarify driver.  *              - SysInfo searched for an EATA SmartROM, not an I2O SmartROM.  *              - We do not use the AC_FOUND_DEV event because of I2O.  *                Removed asr_async.  *      V1.04 2000/09/22 Mark_Salyzyn@adaptec.com, msmith@freebsd.org,  *                       lampa@fee.vutbr.cz and Scott_Long@adaptec.com.  *              - Removed support for PM1554, PM2554 and PM2654 in Mode-0  *                mode as this is confused with competitor adapters in run  *                mode.  *              - critical locking needed in ASR_ccbAdd and ASR_ccbRemove  *                to prevent operating system panic.  *              - moved default major number to 154 from 97.  *      V1.03 2000/07/12 Mark_Salyzyn@adaptec.com  *              - The controller is not actually an ASR (Adaptec SCSI RAID)  *                series that is visible, it's more of an internal code name.  *                remove any visible references within reason for now.  *              - bus_ptr->LUN was not correctly zeroed when initially  *                allocated causing a possible panic of the operating system  *                during boot.  *      V1.02 2000/06/26 Mark_Salyzyn@adaptec.com  *              - Code always fails for ASR_getTid affecting performance.  *              - initiated a set of changes that resulted from a formal  *                code inspection by Mark_Salyzyn@adaptec.com,  *                George_Dake@adaptec.com, Jeff_Zeak@adaptec.com,  *                Martin_Wilson@adaptec.com and Vincent_Trandoan@adaptec.com.  *                Their findings were focussed on the LCT& TID handler, and  *                all resulting changes were to improve code readability,  *                consistency or have a positive effect on performance.  *      V1.01 2000/06/14 Mark_Salyzyn@adaptec.com  *              - Passthrough returned an incorrect error.  *              - Passthrough did not migrate the intrinsic scsi layer wakeup  *                on command completion.  *              - generate control device nodes using make_dev and delete_dev.  *              - Performance affected by TID caching reallocing.  *              - Made suggested changes by Justin_Gibbs@adaptec.com  *                      - use splcam instead of splbio.  *                      - use cam_imask instead of bio_imask.  *                      - use u_int8_t instead of u_char.  *                      - use u_int16_t instead of u_short.  *                      - use u_int32_t instead of u_long where appropriate.  *                      - use 64 bit context handler instead of 32 bit.  *                      - create_ccb should only allocate the worst case  *                        requirements for the driver since CAM may evolve  *                        making union ccb much larger than needed here.  *                        renamed create_ccb to asr_alloc_ccb.  *                      - go nutz justifying all debug prints as macros  *                        defined at the top and remove unsightly ifdefs.  *                      - INLINE STATIC viewed as confusing. Historically  *                        utilized to affect code performance and debug  *                        issues in OS, Compiler or OEM specific situations.  *      V1.00 2000/05/31 Mark_Salyzyn@adaptec.com  *              - Ported from FreeBSD 2.2.X DPT I2O driver.  *                      changed struct scsi_xfer to union ccb/struct ccb_hdr  *                      changed variable name xs to ccb  *                      changed struct scsi_link to struct cam_path  *                      changed struct scsibus_data to struct cam_sim  *                      stopped using fordriver for holding on to the TID  *                      use proprietary packet creation instead of scsi_inquire  *                      CAM layer sends synchronize commands.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1996-2000 Distributed Processing Technology Corporation  * Copyright (c) 2000-2001 Adaptec Corporation  * All rights reserved.  *  * TERMS AND CONDITIONS OF USE  *  * Redistribution and use in source form, with or without modification, are  * permitted provided that redistributions of source code must retain the  * above copyright notice, this list of conditions and the following disclaimer.  *  * This software is provided `as is' by Adaptec and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose, are disclaimed. In no  * event shall Adaptec be liable for any direct, indirect, incidental, special,  * exemplary or consequential damages (including, but not limited to,  * procurement of substitute goods or services; loss of use, data, or profits;  * or business interruptions) however caused and on any theory of liability,  * whether in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this driver software, even  * if advised of the possibility of such damage.  *  * SCSI I2O host adapter driver  *  *	V1.08 2001/08/21 Mark_Salyzyn@adaptec.com  *		- The 2000S and 2005S do not initialize on some machines,  *		  increased timeout to 255ms from 50ms for the StatusGet  *		  command.  *	V1.07 2001/05/22 Mark_Salyzyn@adaptec.com  *		- I knew this one was too good to be true. The error return  *		  on ioctl commands needs to be compared to CAM_REQ_CMP, not  *		  to the bit masked status.  *	V1.06 2001/05/08 Mark_Salyzyn@adaptec.com  *		- The 2005S that was supported is affectionately called the  *		  Conjoined BAR Firmware. In order to support RAID-5 in a  *		  16MB low-cost configuration, Firmware was forced to go  *		  to a Split BAR Firmware. This requires a separate IOP and  *		  Messaging base address.  *	V1.05 2001/04/25 Mark_Salyzyn@adaptec.com  *		- Handle support for 2005S Zero Channel RAID solution.  *		- System locked up if the Adapter locked up. Do not try  *		  to send other commands if the resetIOP command fails. The  *		  fail outstanding command discovery loop was flawed as the  *		  removal of the command from the list prevented discovering  *		  all the commands.  *		- Comment changes to clarify driver.  *		- SysInfo searched for an EATA SmartROM, not an I2O SmartROM.  *		- We do not use the AC_FOUND_DEV event because of I2O.  *		  Removed asr_async.  *	V1.04 2000/09/22 Mark_Salyzyn@adaptec.com, msmith@freebsd.org,  *			 lampa@fee.vutbr.cz and Scott_Long@adaptec.com.  *		- Removed support for PM1554, PM2554 and PM2654 in Mode-0  *		  mode as this is confused with competitor adapters in run  *		  mode.  *		- critical locking needed in ASR_ccbAdd and ASR_ccbRemove  *		  to prevent operating system panic.  *		- moved default major number to 154 from 97.  *	V1.03 2000/07/12 Mark_Salyzyn@adaptec.com  *		- The controller is not actually an ASR (Adaptec SCSI RAID)  *		  series that is visible, it's more of an internal code name.  *		  remove any visible references within reason for now.  *		- bus_ptr->LUN was not correctly zeroed when initially  *		  allocated causing a possible panic of the operating system  *		  during boot.  *	V1.02 2000/06/26 Mark_Salyzyn@adaptec.com  *		- Code always fails for ASR_getTid affecting performance.  *		- initiated a set of changes that resulted from a formal  *		  code inspection by Mark_Salyzyn@adaptec.com,  *		  George_Dake@adaptec.com, Jeff_Zeak@adaptec.com,  *		  Martin_Wilson@adaptec.com and Vincent_Trandoan@adaptec.com.  *		  Their findings were focussed on the LCT& TID handler, and  *		  all resulting changes were to improve code readability,  *		  consistency or have a positive effect on performance.  *	V1.01 2000/06/14 Mark_Salyzyn@adaptec.com  *		- Passthrough returned an incorrect error.  *		- Passthrough did not migrate the intrinsic scsi layer wakeup  *		  on command completion.  *		- generate control device nodes using make_dev and delete_dev.  *		- Performance affected by TID caching reallocing.  *		- Made suggested changes by Justin_Gibbs@adaptec.com  *			- use splcam instead of splbio.  *			- use cam_imask instead of bio_imask.  *			- use u_int8_t instead of u_char.  *			- use u_int16_t instead of u_short.  *			- use u_int32_t instead of u_long where appropriate.  *			- use 64 bit context handler instead of 32 bit.  *			- create_ccb should only allocate the worst case  *			  requirements for the driver since CAM may evolve  *			  making union ccb much larger than needed here.  *			  renamed create_ccb to asr_alloc_ccb.  *			- go nutz justifying all debug prints as macros  *			  defined at the top and remove unsightly ifdefs.  *			- INLINE STATIC viewed as confusing. Historically  *			  utilized to affect code performance and debug  *			  issues in OS, Compiler or OEM specific situations.  *	V1.00 2000/05/31 Mark_Salyzyn@adaptec.com  *		- Ported from FreeBSD 2.2.X DPT I2O driver.  *			changed struct scsi_xfer to union ccb/struct ccb_hdr  *			changed variable name xs to ccb  *			changed struct scsi_link to struct cam_path  *			changed struct scsibus_data to struct cam_sim  *			stopped using fordriver for holding on to the TID  *			use proprietary packet creation instead of scsi_inquire  *			CAM layer sends synchronize commands.  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -46,7 +46,7 @@ value|2001 - 1980
 end_define
 
 begin_comment
-comment|/*  *      Debug macros to reduce the unsightly ifdefs  */
+comment|/*  *	Debug macros to reduce the unsightly ifdefs  */
 end_comment
 
 begin_if
@@ -78,7 +78,7 @@ parameter_list|(
 name|message
 parameter_list|)
 define|\
-value|{                                                                      \                 u_int32_t * pointer = (u_int32_t *)message;                    \                 u_int32_t   length = I2O_MESSAGE_FRAME_getMessageSize(message);\                 u_int32_t   counter = 0;                                       \                                                                                \                 while (length--) {                                             \                         printf ("%08lx%c", (u_long)*(pointer++),               \                           (((++counter& 7) == 0) || (length == 0))            \                             ? '\n'                                             \                             : ' ');                                            \                 }                                                              \         }
+value|{								       \ 		u_int32_t * pointer = (u_int32_t *)message;		       \ 		u_int32_t   length = I2O_MESSAGE_FRAME_getMessageSize(message);\ 		u_int32_t   counter = 0;				       \ 									       \ 		while (length--) {					       \ 			printf ("%08lx%c", (u_long)*(pointer++),	       \ 			  (((++counter& 7) == 0) || (length == 0))	       \ 			    ? '\n'					       \ 			    : ' ');					       \ 		}							       \ 	}
 end_define
 
 begin_endif
@@ -241,7 +241,7 @@ comment|/* DEBUG_ASR */
 end_comment
 
 begin_comment
-comment|/*  *      If DEBUG_ASR_CMD is defined:  *              0 - Display incoming SCSI commands  *              1 - add in a quick character before queueing.  *              2 - add in outgoing message frames.  */
+comment|/*  *	If DEBUG_ASR_CMD is defined:  *		0 - Display incoming SCSI commands  *		1 - add in a quick character before queueing.  *		2 - add in outgoing message frames.  */
 end_comment
 
 begin_if
@@ -276,7 +276,7 @@ parameter_list|(
 name|ccb
 parameter_list|)
 define|\
-value|{                                                             \                 u_int8_t * cp = (unsigned char *)&(ccb->csio.cdb_io); \                 int        len = ccb->csio.cdb_len;                   \                                                                       \                 while (len) {                                         \                         debug_asr_cmd_printf (" %02x", *(cp++));      \                         --len;                                        \                 }                                                     \         }
+value|{							      \ 		u_int8_t * cp = (unsigned char *)&(ccb->csio.cdb_io); \ 		int	   len = ccb->csio.cdb_len;		      \ 								      \ 		while (len) {					      \ 			debug_asr_cmd_printf (" %02x", *(cp++));      \ 			--len;					      \ 		}						      \ 	}
 end_define
 
 begin_if
@@ -600,9 +600,9 @@ name|ASR_DAY
 block|,
 name|ASR_YEAR
 block|,
-comment|/*       01234567890123456789012345678901234567890123456789< 50 chars */
+comment|/*	 01234567890123456789012345678901234567890123456789< 50 chars */
 literal|"Adaptec FreeBSD 4.0.0 Unix SCSI I2O HBA Driver"
-comment|/*               ^^^^^ asr_attach alters these to match OS */
+comment|/*		 ^^^^^ asr_attach alters these to match OS */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -941,7 +941,7 @@ value|58
 end_define
 
 begin_comment
-comment|/* Scatter Gather list Size              */
+comment|/* Scatter Gather list Size		 */
 end_comment
 
 begin_define
@@ -952,7 +952,7 @@ value|126
 end_define
 
 begin_comment
-comment|/* Maximum Target ID supported           */
+comment|/* Maximum Target ID supported		 */
 end_comment
 
 begin_define
@@ -963,7 +963,7 @@ value|255
 end_define
 
 begin_comment
-comment|/* Maximum LUN Supported                 */
+comment|/* Maximum LUN Supported		 */
 end_comment
 
 begin_define
@@ -985,7 +985,7 @@ value|2000
 end_define
 
 begin_comment
-comment|/* Max CCBs, Also Max Queue Size         */
+comment|/* Max CCBs, Also Max Queue Size	 */
 end_comment
 
 begin_define
@@ -996,7 +996,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* Maximum outbound frames/adapter       */
+comment|/* Maximum outbound frames/adapter	 */
 end_comment
 
 begin_define
@@ -1007,7 +1007,7 @@ value|512
 end_define
 
 begin_comment
-comment|/* Maximum inbound frame size            */
+comment|/* Maximum inbound frame size		 */
 end_comment
 
 begin_define
@@ -1018,15 +1018,15 @@ value|4194304L
 end_define
 
 begin_comment
-comment|/* Maximum mapping size of IOP         */
+comment|/* Maximum mapping size of IOP	 */
 end_comment
 
 begin_comment
-comment|/* Also serves as the minimum map for    */
+comment|/* Also serves as the minimum map for	 */
 end_comment
 
 begin_comment
-comment|/* the 2005S zero channel RAID product   */
+comment|/* the 2005S zero channel RAID product	 */
 end_comment
 
 begin_comment
@@ -1131,7 +1131,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  *      To ensure that we only allocate and use the worst case ccb here, lets  *      make our own local ccb union. If asr_alloc_ccb is utilized for another  *      ccb type, ensure that you add the additional structures into our local  *      ccb union. To ensure strict type checking, we will utilize the local  *      ccb definition wherever possible.  */
+comment|/*  *	To ensure that we only allocate and use the worst case ccb here, lets  *	make our own local ccb union. If asr_alloc_ccb is utilized for another  *	ccb type, ensure that you add the additional structures into our local  *	ccb union. To ensure strict type checking, we will utilize the local  *	ccb definition wherever possible.  */
 end_comment
 
 begin_union
@@ -1177,7 +1177,7 @@ name|i2oRegs_t
 modifier|*
 name|ha_Virt
 decl_stmt|;
-comment|/* Base address of IOP      */
+comment|/* Base address of IOP	   */
 name|U8
 modifier|*
 name|ha_Fvirt
@@ -1193,7 +1193,7 @@ argument|ccb_hdr
 argument_list|)
 name|ha_ccb
 expr_stmt|;
-comment|/* ccbs in use              */
+comment|/* ccbs in use		   */
 name|struct
 name|cam_path
 modifier|*
@@ -1406,7 +1406,7 @@ parameter_list|,
 name|tail
 parameter_list|)
 define|\
-value|if (!TIMEQ_FREE_LIST_FULL((head), (tail))) { \                 if TIMEQ_FREE_LIST_EMPTY((head),(tail)) { \                         (head) = (tail) = 0; \                 } \                 else (tail) = ((tail) + 1) % MAX_TIMEQ_SIZE; \                 Q[(tail)] = (item); \         } \         else { \                 debug_asr_printf("asr: Enqueueing when TimeQ Free List is full... This should not happen!\n"); \         }
+value|if (!TIMEQ_FREE_LIST_FULL((head), (tail))) { \ 		if TIMEQ_FREE_LIST_EMPTY((head),(tail)) { \ 			(head) = (tail) = 0; \ 		} \ 		else (tail) = ((tail) + 1) % MAX_TIMEQ_SIZE; \ 		Q[(tail)] = (item); \ 	} \ 	else { \ 		debug_asr_printf("asr: Enqueueing when TimeQ Free List is full... This should not happen!\n"); \ 	}
 define|#
 directive|define
 name|DEQ_TIMEQ_FREE_LIST
@@ -1420,7 +1420,7 @@ parameter_list|,
 name|tail
 parameter_list|)
 define|\
-value|if (!TIMEQ_FREE_LIST_EMPTY((head), (tail))) { \                 item  = Q[(head)]; \                 if ((head) == (tail)) { (head) = (tail) = -1; } \                 else (head) = ((head) + 1) % MAX_TIMEQ_SIZE; \         } \         else { \                 (item) = -1; \                 debug_asr_printf("asr: Dequeueing when TimeQ Free List is empty... This should not happen!\n"); \         }
+value|if (!TIMEQ_FREE_LIST_EMPTY((head), (tail))) { \ 		item  = Q[(head)]; \ 		if ((head) == (tail)) { (head) = (tail) = -1; } \ 		else (head) = ((head) + 1) % MAX_TIMEQ_SIZE; \ 	} \ 	else { \ 		(item) = -1; \ 		debug_asr_printf("asr: Dequeueing when TimeQ Free List is empty... This should not happen!\n"); \ 	}
 comment|/* Circular queue of time stamps */
 name|struct
 name|timeval
@@ -1457,7 +1457,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *      Prototypes of the routines we have in this object.  */
+comment|/*  *	Prototypes of the routines we have in this object.  */
 end_comment
 
 begin_comment
@@ -1869,7 +1869,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *      Here is the auto-probe structure used to nest our tests appropriately  *      during the startup phase of the operating system.  */
+comment|/*  *	Here is the auto-probe structure used to nest our tests appropriately  *	during the startup phase of the operating system.  */
 end_comment
 
 begin_if
@@ -2247,13 +2247,13 @@ init|=
 block|{
 name|asr_open
 block|,
-comment|/* open     */
+comment|/* open	    */
 name|asr_close
 block|,
 comment|/* close    */
 name|noread
 block|,
-comment|/* read     */
+comment|/* read	    */
 name|nowrite
 block|,
 comment|/* write    */
@@ -2262,22 +2262,22 @@ block|,
 comment|/* ioctl    */
 name|nopoll
 block|,
-comment|/* poll     */
+comment|/* poll	    */
 name|nommap
 block|,
-comment|/* mmap     */
+comment|/* mmap	    */
 name|nostrategy
 block|,
 comment|/* strategy */
 literal|"asr"
 block|,
-comment|/* name     */
+comment|/* name	    */
 name|CDEV_MAJOR
 block|,
-comment|/* maj      */
+comment|/* maj	    */
 name|nodump
 block|,
-comment|/* dump     */
+comment|/* dump	    */
 name|nopsize
 block|,
 comment|/* psize    */
@@ -2353,7 +2353,7 @@ block|}
 name|asr_devsw_installed
 operator|++
 expr_stmt|;
-comment|/*          * Find a free spot (the report during driver load used by          * osd layer in engine to generate the controlling nodes).          */
+comment|/* 	 * Find a free spot (the report during driver load used by 	 * osd layer in engine to generate the controlling nodes). 	 */
 while|while
 condition|(
 operator|(
@@ -2443,14 +2443,14 @@ operator|.
 name|d_maj
 control|)
 empty_stmt|;
-comment|/*          *      Come to papa          */
+comment|/* 	 *	Come to papa 	 */
 name|cdevsw_add
 argument_list|(
 operator|&
 name|asr_cdevsw
 argument_list|)
 expr_stmt|;
-comment|/*          *      delete any nodes that would attach to the primary adapter,          * let the adapter scans add them.          */
+comment|/* 	 *	delete any nodes that would attach to the primary adapter, 	 * let the adapter scans add them. 	 */
 name|destroy_dev
 argument_list|(
 name|makedev
@@ -2523,7 +2523,7 @@ value|((STRUCT *)(NAME))
 end_define
 
 begin_comment
-comment|/*  *      Fill message with default.  */
+comment|/*  *	Fill message with default.  */
 end_comment
 
 begin_function
@@ -2703,7 +2703,7 @@ name|Delay
 init|=
 literal|1500
 decl_stmt|;
-comment|/*          * ASR_initiateCp is only used for synchronous commands and will          * be made more resiliant to adapter delays since commands like          * resetIOP can cause the adapter to be deaf for a little time.          */
+comment|/* 	 * ASR_initiateCp is only used for synchronous commands and will 	 * be made more resiliant to adapter delays since commands like 	 * resetIOP can cause the adapter to be deaf for a little time. 	 */
 while|while
 condition|(
 operator|(
@@ -2756,7 +2756,7 @@ operator|<<
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/*                  *      Disable the Interrupts                  */
+comment|/* 		 *	Disable the Interrupts 		 */
 name|virt
 operator|->
 name|Mask
@@ -2791,7 +2791,7 @@ comment|/* ASR_initiateCp */
 end_comment
 
 begin_comment
-comment|/*  *      Reset the adapter.  */
+comment|/*  *	Reset the adapter.  */
 end_comment
 
 begin_function
@@ -2841,7 +2841,7 @@ decl_stmt|;
 name|U32
 name|Old
 decl_stmt|;
-comment|/*          *  Build up our copy of the Message.          */
+comment|/* 	 *  Build up our copy of the Message. 	 */
 name|Message_Ptr
 operator|=
 operator|(
@@ -2864,7 +2864,7 @@ argument_list|,
 name|I2O_EXEC_IOP_RESET
 argument_list|)
 expr_stmt|;
-comment|/*          *  Reset the Reply Status          */
+comment|/* 	 *  Reset the Reply Status 	 */
 operator|*
 operator|(
 name|Reply_Ptr
@@ -2903,7 +2903,7 @@ name|Reply_Ptr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*          *      Send the Message out          */
+comment|/* 	 *	Send the Message out 	 */
 if|if
 condition|(
 operator|(
@@ -2929,7 +2929,7 @@ operator|-
 literal|1L
 condition|)
 block|{
-comment|/*                  *      Wait for a response (Poll), timeouts are dangerous if                  * the card is truly responsive. We assume response in 2s.                  */
+comment|/* 		 *	Wait for a response (Poll), timeouts are dangerous if 		 * the card is truly responsive. We assume response in 2s. 		 */
 name|u_int8_t
 name|Delay
 init|=
@@ -2958,7 +2958,7 @@ literal|10000
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*                  *      Re-enable the interrupts.                  */
+comment|/* 		 *	Re-enable the interrupts. 		 */
 name|virt
 operator|->
 name|Mask
@@ -3002,7 +3002,7 @@ comment|/* ASR_resetIOP */
 end_comment
 
 begin_comment
-comment|/*  *      Get the curent state of the adapter  */
+comment|/*  *	Get the curent state of the adapter  */
 end_comment
 
 begin_function
@@ -3039,7 +3039,7 @@ decl_stmt|;
 name|U32
 name|Old
 decl_stmt|;
-comment|/*          *  Build up our copy of the Message.          */
+comment|/* 	 *  Build up our copy of the Message. 	 */
 name|Message_Ptr
 operator|=
 operator|(
@@ -3087,7 +3087,7 @@ name|I2O_EXEC_STATUS_GET_REPLY
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*          *  Reset the Reply Status          */
+comment|/* 	 *  Reset the Reply Status 	 */
 name|bzero
 argument_list|(
 operator|(
@@ -3102,7 +3102,7 @@ name|I2O_EXEC_STATUS_GET_REPLY
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*          *      Send the Message out          */
+comment|/* 	 *	Send the Message out 	 */
 if|if
 condition|(
 operator|(
@@ -3128,7 +3128,7 @@ operator|-
 literal|1L
 condition|)
 block|{
-comment|/*                  *      Wait for a response (Poll), timeouts are dangerous if                  * the card is truly responsive. We assume response in 50ms.                  */
+comment|/* 		 *	Wait for a response (Poll), timeouts are dangerous if 		 * the card is truly responsive. We assume response in 50ms. 		 */
 name|u_int8_t
 name|Delay
 init|=
@@ -3177,7 +3177,7 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*                  *      Re-enable the interrupts.                  */
+comment|/* 		 *	Re-enable the interrupts. 		 */
 name|virt
 operator|->
 name|Mask
@@ -3206,7 +3206,7 @@ comment|/* ASR_getStatus */
 end_comment
 
 begin_comment
-comment|/*  *      Check if the device is a SCSI I2O HBA, and add it to the list.  */
+comment|/*  *	Check if the device is a SCSI I2O HBA, and add it to the list.  */
 end_comment
 
 begin_comment
@@ -3332,7 +3332,7 @@ block|{
 name|PROBE_SET
 argument_list|()
 expr_stmt|;
-comment|/*          *      If/When we can get a business case to commit to a          * Mode0 driver here, we can make all these tests more          * specific and robust. Mode0 adapters have their processors          * turned off, this the chips are in a raw state.          */
+comment|/* 	 *	If/When we can get a business case to commit to a 	 * Mode0 driver here, we can make all these tests more 	 * specific and robust. Mode0 adapters have their processors 	 * turned off, this the chips are in a raw state. 	 */
 comment|/* This is a PLX9054 */
 if|if
 condition|(
@@ -3408,7 +3408,7 @@ directive|if
 literal|0
 comment|/* this would match any generic i960 -- mjs */
 comment|/* This is an i960RP (typically also on Motherboards) */
-block|if (id == 0x19608086) {                 PROBE_RETURN ("Adaptec Mode0 PM2554/PM1554/PM2654");         }
+block|if (id == 0x19608086) { 		PROBE_RETURN ("Adaptec Mode0 PM2554/PM1554/PM2654"); 	}
 endif|#
 directive|endif
 name|PROBE_RETURN
@@ -3451,7 +3451,7 @@ name|asr_ccb
 operator|*
 name|asr_alloc_ccb
 argument_list|(
-argument|IN Asr_softc_t    * sc
+argument|IN Asr_softc_t	  * sc
 argument_list|)
 block|{
 name|OUT
@@ -3566,7 +3566,7 @@ comment|/* asr_free_ccb */
 end_comment
 
 begin_comment
-comment|/*  *      Print inquiry data `carefully'  */
+comment|/*  *	Print inquiry data `carefully'  */
 end_comment
 
 begin_function
@@ -3653,7 +3653,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *      Send a message synchronously and without Interrupt to a ccb.  */
+comment|/*  *	Send a message synchronously and without Interrupt to a ccb.  */
 end_comment
 
 begin_function
@@ -3694,7 +3694,7 @@ operator|.
 name|spriv_ptr0
 operator|)
 decl_stmt|;
-comment|/*          * We do not need any (optional byteswapping) method access to          * the Initiator context field.          */
+comment|/* 	 * We do not need any (optional byteswapping) method access to 	 * the Initiator context field. 	 */
 name|I2O_MESSAGE_FRAME_setInitiatorContext64
 argument_list|(
 name|Message
@@ -3759,7 +3759,7 @@ operator||=
 name|CAM_REQUEUE_REQ
 expr_stmt|;
 block|}
-comment|/*          * Wait for this board to report a finished instruction.          */
+comment|/* 	 * Wait for this board to report a finished instruction. 	 */
 while|while
 condition|(
 operator|(
@@ -3815,7 +3815,7 @@ comment|/* ASR_queue_s */
 end_comment
 
 begin_comment
-comment|/*  *      Send a message synchronously to a Asr_softc_t  */
+comment|/*  *	Send a message synchronously to a Asr_softc_t  */
 end_comment
 
 begin_function
@@ -3894,7 +3894,7 @@ comment|/* ASR_queue_c */
 end_comment
 
 begin_comment
-comment|/*  *      Add the specified ccb to the active queue  */
+comment|/*  *	Add the specified ccb to the active queue  */
 end_comment
 
 begin_function
@@ -3966,7 +3966,7 @@ operator|==
 name|CAM_TIME_DEFAULT
 condition|)
 block|{
-comment|/*                          * RAID systems can take considerable time to                          * complete some commands given the large cache                          * flashes switching from write back to write thru.                          */
+comment|/* 			 * RAID systems can take considerable time to 			 * complete some commands given the large cache 			 * flashes switching from write back to write thru. 			 */
 name|ccb
 operator|->
 name|ccb_h
@@ -4022,7 +4022,7 @@ comment|/* ASR_ccbAdd */
 end_comment
 
 begin_comment
-comment|/*  *      Remove the specified ccb from the active queue.  */
+comment|/*  *	Remove the specified ccb from the active queue.  */
 end_comment
 
 begin_function
@@ -4094,7 +4094,7 @@ comment|/* ASR_ccbRemove */
 end_comment
 
 begin_comment
-comment|/*  *      Fail all the active commands, so they get re-issued by the operating  *      system.  */
+comment|/*  *	Fail all the active commands, so they get re-issued by the operating  *	system.  */
 end_comment
 
 begin_function
@@ -4122,9 +4122,9 @@ directive|if
 literal|0
 comment|/* Currently handled by callers, unnecessary paranoia currently */
 comment|/* Left in for historical perspective. */
-block|defAlignLong(I2O_EXEC_LCT_NOTIFY_MESSAGE,Message);         PI2O_EXEC_LCT_NOTIFY_MESSAGE             Message_Ptr;
+block|defAlignLong(I2O_EXEC_LCT_NOTIFY_MESSAGE,Message); 	PI2O_EXEC_LCT_NOTIFY_MESSAGE		 Message_Ptr;
 comment|/* Send a blind LCT command to wait for the enableSys to complete */
-block|Message_Ptr = (PI2O_EXEC_LCT_NOTIFY_MESSAGE)ASR_fillMessage(Message,           sizeof(I2O_EXEC_LCT_NOTIFY_MESSAGE) - sizeof(I2O_SG_ELEMENT));         I2O_MESSAGE_FRAME_setFunction(&(Message_Ptr->StdMessageFrame),           I2O_EXEC_LCT_NOTIFY);         I2O_EXEC_LCT_NOTIFY_MESSAGE_setClassIdentifier(Message_Ptr,           I2O_CLASS_MATCH_ANYCLASS);         (void)ASR_queue_c(sc, (PI2O_MESSAGE_FRAME)Message_Ptr);
+block|Message_Ptr = (PI2O_EXEC_LCT_NOTIFY_MESSAGE)ASR_fillMessage(Message, 	  sizeof(I2O_EXEC_LCT_NOTIFY_MESSAGE) - sizeof(I2O_SG_ELEMENT)); 	I2O_MESSAGE_FRAME_setFunction(&(Message_Ptr->StdMessageFrame), 	  I2O_EXEC_LCT_NOTIFY); 	I2O_EXEC_LCT_NOTIFY_MESSAGE_setClassIdentifier(Message_Ptr, 	  I2O_CLASS_MATCH_ANYCLASS); 	(void)ASR_queue_c(sc, (PI2O_MESSAGE_FRAME)Message_Ptr);
 endif|#
 directive|endif
 name|s
@@ -4132,7 +4132,7 @@ operator|=
 name|splcam
 argument_list|()
 expr_stmt|;
-comment|/*          *      We do not need to inform the CAM layer that we had a bus          * reset since we manage it on our own, this also prevents the          * SCSI_DELAY settling that would be required on other systems.          * The `SCSI_DELAY' has already been handled by the card via the          * acquisition of the LCT table while we are at CAM priority level.          *  for (int bus = 0; bus<= sc->ha_MaxBus; ++bus) {          *      xpt_async (AC_BUS_RESET, sc->ha_path[bus], NULL);          *  }          */
+comment|/* 	 *	We do not need to inform the CAM layer that we had a bus 	 * reset since we manage it on our own, this also prevents the 	 * SCSI_DELAY settling that would be required on other systems. 	 * The `SCSI_DELAY' has already been handled by the card via the 	 * acquisition of the LCT table while we are at CAM priority level. 	 *  for (int bus = 0; bus<= sc->ha_MaxBus; ++bus) { 	 *	xpt_async (AC_BUS_RESET, sc->ha_path[bus], NULL); 	 *  } 	 */
 while|while
 condition|(
 operator|(
@@ -4248,7 +4248,7 @@ comment|/* ASR_failActiveCommands */
 end_comment
 
 begin_comment
-comment|/*  *      The following command causes the HBA to reset the specific bus  */
+comment|/*  *	The following command causes the HBA to reset the specific bus  */
 end_comment
 
 begin_function
@@ -4477,7 +4477,7 @@ comment|/* ASR_getBlinkCode */
 end_comment
 
 begin_comment
-comment|/*  *      Determine the address of an TID lookup. Must be done at high priority  *      since the address can be changed by other threads of execution.  *  *      Returns NULL pointer if not indexible (but will attempt to generate  *      an index if `new_entry' flag is set to TRUE).  *  *      All addressible entries are to be guaranteed zero if never initialized.  */
+comment|/*  *	Determine the address of an TID lookup. Must be done at high priority  *	since the address can be changed by other threads of execution.  *  *	Returns NULL pointer if not indexible (but will attempt to generate  *	an index if `new_entry' flag is set to TRUE).  *  *	All addressible entries are to be guaranteed zero if never initialized.  */
 end_comment
 
 begin_function
@@ -4520,7 +4520,7 @@ decl_stmt|;
 name|unsigned
 name|new_size
 decl_stmt|;
-comment|/*          *      Validity checking of incoming parameters. More of a bound          * expansion limit than an issue with the code dealing with the          * values.          *          *      sc must be valid before it gets here, so that check could be          * dropped if speed a critical issue.          */
+comment|/* 	 *	Validity checking of incoming parameters. More of a bound 	 * expansion limit than an issue with the code dealing with the 	 * values. 	 * 	 *	sc must be valid before it gets here, so that check could be 	 * dropped if speed a critical issue. 	 */
 if|if
 condition|(
 operator|(
@@ -4582,7 +4582,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/*          *      See if there is an associated bus list.          *          *      for performance, allocate in size of BUS_CHUNK chunks.          *      BUS_CHUNK must be a power of two. This is to reduce          *      fragmentation effects on the allocations.          */
+comment|/* 	 *	See if there is an associated bus list. 	 * 	 *	for performance, allocate in size of BUS_CHUNK chunks. 	 *	BUS_CHUNK must be a power of two. This is to reduce 	 *	fragmentation effects on the allocations. 	 */
 define|#
 directive|define
 name|BUS_CHUNK
@@ -4626,7 +4626,7 @@ operator|)
 name|NULL
 condition|)
 block|{
-comment|/*                  *      Allocate a new structure?                  *              Since one element in structure, the +1                  *              needed for size has been abstracted.                  */
+comment|/* 		 *	Allocate a new structure? 		 *		Since one element in structure, the +1 		 *		needed for size has been abstracted. 		 */
 if|if
 condition|(
 operator|(
@@ -4723,7 +4723,7 @@ name|target2lun_t
 modifier|*
 name|new_bus_ptr
 decl_stmt|;
-comment|/*                  *      Reallocate a new structure?                  *              Since one element in structure, the +1                  *              needed for size has been abstracted.                  */
+comment|/* 		 *	Reallocate a new structure? 		 *		Since one element in structure, the +1 		 *		needed for size has been abstracted. 		 */
 if|if
 condition|(
 operator|(
@@ -4790,7 +4790,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/*                  *      Copy the whole thing, safer, simpler coding                  * and not really performance critical at this point.                  */
+comment|/* 		 *	Copy the whole thing, safer, simpler coding 		 * and not really performance critical at this point. 		 */
 name|bcopy
 argument_list|(
 name|bus_ptr
@@ -4850,7 +4850,7 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-comment|/*          *      We now have the bus list, lets get to the target list.          *      Since most systems have only *one* lun, we do not allocate          *      in chunks as above, here we allow one, then in chunk sizes.          *      TARGET_CHUNK must be a power of two. This is to reduce          *      fragmentation effects on the allocations.          */
+comment|/* 	 *	We now have the bus list, lets get to the target list. 	 *	Since most systems have only *one* lun, we do not allocate 	 *	in chunks as above, here we allow one, then in chunk sizes. 	 *	TARGET_CHUNK must be a power of two. This is to reduce 	 *	fragmentation effects on the allocations. 	 */
 define|#
 directive|define
 name|TARGET_CHUNK
@@ -4906,7 +4906,7 @@ operator|)
 name|NULL
 condition|)
 block|{
-comment|/*                  *      Allocate a new structure?                  *              Since one element in structure, the +1                  *              needed for size has been abstracted.                  */
+comment|/* 		 *	Allocate a new structure? 		 *		Since one element in structure, the +1 		 *		needed for size has been abstracted. 		 */
 if|if
 condition|(
 operator|(
@@ -5003,7 +5003,7 @@ name|lun2tid_t
 modifier|*
 name|new_target_ptr
 decl_stmt|;
-comment|/*                  *      Reallocate a new structure?                  *              Since one element in structure, the +1                  *              needed for size has been abstracted.                  */
+comment|/* 		 *	Reallocate a new structure? 		 *		Since one element in structure, the +1 		 *		needed for size has been abstracted. 		 */
 if|if
 condition|(
 operator|(
@@ -5070,7 +5070,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/*                  *      Copy the whole thing, safer, simpler coding                  * and not really performance critical at this point.                  */
+comment|/* 		 *	Copy the whole thing, safer, simpler coding 		 * and not really performance critical at this point. 		 */
 name|bcopy
 argument_list|(
 name|target_ptr
@@ -5130,7 +5130,7 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-comment|/*          *      Now, acquire the TID address from the LUN indexed list.          */
+comment|/* 	 *	Now, acquire the TID address from the LUN indexed list. 	 */
 return|return
 operator|(
 operator|&
@@ -5152,7 +5152,7 @@ comment|/* ASR_getTidAddress */
 end_comment
 
 begin_comment
-comment|/*  *      Get a pre-existing TID relationship.  *  *      If the TID was never set, return (tid_t)-1.  *  *      should use mutex rather than spl.  */
+comment|/*  *	Get a pre-existing TID relationship.  *  *	If the TID was never set, return (tid_t)-1.  *  *	should use mutex rather than spl.  */
 end_comment
 
 begin_function
@@ -5272,7 +5272,7 @@ comment|/* ASR_getTid */
 end_comment
 
 begin_comment
-comment|/*  *      Set a TID relationship.  *  *      If the TID was not set, return (tid_t)-1.  *  *      should use mutex rather than spl.  */
+comment|/*  *	Set a TID relationship.  *  *	If the TID was not set, return (tid_t)-1.  *  *	should use mutex rather than spl.  */
 end_comment
 
 begin_function
@@ -5412,7 +5412,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/*                    Function ASR_rescan                                  */
+comment|/*		      Function ASR_rescan				   */
 end_comment
 
 begin_comment
@@ -5420,27 +5420,27 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* The Parameters Passed To This Function Are :                            */
+comment|/* The Parameters Passed To This Function Are :				   */
 end_comment
 
 begin_comment
-comment|/*     Asr_softc_t *     : HBA miniport driver's adapter data storage.     */
+comment|/*     Asr_softc_t *	 : HBA miniport driver's adapter data storage.	   */
 end_comment
 
 begin_comment
-comment|/*                                                                         */
+comment|/*									   */
 end_comment
 
 begin_comment
-comment|/* This Function Will rescan the adapter and resynchronize any data        */
+comment|/* This Function Will rescan the adapter and resynchronize any data	   */
 end_comment
 
 begin_comment
-comment|/*                                                                         */
+comment|/*									   */
 end_comment
 
 begin_comment
-comment|/* Return : 0 For OK, Error Code Otherwise                                 */
+comment|/* Return : 0 For OK, Error Code Otherwise				   */
 end_comment
 
 begin_comment
@@ -5466,7 +5466,7 @@ name|OUT
 name|int
 name|error
 decl_stmt|;
-comment|/*          * Re-acquire the LCT table and synchronize us to the adapter.          */
+comment|/* 	 * Re-acquire the LCT table and synchronize us to the adapter. 	 */
 if|if
 condition|(
 operator|(
@@ -5516,7 +5516,7 @@ name|event
 init|=
 literal|0
 decl_stmt|;
-comment|/*                  *      Scan for all targets on this bus to see if they                  * got affected by the rescan.                  */
+comment|/* 		 *	Scan for all targets on this bus to see if they 		 * got affected by the rescan. 		 */
 for|for
 control|(
 name|target
@@ -5582,7 +5582,7 @@ decl_stmt|;
 name|tid_t
 name|LastTID
 decl_stmt|;
-comment|/*                                  * See if the cached TID changed. Search for                                  * the device in our new LCT.                                  */
+comment|/* 				 * See if the cached TID changed. Search for 				 * the device in our new LCT. 				 */
 for|for
 control|(
 name|Device
@@ -5675,7 +5675,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/*                                  * Indicate to the OS that the label needs                                  * to be recalculated, or that the specific                                  * open device is no longer valid (Merde)                                  * because the cached TID changed.                                  */
+comment|/* 				 * Indicate to the OS that the label needs 				 * to be recalculated, or that the specific 				 * open device is no longer valid (Merde) 				 * because the cached TID changed. 				 */
 name|LastTID
 operator|=
 name|ASR_getTid
@@ -5843,7 +5843,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*                                  *      We have the option of clearing the                                  * cached TID for it to be rescanned, or to                                  * set it now even if the device never got                                  * accessed. We chose the later since we                                  * currently do not use the condition that                                  * the TID ever got cached.                                  */
+comment|/* 				 *	We have the option of clearing the 				 * cached TID for it to be rescanned, or to 				 * set it now even if the device never got 				 * accessed. We chose the later since we 				 * currently do not use the condition that 				 * the TID ever got cached. 				 */
 name|ASR_setTid
 argument_list|(
 name|sc
@@ -5859,7 +5859,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*                  *      The xpt layer can not handle multiple events at the                  * same call.                  */
+comment|/* 		 *	The xpt layer can not handle multiple events at the 		 * same call. 		 */
 if|if
 condition|(
 name|event
@@ -5952,7 +5952,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/*                    Function ASR_reset                                   */
+comment|/*		      Function ASR_reset				   */
 end_comment
 
 begin_comment
@@ -5960,27 +5960,27 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* The Parameters Passed To This Function Are :                            */
+comment|/* The Parameters Passed To This Function Are :				   */
 end_comment
 
 begin_comment
-comment|/*     Asr_softc_t *      : HBA miniport driver's adapter data storage.    */
+comment|/*     Asr_softc_t *	  : HBA miniport driver's adapter data storage.	   */
 end_comment
 
 begin_comment
-comment|/*                                                                         */
+comment|/*									   */
 end_comment
 
 begin_comment
-comment|/* This Function Will reset the adapter and resynchronize any data         */
+comment|/* This Function Will reset the adapter and resynchronize any data	   */
 end_comment
 
 begin_comment
-comment|/*                                                                         */
+comment|/*									   */
 end_comment
 
 begin_comment
-comment|/* Return : None                                                           */
+comment|/* Return : None							   */
 end_comment
 
 begin_comment
@@ -6039,7 +6039,7 @@ name|EBUSY
 operator|)
 return|;
 block|}
-comment|/*          *      Promotes HA_OPERATIONAL to HA_IN_RESET,          * or HA_OFF_LINE to HA_OFF_LINE_RECOVERY.          */
+comment|/* 	 *	Promotes HA_OPERATIONAL to HA_IN_RESET, 	 * or HA_OFF_LINE to HA_OFF_LINE_RECOVERY. 	 */
 operator|++
 operator|(
 name|sc
@@ -6068,7 +6068,7 @@ argument_list|(
 literal|"ASR_resetIOP failed\n"
 argument_list|)
 expr_stmt|;
-comment|/*                  *      We really need to take this card off-line, easier said                  * than make sense. Better to keep retrying for now since if a                  * UART cable is connected the blinkLEDs the adapter is now in                  * a hard state requiring action from the monitor commands to                  * the HBA to continue. For debugging waiting forever is a                  * good thing. In a production system, however, one may wish                  * to instead take the card off-line ...                  */
+comment|/* 		 *	We really need to take this card off-line, easier said 		 * than make sense. Better to keep retrying for now since if a 		 * UART cable is connected the blinkLEDs the adapter is now in 		 * a hard state requiring action from the monitor commands to 		 * the HBA to continue. For debugging waiting forever is a 		 * good thing. In a production system, however, one may wish 		 * to instead take the card off-line ... 		 */
 if|#
 directive|if
 literal|0
@@ -6079,8 +6079,8 @@ argument_list|(
 name|HA_OFF_LINE
 argument_list|)
 operator|)
-comment|/*                          * Take adapter off-line.                          */
-block|printf ("asr%d: Taking adapter off-line\n",                           sc->ha_path[0]                             ? cam_sim_unit(xpt_path_sim(sc->ha_path[0]))                             : 0);                         sc->ha_in_reset = HA_OFF_LINE;                         splx (s);                         return (ENXIO);
+comment|/* 			 * Take adapter off-line. 			 */
+block|printf ("asr%d: Taking adapter off-line\n", 			  sc->ha_path[0] 			    ? cam_sim_unit(xpt_path_sim(sc->ha_path[0])) 			    : 0); 			sc->ha_in_reset = HA_OFF_LINE; 			splx (s); 			return (ENXIO);
 else|#
 directive|else
 comment|/* Wait Forever */
@@ -6216,7 +6216,7 @@ comment|/* ASR_reset */
 end_comment
 
 begin_comment
-comment|/*  *      Device timeout handler.  */
+comment|/*  *	Device timeout handler.  */
 end_comment
 
 begin_function
@@ -6271,7 +6271,7 @@ argument_list|(
 literal|"timed out"
 argument_list|)
 expr_stmt|;
-comment|/*          *      Check if the adapter has locked up?          */
+comment|/* 	 *	Check if the adapter has locked up? 	 */
 if|if
 condition|(
 operator|(
@@ -6348,7 +6348,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/*          *      Abort does not function on the ASR card!!! Walking away from          * the SCSI command is also *very* dangerous. A SCSI BUS reset is          * our best bet, followed by a complete adapter reset if that fails.          */
+comment|/* 	 *	Abort does not function on the ASR card!!! Walking away from 	 * the SCSI command is also *very* dangerous. A SCSI BUS reset is 	 * our best bet, followed by a complete adapter reset if that fails. 	 */
 name|s
 operator|=
 name|splcam
@@ -6757,7 +6757,7 @@ name|sc
 argument_list|)
 condition|)
 block|{
-comment|/*                          *      Unlikely we can do anything if we can't grab a                          * message frame :-(, but lets give it a try.                          */
+comment|/* 			 *	Unlikely we can do anything if we can't grab a 			 * message frame :-(, but lets give it a try. 			 */
 operator|(
 name|void
 operator|)
@@ -6800,11 +6800,11 @@ parameter_list|,
 name|Size
 parameter_list|)
 define|\
-value|I2O_FLAGS_COUNT_setCount(                                  \&(((PI2O_SG_ELEMENT)(SGL))->u.Simple[Index].FlagsCount), \           Size);                                                   \         I2O_FLAGS_COUNT_setFlags(                                  \&(((PI2O_SG_ELEMENT)(SGL))->u.Simple[Index].FlagsCount), \           I2O_SGL_FLAGS_SIMPLE_ADDRESS_ELEMENT | (Flags));         \         I2O_SGE_SIMPLE_ELEMENT_setPhysicalAddress(                 \&(((PI2O_SG_ELEMENT)(SGL))->u.Simple[Index]),            \           (Buffer == NULL) ? NULL : KVTOPHYS(Buffer))
+value|I2O_FLAGS_COUNT_setCount(				   \&(((PI2O_SG_ELEMENT)(SGL))->u.Simple[Index].FlagsCount), \ 	  Size);						   \ 	I2O_FLAGS_COUNT_setFlags(				   \&(((PI2O_SG_ELEMENT)(SGL))->u.Simple[Index].FlagsCount), \ 	  I2O_SGL_FLAGS_SIMPLE_ADDRESS_ELEMENT | (Flags));	   \ 	I2O_SGE_SIMPLE_ELEMENT_setPhysicalAddress(		   \&(((PI2O_SG_ELEMENT)(SGL))->u.Simple[Index]),		   \ 	  (Buffer == NULL) ? NULL : KVTOPHYS(Buffer))
 end_define
 
 begin_comment
-comment|/*  *      Retrieve Parameter Group.  *              Buffer must be allocated using defAlignLong macro.  */
+comment|/*  *	Retrieve Parameter Group.  *		Buffer must be allocated using defAlignLong macro.  */
 end_comment
 
 begin_function
@@ -7123,7 +7123,7 @@ argument_list|,
 name|I2O_UTIL_PARAMS_GET
 argument_list|)
 expr_stmt|;
-comment|/*          *  Set up the buffers as scatter gather elements.          */
+comment|/* 	 *  Set up the buffers as scatter gather elements. 	 */
 name|SG
 argument_list|(
 operator|&
@@ -7224,7 +7224,7 @@ comment|/* ASR_getParams */
 end_comment
 
 begin_comment
-comment|/*  *      Acquire the LCT information.  */
+comment|/*  *	Acquire the LCT information.  */
 end_comment
 
 begin_function
@@ -7260,7 +7260,7 @@ decl_stmt|;
 name|PI2O_LCT_ENTRY
 name|Entry
 decl_stmt|;
-comment|/*          *      sc value assumed valid          */
+comment|/* 	 *	sc value assumed valid 	 */
 name|MessageSizeInBytes
 operator|=
 sizeof|sizeof
@@ -7378,7 +7378,7 @@ argument_list|,
 name|I2O_CLASS_MATCH_ANYCLASS
 argument_list|)
 expr_stmt|;
-comment|/*          *      Call the LCT table to determine the number of device entries          * to reserve space for.          */
+comment|/* 	 *	Call the LCT table to determine the number of device entries 	 * to reserve space for. 	 */
 name|SG
 argument_list|(
 operator|&
@@ -7403,7 +7403,7 @@ name|I2O_LCT
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*          *      since this code is reused in several systems, code efficiency          * is greater by using a shift operation rather than a divide by          * sizeof(u_int32_t).          */
+comment|/* 	 *	since this code is reused in several systems, code efficiency 	 * is greater by using a shift operation rather than a divide by 	 * sizeof(u_int32_t). 	 */
 name|I2O_LCT_setTableSize
 argument_list|(
 operator|&
@@ -7437,7 +7437,7 @@ operator|)
 name|Message_Ptr
 argument_list|)
 expr_stmt|;
-comment|/*          *      Determine the size of the LCT table.          */
+comment|/* 	 *	Determine the size of the LCT table. 	 */
 if|if
 condition|(
 name|sc
@@ -7455,7 +7455,7 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          *      malloc only generates contiguous memory when less than a          * page is expected. We must break the request up into an SG list ...          */
+comment|/* 	 *	malloc only generates contiguous memory when less than a 	 * page is expected. We must break the request up into an SG list ... 	 */
 if|if
 condition|(
 operator|(
@@ -7550,7 +7550,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*          *      since this code is reused in several systems, code efficiency          * is greater by using a shift operation rather than a divide by          * sizeof(u_int32_t).          */
+comment|/* 	 *	since this code is reused in several systems, code efficiency 	 * is greater by using a shift operation rather than a divide by 	 * sizeof(u_int32_t). 	 */
 name|I2O_LCT_setTableSize
 argument_list|(
 name|sc
@@ -7572,7 +7572,7 @@ operator|>>
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/*          *      Convert the access to the LCT table into a SG list.          */
+comment|/* 	 *	Convert the access to the LCT table into a SG list. 	 */
 name|sg
 operator|=
 name|Message_Ptr
@@ -7752,7 +7752,7 @@ condition|)
 block|{
 break|break;
 block|}
-comment|/*                  * Incrementing requires resizing of the packet.                  */
+comment|/* 		 * Incrementing requires resizing of the packet. 		 */
 operator|++
 name|sg
 expr_stmt|;
@@ -8358,7 +8358,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*          *      A zero return value indicates success.          */
+comment|/* 	 *	A zero return value indicates success. 	 */
 return|return
 operator|(
 literal|0
@@ -8770,7 +8770,7 @@ operator||
 name|I2O_SCB_FLAG_SENSE_DATA_IN_BUFFER
 argument_list|)
 expr_stmt|;
-comment|/*          * We do not need any (optional byteswapping) method access to          * the Initiator& Transaction context field.          */
+comment|/* 	 * We do not need any (optional byteswapping) method access to 	 * the Initiator& Transaction context field. 	 */
 name|I2O_MESSAGE_FRAME_setInitiatorContext64
 argument_list|(
 name|Message
@@ -8791,7 +8791,7 @@ argument_list|,
 name|DPT_ORGANIZATION_ID
 argument_list|)
 expr_stmt|;
-comment|/*          * copy the cdb over          */
+comment|/* 	 * copy the cdb over 	 */
 name|PRIVATE_SCSI_SCB_EXECUTE_MESSAGE_setCDBLength
 argument_list|(
 operator|(
@@ -8833,7 +8833,7 @@ operator|.
 name|cdb_len
 argument_list|)
 expr_stmt|;
-comment|/*          * Given a buffer describing a transfer, set up a scatter/gather map          * in a ccb to map that SCSI transfer.          */
+comment|/* 	 * Given a buffer describing a transfer, set up a scatter/gather map 	 * in a ccb to map that SCSI transfer. 	 */
 name|rw
 operator|=
 operator|(
@@ -8900,7 +8900,7 @@ name|I2O_SCB_FLAG_SENSE_DATA_IN_BUFFER
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*          * Given a transfer described by a `data', fill in the SG list.          */
+comment|/* 	 * Given a transfer described by a `data', fill in the SG list. 	 */
 name|sg
 operator|=
 operator|&
@@ -9215,7 +9215,7 @@ comment|/* ASR_init_message */
 end_comment
 
 begin_comment
-comment|/*  *      Reset the adapter.  */
+comment|/*  *	Reset the adapter.  */
 end_comment
 
 begin_function
@@ -9261,7 +9261,7 @@ decl_stmt|;
 name|U32
 name|Old
 decl_stmt|;
-comment|/*          *  Build up our copy of the Message.          */
+comment|/* 	 *  Build up our copy of the Message. 	 */
 name|Message_Ptr
 operator|=
 operator|(
@@ -9306,7 +9306,7 @@ name|I2O_SCSI_ERROR_REPLY_MESSAGE_FRAME
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*          *  Reset the Reply Status          */
+comment|/* 	 *  Reset the Reply Status 	 */
 operator|*
 operator|(
 name|Reply_Ptr
@@ -9352,7 +9352,7 @@ name|U32
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*          *      Send the Message out          */
+comment|/* 	 *	Send the Message out 	 */
 if|if
 condition|(
 operator|(
@@ -9387,7 +9387,7 @@ name|size
 decl_stmt|,
 name|addr
 decl_stmt|;
-comment|/*                  *      Wait for a response (Poll).                  */
+comment|/* 		 *	Wait for a response (Poll). 		 */
 while|while
 condition|(
 operator|*
@@ -9396,7 +9396,7 @@ operator|<
 name|I2O_EXEC_OUTBOUND_INIT_REJECTED
 condition|)
 empty_stmt|;
-comment|/*                  *      Re-enable the interrupts.                  */
+comment|/* 		 *	Re-enable the interrupts. 		 */
 name|sc
 operator|->
 name|ha_Virt
@@ -9405,7 +9405,7 @@ name|Mask
 operator|=
 name|Old
 expr_stmt|;
-comment|/*                  *      Populate the outbound table.                  */
+comment|/* 		 *	Populate the outbound table. 		 */
 if|if
 condition|(
 name|sc
@@ -9430,7 +9430,7 @@ name|sc
 operator|->
 name|ha_Msgs_Count
 expr_stmt|;
-comment|/*                          *      contigmalloc only works reliably at                          * initialization time.                          */
+comment|/* 			 *	contigmalloc only works reliably at 			 * initialization time. 			 */
 if|if
 condition|(
 operator|(
@@ -9568,7 +9568,7 @@ comment|/* ASR_initOutBound */
 end_comment
 
 begin_comment
-comment|/*  *      Set the system table  */
+comment|/*  *	Set the system table  */
 end_comment
 
 begin_function
@@ -9801,7 +9801,7 @@ argument_list|,
 name|I2O_EXEC_SYS_TAB_SET
 argument_list|)
 expr_stmt|;
-comment|/*          *      Call the LCT table to determine the number of device entries          * to reserve space for.          *      since this code is reused in several systems, code efficiency          * is greater by using a shift operation rather than a divide by          * sizeof(u_int32_t).          */
+comment|/* 	 *	Call the LCT table to determine the number of device entries 	 * to reserve space for. 	 *	since this code is reused in several systems, code efficiency 	 * is greater by using a shift operation rather than a divide by 	 * sizeof(u_int32_t). 	 */
 name|sg
 operator|=
 call|(
@@ -10113,7 +10113,7 @@ argument_list|,
 name|I2O_EXEC_HRT_GET
 argument_list|)
 expr_stmt|;
-comment|/*          *  Set up the buffers as scatter gather elements.          */
+comment|/* 	 *  Set up the buffers as scatter gather elements. 	 */
 name|SG
 argument_list|(
 operator|&
@@ -10323,7 +10323,7 @@ comment|/* ASR_acquireHrt */
 end_comment
 
 begin_comment
-comment|/*  *      Enable the adapter.  */
+comment|/*  *	Enable the adapter.  */
 end_comment
 
 begin_function
@@ -10398,7 +10398,7 @@ comment|/* ASR_enableSys */
 end_comment
 
 begin_comment
-comment|/*  *      Perform the stages necessary to initialize the adapter  */
+comment|/*  *	Perform the stages necessary to initialize the adapter  */
 end_comment
 
 begin_function
@@ -10450,7 +10450,7 @@ comment|/* ASR_init */
 end_comment
 
 begin_comment
-comment|/*  *      Send a Synchronize Cache command to the target device.  */
+comment|/*  *	Send a Synchronize Cache command to the target device.  */
 end_comment
 
 begin_function
@@ -10480,7 +10480,7 @@ block|{
 name|tid_t
 name|TID
 decl_stmt|;
-comment|/*          * We will not synchronize the device when there are outstanding          * commands issued by the OS (this is due to a locked up device,          * as the OS normally would flush all outstanding commands before          * issuing a shutdown or an adapter reset).          */
+comment|/* 	 * We will not synchronize the device when there are outstanding 	 * commands issued by the OS (this is due to a locked up device, 	 * as the OS normally would flush all outstanding commands before 	 * issuing a shutdown or an adapter reset). 	 */
 if|if
 condition|(
 operator|(
@@ -10854,7 +10854,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *      Reset the HBA, targets and BUS.  *              Currently this resets *all* the SCSI busses.  */
+comment|/*  *	Reset the HBA, targets and BUS.  *		Currently this resets *all* the SCSI busses.  */
 end_comment
 
 begin_function
@@ -10890,7 +10890,7 @@ comment|/* asr_hbareset */
 end_comment
 
 begin_comment
-comment|/*  *      A reduced copy of the real pci_map_mem, incorporating the MAX_MAP  * limit and a reduction in error checking (in the pre 4.0 case).  */
+comment|/*  *	A reduced copy of the real pci_map_mem, incorporating the MAX_MAP  * limit and a reduction in error checking (in the pre 4.0 case).  */
 end_comment
 
 begin_function
@@ -10936,7 +10936,7 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|400000
-comment|/*          * I2O specification says we must find first *memory* mapped BAR          */
+comment|/* 	 * I2O specification says we must find first *memory* mapped BAR 	 */
 for|for
 control|(
 name|rid
@@ -10992,7 +10992,7 @@ block|{
 break|break;
 block|}
 block|}
-comment|/*          *      Give up?          */
+comment|/* 	 *	Give up? 	 */
 if|if
 condition|(
 name|rid
@@ -11090,7 +11090,7 @@ operator|=
 name|MAX_MAP
 expr_stmt|;
 block|}
-comment|/*          * The 2005S Zero Channel RAID solution is not a perfect PCI          * citizen. It asks for 4MB on BAR0, and 0MB on BAR1, once          * enabled it rewrites the size of BAR0 to 2MB, sets BAR1 to          * BAR0+2MB and sets it's size to 2MB. The IOP registers are          * accessible via BAR0, the messaging registers are accessible          * via BAR1. If the subdevice code is 50 to 59 decimal.          */
+comment|/* 	 * The 2005S Zero Channel RAID solution is not a perfect PCI 	 * citizen. It asks for 4MB on BAR0, and 0MB on BAR1, once 	 * enabled it rewrites the size of BAR0 to 2MB, sets BAR1 to 	 * BAR0+2MB and sets it's size to 2MB. The IOP registers are 	 * accessible via BAR0, the messaging registers are accessible 	 * via BAR1. If the subdevice code is 50 to 59 decimal. 	 */
 name|s
 operator|=
 name|pci_read_config
@@ -11488,7 +11488,7 @@ name|psize
 decl_stmt|,
 name|poffs
 decl_stmt|;
-comment|/*          * I2O specification says we must find first *memory* mapped BAR          */
+comment|/* 	 * I2O specification says we must find first *memory* mapped BAR 	 */
 for|for
 control|(
 name|rid
@@ -11560,7 +11560,7 @@ operator|=
 name|PCI_MAP_REG_START
 expr_stmt|;
 block|}
-comment|/*         **      save old mapping, get size and type of memory         **         **      type is in the lowest four bits.         **      If device requires 2^n bytes, the next         **      n-4 bits are read as 0.         */
+comment|/* 	**	save old mapping, get size and type of memory 	** 	**	type is in the lowest four bits. 	**	If device requires 2^n bytes, the next 	**	n-4 bits are read as 0. 	*/
 name|sc
 operator|->
 name|ha_Base
@@ -11611,7 +11611,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|/*         **      check the type         */
+comment|/* 	**	check the type 	*/
 if|if
 condition|(
 operator|!
@@ -11667,7 +11667,7 @@ operator|)
 return|;
 block|}
 empty_stmt|;
-comment|/*         **      get the size.         */
+comment|/* 	**	get the size. 	*/
 name|psize
 operator|=
 operator|-
@@ -11689,7 +11689,7 @@ operator|=
 name|MAX_MAP
 expr_stmt|;
 block|}
-comment|/*          * The 2005S Zero Channel RAID solution is not a perfect PCI          * citizen. It asks for 4MB on BAR0, and 0MB on BAR1, once          * enabled it rewrites the size of BAR0 to 2MB, sets BAR1 to          * BAR0+2MB and sets it's size to 2MB. The IOP registers are          * accessible via BAR0, the messaging registers are accessible          * via BAR1. If the subdevice code is 50 to 59 decimal.          */
+comment|/* 	 * The 2005S Zero Channel RAID solution is not a perfect PCI 	 * citizen. It asks for 4MB on BAR0, and 0MB on BAR1, once 	 * enabled it rewrites the size of BAR0 to 2MB, sets BAR1 to 	 * BAR0+2MB and sets it's size to 2MB. The IOP registers are 	 * accessible via BAR0, the messaging registers are accessible 	 * via BAR1. If the subdevice code is 50 to 59 decimal. 	 */
 name|s
 operator|=
 name|pci_read_config
@@ -11793,7 +11793,7 @@ operator|)
 return|;
 block|}
 empty_stmt|;
-comment|/*         **      Truncate sc->ha_Base to page boundary.         **      (Or does pmap_mapdev the job?)         */
+comment|/* 	**	Truncate sc->ha_Base to page boundary. 	**	(Or does pmap_mapdev the job?) 	*/
 name|poffs
 operator|=
 operator|(
@@ -11911,7 +11911,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*                 **      save old mapping, get size and type of memory                 **                 **      type is in the lowest four bits.                 **      If device requires 2^n bytes, the next                 **      n-4 bits are read as 0.                 */
+comment|/* 		**	save old mapping, get size and type of memory 		** 		**	type is in the lowest four bits. 		**	If device requires 2^n bytes, the next 		**	n-4 bits are read as 0. 		*/
 if|if
 condition|(
 operator|(
@@ -11981,7 +11981,7 @@ name|p
 operator|&=
 name|PCI_MAP_MEMORY_TYPE_MASK
 expr_stmt|;
-comment|/*                 **      check the type                 */
+comment|/* 		**	check the type 		*/
 if|if
 condition|(
 operator|!
@@ -12032,7 +12032,7 @@ operator|)
 return|;
 block|}
 empty_stmt|;
-comment|/*                 **      get the size.                 */
+comment|/* 		**	get the size. 		*/
 name|psize
 operator|=
 operator|-
@@ -12054,7 +12054,7 @@ operator|=
 name|MAX_MAP
 expr_stmt|;
 block|}
-comment|/*                 **      Truncate p to page boundary.                 **      (Or does pmap_mapdev the job?)                 */
+comment|/* 		**	Truncate p to page boundary. 		**	(Or does pmap_mapdev the job?) 		*/
 name|poffs
 operator|=
 name|p
@@ -12154,7 +12154,7 @@ comment|/* asr_pci_map_mem */
 end_comment
 
 begin_comment
-comment|/*  *      A simplified copy of the real pci_map_int with additional  * registration requirements.  */
+comment|/*  *	A simplified copy of the real pci_map_int with additional  * registration requirements.  */
 end_comment
 
 begin_function
@@ -12355,7 +12355,7 @@ comment|/* asr_pci_map_int */
 end_comment
 
 begin_comment
-comment|/*  *      Attach the devices, and virtual devices to the driver list.  */
+comment|/*  *	Attach the devices, and virtual devices to the driver list.  */
 end_comment
 
 begin_function
@@ -12423,7 +12423,7 @@ operator|)
 name|NULL
 condition|)
 block|{
-comment|/*                  *      Fixup the OS revision as saved in the dptsig for the                  *      engine (dptioctl.h) to pick up.                  */
+comment|/* 		 *	Fixup the OS revision as saved in the dptsig for the 		 *	engine (dptioctl.h) to pick up. 		 */
 name|bcopy
 argument_list|(
 name|osrelease
@@ -12451,7 +12451,7 @@ name|d_maj
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          *      Initialize the software structure          */
+comment|/* 	 *	Initialize the software structure 	 */
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -12556,7 +12556,7 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|;
-comment|/*                  *      This is the real McCoy!                  */
+comment|/* 		 *	This is the real McCoy! 		 */
 if|if
 condition|(
 operator|!
@@ -13108,7 +13108,7 @@ name|I2O_SGE_SIMPLE_ELEMENT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          *      Only do a bus/HBA reset on the first time through. On this          * first time through, we do not send a flush to the devices.          */
+comment|/* 	 *	Only do a bus/HBA reset on the first time through. On this 	 * first time through, we do not send a flush to the devices. 	 */
 if|if
 condition|(
 name|ASR_init
@@ -13231,7 +13231,7 @@ name|ENXIO
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          *      Add in additional probe responses for more channels. We          * are reusing the variable `target' for a channel loop counter.          * Done here because of we need both the acquireLct and          * acquireHrt data.          */
+comment|/* 	 *	Add in additional probe responses for more channels. We 	 * are reusing the variable `target' for a channel loop counter. 	 * Done here because of we need both the acquireLct and 	 * acquireHrt data. 	 */
 block|{
 name|PI2O_LCT_ENTRY
 name|Device
@@ -13376,7 +13376,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*          *      Print the HBA model number as inquired from the card.          */
+comment|/* 	 *	Print the HBA model number as inquired from the card. 	 */
 name|printf
 argument_list|(
 literal|"asr%d:"
@@ -13866,7 +13866,7 @@ operator|->
 name|ha_QueueSize
 argument_list|)
 expr_stmt|;
-comment|/*          * fill in the prototype cam_path.          */
+comment|/* 	 * fill in the prototype cam_path. 	 */
 block|{
 name|int
 name|bus
@@ -13948,7 +13948,7 @@ operator|=
 name|MAX_INBOUND
 expr_stmt|;
 block|}
-comment|/*                          *      Create the device queue for our SIM(s).                          */
+comment|/* 			 *	Create the device queue for our SIM(s). 			 */
 if|if
 condition|(
 operator|(
@@ -13965,7 +13965,7 @@ condition|)
 block|{
 continue|continue;
 block|}
-comment|/*                          *      Construct our first channel SIM entry                          */
+comment|/* 			 *	Construct our first channel SIM entry 			 */
 name|sc
 operator|->
 name|ha_sim
@@ -14126,7 +14126,7 @@ name|ccb
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          *      Generate the device node information          */
+comment|/* 	 *	Generate the device node information 	 */
 operator|(
 name|void
 operator|)
@@ -14570,7 +14570,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*                  *      We will get here if there is no valid TID for the device                  * referenced in the scsi command packet.                  */
+comment|/* 		 *	We will get here if there is no valid TID for the device 		 * referenced in the scsi command packet. 		 */
 name|ccb
 operator|->
 name|ccb_h
@@ -15544,7 +15544,7 @@ name|ha_Msgs
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*                  * We do not need any (optional byteswapping) method access to                  * the Initiator context field.                  */
+comment|/* 		 * We do not need any (optional byteswapping) method access to 		 * the Initiator context field. 		 */
 name|ccb
 operator|=
 operator|(
@@ -15610,7 +15610,7 @@ operator|)
 name|Reply
 argument_list|)
 expr_stmt|;
-comment|/*                          *  Get the Original Message Frame's address, and get                          * it's Transaction Context into our space. (Currently                          * unused at original authorship, but better to be                          * safe than sorry). Straight copy means that we                          * need not concern ourselves with the (optional                          * byteswapping) method access.                          */
+comment|/* 			 *  Get the Original Message Frame's address, and get 			 * it's Transaction Context into our space. (Currently 			 * unused at original authorship, but better to be 			 * safe than sorry). Straight copy means that we 			 * need not concern ourselves with the (optional 			 * byteswapping) method access. 			 */
 name|Reply
 operator|->
 name|StdReplyFrame
@@ -15632,7 +15632,7 @@ operator|)
 operator|->
 name|TransactionContext
 expr_stmt|;
-comment|/*                          *      For 64 bit machines, we need to reconstruct the                          * 64 bit context.                          */
+comment|/* 			 *	For 64 bit machines, we need to reconstruct the 			 * 64 bit context. 			 */
 name|ccb
 operator|=
 operator|(
@@ -15655,7 +15655,7 @@ name|StdMessageFrame
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*                          * Unique error code for command failure.                          */
+comment|/* 			 * Unique error code for command failure. 			 */
 name|I2O_SINGLE_REPLY_MESSAGE_FRAME_setDetailedStatusCode
 argument_list|(
 operator|&
@@ -15672,7 +15672,7 @@ operator|-
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/*                          *  Modify the message frame to contain a NOP and                          * re-issue it to the controller.                          */
+comment|/* 			 *  Modify the message frame to contain a NOP and 			 * re-issue it to the controller. 			 */
 name|Message_Ptr
 operator|=
 operator|(
@@ -15709,7 +15709,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*                          *  Copy the packet out to the Original Message                          */
+comment|/* 			 *  Copy the packet out to the Original Message 			 */
 name|bcopy
 argument_list|(
 operator|(
@@ -15729,7 +15729,7 @@ name|I2O_UTIL_NOP_MESSAGE
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*                          *  Issue the NOP                          */
+comment|/* 			 *  Issue the NOP 			 */
 name|sc
 operator|->
 name|ha_Virt
@@ -15739,7 +15739,7 @@ operator|=
 name|MessageOffset
 expr_stmt|;
 block|}
-comment|/*                  *      Asynchronous command with no return requirements,                  * and a generic handler for immunity against odd error                  * returns from the adapter.                  */
+comment|/* 		 *	Asynchronous command with no return requirements, 		 * and a generic handler for immunity against odd error 		 * returns from the adapter. 		 */
 if|if
 condition|(
 name|ccb
@@ -15752,7 +15752,7 @@ operator|)
 name|NULL
 condition|)
 block|{
-comment|/*                          * Return Reply so that it can be used for the                          * next command                          */
+comment|/* 			 * Return Reply so that it can be used for the 			 * next command 			 */
 name|sc
 operator|->
 name|ha_Virt
@@ -16199,7 +16199,7 @@ comment|/* FALLTHRU */
 case|case
 literal|0x08
 case|:
-comment|/* 6-byte READ  */
+comment|/* 6-byte READ	*/
 comment|/* FALLTHRU */
 case|case
 literal|0x28
@@ -16579,7 +16579,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*                  * Return Reply so that it can be used for the next command                  * since we have no more need for it now                  */
+comment|/* 		 * Return Reply so that it can be used for the next command 		 * since we have no more need for it now 		 */
 name|sc
 operator|->
 name|ha_Virt
@@ -16742,11 +16742,11 @@ comment|/* Grrrr */
 end_comment
 
 begin_comment
-comment|/*  *      Meant to be included at the bottom of asr.c !!!  */
+comment|/*  *	Meant to be included at the bottom of asr.c !!!  */
 end_comment
 
 begin_comment
-comment|/*  *      Included here as hard coded. Done because other necessary include  *      files utilize C++ comment structures which make them a nuisance to  *      included here just to pick up these three typedefs.  */
+comment|/*  *	Included here as hard coded. Done because other necessary include  *	files utilize C++ comment structures which make them a nuisance to  *	included here just to pick up these three typedefs.  */
 end_comment
 
 begin_typedef
@@ -17073,7 +17073,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/*                    Function ASR_queue_i                                 */
+comment|/*		      Function ASR_queue_i				   */
 end_comment
 
 begin_comment
@@ -17081,39 +17081,39 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* The Parameters Passed To This Function Are :                            */
+comment|/* The Parameters Passed To This Function Are :				   */
 end_comment
 
 begin_comment
-comment|/*     Asr_softc_t *      : HBA miniport driver's adapter data storage.    */
+comment|/*     Asr_softc_t *	  : HBA miniport driver's adapter data storage.	   */
 end_comment
 
 begin_comment
-comment|/*     PI2O_MESSAGE_FRAME : Msg Structure Pointer For This Command         */
+comment|/*     PI2O_MESSAGE_FRAME : Msg Structure Pointer For This Command	   */
 end_comment
 
 begin_comment
-comment|/*      I2O_SCSI_ERROR_REPLY_MESSAGE_FRAME following the Msg Structure     */
+comment|/*	I2O_SCSI_ERROR_REPLY_MESSAGE_FRAME following the Msg Structure	   */
 end_comment
 
 begin_comment
-comment|/*                                                                         */
+comment|/*									   */
 end_comment
 
 begin_comment
-comment|/* This Function Will Take The User Request Packet And Convert It To An    */
+comment|/* This Function Will Take The User Request Packet And Convert It To An	   */
 end_comment
 
 begin_comment
-comment|/* I2O MSG And Send It Off To The Adapter.                                 */
+comment|/* I2O MSG And Send It Off To The Adapter.				   */
 end_comment
 
 begin_comment
-comment|/*                                                                         */
+comment|/*									   */
 end_comment
 
 begin_comment
-comment|/* Return : 0 For OK, Error Code Otherwise                                 */
+comment|/* Return : 0 For OK, Error Code Otherwise				   */
 end_comment
 
 begin_comment
@@ -18058,7 +18058,7 @@ block|{
 name|PI2O_SGE_SIMPLE_ELEMENT
 name|sg
 decl_stmt|;
-comment|/*                  *      since this code is reused in several systems, code                  * efficiency is greater by using a shift operation rather                  * than a divide by sizeof(u_int32_t).                  */
+comment|/* 		 *	since this code is reused in several systems, code 		 * efficiency is greater by using a shift operation rather 		 * than a divide by sizeof(u_int32_t). 		 */
 name|sg
 operator|=
 call|(
@@ -18303,7 +18303,7 @@ condition|)
 block|{
 break|break;
 block|}
-comment|/*                          *      If the buffer is not contiguous, lets                          * break up the scatter/gather entries.                          */
+comment|/* 			 *	If the buffer is not contiguous, lets 			 * break up the scatter/gather entries. 			 */
 while|while
 condition|(
 operator|(
@@ -18529,7 +18529,7 @@ condition|)
 block|{
 break|break;
 block|}
-comment|/*                                  * Incrementing requires resizing of the                                  * packet, and moving up the existing SG                                  * elements.                                  */
+comment|/* 				 * Incrementing requires resizing of the 				 * packet, and moving up the existing SG 				 * elements. 				 */
 operator|++
 name|sg
 expr_stmt|;
@@ -18868,7 +18868,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*          * We do not need any (optional byteswapping) method access to          * the Initiator context field.          */
+comment|/* 	 * We do not need any (optional byteswapping) method access to 	 * the Initiator context field. 	 */
 name|I2O_MESSAGE_FRAME_setInitiatorContext64
 argument_list|(
 operator|(
@@ -18902,7 +18902,7 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-comment|/*          * Wait for the board to report a finished instruction.          */
+comment|/* 	 * Wait for the board to report a finished instruction. 	 */
 name|s
 operator|=
 name|splcam
@@ -19368,7 +19368,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/*                          Function asr_ioctl                         */
+comment|/*			    Function asr_ioctl			       */
 end_comment
 
 begin_comment
@@ -19376,43 +19376,43 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* The parameters passed to this function are :                         */
+comment|/* The parameters passed to this function are :				*/
 end_comment
 
 begin_comment
-comment|/*     dev  : Device number.                                            */
+comment|/*     dev  : Device number.						*/
 end_comment
 
 begin_comment
-comment|/*     cmd  : Ioctl Command                                             */
+comment|/*     cmd  : Ioctl Command						*/
 end_comment
 
 begin_comment
-comment|/*     data : User Argument Passed In.                                  */
+comment|/*     data : User Argument Passed In.					*/
 end_comment
 
 begin_comment
-comment|/*     flag : Mode Parameter                                            */
+comment|/*     flag : Mode Parameter						*/
 end_comment
 
 begin_comment
-comment|/*     proc : Process Parameter                                         */
+comment|/*     proc : Process Parameter						*/
 end_comment
 
 begin_comment
-comment|/*                                                                      */
+comment|/*									*/
 end_comment
 
 begin_comment
-comment|/* This function is the user interface into this adapter driver         */
+comment|/* This function is the user interface into this adapter driver		*/
 end_comment
 
 begin_comment
-comment|/*                                                                      */
+comment|/*									*/
 end_comment
 
 begin_comment
-comment|/* Return : zero if OK, error code if not                               */
+comment|/* Return : zero if OK, error code if not				*/
 end_comment
 
 begin_comment
@@ -20410,7 +20410,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/*                          *      Get The Pointer From Int 41 For The First                          *      Drive Parameters                          */
+comment|/* 			 *	Get The Pointer From Int 41 For The First 			 *	Drive Parameters 			 */
 name|j
 operator|=
 operator|(
@@ -20457,7 +20457,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*                          * It appears that SmartROM's Int41/Int46 pointers                          * use memory that gets stepped on by the kernel                          * loading. We no longer have access to this                          * geometry information but try anyways (!?)                          */
+comment|/* 			 * It appears that SmartROM's Int41/Int46 pointers 			 * use memory that gets stepped on by the kernel 			 * loading. We no longer have access to this 			 * geometry information but try anyways (!?) 			 */
 name|Info
 operator|.
 name|drives
@@ -20628,7 +20628,7 @@ operator|>
 literal|1
 condition|)
 block|{
-comment|/*                                  *      Get The Pointer From Int 46 For The                                  *      Second Drive Parameters                                  */
+comment|/* 				 *	Get The Pointer From Int 46 For The 				 *	Second Drive Parameters 				 */
 name|j
 operator|=
 operator|(

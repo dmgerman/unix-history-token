@@ -22,11 +22,11 @@ name|__DPTALIGN_H
 end_define
 
 begin_comment
-comment|/*  *      File -  DPTALIGN.H  *  *      Description:  This file contains basic Alignment support definitions.  *  *      Copyright Distributed Processing Technology, Corp.  *        140 Candace Dr.  *        Maitland, Fl. 32751   USA  *        Phone: (407) 830-5522  Fax: (407) 260-5366  *        All Rights Reserved  *  *      Author: Mark Salyzyn  *      Date:   Aug 29 1996  *  *  *	Fifth Gen product enhancements and additions  *      Author: Ben Ghofrani  *      Date:   April 6 1998  */
+comment|/*  *	File -	DPTALIGN.H  *  *	Description:  This file contains basic Alignment support definitions.  *  *	Copyright Distributed Processing Technology, Corp.  *	  140 Candace Dr.  *	  Maitland, Fl. 32751	USA  *	  Phone: (407) 830-5522	 Fax: (407) 260-5366  *	  All Rights Reserved  *  *	Author: Mark Salyzyn  *	Date:	Aug 29 1996  *  *  *	Fifth Gen product enhancements and additions  *	Author: Ben Ghofrani  *	Date:	April 6 1998  */
 end_comment
 
 begin_comment
-comment|/*  *      Description: Support macros for active alignment  *      Requires:  *              osdLocal2(x)  *              osdLocal4(x)  *              osdSwap2(x)  *              osdSwap4(x)  */
+comment|/*  *	Description: Support macros for active alignment  *	Requires:  *		osdLocal2(x)  *		osdLocal4(x)  *		osdSwap2(x)  *		osdSwap4(x)  */
 end_comment
 
 begin_if
@@ -140,7 +140,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*  *      Name: osdSwap2(value)  *      Description: Mandatory byte swapping routine for words. We allow an  *      override of x routine if the OS supplies it's own byte swapping  *      routine, inline or macro.  */
+comment|/*  *	Name: osdSwap2(value)  *	Description: Mandatory byte swapping routine for words. We allow an  *	override of x routine if the OS supplies it's own byte swapping  *	routine, inline or macro.  */
 end_comment
 
 begin_define
@@ -150,7 +150,7 @@ name|osdSwap2
 parameter_list|(
 name|x
 parameter_list|)
-value|(((unsigned short)(x)>> 8) \                     | ((unsigned short)((unsigned char)(x))<< 8))
+value|(((unsigned short)(x)>> 8) \ 		    | ((unsigned short)((unsigned char)(x))<< 8))
 end_define
 
 begin_endif
@@ -171,7 +171,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*  *      Name: osdSwap4(value)  *      Description: Mandatory byte swapping routine for DPT_4_BYTES words. We allow  *      an override of x routine if the OS supplies it's own byte swapping  *      routine, inline or macro. The following is universal, but may be  *      more optimally performed by an OS or driver processor dependant  *      routine.  */
+comment|/*  *	Name: osdSwap4(value)  *	Description: Mandatory byte swapping routine for DPT_4_BYTES words. We allow  *	an override of x routine if the OS supplies it's own byte swapping  *	routine, inline or macro. The following is universal, but may be  *	more optimally performed by an OS or driver processor dependant  *	routine.  */
 end_comment
 
 begin_define
@@ -181,7 +181,7 @@ name|osdSwap4
 parameter_list|(
 name|x
 parameter_list|)
-value|(                                                   \     (((unsigned DPT_4_BYTES)(x))>> 24L)                                            \   | ((unsigned DPT_4_BYTES)(((unsigned short)((unsigned DPT_4_BYTES)(x)>> 8L))& 0xFF00)) \   | (((unsigned DPT_4_BYTES)(((unsigned short)(x))& 0xFF00))<< 8L)                \   | (((unsigned DPT_4_BYTES)((unsigned char)(x)))<< 24L))
+value|(						     \     (((unsigned DPT_4_BYTES)(x))>> 24L)					    \   | ((unsigned DPT_4_BYTES)(((unsigned short)((unsigned DPT_4_BYTES)(x)>> 8L))& 0xFF00)) \   | (((unsigned DPT_4_BYTES)(((unsigned short)(x))& 0xFF00))<< 8L)		    \   | (((unsigned DPT_4_BYTES)((unsigned char)(x)))<< 24L))
 end_define
 
 begin_endif
@@ -202,7 +202,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*  *      Name: osdLocal2(pointer)  *      Description: Local byte order to Big Endian Format for short words.  *      Could be replaced with an OS defined localization routine, macro or  *      inline.  */
+comment|/*  *	Name: osdLocal2(pointer)  *	Description: Local byte order to Big Endian Format for short words.  *	Could be replaced with an OS defined localization routine, macro or  *	inline.  */
 end_comment
 
 begin_if
@@ -259,7 +259,7 @@ name|osdSLocal2
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned short)(((unsigned char __FAR__ *)(x))[1])\                + ((unsigned int)((unsigned short)(((unsigned char __FAR__ *)(x))[0]))<< 8))
+value|((unsigned short)(((unsigned char __FAR__ *)(x))[1])\ 	       + ((unsigned int)((unsigned short)(((unsigned char __FAR__ *)(x))[0]))<< 8))
 end_define
 
 begin_endif
@@ -315,7 +315,7 @@ name|osdLocal2
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned short)(((unsigned char __FAR__*)(x))[1]) \                 + (((unsigned short)(((unsigned char __FAR__*)(x))[0]))<< 8))
+value|((unsigned short)(((unsigned char __FAR__*)(x))[1]) \ 		+ (((unsigned short)(((unsigned char __FAR__*)(x))[0]))<< 8))
 end_define
 
 begin_endif
@@ -346,7 +346,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*  *      Name: osdLocal3(pointer)  *      Description: Local byte order to Big Endian Format for DPT_4_BYTES words.  *      Could be replaced with an OS defined localization routine, macro or  *      inline.  */
+comment|/*  *	Name: osdLocal3(pointer)  *	Description: Local byte order to Big Endian Format for DPT_4_BYTES words.  *	Could be replaced with an OS defined localization routine, macro or  *	inline.  */
 end_comment
 
 begin_if
@@ -439,7 +439,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*  *      Name: osdLocal4(pointer)  *      Description: Local byte order to Big Endian Format for DPT_4_BYTES words.  *      Could be replaced with an OS defined localization routine, macro or  *      inline.  */
+comment|/*  *	Name: osdLocal4(pointer)  *	Description: Local byte order to Big Endian Format for DPT_4_BYTES words.  *	Could be replaced with an OS defined localization routine, macro or  *	inline.  */
 end_comment
 
 begin_if
@@ -496,7 +496,7 @@ name|osdSLocal4
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned DPT_4_BYTES)osdSLocal2(((unsigned char __FAR__ *)\     (x)+2)) + (((unsigned DPT_4_BYTES)((unsigned char __FAR__ *)(x))[1])<< 16) \             + (((unsigned DPT_4_BYTES)((unsigned char __FAR__ *)(x))[0])<< 24))
+value|((unsigned DPT_4_BYTES)osdSLocal2(((unsigned char __FAR__ *)\     (x)+2)) + (((unsigned DPT_4_BYTES)((unsigned char __FAR__ *)(x))[1])<< 16) \ 	    + (((unsigned DPT_4_BYTES)((unsigned char __FAR__ *)(x))[0])<< 24))
 end_define
 
 begin_endif
@@ -552,7 +552,7 @@ name|osdLocal4
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned DPT_4_BYTES)osdLocal2(((unsigned char __FAR__ *) \         (x)+2)) + (((unsigned DPT_4_BYTES)((unsigned char __FAR__ *)(x))[1])<< 16) \                 + (((unsigned DPT_4_BYTES)((unsigned char __FAR__ *)(x))[0])<< 24))
+value|((unsigned DPT_4_BYTES)osdLocal2(((unsigned char __FAR__ *) \ 	(x)+2)) + (((unsigned DPT_4_BYTES)((unsigned char __FAR__ *)(x))[1])<< 16) \ 		+ (((unsigned DPT_4_BYTES)((unsigned char __FAR__ *)(x))[0])<< 24))
 end_define
 
 begin_endif
@@ -578,7 +578,7 @@ value|((unsigned DPT_4_BYTES) ((1L<<I2O_TID_SZ)-1))
 end_define
 
 begin_comment
-comment|/*  *      Now the access macros used throughout in order to methodize the  * active alignment.  */
+comment|/*  *	Now the access macros used throughout in order to methodize the  * active alignment.  */
 end_comment
 
 begin_define
@@ -656,7 +656,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((unsigned short __FAR__ *)(((unsigned char __FAR__ *) \                                 (x))+(unsigned DPT_4_BYTES)(y)))
+value|((unsigned short __FAR__ *)(((unsigned char __FAR__ *) \ 				(x))+(unsigned DPT_4_BYTES)(y)))
 end_define
 
 begin_define
@@ -668,7 +668,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((unsigned short)osdLocal2((unsigned short __FAR__ *)  \                                 getUP1(x,y)))
+value|((unsigned short)osdLocal2((unsigned short __FAR__ *)  \ 				getUP1(x,y)))
 end_define
 
 begin_define
@@ -680,7 +680,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((unsigned short)osdSLocal2((unsigned short __FAR__ *) \                                 getUP1(x,y)))
+value|((unsigned short)osdSLocal2((unsigned short __FAR__ *) \ 				getUP1(x,y)))
 end_define
 
 begin_comment
@@ -696,7 +696,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((unsigned short)osdLocal2((unsigned short __FAR__ *)  \                                 getUP1(x,y)))
+value|((unsigned short)osdLocal2((unsigned short __FAR__ *)  \ 				getUP1(x,y)))
 end_define
 
 begin_if
@@ -722,7 +722,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|{ unsigned short hold = (unsigned short)(z);  \                         *((unsigned short __FAR__ *)getUP1(x,y))    \                           = osdLocal2(&hold);                       \                       }
+value|{ unsigned short hold = (unsigned short)(z);  \ 			*((unsigned short __FAR__ *)getUP1(x,y))    \ 			  = osdLocal2(&hold);			    \ 		      }
 end_define
 
 begin_endif
@@ -753,7 +753,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|{ unsigned short hold = (unsigned short)(z);  \                         *((unsigned short __FAR__ *)getUP1(x,y))    \                           = osdLocal2(&hold);                       \                       }
+value|{ unsigned short hold = (unsigned short)(z);  \ 			*((unsigned short __FAR__ *)getUP1(x,y))    \ 			  = osdLocal2(&hold);			    \ 		      }
 end_define
 
 begin_endif
@@ -784,7 +784,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|{ unsigned short hold = (unsigned short)(z); \                          *((unsigned short __FAR__ *)getUP1(x,y))   \                            = osdSLocal2(&hold);                     \                        }
+value|{ unsigned short hold = (unsigned short)(z); \ 			 *((unsigned short __FAR__ *)getUP1(x,y))   \ 			   = osdSLocal2(&hold);			    \ 		       }
 end_define
 
 begin_endif
@@ -805,7 +805,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((unsigned DPT_4_BYTES)osdLocal3((unsigned DPT_4_BYTES __FAR__ *) \                                 getUP1(x,y)))
+value|((unsigned DPT_4_BYTES)osdLocal3((unsigned DPT_4_BYTES __FAR__ *) \ 				getUP1(x,y)))
 end_define
 
 begin_if
@@ -843,7 +843,7 @@ parameter_list|,
 name|z
 parameter_list|)
 define|\
-value|{   unsigned DPT_4_BYTES hold = z;                        \             *(getUP1(x,y)) = (unsigned char)(hold>> 16L); \             *((unsigned short __FAR__ *)(getUP1(x,y) + 1)) \               = (unsigned short)hold;                      \         }
+value|{   unsigned DPT_4_BYTES hold = z;			  \ 	    *(getUP1(x,y)) = (unsigned char)(hold>> 16L); \ 	    *((unsigned short __FAR__ *)(getUP1(x,y) + 1)) \ 	      = (unsigned short)hold;			   \ 	}
 end_define
 
 begin_else
@@ -863,7 +863,7 @@ parameter_list|,
 name|z
 parameter_list|)
 define|\
-value|{   unsigned DPT_4_BYTES hold = z;                            \             *(getUP1(x,y) + 0) = (unsigned char)(hold>> 16) ; \             *(getUP1(x,y) + 1) = (unsigned char)(hold>> 8L);  \             *(getUP1(x,y) + 2) = (unsigned char)(hold);        \         }
+value|{   unsigned DPT_4_BYTES hold = z;			      \ 	    *(getUP1(x,y) + 0) = (unsigned char)(hold>> 16) ; \ 	    *(getUP1(x,y) + 1) = (unsigned char)(hold>> 8L);  \ 	    *(getUP1(x,y) + 2) = (unsigned char)(hold);	       \ 	}
 end_define
 
 begin_endif
@@ -889,7 +889,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((unsigned DPT_4_BYTES)osdLocal3((unsigned DPT_4_BYTES __FAR__ *) \                                 getUP1(x,y)))
+value|((unsigned DPT_4_BYTES)osdLocal3((unsigned DPT_4_BYTES __FAR__ *) \ 				getUP1(x,y)))
 end_define
 
 begin_if
@@ -927,7 +927,7 @@ parameter_list|,
 name|z
 parameter_list|)
 define|\
-value|{   unsigned DPT_4_BYTES hold = z;                        \             *(getUP1(x,y)) = (unsigned char)(hold>> 16L); \             *((unsigned short __FAR__ *)(getUP1(x,y) + 1)) \               = (unsigned short)hold;                      \         }
+value|{   unsigned DPT_4_BYTES hold = z;			  \ 	    *(getUP1(x,y)) = (unsigned char)(hold>> 16L); \ 	    *((unsigned short __FAR__ *)(getUP1(x,y) + 1)) \ 	      = (unsigned short)hold;			   \ 	}
 end_define
 
 begin_else
@@ -947,7 +947,7 @@ parameter_list|,
 name|z
 parameter_list|)
 define|\
-value|{   unsigned DPT_4_BYTES hold = z;                            \             *(getUP1(x,y) + 0) = (unsigned char)(hold>> 16) ; \             *(getUP1(x,y) + 1) = (unsigned char)(hold>> 8L);  \             *(getUP1(x,y) + 2) = (unsigned char)(hold);        \         }
+value|{   unsigned DPT_4_BYTES hold = z;			      \ 	    *(getUP1(x,y) + 0) = (unsigned char)(hold>> 16) ; \ 	    *(getUP1(x,y) + 1) = (unsigned char)(hold>> 8L);  \ 	    *(getUP1(x,y) + 2) = (unsigned char)(hold);	       \ 	}
 end_define
 
 begin_endif
@@ -969,7 +969,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((unsigned DPT_4_BYTES __FAR__ *)(((unsigned char __FAR__ *) \                                 (x))+(unsigned DPT_4_BYTES)(y)))
+value|((unsigned DPT_4_BYTES __FAR__ *)(((unsigned char __FAR__ *) \ 				(x))+(unsigned DPT_4_BYTES)(y)))
 end_define
 
 begin_define
@@ -981,7 +981,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((unsigned DPT_4_BYTES)osdLocal4((unsigned DPT_4_BYTES __FAR__ *)   \                                 getUP1(x,y)))
+value|((unsigned DPT_4_BYTES)osdLocal4((unsigned DPT_4_BYTES __FAR__ *)	  \ 				getUP1(x,y)))
 end_define
 
 begin_define
@@ -993,7 +993,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((unsigned DPT_4_BYTES)osdSLocal4((unsigned DPT_4_BYTES __FAR__ *)  \                                 getUP1(x,y)))
+value|((unsigned DPT_4_BYTES)osdSLocal4((unsigned DPT_4_BYTES __FAR__ *)	 \ 				getUP1(x,y)))
 end_define
 
 begin_comment
@@ -1009,7 +1009,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((unsigned DPT_4_BYTES)osdSLocal4((unsigned DPT_4_BYTES __FAR__ *)  \                                 getUP1(x,y)))
+value|((unsigned DPT_4_BYTES)osdSLocal4((unsigned DPT_4_BYTES __FAR__ *)	\ 				getUP1(x,y)))
 end_define
 
 begin_if
@@ -1035,7 +1035,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|{ unsigned DPT_4_BYTES hold = z;                 \                         *((unsigned DPT_4_BYTES __FAR__ *)getUP1(x,y)) \                           = osdLocal4(&hold);                   \                       }
+value|{ unsigned DPT_4_BYTES hold = z;		       \ 			*((unsigned DPT_4_BYTES __FAR__ *)getUP1(x,y)) \ 			  = osdLocal4(&hold);			\ 		      }
 end_define
 
 begin_endif
@@ -1070,7 +1070,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|{ unsigned DPT_4_BYTES hold = z;                 \                         *((unsigned DPT_4_BYTES __FAR__ *)getUP1(x,y)) \                           = osdLocal4(&hold);                   \                       }
+value|{ unsigned DPT_4_BYTES hold = z;			\ 			*((unsigned DPT_4_BYTES __FAR__ *)getUP1(x,y)) \ 			  = osdLocal4(&hold);			\ 		      }
 end_define
 
 begin_endif
@@ -1101,7 +1101,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|{ unsigned DPT_4_BYTES hold = z;                 \                          *((unsigned DPT_4_BYTES __FAR__ *)getUP1(x,y)) \                            = osdSLocal4(&hold);                  \                        }
+value|{ unsigned DPT_4_BYTES hold = z;			\ 			 *((unsigned DPT_4_BYTES __FAR__ *)getUP1(x,y)) \ 			   = osdSLocal4(&hold);			 \ 		       }
 end_define
 
 begin_endif
@@ -1116,11 +1116,11 @@ name|osdSwap16bit
 parameter_list|(
 name|x
 parameter_list|)
-value|( (((unsigned short )x& 0xf000)>> 12) | \ 			  (((unsigned short )x& 0x0f00)>> 4) | \ 			  (((unsigned short )x& 0x00f0)<< 4)  | \ 			  (((unsigned short )x& 0x000f)<< 12 )   )
+value|( (((unsigned short )x& 0xf000)>> 12) | \ 			  (((unsigned short )x& 0x0f00)>> 4) | \ 			  (((unsigned short )x& 0x00f0)<< 4)	| \ 			  (((unsigned short )x& 0x000f)<< 12 )   )
 end_define
 
 begin_comment
-comment|/*  * note that in big endian a 12 bit number (0x123) is stored as   1203  */
+comment|/*  * note that in big endian a 12 bit number (0x123) is stored as	  1203  */
 end_comment
 
 begin_define

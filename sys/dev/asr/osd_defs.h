@@ -16,7 +16,7 @@ name|_OSD_DEFS_H
 end_define
 
 begin_comment
-comment|/*File - OSD_DEFS.H  ****************************************************************************  *  *Description:  *  *	This file contains the OS dependent defines.  This file is included  *in osd_util.h and provides the OS specific defines for that file.  *  *Copyright Distributed Processing Technology, Corp.  *	  140 Candace Dr.  *	  Maitland, Fl.	32751   USA  *	  Phone: (407) 830-5522  Fax: (407) 260-5366  *	  All Rights Reserved  *  *Author:	Doug Anderson  *Date:		1/31/94  *  *Editors:  *  *Remarks:  *  *  *****************************************************************************/
+comment|/*File - OSD_DEFS.H  ****************************************************************************  *  *Description:  *  *	This file contains the OS dependent defines.  This file is included  *in osd_util.h and provides the OS specific defines for that file.  *  *Copyright Distributed Processing Technology, Corp.  *	  140 Candace Dr.  *	  Maitland, Fl. 32751	USA  *	  Phone: (407) 830-5522	 Fax: (407) 260-5366  *	  All Rights Reserved  *  *Author:	Doug Anderson  *Date:		1/31/94  *  *Editors:  *  *Remarks:  *  *  *****************************************************************************/
 end_comment
 
 begin_comment

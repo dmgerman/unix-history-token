@@ -33,15 +33,15 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DPT SIGNATURE SPEC AND HEADER FILE                           */
+comment|/* DPT SIGNATURE SPEC AND HEADER FILE				*/
 end_comment
 
 begin_comment
-comment|/* Signature Version 1 (sorry no 'A')                           */
+comment|/* Signature Version 1 (sorry no 'A')				*/
 end_comment
 
 begin_comment
-comment|/* to make sure we are talking the same size under all OS's     */
+comment|/* to make sure we are talking the same size under all OS's	*/
 end_comment
 
 begin_typedef
@@ -108,7 +108,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * use sigWORDLittleEndian for:  *  dsCapabilities  *  dsDeviceSupp  *  dsAdapterSupp  *  dsApplication  * use sigLONGLittleEndian for:  *      dsOS  * so that the sig can be standardised to Little Endian  */
+comment|/*  * use sigWORDLittleEndian for:  *  dsCapabilities  *  dsDeviceSupp  *  dsAdapterSupp  *  dsApplication  * use sigLONGLittleEndian for:  *	dsOS  * so that the sig can be standardised to Little Endian  */
 end_comment
 
 begin_if
@@ -140,7 +140,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((((x)&0xFF)<<24) |             \          (((x)&0xFF00)<<8) |    \          (((x)&0xFF0000L)>>8) | \          (((x)&0xFF000000L)>>24))
+value|((((x)&0xFF)<<24) |		\ 	 (((x)&0xFF00)<<8) |	\ 	 (((x)&0xFF0000L)>>8) | \ 	 (((x)&0xFF000000L)>>24))
 end_define
 
 begin_else
@@ -174,27 +174,27 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* must make sure the structure is not word or double-word aligned      */
+comment|/* must make sure the structure is not word or double-word aligned	*/
 end_comment
 
 begin_comment
-comment|/* ---------------------------------------------------------------      */
+comment|/* ---------------------------------------------------------------	*/
 end_comment
 
 begin_comment
-comment|/* Borland will ignore the following pragma:                            */
+comment|/* Borland will ignore the following pragma:				*/
 end_comment
 
 begin_comment
-comment|/* Word alignment is OFF by default.  If in the, IDE make               */
+comment|/* Word alignment is OFF by default.  If in the, IDE make		*/
 end_comment
 
 begin_comment
-comment|/* sure that Options | Compiler | Code Generation | Word Alignment      */
+comment|/* sure that Options | Compiler | Code Generation | Word Alignment	*/
 end_comment
 
 begin_comment
-comment|/* is not checked.  If using BCC, do not use the -a option.             */
+comment|/* is not checked.  If using BCC, do not use the -a option.		*/
 end_comment
 
 begin_ifndef
@@ -393,7 +393,7 @@ comment|/* SPARC processor */
 end_comment
 
 begin_comment
-comment|/* Specific Minimim Processor - sigBYTE dsProcessor;    FLAG BITS */
+comment|/* Specific Minimim Processor - sigBYTE dsProcessor;	FLAG BITS */
 end_comment
 
 begin_comment
@@ -667,7 +667,7 @@ comment|/* MIPS RM7000 */
 end_comment
 
 begin_comment
-comment|/* Filetype - sigBYTE dsFiletype;       DISTINCT VALUES */
+comment|/* Filetype - sigBYTE dsFiletype;	DISTINCT VALUES */
 end_comment
 
 begin_comment
@@ -873,7 +873,7 @@ comment|/* DMI component interface */
 end_comment
 
 begin_comment
-comment|/* Filetype flags - sigBYTE dsFiletypeFlags;    FLAG BITS */
+comment|/* Filetype flags - sigBYTE dsFiletypeFlags;	FLAG BITS */
 end_comment
 
 begin_comment
@@ -980,7 +980,7 @@ comment|/* Special Case */
 end_comment
 
 begin_comment
-comment|/* OEM - sigBYTE dsOEM;         DISTINCT VALUES */
+comment|/* OEM - sigBYTE dsOEM;		DISTINCT VALUES */
 end_comment
 
 begin_comment
@@ -1087,7 +1087,7 @@ comment|/* Adaptec */
 end_comment
 
 begin_comment
-comment|/* Operating System  - sigLONG dsOS;    FLAG BITS */
+comment|/* Operating System  - sigLONG dsOS;	FLAG BITS */
 end_comment
 
 begin_comment
@@ -1102,7 +1102,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* PC/MS-DOS                         */
+comment|/* PC/MS-DOS				*/
 end_comment
 
 begin_define
@@ -1113,7 +1113,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* Microsoft Windows 3.x             */
+comment|/* Microsoft Windows 3.x		*/
 end_comment
 
 begin_define
@@ -1124,7 +1124,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* Microsoft Windows NT              */
+comment|/* Microsoft Windows NT		*/
 end_comment
 
 begin_define
@@ -1146,7 +1146,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/* Microsoft OS/2 1.301 - LADDR      */
+comment|/* Microsoft OS/2 1.301 - LADDR	*/
 end_comment
 
 begin_define
@@ -1157,7 +1157,7 @@ value|0x00000020
 end_define
 
 begin_comment
-comment|/* IBM OS/2 2.x                      */
+comment|/* IBM OS/2 2.x			*/
 end_comment
 
 begin_define
@@ -1168,7 +1168,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/* Novell NetWare 286                */
+comment|/* Novell NetWare 286		*/
 end_comment
 
 begin_define
@@ -1179,7 +1179,7 @@ value|0x00000080
 end_define
 
 begin_comment
-comment|/* Novell NetWare 386                */
+comment|/* Novell NetWare 386		*/
 end_comment
 
 begin_define
@@ -1190,7 +1190,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/* Generic Unix                      */
+comment|/* Generic Unix			*/
 end_comment
 
 begin_define
@@ -1201,7 +1201,7 @@ value|0x00000200
 end_define
 
 begin_comment
-comment|/* SCO Unix                          */
+comment|/* SCO Unix				*/
 end_comment
 
 begin_define
@@ -1212,7 +1212,7 @@ value|0x00000400
 end_define
 
 begin_comment
-comment|/* ATT Unix                          */
+comment|/* ATT Unix				*/
 end_comment
 
 begin_define
@@ -1223,7 +1223,7 @@ value|0x00000800
 end_define
 
 begin_comment
-comment|/* USL Unix                          */
+comment|/* USL Unix				*/
 end_comment
 
 begin_define
@@ -1234,7 +1234,7 @@ value|0x00001000
 end_define
 
 begin_comment
-comment|/* Interactive Unix                  */
+comment|/* Interactive Unix			*/
 end_comment
 
 begin_define
@@ -1245,7 +1245,7 @@ value|0x00002000
 end_define
 
 begin_comment
-comment|/* SunSoft Solaris                   */
+comment|/* SunSoft Solaris			*/
 end_comment
 
 begin_define
@@ -1256,7 +1256,7 @@ value|0x00004000
 end_define
 
 begin_comment
-comment|/* QNX for Tom Moch                  */
+comment|/* QNX for Tom Moch			*/
 end_comment
 
 begin_define
@@ -1267,7 +1267,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* NeXTSTEP/OPENSTEP/MACH            */
+comment|/* NeXTSTEP/OPENSTEP/MACH		*/
 end_comment
 
 begin_define
@@ -1278,7 +1278,7 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|/* Banyan Vines                      */
+comment|/* Banyan Vines			*/
 end_comment
 
 begin_define
@@ -1289,7 +1289,7 @@ value|0x00020000
 end_define
 
 begin_comment
-comment|/* Olivetti Unix                     */
+comment|/* Olivetti Unix			*/
 end_comment
 
 begin_define
@@ -1300,7 +1300,7 @@ value|0x00040000
 end_define
 
 begin_comment
-comment|/* Mac OS                            */
+comment|/* Mac OS				*/
 end_comment
 
 begin_define
@@ -1311,7 +1311,7 @@ value|0x00080000
 end_define
 
 begin_comment
-comment|/* Microsoft Windows '95             */
+comment|/* Microsoft Windows '95		*/
 end_comment
 
 begin_define
@@ -1322,7 +1322,7 @@ value|0x00100000
 end_define
 
 begin_comment
-comment|/* Novell Netware 4.x                */
+comment|/* Novell Netware 4.x		*/
 end_comment
 
 begin_define
@@ -1333,7 +1333,7 @@ value|0x00200000
 end_define
 
 begin_comment
-comment|/* BSDi Unix BSD/OS 2.0 and up       */
+comment|/* BSDi Unix BSD/OS 2.0 and up	*/
 end_comment
 
 begin_define
@@ -1344,7 +1344,7 @@ value|0x00400000
 end_define
 
 begin_comment
-comment|/* AIX Unix                          */
+comment|/* AIX Unix				*/
 end_comment
 
 begin_define
@@ -1355,7 +1355,7 @@ value|0x00800000
 end_define
 
 begin_comment
-comment|/* FreeBSD Unix                      */
+comment|/* FreeBSD Unix			*/
 end_comment
 
 begin_define
@@ -1366,7 +1366,7 @@ value|0x01000000
 end_define
 
 begin_comment
-comment|/* Linux                             */
+comment|/* Linux				*/
 end_comment
 
 begin_define
@@ -1377,7 +1377,7 @@ value|0x02000000
 end_define
 
 begin_comment
-comment|/* Data General Unix                 */
+comment|/* Data General Unix			*/
 end_comment
 
 begin_define
@@ -1388,7 +1388,7 @@ value|0x04000000
 end_define
 
 begin_comment
-comment|/* SNI SINIX-N                       */
+comment|/* SNI SINIX-N			*/
 end_comment
 
 begin_define
@@ -1399,7 +1399,7 @@ value|0x08000000
 end_define
 
 begin_comment
-comment|/* ATT Plan 9                        */
+comment|/* ATT Plan 9			*/
 end_comment
 
 begin_define
@@ -1410,7 +1410,7 @@ value|0x10000000
 end_define
 
 begin_comment
-comment|/* SNH TSX-32                        */
+comment|/* SNH TSX-32			*/
 end_comment
 
 begin_define
@@ -1421,7 +1421,7 @@ value|0x20000000
 end_define
 
 begin_comment
-comment|/* Microsoft Windows '98     */
+comment|/* Microsoft Windows '98	*/
 end_comment
 
 begin_define
@@ -1443,11 +1443,11 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/* Other                             */
+comment|/* Other				*/
 end_comment
 
 begin_comment
-comment|/* Capabilities - sigWORD dsCapabilities;        FLAG BITS */
+comment|/* Capabilities - sigWORD dsCapabilities;	 FLAG BITS */
 end_comment
 
 begin_comment
@@ -1587,7 +1587,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Devices Supported - sigWORD dsDeviceSupp;    FLAG BITS */
+comment|/* Devices Supported - sigWORD dsDeviceSupp;	FLAG BITS */
 end_comment
 
 begin_comment
@@ -1742,7 +1742,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* PM2001           */
+comment|/* PM2001	    */
 end_comment
 
 begin_define
@@ -1753,7 +1753,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* PM2012A          */
+comment|/* PM2012A	    */
 end_comment
 
 begin_define
@@ -1786,7 +1786,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* PM2021           */
+comment|/* PM2021	    */
 end_comment
 
 begin_define
@@ -1856,7 +1856,7 @@ comment|/* Fifth Generation I2O products */
 end_comment
 
 begin_comment
-comment|/*  *      Combinations of products  */
+comment|/*  *	Combinations of products  */
 end_comment
 
 begin_define
@@ -1935,7 +1935,7 @@ value|ADF_ALL_EATA
 end_define
 
 begin_comment
-comment|/* Application - sigWORD dsApplication;         FLAG BITS */
+comment|/* Application - sigWORD dsApplication;		FLAG BITS */
 end_comment
 
 begin_comment
@@ -2020,11 +2020,11 @@ comment|/* Archive Information Manager */
 end_comment
 
 begin_comment
-comment|/* Requirements - sigBYTE dsRequirements;         FLAG BITS             */
+comment|/* Requirements - sigBYTE dsRequirements;	  FLAG BITS		*/
 end_comment
 
 begin_comment
-comment|/* ------------------------------------------------------------------   */
+comment|/* ------------------------------------------------------------------	*/
 end_comment
 
 begin_define
@@ -2035,7 +2035,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Requires SmartROM to be present      */
+comment|/* Requires SmartROM to be present	*/
 end_comment
 
 begin_define
@@ -2046,7 +2046,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Requires DPTDDL.SYS to be loaded     */
+comment|/* Requires DPTDDL.SYS to be loaded	*/
 end_comment
 
 begin_define
@@ -2057,7 +2057,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* Requires an HBA driver to be loaded  */
+comment|/* Requires an HBA driver to be loaded	*/
 end_comment
 
 begin_define
@@ -2068,7 +2068,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* Requires an ASPI Transport Modules   */
+comment|/* Requires an ASPI Transport Modules	*/
 end_comment
 
 begin_define
@@ -2079,7 +2079,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* Requires a DPT Engine to be loaded   */
+comment|/* Requires a DPT Engine to be loaded	*/
 end_comment
 
 begin_define
@@ -2094,15 +2094,15 @@ comment|/* Requires a DPT Communications Engine */
 end_comment
 
 begin_comment
-comment|/* ------------------------------------------------------------------   */
+comment|/* ------------------------------------------------------------------	*/
 end_comment
 
 begin_comment
-comment|/* Requirements - sigWORD dsFirmware;         FLAG BITS                 */
+comment|/* Requirements - sigWORD dsFirmware;	      FLAG BITS			*/
 end_comment
 
 begin_comment
-comment|/* ------------------------------------------------------------------   */
+comment|/* ------------------------------------------------------------------	*/
 end_comment
 
 begin_define
@@ -2131,7 +2131,7 @@ value|0x0000
 end_define
 
 begin_comment
-comment|/* 0..3 DownLoader Size 16k             */
+comment|/* 0..3 DownLoader Size 16k		    */
 end_comment
 
 begin_define
@@ -2142,7 +2142,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* 0..3 DownLoader Size 16K         */
+comment|/* 0..3 DownLoader Size 16K		*/
 end_comment
 
 begin_define
@@ -2153,7 +2153,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* 0..3 DownLoader Size 32K         */
+comment|/* 0..3 DownLoader Size 32K		*/
 end_comment
 
 begin_define
@@ -2164,7 +2164,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* 0..3 DownLoader Size 64K         */
+comment|/* 0..3 DownLoader Size 64K		*/
 end_comment
 
 begin_define
@@ -2175,7 +2175,7 @@ value|0x000f
 end_define
 
 begin_comment
-comment|/* 0..3 DownLoader Size 0K - NONE   */
+comment|/* 0..3 DownLoader Size 0K - NONE	*/
 end_comment
 
 begin_define
@@ -2223,7 +2223,7 @@ value|0x0000
 end_define
 
 begin_comment
-comment|/* 13 Code Offset (0=Btm, 1=Top) MIPS   */
+comment|/* 13 Code Offset (0=Btm, 1=Top) MIPS	*/
 end_comment
 
 begin_define
@@ -2234,7 +2234,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* 13 Code Offset (0=Btm, 1=Top) i960   */
+comment|/* 13 Code Offset (0=Btm, 1=Top) i960	*/
 end_comment
 
 begin_define
@@ -2245,7 +2245,7 @@ value|0x0000
 end_define
 
 begin_comment
-comment|/* 15..14 Version Bits 0=Ver1               */
+comment|/* 15..14 Version Bits 0=Ver1		*/
 end_comment
 
 begin_define
@@ -2256,27 +2256,27 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* 15..14 Version Bits 1=Ver2       */
+comment|/* 15..14 Version Bits 1=Ver2	    */
 end_comment
 
 begin_comment
-comment|/*                                 0..3   Downloader Size (Value * 16K)                                  4                                 5                                 6                                 7                                  8                                 9                                 10                                 11                                  12              Downloader Position (0=Top of Image  1= Bottom of Image (Dominator) )                                 13              Load Offset (0=BTM (MIPS) -- 1=TOP (960) )                                 14..15  F/W Sig Version (0=Ver1) */
+comment|/* 				0..3   Downloader Size (Value * 16K)  				4 				5 				6 				7  				8 				9 				10 				11  				12		Downloader Position (0=Top of Image  1= Bottom of Image (Dominator) ) 				13		Load Offset (0=BTM (MIPS) -- 1=TOP (960) ) 				14..15	F/W Sig Version (0=Ver1) */
 end_comment
 
 begin_comment
-comment|/* ------------------------------------------------------------------   */
+comment|/* ------------------------------------------------------------------	*/
 end_comment
 
 begin_comment
-comment|/* Sub System Vendor IDs - The PCI Sub system and vendor IDs for each   */
+comment|/* Sub System Vendor IDs - The PCI Sub system and vendor IDs for each	*/
 end_comment
 
 begin_comment
-comment|/* Adaptec Raid controller                                              */
+comment|/* Adaptec Raid controller						*/
 end_comment
 
 begin_comment
-comment|/* ------------------------------------------------------------------   */
+comment|/* ------------------------------------------------------------------	*/
 end_comment
 
 begin_define
@@ -2532,15 +2532,15 @@ value|0xC03b1044
 end_define
 
 begin_comment
-comment|/* ------------------------------------------------------------------   */
+comment|/* ------------------------------------------------------------------	*/
 end_comment
 
 begin_comment
-comment|/* ------------------------------------------------------------------   */
+comment|/* ------------------------------------------------------------------	*/
 end_comment
 
 begin_comment
-comment|/* ------------------------------------------------------------------   */
+comment|/* ------------------------------------------------------------------	*/
 end_comment
 
 begin_comment
@@ -2642,7 +2642,7 @@ comment|/* 'J' */
 name|sigBYTE
 name|dsSubRevision
 decl_stmt|;
-comment|/* '9'   ' ' if N/A */
+comment|/* '9'	  ' ' if N/A */
 name|sigBYTE
 name|dsMonth
 decl_stmt|;

@@ -24,15 +24,15 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*                                                                           */
+comment|/*									     */
 end_comment
 
 begin_comment
-comment|/*Description:                                                               */
+comment|/*Description:								     */
 end_comment
 
 begin_comment
-comment|/*                                                                           */
+comment|/*									     */
 end_comment
 
 begin_comment
@@ -40,51 +40,51 @@ comment|/*    This file contains definitions for the UNIX OS dependent layer of 
 end_comment
 
 begin_comment
-comment|/*DPT engine.                                                                */
+comment|/*DPT engine.								     */
 end_comment
 
 begin_comment
-comment|/*                                                                           */
+comment|/*									     */
 end_comment
 
 begin_comment
-comment|/*Copyright Distributed Processing Technology, Corp.                         */
+comment|/*Copyright Distributed Processing Technology, Corp.			     */
 end_comment
 
 begin_comment
-comment|/*        140 Candace Dr.                                                    */
+comment|/*	  140 Candace Dr.						     */
 end_comment
 
 begin_comment
-comment|/*        Maitland, Fl. 32751   USA                                          */
+comment|/*	  Maitland, Fl. 32751	USA					     */
 end_comment
 
 begin_comment
-comment|/*        Phone: (407) 830-5522  Fax: (407) 260-5366                         */
+comment|/*	  Phone: (407) 830-5522	 Fax: (407) 260-5366			     */
 end_comment
 
 begin_comment
-comment|/*        All Rights Reserved                                                */
+comment|/*	  All Rights Reserved						     */
 end_comment
 
 begin_comment
-comment|/*                                                                           */
+comment|/*									     */
 end_comment
 
 begin_comment
-comment|/*Author:       Bob Pasteur                                                  */
+comment|/*Author:	Bob Pasteur						     */
 end_comment
 
 begin_comment
-comment|/*Date:         5/28/93                                                      */
+comment|/*Date:		5/28/93							     */
 end_comment
 
 begin_comment
-comment|/*                                                                           */
+comment|/*									     */
 end_comment
 
 begin_comment
-comment|/*Editors:                                                                   */
+comment|/*Editors:								     */
 end_comment
 
 begin_comment
@@ -96,7 +96,7 @@ comment|/*			Added BSDi extensions				     */
 end_comment
 
 begin_comment
-comment|/*		30/9/99	salyzyn@dpt.com					     */
+comment|/*		30/9/99 salyzyn@dpt.com					     */
 end_comment
 
 begin_comment
@@ -104,7 +104,7 @@ comment|/*			Added I2ORESCANCMD				     */
 end_comment
 
 begin_comment
-comment|/*		7/12/99	salyzyn@dpt.com					     */
+comment|/*		7/12/99 salyzyn@dpt.com					     */
 end_comment
 
 begin_comment
@@ -112,19 +112,19 @@ comment|/*			Added I2ORESETCMD				     */
 end_comment
 
 begin_comment
-comment|/*                                                                           */
+comment|/*									     */
 end_comment
 
 begin_comment
-comment|/*Remarks:                                                                   */
+comment|/*Remarks:								     */
 end_comment
 
 begin_comment
-comment|/*                                                                           */
+comment|/*									     */
 end_comment
 
 begin_comment
-comment|/*                                                                           */
+comment|/*									     */
 end_comment
 
 begin_comment
@@ -154,7 +154,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Message Que and Type for engine         */
+comment|/* Message Que and Type for engine	      */
 end_comment
 
 begin_define
@@ -165,7 +165,7 @@ value|0x03
 end_define
 
 begin_comment
-comment|/* Message Type For Logger                 */
+comment|/* Message Type For Logger		      */
 end_comment
 
 begin_define
@@ -176,7 +176,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* Message Que Type Created                */
+comment|/* Message Que Type Created		      */
 end_comment
 
 begin_define
@@ -198,7 +198,7 @@ value|0x00
 end_define
 
 begin_comment
-comment|/* Turnarround Echo Engine Message         */
+comment|/* Turnarround Echo Engine Message	      */
 end_comment
 
 begin_define
@@ -209,7 +209,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Turnarround Open Engine Message         */
+comment|/* Turnarround Open Engine Message	      */
 end_comment
 
 begin_define
@@ -220,7 +220,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Turnarround Close Engine Message        */
+comment|/* Turnarround Close Engine Message	      */
 end_comment
 
 begin_comment
@@ -470,7 +470,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* Len in bytes after this field.      */
+comment|/* Len in bytes after this field.	    */
 name|uCHAR
 name|EATAsignature
 index|[
@@ -501,21 +501,21 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* Command Packet Length               */
+comment|/* Command Packet Length		    */
 name|uCHAR
 name|SPlength
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* Status Packet Length                */
+comment|/* Status Packet Length		    */
 name|uCHAR
 name|QueueSize
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Controller Que depth                */
+comment|/* Controller Que depth		    */
 name|uCHAR
 name|SG_Size
 index|[
@@ -528,7 +528,7 @@ decl_stmt|;
 name|uCHAR
 name|Reserved0
 decl_stmt|;
-comment|/* Reserved Field                       */
+comment|/* Reserved Field			     */
 name|uCHAR
 name|Flags3
 decl_stmt|;
@@ -538,18 +538,18 @@ decl_stmt|;
 name|uCHAR
 name|MaxLUN
 decl_stmt|;
-comment|/* Maximun LUN Supported                */
+comment|/* Maximun LUN Supported		     */
 name|uCHAR
 name|Flags4
 decl_stmt|;
 name|uCHAR
 name|RaidNum
 decl_stmt|;
-comment|/* RAID HBA Number For Stripping        */
+comment|/* RAID HBA Number For Stripping	     */
 name|uCHAR
 name|Reserved3
 decl_stmt|;
-comment|/* Reserved Field                       */
+comment|/* Reserved Field			     */
 block|}
 name|DptReadConfig_t
 typedef|;
@@ -700,7 +700,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* Max used Scatter/Gather seg         */
+comment|/* Max used Scatter/Gather seg	    */
 end_comment
 
 begin_struct
@@ -898,7 +898,7 @@ value|_IOR('D',72,sysInfo_S)
 end_define
 
 begin_comment
-comment|/* Get Blink LED Code	        */
+comment|/* Get Blink LED Code		*/
 end_comment
 
 begin_define
@@ -920,7 +920,7 @@ value|_IOR('D',80,STATS_DATA)
 end_define
 
 begin_comment
-comment|/* Clear the statistical information          */
+comment|/* Clear the statistical information	      */
 end_comment
 
 begin_define
@@ -1044,7 +1044,7 @@ value|(('D'<<8)|73)
 end_define
 
 begin_comment
-comment|/* Get config Data  		*/
+comment|/* Get config Data		*/
 end_comment
 
 begin_define
@@ -1055,7 +1055,7 @@ value|(('D'<<8)|74)
 end_define
 
 begin_comment
-comment|/* Get config Data  		*/
+comment|/* Get config Data		*/
 end_comment
 
 begin_define
@@ -1077,7 +1077,7 @@ value|(('D'<<8)|80)
 end_define
 
 begin_comment
-comment|/* Clear the statistical information          */
+comment|/* Clear the statistical information	      */
 end_comment
 
 begin_define
@@ -1381,7 +1381,7 @@ value|_IO('D',73)
 end_define
 
 begin_comment
-comment|/* Get config Data  		*/
+comment|/* Get config Data		*/
 end_comment
 
 begin_define
@@ -1392,7 +1392,7 @@ value|_IO('D',74)
 end_define
 
 begin_comment
-comment|/* Get Blink LED Code	        */
+comment|/* Get Blink LED Code		*/
 end_comment
 
 begin_define
@@ -1414,7 +1414,7 @@ value|_IOR('D',80,STATS_DATA)
 end_define
 
 begin_comment
-comment|/* Clear the statistical information          */
+comment|/* Clear the statistical information	      */
 end_comment
 
 begin_define
@@ -1512,7 +1512,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* Adapter Was Installed        */
+comment|/* Adapter Was Installed	    */
 end_comment
 
 begin_define
@@ -1523,7 +1523,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* DMA Supported                */
+comment|/* DMA Supported		    */
 end_comment
 
 begin_define
@@ -1545,7 +1545,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* I/O Address Not 0x1f0        */
+comment|/* I/O Address Not 0x1f0	    */
 end_comment
 
 begin_define
@@ -1567,7 +1567,7 @@ value|0x00000020
 end_define
 
 begin_comment
-comment|/* Cache Inhibit Supported      */
+comment|/* Cache Inhibit Supported	    */
 end_comment
 
 begin_define
@@ -1578,7 +1578,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/* Adapter Has Cache            */
+comment|/* Adapter Has Cache	    */
 end_comment
 
 begin_define
@@ -1589,7 +1589,7 @@ value|0x00000080
 end_define
 
 begin_comment
-comment|/* Adapter Functioning OK       */
+comment|/* Adapter Functioning OK	    */
 end_comment
 
 begin_define
@@ -1622,7 +1622,7 @@ value|0x00000400
 end_define
 
 begin_comment
-comment|/* Scatter Gather Supported     */
+comment|/* Scatter Gather Supported	    */
 end_comment
 
 begin_comment
@@ -1683,7 +1683,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/*                     EATA Command Packet definition                      */
+comment|/*		       EATA Command Packet definition			   */
 end_comment
 
 begin_comment
@@ -1729,18 +1729,18 @@ comment|/* _DPT_AIX */
 name|uCHAR
 name|cp_Flags1
 decl_stmt|;
-comment|/* Command Flags                       */
+comment|/* Command Flags			    */
 name|uCHAR
 name|cp_Req_Len
 decl_stmt|;
-comment|/* AutoRequestSense Data length.       */
+comment|/* AutoRequestSense Data length.	    */
 name|uCHAR
 name|cp_Resv1
 index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/* Reserved Fields                     */
+comment|/* Reserved Fields			    */
 name|uCHAR
 name|cp_Flags2
 decl_stmt|;
@@ -1769,7 +1769,7 @@ index|[
 literal|12
 index|]
 decl_stmt|;
-comment|/* SCSI cdb for command.               */
+comment|/* SCSI cdb for command.		    */
 name|uLONG
 name|cp_dataLen
 decl_stmt|;
@@ -1777,17 +1777,17 @@ comment|/* Data length in Bytes for command.   */
 name|uLONG
 name|cp_Vue
 decl_stmt|;
-comment|/* Vendor Unique Area                  */
+comment|/* Vendor Unique Area		    */
 name|uCHAR
 modifier|*
 name|cp_DataAddr
 decl_stmt|;
-comment|/* Data Address For The Command.       */
+comment|/* Data Address For The Command.	    */
 name|uCHAR
 modifier|*
 name|cp_SpAddr
 decl_stmt|;
-comment|/* Status Packet Physical Address.     */
+comment|/* Status Packet Physical Address.	    */
 name|uCHAR
 modifier|*
 name|cp_SenseAddr
@@ -1905,7 +1905,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* Do Auto Request Sense on errors   */
+comment|/* Do Auto Request Sense on errors	  */
 end_comment
 
 begin_define
@@ -1916,7 +1916,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* Data Ptr points to a SG Packet    */
+comment|/* Data Ptr points to a SG Packet	  */
 end_comment
 
 begin_define
@@ -1938,7 +1938,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* Data Out phase with command       */
+comment|/* Data Out phase with command	  */
 end_comment
 
 begin_define
@@ -1949,7 +1949,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* Data In phase with command        */
+comment|/* Data In phase with command	  */
 end_comment
 
 begin_comment
@@ -1975,7 +1975,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Send Command Directly To Target   */
+comment|/* Send Command Directly To Target	  */
 end_comment
 
 begin_define
@@ -1986,7 +1986,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Inhibit Address Translation       */
+comment|/* Inhibit Address Translation	  */
 end_comment
 
 begin_define
@@ -1997,11 +1997,11 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* Inhibit Caching                   */
+comment|/* Inhibit Caching			  */
 end_comment
 
 begin_comment
-comment|/* Structure Returned From Get Controller Info                             */
+comment|/* Structure Returned From Get Controller Info			     */
 end_comment
 
 begin_typedef
@@ -2011,35 +2011,35 @@ block|{
 name|uCHAR
 name|state
 decl_stmt|;
-comment|/* Operational state               */
+comment|/* Operational state		      */
 name|uCHAR
 name|id
 decl_stmt|;
-comment|/* Host adapter SCSI id            */
+comment|/* Host adapter SCSI id	      */
 name|int
 name|vect
 decl_stmt|;
-comment|/* Interrupt vector number         */
+comment|/* Interrupt vector number	      */
 name|int
 name|base
 decl_stmt|;
-comment|/* Base I/O address                */
+comment|/* Base I/O address		      */
 name|int
 name|njobs
 decl_stmt|;
-comment|/* # of jobs sent to HA            */
+comment|/* # of jobs sent to HA	      */
 name|int
 name|qdepth
 decl_stmt|;
-comment|/* Controller queue depth.         */
+comment|/* Controller queue depth.	      */
 name|int
 name|wakebase
 decl_stmt|;
-comment|/* mpx wakeup base index.          */
+comment|/* mpx wakeup base index.	      */
 name|uLONG
 name|SGsize
 decl_stmt|;
-comment|/* Scatter/Gather list size.       */
+comment|/* Scatter/Gather list size.	      */
 name|unsigned
 name|heads
 decl_stmt|;
@@ -2055,14 +2055,14 @@ comment|/* Flag for Above 16 MB Ability    */
 name|uCHAR
 name|BusQuiet
 decl_stmt|;
-comment|/* SCSI Bus Quiet Flag             */
+comment|/* SCSI Bus Quiet Flag	      */
 name|char
 name|idPAL
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* 4 Bytes Of The ID Pal           */
+comment|/* 4 Bytes Of The ID Pal	      */
 name|uCHAR
 name|primary
 decl_stmt|;
@@ -2070,7 +2070,7 @@ comment|/* 1 For Primary, 0 For Secondary  */
 name|uCHAR
 name|eataVersion
 decl_stmt|;
-comment|/* EATA Version                    */
+comment|/* EATA Version		      */
 name|uLONG
 name|cpLength
 decl_stmt|;
@@ -2078,19 +2078,19 @@ comment|/* EATA Command Packet Length      */
 name|uLONG
 name|spLength
 decl_stmt|;
-comment|/* EATA Status Packet Length       */
+comment|/* EATA Status Packet Length	      */
 name|uCHAR
 name|drqNum
 decl_stmt|;
-comment|/* DRQ Index (0,5,6,7)             */
+comment|/* DRQ Index (0,5,6,7)	      */
 name|uCHAR
 name|flag1
 decl_stmt|;
-comment|/* EATA Flags 1 (Byte 9)           */
+comment|/* EATA Flags 1 (Byte 9)	      */
 name|uCHAR
 name|flag2
 decl_stmt|;
-comment|/* EATA Flags 2 (Byte 30)          */
+comment|/* EATA Flags 2 (Byte 30)	      */
 block|}
 name|CtrlInfo
 typedef|;
@@ -2115,33 +2115,33 @@ block|{
 name|uINT
 name|state
 decl_stmt|;
-comment|/* Operational state            */
+comment|/* Operational state		   */
 name|uCHAR
 name|id
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* Host adapter SCSI id         */
+comment|/* Host adapter SCSI id	   */
 name|uINT
 name|vect
 decl_stmt|;
-comment|/* Interrupt vector number      */
+comment|/* Interrupt vector number	   */
 name|uLONG
 name|base
 decl_stmt|;
-comment|/* Base I/O address             */
+comment|/* Base I/O address		   */
 name|int
 name|ha_max_jobs
 decl_stmt|;
-comment|/* Max number of Active Jobs    */
+comment|/* Max number of Active Jobs	   */
 name|uLONG
 name|ha_cacheParams
 decl_stmt|;
 name|int
 name|ha_nbus
 decl_stmt|;
-comment|/* Number Of Busses on HBA      */
+comment|/* Number Of Busses on HBA	   */
 name|int
 name|ha_ntargets
 decl_stmt|;
@@ -2149,23 +2149,23 @@ comment|/* Number Of Targets Supported  */
 name|int
 name|ha_nluns
 decl_stmt|;
-comment|/* Number Of LUNs Supported     */
+comment|/* Number Of LUNs Supported	   */
 name|int
 name|ha_tshift
 decl_stmt|;
-comment|/* Shift value for target       */
+comment|/* Shift value for target	   */
 name|int
 name|ha_bshift
 decl_stmt|;
-comment|/* Shift value for bus          */
+comment|/* Shift value for bus	   */
 name|uINT
 name|ha_npend
 decl_stmt|;
-comment|/* # of jobs sent to HA         */
+comment|/* # of jobs sent to HA	   */
 name|int
 name|ha_active_jobs
 decl_stmt|;
-comment|/* Number Of Active Jobs        */
+comment|/* Number Of Active Jobs	   */
 block|}
 name|HbaInfo
 typedef|;
@@ -2190,7 +2190,7 @@ value|((SDI_IOC)|0x14)
 end_define
 
 begin_comment
-comment|/* Get HBA module name      */
+comment|/* Get HBA module name	    */
 end_comment
 
 begin_define
@@ -2201,7 +2201,7 @@ value|0x0081
 end_define
 
 begin_comment
-comment|/* Send a SCSI command      */
+comment|/* Send a SCSI command	    */
 end_comment
 
 begin_else
@@ -2216,22 +2216,22 @@ block|{
 name|uLONG
 name|flags
 decl_stmt|;
-comment|/* Operational State Flags         */
+comment|/* Operational State Flags	    */
 name|uCHAR
 name|id
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* Host Adapter SCSI ID            */
+comment|/* Host Adapter SCSI ID	    */
 name|int
 name|vect
 decl_stmt|;
-comment|/* Interrupt Vector Number         */
+comment|/* Interrupt Vector Number	    */
 name|int
 name|base
 decl_stmt|;
-comment|/* Base I/O Address                */
+comment|/* Base I/O Address		    */
 name|int
 name|njobs
 decl_stmt|;
@@ -2239,54 +2239,54 @@ comment|/* # Of CCBs Outstanding To HBA    */
 name|int
 name|qdepth
 decl_stmt|;
-comment|/* Controller Queue depth.         */
+comment|/* Controller Queue depth.	    */
 name|uLONG
 name|SGsize
 decl_stmt|;
-comment|/* Scatter/Gather List Size.       */
+comment|/* Scatter/Gather List Size.	    */
 name|char
 name|idPAL
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* 4 Bytes Of The ID Pal           */
+comment|/* 4 Bytes Of The ID Pal	    */
 name|uCHAR
 name|eataVersion
 decl_stmt|;
-comment|/* EATA Version                    */
+comment|/* EATA Version		    */
 name|uLONG
 name|cpLength
 decl_stmt|;
-comment|/* EATA Command Packet Length      */
+comment|/* EATA Command Packet Length	    */
 name|uLONG
 name|spLength
 decl_stmt|;
-comment|/* EATA Status Packet Length       */
+comment|/* EATA Status Packet Length	    */
 name|uCHAR
 name|drqNum
 decl_stmt|;
-comment|/* DRQ Index (0,5,6,7)             */
+comment|/* DRQ Index (0,5,6,7)		    */
 name|uCHAR
 name|eataflag1
 decl_stmt|;
-comment|/* EATA Flags 1 (Byte 9)           */
+comment|/* EATA Flags 1 (Byte 9)	    */
 name|uCHAR
 name|eataflag2
 decl_stmt|;
-comment|/* EATA Flags 2 (Byte 30)          */
+comment|/* EATA Flags 2 (Byte 30)	    */
 name|uCHAR
 name|maxChannel
 decl_stmt|;
-comment|/* Maximum Channel Number          */
+comment|/* Maximum Channel Number	    */
 name|uCHAR
 name|maxID
 decl_stmt|;
-comment|/* Maximum Target ID               */
+comment|/* Maximum Target ID		    */
 name|uCHAR
 name|maxLUN
 decl_stmt|;
-comment|/* Maximum LUN                     */
+comment|/* Maximum LUN			    */
 name|uCHAR
 name|HbaBusType
 decl_stmt|;
@@ -2294,7 +2294,7 @@ comment|/* HBA Bus Type, EISA, PCI, etc    */
 name|uCHAR
 name|RaidNum
 decl_stmt|;
-comment|/* Host Adapter RAID Number        */
+comment|/* Host Adapter RAID Number	    */
 block|}
 name|HbaInfo
 typedef|;
@@ -2325,7 +2325,7 @@ name|_DPT_AIX
 end_ifdef
 
 begin_comment
-comment|/*  * DPT Host Adapter config information structure - this structure contains  * configuration information about an adapter.  It is imbedded into the   * dpt_ctl structure.  */
+comment|/*  * DPT Host Adapter config information structure - this structure contains  * configuration information about an adapter.	It is imbedded into the  * dpt_ctl structure.  */
 end_comment
 
 begin_typedef
@@ -2403,7 +2403,7 @@ comment|/* Maximum LUN			*/
 name|uchar
 name|HbaBusType
 decl_stmt|;
-comment|/* HBA bus type, EISA, PCI, etc	*/
+comment|/* HBA bus type, EISA, PCI, etc */
 name|uchar
 name|RaidNum
 decl_stmt|;

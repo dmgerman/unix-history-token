@@ -16,7 +16,7 @@ name|__SYS_INFO_H
 end_define
 
 begin_comment
-comment|/*File - SYS_INFO.H  ****************************************************************************  *  *Description:  *  *      This file contains structure definitions for the OS dependent  *layer system information buffers.  *  *Copyright Distributed Processing Technology, Corp.  *        140 Candace Dr.  *        Maitland, Fl. 32751   USA  *        Phone: (407) 830-5522  Fax: (407) 260-5366  *        All Rights Reserved  *  *Author:       Don Kemper  *Date:         5/10/94  *  *Editors:  *  *Remarks:  *  *  *****************************************************************************/
+comment|/*File - SYS_INFO.H  ****************************************************************************  *  *Description:  *  *	This file contains structure definitions for the OS dependent  *layer system information buffers.  *  *Copyright Distributed Processing Technology, Corp.  *	  140 Candace Dr.  *	  Maitland, Fl. 32751	USA  *	  Phone: (407) 830-5522	 Fax: (407) 260-5366  *	  All Rights Reserved  *  *Author:	Don Kemper  *Date:		5/10/94  *  *Editors:  *  *Remarks:  *  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -173,7 +173,7 @@ comment|/* no unpack */
 end_comment
 
 begin_comment
-comment|/*struct - driveParam_S - start  *===========================================================================  *  *Description:  *  *      This structure defines the drive parameters seen during  *booting.  *  *---------------------------------------------------------------------------*/
+comment|/*struct - driveParam_S - start  *===========================================================================  *  *Description:  *  *	This structure defines the drive parameters seen during  *booting.  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -251,7 +251,7 @@ comment|/*driveParam_S - end */
 end_comment
 
 begin_comment
-comment|/*struct - sysInfo_S - start  *===========================================================================  *  *Description:  *  *      This structure defines the command system information that  *should be returned by every OS dependent layer.  *  *---------------------------------------------------------------------------*/
+comment|/*struct - sysInfo_S - start  *===========================================================================  *  *Description:  *  *	This structure defines the command system information that  *should be returned by every OS dependent layer.  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
@@ -536,7 +536,7 @@ comment|/*sysInfo_S - end */
 end_comment
 
 begin_comment
-comment|/*struct - DOS_Info_S - start  *===========================================================================  *  *Description:  *  *      This structure defines the system information specific to a  *DOS workstation.  *  *---------------------------------------------------------------------------*/
+comment|/*struct - DOS_Info_S - start  *===========================================================================  *  *Description:  *  *	This structure defines the system information specific to a  *DOS workstation.  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
@@ -642,7 +642,7 @@ comment|/*DOS_Info_S - end */
 end_comment
 
 begin_comment
-comment|/*struct - Netware_Info_S - start  *===========================================================================  *  *Description:  *  *      This structure defines the system information specific to a  *Netware machine.  *  *---------------------------------------------------------------------------*/
+comment|/*struct - Netware_Info_S - start  *===========================================================================  *  *Description:  *  *	This structure defines the system information specific to a  *Netware machine.  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -760,7 +760,7 @@ comment|/*Netware_Info_S - end */
 end_comment
 
 begin_comment
-comment|/*struct - OS2_Info_S - start  *===========================================================================  *  *Description:  *  *      This structure defines the system information specific to an  *OS/2 machine.  *  *---------------------------------------------------------------------------*/
+comment|/*struct - OS2_Info_S - start  *===========================================================================  *  *Description:  *  *	This structure defines the system information specific to an  *OS/2 machine.  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -829,7 +829,7 @@ comment|/*OS2_Info_S - end */
 end_comment
 
 begin_comment
-comment|/*struct - WinNT_Info_S - start  *===========================================================================  *  *Description:  *  *      This structure defines the system information specific to a  *Windows NT machine.  *  *---------------------------------------------------------------------------*/
+comment|/*struct - WinNT_Info_S - start  *===========================================================================  *  *Description:  *  *	This structure defines the system information specific to a  *Windows NT machine.  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -898,7 +898,7 @@ comment|/*WinNT_Info_S - end */
 end_comment
 
 begin_comment
-comment|/*struct - SCO_Info_S - start  *===========================================================================  *  *Description:  *  *      This structure defines the system information specific to an  *SCO UNIX machine.  *  *---------------------------------------------------------------------------*/
+comment|/*struct - SCO_Info_S - start  *===========================================================================  *  *Description:  *  *	This structure defines the system information specific to an  *SCO UNIX machine.  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -967,7 +967,7 @@ comment|/*SCO_Info_S - end */
 end_comment
 
 begin_comment
-comment|/*struct - USL_Info_S - start  *===========================================================================  *  *Description:  *  *      This structure defines the system information specific to a  *USL UNIX machine.  *  *---------------------------------------------------------------------------*/
+comment|/*struct - USL_Info_S - start  *===========================================================================  *  *Description:  *  *	This structure defines the system information specific to a  *USL UNIX machine.  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
