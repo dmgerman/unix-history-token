@@ -55,27 +55,6 @@ name|vm_pageout_deficit
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|VM_PAGEOUT_ASYNC
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_PAGEOUT_SYNC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_PAGEOUT_FORCE
-value|2
-end_define
-
 begin_comment
 comment|/*  * Swap out requests  */
 end_comment
@@ -179,28 +158,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_function_decl
-name|void
-name|vm_pageout_page
-parameter_list|(
-name|vm_page_t
-parameter_list|,
-name|vm_object_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_pageout_cluster
-parameter_list|(
-name|vm_page_t
-parameter_list|,
-name|vm_object_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
