@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)esis.c	7.23 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)esis.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -294,7 +294,7 @@ parameter_list|()
 function_decl|;
 endif|#
 directive|endif
-endif|ISO_X25ESIS
+comment|/* ISO_X25ESIS */
 name|esis_pcb
 operator|.
 name|rcb_next
@@ -373,7 +373,7 @@ name|x25esis_input
 expr_stmt|;
 endif|#
 directive|endif
-endif|ISO_X25ESIS
+comment|/* ISO_X25ESIS */
 block|}
 end_block
 
@@ -4704,8 +4704,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|ISO
 end_endif
+
+begin_comment
+comment|/* ISO */
+end_comment
 
 end_unit
 
