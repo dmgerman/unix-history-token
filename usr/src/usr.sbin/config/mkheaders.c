@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	mkheaders.c	1.3	81/02/25  * Make all the .h files for the optional entries  */
+comment|/*  *	mkheaders.c	1.4	81/02/26  * Make all the .h files for the optional entries  */
 end_comment
 
 begin_include
@@ -610,14 +610,10 @@ name|strcpy
 argument_list|(
 name|hbuf
 argument_list|,
-name|PREFIX
-argument_list|)
-expr_stmt|;
-name|strcat
+name|path
 argument_list|(
-name|hbuf
-argument_list|,
 name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|strcat

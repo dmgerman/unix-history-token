@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * main.c	1.2	81/02/25  * Config  *	Do system configuration for VAX/UNIX  *		1) Build system data structures  *		2) Build makefile  *		3) Create header files for devices  *	Michael Toy -- Berkeley -- 1981  */
+comment|/*  * main.c	1.3	81/02/26  * Config  *	Do system configuration for VAX/UNIX  *		1) Build system data structures  *		2) Build makefile  *		3) Create header files for devices  *	Michael Toy -- Berkeley -- 1981  */
 end_comment
 
 begin_include
@@ -317,17 +317,31 @@ argument_list|(
 name|file
 argument_list|)
 operator|+
-literal|1
+literal|5
 argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
 name|cp
 argument_list|,
+literal|"../"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|cp
+argument_list|,
 name|PREFIX
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strcat
+argument_list|(
+name|cp
+argument_list|,
+literal|"/"
+argument_list|)
+expr_stmt|;
+name|strcat
 argument_list|(
 name|cp
 argument_list|,
