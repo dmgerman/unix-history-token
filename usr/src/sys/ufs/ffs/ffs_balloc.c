@@ -1,60 +1,66 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"quota.h"
+file|<ufs/ufs/quota.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"inode.h"
+file|<ufs/ufs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"fs.h"
+file|<ufs/ffs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/ffs_extern.h>
 end_include
 
 begin_comment
@@ -62,7 +68,7 @@ comment|/*  * Bmap converts a the logical block number of a file  * to its physi
 end_comment
 
 begin_expr_stmt
-name|bmap
+name|ffs_bmap
 argument_list|(
 name|ip
 argument_list|,
@@ -426,7 +432,7 @@ comment|/*  * Balloc defines the structure of file system storage  * by allocati
 end_comment
 
 begin_expr_stmt
-name|balloc
+name|ffs_balloc
 argument_list|(
 name|ip
 argument_list|,
@@ -526,9 +532,6 @@ modifier|*
 name|bap
 decl_stmt|,
 name|pref
-decl_stmt|,
-name|blkpref
-argument_list|()
 decl_stmt|;
 operator|*
 name|bpp
@@ -606,13 +609,13 @@ condition|)
 block|{
 name|error
 operator|=
-name|realloccg
+name|ffs_realloccg
 argument_list|(
 name|ip
 argument_list|,
 name|nb
 argument_list|,
-name|blkpref
+name|ffs_blkpref
 argument_list|(
 name|ip
 argument_list|,
@@ -886,13 +889,13 @@ else|else
 block|{
 name|error
 operator|=
-name|realloccg
+name|ffs_realloccg
 argument_list|(
 name|ip
 argument_list|,
 name|bn
 argument_list|,
-name|blkpref
+name|ffs_blkpref
 argument_list|(
 name|ip
 argument_list|,
@@ -967,13 +970,13 @@ name|fs_bsize
 expr_stmt|;
 name|error
 operator|=
-name|alloc
+name|ffs_alloc
 argument_list|(
 name|ip
 argument_list|,
 name|bn
 argument_list|,
-name|blkpref
+name|ffs_blkpref
 argument_list|(
 name|ip
 argument_list|,
@@ -1159,7 +1162,7 @@ condition|)
 block|{
 name|pref
 operator|=
-name|blkpref
+name|ffs_blkpref
 argument_list|(
 name|ip
 argument_list|,
@@ -1178,7 +1181,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|alloc
+name|ffs_alloc
 argument_list|(
 name|ip
 argument_list|,
@@ -1242,7 +1245,7 @@ name|bp
 argument_list|)
 condition|)
 block|{
-name|blkfree
+name|ffs_blkfree
 argument_list|(
 name|ip
 argument_list|,
@@ -1396,7 +1399,7 @@ literal|0
 condition|)
 name|pref
 operator|=
-name|blkpref
+name|ffs_blkpref
 argument_list|(
 name|ip
 argument_list|,
@@ -1415,7 +1418,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|alloc
+name|ffs_alloc
 argument_list|(
 name|ip
 argument_list|,
@@ -1486,7 +1489,7 @@ name|nbp
 argument_list|)
 condition|)
 block|{
-name|blkfree
+name|ffs_blkfree
 argument_list|(
 name|ip
 argument_list|,
@@ -1571,7 +1574,7 @@ condition|)
 block|{
 name|pref
 operator|=
-name|blkpref
+name|ffs_blkpref
 argument_list|(
 name|ip
 argument_list|,
@@ -1590,7 +1593,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|alloc
+name|ffs_alloc
 argument_list|(
 name|ip
 argument_list|,
