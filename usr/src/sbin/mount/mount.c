@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.20 (Berkeley) %G%"
+literal|"@(#)mount.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2737,6 +2737,7 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
+specifier|static
 name|struct
 name|sockaddr_in
 name|saddr
@@ -2766,10 +2767,12 @@ decl_stmt|;
 name|u_short
 name|tport
 decl_stmt|;
+specifier|static
 name|struct
 name|nfhret
 name|nfhret
 decl_stmt|;
+specifier|static
 name|char
 name|nam
 index|[
