@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcivar.h,v 1.18 2000/01/18 20:11:00 augustss Exp $	*/
+comment|/*	$NetBSD: ohcivar.h,v 1.20 2000/02/22 11:30:55 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -285,6 +285,9 @@ comment|/* free xfers */
 name|usbd_xfer_handle
 name|sc_intrxfer
 decl_stmt|;
+name|ohci_physaddr_t
+name|sc_done
+decl_stmt|;
 name|char
 name|sc_vendor
 index|[
@@ -300,10 +303,16 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 name|void
 modifier|*
 name|sc_powerhook
 decl_stmt|;
+comment|/* cookie from power hook */
 name|void
 modifier|*
 name|sc_shutdownhook

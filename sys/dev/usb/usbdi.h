@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.h,v 1.39 2000/01/19 00:23:59 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.h,v 1.40 2000/02/02 07:34:00 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1288,6 +1288,13 @@ begin_define
 define|#
 directive|define
 name|splusb
+value|splbio
+end_define
+
+begin_define
+define|#
+directive|define
+name|splhardusb
 value|splbio
 end_define
 

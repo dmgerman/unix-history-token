@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdivar.h,v 1.46 2000/01/19 01:16:40 augustss Exp $	*/
+comment|/*	$NetBSD: usbdivar.h,v 1.47 2000/02/22 11:30:56 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -63,6 +63,19 @@ modifier|*
 name|pipe
 parameter_list|)
 function_decl|;
+name|void
+argument_list|(
+argument|*soft_intr
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|usbd_bus
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 name|void
 function_decl|(
 modifier|*
@@ -890,15 +903,6 @@ comment|/* Routines from usb.c */
 end_comment
 
 begin_function_decl
-name|int
-name|usb_bus_count
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|usb_needs_explore
 parameter_list|(
@@ -906,6 +910,20 @@ name|usbd_bus_handle
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|void
+name|usb_schedsoftintr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|usbd_bus
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
