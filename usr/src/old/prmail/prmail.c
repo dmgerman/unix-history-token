@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)prmail.c	4.1 (Berkeley) %G%"
+literal|"@(#)prmail.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -242,7 +242,7 @@ name|access
 argument_list|(
 name|user
 argument_list|,
-literal|"4"
+literal|4
 argument_list|)
 operator|<
 literal|0
