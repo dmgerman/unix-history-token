@@ -1402,17 +1402,6 @@ operator|&
 name|sa_quit
 argument_list|)
 expr_stmt|;
-name|sigaction
-argument_list|(
-name|SIGTSTP
-argument_list|,
-operator|&
-name|sa
-argument_list|,
-operator|&
-name|sa_tstp
-argument_list|)
-expr_stmt|;
 name|statusp
 operator|=
 literal|1
