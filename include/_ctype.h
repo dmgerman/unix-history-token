@@ -15,6 +15,10 @@ directive|define
 name|_CTYPE_H_
 end_define
 
+begin_comment
+comment|/*  * XXX<runetype.h> brings massive namespace pollution (rune_t and struct  * member names).  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -175,123 +179,162 @@ begin_comment
 comment|/* Phonogram */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|__BEGIN_DECLS
+name|int
 name|isalnum
-parameter_list|(
-name|c
-parameter_list|)
-value|__istype((c), (_A|_D))
-end_define
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|isalpha
-parameter_list|(
-name|c
-parameter_list|)
-value|__istype((c),     _A)
-end_define
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|iscntrl
-parameter_list|(
-name|c
-parameter_list|)
-value|__istype((c),     _C)
-end_define
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|isdigit
-parameter_list|(
-name|c
-parameter_list|)
-value|__isctype((c),    _D)
-end_define
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/* ANSI -- locale independent */
-end_comment
-
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|isgraph
-parameter_list|(
-name|c
-parameter_list|)
-value|__istype((c),     _G)
-end_define
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|islower
-parameter_list|(
-name|c
-parameter_list|)
-value|__istype((c),     _L)
-end_define
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|isprint
-parameter_list|(
-name|c
-parameter_list|)
-value|__istype((c),     _R)
-end_define
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|ispunct
-parameter_list|(
-name|c
-parameter_list|)
-value|__istype((c),     _P)
-end_define
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|isspace
-parameter_list|(
-name|c
-parameter_list|)
-value|__istype((c),     _S)
-end_define
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|isupper
-parameter_list|(
-name|c
-parameter_list|)
-value|__istype((c),     _U)
-end_define
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|isxdigit
-parameter_list|(
-name|c
-parameter_list|)
-value|__isctype((c),    _X)
-end_define
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/* ANSI -- locale independent */
-end_comment
+begin_decl_stmt
+name|int
+name|tolower
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|toupper
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -309,67 +352,162 @@ name|_POSIX_SOURCE
 argument_list|)
 end_if
 
-begin_define
+begin_decl_stmt
+name|int
+name|isascii
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|isblank
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|toascii
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|__END_DECLS
+define|#
+directive|define
+name|isalnum
+parameter_list|(
+name|c
+parameter_list|)
+value|__istype((c), (_A|_D))
+define|#
+directive|define
+name|isalpha
+parameter_list|(
+name|c
+parameter_list|)
+value|__istype((c),     _A)
+define|#
+directive|define
+name|iscntrl
+parameter_list|(
+name|c
+parameter_list|)
+value|__istype((c),     _C)
+define|#
+directive|define
+name|isdigit
+parameter_list|(
+name|c
+parameter_list|)
+value|__isctype((c),    _D)
+comment|/* ANSI -- locale independent */
+define|#
+directive|define
+name|isgraph
+parameter_list|(
+name|c
+parameter_list|)
+value|__istype((c),     _G)
+define|#
+directive|define
+name|islower
+parameter_list|(
+name|c
+parameter_list|)
+value|__istype((c),     _L)
+define|#
+directive|define
+name|isprint
+parameter_list|(
+name|c
+parameter_list|)
+value|__istype((c),     _R)
+define|#
+directive|define
+name|ispunct
+parameter_list|(
+name|c
+parameter_list|)
+value|__istype((c),     _P)
+define|#
+directive|define
+name|isspace
+parameter_list|(
+name|c
+parameter_list|)
+value|__istype((c),     _S)
+define|#
+directive|define
+name|isupper
+parameter_list|(
+name|c
+parameter_list|)
+value|__istype((c),     _U)
+define|#
+directive|define
+name|isxdigit
+parameter_list|(
+name|c
+parameter_list|)
+value|__isctype((c),    _X)
+comment|/* ANSI -- locale independent */
+define|#
+directive|define
+name|tolower
+parameter_list|(
+name|c
+parameter_list|)
+value|__tolower(c)
+define|#
+directive|define
+name|toupper
+parameter_list|(
+name|c
+parameter_list|)
+value|__toupper(c)
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_ANSI_SOURCE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_SOURCE
+argument_list|)
 define|#
 directive|define
 name|isascii
 parameter_list|(
 name|c
 parameter_list|)
-value|((c& ~0x7F) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|toascii
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)& 0x7F)
-end_define
-
-begin_define
-define|#
-directive|define
-name|digittoint
-parameter_list|(
-name|c
-parameter_list|)
-value|__istype((c), 0xFF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isideogram
-parameter_list|(
-name|c
-parameter_list|)
-value|__istype((c), _I)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isphonogram
-parameter_list|(
-name|c
-parameter_list|)
-value|__istype((c), _T)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isspecial
-parameter_list|(
-name|c
-parameter_list|)
-value|__istype((c), _Q)
-end_define
-
-begin_define
+value|(((c)& ~0x7F) == 0)
 define|#
 directive|define
 name|isblank
@@ -377,29 +515,21 @@ parameter_list|(
 name|c
 parameter_list|)
 value|__istype((c), _B)
-end_define
-
-begin_define
 define|#
 directive|define
-name|isrune
+name|toascii
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c),  0xFFFFFF00L)
-end_define
-
-begin_define
+value|((c)& 0x7F)
+comment|/* XXX the following macros are not backed up by functions. */
 define|#
 directive|define
-name|isnumber
+name|digittoint
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _D)
-end_define
-
-begin_define
+value|__istype((c), 0xFF)
 define|#
 directive|define
 name|ishexnumber
@@ -407,18 +537,44 @@ parameter_list|(
 name|c
 parameter_list|)
 value|__istype((c), _X)
-end_define
-
-begin_endif
+define|#
+directive|define
+name|isideogram
+parameter_list|(
+name|c
+parameter_list|)
+value|__istype((c), _I)
+define|#
+directive|define
+name|isnumber
+parameter_list|(
+name|c
+parameter_list|)
+value|__istype((c), _D)
+define|#
+directive|define
+name|isphonogram
+parameter_list|(
+name|c
+parameter_list|)
+value|__istype((c), _T)
+define|#
+directive|define
+name|isrune
+parameter_list|(
+name|c
+parameter_list|)
+value|__istype((c), 0xFFFFFF00L)
+define|#
+directive|define
+name|isspecial
+parameter_list|(
+name|c
+parameter_list|)
+value|__istype((c), _Q)
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* See comments in<machine/ansi.h> about _BSD_RUNE_T_. */
-end_comment
-
-begin_decl_stmt
 name|__BEGIN_DECLS
 name|unsigned
 name|long
@@ -458,15 +614,37 @@ end_decl_stmt
 
 begin_function
 name|__END_DECLS
-comment|/*  * If your compiler supports prototypes and inline functions,  * #define _USE_CTYPE_INLINE_.  Otherwise, use the C library  * functions.  */
+comment|/*  * _EXTERNALIZE_CTYPE_INLINES_ is defined in locale/nomacros.c to tell us  * to generate code for extern versions of all our inline functions.  */
+ifdef|#
+directive|ifdef
+name|_EXTERNALIZE_CTYPE_INLINES_
+define|#
+directive|define
+name|_USE_CTYPE_INLINE_
+define|#
+directive|define
+name|static
+define|#
+directive|define
+name|__inline
+endif|#
+directive|endif
+comment|/*  * Use inline functions if we are allowed to and the compiler supports them.  */
 if|#
 directive|if
 operator|!
 name|defined
 argument_list|(
-name|_USE_CTYPE_CLIBRARY_
+name|_DONT_USE_CTYPE_INLINE_
 argument_list|)
 operator|&&
+expr|\
+operator|(
+name|defined
+argument_list|(
+name|_USE_CTYPE_INLINE_
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|__GNUC__
@@ -476,69 +654,58 @@ name|defined
 argument_list|(
 name|__cplusplus
 argument_list|)
-define|#
-directive|define
-name|_USE_CTYPE_INLINE_
-value|1
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_USE_CTYPE_INLINE_
-argument_list|)
+operator|)
 specifier|static
 name|__inline
 name|int
 name|__istype
 parameter_list|(
 name|_BSD_RUNE_T_
-name|__c
+name|_c
 parameter_list|,
 name|unsigned
 name|long
-name|__f
+name|_f
 parameter_list|)
 block|{
 if|if
 condition|(
-name|__c
+name|_c
 operator|<
 literal|0
 condition|)
-name|__c
+name|_c
 operator|=
 operator|(
 name|unsigned
 name|char
 operator|)
-name|__c
+name|_c
 expr_stmt|;
 return|return
 operator|(
 operator|(
 operator|(
 operator|(
-name|__c
+name|_c
 operator|&
 name|_CRMASK
 operator|)
 condition|?
 name|___runetype
 argument_list|(
-name|__c
+name|_c
 argument_list|)
 else|:
 name|_CurrentRuneLocale
 operator|->
 name|runetype
 index|[
-name|__c
+name|_c
 index|]
 operator|)
 operator|&
-name|__f
+name|_f
 operator|)
 condition|?
 literal|1
@@ -556,33 +723,33 @@ name|int
 name|__isctype
 parameter_list|(
 name|_BSD_RUNE_T_
-name|__c
+name|_c
 parameter_list|,
 name|unsigned
 name|long
-name|__f
+name|_f
 parameter_list|)
 block|{
 if|if
 condition|(
-name|__c
+name|_c
 operator|<
 literal|0
 condition|)
-name|__c
+name|_c
 operator|=
 operator|(
 name|unsigned
 name|char
 operator|)
-name|__c
+name|_c
 expr_stmt|;
 return|return
 operator|(
 operator|(
 operator|(
 operator|(
-name|__c
+name|_c
 operator|&
 name|_CRMASK
 operator|)
@@ -593,11 +760,11 @@ name|_DefaultRuneLocale
 operator|.
 name|runetype
 index|[
-name|__c
+name|_c
 index|]
 operator|)
 operator|&
-name|__f
+name|_f
 operator|)
 condition|?
 literal|1
@@ -608,62 +775,48 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* _ANSI_LIBRARY is defined by lib/libc/gen/isctype.c. */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_LIBRARY
-argument_list|)
-end_if
-
 begin_function
 specifier|static
 name|__inline
 name|_BSD_RUNE_T_
-name|toupper
+name|__toupper
 parameter_list|(
 name|_BSD_RUNE_T_
-name|__c
+name|_c
 parameter_list|)
 block|{
 if|if
 condition|(
-name|__c
+name|_c
 operator|<
 literal|0
 condition|)
-name|__c
+name|_c
 operator|=
 operator|(
 name|unsigned
 name|char
 operator|)
-name|__c
+name|_c
 expr_stmt|;
 return|return
 operator|(
 operator|(
-name|__c
+name|_c
 operator|&
 name|_CRMASK
 operator|)
 condition|?
 name|___toupper
 argument_list|(
-name|__c
+name|_c
 argument_list|)
 else|:
 name|_CurrentRuneLocale
 operator|->
 name|mapupper
 index|[
-name|__c
+name|_c
 index|]
 operator|)
 return|;
@@ -674,58 +827,49 @@ begin_function
 specifier|static
 name|__inline
 name|_BSD_RUNE_T_
-name|tolower
+name|__tolower
 parameter_list|(
 name|_BSD_RUNE_T_
-name|__c
+name|_c
 parameter_list|)
 block|{
 if|if
 condition|(
-name|__c
+name|_c
 operator|<
 literal|0
 condition|)
-name|__c
+name|_c
 operator|=
 operator|(
 name|unsigned
 name|char
 operator|)
-name|__c
+name|_c
 expr_stmt|;
 return|return
 operator|(
 operator|(
-name|__c
+name|_c
 operator|&
 name|_CRMASK
 operator|)
 condition|?
 name|___tolower
 argument_list|(
-name|__c
+name|_c
 argument_list|)
 else|:
 name|_CurrentRuneLocale
 operator|->
 name|maplower
 index|[
-name|__c
+name|_c
 index|]
 operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_ANSI_LIBRARY */
-end_comment
 
 begin_else
 else|#
@@ -733,7 +877,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !_USE_CTYPE_INLINE_ */
+comment|/* not using inlines */
 end_comment
 
 begin_decl_stmt
@@ -769,7 +913,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|_BSD_RUNE_T_
-name|toupper
+name|__toupper
 name|__P
 argument_list|(
 operator|(
@@ -781,7 +925,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|_BSD_RUNE_T_
-name|tolower
+name|__tolower
 name|__P
 argument_list|(
 operator|(
@@ -801,7 +945,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _USE_CTYPE_INLINE_ */
+comment|/* using inlines */
 end_comment
 
 begin_endif
