@@ -213,7 +213,9 @@ condition|(
 operator|(
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator|&
 name|BIO_ERROR
 operator|)
@@ -279,6 +281,7 @@ operator|==
 name|BIO_READ
 condition|)
 block|{
+comment|/* read operation */
 name|log
 argument_list|(
 name|LOG_ERR
@@ -494,6 +497,25 @@ name|volno
 operator|>=
 literal|0
 condition|)
+block|{
+comment|/* volume I/O, not plex */
+name|VOL
+index|[
+name|PLEX
+index|[
+name|rqe
+operator|->
+name|rqg
+operator|->
+name|plexno
+index|]
+operator|.
+name|volno
+index|]
+operator|.
+name|reads
+operator|++
+expr_stmt|;
 name|VOL
 index|[
 name|PLEX
@@ -514,6 +536,7 @@ name|bp
 operator|->
 name|b_bcount
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -606,6 +629,25 @@ name|volno
 operator|>=
 literal|0
 condition|)
+block|{
+comment|/* volume I/O, not plex */
+name|VOL
+index|[
+name|PLEX
+index|[
+name|rqe
+operator|->
+name|rqg
+operator|->
+name|plexno
+index|]
+operator|.
+name|volno
+index|]
+operator|.
+name|writes
+operator|++
+expr_stmt|;
 name|VOL
 index|[
 name|PLEX
@@ -626,6 +668,7 @@ name|bp
 operator|->
 name|b_bcount
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -719,14 +762,17 @@ operator|=
 name|urqe
 operator|->
 name|grouplen
-operator|<<
+operator|*
 operator|(
-name|DEV_BSHIFT
-operator|-
-literal|2
+name|DEV_BSIZE
+operator|/
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 operator|)
 expr_stmt|;
-comment|/* and count involved */
+comment|/* and number of ints */
 for|for
 control|(
 name|count
@@ -848,18 +894,19 @@ operator|==
 literal|1
 operator|)
 condition|)
-comment|/* and this is the last rq of phase 1 */
+comment|/* and this is the last active request */
 name|complete_raid5_write
 argument_list|(
 name|rqe
 argument_list|)
 expr_stmt|;
+comment|/*      * This is the earliest place where we can be      * sure that the request has really finished,      * since complete_raid5_write can issue new      * requests.      */
 name|rqg
 operator|->
 name|active
 operator|--
 expr_stmt|;
-comment|/* one less request active */
+comment|/* this request now finished */
 if|if
 condition|(
 name|rqg
@@ -959,7 +1006,9 @@ block|{
 comment|/* plex operation, */
 name|ubp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -1216,7 +1265,9 @@ name|sbp
 operator|->
 name|b
 operator|.
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator|&
 name|BIO_ERROR
 condition|)
@@ -1226,7 +1277,9 @@ name|sbp
 operator|->
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -1456,7 +1509,7 @@ comment|/* offset of request data from parity data */
 name|struct
 name|buf
 modifier|*
-name|bp
+name|ubp
 decl_stmt|;
 comment|/* user buffer header */
 name|struct
@@ -1497,7 +1550,7 @@ operator|->
 name|rq
 expr_stmt|;
 comment|/* point to our request */
-name|bp
+name|ubp
 operator|=
 name|rq
 operator|->
@@ -1581,7 +1634,6 @@ operator|++
 control|)
 block|{
 comment|/* for all the data blocks */
-comment|/* 	     * This can do with improvement.  If we're doing 	     * both a degraded and a normal write, we don't 	     * need to xor (nor to read) the part of the block 	     * that we're going to overwrite.  FIXME XXX 	     */
 name|rqe
 operator|=
 operator|&
@@ -1629,7 +1681,7 @@ literal|2
 operator|)
 expr_stmt|;
 comment|/* and count involved */
-comment|/* 	     * add the data block to the parity block.  Before 	     * we started the request, we zeroed the parity 	     * block, so the result of adding all the other 	     * blocks and the block we want to write will be 	     * the correct parity block. 	     */
+comment|/* 	     * Add the data block to the parity block.  Before 	     * we started the request, we zeroed the parity 	     * block, so the result of adding all the other 	     * blocks and the block we want to write will be 	     * the correct parity block. 	     */
 for|for
 control|(
 name|count
@@ -1823,14 +1875,17 @@ operator|=
 name|rqe
 operator|->
 name|datalen
-operator|<<
+operator|*
 operator|(
-name|DEV_BSHIFT
-operator|-
-literal|2
+name|DEV_BSIZE
+operator|/
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 operator|)
 expr_stmt|;
-comment|/* and count involved */
+comment|/* and number of ints */
 comment|/* 		 * "remove" the old data block 		 * from the parity block 		 */
 if|if
 condition|(
@@ -1959,7 +2014,7 @@ operator|*
 operator|)
 operator|(
 operator|&
-name|bp
+name|ubp
 operator|->
 name|b_data
 index|[
@@ -1982,7 +2037,7 @@ operator|(
 name|int
 operator|*
 operator|)
-name|bp
+name|ubp
 operator|->
 name|b_data
 operator|)
@@ -2001,11 +2056,11 @@ name|int
 operator|*
 operator|)
 operator|(
-name|bp
+name|ubp
 operator|->
 name|b_data
 operator|+
-name|bp
+name|ubp
 operator|->
 name|b_bcount
 operator|)
@@ -2145,7 +2200,7 @@ operator|.
 name|b_data
 operator|=
 operator|&
-name|bp
+name|ubp
 operator|->
 name|b_data
 index|[
@@ -2369,7 +2424,7 @@ name|rqinfou
 operator|)
 name|rqe
 argument_list|,
-name|bp
+name|ubp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2636,7 +2691,7 @@ name|rqinfou
 operator|)
 name|rqe
 argument_list|,
-name|bp
+name|ubp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2653,6 +2708,18 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 
