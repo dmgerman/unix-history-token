@@ -200,6 +200,10 @@ parameter_list|,
 name|int
 parameter_list|,
 name|struct
+name|mem_attrib
+modifier|*
+parameter_list|,
+name|struct
 name|target_ops
 modifier|*
 parameter_list|)
@@ -2130,6 +2134,11 @@ name|int
 name|write
 parameter_list|,
 name|struct
+name|mem_attrib
+modifier|*
+name|attrib
+parameter_list|,
+name|struct
 name|target_ops
 modifier|*
 name|target
@@ -2319,6 +2328,9 @@ parameter_list|(
 name|char
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|from_tty
 parameter_list|)
 block|{
 name|CORE_ADDR
