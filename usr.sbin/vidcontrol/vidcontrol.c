@@ -1,12 +1,44 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: vidcontrol.c,v 1.16 1997/03/07 01:34:47 brian Exp $  */
+comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -24,13 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -131,6 +163,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -139,25 +172,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: vidcontrol mode             (available modes: VGA_40x25, VGA_80x25,\n"
-literal|"                                                     VGA_80x50, VGA_320x200,\n"
-literal|"                                                     EGA_80x25, EGA_80x43)\n"
-literal|"                                   (experimental)    VGA_80x30, VGA_80x60)\n"
-literal|"\n"
-literal|"                  show             (show available colors)\n"
-literal|"                  fgcol bgcol      (set fore-& background colors)\n"
-literal|"                  -r fgcol bgcol   (set reverse fore-& background colors)\n"
-literal|"                  -b color         (set border color)\n"
-literal|"                  -c normal        (set cursor to inverting block)\n"
-literal|"                  -c blink         (set cursor to blinking inverted block)\n"
-literal|"                  -c destructive   (set cursor to blinking destructive char)\n"
-literal|"                  -d               (dump screenmap to stdout)\n"
-literal|"                  -l filename      (load screenmap file filename)\n"
-literal|"                  -m on|off        (switch mousepointer support on or off)\n"
-literal|"                  -L               (load default screenmap)\n"
-literal|"                  -f DxL filename  (load font, D dots wide& L lines high)\n"
-literal|"                  -t N             (set screensaver timeout in seconds)\n"
-literal|"                  -x               (use hex numbers for output)\n"
+literal|"%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: vidcontrol [-r fg bg] [-b color] [-c appearance] [-d] [-l scrmap]"
+argument_list|,
+literal|"                  [-L] [-m on|off] [-f size file] [-s number] [-t N|off]"
+argument_list|,
+literal|"                  [-x] [mode] [fgcol [bgcol]] [show]"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -203,26 +229,13 @@ operator|++
 index|]
 operator|)
 return|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: option requires two arguments -- %c\n"
-argument_list|,
-name|av
-index|[
-literal|0
-index|]
-argument_list|,
-name|oc
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"option requires two arguments -- %c"
+argument_list|,
+name|oc
 argument_list|)
 expr_stmt|;
 return|return
@@ -486,7 +499,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"screenmap file not found"
 argument_list|)
@@ -539,11 +552,9 @@ operator|!=
 name|size
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bad scrnmap file\n"
+literal|"bad screenmap file"
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -568,7 +579,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"can't load screenmap"
 argument_list|)
@@ -633,7 +644,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"can't load default screenmap"
 argument_list|)
@@ -671,9 +682,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"getting scrnmap"
+literal|"getting screenmap"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -873,7 +884,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"font file not found"
 argument_list|)
@@ -950,7 +961,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"bad font size specification"
 argument_list|)
@@ -1006,11 +1017,9 @@ operator|!=
 name|size
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bad font file\n"
+literal|"bad font file"
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -1039,7 +1048,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"can't load font"
 argument_list|)
@@ -1108,11 +1117,9 @@ literal|1
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"argument must be a positive number\n"
+literal|"argument must be a positive number"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1133,7 +1140,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"setting screensaver period"
 argument_list|)
@@ -1199,11 +1206,9 @@ literal|3
 expr_stmt|;
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"argument to -c must be normal, blink or destructive\n"
+literal|"argument to -c must be normal, blink or destructive"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1415,9 +1420,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"Cannot set videomode"
+literal|"cannot set videomode"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1720,15 +1725,10 @@ name|arg
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"vidcontrol: Bad console number\n"
+literal|"bad console number"
 argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -1750,15 +1750,10 @@ operator|>
 literal|12
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"vidcontrol: Console number out of range\n"
+literal|"console number out of range"
 argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
 expr_stmt|;
 block|}
 elseif|else
@@ -1780,7 +1775,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"ioctl(VT_ACTIVATE)"
 argument_list|)
@@ -1881,11 +1876,9 @@ name|MOUSE_HIDE
 expr_stmt|;
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"argument to -m must either on or off\n"
+literal|"argument to -m must either on or off"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2031,15 +2024,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|int
 name|opt
 decl_stmt|;
@@ -2066,16 +2050,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
-literal|"Must be on a virtual console"
+literal|1
+argument_list|,
+literal|"must be on a virtual console"
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
 while|while
 condition|(
 operator|(
@@ -2214,9 +2195,6 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
-return|return
-literal|1
-return|;
 block|}
 name|video_mode
 argument_list|(
@@ -2277,14 +2255,9 @@ operator|==
 literal|1
 operator|)
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
 return|return
 literal|0
 return|;
