@@ -212,7 +212,7 @@ name|PRINT
 parameter_list|(
 name|CH
 parameter_list|)
-value|{						\ 	if (dst>= s + maxsize) 				\ 		goto e2big_error;				\ 	*dst++ = CH;						\ }
+value|do {						\ 	if (dst>= s + maxsize) 				\ 		goto e2big_error;				\ 	*dst++ = CH;						\ } while (0)
 end_define
 
 begin_define
@@ -222,7 +222,7 @@ name|PRINTS
 parameter_list|(
 name|STR
 parameter_list|)
-value|{						\ 	char *tmps = STR;					\ 	while (*tmps != '\0')					\ 		PRINT(*tmps++);					\ }
+value|do {					\ 	char *tmps = STR;					\ 	while (*tmps != '\0')					\ 		PRINT(*tmps++);					\ } while (0)
 end_define
 
 begin_define
@@ -232,7 +232,24 @@ name|GET_NUMBER
 parameter_list|(
 name|VAR
 parameter_list|)
-value|{					\ 	VAR = 0;						\ 	while (isdigit((unsigned char)*fmt)) {			\ 		VAR *= 10;					\ 		VAR += *fmt - '0';				\ 		fmt++;						\ 	}							\ }
+value|do {					\ 	VAR = 0;						\ 	while (isdigit((unsigned char)*fmt)) {			\ 		VAR *= 10;					\ 		VAR += *fmt - '0';				\ 		fmt++;						\ 	}							\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GRPCPY
+parameter_list|(
+name|howmany
+parameter_list|)
+value|do {					\ 	int i = howmany;					\ 	while (i--> 0) {					\ 		avalue_size--;					\ 		*--bufend = *(avalue+avalue_size+padded);	\ 	}							\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GRPSEP
+value|do {						\ 	*--bufend = thousands_sep;				\ 	groups++;						\ } while (0)
 end_define
 
 begin_function_decl
@@ -483,11 +500,9 @@ name|fmt
 operator|!=
 literal|'%'
 condition|)
-block|{
 goto|goto
 name|literal
 goto|;
-block|}
 comment|/* '%' found ! */
 comment|/* "%%" mean just '%' */
 if|if
@@ -980,21 +995,17 @@ name|flags
 operator|&
 name|IS_NEGATIVE
 condition|)
-block|{
 name|PRINT
 argument_list|(
 literal|'('
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|PRINT
 argument_list|(
 literal|' '
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -1685,7 +1696,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|left_chars
+operator|)
 return|;
 block|}
 end_function
@@ -1722,7 +1735,9 @@ literal|0
 condition|)
 comment|/* no grouping ? */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 while|while
 condition|(
@@ -1784,7 +1799,9 @@ break|break;
 block|}
 block|}
 return|return
+operator|(
 name|chars
+operator|)
 return|;
 block|}
 end_function
@@ -1917,7 +1934,6 @@ name|thousands_sep
 operator|==
 literal|'\0'
 condition|)
-block|{
 name|thousands_sep
 operator|=
 operator|*
@@ -1925,7 +1941,6 @@ name|lc
 operator|->
 name|thousands_sep
 expr_stmt|;
-block|}
 comment|/* fill left_prec with default value */
 if|if
 condition|(
@@ -2035,7 +2050,9 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 comment|/* make sure that we've enough space for result string */
 name|bufsize
@@ -2069,7 +2086,9 @@ name|avalue
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|memset
@@ -2178,17 +2197,6 @@ operator|>
 literal|0
 condition|)
 block|{
-define|#
-directive|define
-name|GRPCPY
-parameter_list|(
-name|howmany
-parameter_list|)
-value|{					\ 	int i = howmany;					\ 	while (i--> 0) {					\ 		avalue_size--;					\ 		*--bufend = *(avalue+avalue_size+padded);	\ 	}							\ }
-define|#
-directive|define
-name|GRPSEP
-value|{						\ 	*--bufend = thousands_sep;				\ 	groups++;						\ }
 while|while
 condition|(
 name|avalue_size
@@ -2342,7 +2350,9 @@ name|avalue
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rslt
+operator|)
 return|;
 block|}
 end_function
