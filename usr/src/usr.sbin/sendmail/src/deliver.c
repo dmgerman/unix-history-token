@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.27	%G%"
+literal|"@(#)deliver.c	3.28	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2083,7 +2083,16 @@ operator|->
 name|m_flags
 argument_list|)
 condition|)
-continue|continue;
+block|{
+name|p
+operator|=
+literal|")><("
+expr_stmt|;
+comment|/* can't happen (I hope) */
+goto|goto
+name|checkfrom
+goto|;
+block|}
 if|if
 condition|(
 name|bitset
@@ -2161,6 +2170,63 @@ name|anyheader
 operator|=
 name|TRUE
 expr_stmt|;
+comment|/* hack, hack -- output Original-From field if different */
+name|checkfrom
+label|:
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|h
+operator|->
+name|h_field
+argument_list|,
+literal|"from"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+specifier|extern
+name|char
+modifier|*
+name|hvalue
+parameter_list|()
+function_decl|;
+name|char
+modifier|*
+name|ofrom
+init|=
+name|hvalue
+argument_list|(
+literal|"original-from"
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|ofrom
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+name|ofrom
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"Original-From: %s\n"
+argument_list|,
+name|ofrom
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

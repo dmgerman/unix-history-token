@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	3.3	%G%"
+literal|"@(#)headers.c	3.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,6 +145,25 @@ name|makelower
 argument_list|(
 name|fname
 argument_list|)
+expr_stmt|;
+comment|/* hack, hack -- save the old From: address */
+if|if
+condition|(
+operator|!
+name|def
+operator|&&
+name|strcmp
+argument_list|(
+name|fname
+argument_list|,
+literal|"from"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|fname
+operator|=
+literal|"original-from"
 expr_stmt|;
 comment|/* strip field value on front */
 if|if

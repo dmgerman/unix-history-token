@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.21	%G%"
+literal|"@(#)conf.c	3.22	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,13 @@ name|H_CHECK
 block|,
 name|M_NEEDFROM
 block|,
+literal|"original-from"
+block|,
+name|H_DELETE
+block|,
+literal|0
+block|,
+comment|/* internal */
 literal|"sender"
 block|,
 literal|0
