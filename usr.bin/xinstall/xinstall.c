@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.18.2.1 1997/08/28 06:24:41 charnier Exp $"
+literal|"$Id: xinstall.c,v 1.27 1997/10/28 14:20:10 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,6 +184,32 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
+
+begin_comment
+comment|/* Bootstrap aid - this doesn't exist in most older releases */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAP_FAILED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAP_FAILED
+value|((caddr_t)-1)
+end_define
+
+begin_comment
+comment|/* from<sys/mman.h> */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -432,12 +458,18 @@ end_ifdef
 begin_decl_stmt
 name|uid_t
 name|uid
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|gid_t
 name|gid
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -752,11 +784,7 @@ expr_stmt|;
 comment|/* some options make no sense when creating directories */
 if|if
 condition|(
-operator|(
-name|docompare
-operator|||
 name|dostrip
-operator|)
 operator|&&
 name|dodir
 condition|)
@@ -1711,11 +1739,48 @@ if|if
 condition|(
 name|dostrip
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|to_fd
+argument_list|)
+expr_stmt|;
 name|strip
 argument_list|(
 name|to_name
 argument_list|)
 expr_stmt|;
+comment|/* Reopen target. */
+name|to_fd
+operator|=
+name|open
+argument_list|(
+name|to_name
+argument_list|,
+name|O_RDWR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|to_fd
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"%s"
+argument_list|,
+name|to_name
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Unfortunately, because we strip the installed file and not the 	 * original one, it is impossible to do the comparison without 	 * first laboriously copying things over and then comparing. 	 * It may be possible to better optimize the !dostrip case, however. 	 * For further study. 	 */
 if|if
 condition|(
@@ -2370,7 +2435,7 @@ name|tsize
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|from_fd
 argument_list|,
@@ -2382,13 +2447,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|long
-operator|)
 name|p
 operator|==
-operator|-
-literal|1
+operator|(
+name|char
+operator|*
+operator|)
+name|MAP_FAILED
 condition|)
 goto|goto
 name|out
@@ -2403,7 +2468,7 @@ name|tsize
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|to_fd
 argument_list|,
@@ -2415,13 +2480,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|long
-operator|)
 name|q
 operator|==
-operator|-
-literal|1
+operator|(
+name|char
+operator|*
+operator|)
+name|MAP_FAILED
 condition|)
 block|{
 name|munmap
@@ -2720,7 +2785,7 @@ name|size
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|from_fd
 argument_list|,
@@ -2735,8 +2800,7 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 goto|goto
 name|out
@@ -3105,7 +3169,7 @@ name|mkdir
 argument_list|(
 name|path
 argument_list|,
-literal|0777
+literal|0755
 argument_list|)
 operator|<
 literal|0
@@ -3115,7 +3179,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"%s"
+literal|"mkdir %s"
 argument_list|,
 name|path
 argument_list|)
@@ -3123,6 +3187,26 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|S_ISDIR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"%s exists but is not a directory"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3137,7 +3221,6 @@ break|break;
 block|}
 if|if
 condition|(
-operator|(
 operator|(
 name|gid
 operator|!=
@@ -3164,8 +3247,20 @@ name|uid
 argument_list|,
 name|gid
 argument_list|)
-operator|)
-operator|||
+condition|)
+name|warn
+argument_list|(
+literal|"chown %u:%u %s"
+argument_list|,
+name|uid
+argument_list|,
+name|gid
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|chmod
 argument_list|(
 name|path
@@ -3173,15 +3268,15 @@ argument_list|,
 name|mode
 argument_list|)
 condition|)
-block|{
 name|warn
 argument_list|(
-literal|"%s"
+literal|"chmod %o %s"
+argument_list|,
+name|mode
 argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
