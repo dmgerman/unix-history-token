@@ -122,14 +122,6 @@ file|"extern.h"
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|long
-name|int
-name|crc_total
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|ftsoptions
 init|=
@@ -452,7 +444,7 @@ expr_stmt|;
 name|crc_total
 operator|=
 operator|~
-name|strtol
+name|strtoul
 argument_list|(
 name|optarg
 argument_list|,

@@ -204,14 +204,6 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|long
-name|int
-name|crc_total
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|ftsoptions
 decl_stmt|;
@@ -733,6 +725,10 @@ literal|"%s checksum: %lu"
 argument_list|,
 name|fullpath
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|crc_total
 argument_list|)
 expr_stmt|;
@@ -766,10 +762,11 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-name|u_long
-name|len
-decl_stmt|,
+name|uint32_t
 name|val
+decl_stmt|;
+name|off_t
+name|len
 decl_stmt|;
 name|int
 name|fd
@@ -1324,6 +1321,10 @@ name|offset
 argument_list|,
 literal|"cksum=%lu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|val
 argument_list|)
 expr_stmt|;

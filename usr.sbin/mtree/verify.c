@@ -109,14 +109,6 @@ end_include
 
 begin_decl_stmt
 specifier|extern
-name|long
-name|int
-name|crc_total
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|ftsoptions
 decl_stmt|;
@@ -709,6 +701,10 @@ literal|"%s checksum: %lu"
 argument_list|,
 name|fullpath
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|crc_total
 argument_list|)
 expr_stmt|;
