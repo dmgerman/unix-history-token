@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rpc_main.c,v 1.7 1998/01/09 06:32:54 jb Exp $"
+literal|"$Id: rpc_main.c,v 1.8 1998/01/15 08:46:58 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6166,11 +6166,13 @@ expr_stmt|;
 comment|/* set pmflag only in tirpcmode */
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-operator|||
+operator|&&
+operator|!
 name|defined
 argument_list|(
 name|__NetBSD__
