@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.15	81/02/26	*/
+comment|/*	autoconf.c	4.16	81/02/27	*/
 end_comment
 
 begin_comment
@@ -565,22 +565,6 @@ directive|if
 name|NMBA
 operator|>
 literal|0
-if|if
-condition|(
-name|nummba
-operator|>=
-literal|4
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"5 mba's"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|unsupp
-goto|;
-block|}
 name|printf
 argument_list|(
 literal|"mba%d at tr%d\n"
@@ -590,6 +574,24 @@ argument_list|,
 name|nexnum
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nummba
+operator|>=
+name|NMBA
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%d mba's not configured\n"
+argument_list|,
+name|nummba
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|mbafind
 argument_list|(
 name|nxv
@@ -976,6 +978,23 @@ argument_list|,
 name|nxp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nummba
+operator|>=
+name|NMBA
+condition|)
+name|printf
+argument_list|(
+literal|"%d mba's not configured\n"
+argument_list|,
+name|nummba
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|mbafind
 argument_list|(
 name|nxv
@@ -986,6 +1005,7 @@ expr_stmt|;
 name|nummba
 operator|++
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
