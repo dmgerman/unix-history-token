@@ -4889,6 +4889,27 @@ name|usbd_device_handle
 name|dev
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|dev
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"usbd_get_quirks: dev == NULL\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|dev
