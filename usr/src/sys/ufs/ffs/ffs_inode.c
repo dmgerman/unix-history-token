@@ -987,7 +987,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|u_long
+name|off_t
 name|length
 decl_stmt|;
 end_decl_stmt
@@ -1040,8 +1040,6 @@ decl_stmt|;
 name|int
 name|offset
 decl_stmt|,
-name|osize
-decl_stmt|,
 name|size
 decl_stmt|,
 name|level
@@ -1070,10 +1068,16 @@ name|struct
 name|inode
 name|tip
 decl_stmt|;
+name|off_t
+name|osize
+decl_stmt|;
 name|vnode_pager_setsize
 argument_list|(
 name|ovp
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|length
 argument_list|)
 expr_stmt|;
@@ -1569,9 +1573,6 @@ name|ip
 argument_list|,
 name|bn
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|fs
 operator|->
 name|fs_bsize
@@ -1614,7 +1615,7 @@ operator|--
 control|)
 block|{
 specifier|register
-name|off_t
+name|long
 name|bsize
 decl_stmt|;
 name|bn
@@ -1644,9 +1645,6 @@ literal|0
 expr_stmt|;
 name|bsize
 operator|=
-operator|(
-name|off_t
-operator|)
 name|blksize
 argument_list|(
 name|fs
@@ -1699,7 +1697,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|off_t
+name|long
 name|oldspace
 decl_stmt|,
 name|newspace
@@ -2331,9 +2329,6 @@ name|ip
 argument_list|,
 name|nb
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|fs
 operator|->
 name|fs_bsize

@@ -161,7 +161,7 @@ operator|*
 operator|,
 name|daddr_t
 operator|,
-name|off_t
+name|long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -447,7 +447,7 @@ expr|struct
 name|inode
 operator|*
 operator|,
-name|off_t
+name|daddr_t
 operator|,
 name|daddr_t
 operator|,
@@ -564,7 +564,7 @@ expr|struct
 name|vnode
 operator|*
 operator|,
-name|u_long
+name|off_t
 operator|,
 name|int
 operator|)
