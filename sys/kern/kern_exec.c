@@ -1142,6 +1142,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|setugidsafety
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
