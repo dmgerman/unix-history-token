@@ -1502,7 +1502,7 @@ parameter_list|,
 name|init
 parameter_list|)
 define|\
-value|SYSINIT(name, SI_SUB_PSEUDO, SI_ORDER_FIRST, init, NULL);
+value|SYSINIT(name, SI_SUB_DRIVERS, SI_ORDER_FIRST, init, NULL);
 end_define
 
 begin_define
