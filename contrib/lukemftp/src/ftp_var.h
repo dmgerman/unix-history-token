@@ -1276,6 +1276,17 @@ end_comment
 
 begin_decl_stmt
 name|GLOBAL
+name|sa_family_t
+name|family
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* address family to use for connections */
+end_comment
+
+begin_decl_stmt
+name|GLOBAL
 name|char
 modifier|*
 name|ftpport

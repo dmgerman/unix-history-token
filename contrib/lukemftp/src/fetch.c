@@ -3182,7 +3182,7 @@ name|hints
 operator|.
 name|ai_family
 operator|=
-name|AF_UNSPEC
+name|family
 expr_stmt|;
 name|hints
 operator|.
