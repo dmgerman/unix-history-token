@@ -415,6 +415,7 @@ comment|/* cache effectiveness statistics */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mtx
 name|cache_lock
@@ -602,6 +603,7 @@ comment|/*  * The new name cache statistics  */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_vfs
