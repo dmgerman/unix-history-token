@@ -1687,6 +1687,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|msg
+operator|==
+name|NULL
+condition|)
+name|warnx
+argument_list|(
+literal|"failed to allocate memory for log message"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
 name|LogFD
 operator|<
 name|OK
@@ -1738,7 +1751,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* we have to sprintf() it because fprintf() doesn't always write 	 * everything out in one chunk and this has to be atomically appended 	 * to the log file. 	 */
+comment|/* we have to sprintf() it because fprintf() doesn't always 		 * write everything out in one chunk and this has to be 		 * atomically appended to the log file. 		 */
 name|sprintf
 argument_list|(
 name|msg
@@ -1776,7 +1789,7 @@ argument_list|,
 name|detail
 argument_list|)
 expr_stmt|;
-comment|/* we have to run strlen() because sprintf() returns (char*) on old BSD 	 */
+comment|/* we have to run strlen() because sprintf() returns (char*) 		 * on old BSD. 		 */
 if|if
 condition|(
 name|LogFD
@@ -1834,6 +1847,7 @@ argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/*LOG_FILE*/
@@ -2270,6 +2284,12 @@ operator|+
 literal|1
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|dst
+operator|!=
+name|NULL
+condition|)
 name|mkprint
 argument_list|(
 name|dst
