@@ -3742,7 +3742,7 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-name|INP_INFO_RLOCK
+name|INP_INFO_WLOCK
 argument_list|(
 name|pcbinfo
 argument_list|)
@@ -3836,6 +3836,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
 call|(
 modifier|*
 name|notify
@@ -3845,14 +3847,14 @@ name|inp
 argument_list|,
 name|errno
 argument_list|)
-expr_stmt|;
+condition|)
 name|INP_UNLOCK
 argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_RUNLOCK
+name|INP_INFO_WUNLOCK
 argument_list|(
 name|pcbinfo
 argument_list|)
