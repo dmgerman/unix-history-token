@@ -374,7 +374,10 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|RF_Buf_t
+operator|*
+name|dqd
+operator|->
+name|bp
 argument_list|)
 argument_list|,
 name|M_RAIDFRAME
@@ -407,7 +410,10 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|RF_Buf_t
+operator|*
+name|dqd
+operator|->
+name|bp
 argument_list|)
 argument_list|)
 expr_stmt|;
