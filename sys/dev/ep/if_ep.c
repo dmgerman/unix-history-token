@@ -2060,10 +2060,6 @@ name|struct
 name|ep_softc
 modifier|*
 name|sc
-init|=
-name|ifp
-operator|->
-name|if_softc
 decl_stmt|;
 name|u_int
 name|len
@@ -2081,6 +2077,12 @@ name|s
 decl_stmt|,
 name|pad
 decl_stmt|;
+name|sc
+operator|=
+name|ifp
+operator|->
+name|if_softc
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -2140,6 +2142,8 @@ operator|=
 name|m0
 init|;
 name|m
+operator|!=
+name|NULL
 condition|;
 name|m
 operator|=
@@ -2174,10 +2178,10 @@ name|ETHER_MAX_LEN
 condition|)
 block|{
 comment|/* packet is obviously too large: toss it */
-operator|++
 name|ifp
 operator|->
 name|if_oerrors
+operator|++
 expr_stmt|;
 name|m_freem
 argument_list|(
