@@ -3512,6 +3512,24 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|nsegs
+operator|<
+literal|1
+condition|)
+block|{
+name|_rtld_error
+argument_list|(
+literal|"%s: too few PT_LOAD segments"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|obj
 operator|->
 name|entry
