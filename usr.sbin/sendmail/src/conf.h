@@ -4234,10 +4234,6 @@ directive|include
 file|<osreldate.h>
 end_include
 
-begin_comment
-comment|/* and this works */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -4247,7 +4243,7 @@ literal|199512
 end_if
 
 begin_comment
-comment|/* 2.2-current right now */
+comment|/* 2.2-current when it appeared */
 end_comment
 
 begin_include
@@ -4273,11 +4269,11 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|300000
+literal|222000
 end_if
 
 begin_comment
-comment|/* 3.0-current right now */
+comment|/* 2.2.2-release and later */
 end_comment
 
 begin_include
