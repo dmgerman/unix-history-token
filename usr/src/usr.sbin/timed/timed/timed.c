@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timed.c	2.10 (Berkeley) %G%"
+literal|"@(#)timed.c	2.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,6 +105,9 @@ name|int
 name|sock
 decl_stmt|,
 name|sock_raw
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1766,38 +1769,6 @@ condition|(
 name|Mflag
 condition|)
 block|{
-comment|/* open raw socket used to measure time differences */
-name|sock_raw
-operator|=
-name|socket
-argument_list|(
-name|AF_INET
-argument_list|,
-name|SOCK_RAW
-argument_list|,
-name|IPPROTO_ICMP
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sock_raw
-operator|<
-literal|0
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"opening raw socket: %m"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 		 * number (increased by 1) of slaves controlled by master:  		 * used in master.c, candidate.c, networkdelta.c, and  		 * correct.c  		 */
 name|slvcount
 operator|=
@@ -1932,6 +1903,81 @@ literal|"Attempt to enter invalid state"
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+name|status
+operator|&
+name|MASTER
+condition|)
+block|{
+comment|/* open raw socket used to measure time differences */
+if|if
+condition|(
+name|sock_raw
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|sock_raw
+operator|=
+name|socket
+argument_list|(
+name|AF_INET
+argument_list|,
+name|SOCK_RAW
+argument_list|,
+name|IPPROTO_ICMP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sock_raw
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"opening raw socket: %m"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+else|else
+block|{
+comment|/* sock_raw is not being used now */
+if|if
+condition|(
+name|sock_raw
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|sock_raw
+argument_list|)
+expr_stmt|;
+name|sock_raw
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
