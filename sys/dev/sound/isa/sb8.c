@@ -2356,7 +2356,7 @@ name|buffer
 operator|->
 name|dir
 operator|=
-name|B_WRITE
+name|ISADMA_WRITE
 expr_stmt|;
 name|sb
 operator|->
@@ -2366,7 +2366,7 @@ name|buffer
 operator|->
 name|dir
 operator|=
-name|B_READ
+name|ISADMA_READ
 expr_stmt|;
 block|}
 block|}

@@ -957,6 +957,8 @@ operator|>
 literal|0
 block|{
 name|INTR_TYPE_TTY
+operator||
+name|INTR_TYPE_FAST
 block|,
 operator|&
 name|lorandriver

@@ -22,16 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
-end_include
-
-begin_comment
-comment|/* B_READ and B_RAW */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -903,7 +893,7 @@ operator|!
 operator|(
 name|flags
 operator|&
-name|B_READ
+name|ISADMA_READ
 operator|)
 condition|)
 name|bcopy
@@ -938,7 +928,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_RAW
+name|ISADMA_RAW
 condition|)
 block|{
 name|dma_auto_mode
@@ -975,19 +965,19 @@ condition|)
 block|{
 comment|/* 		 * Program one of DMA channels 0..3.  These are 		 * byte mode channels. 		 */
 comment|/* set dma channel mode, and reset address ff */
-comment|/* If B_RAW flag is set, then use autoinitialise mode */
+comment|/* If ISADMA_RAW flag is set, then use autoinitialise mode */
 if|if
 condition|(
 name|flags
 operator|&
-name|B_RAW
+name|ISADMA_RAW
 condition|)
 block|{
 if|if
 condition|(
 name|flags
 operator|&
-name|B_READ
+name|ISADMA_READ
 condition|)
 name|outb
 argument_list|(
@@ -1018,7 +1008,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_READ
+name|ISADMA_READ
 condition|)
 name|outb
 argument_list|(
@@ -1121,19 +1111,19 @@ else|else
 block|{
 comment|/* 		 * Program one of DMA channels 4..7.  These are 		 * word mode channels. 		 */
 comment|/* set dma channel mode, and reset address ff */
-comment|/* If B_RAW flag is set, then use autoinitialise mode */
+comment|/* If ISADMA_RAW flag is set, then use autoinitialise mode */
 if|if
 condition|(
 name|flags
 operator|&
-name|B_RAW
+name|ISADMA_RAW
 condition|)
 block|{
 if|if
 condition|(
 name|flags
 operator|&
-name|B_READ
+name|ISADMA_READ
 condition|)
 name|outb
 argument_list|(
@@ -1172,7 +1162,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_READ
+name|ISADMA_READ
 condition|)
 name|outb
 argument_list|(
@@ -1431,7 +1421,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_READ
+name|ISADMA_READ
 condition|)
 name|bcopy
 argument_list|(

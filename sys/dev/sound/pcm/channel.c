@@ -3660,7 +3660,7 @@ name|b
 operator|->
 name|dir
 operator||
-name|B_RAW
+name|ISADMA_RAW
 argument_list|,
 name|b
 operator|->
@@ -3705,7 +3705,7 @@ name|b
 operator|->
 name|dir
 operator||
-name|B_RAW
+name|ISADMA_RAW
 argument_list|,
 name|b
 operator|->
@@ -4843,9 +4843,9 @@ operator|==
 name|PCMDIR_PLAY
 operator|)
 condition|?
-name|B_WRITE
+name|ISADMA_WRITE
 else|:
-name|B_READ
+name|ISADMA_READ
 expr_stmt|;
 return|return
 name|r

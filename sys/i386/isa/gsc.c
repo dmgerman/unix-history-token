@@ -1147,7 +1147,7 @@ argument_list|)
 expr_stmt|;
 name|isa_dmastart
 argument_list|(
-name|B_READ
+name|ISADMA_READ
 argument_list|,
 name|scu
 operator|->
@@ -1272,7 +1272,7 @@ argument_list|)
 expr_stmt|;
 name|isa_dmadone
 argument_list|(
-name|B_READ
+name|ISADMA_READ
 argument_list|,
 name|scu
 operator|->

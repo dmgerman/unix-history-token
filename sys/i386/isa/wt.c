@@ -554,7 +554,7 @@ comment|/* size of i/o buffer */
 name|unsigned
 name|dmaflags
 decl_stmt|;
-comment|/* i/o direction, B_READ or B_WRITE */
+comment|/* i/o direction, ISADMA_READ or ISADMA_WRITE */
 name|unsigned
 name|dmacount
 decl_stmt|;
@@ -2994,6 +2994,12 @@ argument_list|,
 name|bp
 operator|->
 name|b_flags
+operator|&
+name|B_READ
+condition|?
+name|ISADMA_READ
+else|:
+name|ISADMA_WRITE
 argument_list|,
 name|bp
 operator|->
@@ -3378,7 +3384,7 @@ name|t
 operator|->
 name|dmaflags
 operator|&
-name|B_READ
+name|ISADMA_READ
 operator|)
 operator|&&
 operator|(
@@ -3518,7 +3524,7 @@ name|t
 operator|->
 name|dmaflags
 operator|&
-name|B_READ
+name|ISADMA_READ
 operator|)
 condition|?
 name|TP_WRP
@@ -4365,7 +4371,7 @@ name|t
 operator|->
 name|dmaflags
 operator|&
-name|B_READ
+name|ISADMA_READ
 operator|)
 operator|&&
 operator|(
