@@ -7559,7 +7559,9 @@ index|]
 argument_list|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|MALLOC
 argument_list|(
