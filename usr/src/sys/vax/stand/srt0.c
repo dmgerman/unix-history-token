@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	srt0.c	4.3	%G%	*/
+comment|/*	srt0.c	4.4	%G%	*/
 end_comment
 
 begin_comment
@@ -42,7 +42,7 @@ name|mask
 end_expr_stmt
 
 begin_for
-for|for total disable  	.word	0x0 	mtpr	$HIGH
+for|for total disable  entry:	.globl	entry 	.word	0x0 	mtpr	$HIGH
 operator|,
 name|$IPL
 operator|#
@@ -52,12 +52,23 @@ end_for
 
 begin_case
 case|case
+name|mtpr
+name|$_Scbbase
+operator|,
+name|$SCBB
 name|movl
+name|$RELOC
+operator|-
+literal|0x2400
+operator|,
+name|sp
+name|mtpr
 name|$RELOC
 operator|-
 literal|0x2000
 operator|,
-name|sp
+name|$ISP
+comment|/* space for interrupts 					/* (in case we are not using that 					/* stack already) 					*/
 if|#
 directive|if
 name|VAX
@@ -65,14 +76,19 @@ operator|==
 literal|780
 name|movl
 name|$1
-decl_stmt|,
+operator|,
 name|PHYSUBA
-decl|+4		#
+operator|+
+literal|4
+operator|#
 name|init
 name|ubic
-range|:
+case|:
+end_case
+
+begin_decl_stmt
 name|movl
-operator|*
+modifier|*
 name|$PHYSUBA
 decl_stmt|,
 name|r0
@@ -94,10 +110,15 @@ decl_stmt|,
 name|r0
 decl|# 	continue
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|jeql
 name|ubic
 endif|#
 directive|endif
+name|start
+range|:
 name|movab
 name|_edata
 decl_stmt|,
@@ -115,8 +136,6 @@ decl_stmt|,
 name|sp
 name|jlss
 name|clr
-name|start
-range|:
 name|calls
 name|$0
 decl_stmt|,
@@ -130,7 +149,7 @@ name|word
 literal|0x0
 name|jmp
 name|start
-end_case
+end_decl_stmt
 
 end_unit
 
