@@ -783,8 +783,8 @@ condition|(
 name|buf
 operator|->
 name|uio_resid
-operator|>=
-name|DMA_ALIGN_THRESHOLD
+operator|>
+literal|0
 condition|)
 block|{
 name|s
@@ -922,6 +922,17 @@ argument_list|,
 name|l
 argument_list|,
 name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"no feed"
 argument_list|)
 expr_stmt|;
 name|s
