@@ -3744,17 +3744,6 @@ operator|->
 name|intline
 operator|!=
 literal|255
-ifdef|#
-directive|ifdef
-name|__i386__
-operator|&&
-name|cfg
-operator|->
-name|intline
-operator|!=
-literal|0
-endif|#
-directive|endif
 condition|)
 block|{
 ifdef|#
@@ -4810,7 +4799,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	     * Scan the class/subclass descriptions for a general description. 	     */
+comment|/* 		 * Scan the class/subclass descriptions for a general 		 * description. 		 */
 name|cp
 operator|=
 literal|"unknown"
@@ -5857,7 +5846,7 @@ operator|==
 name|dev
 condition|)
 block|{
-comment|/* 		 * If device doesn't have an interrupt routed, and is deserving of  		 * an interrupt, try to assign it one. 		 */
+comment|/* 		 * If device doesn't have an interrupt routed, and is 		 * deserving of  an interrupt, try to assign it one. 		 */
 if|if
 condition|(
 operator|(
@@ -5880,6 +5869,7 @@ operator|==
 literal|0
 operator|)
 operator|&&
+comment|/* 0 bad? */
 operator|(
 name|cfg
 operator|->
