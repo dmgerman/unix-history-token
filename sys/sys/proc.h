@@ -1083,7 +1083,7 @@ begin_define
 define|#
 directive|define
 name|P_PROFPEND
-value|0x08000
+value|0x10000
 end_define
 
 begin_comment
