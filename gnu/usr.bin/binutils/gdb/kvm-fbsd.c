@@ -1575,8 +1575,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|KSYM_OLDSYSCALL
+value|"Xlcall_syscall"
+end_define
+
+begin_define
+define|#
+directive|define
 name|KSYM_SYSCALL
-value|"Xsyscall"
+value|"Xint0x80_syscall"
 end_define
 
 begin_comment
@@ -1723,6 +1730,18 @@ name|sym
 argument_list|)
 argument_list|,
 name|KSYM_SYSCALL
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|SYMBOL_NAME
+argument_list|(
+name|sym
+argument_list|)
+argument_list|,
+name|KSYM_OLDSYSCALL
 argument_list|)
 operator|==
 literal|0
