@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -143,19 +143,19 @@ name|u_long
 name|i_reclen
 decl_stmt|;
 comment|/* size of found directory entry */
-comment|/* 	 * the on-disk dinode itself. 	 */
-name|struct
-name|dinode
-name|i_din
-decl_stmt|;
-comment|/* the on-disk dinode */
 name|long
 name|i_spare
 index|[
 literal|11
 index|]
 decl_stmt|;
-comment|/* spares to round up to 256 bytes */
+comment|/* spares to round up to 128 bytes */
+comment|/* 	 * the on-disk dinode itself. 	 */
+name|struct
+name|dinode
+name|i_din
+decl_stmt|;
+comment|/* 128 bytes of the on-disk dinode */
 block|}
 struct|;
 end_struct
