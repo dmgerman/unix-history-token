@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Excelan Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_exreg.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Excelan Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_exreg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -292,11 +292,15 @@ name|XMIT_BITS
 value|"\7\7LENGTH\6CARRIER\5XCLSNS\4SQETST"
 end_define
 
+begin_comment
+comment|/*#define	LLXM_ERROR	(LLXM_NSQE|LLXM_CLSN|LLXM_NCS|LLXM_LNGTH)*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|LLXM_ERROR
-value|(LLXM_NSQE|LLXM_CLSN|LLXM_NCS|LLXM_LNGTH)
+value|(LLXM_CLSN|LLXM_NCS|LLXM_LNGTH)
 end_define
 
 begin_comment
@@ -602,12 +606,6 @@ begin_comment
 comment|/* promiscuous reception */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEWEX
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -618,29 +616,6 @@ end_define
 begin_comment
 comment|/* number fragments that the EXOS will scatter/gather */
 end_comment
-
-begin_else
-else|#
-directive|else
-else|NEWEX
-end_else
-
-begin_define
-define|#
-directive|define
-name|NFRAGMENTS
-value|1
-end_define
-
-begin_comment
-comment|/* number fragments that the EXOS will scatter/gather */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|NEWEX
-end_endif
 
 begin_define
 define|#
@@ -659,7 +634,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|stat_array
+name|ex_stat
 block|{
 name|u_long
 name|sa_fsent
@@ -1097,7 +1072,7 @@ end_define
 
 begin_struct
 struct|struct
-name|confmsg
+name|ex_conf
 block|{
 comment|/*00*/
 name|u_short

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_vba.c	1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_vba.c	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -94,7 +94,11 @@ argument|ifvba0
 argument_list|,
 argument|n
 argument_list|,
-argument|size
+argument|bufsize
+argument_list|,
+argument|extra
+argument_list|,
+argument|extrasize
 argument_list|)
 end_macro
 
@@ -115,7 +119,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|size
+name|bufsize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|caddr_t
+modifier|*
+name|extra
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|extrasize
 decl_stmt|;
 end_decl_stmt
 
@@ -152,9 +169,13 @@ name|n
 operator|=
 name|roundup
 argument_list|(
+name|extrasize
+operator|+
+operator|(
 name|n
 operator|*
-name|size
+name|bufsize
+operator|)
 argument_list|,
 name|NBPG
 argument_list|)
@@ -178,6 +199,32 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|n
+operator|+
+name|kvtophys
+argument_list|(
+name|cp
+argument_list|)
+operator|)
+operator|>
+name|VB_MAXADDR24
+condition|)
+block|{
+name|free
+argument_list|(
+name|cp
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|cp
 operator|==
 literal|0
@@ -185,7 +232,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"No memory for device buffer\n"
+literal|"No memory for device buffer(s)\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -230,6 +277,21 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|extra
+condition|)
+block|{
+operator|*
+name|extra
+operator|=
+name|cp
+expr_stmt|;
+name|cp
+operator|+=
+name|extrasize
+expr_stmt|;
+block|}
 for|for
 control|(
 init|;
@@ -258,7 +320,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|+=
-name|size
+name|bufsize
 expr_stmt|;
 block|}
 return|return
@@ -289,8 +351,7 @@ name|ifp
 parameter_list|,
 name|flags
 parameter_list|)
-name|u_char
-modifier|*
+name|caddr_t
 name|rxbuf
 decl_stmt|;
 name|int
@@ -307,8 +368,7 @@ name|ifp
 decl_stmt|;
 block|{
 specifier|register
-name|u_char
-modifier|*
+name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
@@ -334,8 +394,7 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-name|u_char
-modifier|*
+name|caddr_t
 name|packet_end
 decl_stmt|;
 name|rxbuf
@@ -589,8 +648,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|u_char
-operator|*
+name|caddr_t
 argument_list|)
 argument_list|,
 operator|(
@@ -608,8 +666,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|u_char
-operator|*
+name|caddr_t
 argument_list|)
 argument_list|,
 operator|(
@@ -657,24 +714,24 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_macro
 name|if_vbaput
 argument_list|(
-name|ifu
+argument|ifu
 argument_list|,
-name|m0
+argument|m0
 argument_list|,
-name|flags
+argument|flags
 argument_list|)
-specifier|register
-name|u_char
-operator|*
-name|ifu
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
-specifier|register
+name|caddr_t
+name|ifu
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
@@ -693,8 +750,7 @@ init|=
 name|m0
 decl_stmt|;
 specifier|register
-name|u_char
-modifier|*
+name|caddr_t
 name|cp
 init|=
 name|ifu
@@ -714,12 +770,14 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|u_char
-operator|*
+name|caddr_t
 argument_list|)
 argument_list|,
 name|cp
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|m
 operator|->
 name|m_len
@@ -732,12 +790,14 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|u_char
-operator|*
+name|caddr_t
 argument_list|)
 argument_list|,
 name|cp
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|m
 operator|->
 name|m_len
@@ -796,18 +856,16 @@ argument_list|,
 name|cnt
 argument_list|)
 specifier|register
-name|u_char
-operator|*
+name|caddr_t
 name|from
 operator|,
-operator|*
 name|to
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
 specifier|register
-name|u_int
+name|unsigned
 name|cnt
 decl_stmt|;
 end_decl_stmt
@@ -943,16 +1001,14 @@ comment|/* odd len */
 name|from
 operator|=
 operator|(
-name|u_char
-operator|*
+name|caddr_t
 operator|)
 name|f
 expr_stmt|;
 name|to
 operator|=
 operator|(
-name|u_char
-operator|*
+name|caddr_t
 operator|)
 name|t
 expr_stmt|;
