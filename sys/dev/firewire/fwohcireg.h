@@ -1163,6 +1163,7 @@ name|fwohcireg_t
 name|dummy3
 decl_stmt|;
 block|}
+name|dummy8
 struct|;
 comment|/*       0x180, 0x184, 0x188, 0x18c */
 comment|/*       0x190, 0x194, 0x198, 0x19c */
@@ -1197,6 +1198,7 @@ name|fwohcireg_t
 name|cmd
 decl_stmt|;
 block|}
+name|dummy9
 struct|;
 name|struct
 name|ohci_itdma
