@@ -2847,12 +2847,18 @@ name|working
 operator|->
 name|numlogs
 argument_list|)
+operator|||
+name|working
+operator|->
+name|numlogs
+operator|<
+literal|0
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"error in config file; bad number:\n%s"
+literal|"error in config file; bad value for count of logs to save:\n%s"
 argument_list|,
 name|errline
 argument_list|)
