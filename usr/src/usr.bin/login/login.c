@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.43 (Berkeley) %G%"
+literal|"@(#)login.c	5.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -870,6 +870,13 @@ case|case
 literal|'?'
 case|:
 default|default:
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"invalid flag"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1259,12 +1266,17 @@ argument_list|()
 decl_stmt|;
 name|passwd_req
 operator|=
+ifndef|#
+directive|ifndef
+name|KERBEROS
 name|pwd
 operator|->
 name|pw_uid
 operator|==
 literal|0
 operator|||
+endif|#
+directive|endif
 operator|(
 name|uid
 operator|&&
@@ -1617,6 +1629,11 @@ literal|"Logging in with home = \"/\".\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|BSD
+operator|>
+literal|43
 define|#
 directive|define
 name|TWOWEEKS
@@ -1995,6 +2012,8 @@ name|tm_year
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* nothing else left to fail -- really log in */
 block|{
 name|struct
@@ -2525,6 +2544,11 @@ operator|->
 name|pw_shell
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|BSD
+operator|>
+literal|43
 if|if
 condition|(
 name|setlogname
@@ -2550,6 +2574,8 @@ argument_list|,
 literal|"setlogname() failure: %m"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* discard permissions last so can't get killed and drop core */
 operator|(
 name|void
@@ -2814,16 +2840,13 @@ name|fd
 decl_stmt|,
 name|nchars
 decl_stmt|;
-name|int
-argument_list|(
-operator|*
+name|sig_t
 name|oldint
-argument_list|)
-argument_list|()
-decl_stmt|,
-name|sigint
-argument_list|()
 decl_stmt|;
+name|int
+name|sigint
+parameter_list|()
+function_decl|;
 name|char
 name|tbuf
 index|[
