@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkubglue.c	1.7	82/10/25	*/
+comment|/*	mkubglue.c	1.8	83/06/16	*/
 end_comment
 
 begin_comment
@@ -313,7 +313,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\tmovl\t$%d,r0\n\tjmp\t_dzdma\n\n"
+literal|"\tmovl\t$%d,r0\n\tjmp\tdzdma\n\n"
 argument_list|,
 name|number
 argument_list|)
@@ -329,6 +329,44 @@ argument_list|,
 name|number
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|vector
+argument_list|,
+literal|"uur"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#ifdef UUDMA\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\tmovl\t$%d,r0\n\tjsb\tuudma\n"
+argument_list|,
+name|number
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#endif\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|fp
