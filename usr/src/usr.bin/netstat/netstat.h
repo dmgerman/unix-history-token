@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)netstat.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)netstat.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -37,16 +37,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* show i/f dropped packets */
-end_comment
-
-begin_decl_stmt
-name|int
-name|hflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* show IMP host table */
 end_comment
 
 begin_decl_stmt

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1047,7 +1047,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AaBdf:hI:iM:mN:np:rstuw:"
+literal|"AaBdf:I:iM:mN:np:rstuw:"
 argument_list|)
 operator|)
 operator|!=
@@ -1178,14 +1178,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
-case|case
-literal|'h'
-case|:
-name|hflag
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 literal|'I'
@@ -1613,34 +1605,6 @@ argument_list|,
 name|tp
 operator|->
 name|pr_name
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|hflag
-condition|)
-block|{
-name|hostpr
-argument_list|(
-name|nl
-index|[
-name|N_IMP
-index|]
-operator|.
-name|n_value
-argument_list|,
-name|nl
-index|[
-name|N_NIMP
-index|]
-operator|.
-name|n_value
 argument_list|)
 expr_stmt|;
 name|exit
