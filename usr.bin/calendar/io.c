@@ -1496,7 +1496,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"calendar: setegid failed\n"
+literal|"calendar: setgid failed\n"
 argument_list|)
 expr_stmt|;
 name|_exit
@@ -1519,7 +1519,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"caelndar: setuid failed\n"
+literal|"calendar: setuid failed\n"
 argument_list|)
 expr_stmt|;
 name|_exit
@@ -1874,7 +1874,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"calendar: setegid failed\n"
+literal|"calendar: setgid failed\n"
 argument_list|)
 expr_stmt|;
 name|_exit
@@ -1897,7 +1897,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"caelndar: setuid failed\n"
+literal|"calendar: setuid failed\n"
 argument_list|)
 expr_stmt|;
 name|_exit
