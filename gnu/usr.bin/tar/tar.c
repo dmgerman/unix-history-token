@@ -4,7 +4,7 @@ comment|/* Tar -- a tape archiver.    Copyright (C) 1988, 1992, 1993 Free Softwa
 end_comment
 
 begin_comment
-comment|/*  * A tar (tape archiver) program.  *  * Written by John Gilmore, ihnp4!hoptoad!gnu, starting 25 Aug 85.  */
+comment|/*  * A tar (tape archiver) program.  *  * Written by John Gilmore, ihnp4!hoptoad!gnu, starting 25 Aug 85.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1055,6 +1055,16 @@ literal|'z'
 block|}
 block|,
 block|{
+literal|"gunzip"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'z'
+block|}
+block|,
+block|{
 literal|"ungzip"
 block|,
 literal|0
@@ -1064,6 +1074,7 @@ block|,
 literal|'z'
 block|}
 block|,
+comment|/* for backwards compatibility with former typo */
 block|{
 literal|"use-compress-program"
 block|,
