@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expr.c 4.4 %G%"
+literal|"@(#)expr.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1007,34 +1007,15 @@ name|IF
 name|d
 operator|--
 name|THEN
-name|IF
-name|d
-operator|==
-literal|1
-name|THEN
 name|expv
-operator|<<=
-literal|16
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|FI
+operator|=
+operator|(
 name|expv
-operator||=
-operator|(
-operator|(
-name|d
-operator|&
-literal|1
-operator|)
-condition|?
-name|lastc
-else|:
-name|lastc
 operator|<<
 literal|8
 operator|)
+operator||
+name|lastc
 expr_stmt|;
 end_expr_stmt
 
