@@ -15,6 +15,44 @@ directive|define
 name|_STDARG_H_
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+name|__GNUC__
+operator|&&
+operator|(
+operator|(
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+literal|96
+operator|)
+operator|||
+name|__GNUC__
+operator|>
+literal|2
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/gcc_stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __GNUC__ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -102,6 +140,15 @@ parameter_list|(
 name|ap
 parameter_list|)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GNUC__ */
+end_comment
 
 begin_endif
 endif|#
