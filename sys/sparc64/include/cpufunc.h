@@ -597,7 +597,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_long
+name|register_t
 name|intr_disable
 parameter_list|(
 name|void
