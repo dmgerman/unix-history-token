@@ -1924,6 +1924,15 @@ name|flags
 operator|&
 name|G_PF_CANDELETE
 expr_stmt|;
+if|if
+condition|(
+name|pp2
+operator|->
+name|stripesize
+operator|>
+literal|0
+condition|)
+block|{
 name|pp
 operator|->
 name|stripesize
@@ -1948,6 +1957,7 @@ name|pp
 operator|->
 name|stripesize
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|bootverbose
