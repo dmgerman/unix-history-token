@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.44 1996/04/13 13:31:27 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.45 1996/04/23 01:29:12 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -214,7 +214,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"cuaa0"
 block|,
-literal|"Serial port (COM1) - possible PPP/SLIP device"
+literal|"Serial port (COM1) configured as %s device"
 block|}
 block|,
 block|{
@@ -222,7 +222,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"cuaa1"
 block|,
-literal|"Serial port (COM2) - possible PPP/SLIP device"
+literal|"Serial port (COM2) configured as %s device"
 block|}
 block|,
 block|{
@@ -230,7 +230,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"cuaa2"
 block|,
-literal|"Serial port (COM3) - possible PPP/SLIP device"
+literal|"Serial port (COM3) configured as %s device"
 block|}
 block|,
 block|{
@@ -238,7 +238,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"cuaa3"
 block|,
-literal|"Serial port (COM4) - possible PPP/SLIP device"
+literal|"Serial port (COM4) configured as %s device"
 block|}
 block|,
 block|{
@@ -689,6 +689,120 @@ argument_list|(
 literal|"Too many devices found!"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+literal|"cuaa"
+argument_list|,
+name|name
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+block|{
+name|char
+modifier|*
+name|newdesc
+decl_stmt|;
+comment|/* Serial devices get a slip and ppp device each - trap here and special case the registration */
+name|newdesc
+operator|=
+name|safe_malloc
+argument_list|(
+name|strlen
+argument_list|(
+name|desc
+argument_list|)
+operator|+
+literal|5
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|newdesc
+argument_list|,
+name|desc
+argument_list|,
+literal|"sl0"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|deviceRegister
+argument_list|(
+literal|"sl0"
+argument_list|,
+name|newdesc
+argument_list|,
+name|devname
+argument_list|,
+name|type
+argument_list|,
+name|enabled
+argument_list|,
+name|init
+argument_list|,
+name|get
+argument_list|,
+name|close
+argument_list|,
+name|shutdown
+argument_list|,
+name|private
+argument_list|)
+expr_stmt|;
+name|newdesc
+operator|=
+name|safe_malloc
+argument_list|(
+name|strlen
+argument_list|(
+name|desc
+argument_list|)
+operator|+
+literal|5
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|newdesc
+argument_list|,
+name|desc
+argument_list|,
+literal|"ppp0"
+argument_list|)
+expr_stmt|;
+name|newdev
+operator|=
+name|deviceRegister
+argument_list|(
+literal|"ppp0"
+argument_list|,
+name|newdesc
+argument_list|,
+name|devname
+argument_list|,
+name|type
+argument_list|,
+name|enabled
+argument_list|,
+name|init
+argument_list|,
+name|get
+argument_list|,
+name|close
+argument_list|,
+name|shutdown
+argument_list|,
+name|private
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|newdev
 operator|=
 name|new_device
@@ -781,6 +895,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 return|return
 name|newdev
 return|;
