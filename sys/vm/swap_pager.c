@@ -931,6 +931,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|swap_zone
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"swap_pager_swap_init: swap_zone == NULL"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize our meta-data hash table.  The swapper does not need to 	 * be quite as efficient as the VM system, so we do not use an  	 * oversized hash table. 	 * 	 * 	n: 		size of hash table, must be power of 2 	 *	swhash_mask:	hash table index mask 	 */
 for|for
 control|(
