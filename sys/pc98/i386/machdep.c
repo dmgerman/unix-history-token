@@ -202,6 +202,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ucontext.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vmmeter.h>
 end_include
 
@@ -3692,7 +3698,7 @@ name|td
 decl_stmt|;
 name|struct
 name|sigreturn_args
-comment|/* { 		ucontext_t *sigcntxp; 	} */
+comment|/* { 		const __ucontext *sigcntxp; 	} */
 modifier|*
 name|uap
 decl_stmt|;
