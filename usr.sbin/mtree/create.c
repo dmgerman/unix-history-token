@@ -566,7 +566,9 @@ name|fts_path
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|p
+operator|->
+name|fts_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
