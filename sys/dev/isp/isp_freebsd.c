@@ -641,6 +641,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|CAMLOCK_2_ISPLOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * If we have a second channel, construct SIM entry for that. 	 */
 if|if
