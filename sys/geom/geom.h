@@ -1238,6 +1238,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|g_write_data
+parameter_list|(
+name|struct
+name|g_consumer
+modifier|*
+name|cp
+parameter_list|,
+name|off_t
+name|offset
+parameter_list|,
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|off_t
+name|length
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* geom_kern.c / geom_kernsim.c */
 end_comment
