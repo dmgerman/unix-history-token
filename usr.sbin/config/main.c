@@ -95,11 +95,56 @@ directive|include
 file|"config.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TRUE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TRUE
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FALSE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FALSE
+value|(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|PREFIX
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|no_config_clobber
+init|=
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -154,7 +199,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"gp"
+literal|"gpn"
 argument_list|)
 operator|)
 operator|!=
@@ -177,6 +222,14 @@ literal|'p'
 case|:
 name|profiling
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|no_config_clobber
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -206,7 +259,7 @@ name|usage
 label|:
 name|fputs
 argument_list|(
-literal|"usage: config [-gp] sysname\n"
+literal|"usage: config [-gpn] sysname\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -245,32 +298,17 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|CONFIG_DONT_CLOBBER
 if|if
 condition|(
-name|stat
+name|getenv
 argument_list|(
-name|p
-operator|=
-name|path
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|)
-argument_list|,
-operator|&
-name|buf
+literal|"NO_CONFIG_CLOBBER"
 argument_list|)
 condition|)
-block|{
-else|#
-directive|else
-comment|/* CONFIG_DONT_CLOBBER */
+name|no_config_clobber
+operator|=
+name|TRUE
+expr_stmt|;
 name|p
 operator|=
 name|path
@@ -293,9 +331,6 @@ name|buf
 argument_list|)
 condition|)
 block|{
-endif|#
-directive|endif
-comment|/* CONFIG_DONT_CLOBBER */
 if|if
 condition|(
 name|mkdir
@@ -346,11 +381,13 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|CONFIG_DONT_CLOBBER
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|no_config_clobber
+condition|)
 block|{
 name|char
 name|tmp
@@ -440,9 +477,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* CONFIG_DONT_CLOBBER */
 block|}
 name|loadaddress
 operator|=
@@ -611,7 +645,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * get_word  *	returns EOF on end of file  *	NULL on end of line  *	pointer to the word otherwise  */
+end_comment
+
+begin_function
 name|char
 modifier|*
 name|get_word
@@ -801,7 +841,13 @@ name|line
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * get_quoted_word  *	like get_word but will accept something in double or single quotes  *	(to allow embedded spaces).  */
+end_comment
+
+begin_function
 name|char
 modifier|*
 name|get_quoted_word
@@ -1071,7 +1117,13 @@ name|line
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * prepend the path to a filename  */
+end_comment
+
+begin_function
 name|char
 modifier|*
 name|path
