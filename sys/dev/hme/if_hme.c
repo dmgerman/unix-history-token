@@ -4972,12 +4972,6 @@ operator|&
 name|cflags
 argument_list|)
 expr_stmt|;
-name|td
-operator|->
-name|htx_m
-operator|=
-name|m0
-expr_stmt|;
 name|cba
 operator|.
 name|hta_sc
@@ -5078,6 +5072,12 @@ name|td
 argument_list|,
 name|htx_q
 argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|htx_m
+operator|=
+name|m0
 expr_stmt|;
 comment|/* Turn descriptor ownership to the hme, back to forth. */
 name|ri
