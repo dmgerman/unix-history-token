@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sccsid = "@(#)machdep.h	2.1 %G%";  */
+comment|/*  * sccsid = "@(#)machdep.h	2.2 %G%";  */
 end_comment
 
 begin_define
@@ -63,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|BUFSIZE
-value|2024
+value|4096
 end_define
 
 end_unit
