@@ -146,6 +146,7 @@ comment|/* holds usable tail of path vector */
 end_comment
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|tskip
@@ -154,9 +155,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
-name|tgetstr
+name|tdecode
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -164,7 +166,7 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|tdecode
+name|tgetstr
 parameter_list|()
 function_decl|;
 end_function_decl
