@@ -216,7 +216,9 @@ operator|==
 literal|0
 operator|||
 operator|(
-name|ke
+name|td
+operator|->
+name|td_kse
 operator|->
 name|ke_flags
 operator|&
@@ -321,12 +323,6 @@ condition|)
 block|{
 name|thread_userret
 argument_list|(
-name|p
-argument_list|,
-name|kg
-argument_list|,
-name|ke
-argument_list|,
 name|td
 argument_list|,
 name|frame
@@ -422,10 +418,6 @@ name|struct
 name|kse
 modifier|*
 name|ke
-init|=
-name|td
-operator|->
-name|td_kse
 decl_stmt|;
 name|struct
 name|ksegrp
@@ -546,6 +538,12 @@ argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
+expr_stmt|;
+name|ke
+operator|=
+name|td
+operator|->
+name|td_kse
 expr_stmt|;
 name|sticks
 operator|=
