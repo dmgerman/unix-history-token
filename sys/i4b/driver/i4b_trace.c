@@ -320,41 +320,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|501113
-end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TTIPRI
-end_ifndef
-
-begin_comment
-comment|/* don't want to include tty.h just to get this */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TTIPRI
-value|(PSOCK + 1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	interface attach routine  *---------------------------------------------------------------------------*/
 end_comment
@@ -1267,7 +1232,7 @@ index|]
 operator|.
 name|ifq_mtx
 argument_list|,
-name|TTIPRI
+name|I4BPRI
 operator||
 name|PCATCH
 argument_list|,

@@ -305,41 +305,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|501113
-end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TTIPRI
-end_ifndef
-
-begin_comment
-comment|/* don't want to include tty.h just to get this */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TTIPRI
-value|(PSOCK + 1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	interface attach routine  *---------------------------------------------------------------------------*/
 end_comment
@@ -3270,7 +3235,7 @@ argument_list|(
 operator|&
 name|select_rd_info
 argument_list|,
-name|TTIPRI
+name|I4BPRI
 argument_list|)
 expr_stmt|;
 block|}
@@ -3402,7 +3367,7 @@ argument_list|(
 operator|&
 name|select_rd_info
 argument_list|,
-name|TTIPRI
+name|I4BPRI
 argument_list|)
 expr_stmt|;
 block|}

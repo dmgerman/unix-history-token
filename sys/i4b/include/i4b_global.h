@@ -177,6 +177,17 @@ comment|/* a timer is idle	*/
 end_comment
 
 begin_comment
+comment|/* priority */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I4BPRI
+value|(PSOCK + 1)
+end_define
+
+begin_comment
 comment|/* i4b's spl */
 end_comment
 

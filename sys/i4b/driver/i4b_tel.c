@@ -566,41 +566,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|501113
-end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TTIPRI
-end_ifndef
-
-begin_comment
-comment|/* don't want to include tty.h just to get this */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TTIPRI
-value|(PSOCK + 1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*===========================================================================*  *			DEVICE DRIVER ROUTINES  *===========================================================================*/
 end_comment
@@ -1040,7 +1005,7 @@ name|isdn_linktab
 operator|->
 name|tx_queue
 argument_list|,
-name|TTIPRI
+name|I4BPRI
 operator||
 name|PCATCH
 argument_list|,
@@ -1437,7 +1402,7 @@ name|sc
 operator|->
 name|tones
 argument_list|,
-name|TTIPRI
+name|I4BPRI
 operator||
 name|PCATCH
 argument_list|,
@@ -1753,7 +1718,7 @@ name|rx_queue
 operator|->
 name|ifq_mtx
 argument_list|,
-name|TTIPRI
+name|I4BPRI
 operator||
 name|PCATCH
 argument_list|,
@@ -2091,7 +2056,7 @@ name|sc
 operator|->
 name|result
 argument_list|,
-name|TTIPRI
+name|I4BPRI
 operator||
 name|PCATCH
 argument_list|,
@@ -2420,7 +2385,7 @@ name|tx_queue
 operator|->
 name|ifq_mtx
 argument_list|,
-name|TTIPRI
+name|I4BPRI
 operator||
 name|PCATCH
 argument_list|,
@@ -3652,7 +3617,7 @@ name|sc
 operator|->
 name|selp
 argument_list|,
-name|TTIPRI
+name|I4BPRI
 argument_list|)
 expr_stmt|;
 block|}
@@ -3820,7 +3785,7 @@ name|sc
 operator|->
 name|selp
 argument_list|,
-name|TTIPRI
+name|I4BPRI
 argument_list|)
 expr_stmt|;
 if|if
@@ -3957,7 +3922,7 @@ name|sc
 operator|->
 name|selp
 argument_list|,
-name|TTIPRI
+name|I4BPRI
 argument_list|)
 expr_stmt|;
 block|}
@@ -4125,7 +4090,7 @@ name|sc
 operator|->
 name|selp
 argument_list|,
-name|TTIPRI
+name|I4BPRI
 argument_list|)
 expr_stmt|;
 block|}
