@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: types.h,v 1.5 1998/06/27 15:35:00 dfr Exp $ */
+comment|/* $Id: types.h,v 1.6 1998/07/10 02:27:13 bde Exp $ */
 end_comment
 
 begin_comment
@@ -211,7 +211,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|u_int64_t
 name|ptrint_t
 typedef|;
 end_typedef
@@ -222,7 +222,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|u_int64_t
 name|fptrint_t
 typedef|;
 end_typedef
