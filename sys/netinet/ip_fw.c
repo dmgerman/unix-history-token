@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.14.4.8 1996/06/17 00:03:55 alex Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.14.4.9 1996/06/25 03:16:41 alex Exp $  */
 end_comment
 
 begin_comment
@@ -3725,6 +3725,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/exec.h>
 end_include
 
@@ -3740,13 +3746,49 @@ directive|include
 file|<sys/lkm.h>
 end_include
 
-begin_expr_stmt
-name|MOD_MISC
-argument_list|(
-name|ipfw
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_function_decl
+specifier|static
+name|int
+function_decl|(
+modifier|*
+name|old_chk_ptr
+function_decl|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|ip
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|int
+name|dir
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+function_decl|(
+modifier|*
+name|old_ctl_ptr
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -3878,6 +3920,13 @@ return|;
 block|}
 end_function
 
+begin_macro
+name|MOD_MISC
+argument_list|(
+literal|"ipfw_mod"
+argument_list|)
+end_macro
+
 begin_function
 name|int
 name|ipfw_mod
@@ -3906,7 +3955,7 @@ name|ipfw_load
 argument_list|,
 name|ipfw_unload
 argument_list|,
-name|lkm_nullcmd
+name|nosys
 argument_list|)
 expr_stmt|;
 block|}
