@@ -950,6 +950,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|elf_reloc_local
+parameter_list|(
+name|linker_file_t
+name|_lf
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|_rel
+parameter_list|,
+name|int
+name|_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|Elf_Addr
 name|elf_lookup
 parameter_list|(
