@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)domain.c	5.8 (Berkeley) %G% (no MXDOMAIN)"
+literal|"@(#)domain.c	5.9 (Berkeley) %G% (no MXDOMAIN)"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)domain.c	5.8 (Berkeley) %G%"
+literal|"@(#)domain.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,7 +126,7 @@ end_decl_stmt
 begin_function_decl
 specifier|extern
 name|u_short
-name|getshort
+name|_getshort
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -694,7 +694,7 @@ name|n
 expr_stmt|;
 name|type
 operator|=
-name|getshort
+name|_getshort
 argument_list|(
 name|cp
 argument_list|)
@@ -706,7 +706,7 @@ argument_list|(
 name|u_short
 argument_list|)
 expr_stmt|;
-comment|/* 		class = getshort(cp); 		*/
+comment|/* 		class = _getshort(cp); 		*/
 name|cp
 operator|+=
 sizeof|sizeof
@@ -721,7 +721,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|getshort
+name|_getshort
 argument_list|(
 name|cp
 argument_list|)
@@ -777,7 +777,7 @@ continue|continue;
 block|}
 name|pref
 operator|=
-name|getshort
+name|_getshort
 argument_list|(
 name|cp
 argument_list|)
@@ -1473,7 +1473,7 @@ name|n
 expr_stmt|;
 name|type
 operator|=
-name|getshort
+name|_getshort
 argument_list|(
 name|cp
 argument_list|)
@@ -1499,7 +1499,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|getshort
+name|_getshort
 argument_list|(
 name|cp
 argument_list|)
@@ -1587,56 +1587,6 @@ block|}
 return|return;
 block|}
 end_block
-
-begin_function
-name|u_short
-name|getshort
-parameter_list|(
-name|msgp
-parameter_list|)
-name|char
-modifier|*
-name|msgp
-decl_stmt|;
-block|{
-specifier|register
-name|u_char
-modifier|*
-name|p
-init|=
-operator|(
-name|u_char
-operator|*
-operator|)
-name|msgp
-decl_stmt|;
-specifier|register
-name|int
-name|u
-decl_stmt|;
-name|u
-operator|=
-operator|*
-name|p
-operator|++
-operator|<<
-literal|8
-expr_stmt|;
-return|return
-operator|(
-call|(
-name|u_short
-call|)
-argument_list|(
-name|u
-operator||
-operator|*
-name|p
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
 
 begin_endif
 endif|#
