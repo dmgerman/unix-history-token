@@ -444,13 +444,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"GDB: got '%s'\n"
-argument_list|,
-name|gdb_rxp
-argument_list|)
-expr_stmt|;
+comment|/* printf("GDB: got '%s'\n", gdb_rxp); */
 switch|switch
 condition|(
 name|gdb_rx_char
