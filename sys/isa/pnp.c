@@ -3459,7 +3459,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Trying Read_Port at %x\n"
+literal|"pnp_identify: Trying Read_Port at %x\n"
 argument_list|,
 operator|(
 name|pnp_rd_port
