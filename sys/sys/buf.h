@@ -250,10 +250,6 @@ name|b_iooffset
 value|b_io.bio_offset
 define|#
 directive|define
-name|b_pblkno
-value|b_io.bio_pblkno
-define|#
-directive|define
 name|b_resid
 value|b_io.bio_resid
 name|struct
