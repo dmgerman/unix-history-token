@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regular.c	5.4 (Berkeley) %G%"
+literal|"@(#)regular.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -199,6 +205,30 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|length
+operator|>
+name|SIZE_T_MAX
+condition|)
+return|return
+operator|(
+name|c_special
+argument_list|(
+name|fd1
+argument_list|,
+name|file1
+argument_list|,
+name|skip1
+argument_list|,
+name|fd2
+argument_list|,
+name|file2
+argument_list|,
+name|skip2
+argument_list|)
+operator|)
+return|;
+if|if
+condition|(
 operator|(
 name|p1
 operator|=
@@ -217,7 +247,7 @@ name|length
 argument_list|,
 name|PROT_READ
 argument_list|,
-name|MAP_FILE
+literal|0
 argument_list|,
 name|fd1
 argument_list|,
@@ -264,7 +294,7 @@ name|length
 argument_list|,
 name|PROT_READ
 argument_list|,
-name|MAP_FILE
+literal|0
 argument_list|,
 name|fd2
 argument_list|,
