@@ -37,6 +37,42 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|xprison
+block|{
+name|int
+name|pr_version
+decl_stmt|;
+name|int
+name|pr_id
+decl_stmt|;
+name|char
+name|pr_path
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|char
+name|pr_host
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|;
+name|u_int32_t
+name|pr_ip
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|XPRISON_VERSION
+value|1
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -50,6 +86,15 @@ parameter_list|(
 name|struct
 name|jail
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|jail_attach
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -81,6 +126,13 @@ directive|include
 file|<sys/_mutex.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|JAIL_MAX
+value|999999
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -101,7 +153,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This structure describes a prison.  It is pointed to by all struct  * ucreds's of the inmates.  pr_ref keeps track of them and is used to  * delete the struture when the last inmate is dead.  *  * Lock key:  *   (p) locked by pr_mutex  *   (c) set only during creation before the structure is shared, no mutex  *       required to read  */
+comment|/*  * This structure describes a prison.  It is pointed to by all struct  * ucreds's of the inmates.  pr_ref keeps track of them and is used to  * delete the struture when the last inmate is dead.  *  * Lock key:  *   (a) allprison_mutex  *   (p) locked by pr_mutex  *   (c) set only during creation before the structure is shared, no mutex  *       required to read  */
 end_comment
 
 begin_struct_decl
@@ -114,10 +166,34 @@ begin_struct
 struct|struct
 name|prison
 block|{
+name|LIST_ENTRY
+argument_list|(
+argument|prison
+argument_list|)
+name|pr_list
+expr_stmt|;
+comment|/* (a) all prisons */
+name|int
+name|pr_id
+decl_stmt|;
+comment|/* (c) prison id */
 name|int
 name|pr_ref
 decl_stmt|;
 comment|/* (p) refcount */
+name|char
+name|pr_path
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+comment|/* (c) chroot path */
+name|struct
+name|vnode
+modifier|*
+name|pr_root
+decl_stmt|;
+comment|/* (c) vnode to rdir */
 name|char
 name|pr_host
 index|[
@@ -168,6 +244,24 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|jail_sysvipc_allowed
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|prisonlist
+argument_list|,
+name|prison
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|prisonlist
+name|allprison
 decl_stmt|;
 end_decl_stmt
 
