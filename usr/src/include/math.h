@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * All recipients should regard themselves as participants in an ongoing  * research project and hence should feel obligated to report their  * experiences (good or bad) with these elementary function codes, using  * the sendbug(8) program, to the authors.  *  *	@(#)math.h	5.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * All recipients should regard themselves as participants in an ongoing  * research project and hence should feel obligated to report their  * experiences (good or bad) with these elementary function codes, using  * the sendbug(8) program, to the authors.  *  *	@(#)math.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|HUGE_VAL
-value|1.701411733192644270e38
+value|1.701411733192644270e+38
 end_define
 
 begin_else
@@ -49,7 +49,7 @@ value|1e500
 end_define
 
 begin_comment
-comment|/* positive infinity */
+comment|/* IEEE: positive infinity */
 end_comment
 
 begin_endif
@@ -84,6 +84,149 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|M_E
+value|2.7182818284590452354
+end_define
+
+begin_comment
+comment|/* e */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LOG2E
+value|1.4426950408889634074
+end_define
+
+begin_comment
+comment|/* log 2e */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LOG10E
+value|0.43429448190325182765
+end_define
+
+begin_comment
+comment|/* log 10e */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LN2
+value|0.69314718055994530942
+end_define
+
+begin_comment
+comment|/* log e2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LN10
+value|2.30258509299404568402
+end_define
+
+begin_comment
+comment|/* log e10 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PI
+value|3.14159265358979323846
+end_define
+
+begin_comment
+comment|/* pi */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PI_2
+value|1.57079632679489661923
+end_define
+
+begin_comment
+comment|/* pi/2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PI_4
+value|0.78539816339744830962
+end_define
+
+begin_comment
+comment|/* pi/4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_1_PI
+value|0.31830988618379067154
+end_define
+
+begin_comment
+comment|/* 1/pi */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_2_PI
+value|0.63661977236758134308
+end_define
+
+begin_comment
+comment|/* 2/pi */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_2_SQRTPI
+value|1.12837916709551257390
+end_define
+
+begin_comment
+comment|/* 2/sqrt(pi) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_SQRT2
+value|1.41421356237309504880
+end_define
+
+begin_comment
+comment|/* sqrt(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_SQRT1_2
+value|0.70710678118654752440
+end_define
+
+begin_comment
+comment|/* 1/sqrt(2) */
+end_comment
 
 begin_include
 include|#
