@@ -31,7 +31,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* $Source: /jove_u3/vixie/src/cron/RCS/do_command.c,v $  * $Revision: 2.1 $  * $Log:	do_command.c,v $  * Revision 2.1  90/07/18  00:23:38  vixie  * Baseline for 4.4BSD release  *   * Revision 2.0  88/12/10  04:57:44  vixie  * V2 Beta  *   * Revision 1.5  88/11/29  13:06:06  vixie  * seems to work on Ultrix 3.0 FT1  *   * Revision 1.4  87/05/02  17:33:35  paul  * baseline for mod.sources release  *   * Revision 1.3  87/04/09  00:03:58  paul  * improved data hiding, locality of declaration/references  * fixed a rs@mirror bug by redesigning the mailto stuff completely  *   * Revision 1.2  87/03/19  12:46:24  paul  * implemented suggestions from rs@mirror (Rich $alz):  *    MAILTO="" means no mail should be sent  *    various fixes of bugs or lint complaints  *    put a To: line in the mail message  *   * Revision 1.1  87/01/26  23:47:00  paul  * Initial revision  */
+comment|/* $Source: /jove_u3/vixie/src/cron/RCS/do_command.c,v $  * $Revision: 2.1 $  * $Log:	do_command.c,v $  * Revision 2.1  90/07/18  00:23:38  vixie  * Baseline for 4.4BSD release  *   * Revision 2.0  88/12/10  04:57:44  vixie  * V2 Beta  *   * Revision 1.5  88/11/29  13:06:06  vixie  * seems to work on Ultrix 3.0 FT1  *   * Revision 1.4  87/05/02  17:33:35  paul  * baseline for mod.sources release  *   * Revision 1.3  87/04/09  00:03:58  paul  * improved data hiding, locality of declaration/references  * fixed a rs@mirror bug by redesigning the mailto stuff completely  *   * Revision 1.2  87/03/19  12:46:24  paul  * implemented suggestions from rs@mirror (Rich $alz):  *    MAILTO="" means no mail should be sent  *    various fixes of bugs or lint complaints  *    put a To: line in the mail message  *   * Revision 1.1  87/01/26  23:47:00  paul  * Initial revision  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00131  * --------------------         -----   ----------------------  *  * 06 Apr 93	Adam Glass	Fixes so it compiles quitely  *  */
 end_comment
 
 begin_comment
@@ -215,7 +215,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|child_process
 parameter_list|(
@@ -1160,13 +1159,9 @@ function_decl|;
 specifier|extern
 name|char
 modifier|*
-name|sprintf
-argument_list|()
-decl_stmt|,
-modifier|*
 name|print_cmd
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 specifier|register
 name|char
 modifier|*
@@ -1493,6 +1488,10 @@ name|pid
 operator|=
 name|wait
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|waiter
 argument_list|)

@@ -31,7 +31,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* vix 26jan87 [log is in RCS file]  */
+comment|/* vix 26jan87 [log is in RCS file]  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00131  * --------------------         -----   ----------------------  *  * 06 Apr 93	Adam Glass	Fixes so it compiles quitely  *  */
 end_comment
 
 begin_comment
@@ -179,14 +179,6 @@ name|shell
 decl_stmt|;
 block|{
 name|char
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|sprintf
-argument_list|()
-decl_stmt|,
 modifier|*
 modifier|*
 name|env_init

@@ -31,7 +31,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Revision 1.5  87/05/02  17:33:22  paul  * pokecron?  (RCS file has the rest of the log)  *   * Revision 1.5  87/05/02  17:33:22  paul  * baseline for mod.sources release  *   * Revision 1.4  87/03/31  13:11:48  paul  * I won't say that rs@mirror gave me this idea but crontab uses getopt() now  *   * Revision 1.3  87/03/30  23:43:48  paul  * another suggestion from rs@mirror:  *   use getpwuid(getuid)->pw_name instead of getenv("USER")  *   this is a boost to security...  *   * Revision 1.2  87/02/11  17:40:12  paul  * changed command syntax to allow append and replace instead of append as  * default and no replace at all.  *   * Revision 1.1  87/01/26  23:49:06  paul  * Initial revision  */
+comment|/* Revision 1.5  87/05/02  17:33:22  paul  * pokecron?  (RCS file has the rest of the log)  *   * Revision 1.5  87/05/02  17:33:22  paul  * baseline for mod.sources release  *   * Revision 1.4  87/03/31  13:11:48  paul  * I won't say that rs@mirror gave me this idea but crontab uses getopt() now  *   * Revision 1.3  87/03/30  23:43:48  paul  * another suggestion from rs@mirror:  *   use getpwuid(getuid)->pw_name instead of getenv("USER")  *   this is a boost to security...  *   * Revision 1.2  87/02/11  17:40:12  paul  * changed command syntax to allow append and replace instead of append as  * default and no replace at all.  *   * Revision 1.1  87/01/26  23:49:06  paul  * Initial revision  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00131  * --------------------         -----   ----------------------  *  * 06 Apr 93	Adam Glass	Fixes so it compiles quitely  *  */
 end_comment
 
 begin_comment
@@ -198,7 +198,6 @@ directive|endif
 end_endif
 
 begin_function
-specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -390,7 +389,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|parse_args
 parameter_list|(
@@ -791,7 +789,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|list_cmd
 parameter_list|()
@@ -908,7 +905,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|delete_cmd
 parameter_list|()
@@ -994,7 +990,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|check_error
 parameter_list|(
@@ -1026,16 +1021,10 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|replace_cmd
 parameter_list|()
 block|{
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
 name|entry
 modifier|*
 name|load_entry
@@ -1226,6 +1215,8 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: error while writing new crontab to %s\n"
 argument_list|,
 name|ProgramName
@@ -1508,7 +1499,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|poke_daemon
 parameter_list|()

@@ -31,7 +31,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Copyright 1988,1990 by Paul Vixie  * All rights reserved  *  * Distribute freely, except: don't remove my name from the source or  * documentation (don't take credit for my work), mark your changes (don't  * get me blamed for your possible bugs), don't alter or remove this  * notice.  May be sold if buildable source is provided to buyer.  No  * warrantee of any kind, express or implied, is included with this  * software; use at your own risk, responsibility for damages (if any) to  * anyone resulting from the use of this software rests entirely with the  * user.  *  * Send bug reports, bug fixes, enhancements, requests, flames, etc., and  * I'll try to keep a version up to date.  I can be reached as follows:  * Paul Vixie, 329 Noe Street, San Francisco, CA, 94114, (415) 864-7013,  * paul@vixie.sf.ca.us || {hoptoad,pacbell,decwrl,crash}!vixie!paul  */
+comment|/* Copyright 1988,1990 by Paul Vixie  * All rights reserved  *  * Distribute freely, except: don't remove my name from the source or  * documentation (don't take credit for my work), mark your changes (don't  * get me blamed for your possible bugs), don't alter or remove this  * notice.  May be sold if buildable source is provided to buyer.  No  * warrantee of any kind, express or implied, is included with this  * software; use at your own risk, responsibility for damages (if any) to  * anyone resulting from the use of this software rests entirely with the  * user.  *  * Send bug reports, bug fixes, enhancements, requests, flames, etc., and  * I'll try to keep a version up to date.  I can be reached as follows:  * Paul Vixie, 329 Noe Street, San Francisco, CA, 94114, (415) 864-7013,  * paul@vixie.sf.ca.us || {hoptoad,pacbell,decwrl,crash}!vixie!paul  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00131  * --------------------         -----   ----------------------  *  * 06 Apr 93	Adam Glass	Fixes so it compiles quitely  *  */
 end_comment
 
 begin_include
@@ -290,15 +290,6 @@ name|f
 decl_stmt|;
 block|{
 comment|/* return	ERR = end of file 	 *		FALSE = not an env setting (file was repositioned) 	 *		TRUE = was an env setting 	 */
-name|char
-modifier|*
-name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|sprintf
-argument_list|()
-decl_stmt|;
 name|long
 name|filepos
 decl_stmt|;

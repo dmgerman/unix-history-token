@@ -31,7 +31,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* vix 26jan87 [RCS has the rest of the log]  * vix 15jan87 [added TIOCNOTTY, thanks csg@pyramid]  * vix 30dec86 [written]  */
+comment|/* vix 26jan87 [RCS has the rest of the log]  * vix 15jan87 [added TIOCNOTTY, thanks csg@pyramid]  * vix 30dec86 [written]  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00131  * --------------------         -----   ----------------------  *  * 06 Apr 93	Adam Glass	Fixes so it compiles quitely  *  */
 end_comment
 
 begin_comment
@@ -974,23 +974,6 @@ name|be_different
 parameter_list|()
 block|{
 comment|/* release the control terminal: 	 *  get new pgrp (name after our PID) 	 *  do an IOCTL to void tty association 	 */
-specifier|extern
-name|int
-name|getpid
-argument_list|()
-decl_stmt|,
-name|setpgrp
-argument_list|()
-decl_stmt|,
-name|open
-argument_list|()
-decl_stmt|,
-name|ioctl
-argument_list|()
-decl_stmt|,
-name|close
-argument_list|()
-decl_stmt|;
 specifier|auto
 name|int
 name|fd
