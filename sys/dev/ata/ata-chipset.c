@@ -3269,7 +3269,7 @@ argument_list|,
 name|udmatiming
 index|[
 name|mode
-operator|%
+operator|&
 name|ATA_MODE_MASK
 index|]
 argument_list|)
@@ -3305,7 +3305,7 @@ argument_list|,
 name|dmatiming
 index|[
 name|mode
-operator|%
+operator|&
 name|ATA_MODE_MASK
 index|]
 argument_list|)
@@ -3335,7 +3335,7 @@ argument_list|,
 name|piotiming
 index|[
 name|mode
-operator|%
+operator|&
 name|ATA_MODE_MASK
 index|]
 argument_list|)
