@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.16 (Berkeley) %G%"
+literal|"@(#)headers.c	6.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1671,17 +1671,6 @@ name|sbuf
 argument_list|,
 literal|"from=%.200s, size=%ld, class=%d, pri=%ld, nrcpts=%d, msgid=%.100s"
 argument_list|,
-name|bitset
-argument_list|(
-name|EF_RESPONSE
-argument_list|,
-name|e
-operator|->
-name|e_flags
-argument_list|)
-condition|?
-literal|"[RESPONSE]"
-else|:
 name|e
 operator|->
 name|e_from
