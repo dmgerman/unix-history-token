@@ -4031,9 +4031,6 @@ case|case
 name|XPT_SCAN_LUN
 case|:
 case|case
-name|XPT_RESET_DEV
-case|:
-case|case
 name|XPT_ENG_INQ
 case|:
 comment|/* XXX not implemented yet */
@@ -11570,6 +11567,9 @@ case|case
 name|XPT_CONT_TARGET_IO
 case|:
 case|case
+name|XPT_RESET_DEV
+case|:
+case|case
 name|XPT_ENG_EXEC
 case|:
 block|{
@@ -11771,9 +11771,6 @@ endif|#
 directive|endif
 case|case
 name|XPT_ABORT
-case|:
-case|case
-name|XPT_RESET_DEV
 case|:
 case|case
 name|XPT_ACCEPT_TARGET_IO

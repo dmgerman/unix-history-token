@@ -462,6 +462,8 @@ comment|/* Reset the specified SCSI bus */
 name|XPT_RESET_DEV
 init|=
 literal|0x12
+operator||
+name|XPT_FC_QUEUED
 block|,
 comment|/* Bus Device Reset the specified SCSI device */
 name|XPT_TERM_IO
