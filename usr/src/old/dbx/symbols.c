@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symbols.c 1.10 %G%"
+literal|"@(#)symbols.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -692,6 +692,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 for|for
 control|(
 name|s
@@ -720,11 +721,14 @@ name|block
 operator|==
 name|func
 condition|)
+block|{
 name|psym
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 block|}
 end_function
@@ -1128,6 +1132,73 @@ block|}
 block|}
 block|}
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Create base types.  */
+end_comment
+
+begin_function
+name|public
+name|symbols_init
+parameter_list|()
+block|{
+name|t_boolean
+operator|=
+name|maketype
+argument_list|(
+literal|"$boolean"
+argument_list|,
+literal|0L
+argument_list|,
+literal|1L
+argument_list|)
+expr_stmt|;
+name|t_int
+operator|=
+name|maketype
+argument_list|(
+literal|"$integer"
+argument_list|,
+literal|0x80000000L
+argument_list|,
+literal|0x7fffffffL
+argument_list|)
+expr_stmt|;
+name|t_char
+operator|=
+name|maketype
+argument_list|(
+literal|"$char"
+argument_list|,
+literal|0L
+argument_list|,
+literal|127L
+argument_list|)
+expr_stmt|;
+name|t_real
+operator|=
+name|maketype
+argument_list|(
+literal|"$real"
+argument_list|,
+literal|8L
+argument_list|,
+literal|0L
+argument_list|)
+expr_stmt|;
+name|t_nil
+operator|=
+name|maketype
+argument_list|(
+literal|"$nil"
+argument_list|,
+literal|0L
+argument_list|,
+literal|0L
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3602,7 +3673,6 @@ expr_stmt|;
 block|}
 block|}
 break|break;
-comment|/* 	 * Perform a cast if the call is of the form "type(expr)". 	 */
 case|case
 name|O_CALL
 case|:
