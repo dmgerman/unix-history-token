@@ -3432,7 +3432,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|unsigned
 name|m_fixhdr
 parameter_list|(
 name|struct
@@ -3441,7 +3441,7 @@ modifier|*
 name|m0
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|len
 decl_stmt|;
 name|len
@@ -3470,7 +3470,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|unsigned
 name|m_length
 parameter_list|(
 name|struct
@@ -3490,7 +3490,7 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|int
+name|unsigned
 name|len
 decl_stmt|;
 name|len
