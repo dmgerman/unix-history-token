@@ -1622,7 +1622,7 @@ value|24
 end_define
 
 begin_comment
-comment|/* int: OS release date */
+comment|/* int: kernel release date */
 end_comment
 
 begin_define
