@@ -4178,7 +4178,7 @@ literal|0
 operator|&&
 operator|(
 operator|(
-name|vm_swap_size
+name|swap_pager_avail
 operator|<
 literal|64
 operator|&&
@@ -4267,7 +4267,7 @@ literal|48
 operator|)
 operator|&&
 operator|(
-name|vm_swap_size
+name|swap_pager_avail
 operator|!=
 literal|0
 operator|)

@@ -36,9 +36,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|vm_swap_size
+name|swap_pager_avail
 decl_stmt|;
 end_decl_stmt
+
+begin_struct_decl
+struct_decl|struct
+name|swdevt
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|void
@@ -102,7 +108,9 @@ name|swap_pager_isswapped
 parameter_list|(
 name|vm_object_t
 parameter_list|,
-name|int
+name|struct
+name|swdevt
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

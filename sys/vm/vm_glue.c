@@ -1236,7 +1236,9 @@ begin_function
 name|void
 name|vm_proc_swapin_all
 parameter_list|(
-name|int
+name|struct
+name|swdevt
+modifier|*
 name|devidx
 parameter_list|)
 block|{

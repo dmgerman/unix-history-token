@@ -142,11 +142,19 @@ directive|ifndef
 name|NO_SWAPPING
 end_ifndef
 
+begin_struct_decl
+struct_decl|struct
+name|swdevt
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|vm_proc_swapin_all
 parameter_list|(
-name|int
+name|struct
+name|swdevt
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
