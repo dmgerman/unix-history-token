@@ -2758,6 +2758,8 @@ argument_list|,
 name|DMGL_PARAMS
 operator||
 name|DMGL_ANSI
+operator||
+name|DMGL_VERBOSE
 argument_list|)
 expr_stmt|;
 if|if

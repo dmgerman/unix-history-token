@@ -10280,6 +10280,9 @@ case|case
 name|CONST_DOUBLE
 case|:
 case|case
+name|CONST_VECTOR
+case|:
+case|case
 name|CC0
 case|:
 case|case

@@ -509,11 +509,6 @@ name|unsigned
 name|char
 name|parsing_args
 decl_stmt|;
-comment|/* Nonzero when in a # NUMBER directive.  */
-name|unsigned
-name|char
-name|line_extension
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -546,11 +541,6 @@ modifier|*
 name|n__STRICT_ANSI__
 decl_stmt|;
 comment|/* STDC_0_IN_SYSTEM_HEADERS */
-name|cpp_hashnode
-modifier|*
-name|n__CHAR_UNSIGNED__
-decl_stmt|;
-comment|/* plain char is unsigned */
 name|cpp_hashnode
 modifier|*
 name|n__VA_ARGS__

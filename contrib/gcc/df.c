@@ -4704,6 +4704,9 @@ case|case
 name|CONST_DOUBLE
 case|:
 case|case
+name|CONST_VECTOR
+case|:
+case|case
 name|PC
 case|:
 case|case
@@ -5532,7 +5535,7 @@ argument_list|(
 name|df
 argument_list|,
 operator|&
-name|SET_DEST
+name|XEXP
 argument_list|(
 name|XEXP
 argument_list|(
@@ -5540,6 +5543,8 @@ name|note
 argument_list|,
 literal|0
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 argument_list|,
 name|DF_REF_REG_USE
@@ -5565,9 +5570,11 @@ argument_list|(
 name|df
 argument_list|,
 operator|&
-name|SET_DEST
+name|XEXP
 argument_list|(
 name|x
+argument_list|,
+literal|0
 argument_list|)
 argument_list|,
 name|DF_REF_REG_USE

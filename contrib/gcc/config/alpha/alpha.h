@@ -43,17 +43,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Set the spec to use for signed char.  The default tests the above macro    but DEC's compiler can't handle the conditional in a "constant"    operand.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGNED_CHAR_SPEC
-value|"%{funsigned-char:-D__CHAR_UNSIGNED__}"
-end_define
-
 begin_define
 define|#
 directive|define
@@ -3944,7 +3933,7 @@ define|#
 directive|define
 name|PREDICATE_CODES
 define|\
-value|{"reg_or_0_operand", {SUBREG, REG, CONST_INT}},			\   {"reg_or_6bit_operand", {SUBREG, REG, CONST_INT}},			\   {"reg_or_8bit_operand", {SUBREG, REG, CONST_INT}},			\   {"cint8_operand", {CONST_INT}},					\   {"reg_or_cint_operand", {SUBREG, REG, CONST_INT}},			\   {"add_operand", {SUBREG, REG, CONST_INT}},				\   {"sext_add_operand", {SUBREG, REG, CONST_INT}},			\   {"const48_operand", {CONST_INT}},					\   {"and_operand", {SUBREG, REG, CONST_INT}},				\   {"or_operand", {SUBREG, REG, CONST_INT}},				\   {"mode_mask_operand", {CONST_INT}},					\   {"mul8_operand", {CONST_INT}},					\   {"mode_width_operand", {CONST_INT}},					\   {"reg_or_fp0_operand", {SUBREG, REG, CONST_DOUBLE}},			\   {"alpha_comparison_operator", {EQ, LE, LT, LEU, LTU}},		\   {"alpha_zero_comparison_operator", {EQ, NE, LE, LT, LEU, LTU}},	\   {"alpha_swapped_comparison_operator", {EQ, GE, GT, GEU, GTU}},	\   {"signed_comparison_operator", {EQ, NE, LE, LT, GE, GT}},		\   {"alpha_fp_comparison_operator", {EQ, LE, LT, UNORDERED}},		\   {"divmod_operator", {DIV, MOD, UDIV, UMOD}},				\   {"fp0_operand", {CONST_DOUBLE}},					\   {"current_file_function_operand", {SYMBOL_REF}},			\   {"direct_call_operand", {SYMBOL_REF}},				\   {"local_symbolic_operand", {SYMBOL_REF, CONST, LABEL_REF}},		\   {"small_symbolic_operand", {SYMBOL_REF, CONST}},			\   {"global_symbolic_operand", {SYMBOL_REF, CONST}},			\   {"call_operand", {REG, SYMBOL_REF}},					\   {"input_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		     SYMBOL_REF, CONST, LABEL_REF, HIGH}},		\   {"some_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		    SYMBOL_REF, CONST, LABEL_REF, HIGH}},		\   {"some_ni_operand", {SUBREG, REG, MEM}},				\   {"aligned_memory_operand", {MEM}},					\   {"unaligned_memory_operand", {MEM}},					\   {"reg_or_unaligned_mem_operand", {SUBREG, REG, MEM}},			\   {"any_memory_operand", {MEM}},					\   {"hard_fp_register_operand", {SUBREG, REG}},				\   {"hard_int_register_operand", {SUBREG, REG}},				\   {"reg_not_elim_operand", {SUBREG, REG}},				\   {"reg_no_subreg_operand", {REG}},					\   {"addition_operation", {PLUS}},					\   {"symbolic_operand", {SYMBOL_REF, LABEL_REF, CONST}},			\   {"some_small_symbolic_mem_operand", {SET, PARALLEL}},
+value|{"reg_or_0_operand", {SUBREG, REG, CONST_INT}},			\   {"reg_or_6bit_operand", {SUBREG, REG, CONST_INT}},			\   {"reg_or_8bit_operand", {SUBREG, REG, CONST_INT}},			\   {"cint8_operand", {CONST_INT}},					\   {"reg_or_cint_operand", {SUBREG, REG, CONST_INT}},			\   {"add_operand", {SUBREG, REG, CONST_INT}},				\   {"sext_add_operand", {SUBREG, REG, CONST_INT}},			\   {"const48_operand", {CONST_INT}},					\   {"and_operand", {SUBREG, REG, CONST_INT}},				\   {"or_operand", {SUBREG, REG, CONST_INT}},				\   {"mode_mask_operand", {CONST_INT}},					\   {"mul8_operand", {CONST_INT}},					\   {"mode_width_operand", {CONST_INT}},					\   {"reg_or_fp0_operand", {SUBREG, REG, CONST_DOUBLE}},			\   {"alpha_comparison_operator", {EQ, LE, LT, LEU, LTU}},		\   {"alpha_zero_comparison_operator", {EQ, NE, LE, LT, LEU, LTU}},	\   {"alpha_swapped_comparison_operator", {EQ, GE, GT, GEU, GTU}},	\   {"signed_comparison_operator", {EQ, NE, LE, LT, GE, GT}},		\   {"alpha_fp_comparison_operator", {EQ, LE, LT, UNORDERED}},		\   {"divmod_operator", {DIV, MOD, UDIV, UMOD}},				\   {"fp0_operand", {CONST_DOUBLE}},					\   {"current_file_function_operand", {SYMBOL_REF}},			\   {"direct_call_operand", {SYMBOL_REF}},				\   {"local_symbolic_operand", {SYMBOL_REF, CONST, LABEL_REF}},		\   {"small_symbolic_operand", {SYMBOL_REF, CONST}},			\   {"global_symbolic_operand", {SYMBOL_REF, CONST}},			\   {"call_operand", {REG, SYMBOL_REF}},					\   {"input_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		     SYMBOL_REF, CONST, LABEL_REF, HIGH}},		\   {"some_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		    SYMBOL_REF, CONST, LABEL_REF, HIGH}},		\   {"some_ni_operand", {SUBREG, REG, MEM}},				\   {"aligned_memory_operand", {MEM}},					\   {"unaligned_memory_operand", {MEM}},					\   {"reg_or_unaligned_mem_operand", {SUBREG, REG, MEM}},			\   {"any_memory_operand", {MEM}},					\   {"hard_fp_register_operand", {SUBREG, REG}},				\   {"hard_int_register_operand", {SUBREG, REG}},				\   {"reg_not_elim_operand", {SUBREG, REG}},				\   {"reg_no_subreg_operand", {REG}},					\   {"addition_operation", {PLUS}},					\   {"symbolic_operand", {SYMBOL_REF, LABEL_REF, CONST}},			\   {"some_small_symbolic_operand", {SET, PARALLEL, PREFETCH, UNSPEC,	\ 				   UNSPEC_VOLATILE}},
 end_define
 
 begin_escape
@@ -4422,6 +4411,27 @@ define|#
 directive|define
 name|TARGET_MEM_FUNCTIONS
 value|1
+end_define
+
+begin_comment
+comment|/* Output code to add DELTA to the first argument, and then jump to FUNCTION.    Used for C++ multiple inheritance.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_MI_THUNK
+parameter_list|(
+name|FILE
+parameter_list|,
+name|THUNK_FNDECL
+parameter_list|,
+name|DELTA
+parameter_list|,
+name|FUNCTION
+parameter_list|)
+define|\
+value|alpha_output_mi_thunk_osf (FILE, THUNK_FNDECL, DELTA, FUNCTION)
 end_define
 
 end_unit

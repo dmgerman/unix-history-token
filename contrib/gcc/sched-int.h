@@ -1016,6 +1016,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|rtx
+name|sched_emit_insn
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|schedule_block
 name|PARAMS

@@ -74,7 +74,7 @@ define|#
 directive|define
 name|CPP_SUBTARGET_SPEC
 define|\
-value|"%{pthread|threads:-D_REENTRANT} %{threads:-D_PTHREAD_USE_D4} %(cpp_xfloat)"
+value|"%{pthread|threads:-D_REENTRANT} %{threads:-D_PTHREAD_USE_D4} %(cpp_xfloat) \ -D__EXTERN_PREFIX"
 end_define
 
 begin_comment
@@ -90,7 +90,7 @@ value|"%{p|pg:-lprof1%{pthread|threads:_r} -lpdf} %{a:-lprof2} \  %{threads: -lp
 end_define
 
 begin_comment
-comment|/* Pass "-G 8" to ld because Alpha's CC does.  Pass -O3 if we are    optimizing, -O1 if we are not.  Pass -shared, -non_shared or    -call_shared as appropriate.  Pass -hidden_symbol so that our    constructor and call-frame data structures are not accidentally    overridden.  */
+comment|/* Pass "-G 8" to ld because Alpha's CC does.  Pass -O3 if we are    optimizing, -O1 if we are not.  Pass -S to silence `weak symbol    multiply defined' warnings.  Pass -shared, -non_shared or    -call_shared as appropriate.  Pass -hidden_symbol so that our    constructor and call-frame data structures are not accidentally    overridden.  */
 end_comment
 
 begin_define
@@ -98,7 +98,7 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"-G 8 %{O*:-O3} %{!O*:-O1} %{static:-non_shared} \    %{!static:%{shared:-shared -hidden_symbol _GLOBAL_*} \    %{!shared:-call_shared}} %{pg} %{taso} %{rpath*}"
+value|"-G 8 %{O*:-O3} %{!O*:-O1} -S %{static:-non_shared} \    %{!static:%{shared:-shared -hidden_symbol _GLOBAL_*} \    %{!shared:-call_shared}} %{pg} %{taso} %{rpath*}"
 end_define
 
 begin_define
@@ -147,7 +147,7 @@ value|""
 end_define
 
 begin_comment
-comment|/* No point in running CPP on our assembler output.  */
+comment|/* In OSF/1 v3.2c, the assembler by default does not output file names which    causes mips-tfile to fail.  Passing -g to the assembler fixes this problem.    ??? Strictly speaking, we need -g only if the user specifies -g.  Passing    it always means that we get slightly larger than necessary object files    if the user does not specify -g.  If we don't pass -g, then mips-tfile    will need to be fixed to work in this case.  Pass -O0 since some    optimization are broken and don't help us anyway.  Pass -nocpp because    there's no point in running CPP on our assembler output.  */
 end_comment
 
 begin_if
@@ -166,15 +166,11 @@ operator|!=
 literal|0
 end_if
 
-begin_comment
-comment|/* Don't pass -g to GNU as, because some versions don't accept this option.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"%{malpha-as:-g %(asm_oldas)} -nocpp %{pg}"
+value|"%{malpha-as:-g %(asm_oldas) -nocpp %{pg} -O0}"
 end_define
 
 begin_else
@@ -182,15 +178,11 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* In OSF/1 v3.2c, the assembler by default does not output file names which    causes mips-tfile to fail.  Passing -g to the assembler fixes this problem.    ??? Strictly speaking, we need -g only if the user specifies -g.  Passing    it always means that we get slightly larger than necessary object files    if the user does not specify -g.  If we don't pass -g, then mips-tfile    will need to be fixed to work in this case.  Pass -O0 since some    optimization are broken and don't help us anyway.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"%{!mgas:-g %(asm_oldas)} -nocpp %{pg} -O0"
+value|"%{!mgas:-g %(asm_oldas) -nocpp %{pg} -O0}"
 end_define
 
 begin_endif
@@ -396,6 +388,17 @@ begin_define
 define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
+value|1
+end_define
+
+begin_comment
+comment|/* Handle #pragma extern_prefix.  Technically only needed for Tru64 5.x,    but easier to manipulate preprocessor bits from here.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HANDLE_PRAGMA_EXTERN_PREFIX
 value|1
 end_define
 

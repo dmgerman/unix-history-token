@@ -266,6 +266,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EH_USES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EH_USES
+parameter_list|(
+name|REGNO
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2008,6 +2029,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|stabilized_prop_flags
+init|=
+name|prop_flags
+decl_stmt|;
 name|tmp
 operator|=
 name|INITIALIZE_REG_SET
@@ -2171,18 +2197,28 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Don't pass PROP_SCAN_DEAD_CODE or PROP_KILL_DEAD_CODE to 	     subsequent propagate_block calls, since removing or acting as 	     removing dead code can affect global register liveness, which 	     is supposed to be finalized for this call after this loop.  */
+name|stabilized_prop_flags
+operator|&=
+operator|~
+operator|(
+name|PROP_SCAN_DEAD_CODE
+operator||
+name|PROP_KILL_DEAD_CODE
+operator|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|changed
-operator|||
-operator|!
+condition|)
+break|break;
+comment|/* We repeat regardless of what cleanup_cfg says.  If there were 	     instructions deleted above, that might have been only a 	     partial improvement (see MAX_MEM_SET_LIST_LEN usage). 	     Further improvement may be possible.  */
 name|cleanup_cfg
 argument_list|(
 name|CLEANUP_EXPENSIVE
 argument_list|)
-condition|)
-break|break;
+expr_stmt|;
 block|}
 comment|/* If asked, remove notes from the blocks we'll update.  */
 if|if
@@ -2212,7 +2248,7 @@ literal|0
 argument_list|,
 argument|i
 argument_list|,
-argument|{ 	  basic_block bb = BASIC_BLOCK (i);  	  COPY_REG_SET (tmp, bb->global_live_at_end); 	  propagate_block (bb, tmp, NULL, NULL, prop_flags);  	  if (extent == UPDATE_LIFE_LOCAL) 	    verify_local_live_at_start (tmp, bb); 	}
+argument|{ 	  basic_block bb = BASIC_BLOCK (i);  	  COPY_REG_SET (tmp, bb->global_live_at_end); 	  propagate_block (bb, tmp, NULL, NULL, stabilized_prop_flags);  	  if (extent == UPDATE_LIFE_LOCAL) 	    verify_local_live_at_start (tmp, bb); 	}
 argument_list|)
 empty_stmt|;
 block|}
@@ -2261,7 +2297,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|prop_flags
+name|stabilized_prop_flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -3594,6 +3630,17 @@ name|bb
 expr_stmt|;
 block|}
 block|}
+comment|/* We clean aux when we remove the initially-enqueued bbs, but we      don't enqueue ENTRY and EXIT initially, so clean them upfront and      unconditionally.  */
+name|ENTRY_BLOCK_PTR
+operator|->
+name|aux
+operator|=
+name|EXIT_BLOCK_PTR
+operator|->
+name|aux
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|blocks_out
@@ -3650,6 +3697,12 @@ argument_list|(
 name|new_live_at_end
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bb
+operator|->
+name|succ
+condition|)
 for|for
 control|(
 name|e
@@ -3674,8 +3727,8 @@ name|e
 operator|->
 name|dest
 decl_stmt|;
-comment|/* Call-clobbered registers die across exception and call edges.  */
-comment|/* ??? Abnormal call edges ignored for the moment, as this gets 	     confused by sibling call edges, which crashes reg-stack.  */
+comment|/* Call-clobbered registers die across exception and 	       call edges.  */
+comment|/* ??? Abnormal call edges ignored for the moment, as this gets 	       confused by sibling call edges, which crashes reg-stack.  */
 if|if
 condition|(
 name|e
@@ -3714,6 +3767,73 @@ argument_list|,
 name|sb
 operator|->
 name|global_live_at_start
+argument_list|)
+expr_stmt|;
+comment|/* If a target saves one register in another (instead of on 	       the stack) the save register will need to be live for EH.  */
+if|if
+condition|(
+name|e
+operator|->
+name|flags
+operator|&
+name|EDGE_EH
+condition|)
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|FIRST_PSEUDO_REGISTER
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|EH_USES
+argument_list|(
+name|i
+argument_list|)
+condition|)
+name|SET_REGNO_REG_SET
+argument_list|(
+name|new_live_at_end
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* This might be a noreturn function that throws.  And 	     even if it isn't, getting the unwind info right helps 	     debugging.  */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|FIRST_PSEUDO_REGISTER
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|EH_USES
+argument_list|(
+name|i
+argument_list|)
+condition|)
+name|SET_REGNO_REG_SET
+argument_list|(
+name|new_live_at_end
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 block|}
@@ -13834,6 +13954,23 @@ operator|++
 name|i
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_conditional_execution
+name|int
+name|this_was_live
+init|=
+name|REGNO_REG_SET_P
+argument_list|(
+name|pbi
+operator|->
+name|reg_live
+argument_list|,
+name|i
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
 name|SET_REGNO_REG_SET
 argument_list|(
 name|pbi
@@ -13867,7 +14004,7 @@ name|ncond
 decl_stmt|;
 if|if
 condition|(
-name|some_was_live
+name|this_was_live
 condition|)
 block|{
 name|node
@@ -14044,7 +14181,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|some_was_live
+name|this_was_live
 condition|)
 block|{
 comment|/* The register may have been conditionally live previously, but 	     is now unconditionally live.  Remove it from the conditionally 	     dead list, so that a conditional set won't cause us to think 	     it dead.  */
@@ -14141,6 +14278,9 @@ name|CONST
 case|:
 case|case
 name|CONST_DOUBLE
+case|:
+case|case
+name|CONST_VECTOR
 case|:
 case|case
 name|PC

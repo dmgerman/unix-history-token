@@ -181,6 +181,9 @@ name|rtx
 operator|,
 expr|enum
 name|rtx_code
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -750,6 +753,8 @@ parameter_list|(
 name|x
 parameter_list|,
 name|subroutine_type
+parameter_list|,
+name|used
 parameter_list|)
 name|rtx
 name|x
@@ -757,6 +762,10 @@ decl_stmt|;
 name|enum
 name|rtx_code
 name|subroutine_type
+decl_stmt|;
+name|char
+modifier|*
+name|used
 decl_stmt|;
 block|{
 name|RTX_CODE
@@ -805,6 +814,51 @@ case|:
 case|case
 name|MATCH_DUP
 case|:
+if|if
+condition|(
+name|used
+condition|)
+block|{
+if|if
+condition|(
+name|used
+index|[
+name|XINT
+argument_list|(
+name|x
+argument_list|,
+literal|0
+argument_list|)
+index|]
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"copy_rtx (operand%d)"
+argument_list|,
+name|XINT
+argument_list|(
+name|x
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|used
+index|[
+name|XINT
+argument_list|(
+name|x
+argument_list|,
+literal|0
+argument_list|)
+index|]
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"operand%d"
@@ -904,6 +958,8 @@ name|i
 argument_list|)
 argument_list|,
 name|subroutine_type
+argument_list|,
+name|used
 argument_list|)
 expr_stmt|;
 block|}
@@ -977,6 +1033,8 @@ name|i
 argument_list|)
 argument_list|,
 name|subroutine_type
+argument_list|,
+name|used
 argument_list|)
 expr_stmt|;
 block|}
@@ -1231,6 +1289,8 @@ name|i
 argument_list|)
 argument_list|,
 name|subroutine_type
+argument_list|,
+name|used
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1339,6 +1399,8 @@ name|j
 argument_list|)
 argument_list|,
 name|subroutine_type
+argument_list|,
+name|used
 argument_list|)
 expr_stmt|;
 block|}
@@ -1944,6 +2006,8 @@ literal|0
 argument_list|)
 argument_list|,
 name|DEFINE_INSN
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2002,6 +2066,8 @@ name|i
 argument_list|)
 argument_list|,
 name|DEFINE_INSN
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2224,6 +2290,8 @@ literal|0
 argument_list|)
 argument_list|,
 name|DEFINE_EXPAND
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2739,6 +2807,8 @@ argument_list|(
 name|next
 argument_list|,
 name|DEFINE_EXPAND
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2847,6 +2917,10 @@ name|char
 modifier|*
 name|unused
 decl_stmt|;
+name|char
+modifier|*
+name|used
+decl_stmt|;
 if|if
 condition|(
 name|XVEC
@@ -2923,6 +2997,15 @@ literal|" ATTRIBUTE_UNUSED"
 else|:
 literal|""
 operator|)
+expr_stmt|;
+name|used
+operator|=
+name|xcalloc
+argument_list|(
+literal|1
+argument_list|,
+name|operands
+argument_list|)
 expr_stmt|;
 comment|/* Output the prototype, function name and argument declarations.  */
 if|if
@@ -3368,6 +3451,8 @@ name|GET_CODE
 argument_list|(
 name|split
 argument_list|)
+argument_list|,
+name|used
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3424,6 +3509,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"  return _val;\n}\n\n"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|used
 argument_list|)
 expr_stmt|;
 block|}
@@ -3569,6 +3659,8 @@ name|clobber
 operator|->
 name|pattern
 argument_list|)
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3631,6 +3723,8 @@ name|ent
 decl_stmt|;
 name|int
 name|clobber_p
+decl_stmt|,
+name|used
 decl_stmt|;
 name|printf
 argument_list|(
@@ -3671,6 +3765,10 @@ name|clobber_p
 operator|++
 control|)
 block|{
+name|used
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|clobber
@@ -3709,6 +3807,7 @@ name|ent
 operator|->
 name|next
 control|)
+block|{
 name|printf
 argument_list|(
 literal|"    case %d:\n"
@@ -3718,6 +3817,14 @@ operator|->
 name|code_number
 argument_list|)
 expr_stmt|;
+name|used
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|used
+condition|)
 name|printf
 argument_list|(
 literal|"      return %d;\n\n"

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Data structure definitions for a generic GCC target.    Copyright (C) 2001 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
+comment|/* Data structure definitions for a generic GCC target.    Copyright (C) 2001, 2002 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
 end_comment
 
 begin_comment
@@ -467,6 +467,19 @@ name|fndecl
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Return true if bitfields in RECORD_TYPE should follow the      Microsoft Visual C++ bitfield layout rules.  */
+name|bool
+argument_list|(
+argument|* ms_bitfield_layout_p
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+name|record_type
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Set up target-specific built-in functions.  */
 name|void
 argument_list|(
@@ -534,6 +547,18 @@ comment|/* True if "native" constructors and destructors are supported,      fal
 name|bool
 name|have_ctors_dtors
 decl_stmt|;
+comment|/* True if new jumps cannot be created, to replace existing ones or      not, at the current point in the compilation.  */
+name|bool
+argument_list|(
+argument|* cannot_modify_jumps_p
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 end_struct

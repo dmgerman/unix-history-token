@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Control flow optimization code for GNU compiler.    Copyright (C) 1987, 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Control flow optimization code for GNU compiler.    Copyright (C) 1987, 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|"tm_p.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"target.h"
 end_include
 
 begin_include
@@ -4611,7 +4617,7 @@ name|succ
 operator|->
 name|succ_next
 operator|||
-name|bb1
+name|bb2
 operator|->
 name|succ
 operator|->
@@ -4630,10 +4636,24 @@ operator|||
 operator|!
 name|onlyjump_p
 argument_list|(
-name|bb1
+name|bb2
 operator|->
 name|end
 argument_list|)
+condition|)
+return|return
+name|false
+return|;
+comment|/* Do not crossjump across loop boundaries.  This is a temporary 	 workaround for the common scenario in which crossjumping results 	 in killing the duplicated loop condition, making bb-reorder rotate 	 the loop incorectly, leaving an extra unconditional jump inside 	 the loop.  	 This check should go away once bb-reorder knows how to duplicate 	 code in this case or rotate the loops to avoid this scenario.  */
+if|if
+condition|(
+name|bb1
+operator|->
+name|loop_depth
+operator|!=
+name|bb2
+operator|->
+name|loop_depth
 condition|)
 return|return
 name|false
@@ -5042,7 +5062,7 @@ name|b2
 operator|->
 name|probability
 expr_stmt|;
-comment|/* Fail if the difference in probabilities is 	     greater than 5%.  */
+comment|/* Fail if the difference in probabilities is greater than 50%. 	     This rules out two well-predicted branches with opposite 	     outcomes.  */
 if|if
 condition|(
 name|abs
@@ -5056,7 +5076,7 @@ argument_list|)
 operator|>
 name|REG_BR_PROB_BASE
 operator|/
-literal|20
+literal|2
 condition|)
 block|{
 if|if
@@ -5429,13 +5449,6 @@ name|src1
 operator|->
 name|pred
 operator|&&
-operator|!
-name|src1
-operator|->
-name|pred
-operator|->
-name|pred_next
-operator|&&
 name|FORWARDER_BLOCK_P
 argument_list|(
 name|src1
@@ -5458,13 +5471,6 @@ condition|(
 name|src2
 operator|->
 name|pred
-operator|&&
-operator|!
-name|src2
-operator|->
-name|pred
-operator|->
-name|pred_next
 operator|&&
 name|FORWARDER_BLOCK_P
 argument_list|(
@@ -6463,7 +6469,19 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Attempt to merge blocks as made possible by edge removal.  If a block      has only one successor, and the successor has only one predecessor,      they may be combined.  */
+if|if
+condition|(
+operator|!
+call|(
+modifier|*
+name|targetm
+operator|.
+name|cannot_modify_jumps_p
+call|)
+argument_list|()
+condition|)
+block|{
+comment|/* Attempt to merge blocks as made possible by edge removal.  If 	 a block has only one successor, and the successor has only 	 one predecessor, they may be combined.  */
 do|do
 block|{
 name|changed
@@ -6566,7 +6584,7 @@ operator|=
 name|c
 expr_stmt|;
 block|}
-comment|/* Remove code labels no longer used.  Don't do this before 	     CALL_PLACEHOLDER is removed, as some branches may be hidden 	     within.  */
+comment|/* Remove code labels no longer used.  Don't do this 		 before CALL_PLACEHOLDER is removed, as some branches 		 may be hidden within.  */
 if|if
 condition|(
 name|b
@@ -6623,7 +6641,7 @@ operator|->
 name|head
 argument_list|)
 operator|)
-comment|/* If the previous block ends with a branch to this block, 		 we can't delete the label.  Normally this is a condjump 		 that is yet to be simplified, but if CASE_DROPS_THRU, 		 this can be a tablejump with some element going to the 		 same place as the default (fallthru).  */
+comment|/* If the previous block ends with a branch to this 		     block, we can't delete the label.  Normally this 		     is a condjump that is yet to be simplified, but 		     if CASE_DROPS_THRU, this can be a tablejump with 		     some element going to the same place as the 		     default (fallthru).  */
 operator|&&
 operator|(
 name|b
@@ -6740,7 +6758,7 @@ name|FORWARDER_BLOCK_P
 argument_list|(
 name|b
 argument_list|)
-comment|/* Note that forwarder_block_p true ensures that there 		 is a successor for this block.  */
+comment|/* Note that forwarder_block_p true ensures that 		     there is a successor for this block.  */
 operator|&&
 operator|(
 name|b
@@ -6816,7 +6834,7 @@ operator|=
 name|c
 expr_stmt|;
 block|}
-comment|/* Merge blocks.  Loop because chains of blocks might be 	     combineable.  */
+comment|/* Merge blocks.  Loop because chains of blocks might be 		 combineable.  */
 while|while
 condition|(
 operator|(
@@ -6861,7 +6879,7 @@ operator|->
 name|pred_next
 operator|==
 name|NULL
-comment|/* If the jump insn has side effects, 		    we can't kill the edge.  */
+comment|/* If the jump insn has side effects, 			we can't kill the edge.  */
 operator|&&
 operator|(
 name|GET_CODE
@@ -6923,7 +6941,7 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-comment|/* If B has a single outgoing edge, but uses a non-trivial jump 	     instruction without side-effects, we can either delete the 	     jump entirely, or replace it with a simple unconditional jump. 	     Use redirect_edge_and_branch to do the dirty work.  */
+comment|/* If B has a single outgoing edge, but uses a 		 non-trivial jump instruction without side-effects, we 		 can either delete the jump entirely, or replace it 		 with a simple unconditional jump.  Use 		 redirect_edge_and_branch to do the dirty work.  */
 if|if
 condition|(
 name|b
@@ -7017,7 +7035,7 @@ name|changed_here
 operator|=
 name|true
 expr_stmt|;
-comment|/* Don't get confused by the index shift caused by deleting 	     blocks.  */
+comment|/* Don't get confused by the index shift caused by 		 deleting blocks.  */
 if|if
 condition|(
 operator|!
@@ -7078,6 +7096,7 @@ condition|(
 name|changed
 condition|)
 do|;
+block|}
 if|if
 condition|(
 name|mode
@@ -7219,6 +7238,8 @@ parameter_list|()
 block|{
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 name|bool
 name|changed
@@ -7228,20 +7249,20 @@ decl_stmt|;
 name|find_unreachable_blocks
 argument_list|()
 expr_stmt|;
-comment|/* Delete all unreachable basic blocks.  Count down so that we      don't interfere with the block renumbering that happens in      flow_delete_block.  */
+comment|/* Delete all unreachable basic blocks.  Do compaction concurrently,      as otherwise we can wind up with O(N^2) behaviour here when we       have oodles of dead code.  */
 for|for
 control|(
 name|i
 operator|=
-name|n_basic_blocks
-operator|-
-literal|1
+name|j
+operator|=
+literal|0
 init|;
 name|i
-operator|>=
-literal|0
+operator|<
+name|n_basic_blocks
 condition|;
-operator|--
+operator|++
 name|i
 control|)
 block|{
@@ -7264,16 +7285,50 @@ operator|&
 name|BB_REACHABLE
 operator|)
 condition|)
-name|flow_delete_block
+block|{
+name|flow_delete_block_noexpunge
 argument_list|(
 name|b
 argument_list|)
-operator|,
+expr_stmt|;
+name|expunge_block_nocompact
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
 name|changed
 operator|=
 name|true
 expr_stmt|;
 block|}
+else|else
+block|{
+name|BASIC_BLOCK
+argument_list|(
+name|j
+argument_list|)
+operator|=
+name|b
+expr_stmt|;
+name|b
+operator|->
+name|index
+operator|=
+name|j
+operator|++
+expr_stmt|;
+block|}
+block|}
+name|n_basic_blocks
+operator|=
+name|j
+expr_stmt|;
+name|basic_block_info
+operator|->
+name|num_elements
+operator|=
+name|j
+expr_stmt|;
 if|if
 condition|(
 name|changed

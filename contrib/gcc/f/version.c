@@ -18,7 +18,7 @@ modifier|*
 specifier|const
 name|ffe_version_string
 init|=
-literal|"0.5.27 20020201 (experimental)"
+literal|"3.1 20020509 (prerelease)"
 decl_stmt|;
 end_decl_stmt
 

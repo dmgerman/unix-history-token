@@ -151,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|" \   -D__INTERIX \   -D__OPENNT \   -D_M_IX86=300 -D_X86_=1 \   -D__stdcall=__attribute__((__stdcall__)) \   -D__cdecl=__attribute__((__cdecl__)) \   -Asystem=unix -Asystem=interix"
+value|" \   -D__INTERIX \   -D__OPENNT \   -D_M_IX86=300 -D_X86_=1 \   -D__stdcall=__attribute__((__stdcall__)) \   -D__cdecl=__attribute__((__cdecl__)) \   -D__declspec(x)=__attribute__((x)) \   -Asystem=unix -Asystem=interix"
 end_define
 
 begin_undef
@@ -320,6 +320,12 @@ undef|#
 directive|undef
 name|LD_FINI_SWITCH
 end_undef
+
+begin_define
+define|#
+directive|define
+name|EH_FRAME_IN_DATA_SECTION
+end_define
 
 begin_comment
 comment|/* Note that there appears to be two different ways to support const    sections at the moment.  You can either #define the symbol    READONLY_DATA_SECTION (giving it some code which switches to the    readonly data section) or else you can #define the symbols    EXTRA_SECTIONS, EXTRA_SECTION_FUNCTIONS, SELECT_SECTION, and    SELECT_RTX_SECTION.  We do both here just to be on the safe side.  */
@@ -642,6 +648,15 @@ name|SUPPORTS_ONE_ONLY
 value|1
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 0 */
+end_comment
+
 begin_comment
 comment|/* Switch into a generic section.  */
 end_comment
@@ -652,15 +667,6 @@ directive|define
 name|TARGET_ASM_NAMED_SECTION
 value|default_pe_asm_named_section
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
 
 begin_comment
 comment|/* DWARF2 Unwinding doesn't work with exception handling yet.  */
@@ -681,6 +687,34 @@ begin_define
 define|#
 directive|define
 name|NO_IMPLICIT_EXTERN_C
+end_define
+
+begin_comment
+comment|/* MSVC returns structs of up to 8 bytes via registers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PCC_STRUCT_RETURN
+value|0
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|RETURN_IN_MEMORY
+end_undef
+
+begin_define
+define|#
+directive|define
+name|RETURN_IN_MEMORY
+parameter_list|(
+name|TYPE
+parameter_list|)
+define|\
+value|(TYPE_MODE (TYPE) == BLKmode || \      (AGGREGATE_TYPE_P (TYPE)&& int_size_in_bytes(TYPE)> 8 ))
 end_define
 
 end_unit

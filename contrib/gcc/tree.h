@@ -301,10 +301,6 @@ decl_stmt|;
 name|tree
 name|type
 decl_stmt|;
-name|void
-modifier|*
-name|aux
-decl_stmt|;
 name|ENUM_BITFIELD
 argument_list|(
 argument|tree_code
@@ -345,6 +341,11 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|asm_written_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|unused_0
 range|:
 literal|1
 decl_stmt|;
@@ -423,9 +424,8 @@ name|lang_flag_6
 range|:
 literal|1
 decl_stmt|;
-comment|/* This flag is presently unused.  However, language front-ends      should not make use of this flag; it is reserved for future      expansion.  */
 name|unsigned
-name|dummy
+name|unused_1
 range|:
 literal|1
 decl_stmt|;
@@ -434,7 +434,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* The following table lists the uses of each of the above flags and    for which types of nodes they are defined.  Note that expressions    include decls.     addressable_flag:         TREE_ADDRESSABLE in    	   VAR_DECL, FUNCTION_DECL, FIELD_DECL, CONSTRUCTOR, LABEL_DECL, 	   ..._TYPE, IDENTIFIER_NODE. 	   In a STMT_EXPR, it means we want the result of the enclosed 	   expression.     static_flag:         TREE_STATIC in            VAR_DECL, FUNCTION_DECL, CONSTRUCTOR, ADDR_EXPR        TREE_NO_UNUSED_WARNING in            CONVERT_EXPR, NOP_EXPR, COMPOUND_EXPR        TREE_VIA_VIRTUAL in            TREE_LIST or TREE_VEC        TREE_CONSTANT_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST        TREE_SYMBOL_REFERENCED in            IDENTIFIER_NODE     public_flag:         TREE_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST        TREE_PUBLIC in            VAR_DECL or FUNCTION_DECL or IDENTIFIER_NODE        TREE_VIA_PUBLIC in            TREE_LIST or TREE_VEC        EXPR_WFL_EMIT_LINE_NOTE in            EXPR_WITH_FILE_LOCATION     private_flag:         TREE_VIA_PRIVATE in            TREE_LIST or TREE_VEC        TREE_PRIVATE in            ??? unspecified nodes     protected_flag:         TREE_VIA_PROTECTED in            TREE_LIST 	   TREE_VEC        TREE_PROTECTED in            BLOCK 	   ??? unspecified nodes     side_effects_flag:         TREE_SIDE_EFFECTS in            all expressions     volatile_flag:         TREE_THIS_VOLATILE in            all expressions        TYPE_VOLATILE in            ..._TYPE     readonly_flag:         TREE_READONLY in            all expressions        TYPE_READONLY in            ..._TYPE     constant_flag:         TREE_CONSTANT in            all expressions     unsigned_flag:         TREE_UNSIGNED in            INTEGER_TYPE, ENUMERAL_TYPE, FIELD_DECL        DECL_BUILT_IN_NONANSI in            FUNCTION_DECL        SAVE_EXPR_NOPLACEHOLDER in 	   SAVE_EXPR     asm_written_flag:         TREE_ASM_WRITTEN in            VAR_DECL, FUNCTION_DECL, RECORD_TYPE, UNION_TYPE, QUAL_UNION_TYPE 	   BLOCK     used_flag:         TREE_USED in            expressions, IDENTIFIER_NODE     nothrow_flag:         TREE_NOTHROW in            CALL_EXPR, FUNCTION_DECL     bounded_flag:         TREE_BOUNDED in 	   expressions, VAR_DECL, PARM_DECL, FIELD_DECL, FUNCTION_DECL, 	   IDENTIFIER_NODE        TYPE_BOUNDED in 	   ..._TYPE     deprecated_flag:  	TREE_DEPRECATED in 	   ..._DECL */
+comment|/* The following table lists the uses of each of the above flags and    for which types of nodes they are defined.  Note that expressions    include decls.     addressable_flag:         TREE_ADDRESSABLE in    	   VAR_DECL, FUNCTION_DECL, FIELD_DECL, CONSTRUCTOR, LABEL_DECL, 	   ..._TYPE, IDENTIFIER_NODE. 	   In a STMT_EXPR, it means we want the result of the enclosed 	   expression.     static_flag:         TREE_STATIC in            VAR_DECL, FUNCTION_DECL, CONSTRUCTOR, ADDR_EXPR        TREE_NO_UNUSED_WARNING in            CONVERT_EXPR, NOP_EXPR, COMPOUND_EXPR        TREE_VIA_VIRTUAL in            TREE_LIST or TREE_VEC        TREE_CONSTANT_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST, VECTOR_CST        TREE_SYMBOL_REFERENCED in            IDENTIFIER_NODE        CLEANUP_EH_ONLY in            TARGET_EXPR, WITH_CLEANUP_EXPR, CLEANUP_STMT, 	   TREE_LIST elements of a block's cleanup list.     public_flag:         TREE_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST, VECTOR_CST        TREE_PUBLIC in            VAR_DECL or FUNCTION_DECL or IDENTIFIER_NODE        TREE_VIA_PUBLIC in            TREE_LIST or TREE_VEC        EXPR_WFL_EMIT_LINE_NOTE in            EXPR_WITH_FILE_LOCATION     private_flag:         TREE_VIA_PRIVATE in            TREE_LIST or TREE_VEC        TREE_PRIVATE in            ..._DECL     protected_flag:         TREE_VIA_PROTECTED in            TREE_LIST 	   TREE_VEC        TREE_PROTECTED in            BLOCK 	   ..._DECL     side_effects_flag:         TREE_SIDE_EFFECTS in            all expressions     volatile_flag:         TREE_THIS_VOLATILE in            all expressions        TYPE_VOLATILE in            ..._TYPE     readonly_flag:         TREE_READONLY in            all expressions        TYPE_READONLY in            ..._TYPE     constant_flag:         TREE_CONSTANT in            all expressions     unsigned_flag:         TREE_UNSIGNED in            INTEGER_TYPE, ENUMERAL_TYPE, FIELD_DECL        DECL_BUILT_IN_NONANSI in            FUNCTION_DECL        SAVE_EXPR_NOPLACEHOLDER in 	   SAVE_EXPR     asm_written_flag:         TREE_ASM_WRITTEN in            VAR_DECL, FUNCTION_DECL, RECORD_TYPE, UNION_TYPE, QUAL_UNION_TYPE 	   BLOCK     used_flag:         TREE_USED in            expressions, IDENTIFIER_NODE     nothrow_flag:         TREE_NOTHROW in            CALL_EXPR, FUNCTION_DECL     bounded_flag:         TREE_BOUNDED in 	   expressions, VAR_DECL, PARM_DECL, FIELD_DECL, FUNCTION_DECL, 	   IDENTIFIER_NODE        TYPE_BOUNDED in 	   ..._TYPE     deprecated_flag:  	TREE_DEPRECATED in 	   ..._DECL */
 end_comment
 
 begin_comment
@@ -1027,6 +1027,20 @@ value|((NODE)->common.static_flag)
 end_define
 
 begin_comment
+comment|/* In a TARGET_EXPR, WITH_CLEANUP_EXPR, CLEANUP_STMT, or element of a    block's cleanup list, means that the pertinent cleanup should only be    executed if an exception is thrown, not on normal exit of its scope.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLEANUP_EH_ONLY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|((NODE)->common.static_flag)
+end_define
+
+begin_comment
 comment|/* In a CONVERT_EXPR, NOP_EXPR or COMPOUND_EXPR, this means the node was    made implicitly and should not lead to an "unused value" warning.  */
 end_comment
 
@@ -1055,7 +1069,7 @@ value|((NODE)->common.static_flag)
 end_define
 
 begin_comment
-comment|/* In an INTEGER_CST, REAL_CST, or COMPLEX_CST, this means there was an    overflow in folding.  This is distinct from TREE_OVERFLOW because ANSI C    requires a diagnostic when overflows occur in constant expressions.  */
+comment|/* In an INTEGER_CST, REAL_CST, COMPLEX_CST, or VECTOR_CST this means    there was an overflow in folding.  This is distinct from    TREE_OVERFLOW because ANSI C requires a diagnostic when overflows    occur in constant expressions.  */
 end_comment
 
 begin_define
@@ -1084,7 +1098,7 @@ value|(IDENTIFIER_NODE_CHECK (NODE)->common.static_flag)
 end_define
 
 begin_comment
-comment|/* In an INTEGER_CST, REAL_CST, of COMPLEX_CST, this means there was an    overflow in folding, and no warning has been issued for this subexpression.    TREE_OVERFLOW implies TREE_CONSTANT_OVERFLOW, but not vice versa.  */
+comment|/* In an INTEGER_CST, REAL_CST, COMPLEX_CST, or VECTOR_CST, this means    there was an overflow in folding, and no warning has been issued    for this subexpression.  TREE_OVERFLOW implies    TREE_CONSTANT_OVERFLOW, but not vice versa.  */
 end_comment
 
 begin_define
@@ -1531,7 +1545,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* In REAL_CST, STRING_CST, COMPLEX_CST nodes, and CONSTRUCTOR nodes,    and generally in all kinds of constants that could    be given labels (rather than being immediate).  */
+comment|/* In REAL_CST, STRING_CST, COMPLEX_CST, VECTOR_CST nodes, and    CONSTRUCTOR nodes, and generally in all kinds of constants that    could be given labels (rather than being immediate).  */
 end_comment
 
 begin_define
@@ -1672,6 +1686,38 @@ name|real
 decl_stmt|;
 name|tree
 name|imag
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* In a VECTOR_CST node.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TREE_VECTOR_CST_ELTS
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(VECTOR_CST_CHECK (NODE)->vector.elements)
+end_define
+
+begin_struct
+struct|struct
+name|tree_vector
+block|{
+name|struct
+name|tree_common
+name|common
+decl_stmt|;
+name|rtx
+name|rtl
+decl_stmt|;
+name|tree
+name|elements
 decl_stmt|;
 block|}
 struct|;
@@ -5333,6 +5379,10 @@ name|tree_real_cst
 name|real_cst
 decl_stmt|;
 name|struct
+name|tree_vector
+name|vector
+decl_stmt|;
+name|struct
 name|tree_string
 name|string
 decl_stmt|;
@@ -5466,6 +5516,8 @@ block|,
 name|TI_UV16QI_TYPE
 block|,
 name|TI_V4SF_TYPE
+block|,
+name|TI_V16SF_TYPE
 block|,
 name|TI_V4SI_TYPE
 block|,
@@ -5854,6 +5906,13 @@ define|#
 directive|define
 name|V2SF_type_node
 value|global_trees[TI_V2SF_TYPE]
+end_define
+
+begin_define
+define|#
+directive|define
+name|V16SF_type_node
+value|global_trees[TI_V16SF_TYPE]
 end_define
 
 begin_comment
@@ -6283,6 +6342,21 @@ name|unsigned
 name|HOST_WIDE_INT
 operator|,
 name|HOST_WIDE_INT
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|build_vector
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
 operator|)
 argument_list|)
 decl_stmt|;
@@ -7190,6 +7264,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|bool
+name|default_ms_bitfield_layout_p
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Split a list of declspecs and attributes into two.  */
 end_comment
@@ -7475,6 +7562,10 @@ comment|/* The alignment of the record so far, allowing for the record to be    
 name|unsigned
 name|int
 name|unpadded_align
+decl_stmt|;
+comment|/* The previous field layed out.  */
+name|tree
+name|prev_field
 decl_stmt|;
 comment|/* The static variables (i.e., class variables, as opposed to      instance variables) encountered in T.  */
 name|tree
@@ -9287,7 +9378,7 @@ name|expand_start_stmt_expr
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -9817,15 +9908,27 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|expand_end_case
+name|expand_end_case_type
 name|PARAMS
 argument_list|(
 operator|(
+name|tree
+operator|,
 name|tree
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|expand_end_case
+parameter_list|(
+name|cond
+parameter_list|)
+value|expand_end_case_type (cond, NULL)
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -10370,22 +10473,6 @@ name|PARAMS
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|tree
-name|build_nonstandard_integer_type
-name|PARAMS
-argument_list|(
-operator|(
-name|unsigned
-name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -12176,6 +12263,23 @@ operator|(
 name|tree
 operator|,
 name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|expand_decl_cleanup_eh
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1724,9 +1724,23 @@ decl_stmt|;
 name|tree
 name|value
 decl_stmt|;
+name|tree
+name|cleanup
+decl_stmt|;
 comment|/* Find the initializer.  */
 name|value
 operator|=
+call|(
+modifier|*
+name|lang_hooks
+operator|.
+name|tree_inlining
+operator|.
+name|convert_parm_for_inlining
+call|)
+argument_list|(
+name|p
+argument_list|,
 name|a
 condition|?
 name|TREE_VALUE
@@ -1735,6 +1749,9 @@ name|a
 argument_list|)
 else|:
 name|NULL_TREE
+argument_list|,
+name|fn
+argument_list|)
 expr_stmt|;
 comment|/* If the parameter is never assigned to, we may not need to 	 create a new variable here at all.  Instead, we may be able 	 to just use the argument value.  */
 if|if
@@ -1955,6 +1972,47 @@ operator|=
 name|init_stmt
 expr_stmt|;
 block|}
+comment|/* See if we need to clean up the declaration.  */
+name|cleanup
+operator|=
+name|maybe_build_cleanup
+argument_list|(
+name|var
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cleanup
+condition|)
+block|{
+name|tree
+name|cleanup_stmt
+decl_stmt|;
+comment|/* Build the cleanup statement.  */
+name|cleanup_stmt
+operator|=
+name|build_stmt
+argument_list|(
+name|CLEANUP_STMT
+argument_list|,
+name|var
+argument_list|,
+name|cleanup
+argument_list|)
+expr_stmt|;
+comment|/* Add it to the *front* of the list; the list will be 	     reversed below.  */
+name|TREE_CHAIN
+argument_list|(
+name|cleanup_stmt
+argument_list|)
+operator|=
+name|init_stmts
+expr_stmt|;
+name|init_stmts
+operator|=
+name|cleanup_stmt
+expr_stmt|;
+block|}
 block|}
 comment|/* Evaluate trailing arguments.  */
 for|for
@@ -1975,19 +2033,12 @@ name|init_stmt
 decl_stmt|;
 name|tree
 name|value
-decl_stmt|;
-comment|/* Find the initializer.  */
-name|value
-operator|=
-name|a
-condition|?
+init|=
 name|TREE_VALUE
 argument_list|(
 name|a
 argument_list|)
-else|:
-name|NULL_TREE
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2896,6 +2947,14 @@ argument_list|)
 argument_list|,
 name|NULL_TREE
 argument_list|)
+expr_stmt|;
+comment|/* There is no scope associated with the statement-expression.  */
+name|STMT_EXPR_NO_SCOPE
+argument_list|(
+name|expr
+argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 comment|/* Local declarations will be replaced by their equivalents in this      map.  */
 name|st
@@ -4348,6 +4407,9 @@ name|INTEGER_CST
 case|:
 case|case
 name|REAL_CST
+case|:
+case|case
+name|VECTOR_CST
 case|:
 case|case
 name|STRING_CST

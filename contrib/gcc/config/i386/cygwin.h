@@ -977,6 +977,17 @@ value|" #"
 end_define
 
 begin_comment
+comment|/* DWARF2 Unwinding doesn't work with exception handling yet.  To make it    work, we need to build a libgcc_s.dll, and dcrt0.o should be changed to    call __register_frame_info/__deregister_frame_info.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF2_UNWIND_INFO
+value|0
+end_define
+
+begin_comment
 comment|/* Don't assume anything about the header files.  */
 end_comment
 

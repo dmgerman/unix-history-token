@@ -1050,7 +1050,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* EH_FRAME_SECTION_NAME */
+comment|/* USE_EH_FRAME_REGISTRY */
 ifdef|#
 directive|ifdef
 name|JCR_SECTION_NAME
@@ -1089,7 +1089,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EH_FRAME_SECTION_NAME || JCR_SECTION_NAME */
+comment|/* USE_EH_FRAME_REGISTRY || JCR_SECTION_NAME */
 end_comment
 
 begin_else
@@ -1351,7 +1351,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EH_FRAME_SECTION_NAME || JCR_SECTION_NAME */
+comment|/* USE_EH_FRAME_REGISTRY || JCR_SECTION_NAME */
 end_comment
 
 begin_else

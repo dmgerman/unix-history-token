@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* target.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None     Description:       Implements conversion of lexer tokens to machine-dependent numerical       form and accordingly issues diagnostic messages when necessary.        Also, this module, especially its .h file, provides nearly all of the       information on the target machine's data type, kind type, and length       type capabilities.  The idea is that by carefully going through       target.h and changing things properly, one can accomplish much       towards the porting of the FFE to a new machine.	There are limits       to how much this can accomplish towards that end, however.  For one       thing, the ffeexpr_collapse_convert function doesn't contain all the       conversion cases necessary, because the text file would be       enormous (even though most of the function would be cut during the       cpp phase because of the absence of the types), so when adding to       the number of supported kind types for a given type, one must look       to see if ffeexpr_collapse_convert needs modification in this area,       in addition to providing the appropriate macros and functions in       ffetarget.  Note that if combinatorial explosion actually becomes a       problem for a given machine, one might have to modify the way conversion       expressions are built so that instead of just one conversion expr, a       series of conversion exprs are built to make a path from one type to       another that is not a "near neighbor".  For now, however, with a handful       of each of the numeric types and only one character type, things appear       manageable.        A nonobvious change to ffetarget would be if the target machine was       not a 2's-complement machine.  Any item with the word "magical" (case-       insensitive) in the FFE's source code (at least) indicates an assumption       that a 2's-complement machine is the target, and thus that there exists       a magnitude that can be represented as a negative number but not as       a positive number.  It is possible that this situation can be dealt       with by changing only ffetarget, for example, on a 1's-complement       machine, perhaps #defineing ffetarget_constant_is_magical to simply       FALSE along with making the appropriate changes in ffetarget's number       parsing functions would be sufficient to effectively "comment out" code       in places like ffeexpr that do certain magical checks.  But it is       possible there are other 2's-complement dependencies lurking in the       FFE (as possibly is true of any large program); if you find any, please       report them so we can replace them with dependencies on ffetarget       instead.     Modifications: */
+comment|/* target.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996, 1997, 1998, 2002 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None     Description:       Implements conversion of lexer tokens to machine-dependent numerical       form and accordingly issues diagnostic messages when necessary.        Also, this module, especially its .h file, provides nearly all of the       information on the target machine's data type, kind type, and length       type capabilities.  The idea is that by carefully going through       target.h and changing things properly, one can accomplish much       towards the porting of the FFE to a new machine.	There are limits       to how much this can accomplish towards that end, however.  For one       thing, the ffeexpr_collapse_convert function doesn't contain all the       conversion cases necessary, because the text file would be       enormous (even though most of the function would be cut during the       cpp phase because of the absence of the types), so when adding to       the number of supported kind types for a given type, one must look       to see if ffeexpr_collapse_convert needs modification in this area,       in addition to providing the appropriate macros and functions in       ffetarget.  Note that if combinatorial explosion actually becomes a       problem for a given machine, one might have to modify the way conversion       expressions are built so that instead of just one conversion expr, a       series of conversion exprs are built to make a path from one type to       another that is not a "near neighbor".  For now, however, with a handful       of each of the numeric types and only one character type, things appear       manageable.        A nonobvious change to ffetarget would be if the target machine was       not a 2's-complement machine.  Any item with the word "magical" (case-       insensitive) in the FFE's source code (at least) indicates an assumption       that a 2's-complement machine is the target, and thus that there exists       a magnitude that can be represented as a negative number but not as       a positive number.  It is possible that this situation can be dealt       with by changing only ffetarget, for example, on a 1's-complement       machine, perhaps #defineing ffetarget_constant_is_magical to simply       FALSE along with making the appropriate changes in ffetarget's number       parsing functions would be sufficient to effectively "comment out" code       in places like ffeexpr that do certain magical checks.  But it is       possible there are other 2's-complement dependencies lurking in the       FFE (as possibly is true of any large program); if you find any, please       report them so we can replace them with dependencies on ffetarget       instead.     Modifications: */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|"target.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"diagnostic.h"
 end_include
 
 begin_include
@@ -10337,6 +10343,77 @@ name|size_t
 name|len
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CROSS_COMPILE
+name|int
+name|host_words_big_endian
+init|=
+ifndef|#
+directive|ifndef
+name|HOST_WORDS_BIG_ENDIAN
+literal|0
+else|#
+directive|else
+name|HOST_WORDS_BIG_ENDIAN
+endif|#
+directive|endif
+decl_stmt|;
+name|int
+name|host_bytes_big_endian
+init|=
+ifndef|#
+directive|ifndef
+name|HOST_BYTES_BIG_ENDIAN
+literal|0
+else|#
+directive|else
+name|HOST_BYTES_BIG_ENDIAN
+endif|#
+directive|endif
+decl_stmt|;
+name|int
+name|host_bits_big_endian
+init|=
+ifndef|#
+directive|ifndef
+name|HOST_BITS_BIG_ENDIAN
+literal|0
+else|#
+directive|else
+name|HOST_BITS_BIG_ENDIAN
+endif|#
+directive|endif
+decl_stmt|;
+comment|/* This is just hands thrown up in the air over bits coming through this      function representing a number being memcpy:d as-is from host to      target.  We can't generally adjust endianness here since we don't      know whether it's an integer or floating point number; they're passed      differently.  Better to not emit code at all than to emit wrong code.      We will get some false hits because some data coming through here      seems to be just character vectors, but often enough it's numbers,      for instance in g77.f-torture/execute/980628-[4-6].f and alpha2.f.      Still, we compile *some* code.  FIXME: Rewrite handling of numbers.  */
+if|if
+condition|(
+operator|!
+name|WORDS_BIG_ENDIAN
+operator|!=
+operator|!
+name|host_words_big_endian
+operator|||
+operator|!
+name|BYTES_BIG_ENDIAN
+operator|!=
+operator|!
+name|host_bytes_big_endian
+operator|||
+operator|!
+name|BITS_BIG_ENDIAN
+operator|!=
+operator|!
+name|host_bits_big_endian
+condition|)
+name|sorry
+argument_list|(
+literal|"data initializer on host with different endianness"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* CROSS_COMPILE */
 return|return
 operator|(
 name|void

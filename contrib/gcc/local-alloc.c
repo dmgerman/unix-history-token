@@ -1755,6 +1755,9 @@ case|case
 name|CONST_DOUBLE
 case|:
 case|case
+name|CONST_VECTOR
+case|:
+case|case
 name|SYMBOL_REF
 case|:
 case|case
@@ -2235,6 +2238,9 @@ case|case
 name|CONST_DOUBLE
 case|:
 case|case
+name|CONST_VECTOR
+case|:
+case|case
 name|PC
 case|:
 case|case
@@ -2242,9 +2248,6 @@ name|CC0
 case|:
 case|case
 name|HIGH
-case|:
-case|case
-name|LO_SUM
 case|:
 return|return
 literal|0
@@ -2427,6 +2430,9 @@ name|SYMBOL_REF
 case|:
 case|case
 name|CONST_DOUBLE
+case|:
+case|case
+name|CONST_VECTOR
 case|:
 case|case
 name|PC

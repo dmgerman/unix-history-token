@@ -218,6 +218,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_signed_char
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Implementation of Fortran lexer    Copyright (C) 1995, 1996, 1997, 1998, 2001 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Implementation of Fortran lexer    Copyright (C) 1995, 1996, 1997, 1998, 2001, 2002    Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -1037,6 +1037,7 @@ condition|(
 name|warn_traditional
 condition|)
 block|{
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg_lex
 argument_list|(
 literal|"The meaning of `\\x' (at %0) varies with -traditional"
@@ -1181,6 +1182,7 @@ condition|(
 name|warn_traditional
 condition|)
 block|{
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg_lex
 argument_list|(
 literal|"The meaning of `\\a' (at %0) varies with -traditional"
@@ -1267,6 +1269,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg_lex
 argument_list|(
 literal|"Non-ISO-C-standard escape sequence `\\%A' at %0"
@@ -1345,6 +1348,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg_lex
 argument_list|(
 literal|"Unknown escape sequence `\\%A' at %0"
@@ -1378,6 +1382,7 @@ operator|==
 name|EOF
 condition|)
 block|{
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg_lex
 argument_list|(
 literal|"Unterminated escape sequence `\\' at %0"
@@ -1419,6 +1424,7 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg_lex
 argument_list|(
 literal|"Unknown escape sequence `\\' followed by char code 0x%A at %0"
@@ -1515,6 +1521,7 @@ operator|!
 name|nonnull
 condition|)
 block|{
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg_lex
 argument_list|(
 literal|"\\x used at %0 with no following hex digits"
@@ -1593,6 +1600,7 @@ operator|)
 operator|)
 condition|)
 block|{
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg_lex
 argument_list|(
 literal|"Hex escape at %0 out of range"
@@ -1700,6 +1708,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg_lex
 argument_list|(
 literal|"Escape sequence at %0 out of range for character"
@@ -5270,6 +5279,7 @@ name|column
 operator|+
 literal|4
 expr_stmt|;
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg_lex
 argument_list|(
 literal|"Null character at %0 -- line ignored"

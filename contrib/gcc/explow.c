@@ -470,7 +470,7 @@ break|break;
 case|case
 name|PLUS
 case|:
-comment|/* The interesting case is adding the integer to a sum. 	 Look for constant term in the sum and combine 	 with C.  For an integer constant term, we make a combined 	 integer.  For a constant term that is not an explicit integer, 	 we cannot really combine, but group them together anyway.    	 Restart or use a recursive call in case the remaining operand is 	 something that we handle specially, such as a SYMBOL_REF.  	 We may not immediately return from the recursive call here, lest 	 all_constant gets lost.  */
+comment|/* The interesting case is adding the integer to a sum. 	 Look for constant term in the sum and combine 	 with C.  For an integer constant term, we make a combined 	 integer.  For a constant term that is not an explicit integer, 	 we cannot really combine, but group them together anyway.  	 Restart or use a recursive call in case the remaining operand is 	 something that we handle specially, such as a SYMBOL_REF.  	 We may not immediately return from the recursive call here, lest 	 all_constant gets lost.  */
 if|if
 condition|(
 name|GET_CODE
@@ -2861,16 +2861,8 @@ condition|)
 return|return
 name|x
 return|;
-name|temp
-operator|=
-name|gen_reg_rtx
-argument_list|(
-name|mode
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-operator|!
 name|general_operand
 argument_list|(
 name|x
@@ -2878,13 +2870,12 @@ argument_list|,
 name|mode
 argument_list|)
 condition|)
-name|x
+block|{
+name|temp
 operator|=
-name|force_operand
+name|gen_reg_rtx
 argument_list|(
-name|x
-argument_list|,
-name|NULL_RTX
+name|mode
 argument_list|)
 expr_stmt|;
 name|insn
@@ -2896,6 +2887,57 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|temp
+operator|=
+name|force_operand
+argument_list|(
+name|x
+argument_list|,
+name|NULL_RTX
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|temp
+argument_list|)
+operator|==
+name|REG
+condition|)
+name|insn
+operator|=
+name|get_last_insn
+argument_list|()
+expr_stmt|;
+else|else
+block|{
+name|rtx
+name|temp2
+init|=
+name|gen_reg_rtx
+argument_list|(
+name|mode
+argument_list|)
+decl_stmt|;
+name|insn
+operator|=
+name|emit_move_insn
+argument_list|(
+name|temp2
+argument_list|,
+name|temp
+argument_list|)
+expr_stmt|;
+name|temp
+operator|=
+name|temp2
+expr_stmt|;
+block|}
+block|}
 comment|/* Let optimizers know that TEMP's value never changes      and that X can be substituted for it.  Don't get confused      if INSN set something else (such as a SUBREG of TEMP).  */
 if|if
 condition|(
@@ -3806,7 +3848,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Restore the stack pointer for the purpose in SAVE_LEVEL.  SA is the save    area made by emit_stack_save.  If it is zero, we have nothing to do.      Put any emitted insns after insn AFTER, if nonzero, otherwise at     current position.  */
+comment|/* Restore the stack pointer for the purpose in SAVE_LEVEL.  SA is the save    area made by emit_stack_save.  If it is zero, we have nothing to do.     Put any emitted insns after insn AFTER, if nonzero, otherwise at    current position.  */
 end_comment
 
 begin_function
@@ -4070,7 +4112,7 @@ argument_list|(
 name|insn
 argument_list|)
 decl_stmt|;
-comment|/* If we do not see the note in a pattern matching 		 these precise characteristics, we did something 		 entirely wrong in allocate_dynamic_stack_space.   		 Note, one way this could happen is if SETJMP_VIA_SAVE_AREA 		 was defined on a machine where stacks grow towards higher 		 addresses.  		 Right now only supported port with stack that grow upward 		 is the HPPA and it does not define SETJMP_VIA_SAVE_AREA.  */
+comment|/* If we do not see the note in a pattern matching 		 these precise characteristics, we did something 		 entirely wrong in allocate_dynamic_stack_space.  		 Note, one way this could happen is if SETJMP_VIA_SAVE_AREA 		 was defined on a machine where stacks grow towards higher 		 addresses.  		 Right now only supported port with stack that grow upward 		 is the HPPA and it does not define SETJMP_VIA_SAVE_AREA.  */
 if|if
 condition|(
 name|GET_CODE
@@ -4326,7 +4368,7 @@ name|preferred_stack_boundary
 operator|=
 name|PREFERRED_STACK_BOUNDARY
 expr_stmt|;
-comment|/* We will need to ensure that the address we return is aligned to      BIGGEST_ALIGNMENT.  If STACK_DYNAMIC_OFFSET is defined, we don't      always know its final value at this point in the compilation (it       might depend on the size of the outgoing parameter lists, for      example), so we must align the value to be returned in that case.      (Note that STACK_DYNAMIC_OFFSET will have a default non-zero value if      STACK_POINTER_OFFSET or ACCUMULATE_OUTGOING_ARGS are defined).      We must also do an alignment operation on the returned value if      the stack pointer alignment is less strict that BIGGEST_ALIGNMENT.       If we have to align, we must leave space in SIZE for the hole      that might result from the alignment operation.  */
+comment|/* We will need to ensure that the address we return is aligned to      BIGGEST_ALIGNMENT.  If STACK_DYNAMIC_OFFSET is defined, we don't      always know its final value at this point in the compilation (it      might depend on the size of the outgoing parameter lists, for      example), so we must align the value to be returned in that case.      (Note that STACK_DYNAMIC_OFFSET will have a default non-zero value if      STACK_POINTER_OFFSET or ACCUMULATE_OUTGOING_ARGS are defined).      We must also do an alignment operation on the returned value if      the stack pointer alignment is less strict that BIGGEST_ALIGNMENT.       If we have to align, we must leave space in SIZE for the hole      that might result from the alignment operation.  */
 if|#
 directive|if
 name|defined
@@ -5051,7 +5093,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* A front end may want to override GCC's stack checking by providing a     run-time routine to call to check the stack, so provide a mechanism for    calling that routine.  */
+comment|/* A front end may want to override GCC's stack checking by providing a    run-time routine to call to check the stack, so provide a mechanism for    calling that routine.  */
 end_comment
 
 begin_decl_stmt
@@ -5147,7 +5189,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Probe a range of stack addresses from FIRST to FIRST+SIZE, inclusive.     FIRST is a constant and size is a Pmode RTX.  These are offsets from the    current stack pointer.  STACK_GROWS_DOWNWARD says whether to add or    subtract from the stack.  If SIZE is constant, this is done    with a fixed number of probes.  Otherwise, we must make a loop.  */
+comment|/* Probe a range of stack addresses from FIRST to FIRST+SIZE, inclusive.    FIRST is a constant and size is a Pmode RTX.  These are offsets from the    current stack pointer.  STACK_GROWS_DOWNWARD says whether to add or    subtract from the stack.  If SIZE is constant, this is done    with a fixed number of probes.  Otherwise, we must make a loop.  */
 end_comment
 
 begin_ifdef
@@ -5800,6 +5842,7 @@ name|enum
 name|machine_mode
 name|tmpmode
 decl_stmt|;
+comment|/* int_size_in_bytes can return -1.  We don't need a check here 	 since the value of bytes will be large enough that no mode 	 will match and we will abort later in this function.  */
 for|for
 control|(
 name|tmpmode

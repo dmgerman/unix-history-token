@@ -7927,13 +7927,9 @@ name|op
 operator|++
 control|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|c
+name|tree
+name|id
 init|=
-name|IDENTIFIER_POINTER
-argument_list|(
 name|TREE_PURPOSE
 argument_list|(
 name|TREE_PURPOSE
@@ -7941,6 +7937,20 @@ argument_list|(
 name|t
 argument_list|)
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|id
+condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|c
+init|=
+name|IDENTIFIER_POINTER
+argument_list|(
+name|id
 argument_list|)
 decl_stmt|;
 if|if
@@ -7969,6 +7979,7 @@ goto|goto
 name|found
 goto|;
 block|}
+block|}
 for|for
 control|(
 name|t
@@ -7988,13 +7999,9 @@ name|op
 operator|++
 control|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|c
+name|tree
+name|id
 init|=
-name|IDENTIFIER_POINTER
-argument_list|(
 name|TREE_PURPOSE
 argument_list|(
 name|TREE_PURPOSE
@@ -8002,6 +8009,20 @@ argument_list|(
 name|t
 argument_list|)
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|id
+condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|c
+init|=
+name|IDENTIFIER_POINTER
+argument_list|(
+name|id
 argument_list|)
 decl_stmt|;
 if|if
@@ -8029,6 +8050,7 @@ condition|)
 goto|goto
 name|found
 goto|;
+block|}
 block|}
 operator|*
 name|q
@@ -8467,17 +8489,6 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* If this is an expression with side effects, don't warn.  */
-if|if
-condition|(
-name|TREE_SIDE_EFFECTS
-argument_list|(
-name|exp
-argument_list|)
-condition|)
-return|return
-literal|0
-return|;
 switch|switch
 condition|(
 name|TREE_CODE
@@ -8715,7 +8726,7 @@ literal|0
 return|;
 block|}
 goto|goto
-name|warn
+name|maybe_warn
 goto|;
 case|case
 name|INDIRECT_REF
@@ -8805,8 +8816,19 @@ condition|)
 return|return
 literal|0
 return|;
-name|warn
+name|maybe_warn
 label|:
+comment|/* If this is an expression with side effects, don't warn.  */
+if|if
+condition|(
+name|TREE_SIDE_EFFECTS
+argument_list|(
+name|exp
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 name|warning_with_file_and_line
 argument_list|(
 name|emit_filename
@@ -8840,13 +8862,18 @@ block|}
 end_function
 
 begin_comment
-comment|/* Begin a statement which will return a value.    Return the RTL_EXPR for this statement expr.    The caller must save that value and pass it to expand_end_stmt_expr.  */
+comment|/* Begin a statement-expression, i.e., a series of statements which    may return a value.  Return the RTL_EXPR for this statement expr.    The caller must save that value and pass it to    expand_end_stmt_expr.  If HAS_SCOPE is nonzero, temporaries created    in the statement-expression are deallocated at the end of the    expression.  */
 end_comment
 
 begin_function
 name|tree
 name|expand_start_stmt_expr
-parameter_list|()
+parameter_list|(
+name|has_scope
+parameter_list|)
+name|int
+name|has_scope
+decl_stmt|;
 block|{
 name|tree
 name|t
@@ -8862,10 +8889,18 @@ expr_stmt|;
 name|do_pending_stack_adjust
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|has_scope
+condition|)
 name|start_sequence_for_rtl_expr
 argument_list|(
 name|t
 argument_list|)
+expr_stmt|;
+else|else
+name|start_sequence
+argument_list|()
 expr_stmt|;
 name|NO_DEFER_POP
 expr_stmt|;
@@ -13341,23 +13376,7 @@ block|{
 name|expand_nl_goto_receiver
 argument_list|()
 expr_stmt|;
-name|emit_library_call
-argument_list|(
-name|gen_rtx_SYMBOL_REF
-argument_list|(
-name|Pmode
-argument_list|,
-literal|"abort"
-argument_list|)
-argument_list|,
-name|LCT_NORETURN
-argument_list|,
-name|VOIDmode
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|emit_barrier
+name|expand_builtin_trap
 argument_list|()
 expr_stmt|;
 block|}
@@ -14536,10 +14555,7 @@ name|x
 operator|=
 name|assign_temp
 argument_list|(
-name|TREE_TYPE
-argument_list|(
 name|decl
-argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -15270,6 +15286,71 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Like expand_decl_cleanup, but maybe only run the cleanup if an exception    is thrown.  */
+end_comment
+
+begin_function
+name|int
+name|expand_decl_cleanup_eh
+parameter_list|(
+name|decl
+parameter_list|,
+name|cleanup
+parameter_list|,
+name|eh_only
+parameter_list|)
+name|tree
+name|decl
+decl_stmt|,
+name|cleanup
+decl_stmt|;
+name|int
+name|eh_only
+decl_stmt|;
+block|{
+name|int
+name|ret
+init|=
+name|expand_decl_cleanup
+argument_list|(
+name|decl
+argument_list|,
+name|cleanup
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|cleanup
+operator|&&
+name|ret
+condition|)
+block|{
+name|tree
+name|node
+init|=
+name|block_stack
+operator|->
+name|data
+operator|.
+name|block
+operator|.
+name|cleanups
+decl_stmt|;
+name|CLEANUP_EH_ONLY
+argument_list|(
+name|node
+argument_list|)
+operator|=
+name|eh_only
+expr_stmt|;
+block|}
+return|return
+name|ret
+return|;
+block|}
+end_function
+
 begin_escape
 end_escape
 
@@ -15414,6 +15495,21 @@ name|decl_elt
 argument_list|)
 argument_list|)
 decl_stmt|;
+comment|/* If any of the elements are addressable, so is the entire 	 union.  */
+if|if
+condition|(
+name|TREE_USED
+argument_list|(
+name|decl_elt
+argument_list|)
+condition|)
+name|TREE_USED
+argument_list|(
+name|decl
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Propagate the union's alignment to the elements.  */
 name|DECL_ALIGN
 argument_list|(
@@ -15701,6 +15797,12 @@ expr_stmt|;
 if|if
 condition|(
 name|reachable
+operator|&&
+operator|!
+name|CLEANUP_EH_ONLY
+argument_list|(
+name|tail
+argument_list|)
 condition|)
 block|{
 comment|/* Cleanups may be run multiple times.  For example, 		   when exiting a binding contour, we expand the 		   cleanups associated with that contour.  When a goto 		   within that binding contour has a target outside that 		   contour, it will expand all cleanups from its scope to 		   the target.  Though the cleanups are expanded multiple 		   times, the control paths are non-overlapping so the 		   cleanups will not be executed twice.  */
@@ -17931,7 +18033,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Returns the number of possible values of TYPE.    Returns -1 if the number is unknown, variable, or if the number does not    fit in a HOST_WIDE_INT.    Sets *SPARENESS to 2 if TYPE is an ENUMERAL_TYPE whose values    do not increase monotonically (there may be duplicates);    to 1 if the values increase monotonically, but not always by 1;    otherwise sets it to 0.  */
+comment|/* Returns the number of possible values of TYPE.    Returns -1 if the number is unknown, variable, or if the number does not    fit in a HOST_WIDE_INT.    Sets *SPARSENESS to 2 if TYPE is an ENUMERAL_TYPE whose values    do not increase monotonically (there may be duplicates);    to 1 if the values increase monotonically, but not always by 1;    otherwise sets it to 0.  */
 end_comment
 
 begin_function
@@ -17940,14 +18042,14 @@ name|all_cases_count
 parameter_list|(
 name|type
 parameter_list|,
-name|spareness
+name|sparseness
 parameter_list|)
 name|tree
 name|type
 decl_stmt|;
 name|int
 modifier|*
-name|spareness
+name|sparseness
 decl_stmt|;
 block|{
 name|tree
@@ -17961,7 +18063,7 @@ decl_stmt|,
 name|lastval
 decl_stmt|;
 operator|*
-name|spareness
+name|sparseness
 operator|=
 literal|0
 expr_stmt|;
@@ -18171,16 +18273,16 @@ decl_stmt|;
 if|if
 condition|(
 operator|*
-name|spareness
+name|sparseness
 operator|==
 literal|2
 operator|||
 name|thisval
-operator|<
+operator|<=
 name|lastval
 condition|)
 operator|*
-name|spareness
+name|sparseness
 operator|=
 literal|2
 expr_stmt|;
@@ -18194,9 +18296,13 @@ operator|+
 name|count
 condition|)
 operator|*
-name|spareness
+name|sparseness
 operator|=
 literal|1
+expr_stmt|;
+name|lastval
+operator|=
+name|thisval
 expr_stmt|;
 name|count
 operator|++
@@ -19293,17 +19399,21 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Terminate a case (Pascal) or switch (C) statement    in which ORIG_INDEX is the expression to be tested.    Generate the code to test it and jump to the right place.  */
+comment|/* Terminate a case (Pascal) or switch (C) statement    in which ORIG_INDEX is the expression to be tested.    If ORIG_TYPE is not NULL, it is the original ORIG_INDEX    type as given in the source before any compiler conversions.    Generate the code to test it and jump to the right place.  */
 end_comment
 
 begin_function
 name|void
-name|expand_end_case
+name|expand_end_case_type
 parameter_list|(
 name|orig_index
+parameter_list|,
+name|orig_type
 parameter_list|)
 name|tree
 name|orig_index
+decl_stmt|,
+name|orig_type
 decl_stmt|;
 block|{
 name|tree
@@ -19406,6 +19516,19 @@ argument_list|(
 name|index_type
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|orig_type
+operator|==
+name|NULL
+condition|)
+name|orig_type
+operator|=
+name|TREE_TYPE
+argument_list|(
+name|orig_index
+argument_list|)
+expr_stmt|;
 name|do_pending_stack_adjust
 argument_list|()
 expr_stmt|;
@@ -19435,10 +19558,7 @@ name|default_label
 operator|&&
 name|TREE_CODE
 argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|orig_index
-argument_list|)
+name|orig_type
 argument_list|)
 operator|==
 name|ENUMERAL_TYPE
@@ -19452,10 +19572,7 @@ name|INTEGER_CST
 condition|)
 name|check_for_full_enumeration_handling
 argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|orig_index
-argument_list|)
+name|orig_type
 argument_list|)
 expr_stmt|;
 comment|/* If we don't have a default-label, create one here, 	 after the body of the switch.  */
@@ -20102,10 +20219,7 @@ operator|=
 operator|(
 name|TREE_CODE
 argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|orig_index
-argument_list|)
+name|orig_type
 argument_list|)
 operator|!=
 name|ENUMERAL_TYPE

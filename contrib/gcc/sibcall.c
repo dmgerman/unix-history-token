@@ -75,6 +75,12 @@ directive|include
 file|"except.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"tree.h"
+end_include
+
 begin_comment
 comment|/* In case alternate_exit_block contains copy from pseudo, to return value,    record the pseudo here.  In such case the pseudo must be set to function    return in the sibcall sequence.  */
 end_comment
@@ -2283,8 +2289,10 @@ name|alternate_exit
 init|=
 name|EXIT_BLOCK_PTR
 decl_stmt|;
-name|int
-name|current_function_uses_addressof
+name|bool
+name|no_sibcalls_this_function
+init|=
+name|false
 decl_stmt|;
 name|int
 name|successful_sibling_call
@@ -2339,6 +2347,18 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/* If we are using sjlj exceptions, we may need to add a call to       _Unwind_SjLj_Unregister at exit of the function.  Which means      that we cannot do any sibcall transformations.  */
+if|if
+condition|(
+name|USING_SJLJ_EXCEPTIONS
+operator|&&
+name|current_function_has_exception_handlers
+argument_list|()
+condition|)
+name|no_sibcalls_this_function
+operator|=
+name|true
+expr_stmt|;
 name|return_value_pseudo
 operator|=
 name|NULL_RTX
@@ -2518,8 +2538,8 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* If the function uses ADDRESSOF, we can't (easily) determine      at this point if the value will end up on the stack.  */
-name|current_function_uses_addressof
-operator|=
+name|no_sibcalls_this_function
+operator||=
 name|sequence_uses_addressof
 argument_list|(
 name|insns
@@ -2617,13 +2637,13 @@ name|sibcall
 operator|=
 literal|0
 expr_stmt|;
-comment|/* See if there are any reasons we can't perform either sibling or 	     tail call optimizations.  We must be careful with stack slots 	     which are live at potential optimization sites.  ??? The first 	     test is overly conservative and should be replaced.  */
+comment|/* See if there are any reasons we can't perform either sibling or 	     tail call optimizations.  We must be careful with stack slots 	     which are live at potential optimization sites.  */
 if|if
 condition|(
-name|frame_offset
-comment|/* Can't take address of local var if used by recursive call.  */
+name|no_sibcalls_this_function
+comment|/* ??? Overly conservative.  */
 operator|||
-name|current_function_uses_addressof
+name|frame_offset
 comment|/* Any function that calls setjmp might have longjmp called from 		 any called function.  ??? We really should represent this 		 properly in the CFG so that this needn't be special cased.  */
 operator|||
 name|current_function_calls_setjmp
@@ -2722,6 +2742,9 @@ block|{
 name|rtx
 name|insn
 decl_stmt|;
+name|tree
+name|arg
+decl_stmt|;
 comment|/* A sibling call sequence invalidates any REG_EQUIV notes made for 	 this function's incoming arguments.   	 At the start of RTL generation we know the only REG_EQUIV notes 	 in the rtl chain are those for incoming arguments, so we can safely 	 flush any REG_EQUIV note.   	 This is (slight) overkill.  We could keep track of the highest 	 argument we clobber and be more selective in removing notes, but it 	 does not seem to be worth the effort.  */
 name|purge_reg_equiv_notes
 argument_list|()
@@ -2758,6 +2781,47 @@ argument_list|(
 name|insn
 argument_list|)
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* Similarly, invalidate RTX_UNCHANGING_P for any incoming 	 arguments passed in registers. */
+for|for
+control|(
+name|arg
+operator|=
+name|DECL_ARGUMENTS
+argument_list|(
+name|current_function_decl
+argument_list|)
+init|;
+name|arg
+condition|;
+name|arg
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|arg
+argument_list|)
+control|)
+block|{
+if|if
+condition|(
+name|REG_P
+argument_list|(
+name|DECL_RTL
+argument_list|(
+name|arg
+argument_list|)
+argument_list|)
+condition|)
+name|RTX_UNCHANGING_P
+argument_list|(
+name|DECL_RTL
+argument_list|(
+name|arg
+argument_list|)
+argument_list|)
+operator|=
+name|false
 expr_stmt|;
 block|}
 block|}

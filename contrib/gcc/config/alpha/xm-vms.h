@@ -71,6 +71,17 @@ name|__UNIX_FOPEN
 value|1
 end_define
 
+begin_comment
+comment|/* Write to stdout using fputc to avoid record terminators in pipes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__UNIX_FWRITE
+value|1
+end_define
+
 begin_define
 define|#
 directive|define

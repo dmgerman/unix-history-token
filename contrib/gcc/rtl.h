@@ -713,7 +713,7 @@ parameter_list|(
 name|X
 parameter_list|)
 define|\
-value|(GET_CODE (X) == LABEL_REF || GET_CODE (X) == SYMBOL_REF		\    || GET_CODE (X) == CONST_INT || GET_CODE (X) == CONST_DOUBLE		\    || GET_CODE (X) == CONST || GET_CODE (X) == HIGH			\    || GET_CODE (X) == CONSTANT_P_RTX)
+value|(GET_CODE (X) == LABEL_REF || GET_CODE (X) == SYMBOL_REF		\    || GET_CODE (X) == CONST_INT || GET_CODE (X) == CONST_DOUBLE		\    || GET_CODE (X) == CONST || GET_CODE (X) == HIGH			\    || GET_CODE (X) == CONST_VECTOR	                                \    || GET_CODE (X) == CONSTANT_P_RTX)
 end_define
 
 begin_comment
@@ -2484,6 +2484,36 @@ parameter_list|(
 name|r
 parameter_list|)
 value|XCEXP (r, 0, CONST_DOUBLE)
+end_define
+
+begin_comment
+comment|/* For a CONST_VECTOR, return element #n.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONST_VECTOR_ELT
+parameter_list|(
+name|RTX
+parameter_list|,
+name|N
+parameter_list|)
+value|XCVECEXP (RTX, 0, N, CONST_VECTOR)
+end_define
+
+begin_comment
+comment|/* For a CONST_VECTOR, return the number of elements in a vector.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONST_VECTOR_NUNITS
+parameter_list|(
+name|RTX
+parameter_list|)
+value|XCVECLEN (RTX, 0, CONST_VECTOR)
 end_define
 
 begin_comment
@@ -4896,6 +4926,22 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|rtx
+name|get_pool_constant_mark
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|bool
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|enum
 name|machine_mode
 name|get_pool_mode
@@ -6877,6 +6923,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|pure_call_p
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|remove_note
 name|PARAMS
@@ -8662,6 +8721,8 @@ name|never_reached_warning
 name|PARAMS
 argument_list|(
 operator|(
+name|rtx
+operator|,
 name|rtx
 operator|)
 argument_list|)

@@ -793,6 +793,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|JUMP_TARGET
+parameter_list|(
+name|name
+parameter_list|)
+value|FUNC_NAME(name)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FUNC_START
 parameter_list|(
 name|name

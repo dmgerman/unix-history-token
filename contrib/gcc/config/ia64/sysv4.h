@@ -87,6 +87,23 @@ value|"\tstring\t"
 end_define
 
 begin_comment
+comment|/* ia64-specific options for gas    ??? ia64 gas doesn't accept standard svr4 assembler options?  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_SPEC
+value|"-x %{mconstant-gp} %{mauto-pic} %(asm_extra)"
+end_define
+
+begin_comment
 comment|/* ??? Unfortunately, .lcomm doesn't work, because it puts things in either    .bss or .sbss, and we can't control the decision of which is used.  When    I use .lcomm, I get a cryptic "Section group has no member" error from    the Intel simulator.  So we must explicitly put variables in .bss    instead.  This matters only if we care about the Intel assembler.  */
 end_comment
 

@@ -528,6 +528,9 @@ operator|,
 name|rtx
 operator|,
 name|int
+operator|,
+name|CUMULATIVE_ARGS
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1675,6 +1678,8 @@ parameter_list|,
 name|call_fusage
 parameter_list|,
 name|ecf_flags
+parameter_list|,
+name|args_so_far
 parameter_list|)
 name|rtx
 name|funexp
@@ -1713,6 +1718,11 @@ name|call_fusage
 decl_stmt|;
 name|int
 name|ecf_flags
+decl_stmt|;
+name|CUMULATIVE_ARGS
+modifier|*
+name|args_so_far
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|rtx
@@ -1762,6 +1772,19 @@ operator|=
 name|GEN_INT
 argument_list|(
 name|struct_value_size
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|CALL_POPS_ARGS
+name|n_popped
+operator|+=
+name|CALL_POPS_ARGS
+argument_list|(
+operator|*
+name|args_so_far
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5915,9 +5938,6 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-name|push_temp_slots
-argument_list|()
-expr_stmt|;
 name|args
 index|[
 name|i
@@ -5940,19 +5960,6 @@ name|VOIDmode
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|preserve_temp_slots
-argument_list|(
-name|args
-index|[
-name|i
-index|]
-operator|.
-name|value
-argument_list|)
-expr_stmt|;
-name|pop_temp_slots
-argument_list|()
 expr_stmt|;
 comment|/* ANSI doesn't require a sequence point here, 	   but PCC has one, so this will avoid some problems.  */
 name|emit_queue
@@ -9722,10 +9729,6 @@ operator|)
 condition|)
 name|NO_DEFER_POP
 expr_stmt|;
-comment|/* Push the temporary stack slot level so that we can free any 	 temporaries we make.  */
-name|push_temp_slots
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FINAL_REG_PARM_STACK_SPACE
@@ -10851,6 +10854,9 @@ argument_list|,
 name|call_fusage
 argument_list|,
 name|flags
+argument_list|,
+operator|&
+name|args_so_far
 argument_list|)
 expr_stmt|;
 comment|/* Verify that we've deallocated all the stack we used.  */
@@ -11968,9 +11974,6 @@ name|nonlocal_goto_stack_level
 argument_list|,
 name|NULL_RTX
 argument_list|)
-expr_stmt|;
-name|pop_temp_slots
-argument_list|()
 expr_stmt|;
 comment|/* Free up storage we no longer need.  */
 for|for
@@ -14883,6 +14886,9 @@ argument_list|,
 name|call_fusage
 argument_list|,
 name|flags
+argument_list|,
+operator|&
+name|args_so_far
 argument_list|)
 expr_stmt|;
 comment|/* For calls to `setjmp', etc., inform flow.c it should complain      if nonvolatile values are live.  For functions that cannot return,      inform flow that control does not fall through.  */
@@ -16037,18 +16043,33 @@ name|arg
 operator|->
 name|pass_on_stack
 condition|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|ECF_SIBCALL
+condition|)
+name|reg
+operator|=
+name|arg
+operator|->
+name|tail_call_reg
+expr_stmt|;
+else|else
 name|reg
 operator|=
 name|arg
 operator|->
 name|reg
-operator|,
+expr_stmt|;
 name|partial
 operator|=
 name|arg
 operator|->
 name|partial
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|reg
@@ -16336,6 +16357,21 @@ operator|->
 name|alignment_pad
 argument_list|)
 argument_list|)
+expr_stmt|;
+comment|/* Unless this is a partially-in-register argument, the argument is now 	 in the stack.  */
+if|if
+condition|(
+name|partial
+operator|==
+literal|0
+condition|)
+name|arg
+operator|->
+name|value
+operator|=
+name|arg
+operator|->
+name|stack
 expr_stmt|;
 block|}
 else|else
@@ -16819,8 +16855,7 @@ name|alignment_pad
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* Unless this is a partially-in-register argument, the argument is now      in the stack.       ??? Note that this can change arg->value from arg->stack to      arg->stack_slot and it matters when they are not the same.      It isn't totally clear that this is correct in all cases.  */
+comment|/* Unless this is a partially-in-register argument, the argument is now 	 in the stack.  	 ??? Unlike the case above, in which we want the actual 	 address of the data, so that we can load it directly into a 	 register, here we want the address of the stack slot, so that 	 it's properly aligned for word-by-word copying or something 	 like that.  It's not clear that this is always correct.  */
 if|if
 condition|(
 name|partial
@@ -16835,6 +16870,7 @@ name|arg
 operator|->
 name|stack_slot
 expr_stmt|;
+block|}
 comment|/* Once we have pushed something, pops can't safely      be deferred during the rest of the arguments.  */
 name|NO_DEFER_POP
 expr_stmt|;

@@ -4625,6 +4625,22 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|ARRAY_TYPE
+condition|)
+comment|/* It is important not to use the TYPE_MAIN_VARIANT of TYPE here        so that the cv-qualification of the element type is available        in write_array_type.  */
+name|write_array_type
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
 else|else
 block|{
 comment|/* See through any typedefs.  */
@@ -4740,15 +4756,6 @@ name|TYPE_STUB_DECL
 argument_list|(
 name|type
 argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ARRAY_TYPE
-case|:
-name|write_array_type
-argument_list|(
-name|type
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4912,13 +4919,15 @@ name|num_qualifiers
 init|=
 literal|0
 decl_stmt|;
-comment|/* The order is specified by:         "In cases where multiple order-insensitive qualifiers are        present, they should be ordered 'K' (closest to the base type),        'V', 'r', and 'U' (farthest from the base type) ..."  */
+comment|/* The order is specified by:         "In cases where multiple order-insensitive qualifiers are        present, they should be ordered 'K' (closest to the base type),        'V', 'r', and 'U' (farthest from the base type) ..."         Note that we do not use cp_type_quals below; given "const      int[3]", the "const" is emitted with the "int", not with the      array.  */
 if|if
 condition|(
-name|CP_TYPE_RESTRICT_P
+name|TYPE_QUALS
 argument_list|(
 name|type
 argument_list|)
+operator|&
+name|TYPE_QUAL_RESTRICT
 condition|)
 block|{
 name|write_char
@@ -4932,10 +4941,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|CP_TYPE_VOLATILE_P
+name|TYPE_QUALS
 argument_list|(
 name|type
 argument_list|)
+operator|&
+name|TYPE_QUAL_VOLATILE
 condition|)
 block|{
 name|write_char
@@ -4949,10 +4960,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|CP_TYPE_CONST_P
+name|TYPE_QUALS
 argument_list|(
 name|type
 argument_list|)
+operator|&
+name|TYPE_QUAL_CONST
 condition|)
 block|{
 name|write_char
@@ -4971,7 +4984,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Non-terminal<builtin-type>.<builtin-type> ::= v   # void                      ::= b   # bool                     ::= w   # wchar_t                     ::= c   # char                     ::= a   # signed char                     ::= h   # unsigned char                     ::= s   # short                     ::= t   # unsigned short                     ::= i   # int                     ::= j   # unsigned int                     ::= l   # long                     ::= m   # unsigned long                     ::= x   # long long, __int64                     ::= y   # unsigned long long, __int64                       ::= n   # __int128            [not supported]                     ::= o   # unsigned __int128   [not supported]                      ::= f   # float                     ::= d   # double                     ::= e   # long double, __float80                      ::= g   # __float128          [not supported]                     ::= u<source-name>  # vendor extended type */
+comment|/* Non-terminal<builtin-type>.<builtin-type> ::= v   # void                      ::= b   # bool                     ::= w   # wchar_t                     ::= c   # char                     ::= a   # signed char                     ::= h   # unsigned char                     ::= s   # short                     ::= t   # unsigned short                     ::= i   # int                     ::= j   # unsigned int                     ::= l   # long                     ::= m   # unsigned long                     ::= x   # long long, __int64                     ::= y   # unsigned long long, __int64                       ::= n   # __int128                     ::= o   # unsigned __int128                     ::= f   # float                     ::= d   # double                     ::= e   # long double, __float80                      ::= g   # __float128          [not supported]                     ::= u<source-name>  # vendor extended type */
 end_comment
 
 begin_function
@@ -5125,10 +5138,36 @@ name|type
 operator|==
 name|t
 condition|)
+block|{
+if|if
+condition|(
+name|TYPE_PRECISION
+argument_list|(
+name|type
+argument_list|)
+operator|==
+literal|128
+condition|)
+name|write_char
+argument_list|(
+name|TREE_UNSIGNED
+argument_list|(
+name|type
+argument_list|)
+condition|?
+literal|'o'
+else|:
+literal|'n'
+argument_list|)
+expr_stmt|;
+else|else
 comment|/* Couldn't find this type.  */
 name|abort
 argument_list|()
 expr_stmt|;
+block|}
+else|else
+block|{
 name|type
 operator|=
 name|t
@@ -5136,6 +5175,7 @@ expr_stmt|;
 goto|goto
 name|iagain
 goto|;
+block|}
 block|}
 block|}
 break|break;
@@ -5220,6 +5260,38 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+comment|/* For a pointer to member function, the function type may have      cv-qualifiers, indicating the quals for the artificial 'this'      parameter.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|METHOD_TYPE
+condition|)
+block|{
+comment|/* The first parameter must be a POINTER_TYPE pointing to the 	 `this' parameter.  */
+name|tree
+name|this_type
+init|=
+name|TREE_TYPE
+argument_list|(
+name|TREE_VALUE
+argument_list|(
+name|TYPE_ARG_TYPES
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|write_CV_qualifiers_for_type
+argument_list|(
+name|this_type
+argument_list|)
+expr_stmt|;
+block|}
 name|write_char
 argument_list|(
 literal|'F'
@@ -5695,6 +5767,41 @@ name|expr
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Skip NOP_EXPRs.  They can occur when (say) a pointer argument      is converted (via qualification conversions) to another      type.  */
+while|while
+condition|(
+name|TREE_CODE
+argument_list|(
+name|expr
+argument_list|)
+operator|==
+name|NOP_EXPR
+operator|||
+name|TREE_CODE
+argument_list|(
+name|expr
+argument_list|)
+operator|==
+name|NON_LVALUE_EXPR
+condition|)
+block|{
+name|expr
+operator|=
+name|TREE_OPERAND
+argument_list|(
+name|expr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|code
+operator|=
+name|TREE_CODE
+argument_list|(
+name|expr
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Handle template parameters. */
 if|if
 condition|(
@@ -5765,34 +5872,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* Skip NOP_EXPRs.  They can occur when (say) a pointer argument 	 is converted (via qualification conversions) to another 	 type.  */
-while|while
-condition|(
-name|TREE_CODE
-argument_list|(
-name|expr
-argument_list|)
-operator|==
-name|NOP_EXPR
-condition|)
-block|{
-name|expr
-operator|=
-name|TREE_OPERAND
-argument_list|(
-name|expr
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|code
-operator|=
-name|TREE_CODE
-argument_list|(
-name|expr
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* When we bind a variable or function to a non-type template 	 argument with reference type, we create an ADDR_EXPR to show 	 the fact that the entity's address has been taken.  But, we 	 don't actually want to output a mangling code for the `&'.  */
 if|if
 condition|(
@@ -6550,50 +6629,6 @@ argument_list|(
 literal|'M'
 argument_list|)
 expr_stmt|;
-comment|/* For a pointer-to-function member, the class type may be      cv-qualified, but that won't be reflected in      TYPE_PTRMEM_CLASS_TYPE.  So, we go fishing around in      TYPE_PTRMEM_POINTED_TO_TYPE instead.  */
-if|if
-condition|(
-name|TYPE_PTRMEMFUNC_P
-argument_list|(
-name|type
-argument_list|)
-condition|)
-block|{
-name|tree
-name|fn_type
-decl_stmt|;
-name|tree
-name|this_type
-decl_stmt|;
-name|fn_type
-operator|=
-name|TYPE_PTRMEM_POINTED_TO_TYPE
-argument_list|(
-name|type
-argument_list|)
-expr_stmt|;
-comment|/* The first parameter must be a POINTER_TYPE pointing to the 	 `this' parameter.  */
-name|this_type
-operator|=
-name|TREE_TYPE
-argument_list|(
-name|TREE_VALUE
-argument_list|(
-name|TYPE_ARG_TYPES
-argument_list|(
-name|fn_type
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|write_type
-argument_list|(
-name|this_type
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* For a pointer-to-data member, things are simpler.  */
-else|else
 name|write_type
 argument_list|(
 name|TYPE_PTRMEM_CLASS_TYPE

@@ -1718,6 +1718,8 @@ expr_stmt|;
 comment|/* If brack == qtail, remove brack as it's simpler.  */
 if|if
 condition|(
+name|brack
+operator|&&
 name|INO_T_EQ
 argument_list|(
 name|qtail
@@ -2384,6 +2386,31 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
+if|#
+directive|if
+name|DEFAULT_SIGNED_CHAR
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|signed_char
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|signed_char
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|CPP_OPTION
 argument_list|(
 name|pfile
@@ -3651,6 +3678,24 @@ argument_list|(
 name|pfile
 argument_list|,
 literal|"__STDC_VERSION__ 199901L"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|signed_char
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|_cpp_define_builtin
+argument_list|(
+name|pfile
+argument_list|,
+literal|"__CHAR_UNSIGNED__ 1"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5015,8 +5060,11 @@ name|pfile
 argument_list|,
 name|deps_file
 argument_list|)
-operator|==
+index|[
 literal|0
+index|]
+operator|==
+literal|'\0'
 condition|)
 name|deps_stream
 operator|=
@@ -5092,12 +5140,9 @@ expr_stmt|;
 comment|/* Don't close stdout.  */
 if|if
 condition|(
-name|CPP_OPTION
-argument_list|(
-name|pfile
-argument_list|,
-name|deps_file
-argument_list|)
+name|deps_stream
+operator|!=
+name|stdout
 condition|)
 block|{
 if|if
@@ -5340,7 +5385,7 @@ name|COMMAND_LINE_OPTIONS
 define|\
 value|DEF_OPT("$",                        0,      OPT_dollar)                     \   DEF_OPT("+",                        0,      OPT_plus)                       \   DEF_OPT("-help",                    0,      OPT__help)                      \   DEF_OPT("-target-help",             0,      OPT_target__help)               \   DEF_OPT("-version",                 0,      OPT__version)                   \   DEF_OPT("A",                        no_ass, OPT_A)                          \   DEF_OPT("C",                        0,      OPT_C)                          \   DEF_OPT("D",                        no_mac, OPT_D)                          \   DEF_OPT("H",                        0,      OPT_H)                          \   DEF_OPT("I",                        no_dir, OPT_I)                          \   DEF_OPT("M",                        0,      OPT_M)                          \   DEF_OPT("MD",                       no_fil, OPT_MD)                         \   DEF_OPT("MF",                       no_fil, OPT_MF)                         \   DEF_OPT("MG",                       0,      OPT_MG)                         \   DEF_OPT("MM",                       0,      OPT_MM)                         \   DEF_OPT("MMD",                      no_fil, OPT_MMD)                        \   DEF_OPT("MP",                       0,      OPT_MP)                         \   DEF_OPT("MQ",                       no_tgt, OPT_MQ)                         \   DEF_OPT("MT",                       no_tgt, OPT_MT)                         \   DEF_OPT("P",                        0,      OPT_P)                          \   DEF_OPT("U",                        no_mac, OPT_U)                          \   DEF_OPT("W",                        no_arg, OPT_W)
 comment|/* arg optional */
-value|\   DEF_OPT("d",                        no_arg, OPT_d)                          \   DEF_OPT("fleading-underscore",      0,      OPT_fleading_underscore)        \   DEF_OPT("fno-leading-underscore",   0,      OPT_fno_leading_underscore)     \   DEF_OPT("fno-operator-names",       0,      OPT_fno_operator_names)         \   DEF_OPT("fno-preprocessed",         0,      OPT_fno_preprocessed)           \   DEF_OPT("fno-show-column",          0,      OPT_fno_show_column)            \   DEF_OPT("fpreprocessed",            0,      OPT_fpreprocessed)              \   DEF_OPT("fshow-column",             0,      OPT_fshow_column)               \   DEF_OPT("ftabstop=",                no_num, OPT_ftabstop)                   \   DEF_OPT("h",                        0,      OPT_h)                          \   DEF_OPT("idirafter",                no_dir, OPT_idirafter)                  \   DEF_OPT("imacros",                  no_fil, OPT_imacros)                    \   DEF_OPT("include",                  no_fil, OPT_include)                    \   DEF_OPT("iprefix",                  no_pth, OPT_iprefix)                    \   DEF_OPT("isystem",                  no_dir, OPT_isystem)                    \   DEF_OPT("iwithprefix",              no_dir, OPT_iwithprefix)                \   DEF_OPT("iwithprefixbefore",        no_dir, OPT_iwithprefixbefore)          \   DEF_OPT("lang-asm",                 0,      OPT_lang_asm)                   \   DEF_OPT("lang-c",                   0,      OPT_lang_c)                     \   DEF_OPT("lang-c++",                 0,      OPT_lang_cplusplus)             \   DEF_OPT("lang-c89",                 0,      OPT_lang_c89)                   \   DEF_OPT("lang-objc",                0,      OPT_lang_objc)                  \   DEF_OPT("lang-objc++",              0,      OPT_lang_objcplusplus)          \   DEF_OPT("nostdinc",                 0,      OPT_nostdinc)                   \   DEF_OPT("nostdinc++",               0,      OPT_nostdincplusplus)           \   DEF_OPT("o",                        no_fil, OPT_o)                          \   DEF_OPT("pedantic",                 0,      OPT_pedantic)                   \   DEF_OPT("pedantic-errors",          0,      OPT_pedantic_errors)            \   DEF_OPT("remap",                    0,      OPT_remap)                      \   DEF_OPT("std=c++98",                0,      OPT_std_cplusplus98)            \   DEF_OPT("std=c89",                  0,      OPT_std_c89)                    \   DEF_OPT("std=c99",                  0,      OPT_std_c99)                    \   DEF_OPT("std=c9x",                  0,      OPT_std_c9x)                    \   DEF_OPT("std=gnu89",                0,      OPT_std_gnu89)                  \   DEF_OPT("std=gnu99",                0,      OPT_std_gnu99)                  \   DEF_OPT("std=gnu9x",                0,      OPT_std_gnu9x)                  \   DEF_OPT("std=iso9899:1990",         0,      OPT_std_iso9899_1990)           \   DEF_OPT("std=iso9899:199409",       0,      OPT_std_iso9899_199409)         \   DEF_OPT("std=iso9899:1999",         0,      OPT_std_iso9899_1999)           \   DEF_OPT("std=iso9899:199x",         0,      OPT_std_iso9899_199x)           \   DEF_OPT("trigraphs",                0,      OPT_trigraphs)                  \   DEF_OPT("v",                        0,      OPT_v)                          \   DEF_OPT("version",                  0,      OPT_version)                    \   DEF_OPT("w",                        0,      OPT_w)
+value|\   DEF_OPT("d",                        no_arg, OPT_d)                          \   DEF_OPT("fleading-underscore",      0,      OPT_fleading_underscore)        \   DEF_OPT("fno-leading-underscore",   0,      OPT_fno_leading_underscore)     \   DEF_OPT("fno-operator-names",       0,      OPT_fno_operator_names)         \   DEF_OPT("fno-preprocessed",         0,      OPT_fno_preprocessed)           \   DEF_OPT("fno-show-column",          0,      OPT_fno_show_column)            \   DEF_OPT("fpreprocessed",            0,      OPT_fpreprocessed)              \   DEF_OPT("fshow-column",             0,      OPT_fshow_column)               \   DEF_OPT("fsigned-char",             0,      OPT_fsigned_char)               \   DEF_OPT("ftabstop=",                no_num, OPT_ftabstop)                   \   DEF_OPT("funsigned-char",           0,      OPT_funsigned_char)             \   DEF_OPT("h",                        0,      OPT_h)                          \   DEF_OPT("idirafter",                no_dir, OPT_idirafter)                  \   DEF_OPT("imacros",                  no_fil, OPT_imacros)                    \   DEF_OPT("include",                  no_fil, OPT_include)                    \   DEF_OPT("iprefix",                  no_pth, OPT_iprefix)                    \   DEF_OPT("isystem",                  no_dir, OPT_isystem)                    \   DEF_OPT("iwithprefix",              no_dir, OPT_iwithprefix)                \   DEF_OPT("iwithprefixbefore",        no_dir, OPT_iwithprefixbefore)          \   DEF_OPT("lang-asm",                 0,      OPT_lang_asm)                   \   DEF_OPT("lang-c",                   0,      OPT_lang_c)                     \   DEF_OPT("lang-c++",                 0,      OPT_lang_cplusplus)             \   DEF_OPT("lang-c89",                 0,      OPT_lang_c89)                   \   DEF_OPT("lang-objc",                0,      OPT_lang_objc)                  \   DEF_OPT("lang-objc++",              0,      OPT_lang_objcplusplus)          \   DEF_OPT("nostdinc",                 0,      OPT_nostdinc)                   \   DEF_OPT("nostdinc++",               0,      OPT_nostdincplusplus)           \   DEF_OPT("o",                        no_fil, OPT_o)                          \   DEF_OPT("pedantic",                 0,      OPT_pedantic)                   \   DEF_OPT("pedantic-errors",          0,      OPT_pedantic_errors)            \   DEF_OPT("remap",                    0,      OPT_remap)                      \   DEF_OPT("std=c++98",                0,      OPT_std_cplusplus98)            \   DEF_OPT("std=c89",                  0,      OPT_std_c89)                    \   DEF_OPT("std=c99",                  0,      OPT_std_c99)                    \   DEF_OPT("std=c9x",                  0,      OPT_std_c9x)                    \   DEF_OPT("std=gnu89",                0,      OPT_std_gnu89)                  \   DEF_OPT("std=gnu99",                0,      OPT_std_gnu99)                  \   DEF_OPT("std=gnu9x",                0,      OPT_std_gnu9x)                  \   DEF_OPT("std=iso9899:1990",         0,      OPT_std_iso9899_1990)           \   DEF_OPT("std=iso9899:199409",       0,      OPT_std_iso9899_199409)         \   DEF_OPT("std=iso9899:1999",         0,      OPT_std_iso9899_1999)           \   DEF_OPT("std=iso9899:199x",         0,      OPT_std_iso9899_199x)           \   DEF_OPT("trigraphs",                0,      OPT_trigraphs)                  \   DEF_OPT("v",                        0,      OPT_v)                          \   DEF_OPT("version",                  0,      OPT_version)                    \   DEF_OPT("w",                        0,      OPT_w)
 end_define
 
 begin_define
@@ -6038,6 +6083,32 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+name|OPT_fsigned_char
+case|:
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|signed_char
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|OPT_funsigned_char
+case|:
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|signed_char
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
 name|OPT_ftabstop
 case|:
 comment|/* Silently ignore empty string, non-longs and silly values.  */
@@ -6595,15 +6666,6 @@ argument_list|)
 operator|=
 name|dump_only
 expr_stmt|;
-name|CPP_OPTION
-argument_list|(
-name|pfile
-argument_list|,
-name|no_output
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 literal|'N'
@@ -6663,6 +6725,7 @@ break|break;
 case|case
 name|OPT_M
 case|:
+comment|/* When doing dependencies with -M or -MM, suppress normal 	     preprocessed output, but still do -dM etc. as software 	     depends on this.  Preprocessed output occurs if -MD, -MMD 	     or environment var dependency generation is used.  */
 name|CPP_OPTION
 argument_list|(
 name|pfile
@@ -6671,6 +6734,15 @@ name|print_deps
 argument_list|)
 operator|=
 literal|2
+expr_stmt|;
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|no_output
+argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -6681,6 +6753,15 @@ argument_list|(
 name|pfile
 argument_list|,
 name|print_deps
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|no_output
 argument_list|)
 operator|=
 literal|1
@@ -6733,7 +6814,6 @@ name|OPT_MQ
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* -MD and -MMD for cpp0 are deprecated and undocumented 	     (use -M or -MM with -MF instead), and probably should be 	     removed with the next major GCC version.  For the moment 	     we allow these for the benefit of Automake 1.4, which 	     uses these when dependency tracking is enabled.  Automake 	     1.5 will fix this.  */
 case|case
 name|OPT_MD
 case|:
@@ -7887,6 +7967,68 @@ name|prevent_expansion
 operator|=
 literal|1
 expr_stmt|;
+comment|/* -dM makes no normal output.  This is set here so that -dM -dD      works as expected.  */
+if|if
+condition|(
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|dump_macros
+argument_list|)
+operator|==
+name|dump_only
+condition|)
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|no_output
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Disable -dD, -dN and -dI if we should make no normal output      (such as with -M). Allow -M -dM since some software relies on      this.  */
+if|if
+condition|(
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|no_output
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|dump_macros
+argument_list|)
+operator|!=
+name|dump_only
+condition|)
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|dump_macros
+argument_list|)
+operator|=
+name|dump_none
+expr_stmt|;
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|dump_includes
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* We need to do this after option processing and before      cpp_start_read, as cppmain.c relies on the options->no_output to      set its callbacks correctly before calling cpp_start_read.  */
 name|init_dependency_output
 argument_list|(
@@ -7939,7 +8081,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set up dependency-file output.  */
+comment|/* Set up dependency-file output.  On exit, if print_deps is non-zero    then deps_file is not NULL; stdout is the empty string.  */
 end_comment
 
 begin_function
@@ -8092,7 +8234,7 @@ name|output_file
 operator|=
 name|spec
 expr_stmt|;
-comment|/* Command line overrides environment variables.  */
+comment|/* Command line -MF overrides environment variables and default.  */
 if|if
 condition|(
 name|CPP_OPTION
@@ -8123,7 +8265,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* If dependencies go to standard output, or -MG is used, we should      suppress output, including -dM, -dI etc.  */
+elseif|else
 if|if
 condition|(
 name|CPP_OPTION
@@ -8134,43 +8276,22 @@ name|deps_file
 argument_list|)
 operator|==
 literal|0
-operator|||
-name|CPP_OPTION
-argument_list|(
-name|pfile
-argument_list|,
-name|print_deps_missing_files
-argument_list|)
 condition|)
-block|{
+comment|/* If -M or -MM was seen without -MF, default output to wherever        was specified with -o.  out_fname is non-NULL here.  */
 name|CPP_OPTION
 argument_list|(
 name|pfile
 argument_list|,
-name|no_output
+name|deps_file
 argument_list|)
 operator|=
-literal|1
-expr_stmt|;
 name|CPP_OPTION
 argument_list|(
 name|pfile
 argument_list|,
-name|dump_macros
+name|out_fname
 argument_list|)
-operator|=
-literal|0
 expr_stmt|;
-name|CPP_OPTION
-argument_list|(
-name|pfile
-argument_list|,
-name|dump_includes
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -8184,18 +8305,6 @@ name|void
 name|print_help
 parameter_list|()
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|_
-argument_list|(
-literal|"Usage: %s [switches] input output\n"
-argument_list|)
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
 comment|/* To keep the lines from getting too long for some compilers, limit      to about 500 characters (6 lines) per chunk.  */
 name|fputs
 argument_list|(
@@ -8271,7 +8380,7 @@ name|fputs
 argument_list|(
 name|_
 argument_list|(
-literal|"\   -M                        Generate make dependencies\n\   -MM                       As -M, but ignore system header files\n\   -MF<file>                Write dependency output to the given file\n\   -MG                       Treat missing header file as generated files\n\ "
+literal|"\   -M                        Generate make dependencies\n\   -MM                       As -M, but ignore system header files\n\   -MD                       Generate make dependencies and compile\n\   -MMD                      As -MD, but ignore system header files\n\   -MF<file>                Write dependency output to the given file\n\   -MG                       Treat missing header file as generated files\n\ "
 argument_list|)
 argument_list|,
 name|stdout
@@ -8291,7 +8400,7 @@ name|fputs
 argument_list|(
 name|_
 argument_list|(
-literal|"\   -D<macro>                 Define a<macro> with string '1' as its value\n\   -D<macro>=<val>           Define a<macro> with<val> as its value\n\   -A<question> (<answer>)   Assert the<answer> to<question>\n\   -A-<question> (<answer>)  Disable the<answer> to<question>\n\   -U<macro>                 Undefine<macro> \n\   -v                        Display the version number\n\ "
+literal|"\   -D<macro>                 Define a<macro> with string '1' as its value\n\   -D<macro>=<val>           Define a<macro> with<val> as its value\n\   -A<question>=<answer>     Assert the<answer> to<question>\n\   -A-<question>=<answer>    Disable the<answer> to<question>\n\   -U<macro>                 Undefine<macro> \n\   -v                        Display the version number\n\ "
 argument_list|)
 argument_list|,
 name|stdout
@@ -8311,7 +8420,7 @@ name|fputs
 argument_list|(
 name|_
 argument_list|(
-literal|"\   -fpreprocessed            Treat the input file as already preprocessed\n\   -ftabstop=<number>        Distance between tab stops for column reporting\n\   -P                        Do not generate #line directives\n\   -$                        Do not allow '$' in identifiers\n\   -remap                    Remap file names when including files.\n\   --version                 Display version information\n\   -h or --help              Display this information\n\ "
+literal|"\   -fpreprocessed            Treat the input file as already preprocessed\n\   -ftabstop=<number>        Distance between tab stops for column reporting\n\   -P                        Do not generate #line directives\n\   -$                        Do not allow '$' in identifiers\n\   -remap                    Remap file names when including files\n\   --version                 Display version information\n\   -h or --help              Display this information\n\ "
 argument_list|)
 argument_list|,
 name|stdout

@@ -3079,6 +3079,9 @@ case|case
 name|CONST_DOUBLE
 case|:
 case|case
+name|CONST_VECTOR
+case|:
+case|case
 name|SYMBOL_REF
 case|:
 case|case

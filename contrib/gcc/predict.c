@@ -4234,6 +4234,10 @@ block|{
 name|basic_block
 name|bb
 decl_stmt|;
+specifier|volatile
+name|double
+name|tmp
+decl_stmt|;
 if|if
 condition|(
 name|i
@@ -4265,9 +4269,8 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-name|bb
-operator|->
-name|frequency
+comment|/* ??? Prevent rounding differences due to optimization on x86.  */
+name|tmp
 operator|=
 name|BLOCK_INFO
 argument_list|(
@@ -4277,10 +4280,20 @@ operator|->
 name|frequency
 operator|*
 name|BB_FREQ_MAX
-operator|/
+expr_stmt|;
+name|tmp
+operator|/=
 name|freq_max
-operator|+
+expr_stmt|;
+name|tmp
+operator|+=
 literal|0.5
+expr_stmt|;
+name|bb
+operator|->
+name|frequency
+operator|=
+name|tmp
 expr_stmt|;
 block|}
 name|free_aux_for_blocks

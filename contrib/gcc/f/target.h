@@ -1072,6 +1072,12 @@ name|defined
 argument_list|(
 name|__s390x__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
 end_if
 
 begin_define

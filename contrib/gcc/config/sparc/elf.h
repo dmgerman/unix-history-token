@@ -39,7 +39,8 @@ begin_define
 define|#
 directive|define
 name|ENDFILE_SPEC
-value|"crtend.o%s crtn.o%s"
+define|\
+value|"%{ffast-math|funsafe-math-optimizations:crtfastmath.o%s} \    crtend.o%s crtn.o%s"
 end_define
 
 begin_comment

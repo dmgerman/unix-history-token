@@ -178,6 +178,19 @@ name|COMMON_ASM_OP
 value|"\t.common\t"
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|LOCAL_LABEL_PREFIX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LOCAL_LABEL_PREFIX
+value|"."
+end_define
+
 begin_comment
 comment|/* This is how to output a definition of an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.  */
 end_comment

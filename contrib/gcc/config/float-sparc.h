@@ -371,6 +371,11 @@ name|defined
 argument_list|(
 name|__arch64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__LONG_DOUBLE_128__
+argument_list|)
 end_if
 
 begin_comment

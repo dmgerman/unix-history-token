@@ -668,6 +668,12 @@ name|r
 init|=
 name|NULL_TREE
 decl_stmt|;
+name|tree
+name|expr_type
+init|=
+name|NULL_TREE
+decl_stmt|;
+empty_stmt|;
 if|if
 condition|(
 name|expr
@@ -722,6 +728,14 @@ argument_list|(
 name|expr
 argument_list|)
 expr_stmt|;
+comment|/* Remember the type of the expression.  */
+name|expr_type
+operator|=
+name|TREE_TYPE
+argument_list|(
+name|expr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|stmts_are_full_exprs_p
@@ -755,14 +769,7 @@ expr_stmt|;
 comment|/* This was an expression-statement, so we save the type of the      expression.  */
 name|last_expr_type
 operator|=
-name|expr
-condition|?
-name|TREE_TYPE
-argument_list|(
-name|expr
-argument_list|)
-else|:
-name|NULL_TREE
+name|expr_type
 expr_stmt|;
 return|return
 name|r
@@ -1523,6 +1530,8 @@ argument_list|,
 name|NULL_TREE
 argument_list|,
 name|NULL_TREE
+argument_list|,
+name|NULL_TREE
 argument_list|)
 expr_stmt|;
 name|add_stmt
@@ -1558,15 +1567,17 @@ name|tree
 name|switch_stmt
 decl_stmt|;
 block|{
+name|tree
+name|orig_type
+init|=
+name|NULL
+decl_stmt|;
 if|if
 condition|(
 operator|!
 name|processing_template_decl
 condition|)
 block|{
-name|tree
-name|type
-decl_stmt|;
 name|tree
 name|index
 decl_stmt|;
@@ -1601,6 +1612,13 @@ operator|=
 name|error_mark_node
 expr_stmt|;
 block|}
+name|orig_type
+operator|=
+name|TREE_TYPE
+argument_list|(
+name|cond
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cond
@@ -1633,13 +1651,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|type
-operator|=
-name|TREE_TYPE
-argument_list|(
+if|if
+condition|(
 name|cond
-argument_list|)
-expr_stmt|;
+operator|!=
+name|error_mark_node
+condition|)
+block|{
 name|index
 operator|=
 name|get_unwidened
@@ -1649,7 +1667,7 @@ argument_list|,
 name|NULL_TREE
 argument_list|)
 expr_stmt|;
-comment|/* We can't strip a conversion from a signed type to an unsigned, 	 because if we did, int_fits_type_p would do the wrong thing 	 when checking case values for being in range, 	 and it's too hard to do the right thing.  */
+comment|/* We can't strip a conversion from a signed type to an unsigned, 	     because if we did, int_fits_type_p would do the wrong thing 	     when checking case values for being in range, 	     and it's too hard to do the right thing.  */
 if|if
 condition|(
 name|TREE_UNSIGNED
@@ -1673,6 +1691,7 @@ operator|=
 name|index
 expr_stmt|;
 block|}
+block|}
 name|FINISH_COND
 argument_list|(
 name|cond
@@ -1684,6 +1703,13 @@ argument_list|(
 name|switch_stmt
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|SWITCH_TYPE
+argument_list|(
+name|switch_stmt
+argument_list|)
+operator|=
+name|orig_type
 expr_stmt|;
 name|push_switch
 argument_list|(
@@ -3670,16 +3696,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|last_tree
-operator|!=
-name|NULL_TREE
-operator|)
 condition|?
 name|last_tree
 else|:
 name|expand_start_stmt_expr
-argument_list|()
+argument_list|(
+comment|/*has_scope=*/
+literal|1
+argument_list|)
 return|;
 block|}
 end_function
@@ -4615,16 +4640,8 @@ name|type_lookups
 operator|=
 name|current_type_lookups
 expr_stmt|;
-name|current_type_lookups
-operator|=
-name|NULL_TREE
-expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* Record the lookups, if we're doing deferred access control.  */
-end_comment
 
 begin_function
 name|void
@@ -4636,54 +4653,9 @@ name|tree
 name|lookups
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|type_lookups
-operator|!=
-name|error_mark_node
-condition|)
-block|{
-name|my_friendly_assert
-argument_list|(
-operator|!
-name|current_type_lookups
-argument_list|,
-literal|20010301
-argument_list|)
-expr_stmt|;
 name|current_type_lookups
 operator|=
 name|lookups
-expr_stmt|;
-block|}
-else|else
-name|my_friendly_assert
-argument_list|(
-operator|!
-name|lookups
-operator|||
-name|lookups
-operator|==
-name|error_mark_node
-argument_list|,
-literal|20010301
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Set things up so that the next deferred access control will succeed.    This is needed for friend declarations see grokdeclarator for details.  */
-end_comment
-
-begin_function
-name|void
-name|skip_type_access_control
-parameter_list|()
-block|{
-name|type_lookups
-operator|=
-name|NULL_TREE
 expr_stmt|;
 block|}
 end_function
@@ -5777,14 +5749,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|current_function_decl
-condition|)
-name|type_lookups
-operator|=
-name|error_mark_node
-expr_stmt|;
-if|if
-condition|(
 name|current_scope
 argument_list|()
 operator|==
@@ -6434,23 +6398,6 @@ name|t
 argument_list|)
 condition|)
 block|{
-case|case
-name|CLEANUP_STMT
-case|:
-name|genrtl_decl_cleanup
-argument_list|(
-name|CLEANUP_DECL
-argument_list|(
-name|t
-argument_list|)
-argument_list|,
-name|CLEANUP_EXPR
-argument_list|(
-name|t
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|CTOR_STMT
 case|:
@@ -7177,12 +7124,6 @@ name|fn
 argument_list|)
 condition|)
 return|return;
-comment|/* Emit any thunks that should be emitted at the same time as FN.  */
-name|emit_associated_thunks
-argument_list|(
-name|fn
-argument_list|)
-expr_stmt|;
 name|timevar_push
 argument_list|(
 name|TV_INTEGRATION
@@ -7322,6 +7263,12 @@ argument_list|(
 name|TV_EXPAND
 argument_list|)
 expr_stmt|;
+comment|/* Emit any thunks that should be emitted at the same time as FN.  */
+name|emit_associated_thunks
+argument_list|(
+name|fn
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -7412,13 +7359,13 @@ argument_list|)
 operator|==
 name|nrv
 condition|)
-name|CLEANUP_EXPR
+name|CLEANUP_EH_ONLY
 argument_list|(
 operator|*
 name|tp
 argument_list|)
 operator|=
-name|NULL_TREE
+literal|1
 expr_stmt|;
 comment|/* Keep iterating.  */
 return|return
@@ -7534,7 +7481,16 @@ name|cp_function_chain
 operator|->
 name|cannot_inline
 expr_stmt|;
-comment|/* We don't need the saved data anymore.  */
+comment|/* We don't need the saved data anymore.  Unless this is an inline          function; we need the named return value info for          cp_copy_res_decl_for_inlining.  */
+if|if
+condition|(
+operator|!
+name|DECL_INLINE
+argument_list|(
+name|fn
+argument_list|)
+condition|)
+block|{
 name|free
 argument_list|(
 name|DECL_SAVED_FUNCTION_DATA
@@ -7551,17 +7507,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Tell the cross-reference machinery that we're defining this      function.  */
-name|GNU_xref_function
-argument_list|(
-name|fn
-argument_list|,
-name|DECL_ARGUMENTS
-argument_list|(
-name|fn
-argument_list|)
-argument_list|)
-expr_stmt|;
+block|}
 comment|/* Keep track of how many functions we're presently expanding.  */
 operator|++
 name|function_depth

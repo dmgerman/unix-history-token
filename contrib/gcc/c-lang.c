@@ -271,6 +271,20 @@ define|\
 value|anon_aggr_type_p
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|LANG_HOOKS_TREE_INLINING_CONVERT_PARM_FOR_INLINING
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LANG_HOOKS_TREE_INLINING_CONVERT_PARM_FOR_INLINING
+define|\
+value|c_convert_parm_for_inlining
+end_define
+
 begin_comment
 comment|/* ### When changing hooks, consider if ObjC needs changing too!! ### */
 end_comment

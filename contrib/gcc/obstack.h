@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obstack.h - object stack macros    Copyright (C) 1988,89,90,91,92,93,94,96,97,98 Free Software Foundation, Inc.      NOTE: The canonical source of this file is maintained with the GNU C Library.    Bugs can be reported to bug-glibc@gnu.org.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,    USA.  */
+comment|/* obstack.h - object stack macros    Copyright 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1996, 1997, 1998,    1999, 2000    Free Software Foundation, Inc.      NOTE: The canonical source of this file is maintained with the GNU C Library.    Bugs can be reported to bug-glibc@gnu.org.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,    USA.  */
 end_comment
 
 begin_comment
@@ -101,6 +101,12 @@ name|HAVE_STRING_H
 include|#
 directive|include
 file|<string.h>
+if|#
+directive|if
+name|defined
+name|__STDC__
+operator|&&
+name|__STDC__
 define|#
 directive|define
 name|_obstack_memcpy
@@ -112,6 +118,21 @@ parameter_list|,
 name|N
 parameter_list|)
 value|memcpy ((To), (From), (N))
+else|#
+directive|else
+define|#
+directive|define
+name|_obstack_memcpy
+parameter_list|(
+name|To
+parameter_list|,
+name|From
+parameter_list|,
+name|N
+parameter_list|)
+value|memcpy ((To), (char *)(From), (N))
+endif|#
+directive|endif
 else|#
 directive|else
 ifdef|#
@@ -127,7 +148,7 @@ name|From
 parameter_list|,
 name|N
 parameter_list|)
-value|memcpy ((To), (From), (N))
+value|memcpy ((To), (char *)(From), (N))
 else|#
 directive|else
 define|#
@@ -140,7 +161,7 @@ name|From
 parameter_list|,
 name|N
 parameter_list|)
-value|bcopy ((From), (To), (N))
+value|bcopy ((char *)(From), (To), (N))
 endif|#
 directive|endif
 endif|#
@@ -1048,7 +1069,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    if (__o->next_free + __len> __o->chunk_limit)			\      _obstack_newchunk (__o, __len);					\    _obstack_memcpy (__o->next_free, (char *) (where), __len);		\    __o->next_free += __len;						\    (void) 0; })
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    if (__o->next_free + __len> __o->chunk_limit)			\      _obstack_newchunk (__o, __len);					\    _obstack_memcpy (__o->next_free, (where), __len);			\    __o->next_free += __len;						\    (void) 0; })
 define|#
 directive|define
 name|obstack_grow0
@@ -1060,7 +1081,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    if (__o->next_free + __len + 1> __o->chunk_limit)			\      _obstack_newchunk (__o, __len + 1);				\    _obstack_memcpy (__o->next_free, (char *) (where), __len);		\    __o->next_free += __len;						\    *(__o->next_free)++ = 0;						\    (void) 0; })
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    if (__o->next_free + __len + 1> __o->chunk_limit)			\      _obstack_newchunk (__o, __len + 1);				\    _obstack_memcpy (__o->next_free, (where), __len);			\    __o->next_free += __len;						\    *(__o->next_free)++ = 0;						\    (void) 0; })
 define|#
 directive|define
 name|obstack_1grow
@@ -1222,7 +1243,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|( (h)->temp = (length),							\   (((h)->next_free + (h)->temp> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), (h)->temp), 0) : 0),			\   _obstack_memcpy ((h)->next_free, (char *) (where), (h)->temp),	\   (h)->next_free += (h)->temp)
+value|( (h)->temp = (length),							\   (((h)->next_free + (h)->temp> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), (h)->temp), 0) : 0),			\   _obstack_memcpy ((h)->next_free, (where), (h)->temp),			\   (h)->next_free += (h)->temp)
 define|#
 directive|define
 name|obstack_grow0
@@ -1234,7 +1255,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|( (h)->temp = (length),							\   (((h)->next_free + (h)->temp + 1> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), (h)->temp + 1), 0) : 0),			\   _obstack_memcpy ((h)->next_free, (char *) (where), (h)->temp),	\   (h)->next_free += (h)->temp,						\   *((h)->next_free)++ = 0)
+value|( (h)->temp = (length),							\   (((h)->next_free + (h)->temp + 1> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), (h)->temp + 1), 0) : 0),			\   _obstack_memcpy ((h)->next_free, (where), (h)->temp),			\   (h)->next_free += (h)->temp,						\   *((h)->next_free)++ = 0)
 define|#
 directive|define
 name|obstack_1grow

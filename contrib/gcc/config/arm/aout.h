@@ -474,7 +474,7 @@ parameter_list|,
 name|REL
 parameter_list|)
 define|\
-value|asm_fprintf (STREAM, "\tb\t%LL%d\n", VALUE)
+value|do									\     {									\       if (TARGET_ARM)							\ 	asm_fprintf (STREAM, "\tb\t%LL%d\n", VALUE);			\       else								\ 	asm_fprintf (STREAM, "\t.word\t%LL%d-%LL%d\n", VALUE, REL);	\     }									\   while (0)
 end_define
 
 begin_undef

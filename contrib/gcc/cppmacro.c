@@ -291,31 +291,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|char
-modifier|*
-name|quote_string
-name|PARAMS
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|,
-specifier|const
-name|unsigned
-name|char
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 specifier|const
 name|cpp_token
 modifier|*
@@ -933,7 +908,7 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|quote_string
+name|cpp_quote_string
 argument_list|(
 name|buf
 argument_list|,
@@ -1327,14 +1302,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copies SRC, of length LEN, to DEST, adding backslashes before all    backslashes and double quotes.  Non-printable characters are    converted to octal.  DEST must be of sufficient size.  */
+comment|/* Copies SRC, of length LEN, to DEST, adding backslashes before all    backslashes and double quotes.  Non-printable characters are    converted to octal.  DEST must be of sufficient size.  Returns    a pointer to the end of the string.  */
 end_comment
 
 begin_function
-specifier|static
 name|U_CHAR
 modifier|*
-name|quote_string
+name|cpp_quote_string
 parameter_list|(
 name|dest
 parameter_list|,
@@ -1732,7 +1706,7 @@ name|buf
 expr_stmt|;
 name|dest
 operator|=
-name|quote_string
+name|cpp_quote_string
 argument_list|(
 name|dest
 argument_list|,
@@ -3040,7 +3014,24 @@ name|node
 argument_list|)
 return|;
 block|}
-comment|/* Back up.  We may have skipped padding, in which case backing up      more than one token when expanding macros is in general too      difficult.  We re-insert it in its own context.  */
+comment|/* CPP_EOF can be the end of macro arguments, or the end of the      file.  We mustn't back up over the latter.  Ugh.  */
+if|if
+condition|(
+name|token
+operator|->
+name|type
+operator|!=
+name|CPP_EOF
+operator|||
+name|token
+operator|==
+operator|&
+name|pfile
+operator|->
+name|eof
+condition|)
+block|{
+comment|/* Back up.  We may have skipped padding, in which case backing 	 up more than one token when expanding macros is in general 	 too difficult.  We re-insert it in its own context.  */
 name|_cpp_backup_tokens
 argument_list|(
 name|pfile
@@ -3063,6 +3054,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|NULL
 return|;
@@ -6939,9 +6931,9 @@ condition|)
 block|{
 name|len
 operator|+=
-literal|3
+literal|4
 expr_stmt|;
-comment|/* "()" plus possible final "." of named 			   varargs (we have + 2 below).  */
+comment|/* "()" plus possible final ".." of named 			   varargs (we have + 1 below).  */
 for|for
 control|(
 name|i
@@ -6969,9 +6961,9 @@ name|i
 index|]
 argument_list|)
 operator|+
-literal|2
+literal|1
 expr_stmt|;
-comment|/* ", " */
+comment|/* "," */
 block|}
 for|for
 control|(
@@ -7209,17 +7201,12 @@ name|macro
 operator|->
 name|paramc
 condition|)
+comment|/* Don't emit a space after the comma here; we're trying                to emit a Dwarf-friendly definition, and the Dwarf spec                forbids spaces in the argument list.  */
 operator|*
 name|buffer
 operator|++
 operator|=
 literal|','
-operator|,
-operator|*
-name|buffer
-operator|++
-operator|=
-literal|' '
 expr_stmt|;
 elseif|else
 if|if
@@ -7254,6 +7241,13 @@ operator|=
 literal|')'
 expr_stmt|;
 block|}
+comment|/* The Dwarf spec requires a space after the macro name, even if the      definition is the empty string.  */
+operator|*
+name|buffer
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
 comment|/* Expansion tokens.  */
 if|if
 condition|(
@@ -7262,12 +7256,6 @@ operator|->
 name|count
 condition|)
 block|{
-operator|*
-name|buffer
-operator|++
-operator|=
-literal|' '
-expr_stmt|;
 for|for
 control|(
 name|i

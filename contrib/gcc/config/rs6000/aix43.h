@@ -242,17 +242,6 @@ value|"%{!shared:\    %{mpe:%{pg:/usr/lpp/ppe.poe/lib/gcrt0.o}\          %{!pg:%
 end_define
 
 begin_comment
-comment|/* Since there are separate multilibs for pthreads, determine the    thread model based on the command-line arguments.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|THREAD_MODEL_SPEC
-value|"%{pthread:posix}%{!pthread:single}"
-end_define
-
-begin_comment
 comment|/* AIX 4.3 typedefs ptrdiff_t as "long" while earlier releases used "int".  */
 end_comment
 

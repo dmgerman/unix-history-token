@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-D__ELF__ -DMACH -Asystem=mach \   -Dunix -Asystem=unix -Asystem=posix -D__GNU__ -Asystem=gnu"
+value|"-D__ELF__ -DMACH -Asystem=mach \   -Dunix -Asystem=unix -Asystem=posix -D__gnu_hurd__ -D__GNU__ -Asystem=gnu"
 end_define
 
 begin_undef

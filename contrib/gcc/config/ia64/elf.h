@@ -53,12 +53,18 @@ begin_comment
 comment|/* GNU AS.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|ASM_EXTRA_SPEC
+end_undef
+
 begin_define
 define|#
 directive|define
-name|ASM_SPEC
+name|ASM_EXTRA_SPEC
 define|\
-value|"%{mno-gnu-as:-N so} %{!mno-gnu-as:-x} %{mconstant-gp} %{mauto-pic}"
+value|"%{mno-gnu-as:-N so} %{!mno-gnu-as:-x}"
 end_define
 
 begin_else
@@ -69,6 +75,12 @@ end_else
 begin_comment
 comment|/* Intel ias.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_SPEC
+end_undef
 
 begin_define
 define|#

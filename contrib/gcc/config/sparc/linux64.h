@@ -60,7 +60,7 @@ name|TARGET_DEFAULT
 define|\
 value|(MASK_V9 + MASK_PTR64 + MASK_64BIT
 comment|/* + MASK_HARD_QUAD */
-value|\    + MASK_STACK_BIAS + MASK_APP_REGS + MASK_EPILOGUE + MASK_FPU + MASK_LONG_DOUBLE_128)
+value|\    + MASK_STACK_BIAS + MASK_APP_REGS + MASK_FPU + MASK_LONG_DOUBLE_128)
 end_define
 
 begin_endif
@@ -120,7 +120,7 @@ define|#
 directive|define
 name|STARTFILE_SPEC32
 define|\
-value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
+value|"%{!shared: \      %{pg:/usr/lib/gcrt1.o%s} %{!pg:%{/usr/lib/p:gcrt1.o%s} %{!p:/usr/lib/crt1.o%s}}}\    /usr/lib/crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
 end_define
 
 begin_define
@@ -199,7 +199,7 @@ define|#
 directive|define
 name|ENDFILE_SPEC32
 define|\
-value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
+value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} /usr/lib/crtn.o%s"
 end_define
 
 begin_define
@@ -208,6 +208,14 @@ directive|define
 name|ENDFILE_SPEC64
 define|\
 value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} /usr/lib64/crtn.o%s"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_SPEC_COMMON
+define|\
+value|"%{ffast-math|funsafe-math-optimizations:crtfastmath.o%s}"
 end_define
 
 begin_ifdef
@@ -226,7 +234,7 @@ begin_define
 define|#
 directive|define
 name|ENDFILE_SPEC
-value|"\ %{m32:" ENDFILE_SPEC32 "} \ %{m64:" ENDFILE_SPEC64 "} \ %{!m32:%{!m64:" ENDFILE_SPEC32 "}}"
+value|"\ %{m32:" ENDFILE_SPEC32 "} \ %{m64:" ENDFILE_SPEC64 "} \ %{!m32:%{!m64:" ENDFILE_SPEC32 "}} " \ ENDFILE_SPEC_COMMON
 end_define
 
 begin_else
@@ -238,7 +246,7 @@ begin_define
 define|#
 directive|define
 name|ENDFILE_SPEC
-value|"\ %{m32:" ENDFILE_SPEC32 "} \ %{m64:" ENDFILE_SPEC64 "} \ %{!m32:%{!m64:" ENDFILE_SPEC64 "}}"
+value|"\ %{m32:" ENDFILE_SPEC32 "} \ %{m64:" ENDFILE_SPEC64 "} \ %{!m32:%{!m64:" ENDFILE_SPEC64 "}} " \ ENDFILE_SPEC_COMMON
 end_define
 
 begin_endif
@@ -255,7 +263,7 @@ begin_define
 define|#
 directive|define
 name|ENDFILE_SPEC
-value|ENDFILE_SPEC64
+value|ENDFILE_SPEC64 " " ENDFILE_SPEC_COMMON
 end_define
 
 begin_endif
@@ -350,12 +358,6 @@ name|WCHAR_TYPE_SIZE
 value|32
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|MAX_WCHAR_TYPE_SIZE
-end_undef
-
 begin_comment
 comment|/* Define for support of TFmode long double and REAL_ARITHMETIC.    Sparc ABI says that long double is 4 words.  */
 end_comment
@@ -442,7 +444,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-D__ELF__ -Dunix -D_LONGLONG -D__sparc__ -Dlinux -Asystem=unix -Asystem=posix"
+value|"-D__ELF__ -Dunix -D_LONGLONG -D__sparc__ -D__gnu_linux__ -Dlinux -Asystem=unix -Asystem=posix"
 end_define
 
 begin_undef
@@ -558,7 +560,7 @@ begin_define
 define|#
 directive|define
 name|CC1_SPEC
-value|"\ %{sun4:} %{target:} \ %{mcypress:-mcpu=cypress} \ %{msparclite:-mcpu=sparclite} %{mf930:-mcpu=f930} %{mf934:-mcpu=f934} \ %{mv8:-mcpu=v8} %{msupersparc:-mcpu=supersparc} \ %{m64:-mptr64 -mstack-bias -mlong-double-128 \   %{!mcpu*:%{!mcypress:%{!msparclite:%{!mf930:%{!mf934:%{!mv8:%{!msupersparc:-mcpu=ultrasparc}}}}}}} \   %{!mno-vis:%{!mcpu=v9:-mvis}}} \ "
+value|"\ %{sun4:} %{target:} \ %{mcypress:-mcpu=cypress} \ %{msparclite:-mcpu=sparclite} %{mf930:-mcpu=f930} %{mf934:-mcpu=f934} \ %{mv8:-mcpu=v8} %{msupersparc:-mcpu=supersparc} \ %{m32:%{m64:%emay not use both -m32 and -m64}} \ %{m64:-mptr64 -mstack-bias -mlong-double-128 \   %{!mcpu*:%{!mcypress:%{!msparclite:%{!mf930:%{!mf934:%{!mv8:%{!msupersparc:-mcpu=ultrasparc}}}}}}} \   %{!mno-vis:%{!mcpu=v9:-mvis}}} \ "
 end_define
 
 begin_else
@@ -570,7 +572,7 @@ begin_define
 define|#
 directive|define
 name|CC1_SPEC
-value|"\ %{sun4:} %{target:} \ %{mcypress:-mcpu=cypress} \ %{msparclite:-mcpu=sparclite} %{mf930:-mcpu=f930} %{mf934:-mcpu=f934} \ %{mv8:-mcpu=v8} %{msupersparc:-mcpu=supersparc} \ %{m32:-mptr32 -mno-stack-bias %{!mlong-double-128:-mlong-double-64} \   %{!mcpu*:%{!mcypress:%{!msparclite:%{!mf930:%{!mf934:%{!mv8:%{!msupersparc:-mcpu=cypress}}}}}}}} \ %{!m32:%{!mcpu*:-mcpu=ultrasparc}} \ %{!mno-vis:%{!m32:%{!mcpu=v9:-mvis}}} \ "
+value|"\ %{sun4:} %{target:} \ %{mcypress:-mcpu=cypress} \ %{msparclite:-mcpu=sparclite} %{mf930:-mcpu=f930} %{mf934:-mcpu=f934} \ %{mv8:-mcpu=v8} %{msupersparc:-mcpu=supersparc} \ %{m32:%{m64:%emay not use both -m32 and -m64}} \ %{m32:-mptr32 -mno-stack-bias %{!mlong-double-128:-mlong-double-64} \   %{!mcpu*:%{!mcypress:%{!msparclite:%{!mf930:%{!mf934:%{!mv8:%{!msupersparc:-mcpu=cypress}}}}}}}} \ %{!m32:%{!mcpu*:-mcpu=ultrasparc}} \ %{!mno-vis:%{!m32:%{!mcpu=v9:-mvis}}} \ "
 end_define
 
 begin_endif
@@ -746,6 +748,19 @@ name|COMMON_ASM_OP
 value|"\t.common\t"
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|LOCAL_LABEL_PREFIX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LOCAL_LABEL_PREFIX
+value|"."
+end_define
+
 begin_comment
 comment|/* This is how to output a definition of an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.  */
 end_comment
@@ -856,6 +871,113 @@ end_endif
 
 begin_escape
 end_escape
+
+begin_comment
+comment|/* Don't be different from other Linux platforms in this regard.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HANDLE_PRAGMA_PACK_PUSH_POP
+end_define
+
+begin_comment
+comment|/* We use GNU ld so undefine this so that attribute((init_priority)) works.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CTORS_SECTION_ASM_OP
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|DTORS_SECTION_ASM_OP
+end_undef
+
+begin_comment
+comment|/* Do code reading to identify a signal frame, and set the frame    state data appropriately.  See unwind-dw2.c for the structs.  */
+end_comment
+
+begin_comment
+comment|/* Handle multilib correctly.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arch64__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* 64-bit Sparc version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_FALLBACK_FRAME_STATE_FOR
+parameter_list|(
+name|CONTEXT
+parameter_list|,
+name|FS
+parameter_list|,
+name|SUCCESS
+parameter_list|)
+define|\
+value|do {									\     unsigned int *pc_ = (CONTEXT)->ra;					\     long new_cfa_, i_;							\     long regs_off_, fpu_save_off_;					\     long this_cfa_, fpu_save_;						\ 									\     if (pc_[0] != 0x82102065
+comment|/* mov NR_rt_sigreturn, %g1 */
+value|\         || pc_[1] != 0x91d0206d)
+comment|/* ta 0x6d */
+value|\       break;								\     regs_off_ = 192 + 128;						\     fpu_save_off_ = regs_off_ + (16 * 8) + (3 * 8) + (2 * 4);		\     this_cfa_ = (long) (CONTEXT)->cfa;					\     new_cfa_ = *(long *)(((CONTEXT)->cfa) + (regs_off_ + (14 * 8)));	\     new_cfa_ += 2047;
+comment|/* Stack bias */
+value|\     fpu_save_ = *(long *)((this_cfa_) + (fpu_save_off_));		\     (FS)->cfa_how = CFA_REG_OFFSET;					\     (FS)->cfa_reg = 14;							\     (FS)->cfa_offset = new_cfa_ - (long) (CONTEXT)->cfa;		\     for (i_ = 1; i_< 16; ++i_)						\       {									\ 	(FS)->regs.reg[i_].how = REG_SAVED_OFFSET;			\ 	(FS)->regs.reg[i_].loc.offset =					\ 	  this_cfa_ + (regs_off_ + (i_ * 8)) - new_cfa_;		\       }									\     for (i_ = 0; i_< 16; ++i_)						\       {									\ 	(FS)->regs.reg[i_ + 16].how = REG_SAVED_OFFSET;			\ 	(FS)->regs.reg[i_ + 16].loc.offset =				\ 	  this_cfa_ + (i_ * 8) - new_cfa_;				\       }									\     if (fpu_save_)							\       {									\ 	for (i_ = 0; i_< 64; ++i_)					\ 	  {								\             if (i_> 32&& (i_& 0x1))					\               continue;							\ 	    (FS)->regs.reg[i_ + 32].how = REG_SAVED_OFFSET;		\ 	    (FS)->regs.reg[i_ + 32].loc.offset =			\ 	      (fpu_save_ + (i_ * 4)) - new_cfa_;			\ 	  }								\       }									\
+comment|/* Stick return address into %g0, same trick Alpha uses.  */
+value|\     (FS)->regs.reg[0].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[0].loc.offset =					\       this_cfa_ + (regs_off_ + (16 * 8) + 8) - new_cfa_;		\     (FS)->retaddr_column = 0;						\     goto SUCCESS;							\   } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* 32-bit Sparc version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_FALLBACK_FRAME_STATE_FOR
+parameter_list|(
+name|CONTEXT
+parameter_list|,
+name|FS
+parameter_list|,
+name|SUCCESS
+parameter_list|)
+define|\
+value|do {									\     unsigned int *pc_ = (CONTEXT)->ra;					\     int new_cfa_, i_, oldstyle_;					\     int regs_off_, fpu_save_off_;					\     int fpu_save_, this_cfa_;						\ 									\     if (pc_[1] != 0x91d02010)
+comment|/* ta 0x10 */
+value|\       break;								\     if (pc_[0] == 0x821020d8)
+comment|/* mov NR_sigreturn, %g1 */
+value|\       oldstyle_ = 1;							\     else if (pc_[0] == 0x82102065)
+comment|/* mov NR_rt_sigreturn, %g1 */
+value|\       oldstyle_ = 0;							\     else								\       break;								\     if (oldstyle_)							\       {									\         regs_off_ = 96;							\         fpu_save_off_ = regs_off_ + (4 * 4) + (16 * 4);			\       }									\     else								\       {									\         regs_off_ = 96 + 128;						\         fpu_save_off_ = regs_off_ + (4 * 4) + (16 * 4) + (2 * 4);	\       }									\     this_cfa_ = (int) (CONTEXT)->cfa;					\     new_cfa_ = *(int *)(((CONTEXT)->cfa) + (regs_off_+(4*4)+(14 * 4)));	\     fpu_save_ = *(int *)((this_cfa_) + (fpu_save_off_));		\     (FS)->cfa_how = CFA_REG_OFFSET;					\     (FS)->cfa_reg = 14;							\     (FS)->cfa_offset = new_cfa_ - (int) (CONTEXT)->cfa;			\     for (i_ = 1; i_< 16; ++i_)						\       {									\         if (i_ == 14)							\           continue;							\ 	(FS)->regs.reg[i_].how = REG_SAVED_OFFSET;			\ 	(FS)->regs.reg[i_].loc.offset =					\ 	   this_cfa_ + (regs_off_+(4 * 4)+(i_ * 4)) - new_cfa_;		\       }									\     for (i_ = 0; i_< 16; ++i_)						\       {									\ 	(FS)->regs.reg[i_ + 16].how = REG_SAVED_OFFSET;			\ 	(FS)->regs.reg[i_ + 16].loc.offset =				\ 	  this_cfa_ + (i_ * 4) - new_cfa_;				\       }									\     if (fpu_save_)							\       {									\ 	for (i_ = 0; i_< 32; ++i_)					\ 	  {								\ 	    (FS)->regs.reg[i_ + 32].how = REG_SAVED_OFFSET;		\ 	    (FS)->regs.reg[i_ + 32].loc.offset =			\ 	      (fpu_save_ + (i_ * 4)) - new_cfa_;			\ 	  }								\       }									\
+comment|/* Stick return address into %g0, same trick Alpha uses.  */
+value|\     (FS)->regs.reg[0].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[0].loc.offset = this_cfa_+(regs_off_+4)-new_cfa_;	\     (FS)->retaddr_column = 0;						\     goto SUCCESS;							\   } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

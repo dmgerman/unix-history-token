@@ -27,7 +27,7 @@ define|#
 directive|define
 name|TARGET_DEFAULT
 define|\
-value|(MASK_V9 + MASK_PTR64 + MASK_64BIT + MASK_HARD_QUAD \    + MASK_APP_REGS + MASK_EPILOGUE + MASK_FPU + MASK_STACK_BIAS)
+value|(MASK_V9 + MASK_PTR64 + MASK_64BIT + MASK_HARD_QUAD \    + MASK_APP_REGS + MASK_FPU + MASK_STACK_BIAS)
 end_define
 
 begin_comment
