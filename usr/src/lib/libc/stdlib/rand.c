@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rand.c	8.1 (Berkeley) %G%"
+literal|"@(#)rand.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,6 +76,9 @@ literal|12345
 operator|)
 operator|%
 operator|(
+operator|(
+name|u_long
+operator|)
 name|RAND_MAX
 operator|+
 literal|1
