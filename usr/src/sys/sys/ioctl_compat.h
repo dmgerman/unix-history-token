@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ioctl_compat.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ioctl_compat.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -695,7 +695,7 @@ value|0x01000000
 end_define
 
 begin_comment
-comment|/* no SIGHUP on carrier drop */
+comment|/* (no-op) was no SIGHUP on carrier drop */
 end_comment
 
 begin_define
