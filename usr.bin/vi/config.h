@@ -8,6 +8,10 @@ comment|/* config.h.in.  Generated automatically from configure.in by autoheader
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* Define to empty if the keyword does not work.  */
 end_comment
 
@@ -408,12 +412,9 @@ begin_comment
 comment|/* Define if you have<sys/select.h> */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_SELECT_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SYS_SELECT_H 1 */
+end_comment
 
 begin_comment
 comment|/* Define if you have the System V style pty calls. */
