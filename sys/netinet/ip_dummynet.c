@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.1 1998/09/12 22:03:20 luigi Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.1.2.1 1998/10/16 15:00:16 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -1285,6 +1285,17 @@ literal|0
 return|;
 comment|/* XXX error */
 block|}
+name|bzero
+argument_list|(
+name|pkt
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|pkt
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* build and enqueue packet */
 name|pkt
 operator|->
@@ -2698,13 +2709,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"DUMMYNET initialized (980901) -- size dn_pkt %d\n"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dn_pkt
-argument_list|)
+literal|"DUMMYNET initialized (990111)\n"
 argument_list|)
 expr_stmt|;
 name|all_pipes
