@@ -2473,9 +2473,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * RFC1812 says we must ignore ICMP redirects if we 		 * are acting as router. 		 */
 if|if
 condition|(
 name|drop_redirect
+operator|||
+name|ipforwarding
 condition|)
 break|break;
 if|if
