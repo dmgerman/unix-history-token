@@ -145,17 +145,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|tickadj
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* "standard" clock skew, us./tick */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|hz
 decl_stmt|;
 end_decl_stmt
@@ -214,20 +203,6 @@ end_decl_stmt
 begin_comment
 comment|/* once a second sleep address */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tickdelta
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|timedelta
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#

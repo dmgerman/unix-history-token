@@ -118,16 +118,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|tickadj
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* can adjust 30ms in 60s */
-end_comment
-
-begin_decl_stmt
-name|int
 name|maxusers
 decl_stmt|;
 end_decl_stmt
@@ -319,18 +309,6 @@ literal|1000000
 operator|/
 name|hz
 expr_stmt|;
-name|tickadj
-operator|=
-name|howmany
-argument_list|(
-literal|30000
-argument_list|,
-literal|60
-operator|*
-name|hz
-argument_list|)
-expr_stmt|;
-comment|/* can adjust 30ms in 60s */
 ifdef|#
 directive|ifdef
 name|VM_SWZONE_SIZE_MAX
