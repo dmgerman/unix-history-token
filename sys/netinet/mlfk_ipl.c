@@ -960,7 +960,7 @@ name|moduledata_t
 name|ipfiltermod
 init|=
 block|{
-name|IPL_VERSION
+literal|"ipfilter"
 block|,
 name|ipfilter_modevent
 block|,
