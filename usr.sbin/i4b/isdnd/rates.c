@@ -186,7 +186,7 @@ block|{
 name|char
 name|buffer
 index|[
-literal|1024
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 specifier|register
@@ -256,9 +256,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"error open %s: %s"
 argument_list|,
@@ -399,9 +404,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"rates: invalid rate type %c%c%c in line %d"
 argument_list|,
@@ -436,9 +446,14 @@ operator|>=
 name|NRATES
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"rates: invalid rate index %d in line %d"
 argument_list|,
@@ -497,9 +512,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"rates: invalid day digit %c in line %d"
 argument_list|,
@@ -549,9 +569,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"rates: cannot malloc space for rate structure"
 argument_list|)
@@ -658,9 +683,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"rates: cannot malloc space2 for rate structure"
 argument_list|)
@@ -716,9 +746,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"rates: start_hr error in line %d"
 argument_list|,
@@ -744,9 +779,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"rates: no '.' after start_hr in line %d"
 argument_list|,
@@ -791,9 +831,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"rates: start_min error in line %d"
 argument_list|,
@@ -829,9 +874,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"rates: no '-' after start_min in line %d"
 argument_list|,
@@ -876,9 +926,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"rates: end_hr error in line %d"
 argument_list|,
@@ -904,9 +959,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"rates: no '.' after end_hr in line %d"
 argument_list|,
@@ -951,9 +1011,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"rates: end_min error in line %d"
 argument_list|,
@@ -996,9 +1061,14 @@ operator|->
 name|start_time
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"rates: end_time must be greater then start_time %d"
 argument_list|,
@@ -1024,9 +1094,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"rates: no ':' after end_min in line %d"
 argument_list|,
@@ -1071,9 +1146,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|error
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|error
+argument_list|)
 argument_list|,
 literal|"rates: first rate digit error in line %d"
 argument_list|,

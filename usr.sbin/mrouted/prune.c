@@ -104,7 +104,7 @@ name|JITTERED_VALUE
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)/2 + (random() % (x)))
+value|((x)/2 + (arc4random() % (x)))
 end_define
 
 begin_endif

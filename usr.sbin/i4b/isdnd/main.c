@@ -1636,9 +1636,14 @@ name|SIG_IGN
 argument_list|)
 expr_stmt|;
 comment|/* remove handler */
-name|sprintf
+name|snprintf
 argument_list|(
 name|sbuffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sbuffer
+argument_list|)
 argument_list|,
 literal|"%s%s%s%s%s%s%s%s"
 argument_list|,
@@ -2554,9 +2559,14 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|filename
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|filename
+argument_list|)
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -2681,9 +2691,14 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|filename
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|filename
+argument_list|)
 argument_list|,
 literal|"%s%s"
 argument_list|,
