@@ -1736,7 +1736,7 @@ condition|)
 do|;
 name|tlb_range_demap
 argument_list|(
-name|TLB_CTX_KERNEL
+name|kernel_pmap
 argument_list|,
 name|sva
 argument_list|,
@@ -1816,7 +1816,7 @@ argument_list|)
 expr_stmt|;
 name|tlb_range_demap
 argument_list|(
-name|TLB_CTX_KERNEL
+name|kernel_pmap
 argument_list|,
 name|sva
 argument_list|,
