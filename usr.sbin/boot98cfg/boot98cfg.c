@@ -302,6 +302,7 @@ name|char
 modifier|*
 name|endptr
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|iplpath

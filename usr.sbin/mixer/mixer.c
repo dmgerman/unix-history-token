@@ -72,6 +72,7 @@ file|<sys/soundcard.h>
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|names

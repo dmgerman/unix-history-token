@@ -32,6 +32,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -81,14 +87,24 @@ begin_function_decl
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|print_xferstats
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|double
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -154,18 +170,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|argv
-decl_stmt|;
+index|[]
+parameter_list|)
 block|{
 name|spraycumul
 name|host_stats
@@ -180,10 +192,10 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
-name|int
+name|u_int
 name|count
 init|=
 literal|0
@@ -446,7 +458,7 @@ expr_stmt|;
 comment|/* Spray server with packets */
 name|printf
 argument_list|(
-literal|"sending %d packets of lnth %d to %s ..."
+literal|"sending %u packets of lnth %d to %s ..."
 argument_list|,
 name|count
 argument_list|,
@@ -647,24 +659,19 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_xferstats
 parameter_list|(
+name|u_int
 name|packets
 parameter_list|,
+name|int
 name|packetlen
 parameter_list|,
-name|xfertime
-parameter_list|)
-name|int
-name|packets
-decl_stmt|;
-name|int
-name|packetlen
-decl_stmt|;
 name|double
 name|xfertime
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|datalen
@@ -737,7 +744,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
