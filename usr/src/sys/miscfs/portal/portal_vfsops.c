@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vfsops.c	8.2 (Berkeley) %G%  *  * $Id: portal_vfsops.c,v 1.5 1992/05/30 10:25:27 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vfsops.c	8.3 (Berkeley) %G%  *  * $Id: portal_vfsops.c,v 1.5 1992/05/30 10:25:27 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -222,11 +222,6 @@ modifier|*
 name|rvp
 decl_stmt|;
 name|struct
-name|sockaddr_un
-modifier|*
-name|unp
-decl_stmt|;
-name|struct
 name|file
 modifier|*
 name|fp
@@ -235,12 +230,6 @@ name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
-name|char
-name|cfile
-index|[
-name|MAXPATHLEN
-index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -714,14 +703,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|error
-decl_stmt|;
-name|int
-name|flags
-init|=
-literal|0
-decl_stmt|;
 specifier|extern
 name|int
 name|doforce
@@ -737,6 +718,13 @@ name|mp
 argument_list|)
 operator|->
 name|pm_root
+decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|flags
+init|=
+literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1008,9 +996,6 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|PORTAL_DIAGNOSTIC
@@ -1152,23 +1137,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|filedesc
-modifier|*
-name|fdp
-decl_stmt|;
-name|int
-name|lim
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|int
-name|last
-decl_stmt|;
-name|int
-name|freefd
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|PORTAL_DIAGNOSTIC
