@@ -563,6 +563,42 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|pthread_rwlockattr
+block|{
+name|int
+name|pshared
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|pthread_rwlock
+block|{
+name|pthread_mutex_t
+name|lock
+decl_stmt|;
+comment|/* monitor lock */
+name|int
+name|state
+decl_stmt|;
+comment|/* 0 = idle>0 = # of readers  -1 = writer */
+name|pthread_cond_t
+name|read_signal
+decl_stmt|;
+name|pthread_cond_t
+name|write_signal
+decl_stmt|;
+name|int
+name|blocked_writers
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Thread states.  */
 end_comment
