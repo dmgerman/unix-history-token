@@ -996,9 +996,6 @@ else|else
 block|{
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ac
 operator|->
 name|ac_if
@@ -1243,9 +1240,6 @@ else|else
 block|{
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ac
 operator|->
 name|ac_if
@@ -3399,9 +3393,6 @@ else|else
 block|{
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ac
 operator|->
 name|ac_if
