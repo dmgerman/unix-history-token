@@ -72,7 +72,7 @@ name|int
 name|gd_switchticks
 decl_stmt|;
 name|u_int
-name|gd_cpuno
+name|gd_cpuid
 decl_stmt|;
 comment|/* this cpu number */
 name|u_int
@@ -106,9 +106,6 @@ name|gd_allcpu
 expr_stmt|;
 name|int
 name|gd_witness_spin_check
-decl_stmt|;
-name|u_int
-name|gd_cpuid
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -162,7 +159,7 @@ modifier|*
 name|pcpu
 parameter_list|,
 name|int
-name|cpuno
+name|cpuid
 parameter_list|,
 name|size_t
 name|sz
@@ -177,10 +174,33 @@ modifier|*
 name|globaldata_find
 parameter_list|(
 name|int
-name|cpuno
+name|cpuid
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_function_decl
+name|void
+name|globaldata_register
+parameter_list|(
+name|struct
+name|globaldata
+modifier|*
+name|pcpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
