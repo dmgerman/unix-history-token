@@ -60,5 +60,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|mcclock_getsecs
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+modifier|*
+name|secp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
