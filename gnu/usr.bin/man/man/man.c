@@ -1952,6 +1952,11 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+operator|||
+operator|*
+name|pager
+operator|==
+name|NULL
 condition|)
 name|pager
 operator|=
