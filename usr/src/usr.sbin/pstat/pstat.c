@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pstat.c	4.26 (Berkeley) %G%"
+literal|"@(#)pstat.c	4.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2309,10 +2309,12 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
-specifier|register
+specifier|static
 name|char
-modifier|*
 name|mesg
+index|[]
+init|=
+literal|" # RAW CAN OUT     MODE     ADDR DEL COL     STATE  PGRP DISC\n"
 decl_stmt|;
 name|printf
 argument_list|(
@@ -2371,10 +2373,6 @@ literal|0
 index|]
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|mesg
-operator|=
-literal|" # RAW CAN OUT   MODE    ADDR   DEL COL  STATE   PGRP DISC\n"
 expr_stmt|;
 name|printf
 argument_list|(
@@ -2513,6 +2511,11 @@ argument_list|(
 expr|struct
 name|tty
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|mesg
 argument_list|)
 expr_stmt|;
 for|for
@@ -2666,6 +2669,11 @@ name|tty
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+name|mesg
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|tp
@@ -2817,6 +2825,11 @@ name|tty
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+name|mesg
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|tp
@@ -2917,6 +2930,11 @@ name|tty
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+name|mesg
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|tp
@@ -2993,18 +3011,13 @@ comment|/* 	case NETLDISC: 		if (tp->t_rec) 			printf("%4d%4d", 0, tp->t_inbuf);
 default|default:
 name|printf
 argument_list|(
-literal|"%4d"
+literal|"%4d%4d"
 argument_list|,
 name|tp
 operator|->
 name|t_rawq
 operator|.
 name|c_cc
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%4d"
 argument_list|,
 name|tp
 operator|->
@@ -3016,45 +3029,25 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%4d"
+literal|"%4d %8x %8x%4d%4d"
 argument_list|,
 name|tp
 operator|->
 name|t_outq
 operator|.
 name|c_cc
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%8.1x"
 argument_list|,
 name|tp
 operator|->
 name|t_flags
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" %8.1x"
 argument_list|,
 name|tp
 operator|->
 name|t_addr
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%3d"
 argument_list|,
 name|tp
 operator|->
 name|t_delct
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%4d "
 argument_list|,
 name|tp
 operator|->
@@ -3092,6 +3085,17 @@ operator|&
 name|TS_ISOPEN
 argument_list|,
 literal|'O'
+argument_list|)
+expr_stmt|;
+name|putf
+argument_list|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_FLUSH
+argument_list|,
+literal|'F'
 argument_list|)
 expr_stmt|;
 name|putf
@@ -3144,6 +3148,17 @@ name|tp
 operator|->
 name|t_state
 operator|&
+name|TS_TTSTOP
+argument_list|,
+literal|'S'
+argument_list|)
+expr_stmt|;
+name|putf
+argument_list|(
+name|tp
+operator|->
+name|t_state
+operator|&
 name|TS_HUPCLS
 argument_list|,
 literal|'H'
@@ -3166,11 +3181,20 @@ name|t_line
 condition|)
 block|{
 case|case
+name|OTTYDISC
+case|:
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|NTTYDISC
 case|:
 name|printf
 argument_list|(
-literal|" ntty"
+literal|" ntty\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3179,16 +3203,39 @@ name|NETLDISC
 case|:
 name|printf
 argument_list|(
-literal|" net"
+literal|" net\n"
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
+case|case
+name|TABLDISC
+case|:
 name|printf
 argument_list|(
-literal|"\n"
+literal|" tab\n"
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|NTABLDISC
+case|:
+name|printf
+argument_list|(
+literal|" ntab\n"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|" %d\n"
+argument_list|,
+name|tp
+operator|->
+name|t_line
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
