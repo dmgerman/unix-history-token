@@ -7584,9 +7584,9 @@ argument_list|(
 name|p
 operator|->
 name|fcharp
-operator|.
-name|headblock
 operator|->
+name|headblock
+operator|.
 name|vtype
 argument_list|)
 condition|)
@@ -7630,9 +7630,9 @@ argument_list|(
 name|p
 operator|->
 name|lcharp
-operator|.
-name|headblock
 operator|->
+name|headblock
+operator|.
 name|vtype
 argument_list|)
 condition|)
