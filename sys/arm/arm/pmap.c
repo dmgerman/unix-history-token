@@ -788,6 +788,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|char
+modifier|*
+name|_tmppt
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Metadata for L1 translation tables.  */
 end_comment
@@ -8404,6 +8411,23 @@ name|PAGE_SIZE
 argument_list|,
 operator|&
 name|pmap_kernel_l2dtable_kva
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|pmap_alloc_specials
+argument_list|(
+operator|&
+name|virtual_avail
+argument_list|,
+literal|1
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|*
+operator|)
+operator|&
+name|_tmppt
 argument_list|,
 name|NULL
 argument_list|)

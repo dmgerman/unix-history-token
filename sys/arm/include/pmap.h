@@ -42,159 +42,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|VADDR
-parameter_list|(
-name|pdi
-parameter_list|,
-name|pti
-parameter_list|)
-value|((vm_offset_t)(((pdi)<<PDR_SHIFT)+((pti)<<PAGE_SHIFT)))
+name|PTE_PAGETABLE
+value|2
 end_define
-
-begin_define
-define|#
-directive|define
-name|PTDIPDE
-parameter_list|(
-name|ptd
-parameter_list|)
-value|((ptd)/1024)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTDIPTE
-parameter_list|(
-name|ptd
-parameter_list|)
-value|((ptd)%256)
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NKPT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NKPT
-value|120
-end_define
-
-begin_comment
-comment|/* actual number of kernel page tables */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NKPDE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NKPDE
-value|1019
-end_define
-
-begin_comment
-comment|/* Maximum number of kernel PDE */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|NPDEPTD
-value|16
-end_define
-
-begin_comment
-comment|/* Number of PDE in each PTD */
-end_comment
-
-begin_comment
-comment|/*  * The *PTDI values control the layout of virtual memory  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KPTDI
-value|(NPDEPG-NKPDE)
-end_define
-
-begin_comment
-comment|/* ptd entry for kernel space begin */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTDPTDI
-value|(KPTDI-1)
-end_define
-
-begin_comment
-comment|/* ptd entry that points to ptd! */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KPTPTDI
-value|(PTDPTDI-1)
-end_define
-
-begin_comment
-comment|/* ptd entry for kernel PTEs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UPTPTDI
-value|(KPTPTDI-3)
-end_define
-
-begin_comment
-comment|/* ptd entry for uspace PTEs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMAXPTDI
-value|(UPTPTDI-1)
-end_define
-
-begin_comment
-comment|/* ptd entry for user space end */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMAXPTEOFF
-value|(NPTEPG)
-end_define
-
-begin_comment
-comment|/* pte entry for user space end */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -272,7 +122,7 @@ value|(!TAILQ_EMPTY(&(m)->md.pv_list))
 end_define
 
 begin_comment
-comment|/*  * Pmap sutff  */
+comment|/*  * Pmap stuff  */
 end_comment
 
 begin_comment
@@ -547,48 +397,6 @@ directive|define
 name|PV_ENTRY_NULL
 value|((pv_entry_t) 0)
 end_define
-
-begin_define
-define|#
-directive|define
-name|PV_CI
-value|0x01
-end_define
-
-begin_comment
-comment|/* all entries must be cache inhibited */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PV_PTPAGE
-value|0x02
-end_define
-
-begin_comment
-comment|/* entry maps a page table page */
-end_comment
-
-begin_comment
-comment|/*  * Page hooks.  * For speed we store the both the virtual address and the page table  * entry address for each page hook.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|vm_offset_t
-name|va
-decl_stmt|;
-name|pt_entry_t
-modifier|*
-name|pte
-decl_stmt|;
-block|}
-name|pagehook_t
-typedef|;
-end_typedef
 
 begin_ifdef
 ifdef|#
@@ -2073,25 +1881,6 @@ value|l2pte_pa(*(pte))
 end_define
 
 begin_comment
-comment|/* Size of the kernel part of the L1 page table */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERNEL_PD_SIZE
-define|\
-value|(L1_TABLE_SIZE - (KERNEL_BASE>> L1_S_SHIFT) * sizeof(pd_entry_t))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_PAGETABLE
-value|2
-end_define
-
-begin_comment
 comment|/*  * Flags that indicate attributes of pages or mappings of pages.  *  * The PVF_MOD and PVF_REF flags are stored in the mdpage for each  * page.  PVF_WIRED, PVF_WRITE, and PVF_NC are kept in individual  * pv_entry's for each page.  They live in the same "namespace" so  * that we can clear multiple attributes at a time.  *  * Note the "non-cacheable" flag generally means the page has  * multiple mappings in a given address space.  */
 end_comment
 
@@ -2282,6 +2071,14 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|_tmppt
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
