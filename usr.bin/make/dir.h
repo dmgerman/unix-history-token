@@ -57,6 +57,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|Dir_InitDot
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|Dir_End
 parameter_list|(
 name|void

@@ -233,7 +233,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Dir_Init --  *	initialize things for this module  *  * Results:  *	none  *  * Side Effects:  *	some directories may be opened.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Dir_Init --  *	initialize things for this module  *  * Results:  *	none  *  * Side Effects:  *	none  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -265,7 +265,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*      * Since the Path structure is placed on both openDirectories and      * the path we give Dir_AddDir (which in this case is openDirectories),      * we need to remove "." from openDirectories and what better time to      * do it than when we have to fetch the thing anyway?      */
+block|}
+end_function
+
+begin_comment
+comment|/*-  *-----------------------------------------------------------------------  * Dir_InitDot --  *	initialize the "." directory  *  * Results:  *	none  *  * Side Effects:  *	some directories may be opened.  *-----------------------------------------------------------------------  */
+end_comment
+
+begin_function
+name|void
+name|Dir_InitDot
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 name|Dir_AddDir
 argument_list|(
 name|openDirectories
@@ -279,9 +292,12 @@ operator|(
 name|Path
 operator|*
 operator|)
-name|Lst_DeQueue
+name|Lst_Datum
+argument_list|(
+name|Lst_Last
 argument_list|(
 name|openDirectories
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3157,6 +3173,12 @@ operator|)
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|path
+operator|!=
+name|openDirectories
+condition|)
 operator|(
 name|void
 operator|)
