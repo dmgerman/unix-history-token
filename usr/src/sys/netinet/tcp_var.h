@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_var.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_var.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -46,9 +46,9 @@ name|t_rxtcur
 decl_stmt|;
 comment|/* current retransmit value */
 name|short
-name|t_unused
+name|t_dupacks
 decl_stmt|;
-comment|/* XXX */
+comment|/* consecutive dup acks recd */
 name|u_short
 name|t_maxseg
 decl_stmt|;
@@ -155,12 +155,16 @@ name|tcp_seq
 name|snd_max
 decl_stmt|;
 comment|/* highest sequence number sent 					 * used to recognize retransmits 					 */
-comment|/* congestion control (for source quench) */
+comment|/* congestion control (for slow start, source quench, retransmit after loss) */
 name|u_short
 name|snd_cwnd
 decl_stmt|;
 comment|/* congestion-controlled window */
-comment|/*  * transmit timing stuff.  * srtt and rttvar are stored as fixed point; for convenience in smoothing,  * srtt has 3 bits to the right of the binary point, rttvar has 2.  */
+name|u_short
+name|snd_ssthresh
+decl_stmt|;
+comment|/* snd_cwnd size threshhold for 					 * for slow start exponential to 					 * linear switch */
+comment|/*  * transmit timing stuff.  * srtt and rttvar are stored as fixed point; for convenience in smoothing,  * srtt has 3 bits to the right of the binary point, rttvar has 2.  * "Variance" is actually smoothed difference.  */
 name|short
 name|t_idle
 decl_stmt|;
@@ -169,10 +173,6 @@ name|short
 name|t_rtt
 decl_stmt|;
 comment|/* round trip time */
-name|u_short
-name|max_rcvd
-decl_stmt|;
-comment|/* most peer has sent into window */
 name|tcp_seq
 name|t_rtseq
 decl_stmt|;
@@ -185,6 +185,10 @@ name|short
 name|t_rttvar
 decl_stmt|;
 comment|/* variance in round-trip time */
+name|u_short
+name|max_rcvd
+decl_stmt|;
+comment|/* most peer has sent into window */
 name|u_short
 name|max_sndwnd
 decl_stmt|;
