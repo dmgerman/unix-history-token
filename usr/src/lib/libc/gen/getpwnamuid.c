@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	getpwnamuid.c	4.1	83/12/02	*/
+comment|/*	getpwnamuid.c	4.2	83/12/20	*/
 end_comment
 
 begin_include
@@ -310,6 +310,29 @@ operator|)
 name|NULL
 operator|)
 return|;
+if|if
+condition|(
+name|flock
+argument_list|(
+name|db
+operator|->
+name|db_dirf
+argument_list|,
+name|LOCK_SH
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|(
+expr|struct
+name|passwd
+operator|*
+operator|)
+name|NULL
+operator|)
+return|;
 name|key
 operator|.
 name|dptr
@@ -383,6 +406,29 @@ operator|(
 name|DBM
 operator|*
 operator|)
+literal|0
+condition|)
+return|return
+operator|(
+operator|(
+expr|struct
+name|passwd
+operator|*
+operator|)
+name|NULL
+operator|)
+return|;
+if|if
+condition|(
+name|flock
+argument_list|(
+name|db
+operator|->
+name|db_dirf
+argument_list|,
+name|LOCK_SH
+argument_list|)
+operator|<
 literal|0
 condition|)
 return|return
