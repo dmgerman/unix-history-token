@@ -593,30 +593,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|ipip_input
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|int
-name|off
-parameter_list|)
-block|{
-comment|/* XXX must fixup manually */
-name|rip_input
-argument_list|(
-name|m
-argument_list|,
-name|off
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_function_decl
 name|int
 function_decl|(
