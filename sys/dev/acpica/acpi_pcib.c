@@ -373,6 +373,24 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
+name|buf
+operator|.
+name|Pointer
+operator|=
+name|NULL
+expr_stmt|;
+name|crsbuf
+operator|.
+name|Pointer
+operator|=
+name|NULL
+expr_stmt|;
+name|prsbuf
+operator|.
+name|Pointer
+operator|=
+name|NULL
+expr_stmt|;
 name|interrupt
 operator|=
 literal|255
@@ -579,12 +597,6 @@ block|}
 comment|/*      * Verify that this is a PCI link device, and that it's present.      */
 name|buf
 operator|.
-name|Pointer
-operator|=
-name|NULL
-expr_stmt|;
-name|buf
-operator|.
 name|Length
 operator|=
 name|ACPI_ALLOCATE_BUFFER
@@ -716,12 +728,6 @@ block|}
 comment|/*      * Get the current and possible resources for the interrupt link device.      */
 name|crsbuf
 operator|.
-name|Pointer
-operator|=
-name|NULL
-expr_stmt|;
-name|crsbuf
-operator|.
 name|Length
 operator|=
 name|ACPI_ALLOCATE_BUFFER
@@ -759,12 +765,6 @@ name|out
 goto|;
 comment|/* this is fatal */
 block|}
-name|prsbuf
-operator|.
-name|Pointer
-operator|=
-name|NULL
-expr_stmt|;
 name|prsbuf
 operator|.
 name|Length
