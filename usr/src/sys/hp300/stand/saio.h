@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)saio.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)saio.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,13 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"types.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -64,6 +58,10 @@ name|off_t
 name|i_offset
 decl_stmt|;
 comment|/* seek offset in file */
+name|dev_t
+name|i_dev
+decl_stmt|;
+comment|/* associated device */
 name|daddr_t
 name|i_bn
 decl_stmt|;
