@@ -6154,7 +6154,7 @@ break|break;
 default|default:
 name|warnx
 argument_list|(
-literal|"unknown multiplier prefix '%c' for partition %c (should be K, M, G or T)"
+literal|"unknown multiplier suffix '%c' for partition %c (should be K, M, G or T)"
 argument_list|,
 name|part_size_type
 index|[
