@@ -110,7 +110,7 @@ name|Elf_Rela
 modifier|*
 name|rela
 decl_stmt|;
-comment|/*  	 * COPY relocs are invalid outside of the main program 	 */
+comment|/* 	 * COPY relocs are invalid outside of the main program 	 */
 name|assert
 argument_list|(
 name|dstobj
@@ -463,7 +463,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* 	 * Relocate these values  	 */
+comment|/* 	 * Relocate these values 	 */
 name|relalim
 operator|=
 operator|(
@@ -524,7 +524,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Relocate a non-PLT object with addend.   */
+comment|/*  * Relocate a non-PLT object with addend.  */
 end_comment
 
 begin_function
@@ -856,7 +856,7 @@ name|cache
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * From the SVR4 PPC ABI: 	 * "The PowerPC family uses only the Elf32_Rela relocation  	 *  entries with explicit addends." 	 */
+comment|/* 	 * From the SVR4 PPC ABI: 	 * "The PowerPC family uses only the Elf32_Rela relocation 	 *  entries with explicit addends." 	 */
 name|relalim
 operator|=
 operator|(
@@ -1722,7 +1722,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* 	 * From the SVR4 PPC ABI: 	 * 	 * 'The first 18 words (72 bytes) of the PLT are reserved for 	 * use by the dynamic linker. 	 *   ... 	 * 'If the executable or shared object requires N procedure  	 *  linkage table entries, the link editor shall reserve 3*N  	 *  words (12*N bytes) following the 18 reserved words. The  	 *  first 2*N of these words are the procedure linkage table  	 *  entries themselves. The static linker directs calls to bytes  	 *  (72 + (i-1)*8), for i between 1 and N inclusive. The remaining  	 *  N words (4*N bytes) are reserved for use by the dynamic linker.' 	 */
+comment|/* 	 * From the SVR4 PPC ABI: 	 * 	 * 'The first 18 words (72 bytes) of the PLT are reserved for 	 * use by the dynamic linker. 	 *   ... 	 * 'If the executable or shared object requires N procedure 	 *  linkage table entries, the link editor shall reserve 3*N 	 *  words (12*N bytes) following the 18 reserved words. The 	 *  first 2*N of these words are the procedure linkage table 	 *  entries themselves. The static linker directs calls to bytes 	 *  (72 + (i-1)*8), for i between 1 and N inclusive. The remaining 	 *  N words (4*N bytes) are reserved for use by the dynamic linker.' 	 */
 comment|/* 	 * Copy the absolute-call assembler stub into the first part of 	 * the reserved PLT area. 	 */
 name|memcpy
 argument_list|(

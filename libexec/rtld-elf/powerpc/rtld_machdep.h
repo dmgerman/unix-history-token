@@ -19,28 +19,14 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/atomic.h>
+file|<sys/types.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|atomic_incr_int
-parameter_list|(
-name|p
-parameter_list|)
-value|atomic_add_int((p), 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_decr_int
-parameter_list|(
-name|p
-parameter_list|)
-value|atomic_subtract_int((p), 1)
-end_define
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
+end_include
 
 begin_define
 define|#
@@ -127,7 +113,7 @@ value|(((InitFunc)(target))())
 end_define
 
 begin_comment
-comment|/*  * Lazy binding entry point, called via PLT.   */
+comment|/*  * Lazy binding entry point, called via PLT.  */
 end_comment
 
 begin_function_decl

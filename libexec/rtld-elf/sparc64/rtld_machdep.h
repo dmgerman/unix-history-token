@@ -31,30 +31,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|atomic_incr_int
-parameter_list|(
-name|p
-parameter_list|)
-value|atomic_add_int((p), 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_decr_int
-parameter_list|(
-name|p
-parameter_list|)
-value|atomic_subtract_int((p), 1)
-end_define
-
-begin_comment
-comment|/*  * This value of CACHE_LINE_SIZE is conservative.  The actual size  * is 32 on the  21064, 21064A, 21066, 21066A, and 21164.  It is 64  * on the 21264.  Compaq recommends sequestering each lock in its own  * 128-byte block to allow for future implementations with larger  * cache lines.  */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CACHE_LINE_SIZE
 value|128
 end_define

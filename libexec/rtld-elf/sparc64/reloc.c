@@ -1016,7 +1016,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static const char *reloc_names[] = { 	"NONE", "RELOC_8", "RELOC_16", "RELOC_32", "DISP_8", 	"DISP_16", "DISP_32", "WDISP_30", "WDISP_22", "HI22", 	"22", "13", "LO10", "GOT10", "GOT13", 	"GOT22", "PC10", "PC22", "WPLT30", "COPY", 	"GLOB_DAT", "JMP_SLOT", "RELATIVE", "UA_32", "PLT32", 	"HIPLT22", "LOPLT10", "LOPLT10", "PCPLT22", "PCPLT32", 	"10", "11", "64", "OLO10", "HH22", 	"HM10", "LM22", "PC_HH22", "PC_HM10", "PC_LM22",  	"WDISP16", "WDISP19", "GLOB_JMP", "7", "5", "6", 	"DISP64", "PLT64", "HIX22", "LOX10", "H44", "M44",  	"L44", "REGISTER", "UA64", "UA16" };
+unit|static const char *reloc_names[] = { 	"NONE", "RELOC_8", "RELOC_16", "RELOC_32", "DISP_8", 	"DISP_16", "DISP_32", "WDISP_30", "WDISP_22", "HI22", 	"22", "13", "LO10", "GOT10", "GOT13", 	"GOT22", "PC10", "PC22", "WPLT30", "COPY", 	"GLOB_DAT", "JMP_SLOT", "RELATIVE", "UA_32", "PLT32", 	"HIPLT22", "LOPLT10", "LOPLT10", "PCPLT22", "PCPLT32", 	"10", "11", "64", "OLO10", "HH22", 	"HM10", "LM22", "PC_HH22", "PC_HM10", "PC_LM22", 	"WDISP16", "WDISP19", "GLOB_JMP", "7", "5", "6", 	"DISP64", "PLT64", "HIX22", "LOX10", "H44", "M44", 	"L44", "REGISTER", "UA64", "UA16" };
 endif|#
 directive|endif
 end_endif
@@ -2805,7 +2805,7 @@ literal|20
 operator|)
 condition|)
 block|{
-comment|/*  			 * We're within 1MB -- we can use a direct branch insn. 			 * 			 * We can generate this pattern: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	ba,a	%xcc, addr 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're within 1MB -- we can use a direct branch insn. 			 * 			 * We can generate this pattern: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	ba,a	%xcc, addr 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|1
@@ -2847,7 +2847,7 @@ literal|32
 operator|)
 condition|)
 block|{
-comment|/*  			 * We're withing 32-bits of address zero. 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hi(addr), %g1 			 *	jmp	%g1+%lo(addr) 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're withing 32-bits of address zero. 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hi(addr), %g1 			 *	jmp	%g1+%lo(addr) 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|2
@@ -2906,7 +2906,7 @@ literal|32
 operator|)
 condition|)
 block|{
-comment|/*  			 * We're withing 32-bits of address -1. 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hix(addr), %g1 			 *	xor	%g1, %lox(addr), %g1 			 *	jmp	%g1 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're withing 32-bits of address -1. 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hix(addr), %g1 			 *	xor	%g1, %lox(addr), %g1 			 *	jmp	%g1 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|3
@@ -2992,7 +2992,7 @@ literal|4
 operator|)
 condition|)
 block|{
-comment|/*  			 * We're withing 32-bits -- we can use a direct call 			 * insn 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	mov	%o7, %g1 			 *	call	(.+offset) 			 *	 mov	%g1, %o7 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're withing 32-bits -- we can use a direct call 			 * insn 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	mov	%o7, %g1 			 *	call	(.+offset) 			 *	 mov	%g1, %o7 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|3
@@ -3062,7 +3062,7 @@ literal|44
 operator|)
 condition|)
 block|{
-comment|/*  			 * We're withing 44 bits.  We can generate this pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(addr), %g1 			 *	or	%g1, %m44(addr), %g1 			 *	sllx	%g1, 12, %g1	 			 *	jmp	%g1+%l44(addr)	 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're withing 44 bits.  We can generate this pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(addr), %g1 			 *	or	%g1, %m44(addr), %g1 			 *	sllx	%g1, 12, %g1 			 *	jmp	%g1+%l44(addr) 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|4
@@ -3163,7 +3163,7 @@ literal|44
 operator|)
 condition|)
 block|{
-comment|/*  			 * We're withing 44 bits.  We can generate this pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(-addr), %g1 			 *	xor	%g1, %m44(-addr), %g1 			 *	sllx	%g1, 12, %g1	 			 *	jmp	%g1+%l44(addr)	 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're withing 44 bits.  We can generate this pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(-addr), %g1 			 *	xor	%g1, %m44(-addr), %g1 			 *	sllx	%g1, 12, %g1 			 *	jmp	%g1+%l44(addr) 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|4
@@ -3251,7 +3251,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  			 * We need to load all 64-bits 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hh(addr), %g1 			 *	sethi	%lm(addr), %g5 			 *	or	%g1, %hm(addr), %g1 			 *	sllx	%g1, 32, %g1 			 *	or	%g1, %g5, %g1 			 *	jmp	%g1+%lo(addr) 			 *	nop 			 * 			 */
+comment|/* 			 * We need to load all 64-bits 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hh(addr), %g1 			 *	sethi	%lm(addr), %g5 			 *	or	%g1, %hm(addr), %g1 			 *	sllx	%g1, 32, %g1 			 *	or	%g1, %g5, %g1 			 *	jmp	%g1+%lo(addr) 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|6

@@ -391,7 +391,7 @@ name|fbytes
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * This assertion is necessary to guarantee function pointer  	 * uniqueness   	 */
+comment|/* 	 * This assertion is necessary to guarantee function pointer 	 * uniqueness  	 */
 name|assert
 argument_list|(
 name|fptrs
@@ -664,7 +664,7 @@ case|case
 name|R_IA64_FPTR64LSB
 case|:
 block|{
-comment|/* 		 * We have to make sure that all @fptr references to 		 * the same function are identical so that code can 		 * compare function pointers.  		 */
+comment|/* 		 * We have to make sure that all @fptr references to 		 * the same function are identical so that code can 		 * compare function pointers. 		 */
 specifier|const
 name|Elf_Sym
 modifier|*
@@ -1274,7 +1274,7 @@ argument_list|,
 name|bytes
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Release temporarily mapped fptrs if relocating  	 * rtld object itself. A new table will be created 	 * in make_function_pointer using malloc when needed. 	 */
+comment|/* 	 * Release temporarily mapped fptrs if relocating 	 * rtld object itself. A new table will be created 	 * in make_function_pointer using malloc when needed. 	 */
 if|if
 condition|(
 name|obj

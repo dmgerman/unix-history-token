@@ -438,7 +438,7 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 			 * There should be nothing except whitespace or comment 			 * from this point to the end of the line.    			 */
+comment|/* 			 * There should be nothing except whitespace or comment 			  from this point to the end of the line. 			 */
 while|while
 condition|(
 name|isspace
@@ -771,12 +771,6 @@ name|p
 operator|=
 literal|"$DEFAULT$"
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf("%s(\"%s\", \"%s\", \"%s\")\n", __func__, p, f, t);
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
