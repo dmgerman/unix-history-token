@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vnode_pager.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vnode_pager.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Page to/from files (vnodes).  *  * TODO:  *	pageouts  */
+comment|/*  * Page to/from files (vnodes).  *  * TODO:  *	pageouts  *	fix credential use (uses current process credentials now)  */
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"proc.h"
 end_include
 
 begin_include
@@ -60,31 +60,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vm_param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lock.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"queue.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
+file|"vm_prot.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_pager.h"
+file|"vm_object.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_page.h"
+file|"vm_page.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vnode_pager.h"
+file|"vnode_pager.h"
 end_include
 
 begin_decl_stmt
@@ -373,9 +385,9 @@ argument_list|,
 operator|&
 name|vattr
 argument_list|,
-name|u
-operator|.
-name|u_cred
+name|curproc
+operator|->
+name|p_ucred
 argument_list|)
 operator|==
 literal|0
@@ -526,6 +538,9 @@ argument_list|(
 name|pager
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|vnp
 operator|=
 operator|(
@@ -535,20 +550,9 @@ name|pager
 operator|->
 name|pg_data
 expr_stmt|;
+endif|#
+directive|endif
 block|}
-if|if
-condition|(
-name|prot
-operator|&
-name|VM_PROT_EXECUTE
-condition|)
-name|vp
-operator|->
-name|v_flag
-operator||=
-name|VTEXT
-expr_stmt|;
-comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -654,7 +658,7 @@ if|#
 directive|if
 literal|0
 comment|/* can hang if done at reboot on NFS FS */
-block|(void) VOP_FSYNC(vp, u.u_cred);
+block|(void) VOP_FSYNC(vp, curproc->p_ucred);
 endif|#
 directive|endif
 name|vrele
@@ -1724,9 +1728,9 @@ name|auio
 argument_list|,
 literal|0
 argument_list|,
-name|u
-operator|.
-name|u_cred
+name|curproc
+operator|->
+name|p_ucred
 argument_list|)
 expr_stmt|;
 else|else
@@ -1743,9 +1747,9 @@ name|auio
 argument_list|,
 literal|0
 argument_list|,
-name|u
-operator|.
-name|u_cred
+name|curproc
+operator|->
+name|p_ucred
 argument_list|)
 expr_stmt|;
 ifdef|#
