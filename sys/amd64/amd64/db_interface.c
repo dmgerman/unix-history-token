@@ -461,6 +461,10 @@ condition|(
 name|stopped_cpus
 operator|!=
 name|other_cpus
+operator|&&
+name|smp_started
+operator|!=
+literal|0
 condition|)
 block|{
 name|db_printf
