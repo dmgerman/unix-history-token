@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	6.6	84/12/31	*/
+comment|/*	ioctl.h	6.6	85/01/03	*/
 end_comment
 
 begin_comment
@@ -171,6 +171,32 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Window size structure  */
+end_comment
+
+begin_struct
+struct|struct
+name|winsize
+block|{
+name|unsigned
+name|short
+name|row
+decl_stmt|,
+name|col
+decl_stmt|;
+comment|/* character size of window */
+name|unsigned
+name|short
+name|xpixel
+decl_stmt|,
+name|ypixel
+decl_stmt|;
+comment|/* pixel size of window */
+block|}
+struct|;
+end_struct
 
 begin_ifndef
 ifndef|#
@@ -1463,6 +1489,28 @@ end_define
 
 begin_comment
 comment|/* remote input editing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCGWINSZ
+value|_IOR(t, 104, struct winsize)
+end_define
+
+begin_comment
+comment|/* get window size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSWINSZ
+value|_IOW(t, 103, struct winsize)
+end_define
+
+begin_comment
+comment|/* set window size */
 end_comment
 
 begin_define
