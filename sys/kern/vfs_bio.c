@@ -9302,6 +9302,23 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If the user does not want us to create the buffer, bail out 		 * here. 		 */
+if|if
+condition|(
+name|flags
+operator|&
+name|GB_NOCREAT
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 if|if
 condition|(
 name|vn_isdisk

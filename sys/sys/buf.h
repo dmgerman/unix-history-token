@@ -1780,6 +1780,17 @@ begin_comment
 comment|/* Fail if we block on a buf lock. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|GB_NOCREAT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Don't create a buf if not found. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
