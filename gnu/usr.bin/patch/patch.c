@@ -4,12 +4,12 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /home/ncvs/src/gnu/usr.bin/patch/patch.c,v 1.6 1995/05/30 05:02:34 rgrimes Exp $"
+literal|"$Header: /home/ncvs/src/gnu/usr.bin/patch/patch.c,v 1.13 1998/01/21 15:15:39 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* patch - a program to apply diffs to original files  *  * Copyright 1986, Larry Wall  *  * This program may be copied as long as you don't try to make any  * money off of it, or pretend that you wrote it.  *  * Log: patch.c,v  * Revision 2.0.2.0  90/05/01  22:17:50  davison  * patch12u: unidiff support added  *  * Revision 2.0.1.6  88/06/22  20:46:39  lwall  * patch12: rindex() wasn't declared  *  * Revision 2.0.1.5  88/06/03  15:09:37  lwall  * patch10: exit code improved.  * patch10: better support for non-flexfilenames.  *  * Revision 2.0.1.4  87/02/16  14:00:04  lwall  * Short replacement caused spurious "Out of sync" message.  *  * Revision 2.0.1.3  87/01/30  22:45:50  lwall  * Improved diagnostic on sync error.  * Moved do_ed_script() to pch.c.  *  * Revision 2.0.1.2  86/11/21  09:39:15  lwall  * Fuzz factor caused offset of installed lines.  *  * Revision 2.0.1.1  86/10/29  13:10:22  lwall  * Backwards search could terminate prematurely.  *  * Revision 2.0  86/09/17  15:37:32  lwall  * Baseline for netwide release.  *  * Revision 1.5  86/08/01  20:53:24  lwall  * Changed some %d's to %ld's.  * Linted.  *  * Revision 1.4  86/08/01  19:17:29  lwall  * Fixes for machines that can't vararg.  * Added fuzz factor.  * Generalized -p.  * General cleanup.  *  * 85/08/15 van%ucbmonet@berkeley  * Changes for 4.3bsd diff -c.  *  * Revision 1.3  85/03/26  15:07:43  lwall  * Frozen.  *  * Revision 1.2.1.9  85/03/12  17:03:35  lwall  * Changed pfp->_file to fileno(pfp).  *  * Revision 1.2.1.8  85/03/12  16:30:43  lwall  * Check i_ptr and i_womp to make sure they aren't null before freeing.  * Also allow ed output to be suppressed.  *  * Revision 1.2.1.7  85/03/12  15:56:13  lwall  * Added -p option from jromine@uci-750a.  *  * Revision 1.2.1.6  85/03/12  12:12:51  lwall  * Now checks for normalness of file to patch.  *  * Revision 1.2.1.5  85/03/12  11:52:12  lwall  * Added -D (#ifdef) option from joe@fluke.  *  * Revision 1.2.1.4  84/12/06  11:14:15  lwall  * Made smarter about SCCS subdirectories.  *  * Revision 1.2.1.3  84/12/05  11:18:43  lwall  * Added -l switch to do loose string comparison.  *  * Revision 1.2.1.2  84/12/04  09:47:13  lwall  * Failed hunk count not reset on multiple patch file.  *  * Revision 1.2.1.1  84/12/04  09:42:37  lwall  * Branch for sdcrdcf changes.  *  * Revision 1.2  84/11/29  13:29:51  lwall  * Linted.  Identifiers uniqified.  Fixed i_ptr malloc() bug.  Fixed  * multiple calls to mktemp().  Will now work on machines that can only  * read 32767 chars.  Added -R option for diffs with new and old swapped.  * Various cosmetic changes.  *  * Revision 1.1  84/11/09  17:03:58  lwall  * Initial revision  *  */
+comment|/* patch - a program to apply diffs to original files  *  * Copyright 1986, Larry Wall  *  * This program may be copied as long as you don't try to make any  * money off of it, or pretend that you wrote it.  *  * $Log: patch.c,v $  * Revision 1.13  1998/01/21 15:15:39  ache  * Update usage line with new option  *  * Revision 1.12  1998/01/21 15:10:13  ache  * Add -I or --index-first option to take Index: precedence over context diff,  * as it was in hacked FreeBSD version  *  * Revision 1.11  1998/01/21 14:37:22  ache  * Resurrect patch 2.1 without FreeBSD Index: hack  *  * Revision 1.9  1997/10/23 02:44:22  ache  * Add (unsigned char) cast to ctype macros  *  * Revision 1.8  1997/03/17 01:44:42  jmg  * fix compilation warnings in patch... (with slight modification)  *  * also remove -Wall that I acidentally committed last time I was here...  *  * Submitted-by: Philippe Charnier  *  * Closes PR#2998  *  * Revision 1.7  1997/02/13 21:10:41  jmg  * Fix a problem with patch in that is will always default, even when the  * controlling terminal is closed.  Now the function ask() will return 1 when th  * input is known to come from a file or terminal, or it will return 0 when ther  * was a read error.  *  * Modified the question "Skip patch?" so that on an error from ask it will skip  * the patch instead of looping.  *  * Closes PR#777  *  * 2.2 candidate  *  * Revision 1.6  1995/05/30 05:02:34  rgrimes  * Remove trailing whitespace.  *  * Revision 1.5  1995/01/12  22:09:40  hsu  * Fix bug that created new files even when running in -C check mode.  * Reviewed by: phk  *  * Revision 1.4  1994/02/25  21:46:04  phk  * added the -C/-check again.  *  * Revision 1.3  1994/02/17  22:20:34  jkh  * Put this back - I was somehow under the erroneous impression that patch was in  * ports, until I saw the the commit messages, that is! :-)  All changed backed out.  *  * Revision 1.2  1994/02/17  22:16:03  jkh  * From Poul-Henning Kamp -  Implement a -C option to verify the integrity of  * a patch before actually applying it.  *  * Revision 1.1.1.1  1993/06/19  14:21:52  paul  * b-maked patch-2.10  *  * Revision 2.0.2.0  90/05/01  22:17:50  davison  * patch12u: unidiff support added  *  * Revision 2.0.1.6  88/06/22  20:46:39  lwall  * patch12: rindex() wasn't declared  *  * Revision 2.0.1.5  88/06/03  15:09:37  lwall  * patch10: exit code improved.  * patch10: better support for non-flexfilenames.  *  * Revision 2.0.1.4  87/02/16  14:00:04  lwall  * Short replacement caused spurious "Out of sync" message.  *  * Revision 2.0.1.3  87/01/30  22:45:50  lwall  * Improved diagnostic on sync error.  * Moved do_ed_script() to pch.c.  *  * Revision 2.0.1.2  86/11/21  09:39:15  lwall  * Fuzz factor caused offset of installed lines.  *  * Revision 2.0.1.1  86/10/29  13:10:22  lwall  * Backwards search could terminate prematurely.  *  * Revision 2.0  86/09/17  15:37:32  lwall  * Baseline for netwide release.  *  * Revision 1.5  86/08/01  20:53:24  lwall  * Changed some %d's to %ld's.  * Linted.  *  * Revision 1.4  86/08/01  19:17:29  lwall  * Fixes for machines that can't vararg.  * Added fuzz factor.  * Generalized -p.  * General cleanup.  *  * 85/08/15 van%ucbmonet@berkeley  * Changes for 4.3bsd diff -c.  *  * Revision 1.3  85/03/26  15:07:43  lwall  * Frozen.  *  * Revision 1.2.1.9  85/03/12  17:03:35  lwall  * Changed pfp->_file to fileno(pfp).  *  * Revision 1.2.1.8  85/03/12  16:30:43  lwall  * Check i_ptr and i_womp to make sure they aren't null before freeing.  * Also allow ed output to be suppressed.  *  * Revision 1.2.1.7  85/03/12  15:56:13  lwall  * Added -p option from jromine@uci-750a.  *  * Revision 1.2.1.6  85/03/12  12:12:51  lwall  * Now checks for normalness of file to patch.  *  * Revision 1.2.1.5  85/03/12  11:52:12  lwall  * Added -D (#ifdef) option from joe@fluke.  *  * Revision 1.2.1.4  84/12/06  11:14:15  lwall  * Made smarter about SCCS subdirectories.  *  * Revision 1.2.1.3  84/12/05  11:18:43  lwall  * Added -l switch to do loose string comparison.  *  * Revision 1.2.1.2  84/12/04  09:47:13  lwall  * Failed hunk count not reset on multiple patch file.  *  * Revision 1.2.1.1  84/12/04  09:42:37  lwall  * Branch for sdcrdcf changes.  *  * Revision 1.2  84/11/29  13:29:51  lwall  * Linted.  Identifiers uniqified.  Fixed i_ptr malloc() bug.  Fixed  * multiple calls to mktemp().  Will now work on machines that can only  * read 32767 chars.  Added -R option for diffs with new and old swapped.  * Various cosmetic changes.  *  * Revision 1.1  84/11/09  17:03:58  lwall  * Initial revision  *  */
 end_comment
 
 begin_include
@@ -201,6 +201,18 @@ end_comment
 begin_decl_stmt
 name|int
 name|check_patch
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TRUE if -I was specified on command line.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|index_first
 init|=
 name|FALSE
 decl_stmt|;
@@ -1438,7 +1450,7 @@ name|char
 modifier|*
 name|shortopts
 init|=
-literal|"-b:B:cCd:D:eEfF:lnNo:p::r:RsStuvV:x:"
+literal|"-b:B:cCd:D:eEfF:IlnNo:p::r:RsStuvV:x:"
 decl_stmt|;
 end_decl_stmt
 
@@ -1548,6 +1560,16 @@ block|,
 name|NULL
 block|,
 literal|'F'
+block|}
+block|,
+block|{
+literal|"index-first"
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|'I'
 block|}
 block|,
 block|{
@@ -1888,6 +1910,10 @@ condition|(
 operator|!
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|optarg
 argument_list|)
@@ -1963,6 +1989,14 @@ name|atoi
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'I'
+case|:
+name|index_first
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -2138,7 +2172,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\        [--strip[=strip-count]] [--normal] [--reject-file=rej-name] [--skip]\n\        [--remove-empty-files] [--quiet] [--silent] [--unified] [--version]\n\        [--version-control={numbered,existing,simple}]\n"
+literal|"\        [--strip[=strip-count]] [--normal] [--reject-file=rej-name] [--skip]\n\        [--remove-empty-files] [--quiet] [--silent] [--unified] [--version]\n\        [--version-control={numbered,existing,simple}] [--index-first]\n"
 argument_list|)
 expr_stmt|;
 name|my_exit
@@ -3709,6 +3743,10 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|b
 argument_list|)
@@ -3720,6 +3758,10 @@ condition|(
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|a
 argument_list|)
@@ -3734,6 +3776,10 @@ name|len
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|b
 argument_list|)
@@ -3754,6 +3800,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|a
 argument_list|)
