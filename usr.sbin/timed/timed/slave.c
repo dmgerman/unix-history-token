@@ -35,7 +35,7 @@ name|sgi
 end_ifdef
 
 begin_empty
-empty|#ident "$Revision: 1.20 $"
+empty|#ident "$Revision: 1.1.1.1 $"
 end_empty
 
 begin_endif
@@ -1388,7 +1388,7 @@ argument_list|)
 expr_stmt|;
 name|logwtmp
 argument_list|(
-literal|"}"
+literal|"{"
 argument_list|,
 literal|"date"
 argument_list|,
