@@ -24,14 +24,14 @@ begin_define
 define|#
 directive|define
 name|SSH_VERSION_BASE
-value|"OpenSSH_3.8p1"
+value|"OpenSSH_3.8.1p1"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSH_VERSION_ADDENDUM
-value|"FreeBSD-20040226"
+value|"FreeBSD-20040419"
 end_define
 
 begin_function_decl
