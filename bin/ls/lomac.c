@@ -417,7 +417,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"ioctl"
 argument_list|)
 expr_stmt|;
 comment|/* we use ioctl_args.path as scratch space to build lattr */
@@ -468,7 +468,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"lattr"
 argument_list|)
 expr_stmt|;
 return|return

@@ -1790,7 +1790,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"fts_open"
 argument_list|)
 expr_stmt|;
 name|display
@@ -2235,7 +2235,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2943,7 +2943,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"fflagstostr"
 argument_list|)
 expr_stmt|;
 name|flen
@@ -3041,7 +3041,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 name|np

@@ -634,7 +634,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"fts_open"
 argument_list|)
 expr_stmt|;
 while|while
@@ -1901,7 +1901,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"fflagstostr"
 argument_list|)
 expr_stmt|;
 operator|(
