@@ -12,38 +12,6 @@ comment|/* config.in.  Generated automatically from configure.in by autoheader. 
 end_comment
 
 begin_comment
-comment|/* Whether malloc must be declared even if<stdlib.h> is included.  */
-end_comment
-
-begin_comment
-comment|/* #undef NEED_DECLARATION_MALLOC */
-end_comment
-
-begin_comment
-comment|/* Whether realloc must be declared even if<stdlib.h> is included.  */
-end_comment
-
-begin_comment
-comment|/* #undef NEED_DECLARATION_REALLOC */
-end_comment
-
-begin_comment
-comment|/* Whether free must be declared even if<stdlib.h> is included.  */
-end_comment
-
-begin_comment
-comment|/* #undef NEED_DECLARATION_FREE */
-end_comment
-
-begin_comment
-comment|/* Whether strerror must be declared even if<string.h> is included.  */
-end_comment
-
-begin_comment
-comment|/* #undef NEED_DECLARATION_STRERROR */
-end_comment
-
-begin_comment
 comment|/* Define if on AIX 3.    System headers sometimes define this.    We just want to avoid a redefinition error message.  */
 end_comment
 
@@ -128,6 +96,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have<vfork.h>.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_VFORK_H */
+end_comment
+
+begin_comment
 comment|/* Define as __inline if that's what the C compiler calls it.  */
 end_comment
 
@@ -144,11 +120,11 @@ comment|/* #undef off_t */
 end_comment
 
 begin_comment
-comment|/* Define if you need to in order for stat and other things to work.  */
+comment|/* Define to `int' if<sys/types.h> doesn't define.  */
 end_comment
 
 begin_comment
-comment|/* #undef _POSIX_SOURCE */
+comment|/* #undef pid_t */
 end_comment
 
 begin_comment
@@ -161,6 +137,14 @@ directive|define
 name|RETSIGTYPE
 value|void
 end_define
+
+begin_comment
+comment|/* Define if the `setpgrp' function takes no argument.  */
+end_comment
+
+begin_comment
+comment|/* #undef SETPGRP_VOID */
+end_comment
 
 begin_comment
 comment|/* Define to `unsigned' if<sys/types.h> doesn't define.  */
@@ -198,19 +182,100 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define vfork as fork if vfork does not work.  */
+end_comment
+
+begin_comment
+comment|/* #undef vfork */
+end_comment
+
+begin_comment
+comment|/* Define if compiling on Solaris 7. */
+end_comment
+
+begin_comment
+comment|/* #undef _MSE_INT_H */
+end_comment
+
+begin_comment
+comment|/* Define if your struct reg has r_fs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_REG_R_FS
+value|1
+end_define
+
+begin_comment
+comment|/* Define if your struct reg has r_gs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_REG_R_GS
+value|1
+end_define
+
+begin_comment
+comment|/* Define if<link.h> exists and defines struct link_map which has    members with an ``l_'' prefix.  (For Solaris, SVR4, and    SVR4-like systems.) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_LINK_MAP_WITH_L_MEMBERS
+value|1
+end_define
+
+begin_comment
+comment|/* Define if<link.h> exists and defines struct link_map which has   members with an ``lm_'' prefix.  (For SunOS.)  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_LINK_MAP_WITH_LM_MEMBERS */
+end_comment
+
+begin_comment
+comment|/* Define if<link.h> exists and defines a struct so_map which has   members with an ``som_'' prefix.  (Found on older *BSD systems.)  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_SO_MAP_WITH_SOM_MEMBERS */
+end_comment
+
+begin_comment
+comment|/* Define if<sys/link.h> has struct link_map32 */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_LINK_MAP32 */
+end_comment
+
+begin_comment
+comment|/* Define if the prfpregset_t type is broken. */
+end_comment
+
+begin_comment
+comment|/* #undef PRFPREGSET_T_BROKEN */
+end_comment
+
+begin_comment
+comment|/* Define if you want to use new multi-fd /proc interface    (replaces HAVE_MULTIPLE_PROC_FDS as well as other macros). */
+end_comment
+
+begin_comment
+comment|/* #undef NEW_PROC_API */
+end_comment
+
+begin_comment
 comment|/* Define if ioctl argument PIOCSET is available. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_PROCFS_PIOCSET */
-end_comment
-
-begin_comment
-comment|/* /proc PID entries are directories containing the files    ctl as map status */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_MULTIPLE_PROC_FDS */
 end_comment
 
 begin_comment
@@ -302,14 +367,6 @@ comment|/* #undef MMCHECK_FORCE */
 end_comment
 
 begin_comment
-comment|/* Define if you want to use the full-screen terminal user interface.  */
-end_comment
-
-begin_comment
-comment|/* #undef TUI */
-end_comment
-
-begin_comment
 comment|/* Define if<proc_service.h> on solaris uses int instead of    size_t, and assorted other type changes. */
 end_comment
 
@@ -318,25 +375,144 @@ comment|/* #undef PROC_SERVICE_IS_OLD */
 end_comment
 
 begin_comment
+comment|/* If you want to specify a default CPU variant, define this to be its    name, as a C string.  */
+end_comment
+
+begin_comment
+comment|/* #undef TARGET_CPU_DEFAULT */
+end_comment
+
+begin_comment
+comment|/* Define if the simulator is being linked in.  */
+end_comment
+
+begin_comment
+comment|/* #undef WITH_SIM */
+end_comment
+
+begin_comment
 comment|/* Set to true if the save_state_t structure is present */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_STRUCT_SAVE_STATE_T
-value|0
-end_define
+begin_comment
+comment|/* #undef HAVE_STRUCT_SAVE_STATE_T */
+end_comment
 
 begin_comment
 comment|/* Set to true if the save_state_t structure has the ss_wide member */
 end_comment
 
+begin_comment
+comment|/* #undef HAVE_STRUCT_MEMBER_SS_WIDE */
+end_comment
+
+begin_comment
+comment|/* Define if<sys/ptrace.h> defines the PTRACE_GETREGS request.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PTRACE_GETREGS */
+end_comment
+
+begin_comment
+comment|/* Define if<sys/ptrace.h> defines the PTRACE_GETFPXREGS request.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PTRACE_GETFPXREGS */
+end_comment
+
+begin_comment
+comment|/* Define if<sys/ptrace.h> defines the PT_GETDBREGS request.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|HAVE_STRUCT_MEMBER_SS_WIDE
-value|0
+name|HAVE_PT_GETDBREGS
+value|1
+end_define
+
+begin_comment
+comment|/* Define if<sys/ptrace.h> defines the PT_GETXMMREGS request.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PT_GETXMMREGS */
+end_comment
+
+begin_comment
+comment|/* Define if gnu-regex.c included with GDB should be used. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USE_INCLUDED_REGEX
+value|1
+end_define
+
+begin_comment
+comment|/* BFD's default architecture. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_BFD_ARCH
+value|bfd_i386_arch
+end_define
+
+begin_comment
+comment|/* BFD's default target vector. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_BFD_VEC
+value|bfd_elf32_i386_vec
+end_define
+
+begin_comment
+comment|/* Multi-arch enabled. */
+end_comment
+
+begin_comment
+comment|/* #undef GDB_MULTI_ARCH */
+end_comment
+
+begin_comment
+comment|/* hostfile */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GDB_XM_FILE
+value|config/i386/xm-i386.h
+end_define
+
+begin_comment
+comment|/* targetfile */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GDB_TM_FILE
+value|config/i386/tm-fbsd.h
+end_define
+
+begin_comment
+comment|/* nativefile */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GDB_NM_FILE
+value|config/i386/nm-fbsd.h
 end_define
 
 begin_comment
@@ -394,6 +570,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the canonicalize_file_name function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CANONICALIZE_FILE_NAME */
+end_comment
+
+begin_comment
 comment|/* Define if you have the dcgettext function.  */
 end_comment
 
@@ -446,6 +630,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the poll function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_POLL
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the putenv function.  */
 end_comment
 
@@ -453,6 +648,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_PUTENV
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the realpath function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_REALPATH
 value|1
 end_define
 
@@ -501,6 +707,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the setpgrp function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETPGRP
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the sigaction function.  */
 end_comment
 
@@ -508,6 +725,39 @@ begin_define
 define|#
 directive|define
 name|HAVE_SIGACTION
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the sigprocmask function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGPROCMASK
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the sigsetmask function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGSETMASK
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the socketpair function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SOCKETPAIR
 value|1
 end_define
 
@@ -580,12 +830,15 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<endian.h> header file.  */
+comment|/* Define if you have the<dirent.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_ENDIAN_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_DIRENT_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<limits.h> header file.  */
@@ -640,6 +893,25 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<ncurses.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NCURSES_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<ndir.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NDIR_H */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<nl_types.h> header file.  */
 end_comment
 
@@ -651,11 +923,41 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<nlist.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NLIST_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<objlist.h> header file.  */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_OBJLIST_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<poll.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_POLL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<proc_service.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PROC_SERVICE_H */
 end_comment
 
 begin_comment
@@ -685,6 +987,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STDDEF_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<stdint.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDINT_H
 value|1
 end_define
 
@@ -719,6 +1032,63 @@ comment|/* #undef HAVE_SYS_DEBUGREG_H */
 end_comment
 
 begin_comment
+comment|/* Define if you have the<sys/dir.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_DIR_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<sys/fault.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_FAULT_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<sys/file.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_FILE_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/filio.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_FILIO_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/ioctl.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_IOCTL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/ndir.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_NDIR_H */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<sys/param.h> header file.  */
 end_comment
 
@@ -726,6 +1096,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_PARAM_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/poll.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_POLL_H
 value|1
 end_define
 
@@ -758,6 +1139,39 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_SYS_REG_H */
 end_comment
+
+begin_comment
+comment|/* Define if you have the<sys/select.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_SELECT_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/syscall.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_SYSCALL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/user.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_USER_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<sys/wait.h> header file.  */
@@ -801,6 +1215,25 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<thread_db.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_THREAD_DB_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<time.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TIME_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<unistd.h> header file.  */
 end_comment
 
@@ -831,17 +1264,23 @@ begin_comment
 comment|/* Define if you have the<wchar.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WCHAR_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WCHAR_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<wctype.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_WCTYPE_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WCTYPE_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the dl library (-ldl).  */
@@ -861,6 +1300,14 @@ directive|define
 name|HAVE_LIBM
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the socket library (-lsocket).  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBSOCKET */
+end_comment
 
 begin_comment
 comment|/* Define if you have the w library (-lw).  */
@@ -909,6 +1356,17 @@ comment|/* #undef HAVE_GETTEXT */
 end_comment
 
 begin_comment
+comment|/* Define if sigsetjmp is available.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGSETJMP
+value|1
+end_define
+
+begin_comment
 comment|/* Define if malloc is not declared in system header files. */
 end_comment
 
@@ -946,6 +1404,14 @@ end_comment
 
 begin_comment
 comment|/* #undef NEED_DECLARATION_STRDUP */
+end_comment
+
+begin_comment
+comment|/* Define if strstr is not declared in system header files. */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_DECLARATION_STRSTR */
 end_comment
 
 begin_comment
@@ -996,6 +1462,89 @@ directive|define
 name|HAVE_FPREGSET_T
 value|1
 end_define
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has prgregset_t. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PRGREGSET_T */
+end_comment
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has prfpregset_t. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PRFPREGSET_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has prgregset32_t. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PRGREGSET32_T */
+end_comment
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has prfpregset32_t. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PRFPREGSET32_T */
+end_comment
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has lwpid_t. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LWPID_T */
+end_comment
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has psaddr_t. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PSADDR_T */
+end_comment
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has prsysent_t. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PRSYSENT_T */
+end_comment
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has pr_sigset_t. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PR_SIGSET_T */
+end_comment
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has pr_sigaction64_t. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PR_SIGACTION64_T */
+end_comment
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has pr_siginfo64_t. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PR_SIGINFO64_T */
+end_comment
 
 end_unit
 
