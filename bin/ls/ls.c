@@ -1264,6 +1264,11 @@ condition|(
 name|f_color
 condition|)
 block|{
+comment|/* 		 * We can't put tabs and color sequences together: 		 * column number will be incremented incorrectly 		 * for "stty oxtabs" mode. 		 */
+name|f_notabs
+operator|=
+literal|1
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2235,11 +2240,16 @@ case|:
 name|maxlen
 operator|=
 literal|0
-operator|,
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|COLORLS
 name|f_notabs
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|maxinode
 operator|=
