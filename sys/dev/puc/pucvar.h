@@ -93,6 +93,15 @@ index|[
 name|PUC_MAX_PORTS
 index|]
 struct|;
+name|uint32_t
+name|ilr_type
+decl_stmt|;
+name|uint32_t
+name|ilr_offset
+index|[
+literal|2
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -144,6 +153,24 @@ define|#
 directive|define
 name|PUC_PORT_TYPE_LPT
 value|2
+end_define
+
+begin_comment
+comment|/* Interrupt Latch Register (ILR) types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PUC_ILR_TYPE_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PUC_ILR_TYPE_DIGI
+value|1
 end_define
 
 begin_define
@@ -394,6 +421,15 @@ decl_stmt|;
 name|void
 modifier|*
 name|intr_cookie
+decl_stmt|;
+name|int
+name|ilr_enabled
+decl_stmt|;
+name|bus_space_tag_t
+name|ilr_st
+decl_stmt|;
+name|bus_space_handle_t
+name|ilr_sh
 decl_stmt|;
 struct|struct
 block|{
