@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#22 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#24 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -1164,12 +1164,18 @@ literal|0x0010
 block|,
 name|SCB_RECOVERY_SCB
 init|=
+literal|0x0020
+block|,
+name|SCB_AUTO_NEGOTIATE
+init|=
 literal|0x0040
 block|,
+comment|/* Negotiate to achieve goal. */
 name|SCB_NEGOTIATE
 init|=
 literal|0x0080
 block|,
+comment|/* Negotiation forced for command. */
 name|SCB_ABORT
 init|=
 literal|0x1000
@@ -1460,7 +1466,7 @@ end_ifdef
 
 begin_struct
 struct|struct
-name|tmode_lstate
+name|ahc_tmode_lstate
 block|{
 name|struct
 name|cam_path
@@ -1499,7 +1505,7 @@ end_else
 
 begin_struct_decl
 struct_decl|struct
-name|tmode_lstate
+name|ahc_tmode_lstate
 struct_decl|;
 end_struct_decl
 
@@ -1626,10 +1632,10 @@ end_comment
 
 begin_struct
 struct|struct
-name|tmode_tstate
+name|ahc_tmode_tstate
 block|{
 name|struct
-name|tmode_lstate
+name|ahc_tmode_lstate
 modifier|*
 name|enabled_luns
 index|[
@@ -1644,6 +1650,10 @@ name|AHC_NUM_TARGETS
 index|]
 decl_stmt|;
 comment|/* 	 * Per initiator state bitmasks. 	 */
+name|uint16_t
+name|auto_negotiate
+decl_stmt|;
+comment|/* Auto Negotiation Required */
 name|uint16_t
 name|ultraenb
 decl_stmt|;
@@ -2182,6 +2192,21 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|ahc_bus_intr_t
+function_decl|)
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|ahc_softc
@@ -2241,9 +2266,13 @@ comment|/* 	 * Platform specific device information. 	 */
 name|ahc_dev_softc_t
 name|dev_softc
 decl_stmt|;
+comment|/* 	 * Bus specific device information. 	 */
+name|ahc_bus_intr_t
+name|bus_intr
+decl_stmt|;
 comment|/* 	 * Target mode related state kept on a per enabled lun basis. 	 * Targets that are not enabled will have null entries. 	 * As an initiator, we keep one target entry for our initiator 	 * ID to store our sync/wide transfer settings. 	 */
 name|struct
-name|tmode_tstate
+name|ahc_tmode_tstate
 modifier|*
 name|enabled_targets
 index|[
@@ -2252,13 +2281,13 @@ index|]
 decl_stmt|;
 comment|/* 	 * The black hole device responsible for handling requests for 	 * disabled luns on enabled targets. 	 */
 name|struct
-name|tmode_lstate
+name|ahc_tmode_lstate
 modifier|*
 name|black_hole
 decl_stmt|;
 comment|/* 	 * Device instance currently on the bus awaiting a continue TIO 	 * for a command that was not given the disconnect priveledge. 	 */
 name|struct
-name|tmode_lstate
+name|ahc_tmode_lstate
 modifier|*
 name|pending_device
 decl_stmt|;
@@ -2326,10 +2355,6 @@ name|our_id
 decl_stmt|;
 name|uint8_t
 name|our_id_b
-decl_stmt|;
-comment|/* Targets that need negotiation messages */
-name|uint16_t
-name|targ_msg_req
 decl_stmt|;
 comment|/* 	 * PCI error detection. 	 */
 name|int
@@ -2912,6 +2937,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ahc_intr_enable
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|,
+name|int
+name|enable
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ahc_pause_and_flushwork
 parameter_list|(
 name|struct
@@ -3429,29 +3469,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|ahc_update_target_msg_request
+name|int
+name|ahc_update_neg_request
 parameter_list|(
 name|struct
 name|ahc_softc
 modifier|*
-name|ahc
 parameter_list|,
 name|struct
 name|ahc_devinfo
 modifier|*
-name|dinfo
+parameter_list|,
+name|struct
+name|ahc_tmode_tstate
+modifier|*
 parameter_list|,
 name|struct
 name|ahc_initiator_tinfo
 modifier|*
-name|tinfo
 parameter_list|,
 name|int
-name|force
-parameter_list|,
-name|int
-name|paused
+comment|/*force*/
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3558,7 +3596,7 @@ name|ahc_softc
 modifier|*
 parameter_list|,
 name|struct
-name|tmode_lstate
+name|ahc_tmode_lstate
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3606,36 +3644,19 @@ modifier|*
 name|ccb
 parameter_list|,
 name|struct
-name|tmode_tstate
+name|ahc_tmode_tstate
 modifier|*
 modifier|*
 name|tstate
 parameter_list|,
 name|struct
-name|tmode_lstate
+name|ahc_tmode_lstate
 modifier|*
 modifier|*
 name|lstate
 parameter_list|,
 name|int
 name|notfound_failure
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ahc_setup_target_msgin
-parameter_list|(
-name|struct
-name|ahc_softc
-modifier|*
-name|ahc
-parameter_list|,
-name|struct
-name|ahc_devinfo
-modifier|*
-name|devinfo
 parameter_list|)
 function_decl|;
 end_function_decl
