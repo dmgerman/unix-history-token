@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: tlsbreg.h,v 1.3 1997/04/06 20:08:40 cgd Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1997 by Matthew Jacob  * NASA AMES Research Center.  * All rights reserved.  *  * Based in part upon a prototype version by Jason Thorpe  * Copyright (c) 1996 by Jason Thorpe.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/* $NetBSD: tlsbreg.h,v 1.5 2000/01/27 22:27:50 mjacob Exp $ */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1997, 2000 by Matthew Jacob  * NASA AMES Research Center.  * All rights reserved.  *  * Based in part upon a prototype version by Jason Thorpe  * Copyright (c) 1996 by Jason Thorpe.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -39,6 +43,10 @@ directive|define
 name|TLSB_NODE_MAX
 value|8
 end_define
+
+begin_comment
+comment|/* inclusive */
+end_comment
 
 begin_comment
 comment|/* Translate a node number to an address. */
@@ -443,12 +451,111 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TLINTRMASK0
+value|0x1100
+end_define
+
+begin_comment
+comment|/* C: Interrupt Mask Register CPU 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRMASK1
+value|0x1140
+end_define
+
+begin_comment
+comment|/* C: Interrupt Mask Register CPU 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRSUM0
+value|0x1180
+end_define
+
+begin_comment
+comment|/* C: Interrupt Sum Register CPU 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRSUM1
+value|0x11C0
+end_define
+
+begin_comment
+comment|/* C: Interrupt Sum Register CPU 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TLEPAERR
 value|0x1500
 end_define
 
 begin_comment
 comment|/* C: ADG error register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLEPDERR
+value|0x1540
+end_define
+
+begin_comment
+comment|/* C: DIGA error register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLEPMERR
+value|0x1580
+end_define
+
+begin_comment
+comment|/* C: MMG error register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLDMCMD
+value|0x1600
+end_define
+
+begin_comment
+comment|/* C: Data Mover Command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLDMADRA
+value|0x1680
+end_define
+
+begin_comment
+comment|/* C: Data Mover Source */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLDMADRB
+value|0x16C0
+end_define
+
+begin_comment
+comment|/* C: Data Mover Destination */
 end_comment
 
 begin_comment
@@ -1378,6 +1485,297 @@ end_define
 
 begin_comment
 comment|/*  * TLFADRn - Failing Address Registers  *  * Access: R/W  *  * Notes:  *	These registers contain status information for a failed address.  *	Not all nodes preserve this information.  The validation bits  *	indicate the validity of a given field.  */
+end_comment
+
+begin_comment
+comment|/*  * CPU Interrupt Mask Register  *  * The PAL code reads this register for each CPU on a TLSB CPU board  * to see what is or isn't enabled.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRMASK_CONHALT
+value|0x100
+end_define
+
+begin_comment
+comment|/* Enable ^P Halt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRMASK_HALT
+value|0x080
+end_define
+
+begin_comment
+comment|/* Enable Halt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRMASK_CLOCK
+value|0x040
+end_define
+
+begin_comment
+comment|/* Enable Clock Interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRMASK_XCALL
+value|0x020
+end_define
+
+begin_comment
+comment|/* Enable Interprocessor Interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRMASK_IPL17
+value|0x010
+end_define
+
+begin_comment
+comment|/* Enable IPL 17 Interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRMASK_IPL16
+value|0x008
+end_define
+
+begin_comment
+comment|/* Enable IPL 16 Interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRMASK_IPL15
+value|0x004
+end_define
+
+begin_comment
+comment|/* Enable IPL 15 Interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRMASK_IPL14
+value|0x002
+end_define
+
+begin_comment
+comment|/* Enable IPL 14 Interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRMASK_DUART
+value|0x001
+end_define
+
+begin_comment
+comment|/* Enable GBUS Duart0 Interrupts */
+end_comment
+
+begin_comment
+comment|/*  * CPU Interrupt Summary Register  *  * The PAL code reads this register at interrupt time to figure out  * which interrupt line to assert to the CPU. Note that when the  * interrupt is actually vectored through the PAL code, it arrives  * here already presorted as to type (clock, halt, iointr).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRSUM_HALT
+value|(1<< 28)
+end_define
+
+begin_comment
+comment|/* Halted via TLCNR register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRSUM_CONHALT
+value|(1<< 27)
+end_define
+
+begin_comment
+comment|/* Halted via ^P (W1C) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRSUM_CLOCK
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* Clock Interrupt (W1C) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRSUM_XCALL
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* Interprocessor Int (W1C) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRSUM_IPL17
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* IPL 17 Interrupt Summary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRSUM_IPL16
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* IPL 16 Interrupt Summary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRSUM_IPL15
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* IPL 15 Interrupt Summary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRSUM_IPL14
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* IPL 14 Interrupt Summary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRSUM_DUART
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* Duart Int (W1C) */
+end_comment
+
+begin_comment
+comment|/* after checking the summaries, you can get the source node for each level */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLINTRSUM_IPL17_SOURCE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x>> 22)& 0x1f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLINTRSUM_IPL16_SOURCE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x>> 17)& 0x1f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLINTRSUM_IPL15_SOURCE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x>> 12)& 0x1f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLINTRSUM_IPL14_SOURCE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x>> 7)& 0x1f)
+end_define
+
+begin_comment
+comment|/*  * (some of) TurboLaser CPU ADG error register defines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLEPAERR_IBOX_TMO
+value|0x1800
+end_define
+
+begin_comment
+comment|/* window space read failed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLEPAERR_WSPC_RD
+value|0x0600
+end_define
+
+begin_comment
+comment|/* window space read failed */
+end_comment
+
+begin_comment
+comment|/*  * (some of) TurboLaser CPU DIGA error register defines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLEPDERR_GBTMO
+value|0x4
+end_define
+
+begin_comment
+comment|/* GBus timeout */
 end_comment
 
 end_unit
