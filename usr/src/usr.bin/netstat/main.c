@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.8 (Berkeley) %G%"
+literal|"@(#)main.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2006,15 +2006,11 @@ name|kflag
 condition|)
 block|{
 comment|/* get kernel pte */
-ifdef|#
-directive|ifdef
-name|vax
 name|base
 operator|&=
-literal|0x7fffffff
+operator|~
+name|KERNBASE
 expr_stmt|;
-endif|#
-directive|endif
 name|base
 operator|=
 name|ctob
