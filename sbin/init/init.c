@@ -137,6 +137,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/reboot.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -530,6 +536,14 @@ init|=
 name|AUTOBOOT
 enum|;
 end_enum
+
+begin_decl_stmt
+name|int
+name|reboot
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -1091,6 +1105,8 @@ name|transition_handler
 argument_list|,
 name|SIGHUP
 argument_list|,
+name|SIGINT
+argument_list|,
 name|SIGTERM
 argument_list|,
 name|SIGTSTP
@@ -1135,6 +1151,8 @@ argument_list|,
 name|SIGXFSZ
 argument_list|,
 name|SIGHUP
+argument_list|,
+name|SIGINT
 argument_list|,
 name|SIGTERM
 argument_list|,
@@ -2259,6 +2277,34 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|reboot
+condition|)
+block|{
+comment|/* Instead of going single user, let's halt the machine */
+name|sync
+argument_list|()
+expr_stmt|;
+name|alarm
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|pause
+argument_list|()
+expr_stmt|;
+name|reboot
+argument_list|(
+name|RB_AUTOBOOT
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -4783,6 +4829,13 @@ operator|=
 name|clean_ttys
 expr_stmt|;
 break|break;
+case|case
+name|SIGINT
+case|:
+name|reboot
+operator|=
+name|TRUE
+expr_stmt|;
 case|case
 name|SIGTERM
 case|:
