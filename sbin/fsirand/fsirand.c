@@ -154,14 +154,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|printonly
 init|=
@@ -1603,9 +1595,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [ -b ] [ -f ] [ -p ] special [special ...]\n"
-argument_list|,
-name|__progname
+literal|"Usage: fsirand [ -b ] [ -f ] [ -p ] special [special ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
