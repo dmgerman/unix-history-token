@@ -1210,7 +1210,7 @@ value|5
 end_define
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|ac

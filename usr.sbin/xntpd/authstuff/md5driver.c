@@ -7,6 +7,10 @@ begin_comment
 comment|/*  ***********************************************************************  ** Copyright (C) 1990, RSA Data Security, Inc. All rights reserved.  **  **                                                                   **  ** RSA Data Security, Inc. makes no representations concerning       **  ** either the merchantability of this software or the suitability    **  ** of this software for any particular purpose.  It is provided "as  **  ** is" without express or implied warranty of any kind.              **  **                                                                   **  ** These notices must be retained in any copies of any part of this  **  ** documentation and/or software.                                    **  ***********************************************************************  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -657,7 +661,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc

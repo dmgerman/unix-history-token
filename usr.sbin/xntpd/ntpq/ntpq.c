@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ntpq - query an NTP server using mode 6 commands  */
+comment|/*  * ntpq - query an NTP server using mode 6 commands  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -3544,7 +3544,7 @@ comment|/*  * main - parse arguments and handle options  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc

@@ -5135,7 +5135,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|int

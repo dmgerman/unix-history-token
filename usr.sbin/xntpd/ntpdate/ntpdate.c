@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ntpdate - set the time of day by polling one or more NTP servers  */
+comment|/*  * ntpdate - set the time of day by polling one or more NTP servers  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -886,7 +886,7 @@ comment|/*  * Main program.  Initialize us and loop waiting for I/O and/or  * ti
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ntptrace - show the chain from an NTP host leading back to  *	its source of time  *  *	Jeffrey Mogul	DECWRL	13 January 1993  *  *	Inspired by a script written by Glenn Trewitt  *  *	Large portions stolen from ntpdate.c  */
+comment|/*  * ntptrace - show the chain from an NTP host leading back to  *	its source of time  *  *	Jeffrey Mogul	DECWRL	13 January 1993  *  *	Inspired by a script written by Glenn Trewitt  *  *	Large portions stolen from ntpdate.c  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -587,7 +587,7 @@ comment|/*  * Main program.  Initialize us and loop waiting for I/O and/or  * ti
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc

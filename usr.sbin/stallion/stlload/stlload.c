@@ -1646,7 +1646,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|int

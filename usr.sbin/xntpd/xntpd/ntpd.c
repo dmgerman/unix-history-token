@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ntpd.c - main program for the fixed point NTP daemon  */
+comment|/*  * ntpd.c - main program for the fixed point NTP daemon  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -432,7 +432,7 @@ comment|/*  * Main program.  Initialize us, disconnect us from the tty if necess
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc

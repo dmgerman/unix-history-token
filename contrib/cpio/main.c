@@ -7,6 +7,10 @@ begin_comment
 comment|/* Written by Phil Nelson<phil@cs.wwu.edu>,    David MacKenzie<djm@gnu.ai.mit.edu>,    and John Oleynick<juo@klinzhai.rutgers.edu>.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1944,7 +1948,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
