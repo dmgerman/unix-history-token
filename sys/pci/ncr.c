@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.37.4.2 1995/08/31 06:23:20 davidg Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.49 1995/09/21 17:27:28 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|__NCR_C__
-value|"pl22 95/07/07"
+name|NCR_DATE
+value|"pl23 95/09/07"
 end_define
 
 begin_define
@@ -150,7 +150,7 @@ begin_define
 define|#
 directive|define
 name|MAX_TARGET
-value|(7)
+value|(16)
 end_define
 
 begin_comment
@@ -165,14 +165,14 @@ value|(1)
 end_define
 
 begin_comment
-comment|/* **    The maximum number of jobs scheduled for starting. **    There should be one slot per target, and one slot **    for each tag of each target. */
+comment|/* **    The maximum number of jobs scheduled for starting. **    There should be one slot per target, and one slot **    for each tag of each target in use. **    The calculation below is actually quite silly ... */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAX_START
-value|(7 * SCSI_NCR_MAX_TAGS)
+value|(MAX_TARGET + 7 * SCSI_NCR_MAX_TAGS)
 end_define
 
 begin_comment
@@ -211,6 +211,34 @@ end_define
 begin_comment
 comment|/*========================================================== ** **      Include files ** **========================================================== */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KERNEL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -284,6 +312,28 @@ directive|include
 file|<machine/clock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_comment
+comment|/* bootverbose */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|bootverbose
+value|1
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -293,6 +343,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_extern.h>
 end_include
 
 begin_endif
@@ -357,19 +413,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/pci/ncr_reg.h>
+file|<dev/pci/ncr_reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/pci/pcivar.h>
+file|<dev/pci/pcivar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/pci/pcireg.h>
+file|<dev/pci/pcireg.h>
 end_include
 
 begin_define
@@ -1129,16 +1185,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRINT_ADDR
-parameter_list|(
-name|xp
-parameter_list|)
-value|sc_print_addr(xp->sc_link)
-end_define
-
-begin_define
-define|#
-directive|define
 name|INT32
 value|int32
 end_define
@@ -1165,6 +1211,16 @@ end_endif
 begin_comment
 comment|/*__NetBSD__*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PRINT_ADDR
+parameter_list|(
+name|xp
+parameter_list|)
+value|sc_print_addr(xp->sc_link)
+end_define
 
 begin_comment
 comment|/*========================================================== ** **	Declaration of structs. ** **========================================================== */
@@ -1518,7 +1574,7 @@ begin_struct
 struct|struct
 name|lcb
 block|{
-comment|/* 	**	during reselection the ncr jumps to this point 	**	with SFBR set to the "Identify" message. 	**	if it's not this lun, jump to the next. 	** 	**	JUMP  IF (SFBR == #lun#) 	**	@(next lcb of this target) 	*/
+comment|/* 	**	during reselection the ncr jumps to this point 	**	with SFBR set to the "Identify" message. 	**	if it's not this lun, jump to the next. 	** 	**	JUMP  IF (SFBR != #lun#) 	**	@(next lcb of this target) 	*/
 name|struct
 name|link
 name|jump_lcb
@@ -1604,7 +1660,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* **	The status bytes are used by the host and the script processor. ** **	The first four byte are copied to the scratchb register **	(declared as scr0..scr3 in ncr_reg.h) just after the select/reselect, **	and copied back just after disconnecting. **	Inside the script the XX_REG are used. ** **	The last four bytes are used inside the script by "COPY" commands. **	Because source and destination must have the same alignment **	in a longword, the fields HAVE to be on the selected offsets. **		xerr_st	(4)	0	(0x34)	scratcha **		sync_st	(5)	1	(0x05)	sxfer **		wide_st	(7)	3	(0x03)	scntl3 */
+comment|/* **	The status bytes are used by the host and the script processor. ** **	The first four byte are copied to the scratchb register **	(declared as scr0..scr3 in ncr_reg.h) just after the select/reselect, **	and copied back just after disconnecting. **	Inside the script the XX_REG are used. ** **	The last four bytes are used inside the script by "COPY" commands. **	Because source and destination must have the same alignment **	in a longword, the fields HAVE to be at the choosen offsets. **		xerr_st	(4)	0	(0x34)	scratcha **		sync_st	(5)	1	(0x05)	sxfer **		wide_st	(7)	3	(0x03)	scntl3 */
 end_comment
 
 begin_comment
@@ -1856,6 +1912,10 @@ comment|/* 	**	Lock this ccb. 	**	Flag is used while looking for a free ccb. 	*/
 name|u_long
 name|magic
 decl_stmt|;
+comment|/* 	**	Physical address of this instance of ccb 	*/
+name|u_long
+name|p_ccb
+decl_stmt|;
 comment|/* 	**	Completion time out for this job. 	**	It's set to time of start + allowed number of seconds. 	*/
 name|u_long
 name|tlimit
@@ -1883,6 +1943,18 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|CCB_PHYS
+parameter_list|(
+name|cp
+parameter_list|,
+name|lbl
+parameter_list|)
+value|(cp->p_ccb + offsetof(struct ccb, lbl))
+end_define
+
 begin_comment
 comment|/*========================================================== ** **      Declaration of structs:     NCR device descriptor ** **========================================================== */
 end_comment
@@ -1898,8 +1970,8 @@ name|struct
 name|device
 name|sc_dev
 decl_stmt|;
-name|struct
-name|intrhand
+name|void
+modifier|*
 name|sc_ih
 decl_stmt|;
 else|#
@@ -1936,6 +2008,7 @@ name|script
 modifier|*
 name|script
 decl_stmt|;
+comment|/* 	**	Physical address of this instance of ncb->script 	*/
 name|u_long
 name|p_script
 decl_stmt|;
@@ -2070,6 +2143,18 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|NCB_SCRIPT_PHYS
+parameter_list|(
+name|np
+parameter_list|,
+name|lbl
+parameter_list|)
+value|(np->p_script + offsetof (struct script, lbl))
+end_define
 
 begin_comment
 comment|/*========================================================== ** ** **      Script for NCR-Processor. ** **	Use ncr_script_fill() to create the variable parts. **	Use ncr_script_copy_and_bind() to make a copy and **	bind to physical addresses. ** ** **========================================================== ** **	We have to know the offsets of all labels before **	we reach them (for forward jumps). **	Therefore we declare a struct here. **	If you make changes inside the script, **	DONT FORGET TO CHANGE THE LENGTHS HERE! ** **---------------------------------------------------------- */
@@ -2602,6 +2687,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|int
+name|ncr_intr
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !__NetBSD__ */
+end_comment
+
 begin_function_decl
 specifier|static
 name|int
@@ -2612,6 +2723,15 @@ name|np
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __NetBSD__ */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -2934,8 +3054,7 @@ name|struct
 name|device
 modifier|*
 parameter_list|,
-name|struct
-name|device
+name|void
 modifier|*
 parameter_list|,
 name|void
@@ -3029,7 +3148,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.37.4.2 1995/08/31 06:23:20 davidg Exp $\n"
+literal|"\n$Id: ncr.c,v 1.49 1995/09/21 17:27:28 se Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -3038,6 +3157,8 @@ name|u_long
 name|ncr_version
 init|=
 name|NCR_VERSION
+operator|*
+literal|11
 operator|+
 operator|(
 name|u_long
@@ -3048,6 +3169,8 @@ expr|struct
 name|ncb
 argument_list|)
 operator|*
+literal|7
+operator|+
 operator|(
 name|u_long
 operator|)
@@ -3057,6 +3180,8 @@ expr|struct
 name|ccb
 argument_list|)
 operator|*
+literal|5
+operator|+
 operator|(
 name|u_long
 operator|)
@@ -3066,6 +3191,8 @@ expr|struct
 name|lcb
 argument_list|)
 operator|*
+literal|3
+operator|+
 operator|(
 name|u_long
 operator|)
@@ -3074,6 +3201,8 @@ argument_list|(
 expr|struct
 name|tcb
 argument_list|)
+operator|*
+literal|2
 decl_stmt|;
 end_decl_stmt
 
@@ -3111,6 +3240,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* !__NetBSD__ */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -3127,7 +3260,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* to be alligned _NOT_ static */
+comment|/* to be aligned _NOT_ static */
 end_comment
 
 begin_comment
@@ -3144,6 +3277,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NCR_810AP_ID
+value|(0x00051000ul)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NCR_815_ID
 value|(0x00041000ul)
 end_define
@@ -3153,6 +3293,20 @@ define|#
 directive|define
 name|NCR_825_ID
 value|(0x00031000ul)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCR_860_ID
+value|(0x00061000ul)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCR_875_ID
+value|(0x000f1000ul)
 end_define
 
 begin_ifdef
@@ -3255,10 +3409,17 @@ literal|0
 block|,
 literal|0
 block|,
+ifndef|#
+directive|ifndef
+name|__NetBSD__
 name|ncr_info
 block|,
 literal|"ncr"
-block|, }
+block|,
+endif|#
+directive|endif
+comment|/* !__NetBSD__ */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -3280,8 +3441,15 @@ comment|/* have no async handler */
 name|NULL
 block|,
 comment|/* Use default 'done' routine */
+ifndef|#
+directive|ifndef
+name|__NetBSD__
 literal|"ncr"
-block|, }
+block|,
+endif|#
+directive|endif
+comment|/* !__NetBSD__ */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -3528,7 +3696,7 @@ block|}
 comment|/*-------------------------< TRYSEL>----------------------*/
 block|,
 block|{
-comment|/* 	**	Now: 	**	DSA: Address of a Data Structure 	**	or   Address of the IDLE-Label. 	** 	**	TEMP:	Address of a script, which tries to 	**		start the NEXT entry. 	** 	**	Save the TEMP register into the SCRATCHA register. 	**	Then copy the DSA to TEMP and RETURN. 	**	This is kind of an indirect jump. 	**	(The script processor has NO stack, so the 	**	CALL is actually a jump and link, and the 	**	RETURN is an indirect jump.) 	** 	**	If the slot was empty, DSA contains the address 	**	of the IDLE part of this script. The processor 	**	jumps to IDLE and waits for a reselect. 	**	It will wake up and try the same slot again 	**	after the SIGP bit becomes set by the host. 	** 	**	If the slot was not empty, DSA contains 	**	the address of the phys-part of a ccb. 	**	The processor jumps to this address. 	**	phys starts with head, 	**	head starts with launch, 	**	so actually the processor jumps to 	**	the lauch part. 	**	If the entry is scheduled to be executed, 	**	then launch contains a jump to SELECT. 	**	If it's not scheduled, it contains a jump to IDLE. 	*/
+comment|/* 	**	Now: 	**	DSA: Address of a Data Structure 	**	or   Address of the IDLE-Label. 	** 	**	TEMP:	Address of a script, which tries to 	**		start the NEXT entry. 	** 	**	Save the TEMP register into the SCRATCHA register. 	**	Then copy the DSA to TEMP and RETURN. 	**	This is kind of an indirect jump. 	**	(The script processor has NO stack, so the 	**	CALL is actually a jump and link, and the 	**	RETURN is an indirect jump.) 	** 	**	If the slot was empty, DSA contains the address 	**	of the IDLE part of this script. The processor 	**	jumps to IDLE and waits for a reselect. 	**	It will wake up and try the same slot again 	**	after the SIGP bit becomes set by the host. 	** 	**	If the slot was not empty, DSA contains 	**	the address of the phys-part of a ccb. 	**	The processor jumps to this address. 	**	phys starts with head, 	**	head starts with launch, 	**	so actually the processor jumps to 	**	the lauch part. 	**	If the entry is scheduled for execution, 	**	then launch contains a jump to SELECT. 	**	If it's not scheduled, it contains a jump to IDLE. 	*/
 name|SCR_COPY
 argument_list|(
 literal|4
@@ -3634,7 +3802,7 @@ block|,  }
 comment|/*-------------------------< SELECT>----------------------*/
 block|,
 block|{
-comment|/* 	**	DSA	contains the address of a scheduled 	**		data structure. 	** 	**	SCRATCHA contains the address of the script, 	**		which starts the next entry. 	** 	**	Set Initiator mode. 	** 	**	(Target mode is left as an exercise for the student) 	*/
+comment|/* 	**	DSA	contains the address of a scheduled 	**		data structure. 	** 	**	SCRATCHA contains the address of the script, 	**		which starts the next entry. 	** 	**	Set Initiator mode. 	** 	**	(Target mode is left as an exercise for the reader) 	*/
 name|SCR_CLR
 argument_list|(
 name|SCR_TRG
@@ -6054,7 +6222,7 @@ name|savep
 argument_list|)
 block|,
 comment|/*>>>*/
-comment|/* 	**	Check if temp==savep or temp==goalp: 	**	if not, log a missing save pointer message. 	**	In fact, it's a comparation mod 256. 	** 	**	Hmmm, I hadn't thought that I would be urged to 	**	write this kind of ugly self modifying code. 	** 	**	It's unbelievable, but the ncr53c8xx isn't able 	**	to subtract one register from another. 	*/
+comment|/* 	**	Check if temp==savep or temp==goalp: 	**	if not, log a missing save pointer message. 	**	In fact, it's a comparison mod 256. 	** 	**	Hmmm, I hadn't thought that I would be urged to 	**	write this kind of ugly self modifying code. 	** 	**	It's unbelievable, but the ncr53c8xx isn't able 	**	to subtract one register from another. 	*/
 name|SCR_FROM_REG
 argument_list|(
 name|temp
@@ -6062,7 +6230,7 @@ argument_list|)
 block|,
 literal|0
 block|,
-comment|/* 	**	You are not expected to understand this .. 	*/
+comment|/* 	**	You are not expected to understand this .. 	** 	**	CAUTION: only little endian architectures supported! XXX 	*/
 name|SCR_COPY
 argument_list|(
 literal|1
@@ -7807,6 +7975,39 @@ decl_stmt|;
 name|int
 name|relocs
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|__NetBSD__
+name|np
+operator|->
+name|script
+operator|=
+operator|(
+expr|struct
+name|script
+operator|*
+operator|)
+name|vm_page_alloc_contig
+argument_list|(
+name|round_page
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|script
+argument_list|)
+argument_list|)
+argument_list|,
+literal|0x100000
+argument_list|,
+literal|0xffffffff
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* !__NetBSD___ */
 name|np
 operator|->
 name|script
@@ -7829,6 +8030,9 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 name|np
 operator|->
 name|p_script
@@ -8109,12 +8313,9 @@ operator|~
 name|RELOC_MASK
 operator|)
 operator|+
-name|vtophys
-argument_list|(
 name|np
 operator|->
-name|script
-argument_list|)
+name|p_script
 expr_stmt|;
 break|break;
 case|case
@@ -8261,7 +8462,7 @@ name|ncr_probe
 parameter_list|(
 name|parent
 parameter_list|,
-name|self
+name|match
 parameter_list|,
 name|aux
 parameter_list|)
@@ -8269,18 +8470,15 @@ name|struct
 name|device
 modifier|*
 name|parent
-decl_stmt|,
-decl|*
-name|self
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|void
 modifier|*
+name|match
+decl_stmt|,
+decl|*
 name|aux
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -8289,9 +8487,7 @@ name|cfdata
 modifier|*
 name|cf
 init|=
-name|self
-operator|->
-name|dv_cfdata
+name|match
 decl_stmt|;
 name|struct
 name|pci_attach_args
@@ -8300,6 +8496,9 @@ name|pa
 init|=
 name|aux
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|0
 if|if
 condition|(
 operator|!
@@ -8313,6 +8512,8 @@ condition|)
 return|return
 literal|0
 return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pa
@@ -8325,6 +8526,12 @@ name|pa
 operator|->
 name|pa_id
 operator|!=
+name|NCR_810AP_ID
+operator|&&
+name|pa
+operator|->
+name|pa_id
+operator|!=
 name|NCR_815_ID
 operator|&&
 name|pa
@@ -8332,6 +8539,18 @@ operator|->
 name|pa_id
 operator|!=
 name|NCR_825_ID
+operator|&&
+name|pa
+operator|->
+name|pa_id
+operator|!=
+name|NCR_860_ID
+operator|&&
+name|pa
+operator|->
+name|pa_id
+operator|!=
+name|NCR_875_ID
 condition|)
 return|return
 literal|0
@@ -8378,6 +8597,14 @@ literal|"ncr 53c810 scsi"
 operator|)
 return|;
 case|case
+name|NCR_810AP_ID
+case|:
+return|return
+operator|(
+literal|"ncr 53c810ap scsi"
+operator|)
+return|;
+case|case
 name|NCR_815_ID
 case|:
 return|return
@@ -8393,10 +8620,26 @@ operator|(
 literal|"ncr 53c825 wide scsi"
 operator|)
 return|;
+case|case
+name|NCR_860_ID
+case|:
+return|return
+operator|(
+literal|"ncr 53c860 scsi"
+operator|)
+return|;
+case|case
+name|NCR_875_ID
+case|:
+return|return
+operator|(
+literal|"ncr 53c875 wide scsi"
+operator|)
+return|;
 block|}
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -8526,28 +8769,6 @@ return|return;
 name|np
 operator|->
 name|sc_ih
-operator|.
-name|ih_fun
-operator|=
-name|ncr_intr
-expr_stmt|;
-name|np
-operator|->
-name|sc_ih
-operator|.
-name|ih_arg
-operator|=
-name|np
-expr_stmt|;
-name|np
-operator|->
-name|sc_ih
-operator|.
-name|ih_level
-operator|=
-name|IPL_BIO
-expr_stmt|;
-name|retval
 operator|=
 name|pci_map_int
 argument_list|(
@@ -8555,15 +8776,20 @@ name|pa
 operator|->
 name|pa_tag
 argument_list|,
-operator|&
+name|PCI_IPL_BIO
+argument_list|,
+name|ncr_intr
+argument_list|,
 name|np
-operator|->
-name|sc_ih
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|retval
+name|np
+operator|->
+name|sc_ih
+operator|==
+name|NULL
 condition|)
 return|return;
 else|#
@@ -8735,6 +8961,7 @@ condition|)
 block|{
 else|#
 directive|else
+comment|/* !__NetBSD__ */
 switch|switch
 condition|(
 name|pci_conf_read
@@ -8747,8 +8974,12 @@ condition|)
 block|{
 endif|#
 directive|endif
+comment|/* __NetBSD__ */
 case|case
 name|NCR_825_ID
+case|:
+case|case
+name|NCR_875_ID
 case|:
 name|np
 operator|->
@@ -8781,6 +9012,20 @@ argument_list|,
 name|np
 argument_list|)
 expr_stmt|;
+name|np
+operator|->
+name|ccb
+operator|.
+name|p_ccb
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|ccb
+argument_list|)
+expr_stmt|;
 comment|/* 	**	init data structure 	*/
 name|np
 operator|->
@@ -8796,13 +9041,10 @@ name|jump_tcb
 operator|.
 name|l_paddr
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|abort
 argument_list|)
 expr_stmt|;
@@ -8859,6 +9101,11 @@ argument_list|,
 name|SRST
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 name|OUTB
 argument_list|(
 name|nc_istat
@@ -8886,6 +9133,7 @@ name|pa_tag
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* __NetBSD__ */
 for|for
 control|(
 name|reg
@@ -8954,6 +9202,11 @@ argument_list|,
 name|SRST
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 name|OUTB
 argument_list|(
 name|nc_istat
@@ -9007,6 +9260,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* __NetBSD__ */
 comment|/* 	**	After SCSI devices have been opened, we cannot 	**	reset the bus safely, so we do it here. 	**	Interrupt handler does the real work. 	*/
 name|OUTB
 argument_list|(
@@ -9020,7 +9274,7 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* 	**	process the reset exception, 	**	if interrupts are not enabled yet. 	**	than enable disconnects. 	*/
+comment|/* 	**	Process the reset exception, 	**	if interrupts are not enabled yet. 	**	Then enable disconnects. 	*/
 name|ncr_exception
 argument_list|(
 name|np
@@ -9031,24 +9285,6 @@ operator|->
 name|disc
 operator|=
 literal|1
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s scanning for targets 0..%d (V%d "
-name|__NCR_C__
-literal|")\n"
-argument_list|,
-name|ncr_name
-argument_list|(
-name|np
-argument_list|)
-argument_list|,
-name|MAX_TARGET
-operator|-
-literal|1
-argument_list|,
-name|NCR_VERSION
-argument_list|)
 expr_stmt|;
 comment|/* 	**	Now let the generic SCSI driver 	**	look for the SCSI devices on the bus .. 	*/
 ifdef|#
@@ -9062,6 +9298,24 @@ name|adapter_softc
 operator|=
 name|np
 expr_stmt|;
+name|np
+operator|->
+name|sc_link
+operator|.
+name|adapter_target
+operator|=
+name|np
+operator|->
+name|myaddr
+expr_stmt|;
+name|np
+operator|->
+name|sc_link
+operator|.
+name|openings
+operator|=
+literal|1
+expr_stmt|;
 else|#
 directive|else
 comment|/* !__NetBSD__ */
@@ -9073,9 +9327,6 @@ name|adapter_unit
 operator|=
 name|unit
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !__NetBSD__ */
 name|np
 operator|->
 name|sc_link
@@ -9086,6 +9337,17 @@ name|np
 operator|->
 name|myaddr
 expr_stmt|;
+name|np
+operator|->
+name|sc_link
+operator|.
+name|fordriver
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !__NetBSD__ */
 name|np
 operator|->
 name|sc_link
@@ -9103,6 +9365,14 @@ name|device
 operator|=
 operator|&
 name|ncr_dev
+expr_stmt|;
+name|np
+operator|->
+name|sc_link
+operator|.
+name|flags
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -9140,7 +9410,6 @@ operator|!
 name|scbus
 condition|)
 return|return;
-comment|/* XXX scbus->maxtarg should be adjusted based on bus width */
 name|scbus
 operator|->
 name|adapter_link
@@ -9150,6 +9419,110 @@ name|np
 operator|->
 name|sc_link
 expr_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|maxwide
+condition|)
+name|scbus
+operator|->
+name|maxtarg
+operator|=
+literal|15
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+name|unsigned
+name|t_from
+init|=
+literal|0
+decl_stmt|;
+name|unsigned
+name|t_to
+init|=
+name|scbus
+operator|->
+name|maxtarg
+decl_stmt|;
+name|unsigned
+name|myaddr
+init|=
+name|np
+operator|->
+name|myaddr
+decl_stmt|;
+name|char
+modifier|*
+name|txt_and
+init|=
+literal|""
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"%s scanning for targets "
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t_from
+operator|<
+name|myaddr
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%d..%d "
+argument_list|,
+name|t_from
+argument_list|,
+name|myaddr
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|txt_and
+operator|=
+literal|"and "
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|myaddr
+operator|<
+name|t_to
+condition|)
+name|printf
+argument_list|(
+literal|"%s%d..%d "
+argument_list|,
+name|txt_and
+argument_list|,
+name|myaddr
+operator|+
+literal|1
+argument_list|,
+name|t_to
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"(V%d "
+name|NCR_DATE
+literal|")\n"
+argument_list|,
+name|NCR_VERSION
+argument_list|)
+expr_stmt|;
+block|}
 name|scsi_attachdevs
 argument_list|(
 name|scbus
@@ -9192,6 +9565,27 @@ comment|/* 	**  Done. 	*/
 return|return;
 block|}
 comment|/*========================================================== ** ** **	Process pending device interrupts. ** ** **========================================================== */
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+name|int
+name|ncr_intr
+parameter_list|(
+name|arg
+parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
+block|{
+name|ncb_p
+name|np
+init|=
+name|arg
+decl_stmt|;
+else|#
+directive|else
+comment|/* !__NetBSD__ */
 name|int
 name|ncr_intr
 parameter_list|(
@@ -9201,6 +9595,9 @@ name|ncb_p
 name|np
 decl_stmt|;
 block|{
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 name|int
 name|n
 init|=
@@ -9409,6 +9806,11 @@ argument_list|,
 name|CRST
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|COMPLETE
@@ -9466,7 +9868,7 @@ name|XS_DRIVER_STUFFUP
 expr_stmt|;
 return|return
 operator|(
-name|HAD_ERROR
+name|COMPLETE
 operator|)
 return|;
 block|}
@@ -9536,7 +9938,7 @@ name|XS_DRIVER_STUFFUP
 expr_stmt|;
 return|return
 operator|(
-name|HAD_ERROR
+name|COMPLETE
 operator|)
 return|;
 block|}
@@ -10088,13 +10490,6 @@ name|tag
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 		** @GENSCSI@	Bug in "/sys/scsi/cd.c" 		** 		**	/sys/scsi/cd.c initializes opennings with 2. 		**	Our info value of 1 is not respected. 		*/
-block|if (xp->sc_link&& xp->sc_link->opennings) { 			PRINT_ADDR(xp); 			printf ("opennings set to 0.\n"); 			xp->sc_link->opennings = 0; 		};
-endif|#
-directive|endif
 block|}
 empty_stmt|;
 comment|/*---------------------------------------------------- 	** 	**	Build the identify / tag / sdtr message 	** 	**---------------------------------------------------- 	*/
@@ -10496,7 +10891,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|HAD_ERROR
+name|COMPLETE
 operator|)
 return|;
 block|}
@@ -10517,13 +10912,10 @@ name|header
 operator|.
 name|savep
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|data_in
 argument_list|)
 expr_stmt|;
@@ -10566,13 +10958,10 @@ name|header
 operator|.
 name|savep
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|data_out
 argument_list|)
 expr_stmt|;
@@ -10609,13 +10998,10 @@ name|header
 operator|.
 name|savep
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|no_data
 argument_list|)
 expr_stmt|;
@@ -10675,13 +11061,10 @@ name|launch
 operator|.
 name|l_paddr
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|select
 argument_list|)
 expr_stmt|;
@@ -10737,6 +11120,7 @@ operator|->
 name|sval
 expr_stmt|;
 comment|/* 	**	message 	*/
+comment|/*	cp->phys.smsg.addr		= cp->p_scsi_smsg;*/
 name|cp
 operator|->
 name|phys
@@ -10745,11 +11129,10 @@ name|smsg
 operator|.
 name|addr
 operator|=
-name|vtophys
+name|CCB_PHYS
 argument_list|(
-operator|&
 name|cp
-operator|->
+argument_list|,
 name|scsi_smsg
 argument_list|)
 expr_stmt|;
@@ -10763,6 +11146,7 @@ name|size
 operator|=
 name|msglen
 expr_stmt|;
+comment|/*	cp->phys.smsg2.addr		= cp->p_scsi_smsg2;*/
 name|cp
 operator|->
 name|phys
@@ -10771,11 +11155,10 @@ name|smsg2
 operator|.
 name|addr
 operator|=
-name|vtophys
+name|CCB_PHYS
 argument_list|(
-operator|&
 name|cp
-operator|->
+argument_list|,
 name|scsi_smsg2
 argument_list|)
 expr_stmt|;
@@ -10816,6 +11199,7 @@ operator|->
 name|cmdlen
 expr_stmt|;
 comment|/* 	**	sense command 	*/
+comment|/*	cp->phys.scmd.addr		= cp->p_sensecmd;*/
 name|cp
 operator|->
 name|phys
@@ -10824,11 +11208,10 @@ name|scmd
 operator|.
 name|addr
 operator|=
-name|vtophys
+name|CCB_PHYS
 argument_list|(
-operator|&
 name|cp
-operator|->
+argument_list|,
 name|sensecmd
 argument_list|)
 expr_stmt|;
@@ -11059,13 +11442,10 @@ index|[
 name|ptr
 index|]
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|idle
 argument_list|)
 expr_stmt|;
@@ -11078,11 +11458,10 @@ operator|->
 name|squeueput
 index|]
 operator|=
-name|vtophys
+name|CCB_PHYS
 argument_list|(
-operator|&
 name|cp
-operator|->
+argument_list|,
 name|phys
 argument_list|)
 expr_stmt|;
@@ -11125,13 +11504,10 @@ literal|0
 index|]
 operator|-
 operator|(
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|tryloop
 argument_list|)
 operator|)
@@ -11153,6 +11529,22 @@ name|oldspl
 argument_list|)
 expr_stmt|;
 comment|/* 	**	If interrupts are enabled, return now. 	**	Command is successfully queued. 	*/
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|SCSI_POLL
+operator|)
+condition|)
+block|{
+else|#
+directive|else
+comment|/* !__NetBSD__ */
 if|if
 condition|(
 operator|!
@@ -11163,6 +11555,9 @@ name|SCSI_NOMASK
 operator|)
 condition|)
 block|{
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 if|if
 condition|(
 name|np
@@ -11410,6 +11805,21 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|SCSI_POLL
+operator|)
+condition|)
+else|#
+directive|else
+comment|/* !__NetBSD__ */
 if|if
 condition|(
 operator|!
@@ -11419,6 +11829,9 @@ operator|&
 name|SCSI_NOMASK
 operator|)
 condition|)
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 return|return
 operator|(
 name|SUCCESSFULLY_QUEUED
@@ -11451,7 +11864,7 @@ block|}
 empty_stmt|;
 return|return
 operator|(
-name|HAD_ERROR
+name|COMPLETE
 operator|)
 return|;
 block|}
@@ -11531,13 +11944,10 @@ name|launch
 operator|.
 name|l_paddr
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|idle
 argument_list|)
 expr_stmt|;
@@ -11721,6 +12131,24 @@ expr_stmt|;
 block|}
 empty_stmt|;
 comment|/* 	**	Check the status. 	*/
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+if|if
+condition|(
+name|xp
+operator|->
+name|error
+operator|!=
+name|XS_NOERROR
+condition|)
+block|{
+comment|/*                               **      Don't override the error value.                 */
+block|}
+elseif|else
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 if|if
 condition|(
 operator|(
@@ -11861,6 +12289,9 @@ operator|->
 name|transfers
 operator|++
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__NetBSD__
 block|}
 elseif|else
 if|if
@@ -11879,6 +12310,9 @@ name|resid
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* !__NetBSD__ */
 block|}
 elseif|else
 if|if
@@ -12381,6 +12815,11 @@ argument_list|,
 name|SRST
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 comment|/* 	**	Message. 	*/
 if|if
 condition|(
@@ -12419,13 +12858,10 @@ index|[
 name|i
 index|]
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|idle
 argument_list|)
 expr_stmt|;
@@ -12445,13 +12881,10 @@ index|[
 literal|0
 index|]
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|tryloop
 argument_list|)
 expr_stmt|;
@@ -12480,6 +12913,9 @@ name|code
 argument_list|)
 expr_stmt|;
 comment|/* 	**	Init chip. 	*/
+ifndef|#
+directive|ifndef
+name|__NetBSD__
 if|if
 condition|(
 name|pci_max_burst_len
@@ -12517,6 +12953,16 @@ name|burstlen
 operator|=
 literal|0xc0
 expr_stmt|;
+else|#
+directive|else
+comment|/* !__NetBSD__ */
+name|burstlen
+operator|=
+literal|0xc0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 name|OUTB
 argument_list|(
 name|nc_istat
@@ -12524,7 +12970,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  Remove Reset, abort ...	  */
+comment|/*  Remove Reset, abort ...	     */
 name|OUTB
 argument_list|(
 name|nc_scntl0
@@ -12550,7 +12996,7 @@ operator|->
 name|rv_scntl3
 argument_list|)
 expr_stmt|;
-comment|/*  timing prescaler		 */
+comment|/*  timing prescaler		     */
 name|OUTB
 argument_list|(
 name|nc_scid
@@ -12574,7 +13020,7 @@ operator|->
 name|myaddr
 argument_list|)
 expr_stmt|;
-comment|/*  id to respond to	       */
+comment|/*  id to respond to		     */
 name|OUTB
 argument_list|(
 name|nc_istat
@@ -12582,7 +13028,7 @@ argument_list|,
 name|SIGP
 argument_list|)
 expr_stmt|;
-comment|/*  Signal Process		   */
+comment|/*  Signal Process		     */
 name|OUTB
 argument_list|(
 name|nc_dmode
@@ -12622,7 +13068,7 @@ argument_list|,
 name|TE
 argument_list|)
 expr_stmt|;
-comment|/*  TolerANT enable		  */
+comment|/*  TolerANT enable		     */
 name|OUTB
 argument_list|(
 name|nc_stime0
@@ -12817,13 +13263,10 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|start
 argument_list|)
 argument_list|)
@@ -14100,34 +14543,10 @@ name|np
 operator|->
 name|latetime
 operator|>
-literal|10
+literal|4
 condition|)
 block|{
-comment|/* 			**	Although we tried to wakeup it, 			**	the script processor didn't answer. 			** 			**	May be a target is hanging, 			**	or another initator lets a tape device 			**	rewind with disabled disconnect :-( 			** 			**	We won't accept that. 			*/
-name|printf
-argument_list|(
-literal|"%s: reset by timeout.\n"
-argument_list|,
-name|ncr_name
-argument_list|(
-name|np
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|OUTB
-argument_list|(
-name|nc_istat
-argument_list|,
-name|SRST
-argument_list|)
-expr_stmt|;
-name|OUTB
-argument_list|(
-name|nc_istat
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/* 			**	Although we tried to wake it up, 			**	the script processor didn't respond. 			** 			**	May be a target is hanging, 			**	or another initator lets a tape device 			**	rewind with disconnect disabled :-( 			** 			**	We won't accept that. 			*/
 if|if
 condition|(
 name|INB
@@ -14144,11 +14563,16 @@ argument_list|,
 name|CRST
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 name|ncr_init
 argument_list|(
 name|np
 argument_list|,
-name|NULL
+literal|"ncr dead ?"
 argument_list|,
 name|HS_TIMEOUT
 argument_list|)
@@ -14224,13 +14648,10 @@ name|launch
 operator|.
 name|l_paddr
 operator|==
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|select
 argument_list|)
 condition|)
@@ -14260,13 +14681,10 @@ name|launch
 operator|.
 name|l_paddr
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|skip
 argument_list|)
 expr_stmt|;
@@ -14298,13 +14716,10 @@ name|launch
 operator|.
 name|l_paddr
 operator|==
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|skip
 argument_list|)
 condition|)
@@ -14431,9 +14846,6 @@ name|u_long
 name|dsp
 decl_stmt|,
 name|dsa
-decl_stmt|;
-name|ccb_p
-name|cp
 decl_stmt|;
 name|int
 name|i
@@ -14589,7 +15001,11 @@ name|ncr_init
 argument_list|(
 name|np
 argument_list|,
+name|bootverbose
+condition|?
 literal|"scsi reset"
+else|:
+name|NULL
 argument_list|,
 name|HS_RESET
 argument_list|)
@@ -14773,13 +15189,10 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|no_data
 argument_list|)
 argument_list|)
@@ -14965,16 +15378,13 @@ name|script_ofs
 operator|=
 name|dsp
 operator|-
-operator|(
-name|unsigned
-operator|)
 name|np
 operator|->
 name|p_script
-operator|,
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s targ %d?: ERROR (%x:%x) (%x-%x-%x) (%x/%x) @ (%x:%08x).\n"
+literal|"%s:%d: ERROR (%x:%x) (%x-%x-%x) (%x/%x) @ (%x:%08x).\n"
 argument_list|,
 name|ncr_name
 argument_list|(
@@ -14986,7 +15396,7 @@ argument_list|(
 name|nc_ctest0
 argument_list|)
 operator|&
-literal|7
+literal|0x0f
 argument_list|,
 name|dstat
 argument_list|,
@@ -15028,6 +15438,53 @@ name|nc_dbc
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|script_ofs
+operator|&
+literal|3
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|unsigned
+operator|)
+name|script_ofs
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|script
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\tscript cmd = %08x\n"
+argument_list|,
+operator|*
+operator|(
+name|ncrcmd
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|np
+operator|->
+name|script
+operator|+
+name|script_ofs
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\treg:\t"
@@ -15048,7 +15505,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|" %x"
+literal|" %02x"
 argument_list|,
 operator|(
 operator|(
@@ -15069,123 +15526,6 @@ argument_list|(
 literal|".\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|script_ofs
-operator|<
-sizeof|sizeof
-argument_list|(
-operator|*
-name|np
-operator|->
-name|script
-argument_list|)
-condition|)
-block|{
-name|u_long
-name|vpci
-decl_stmt|;
-name|u_long
-name|vpc
-init|=
-operator|(
-operator|(
-name|u_long
-operator|)
-name|np
-operator|->
-name|script
-operator|)
-operator|+
-name|script_ofs
-decl_stmt|;
-for|for
-control|(
-name|vpci
-operator|=
-name|vpc
-init|;
-name|vpci
-operator|>=
-literal|4
-condition|;
-name|vpci
-operator|-=
-literal|4
-control|)
-empty_stmt|;
-while|while
-condition|(
-name|vpci
-operator|<=
-name|vpc
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"\tvirt.addr: 0x%08x instr: 0x%08x\n"
-argument_list|,
-name|vpci
-argument_list|,
-operator|*
-operator|(
-name|ncrcmd
-operator|*
-operator|)
-operator|(
-name|vpci
-operator|)
-argument_list|)
-expr_stmt|;
-name|vpci
-operator|+=
-literal|4
-expr_stmt|;
-block|}
-block|}
-name|cp
-operator|=
-operator|&
-name|np
-operator|->
-name|ccb
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\tgather/scatter table:\n"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|MAX_SCATTER
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|printf
-argument_list|(
-literal|"\t%02d\t0x%08x\n"
-argument_list|,
-name|i
-argument_list|,
-name|cp
-operator|->
-name|phys
-operator|.
-name|data
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*---------------------------------------- 	**	clean up the dma fifo 	**---------------------------------------- 	*/
 if|if
 condition|(
@@ -15268,6 +15608,64 @@ argument_list|)
 expr_stmt|;
 comment|/* clear dma fifo  */
 block|}
+comment|/*---------------------------------------- 	**	handshake timeout 	**---------------------------------------- 	*/
+if|if
+condition|(
+name|sist
+operator|&
+name|HTH
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: handshake timeout\n"
+argument_list|,
+name|ncr_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|nc_scntl1
+argument_list|,
+name|CRST
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|nc_scntl1
+argument_list|,
+literal|0x00
+argument_list|)
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|nc_scr0
+argument_list|,
+name|HS_FAIL
+argument_list|)
+expr_stmt|;
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|NCB_SCRIPT_PHYS
+argument_list|(
+name|np
+argument_list|,
+name|cleanup
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/*---------------------------------------- 	**	unexpected disconnect 	**---------------------------------------- 	*/
 if|if
 condition|(
@@ -15327,13 +15725,10 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|cleanup
 argument_list|)
 argument_list|)
@@ -15441,7 +15836,7 @@ block|}
 empty_stmt|;
 name|printf
 argument_list|(
-literal|"%s: target %d? doesn't release the bus.\n"
+literal|"%s: target %d doesn't release the bus.\n"
 argument_list|,
 name|ncr_name
 argument_list|(
@@ -15453,7 +15848,7 @@ argument_list|(
 name|nc_ctest0
 argument_list|)
 operator|&
-literal|7
+literal|0x0f
 argument_list|)
 expr_stmt|;
 comment|/* 		**	return without restarting the NCR. 		**	timeout will do the real work. 		*/
@@ -15524,7 +15919,7 @@ expr_stmt|;
 return|return;
 block|}
 empty_stmt|;
-comment|/* **	@RECOVER@ HTH, SGE, ABRT. ** **	We should try to recover from these interrupts. **	They may occur if there are problems with synch transfers, **	or if targets are powerswitched while the driver is running. */
+comment|/* **	@RECOVER@ HTH, SGE, ABRT. ** **	We should try to recover from these interrupts. **	They may occur if there are problems with synch transfers, or  **	if targets are switched on or off while the driver is running. */
 if|if
 condition|(
 name|sist
@@ -15767,11 +16162,10 @@ condition|(
 name|cp
 operator|&&
 operator|(
-name|vtophys
+name|CCB_PHYS
 argument_list|(
-operator|&
 name|cp
-operator|->
+argument_list|,
 name|phys
 argument_list|)
 operator|!=
@@ -15816,13 +16210,10 @@ name|diff
 operator|=
 name|scratcha
 operator|-
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|tryloop
 argument_list|)
 expr_stmt|;
@@ -15860,13 +16251,10 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|start
 argument_list|)
 argument_list|)
@@ -16108,11 +16496,10 @@ condition|(
 name|cp
 operator|&&
 operator|(
-name|vtophys
+name|CCB_PHYS
 argument_list|(
-operator|&
 name|cp
-operator|->
+argument_list|,
 name|phys
 argument_list|)
 operator|!=
@@ -16133,13 +16520,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: SCSI phase error fixup: CCB already dequeued (0x%08x)\n"
+literal|"%s: SCSI phase error fixup: CCB already dequeued (0x%08lx)\n"
 argument_list|,
 name|ncr_name
 argument_list|(
 name|np
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|np
 operator|->
 name|header
@@ -16162,15 +16552,21 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: SCSI phase error fixup: CCB address mismatch (0x%08x != 0x%08x)\n"
+literal|"%s: SCSI phase error fixup: CCB address mismatch (0x%08lx != 0x%08lx)\n"
 argument_list|,
 name|ncr_name
 argument_list|(
 name|np
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|cp
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|np
 operator|->
 name|header
@@ -16267,12 +16663,9 @@ name|np
 operator|->
 name|script
 operator|-
-name|vtophys
-argument_list|(
 name|np
 operator|->
-name|script
-argument_list|)
+name|p_script
 operator|+
 name|dsp
 operator|-
@@ -16299,7 +16692,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"P%d%d "
+literal|"P%x%x "
 argument_list|,
 name|cmd
 operator|&
@@ -16487,10 +16880,10 @@ expr_stmt|;
 block|}
 empty_stmt|;
 comment|/* 	**	if old phase not dataphase, leave here. 	*/
-name|assert
-argument_list|(
+if|if
+condition|(
 name|cmd
-operator|==
+operator|!=
 operator|(
 name|vdsp
 index|[
@@ -16499,8 +16892,37 @@ index|]
 operator|>>
 literal|24
 operator|)
+condition|)
+block|{
+name|PRINT_ADDR
+argument_list|(
+name|cp
+operator|->
+name|xfer
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"internal error: cmd=%02x != %02x=(vdsp[0]>> 24)\n"
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|cmd
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|vdsp
+index|[
+literal|0
+index|]
+operator|>>
+literal|24
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|cmd
@@ -16517,7 +16939,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"phase change %d-%d %d@%x resid=%d.\n"
+literal|"phase change %x-%x %d@%08x resid=%d.\n"
 argument_list|,
 name|cmd
 operator|&
@@ -16706,13 +17128,10 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|dispatch
 argument_list|)
 argument_list|)
@@ -16933,11 +17352,10 @@ condition|(
 name|cp
 operator|&&
 operator|(
-name|vtophys
+name|CCB_PHYS
 argument_list|(
-operator|&
 name|cp
-operator|->
+argument_list|,
 name|phys
 argument_list|)
 operator|!=
@@ -16953,6 +17371,19 @@ expr_stmt|;
 name|assert
 argument_list|(
 name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+goto|goto
+name|out
+goto|;
+name|assert
+argument_list|(
+name|cp
 operator|==
 name|np
 operator|->
@@ -16961,14 +17392,14 @@ operator|.
 name|cp
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-name|cp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-operator|!
+name|cp
+operator|!=
+name|np
+operator|->
+name|header
+operator|.
 name|cp
 condition|)
 goto|goto
@@ -17144,11 +17575,10 @@ name|OUTL
 argument_list|(
 name|nc_dsa
 argument_list|,
-name|vtophys
+name|CCB_PHYS
 argument_list|(
-operator|&
 name|cp
-operator|->
+argument_list|,
 name|phys
 argument_list|)
 argument_list|)
@@ -17157,13 +17587,10 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|getcc
 argument_list|)
 argument_list|)
@@ -17227,7 +17654,7 @@ argument_list|(
 name|nc_ssid
 argument_list|)
 operator|&
-literal|7
+literal|0x0f
 argument_list|)
 expr_stmt|;
 block|}
@@ -17382,13 +17809,10 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|dispatch
 argument_list|)
 argument_list|)
@@ -17663,13 +18087,10 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|msg_bad
 argument_list|)
 argument_list|)
@@ -17697,13 +18118,10 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|clrack
 argument_list|)
 argument_list|)
@@ -17840,13 +18258,10 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|msg_bad
 argument_list|)
 argument_list|)
@@ -18023,13 +18438,10 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|msg_bad
 argument_list|)
 argument_list|)
@@ -18051,13 +18463,10 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|clrack
 argument_list|)
 argument_list|)
@@ -18388,13 +18797,10 @@ name|OUTL
 argument_list|(
 name|nc_dsp
 argument_list|,
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|reselect
 argument_list|)
 argument_list|)
@@ -18494,13 +18900,14 @@ if|if
 condition|(
 name|lp
 condition|)
+block|{
 name|cp
 operator|=
 name|lp
 operator|->
 name|next_ccb
 expr_stmt|;
-comment|/* 	**	Look for free CCB 	*/
+comment|/* 		**	Look for free CCB 		*/
 while|while
 condition|(
 name|cp
@@ -18515,6 +18922,7 @@ name|cp
 operator|->
 name|next_ccb
 expr_stmt|;
+block|}
 comment|/* 	**	if nothing available, take the default. 	*/
 if|if
 condition|(
@@ -18605,12 +19013,13 @@ name|flags
 parameter_list|)
 block|{
 comment|/* 	**    sanity 	*/
-if|if
-condition|(
-operator|!
+name|assert
+argument_list|(
 name|cp
-condition|)
-return|return;
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|cp
 operator|->
 name|host_status
@@ -18670,18 +19079,20 @@ decl_stmt|;
 name|u_long
 name|lun
 decl_stmt|;
-if|if
-condition|(
-operator|!
+name|assert
+argument_list|(
 name|np
-condition|)
-return|return;
-if|if
-condition|(
-operator|!
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
 name|xp
-condition|)
-return|return;
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|target
 operator|=
 name|xp
@@ -18927,13 +19338,10 @@ name|call_lun
 operator|.
 name|l_paddr
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|resel_lun
 argument_list|)
 expr_stmt|;
@@ -18953,13 +19361,10 @@ name|jump_lcb
 operator|.
 name|l_paddr
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|abort
 argument_list|)
 expr_stmt|;
@@ -19084,13 +19489,10 @@ name|call_tag
 operator|.
 name|l_paddr
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|resel_tag
 argument_list|)
 expr_stmt|;
@@ -19110,13 +19512,10 @@ name|jump_ccb
 operator|.
 name|l_paddr
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|aborttag
 argument_list|)
 expr_stmt|;
@@ -19251,6 +19650,16 @@ name|cp
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	**	Fill in physical addresses 	*/
+name|cp
+operator|->
+name|p_ccb
+operator|=
+name|vtophys
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
 comment|/* 	**	Chain into reselect list 	*/
 name|cp
 operator|->
@@ -19278,11 +19687,10 @@ name|jump_ccb
 operator|.
 name|l_paddr
 operator|=
-name|vtophys
+name|CCB_PHYS
 argument_list|(
-operator|&
 name|cp
-operator|->
+argument_list|,
 name|jump_ccb
 argument_list|)
 expr_stmt|;
@@ -19300,13 +19708,10 @@ name|call_tmp
 operator|.
 name|l_paddr
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|resel_tmp
 argument_list|)
 expr_stmt|;
@@ -19392,6 +19797,38 @@ operator|!
 name|diff
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+if|if
+condition|(
+name|diff
+operator|>
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|openings
+condition|)
+name|diff
+operator|=
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|openings
+expr_stmt|;
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|openings
+operator|-=
+name|diff
+expr_stmt|;
+else|#
+directive|else
+comment|/* !__NetBSD__ */
 if|if
 condition|(
 name|diff
@@ -19418,6 +19855,9 @@ name|opennings
 operator|-=
 name|diff
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 name|lp
 operator|->
 name|actlink
@@ -19476,6 +19916,20 @@ name|lp
 operator|->
 name|actlink
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|openings
+operator|+=
+name|diff
+expr_stmt|;
+else|#
+directive|else
+comment|/* !__NetBSD__ */
 name|xp
 operator|->
 name|sc_link
@@ -19484,6 +19938,9 @@ name|opennings
 operator|+=
 name|diff
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 name|lp
 operator|->
 name|actlink
@@ -19608,7 +20065,7 @@ argument_list|(
 name|vaddr
 argument_list|)
 expr_stmt|;
-comment|/* 	**	insert extra break points at a distance of chunk. 	**	We try to reduce the number of interrupts due to 	**	unexpected phase changes due to disconnects. 	**	A typical harddisk may disconnect before ANY block. 	**	If we want to avoid unexpected phase changes at all 	**	we have to use a break point every 512 bytes. 	**	Of course the number of scatter/gather blocks is 	**	limited. 	*/
+comment|/* 	**	insert extra break points at a distance of chunk. 	**	We try to reduce the number of interrupts caused 	**	by unexpected phase changes due to disconnects. 	**	A typical harddisk may disconnect before ANY block. 	**	If we wanted to avoid unexpected phase changes at all 	**	we had to use a break point every 512 bytes. 	**	Of course the number of scatter/gather blocks is 	**	limited. 	*/
 name|free
 operator|=
 name|MAX_SCATTER
@@ -20046,13 +20503,10 @@ directive|endif
 comment|/* 	**	init 	*/
 name|pc
 operator|=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|snooptest
 argument_list|)
 expr_stmt|;
@@ -20149,6 +20603,11 @@ argument_list|,
 name|SRST
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 name|OUTB
 argument_list|(
 name|nc_istat
@@ -20181,13 +20640,10 @@ if|if
 condition|(
 name|pc
 operator|!=
-name|vtophys
+name|NCB_SCRIPT_PHYS
 argument_list|(
-operator|&
 name|np
-operator|->
-name|script
-operator|->
+argument_list|,
 name|snoopend
 argument_list|)
 operator|+
