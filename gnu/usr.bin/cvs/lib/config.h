@@ -242,22 +242,6 @@ comment|/* #undef HAVE_KERBEROS */
 end_comment
 
 begin_comment
-comment|/* Define if you have GSSAPI with MIT Kerberos version 5 available.  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_GSSAPI */
-end_comment
-
-begin_comment
-comment|/* Define if GSS_C_NT_HOSTBASED_SERVICE is defined in the gssapi.h    header file.  Only relevant when using GSSAPI.  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_GSS_C_NT_HOSTBASED_SERVICE */
-end_comment
-
-begin_comment
 comment|/* Define if you want CVS to be able to be a remote repository client.  */
 end_comment
 
@@ -460,6 +444,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the getgroups function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETGROUPS
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the getpagesize function.  */
 end_comment
 
@@ -477,6 +472,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_GETPASSPHRASE */
 end_comment
+
+begin_comment
+comment|/* Define if you have the gettimeofday function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETTIMEOFDAY
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the initgroups function.  */
@@ -531,6 +537,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the mkstemp function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MKSTEMP
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the mktemp function.  */
 end_comment
 
@@ -538,6 +555,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_MKTEMP
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the nanosleep function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NANOSLEEP
 value|1
 end_define
 
@@ -573,6 +601,14 @@ directive|define
 name|HAVE_RENAME
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the select function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SELECT */
+end_comment
 
 begin_comment
 comment|/* Define if you have the sigaction function.  */
@@ -694,6 +730,14 @@ directive|define
 name|HAVE_TZSET
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the usleep function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_USLEEP */
+end_comment
 
 begin_comment
 comment|/* Define if you have the valloc function.  */
@@ -963,6 +1007,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<syslog.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYSLOG_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<unistd.h> header file.  */
 end_comment
 
@@ -985,11 +1040,52 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the gen library (-lgen).  */
+comment|/* Name of package */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE
+value|"cvs"
+end_define
+
+begin_comment
+comment|/* Version number of package */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VERSION
+value|"1.11.1p1"
+end_define
+
+begin_comment
+comment|/* Path to the pr utility */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_PROGRAM
+value|"/usr/bin/pr"
+end_define
+
+begin_comment
+comment|/* Define if you have GSSAPI with Kerberos version 5 available. */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_LIBGEN */
+comment|/* #undef HAVE_GSSAPI */
+end_comment
+
+begin_comment
+comment|/* Define to an alternative value if GSS_C_NT_HOSTBASED_SERVICE isn't defined in the gssapi.h header file.  MIT Kerberos 1.2.1 requires this.  Only relevant when using GSSAPI. */
+end_comment
+
+begin_comment
+comment|/* #undef GSS_C_NT_HOSTBASED_SERVICE */
 end_comment
 
 end_unit
