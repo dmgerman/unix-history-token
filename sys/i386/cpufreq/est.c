@@ -77,6 +77,24 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/acpi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/acpica/acpivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acpi_if.h"
+end_include
+
 begin_comment
 comment|/* Status/control registers (from the IA-32 System Programming Guide). */
 end_comment
@@ -3744,6 +3762,22 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|est_features
+parameter_list|(
+name|driver_t
+modifier|*
+name|driver
+parameter_list|,
+name|u_int
+modifier|*
+name|features
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|est_probe
 parameter_list|(
 name|device_t
@@ -3969,6 +4003,14 @@ argument_list|,
 name|est_settings
 argument_list|)
 block|,
+comment|/* ACPI interface */
+name|DEVMETHOD
+argument_list|(
+name|acpi_get_features
+argument_list|,
+name|est_features
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
@@ -4024,6 +4066,34 @@ end_expr_stmt
 
 begin_function
 specifier|static
+name|int
+name|est_features
+parameter_list|(
+name|driver_t
+modifier|*
+name|driver
+parameter_list|,
+name|u_int
+modifier|*
+name|features
+parameter_list|)
+block|{
+comment|/* Notify the ACPI CPU that we support direct access to MSRs */
+operator|*
+name|features
+operator|=
+name|ACPI_CAP_PERF_MSRS
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|est_identify
 parameter_list|(
@@ -4035,6 +4105,9 @@ name|device_t
 name|parent
 parameter_list|)
 block|{
+name|device_t
+name|child
+decl_stmt|;
 name|u_int
 name|p
 index|[
@@ -4097,8 +4170,8 @@ literal|0
 condition|)
 return|return;
 comment|/* 	 * We add a child for each CPU since settings must be performed 	 * on each CPU in the SMP case. 	 */
-if|if
-condition|(
+name|child
+operator|=
 name|BUS_ADD_CHILD
 argument_list|(
 name|parent
@@ -4110,6 +4183,10 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|child
 operator|==
 name|NULL
 condition|)
