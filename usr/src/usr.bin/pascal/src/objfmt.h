@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)objfmt.h 1.9 %G%"; */
+comment|/* static char sccsid[] = "@(#)objfmt.h 1.10 %G%"; */
 end_comment
 
 begin_ifdef
@@ -230,7 +230,7 @@ begin_define
 define|#
 directive|define
 name|DPOFF1
-value|( sizeof rtlocs - sizeof rtlocs.unwind )
+value|( sizeof rtlocs )
 end_define
 
 begin_define

@@ -4,8 +4,14 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)pc.h 1.5 %G%"; */
+comment|/* static	char sccsid[] = "@(#)pc.h 1.6 %G%"; */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
 
 begin_comment
 comment|/*      *		random constants for pc      */
@@ -30,6 +36,9 @@ begin_struct
 struct|struct
 name|rtlocals
 block|{
+name|jmp_buf
+name|gotoenv
+decl_stmt|;
 name|struct
 name|iorec
 modifier|*
@@ -39,18 +48,6 @@ name|struct
 name|dispsave
 name|dsave
 decl_stmt|;
-name|struct
-name|dispsave
-modifier|*
-name|dptr
-decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|unwind
-function_decl|)
-parameter_list|()
-function_decl|;
 block|}
 name|rtlocs
 struct|;
@@ -59,8 +56,15 @@ end_struct
 begin_define
 define|#
 directive|define
+name|GOTOENVOFFSET
+value|( -sizeof rtlocs )
+end_define
+
+begin_define
+define|#
+directive|define
 name|CURFILEOFFSET
-value|( ( -sizeof rtlocs ) + sizeof rtlocs.unwind )
+value|( GOTOENVOFFSET + sizeof rtlocs.gotoenv )
 end_define
 
 begin_define
@@ -68,27 +72,6 @@ define|#
 directive|define
 name|DSAVEOFFSET
 value|( CURFILEOFFSET + sizeof rtlocs.curfile )
-end_define
-
-begin_define
-define|#
-directive|define
-name|DPTROFFSET
-value|( DSAVEOFFSET + sizeof rtlocs.dsave )
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNWINDOFFSET
-value|( DPTROFFSET + sizeof rtlocs.dptr )
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNWINDNAME
-value|"_UNWIND"
 end_define
 
 begin_comment
