@@ -372,11 +372,6 @@ name|mnt_nvnodelist
 decl_stmt|;
 comment|/* list of vnodes this mount */
 name|struct
-name|vnodelst
-name|mnt_reservedvnlist
-decl_stmt|;
-comment|/* (future) dirty vnode list */
-name|struct
 name|lock
 name|mnt_lock
 decl_stmt|;
@@ -410,6 +405,11 @@ name|u_int
 name|mnt_iosize_max
 decl_stmt|;
 comment|/* max IO request size */
+name|struct
+name|vnodelst
+name|mnt_reservedvnlist
+decl_stmt|;
+comment|/* (future) dirty vnode list */
 block|}
 struct|;
 end_struct
