@@ -2975,7 +2975,7 @@ case|:
 comment|/* not a thread flag XXXKSE */
 name|panic
 argument_list|(
-literal|"setrunnabl(1)"
+literal|"setrunnable(1)"
 argument_list|)
 expr_stmt|;
 block|}
