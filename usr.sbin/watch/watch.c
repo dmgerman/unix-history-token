@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -245,6 +251,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|tchars
+name|tco
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|tbuf
 index|[
@@ -370,6 +383,10 @@ name|struct
 name|sgttyb
 name|sgn
 decl_stmt|;
+name|struct
+name|tchars
+name|tc
+decl_stmt|;
 name|ioctl
 argument_list|(
 name|std_in
@@ -380,10 +397,23 @@ operator|&
 name|sgo
 argument_list|)
 expr_stmt|;
-comment|/* bcopy(&sgn,&sgo, sizeof(struct sgttyb)); */
+name|ioctl
+argument_list|(
+name|std_in
+argument_list|,
+name|TIOCGETC
+argument_list|,
+operator|&
+name|tco
+argument_list|)
+expr_stmt|;
 name|sgn
 operator|=
 name|sgo
+expr_stmt|;
+name|tc
+operator|=
+name|tco
 expr_stmt|;
 name|sgn
 operator|.
@@ -404,6 +434,20 @@ name|sgo
 operator|.
 name|sg_ospeed
 expr_stmt|;
+name|tc
+operator|.
+name|t_intrc
+operator|=
+literal|17
+expr_stmt|;
+comment|/* ^Q */
+name|tc
+operator|.
+name|t_quitc
+operator|=
+literal|17
+expr_stmt|;
+comment|/* ^Q */
 name|ioctl
 argument_list|(
 name|std_in
@@ -412,6 +456,16 @@ name|TIOCSETP
 argument_list|,
 operator|&
 name|sgn
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+name|std_in
+argument_list|,
+name|TIOCSETC
+argument_list|,
+operator|&
+name|tc
 argument_list|)
 expr_stmt|;
 block|}
@@ -430,6 +484,16 @@ name|TIOCSETP
 argument_list|,
 operator|&
 name|sgo
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+name|std_in
+argument_list|,
+name|TIOCSETC
+argument_list|,
+operator|&
+name|tco
 argument_list|)
 expr_stmt|;
 block|}
@@ -1079,6 +1143,16 @@ decl_stmt|;
 name|fd_set
 name|fd_s
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_TIME
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|getuid
