@@ -8,8 +8,14 @@ comment|/*  *  dptpci.c:  Pseudo device drivers for DPT on PCI on FreeBSD   *  *
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_pci.c,v 1.10 1998/01/21 04:38:47 ShimonR Exp $"
+empty|#ident "$Id: dpt_pci.c,v 1.1 1998/01/26 06:11:17 julian Exp $"
 end_empty
+
+begin_include
+include|#
+directive|include
+file|"opt_devfs.h"
+end_include
 
 begin_include
 include|#
