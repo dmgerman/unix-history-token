@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,13 +15,14 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vpltdmp.c	4.6 (Berkeley) %G%"
+literal|"@(#)vpltdmp.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|not lint
 end_endif
 
 begin_comment
@@ -56,7 +61,7 @@ name|char
 modifier|*
 name|Sid
 init|=
-literal|"@(#)vpltdmp.c	4.6\t%G%"
+literal|"@(#)vpltdmp.c	5.1\t%G%"
 decl_stmt|;
 end_decl_stmt
 
