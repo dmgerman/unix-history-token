@@ -55,6 +55,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CY_PLX_9050_ICS_LOCAL_IPOLARITY
+value|0x002
+end_define
+
+begin_define
+define|#
+directive|define
 name|CY_PLX_9060_ICS_IENABLE
 value|0x100
 end_define
