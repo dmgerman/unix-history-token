@@ -463,9 +463,10 @@ name|br
 operator|.
 name|ifr_name
 argument_list|,
-literal|"de0"
+name|sr
+operator|.
+name|svr4_ifr_name
 argument_list|,
-comment|/*sr.svr4_ifr_name,*/
 sizeof|sizeof
 argument_list|(
 name|br
