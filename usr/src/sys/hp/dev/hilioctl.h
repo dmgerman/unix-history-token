@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hilioctl.h 1.1 90/07/09$  *  *	@(#)hilioctl.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hilioctl.h 1.10 92/01/21$  *  *	@(#)hilioctl.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -106,6 +106,29 @@ begin_comment
 comment|/*  * HPUX ioctls (here for the benefit of the HIL driver).  * Named as they are under HPUX.  * The first set are loop device ioctls.  * The second set are ioctls for the 8042.  * Note that some are not defined as in HPUX  * due to the difference in the definitions of IOC_VOID.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp800
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_IOHpux
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|_IO(x,y)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -121,6 +144,11 @@ end_define
 begin_comment
 comment|/* IOC_IN is IOC_VOID */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -475,27 +503,9 @@ begin_comment
 comment|/* Read configuration code. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ORIGINAL_HP_CODE_ASSUMES_COMPILER_PADS_TO_EVEN
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|EFTRRT
-value|_IOR('H',0x31,struct _hilbuf5)
-end_define
-
 begin_comment
-comment|/* Read the real time. */
+comment|/*#define EFTRRT  _IOR('H',0x31,struct _hilbuf5)/* Read the real time. */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -503,11 +513,6 @@ directive|define
 name|EFTRRT
 value|0x40064831
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -520,6 +525,28 @@ begin_comment
 comment|/* Read the timers for the 	                                              four voices. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp800
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EFTSBI
+value|_IOW('H',0xa3,char)
+end_define
+
+begin_comment
+comment|/* Do the beep thing. */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -531,6 +558,11 @@ begin_comment
 comment|/* Set the bell information. */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * BSD ioctls.  * Mostly the same as the HPUX versions except for shared-queue ioctls.  */
 end_comment
@@ -540,6 +572,13 @@ define|#
 directive|define
 name|HILIOCID
 value|_IOR('h',0x03, struct _hilbuf11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OHILIOCID
+value|HILID
 end_define
 
 begin_define

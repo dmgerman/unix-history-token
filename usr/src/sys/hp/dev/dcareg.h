@@ -1,86 +1,221 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dcareg.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dcareg.h	7.4 (Berkeley) %G%  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"hp/dev/iotypes.h"
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<hp/dev/iotypes.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp700
+end_ifdef
 
 begin_struct
 struct|struct
 name|dcadevice
 block|{
-name|u_char
-name|dca_pad0
+name|vu_char
+name|dca_reset
 decl_stmt|;
-specifier|volatile
-name|u_char
-name|dca_irid
-decl_stmt|;
-specifier|volatile
-name|short
-name|dca_ic
-decl_stmt|;
-specifier|volatile
-name|short
-name|dca_ocbrc
-decl_stmt|;
-specifier|volatile
-name|short
-name|dca_lcsm
-decl_stmt|;
-name|short
-name|dca_pad1
+name|vu_char
+name|dca_pad
 index|[
-literal|4
+literal|0x800
+operator|-
+literal|1
 index|]
 decl_stmt|;
-name|u_char
-name|dca_pad2
-decl_stmt|;
-specifier|volatile
-name|u_char
+name|vu_char
 name|dca_data
 decl_stmt|;
-specifier|volatile
-name|short
+comment|/* receive buf or xmit hold */
+name|vu_char
 name|dca_ier
 decl_stmt|;
-name|u_char
-name|dca_pad4
-decl_stmt|;
-specifier|volatile
-name|u_char
+comment|/* interrupt enable */
+name|vu_char
 name|dca_iir
 decl_stmt|;
-comment|/* read-only */
+comment|/* (RO) interrupt identify */
 define|#
 directive|define
 name|dca_fifo
 value|dca_iir
-comment|/* write-only */
-specifier|volatile
-name|short
+comment|/* (WO) FIFO control */
+name|vu_char
 name|dca_cfcr
 decl_stmt|;
-specifier|volatile
-name|short
+comment|/* line control */
+name|vu_char
 name|dca_mcr
 decl_stmt|;
-specifier|volatile
-name|short
+comment|/* modem control */
+name|vu_char
 name|dca_lsr
 decl_stmt|;
-name|u_char
-name|dca_pad3
-decl_stmt|;
-specifier|volatile
-name|u_char
+comment|/* line status */
+name|vu_char
 name|dca_msr
 decl_stmt|;
+comment|/* modem status */
+name|vu_char
+name|dca_scr
+decl_stmt|;
+comment|/* scratch pad */
 block|}
 struct|;
 end_struct
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct
+struct|struct
+name|dcadevice
+block|{
+comment|/* card registers */
+name|u_char
+name|dca_pad0
+decl_stmt|;
+name|vu_char
+name|dca_id
+decl_stmt|;
+comment|/* 0x01 (read) */
+define|#
+directive|define
+name|dca_reset
+value|dca_id
+comment|/* 0x01 (write) */
+name|u_char
+name|dca_pad1
+decl_stmt|;
+name|vu_char
+name|dca_ic
+decl_stmt|;
+comment|/* 0x03 */
+name|u_char
+name|dca_pad2
+decl_stmt|;
+name|vu_char
+name|dca_ocbrc
+decl_stmt|;
+comment|/* 0x05 */
+name|u_char
+name|dca_pad3
+decl_stmt|;
+name|vu_char
+name|dca_lcsm
+decl_stmt|;
+comment|/* 0x07 */
+name|u_char
+name|dca_pad4
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* chip registers */
+name|u_char
+name|dca_pad5
+decl_stmt|;
+name|vu_char
+name|dca_data
+decl_stmt|;
+comment|/* 0x11 */
+name|u_char
+name|dca_pad6
+decl_stmt|;
+name|vu_char
+name|dca_ier
+decl_stmt|;
+comment|/* 0x13 */
+name|u_char
+name|dca_pad7
+decl_stmt|;
+name|vu_char
+name|dca_iir
+decl_stmt|;
+comment|/* 0x15 (read) */
+define|#
+directive|define
+name|dca_fifo
+value|dca_iir
+comment|/* 0x15 (write) */
+name|u_char
+name|dca_pad8
+decl_stmt|;
+name|vu_char
+name|dca_cfcr
+decl_stmt|;
+comment|/* 0x17 */
+name|u_char
+name|dca_pad9
+decl_stmt|;
+name|vu_char
+name|dca_mcr
+decl_stmt|;
+comment|/* 0x19 */
+name|u_char
+name|dca_padA
+decl_stmt|;
+name|vu_char
+name|dca_lsr
+decl_stmt|;
+comment|/* 0x1B */
+name|u_char
+name|dca_padB
+decl_stmt|;
+name|vu_char
+name|dca_msr
+decl_stmt|;
+comment|/* 0x1D */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* interface reset/id */
+comment|/* interface reset/id (300 only) */
 end_comment
 
 begin_define
@@ -112,7 +247,7 @@ value|0xC2
 end_define
 
 begin_comment
-comment|/* interrupt control */
+comment|/* interrupt control (300 only) */
 end_comment
 
 begin_define
@@ -140,8 +275,14 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* 16 bit baud rate divisor (lower byte in dca_data, upper in dca_ier) */
+comment|/*  * 16 bit baud rate divisor (lower byte in dca_data, upper in dca_ier)  * NB: This constant is for a 7.3728 clock frequency. The 300 clock  *     frequency is 2.4576, giving a constant of 153600.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp300
+end_ifdef
 
 begin_define
 define|#
@@ -152,6 +293,32 @@ name|x
 parameter_list|)
 value|(153600 / (x))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp700
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DCABRD
+parameter_list|(
+name|x
+parameter_list|)
+value|(460800 / (x))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* interrupt enable register */
@@ -411,7 +578,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MCR_SRTS
+name|MCR_IEN
 value|0x08
 end_define
 
@@ -563,8 +730,14 @@ name|MSR_DCTS
 value|0x01
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp300
+end_ifdef
+
 begin_comment
-comment|/*  * WARNING: Serial console is assumed to be at SC9  * and CONUNIT must be 0.  */
+comment|/* WARNING: Serial console is assumed to be at SC9 */
 end_comment
 
 begin_define
@@ -573,6 +746,47 @@ directive|define
 name|CONSCODE
 value|(9)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp700
+end_ifdef
+
+begin_comment
+comment|/* hardwired port addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PORT1
+value|((struct dcadevice *)CORE_RS232_1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PORT2
+value|((struct dcadevice *)CORE_RS232_2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONPORT
+value|PORT1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

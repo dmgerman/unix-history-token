@@ -1,7 +1,49 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hilreg.h 1.9 91/01/21$  *  *	@(#)hilreg.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hilreg.h 1.10 92/01/21$  *  *	@(#)hilreg.h	7.4 (Berkeley) %G%  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"hp/dev/iotypes.h"
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<hp/dev/iotypes.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp300
+end_ifdef
 
 begin_struct
 struct|struct
@@ -10,21 +52,15 @@ block|{
 name|char
 name|hil_pad0
 decl_stmt|;
-specifier|volatile
-name|char
+name|vu_char
 name|hil_data
 decl_stmt|;
 name|char
 name|hil_pad1
 decl_stmt|;
-specifier|volatile
-name|char
+name|vu_char
 name|hil_cmd
 decl_stmt|;
-define|#
-directive|define
-name|hil_stat
-value|hil_cmd
 block|}
 struct|;
 end_struct
@@ -43,12 +79,292 @@ name|BBCADDR
 value|((struct hil_dev *)IIOV(0x420000))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp800
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp700
+end_ifdef
+
+begin_struct
+struct|struct
+name|hil_dev
+block|{
+name|vu_char
+name|hil_rsthold
+decl_stmt|;
+comment|/* (WO) reset hold (and Serial #3) */
+name|vu_char
+name|hil_resv1
+index|[
+literal|2047
+index|]
+decl_stmt|;
+name|vu_char
+name|hil_data
+decl_stmt|;
+comment|/* send/receive data to/from 8042 */
+name|vu_char
+name|hil_cmd
+decl_stmt|;
+comment|/* status/control to/from 8042 */
+name|vu_char
+name|hil_resv2
+index|[
+literal|1022
+index|]
+decl_stmt|;
+name|vu_char
+name|hil_rstrel
+decl_stmt|;
+comment|/* (WO) reset release (and Serial #3) */
+block|}
+struct|;
+end_struct
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct
+struct|struct
+name|hil_dev
+block|{
+name|vu_int
+name|hil_data
+decl_stmt|;
+name|vu_int
+name|hil_pad
+decl_stmt|;
+name|vu_int
+name|hil_cmd
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|hil_stat
+value|hil_cmd
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|hp700
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|READHILDATA
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)->hil_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|READHILSTAT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)->hil_stat)
+end_define
+
+begin_define
+define|#
+directive|define
+name|READHILCMD
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)->hil_cmd)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITEHILDATA
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((x)->hil_data = (y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITEHILSTAT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((x)->hil_stat = (y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITEHILCMD
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((x)->hil_cmd  = (y))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|READHILDATA
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)->hil_data>> 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|READHILSTAT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)->hil_stat>> 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|READHILCMD
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)->hil_cmd>> 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITEHILDATA
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((x)->hil_data = ((y)<< 24))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITEHILSTAT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((x)->hil_stat = ((y)<< 24))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITEHILCMD
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((x)->hil_cmd  = ((y)<< 24))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp300
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|splhil
-value|spl1
+parameter_list|()
+value|spl1()
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|hilspl
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|splhil
+parameter_list|()
+value|splx(hilspl)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -71,7 +387,7 @@ name|HILWAIT
 parameter_list|(
 name|hil_dev
 parameter_list|)
-value|while ((hil_dev->hil_stat& HIL_BUSY))
+value|while ((READHILSTAT(hil_dev)& HIL_BUSY))
 end_define
 
 begin_define
@@ -81,7 +397,7 @@ name|HILDATAWAIT
 parameter_list|(
 name|hil_dev
 parameter_list|)
-value|while ((hil_dev->hil_stat& HIL_DATA_RDY) == 0)
+value|while (!(READHILSTAT(hil_dev)& HIL_DATA_RDY))
 end_define
 
 begin_comment
@@ -623,24 +939,6 @@ comment|/* knob box motion data */
 end_comment
 
 begin_comment
-comment|/* Magic */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KBDNMISTAT
-value|((volatile char *)IIOV(0x478005))
-end_define
-
-begin_define
-define|#
-directive|define
-name|KBDNMI
-value|0x04
-end_define
-
-begin_comment
 comment|/* For setting auto repeat on the keyboard */
 end_comment
 
@@ -673,8 +971,37 @@ value|60
 end_define
 
 begin_comment
-comment|/* rate (10 - 2550 msec, 2551 == off)*/
+comment|/* rate (10 - 2550 msec, 2551 == off) */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp300
+end_ifdef
+
+begin_comment
+comment|/* Magic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KBDNMISTAT
+value|((volatile char *)IIOV(0x478005))
+end_define
+
+begin_define
+define|#
+directive|define
+name|KBDNMI
+value|0x04
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

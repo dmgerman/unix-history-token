@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grfvar.h 1.9 91/01/21$  *  *	@(#)grfvar.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grfvar.h 1.10 92/01/21$  *  *	@(#)grfvar.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -36,6 +36,47 @@ value|gl_locks[0]
 end_define
 
 begin_comment
+comment|/*  * Static configuration info for display types  */
+end_comment
+
+begin_struct
+struct|struct
+name|grfsw
+block|{
+name|int
+name|gd_hwid
+decl_stmt|;
+comment|/* id returned by hardware */
+name|int
+name|gd_swid
+decl_stmt|;
+comment|/* id to be returned by software */
+name|char
+modifier|*
+name|gd_desc
+decl_stmt|;
+comment|/* description printed at config time */
+name|int
+function_decl|(
+modifier|*
+name|gd_init
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* boot time init routine */
+name|int
+function_decl|(
+modifier|*
+name|gd_mode
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* misc function routine */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* per display info */
 end_comment
 
@@ -47,10 +88,12 @@ name|int
 name|g_flags
 decl_stmt|;
 comment|/* software flags */
-name|int
-name|g_type
+name|struct
+name|grfsw
+modifier|*
+name|g_sw
 decl_stmt|;
-comment|/* type of display */
+comment|/* static configuration info */
 name|caddr_t
 name|g_regkva
 decl_stmt|;
@@ -140,153 +183,6 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* display types - indices into grfdev */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GT_TOPCAT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|GT_GATORBOX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|GT_RENAISSANCE
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|GT_LRCATSEYE
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|GT_HRCCATSEYE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|GT_HRMCATSEYE
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|GT_DAVINCI
-value|6
-end_define
-
-begin_struct
-struct|struct
-name|grfdev
-block|{
-name|int
-name|gd_hardid
-decl_stmt|;
-comment|/* secondary id returned by hardware */
-name|int
-name|gd_softid
-decl_stmt|;
-comment|/* id returned by HP-UX */
-name|int
-function_decl|(
-modifier|*
-name|gd_init
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* boot time initialization */
-name|int
-function_decl|(
-modifier|*
-name|gd_mode
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* misc functions */
-name|char
-modifier|*
-name|gd_desc
-decl_stmt|;
-comment|/* text description */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* hardware ids */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GID_GATORBOX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|GID_TOPCAT
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|GID_RENAISSANCE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|GID_LRCATSEYE
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|GID_HRCCATSEYE
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|GID_HRMCATSEYE
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|GID_DAVINCI
-value|8
-end_define
-
-begin_comment
-comment|/* software ids defined in grfioctl.h */
-end_comment
-
-begin_comment
 comment|/* requests to mode routine */
 end_comment
 
@@ -318,68 +214,11 @@ name|GM_GRFOVOFF
 value|4
 end_define
 
-begin_struct
-struct|struct
-name|grfreg
-block|{
-name|char
-name|gr_pad0
-decl_stmt|;
-name|u_char
-name|gr_id
-decl_stmt|;
-comment|/* +0x01 */
-name|char
-name|gr_pad1
-index|[
-literal|0x13
-index|]
-decl_stmt|;
-name|u_char
-name|gr_id2
-decl_stmt|;
-comment|/* +0x15 */
-name|char
-name|gr_pad2
-index|[
-literal|0x47
-index|]
-decl_stmt|;
-name|u_char
-name|gr_fbomsb
-decl_stmt|;
-comment|/* +0x5d */
-name|char
-name|gr_pad3
-decl_stmt|;
-name|u_char
-name|gr_fbolsb
-decl_stmt|;
-comment|/* +0x5f */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* bitmapped display hardware id */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|GRFHWID
-value|0x39
-end_define
-
-begin_comment
-comment|/* internal bitmapped display address */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GRFIADDR
-value|0x560000
+name|GM_DESCRIBE
+value|5
 end_define
 
 begin_comment
@@ -430,6 +269,22 @@ name|struct
 name|grf_softc
 name|grf_softc
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|grfsw
+name|grfsw
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ngrfsw
 decl_stmt|;
 end_decl_stmt
 

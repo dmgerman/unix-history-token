@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: itevar.h 1.1 90/07/09$  *  *	@(#)itevar.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: itevar.h 1.14 92/01/21$  *  *	@(#)itevar.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -17,6 +17,10 @@ begin_struct
 struct|struct
 name|itesw
 block|{
+name|int
+name|ite_hwid
+decl_stmt|;
+comment|/* Hardware id */
 name|int
 function_decl|(
 modifier|*
@@ -59,9 +63,64 @@ name|ite_scroll
 function_decl|)
 parameter_list|()
 function_decl|;
+name|u_char
+function_decl|(
+modifier|*
+name|ite_readbyte
+function_decl|)
+parameter_list|()
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|ite_writeglyph
+function_decl|)
+parameter_list|()
+function_decl|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|getbyte
+parameter_list|(
+name|ip
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|((*(ip)->isw->ite_readbyte)(ip, offset))
+end_define
+
+begin_define
+define|#
+directive|define
+name|getword
+parameter_list|(
+name|ip
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|((getbyte(ip, offset)<< 8) | getbyte(ip, (offset) + 2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|writeglyph
+parameter_list|(
+name|ip
+parameter_list|,
+name|offset
+parameter_list|,
+name|fontbuf
+parameter_list|)
+define|\
+value|((*(ip)->isw->ite_writeglyph)((ip), (offset), (fontbuf)))
+end_define
 
 begin_struct
 struct|struct
@@ -70,8 +129,15 @@ block|{
 name|int
 name|flags
 decl_stmt|;
-name|int
-name|type
+name|struct
+name|itesw
+modifier|*
+name|isw
+decl_stmt|;
+name|struct
+name|grf_softc
+modifier|*
+name|grf
 decl_stmt|;
 name|caddr_t
 name|regbase
@@ -143,6 +209,10 @@ name|fpd
 decl_stmt|,
 name|hold
 decl_stmt|;
+name|caddr_t
+name|devdata
+decl_stmt|;
+comment|/* display dependent data */
 block|}
 struct|;
 end_struct
@@ -216,38 +286,6 @@ end_define
 begin_comment
 comment|/* device in use as non-ITE */
 end_comment
-
-begin_comment
-comment|/* Types - indices into itesw */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ITE_TOPCAT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ITE_GATORBOX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ITE_RENAISSANCE
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ITE_DAVINCI
-value|3
-end_define
 
 begin_define
 define|#
@@ -360,6 +398,31 @@ name|c
 parameter_list|)
 define|\
 value|(((c) / (ip)->cpl) * (ip)->ftheight + (ip)->fonty)
+end_define
+
+begin_comment
+comment|/*  * The cursor is just an inverted space.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|draw_cursor
+parameter_list|(
+name|ip
+parameter_list|)
+value|{ \ 	WINDOWMOVER(ip, ip->cblanky, ip->cblankx, \ 		    ip->cury * ip->ftheight, \ 		    ip->curx * ip->ftwidth, \ 		    ip->ftheight, ip->ftwidth, RR_XOR); \         ip->cursorx = ip->curx; \ 	ip->cursory = ip->cury; }
+end_define
+
+begin_define
+define|#
+directive|define
+name|erase_cursor
+parameter_list|(
+name|ip
+parameter_list|)
+define|\
+value|WINDOWMOVER(ip, ip->cblanky, ip->cblankx, \ 		    ip->cursory * ip->ftheight, \ 		    ip->cursorx * ip->ftwidth, \ 		    ip->ftheight, ip->ftwidth, RR_XOR);
 end_define
 
 begin_comment
@@ -643,6 +706,22 @@ name|struct
 name|ite_softc
 name|ite_softc
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|itesw
+name|itesw
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nitesw
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hilvar.h 1.1 90/07/09$  *  *	@(#)hilvar.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hilvar.h 1.3 92/01/21$  *  *	@(#)hilvar.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -84,7 +84,7 @@ comment|/* loop device index */
 end_comment
 
 begin_comment
-comment|/*  * XXX: HPUX minor numbers are of the form "D0" where D is the device number  * BSD uses "0D".  For compatibility we accept either.  Maybe we should just  * use the HPUX numbering.  */
+comment|/*  * Minor device numbers.  * HP-UX uses 12 bits of the form:  *	LLLLDDDD0000  * where L is 4 bits of loop number, D 4 bits of device and 4 bits of 0.  * BSD uses 8 bits:  *	LLLLDDDD  * Device files are in BSD format, we map device numbers to HP-UX format  * on stat calls.  */
 end_comment
 
 begin_define
@@ -94,7 +94,17 @@ name|HILUNIT
 parameter_list|(
 name|d
 parameter_list|)
-value|(((((d)>>4)&7)==0)?((d)&7):(((d)>>4)&7))
+value|((d)& 0xF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HILLOOP
+parameter_list|(
+name|d
+parameter_list|)
+value|(((d)>>4)& 0xF)
 end_define
 
 begin_define

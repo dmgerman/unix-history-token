@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vn.c 1.1 91/04/30$  *  *	@(#)vn.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: fd.c 1.3 89/12/03$  *  *	@(#)vn.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -410,7 +410,7 @@ decl_stmt|,
 name|flags
 decl_stmt|;
 specifier|extern
-name|int
+name|void
 name|vniodone
 parameter_list|()
 function_decl|;
@@ -940,20 +940,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|void
 name|vniodone
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|buf
-operator|*
+modifier|*
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1148,7 +1146,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|vnread
