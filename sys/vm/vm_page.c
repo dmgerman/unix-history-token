@@ -2316,28 +2316,7 @@ operator|>
 name|cnt
 operator|.
 name|v_free_reserved
-condition|)
-block|{
-comment|/* 		 * Allocate from the free queue if there are plenty of pages 		 * in it. 		 */
-name|m
-operator|=
-name|vm_page_select_free
-argument_list|(
-name|color
-argument_list|,
-operator|(
-name|req
-operator|&
-name|VM_ALLOC_ZERO
-operator|)
-operator|!=
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
+operator|||
 operator|(
 name|page_req
 operator|==
@@ -2371,14 +2350,20 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * Interrupt or system, dig deeper into the free list. 		 */
+comment|/* 		 * Allocate from the free queue if the number of free pages 		 * exceeds the minimum for the request class. 		 */
 name|m
 operator|=
 name|vm_page_select_free
 argument_list|(
 name|color
 argument_list|,
-name|FALSE
+operator|(
+name|req
+operator|&
+name|VM_ALLOC_ZERO
+operator|)
+operator|!=
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
