@@ -8137,11 +8137,8 @@ condition|(
 name|invalidate
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|VM_LOCK_GIANT
+argument_list|()
 expr_stmt|;
 name|pmap_remove
 argument_list|(
@@ -8154,11 +8151,8 @@ argument_list|,
 name|end
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|VM_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	 * Make a second pass, cleaning/uncaching pages from the indicated 	 * objects as we go. 	 */
@@ -8873,11 +8867,8 @@ name|map
 operator|->
 name|system_map
 condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|VM_LOCK_GIANT
+argument_list|()
 expr_stmt|;
 name|pmap_remove
 argument_list|(
@@ -8901,11 +8892,8 @@ name|map
 operator|->
 name|system_map
 condition|)
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|VM_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 comment|/* 		 * Delete the entry (which may delete the object) only after 		 * removing all pmap entries pointing to its pages. 		 * (Otherwise, its page frames may be reallocated, and any 		 * modify bits will be set in the wrong object!) 		 */
 name|vm_map_entry_delete
