@@ -5914,6 +5914,14 @@ literal|0
 operator|||
 name|f
 operator|->
+name|fw_tcpopt
+operator|!=
+name|f
+operator|->
+name|fw_tcpnopt
+operator|||
+name|f
+operator|->
 name|fw_tcpf
 operator|!=
 name|f
