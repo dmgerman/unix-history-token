@@ -119,6 +119,19 @@ define|\
 value|((defobj)->relocbase + (def)->st_value)
 end_define
 
+begin_define
+define|#
+directive|define
+name|call_initfini_pointer
+parameter_list|(
+name|obj
+parameter_list|,
+name|target
+parameter_list|)
+define|\
+value|(((InitFunc)(target))())
+end_define
+
 begin_function
 specifier|static
 specifier|inline

@@ -517,11 +517,11 @@ modifier|*
 name|needed
 decl_stmt|;
 comment|/* Shared objects needed by this one (%) */
-name|InitFunc
+name|Elf_Addr
 name|init
 decl_stmt|;
 comment|/* Initialization function to call */
-name|InitFunc
+name|Elf_Addr
 name|fini
 decl_stmt|;
 comment|/* Termination function to call */
