@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.4 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -657,8 +657,7 @@ expr|struct
 name|cmdtab
 operator|*
 operator|)
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 for|for
 control|(
