@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	5.4 (Berkeley) %G%"
+literal|"@(#)savemail.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -214,7 +214,9 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"\nsavemail\n"
+literal|"\nsavemail, ErrorMode = %c\n"
+argument_list|,
+name|ErrorMode
 argument_list|)
 expr_stmt|;
 endif|#
@@ -352,6 +354,9 @@ break|break;
 case|case
 name|EM_PRINT
 case|:
+case|case
+literal|'\0'
+case|:
 name|state
 operator|=
 name|ESM_QUIET
@@ -362,6 +367,17 @@ name|EM_QUIET
 case|:
 comment|/* no need to return anything at all */
 return|return;
+default|default:
+name|syserr
+argument_list|(
+literal|"savemail: ErrorMode x%x\n"
+argument_list|)
+expr_stmt|;
+name|state
+operator|=
+name|ESM_MAIL
+expr_stmt|;
+break|break;
 block|}
 while|while
 condition|(
@@ -370,11 +386,56 @@ operator|!=
 name|ESM_DONE
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|6
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"  state %d\n"
+argument_list|,
+name|state
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 switch|switch
 condition|(
 name|state
 condition|)
 block|{
+case|case
+name|ESM_QUIET
+case|:
+if|if
+condition|(
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|==
+name|LocalMailer
+condition|)
+name|state
+operator|=
+name|ESM_DEADLETTER
+expr_stmt|;
+else|else
+name|state
+operator|=
+name|ESM_MAIL
+expr_stmt|;
+break|break;
 case|case
 name|ESM_REPORT
 case|:

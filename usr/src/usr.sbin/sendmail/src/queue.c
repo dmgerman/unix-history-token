@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.10 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.11 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.10 (Berkeley) %G%"
+literal|"@(#)queue.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2862,6 +2862,16 @@ argument_list|,
 name|WLSIZE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|")\n--QID-- --Size-- -Priority- -----Q-Time----- --------Sender/Recipient--------\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|")\n--QID-- --Size-- -----Q-Time----- ------------Sender/Recipient------------\n"
@@ -3073,6 +3083,34 @@ case|case
 literal|'S'
 case|:
 comment|/* sender name */
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"%8ld %10ld %.16s %.37s"
+argument_list|,
+name|dfsize
+argument_list|,
+name|w
+operator|->
+name|w_pri
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|submittime
+argument_list|)
+argument_list|,
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"%8ld %.16s %.45s"
@@ -3113,6 +3151,22 @@ case|case
 literal|'R'
 case|:
 comment|/* recipient name */
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"\n\t\t\t\t\t     %.37s"
+argument_list|,
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"\n\t\t\t\t  %.45s"
