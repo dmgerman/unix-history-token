@@ -876,5 +876,35 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|RCS_setlocalid
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|arg
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|RCS_setincexc
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|arg
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
