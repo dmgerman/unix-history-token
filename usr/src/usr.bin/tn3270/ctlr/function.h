@@ -18,7 +18,9 @@ comment|/* Illegal sequence */
 name|FCN_RESET
 block|,
 comment|/* unlock keyboard */
-name|FCN_CAPS_LOCK
+name|FCN_MAKE_SHIFT_LOCK
+block|,
+name|FCN_BREAK_SHIFT_LOCK
 block|,
 name|FCN_MAKE_SHIFT
 block|,
