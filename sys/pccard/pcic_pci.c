@@ -985,12 +985,35 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-comment|/* 	 * This is incomplete. 	 */
+name|struct
+name|pcic_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|csc_route
+operator|==
+name|pcic_iw_pci
+operator|||
+name|sc
+operator|->
+name|func_route
+operator|==
+name|pcic_iw_pci
+condition|)
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Warning: CL-PD67xx chips may not work\n"
+literal|"CL-PD67xx broken for PCI routing.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2810,13 +2833,6 @@ operator|&
 literal|0x1
 condition|)
 block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"I/O mapped device, might not work.\n"
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|iorid
