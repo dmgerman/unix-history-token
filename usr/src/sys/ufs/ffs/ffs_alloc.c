@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1941,6 +1941,8 @@ index|]
 operator|)
 operator|->
 name|in_off
+operator|+
+literal|1
 operator|>=
 name|len
 condition|)
@@ -1952,6 +1954,31 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|start_ap
+index|[
+name|start_lvl
+operator|-
+literal|1
+index|]
+operator|.
+name|in_lbn
+operator|==
+name|idp
+operator|->
+name|in_lbn
+condition|)
+name|panic
+argument_list|(
+literal|"ffs_reallocblk: start == end"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ssize
 operator|=
 name|len
