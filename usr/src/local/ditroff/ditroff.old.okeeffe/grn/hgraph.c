@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hgraph.c	1.13	(Berkeley) 84/10/08  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
+comment|/*	hgraph.c	1.14	(Berkeley) 84/11/27  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
 end_comment
 
 begin_include
@@ -526,6 +526,12 @@ name|printf
 argument_list|(
 literal|"\\D'p %d"
 argument_list|,
+name|element
+operator|->
+name|size
+operator|<=
+name|NSTIPPLES
+condition|?
 name|stipple_index
 index|[
 name|element
@@ -534,6 +540,10 @@ name|size
 operator|-
 literal|1
 index|]
+else|:
+name|element
+operator|->
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -543,6 +553,12 @@ name|printf
 argument_list|(
 literal|"\\D'P %d"
 argument_list|,
+name|element
+operator|->
+name|size
+operator|<=
+name|NSTIPPLES
+condition|?
 name|stipple_index
 index|[
 name|element
@@ -551,6 +567,10 @@ name|size
 operator|-
 literal|1
 index|]
+else|:
+name|element
+operator|->
+name|size
 argument_list|)
 expr_stmt|;
 block|}
