@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  POSTBOX.H -- Global definitions for postbox. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	3.3	%G% */
+comment|/* **  POSTBOX.H -- Global definitions for postbox. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	3.4	%G% */
 end_comment
 
 begin_include
@@ -120,10 +120,8 @@ decl_stmt|;
 comment|/* host map */
 name|char
 modifier|*
+modifier|*
 name|m_argv
-index|[
-name|MAXPV
-index|]
 decl_stmt|;
 comment|/* template argument vector */
 block|}
@@ -273,6 +271,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|mailer
+modifier|*
 name|Mailer
 index|[]
 decl_stmt|;
@@ -301,13 +300,11 @@ modifier|*
 name|q_host
 decl_stmt|;
 comment|/* host name */
-name|struct
-name|mailer
-modifier|*
+name|short
 name|q_mailer
 decl_stmt|;
 comment|/* mailer to use */
-name|int
+name|short
 name|q_rmailer
 decl_stmt|;
 comment|/* real mailer (before mapping) */

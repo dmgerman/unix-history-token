@@ -661,11 +661,7 @@ name|q
 operator|->
 name|q_mailer
 operator|!=
-operator|&
-name|Mailer
-index|[
 literal|0
-index|]
 condition|)
 continue|continue;
 comment|/* create a key for fetch */

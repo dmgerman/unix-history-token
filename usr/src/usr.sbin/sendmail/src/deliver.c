@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.3	%G%"
+literal|"@(#)deliver.c	3.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,9 +208,12 @@ end_expr_stmt
 begin_expr_stmt
 name|m
 operator|=
+name|Mailer
+index|[
 name|to
 operator|->
 name|q_mailer
+index|]
 expr_stmt|;
 end_expr_stmt
 
@@ -396,7 +399,6 @@ if|if
 condition|(
 name|m
 operator|==
-operator|&
 name|Mailer
 index|[
 literal|0
@@ -416,7 +418,6 @@ operator|++
 expr_stmt|;
 name|m
 operator|=
-operator|&
 name|Mailer
 index|[
 literal|1
@@ -472,7 +473,6 @@ if|if
 condition|(
 name|m
 operator|==
-operator|&
 name|Mailer
 index|[
 literal|0
@@ -1454,9 +1454,12 @@ name|translate
 argument_list|(
 literal|"$f"
 argument_list|,
+name|Mailer
+index|[
 name|From
 operator|.
 name|q_mailer
+index|]
 argument_list|,
 name|From
 operator|.
@@ -1959,9 +1962,12 @@ name|q_paddr
 expr_stmt|;
 name|m
 operator|=
+name|Mailer
+index|[
 name|a
 operator|->
 name|q_mailer
+index|]
 expr_stmt|;
 name|errno
 operator|=
@@ -2101,7 +2107,6 @@ if|if
 condition|(
 name|m
 operator|==
-operator|&
 name|Mailer
 index|[
 literal|0

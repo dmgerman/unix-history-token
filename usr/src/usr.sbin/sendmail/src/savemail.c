@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.2	%G%"
+literal|"@(#)savemail.c	3.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -379,16 +379,6 @@ begin_if
 if|if
 condition|(
 name|MailBack
-operator|||
-name|From
-operator|.
-name|q_mailer
-operator|!=
-operator|&
-name|Mailer
-index|[
-literal|0
-index|]
 condition|)
 block|{
 name|freopen
@@ -539,11 +529,7 @@ name|From
 operator|.
 name|q_mailer
 operator|==
-operator|&
-name|Mailer
-index|[
 literal|0
-index|]
 operator|&&
 operator|(
 name|pw

@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.3	%G%"
+literal|"@(#)parseaddr.c	3.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -459,23 +459,15 @@ name|addr
 expr_stmt|;
 name|a
 operator|->
+name|q_mailer
+operator|=
+name|a
+operator|->
 name|q_rmailer
 operator|=
 name|t
 operator|->
 name|p_mailer
-expr_stmt|;
-name|a
-operator|->
-name|q_mailer
-operator|=
-operator|&
-name|Mailer
-index|[
-name|t
-operator|->
-name|p_mailer
-index|]
 expr_stmt|;
 if|if
 condition|(
@@ -576,9 +568,12 @@ condition|(
 operator|(
 name|pvp
 operator|=
+name|Mailer
+index|[
 name|a
 operator|->
 name|q_mailer
+index|]
 operator|->
 name|m_local
 operator|)
