@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.46 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.47 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.46 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.47 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2636,6 +2636,30 @@ name|nc_flags
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|9
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"maphostname(%s, %d) => CACHE %s\n"
+argument_list|,
+name|hbuf
+argument_list|,
+name|hbsize
+argument_list|,
+name|s
+operator|->
+name|s_namecanon
+operator|.
+name|nc_cname
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|s
