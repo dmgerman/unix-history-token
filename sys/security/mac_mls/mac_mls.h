@@ -30,7 +30,14 @@ begin_define
 define|#
 directive|define
 name|MAC_MLS_EXTATTR_NAME
-value|"mac_biba"
+value|"mac_mls"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_MLS_LABEL_NAME
+value|"mls"
 end_define
 
 begin_define

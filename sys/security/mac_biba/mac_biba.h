@@ -36,6 +36,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAC_BIBA_LABEL_NAME
+value|"biba"
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAC_BIBA_FLAG_SINGLE
 value|0x00000001
 end_define
