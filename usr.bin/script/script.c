@@ -1166,6 +1166,8 @@ argument_list|)
 expr_stmt|;
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|av
 index|[
 literal|0
@@ -1188,6 +1190,8 @@ argument_list|)
 expr_stmt|;
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|shell
 argument_list|)
 expr_stmt|;

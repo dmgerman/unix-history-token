@@ -251,6 +251,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
