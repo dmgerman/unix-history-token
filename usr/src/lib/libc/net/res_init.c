@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	6.12 (Berkeley) %G%"
+literal|"@(#)res_init.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -697,7 +697,22 @@ operator|)
 operator|-
 literal|1
 condition|)
+block|{
+name|_res
+operator|.
+name|nsaddr_list
+index|[
+name|nserv
+index|]
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|INADDR_ANY
+expr_stmt|;
 continue|continue;
+block|}
 name|_res
 operator|.
 name|nsaddr_list
