@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	7.17 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/* NEEDSWORK: function defns need update */
 end_comment
 
 begin_ifndef
@@ -15,104 +19,48 @@ directive|define
 name|_NAMEI_H_
 end_define
 
-begin_comment
-comment|/*  * Encapsulation of namei parameters.  */
-end_comment
-
 begin_struct
 struct|struct
-name|nameidata
+name|componentname
 block|{
-comment|/* 	 * Arguments to namei. 	 */
-name|caddr_t
-name|ni_dirp
-decl_stmt|;
-comment|/* pathname pointer */
-name|enum
-name|uio_seg
-name|ni_segflg
-decl_stmt|;
-comment|/* location of pathname */
 name|u_long
-name|ni_nameiop
+name|cn_nameiop
 decl_stmt|;
-comment|/* see below */
-comment|/* 	 * Arguments to lookup. 	 */
+comment|/* in */
+name|u_long
+name|cn_flags
+decl_stmt|;
+comment|/* in */
+name|long
+name|cn_namelen
+decl_stmt|;
+comment|/* in */
+name|char
+modifier|*
+name|cn_nameptr
+decl_stmt|;
+comment|/* in */
+name|u_long
+name|cn_hash
+decl_stmt|;
+comment|/* in */
+name|char
+modifier|*
+name|cn_pnbuf
+decl_stmt|;
+comment|/* in */
 name|struct
 name|ucred
 modifier|*
-name|ni_cred
+name|cn_cred
 decl_stmt|;
-comment|/* credentials */
+comment|/* in */
 name|struct
-name|vnode
+name|proc
 modifier|*
-name|ni_startdir
+name|cn_proc
 decl_stmt|;
-comment|/* starting directory */
-name|struct
-name|vnode
-modifier|*
-name|ni_rootdir
-decl_stmt|;
-comment|/* logical root directory */
-comment|/* 	 * Results 	 */
-name|struct
-name|vnode
-modifier|*
-name|ni_vp
-decl_stmt|;
-comment|/* vnode of result */
-name|struct
-name|vnode
-modifier|*
-name|ni_dvp
-decl_stmt|;
-comment|/* vnode of intermediate directory */
-comment|/* 	 * Shared between namei, lookup routines, and commit routines. 	 */
-name|char
-modifier|*
-name|ni_pnbuf
-decl_stmt|;
-comment|/* pathname buffer */
-name|long
-name|ni_pathlen
-decl_stmt|;
-comment|/* remaining chars in path */
-name|char
-modifier|*
-name|ni_ptr
-decl_stmt|;
-comment|/* current location in pathname */
-name|long
-name|ni_namelen
-decl_stmt|;
-comment|/* length of current component */
-name|char
-modifier|*
-name|ni_next
-decl_stmt|;
-comment|/* next location in pathname */
-name|u_long
-name|ni_hash
-decl_stmt|;
-comment|/* hash value of current component */
-name|u_char
-name|ni_loopcnt
-decl_stmt|;
-comment|/* count of symlinks encountered */
-name|u_char
-name|ni_makeentry
-decl_stmt|;
-comment|/* 1 => add entry to name cache */
-name|u_char
-name|ni_isdotdot
-decl_stmt|;
-comment|/* 1 => current component name is .. */
-name|u_char
-name|ni_more
-decl_stmt|;
-comment|/* 1 => symlink needs interpretation */
+comment|/* in */
 comment|/* 	 * Side effects. 	 */
 struct|struct
 name|ufs_specific
@@ -139,11 +87,147 @@ name|ufs_reclen
 decl_stmt|;
 comment|/* size of found directory entry */
 block|}
-name|ni_ufs
+name|cn_ufs
 struct|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Encapsulation of namei parameters.  */
+end_comment
+
+begin_struct
+struct|struct
+name|nameidata
+block|{
+comment|/* 	 * Arguments to namei. 	 */
+name|caddr_t
+name|ni_dirp
+decl_stmt|;
+comment|/* pathname pointer */
+name|enum
+name|uio_seg
+name|ni_segflg
+decl_stmt|;
+comment|/* location of pathname */
+name|u_long
+name|ni_nameiop
+decl_stmt|;
+comment|/* see below.  NEEDSWORK: here for compatibility */
+comment|/* 	 * Arguments to lookup. 	 */
+comment|/* struct	ucred *ni_cred;		/* credentials */
+name|struct
+name|vnode
+modifier|*
+name|ni_startdir
+decl_stmt|;
+comment|/* starting directory */
+name|struct
+name|vnode
+modifier|*
+name|ni_rootdir
+decl_stmt|;
+comment|/* logical root directory */
+comment|/* 	 * Results: returned from/manipulated by lookup 	 */
+name|struct
+name|vnode
+modifier|*
+name|ni_vp
+decl_stmt|;
+comment|/* vnode of result */
+name|struct
+name|vnode
+modifier|*
+name|ni_dvp
+decl_stmt|;
+comment|/* vnode of intermediate directory */
+comment|/* 	 * Shared between namei, lookup routines, and commit routines. 	 */
+comment|/* char	*ni_pnbuf;		/* pathname buffer */
+name|long
+name|ni_pathlen
+decl_stmt|;
+comment|/* remaining chars in path */
+comment|/* char	*ni_ptr;		/* current location in pathname */
+comment|/* long	ni_namelen;		/* length of current component */
+name|char
+modifier|*
+name|ni_next
+decl_stmt|;
+comment|/* next location in pathname */
+comment|/* u_long	ni_hash;		/* hash value of current component */
+name|u_char
+name|ni_loopcnt
+decl_stmt|;
+comment|/* count of symlinks encountered */
+comment|/* u_char	ni_makeentry;		/* 1 => add entry to name cache */
+comment|/* u_char	ni_isdotdot;		/* 1 => current component name is .. */
+comment|/* u_char	ni_more;		/* 1 => symlink needs interpretation */
+comment|/* 	 * Lookup params. 	 */
+name|struct
+name|componentname
+name|ni_cnd
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Backwards compatibility.  */
+end_comment
+
+begin_comment
+comment|/* #define ni_nameiop	ni_cnd.cn_nameiop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ni_cred
+value|ni_cnd.cn_cred
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_pnbuf
+value|ni_cnd.cn_pnbuf
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_namelen
+value|ni_cnd.cn_namelen
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_ptr
+value|ni_cnd.cn_nameptr
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_hash
+value|ni_cnd.cn_hash
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_flags
+value|ni_cnd.cn_flags
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_ufs
+value|ni_cnd.cn_ufs
+end_define
 
 begin_ifdef
 ifdef|#
@@ -211,7 +295,7 @@ comment|/* mask for operation */
 end_comment
 
 begin_comment
-comment|/*  * namei operational modifiers  */
+comment|/*  * namei operational modifier flags, stored in ni_cnd.flags  */
 end_comment
 
 begin_define
@@ -299,7 +383,7 @@ begin_define
 define|#
 directive|define
 name|NOCROSSMOUNT
-value|0x0100
+value|0x00100
 end_define
 
 begin_comment
@@ -310,7 +394,7 @@ begin_define
 define|#
 directive|define
 name|RDONLY
-value|0x0200
+value|0x00200
 end_define
 
 begin_comment
@@ -321,7 +405,7 @@ begin_define
 define|#
 directive|define
 name|HASBUF
-value|0x0400
+value|0x00400
 end_define
 
 begin_comment
@@ -332,7 +416,7 @@ begin_define
 define|#
 directive|define
 name|SAVENAME
-value|0x0800
+value|0x00800
 end_define
 
 begin_comment
@@ -343,18 +427,66 @@ begin_define
 define|#
 directive|define
 name|SAVESTART
-value|0x1000
+value|0x01000
 end_define
 
 begin_comment
 comment|/* save starting directory */
 end_comment
 
+begin_comment
+comment|/* new: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISDOTDOT
+value|0x02000
+end_define
+
+begin_comment
+comment|/* current component name is .. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAKEENTRY
+value|0x04000
+end_define
+
+begin_comment
+comment|/* entry is to be added to name cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISLASTCN
+value|0x08000
+end_define
+
+begin_comment
+comment|/* this is last component of pathname */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISSYMLINK
+value|0x10000
+end_define
+
+begin_comment
+comment|/* symlink needs interpretation */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PARAMASK
-value|0xff00
+value|0xfff00
 end_define
 
 begin_comment
