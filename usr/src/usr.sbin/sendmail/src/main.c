@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.124 (Berkeley) %G%"
+literal|"@(#)main.c	8.125 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4160,7 +4160,7 @@ condition|(
 operator|!
 name|tTd
 argument_list|(
-literal|52
+literal|99
 argument_list|,
 literal|100
 argument_list|)
