@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	5.35.1.1 (Berkeley) %G%"
+literal|"@(#)rcp.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,12 @@ begin_include
 include|#
 directive|include
 file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -740,25 +746,15 @@ name|sp
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rcp: %s/tcp: unknown service\n"
+literal|"%s/tcp: unknown service"
 argument_list|,
 name|shell
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|port
 operator|=
 name|sp
@@ -781,15 +777,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rcp: unknown user %d.\n"
+literal|"unknown user %d"
 argument_list|,
 operator|(
 name|int
@@ -797,12 +789,6 @@ operator|)
 name|userid
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|rem
 operator|=
 name|STDIN_FILENO
@@ -1110,7 +1096,7 @@ if|if
 condition|(
 name|thost
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|argv
 index|[
@@ -1232,7 +1218,7 @@ literal|"."
 expr_stmt|;
 name|host
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|argv
 index|[
@@ -1299,8 +1285,12 @@ name|len
 argument_list|)
 operator|)
 condition|)
-name|nospace
-argument_list|()
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1475,8 +1465,12 @@ name|len
 argument_list|)
 operator|)
 condition|)
-name|nospace
-argument_list|()
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -1592,19 +1586,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"rcp: TOS (ignored): %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"TOS (ignored)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1759,8 +1743,12 @@ name|len
 argument_list|)
 operator|)
 condition|)
-name|nospace
-argument_list|()
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -1844,7 +1832,7 @@ condition|(
 operator|(
 name|host
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|argv
 index|[
@@ -1935,8 +1923,12 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|nospace
-argument_list|()
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -2048,19 +2040,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"rcp: TOS (ignored): %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"TOS (ignored)"
 argument_list|)
 expr_stmt|;
 name|sink
@@ -2208,7 +2190,7 @@ condition|)
 block|{
 name|syserr
 label|:
-name|err
+name|run_err
 argument_list|(
 literal|"%s: %s"
 argument_list|,
@@ -2259,7 +2241,7 @@ goto|;
 block|}
 comment|/* FALLTHROUGH */
 default|default:
-name|err
+name|run_err
 argument_list|(
 literal|"%s: not a regular file"
 argument_list|,
@@ -2275,7 +2257,7 @@ condition|(
 operator|(
 name|last
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|name
 argument_list|,
@@ -2604,7 +2586,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 else|else
-name|err
+name|run_err
 argument_list|(
 literal|"%s: %s"
 argument_list|,
@@ -2681,7 +2663,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|err
+name|run_err
 argument_list|(
 literal|"%s: %s"
 argument_list|,
@@ -2697,7 +2679,7 @@ return|return;
 block|}
 name|last
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|name
 argument_list|,
@@ -2899,7 +2881,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|err
+name|run_err
 argument_list|(
 literal|"%s/%s: name too long"
 argument_list|,
@@ -3130,7 +3112,7 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|err
+name|run_err
 argument_list|(
 literal|"ambiguous target"
 argument_list|)
@@ -3524,7 +3506,7 @@ condition|(
 name|first
 condition|)
 block|{
-name|err
+name|run_err
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -3698,7 +3680,7 @@ name|need
 argument_list|)
 operator|)
 condition|)
-name|err
+name|run_err
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -3866,9 +3848,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|run_err
 argument_list|(
-literal|"can't set times on %s: %s"
+literal|"%s: set times: %s"
 argument_list|,
 name|np
 argument_list|,
@@ -3925,7 +3907,7 @@ condition|)
 block|{
 name|bad
 label|:
-name|err
+name|run_err
 argument_list|(
 literal|"%s: %s"
 argument_list|,
@@ -4049,7 +4031,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|err
+name|run_err
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -4203,9 +4185,9 @@ name|size
 argument_list|)
 condition|)
 block|{
-name|err
+name|run_err
 argument_list|(
-literal|"can't truncate %s: %s"
+literal|"%s: truncate: %s"
 argument_list|,
 name|np
 argument_list|,
@@ -4233,14 +4215,25 @@ name|omode
 operator|!=
 name|mode
 condition|)
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fchmod
 argument_list|(
 name|ofd
 argument_list|,
 name|omode
+argument_list|)
+condition|)
+name|run_err
+argument_list|(
+literal|"%s: set mode: %s"
+argument_list|,
+name|np
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4255,9 +4248,8 @@ name|omode
 operator|!=
 name|mode
 condition|)
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fchmod
 argument_list|(
 name|ofd
@@ -4266,6 +4258,18 @@ name|omode
 operator|&
 operator|~
 name|mask
+argument_list|)
+condition|)
+name|run_err
+argument_list|(
+literal|"%s: set mode: %s"
+argument_list|,
+name|np
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4308,9 +4312,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|err
+name|run_err
 argument_list|(
-literal|"can't set times on %s: %s"
+literal|"%s: set times: %s"
 argument_list|,
 name|np
 argument_list|,
@@ -4334,7 +4338,7 @@ block|{
 case|case
 name|YES
 case|:
-name|err
+name|run_err
 argument_list|(
 literal|"%s: %s"
 argument_list|,
@@ -4371,7 +4375,7 @@ block|}
 block|}
 name|screwup
 label|:
-name|err
+name|run_err
 argument_list|(
 literal|"protocol error: %s"
 argument_list|,
@@ -4499,23 +4503,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rcp: unknown service shell/tcp\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unknown service shell/tcp"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|errno
@@ -4939,7 +4933,7 @@ name|void
 if|#
 directive|if
 name|__STDC__
-name|err
+name|run_err
 parameter_list|(
 specifier|const
 name|char
@@ -4950,7 +4944,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
-function|err
+function|run_err
 parameter_list|(
 name|fmt
 parameter_list|,
@@ -4996,8 +4990,9 @@ name|errs
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|fp
+operator|==
+name|NULL
 operator|&&
 operator|!
 operator|(
@@ -5056,56 +5051,29 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|iamremote
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rcp: "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
 name|fflush
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|iamremote
+condition|)
+name|vwarnx
+argument_list|(
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 block|}
