@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.13	82/01/17	*/
+comment|/*	ioctl.h	4.14	82/01/19	*/
 end_comment
 
 begin_comment
@@ -716,6 +716,28 @@ end_define
 
 begin_comment
 comment|/* start output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSTOP
+value|(('t'<<8)|111)
+end_define
+
+begin_comment
+comment|/* stop output, like ^S */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSTART
+value|(('t'<<8)|110)
+end_define
+
+begin_comment
+comment|/* start output, like ^Q */
 end_comment
 
 begin_define
