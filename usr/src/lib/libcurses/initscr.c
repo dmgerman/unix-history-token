@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)initscr.c	5.13 (Berkeley) %G%"
+literal|"@(#)initscr.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,9 +143,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|__startwin
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|curscr
@@ -254,6 +251,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|__startwin
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|stdscr
