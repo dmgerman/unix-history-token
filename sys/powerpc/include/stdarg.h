@@ -99,6 +99,45 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|defined
+name|__GNUC__
+operator|&&
+operator|(
+name|__GNUC__
+operator|>
+literal|2
+operator|||
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|==
+literal|95
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|va_start
+parameter_list|(
+name|ap
+parameter_list|,
+name|last
+parameter_list|)
+define|\
+value|(__builtin_next_arg(last),					\ 	 __builtin_memcpy ((ap), __builtin_saveregs (), sizeof(__gnuc_va_list)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -111,6 +150,11 @@ parameter_list|)
 define|\
 value|(__builtin_next_arg(last),					\ 	 (ap).__stack = __va_stack_args,				\ 	 (ap).__base = __va_reg_args,					\ 	 (ap).__gpr = __va_first_gpr,					\ 	 (ap).__fpr = __va_first_fpr)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -207,6 +251,97 @@ define|\
 value|((sizeof(type) + sizeof(int) - 1) / sizeof(int) * sizeof(int))
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+name|__GNUC__
+operator|&&
+operator|(
+name|__GNUC__
+operator|>
+literal|2
+operator|||
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|==
+literal|95
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__va_savedgpr
+parameter_list|(
+name|ap
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|((ap)->__base + (ap)->__gpr * sizeof(int) - sizeof(type))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__va_savedfpr
+parameter_list|(
+name|ap
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|((ap)->__base + 8 * sizeof(int) + (ap)->__fpr * sizeof(double) -	\ 	 sizeof(type))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__va_stack
+parameter_list|(
+name|ap
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|((ap)->__stack += __va_size(type) +				\ 			(__va_longlong(type) ? (int)(ap)->__stack& 4 : 0), \ 	 (ap)->__stack - sizeof(type))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__va_gpr
+parameter_list|(
+name|ap
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|((ap)->__gpr += __va_size(type) / sizeof(int) +			\ 		      (__va_longlong(type) ? (ap)->__gpr& 1 : 0),	\ 	 (ap)->__gpr<= 8 ? __va_savedgpr(ap, type) : __va_stack(ap, type))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__va_fpr
+parameter_list|(
+name|ap
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|((ap)->__fpr++,							\ 	 (ap)->__fpr<= 8 ? __va_savedfpr(ap, type) : __va_stack(ap, type))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -271,6 +406,11 @@ parameter_list|)
 define|\
 value|((ap).__fpr++,							\ 	 (ap).__fpr<= 8 ? __va_savedfpr(ap, type) : __va_stack(ap, type))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
