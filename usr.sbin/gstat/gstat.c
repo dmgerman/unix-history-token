@@ -103,6 +103,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|flag_c
+decl_stmt|,
+name|flag_d
 decl_stmt|;
 end_decl_stmt
 
@@ -202,7 +204,7 @@ name|long
 name|double
 name|ld
 index|[
-literal|8
+literal|11
 index|]
 decl_stmt|;
 name|uint64_t
@@ -219,7 +221,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cI:"
+literal|"dcI:"
 argument_list|)
 operator|)
 operator|!=
@@ -236,6 +238,14 @@ case|case
 literal|'c'
 case|:
 name|flag_c
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|flag_d
 operator|=
 literal|1
 expr_stmt|;
@@ -605,7 +615,31 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|" L(q)  ops/s    r/s   kBps   ms/r    w/s   kBps   ms/w   %%busy Name\n"
+literal|" L(q)  ops/s   "
+argument_list|)
+expr_stmt|;
+name|printw
+argument_list|(
+literal|" r/s   kBps   ms/r   "
+argument_list|)
+expr_stmt|;
+name|printw
+argument_list|(
+literal|" w/s   kBps   ms/d   "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flag_d
+condition|)
+name|printw
+argument_list|(
+literal|" d/s   kBps   ms/d   "
+argument_list|)
+expr_stmt|;
+name|printw
+argument_list|(
+literal|"%%busy Name\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -827,6 +861,30 @@ index|[
 literal|7
 index|]
 argument_list|,
+name|DSM_TRANSFERS_PER_SECOND_FREE
+argument_list|,
+operator|&
+name|ld
+index|[
+literal|8
+index|]
+argument_list|,
+name|DSM_MB_PER_SECOND_FREE
+argument_list|,
+operator|&
+name|ld
+index|[
+literal|9
+index|]
+argument_list|,
+name|DSM_MS_PER_TRANSACTION_FREE
+argument_list|,
+operator|&
+name|ld
+index|[
+literal|10
+index|]
+argument_list|,
 name|DSM_NONE
 argument_list|)
 expr_stmt|;
@@ -935,6 +993,53 @@ literal|6
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flag_d
+condition|)
+block|{
+name|printw
+argument_list|(
+literal|" %6.0f"
+argument_list|,
+operator|(
+name|double
+operator|)
+name|ld
+index|[
+literal|8
+index|]
+argument_list|)
+expr_stmt|;
+name|printw
+argument_list|(
+literal|" %6.0f"
+argument_list|,
+operator|(
+name|double
+operator|)
+name|ld
+index|[
+literal|9
+index|]
+operator|*
+literal|1024
+argument_list|)
+expr_stmt|;
+name|printw
+argument_list|(
+literal|" %6.1f"
+argument_list|,
+operator|(
+name|double
+operator|)
+name|ld
+index|[
+literal|10
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ld
