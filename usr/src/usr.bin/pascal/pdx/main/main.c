@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 1.1 %G%"
+literal|"@(#)main.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,23 +196,6 @@ argument_list|)
 operator|=
 name|FALSE
 expr_stmt|;
-if|if
-condition|(
-name|isinteractive
-argument_list|()
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"> "
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 else|else
