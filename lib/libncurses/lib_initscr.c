@@ -19,12 +19,24 @@ directive|include
 file|"curses.priv.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|_ncurses_copyright
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|WINDOW
 modifier|*
 name|initscr
 parameter_list|()
 block|{
+name|char
+modifier|*
+name|use_it
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|TRACE
@@ -42,6 +54,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|use_it
+operator|=
+name|_ncurses_copyright
+expr_stmt|;
 if|if
 condition|(
 name|newterm
