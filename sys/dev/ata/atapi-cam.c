@@ -74,6 +74,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sema.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -3443,7 +3455,16 @@ argument_list|)
 operator|!=
 name|CAM_REQ_CMP
 condition|)
+block|{
+name|free
+argument_list|(
+name|ccb
+argument_list|,
+name|M_ATACAM
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|CAM_DEBUG
 argument_list|(
 name|ccb

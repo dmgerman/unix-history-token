@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 - 2003 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1998 - 2004 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -1108,19 +1108,19 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|ATA_R_DONE
+name|ATA_R_CONTROL
 value|0x0001
 define|#
 directive|define
-name|ATA_R_CONTROL
+name|ATA_R_READ
 value|0x0002
 define|#
 directive|define
-name|ATA_R_READ
+name|ATA_R_WRITE
 value|0x0004
 define|#
 directive|define
-name|ATA_R_WRITE
+name|ATA_R_DMA
 value|0x0008
 define|#
 directive|define
@@ -1132,15 +1132,19 @@ name|ATA_R_QUIET
 value|0x0020
 define|#
 directive|define
-name|ATA_R_DMA
+name|ATA_R_INTR_SEEN
 value|0x0040
+define|#
+directive|define
+name|ATA_R_TIMEOUT
+value|0x0080
 define|#
 directive|define
 name|ATA_R_ORDERED
 value|0x0100
 define|#
 directive|define
-name|ATA_R_AT_HEAD
+name|ATA_R_IMMEDIATE
 value|0x0200
 define|#
 directive|define
@@ -1150,6 +1154,10 @@ define|#
 directive|define
 name|ATA_R_SKIPSTART
 value|0x0800
+define|#
+directive|define
+name|ATA_R_DEBUG
+value|0x1000
 name|void
 function_decl|(
 modifier|*
@@ -1162,6 +1170,11 @@ modifier|*
 name|request
 parameter_list|)
 function_decl|;
+name|struct
+name|sema
+name|done
+decl_stmt|;
+comment|/* request done sema */
 name|int
 name|retries
 decl_stmt|;
@@ -1179,11 +1192,6 @@ name|int
 name|result
 decl_stmt|;
 comment|/* result error code */
-name|struct
-name|task
-name|task
-decl_stmt|;
-comment|/* task management */
 name|TAILQ_ENTRY
 argument_list|(
 argument|ata_request
@@ -1198,9 +1206,59 @@ argument_list|)
 name|chain
 expr_stmt|;
 comment|/* list management */
+name|TAILQ_ENTRY
+argument_list|(
+argument|ata_request
+argument_list|)
+name|request_link
+expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* define this for debugging request processing */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATA_DEBUG_RQ
+parameter_list|(
+name|request
+parameter_list|,
+name|string
+parameter_list|)
+define|\
+value|{ \     if (request->flags& ATA_R_DEBUG) \         ata_prtdev(request->device, "req=%08x %s " string "\n", \                    (u_int)request, ata_cmd2str(request)); \     }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATA_DEBUG_RQ
+parameter_list|(
+name|request
+parameter_list|,
+name|string
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* structure describing an ATA/ATAPI device */
@@ -1259,6 +1317,18 @@ name|void
 function_decl|(
 modifier|*
 name|detach
+function_decl|)
+parameter_list|(
+name|struct
+name|ata_device
+modifier|*
+name|atadev
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|config
 function_decl|)
 parameter_list|(
 name|struct
@@ -1634,6 +1704,10 @@ define|#
 directive|define
 name|ATA_48BIT_ACTIVE
 value|0x10
+define|#
+directive|define
+name|ATA_IMMEDIATE_MODE
+value|0x20
 name|struct
 name|ata_device
 name|device
@@ -1689,6 +1763,17 @@ value|0x0002
 name|void
 function_decl|(
 modifier|*
+name|reset
+function_decl|)
+parameter_list|(
+name|struct
+name|ata_channel
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
 name|locking
 function_decl|)
 parameter_list|(
@@ -1711,6 +1796,7 @@ name|struct
 name|mtx
 name|queue_mtx
 decl_stmt|;
+comment|/* queue lock */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1724,6 +1810,23 @@ modifier|*
 name|running
 decl_stmt|;
 comment|/* currently running request */
+name|struct
+name|task
+name|task
+decl_stmt|;
+comment|/* task management */
+name|struct
+name|mtx
+name|request_lock
+decl_stmt|;
+comment|/* queue lock */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ata_request
+argument_list|)
+name|complete_tqh
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -1879,15 +1982,6 @@ begin_decl_stmt
 specifier|extern
 name|devclass_t
 name|ata_devclass
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|intr_config_hook
-modifier|*
-name|ata_delayed_attach
 decl_stmt|;
 end_decl_stmt
 
@@ -2179,29 +2273,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|ata_request
-modifier|*
-name|ata_alloc_request
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ata_free_request
-parameter_list|(
-name|struct
-name|ata_request
-modifier|*
-name|request
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|ata_controlcmd
 parameter_list|(
@@ -2286,6 +2357,20 @@ name|struct
 name|ata_request
 modifier|*
 name|request
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ata_completed
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|,
+name|int
+name|pending
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2393,6 +2478,35 @@ name|ch
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* macros for alloc/free of ata_requests */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|ata_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ata_alloc_request
+parameter_list|()
+value|uma_zalloc(ata_zone, M_NOWAIT | M_ZERO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ata_free_request
+parameter_list|(
+name|request
+parameter_list|)
+value|uma_zfree(ata_zone, request)
+end_define
 
 begin_comment
 comment|/* macros for locking a channel */
