@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage2.c,v 1.21 1995/01/14 10:31:21 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage2.c,v 1.22 1995/01/30 03:19:54 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -394,6 +394,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|!
 name|strcmp
 argument_list|(
 name|Ftype
@@ -404,7 +405,7 @@ name|j
 index|]
 index|]
 argument_list|,
-literal|"ufs"
+literal|"swap"
 argument_list|)
 condition|)
 continue|continue;
@@ -451,6 +452,23 @@ argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|Ftype
+index|[
+name|Fsize
+index|[
+name|j
+index|]
+index|]
+argument_list|,
+literal|"ufs"
+argument_list|)
+condition|)
+block|{
 name|MountUfs
 argument_list|(
 name|p
@@ -460,6 +478,13 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|Mkdir
+argument_list|(
+name|dbuf
 argument_list|)
 expr_stmt|;
 block|}
