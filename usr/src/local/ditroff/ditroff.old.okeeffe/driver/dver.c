@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dver.c	1.4	83/07/05  *  * dver.c - Versatec driver for the new troff  *  * Authors:	BWK(BELL), VCAT(berkley), and Richard L. Hyde  *		Many parts where lifted from the above sources.  * Editor:	Richard L. Hyde  * 		Dept. of Computer Sciences  * 		Purdue University  * Date:	Thu Oct 28 1982  */
+comment|/* dver.c	1.5	83/07/08  *  * Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, Berkeley  */
 end_comment
 
 begin_comment
@@ -175,7 +175,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"dver.c	1.4	83/07/05"
+literal|"dver.c	1.5	83/07/08"
 decl_stmt|;
 end_decl_stmt
 
