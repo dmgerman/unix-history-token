@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All righ
 end_comment
 
 begin_comment
-comment|/*  * error logging/reporting facilities  * stolen from /usr/libexec/mail.local via ypserv  *  * $Id: yp_error.c,v 1.2 1995/12/06 16:02:56 wpaul Exp $  */
+comment|/*  * error logging/reporting facilities  * stolen from /usr/libexec/mail.local via ypserv  *  * $Id: yp_error.c,v 1.1.1.1 1995/12/16 20:54:17 wpaul Exp $  */
 end_comment
 
 begin_include
@@ -75,8 +75,9 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|void
-name|verr
+name|__verr
 parameter_list|(
 name|fmt
 parameter_list|,
@@ -193,7 +194,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|verr
+name|__verr
 argument_list|(
 name|fmt
 argument_list|,
