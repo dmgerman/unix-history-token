@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comm.c	5.6 (Berkeley) %G%"
+literal|"@(#)comm.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -286,6 +286,14 @@ name|p
 operator|=
 name|tabs
 expr_stmt|;
+name|col1
+operator|=
+name|col2
+operator|=
+name|col3
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|flag1
@@ -314,7 +322,6 @@ name|col3
 operator|=
 operator|*
 name|p
-operator|++
 expr_stmt|;
 for|for
 control|(
