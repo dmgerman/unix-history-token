@@ -14,7 +14,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 2.8 %G%"
+literal|"@(#)main.c 2.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1092,14 +1092,24 @@ operator|)
 name|MAXBSIZE
 argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
-name|command
+name|readhdr
+argument_list|(
+operator|&
+name|spcl
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
-case|case
-literal|'t'
-case|:
+name|bct
+operator|--
+expr_stmt|;
+comment|/* push back this block */
+name|cvtflag
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|readhdr
@@ -1124,6 +1134,22 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Converting to new file system format.\n"
+argument_list|)
+expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|command
+condition|)
+block|{
+case|case
+literal|'t'
+case|:
 name|fprintf
 argument_list|(
 name|stdout
@@ -1332,30 +1358,6 @@ name|MAXBSIZE
 expr_stmt|;
 if|if
 condition|(
-name|readhdr
-argument_list|(
-operator|&
-name|spcl
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Tape is not a dump tape\n"
-argument_list|)
-expr_stmt|;
-name|done
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|checkvol
 argument_list|(
 operator|&
@@ -1419,13 +1421,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"d = %d\n"
-argument_list|,
-name|d
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stdout
@@ -5165,7 +5160,7 @@ name|buf
 operator|->
 name|c_magic
 operator|!=
-name|MAGIC
+name|NFS_MAGIC
 operator|||
 name|checksum
 argument_list|(
@@ -5211,7 +5206,7 @@ name|s_ospcl
 operator|.
 name|c_magic
 operator|!=
-name|MAGIC
+name|OFS_MAGIC
 operator|||
 name|checksum
 argument_list|(
@@ -5309,11 +5304,7 @@ name|buf
 operator|->
 name|c_magic
 operator|=
-name|u_ospcl
-operator|.
-name|s_ospcl
-operator|.
-name|c_magic
+name|NFS_MAGIC
 expr_stmt|;
 name|buf
 operator|->
@@ -5499,7 +5490,7 @@ name|buf
 operator|->
 name|c_magic
 operator|!=
-name|MAGIC
+name|NFS_MAGIC
 condition|)
 return|return
 operator|(
