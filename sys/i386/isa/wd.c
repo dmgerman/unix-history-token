@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"i386/isa/isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"i386/isa/isa_device.h"
 end_include
 
@@ -805,7 +811,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|IO_WDCSIZE
 operator|)
 return|;
 name|nodevice
