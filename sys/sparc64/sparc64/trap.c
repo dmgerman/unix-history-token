@@ -203,12 +203,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pv.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/smp.h>
 end_include
 
