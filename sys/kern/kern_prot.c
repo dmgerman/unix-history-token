@@ -4944,7 +4944,7 @@ operator|->
 name|p_cred
 operator|->
 name|p_svuid
-operator|==
+operator|!=
 name|p2
 operator|->
 name|p_cred
