@@ -417,6 +417,9 @@ name|alignment
 operator|=
 literal|0x1
 expr_stmt|;
+if|#
+directive|if
+literal|1
 if|if
 condition|(
 name|udmamode
@@ -448,6 +451,8 @@ operator|=
 literal|2
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|scp
@@ -4496,6 +4501,10 @@ case|case
 literal|0x6268105a
 case|:
 comment|/* Promise TX2v2 ATA100 controllers */
+case|case
+literal|0x4d69105a
+case|:
+comment|/* Promise ATA133 controllers */
 name|ATA_OUTB
 argument_list|(
 name|scp
@@ -4542,12 +4551,7 @@ literal|0
 argument_list|,
 name|ATA_UDMA
 operator|+
-name|max
-argument_list|(
 name|udmamode
-argument_list|,
-literal|5
-argument_list|)
 argument_list|,
 name|ATA_C_F_SETXFER
 argument_list|,
@@ -4578,12 +4582,7 @@ name|ata_mode2str
 argument_list|(
 name|ATA_UDMA
 operator|+
-name|max
-argument_list|(
 name|udmamode
-argument_list|,
-literal|5
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4605,14 +4604,7 @@ index|]
 operator|=
 name|ATA_UDMA
 operator|+
-operator|(
-name|max
-argument_list|(
 name|udmamode
-argument_list|,
-literal|5
-argument_list|)
-operator|)
 expr_stmt|;
 return|return;
 block|}

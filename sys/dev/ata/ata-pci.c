@@ -720,6 +720,12 @@ return|return
 literal|"Promise TX2 ATA100 controller"
 return|;
 case|case
+literal|0x4d69105a
+case|:
+return|return
+literal|"Promise ATA133 controller"
+return|;
+case|case
 literal|0x00041103
 case|:
 switch|switch
@@ -1784,6 +1790,10 @@ case|case
 literal|0x6268105a
 case|:
 comment|/* Promise TX2v2 ATA100 */
+case|case
+literal|0x4d69105a
+case|:
+comment|/* Promise ATA133 */
 name|ATA_OUTB
 argument_list|(
 name|scp
