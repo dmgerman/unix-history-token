@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.15 (Berkeley) %G%"
+literal|"@(#)command.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -920,7 +920,26 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|linenums
+operator|!
+name|ispipe
+operator|&&
+operator|(
+name|pos
+operator|=
+name|position
+argument_list|(
+name|BOTTOM
+argument_list|)
+operator|)
+operator|!=
+name|NULL_POSITION
+operator|&&
+operator|(
+name|len
+operator|=
+name|ch_length
+argument_list|()
+operator|)
 condition|)
 block|{
 operator|(
@@ -930,12 +949,17 @@ name|sprintf
 argument_list|(
 name|pbuf
 argument_list|,
-literal|": %d"
+literal|" (%ld%%)"
 argument_list|,
-name|currline
-argument_list|(
-name|TOP
-argument_list|)
+operator|(
+operator|(
+literal|100
+operator|*
+name|pos
+operator|)
+operator|/
+name|len
+operator|)
 argument_list|)
 expr_stmt|;
 name|putstr
