@@ -241,6 +241,13 @@ argument_list|,
 name|iicbb_attach
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|device_detach
+argument_list|,
+name|bus_generic_detach
+argument_list|)
+block|,
 comment|/* bus interface */
 name|DEVMETHOD
 argument_list|(
