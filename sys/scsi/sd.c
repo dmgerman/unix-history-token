@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.109 1997/09/10 12:31:40 joerg Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.110 1997/09/13 16:12:15 joerg Exp $  */
 end_comment
 
 begin_include
@@ -914,7 +914,7 @@ name|opennings
 operator|=
 name|SDOUTSTANDING
 expr_stmt|;
-name|TAILQ_INIT
+name|bufq_init
 argument_list|(
 operator|&
 name|sd
@@ -2101,7 +2101,7 @@ comment|/* 	 * Place it in the queue of disk activities for this disk 	 */
 ifdef|#
 directive|ifdef
 name|SDDISKSORT
-name|tqdisksort
+name|bufq_disksort
 argument_list|(
 operator|&
 name|sd
@@ -2113,7 +2113,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|TAILQ_INSERT_TAIL
+name|bufq_insert_tail
 argument_list|(
 operator|&
 name|sd
@@ -2121,8 +2121,6 @@ operator|->
 name|buf_queue
 argument_list|,
 name|bp
-argument_list|,
-name|b_act
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2285,11 +2283,13 @@ block|}
 comment|/* 		 * See if there is a buf with work for us to do.. 		 */
 name|bp
 operator|=
+name|bufq_first
+argument_list|(
+operator|&
 name|sd
 operator|->
 name|buf_queue
-operator|.
-name|tqh_first
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2301,7 +2301,7 @@ block|{
 comment|/* yes, an assign */
 return|return;
 block|}
-name|TAILQ_REMOVE
+name|bufq_remove
 argument_list|(
 operator|&
 name|sd
@@ -2309,8 +2309,6 @@ operator|->
 name|buf_queue
 argument_list|,
 name|bp
-argument_list|,
-name|b_act
 argument_list|)
 expr_stmt|;
 comment|/* 		 *  If the device has become invalid, abort all the 		 * reads and writes until all files have been closed and 		 * re-openned 		 */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.49 1997/07/25 23:25:20 jdp Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.50 1997/09/02 20:06:33 bde Exp $  */
 end_comment
 
 begin_include
@@ -427,6 +427,14 @@ name|NULL
 operator|)
 return|;
 block|}
+name|callout_handle_init
+argument_list|(
+operator|&
+name|xs
+operator|->
+name|timeout_ch
+argument_list|)
+expr_stmt|;
 block|}
 name|SC_DEBUG
 argument_list|(

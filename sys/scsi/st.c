@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.80 1997/09/02 20:06:38 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.81 1997/09/07 10:08:23 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -1245,7 +1245,7 @@ name|sc_link
 operator|->
 name|dev_unit
 expr_stmt|;
-name|TAILQ_INIT
+name|bufq_init
 argument_list|(
 operator|&
 name|st
@@ -3644,7 +3644,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Place it in the queue of activities for this tape 	 * at the end (a bit silly because we only have on user.. 	 * (but it could fork() )) 	 */
-name|TAILQ_INSERT_TAIL
+name|bufq_insert_tail
 argument_list|(
 operator|&
 name|st
@@ -3652,8 +3652,6 @@ operator|->
 name|buf_queue
 argument_list|,
 name|bp
-argument_list|,
-name|b_act
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Tell the device to get going on the transfer if it's 	 * not doing anything, otherwise just wait for completion 	 * (All a bit silly if we're only allowing 1 open but..) 	 */
@@ -3794,11 +3792,13 @@ return|return;
 block|}
 name|bp
 operator|=
+name|bufq_first
+argument_list|(
+operator|&
 name|st
 operator|->
 name|buf_queue
-operator|.
-name|tqh_first
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3810,7 +3810,7 @@ block|{
 comment|/* yes, an assign */
 return|return;
 block|}
-name|TAILQ_REMOVE
+name|bufq_remove
 argument_list|(
 operator|&
 name|st
@@ -3818,8 +3818,6 @@ operator|->
 name|buf_queue
 argument_list|,
 name|bp
-argument_list|,
-name|b_act
 argument_list|)
 expr_stmt|;
 comment|/* 		 * if the device has been unmounted by the user 		 * then throw away all requests until done 		 */
