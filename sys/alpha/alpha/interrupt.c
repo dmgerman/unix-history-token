@@ -1870,7 +1870,7 @@ argument_list|(
 name|cpuid
 argument_list|)
 operator|==
-name|boot_cpu_id
+literal|0
 condition|)
 block|{
 endif|#

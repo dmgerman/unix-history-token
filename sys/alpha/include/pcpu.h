@@ -28,6 +28,8 @@ name|PCPU_MD_FIELDS
 define|\
 value|struct alpha_pcb pc_idlepcb;
 comment|/* pcb for idling */
+value|\ 	u_int64_t	pc_pal_id;
+comment|/* physical CPU ID */
 value|\ 	u_int64_t	pc_idlepcbphys;
 comment|/* pa of pc_idlepcb */
 value|\ 	u_int64_t	pc_pending_ipis;

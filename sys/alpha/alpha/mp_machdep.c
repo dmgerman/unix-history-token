@@ -190,7 +190,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|u_int64_t
 name|boot_cpu_id
 decl_stmt|;
 end_decl_stmt
@@ -241,7 +241,7 @@ modifier|*
 name|command
 parameter_list|,
 name|int
-name|cpuid
+name|pal_id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -251,6 +251,9 @@ specifier|static
 name|int
 name|smp_start_secondary
 parameter_list|(
+name|int
+name|pal_id
+parameter_list|,
 name|int
 name|cpuid
 parameter_list|)
@@ -272,7 +275,7 @@ modifier|*
 name|command
 parameter_list|,
 name|int
-name|cpuid
+name|pal_id
 parameter_list|)
 block|{
 name|u_int64_t
@@ -280,7 +283,7 @@ name|mask
 init|=
 literal|1L
 operator|<<
-name|cpuid
+name|pal_id
 decl_stmt|;
 name|struct
 name|pcs
@@ -291,7 +294,7 @@ name|LOCATE_PCS
 argument_list|(
 name|hwrpb
 argument_list|,
-name|cpuid
+name|pal_id
 argument_list|)
 decl_stmt|;
 name|int
@@ -574,7 +577,7 @@ name|hwrpb
 argument_list|,
 name|PCPU_GET
 argument_list|(
-name|cpuid
+name|pal_id
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -750,6 +753,9 @@ name|int
 name|smp_start_secondary
 parameter_list|(
 name|int
+name|pal_id
+parameter_list|,
+name|int
 name|cpuid
 parameter_list|)
 block|{
@@ -762,7 +768,7 @@ name|LOCATE_PCS
 argument_list|(
 name|hwrpb
 argument_list|,
-name|cpuid
+name|pal_id
 argument_list|)
 decl_stmt|;
 name|struct
@@ -819,7 +825,7 @@ name|printf
 argument_list|(
 literal|"smp_start_secondary: cpu %d PALcode invalid\n"
 argument_list|,
-name|cpuid
+name|pal_id
 argument_list|)
 expr_stmt|;
 return|return
@@ -834,7 +840,7 @@ name|printf
 argument_list|(
 literal|"smp_start_secondary: starting cpu %d\n"
 argument_list|,
-name|cpuid
+name|pal_id
 argument_list|)
 expr_stmt|;
 name|sz
@@ -884,6 +890,12 @@ name|cpuid
 argument_list|,
 name|sz
 argument_list|)
+expr_stmt|;
+name|pcpu
+operator|->
+name|pc_pal_id
+operator|=
+name|pal_id
 expr_stmt|;
 comment|/* 	 * Copy the idle pcb and setup the address to start executing. 	 * Use the pcb unique value to point the secondary at its pcpu 	 * structure. 	 */
 operator|*
@@ -973,7 +985,7 @@ name|smp_send_secondary_command
 argument_list|(
 literal|"START\r\n"
 argument_list|,
-name|cpuid
+name|pal_id
 argument_list|)
 condition|)
 block|{
@@ -1070,7 +1082,7 @@ name|printf
 argument_list|(
 literal|"smp_start_secondary: cpu %d started\n"
 argument_list|,
-name|cpuid
+name|pal_id
 argument_list|)
 expr_stmt|;
 return|return
@@ -1172,7 +1184,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|u_int64_t
 name|i
 decl_stmt|;
 name|mp_maxid
@@ -1190,10 +1202,6 @@ operator|<
 name|hwrpb
 operator|->
 name|rpb_pcs_cnt
-operator|&&
-name|i
-operator|<
-name|MAXCPU
 condition|;
 name|i
 operator|++
@@ -1205,7 +1213,7 @@ name|i
 operator|==
 name|PCPU_GET
 argument_list|(
-name|cpuid
+name|pal_id
 argument_list|)
 condition|)
 continue|continue;
@@ -1224,10 +1232,19 @@ argument_list|)
 condition|)
 continue|continue;
 name|mp_maxid
-operator|=
-name|i
+operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mp_maxid
+operator|>
+name|MAXCPU
+condition|)
+name|mp_maxid
+operator|=
+name|MAXCPU
+expr_stmt|;
 block|}
 end_function
 
@@ -1248,7 +1265,7 @@ name|boot_cpu_id
 operator|=
 name|PCPU_GET
 argument_list|(
-name|cpuid
+name|pal_id
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1302,7 +1319,7 @@ name|i
 operator|==
 name|PCPU_GET
 argument_list|(
-name|cpuid
+name|pal_id
 argument_list|)
 condition|)
 continue|continue;
@@ -1318,13 +1335,6 @@ argument_list|,
 name|i
 argument_list|)
 argument_list|)
-condition|)
-continue|continue;
-if|if
-condition|(
-name|i
-operator|>
-name|MAXCPU
 condition|)
 continue|continue;
 name|cpus
@@ -1348,6 +1358,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|cpuid
 decl_stmt|;
 name|mtx_init
 argument_list|(
@@ -1360,6 +1372,10 @@ name|NULL
 argument_list|,
 name|MTX_SPIN
 argument_list|)
+expr_stmt|;
+name|cpuid
+operator|=
+literal|1
 expr_stmt|;
 for|for
 control|(
@@ -1531,17 +1547,31 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|smp_start_secondary
+argument_list|(
+name|i
+argument_list|,
+name|cpuid
+argument_list|)
+condition|)
+block|{
 name|all_cpus
 operator||=
 operator|(
 literal|1
 operator|<<
-name|i
+name|cpuid
 operator|)
 expr_stmt|;
 name|mp_ncpus
 operator|++
 expr_stmt|;
+name|cpuid
+operator|++
+expr_stmt|;
+block|}
 block|}
 name|PCPU_SET
 argument_list|(
@@ -1556,43 +1586,6 @@ name|cpumask
 argument_list|)
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|hwrpb
-operator|->
-name|rpb_pcs_cnt
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|i
-operator|==
-name|boot_cpu_id
-condition|)
-continue|continue;
-if|if
-condition|(
-operator|!
-name|CPU_ABSENT
-argument_list|(
-name|i
-argument_list|)
-condition|)
-name|smp_start_secondary
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1602,7 +1595,72 @@ name|cpu_mp_announce
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+name|struct
+name|pcpu
+modifier|*
+name|pc
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/* List CPUs */
+name|printf
+argument_list|(
+literal|" cpu0 (BSP): PAL ID: %2lu\n"
+argument_list|,
+name|boot_cpu_id
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|MAXCPU
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|CPU_ABSENT
+argument_list|(
+name|i
+argument_list|)
+condition|)
+continue|continue;
+name|pc
+operator|=
+name|pcpu_find
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+name|MPASS
+argument_list|(
+name|pc
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" cpu%d (AP): PAL ID: %2lu\n"
+argument_list|,
+name|i
+argument_list|,
+name|pc
+operator|->
+name|pc_pal_id
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 end_function
 
 begin_comment
@@ -1694,12 +1752,16 @@ name|KTR_SMP
 argument_list|,
 literal|"calling alpha_pal_wripir(%d)"
 argument_list|,
-name|cpuid
+name|pcpu
+operator|->
+name|pc_pal_id
 argument_list|)
 expr_stmt|;
 name|alpha_pal_wripir
 argument_list|(
-name|cpuid
+name|pcpu
+operator|->
+name|pc_pal_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -1947,14 +2009,14 @@ if|if
 condition|(
 name|PCPU_GET
 argument_list|(
-name|cpuid
+name|pal_id
 argument_list|)
 operator|==
 name|boot_cpu_id
 condition|)
 block|{
 name|u_int
-name|cpuid
+name|pal_id
 decl_stmt|;
 name|u_int64_t
 name|txrdy
@@ -1987,7 +2049,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|cpuid
+name|pal_id
 operator|=
 name|ffs
 argument_list|(
@@ -2007,7 +2069,7 @@ name|LOCATE_PCS
 argument_list|(
 name|hwrpb
 argument_list|,
-name|cpuid
+name|pal_id
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -2043,7 +2105,7 @@ name|printf
 argument_list|(
 literal|"SMP From CPU%d: %s\n"
 argument_list|,
-name|cpuid
+name|pal_id
 argument_list|,
 name|buf
 argument_list|)
@@ -2076,7 +2138,7 @@ operator|~
 operator|(
 literal|1
 operator|<<
-name|cpuid
+name|pal_id
 operator|)
 argument_list|)
 operator|==
