@@ -1761,7 +1761,7 @@ name|timeout
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Calibrating clock(s) relative to mc146818A clock.\n"
+literal|"Calibrating clock(s) ... "
 argument_list|)
 expr_stmt|;
 if|if
@@ -2056,7 +2056,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  i586 clock: %u Hz,\n"
+literal|"i586 clock: %u Hz, "
 argument_list|,
 name|i586_ctr_freq
 argument_list|)
@@ -2066,7 +2066,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"  i8254 clock: %u Hz\n"
+literal|"i8254 clock: %u Hz\n"
 argument_list|,
 name|tot_count
 argument_list|)
@@ -2080,7 +2080,7 @@ name|fail
 label|:
 name|printf
 argument_list|(
-literal|"  Failed, using default i8254 clock of %u Hz\n"
+literal|"failed, using default i8254 clock of %u Hz\n"
 argument_list|,
 name|timer_freq
 argument_list|)
