@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vd.c	7.7	87/04/06	*/
+comment|/*	vd.c	7.8	87/11/12	*/
 end_comment
 
 begin_comment
@@ -177,6 +177,23 @@ comment|/* unit configured */
 end_comment
 
 begin_decl_stmt
+name|u_char
+name|dkflags
+index|[
+name|NVD
+index|]
+index|[
+name|NDRIVE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* unit flags */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|disklabel
 name|dklabel
@@ -193,6 +210,7 @@ comment|/* pack label */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mdcb
 name|mdcb
@@ -200,6 +218,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|dcb
 name|dcb
@@ -207,6 +226,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|lbuf
 index|[
@@ -333,13 +353,13 @@ name|lp
 operator|->
 name|d_secsize
 operator|=
-literal|512
+literal|1024
 expr_stmt|;
 name|lp
 operator|->
 name|d_nsectors
 operator|=
-literal|32
+literal|72
 expr_stmt|;
 name|lp
 operator|->
@@ -357,7 +377,7 @@ name|lp
 operator|->
 name|d_secpercyl
 operator|=
-literal|32
+literal|72
 operator|*
 literal|24
 expr_stmt|;
@@ -418,7 +438,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"can't read disk label"
+literal|"dk%d: can't read disk label\n"
+argument_list|,
+name|io
+operator|->
+name|i_unit
 argument_list|)
 expr_stmt|;
 return|return
@@ -492,6 +516,7 @@ endif|#
 directive|endif
 block|}
 else|else
+block|{
 operator|*
 name|lp
 operator|=
@@ -511,6 +536,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
 name|dkconfigured
 index|[
 name|io
@@ -903,6 +929,14 @@ name|struct
 name|disklabel
 modifier|*
 name|lp
+init|=
+operator|&
+name|dklabel
+index|[
+name|io
+operator|->
+name|i_unit
+index|]
 decl_stmt|;
 specifier|register
 name|struct
@@ -929,16 +963,18 @@ index|]
 decl_stmt|,
 name|error
 decl_stmt|;
-name|lp
-operator|=
-operator|&
-name|dklabel
+name|int
+name|devflags
+init|=
+name|dkflags
 index|[
-name|io
-operator|->
-name|i_unit
+name|ctlr
 index|]
-expr_stmt|;
+index|[
+name|slave
+index|]
+decl_stmt|;
+comment|/* starts with 0 */
 name|again
 label|:
 name|dcb
@@ -977,6 +1013,8 @@ operator|.
 name|devselect
 operator|=
 name|slave
+operator||
+name|devflags
 expr_stmt|;
 name|dcb
 operator|.
@@ -1044,9 +1082,10 @@ name|rstrail
 operator|.
 name|slip_sec
 operator|=
-literal|0
+name|lp
+operator|->
+name|d_trackskew
 expr_stmt|;
-comment|/* XXX */
 name|dcb
 operator|.
 name|trail
@@ -1055,9 +1094,8 @@ name|rstrail
 operator|.
 name|recovery
 operator|=
-literal|0x18f
+name|VDRF_NORMAL
 expr_stmt|;
-comment|/* ??? */
 block|}
 else|else
 name|dcb
@@ -1169,12 +1207,39 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* success */
+name|dkflags
+index|[
+name|ctlr
+index|]
+index|[
+name|slave
+index|]
+operator|=
+name|devflags
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|devflags
+operator|==
+literal|0
+condition|)
+block|{
+name|devflags
+operator|=
+name|VD_ESDI
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
 if|if
 condition|(
 name|type
@@ -1245,6 +1310,10 @@ literal|0
 operator|)
 return|;
 block|}
+name|devflags
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|pass
@@ -1376,6 +1445,14 @@ operator|.
 name|devselect
 operator|=
 name|unit
+operator||
+name|dkflags
+index|[
+name|ctlr
+index|]
+index|[
+name|unit
+index|]
 expr_stmt|;
 name|dcb
 operator|.
@@ -1488,6 +1565,12 @@ decl_stmt|,
 name|tn
 decl_stmt|,
 name|sn
+decl_stmt|,
+name|slave
+decl_stmt|,
+name|retries
+init|=
+literal|0
 decl_stmt|;
 name|daddr_t
 name|bn
@@ -1594,6 +1677,8 @@ name|lp
 operator|->
 name|d_nsectors
 expr_stmt|;
+name|top
+label|:
 name|dcb
 operator|.
 name|opcode
@@ -1632,9 +1717,16 @@ name|operrsta
 operator|=
 literal|0
 expr_stmt|;
-name|dcb
-operator|.
-name|devselect
+name|ctlr
+operator|=
+name|VDCTLR
+argument_list|(
+name|io
+operator|->
+name|i_unit
+argument_list|)
+expr_stmt|;
+name|slave
 operator|=
 name|VDSLAVE
 argument_list|(
@@ -1642,6 +1734,20 @@ name|io
 operator|->
 name|i_unit
 argument_list|)
+expr_stmt|;
+name|dcb
+operator|.
+name|devselect
+operator|=
+name|slave
+operator||
+name|dkflags
+index|[
+name|ctlr
+index|]
+index|[
+name|slave
+index|]
 expr_stmt|;
 name|dcb
 operator|.
@@ -1743,15 +1849,6 @@ name|mdcb_status
 operator|=
 literal|0
 expr_stmt|;
-name|ctlr
-operator|=
-name|VDCTLR
-argument_list|(
-name|io
-operator|->
-name|i_unit
-argument_list|)
-expr_stmt|;
 name|vdaddr
 operator|=
 name|VDADDR
@@ -1807,6 +1904,32 @@ operator|&
 name|VDERR_HARD
 condition|)
 block|{
+if|if
+condition|(
+name|retries
+operator|++
+operator|==
+literal|0
+operator|&&
+name|vdreset_ctlr
+argument_list|(
+name|ctlr
+argument_list|,
+name|io
+operator|->
+name|i_unit
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|vdreset_drive
+argument_list|(
+name|io
+argument_list|)
+condition|)
+goto|goto
+name|top
+goto|;
 name|vderror
 argument_list|(
 name|io
@@ -2143,6 +2266,10 @@ name|int
 name|ncylinders
 decl_stmt|;
 comment|/* cylinders per drive */
+name|int
+name|secsize
+decl_stmt|;
+comment|/* sector size */
 define|#
 directive|define
 name|NPART
@@ -2166,6 +2293,8 @@ literal|24
 block|,
 literal|711
 block|,
+literal|512
+block|,
 literal|0
 block|,
 literal|61056
@@ -2178,6 +2307,8 @@ block|,
 literal|20
 block|,
 literal|842
+block|,
+literal|512
 block|,
 literal|0
 block|,
@@ -2192,6 +2323,8 @@ literal|10
 block|,
 literal|823
 block|,
+literal|512
+block|,
 literal|0
 block|,
 literal|38400
@@ -2204,6 +2337,8 @@ block|,
 literal|24
 block|,
 literal|711
+block|,
+literal|512
 block|,
 literal|0
 block|,
@@ -2218,6 +2353,8 @@ literal|19
 block|,
 literal|823
 block|,
+literal|512
+block|,
 literal|0
 block|,
 literal|40128
@@ -2231,12 +2368,29 @@ literal|10
 block|,
 literal|823
 block|,
+literal|512
+block|,
 literal|0
 block|,
 literal|19200
 block|}
 block|,
 comment|/* fsd */
+block|{
+literal|18
+block|,
+literal|15
+block|,
+literal|1224
+block|,
+literal|1024
+block|,
+literal|0
+block|,
+literal|21600
+block|}
+block|,
+comment|/* mxd */
 block|}
 struct|;
 end_struct
@@ -2294,6 +2448,8 @@ name|i
 decl_stmt|,
 name|ctlr
 decl_stmt|,
+name|slave
+decl_stmt|,
 name|type
 decl_stmt|;
 name|struct
@@ -2304,6 +2460,15 @@ decl_stmt|;
 name|ctlr
 operator|=
 name|VDCTLR
+argument_list|(
+name|io
+operator|->
+name|i_unit
+argument_list|)
+expr_stmt|;
+name|slave
+operator|=
+name|VDSLAVE
 argument_list|(
 name|io
 operator|->
@@ -2379,6 +2544,14 @@ name|dp
 operator|->
 name|ncylinders
 expr_stmt|;
+name|lp
+operator|->
+name|d_secsize
+operator|=
+name|dp
+operator|->
+name|secsize
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2421,12 +2594,15 @@ name|dcb
 operator|.
 name|devselect
 operator|=
-name|VDSLAVE
-argument_list|(
-name|io
-operator|->
-name|i_unit
-argument_list|)
+name|slave
+operator||
+name|dkflags
+index|[
+name|ctlr
+index|]
+index|[
+name|slave
+index|]
 expr_stmt|;
 name|dcb
 operator|.
@@ -2470,7 +2646,9 @@ name|rwtrail
 operator|.
 name|wcount
 operator|=
-literal|512
+name|lp
+operator|->
+name|d_secsize
 operator|/
 sizeof|sizeof
 argument_list|(
