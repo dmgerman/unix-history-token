@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sel_subs.c	1.1 (Berkeley) %G%"
+literal|"@(#)sel_subs.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,7 +244,7 @@ comment|/*  * Routines for selection of archive members  */
 end_comment
 
 begin_comment
-comment|/*  * sel_chk()  *	check if this files matches a specfied uid, gid and time range  * Return:  *	0 if this archive member should be processed, 1 if it should be skipped  */
+comment|/*  * sel_chk()  *	check if this file matches a specfied uid, gid or time range  * Return:  *	0 if this archive member should be processed, 1 if it should be skipped  */
 end_comment
 
 begin_if
@@ -338,7 +338,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * User/group selection routines  *  * Routine that handle user selection of files based on the file uid/gid. To  * add an entry the user supplies either then name or the uid/gid starting with  * a #. A \# will eascape the #.  */
+comment|/*  * User/group selection routines  *  * Routines to handle user selection of files based on the file uid/gid. To  * add an entry, the user supplies either then name or the uid/gid starting with  * a # on the command line. A \# will eascape the #.  */
 end_comment
 
 begin_comment
@@ -642,7 +642,7 @@ name|fow
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * uid not already in the table, add it to the front of the chain 	 */
+comment|/* 	 * uid is not yet in the table, add it to the front of the chain 	 */
 if|if
 condition|(
 operator|(
@@ -1115,7 +1115,7 @@ name|fow
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * gid not already in the table, add it to the front of the chain 	 */
+comment|/* 	 * gid not in the table, add it to the front of the chain 	 */
 if|if
 condition|(
 operator|(
@@ -1288,7 +1288,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Time range selection routines  *  * Routines to handle user selection of files based on the modification time  * being within a specified time range (the non-standard -T flag). The user  * may specify any number of different file modification time ranges. The  * ranges are checked one at a time until a match is found (if at all).  * If the file has a mtime that lies within one of the time ranges, the file  * is selected. Time ranges may have a lower and/or a upper value. Ranges are  * inclusive. If no time ranges are supplied to pax, all members in the archive  * will be selected. If only a lower range is supplied, all files with a mtime  * equal to or younger are selected. If only an upper range is supplied, all  * files with a mtime equal to or older will be selected. When the lower value  * is equal to the upper value, only files with a mtime of exactly that time  * will be selected.  */
+comment|/*  * Time range selection routines  *  * Routines to handle user selection of files based on the modification and/or  * inode change time falling within a specified time range (the non-standard  * -T flag). The user may specify any number of different file time ranges.  * Time ranges are checked one at a time until a match is found (if at all).  * If the file has a mtime (and/or ctime) which lies within one of the time  * ranges, the file is selected. Time ranges may have a lower and/or a upper  * value. These ranges are inclusive. When no time ranges are supplied to pax  * with the -T option, all members in the archive will be selected by the time  * range routines. When only a lower range is supplied, only files with a  * mtime (and/or ctime) equal to or younger are selected. When only a upper  * range is supplied, only files with a mtime (and/or ctime) equal to or older  * are selected. When the lower time range is equal to the upper time range,  * only files with a mtime (or ctime) of exactly that time are selected.  */
 end_comment
 
 begin_comment
@@ -1349,6 +1349,11 @@ modifier|*
 name|stpt
 decl_stmt|;
 specifier|register
+name|char
+modifier|*
+name|flgpt
+decl_stmt|;
+specifier|register
 name|int
 name|dot
 init|=
@@ -1384,6 +1389,59 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
+comment|/* 	 * locate optional flags suffix /{cm}. We only allow a flag suffix(s) 	 * in write and copy (as none of the formats stores inode change time; 	 * currently inode change time cannot be set to a specific value by 	 * any system call). 	 */
+if|if
+condition|(
+operator|(
+name|flgpt
+operator|=
+name|rindex
+argument_list|(
+name|str
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|*
+name|flgpt
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|act
+operator|==
+name|LIST
+operator|)
+operator|||
+operator|(
+name|act
+operator|==
+name|EXTRACT
+operator|)
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|1
+argument_list|,
+literal|"Time suffix only valid in write or copy modes"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 block|}
 for|for
 control|(
@@ -1520,12 +1578,98 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* 	 * by default we only will check file mtime, but usee can specify 	 * mtime, ctime (inode change time) or both. 	 */
+if|if
+condition|(
+operator|(
+name|flgpt
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+operator|*
+name|flgpt
+operator|==
+literal|'\0'
+operator|)
+condition|)
 name|pt
 operator|->
-name|flags
+name|flgs
+operator|=
+name|CMPMTME
+expr_stmt|;
+else|else
+block|{
+name|pt
+operator|->
+name|flgs
 operator|=
 literal|0
 expr_stmt|;
+while|while
+condition|(
+operator|*
+name|flgpt
+operator|!=
+literal|'\0'
+condition|)
+block|{
+switch|switch
+condition|(
+operator|*
+name|flgpt
+condition|)
+block|{
+case|case
+literal|'M'
+case|:
+case|case
+literal|'m'
+case|:
+name|pt
+operator|->
+name|flgs
+operator||=
+name|CMPMTME
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+case|case
+literal|'c'
+case|:
+name|pt
+operator|->
+name|flgs
+operator||=
+name|CMPCTME
+expr_stmt|;
+break|break;
+default|default:
+name|warn
+argument_list|(
+literal|1
+argument_list|,
+literal|"Bad option %c with time range %s"
+argument_list|,
+operator|*
+name|flgpt
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+operator|++
+name|flgpt
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * start off with the current time 	 */
 name|pt
 operator|->
@@ -1597,7 +1741,7 @@ goto|;
 block|}
 name|pt
 operator|->
-name|flags
+name|flgs
 operator||=
 name|HASLOW
 expr_stmt|;
@@ -1663,7 +1807,7 @@ goto|;
 block|}
 name|pt
 operator|->
-name|flags
+name|flgs
 operator||=
 name|HASHIGH
 expr_stmt|;
@@ -1672,7 +1816,7 @@ if|if
 condition|(
 name|pt
 operator|->
-name|flags
+name|flgs
 operator|&
 name|HASLOW
 condition|)
@@ -1764,9 +1908,9 @@ name|out
 label|:
 name|warn
 argument_list|(
-literal|0
+literal|1
 argument_list|,
-literal|"Time range format is: [yy[mm[dd[hh]]]]mm[.ss]"
+literal|"Time range format is: [yy[mm[dd[hh]]]]mm[.ss][/[c][m]]"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1779,7 +1923,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * trng_match()  *	check if this files mtime falls within any supplied time range.  * Return:  *	0 if this archive member should be processed, 1 if it should be skipped  */
+comment|/*  * trng_match()  *	check if this files mtime/ctime falls within any supplied time range.  * Return:  *	0 if this archive member should be processed, 1 if it should be skipped  */
 end_comment
 
 begin_if
@@ -1837,17 +1981,31 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
+switch|switch
 condition|(
 name|pt
 operator|->
-name|flags
+name|flgs
 operator|&
-name|HASLOW
+name|CMPBOTH
 condition|)
 block|{
+case|case
+name|CMPBOTH
+case|:
+comment|/* 			 * user wants both mtime and ctime checked for this 			 * time range 			 */
 if|if
 condition|(
+operator|(
+operator|(
+name|pt
+operator|->
+name|flgs
+operator|&
+name|HASLOW
+operator|)
+operator|&&
+operator|(
 name|arcn
 operator|->
 name|sb
@@ -1857,28 +2015,31 @@ operator|<
 name|pt
 operator|->
 name|low_time
-condition|)
-block|{
-name|pt
-operator|=
+operator|)
+operator|&&
+operator|(
+name|arcn
+operator|->
+name|sb
+operator|.
+name|st_ctime
+operator|<
 name|pt
 operator|->
-name|fow
-expr_stmt|;
-continue|continue;
-block|}
-block|}
-if|if
-condition|(
+name|low_time
+operator|)
+operator|)
+operator|||
+operator|(
+operator|(
 name|pt
 operator|->
-name|flags
+name|flgs
 operator|&
 name|HASHIGH
-condition|)
-block|{
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 name|arcn
 operator|->
 name|sb
@@ -1888,6 +2049,20 @@ operator|>
 name|pt
 operator|->
 name|high_time
+operator|)
+operator|&&
+operator|(
+name|arcn
+operator|->
+name|sb
+operator|.
+name|st_ctime
+operator|>
+name|pt
+operator|->
+name|high_time
+operator|)
+operator|)
 condition|)
 block|{
 name|pt
@@ -1898,6 +2073,128 @@ name|fow
 expr_stmt|;
 continue|continue;
 block|}
+break|break;
+case|case
+name|CMPCTME
+case|:
+comment|/* 			 * user wants only ctime checked for this time range 			 */
+if|if
+condition|(
+operator|(
+operator|(
+name|pt
+operator|->
+name|flgs
+operator|&
+name|HASLOW
+operator|)
+operator|&&
+operator|(
+name|arcn
+operator|->
+name|sb
+operator|.
+name|st_ctime
+operator|<
+name|pt
+operator|->
+name|low_time
+operator|)
+operator|)
+operator|||
+operator|(
+operator|(
+name|pt
+operator|->
+name|flgs
+operator|&
+name|HASHIGH
+operator|)
+operator|&&
+operator|(
+name|arcn
+operator|->
+name|sb
+operator|.
+name|st_ctime
+operator|>
+name|pt
+operator|->
+name|high_time
+operator|)
+operator|)
+condition|)
+block|{
+name|pt
+operator|=
+name|pt
+operator|->
+name|fow
+expr_stmt|;
+continue|continue;
+block|}
+break|break;
+case|case
+name|CMPMTME
+case|:
+default|default:
+comment|/* 			 * user wants only mtime checked for this time range 			 */
+if|if
+condition|(
+operator|(
+operator|(
+name|pt
+operator|->
+name|flgs
+operator|&
+name|HASLOW
+operator|)
+operator|&&
+operator|(
+name|arcn
+operator|->
+name|sb
+operator|.
+name|st_mtime
+operator|<
+name|pt
+operator|->
+name|low_time
+operator|)
+operator|)
+operator|||
+operator|(
+operator|(
+name|pt
+operator|->
+name|flgs
+operator|&
+name|HASHIGH
+operator|)
+operator|&&
+operator|(
+name|arcn
+operator|->
+name|sb
+operator|.
+name|st_mtime
+operator|>
+name|pt
+operator|->
+name|high_time
+operator|)
+operator|)
+condition|)
+block|{
+name|pt
+operator|=
+name|pt
+operator|->
+name|fow
+expr_stmt|;
+continue|continue;
+block|}
+break|break;
 block|}
 break|break;
 block|}
