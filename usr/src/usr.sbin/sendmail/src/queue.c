@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.18 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.19 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.18 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.19 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -961,8 +961,18 @@ control|)
 block|{
 if|if
 condition|(
+name|bitset
+argument_list|(
+name|QQUEUEUP
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+operator|||
+operator|(
 name|queueall
-condition|?
+operator|&&
 operator|!
 name|bitset
 argument_list|(
@@ -974,15 +984,7 @@ name|q
 operator|->
 name|q_flags
 argument_list|)
-else|:
-name|bitset
-argument_list|(
-name|QQUEUEUP
-argument_list|,
-name|q
-operator|->
-name|q_flags
-argument_list|)
+operator|)
 condition|)
 block|{
 name|ADDRESS
@@ -4013,6 +4015,66 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+comment|/* 	**  Check for permission to print the queue 	*/
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|PRIV_RESTRMAILQ
+argument_list|,
+name|PrivacyFlags
+argument_list|)
+condition|)
+block|{
+name|struct
+name|stat
+name|st
+decl_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|QueueDir
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|<=
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"Cannot stat %s"
+argument_list|,
+name|QueueDir
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|getgid
+argument_list|()
+operator|!=
+name|st
+operator|.
+name|st_gid
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"510 You are not permitted to see the queue"
+argument_list|)
+expr_stmt|;
+name|setstat
+argument_list|(
+name|EX_NOPERM
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
 comment|/* 	**  Read and order the queue. 	*/
 name|nrequests
 operator|=
