@@ -67,6 +67,12 @@ directive|include
 file|"asexpr.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -624,7 +630,7 @@ name|char
 modifier|*
 name|tmpdirprefix
 init|=
-literal|"/tmp/"
+name|_PATH_TMP
 decl_stmt|;
 end_decl_stmt
 
