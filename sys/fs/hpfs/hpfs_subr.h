@@ -130,11 +130,11 @@ name|int
 name|hpfs_cpinit
 parameter_list|(
 name|struct
-name|hpfsmount
+name|mount
 modifier|*
 parameter_list|,
 name|struct
-name|hpfs_args
+name|hpfsmount
 modifier|*
 parameter_list|)
 function_decl|;
