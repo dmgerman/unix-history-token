@@ -957,6 +957,12 @@ return|return
 literal|"AcerLabs Aladdin IDE controller"
 return|;
 case|case
+literal|0x00041103
+case|:
+return|return
+literal|"HighPoint HPT366 IDE controller"
+return|;
+case|case
 literal|0x05711106
 case|:
 comment|/* 82c586 */
@@ -3246,22 +3252,16 @@ condition|(
 operator|!
 name|atapi_request
 condition|)
-block|{
-name|timeout
+name|atapi_request
+operator|=
+name|TAILQ_FIRST
 argument_list|(
-operator|(
-name|timeout_t
-operator|*
-operator|)
-name|ata_start
-argument_list|,
+operator|&
 name|scp
-argument_list|,
-literal|1
+operator|->
+name|atapi_queue
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&

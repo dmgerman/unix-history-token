@@ -246,6 +246,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* internal vars */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -254,6 +258,17 @@ modifier|*
 name|atapi_attach_hook
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_MAX_RETRIES
+value|5
+end_define
 
 begin_function
 specifier|static
@@ -2367,7 +2382,7 @@ operator|+
 name|ATA_ERROR
 argument_list|)
 operator||
-literal|0xf0
+name|ATAPI_SK_RESERVED
 expr_stmt|;
 goto|goto
 name|op_finished
@@ -3124,6 +3139,56 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|request
+operator|->
+name|retries
+operator|<
+name|ATAPI_MAX_RETRIES
+condition|)
+block|{
+comment|/* reinject this request */
+name|request
+operator|->
+name|retries
+operator|++
+expr_stmt|;
+name|TAILQ_INSERT_HEAD
+argument_list|(
+operator|&
+name|atp
+operator|->
+name|controller
+operator|->
+name|atapi_queue
+argument_list|,
+name|request
+argument_list|,
+name|chain
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* retries all used up, return error */
+name|request
+operator|->
+name|result
+operator|=
+name|ATAPI_SK_RESERVED
+operator||
+name|ATAPI_E_ABRT
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|request
+argument_list|)
+expr_stmt|;
+block|}
 name|ata_reinit
 argument_list|(
 name|atp

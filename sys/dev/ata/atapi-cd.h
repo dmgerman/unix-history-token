@@ -877,32 +877,32 @@ comment|/* 2336 bytes Mode 2 (ISO/IEC 10149) */
 define|#
 directive|define
 name|CDR_DB_XA_MODE1
-value|0x10
+value|0xa
 comment|/* 2048 bytes Mode 1 (CD-ROM XA 1) */
 define|#
 directive|define
 name|CDR_DB_XA_MODE2_F1
-value|0x11
+value|0xb
 comment|/* 2056 bytes Mode 2 (CD-ROM XA 1) */
 define|#
 directive|define
 name|CDR_DB_XA_MODE2_F2
-value|0x12
+value|0xc
 comment|/* 2324 bytes Mode 2 (CD-ROM XA 2) */
 define|#
 directive|define
 name|CDR_DB_XA_MODE2_MIX
-value|0x13
+value|0xd
 comment|/* 2332 bytes Mode 2 (CD-ROM XA 1/2) */
 define|#
 directive|define
 name|CDR_DB_RES_14
-value|0x14
+value|0xe
 comment|/* reserved */
 define|#
 directive|define
 name|CDR_DB_VS_15
-value|0x15
+value|0xf
 comment|/* vendor specific */
 name|u_int8_t
 name|reserved4_4567

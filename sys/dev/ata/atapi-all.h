@@ -1312,6 +1312,10 @@ name|timeout_handle
 decl_stmt|;
 comment|/* handle for untimeout */
 name|int32_t
+name|retries
+decl_stmt|;
+comment|/* retry count */
+name|int32_t
 name|result
 decl_stmt|;
 comment|/* result of this cmd */
