@@ -14133,8 +14133,6 @@ name|p_vmspace
 operator|->
 name|vm_pmap
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|bp
