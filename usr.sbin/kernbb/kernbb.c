@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: kernbb.c,v 1.9 1997/09/22 06:30:04 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,7 +124,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"bbset"
+literal|"bbhead"
 block|}
 block|,
 block|{
@@ -307,7 +307,6 @@ expr_stmt|;
 while|while
 condition|(
 name|l2
-operator|--
 condition|)
 block|{
 name|l1
@@ -319,27 +318,20 @@ name|kvm_read
 argument_list|(
 name|kv
 argument_list|,
-name|l1
+name|l2
 argument_list|,
 operator|&
-name|l3
+name|bb
 argument_list|,
 sizeof|sizeof
-name|l3
+name|bb
 argument_list|)
 expr_stmt|;
-name|kvm_read
-argument_list|(
-name|kv
-argument_list|,
-name|l3
-argument_list|,
-operator|&
+name|l2
+operator|=
 name|bb
-argument_list|,
-sizeof|sizeof
-name|bb
-argument_list|)
+operator|.
+name|next
 expr_stmt|;
 if|if
 condition|(
