@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** rmail: front end for mail to stack up those stupid>From ... remote from ... ** lines and make a correct return address.  This works with the -f option ** to /usr/lib/sendmail so it won't work on systems without sendmail. ** However, it ought to be easy to modify a standard /bin/mail to do the ** same thing. */
+comment|/* **  RMAIL -- UUCP mail server. ** **	This program reads the>From ... remote from ... lines that **	UUCP is so fond of and turns them into something reasonable. **	It calls sendmail giving it a -f option built from these **	lines. */
 end_comment
 
 begin_include
@@ -37,7 +37,7 @@ operator|)
 name|rmail
 operator|.
 name|c
-literal|3.7
+literal|3.8
 operator|(
 name|Berkeley
 operator|)
@@ -208,6 +208,20 @@ name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
+name|strcpy
+argument_list|(
+name|from
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|ufrom
+argument_list|,
+literal|"/dev/null"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
