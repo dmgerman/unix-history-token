@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * small test-driver for new dialog functionality  *  * Copyright (c) 1995, Jordan Hubbard  *  * All rights reserved.  *  * This manual page may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of the software described herein  * nor does the author assume any responsibility for damages incurred with  * its use.  *  * $Id$  */
+comment|/*  * small test-driver for new dialog functionality  *  * Copyright (c) 1995, Jordan Hubbard  *  * All rights reserved.  *  * This manual page may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of the software described herein  * nor does the author assume any responsibility for damages incurred with  * its use.  *  * $Id: test1.c,v 1.1 1995/12/23 01:10:32 jkh Exp $  */
 end_comment
 
 begin_include
@@ -39,6 +39,25 @@ directive|include
 file|<dialog.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|IVAL
+value|0
+end_define
+
+begin_comment
+comment|/* Time so sleep between stages */
+end_comment
+
+begin_comment
+comment|/* Private routines and the menu declarations that use them reside in this section */
+end_comment
+
+begin_comment
+comment|/* Callbacks for menu1 */
+end_comment
+
 begin_enum
 specifier|static
 enum|enum
@@ -54,13 +73,6 @@ block|}
 name|where
 enum|;
 end_enum
-
-begin_define
-define|#
-directive|define
-name|IVAL
-value|0
-end_define
 
 begin_function
 specifier|static
@@ -326,6 +338,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* menu1 - show off the "fire" action hook */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|dialogMenuItem
@@ -366,7 +382,12 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Callbacks for menu2 */
+end_comment
+
 begin_function
+specifier|static
 name|int
 name|getBool
 parameter_list|(
@@ -402,6 +423,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|setBool
 parameter_list|(
@@ -469,6 +491,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|clearBooks
 parameter_list|(
@@ -491,7 +514,83 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* menu2 - A more advanced way of using checked and fire hooks to manipulate the backing-variables directly */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|dialogMenuItem
+name|menu2
+index|[]
+init|=
+block|{
+block|{
+literal|"German"
+block|,
+literal|"Buy book on learning German"
+block|,
+name|getBool
+block|,
+name|setBool
+block|,
+operator|&
+name|german_book
+block|}
+block|,
+block|{
+literal|"Italian"
+block|,
+literal|"Buy book on learning Italian"
+block|,
+name|getBool
+block|,
+name|setBool
+block|,
+operator|&
+name|italian_book
+block|}
+block|,
+block|{
+literal|"Slang"
+block|,
+literal|"Buy book on commonly used insults"
+block|,
+name|getBool
+block|,
+name|setBool
+block|,
+operator|&
+name|slang_book
+block|}
+block|,
+block|{
+literal|"Clear"
+block|,
+literal|"Clear book list"
+block|,
+name|NULL
+block|,
+name|clearBooks
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Callbacks for menu3 */
+end_comment
+
 begin_function
+specifier|static
 name|int
 name|buyBooks
 parameter_list|(
@@ -565,114 +664,9 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
-name|check
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|int
-operator|)
-name|self
-operator|->
-name|data
-operator|==
-name|spending
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|spend
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-name|spending
-operator|=
-operator|(
-name|int
-operator|)
-name|self
-operator|->
-name|data
-expr_stmt|;
-return|return
-name|DITEM_REDRAW
-return|;
-block|}
-end_function
-
-begin_decl_stmt
-specifier|static
-name|dialogMenuItem
-name|menu2
-index|[]
-init|=
-block|{
-block|{
-literal|"German"
-block|,
-literal|"Buy book on learning German"
-block|,
-name|getBool
-block|,
-name|setBool
-block|,
-operator|&
-name|german_book
-block|}
-block|,
-block|{
-literal|"Italian"
-block|,
-literal|"Buy book on learning Italian"
-block|,
-name|getBool
-block|,
-name|setBool
-block|,
-operator|&
-name|italian_book
-block|}
-block|,
-block|{
-literal|"Slang"
-block|,
-literal|"Buy book on commonly used insults"
-block|,
-name|getBool
-block|,
-name|setBool
-block|,
-operator|&
-name|slang_book
-block|}
-block|,
-block|{
-literal|"Clear"
-block|,
-literal|"Clear book list"
-block|,
-name|NULL
-block|,
-name|clearBooks
-block|,
-name|NULL
-block|}
-block|, }
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* menu3 - Look mom!  We can finally use our own OK and Cancel buttons! */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -691,6 +685,7 @@ block|,
 name|buyBooks
 block|}
 block|,
+comment|/* This is the new "OK" button with own fire action */
 block|{
 literal|"No Way!"
 block|,
@@ -701,6 +696,7 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* This is the new "Cancel" button with defaults */
 block|{
 literal|"German"
 block|,
@@ -714,6 +710,7 @@ operator|&
 name|german_book
 block|}
 block|,
+comment|/* Actual items start here */
 block|{
 literal|"Italian"
 block|,
@@ -754,6 +751,64 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Callbacks for menu4 and menu5 */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|check
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|int
+operator|)
+name|self
+operator|->
+name|data
+operator|==
+name|spending
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|spend
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|spending
+operator|=
+operator|(
+name|int
+operator|)
+name|self
+operator|->
+name|data
+expr_stmt|;
+return|return
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* menu4 - Show off a simulated compound menu (group at top is checklist, group at bottom radio) */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -888,6 +943,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* menu5 - Show a simple radiolist menu that inherits the radio appearance by default */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|dialogMenuItem
@@ -945,6 +1004,223 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Callbacks for menu6 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|bachelor
+index|[
+literal|10
+index|]
+decl_stmt|,
+name|bachelette
+index|[
+literal|10
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|int
+name|getBachelor
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+operator|!
+name|strcmp
+argument_list|(
+name|bachelor
+argument_list|,
+name|self
+operator|->
+name|prompt
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|setBachelor
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|strcpy
+argument_list|(
+name|bachelor
+argument_list|,
+name|self
+operator|->
+name|prompt
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|getBachelette
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+operator|!
+name|strcmp
+argument_list|(
+name|bachelette
+argument_list|,
+name|self
+operator|->
+name|prompt
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|setBachelette
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|strcpy
+argument_list|(
+name|bachelette
+argument_list|,
+name|self
+operator|->
+name|prompt
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* menu6- More complex radiolist menu that creates two groups in a single menu */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|dialogMenuItem
+name|menu6
+index|[]
+init|=
+block|{
+block|{
+literal|"Tom"
+block|,
+literal|"Tom's a dynamic shoe salesman from Tulsa, OK!"
+block|,
+name|getBachelor
+block|,
+name|setBachelor
+block|}
+block|,
+block|{
+literal|"Dick"
+block|,
+literal|"Dick's a retired engine inspector from McDonnell-Douglas!"
+block|,
+name|getBachelor
+block|,
+name|setBachelor
+block|}
+block|,
+block|{
+literal|"Harry"
+block|,
+literal|"Harry's a professional female impersonator from Las Vegas!"
+block|,
+name|getBachelor
+block|,
+name|setBachelor
+block|}
+block|,
+block|{
+literal|"-----"
+block|,
+literal|"----------------------------------"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Jane"
+block|,
+literal|"Jane's a twice-divorced housewife from Moose, Oregon!"
+block|,
+name|getBachelette
+block|,
+name|setBachelette
+block|}
+block|,
+block|{
+literal|"Sally"
+block|,
+literal|"Sally's a shy Human Resources Manager for IBM!"
+block|,
+name|getBachelette
+block|,
+name|setBachelette
+block|}
+block|,
+block|{
+literal|"Mary"
+block|,
+literal|"Mary's an energetic serial killer on the lam!"
+block|,
+name|getBachelette
+block|,
+name|setBachelette
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* End of hook functions */
+end_comment
+
+begin_comment
+comment|/* Kick it off, James! */
+end_comment
 
 begin_function
 name|int
@@ -1005,7 +1281,7 @@ name|dialog_msgbox
 argument_list|(
 literal|"This is dialog_msgbox() in action with pause on"
 argument_list|,
-literal|"This is a multiple\nline message."
+literal|"Hi there.  Please press return now."
 argument_list|,
 operator|-
 literal|1
@@ -1037,9 +1313,11 @@ name|retval
 operator|=
 name|dialog_msgbox
 argument_list|(
-literal|"This is dialog_msgbox() in action"
+literal|"This is dialog_msgbox() in action with pause off"
 argument_list|,
-literal|"This is a multiple\nline message."
+literal|"It also contains\n"
+literal|"a multiple line\n"
+literal|"message."
 argument_list|,
 operator|-
 literal|1
@@ -1071,13 +1349,13 @@ name|retval
 operator|=
 name|dialog_prgbox
 argument_list|(
-literal|"This is dialog_prgbox() in action"
+literal|"This is dialog_prgbox() in action with cal(1)"
 argument_list|,
 literal|"cal"
 argument_list|,
 literal|14
 argument_list|,
-literal|40
+literal|50
 argument_list|,
 name|TRUE
 argument_list|,
@@ -1105,13 +1383,13 @@ name|retval
 operator|=
 name|dialog_textbox
 argument_list|(
-literal|"This is dialog_textbox() in action"
+literal|"This is dialog_textbox() in action with /etc/passwd"
 argument_list|,
 literal|"/etc/passwd"
 argument_list|,
 literal|10
 argument_list|,
-literal|50
+literal|60
 argument_list|)
 expr_stmt|;
 name|dialog_clear
@@ -1211,9 +1489,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"returned value for dialog_checklist was %d\n"
+literal|"returned value for dialog_checklist was %d (%d %d %d)\n"
 argument_list|,
 name|retval
+argument_list|,
+name|german_book
+argument_list|,
+name|italian_book
+argument_list|,
+name|slang_book
 argument_list|)
 expr_stmt|;
 name|sleep
@@ -1274,7 +1558,7 @@ name|dialog_checklist
 argument_list|(
 literal|"this is dialog_checklist() in action, trial #3"
 argument_list|,
-literal|"Now we show off some of the button 'styles' one could use."
+literal|"Now we show off some of the button 'styles' one can create."
 argument_list|,
 operator|-
 literal|1
@@ -1365,6 +1649,53 @@ argument_list|,
 name|retval
 argument_list|,
 name|spending
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+name|IVAL
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+name|dialog_radiolist
+argument_list|(
+literal|"this is dialog_radiolist() in action, trial #2"
+argument_list|,
+literal|"Welcome to \"The Love Blender!\" - America's favorite game show\n"
+literal|"where YOU, the contestant, get to choose which of these two\n"
+literal|"fine specimens of humanity will go home together, whether they\n"
+literal|"like it or not!"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|7
+argument_list|,
+operator|-
+literal|7
+argument_list|,
+operator|&
+name|menu6
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"I'm sure that %s and %s will be very happy together!\n"
+argument_list|,
+name|bachelor
+argument_list|,
+name|bachelette
 argument_list|)
 expr_stmt|;
 name|sleep
