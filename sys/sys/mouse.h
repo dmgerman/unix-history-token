@@ -140,6 +140,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|MOUSE_SYN_GETHWINFO
+value|_IOR('M', 100, synapticshw_t)
+end_define
+
 begin_comment
 comment|/* mouse status block */
 end_comment
@@ -348,6 +355,64 @@ name|mousehw_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|synapticshw
+block|{
+name|int
+name|infoMajor
+decl_stmt|;
+name|int
+name|infoMinor
+decl_stmt|;
+name|int
+name|infoRot180
+decl_stmt|;
+name|int
+name|infoPortrait
+decl_stmt|;
+name|int
+name|infoSensor
+decl_stmt|;
+name|int
+name|infoHardware
+decl_stmt|;
+name|int
+name|infoNewAbs
+decl_stmt|;
+name|int
+name|capPen
+decl_stmt|;
+name|int
+name|infoSimplC
+decl_stmt|;
+name|int
+name|infoGeometry
+decl_stmt|;
+name|int
+name|capExtended
+decl_stmt|;
+name|int
+name|capSleep
+decl_stmt|;
+name|int
+name|capFourButtons
+decl_stmt|;
+name|int
+name|capMultiFinger
+decl_stmt|;
+name|int
+name|capPalmDetect
+decl_stmt|;
+name|int
+name|capPassthrough
+decl_stmt|;
+block|}
+name|synapticshw_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* iftype */
 end_comment
@@ -544,6 +609,13 @@ define|#
 directive|define
 name|MOUSE_MODEL_4DPLUS
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_SYNAPTICS
+value|13
 end_define
 
 begin_typedef
@@ -924,6 +996,21 @@ end_endif
 
 begin_comment
 comment|/* MOUSE_GETVARS */
+end_comment
+
+begin_comment
+comment|/* Synaptics Touchpad */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SYNAPTICS_PACKETSIZE
+value|6
+end_define
+
+begin_comment
+comment|/* '3' works better */
 end_comment
 
 begin_comment
