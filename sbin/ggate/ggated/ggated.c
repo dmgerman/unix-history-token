@@ -1797,7 +1797,6 @@ operator|.
 name|gs_flags
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|fd
 operator|=
 name|open
