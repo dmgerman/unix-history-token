@@ -257,6 +257,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|Var_Types
@@ -1292,6 +1293,7 @@ end_enum
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ILMI_State
@@ -1348,34 +1350,6 @@ parameter_list|)
 define|\
 value|bcopy ( (resp), Resp_Buf, (resp)[0] + 1 )
 end_define
-
-begin_comment
-comment|/*  * TRAP generic trap types  */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|Traps
-index|[]
-init|=
-block|{
-literal|"coldStart"
-block|,
-literal|"warmStart"
-block|,
-literal|"linkDown"
-block|,
-literal|"linkUp"
-block|,
-literal|"authenticationFailure"
-block|,
-literal|"egpNeighborLoss"
-block|,
-literal|"enterpriseSpecific"
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1561,6 +1535,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|Months
