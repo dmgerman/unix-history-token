@@ -1066,7 +1066,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* We'll get a prompt because of our status change */
-comment|/* Fall through */
+comment|/* FALLTHROUGH */
 default|default:
 comment|/* Wait 'till we're in a state we care about */
 return|return;

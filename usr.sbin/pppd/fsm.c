@@ -645,7 +645,7 @@ name|state
 operator|=
 name|STOPPING
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|STOPPED
 case|:
@@ -2866,7 +2866,7 @@ name|f
 argument_list|)
 expr_stmt|;
 comment|/* Cancel timeout */
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|CLOSED
 case|:
@@ -2917,7 +2917,7 @@ name|f
 argument_list|)
 expr_stmt|;
 comment|/* Cancel timeout */
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|STOPPED
 case|:

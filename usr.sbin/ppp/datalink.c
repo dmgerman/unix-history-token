@@ -1715,7 +1715,7 @@ argument_list|)
 expr_stmt|;
 else|else
 break|break;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|DATALINK_OPENING
 case|:
@@ -3846,7 +3846,7 @@ operator|->
 name|bundle
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|MP_ADDED
 case|:
@@ -4796,7 +4796,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* fall through (just in case) */
+comment|/* FALLTHROUGH (just in case) */
 case|case
 name|DATALINK_CBCP
 case|:
@@ -4817,7 +4817,7 @@ operator|->
 name|cbcp
 argument_list|)
 expr_stmt|;
-comment|/* fall through (just in case) */
+comment|/* FALLTHROUGH (just in case) */
 case|case
 name|DATALINK_AUTH
 case|:
@@ -6303,7 +6303,7 @@ name|run
 operator|=
 literal|1
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|DATALINK_DIAL
 case|:
@@ -6410,7 +6410,7 @@ operator|.
 name|fsm
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|DATALINK_CBCP
 case|:
@@ -6521,7 +6521,7 @@ operator|.
 name|fsm
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|DATALINK_CBCP
 case|:
@@ -6555,7 +6555,7 @@ name|DATALINK_OPENING
 condition|)
 return|return;
 comment|/* we're doing a callback... */
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 default|default:
 name|datalink_ComeDown
 argument_list|(

@@ -3723,7 +3723,7 @@ name|rtype
 operator|=
 name|MOUSE_PROTO_BUS
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|MOUSE_PROTO_BUS
 case|:
@@ -7457,7 +7457,7 @@ name|rtype
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|MOUSE_PROTO_BUS
 case|:
@@ -9912,7 +9912,7 @@ case|case
 literal|0
 case|:
 comment|/* device type packet - shouldn't happen */
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 default|default:
 name|act
 operator|->

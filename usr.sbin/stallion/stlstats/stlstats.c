@@ -1613,7 +1613,7 @@ operator|+
 literal|10
 operator|)
 expr_stmt|;
-comment|/* fall thru */
+comment|/* FALLTHROUGH */
 case|case
 literal|'0'
 case|:

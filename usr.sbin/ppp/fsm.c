@@ -3152,7 +3152,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* Fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|ST_OPENED
 case|:
