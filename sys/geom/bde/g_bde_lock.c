@@ -1384,7 +1384,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* If it points ito thin blue air, forget it */
+comment|/* If it points into thin blue air, forget it */
 if|if
 condition|(
 name|off
