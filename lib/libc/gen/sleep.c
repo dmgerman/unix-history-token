@@ -197,6 +197,18 @@ name|time_remaining
 operator|.
 name|tv_sec
 expr_stmt|;
+if|if
+condition|(
+name|time_remaining
+operator|.
+name|tv_nsec
+operator|>
+literal|0
+condition|)
+name|seconds
+operator|++
+expr_stmt|;
+comment|/* round up */
 block|}
 return|return
 operator|(
