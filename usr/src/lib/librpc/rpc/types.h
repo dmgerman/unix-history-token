@@ -81,8 +81,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-specifier|extern
-name|char
+name|void
 modifier|*
 name|malloc
 parameter_list|()
