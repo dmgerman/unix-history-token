@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_fsm.h	4.7	81/11/24	*/
+comment|/*	tcp_fsm.h	4.8	81/11/25	*/
 end_comment
 
 begin_comment
@@ -58,6 +58,10 @@ begin_comment
 comment|/* have send and received syn */
 end_comment
 
+begin_comment
+comment|/* states< TCPS_ESTABLISHED are those where connections not established */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -67,6 +71,21 @@ end_define
 
 begin_comment
 comment|/* established */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPS_CLOSE_WAIT
+value|8
+end_define
+
+begin_comment
+comment|/* rcvd fin, waiting for close */
+end_comment
+
+begin_comment
+comment|/* states> TCPS_CLOSE_WAIT are those where user has closed */
 end_comment
 
 begin_define
@@ -100,17 +119,6 @@ end_define
 
 begin_comment
 comment|/* in 2*msl quiet wait after close */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPS_CLOSE_WAIT
-value|8
-end_define
-
-begin_comment
-comment|/* rcvd fin, waiting for close */
 end_comment
 
 begin_define

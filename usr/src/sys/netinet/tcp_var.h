@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.7	81/11/24	*/
+comment|/*	tcp_var.h	4.8	81/11/25	*/
 end_comment
 
 begin_comment
@@ -208,25 +208,14 @@ begin_define
 define|#
 directive|define
 name|TCPT_NTIMERS
-value|7
+value|4
 end_define
-
-begin_define
-define|#
-directive|define
-name|TCPT_INIT
-value|0
-end_define
-
-begin_comment
-comment|/* initialization */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|TCPT_REXMT
-value|1
+value|0
 end_define
 
 begin_comment
@@ -236,12 +225,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPT_REXMTTL
+name|TCPT_2MSL
+value|1
+end_define
+
+begin_comment
+comment|/* 2*msl quiet time timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPT_PERSIST
 value|2
 end_define
 
 begin_comment
-comment|/* retransmit too long */
+comment|/* retransmit persistance */
 end_comment
 
 begin_define
@@ -253,39 +253,6 @@ end_define
 
 begin_comment
 comment|/* keep alive */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPT_KEEPTTL
-value|4
-end_define
-
-begin_comment
-comment|/* keep alive too long */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPT_PERSIST
-value|5
-end_define
-
-begin_comment
-comment|/* retransmit persistance */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPT_2MSL
-value|6
-end_define
-
-begin_comment
-comment|/* 2*msl quiet time timer */
 end_comment
 
 begin_comment
@@ -300,19 +267,21 @@ name|struct
 name|tcpiphdr
 modifier|*
 name|seg_next
-decl_stmt|,
+decl_stmt|;
+comment|/* sequencing queue */
+name|struct
+name|tcpiphdr
 modifier|*
 name|seg_prev
 decl_stmt|;
-comment|/* seq queue */
-name|short
-name|seqcnt
-decl_stmt|;
-comment|/* count of chars in seq queue */
-name|u_char
+name|int
 name|t_state
 decl_stmt|;
 comment|/* state of this connection */
+name|int
+name|seqcnt
+decl_stmt|;
+comment|/* count of chars in seq queue */
 name|short
 name|t_timers
 index|[
@@ -320,7 +289,7 @@ name|TCPT_NTIMERS
 index|]
 decl_stmt|;
 comment|/* tcp timers */
-name|u_char
+name|short
 name|t_options
 decl_stmt|;
 comment|/* connection options: */
@@ -347,12 +316,11 @@ directive|define
 name|TF_OWEACK
 value|0x01
 comment|/* owe ack to peer */
-name|struct
-name|mbuf
-modifier|*
-name|seg_unack
-decl_stmt|;
-comment|/* unacked message queue */
+define|#
+directive|define
+name|TF_DELACK
+value|0x02
+comment|/* delaying ack to peer */
 name|struct
 name|tcpiphdr
 modifier|*
@@ -413,79 +381,22 @@ name|irs
 decl_stmt|;
 comment|/* initial receive sequence number */
 comment|/*  * Additional variables for this implementation.  */
-comment|/* send variables */
-name|tcp_seq
-name|snd_off
-decl_stmt|;
-comment|/*??*/
-comment|/* seq # of first datum in send buf */
-name|tcp_seq
-name|seq_fin
-decl_stmt|;
-comment|/*??*/
-comment|/* seq # of FIN sent */
-name|tcp_seq
-name|snd_hi
-decl_stmt|;
-comment|/*??*/
-comment|/* highest seq # sent */
-name|tcp_seq
-name|snd_end
-decl_stmt|;
-comment|/*??*/
-comment|/* send eol pointer */
-name|tcp_seq
-name|snd_lst
-decl_stmt|;
-comment|/*??*/
-comment|/* seq # of last sent datum */
-name|tcp_seq
-name|snd_wl
-decl_stmt|;
-comment|/*??*/
-comment|/* seq # of last sent window */
-name|tcp_seq
-name|snd_wnd
-decl_stmt|;
-comment|/*??*/
-comment|/* send window max */
-comment|/* retransmit variables */
-name|tcp_seq
-name|t_rexmt_val
-decl_stmt|;
-comment|/*??*/
-comment|/* val saved in rexmt timer */
-name|tcp_seq
-name|t_rtl_val
-decl_stmt|;
-comment|/*??*/
-comment|/* val saved in rexmt too long timer */
-name|tcp_seq
-name|t_xmt_val
-decl_stmt|;
-comment|/*??*/
-comment|/* seq # sent when xmt timer started */
-name|u_char
-name|t_xmtime
-decl_stmt|;
-comment|/*??*/
-comment|/* current rexmt time */
-name|short
-name|t_xmt
-decl_stmt|;
-comment|/*??*/
-comment|/* round trip transmission time */
 comment|/* receive variables */
-name|tcp_seq
-name|rcv_end
-decl_stmt|;
-comment|/*??*/
-comment|/* rcv eol pointer */
 name|tcp_seq
 name|rcv_adv
 decl_stmt|;
-comment|/*??*/
 comment|/* advertised window */
+comment|/* retransmit variables */
+name|tcp_seq
+name|snd_max
+decl_stmt|;
+comment|/* highest sequence number sent */
+name|used
+name|to
+name|recognize
+name|retransmits
+operator|*
+operator|/
 block|}
 struct|;
 end_struct
@@ -524,23 +435,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPSIZE
-value|20
-end_define
-
-begin_comment
-comment|/* size of TCP leader (bytes) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TCP_TTL
-value|30
+value|60
 end_define
 
 begin_comment
-comment|/* time to live for TCP segs: 30s */
+comment|/* time to live for TCP segs */
 end_comment
 
 begin_comment
@@ -551,7 +451,7 @@ begin_define
 define|#
 directive|define
 name|TCPSC_MSL
-value|(TCP_TTL*PR_SLOWHZ)
+value|(120*PR_SLOWHZ)
 end_define
 
 begin_comment
@@ -562,7 +462,7 @@ begin_define
 define|#
 directive|define
 name|TCPSC_REXMT
-value|(1*PR_SLOWHZ)
+value|(  1*PR_SLOWHZ)
 end_define
 
 begin_comment
@@ -572,19 +472,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPSC_REXMTTL
-value|(TCP_TTL*2*PR_SLOWHZ)
-end_define
-
-begin_comment
-comment|/* retransmit too long */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TCPSC_KEEP
-value|(TCP_TTL*4*PR_SLOWHZ)
+value|(240*PR_SLOWHZ)
 end_define
 
 begin_comment
@@ -594,19 +483,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPSC_KEEPTTL
-value|(4*TCPSC_KEEP)
-end_define
-
-begin_comment
-comment|/* keep alive too long */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TCPSC_PERSIST
-value|(5*PR_SLOWHZ)
+value|(  5*PR_SLOWHZ)
 end_define
 
 begin_comment
@@ -616,8 +494,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TCPSC_KEEPTTL
+value|(  4*TCPSC_KEEP)
+end_define
+
+begin_comment
+comment|/* keep alive too long */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TCPSC_2MSL
-value|(TCP_TTL*2*PR_SLOWHZ)
+value|(  2*TCPSC_MSL)
 end_define
 
 begin_comment
@@ -627,13 +516,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPSC_REMAX
-value|(TCP_TTL*PR_SLOWHZ)
+name|TCPSC_TOOLONG
+value|(480*PR_SLOWHZ)
 end_define
-
-begin_comment
-comment|/* maximum rexmt time */
-end_comment
 
 begin_struct
 struct|struct

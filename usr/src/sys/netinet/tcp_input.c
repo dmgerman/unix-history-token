@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.30 81/11/24 */
+comment|/*	tcp_input.c	1.31	81/11/25	*/
 end_comment
 
 begin_include
@@ -1510,23 +1510,28 @@ expr_stmt|;
 comment|/* 	 * If FIN is received then if we haven't received SYN and 	 * therefore can't validate drop the segment.  Otherwise ACK 	 * the FIN and let the user know that the connection is closing. 	 */
 if|if
 condition|(
-operator|(
 name|tiflags
 operator|&
 name|TH_FIN
-operator|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|TCPS_HAVERCVDSYN
 argument_list|(
 name|tp
 operator|->
 name|t_state
 argument_list|)
+operator|==
+literal|0
 condition|)
-block|{
-name|tcp_usrclosing
+goto|goto
+name|drop
+goto|;
+name|socantrcvmore
 argument_list|(
-name|tp
+name|so
 argument_list|)
 expr_stmt|;
 name|tp
@@ -1618,8 +1623,6 @@ expr_stmt|;
 name|tcp_canceltimers
 argument_list|(
 name|tp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|tp
@@ -2112,7 +2115,7 @@ name|ti
 condition|)
 name|panic
 argument_list|(
-literal|"tcp_text dropall"
+literal|"tcp_reass dropall"
 argument_list|)
 expr_stmt|;
 name|q
@@ -2280,6 +2283,23 @@ operator|->
 name|ti_next
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_CANTRCVMORE
+condition|)
+name|sbflush
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
+else|else
 name|sorwakeup
 argument_list|(
 name|so
