@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: bootp_subr.c,v 1.8 1998/01/18 18:46:20 tegge Exp $	*/
+comment|/*	$Id: bootp_subr.c,v 1.9 1998/02/09 06:10:32 eivind Exp $	*/
 end_comment
 
 begin_comment
@@ -4044,18 +4044,28 @@ condition|(
 name|nfs_diskless_valid
 condition|)
 return|return;
-comment|/*    * Bump time if 0.    */
-if|if
+comment|/*    * Wait until arp entries can be handled.    */
+while|while
 condition|(
-operator|!
 name|time
 operator|.
 name|tv_sec
+operator|==
+literal|0
 condition|)
+name|tsleep
+argument_list|(
+operator|&
 name|time
-operator|.
-name|tv_sec
-operator|++
+argument_list|,
+name|PZERO
+operator|+
+literal|8
+argument_list|,
+literal|"arpkludge"
+argument_list|,
+literal|10
+argument_list|)
 expr_stmt|;
 comment|/*    * Find a network interface.    */
 for|for
