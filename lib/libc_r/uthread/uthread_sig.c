@@ -511,11 +511,11 @@ name|sa_flags
 operator|&
 name|SA_RESTART
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * Process according to thread state: 		 */
+comment|/* 		 * System calls are flagged for restart. 		 * 		 * Process according to thread state: 		 */
 switch|switch
 condition|(
 name|pthread
@@ -607,7 +607,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * System calls are flagged for restart. 		 * 		 * Process according to thread state: 		 */
+comment|/* 		 * Process according to thread state: 		 */
 switch|switch
 condition|(
 name|pthread
