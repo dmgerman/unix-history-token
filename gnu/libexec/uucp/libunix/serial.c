@@ -4138,6 +4138,12 @@ block|,
 literal|9600
 block|}
 block|,
+block|{
+name|B28800
+block|,
+literal|28800
+block|}
+block|,
 ifdef|#
 directive|ifdef
 name|B19200

@@ -2091,6 +2091,15 @@ argument_list|)
 block|}
 block|,
 block|{
+literal|28800
+block|,
+name|COMBRD
+argument_list|(
+literal|28800
+argument_list|)
+block|}
+block|,
+block|{
 literal|38400
 block|,
 name|COMBRD
