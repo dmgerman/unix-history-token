@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tar.c	4.1 (Berkeley) %G%"
+literal|"@(#)tar.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2796,6 +2796,23 @@ argument_list|()
 expr_stmt|;
 continue|continue;
 block|}
+name|chown
+argument_list|(
+name|dblock
+operator|.
+name|dbuf
+operator|.
+name|name
+argument_list|,
+name|stbuf
+operator|.
+name|st_uid
+argument_list|,
+name|stbuf
+operator|.
+name|st_gid
+argument_list|)
+expr_stmt|;
 name|blocks
 operator|=
 operator|(
@@ -2984,24 +3001,6 @@ if|if
 condition|(
 name|pflag
 condition|)
-block|{
-name|chown
-argument_list|(
-name|dblock
-operator|.
-name|dbuf
-operator|.
-name|name
-argument_list|,
-name|stbuf
-operator|.
-name|st_uid
-argument_list|,
-name|stbuf
-operator|.
-name|st_gid
-argument_list|)
-expr_stmt|;
 name|chmod
 argument_list|(
 name|dblock
@@ -3017,7 +3016,6 @@ operator|&
 literal|07777
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_block
@@ -3759,11 +3757,6 @@ operator|!=
 name|pid
 condition|)
 empty_stmt|;
-if|if
-condition|(
-name|pflag
-condition|)
-block|{
 name|chown
 argument_list|(
 name|name
@@ -3777,6 +3770,10 @@ operator|.
 name|st_gid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pflag
+condition|)
 name|chmod
 argument_list|(
 name|dblock
@@ -3792,7 +3789,6 @@ operator|&
 literal|0777
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 operator|*
 name|cp
