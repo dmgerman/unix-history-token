@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.4 1995/04/06 06:09:44 jkh Exp $"
+literal|"$Id: route.c,v 1.5 1995/05/30 06:32:53 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -354,6 +354,19 @@ begin_decl_stmt
 name|struct
 name|radix_mask
 name|rmask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|radix_node_head
+modifier|*
+name|rt_tables
+index|[
+name|AF_MAX
+operator|+
+literal|1
+index|]
 decl_stmt|;
 end_decl_stmt
 
