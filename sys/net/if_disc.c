@@ -272,6 +272,14 @@ name|if_addrlen
 operator|=
 literal|0
 expr_stmt|;
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_maxlen
+operator|=
+literal|20
+expr_stmt|;
 name|if_attach
 argument_list|(
 name|ifp
