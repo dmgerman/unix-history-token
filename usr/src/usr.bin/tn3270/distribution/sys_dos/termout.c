@@ -55,6 +55,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../ascii/disp_asc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../ascii/map3270.ext"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../ctlr/hostctlr.h"
 end_include
 
@@ -86,12 +98,6 @@ begin_include
 include|#
 directive|include
 file|"../ctlr/screen.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ascii/map3270.ext"
 end_include
 
 begin_include
@@ -208,16 +214,6 @@ index|]
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Variables for transparent mode */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"disp_asc.out"
-end_include
 
 begin_escape
 end_escape
