@@ -429,8 +429,6 @@ name|char
 name|reply_src
 index|[
 name|IFNAMSIZ
-operator|+
-literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
