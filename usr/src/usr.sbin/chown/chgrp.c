@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chgrp.c	5.6 (Berkeley) %G%"
+literal|"@(#)chgrp.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -522,6 +522,7 @@ condition|(
 name|rflag
 operator|&&
 operator|(
+operator|(
 name|stbuf
 operator|.
 name|st_mode
@@ -530,6 +531,7 @@ name|S_IFMT
 operator|)
 operator|==
 name|S_IFDIR
+operator|)
 condition|)
 block|{
 name|status
@@ -868,7 +870,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|stbuf
+name|st
 operator|.
 name|st_mode
 operator|&
