@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: map.c,v 1.5 1999/08/22 05:12:51 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: map.c,v 1.6.2.3 2001/01/10 03:23:07 ezk Exp $  *  */
 end_comment
 
 begin_ifdef
@@ -71,7 +71,7 @@ value|(am_gen++)
 end_define
 
 begin_comment
-comment|/*  * Generation Numbers.  *  * Generation numbers are allocated to every node created  * by amd.  When a filehandle is computed and sent to the  * kernel, the generation number makes sure that it is safe  * to reallocate a node slot even when the kernel has a cached  * reference to its old incarnation.  * No garbage collection is done, since it is assumed that  * there is no way that 2^32 generation numbers could ever  * be allocated by a single run of amd - there is simply  * not enough cpu time available.  */
+comment|/*  * Generation Numbers.  *  * Generation numbers are allocated to every node created  * by amd.  When a filehandle is computed and sent to the  * kernel, the generation number makes sure that it is safe  * to reallocate a node slot even when the kernel has a cached  * reference to its old incarnation.  * No garbage collection is done, since it is assumed that  * there is no way that 2^32 generation numbers could ever  * be allocated by a single run of amd - there is simply  * not enough cpu time available.  * Famous last words... -Ion  */
 end_comment
 
 begin_decl_stmt
@@ -896,7 +896,7 @@ modifier|*
 name|dir
 parameter_list|)
 block|{
-comment|/*    * mp->am_mapno is initialized by exported_ap_alloc    * other fields don't need to be set to zero.    */
+comment|/*    * mp->am_mapno is initialized by exported_ap_alloc    * other fields don't need to be initialized.    */
 name|mp
 operator|->
 name|am_mnt
@@ -965,7 +965,9 @@ name|am_fattr
 operator|.
 name|na_fileid
 operator|=
-literal|0
+name|mp
+operator|->
+name|am_gen
 expr_stmt|;
 name|mp
 operator|->
@@ -2892,6 +2894,59 @@ name|mp
 operator|->
 name|am_mnt
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|MNT2_NFS_OPT_SYMTTL
+comment|/*      * This code is needed to defeat Solaris 2.4's (and newer) symlink      * values cache.  It forces the last-modified time of the symlink to be      * current.  It is not needed if the O/S has an nfs flag to turn off the      * symlink-cache at mount time (such as Irix 5.x and 6.x). -Erez.      */
+if|if
+condition|(
+name|mp
+operator|->
+name|am_parent
+condition|)
+block|{
+comment|/* defensive programming... can't we assert the above condition? */
+name|nfsattrstat
+modifier|*
+name|attrp
+init|=
+operator|&
+name|mp
+operator|->
+name|am_parent
+operator|->
+name|am_attr
+decl_stmt|;
+if|if
+condition|(
+operator|++
+name|attrp
+operator|->
+name|ns_u
+operator|.
+name|ns_attr_u
+operator|.
+name|na_mtime
+operator|.
+name|nt_useconds
+operator|==
+literal|0
+condition|)
+operator|++
+name|attrp
+operator|->
+name|ns_u
+operator|.
+name|ns_attr_u
+operator|.
+name|na_mtime
+operator|.
+name|nt_seconds
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* not MNT2_NFS_OPT_SYMTTL */
 ifdef|#
 directive|ifdef
 name|notdef

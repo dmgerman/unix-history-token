@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: opts.c,v 1.6 1999/09/30 21:01:32 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: opts.c,v 1.8.2.4 2001/01/10 03:23:11 ezk Exp $  *  */
 end_comment
 
 begin_ifdef
@@ -272,18 +272,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|am_opts
-name|fs_static
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* copy of the options to play with */
-end_comment
-
-begin_decl_stmt
-specifier|static
 name|char
 name|NullStr
 index|[]
@@ -379,6 +367,39 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
+name|uid_str
+index|[
+literal|12
+index|]
+decl_stmt|,
+name|gid_str
+index|[
+literal|12
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|opt_uid
+init|=
+name|uid_str
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|opt_gid
+init|=
+name|gid_str
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 modifier|*
 name|vars
 index|[
@@ -386,6 +407,35 @@ literal|8
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|literal_dollar
+init|=
+literal|"$"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ${dollar}: a literal '$' in maps */
+end_comment
+
+begin_comment
+comment|/*  * GLOBALS  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|am_opts
+name|fs_static
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* copy of the options to play with */
+end_comment
 
 begin_comment
 comment|/*  * Options in something corresponding to frequency of use so that  * first-match algorithm is sped up.  */
@@ -399,7 +449,7 @@ name|opt_fields
 index|[]
 init|=
 block|{
-comment|/* Name and length. 	Option str.		Selector str.	boolean fxn.	flags */
+comment|/* Name and length. 	Option str.		Selector str.	boolean fxn.	case sensitive */
 block|{
 name|S
 argument_list|(
@@ -618,24 +668,6 @@ operator|&
 name|fs_static
 operator|.
 name|opt_pref
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|FALSE
-block|}
-block|,
-block|{
-name|S
-argument_list|(
-literal|"autopref"
-argument_list|)
-block|,
-operator|&
-name|fs_static
-operator|.
-name|opt_autopref
 block|,
 literal|0
 block|,
@@ -1021,6 +1053,7 @@ block|,
 name|FALSE
 block|}
 block|,
+comment|/* XXX: should maptype really be a variable? I think selector. -Erez */
 block|{
 name|S
 argument_list|(
@@ -1067,6 +1100,54 @@ operator|&
 name|fs_static
 operator|.
 name|opt_addopts
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|FALSE
+block|}
+block|,
+block|{
+name|S
+argument_list|(
+literal|"uid"
+argument_list|)
+block|,
+literal|0
+block|,
+operator|&
+name|opt_uid
+block|,
+literal|0
+block|,
+name|FALSE
+block|}
+block|,
+block|{
+name|S
+argument_list|(
+literal|"gid"
+argument_list|)
+block|,
+literal|0
+block|,
+operator|&
+name|opt_gid
+block|,
+literal|0
+block|,
+name|FALSE
+block|}
+block|,
+block|{
+name|S
+argument_list|(
+literal|"dollar"
+argument_list|)
+block|,
+operator|&
+name|literal_dollar
 block|,
 literal|0
 block|,
@@ -1711,7 +1792,7 @@ name|p
 condition|)
 block|{
 case|case
-literal|'a'
+literal|'g'
 case|:
 name|c
 operator|=
@@ -3663,6 +3744,7 @@ name|sel_p
 parameter_list|)
 block|{
 specifier|static
+specifier|const
 name|char
 name|expand_error
 index|[]

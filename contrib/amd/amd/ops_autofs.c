@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: ops_autofs.c,v 1.4 1999/01/13 23:31:00 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: ops_autofs.c,v 1.7.2.4 2001/04/24 06:17:40 ib42 Exp $  *  */
 end_comment
 
 begin_comment
@@ -387,7 +387,7 @@ literal|"direct"
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_UNION
+name|HAVE_AMU_FS_UNION
 elseif|else
 if|if
 condition|(
@@ -404,7 +404,7 @@ literal|"union"
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_AM_FS_UNION */
+comment|/* HAVE_AMU_FS_UNION */
 else|else
 name|mnttype
 operator|=
@@ -1987,7 +1987,7 @@ name|plog
 argument_list|(
 name|XLOG_MAP
 argument_list|,
-literal|"Map entry %s for %s failed to match"
+literal|"Map entry %s for %s did not match"
 argument_list|,
 operator|*
 name|cp
@@ -2348,16 +2348,6 @@ name|mp
 argument_list|,
 name|NFLNK
 argument_list|)
-expr_stmt|;
-name|mp
-operator|->
-name|am_fattr
-operator|.
-name|na_fileid
-operator|=
-name|mp
-operator|->
-name|am_gen
 expr_stmt|;
 if|if
 condition|(
@@ -3927,7 +3917,7 @@ name|gopt
 operator|.
 name|flags
 operator|&
-name|CFM_ENABLE_DEFAULT_SELECTORS
+name|CFM_SELECTORS_IN_DEFAULTS
 condition|)
 block|{
 comment|/*        * Pick whichever first entry matched the list of selectors.        * Strip the selectors from the string, and assign to dfl the        * rest of the string.        */
@@ -4020,7 +4010,7 @@ name|plog
 argument_list|(
 name|XLOG_MAP
 argument_list|,
-literal|"failed to match defaults for \"%s\""
+literal|"did not match defaults for \"%s\""
 argument_list|,
 operator|*
 name|sp
@@ -4058,7 +4048,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* not enable_default_selectors */
+comment|/* not selectors_in_defaults */
 comment|/*        * Extract first value        */
 name|dfl
 operator|=
@@ -4083,7 +4073,7 @@ name|gopt
 operator|.
 name|flags
 operator|&
-name|CFM_ENABLE_DEFAULT_SELECTORS
+name|CFM_SELECTORS_IN_DEFAULTS
 operator|)
 operator|&&
 name|rvec

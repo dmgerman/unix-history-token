@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: amd.h,v 1.4 1999/09/30 21:01:29 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: amd.h,v 1.8.2.3 2001/04/07 00:47:41 ib42 Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -40,7 +40,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CFM_ENABLE_DEFAULT_SELECTORS
+name|CFM_SELECTORS_IN_DEFAULTS
 value|0x0004
 end_define
 
@@ -457,6 +457,15 @@ comment|/* YP domain name */
 endif|#
 directive|endif
 comment|/* HAVE_MAP_NIS */
+name|char
+modifier|*
+name|nfs_proto
+decl_stmt|;
+comment|/* NFS protocol (NULL, udp, tcp) */
+name|int
+name|nfs_vers
+decl_stmt|;
+comment|/* NFS version (0, 2, 3, 4) */
 block|}
 struct|;
 end_struct
@@ -1261,6 +1270,22 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|char
+modifier|*
+name|opt_gid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|opt_uid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|NumChild
 decl_stmt|;
@@ -1315,6 +1340,18 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
+name|am_opts
+name|fs_static
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* copy of the options to play with */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
 name|amu_global_options
 name|gopt
 decl_stmt|;
@@ -1351,12 +1388,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_AM_FS_LINK
+name|HAVE_AMU_FS_LINK
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|HAVE_AM_FS_LINKX
+name|HAVE_AMU_FS_LINKX
 argument_list|)
 end_if
 
@@ -1391,13 +1428,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(HAVE_AM_FS_LINK) || defined(HAVE_AM_FS_LINKX) */
+comment|/* defined(HAVE_AMU_FS_LINK) || defined(HAVE_AMU_FS_LINKX) */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_NFSL
+name|HAVE_AMU_FS_NFSL
 end_ifdef
 
 begin_function_decl
@@ -1419,7 +1456,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_AM_FS_NFSL */
+comment|/* HAVE_AMU_FS_NFSL */
 end_comment
 
 begin_if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: amfs_auto.c,v 1.5 1999/09/30 21:01:29 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: amfs_auto.c,v 1.9.2.7 2001/04/14 21:08:19 ezk Exp $  *  */
 end_comment
 
 begin_comment
@@ -53,16 +53,6 @@ name|cp
 parameter_list|)
 value|((cp)->mp->am_mnt->mf_flags& MFF_MOUNTING)
 end_define
-
-begin_comment
-comment|/* DEVELOPERS: turn this on for special debugging of readdir code */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DEBUG_READDIR
-end_undef
 
 begin_define
 define|#
@@ -1595,7 +1585,7 @@ name|plog
 argument_list|(
 name|XLOG_MAP
 argument_list|,
-literal|"Map entry %s for %s failed to match"
+literal|"Map entry %s for %s did not match"
 argument_list|,
 operator|*
 name|cp
@@ -1724,7 +1714,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * try getting fs option from continuation, not mountpoint! 	 * Don't try logging the string from mf, since it may be bad! 	 */
+comment|/* 	 * Try getting fs option from continuation, not mountpoint! 	 * Don't try logging the string from mf, since it may be bad! 	 */
 if|if
 condition|(
 name|cp
@@ -1956,16 +1946,6 @@ name|mp
 argument_list|,
 name|NFLNK
 argument_list|)
-expr_stmt|;
-name|mp
-operator|->
-name|am_fattr
-operator|.
-name|na_fileid
-operator|=
-name|mp
-operator|->
-name|am_gen
 expr_stmt|;
 if|if
 condition|(
@@ -2199,6 +2179,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* actually run the task, backgrounding as necessary */
 name|run_task
 argument_list|(
 name|try_mount
@@ -3533,7 +3514,7 @@ name|gopt
 operator|.
 name|flags
 operator|&
-name|CFM_ENABLE_DEFAULT_SELECTORS
+name|CFM_SELECTORS_IN_DEFAULTS
 condition|)
 block|{
 comment|/*        * Pick whichever first entry matched the list of selectors.        * Strip the selectors from the string, and assign to dfl the        * rest of the string.        */
@@ -3580,6 +3561,7 @@ name|am_opts
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	   * This next routine cause many spurious "expansion of ... is" 	   * messages, which are ignored, b/c all we need out of this 	   * routine is to match selectors.  These spurious messages may 	   * be wrong, esp. if they try to expand ${key} b/c it will 	   * get expanded to "/defaults" 	   */
 name|pt
 operator|=
 name|ops_match
@@ -3626,7 +3608,7 @@ name|plog
 argument_list|(
 name|XLOG_MAP
 argument_list|,
-literal|"failed to match defaults for \"%s\""
+literal|"did not match defaults for \"%s\""
 argument_list|,
 operator|*
 name|sp
@@ -3689,7 +3671,7 @@ name|gopt
 operator|.
 name|flags
 operator|&
-name|CFM_ENABLE_DEFAULT_SELECTORS
+name|CFM_SELECTORS_IN_DEFAULTS
 operator|)
 operator|&&
 name|rvec
@@ -4212,6 +4194,20 @@ decl_stmt|;
 name|mntent_t
 name|mnt
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|nfsentry
+modifier|*
+name|ne
+decl_stmt|;
+specifier|static
+name|int
+name|j
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
 name|dp
 operator|->
 name|dl_eof
@@ -4296,6 +4292,7 @@ name|FALSE
 argument_list|)
 return|;
 block|}
+comment|/* when gen is 0, we start reading from the beginning of the directory */
 if|if
 condition|(
 name|gen
@@ -4499,6 +4496,61 @@ operator|=
 name|TRUE
 expr_stmt|;
 comment|/* by default assume readdir done */
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|amuDebug
+argument_list|(
+argument|D_READDIR
+argument_list|)
+for|for
+control|(
+name|j
+operator|=
+literal|0
+operator|,
+name|ne
+operator|=
+name|ep
+init|;
+name|ne
+condition|;
+name|ne
+operator|=
+name|ne
+operator|->
+name|ne_nextentry
+control|)
+name|plog
+argument_list|(
+name|XLOG_DEBUG
+argument_list|,
+literal|"gen1 key %4d \"%s\" fi=%d ck=%d"
+argument_list|,
+name|j
+operator|++
+argument_list|,
+name|ne
+operator|->
+name|ne_name
+argument_list|,
+name|ne
+operator|->
+name|ne_fileid
+argument_list|,
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+name|ne
+operator|->
+name|ne_cookie
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
 return|return
 literal|0
 return|;
@@ -4548,6 +4600,23 @@ name|dl_entries
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|amuDebug
+argument_list|(
+argument|D_READDIR
+argument_list|)
+name|plog
+argument_list|(
+name|XLOG_DEBUG
+argument_list|,
+literal|"end of readdir eof=TRUE, dl_entries=0\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
 return|return
 literal|0
 return|;
@@ -4748,6 +4817,61 @@ name|ne_nextentry
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|amuDebug
+argument_list|(
+argument|D_READDIR
+argument_list|)
+for|for
+control|(
+name|j
+operator|=
+literal|0
+operator|,
+name|ne
+operator|=
+name|ep
+init|;
+name|ne
+condition|;
+name|ne
+operator|=
+name|ne
+operator|->
+name|ne_nextentry
+control|)
+name|plog
+argument_list|(
+name|XLOG_DEBUG
+argument_list|,
+literal|"gen2 key %4d \"%s\" fi=%d ck=%d"
+argument_list|,
+name|j
+operator|++
+argument_list|,
+name|ne
+operator|->
+name|ne_name
+argument_list|,
+name|ne
+operator|->
+name|ne_fileid
+argument_list|,
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+name|ne
+operator|->
+name|ne_cookie
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
 return|return
 literal|0
 return|;
@@ -4814,7 +4938,7 @@ name|te_next
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG_READDIR
+name|DEBUG
 name|nfsentry
 modifier|*
 name|ne
@@ -4825,7 +4949,7 @@ name|j
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG_READDIR */
+comment|/* DEBUG */
 name|dp
 operator|->
 name|dl_eof
@@ -4835,10 +4959,14 @@ expr_stmt|;
 comment|/* assume readdir not done */
 ifdef|#
 directive|ifdef
-name|DEBUG_READDIR
+name|DEBUG
+name|amuDebug
+argument_list|(
+argument|D_READDIR
+argument_list|)
 name|plog
 argument_list|(
-name|XLOG_INFO
+name|XLOG_DEBUG
 argument_list|,
 literal|"amfs_auto_readdir_browsable gen=%u, count=%d"
 argument_list|,
@@ -4849,7 +4977,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG_READDIR */
+comment|/* DEBUG */
 if|if
 condition|(
 name|gen
@@ -5062,7 +5190,11 @@ literal|0
 return|;
 ifdef|#
 directive|ifdef
-name|DEBUG_READDIR
+name|DEBUG
+name|amuDebug
+argument_list|(
+argument|D_READDIR
+argument_list|)
 for|for
 control|(
 name|j
@@ -5083,7 +5215,7 @@ name|ne_nextentry
 control|)
 name|plog
 argument_list|(
-name|XLOG_INFO
+name|XLOG_DEBUG
 argument_list|,
 literal|"gen1 key %4d \"%s\""
 argument_list|,
@@ -5097,7 +5229,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG_READDIR */
+comment|/* DEBUG */
 comment|/* return only "chain_length" entries */
 name|te_next
 operator|=
@@ -5185,7 +5317,12 @@ expr_stmt|;
 comment|/* append this chunk of "te" chain */
 ifdef|#
 directive|ifdef
-name|DEBUG_READDIR
+name|DEBUG
+name|amuDebug
+argument_list|(
+argument|D_READDIR
+argument_list|)
+block|{
 for|for
 control|(
 name|j
@@ -5206,7 +5343,7 @@ name|ne_nextentry
 control|)
 name|plog
 argument_list|(
-name|XLOG_INFO
+name|XLOG_DEBUG
 argument_list|,
 literal|"gen2 key %4d \"%s\""
 argument_list|,
@@ -5238,7 +5375,7 @@ name|ne_nextentry
 control|)
 name|plog
 argument_list|(
-name|XLOG_INFO
+name|XLOG_DEBUG
 argument_list|,
 literal|"gen2+ key %4d \"%s\" fi=%d ck=%d"
 argument_list|,
@@ -5265,7 +5402,7 @@ argument_list|)
 expr_stmt|;
 name|plog
 argument_list|(
-name|XLOG_INFO
+name|XLOG_DEBUG
 argument_list|,
 literal|"EOF is %d"
 argument_list|,
@@ -5274,6 +5411,7 @@ operator|->
 name|dl_eof
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* DEBUG_READDIR */
@@ -5447,22 +5585,27 @@ name|ep
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG_READDIR
+name|DEBUG
+name|amuDebug
+argument_list|(
+argument|D_READDIR
+argument_list|)
+block|{
 name|plog
 argument_list|(
-name|XLOG_INFO
+name|XLOG_DEBUG
 argument_list|,
-literal|"dl_entries=0x%x, te_next=0x%x, dl_eof=%d"
+literal|"dl_entries=0x%lx, te_next=0x%lx, dl_eof=%d"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|dp
 operator|->
 name|dl_entries
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|te_next
 argument_list|,
@@ -5487,7 +5630,7 @@ name|ne_nextentry
 control|)
 name|plog
 argument_list|(
-name|XLOG_INFO
+name|XLOG_DEBUG
 argument_list|,
 literal|"gen3 key %4d \"%s\""
 argument_list|,
@@ -5499,9 +5642,10 @@ operator|->
 name|ne_name
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
-comment|/* DEBUG_READDIR */
+comment|/* DEBUG */
 return|return
 literal|0
 return|;

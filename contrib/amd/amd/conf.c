@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: conf.c,v 1.5 1999/09/30 21:01:30 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: conf.c,v 1.7.2.3 2001/04/14 21:08:21 ezk Exp $  *  */
 end_comment
 
 begin_comment
@@ -396,6 +396,19 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|gopt_nfs_proto
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|val
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|gopt_nfs_retransmit_counter
 parameter_list|(
 specifier|const
@@ -410,6 +423,19 @@ begin_function_decl
 specifier|static
 name|int
 name|gopt_nfs_retry_interval
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|val
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|gopt_nfs_vers
 parameter_list|(
 specifier|const
 name|char
@@ -539,7 +565,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|gopt_selectors_on_default
+name|gopt_selectors_in_defaults
 parameter_list|(
 specifier|const
 name|char
@@ -934,6 +960,12 @@ name|gopt_portmap_program
 block|}
 block|,
 block|{
+literal|"nfs_proto"
+block|,
+name|gopt_nfs_proto
+block|}
+block|,
+block|{
 literal|"nfs_retransmit_counter"
 block|,
 name|gopt_nfs_retransmit_counter
@@ -943,6 +975,12 @@ block|{
 literal|"nfs_retry_interval"
 block|,
 name|gopt_nfs_retry_interval
+block|}
+block|,
+block|{
+literal|"nfs_vers"
+block|,
+name|gopt_nfs_vers
 block|}
 block|,
 block|{
@@ -1002,7 +1040,13 @@ block|,
 block|{
 literal|"selectors_on_default"
 block|,
-name|gopt_selectors_on_default
+name|gopt_selectors_in_defaults
+block|}
+block|,
+block|{
+literal|"selectors_in_defaults"
+block|,
+name|gopt_selectors_in_defaults
 block|}
 block|,
 block|{
@@ -1222,7 +1266,7 @@ name|CFM_BROWSABLE_DIRS_FULL
 operator||
 name|CFM_MOUNT_TYPE_AUTOFS
 operator||
-name|CFM_ENABLE_DEFAULT_SELECTORS
+name|CFM_SELECTORS_IN_DEFAULTS
 operator|)
 expr_stmt|;
 block|}
@@ -2162,7 +2206,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"conf: ldap_cache option ignored.  No LDAP support available.\n"
+literal|"conf: ldap_cache_seconds option ignored.  No LDAP support available.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2240,7 +2284,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"conf: ldap_cache option ignored.  No LDAP support available.\n"
+literal|"conf: ldap_cache_maxmem option ignored.  No LDAP support available.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2591,7 +2635,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"conf: illegal amd program numver \"%s\"\n"
+literal|"conf: illegal amd program number \"%s\"\n"
 argument_list|,
 name|val
 argument_list|)
@@ -2611,6 +2655,66 @@ return|return
 literal|0
 return|;
 comment|/* all is OK */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|gopt_nfs_proto
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|val
+parameter_list|)
+block|{
+if|if
+condition|(
+name|STREQ
+argument_list|(
+name|val
+argument_list|,
+literal|"udp"
+argument_list|)
+operator|||
+name|STREQ
+argument_list|(
+name|val
+argument_list|,
+literal|"tcp"
+argument_list|)
+condition|)
+block|{
+name|gopt
+operator|.
+name|nfs_proto
+operator|=
+name|strdup
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|val
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"conf: illegal nfs_proto \"%s\"\n"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -2662,6 +2766,61 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|gopt_nfs_vers
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|val
+parameter_list|)
+block|{
+name|int
+name|i
+init|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|2
+operator|||
+name|i
+operator|==
+literal|3
+condition|)
+block|{
+name|gopt
+operator|.
+name|nfs_vers
+operator|=
+name|i
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"conf: illegal nfs_vers \"%s\"\n"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
 return|;
 block|}
 end_function
@@ -3148,7 +3307,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|gopt_selectors_on_default
+name|gopt_selectors_in_defaults
 parameter_list|(
 specifier|const
 name|char
@@ -3170,7 +3329,7 @@ name|gopt
 operator|.
 name|flags
 operator||=
-name|CFM_ENABLE_DEFAULT_SELECTORS
+name|CFM_SELECTORS_IN_DEFAULTS
 expr_stmt|;
 return|return
 literal|0
@@ -3192,7 +3351,7 @@ operator|.
 name|flags
 operator|&=
 operator|~
-name|CFM_ENABLE_DEFAULT_SELECTORS
+name|CFM_SELECTORS_IN_DEFAULTS
 expr_stmt|;
 return|return
 literal|0

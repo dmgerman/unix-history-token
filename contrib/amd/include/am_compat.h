@@ -524,6 +524,68 @@ begin_comment
 comment|/* defined(MNT2_NFS_OPT_MAXGRPS)&& !defined(MNTTAB_OPT_MAXGROUPS) */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MNT2_NFS_OPT_PROPLIST
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MNTTAB_OPT_PROPLIST
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_OPT_PROPLIST
+value|"proplist"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(MNT2_NFS_OPT_PROPLIST)&& !defined(MNTTAB_OPT_PROPLIST) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MNT2_NFS_OPT_NONLM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MNTTAB_OPT_NOLOCK
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MNTTAB_OPT_NOLOCK
+value|"nolock"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(MNT2_NFS_OPT_NONLM)&& !defined(MNTTAB_OPT_NOLOCK) */
+end_comment
+
 begin_comment
 comment|/*  * Complete MNTTAB_OPT_* options based on MNT2_CDFS_OPT_* mount options.  */
 end_comment
@@ -1459,6 +1521,41 @@ end_endif
 
 begin_comment
 comment|/* defined(HAVE_FS_UFS)&& !defined(ufs_args_t) */
+end_comment
+
+begin_comment
+comment|/*  * if does not define struct efs_args, assume integer bit-field (linux)  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_FS_EFS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|efs_args_t
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|efs_args_t
+value|u_int
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(HAVE_FS_EFS)&& !defined(efs_args_t) */
 end_comment
 
 begin_if

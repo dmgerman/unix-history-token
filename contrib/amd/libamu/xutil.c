@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: xutil.c,v 1.8 1999/09/30 21:01:42 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: xutil.c,v 1.11.2.6 2001/01/10 03:23:41 ezk Exp $  *  */
 end_comment
 
 begin_ifdef
@@ -249,6 +249,7 @@ parameter_list|(
 name|int
 name|lvl
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -256,8 +257,56 @@ parameter_list|,
 name|va_list
 name|vargs
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|__printf__
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|0
 end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* for GCC format string auditing */
+end_comment
+
+begin_function_decl
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|expand_error
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|f
+parameter_list|,
+name|char
+modifier|*
+name|e
+parameter_list|,
+name|int
+name|maxlen
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format_arg__
+parameter_list|(
+function_decl|1
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_ifdef
 ifdef|#
@@ -311,6 +360,19 @@ name|D_FULL
 block|}
 block|,
 comment|/* Program trace */
+ifdef|#
+directive|ifdef
+name|HAVE_CLOCK_GETTIME
+block|{
+literal|"hrtime"
+block|,
+name|D_HRTIME
+block|}
+block|,
+comment|/* Print high resolution time stamps */
+endif|#
+directive|endif
+comment|/* HAVE_CLOCK_GETTIME */
 comment|/* info service specific debugging (hesiod, nis, etc) */
 block|{
 literal|"info"
@@ -339,6 +401,13 @@ block|}
 block|,
 comment|/* Use local mtab file */
 block|{
+literal|"readdir"
+block|,
+name|D_READDIR
+block|}
+block|,
+comment|/* check on browsable_dirs progress */
+block|{
 literal|"str"
 block|,
 name|D_STR
@@ -359,6 +428,13 @@ name|D_TRACE
 block|}
 block|,
 comment|/* Protocol trace */
+block|{
+literal|"xdrtrace"
+block|,
+name|D_XDRTRACE
+block|}
+block|,
+comment|/* Trace xdr routines */
 block|{
 literal|0
 block|,
@@ -1050,9 +1126,12 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+specifier|const
+name|char
+modifier|*
 name|expand_error
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|f
@@ -1065,14 +1144,23 @@ name|int
 name|maxlen
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|HAVE_STRERROR
+comment|/*    * XXX: we are assuming that if a system doesn't has strerror,    * then it has sys_nerr.  If this assumption turns out to be wrong on    * some systems, we'll have to write a separate test to detect if    * a system has sys_nerr.  -Erez    */
 specifier|extern
 name|int
 name|sys_nerr
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* not HAVE_STRERROR */
+specifier|const
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|q
 decl_stmt|;
@@ -1140,6 +1228,18 @@ name|char
 modifier|*
 name|errstr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_STRERROR
+if|if
+condition|(
+name|error
+operator|<
+literal|0
+condition|)
+else|#
+directive|else
+comment|/* not HAVE_STRERROR */
 if|if
 condition|(
 name|error
@@ -1150,6 +1250,9 @@ name|error
 operator|>=
 name|sys_nerr
 condition|)
+endif|#
+directive|endif
+comment|/* not HAVE_STRERROR */
 name|errstr
 operator|=
 name|NULL
@@ -1232,6 +1335,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* null terminate, to be sure */
+return|return
+name|e
+return|;
 block|}
 end_function
 
@@ -1263,14 +1369,84 @@ literal|0
 decl_stmt|;
 name|time_t
 name|t
-init|=
-name|clocktime
-argument_list|()
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_CLOCK_GETTIME
+name|struct
+name|timespec
+name|ts
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_CLOCK_GETTIME */
+name|char
+name|nsecs
+index|[
+literal|11
+index|]
+init|=
+literal|""
+decl_stmt|;
+comment|/* '.' + 9 digits + '\0' */
 name|char
 modifier|*
 name|sev
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_CLOCK_GETTIME
+comment|/*    * Some systems (AIX 4.3) seem to implement clock_gettime() as stub    * returning ENOSYS.    */
+if|if
+condition|(
+name|clock_gettime
+argument_list|(
+name|CLOCK_REALTIME
+argument_list|,
+operator|&
+name|ts
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|t
+operator|=
+name|ts
+operator|.
+name|tv_sec
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|amuDebug
+argument_list|(
+argument|D_HRTIME
+argument_list|)
+name|sprintf
+argument_list|(
+name|nsecs
+argument_list|,
+literal|".%09ld"
+argument_list|,
+name|ts
+operator|.
+name|tv_nsec
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
+block|}
+else|else
+endif|#
+directive|endif
+comment|/* HAVE_CLOCK_GETTIME */
+name|t
+operator|=
+name|clocktime
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|t
@@ -1371,11 +1547,13 @@ name|fprintf
 argument_list|(
 name|logfp
 argument_list|,
-literal|"%15.15s %s %s[%ld]/%s "
+literal|"%15.15s%s %s %s[%ld]/%s "
 argument_list|,
 name|last_ctime
 operator|+
 literal|4
+argument_list|,
+name|nsecs
 argument_list|,
 name|am_get_hostname
 argument_list|()
@@ -1431,6 +1609,7 @@ begin_function
 name|void
 name|dplog
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1491,6 +1670,7 @@ parameter_list|(
 name|int
 name|lvl
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1543,6 +1723,7 @@ parameter_list|(
 name|int
 name|lvl
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1605,6 +1786,16 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG_MEM */
+ifdef|#
+directive|ifdef
+name|HAVE_VSNPRINTF
+comment|/*    * XXX: ptr is 1024 bytes long, but we may write to ptr[strlen(ptr) + 2]    * (to add an '\n', see code below) so we have to limit the string copy    * to 1023 (including the '\0').    */
+name|vsnprintf
+argument_list|(
+name|ptr
+argument_list|,
+literal|1023
+argument_list|,
 name|expand_error
 argument_list|(
 name|fmt
@@ -1613,21 +1804,18 @@ name|efmt
 argument_list|,
 literal|1024
 argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_VSNPRINTF
-name|vsnprintf
-argument_list|(
-name|ptr
-argument_list|,
-literal|1024
-argument_list|,
-name|efmt
 argument_list|,
 name|vargs
 argument_list|)
 expr_stmt|;
+name|msg
+index|[
+literal|1022
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* null terminate, to be sure */
 else|#
 directive|else
 comment|/* not HAVE_VSNPRINTF */
@@ -1636,7 +1824,14 @@ name|vsprintf
 argument_list|(
 name|ptr
 argument_list|,
+name|expand_error
+argument_list|(
+name|fmt
+argument_list|,
 name|efmt
+argument_list|,
+literal|1023
+argument_list|)
 argument_list|,
 name|vargs
 argument_list|)
@@ -3217,6 +3412,9 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* TIOCNOTTY */
+name|int
+name|tempfd
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_SETSID
@@ -3251,6 +3449,72 @@ block|}
 endif|#
 directive|endif
 comment|/* HAVE_SETSID */
+comment|/*    * In daemon mode, leaving open file descriptors to terminals or pipes    * can be a really bad idea.    * Case in point: the redhat startup script calls us through their 'initlog'    * program, which exits as soon as the original amd process exits. If, at some    * point, a misbehaved library function decides to print something to the screen,    * we get a SIGPIPE and die.    * More precisely: NIS libc functions will attempt to print to stderr    * "YPBINDPROC_DOMAIN: Domain not bound" if ypbind is running but can't find    * a ypserver.    *    * So we close all of our "terminal" filedescriptors, i.e. 0, 1 and 2, then    * reopen them as /dev/null.    *    * XXX We should also probably set the SIGPIPE handler to SIG_IGN.    */
+name|tempfd
+operator|=
+name|open
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdin
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|dup2
+argument_list|(
+name|tempfd
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|dup2
+argument_list|(
+name|tempfd
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|dup2
+argument_list|(
+name|tempfd
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|tempfd
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TIOCNOTTY

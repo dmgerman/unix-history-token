@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: am_utils.h,v 1.6 1999/08/22 05:12:55 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: am_utils.h,v 1.11.2.6 2001/02/23 01:03:40 ezk Exp $  *  */
 end_comment
 
 begin_comment
@@ -176,7 +176,7 @@ begin_define
 define|#
 directive|define
 name|MAXHOSTNAMELEN
-value|64
+value|256
 end_define
 
 begin_endif
@@ -195,6 +195,36 @@ end_endif
 
 begin_comment
 comment|/* not MAXHOSTNAMELEN */
+end_comment
+
+begin_comment
+comment|/*  * for hlfsd, and amd for detecting uid/gid  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INVALIDID
+end_ifndef
+
+begin_comment
+comment|/* this is also defined in include/am_utils.h */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INVALIDID
+value|(((unsigned short) ~0) - 3)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not INVALIDID */
 end_comment
 
 begin_comment
@@ -852,7 +882,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_NFSL
+name|HAVE_AMU_FS_NFSL
 end_ifdef
 
 begin_define
@@ -872,7 +902,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_AM_FS_NFSL */
+comment|/* HAVE_AMU_FS_NFSL */
 end_comment
 
 begin_comment
@@ -1333,10 +1363,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|opt_pref
-decl_stmt|;
-name|char
-modifier|*
-name|opt_autopref
 decl_stmt|;
 name|char
 modifier|*
@@ -2289,6 +2315,14 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|SVCXPRT
+modifier|*
+name|nfsxprt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|am_node
 modifier|*
 modifier|*
@@ -2359,22 +2393,6 @@ end_decl_stmt
 begin_comment
 comment|/* Name of subsidiary connected network */
 end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|extern char *progname;
-comment|/* "amd" */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
@@ -2448,27 +2466,6 @@ name|pid_t
 name|am_mypid
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|extern char hostname[];
-comment|/* "kiska" */
-end_comment
-
-begin_comment
-unit|extern pid_t mypid;
-comment|/* Current process id */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -2673,14 +2670,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|SVCXPRT
-modifier|*
-name|nfsxprt
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|extern
@@ -3152,11 +3141,59 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|getcreds
+parameter_list|(
+name|struct
+name|svc_req
+modifier|*
+parameter_list|,
+name|uid_t
+modifier|*
+parameter_list|,
+name|gid_t
+modifier|*
+parameter_list|,
+name|SVCXPRT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|hasmntval
 parameter_list|(
 name|mntent_t
 modifier|*
 parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|hasmnteq
+parameter_list|(
+name|mntent_t
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|haseq
+parameter_list|(
 name|char
 modifier|*
 parameter_list|)
@@ -4113,6 +4150,7 @@ name|plog
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -5133,7 +5171,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_AUTO
+name|HAVE_AMU_FS_AUTO
 end_ifdef
 
 begin_decl_stmt
@@ -5306,7 +5344,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_AM_FS_AUTO */
+comment|/* HAVE_AMU_FS_AUTO */
 end_comment
 
 begin_comment
@@ -5316,7 +5354,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_TOPLVL
+name|HAVE_AMU_FS_TOPLVL
 end_ifdef
 
 begin_decl_stmt
@@ -5372,7 +5410,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_AM_FS_TOPLVL */
+comment|/* HAVE_AMU_FS_TOPLVL */
 end_comment
 
 begin_comment
@@ -5382,7 +5420,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_DIRECT
+name|HAVE_AMU_FS_DIRECT
 end_ifdef
 
 begin_decl_stmt
@@ -5402,7 +5440,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_AM_FS_DIRECT */
+comment|/* HAVE_AMU_FS_DIRECT */
 end_comment
 
 begin_comment
@@ -5412,7 +5450,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_ERROR
+name|HAVE_AMU_FS_ERROR
 end_ifdef
 
 begin_decl_stmt
@@ -5482,7 +5520,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_AM_FS_ERROR */
+comment|/* HAVE_AMU_FS_ERROR */
 end_comment
 
 begin_comment
@@ -5492,7 +5530,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_INHERIT
+name|HAVE_AMU_FS_INHERIT
 end_ifdef
 
 begin_decl_stmt
@@ -5512,7 +5550,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_AM_FS_INHERIT */
+comment|/* HAVE_AMU_FS_INHERIT */
 end_comment
 
 begin_comment
@@ -5522,7 +5560,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_NFSL
+name|HAVE_AMU_FS_NFSL
 end_ifdef
 
 begin_decl_stmt
@@ -5542,7 +5580,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_AM_FS_NFSL */
+comment|/* HAVE_AMU_FS_NFSL */
 end_comment
 
 begin_comment
@@ -5552,7 +5590,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_NFSX
+name|HAVE_AMU_FS_NFSX
 end_ifdef
 
 begin_decl_stmt
@@ -5572,7 +5610,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_AM_FS_NFSX */
+comment|/* HAVE_AMU_FS_NFSX */
 end_comment
 
 begin_comment
@@ -5582,7 +5620,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_HOST
+name|HAVE_AMU_FS_HOST
 end_ifdef
 
 begin_decl_stmt
@@ -5602,7 +5640,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_AM_FS_HOST */
+comment|/* HAVE_AMU_FS_HOST */
 end_comment
 
 begin_comment
@@ -5612,7 +5650,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_PROGRAM
+name|HAVE_AMU_FS_PROGRAM
 end_ifdef
 
 begin_decl_stmt
@@ -5632,7 +5670,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_AM_FS_PROGRAM */
+comment|/* HAVE_AMU_FS_PROGRAM */
 end_comment
 
 begin_comment
@@ -5642,7 +5680,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_LINK
+name|HAVE_AMU_FS_LINK
 end_ifdef
 
 begin_decl_stmt
@@ -5674,7 +5712,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_AM_FS_LINK */
+comment|/* HAVE_AMU_FS_LINK */
 end_comment
 
 begin_comment
@@ -5684,7 +5722,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_LINKX
+name|HAVE_AMU_FS_LINKX
 end_ifdef
 
 begin_decl_stmt
@@ -5704,7 +5742,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_AM_FS_LINKX */
+comment|/* HAVE_AMU_FS_LINKX */
 end_comment
 
 begin_comment
@@ -5714,7 +5752,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_UNION
+name|HAVE_AMU_FS_UNION
 end_ifdef
 
 begin_decl_stmt
@@ -5734,7 +5772,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_AM_FS_UNION */
+comment|/* HAVE_AMU_FS_UNION */
 end_comment
 
 begin_comment
@@ -5910,8 +5948,41 @@ name|D_INFO
 value|0x0100
 end_define
 
+begin_define
+define|#
+directive|define
+name|D_HRTIME
+value|0x0200
+end_define
+
 begin_comment
-comment|/*  * Normally, don't enter daemon mode, and don't register amq  */
+comment|/* Print high resolution time stamps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_XDRTRACE
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Trace xdr routines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_READDIR
+value|0x0800
+end_define
+
+begin_comment
+comment|/* show browsable_dir progress */
+end_comment
+
+begin_comment
+comment|/*  * Normally, don't enter daemon mode, don't register amq, and don't trace xdr  */
 end_comment
 
 begin_ifdef
@@ -5924,7 +5995,7 @@ begin_define
 define|#
 directive|define
 name|D_TEST
-value|(~(D_DAEMON|D_MEM|D_STR))
+value|(~(D_DAEMON|D_MEM|D_STR|D_XDRTRACE))
 end_define
 
 begin_else
@@ -5940,7 +6011,7 @@ begin_define
 define|#
 directive|define
 name|D_TEST
-value|(~(D_DAEMON|D_STR))
+value|(~(D_DAEMON|D_STR|D_XDRTRACE))
 end_define
 
 begin_endif
@@ -6174,6 +6245,7 @@ specifier|extern
 name|void
 name|dplog
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
