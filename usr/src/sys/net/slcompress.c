@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	slcompress.c	7.1	89/06/28	*/
+comment|/*	slcompress.c	7.2	89/06/29	*/
 end_comment
 
 begin_comment
@@ -1303,6 +1303,8 @@ operator|*
 name|cp
 operator|++
 operator|=
+name|TYPE_COMPRESSED_TCP
+operator||
 name|changes
 operator||
 name|NEW_C
@@ -1344,6 +1346,8 @@ operator|*
 name|cp
 operator|++
 operator|=
+name|TYPE_COMPRESSED_TCP
+operator||
 name|changes
 expr_stmt|;
 block|}
@@ -1372,28 +1376,6 @@ argument_list|)
 expr_stmt|;
 operator|++
 name|sls_compressed
-expr_stmt|;
-comment|/* note: low order version bits used */
-name|ip
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ip
-operator|*
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_v
-operator||=
-operator|(
-name|TYPE_COMPRESSED_TCP
-operator|>>
-literal|4
-operator|)
 expr_stmt|;
 return|return
 operator|(
