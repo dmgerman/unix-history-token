@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *	is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *	are met.  *  * $Id: vm_zone.c,v 1.6 1997/09/01 03:17:32 bde Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *	is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *	are met.  *  * $Id: vm_zone.c,v 1.7 1997/09/21 04:24:26 dyson Exp $  */
 end_comment
 
 begin_include
@@ -95,7 +95,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Create a zone, but don't allocate the zone structure.  If the  * zone had been previously created by the zone boot code, initialize  * various parts of the zone code.  *  * If waits are not allowed during allocation (e.g. during interrupt  * code), a-priori allocate the kernel virtual space, and allocate  * only pages when needed.  *  * Arguments:  * z		pointer to zone structure.  * obj		pointer to VM object (opt).  * name		name of zone.  * size		size of zone entries.  * nentries	number of zone entries allocated (only ZONE_INTERRUPT.)  * flags	ZONE_INTERRUPT --	items can be allocated at interrupt time.  * zalloc	number of pages allocated when memory is needed.  *  * Note that when using ZONE_INTERRUPT, the size of the zone is limited  * by the nentries argument.  The size of the memory allocatable is  * unlimited if ZONE_INTERRUPT is not set.  *  */
+comment|/*  * Create a zone, but don't allocate the zone structure.  If the  * zone had been previously created by the zone boot code, initialize  * various parts of the zone code.  *  * If waits are not allowed during allocation (e.g. during interrupt  * code), a-priori allocate the kernel virtual space, and allocate  * only pages when needed.  *  * Arguments:  * z		pointer to zone structure.  * obj		pointer to VM object (opt).  * name		name of zone.  * size		size of zone entries.  * nentries	number of zone entries allocated (only ZONE_INTERRUPT.)  * flags	ZONE_INTERRUPT -- items can be allocated at interrupt time.  * zalloc	number of pages allocated when memory is needed.  *  * Note that when using ZONE_INTERRUPT, the size of the zone is limited  * by the nentries argument.  The size of the memory allocatable is  * unlimited if ZONE_INTERRUPT is not set.  *  */
 end_comment
 
 begin_function
@@ -276,11 +276,9 @@ name|zkva
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 literal|0
 return|;
-block|}
 name|z
 operator|->
 name|zpagemax
@@ -1007,9 +1005,7 @@ name|m
 operator|==
 name|NULL
 condition|)
-block|{
 break|break;
-block|}
 name|pmap_kenter
 argument_list|(
 name|z
@@ -1074,7 +1070,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (z->zname) 			printf("zalloc: %s, %d (0x%x --> 0x%x)\n", 				z->zname, z->zalloc, item, (char *)item + nbytes); 		else 			printf("zalloc: XXX(%d), %d (0x%x --> 0x%x)\n", 				z->zsize, z->zalloc, item, (char *)item + nbytes);  		for(i=0;i<nbytes;i+=PAGE_SIZE) { 			printf("(%x, %x)", (char *) item + i, pmap_kextract( (char *) item + i)); 		} 		printf("\n");
+block|if (z->zname) 			printf("zalloc: %s, %d (0x%x --> 0x%x)\n", 				z->zname, z->zalloc, item, 				(char *)item + nbytes); 		else 			printf("zalloc: XXX(%d), %d (0x%x --> 0x%x)\n", 				z->zsize, z->zalloc, item, 				(char *)item + nbytes);  		for (i = 0; i< nbytes; i += PAGE_SIZE) 			printf("(%x, %x)", (char *) item + i, 			       pmap_kextract((char *) item + i)); 		printf("\n");
 endif|#
 directive|endif
 name|nitems
@@ -1493,7 +1489,6 @@ name|nextzone
 operator|==
 name|NULL
 condition|)
-block|{
 name|tmpbuf
 index|[
 name|len
@@ -1503,7 +1498,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|error
 operator|=
 name|SYSCTL_OUT
