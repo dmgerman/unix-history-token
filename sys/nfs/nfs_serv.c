@@ -10605,6 +10605,12 @@ argument_list|,
 name|procp
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|vp
+condition|)
+block|{
 name|vput
 argument_list|(
 name|vp
