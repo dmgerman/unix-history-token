@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993,1995 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ldconfig.c,v 1.13 1996/07/12 19:08:34 jkh Exp $  */
+comment|/*  * Copyright (c) 1993,1995 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ldconfig.c,v 1.14 1996/10/01 01:31:51 peter Exp $  */
 end_comment
 
 begin_include
@@ -147,6 +147,34 @@ directive|include
 file|"support.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|DEBUG
+end_if
+
+begin_comment
+comment|/* test */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_PATH_LD_HINTS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|_PATH_LD_HINTS
+value|"./ld.so.hints"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_undef
 undef|#
 directive|undef
@@ -192,6 +220,16 @@ begin_decl_stmt
 specifier|static
 name|int
 name|merge
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|hints_file
+init|=
+name|_PATH_LD_HINTS
 decl_stmt|;
 end_decl_stmt
 
@@ -378,7 +416,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"mrsv"
+literal|"f:mrsv"
 argument_list|)
 operator|)
 operator|!=
@@ -390,6 +428,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'f'
+case|:
+name|hints_file
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 case|case
 literal|'m'
 case|:
@@ -427,7 +473,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Usage: %s [-mrsv] [dir ...]"
+literal|"Usage: %s [-mrsv] [-f hints_file] [dir ...]"
 argument_list|,
 name|__progname
 argument_list|)
@@ -1149,34 +1195,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_if
-if|#
-directive|if
-name|DEBUG
-end_if
-
-begin_comment
-comment|/* test */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|_PATH_LD_HINTS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|_PATH_LD_HINTS
-value|"./ld.so.hints"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|hinthash
@@ -1777,7 +1795,7 @@ name|tmpfile
 operator|=
 name|concat
 argument_list|(
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|,
 literal|".XXXXXX"
 argument_list|,
@@ -1843,7 +1861,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|)
 expr_stmt|;
 return|return
@@ -1878,7 +1896,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|)
 expr_stmt|;
 return|return
@@ -1920,7 +1938,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|)
 expr_stmt|;
 return|return
@@ -1946,7 +1964,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|)
 expr_stmt|;
 return|return
@@ -1968,7 +1986,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|)
 expr_stmt|;
 return|return
@@ -1981,7 +1999,7 @@ if|if
 condition|(
 name|unlink
 argument_list|(
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|)
 operator|!=
 literal|0
@@ -1995,7 +2013,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|)
 expr_stmt|;
 return|return
@@ -2009,7 +2027,7 @@ name|rename
 argument_list|(
 name|tmpfile
 argument_list|,
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|)
 operator|!=
 literal|0
@@ -2019,7 +2037,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|)
 expr_stmt|;
 return|return
@@ -2077,7 +2095,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -2093,7 +2111,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|)
 expr_stmt|;
 return|return
@@ -2137,7 +2155,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|)
 expr_stmt|;
 return|return
@@ -2167,7 +2185,7 @@ name|warnx
 argument_list|(
 literal|"%s: Bad magic: %o"
 argument_list|,
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|,
 name|hdr
 operator|->
@@ -2256,7 +2274,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|)
 expr_stmt|;
 return|return
@@ -2504,7 +2522,7 @@ name|printf
 argument_list|(
 literal|"%s:\n"
 argument_list|,
-name|_PATH_LD_HINTS
+name|hints_file
 argument_list|)
 expr_stmt|;
 name|printf
