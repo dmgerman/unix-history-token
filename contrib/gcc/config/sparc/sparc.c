@@ -30825,7 +30825,7 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"\tor\t%o2,%lo("
+literal|"\tor\t%g2,%lo("
 argument_list|,
 name|file
 argument_list|)

@@ -338,7 +338,7 @@ comment|/* Define the strings used for the .type and .size directives.    These 
 end_comment
 
 begin_comment
-comment|/* OpenBSD assembler is hacked to have .type& .size support even in a.out    format object files.  Functions size are supported but not activated     yet (look for GRACE_PERIOD_EXPIRED in gas/config/obj-aout.c).  */
+comment|/* OpenBSD assembler is hacked to have .type& .size support even in a.out    format object files.  Functions size are supported but not activated     yet (look for GRACE_PERIOD_EXPIRED in gas/config/obj-aout.c).      SET_ASM_OP is needed for attribute alias to work.  */
 end_comment
 
 begin_undef
@@ -353,6 +353,12 @@ directive|undef
 name|SIZE_ASM_OP
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|SET_ASM_OP
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -365,6 +371,13 @@ define|#
 directive|define
 name|SIZE_ASM_OP
 value|".size"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_ASM_OP
+value|".set"
 end_define
 
 begin_comment

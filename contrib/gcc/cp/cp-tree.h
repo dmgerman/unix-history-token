@@ -1556,6 +1556,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means generate separate instantiation control files and juggle    them at link time.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_use_repository
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero if we want to issue diagnostics that the standard says are not    required.  */
 end_comment
 

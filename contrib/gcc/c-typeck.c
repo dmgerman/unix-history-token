@@ -809,6 +809,11 @@ name|type
 argument_list|,
 name|TYPE_QUALS
 argument_list|(
+name|type
+argument_list|)
+operator||
+name|TYPE_QUALS
+argument_list|(
 name|like
 argument_list|)
 argument_list|)

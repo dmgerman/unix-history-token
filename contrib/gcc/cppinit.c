@@ -735,9 +735,22 @@ directive|if
 name|defined
 name|__GNUC__
 operator|&&
+operator|(
 name|__GNUC__
-operator|>=
+operator|>
 literal|2
+expr|\
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|>
+literal|6
+operator|)
+operator|)
 end_if
 
 begin_comment

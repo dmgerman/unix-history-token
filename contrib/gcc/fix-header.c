@@ -4579,6 +4579,11 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|entry
+operator|->
+name|name
+operator|||
 name|strcmp
 argument_list|(
 name|entry

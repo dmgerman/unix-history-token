@@ -4761,6 +4761,13 @@ name|unsigned
 operator|)
 name|MEM
 expr_stmt|;
+name|hash
+operator|+=
+name|MEM_ALIAS_SET
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 name|x
 operator|=
 name|XEXP
@@ -5276,6 +5283,26 @@ argument_list|(
 name|y
 argument_list|)
 return|;
+case|case
+name|MEM
+case|:
+comment|/* Can't merge two expressions in different alias sets, since we can 	 decide that the expression is transparent in a block when it isn't, 	 due to it being set with the different alias set.  */
+if|if
+condition|(
+name|MEM_ALIAS_SET
+argument_list|(
+name|x
+argument_list|)
+operator|!=
+name|MEM_ALIAS_SET
+argument_list|(
+name|y
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+break|break;
 comment|/*  For commutative operations, check both orders.  */
 case|case
 name|PLUS

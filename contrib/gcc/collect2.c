@@ -7144,6 +7144,14 @@ block|{
 ifdef|#
 directive|ifdef
 name|COLLECT_EXPORT_LIST
+comment|/* Do the link we avoided above if we are exiting.  */
+name|do_tlink
+argument_list|(
+name|ld1_argv
+argument_list|,
+name|object_lst
+argument_list|)
+expr_stmt|;
 comment|/* But make sure we delete the export file we may have created.  */
 if|if
 condition|(

@@ -4735,7 +4735,23 @@ decl_stmt|;
 block|{
 name|rtx
 name|result
-init|=
+decl_stmt|;
+comment|/* If the value is supposed to be returned in memory, then clearly      it is not returned in a stack register.  */
+if|if
+condition|(
+name|aggregate_value_p
+argument_list|(
+name|DECL_RESULT
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+name|result
+operator|=
 name|DECL_RTL
 argument_list|(
 name|DECL_RESULT
@@ -4743,7 +4759,8 @@ argument_list|(
 name|decl
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+comment|/* ?!?  What is this code supposed to do?  Can this code actually      trigger if we kick out aggregates above?  */
 if|if
 condition|(
 name|result

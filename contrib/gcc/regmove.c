@@ -362,7 +362,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|stable_but_for_p
+name|stable_and_no_regs_but_for_p
 name|PROTO
 argument_list|(
 operator|(
@@ -7069,6 +7069,17 @@ name|s_length
 decl_stmt|,
 name|true_loop_depth
 decl_stmt|;
+comment|/* If SRC is marked as unchanging, we may not change it.      ??? Maybe we could get better code by removing the unchanging bit      instead, and changing it back if we don't succeed?  */
+if|if
+condition|(
+name|RTX_UNCHANGING_P
+argument_list|(
+name|src
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|!
@@ -7152,7 +7163,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|stable_but_for_p
+name|stable_and_no_regs_but_for_p
 argument_list|(
 name|SET_SRC
 argument_list|(
@@ -9028,13 +9039,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* return nonzero if X is stable but for mentioning SRC or mentioning /    changing DST .  If in doubt, presume it is unstable.  */
+comment|/* return nonzero if X is stable and mentions no regsiters but for    mentioning SRC or mentioning / changing DST .  If in doubt, presume    it is unstable.    The rationale is that we want to check if we can move an insn easily    while just paying attention to SRC and DST.  A register is considered    stable if it has the RTX_UNCHANGING_P bit set, but that would still    leave the burden to update REG_DEAD / REG_UNUSED notes, so we don't    want any registers but SRC and DST.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|stable_but_for_p
+name|stable_and_no_regs_but_for_p
 parameter_list|(
 name|x
 parameter_list|,
@@ -9125,7 +9136,7 @@ operator|==
 literal|'e'
 operator|&&
 operator|!
-name|stable_but_for_p
+name|stable_and_no_regs_but_for_p
 argument_list|(
 name|XEXP
 argument_list|(
@@ -9151,6 +9162,11 @@ literal|'o'
 case|:
 if|if
 condition|(
+name|code
+operator|==
+name|REG
+condition|)
+return|return
 name|x
 operator|==
 name|src
@@ -9158,9 +9174,31 @@ operator|||
 name|x
 operator|==
 name|dst
+return|;
+comment|/* If this is a MEM, look inside - there might be a register hidden in 	 the address of an unchanging MEM.  */
+if|if
+condition|(
+name|code
+operator|==
+name|MEM
+operator|&&
+operator|!
+name|stable_and_no_regs_but_for_p
+argument_list|(
+name|XEXP
+argument_list|(
+name|x
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+name|src
+argument_list|,
+name|dst
+argument_list|)
 condition|)
 return|return
-literal|1
+literal|0
 return|;
 comment|/* fall through */
 default|default:

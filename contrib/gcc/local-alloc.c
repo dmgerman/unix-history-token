@@ -2901,7 +2901,15 @@ operator|&&
 operator|!
 name|find_reg_note
 argument_list|(
-name|insn
+name|XEXP
+argument_list|(
+name|reg_equiv_init_insns
+index|[
+name|regno
+index|]
+argument_list|,
+literal|0
+argument_list|)
 argument_list|,
 name|REG_EQUIV
 argument_list|,
