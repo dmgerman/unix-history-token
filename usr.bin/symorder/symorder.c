@@ -1010,8 +1010,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|symfound
-operator|=
 name|symkept
 operator|=
 name|i
@@ -1098,6 +1096,14 @@ operator|~
 name|N_EXT
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|clean
+condition|)
+name|symfound
+operator|++
+expr_stmt|;
 name|symp
 operator|->
 name|n_un
