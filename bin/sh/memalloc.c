@@ -47,12 +47,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"shell.h"
 end_include
 
@@ -72,6 +66,12 @@ begin_include
 include|#
 directive|include
 file|"error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machdep.h"
 end_include
 
 begin_include
