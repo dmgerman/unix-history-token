@@ -1142,6 +1142,12 @@ operator|->
 name|type
 operator|==
 name|NCMD
+operator|||
+name|n
+operator|->
+name|type
+operator|==
+name|NSUBSHELL
 operator|)
 operator|)
 condition|)
