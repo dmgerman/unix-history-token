@@ -1260,6 +1260,11 @@ name|ENXIO
 operator|)
 return|;
 block|}
+comment|/* 	 * XXX: Prevent the PnP BIOS code from interfering with 	 * our own scan of ISA devices. 	 */
+name|PnPBIOStable
+operator|=
+name|NULL
+expr_stmt|;
 name|acpi_capm_init
 argument_list|(
 name|sc

@@ -26,11 +26,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/*      * Prevent the PnP BIOS code from interfering with our own scan of      * ISA devices.      */
-name|PnPBIOStable
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 operator|(
 literal|0
