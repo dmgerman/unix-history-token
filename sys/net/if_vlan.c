@@ -1761,6 +1761,16 @@ control|)
 block|{
 if|if
 condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|==
+name|ifv
+operator|->
+name|ifv_p
+operator|&&
 name|ifv
 operator|->
 name|ifv_tag
@@ -1772,7 +1782,7 @@ block|}
 if|if
 condition|(
 name|ifv
-operator|!=
+operator|==
 name|NULL
 operator|||
 operator|(
@@ -1799,7 +1809,7 @@ literal|1
 return|;
 comment|/* So the parent can take note */
 block|}
-comment|/* 	 * Having found a valid vlan interface corresponding to 	 * the given source interface and vlan tag, run the 	 * the real packet through ethert_input(). 	 */
+comment|/* 	 * Having found a valid vlan interface corresponding to 	 * the given source interface and vlan tag, run the 	 * the real packet through ether_input(). 	 */
 name|m
 operator|->
 name|m_pkthdr
@@ -1919,7 +1929,7 @@ block|}
 if|if
 condition|(
 name|ifv
-operator|!=
+operator|==
 name|NULL
 operator|||
 operator|(
