@@ -14389,12 +14389,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -14416,12 +14410,6 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|vm_mtx
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
