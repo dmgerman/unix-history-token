@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.12 (Berkeley) %G%"
+literal|"@(#)main.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2321,6 +2321,9 @@ name|t
 decl_stmt|;
 name|char
 modifier|*
+name|fmt
+decl_stmt|,
+modifier|*
 name|slash
 decl_stmt|,
 name|db
@@ -2417,6 +2420,18 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
+comment|/* SCCS *likes* main.c... */
+name|fmt
+operator|=
+literal|"%l:% %P on %A, %d %B %Y"
+expr_stmt|;
+name|fmt
+index|[
+literal|4
+index|]
+operator|=
+literal|'M'
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2429,7 +2444,7 @@ argument_list|(
 name|db
 argument_list|)
 argument_list|,
-literal|"%l:main.cP on %A, %d %B %Y"
+name|fmt
 argument_list|,
 operator|&
 name|t
