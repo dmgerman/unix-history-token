@@ -1767,8 +1767,6 @@ decl_stmt|;
 name|linux_get_osname
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|osname
 argument_list|)
@@ -1776,8 +1774,6 @@ expr_stmt|;
 name|linux_get_osrelease
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|osrelease
 argument_list|)

@@ -8764,8 +8764,6 @@ init|=
 name|linux_get_oss_version
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|)
 decl_stmt|;
 return|return
