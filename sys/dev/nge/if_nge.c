@@ -4911,7 +4911,7 @@ name|nge_jfree
 argument_list|,
 operator|(
 expr|struct
-name|ti_softc
+name|nge_softc
 operator|*
 operator|)
 name|sc
