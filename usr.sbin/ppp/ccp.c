@@ -1210,7 +1210,9 @@ index|[
 name|CCP_NEG_MPPE
 index|]
 operator|=
-literal|0
+name|NEG_ENABLED
+operator||
+name|NEG_ACCEPTED
 expr_stmt|;
 endif|#
 directive|endif

@@ -1369,7 +1369,7 @@ name|cfg
 operator|.
 name|chap81
 operator|=
-literal|0
+name|NEG_ACCEPTED
 expr_stmt|;
 endif|#
 directive|endif
