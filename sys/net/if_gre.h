@@ -29,6 +29,12 @@ directive|include
 file|<sys/ioccom.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -358,6 +364,15 @@ directive|define
 name|GRE_TTL
 value|30
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/*   * ioctls needed to manipulate the interface   */
