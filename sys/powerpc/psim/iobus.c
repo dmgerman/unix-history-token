@@ -7,6 +7,12 @@ begin_comment
 comment|/*  *  PSIM 'iobus' local bus. Should be set up in the device tree like:  *  *     /iobus@0x80000000/name psim-iobus  *  *  Code borrowed from various nexus.c and uninorth.c :-)  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|__RMAN_RESOURCE_VISIBLE
+end_define
+
 begin_include
 include|#
 directive|include
@@ -102,6 +108,27 @@ include|#
 directive|include
 file|<powerpc/psim/iobusvar.h>
 end_include
+
+begin_struct
+struct|struct
+name|iobus_softc
+block|{
+name|phandle_t
+name|sc_node
+decl_stmt|;
+name|vm_offset_t
+name|sc_addr
+decl_stmt|;
+name|vm_offset_t
+name|sc_size
+decl_stmt|;
+name|struct
+name|rman
+name|sc_mem_rman
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_expr_stmt
 specifier|static

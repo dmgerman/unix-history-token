@@ -7,6 +7,12 @@ begin_comment
 comment|/*  * Driver for KeyLargo/Pangea, the MacPPC south bridge ASIC.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|__RMAN_RESOURCE_VISIBLE
+end_define
+
 begin_include
 include|#
 directive|include
@@ -108,6 +114,31 @@ include|#
 directive|include
 file|<dev/pci/pcireg.h>
 end_include
+
+begin_comment
+comment|/*  * Macio softc  */
+end_comment
+
+begin_struct
+struct|struct
+name|macio_softc
+block|{
+name|phandle_t
+name|sc_node
+decl_stmt|;
+name|vm_offset_t
+name|sc_base
+decl_stmt|;
+name|vm_offset_t
+name|sc_size
+decl_stmt|;
+name|struct
+name|rman
+name|sc_mem_rman
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_expr_stmt
 specifier|static
