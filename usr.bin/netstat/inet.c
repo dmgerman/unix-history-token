@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet.c,v 1.30 1998/07/06 21:01:23 bde Exp $"
+literal|"$Id: inet.c,v 1.31 1999/03/10 17:25:42 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -694,11 +694,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-name|Aflag
-condition|?
-literal|"%-5.5s %-6.6s %-6.6s  %-18.18s %-18.18s %s\n"
-else|:
-literal|"%-5.5s %-6.6s %-6.6s  %-22.22s %-22.22s %s\n"
+literal|"%-5.5s %-6.6s %-6.6s %-21.21s %-21.21s %s\n"
 argument_list|,
 literal|"Proto"
 argument_list|,
@@ -933,7 +929,7 @@ name|TCP_NSTATES
 condition|)
 name|printf
 argument_list|(
-literal|" %d"
+literal|"%d"
 argument_list|,
 name|tp
 operator|->
@@ -944,7 +940,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|" %s"
+literal|"%s"
 argument_list|,
 name|tcpstates
 index|[
@@ -2660,9 +2656,6 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
-name|int
-name|width
-decl_stmt|;
 name|sprintf
 argument_list|(
 name|line
@@ -2753,21 +2746,9 @@ name|port
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|width
-operator|=
-name|Aflag
-condition|?
-literal|18
-else|:
-literal|22
-expr_stmt|;
 name|printf
 argument_list|(
-literal|" %-*.*s"
-argument_list|,
-name|width
-argument_list|,
-name|width
+literal|"%-21.21s "
 argument_list|,
 name|line
 argument_list|)
