@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)halt.c	4.7 (Berkeley) %G%"
+literal|"@(#)halt.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Halt  */
@@ -513,6 +524,15 @@ operator|.
 name|ut_name
 argument_list|,
 literal|"shutdown"
+argument_list|)
+expr_stmt|;
+name|SCPYN
+argument_list|(
+name|wtmp
+operator|.
+name|ut_host
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 name|time

@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)last.c	4.4 (Berkeley) %G%"
+literal|"@(#)last.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * last  */
@@ -60,6 +71,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HMAX
+value|sizeof(buf[0].ut_host)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SECDAY
 value|(24*60*60)
 end_define
@@ -86,6 +104,18 @@ parameter_list|,
 name|b
 parameter_list|)
 value|(!strncmp(a,b,NMAX))
+end_define
+
+begin_define
+define|#
+directive|define
+name|hosteq
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(!strncmp(a,b,HMAX))
 end_define
 
 begin_define
@@ -551,7 +581,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-*.*s  %-*.*s  %10.10s %5.5s "
+literal|"%-*.*s  %-*.*s %-*.*s %10.10s %5.5s"
 argument_list|,
 name|NMAX
 argument_list|,
@@ -568,6 +598,14 @@ argument_list|,
 name|bp
 operator|->
 name|ut_line
+argument_list|,
+name|HMAX
+argument_list|,
+name|HMAX
+argument_list|,
+name|bp
+operator|->
+name|ut_host
 argument_list|,
 name|ct
 argument_list|,
