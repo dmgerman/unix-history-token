@@ -237,6 +237,19 @@ end_struct
 
 begin_struct
 struct|struct
+name|usbd_tt
+block|{
+name|struct
+name|usbd_hub
+modifier|*
+name|hub
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|usbd_port
 block|{
 name|usb_port_status_t
@@ -268,6 +281,12 @@ modifier|*
 name|parent
 decl_stmt|;
 comment|/* The ports hub */
+name|struct
+name|usbd_tt
+modifier|*
+name|tt
+decl_stmt|;
+comment|/* Transaction translator (if any) */
 block|}
 struct|;
 end_struct
@@ -488,11 +507,11 @@ name|myhub
 decl_stmt|;
 comment|/* upstream hub */
 name|struct
-name|usbd_device
+name|usbd_port
 modifier|*
-name|myhighhub
+name|myhsport
 decl_stmt|;
-comment|/* closest high speed hub */
+comment|/* closest high speed port */
 name|struct
 name|usbd_endpoint
 name|def_ep
