@@ -1401,8 +1401,7 @@ name|__STRICT_ANSI__
 end_ifndef
 
 begin_decl_stmt
-name|long
-name|long
+name|int64_t
 name|strtoq
 name|__P
 argument_list|(
@@ -1422,9 +1421,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|long
-name|long
+name|u_int64_t
 name|strtouq
 name|__P
 argument_list|(
