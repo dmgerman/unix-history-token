@@ -2060,6 +2060,12 @@ name|i
 operator||=
 name|DITEM_LEAVE_MENU
 expr_stmt|;
+comment|/* Set default security level */
+name|configSecurityModerate
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
 comment|/* Give user the option of one last configuration spree */
 name|installConfigure
 argument_list|()
@@ -2358,6 +2364,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -2370,6 +2379,9 @@ name|configAnonFTP
 argument_list|(
 name|self
 argument_list|)
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2403,6 +2415,28 @@ literal|"YES"
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"Do you want to select a default security profile for\n"
+literal|"this host (\"medium\" security being the default)?"
+argument_list|)
+condition|)
+name|configSecurityProfile
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
+else|else
+name|configSecurityModerate
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2626,6 +2660,12 @@ operator|==
 name|DITEM_SUCCESS
 condition|)
 block|{
+comment|/* Set default security level */
+name|configSecurityModerate
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
 comment|/* Give user the option of one last configuration spree */
 name|installConfigure
 argument_list|()

@@ -239,12 +239,6 @@ name|distSetEverything
 block|}
 block|,
 block|{
-literal|"distSetCRYPTO"
-block|,
-name|distSetCRYPTO
-block|}
-block|,
-block|{
 literal|"distSetSrc"
 block|,
 name|distSetSrc
