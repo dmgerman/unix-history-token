@@ -313,12 +313,6 @@ name|sc_label
 decl_stmt|;
 comment|/* generic disk device info */
 name|int
-name|sc_bopenmask
-decl_stmt|;
-name|int
-name|sc_copenmask
-decl_stmt|;
-name|int
 name|sc_openmask
 decl_stmt|;
 name|int
