@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.34 (Berkeley) %G%"
+literal|"@(#)main.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1149,6 +1149,17 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
+specifier|register
+name|char
+modifier|*
+name|q
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|strchr
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|tTd
@@ -1181,6 +1192,35 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
+name|q
+operator|=
+name|strchr
+argument_list|(
+name|jbuf
+argument_list|,
+literal|'.'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|q
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|*
+name|q
+operator|=
+literal|'\0'
+expr_stmt|;
+name|p
+operator|=
+name|newstr
+argument_list|(
+name|jbuf
+argument_list|)
+expr_stmt|;
+block|}
 name|setclass
 argument_list|(
 literal|'w'
