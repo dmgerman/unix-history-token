@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.   *  * %sccs.include.redist.c%  *  *	@(#)kern_subr.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.   *  * %sccs.include.redist.c%  *  *	@(#)kern_subr.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"proc.h"
 end_include
 
 begin_expr_stmt
@@ -62,6 +68,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|uio
@@ -81,6 +90,27 @@ argument_list|(
 literal|"uiomove: mode"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_segflg
+operator|==
+name|UIO_USERSPACE
+operator|&&
+name|uio
+operator|->
+name|uio_procp
+operator|!=
+name|curproc
+condition|)
+name|panic
+argument_list|(
+literal|"uiomove proc"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|n
