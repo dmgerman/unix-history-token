@@ -56,6 +56,9 @@ block|{
 name|pid_t
 name|ret
 decl_stmt|;
+name|_thread_kern_sig_defer
+argument_list|()
+expr_stmt|;
 comment|/* Perform a non-blocking wait4 syscall: */
 while|while
 condition|(
@@ -124,6 +127,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|_thread_kern_sig_undefer
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ret
