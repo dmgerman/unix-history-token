@@ -2106,6 +2106,12 @@ argument_list|,
 name|M_NFSRVDESC
 argument_list|,
 name|waitflag
+operator|==
+name|M_DONTWAIT
+condition|?
+name|M_NOWAIT
+else|:
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2880,6 +2886,12 @@ argument_list|,
 name|M_NFSRVDESC
 argument_list|,
 name|waitflag
+operator|==
+name|M_DONTWAIT
+condition|?
+name|M_NOWAIT
+else|:
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
