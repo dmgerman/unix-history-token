@@ -367,16 +367,22 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
+name|mbuf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
 modifier|*
 name|nosync
 decl_stmt|,
 modifier|*
 name|whom
-decl_stmt|,
-name|mbuf
-index|[
-name|BUFSIZ
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -508,7 +514,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1141,11 +1146,16 @@ if|if
 condition|(
 name|sltime
 operator|>
+call|(
+name|u_int
+call|)
+argument_list|(
 name|tp
 operator|->
 name|timetowait
 operator|/
 literal|5
+argument_list|)
 condition|)
 name|timewarn
 argument_list|(
@@ -1234,6 +1244,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|restricted_environ
@@ -1284,6 +1295,7 @@ literal|4
 index|]
 decl_stmt|;
 specifier|extern
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1553,6 +1565,7 @@ name|signo
 parameter_list|)
 name|int
 name|signo
+name|__unused
 decl_stmt|;
 block|{
 name|longjmp
@@ -1898,19 +1911,16 @@ name|getoffset
 parameter_list|(
 name|timearg
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|timearg
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|tm
 modifier|*
 name|lt
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -2499,6 +2509,7 @@ name|signo
 parameter_list|)
 name|int
 name|signo
+name|__unused
 decl_stmt|;
 block|{
 if|if

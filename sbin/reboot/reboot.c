@@ -174,10 +174,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
 name|struct
 name|passwd
 modifier|*
@@ -187,6 +183,8 @@ name|int
 name|ch
 decl_stmt|,
 name|howto
+decl_stmt|,
+name|i
 decl_stmt|,
 name|lflag
 decl_stmt|,
@@ -201,7 +199,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|user
 decl_stmt|;
