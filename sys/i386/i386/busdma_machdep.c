@@ -1847,12 +1847,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|contigfree
 argument_list|(
 name|vaddr
@@ -1862,12 +1856,6 @@ operator|->
 name|maxsize
 argument_list|,
 name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
