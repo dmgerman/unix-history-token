@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	4.4 (Berkeley) 83/07/09"
+literal|"@(#)init.c	4.5 (Berkeley) 85/02/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -499,6 +499,13 @@ literal|0
 block|}
 block|,
 comment|/* unbuffered output */
+block|{
+literal|"ab"
+block|,
+literal|0
+block|}
+block|,
+comment|/* auto-baud detect with '\r' */
 block|{
 literal|0
 block|}

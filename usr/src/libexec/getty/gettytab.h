@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gettytab.h	4.3	83/07/09	*/
+comment|/*	gettytab.h	4.4	85/02/05	*/
 end_comment
 
 begin_comment
@@ -528,6 +528,13 @@ define|#
 directive|define
 name|UB
 value|gettyflags[18].value
+end_define
+
+begin_define
+define|#
+directive|define
+name|AB
+value|gettyflags[19].value
 end_define
 
 begin_function_decl
