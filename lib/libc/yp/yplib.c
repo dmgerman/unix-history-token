@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.10 1995/05/30 05:42:15 rgrimes Exp $"
+literal|"$Id: yplib.c,v 1.12 1995/09/02 04:16:21 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2047,23 +2047,6 @@ condition|)
 return|return
 name|YPERR_BADARGS
 return|;
-name|again
-label|:
-if|if
-condition|(
-name|_yp_dobind
-argument_list|(
-name|indomain
-argument_list|,
-operator|&
-name|ysd
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-name|YPERR_DOMAIN
-return|;
 ifdef|#
 directive|ifdef
 name|YPMATCHCACHE
@@ -2157,6 +2140,23 @@ return|;
 block|}
 endif|#
 directive|endif
+name|again
+label|:
+if|if
+condition|(
+name|_yp_dobind
+argument_list|(
+name|indomain
+argument_list|,
+operator|&
+name|ysd
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|YPERR_DOMAIN
+return|;
 name|tv
 operator|.
 name|tv_sec
