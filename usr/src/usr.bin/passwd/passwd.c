@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.19 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -983,6 +983,12 @@ argument_list|(
 name|tf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|!=
+name|NULL
+condition|)
 name|dbm_close
 argument_list|(
 name|dp
