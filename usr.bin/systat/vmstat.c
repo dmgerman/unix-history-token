@@ -1896,7 +1896,7 @@ name|DISKROW
 argument_list|,
 name|DISKCOL
 argument_list|,
-literal|"Discs"
+literal|"Disks"
 argument_list|)
 expr_stmt|;
 name|mvprintw
