@@ -116,13 +116,6 @@ name|zero_read
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|d_read_t
-name|null_read
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -154,7 +147,11 @@ block|{
 operator|.
 name|d_read
 operator|=
-name|null_read
+operator|(
+name|d_read_t
+operator|*
+operator|)
+name|nullop
 block|,
 operator|.
 name|d_write
@@ -228,36 +225,6 @@ modifier|*
 name|zbuf
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|null_read
-parameter_list|(
-name|dev_t
-name|dev
-name|__unused
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
-name|__unused
-parameter_list|,
-name|int
-name|flags
-name|__unused
-parameter_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/* ARGSUSED */
