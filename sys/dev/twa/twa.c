@@ -3591,6 +3591,11 @@ else|:
 literal|0
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
 name|copyin
 argument_list|(
 name|user_buf
@@ -3606,7 +3611,11 @@ expr|struct
 name|twa_lock_packet
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+literal|0
+condition|)
+break|break;
 name|s
 operator|=
 name|splcam
@@ -3732,6 +3741,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
 name|copyout
 argument_list|(
 operator|&
@@ -3746,6 +3760,18 @@ argument_list|(
 expr|struct
 name|twa_lock_packet
 argument_list|)
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|twa_printf
+argument_list|(
+name|sc
+argument_list|,
+literal|"get_lock: Could not copyout to lock packet. error = %x\n"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 break|break;
