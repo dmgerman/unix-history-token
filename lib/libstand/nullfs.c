@@ -21,6 +21,7 @@ begin_function
 name|int
 name|null_open
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|path
