@@ -438,7 +438,16 @@ comment|/* Size requested */
 block|{
 name|int
 name|maxsize
+decl_stmt|,
+name|defsize
 decl_stmt|;
+name|maxsize
+operator|=
+literal|256
+operator|*
+literal|1024
+expr_stmt|;
+comment|/* XXX */
 switch|switch
 condition|(
 name|proto
@@ -447,23 +456,24 @@ block|{
 case|case
 name|IPPROTO_TCP
 case|:
-name|maxsize
+name|defsize
 operator|=
-literal|65536
+literal|64
+operator|*
+literal|1024
 expr_stmt|;
 comment|/* XXX */
 break|break;
 case|case
 name|IPPROTO_UDP
 case|:
-name|maxsize
+name|defsize
 operator|=
-literal|8192
+name|UDPMSGSIZE
 expr_stmt|;
-comment|/* XXX */
 break|break;
 default|default:
-name|maxsize
+name|defsize
 operator|=
 name|RPC_MAXDATASIZE
 expr_stmt|;
@@ -476,7 +486,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|maxsize
+name|defsize
 return|;
 comment|/* Check whether the value is within the upper max limit */
 return|return
