@@ -834,6 +834,8 @@ decl_stmt|,
 name|ileave
 decl_stmt|,
 name|flags
+init|=
+literal|0
 decl_stmt|,
 name|j
 decl_stmt|;
@@ -1462,6 +1464,10 @@ decl_stmt|;
 name|gid_t
 name|egid
 decl_stmt|;
+name|rval
+operator|=
+literal|0
+expr_stmt|;
 name|egid
 operator|=
 name|getegid
