@@ -142,6 +142,16 @@ name|devmax
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|PRVERB
+parameter_list|(
+name|a
+parameter_list|)
+value|printf a
+end_define
+
 begin_function_decl
 specifier|static
 name|int
@@ -310,11 +320,20 @@ name|entry
 operator|==
 literal|0
 condition|)
+block|{
+name|PRVERB
+argument_list|(
+operator|(
+literal|"pcibios: No call entry point\n"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|args
 operator|.
 name|eax
@@ -340,11 +359,20 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 condition|)
+block|{
+name|PRVERB
+argument_list|(
+operator|(
+literal|"pcibios: BIOS_PRESENT call failed\n"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|args
@@ -353,11 +381,20 @@ name|edx
 operator|!=
 literal|0x20494350
 condition|)
+block|{
+name|PRVERB
+argument_list|(
+operator|(
+literal|"pcibios: BIOS_PRESENT didn't return 'PCI ' in edx\n"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 return|return
 operator|(
 name|args
@@ -978,10 +1015,11 @@ operator|<
 literal|0x0210
 condition|)
 block|{
-name|printf
+name|PRVERB
 argument_list|(
+operator|(
 literal|"pci_cfgintr: BIOS %x.%02x doesn't support interrupt routing\n"
-argument_list|,
+operator|,
 operator|(
 name|v
 operator|&
@@ -989,10 +1027,11 @@ literal|0xff00
 operator|)
 operator|>>
 literal|8
-argument_list|,
+operator|,
 name|v
 operator|&
 literal|0xff
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1093,7 +1132,7 @@ condition|)
 continue|continue;
 name|irq
 operator|=
-name|pci_cfgintr_unique
+name|pci_cfgintr_linked
 argument_list|(
 name|pe
 argument_list|,
@@ -1103,12 +1142,38 @@ expr_stmt|;
 if|if
 condition|(
 name|irq
-operator|==
+operator|!=
 literal|255
 condition|)
+block|{
+name|PRVERB
+argument_list|(
+operator|(
+literal|"pci_cfgintr: %d:%d INT%c already routed to irq %d\n"
+operator|,
+name|bus
+operator|,
+name|device
+operator|,
+literal|'A'
+operator|+
+name|pin
+operator|-
+literal|1
+operator|,
+name|irq
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|irq
+operator|)
+return|;
+block|}
 name|irq
 operator|=
-name|pci_cfgintr_linked
+name|pci_cfgintr_unique
 argument_list|(
 name|pe
 argument_list|,
@@ -1199,10 +1264,12 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * XXX if it fails, we should try to smack the router 		 * hardware directly 		 */
-name|printf
+comment|/* 	     * XXX if it fails, we should try to smack the router 	     * hardware directly. 	     * XXX Also, there may be other choices that we can try that 	     * will work. 	     */
+name|PRVERB
 argument_list|(
-literal|"pci_cfgintr: ROUTE_INTERRUPT failed\n"
+operator|(
+literal|"pci_cfgintr: ROUTE_INTERRUPT failured.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1234,19 +1301,21 @@ name|irq
 operator|)
 return|;
 block|}
-name|printf
+name|PRVERB
 argument_list|(
+operator|(
 literal|"pci_cfgintr: can't route an interrupt to %d:%d INT%c\n"
-argument_list|,
+operator|,
 name|bus
-argument_list|,
+operator|,
 name|device
-argument_list|,
+operator|,
 literal|'A'
 operator|+
 name|pin
 operator|-
 literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1313,11 +1382,13 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-name|printf
+name|PRVERB
 argument_list|(
+operator|(
 literal|"pci_cfgintr_unique: hard-routed to irq %d\n"
-argument_list|,
+operator|,
 name|irq
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1486,15 +1557,17 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-name|printf
+name|PRVERB
 argument_list|(
+operator|(
 literal|"pci_cfgintr_linked: linked (%x) to hard-routed irq %d\n"
-argument_list|,
+operator|,
 name|pi
 operator|->
 name|link
-argument_list|,
+operator|,
 name|irq
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1749,10 +1822,11 @@ literal|255
 operator|)
 condition|)
 block|{
-name|printf
+name|PRVERB
 argument_list|(
+operator|(
 literal|"pci_cfgintr_search: linked (%x) to configured irq %d at %d:%d:%d\n"
-argument_list|,
+operator|,
 name|pe
 operator|->
 name|pe_intpin
@@ -1763,26 +1837,27 @@ literal|1
 index|]
 operator|.
 name|link
-argument_list|,
+operator|,
 name|irq
-argument_list|,
+operator|,
 name|pci_get_bus
 argument_list|(
 operator|*
 name|childp
 argument_list|)
-argument_list|,
+operator|,
 name|pci_get_slot
 argument_list|(
 operator|*
 name|childp
 argument_list|)
-argument_list|,
+operator|,
 name|pci_get_function
 argument_list|(
 operator|*
 name|childp
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1898,11 +1973,13 @@ name|ibit
 operator|)
 condition|)
 block|{
-name|printf
+name|PRVERB
 argument_list|(
+operator|(
 literal|"pci_cfgintr_virgin: using routable PCI-only interrupt %d\n"
-argument_list|,
+operator|,
 name|irq
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1951,11 +2028,13 @@ operator|&
 name|ibit
 condition|)
 block|{
-name|printf
+name|PRVERB
 argument_list|(
+operator|(
 literal|"pci_cfgintr_virgin: using routable interrupt %d\n"
-argument_list|,
+operator|,
 name|irq
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
