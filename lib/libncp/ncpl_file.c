@@ -67,7 +67,7 @@ begin_function
 name|int
 name|ncp_read
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|ncp_fh
@@ -173,7 +173,7 @@ begin_function
 name|int
 name|ncp_write
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|ncp_fh

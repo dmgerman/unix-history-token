@@ -31,7 +31,7 @@ begin_function
 name|int
 name|ncp_create_queue_job_and_file
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|u_int32_t
@@ -144,7 +144,7 @@ begin_function
 name|int
 name|ncp_close_file_and_start_job
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|u_int32_t
@@ -207,7 +207,7 @@ begin_function
 name|int
 name|ncp_attach_to_queue
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|u_int32_t
@@ -254,7 +254,7 @@ begin_function
 name|int
 name|ncp_detach_from_queue
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|u_int32_t
@@ -301,7 +301,7 @@ begin_function
 name|int
 name|ncp_service_queue_job
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|u_int32_t
@@ -407,7 +407,7 @@ begin_function
 name|int
 name|ncp_finish_servicing_job
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|u_int32_t
@@ -474,7 +474,7 @@ begin_function
 name|int
 name|ncp_abort_servicing_job
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|u_int32_t
@@ -531,7 +531,7 @@ begin_function
 name|int
 name|ncp_get_queue_length
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|u_int32_t
@@ -644,7 +644,7 @@ begin_function
 name|int
 name|ncp_get_queue_job_ids
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|u_int32_t
@@ -860,7 +860,7 @@ begin_function
 name|int
 name|ncp_get_queue_job_info
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|u_int32_t

@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NCP_RCFILE_H_
+name|_NETNCP_NCP_RCFILE_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NCP_RCFILE_H_
+name|_NETNCP_NCP_RCFILE_H_
 end_define
 
 begin_include
@@ -100,22 +100,20 @@ struct|;
 end_struct
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|int
 name|rc_open
 parameter_list|(
 name|char
 modifier|*
-name|filename
 parameter_list|,
 name|char
 modifier|*
-name|mode
 parameter_list|,
 name|struct
 name|rcfile
 modifier|*
 modifier|*
-name|rcfile
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -127,7 +125,6 @@ parameter_list|(
 name|struct
 name|rcfile
 modifier|*
-name|rcp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -139,20 +136,16 @@ parameter_list|(
 name|struct
 name|rcfile
 modifier|*
-name|rcp
 parameter_list|,
 name|char
 modifier|*
-name|section
 parameter_list|,
 name|char
 modifier|*
-name|key
 parameter_list|,
 name|char
 modifier|*
 modifier|*
-name|dest
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -164,22 +157,17 @@ parameter_list|(
 name|struct
 name|rcfile
 modifier|*
-name|rcp
 parameter_list|,
 name|char
 modifier|*
-name|section
 parameter_list|,
 name|char
 modifier|*
-name|key
 parameter_list|,
 name|int
-name|maxlen
 parameter_list|,
 name|char
 modifier|*
-name|dest
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -191,19 +179,15 @@ parameter_list|(
 name|struct
 name|rcfile
 modifier|*
-name|rcp
 parameter_list|,
 name|char
 modifier|*
-name|section
 parameter_list|,
 name|char
 modifier|*
-name|key
 parameter_list|,
 name|int
 modifier|*
-name|value
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -215,22 +199,22 @@ parameter_list|(
 name|struct
 name|rcfile
 modifier|*
-name|rcp
 parameter_list|,
 name|char
 modifier|*
-name|section
 parameter_list|,
 name|char
 modifier|*
-name|key
 parameter_list|,
 name|int
 modifier|*
-name|value
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
@@ -238,7 +222,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _NCP_RCFILE_H_ */
+comment|/* _NETNCP_NCP_RCFILE_H_ */
 end_comment
 
 end_unit

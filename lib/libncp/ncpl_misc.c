@@ -154,7 +154,7 @@ begin_function
 name|int
 name|ncp_get_file_server_information
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|struct
@@ -267,7 +267,7 @@ begin_function
 name|int
 name|ncp_get_stations_logged_info
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|u_int32_t
@@ -404,7 +404,7 @@ begin_function
 name|int
 name|ncp_get_internet_address
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|u_int32_t

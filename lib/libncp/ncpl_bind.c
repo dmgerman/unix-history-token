@@ -51,7 +51,7 @@ begin_function
 name|int
 name|ncp_get_bindery_object_id
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|u_int16_t
@@ -177,7 +177,7 @@ begin_function
 name|int
 name|ncp_read_property_value
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|int
@@ -326,7 +326,7 @@ begin_function
 name|int
 name|ncp_scan_bindery_object
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|u_int32_t
@@ -477,7 +477,7 @@ begin_function
 name|int
 name|ncp_get_bindery_object_name
 parameter_list|(
-name|int
+name|NWCONN_HANDLE
 name|connid
 parameter_list|,
 name|u_int32_t
