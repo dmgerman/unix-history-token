@@ -24,6 +24,20 @@ parameter_list|)
 value|(((x)+(BPF_ALIGNMENT-1))&~(BPF_ALIGNMENT-1))
 end_define
 
+begin_define
+define|#
+directive|define
+name|BPF_MAXINSNS
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_MAXBUFSIZE
+value|0x8000
+end_define
+
 begin_comment
 comment|/*  *  Structure for BIOCSETF.  */
 end_comment

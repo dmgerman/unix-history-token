@@ -18,24 +18,30 @@ name|bd_next
 decl_stmt|;
 comment|/* Linked list of descriptors */
 comment|/* 	 * Buffer slots: two mbuf clusters buffer the incoming packets. 	 *   The model has three slots.  Sbuf is always occupied. 	 *   sbuf (store) - Receive interrupt puts packets here. 	 *   hbuf (hold) - When sbuf is full, put cluster here and 	 *                 wakeup read (replace sbuf with fbuf). 	 *   fbuf (free) - When read is done, put cluster here. 	 * On receiving, if sbuf is full and fbuf is 0, packet is dropped. 	 */
-name|struct
-name|mbuf
-modifier|*
+name|caddr_t
 name|bd_sbuf
 decl_stmt|;
 comment|/* store slot */
-name|struct
-name|mbuf
-modifier|*
+name|caddr_t
 name|bd_hbuf
 decl_stmt|;
 comment|/* hold slot */
-name|struct
-name|mbuf
-modifier|*
+name|caddr_t
 name|bd_fbuf
 decl_stmt|;
 comment|/* free slot */
+name|int
+name|bd_slen
+decl_stmt|;
+comment|/* current length of store buffer */
+name|int
+name|bd_hlen
+decl_stmt|;
+comment|/* current length of hold buffer */
+name|int
+name|bd_bufsize
+decl_stmt|;
+comment|/* absolute length of buffers */
 name|struct
 name|bpf_if
 modifier|*
@@ -47,17 +53,11 @@ name|bd_rtout
 decl_stmt|;
 comment|/* Read timeout in 'ticks' */
 name|struct
-name|mbuf
-modifier|*
-name|bd_filterm
-decl_stmt|;
-comment|/* Packet filter mbuf */
-name|struct
 name|bpf_insn
 modifier|*
 name|bd_filter
 decl_stmt|;
-comment|/* precomputed pointer to fcode */
+comment|/* filter code */
 name|u_long
 name|bd_rcount
 decl_stmt|;
@@ -69,7 +69,7 @@ comment|/* number of packets dropped */
 name|struct
 name|proc
 modifier|*
-name|bd_SelProc
+name|bd_selproc
 decl_stmt|;
 comment|/* process that last selected us */
 name|u_char
@@ -81,7 +81,7 @@ name|bd_state
 decl_stmt|;
 comment|/* idle, waiting, or timed out */
 name|u_char
-name|bd_SelColl
+name|bd_selcoll
 decl_stmt|;
 comment|/* true if selects collide */
 name|u_char
