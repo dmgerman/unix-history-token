@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dk.h"
+file|"dkstat.h"
 end_include
 
 begin_include
@@ -1786,6 +1786,18 @@ name|nummba
 index|]
 argument_list|)
 expr_stmt|;
+name|mdp
+operator|->
+name|mba_cr
+operator|=
+name|MBCR_INIT
+expr_stmt|;
+name|mdp
+operator|->
+name|mba_cr
+operator|=
+name|MBCR_IE
+expr_stmt|;
 name|fnd
 operator|.
 name|mi_mba
@@ -2050,18 +2062,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|mdp
-operator|->
-name|mba_cr
-operator|=
-name|MBCR_INIT
-expr_stmt|;
-name|mdp
-operator|->
-name|mba_cr
-operator|=
-name|MBCR_IE
-expr_stmt|;
 block|}
 end_block
 
@@ -4590,6 +4590,12 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|nblks
+operator|!=
+operator|-
+literal|1
+operator|&&
+operator|(
 name|swp
 operator|->
 name|sw_nblks
@@ -4601,6 +4607,7 @@ operator|->
 name|sw_nblks
 operator|>
 name|nblks
+operator|)
 condition|)
 name|swp
 operator|->
