@@ -489,6 +489,14 @@ begin_comment
 comment|/* Has pmap_init completed? */
 end_comment
 
+begin_decl_stmt
+name|vm_offset_t
+name|vhpt_base
+decl_stmt|,
+name|vhpt_size
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * We use an object to own the kernel's 'page tables'. For simplicity,  * we use one page directory to index a set of pages containing  * ia64_lptes. This gives us up to 2Gb of kernel virtual space.  */
 end_comment
@@ -1127,11 +1135,6 @@ decl_stmt|,
 name|count
 decl_stmt|,
 name|ridbits
-decl_stmt|;
-name|vm_offset_t
-name|vhpt_size
-decl_stmt|,
-name|vhpt_base
 decl_stmt|;
 name|struct
 name|ia64_pal_result
