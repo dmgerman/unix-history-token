@@ -734,6 +734,15 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|MICROSOFT
+argument_list|,
+name|MN_520
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|NETGEAR_2
 argument_list|,
 name|MA401RA
