@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)shutdown.c	4.4 (Berkeley/Melbourne) 81/04/21	*/
+comment|/*	@(#)shutdown.c	4.5 (Berkeley/Melbourne) 81/05/04	*/
 end_comment
 
 begin_include
@@ -216,6 +216,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|reboot
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|noroot
 init|=
 literal|0
 decl_stmt|;
@@ -516,6 +524,14 @@ operator|=
 literal|1
 expr_stmt|;
 continue|continue;
+case|case
+literal|'y'
+case|:
+name|noroot
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
 default|default:
 name|fprintf
 argument_list|(
@@ -548,12 +564,33 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: %s [-krd] shutdowntime [nologmessage]\n"
+literal|"Usage: %s [-krdy] shutdowntime [nologmessage]\n"
 argument_list|,
 name|argv
 index|[
 literal|0
 index|]
+argument_list|)
+expr_stmt|;
+name|finish
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|noroot
+operator|==
+literal|0
+operator|&&
+name|geteuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Must specify -y flag to run as normal user.\n"
 argument_list|)
 expr_stmt|;
 name|finish
