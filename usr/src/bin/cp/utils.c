@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utils.c	5.6 (Berkeley) %G%"
+literal|"@(#)utils.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,19 +55,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fts.h>
 end_include
 
 begin_include
@@ -85,7 +85,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fts.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -988,27 +988,33 @@ name|S_IRWXG
 operator||
 name|S_IRWXO
 expr_stmt|;
+name|TIMESPEC_TO_TIMEVAL
+argument_list|(
+operator|&
 name|tv
 index|[
 literal|0
 index|]
-operator|.
-name|tv_sec
-operator|=
+argument_list|,
+operator|&
 name|fs
 operator|->
-name|st_atime
+name|st_atimespec
+argument_list|)
 expr_stmt|;
+name|TIMESPEC_TO_TIMEVAL
+argument_list|(
+operator|&
 name|tv
 index|[
 literal|1
 index|]
-operator|.
-name|tv_sec
-operator|=
+argument_list|,
+operator|&
 name|fs
 operator|->
-name|st_mtime
+name|st_mtimespec
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
