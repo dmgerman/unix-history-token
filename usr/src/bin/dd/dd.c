@@ -4,6 +4,10 @@ comment|/* dd -- convert a file while copying it.    Copyright (C) 1985, 1990, 1
 end_comment
 
 begin_comment
+comment|/*  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00140  * --------------------         -----   ----------------------  *  * 20 Apr 93	Dave Burgess	silence compile warnings...  *  */
+end_comment
+
+begin_comment
 comment|/* Written by Paul Rubin, David MacKenzie, and Stuart Kemp. */
 end_comment
 
@@ -290,9 +294,12 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*void error ();*/
-end_comment
+begin_function_decl
+name|void
+name|error
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -5097,20 +5104,29 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|error
-argument_list|(
-argument|n
-argument_list|,
-argument|e
-argument_list|,
-argument|s
-argument_list|,
-argument|s1
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|n
+parameter_list|,
+name|e
+parameter_list|,
+name|s
+parameter_list|,
+name|s1
+parameter_list|)
+name|int
+name|n
+decl_stmt|,
+name|e
+decl_stmt|,
+name|s1
+decl_stmt|;
+name|char
+modifier|*
+name|s
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -5144,7 +5160,7 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
