@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	4.34	82/12/22	*/
+comment|/*	ufs_lookup.c	4.35	83/02/10	*/
 end_comment
 
 begin_include
@@ -2067,6 +2067,10 @@ name|int
 name|loc
 decl_stmt|,
 name|freespace
+decl_stmt|,
+name|error
+init|=
+literal|0
 decl_stmt|;
 name|u_int
 name|dsize
@@ -2139,9 +2143,8 @@ name|d_reclen
 operator|=
 name|DIRBLKSIZ
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|error
+operator|=
 name|rdwri
 argument_list|(
 name|UIO_WRITE
@@ -2180,7 +2183,11 @@ operator|.
 name|u_pdir
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 comment|/* 	 * If u.u_count is non-zero, then namei found space for the 	 * new entry in the range u.u_offset to u.u_offset+u.u_count. 	 * in the directory.  To use this space, we may have to compact 	 * the entries located there, by copying them together towards 	 * the beginning of the block, leaving the free space in 	 * one usable chunk at the end. 	 */
 comment|/* 	 * Increase size of directory if entry eats into new space. 	 * This should never push the size past a new multiple of 	 * DIRBLKSIZE. 	 */
@@ -2214,7 +2221,7 @@ name|u
 operator|.
 name|u_count
 expr_stmt|;
-comment|/* 	 * Get the block containing the space for the new directory 	 * entry. 	 */
+comment|/* 	 * Get the block containing the space for the new directory 	 * entry.  Should return error by result instead of u.u_error. 	 */
 name|bp
 operator|=
 name|blkatoff
@@ -2250,7 +2257,13 @@ operator|.
 name|u_pdir
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|u
+operator|.
+name|u_error
+operator|)
+return|;
 block|}
 comment|/* 	 * Find space for the new entry.  In the simple case, the 	 * entry at offset base will have the space.  If it does 	 * not, then namei arranged that compacting the region 	 * u.u_offset to u.u_offset+u.u_count would yield the space. 	 */
 name|ep
@@ -2505,6 +2518,11 @@ operator|.
 name|u_pdir
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_block
 

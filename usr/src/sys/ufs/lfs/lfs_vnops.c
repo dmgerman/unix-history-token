@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	4.49	83/01/22	*/
+comment|/*	lfs_vnops.c	4.50	83/02/10	*/
 end_comment
 
 begin_include
@@ -1200,6 +1200,10 @@ goto|goto
 name|out
 goto|;
 block|}
+name|u
+operator|.
+name|u_error
+operator|=
 name|direnter
 argument_list|(
 name|ip
@@ -4489,6 +4493,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|error
+operator|=
 name|direnter
 argument_list|(
 name|ip
@@ -4496,21 +4502,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
-condition|)
-block|{
 name|error
-operator|=
-name|u
-operator|.
-name|u_error
-expr_stmt|;
+condition|)
 goto|goto
 name|out
 goto|;
-block|}
 block|}
 else|else
 block|{
@@ -5245,6 +5241,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|u
+operator|.
+name|u_error
+operator|=
 name|direnter
 argument_list|(
 name|ip
@@ -5257,7 +5257,7 @@ operator|.
 name|u_error
 condition|)
 block|{
-comment|/* 		 * write error occurred trying to update directory 		 * so must deallocate the inode 		 */
+comment|/* 		 * Write error occurred trying to update directory 		 * so must deallocate the inode. 		 */
 name|ip
 operator|->
 name|i_nlink
