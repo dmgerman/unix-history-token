@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.16 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.17 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.16 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.17 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1637,19 +1637,74 @@ operator|!=
 literal|'['
 condition|)
 block|{
+name|bool
+name|canonical
+decl_stmt|;
 specifier|extern
 name|bool
 name|getcanonname
 parameter_list|()
 function_decl|;
-if|if
-condition|(
+ifdef|#
+directive|ifdef
+name|SETPROCTITLE
+name|char
+name|ptbuf
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
+specifier|extern
+name|char
+name|ProcTitleBuf
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|ptbuf
+argument_list|,
+name|ProcTitleBuf
+argument_list|)
+expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"getcanonname(%s)"
+argument_list|,
+name|hbuf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|SETPROCTITLE
+name|canonical
+operator|=
 name|getcanonname
 argument_list|(
 name|hbuf
 argument_list|,
 name|hbsize
 argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SETPROCTITLE
+name|setproctitle
+argument_list|(
+name|NULL
+argument_list|,
+name|ptbuf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|canonical
 condition|)
 return|return
 name|hbuf
