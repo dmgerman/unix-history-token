@@ -113,6 +113,12 @@ directive|include
 file|<machine/powerpc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/ofw_machdep.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -357,44 +363,9 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|pmap_bootstrapped
-condition|)
-block|{
-asm|__asm __volatile("mfsr %0,0" : "=r"(srsave[0]));
-asm|__asm __volatile("mfsr %0,1" : "=r"(srsave[1]));
-asm|__asm __volatile("mfsr %0,2" : "=r"(srsave[2]));
-asm|__asm __volatile("mfsr %0,3" : "=r"(srsave[3]));
-asm|__asm __volatile("mfsr %0,4" : "=r"(srsave[4]));
-asm|__asm __volatile("mfsr %0,5" : "=r"(srsave[5]));
-asm|__asm __volatile("mfsr %0,6" : "=r"(srsave[6]));
-asm|__asm __volatile("mfsr %0,7" : "=r"(srsave[7]));
-asm|__asm __volatile("mfsr %0,8" : "=r"(srsave[8]));
-asm|__asm __volatile("mfsr %0,9" : "=r"(srsave[9]));
-asm|__asm __volatile("mfsr %0,10" : "=r"(srsave[10]));
-asm|__asm __volatile("mfsr %0,11" : "=r"(srsave[11]));
-asm|__asm __volatile("mfsr %0,12" : "=r"(srsave[12]));
-asm|__asm __volatile("mfsr %0,13" : "=r"(srsave[13]));
-asm|__asm __volatile("mfsr %0,14" : "=r"(srsave[14]));
-asm|__asm __volatile("mfsr %0,15" : "=r"(srsave[15]));
-asm|__asm __volatile("mtsr 0,%0" :: "r"(ofw_pmap.pm_sr[0]));
-asm|__asm __volatile("mtsr 1,%0" :: "r"(ofw_pmap.pm_sr[1]));
-asm|__asm __volatile("mtsr 2,%0" :: "r"(ofw_pmap.pm_sr[2]));
-asm|__asm __volatile("mtsr 3,%0" :: "r"(ofw_pmap.pm_sr[3]));
-asm|__asm __volatile("mtsr 4,%0" :: "r"(ofw_pmap.pm_sr[4]));
-asm|__asm __volatile("mtsr 5,%0" :: "r"(ofw_pmap.pm_sr[5]));
-asm|__asm __volatile("mtsr 6,%0" :: "r"(ofw_pmap.pm_sr[6]));
-asm|__asm __volatile("mtsr 7,%0" :: "r"(ofw_pmap.pm_sr[7]));
-asm|__asm __volatile("mtsr 8,%0" :: "r"(ofw_pmap.pm_sr[8]));
-asm|__asm __volatile("mtsr 9,%0" :: "r"(ofw_pmap.pm_sr[9]));
-asm|__asm __volatile("mtsr 10,%0" :: "r"(ofw_pmap.pm_sr[10]));
-asm|__asm __volatile("mtsr 11,%0" :: "r"(ofw_pmap.pm_sr[11]));
-asm|__asm __volatile("mtsr 12,%0" :: "r"(ofw_pmap.pm_sr[12]));
-asm|__asm __volatile("mtsr 13,%0" :: "r"(ofw_pmap.pm_sr[13]));
-asm|__asm __volatile("mtsr 14,%0" :: "r"(ofw_pmap.pm_sr[14]));
-asm|__asm __volatile("mtsr 15,%0" :: "r"(ofw_pmap.pm_sr[15]));
-block|}
+name|u_int
+name|i
+decl_stmt|;
 asm|__asm __volatile(	"\t"
 literal|"sync\n\t"
 literal|"mfmsr  %0\n\t"
@@ -414,6 +385,60 @@ block|)
 function|;
 end_function
 
+begin_if
+if|if
+condition|(
+name|pmap_bootstrapped
+condition|)
+block|{
+comment|/* 		 * Swap the kernel's address space with OpenFirmware's 		 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|16
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|srsave
+index|[
+name|i
+index|]
+operator|=
+name|mfsrin
+argument_list|(
+name|i
+operator|<<
+name|ADDR_SR_SHFT
+argument_list|)
+expr_stmt|;
+name|mtsrin
+argument_list|(
+name|i
+operator|<<
+name|ADDR_SR_SHFT
+argument_list|,
+name|ofw_pmap
+operator|.
+name|pm_sr
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|isync
+argument_list|()
+expr_stmt|;
+block|}
+end_if
+
 begin_expr_stmt
 name|result
 operator|=
@@ -423,6 +448,46 @@ name|args
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|pmap_bootstrapped
+condition|)
+block|{
+comment|/* 		 * Restore the kernel's addr space. The isync() doesn;t 		 * work outside the loop unless mtsrin() is open-coded 		 * in an asm statement :( 		 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|16
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|mtsrin
+argument_list|(
+name|i
+operator|<<
+name|ADDR_SR_SHFT
+argument_list|,
+name|srsave
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|isync
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_if
 
 begin_asm
 asm|__asm(	"\t"
@@ -443,32 +508,6 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_if
-if|if
-condition|(
-name|pmap_bootstrapped
-condition|)
-block|{
-asm|__asm __volatile("mtsr 0,%0" :: "r"(srsave[0]));
-asm|__asm __volatile("mtsr 1,%0" :: "r"(srsave[1]));
-asm|__asm __volatile("mtsr 2,%0" :: "r"(srsave[2]));
-asm|__asm __volatile("mtsr 3,%0" :: "r"(srsave[3]));
-asm|__asm __volatile("mtsr 4,%0" :: "r"(srsave[4]));
-asm|__asm __volatile("mtsr 5,%0" :: "r"(srsave[5]));
-asm|__asm __volatile("mtsr 6,%0" :: "r"(srsave[6]));
-asm|__asm __volatile("mtsr 7,%0" :: "r"(srsave[7]));
-asm|__asm __volatile("mtsr 8,%0" :: "r"(srsave[8]));
-asm|__asm __volatile("mtsr 9,%0" :: "r"(srsave[9]));
-asm|__asm __volatile("mtsr 10,%0" :: "r"(srsave[10]));
-asm|__asm __volatile("mtsr 11,%0" :: "r"(srsave[11]));
-asm|__asm __volatile("mtsr 12,%0" :: "r"(srsave[12]));
-asm|__asm __volatile("mtsr 13,%0" :: "r"(srsave[13]));
-asm|__asm __volatile("mtsr 14,%0" :: "r"(srsave[14]));
-asm|__asm __volatile("mtsr 15,%0" :: "r"(srsave[15]));
-asm|__asm __volatile("sync");
-block|}
-end_if
 
 begin_return
 return|return
