@@ -544,6 +544,13 @@ argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
+name|wattrset
+argument_list|(
+name|dialog
+argument_list|,
+name|dialog_attr
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|key

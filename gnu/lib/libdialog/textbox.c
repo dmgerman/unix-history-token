@@ -3452,6 +3452,13 @@ argument_list|,
 literal|" Search "
 argument_list|)
 expr_stmt|;
+name|wattrset
+argument_list|(
+name|win
+argument_list|,
+name|dialog_attr
+argument_list|)
+expr_stmt|;
 name|box_width
 operator|-=
 literal|2
