@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -4801,7 +4807,8 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"ccd%d: error %d on component %d block %d (ccd block %lld)%s\n"
+literal|"ccd%d: error %d on component %d block %d "
+literal|"(ccd block %jd)%s\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -4822,6 +4829,9 @@ name|cb_buf
 operator|.
 name|bio_blkno
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bp
 operator|->
 name|bio_blkno
