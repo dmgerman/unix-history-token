@@ -59,12 +59,6 @@ begin_comment
 comment|/* Period must be matched by period. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -93,11 +87,6 @@ directive|define
 name|FNM_IGNORECASE
 value|FNM_CASEFOLD
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
