@@ -401,6 +401,14 @@ name|RB_KDB
 expr_stmt|;
 break|break;
 case|case
+literal|'g'
+case|:
+name|howto
+operator||=
+name|RB_GDB
+expr_stmt|;
+break|break;
+case|case
 literal|'v'
 case|:
 name|howto

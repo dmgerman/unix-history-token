@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.18 1996/04/07 18:34:59 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.19 1996/05/03 21:00:51 phk Exp $  */
 end_comment
 
 begin_comment
@@ -99,6 +99,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|void
+name|gdb_handle_exception
+name|__P
+argument_list|(
+operator|(
+name|db_regs_t
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|db_regs_t
 name|ddb_regs
 decl_stmt|;
@@ -183,6 +201,13 @@ comment|/* 	 * XXX try to do nothing if the console is in graphics mode. 	 * Han
 if|if
 condition|(
 name|cons_unavail
+operator|&&
+operator|!
+operator|(
+name|boothowto
+operator|&
+name|RB_GDB
+operator|)
 condition|)
 block|{
 if|if
@@ -316,6 +341,23 @@ argument_list|(
 name|TRUE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_GDB
+condition|)
+name|gdb_handle_exception
+argument_list|(
+operator|&
+name|ddb_regs
+argument_list|,
+name|type
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
+else|else
 name|db_trap
 argument_list|(
 name|type
@@ -832,6 +874,13 @@ comment|/* 	 * XXX do nothing if the console is in graphics mode.  This is 	 * O
 if|if
 condition|(
 name|cons_unavail
+operator|&
+operator|!
+operator|(
+name|boothowto
+operator|&
+name|RB_GDB
+operator|)
 condition|)
 return|return;
 if|if

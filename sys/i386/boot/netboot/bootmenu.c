@@ -1793,6 +1793,14 @@ name|RB_KDB
 expr_stmt|;
 break|break;
 case|case
+literal|'g'
+case|:
+name|flags
+operator||=
+name|RB_GDB
+expr_stmt|;
+break|break;
+case|case
 literal|'h'
 case|:
 name|flags
