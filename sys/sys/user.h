@@ -578,7 +578,7 @@ comment|/* mutex name */
 name|char
 name|ki_sparestrings
 index|[
-literal|102
+literal|99
 index|]
 decl_stmt|;
 comment|/* spare string space */

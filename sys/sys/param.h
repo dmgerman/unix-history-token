@@ -110,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|MAXCOMLEN
-value|16
+value|19
 end_define
 
 begin_comment
