@@ -205,11 +205,6 @@ comment|/* don't recurse */
 name|int
 name|was_finishing
 decl_stmt|;
-block|<<<<<<
-operator|<
-name|vinumconfig
-operator|.
-name|c
 if|if
 condition|(
 operator|(
@@ -228,32 +223,6 @@ argument_list|(
 literal|"throw_rude_remark: called without config lock"
 argument_list|)
 expr_stmt|;
-operator|==
-operator|==
-operator|==
-operator|=
-if|if
-condition|(
-operator|(
-name|vinum_conf
-operator|.
-name|flags
-operator|&
-name|VF_LOCKED
-operator|)
-operator|==
-literal|0
-condition|)
-comment|/* bug catcher */
-name|panic
-argument_list|(
-literal|"throw_rude_remark: called without config lock"
-argument_list|)
-expr_stmt|;
-operator|>>>
-operator|>>>
-operator|>
-literal|1.44
 name|va_start
 argument_list|(
 name|ap
