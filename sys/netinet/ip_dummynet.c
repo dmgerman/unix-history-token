@@ -10,7 +10,7 @@ name|DUMMYNET_DEBUG
 end_define
 
 begin_comment
-comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  * Description of the data structures used is in ip_dummynet.h  * Here you mainly find the following blocks of code:  *  + variable declarations;  *  + heap management functions;  *  + scheduler and dummynet functions;  *  + configuration and initialization.  *  * NOTA BENE: critical sections are protected by splimp()/splx()  *    pairs. One would think that splnet() is enough as for most of  *    the netinet code, but it is not so because when used with  *    bridging, dummynet is invoked at splimp().  *  * Most important Changes:  *  * 011004: KLDable  * 010124: Fixed WF2Q behaviour  * 010122: Fixed spl protection.  * 000601: WF2Q support  * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  *  * include files marked with XXX are probably not needed  */
+comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  * Description of the data structures used is in ip_dummynet.h  * Here you mainly find the following blocks of code:  *  + variable declarations;  *  + heap management functions;  *  + scheduler and dummynet functions;  *  + configuration and initialization.  *  * NOTA BENE: critical sections are protected by the "dummynet lock".  *  * Most important Changes:  *  * 011004: KLDable  * 010124: Fixed WF2Q behaviour  * 010122: Fixed spl protection.  * 000601: WF2Q support  * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  *  * include files marked with XXX are probably not needed  */
 end_comment
 
 begin_include
@@ -666,12 +666,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|DUMMYNET_DEBUG
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -834,6 +828,10 @@ parameter_list|(
 name|struct
 name|rtentry
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -907,6 +905,11 @@ name|struct
 name|rtentry
 modifier|*
 name|rt
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|where
 parameter_list|)
 block|{
 if|if
@@ -916,6 +919,11 @@ operator|==
 name|NULL
 condition|)
 return|return ;
+name|RT_LOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rt
@@ -924,16 +932,20 @@ name|rt_refcnt
 operator|<=
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"dummynet: warning, refcnt now %ld, decreasing\n"
+literal|"dummynet: warning, refcnt now %ld, decreasing (%s)\n"
 argument_list|,
 name|rt
 operator|->
 name|rt_refcnt
+argument_list|,
+name|where
 argument_list|)
 expr_stmt|;
-name|RTFREE
+block|}
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -1882,6 +1894,8 @@ operator|->
 name|ro
 operator|.
 name|ro_rt
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 break|break ;
@@ -5580,21 +5594,66 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|fwa
+name|pkt
 operator|->
 name|ro
-operator|->
+operator|.
 name|ro_rt
 condition|)
-name|fwa
+block|{
+name|RT_LOCK
+argument_list|(
+name|pkt
 operator|->
 name|ro
+operator|.
+name|ro_rt
+argument_list|)
+expr_stmt|;
+name|pkt
 operator|->
+name|ro
+operator|.
 name|ro_rt
 operator|->
 name|rt_refcnt
 operator|++
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pkt
+operator|->
+name|ro
+operator|.
+name|ro_rt
+operator|->
+name|rt_refcnt
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"bogus refcnt %ld"
+operator|,
+name|pkt
+operator|->
+name|ro
+operator|.
+name|ro_rt
+operator|->
+name|rt_refcnt
+operator|)
+argument_list|)
+expr_stmt|;
+name|RT_UNLOCK
+argument_list|(
+name|pkt
+operator|->
+name|ro
+operator|.
+name|ro_rt
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|fwa
@@ -6075,7 +6134,7 @@ name|DN_FREE_PKT
 parameter_list|(
 name|pkt
 parameter_list|)
-value|{		\ 	struct dn_pkt *n = pkt ;		\ 	rt_unref ( n->ro.ro_rt ) ;		\ 	m_freem(n->dn_m);			\ 	pkt = DN_NEXT(n) ;			\ 	free(n, M_DUMMYNET) ;	}
+value|{		\ 	struct dn_pkt *n = pkt ;		\ 	rt_unref ( n->ro.ro_rt, __func__ ) ;	\ 	m_freem(n->dn_m);			\ 	pkt = DN_NEXT(n) ;			\ 	free(n, M_DUMMYNET) ;	}
 end_define
 
 begin_comment
