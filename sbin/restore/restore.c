@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)restore.c	8.3 (Berkeley) 9/13/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)restore.c	8.3 (Berkeley) 9/13/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +45,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_include
@@ -541,12 +548,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ep
 operator|=
 name|lookupino
 argument_list|(
 name|WINO
 argument_list|)
+operator|)
 condition|)
 block|{
 name|vprintf
@@ -1629,7 +1638,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * A hard link to a diirectory that has been removed. 	 * Ignore it. 	 */
+comment|/* 	 * A hard link to a directory that has been removed. 	 * Ignore it. 	 */
 case|case
 name|NAMEFND
 case|:
@@ -2410,7 +2419,7 @@ argument_list|,
 literal|"unexpected file on tape"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the file is to be extracted, then the old file must 		 * be removed since its type may change from one leaf type 		 * to another (eg "file" to "character special"). 		 */
+comment|/* 		 * If the file is to be extracted, then the old file must 		 * be removed since its type may change from one leaf type 		 * to another (e.g. "file" to "character special"). 		 */
 if|if
 condition|(
 operator|(
@@ -2459,7 +2468,7 @@ operator||
 name|EXTRACT
 operator|)
 expr_stmt|;
-comment|/* 		 * We checkpoint the restore after every tape reel, so 		 * as to simplify the amount of work re quired by the 		 * 'R' command. 		 */
+comment|/* 		 * We checkpoint the restore after every tape reel, so 		 * as to simplify the amount of work required by the 		 * 'R' command. 		 */
 name|next
 label|:
 if|if
@@ -2820,12 +2829,14 @@ index|]
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|ep
 operator|=
 name|lookupino
 argument_list|(
 name|WINO
 argument_list|)
+operator|)
 condition|)
 block|{
 name|vprintf

@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)interactive.c	8.5 (Berkeley) 5/1/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)interactive.c	8.5 (Berkeley) 5/1/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -56,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ffs/fs.h>
 end_include
 
 begin_include
@@ -1835,7 +1836,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Canonicalize file names to always start with ``./'' and  * remove any imbedded "." and ".." components.  */
+comment|/*  * Canonicalize file names to always start with ``./'' and  * remove any embedded "." and ".." components.  */
 end_comment
 
 begin_function
@@ -1955,7 +1956,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"canonname: not enough bufferspace\n"
+literal|"canonname: not enough buffer space\n"
 argument_list|)
 expr_stmt|;
 name|done
@@ -2361,12 +2362,14 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|dp
 operator|=
 name|rst_readdir
 argument_list|(
 name|dirp
 argument_list|)
+operator|)
 condition|)
 name|entries
 operator|++
@@ -2478,12 +2481,14 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|dp
 operator|=
 name|rst_readdir
 argument_list|(
 name|dirp
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if

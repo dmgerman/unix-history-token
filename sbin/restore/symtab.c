@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)symtab.c	8.3 (Berkeley) 4/28/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)symtab.c	8.3 (Berkeley) 4/28/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -870,7 +883,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unused symbol table entries are linked together on a freelist  * headed by the following pointer.  */
+comment|/*  * Unused symbol table entries are linked together on a free list  * headed by the following pointer.  */
 end_comment
 
 begin_decl_stmt
@@ -1135,7 +1148,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"link to non-existant name\n"
+literal|"link to non-existent name\n"
 argument_list|)
 expr_stmt|;
 name|np
@@ -1684,7 +1697,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Table of unused string entries, sorted by length.  *  * Entries are allocated in STRTBLINCR sized pieces so that names  * of similar lengths can use the same entry. The value of STRTBLINCR  * is chosen so that every entry has at least enough space to hold  * a "struct strtbl" header. Thus every entry can be linked onto an  * apprpriate free list.  *  * NB. The macro "allocsize" below assumes that "struct strhdr"  *     has a size that is a power of two.  */
+comment|/*  * Table of unused string entries, sorted by length.  *  * Entries are allocated in STRTBLINCR sized pieces so that names  * of similar lengths can use the same entry. The value of STRTBLINCR  * is chosen so that every entry has at least enough space to hold  * a "struct strtbl" header. Thus every entry can be linked onto an  * appropriate free list.  *  * NB. The macro "allocsize" below assumes that "struct strhdr"  *     has a size that is a power of two.  */
 end_comment
 
 begin_struct
@@ -2069,7 +2082,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Assign indicies to each entry 	 * Write out the string entries 	 */
+comment|/* 	 * Assign indices to each entry 	 * Write out the string entries 	 */
 for|for
 control|(
 name|i

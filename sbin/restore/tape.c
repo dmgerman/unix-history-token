@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)tape.c	8.9 (Berkeley) 5/1/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)tape.c	8.9 (Berkeley) 5/1/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -1480,7 +1487,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Prompt user to load a new dump volume.  * "Nextvol" is the next suggested volume to use.  * This suggested volume is enforced when doing full  * or incremental restores, but can be overrridden by  * the user when only extracting a subset of the files.  */
+comment|/*  * Prompt user to load a new dump volume.  * "Nextvol" is the next suggested volume to use.  * This suggested volume is enforced when doing full  * or incremental restores, but can be overridden by  * the user when only extracting a subset of the files.  */
 end_comment
 
 begin_function
