@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1994	Poul-Henning Kamp  *  * All rights reserved.  *  * This file contains some material which are covered by the message after   * this message.  *  * The rest of this file is covered by the following clause:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: pas.c,v 1.3 1994/09/13 06:44:39 phk Exp $  *  * This is a driver for the one particular kind of the "ProAudioSpectrum"  * card from MediaVision.  To find out if your card is supported, you can  * either try out the driver, or you can look for a chip a little less than  * 1" square in one end of the card, with writing on it that say ...5380...  *  * Up to four of these cards can be in the same computer.  If you have   * multiple cards, you need to set the "card-id" jumpers correspondingly.  *  * The driver uses no interrupts, so don't expect record-breaking performance.  *  * Poul-Henning Kamp<phk@freefall.cdrom.com>  */
+comment|/*  * Copyright (C) 1994	Poul-Henning Kamp  *  * All rights reserved.  *  * This file contains some material which are covered by the message after   * this message.  *  * The rest of this file is covered by the following clause:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: pas.c,v 1.4 1994/09/16 13:33:46 davidg Exp $  *  * This is a driver for the one particular kind of the "ProAudioSpectrum"  * card from MediaVision.  To find out if your card is supported, you can  * either try out the driver, or you can look for a chip a little less than  * 1" square in one end of the card, with writing on it that say ...5380...  *  * Up to four of these cards can be in the same computer.  If you have   * multiple cards, you need to set the "card-id" jumpers correspondingly.  *  * The driver uses no interrupts, so don't expect record-breaking performance.  *  * Poul-Henning Kamp<phk@freefall.cdrom.com>  */
 end_comment
 
 begin_comment
@@ -2772,12 +2772,6 @@ end_function
 begin_comment
 comment|/*  * Figure 5-2.  */
 end_comment
-
-begin_decl_stmt
-name|int
-name|PHK
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
