@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1983 Regents of the University of California,  * All rights reserved.  Redistribution permitted subject to  * the terms of the Berkeley Software License Agreement.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)assorted.c	2.4 84/02/03"
+literal|"@(#)assorted.c	2.5 85/04/23"
 decl_stmt|;
 end_decl_stmt
 

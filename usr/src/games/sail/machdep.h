@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sccsid = "@(#)machdep.h	2.6 %G%";  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California,  * All rights reserved.  Redistribution permitted subject to  * the terms of the Berkeley Software License Agreement.  */
+end_comment
+
+begin_comment
+comment|/*  * @(#)machdep.h	2.7 %G%  */
 end_comment
 
 begin_define
