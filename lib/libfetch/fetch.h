@@ -120,7 +120,7 @@ block|{
 name|char
 name|name
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|struct
@@ -816,6 +816,32 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Authentication */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|auth_t
+function_decl|)
+parameter_list|(
+name|struct
+name|url
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|auth_t
+name|fetchAuthMethod
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Last error code */
 end_comment
 
@@ -854,6 +880,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|fetchRestartCalls
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Extra verbosity */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fetchDebug
 decl_stmt|;
 end_decl_stmt
 

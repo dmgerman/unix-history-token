@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * The following copyright applies to the base64 code:  *  *-  * Copyright 1997 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
@@ -176,7 +190,7 @@ begin_define
 define|#
 directive|define
 name|HTTP_NEED_PROXY_AUTH
-value|403
+value|407
 end_define
 
 begin_define
@@ -217,7 +231,7 @@ decl_stmt|;
 name|size_t
 name|b_size
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|b_len
 decl_stmt|;
 name|int
@@ -229,13 +243,13 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|long
+name|size_t
 name|chunksize
 decl_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
-name|long
+name|size_t
 name|total
 decl_stmt|;
 endif|#
@@ -409,6 +423,11 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
+if|if
+condition|(
+name|fetchDebug
+condition|)
+block|{
 name|c
 operator|->
 name|total
@@ -439,17 +458,26 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\033[1m_http_fillbuf(): "
-literal|"new chunk: %ld (%ld)\033[m\n"
+literal|"new chunk: %lu (%lu)\033[m\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|c
 operator|->
 name|chunksize
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|c
 operator|->
 name|total
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 return|return
@@ -1085,7 +1113,7 @@ name|hdr_transfer_encoding
 block|,
 name|hdr_www_authenticate
 block|}
-name|hdr
+name|hdr_t
 typedef|;
 end_typedef
 
@@ -1097,7 +1125,7 @@ begin_struct
 specifier|static
 struct|struct
 block|{
-name|hdr
+name|hdr_t
 name|num
 decl_stmt|;
 specifier|const
@@ -1561,7 +1589,7 @@ end_comment
 
 begin_function
 specifier|static
-name|hdr
+name|hdr_t
 name|_http_next_header
 parameter_list|(
 name|int
@@ -1877,6 +1905,15 @@ operator|-
 literal|'0'
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|DEBUG
 argument_list|(
 name|fprintf
@@ -1885,6 +1922,10 @@ name|stderr
 argument_list|,
 literal|"content length: [\033[1m%lld\033[m]\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|len
 argument_list|)
 argument_list|)
@@ -1927,7 +1968,7 @@ modifier|*
 name|size
 parameter_list|)
 block|{
-name|int
+name|off_t
 name|first
 decl_stmt|,
 name|last
@@ -2076,6 +2117,9 @@ literal|'0'
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|p
+operator|||
 name|len
 operator|<
 name|last
@@ -2094,12 +2138,24 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"content range: [\033[1m%d-%d/%d\033[m]\n"
+literal|"content range: [\033[1m%lld-%lld/%lld\033[m]\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|first
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|last
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|len
 argument_list|)
 argument_list|)
@@ -3151,7 +3207,7 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
-name|hdr
+name|hdr_t
 name|h
 decl_stmt|;
 name|char
@@ -3283,6 +3339,77 @@ operator|->
 name|scheme
 argument_list|)
 expr_stmt|;
+comment|/* were we redirected to an FTP URL? */
+if|if
+condition|(
+name|purl
+operator|==
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|url
+operator|->
+name|scheme
+argument_list|,
+name|SCHEME_FTP
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|op
+argument_list|,
+literal|"GET"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|_ftp_request
+argument_list|(
+name|url
+argument_list|,
+literal|"RETR"
+argument_list|,
+name|us
+argument_list|,
+name|purl
+argument_list|,
+name|flags
+argument_list|)
+return|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|op
+argument_list|,
+literal|"HEAD"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|_ftp_request
+argument_list|(
+name|url
+argument_list|,
+literal|"STAT"
+argument_list|,
+name|us
+argument_list|,
+name|purl
+argument_list|,
+name|flags
+argument_list|)
+return|;
+block|}
 comment|/* connect to server or proxy */
 if|if
 condition|(
@@ -3588,6 +3715,35 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|fetchAuthMethod
+operator|&&
+name|fetchAuthMethod
+argument_list|(
+name|url
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|_http_basic_auth
+argument_list|(
+name|fd
+argument_list|,
+literal|"Authorization"
+argument_list|,
+name|url
+operator|->
+name|user
+argument_list|,
+name|url
+operator|->
+name|pwd
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|_http_seterr
@@ -3651,6 +3807,10 @@ name|fd
 argument_list|,
 literal|"Range: bytes=%lld-"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|url
 operator|->
 name|offset
@@ -3696,6 +3856,9 @@ name|HTTP_MOVED_PERM
 case|:
 case|case
 name|HTTP_MOVED_TEMP
+case|:
+case|case
+name|HTTP_SEE_OTHER
 case|:
 comment|/* 	     * Not so fine, but we still have to read the headers to 	     * get the new location. 	     */
 break|break;
@@ -4163,14 +4326,31 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"offset %lld, length %lld, size %lld, clength %lld\n"
+literal|"offset %lld, length %lld,"
+literal|" size %lld, clength %lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|offset
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|length
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|size
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|clength
 argument_list|)
 argument_list|)
@@ -4508,11 +4688,13 @@ name|struct
 name|url
 modifier|*
 name|URL
+name|__unused
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|flags
+name|__unused
 parameter_list|)
 block|{
 name|warnx
@@ -4605,11 +4787,13 @@ name|struct
 name|url
 modifier|*
 name|url
+name|__unused
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|flags
+name|__unused
 parameter_list|)
 block|{
 name|warnx
