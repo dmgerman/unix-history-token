@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Steve Hayman of the Computer Science Department, Indiana University,  * Michiro Hikida and David Goodenough.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Steve Hayman of the Computer Science Department, Indiana University,  * Michiro Hikida and David Goodenough.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1991, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1991, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)join.c	8.2 (Berkeley) %G%"
+literal|"@(#)join.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -288,18 +294,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|showusage
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* show usage for usage err() calls */
-end_comment
-
-begin_decl_stmt
-name|int
 name|spans
 init|=
 literal|1
@@ -349,34 +343,6 @@ name|LINE
 operator|*
 operator|,
 name|u_long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|enomem
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|err
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
 operator|)
 argument_list|)
 decl_stmt|;
@@ -435,6 +401,8 @@ name|LINE
 operator|*
 operator|,
 name|u_long
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -520,7 +488,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|INPUT
 modifier|*
 name|F1
@@ -588,6 +555,7 @@ block|{
 case|case
 literal|'\01'
 case|:
+comment|/* See comment in obsolete(). */
 name|aflag
 operator|=
 literal|1
@@ -626,8 +594,10 @@ operator|)
 operator|<
 literal|1
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"-1 option field number less than 1"
 argument_list|)
 expr_stmt|;
@@ -636,8 +606,10 @@ condition|(
 operator|*
 name|end
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal field number -- %s"
 argument_list|,
 name|optarg
@@ -672,8 +644,10 @@ operator|)
 operator|<
 literal|1
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"-2 option field number less than 1"
 argument_list|)
 expr_stmt|;
@@ -682,8 +656,10 @@ condition|(
 operator|*
 name|end
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal field number -- %s"
 argument_list|,
 name|optarg
@@ -736,8 +712,10 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"-a option file number not 1 or 2"
 argument_list|)
 expr_stmt|;
@@ -748,8 +726,10 @@ condition|(
 operator|*
 name|end
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal file number -- %s"
 argument_list|,
 name|optarg
@@ -791,8 +771,10 @@ operator|)
 operator|<
 literal|1
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"-j option field number less than 1"
 argument_list|)
 expr_stmt|;
@@ -801,8 +783,10 @@ condition|(
 operator|*
 name|end
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal field number -- %s"
 argument_list|,
 name|optarg
@@ -846,8 +830,10 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal tab character specification"
 argument_list|)
 expr_stmt|;
@@ -897,8 +883,10 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"-v option file number not 1 or 2"
 argument_list|)
 expr_stmt|;
@@ -909,8 +897,10 @@ condition|(
 operator|*
 name|end
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal file number -- %s"
 argument_list|,
 name|optarg
@@ -940,9 +930,11 @@ name|aflag
 operator|&&
 name|vflag
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"-a and -v options mutually exclusive"
+literal|1
+argument_list|,
+literal|"the -a and -v options are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -953,10 +945,6 @@ literal|2
 condition|)
 name|usage
 argument_list|()
-expr_stmt|;
-name|showusage
-operator|=
-literal|0
 expr_stmt|;
 comment|/* Open the files; "-" means stdin. */
 if|if
@@ -997,15 +985,12 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 operator|++
@@ -1049,15 +1034,12 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1074,8 +1056,10 @@ name|fp
 operator|==
 name|stdin
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"only one input file may be stdin"
 argument_list|)
 expr_stmt|;
@@ -1274,15 +1258,13 @@ modifier|*
 name|F
 decl_stmt|;
 block|{
-specifier|register
 name|LINE
 modifier|*
 name|lp
 decl_stmt|,
 modifier|*
 name|lastlp
-decl_stmt|;
-name|LINE
+decl_stmt|,
 name|tmp
 decl_stmt|;
 name|size_t
@@ -1372,16 +1354,22 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|enomem
-argument_list|()
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|F
 operator|->
 name|set
 operator|+
 name|cnt
+argument_list|,
+literal|0
 argument_list|,
 literal|50
 operator|*
@@ -1524,17 +1512,21 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|enomem
-argument_list|()
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
-name|bp
-argument_list|,
 name|lp
 operator|->
 name|line
+argument_list|,
+name|bp
 argument_list|,
 name|len
 argument_list|)
@@ -1656,8 +1648,12 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|enomem
-argument_list|()
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 name|lp
@@ -1813,7 +1809,6 @@ name|F1
 parameter_list|,
 name|F2
 parameter_list|)
-specifier|register
 name|INPUT
 modifier|*
 name|F1
@@ -1825,7 +1820,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|int
 name|cnt1
 decl_stmt|,
@@ -1937,13 +1931,11 @@ name|INPUT
 modifier|*
 name|F
 decl_stmt|;
-specifier|register
 name|LINE
 modifier|*
 name|lp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|cnt
 decl_stmt|;
@@ -1989,6 +1981,18 @@ name|cnt
 index|]
 operator|.
 name|fieldno
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|outfield
+argument_list|(
+name|lp
+argument_list|,
+literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2013,6 +2017,8 @@ argument_list|(
 name|lp
 argument_list|,
 name|cnt
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2032,12 +2038,9 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"stdout: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"stdout"
 argument_list|)
 expr_stmt|;
 name|needsep
@@ -2059,7 +2062,6 @@ name|F2
 parameter_list|,
 name|lp2
 parameter_list|)
-specifier|register
 name|INPUT
 modifier|*
 name|F1
@@ -2070,7 +2072,6 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-specifier|register
 name|LINE
 modifier|*
 name|lp1
@@ -2082,7 +2083,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|cnt
 decl_stmt|;
@@ -2125,6 +2125,8 @@ name|cnt
 index|]
 operator|.
 name|fieldno
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -2139,6 +2141,8 @@ name|cnt
 index|]
 operator|.
 name|fieldno
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -2151,6 +2155,8 @@ argument_list|,
 name|F1
 operator|->
 name|joinf
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -2181,6 +2187,8 @@ argument_list|(
 name|lp1
 argument_list|,
 name|cnt
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -2211,6 +2219,8 @@ argument_list|(
 name|lp2
 argument_list|,
 name|cnt
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2231,12 +2241,9 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"stdout: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"stdout"
 argument_list|)
 expr_stmt|;
 name|needsep
@@ -2253,6 +2260,8 @@ parameter_list|(
 name|lp
 parameter_list|,
 name|fieldno
+parameter_list|,
+name|out_empty
 parameter_list|)
 name|LINE
 modifier|*
@@ -2260,6 +2269,9 @@ name|lp
 decl_stmt|;
 name|u_long
 name|fieldno
+decl_stmt|;
+name|int
+name|out_empty
 decl_stmt|;
 block|{
 if|if
@@ -2293,6 +2305,8 @@ operator|->
 name|fieldcnt
 operator|<
 name|fieldno
+operator|||
+name|out_empty
 condition|)
 block|{
 if|if
@@ -2352,12 +2366,9 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"stdout: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"stdout"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2436,8 +2447,10 @@ index|]
 operator|!=
 literal|'.'
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"malformed -o option field"
 argument_list|)
 expr_stmt|;
@@ -2460,8 +2473,10 @@ condition|(
 operator|*
 name|end
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"malformed -o option field"
 argument_list|)
 expr_stmt|;
@@ -2471,8 +2486,10 @@ name|fieldno
 operator|==
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"field numbers are 1 based"
 argument_list|)
 expr_stmt|;
@@ -2507,8 +2524,12 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|enomem
-argument_list|()
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 name|olist
@@ -2571,11 +2592,15 @@ name|t
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|ap
 operator|=
 operator|*
 operator|++
 name|argv
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* Return if "--". */
@@ -2704,8 +2729,10 @@ break|break;
 default|default:
 name|jbad
 label|:
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal option -- %s"
 argument_list|,
 name|ap
@@ -2719,7 +2746,7 @@ break|break;
 case|case
 literal|'o'
 case|:
-comment|/* 			 * The original join allowed "-o arg arg".  Convert to 			 * "-o arg -o arg". 			 */
+comment|/* 			 * The original join allowed "-o arg arg". 			 * Convert to "-o arg -o arg". 			 */
 if|if
 condition|(
 name|ap
@@ -2818,8 +2845,12 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|enomem
-argument_list|()
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 name|t
 index|[
@@ -2835,14 +2866,14 @@ index|]
 operator|=
 literal|'o'
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-operator|*
-name|p
-argument_list|,
 name|t
 operator|+
 literal|2
+argument_list|,
+operator|*
+name|p
 argument_list|,
 name|len
 operator|+
@@ -2864,28 +2895,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-block|}
-end_function
-
-begin_function
-name|void
-name|enomem
-parameter_list|()
-block|{
-name|showusage
-operator|=
-literal|0
-expr_stmt|;
-name|err
-argument_list|(
-literal|"%s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2913,139 +2922,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-name|void
-if|#
-directive|if
-name|__STDC__
-name|err
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|err
-parameter_list|(
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-if|#
-directive|if
-name|__STDC__
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"join: "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|showusage
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
