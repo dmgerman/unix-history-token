@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: moused.c,v 1.23 1998/11/20 11:22:17 yokota Exp $"
+literal|"$Id: moused.c,v 1.24 1998/12/13 23:26:21 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -520,6 +520,12 @@ block|{
 literal|"sysmouse"
 block|,
 name|MOUSE_IF_SYSMOUSE
+block|}
+block|,
+block|{
+literal|"usb"
+block|,
+name|MOUSE_IF_USB
 block|}
 block|,
 block|{
