@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.24	82/11/03	*/
+comment|/*	ip_icmp.c	4.25	82/11/05	*/
 end_comment
 
 begin_include
