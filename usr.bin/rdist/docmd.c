@@ -2488,6 +2488,11 @@ argument_list|(
 name|target
 argument_list|,
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|target
+argument_list|)
 argument_list|)
 operator|==
 name|NULL
