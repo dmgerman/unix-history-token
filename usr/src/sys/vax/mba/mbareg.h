@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbareg.h	4.16	82/02/08	*/
+comment|/*	mbareg.h	4.17	82/05/20	*/
 end_comment
 
 begin_comment
@@ -650,6 +650,13 @@ define|#
 directive|define
 name|MBDT_RP07
 value|042
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBDT_RM02
+value|025
 end_define
 
 begin_define

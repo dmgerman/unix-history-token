@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpreg.h	4.10	82/02/08	*/
+comment|/*	hpreg.h	4.11	82/05/20	*/
 end_comment
 
 begin_struct
@@ -55,6 +55,11 @@ name|int
 name|hpcc
 decl_stmt|;
 comment|/* current cylinder */
+define|#
+directive|define
+name|hphr
+value|hpcc
+comment|/* holding register */
 comment|/* on an rp drive, mr2 is called er2 and er2 is called er3 */
 comment|/* we use rm terminology here */
 name|int
@@ -966,6 +971,54 @@ comment|/* -1200 uinches */
 end_comment
 
 begin_comment
+comment|/* hphr (alias hpcc) commands */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPHR_MAXCYL
+value|0x8017
+end_define
+
+begin_comment
+comment|/* maximum cylinder address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPHR_MAXTRAK
+value|0x8018
+end_define
+
+begin_comment
+comment|/* maximum track address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPHR_MAXSECT
+value|0x8019
+end_define
+
+begin_comment
+comment|/* maximum sector address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPHR_FMTENABLE
+value|0xffff
+end_define
+
+begin_comment
+comment|/* enable format command in cs1 */
+end_comment
+
+begin_comment
 comment|/* hpmr */
 end_comment
 
@@ -1000,6 +1053,131 @@ end_define
 
 begin_comment
 comment|/* ML11 transfer rate */
+end_comment
+
+begin_comment
+comment|/*  * Systems Industries kludge: use value in  * the serial # register to figure out real drive type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIMB_MB
+value|0xff00
+end_define
+
+begin_comment
+comment|/* model byte value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIMB_S6
+value|0x2000
+end_define
+
+begin_comment
+comment|/* switch s6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIMB_LU
+value|0x0007
+end_define
+
+begin_comment
+comment|/* logical unit (should = drive #) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SI9775D
+value|0x0700
+end_define
+
+begin_comment
+comment|/* 9775 direct */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SI9775M
+value|0x0e00
+end_define
+
+begin_comment
+comment|/* 9775 mapped */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SI9730D
+value|0x0b00
+end_define
+
+begin_comment
+comment|/* 9730 direct */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SI9730M
+value|0x0d00
+end_define
+
+begin_comment
+comment|/* 9730 mapped */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SI9766
+value|0x0300
+end_define
+
+begin_comment
+comment|/* 9766 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SI9762
+value|0x0100
+end_define
+
+begin_comment
+comment|/* 9762 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIRM03
+value|0x8000
+end_define
+
+begin_comment
+comment|/* RM03 indication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIRM05
+value|0x0000
+end_define
+
+begin_comment
+comment|/* RM05 pseudo-indication */
 end_comment
 
 end_unit
