@@ -362,14 +362,6 @@ name|i
 operator|+
 literal|1
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"returning with argc %u\n"
-argument_list|,
-operator|*
-name|argc
-argument_list|)
-expr_stmt|;
 return|return
 name|argv
 return|;
