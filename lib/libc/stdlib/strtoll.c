@@ -37,6 +37,28 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -68,12 +90,13 @@ file|<stdlib.h>
 end_include
 
 begin_comment
-comment|/*  * Convert a string to a quad integer.  *  * Ignores `locale' stuff.  Assumes that the upper and lower case  * alphabets and digits are each contiguous.  */
+comment|/*  * Convert a string to a long long integer.  *  * Ignores `locale' stuff.  Assumes that the upper and lower case  * alphabets and digits are each contiguous.  */
 end_comment
 
 begin_function
-name|quad_t
-name|strtoq
+name|long
+name|long
+name|strtoll
 parameter_list|(
 name|nptr
 parameter_list|,
@@ -103,7 +126,9 @@ modifier|*
 name|s
 decl_stmt|;
 specifier|register
-name|u_quad_t
+name|unsigned
+name|long
+name|long
 name|acc
 decl_stmt|;
 specifier|register
@@ -112,7 +137,9 @@ name|char
 name|c
 decl_stmt|;
 specifier|register
-name|u_quad_t
+name|unsigned
+name|long
+name|long
 name|qbase
 decl_stmt|,
 name|cutoff
@@ -258,18 +285,20 @@ operator|=
 name|neg
 condition|?
 operator|(
-name|u_quad_t
+name|unsigned
+name|long
+name|long
 operator|)
 operator|-
 operator|(
-name|QUAD_MIN
+name|LLONG_MIN
 operator|+
-name|QUAD_MAX
+name|LLONG_MAX
 operator|)
 operator|+
-name|QUAD_MAX
+name|LLONG_MAX
 else|:
-name|QUAD_MAX
+name|LLONG_MAX
 expr_stmt|;
 name|cutlim
 operator|=
@@ -403,9 +432,9 @@ name|acc
 operator|=
 name|neg
 condition|?
-name|QUAD_MIN
+name|LLONG_MIN
 else|:
-name|QUAD_MAX
+name|LLONG_MAX
 expr_stmt|;
 name|errno
 operator|=
