@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	main.c	1.7	82/10/25	*/
+comment|/*	main.c	1.8	82/12/09	*/
 end_comment
 
 begin_include
@@ -50,6 +50,33 @@ block|{
 if|if
 condition|(
 name|argc
+operator|>
+literal|1
+operator|&&
+name|eq
+argument_list|(
+literal|"-p"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+condition|)
+block|{
+name|profiling
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|argc
 operator|!=
 literal|2
 condition|)
@@ -58,7 +85,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: config sysname\n"
+literal|"usage: config [ -p ] sysname\n"
 argument_list|)
 expr_stmt|;
 name|exit

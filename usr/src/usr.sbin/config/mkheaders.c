@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkheaders.c	1.12	82/10/25	*/
+comment|/*	mkheaders.c	1.13	82/12/09	*/
 end_comment
 
 begin_comment
@@ -556,10 +556,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cp
-operator|==
-literal|0
-operator|||
 name|cp
 operator|==
 operator|(

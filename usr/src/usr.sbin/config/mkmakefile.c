@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkmakefile.c	1.21	82/10/25	*/
+comment|/*	mkmakefile.c	1.22	82/12/09	*/
 end_comment
 
 begin_comment
@@ -743,6 +743,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -759,7 +760,6 @@ argument_list|(
 name|ofp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -851,7 +851,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"../conf/files"
+name|fname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1021,7 +1021,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: %s must be optional or standard"
+literal|"%s: %s must be optional or standard\n"
 argument_list|,
 name|fname
 argument_list|,
@@ -1072,9 +1072,18 @@ argument_list|,
 literal|"profiling-routine"
 argument_list|)
 condition|)
+block|{
+name|next_word
+argument_list|(
+name|fp
+argument_list|,
+name|wd
+argument_list|)
+expr_stmt|;
 goto|goto
 name|save
 goto|;
+block|}
 name|nreqs
 operator|++
 expr_stmt|;
@@ -1243,6 +1252,22 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|eq
+argument_list|(
+name|devorprof
+argument_list|,
+literal|"profiling-routine"
+argument_list|)
+operator|&&
+name|profiling
+operator|==
+literal|0
+condition|)
+goto|goto
+name|next
+goto|;
 name|tp
 operator|=
 name|new_fent
@@ -1995,7 +2020,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t/lib/cpp %ss | sed -f ../conf/asm.sed | ${AS} -o %so\n"
+literal|"\t/lib/cpp %ss | sed -f ../vax/asm.sed | ${AS} -o %so\n"
 argument_list|,
 name|tp
 argument_list|,
@@ -2024,6 +2049,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+break|break;
 default|default:
 name|printf
 argument_list|(
