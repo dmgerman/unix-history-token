@@ -1960,8 +1960,6 @@ literal|"wd"
 block|,
 literal|"ad"
 block|,
-literal|"sd"
-block|,
 literal|"da"
 block|,
 literal|"wfd"
