@@ -362,15 +362,23 @@ init|=
 block|{
 comment|/* Texas Instruments chips */
 block|{
+name|PCI_DEVICE_ID_PCIC_TI1031
+block|,
+literal|"TI1031 PCI-PCCard Bridge"
+block|,
+name|CB_TI113X
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|PCI_DEVICE_ID_PCIC_TI1130
 block|,
 literal|"TI1130 PCI-CardBus Bridge"
 block|,
 name|CB_TI113X
 block|,
-name|PCCBB_PCIC_IO_RELOC
-operator||
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -380,9 +388,17 @@ literal|"TI1131 PCI-CardBus Bridge"
 block|,
 name|CB_TI113X
 block|,
-name|PCCBB_PCIC_IO_RELOC
-operator||
-name|PCCBB_PCIC_MEM_32
+literal|0
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1210
+block|,
+literal|"TI1210 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -392,9 +408,7 @@ literal|"TI1211 PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|,
-name|PCCBB_PCIC_IO_RELOC
-operator||
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -404,9 +418,7 @@ literal|"TI1220 PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|,
-name|PCCBB_PCIC_IO_RELOC
-operator||
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -416,9 +428,7 @@ literal|"TI1221 PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|,
-name|PCCBB_PCIC_IO_RELOC
-operator||
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -428,9 +438,7 @@ literal|"TI1225 PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|,
-name|PCCBB_PCIC_IO_RELOC
-operator||
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -440,9 +448,7 @@ literal|"TI1250 PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|,
-name|PCCBB_PCIC_IO_RELOC
-operator||
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -452,9 +458,7 @@ literal|"TI1251 PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|,
-name|PCCBB_PCIC_IO_RELOC
-operator||
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -464,9 +468,27 @@ literal|"TI1251B PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|,
-name|PCCBB_PCIC_IO_RELOC
-operator||
-name|PCCBB_PCIC_MEM_32
+literal|0
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1260
+block|,
+literal|"TI1260 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1260B
+block|,
+literal|"TI1260B PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -476,9 +498,7 @@ literal|"TI1410 PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|,
-name|PCCBB_PCIC_IO_RELOC
-operator||
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -488,9 +508,17 @@ literal|"TI1420 PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|,
-name|PCCBB_PCIC_IO_RELOC
-operator||
-name|PCCBB_PCIC_MEM_32
+literal|0
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1421
+block|,
+literal|"TI1421 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -500,9 +528,7 @@ literal|"TI1450 PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|,
-name|PCCBB_PCIC_IO_RELOC
-operator||
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -512,9 +538,7 @@ literal|"TI1451 PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|,
-name|PCCBB_PCIC_IO_RELOC
-operator||
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -524,9 +548,17 @@ literal|"TI4410 PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|,
-name|PCCBB_PCIC_IO_RELOC
-operator||
-name|PCCBB_PCIC_MEM_32
+literal|0
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI4450
+block|,
+literal|"TI4450 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -536,9 +568,7 @@ literal|"TI4451 PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|,
-name|PCCBB_PCIC_IO_RELOC
-operator||
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 comment|/* Ricoh chips */
@@ -549,7 +579,7 @@ literal|"RF5C465 PCI-CardBus Bridge"
 block|,
 name|CB_RF5C46X
 block|,
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -559,7 +589,7 @@ literal|"RF5C466 PCI-CardBus Bridge"
 block|,
 name|CB_RF5C46X
 block|,
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -569,7 +599,7 @@ literal|"RF5C475 PCI-CardBus Bridge"
 block|,
 name|CB_RF5C47X
 block|,
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -579,7 +609,7 @@ literal|"RF5C476 PCI-CardBus Bridge"
 block|,
 name|CB_RF5C47X
 block|,
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -589,7 +619,7 @@ literal|"RF5C478 PCI-CardBus Bridge"
 block|,
 name|CB_RF5C47X
 block|,
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 comment|/* Toshiba products */
@@ -600,7 +630,7 @@ literal|"ToPIC95 PCI-CardBus Bridge"
 block|,
 name|CB_TOPIC95
 block|,
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -610,7 +640,7 @@ literal|"ToPIC95B PCI-CardBus Bridge"
 block|,
 name|CB_TOPIC95B
 block|,
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -620,7 +650,7 @@ literal|"ToPIC97 PCI-CardBus Bridge"
 block|,
 name|CB_TOPIC97
 block|,
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -630,7 +660,7 @@ literal|"ToPIC100 PCI-CardBus Bridge"
 block|,
 name|CB_TOPIC97
 block|,
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 comment|/* Cirrus Logic */
@@ -641,7 +671,7 @@ literal|"CLPD6832 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
 block|,
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -651,7 +681,17 @@ literal|"CLPD6833 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
 block|,
-name|PCCBB_PCIC_MEM_32
+literal|0
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_CLPD6834
+block|,
+literal|"CLPD6834 PCI-CardBus Bridge"
+block|,
+name|CB_CIRRUS
+block|,
+literal|0
 block|}
 block|,
 comment|/* 02Micro */
@@ -662,7 +702,7 @@ literal|"O2Mirco OZ6832/6833 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
 block|,
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -672,7 +712,7 @@ literal|"O2Mirco OZ6836/6860 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
 block|,
-name|PCCBB_PCIC_MEM_32
+literal|0
 block|}
 block|,
 block|{
@@ -682,7 +722,37 @@ literal|"O2Mirco OZ6812/6872 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
 block|,
-name|PCCBB_PCIC_MEM_32
+literal|0
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_OZ6912
+block|,
+literal|"O2Mirco OZ6912/6972 PCI-CardBus Bridge"
+block|,
+name|CB_CIRRUS
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_OZ6922
+block|,
+literal|"O2Mirco OZ6822 PCI-CardBus Bridge"
+block|,
+name|CB_CIRRUS
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_OZ6933
+block|,
+literal|"O2Mirco OZ6833 PCI-CardBus Bridge"
+block|,
+name|CB_CIRRUS
+block|,
+literal|0
 block|}
 block|,
 comment|/* sentinel */
@@ -2392,7 +2462,7 @@ block|{
 case|case
 name|CB_TI113X
 case|:
-comment|/* 		 * The TI 1030, TI 1130 and TI 1131 all require another bit 		 * be set to enable PCI routing of interrupts, and then 		 * a bit for each of the CSC and Function interrupts we 		 * want routed. 		 */
+comment|/* 		 * The TI 1031, TI 1130 and TI 1131 all require another bit 		 * be set to enable PCI routing of interrupts, and then 		 * a bit for each of the CSC and Function interrupts we 		 * want routed. 		 */
 name|PCI_MASK_CONFIG
 argument_list|(
 name|sc
@@ -10516,26 +10586,6 @@ decl_stmt|;
 name|int
 name|tmp
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|sc_flags
-operator|&
-name|PCCBB_PCIC_MEM_32
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* XXX: how do we do this? */
-name|panic
-argument_list|(
-literal|"PCCBB bridge cannot handle non MEM_32 bridges\n"
-argument_list|)
-expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|type
