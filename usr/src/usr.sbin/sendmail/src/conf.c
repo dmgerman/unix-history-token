@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.10 (Berkeley) %G%"
+literal|"@(#)conf.c	8.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3313,21 +3313,21 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|HASGETDTABLESIZE
+return|return
+name|getdtablesize
+argument_list|()
+return|;
+else|#
+directive|else
+ifdef|#
+directive|ifdef
 name|_SC_OPEN_MAX
 return|return
 name|sysconf
 argument_list|(
 name|_SC_OPEN_MAX
 argument_list|)
-return|;
-else|#
-directive|else
-ifdef|#
-directive|ifdef
-name|HASGETDTABLESIZE
-return|return
-name|getdtablesize
-argument_list|()
 return|;
 else|#
 directive|else
