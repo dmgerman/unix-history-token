@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -559,49 +559,46 @@ begin_comment
 comment|/*  * System call swapon(name) enables swapping on device name,  * which must be in the swdevsw.  Return EBUSY  * if already swapping on this device.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_decl_stmt
-name|int
-name|swapon
-argument_list|(
-name|p
-argument_list|,
-name|uap
-argument_list|,
-name|retval
-argument_list|)
-decl|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
-name|args
+name|swapon_args
 block|{
 name|char
 modifier|*
 name|name
 decl_stmt|;
 block|}
-modifier|*
-name|uap
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|int
+name|swapon
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|swapon_args
+modifier|*
+name|uap
+decl_stmt|;
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -807,7 +804,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_unix.c 1.1 89/11/07$  *  *	@(#)vm_unix.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_unix.c 1.1 89/11/07$  *  *	@(#)vm_unix.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -37,49 +37,46 @@ directive|include
 file|<vm/vm.h>
 end_include
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_decl_stmt
-name|int
-name|obreak
-argument_list|(
-name|p
-argument_list|,
-name|uap
-argument_list|,
-name|retval
-argument_list|)
-decl|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
-name|args
+name|obreak_args
 block|{
 name|char
 modifier|*
 name|nsiz
 decl_stmt|;
 block|}
-modifier|*
-name|uap
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|int
+name|obreak
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|obreak_args
+modifier|*
+name|uap
+decl_stmt|;
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -283,7 +280,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Enlarge the "stack segment" to include the specified  * stack pointer for the process.  */
@@ -412,48 +409,45 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ovadvise
-argument_list|(
-name|p
-argument_list|,
-name|uap
-argument_list|,
-name|retval
-argument_list|)
-decl|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
-name|args
+name|ovadvise_args
 block|{
 name|int
 name|anom
 decl_stmt|;
 block|}
-modifier|*
-name|uap
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|int
+name|ovadvise
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|ovadvise_args
+modifier|*
+name|uap
+decl_stmt|;
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -461,7 +455,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

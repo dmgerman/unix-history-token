@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_sig.c 1.4 92/01/20$  *  *	@(#)hpux_sig.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_sig.c 1.4 92/01/20$  *  *	@(#)hpux_sig.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -219,6 +219,27 @@ begin_comment
 comment|/*  * XXX: In addition to mapping the signal number we also have  * to see if the "old" style signal mechinism is needed.  * If so, we set the OUSIG flag.  This is not really correct  * as under HP-UX "old" style handling can be set on a per  * signal basis and we are setting it for all signals in one  * swell foop.  I suspect we can get away with this since I  * doubt any program of interest mixes the two semantics.  */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxsigvec_args
+block|{
+name|int
+name|signo
+decl_stmt|;
+name|struct
+name|sigvec
+modifier|*
+name|nsv
+decl_stmt|;
+name|struct
+name|sigvec
+modifier|*
+name|osv
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxsigvec
 argument_list|(
@@ -238,29 +259,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|signo
-decl_stmt|;
 name|struct
-name|sigvec
-modifier|*
-name|nsv
-decl_stmt|;
-name|struct
-name|sigvec
-modifier|*
-name|osv
-decl_stmt|;
-block|}
+name|hpuxsigvec_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -547,6 +553,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxsigblock_args
+block|{
+name|int
+name|mask
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_expr_stmt
 name|hpuxsigblock
 argument_list|(
@@ -564,18 +581,13 @@ name|p
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|mask
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxsigblock_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -630,6 +642,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxsigsetmask_args
+block|{
+name|int
+name|mask
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxsigsetmask
 argument_list|(
@@ -649,18 +672,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|mask
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxsigsetmask_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -715,6 +733,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxsigpause_args
+block|{
+name|int
+name|mask
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxsigpause
 argument_list|(
@@ -734,18 +763,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|mask
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxsigpause_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -786,6 +810,20 @@ begin_comment
 comment|/* not totally correct, but close enuf' */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxkill_args
+block|{
+name|int
+name|pid
+decl_stmt|;
+name|int
+name|signo
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxkill
 argument_list|(
@@ -805,21 +843,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|pid
-decl_stmt|;
-name|int
-name|signo
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxkill_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -886,6 +916,25 @@ begin_comment
 comment|/*  * Manipulate signal mask.  * Note that we receive new mask, not pointer,  * and return old mask as return value;  * the library stub does the rest.  */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxsigprocmask_args
+block|{
+name|int
+name|how
+decl_stmt|;
+name|hpuxsigset_t
+modifier|*
+name|set
+decl_stmt|;
+name|hpuxsigset_t
+modifier|*
+name|oset
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_expr_stmt
 name|hpuxsigprocmask
 argument_list|(
@@ -903,26 +952,13 @@ name|p
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|how
-decl_stmt|;
-name|hpuxsigset_t
-modifier|*
-name|set
-decl_stmt|;
-name|hpuxsigset_t
-modifier|*
-name|oset
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxsigprocmask_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1127,6 +1163,18 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxsigpending_args
+block|{
+name|hpuxsigset_t
+modifier|*
+name|set
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_expr_stmt
 name|hpuxsigpending
 argument_list|(
@@ -1144,19 +1192,13 @@ name|p
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|hpuxsigset_t
-modifier|*
-name|set
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxsigpending_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1211,6 +1253,18 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxsigsuspend_args
+block|{
+name|hpuxsigset_t
+modifier|*
+name|set
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_expr_stmt
 name|hpuxsigsuspend
 argument_list|(
@@ -1228,19 +1282,13 @@ name|p
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|hpuxsigset_t
-modifier|*
-name|set
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxsigsuspend_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1358,6 +1406,27 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxsigaction_args
+block|{
+name|int
+name|signo
+decl_stmt|;
+name|struct
+name|hpuxsigaction
+modifier|*
+name|nsa
+decl_stmt|;
+name|struct
+name|hpuxsigaction
+modifier|*
+name|osa
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxsigaction
 argument_list|(
@@ -1377,29 +1446,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|signo
-decl_stmt|;
 name|struct
-name|hpuxsigaction
-modifier|*
-name|nsa
-decl_stmt|;
-name|struct
-name|hpuxsigaction
-modifier|*
-name|osa
-decl_stmt|;
-block|}
+name|hpuxsigaction_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1751,6 +1805,20 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|ohpuxssig_args
+block|{
+name|int
+name|signo
+decl_stmt|;
+name|sig_t
+name|fun
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|ohpuxssig
 argument_list|(
@@ -1770,21 +1838,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|signo
-decl_stmt|;
-name|sig_t
-name|fun
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|ohpuxssig_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
