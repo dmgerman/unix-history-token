@@ -423,7 +423,7 @@ operator|(
 name|vm_offset_t
 name|addr
 operator|,
-name|long
+name|off_t
 name|count
 operator|)
 argument_list|)

@@ -2021,7 +2021,7 @@ parameter_list|(
 name|vm_offset_t
 name|addr
 parameter_list|,
-name|long
+name|off_t
 name|count
 parameter_list|)
 block|{
@@ -2060,6 +2060,10 @@ name|printf
 argument_list|(
 literal|"%ld "
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|count
 operator|/
 operator|(
@@ -2067,6 +2071,7 @@ literal|1024
 operator|*
 literal|1024
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
