@@ -8,12 +8,18 @@ comment|/* Copyright (C) 1995 Eric Young (eay@mincom.oz.au)  * All rights reserv
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995  *	Mark Murray.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Mark Murray  *	and Eric Young  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY MARK MURRAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: new_rkey.c,v 1.1.1.1 1996/02/10 15:32:24 markm Exp $  */
+comment|/*  * Copyright (c) 1995  *	Mark Murray.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Mark Murray  *	and Eric Young  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY MARK MURRAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: new_rkey.c,v 1.2 1996/02/10 15:54:48 markm Exp $  */
 end_comment
 
 begin_comment
 comment|/* 21-Nov-95 - eay - I've finally put this into libdes, I have made a  * few changes since it need to compile on all version of unix and  * there were a few things that would not :-) */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
 
 begin_include
 include|#
@@ -302,6 +308,12 @@ decl_stmt|;
 block|}
 name|time64bit
 struct|;
+name|u_int32_t
+name|devrandom
+index|[
+literal|2
+index|]
+decl_stmt|;
 name|des_cblock
 name|new_key
 decl_stmt|;
@@ -313,6 +325,9 @@ index|]
 decl_stmt|;
 name|size_t
 name|len
+decl_stmt|;
+name|int
+name|dr
 decl_stmt|;
 comment|/* Get host ID using official BSD 4.4 method */
 name|mib
@@ -425,6 +440,112 @@ name|timeblock
 operator|.
 name|tv_usec
 expr_stmt|;
+comment|/* If /dev/random is available, read some muck */
+name|dr
+operator|=
+name|open
+argument_list|(
+literal|"/dev/random"
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dr
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* Set the descriptor into non-blocking mode. */
+name|fcntl
+argument_list|(
+name|dr
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|O_NONBLOCK
+argument_list|)
+expr_stmt|;
+name|len
+operator|=
+name|read
+argument_list|(
+name|dr
+argument_list|,
+name|devrandom
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|devrandom
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|dr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+condition|)
+block|{
+name|time64bit
+operator|.
+name|tv_sec
+operator|^=
+name|devrandom
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|time64bit
+operator|.
+name|tv_usec
+operator|^=
+name|devrandom
+index|[
+literal|1
+index|]
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"DEBUG: read from /dev/random %d %x %x\n"
+argument_list|,
+name|len
+argument_list|,
+name|devrandom
+index|[
+literal|0
+index|]
+argument_list|,
+name|devrandom
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
+else|else
+name|printf
+argument_list|(
+literal|"Cannot open /dev/random\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|des_set_sequence_number
 argument_list|(
 operator|(
