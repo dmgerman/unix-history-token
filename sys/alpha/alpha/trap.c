@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: trap.c,v 1.12 1999/04/19 14:14:12 peter Exp $ */
+comment|/* $Id: trap.c,v 1.13 1999/04/23 19:53:38 dt Exp $ */
 end_comment
 
 begin_comment
@@ -2441,6 +2441,7 @@ name|p_sysent
 operator|->
 name|sv_errsize
 condition|)
+block|{
 if|if
 condition|(
 name|error
@@ -2469,6 +2470,7 @@ index|[
 name|error
 index|]
 expr_stmt|;
+block|}
 name|framep
 operator|->
 name|tf_regs
