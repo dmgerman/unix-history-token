@@ -238,7 +238,8 @@ parameter_list|(
 name|int
 name|regnum
 parameter_list|,
-name|register_t
+name|void
+modifier|*
 name|val
 parameter_list|)
 block|{
