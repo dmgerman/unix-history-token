@@ -85,6 +85,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if your<sys/time.h> declares struct tm.  */
+end_comment
+
+begin_comment
+comment|/* #undef TM_IN_SYS_TIME */
+end_comment
+
+begin_comment
 comment|/* Define if builtin ELF support is enabled.  */
 end_comment
 
@@ -116,6 +124,25 @@ directive|define
 name|HAVE_LONG_LONG
 value|1
 end_define
+
+begin_comment
+comment|/* Define if we have "tm_isdst" in "struct tm".  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TM_ISDST
+value|1
+end_define
+
+begin_comment
+comment|/* Define if we have a global "int" variable "daylight".  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DAYLIGHT */
+end_comment
 
 begin_comment
 comment|/* Define to `unsigned char' if standard headers don't define.  */
@@ -194,6 +221,17 @@ value|8
 end_define
 
 begin_comment
+comment|/* Define if you have the mkstemp function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MKSTEMP
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the mmap function.  */
 end_comment
 
@@ -227,6 +265,25 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<fcntl.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FCNTL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<getopt.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETOPT_H */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<locale.h> header file.  */
 end_comment
 
@@ -234,6 +291,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_LOCALE_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<stdint.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDINT_H
 value|1
 end_define
 
@@ -249,6 +317,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<sys/stat.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_STAT_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/types.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_TYPES_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<unistd.h> header file.  */
 end_comment
 
@@ -256,6 +346,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_UNISTD_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the z library (-lz).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIBZ
 value|1
 end_define
 
@@ -278,14 +379,46 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"3.36"
+value|"3.39"
 end_define
 
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
+begin_comment
+comment|/* HAVE_TM_ZONE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TM_ZONE
+value|1
+end_define
+
+begin_comment
+comment|/* HAVE_TZNAME */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TZNAME
+value|1
+end_define
+
+begin_comment
+comment|/* Number of bits in a file offset, on hosts where this is settable. */
+end_comment
+
+begin_comment
+comment|/* #undef _FILE_OFFSET_BITS */
+end_comment
+
+begin_comment
+comment|/* Define for large files, on AIX-style hosts. */
+end_comment
+
+begin_comment
+comment|/* #undef _LARGE_FILES */
+end_comment
 
 end_unit
 
