@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)syslog.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)syslog.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -220,6 +220,20 @@ begin_comment
 comment|/* mask to extract facility part */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LOG_FAC
+parameter_list|(
+name|p
+parameter_list|)
+value|(((p)& LOG_FACMASK)>> 3)
+end_define
+
+begin_comment
+comment|/* facility of pri */
+end_comment
+
 begin_comment
 comment|/*  *  Priorities (these are ordered)  */
 end_comment
@@ -322,6 +336,54 @@ end_define
 begin_comment
 comment|/* mask to extract priority part (internal) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_PRI
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)& LOG_PRIMASK)
+end_define
+
+begin_comment
+comment|/* extract priority */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_MAKEPRI
+parameter_list|(
+name|fac
+parameter_list|,
+name|pri
+parameter_list|)
+value|(((fac)<< 3) | (pri))
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LOG_PRINTF
+value|-1
+end_define
+
+begin_comment
+comment|/* pseudo-priority to indicate use of printf */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * arguments to setlogmask.  */
