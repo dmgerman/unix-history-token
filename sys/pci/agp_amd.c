@@ -720,19 +720,19 @@ argument_list|)
 condition|)
 block|{
 case|case
-literal|0x700e1022
-case|:
-return|return
-operator|(
-literal|"AMD 761 host to AGP bridge"
-operator|)
-return|;
-case|case
 literal|0x70061022
 case|:
 return|return
 operator|(
 literal|"AMD 751 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x700e1022
+case|:
+return|return
+operator|(
+literal|"AMD 761 host to AGP bridge"
 operator|)
 return|;
 case|case
