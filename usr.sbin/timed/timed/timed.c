@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: timed.c,v 1.6 1997/10/29 07:32:30 charnier Exp $"
+literal|"$Id: timed.c,v 1.7 1997/10/31 12:33:06 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3395,7 +3395,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"\tnets=%d masters=%d slaves=%d ignored=%d delay2=%d\n"
+literal|"\tnets=%d masters=%d slaves=%d ignored=%d delay2=%ld\n"
 argument_list|,
 name|nnets
 argument_list|,
@@ -3760,6 +3760,9 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
+name|time_t
+name|tv_sec
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -3776,13 +3779,17 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+name|tv_sec
+operator|=
+name|tv
+operator|.
+name|tv_sec
+expr_stmt|;
 return|return
 operator|(
 name|ctime
 argument_list|(
 operator|&
-name|tv
-operator|.
 name|tv_sec
 argument_list|)
 operator|)
