@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -712,12 +712,14 @@ name|securelevel
 operator|>=
 literal|2
 operator|&&
-name|isdisk
-argument_list|(
-name|dev
-argument_list|,
-name|VCHR
-argument_list|)
+name|cdevsw
+index|[
+name|maj
+index|]
+operator|.
+name|d_type
+operator|==
+name|D_DISK
 condition|)
 return|return
 operator|(
@@ -791,10 +793,14 @@ block|}
 block|}
 if|if
 condition|(
-name|istty
-argument_list|(
-name|dev
-argument_list|)
+name|cdevsw
+index|[
+name|maj
+index|]
+operator|.
+name|d_type
+operator|==
+name|D_TTY
 condition|)
 name|vp
 operator|->
@@ -880,12 +886,14 @@ operator|&
 name|FWRITE
 operator|)
 operator|&&
-name|isdisk
-argument_list|(
-name|dev
-argument_list|,
-name|VBLK
-argument_list|)
+name|bdevsw
+index|[
+name|maj
+index|]
+operator|.
+name|d_type
+operator|==
+name|D_DISK
 condition|)
 return|return
 operator|(
@@ -2073,9 +2081,9 @@ name|dev
 argument_list|)
 index|]
 operator|.
-name|d_flags
-operator|&
-name|B_TAPE
+name|d_type
+operator|==
+name|D_TAPE
 condition|)
 return|return
 operator|(
