@@ -53,6 +53,8 @@ block|,
 name|GCTL_INSERT_GEOM
 block|,
 name|GCTL_ELIMINATE_GEOM
+block|,
+name|GCTL_CONFIG_GEOM
 block|, }
 enum|;
 end_enum
@@ -222,6 +224,22 @@ block|,
 literal|"eliminate geom"
 block|,
 name|GCTL_ELIMINATE_GEOM
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|"config geom"
+block|,
+name|GCTL_CONFIG_GEOM
 block|}
 block|,
 comment|/* Terminator entry */
