@@ -991,6 +991,9 @@ argument_list|,
 name|npages
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|pidx
@@ -1013,6 +1016,9 @@ index|[
 name|pidx
 index|]
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|bp
 operator|->
