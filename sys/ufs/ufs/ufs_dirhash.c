@@ -1848,7 +1848,7 @@ name|offset
 operator|==
 name|dh
 operator|->
-name|dh_seqopt
+name|dh_seqoff
 condition|)
 break|break;
 if|if
