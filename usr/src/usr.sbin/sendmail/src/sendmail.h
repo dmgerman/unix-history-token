@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.54 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.55 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.54		%G%"
+literal|"@(#)sendmail.h	6.55		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2225,6 +2225,50 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* **  Name canonification short circuit. ** **	If the name server for a host is down, the process of trying to **	canonify the name can hang.  This is similar to (but alas, not **	identical to) looking up the name for delivery.  This stab type **	caches the result of the name server lookup so we don't hang **	multiple times. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NAMECANON
+value|struct _namecanon
+end_define
+
+begin_macro
+name|NAMECANON
+end_macro
+
+begin_block
+block|{
+name|short
+name|nc_errno
+decl_stmt|;
+comment|/* cached errno */
+name|short
+name|nc_herrno
+decl_stmt|;
+comment|/* cached h_errno */
+name|short
+name|nc_stat
+decl_stmt|;
+comment|/* cached exit status code */
+name|char
+modifier|*
+name|nc_cname
+decl_stmt|;
+comment|/* the canonical name */
+block|}
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  Mapping functions ** **	These allow arbitrary mappings in the config file.  The idea **	(albeit not the implementation) comes from IDA sendmail. */
 end_comment
 
@@ -2485,6 +2529,10 @@ name|MCI
 name|sv_mci
 decl_stmt|;
 comment|/* mailer connection info */
+name|NAMECANON
+name|sv_namecanon
+decl_stmt|;
+comment|/* canonical name cache */
 block|}
 name|s_value
 union|;
@@ -2590,6 +2638,17 @@ end_define
 
 begin_comment
 comment|/* host signature */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_NAMECANON
+value|8
+end_define
+
+begin_comment
+comment|/* cached canonical name */
 end_comment
 
 begin_define
