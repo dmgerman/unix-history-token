@@ -4759,6 +4759,12 @@ name|rep
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|nfs_reqq_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4788,6 +4794,12 @@ operator||=
 name|R_SENT
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|nfs_reqq_mtx
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -4869,6 +4881,12 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Decrement the outstanding request count. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|nfs_reqq_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rep
@@ -4893,6 +4911,12 @@ operator|-=
 name|NFS_CWNDSCALE
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|nfs_reqq_mtx
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If there was a successful reply and a tprintf msg. 	 * tprintf a response. 	 */
 if|if
 condition|(
