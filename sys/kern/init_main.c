@@ -2891,6 +2891,19 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|initproc
+operator|->
+name|p_pid
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"create_init: initproc->p_pid != 1"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* divorce init's credentials from the kernel's */
 name|newcred
 operator|=
