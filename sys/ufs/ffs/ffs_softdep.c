@@ -4495,7 +4495,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Look up a pagedep. Return 1 if found, 0 if not found.  * If not found, allocate if DEPALLOC flag is passed.  * Found or allocated entry is returned in pagedeppp.  * This routine must be called with splbio interrupts blocked.  */
+comment|/*  * Look up a pagedep. Return 1 if found, 0 if not found or found  * when asked to allocate but not associated with any buffer.  * If not found, allocate if DEPALLOC flag is passed.  * Found or allocated entry is returned in pagedeppp.  * This routine must be called with splbio interrupts blocked.  */
 end_comment
 
 begin_function
@@ -4630,6 +4630,31 @@ name|pagedeppp
 operator|=
 name|pagedep
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|DEPALLOC
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|pagedep
+operator|->
+name|pd_state
+operator|&
+name|ONWORKLIST
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 literal|1
@@ -17973,19 +17998,9 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * If no dependencies remain and we are not waiting for a 	 * new directory block to be claimed by its inode, then the 	 * pagedep will be freed. Otherwise it will remain to track 	 * any new entries on the page in case they are fsync'ed. 	 */
+comment|/* 	 * If we are not waiting for a new directory block to be 	 * claimed by its inode, then the pagedep will be freed. 	 * Otherwise it will remain to track any new entries on 	 * the page in case they are fsync'ed. 	 */
 if|if
 condition|(
-name|LIST_FIRST
-argument_list|(
-operator|&
-name|pagedep
-operator|->
-name|pd_pendinghd
-argument_list|)
-operator|==
-literal|0
-operator|&&
 operator|(
 name|pagedep
 operator|->
