@@ -594,7 +594,7 @@ argument_list|(
 literal|"hw.cs.recv_delay"
 argument_list|,
 operator|&
-name|cs_ignore_cksum_failure
+name|cs_recv_delay
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -883,7 +883,9 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX should we do some checks here ? */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1038,7 +1040,9 @@ literal|1000000
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1109,11 +1113,15 @@ literal|"failed to enable TP\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1330,7 +1338,9 @@ name|i
 index|]
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|outsw
@@ -1397,10 +1407,14 @@ operator|==
 name|TX_OK
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1467,11 +1481,15 @@ literal|"failed to enable AUI\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1538,11 +1556,15 @@ literal|"failed to enable BNC\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1835,7 +1857,7 @@ operator|=
 name|TX_CS8920_AFTER_ALL
 expr_stmt|;
 block|}
-comment|/*          * Clear some fields so that fail of EEPROM will left them clean          */
+comment|/* 	 * Clear some fields so that fail of EEPROM will left them clean 	 */
 name|sc
 operator|->
 name|auto_neg_cnf
@@ -2037,7 +2059,7 @@ operator|>>
 literal|8
 expr_stmt|;
 block|}
-comment|/*                                  * If no interrupt specified (or "?"),                                  * use what the board tells us.                                  */
+comment|/* 				 * If no interrupt specified, 				 * use what the board tells us. 				 */
 if|if
 condition|(
 name|error
@@ -2050,6 +2072,10 @@ operator|->
 name|isa_config
 operator|&
 name|INT_NO_MASK
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2070,10 +2096,6 @@ name|irq
 operator|=
 literal|10
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 literal|1
@@ -2081,10 +2103,6 @@ case|:
 name|irq
 operator|=
 literal|11
-expr_stmt|;
-name|error
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -2094,10 +2112,6 @@ name|irq
 operator|=
 literal|12
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 literal|3
@@ -2105,10 +2119,6 @@ case|:
 name|irq
 operator|=
 literal|5
-expr_stmt|;
-name|error
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 default|default:
@@ -2144,13 +2154,6 @@ expr_stmt|;
 name|error
 operator|=
 name|EINVAL
-expr_stmt|;
-block|}
-else|else
-block|{
-name|error
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}
@@ -2255,6 +2258,17 @@ operator|!
 name|error
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|CS_NO_IRQ
+operator|)
+condition|)
 name|cs_writereg
 argument_list|(
 name|sc
@@ -2280,7 +2294,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/*          * Temporary disabled          *         if (drq>0) 		cs_writereg(sc, pp_isadma, drq); 	else { 		device_printf(dev, "incorrect drq\n",); 		return 0; 	}         */
+comment|/* 	 * Temporary disabled 	 * 	if (drq>0) 		cs_writereg(sc, pp_isadma, drq); 	else { 		device_printf(dev, "incorrect drq\n",); 		return (0); 	} 	*/
 if|if
 condition|(
 name|bootverbose
@@ -2378,7 +2392,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2440,8 +2456,14 @@ expr_stmt|;
 if|if
 condition|(
 name|res
+operator|==
+name|NULL
 condition|)
-block|{
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
 name|sc
 operator|->
 name|port_rid
@@ -2465,15 +2487,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-else|else
-block|{
-return|return
-operator|(
-name|ENOENT
-operator|)
-return|;
-block|}
 block|}
 end_function
 
@@ -2534,8 +2547,14 @@ expr_stmt|;
 if|if
 condition|(
 name|res
+operator|==
+name|NULL
 condition|)
-block|{
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
 name|sc
 operator|->
 name|mem_rid
@@ -2559,15 +2578,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-else|else
-block|{
-return|return
-operator|(
-name|ENOENT
-operator|)
-return|;
-block|}
 block|}
 end_function
 
@@ -2625,8 +2635,14 @@ expr_stmt|;
 if|if
 condition|(
 name|res
+operator|==
+name|NULL
 condition|)
-block|{
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
 name|sc
 operator|->
 name|irq_rid
@@ -2644,15 +2660,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-else|else
-block|{
-return|return
-operator|(
-name|ENOENT
-operator|)
-return|;
-block|}
 block|}
 end_function
 
@@ -3251,6 +3258,70 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|cs_detach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|cs_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+expr_stmt|;
+name|cs_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_RUNNING
+expr_stmt|;
+name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|cs_release_resources
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Initialize the board  */
 end_comment
@@ -3465,7 +3536,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now enable everything 	 */
-comment|/* #ifdef	CS_USE_64K_DMA 	cs_writereg(sc, PP_BusCTL, ENABLE_IRQ | RX_DMA_SIZE_64K); #else         cs_writereg(sc, PP_BusCTL, ENABLE_IRQ); #endif */
+comment|/* #ifdef	CS_USE_64K_DMA 	cs_writereg(sc, PP_BusCTL, ENABLE_IRQ | RX_DMA_SIZE_64K); #else 	cs_writereg(sc, PP_BusCTL, ENABLE_IRQ); #endif */
 name|cs_writereg
 argument_list|(
 name|sc
@@ -3636,8 +3707,10 @@ name|if_ierrors
 operator|++
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|MGETHDR
@@ -3656,8 +3729,10 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -3691,8 +3766,10 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -3861,7 +3938,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4824,7 +4903,7 @@ block|{
 case|case
 name|SIOCSIFFLAGS
 case|:
-comment|/* 		 * Switch interface state between "running" and 		 * "stopped", reflecting the UP flag.                  */
+comment|/* 		 * Switch interface state between "running" and 		 * "stopped", reflecting the UP flag. 		 */
 if|if
 condition|(
 name|sc
@@ -4936,6 +5015,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|error
+operator|=
 name|ether_ioctl
 argument_list|(
 name|ifp
@@ -4956,7 +5037,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -5066,9 +5149,12 @@ operator|!=
 name|IFM_ETHER
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 return|return
+operator|(
 name|cs_mediaset
 argument_list|(
 name|sc
@@ -5077,6 +5163,7 @@ name|ifm
 operator|->
 name|ifm_media
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -5472,7 +5559,9 @@ name|SERIAL_TX_ON
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
