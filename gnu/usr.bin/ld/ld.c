@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.35 1996/07/12 19:08:20 jkh Exp $  */
+comment|/*  *	$Id: ld.c,v 1.36 1996/10/01 01:22:23 peter Exp $  */
 end_comment
 
 begin_comment
@@ -3075,7 +3075,7 @@ literal|'O'
 case|:
 name|output_filename
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -6152,12 +6152,6 @@ expr_stmt|;
 name|make_executable
 operator|=
 literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-name|global_alias_count
-operator|++
 expr_stmt|;
 block|}
 if|#
@@ -9535,6 +9529,39 @@ name|defined_global_sym_count
 operator|++
 expr_stmt|;
 block|}
+comment|/* 		 * Count the aliases that will appear in the output. 		 */
+if|if
+condition|(
+name|sp
+operator|->
+name|alias
+operator|&&
+operator|!
+name|sp
+operator|->
+name|so_defined
+operator|&&
+operator|!
+name|sp
+operator|->
+name|alias
+operator|->
+name|so_defined
+operator|&&
+operator|(
+name|sp
+operator|->
+name|defined
+operator|||
+name|relocatable_output
+operator|||
+operator|!
+name|building_shared_object
+operator|)
+condition|)
+name|global_alias_count
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|(
