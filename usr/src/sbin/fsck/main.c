@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.29 (Berkeley) %G%"
+literal|"@(#)main.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -862,24 +862,41 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(%ld frags, %ld blocks, %.1f%% fragmentation)\n"
+literal|"(%ld frags, %ld blocks, %d.%d%% fragmentation)\n"
 argument_list|,
 name|n_ffree
 argument_list|,
 name|n_bfree
 argument_list|,
-call|(
-name|float
-call|)
-argument_list|(
+operator|(
 name|n_ffree
 operator|*
 literal|100
-argument_list|)
+operator|)
 operator|/
 name|sblock
 operator|.
 name|fs_dsize
+argument_list|,
+operator|(
+operator|(
+name|n_ffree
+operator|*
+literal|1000
+operator|+
+name|sblock
+operator|.
+name|fs_dsize
+operator|/
+literal|2
+operator|)
+operator|/
+name|sblock
+operator|.
+name|fs_dsize
+operator|)
+operator|%
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
