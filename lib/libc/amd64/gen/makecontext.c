@@ -71,7 +71,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|void
-name|ctx_wrapper
+name|makectx_wrapper
 parameter_list|(
 name|ucontext_t
 modifier|*
@@ -386,7 +386,7 @@ operator|=
 operator|(
 name|register_t
 operator|)
-name|ctx_wrapper
+name|makectx_wrapper
 expr_stmt|;
 block|}
 end_function
@@ -394,7 +394,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ctx_wrapper
+name|makectx_wrapper
 parameter_list|(
 name|ucontext_t
 modifier|*

@@ -71,7 +71,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|void
-name|ctx_wrapper
+name|sigctx_wrapper
 parameter_list|(
 name|ucontext_t
 modifier|*
@@ -138,7 +138,7 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Build a signal frame and copy the arguments of signal handler 	 * 'func' onto the stack. We only need 3 arguments, but we 	 * create room for 4 so that we are 16-byte aligned. 	 */
+comment|/* 	 * Build a signal frame and copy the arguments of signal handler 	 * 'func' onto the stack and do the funky stack alignment. 	 * This means that we need an 8-byte-odd alignment since the ABI expects 	 * the return address to be pushed, thus breaking the 16 byte alignment. 	 */
 name|sp
 operator|=
 operator|(
@@ -219,7 +219,7 @@ name|sig
 expr_stmt|;
 name|sp
 operator|-=
-literal|4
+literal|3
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -260,13 +260,6 @@ operator|(
 name|intptr_t
 operator|)
 name|sig_uc
-expr_stmt|;
-name|args
-index|[
-literal|3
-index|]
-operator|=
-literal|0
 expr_stmt|;
 name|sp
 operator|-=
@@ -390,7 +383,7 @@ operator|=
 operator|(
 name|register_t
 operator|)
-name|ctx_wrapper
+name|sigctx_wrapper
 expr_stmt|;
 return|return
 operator|(
@@ -403,7 +396,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ctx_wrapper
+name|sigctx_wrapper
 parameter_list|(
 name|ucontext_t
 modifier|*
