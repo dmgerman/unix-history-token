@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.30 (Berkeley) %G%"
+literal|"@(#)main.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1063,8 +1063,25 @@ if|if
 condition|(
 operator|!
 operator|*
+name|argv
+index|[
+literal|0
+index|]
+operator|||
 operator|*
 name|argv
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|&&
+operator|!
+operator|*
+name|argv
+index|[
+literal|1
+index|]
 condition|)
 name|Punt
 argument_list|(
