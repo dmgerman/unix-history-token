@@ -1197,7 +1197,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%*s                Block  limits                    File  limits\n"
+literal|"%*s                 Block  limits                    File  limits\n"
 argument_list|,
 name|max
 argument_list|(
@@ -1211,7 +1211,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"User%*s   used     soft     hard  grace     used    soft    hard  grace\n"
+literal|"User%*s    used     soft     hard  grace     used    soft    hard  grace\n"
 argument_list|,
 name|max
 argument_list|(
@@ -1277,7 +1277,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"%-*s"
+literal|"%-*s "
 argument_list|,
 name|max
 argument_list|(
