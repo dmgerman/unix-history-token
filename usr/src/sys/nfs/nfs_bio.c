@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -109,14 +109,6 @@ decl_stmt|,
 modifier|*
 name|nfs_getcacheblk
 argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|queue_entry
-name|nfs_bufq
 decl_stmt|;
 end_decl_stmt
 
@@ -3508,16 +3500,12 @@ name|cred
 expr_stmt|;
 block|}
 block|}
-name|queue_enter_tail
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|nfs_bufq
 argument_list|,
 name|bp
-argument_list|,
-expr|struct
-name|buf
-operator|*
 argument_list|,
 name|b_freelist
 argument_list|)
