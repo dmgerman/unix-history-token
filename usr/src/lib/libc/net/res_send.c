@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	5.7 (Berkeley) %G%"
+literal|"@(#)res_send.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -851,7 +851,7 @@ condition|(
 operator|(
 name|resplen
 operator|=
-name|recvfrom
+name|recv
 argument_list|(
 name|s
 argument_list|,
@@ -859,19 +859,6 @@ name|answer
 argument_list|,
 name|anslen
 argument_list|,
-literal|0
-argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-literal|0
-argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 literal|0
 argument_list|)
 operator|)
