@@ -167,6 +167,23 @@ name|sflag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|size_t
+name|autostart
+decl_stmt|,
+name|autostop
+decl_stmt|,
+name|maxval
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|positions
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|b_cut
@@ -649,23 +666,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-name|size_t
-name|autostart
-decl_stmt|,
-name|autostop
-decl_stmt|,
-name|maxval
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|positions
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void
