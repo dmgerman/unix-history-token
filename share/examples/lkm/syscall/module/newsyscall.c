@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -41,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<sys/exec.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysent.h>
 end_include
 
 begin_include
@@ -97,7 +109,7 @@ end_decl_stmt
 begin_macro
 name|MOD_SYSCALL
 argument_list|(
-literal|"newsyscall"
+literal|"new_syscall"
 argument_list|,
 argument|-
 literal|1
@@ -170,7 +182,7 @@ comment|/*  * External entry point; should generally match name of .o file.  The
 end_comment
 
 begin_macro
-name|newsyscall
+name|new_syscall
 argument_list|(
 argument|lkmtp
 argument_list|,
