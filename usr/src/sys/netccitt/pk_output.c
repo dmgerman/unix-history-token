@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_output.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_output.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -77,6 +77,8 @@ init|=
 block|{
 literal|0
 block|}
+decl_stmt|,
+name|pk_input_cache
 decl_stmt|;
 end_decl_stmt
 
@@ -505,22 +507,30 @@ expr_stmt|;
 comment|/* Pass the packet on down to the link layer */
 if|if
 condition|(
-name|pk_output_cache
+name|pk_input_cache
 operator|.
 name|mbc_size
 operator|||
-name|pk_output_cache
+name|pk_input_cache
 operator|.
 name|mbc_oldsize
 condition|)
+block|{
+name|m
+operator|->
+name|m_flags
+operator||=
+literal|0x08
+expr_stmt|;
 name|mbuf_cache
 argument_list|(
 operator|&
-name|pk_output_cache
+name|pk_input_cache
 argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 call|(
 modifier|*
 name|pkp
