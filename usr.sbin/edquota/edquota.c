@@ -2197,7 +2197,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"%s: %s %lu, limits (soft = %lu, hard = %lu)\n"
+literal|"%s: %s %u, limits (soft = %u, hard = %u)\n"
 argument_list|,
 name|qup
 operator|->
@@ -2261,7 +2261,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"%s %lu, limits (soft = %lu, hard = %lu)\n"
+literal|"%s %u, limits (soft = %u, hard = %u)\n"
 argument_list|,
 literal|"\tinodes in use:"
 argument_list|,
@@ -2509,7 +2509,7 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|" blocks in use: %lu, limits (soft = %lu, hard = %lu)"
+literal|" blocks in use: %u, limits (soft = %u, hard = %u)"
 argument_list|,
 operator|&
 name|dqblk
@@ -2634,7 +2634,7 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|"\tinodes in use: %lu, limits (soft = %lu, hard = %lu)"
+literal|"\tinodes in use: %u, limits (soft = %u, hard = %u)"
 argument_list|,
 operator|&
 name|dqblk
