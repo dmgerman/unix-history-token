@@ -2627,7 +2627,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s"
+literal|"%.*s"
+argument_list|,
+name|len
 argument_list|,
 name|p
 argument_list|)
