@@ -4405,37 +4405,6 @@ block|}
 elseif|else
 if|if
 condition|(
-name|nosignal
-condition|)
-block|{
-comment|/* 			 * While this entry might usually signal some 			 * process via the pid-file, newsyslog was run 			 * with '-s', so quietly ignore the pid-file. 			 */
-if|if
-condition|(
-name|working
-operator|->
-name|pid_file
-operator|!=
-name|NULL
-condition|)
-block|{
-name|free
-argument_list|(
-name|working
-operator|->
-name|pid_file
-argument_list|)
-expr_stmt|;
-name|working
-operator|->
-name|pid_file
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
 name|working
 operator|->
 name|pid_file
@@ -5580,6 +5549,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Find out if there is a process to signal.  If nosignal (-s) was 	 * specified, then do not signal any process.  Note that nosignal 	 * will trigger a warning message if the rotated logfile needs to 	 * be compressed, *unless* -R was specified.  This is because there 	 * presumably still are process(es) writing to the old logfile, but 	 * we assume that a -sR request comes from a process which writes  	 * to the logfile, and as such, that process has already made sure 	 * that the logfile is not presently in use. 	 */
 name|pid
 operator|=
 literal|0
@@ -5603,6 +5573,11 @@ name|need_notification
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|nosignal
+condition|)
 name|pid
 operator|=
 name|get_pid
@@ -5611,6 +5586,16 @@ name|ent
 operator|->
 name|pid_file
 argument_list|)
+expr_stmt|;
+comment|/* the normal case! */
+elseif|else
+if|if
+condition|(
+name|rotatereq
+condition|)
+name|need_notification
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
