@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.1 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -256,6 +256,14 @@ name|p
 operator|->
 name|p_pid
 expr_stmt|;
+name|atomic_lock
+argument_list|(
+operator|&
+name|lkp
+operator|->
+name|lk_interlock
+argument_list|)
+expr_stmt|;
 name|extflags
 operator|=
 operator|(
@@ -285,14 +293,6 @@ block|{
 case|case
 name|LK_SHARED
 case|:
-name|atomic_lock
-argument_list|(
-operator|&
-name|lkp
-operator|->
-name|lk_interlock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|lkp
@@ -406,26 +406,10 @@ operator|->
 name|lk_sharecount
 operator|++
 expr_stmt|;
-name|atomic_unlock
-argument_list|(
-operator|&
-name|lkp
-operator|->
-name|lk_interlock
-argument_list|)
-expr_stmt|;
 comment|/* fall into downgrade */
 case|case
 name|LK_DOWNGRADE
 case|:
-name|atomic_lock
-argument_list|(
-operator|&
-name|lkp
-operator|->
-name|lk_interlock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|lkp
@@ -510,15 +494,7 @@ return|;
 case|case
 name|LK_UPGRADE
 case|:
-comment|/* 		 * Upgrade a shared lock to an exclusive one. If another 		 * shared lock has already requested an upgrade to an 		 * exclusive lock, our shared lock is released and an 		 * exclusive lock is requested (which will be granted 		 * after the upgrade). 		 */
-name|atomic_lock
-argument_list|(
-operator|&
-name|lkp
-operator|->
-name|lk_interlock
-argument_list|)
-expr_stmt|;
+comment|/* 		 * Upgrade a shared lock to an exclusive one. If another 		 * shared lock has already requested an upgrade to an 		 * exclusive lock, our shared lock is released and an 		 * exclusive lock is requested (which will be granted 		 * after the upgrade). If we return an error, the file 		 * will always be unlocked. 		 */
 if|if
 condition|(
 name|lkp
@@ -537,6 +513,11 @@ name|panic
 argument_list|(
 literal|"lockmgr: upgrade exclusive lock"
 argument_list|)
+expr_stmt|;
+name|lkp
+operator|->
+name|lk_sharecount
+operator|--
 expr_stmt|;
 comment|/* 		 * If we are just polling, check to see if we will block. 		 */
 if|if
@@ -578,11 +559,6 @@ name|EBUSY
 operator|)
 return|;
 block|}
-name|lkp
-operator|->
-name|lk_sharecount
-operator|--
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -718,26 +694,10 @@ name|lkp
 argument_list|)
 expr_stmt|;
 block|}
-name|atomic_unlock
-argument_list|(
-operator|&
-name|lkp
-operator|->
-name|lk_interlock
-argument_list|)
-expr_stmt|;
 comment|/* fall into exclusive request */
 case|case
 name|LK_EXCLUSIVE
 case|:
-name|atomic_lock
-argument_list|(
-operator|&
-name|lkp
-operator|->
-name|lk_interlock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|lkp
@@ -970,14 +930,6 @@ return|;
 case|case
 name|LK_RELEASE
 case|:
-name|atomic_lock
-argument_list|(
-operator|&
-name|lkp
-operator|->
-name|lk_interlock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|lkp
@@ -1066,6 +1018,14 @@ literal|0
 operator|)
 return|;
 default|default:
+name|atomic_unlock
+argument_list|(
+operator|&
+name|lkp
+operator|->
+name|lk_interlock
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"lockmgr: unknown locktype request %d"
@@ -1075,6 +1035,7 @@ operator|&
 name|LK_TYPE_MASK
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 block|}
 end_block

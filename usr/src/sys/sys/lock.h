@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.1 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -54,7 +54,7 @@ name|atomic_lk
 name|lk_interlock
 decl_stmt|;
 comment|/* lock on remaining fields */
-name|int
+name|u_int
 name|lk_flags
 decl_stmt|;
 comment|/* see below */
@@ -320,7 +320,7 @@ expr|struct
 name|proc
 operator|*
 operator|,
-name|int
+name|u_int
 name|flags
 operator|)
 argument_list|)
@@ -340,7 +340,7 @@ comment|/*  * The simple-lock routines are the primitives out of which the lock 
 end_comment
 
 begin_function
-specifier|inline
+name|__inline
 name|void
 name|atomic_lock_init
 parameter_list|(
@@ -362,7 +362,7 @@ block|}
 end_function
 
 begin_function
-specifier|inline
+name|__inline
 name|void
 name|atomic_lock
 parameter_list|(
@@ -389,7 +389,7 @@ block|}
 end_function
 
 begin_function
-specifier|inline
+name|__inline
 name|void
 name|atomic_unlock
 parameter_list|(
@@ -422,11 +422,11 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|DEBUG
 end_ifdef
 
 begin_function
-specifier|inline
+name|__inline
 name|void
 name|atomic_lock_init
 parameter_list|(
@@ -448,7 +448,7 @@ block|}
 end_function
 
 begin_function
-specifier|inline
+name|__inline
 name|void
 name|atomic_lock
 parameter_list|(
@@ -484,7 +484,7 @@ block|}
 end_function
 
 begin_function
-specifier|inline
+name|__inline
 name|void
 name|atomic_unlock
 parameter_list|(
