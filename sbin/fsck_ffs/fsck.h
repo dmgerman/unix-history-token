@@ -822,6 +822,71 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|adjndir
+index|[
+name|MIBSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MIB command to adjust number of directories */
+end_comment
+
+begin_decl_stmt
+name|int
+name|adjnbfree
+index|[
+name|MIBSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MIB command to adjust number of free blocks */
+end_comment
+
+begin_decl_stmt
+name|int
+name|adjnifree
+index|[
+name|MIBSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MIB command to adjust number of free inodes */
+end_comment
+
+begin_decl_stmt
+name|int
+name|adjnffree
+index|[
+name|MIBSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MIB command to adjust number of free frags */
+end_comment
+
+begin_decl_stmt
+name|int
+name|adjnumclusters
+index|[
+name|MIBSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MIB command to adjust number of free clusters */
+end_comment
+
+begin_decl_stmt
+name|int
 name|freefiles
 index|[
 name|MIBSIZE
