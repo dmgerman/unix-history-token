@@ -171,6 +171,32 @@ end_define
 
 begin_expr_stmt
 specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_UNPATH
+argument_list|,
+literal|"unpath"
+argument_list|,
+literal|"UNION path component"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_UNDCACHE
+argument_list|,
+literal|"undcac"
+argument_list|,
+literal|"UNION directory cache"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument|unhead
@@ -778,7 +804,7 @@ name|un
 operator|->
 name|un_path
 argument_list|,
-name|M_TEMP
+name|M_UNPATH
 argument_list|)
 expr_stmt|;
 name|un
@@ -1847,7 +1873,7 @@ name|cn_namelen
 operator|+
 literal|1
 argument_list|,
-name|M_TEMP
+name|M_UNPATH
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -2187,7 +2213,7 @@ name|un
 operator|->
 name|un_dircache
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|un
 operator|->
@@ -2218,7 +2244,7 @@ name|cn_namelen
 operator|+
 literal|1
 argument_list|,
-name|M_TEMP
+name|M_UNPATH
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -2256,7 +2282,7 @@ name|un
 operator|->
 name|un_path
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|un
 operator|->
@@ -2460,7 +2486,7 @@ name|un
 operator|->
 name|un_path
 argument_list|,
-name|M_TEMP
+name|M_UNPATH
 argument_list|)
 expr_stmt|;
 name|un
@@ -4978,7 +5004,7 @@ name|vnode
 operator|*
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_UNDCACHE
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -5186,7 +5212,7 @@ name|free
 argument_list|(
 name|newdircache
 argument_list|,
-name|M_TEMP
+name|M_UNDCACHE
 argument_list|)
 expr_stmt|;
 block|}
@@ -5251,7 +5277,7 @@ name|un
 operator|->
 name|un_dircache
 argument_list|,
-name|M_TEMP
+name|M_UNDCACHE
 argument_list|)
 expr_stmt|;
 name|un
@@ -5366,7 +5392,7 @@ argument_list|)
 expr_stmt|;
 name|lvp
 operator|=
-name|NULL
+name|NULLVP
 expr_stmt|;
 block|}
 block|}
