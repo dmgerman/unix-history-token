@@ -449,7 +449,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return the name of the new backup file for file FILE,    allocated with malloc.  Return 0 if out of memory.    FILE must not end with a '/' unless it is the root directory.  */
+comment|/* Return the name of the new backup file for file FILE,    allocated with malloc.  Return 0 if out of memory.    FILE must not end with a '/' unless it is the root directory.    Do not call this function if backup_type == none. */
 end_comment
 
 begin_function
@@ -550,10 +550,6 @@ condition|(
 name|backup_type
 operator|!=
 name|simple
-operator|&&
-name|backup_type
-operator|!=
-name|none
 condition|)
 block|{
 name|int

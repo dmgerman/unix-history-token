@@ -4,7 +4,7 @@ comment|/* utility functions for `patch' */
 end_comment
 
 begin_comment
-comment|/* $Id: util.h,v 1.14 1997/06/13 06:28:37 eggert Exp $ */
+comment|/* $Id: util.h,v 1.15 1997/07/16 12:26:36 eggert Exp $ */
 end_comment
 
 begin_decl_stmt
@@ -388,6 +388,12 @@ operator|(
 name|void
 operator|)
 argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|noreturn
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -419,6 +425,12 @@ name|PARAMS
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|noreturn
 operator|)
 argument_list|)
 decl_stmt|;
@@ -471,6 +483,12 @@ name|PARAMS
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|noreturn
 operator|)
 argument_list|)
 decl_stmt|;

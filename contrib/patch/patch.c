@@ -4,7 +4,7 @@ comment|/* patch - a program to apply diffs to original files */
 end_comment
 
 begin_comment
-comment|/* $Id: patch.c,v 1.22 1997/06/17 22:32:49 eggert Exp $ */
+comment|/* $Id: patch.c,v 1.23 1997/07/05 10:32:23 eggert Exp $ */
 end_comment
 
 begin_comment
@@ -418,7 +418,23 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|make_backups
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|backup_if_mismatch
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+modifier|*
+name|version_control
 decl_stmt|;
 end_decl_stmt
 
@@ -723,14 +739,12 @@ name|char
 specifier|const
 modifier|*
 name|v
-decl_stmt|;
-name|v
-operator|=
+init|=
 name|getenv
 argument_list|(
 literal|"SIMPLE_BACKUP_SUFFIX"
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|v
@@ -742,7 +756,8 @@ name|simple_backup_suffix
 operator|=
 name|v
 expr_stmt|;
-name|v
+block|}
+name|version_control
 operator|=
 name|getenv
 argument_list|(
@@ -752,30 +767,15 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|v
+name|version_control
 condition|)
-name|v
+name|version_control
 operator|=
 name|getenv
 argument_list|(
 literal|"VERSION_CONTROL"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|v
-operator|&&
-operator|*
-name|v
-condition|)
-name|backup_type
-operator|=
-name|get_version
-argument_list|(
-name|v
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Cons up the names of the global temporary files.        Do this before `cleanup' can possibly be called (e.g. by `pfatal').  */
 name|TMPOUTNAME
 operator|=
@@ -816,6 +816,19 @@ name|argv
 expr_stmt|;
 name|get_some_switches
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|make_backups
+operator||
+name|backup_if_mismatch
+condition|)
+name|backup_type
+operator|=
+name|get_version
+argument_list|(
+name|version_control
+argument_list|)
 expr_stmt|;
 name|init_output
 argument_list|(
@@ -1601,9 +1614,7 @@ operator|)
 literal|0
 argument_list|,
 operator|(
-name|backup_type
-operator|!=
-name|none
+name|make_backups
 operator|||
 operator|(
 name|backup_if_mismatch
@@ -1679,9 +1690,7 @@ operator|.
 name|st_mode
 argument_list|,
 operator|(
-name|backup_type
-operator|!=
-name|none
+name|make_backups
 operator|||
 operator|(
 name|backup_if_mismatch
@@ -2596,17 +2605,17 @@ literal|"Backup and version control options:"
 block|,
 literal|""
 block|,
-literal|"  -V STYLE  --version-control=STYLE  Use STYLE version control."
-block|,
-literal|"	STYLE is either 'simple', 'numbered', or 'existing'."
-block|,
-literal|""
-block|,
 literal|"  -b  --backup  Back up the original contents of each file."
 block|,
 literal|"  --backup-if-mismatch  Back up if the patch does not match exactly."
 block|,
 literal|"  --no-backup-if-mismatch  Back up mismatches only if otherwise requested."
+block|,
+literal|""
+block|,
+literal|"  -V STYLE  --version-control=STYLE  Use STYLE version control."
+block|,
+literal|"	STYLE is either 'simple', 'numbered', or 'existing'."
 block|,
 literal|"  -B PREFIX  --prefix=PREFIX  Prepend PREFIX to backup file names."
 block|,
@@ -2824,7 +2833,11 @@ block|{
 case|case
 literal|'b'
 case|:
-comment|/* Special hack for backward compatibility with CVS 1.9. 		    If the last 4 args are `-b SUFFIX ORIGFILE PATCHFILE', 		    treat `-b' as if it were `-z'.  */
+name|make_backups
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Special hack for backward compatibility with CVS 1.9. 		    If the last 4 args are `-b SUFFIX ORIGFILE PATCHFILE', 		    treat `-b' as if it were `-b -z'.  */
 if|if
 condition|(
 name|Argc
@@ -2939,7 +2952,7 @@ name|SILENT
 condition|)
 name|say
 argument_list|(
-literal|"warning: the `-b %s' option is obsolete; use `-z %s' instead\n"
+literal|"warning: the `-b %s' option is obsolete; use `-b -z %s' instead\n"
 argument_list|,
 name|optarg
 argument_list|,
@@ -2950,10 +2963,6 @@ goto|goto
 name|case_z
 goto|;
 block|}
-name|backup_type
-operator|=
-name|simple
-expr_stmt|;
 break|break;
 case|case
 literal|'B'
@@ -3217,12 +3226,9 @@ break|break;
 case|case
 literal|'V'
 case|:
-name|backup_type
+name|version_control
 operator|=
-name|get_version
-argument_list|(
 name|optarg
-argument_list|)
 expr_stmt|;
 break|break;
 if|#
@@ -3806,9 +3812,8 @@ literal|1
 operator|-
 name|first_guess
 expr_stmt|;
-return|return
-operator|(
-operator|(
+if|if
+condition|(
 name|last_frozen_line
 operator|<=
 name|prefix_context
@@ -3830,12 +3835,21 @@ literal|0
 argument_list|,
 name|suffix_fuzz
 argument_list|)
-operator|)
-condition|?
+condition|)
+block|{
+name|last_offset
+operator|=
+name|offset
+expr_stmt|;
+return|return
 name|first_guess
-else|:
+operator|+
+name|offset
+return|;
+block|}
+else|else
+return|return
 literal|0
-operator|)
 return|;
 block|}
 if|if
@@ -3858,9 +3872,8 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-return|return
-operator|(
-operator|(
+if|if
+condition|(
 name|offset
 operator|<=
 name|max_neg_offset
@@ -3879,12 +3892,22 @@ name|LINENUM
 operator|)
 literal|0
 argument_list|)
-operator|)
-condition|?
+condition|)
+block|{
+name|last_offset
+operator|=
+operator|-
+name|offset
+expr_stmt|;
+return|return
 name|first_guess
-else|:
+operator|-
+name|offset
+return|;
+block|}
+else|else
+return|return
 literal|0
-operator|)
 return|;
 block|}
 for|for
