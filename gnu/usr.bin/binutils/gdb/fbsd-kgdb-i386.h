@@ -82,7 +82,7 @@ parameter_list|(
 name|FRAME
 parameter_list|)
 define|\
-value|(kernel_debugging \     ? fbsd_kern_frame_saved_pc(FRAME) : \     (FRAME)->signal_handler_caller \       ? sigtramp_saved_pc (FRAME) \       : read_memory_integer ((FRAME)->frame + 4, 4))
+value|(kernel_debugging \     ? fbsd_kern_frame_saved_pc (FRAME) : \     (FRAME)->signal_handler_caller \       ? sigtramp_saved_pc (FRAME) \       : read_memory_integer ((FRAME)->frame + 4, 4))
 end_define
 
 begin_comment

@@ -76,7 +76,7 @@ parameter_list|,
 name|N
 parameter_list|)
 define|\
-value|if (!strcmp(STR, "kgdb")) \      kernel_debugging = 1;
+value|if (!strcmp (STR, "kgdb")) \      kernel_debugging = 1;
 end_define
 
 begin_endif
