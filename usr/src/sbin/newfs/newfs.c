@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.12 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1735,19 +1735,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|maxbpg
-operator|==
-literal|0
-condition|)
-name|maxbpg
-operator|=
-name|MAXBLKPG
-argument_list|(
-name|bsize
-argument_list|)
-expr_stmt|;
 name|special
 operator|=
 name|argv
@@ -2443,6 +2430,19 @@ argument_list|,
 name|lp
 operator|->
 name|d_secpercyl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|maxbpg
+operator|==
+literal|0
+condition|)
+name|maxbpg
+operator|=
+name|MAXBLKPG
+argument_list|(
+name|bsize
 argument_list|)
 expr_stmt|;
 name|headswitch
