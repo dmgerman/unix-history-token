@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotacheck.c	5.4 (Berkeley) %G%"
+literal|"@(#)quotacheck.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -747,12 +747,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s not found in /etc/fstab\n"
+literal|"%s not found in %s\n"
 argument_list|,
 name|argv
 index|[
 name|i
 index|]
+argument_list|,
+name|FSTAB
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2344,13 +2346,6 @@ condition|(
 name|cp
 operator|==
 name|NULL
-operator|||
-name|cp
-index|[
-literal|1
-index|]
-operator|==
-literal|'r'
 condition|)
 return|return
 operator|(
