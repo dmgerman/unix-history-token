@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Cimarron D. Taylor of the University of California, Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)find.h	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Cimarron D. Taylor of the University of California, Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)find.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -242,48 +242,11 @@ name|PLAN
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|error
-parameter_list|(
-name|name
-parameter_list|,
-name|number
-parameter_list|)
-define|\
-value|(void)fprintf(stderr, "find: %s: %s\n", name, strerror(number));
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ftsoptions
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|isdeprecated
-decl_stmt|,
-name|isdepth
-decl_stmt|,
-name|isoutput
-decl_stmt|,
-name|isrelative
-decl_stmt|,
-name|isxargs
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-modifier|*
-name|emalloc
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
 end_unit
 

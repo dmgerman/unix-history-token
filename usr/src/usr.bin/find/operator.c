@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)operator.c	5.3 (Berkeley) %G%"
+literal|"@(#)operator.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,18 +46,12 @@ directive|include
 file|"find.h"
 end_include
 
-begin_function_decl
-name|void
-name|bad_arg
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * yanknode --  *	destructively removes the top from the plan  */
 end_comment
 
 begin_function
+specifier|static
 name|PLAN
 modifier|*
 name|yanknode
@@ -125,6 +119,7 @@ comment|/*  * yankexpr --  *	Removes one expression from the plan.  This is used
 end_comment
 
 begin_function
+specifier|static
 name|PLAN
 modifier|*
 name|yankexpr
@@ -215,8 +210,10 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|bad_arg
+name|err
 argument_list|(
+literal|"%s: %s"
+argument_list|,
 literal|"("
 argument_list|,
 literal|"missing closing ')'"
@@ -238,8 +235,10 @@ name|subplan
 operator|==
 name|NULL
 condition|)
-name|bad_arg
+name|err
 argument_list|(
+literal|"%s: %s"
+argument_list|,
 literal|"()"
 argument_list|,
 literal|"empty inner expression"
@@ -376,8 +375,10 @@ name|type
 operator|==
 name|N_CLOSEPAREN
 condition|)
-name|bad_arg
+name|err
 argument_list|(
+literal|"%s: %s"
+argument_list|,
 literal|")"
 argument_list|,
 literal|"no beginning '('"
@@ -563,8 +564,10 @@ name|node
 operator|==
 name|NULL
 condition|)
-name|bad_arg
+name|err
 argument_list|(
+literal|"%s: %s"
+argument_list|,
 literal|"!"
 argument_list|,
 literal|"no following expression"
@@ -578,8 +581,10 @@ name|type
 operator|==
 name|N_OR
 condition|)
-name|bad_arg
+name|err
 argument_list|(
+literal|"%s: %s"
+argument_list|,
 literal|"!"
 argument_list|,
 literal|"nothing between ! and -o"
@@ -774,8 +779,10 @@ name|result
 operator|==
 name|NULL
 condition|)
-name|bad_arg
+name|err
 argument_list|(
+literal|"%s: %s"
+argument_list|,
 literal|"-o"
 argument_list|,
 literal|"no expression before -o"
@@ -813,8 +820,10 @@ index|]
 operator|==
 name|NULL
 condition|)
-name|bad_arg
+name|err
 argument_list|(
+literal|"%s: %s"
+argument_list|,
 literal|"-o"
 argument_list|,
 literal|"no expression after -o"
