@@ -2403,11 +2403,6 @@ name|var
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"Be nice to each other, mmmkay?\n"
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|path
