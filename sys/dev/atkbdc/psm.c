@@ -11894,6 +11894,16 @@ index|[
 literal|2
 index|]
 expr_stmt|;
+comment|/* Finger width value */
+if|if
+condition|(
+name|sc
+operator|->
+name|synhw
+operator|.
+name|capExtended
+condition|)
+block|{
 name|w
 operator|=
 operator|(
@@ -11941,6 +11951,15 @@ operator|>>
 literal|2
 operator|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Assume a finger of regular width */
+name|w
+operator|=
+literal|4
+expr_stmt|;
+block|}
 comment|/* Button presses */
 name|ms
 operator|.
