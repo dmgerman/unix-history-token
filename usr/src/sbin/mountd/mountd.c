@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mountd.c	5.4 (Berkeley) %G%"
+literal|"@(#)mountd.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -615,6 +615,42 @@ argument_list|,
 name|get_exportlist
 argument_list|)
 expr_stmt|;
+block|{
+name|FILE
+modifier|*
+name|pidfile
+init|=
+name|fopen
+argument_list|(
+name|_PATH_MOUNTDPID
+argument_list|,
+literal|"w"
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|pidfile
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|pidfile
+argument_list|,
+literal|"%d\n"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|pidfile
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 operator|(

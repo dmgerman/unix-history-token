@@ -23,5 +23,12 @@ name|_PATH_RMOUNTLIST
 value|"/var/mountdtab"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_MOUNTDPID
+value|"/var/run/mountd.pid"
+end_define
+
 end_unit
 
