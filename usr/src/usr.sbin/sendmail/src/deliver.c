@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.27 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1333,6 +1333,28 @@ condition|(
 name|clever
 condition|)
 block|{
+name|rcode
+operator|=
+name|EX_OK
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
+if|if
+condition|(
+name|host
+index|[
+literal|0
+index|]
+operator|&&
+name|host
+index|[
+literal|0
+index|]
+operator|!=
+literal|'['
+condition|)
+block|{
 name|expand
 argument_list|(
 literal|"\001w"
@@ -1353,23 +1375,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|rcode
-operator|=
-name|EX_OK
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NAMED_BIND
-if|if
-condition|(
-name|host
-index|[
-literal|0
-index|]
-operator|!=
-literal|'['
-condition|)
-block|{
 name|Nmx
 operator|=
 name|getmxrr
