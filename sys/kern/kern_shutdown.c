@@ -1382,7 +1382,7 @@ name|DIAGNOSTIC
 argument_list|)
 name|printf
 argument_list|(
-literal|"%d: dev:%s, flags:%08lx, blkno:%ld, lblkno:%ld\n"
+literal|"%d: dev:%s, flags:%0x, blkno:%ld, lblkno:%ld\n"
 argument_list|,
 name|nbusy
 argument_list|,
