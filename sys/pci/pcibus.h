@@ -95,9 +95,6 @@ name|u_long
 name|data
 parameter_list|)
 function_decl|;
-name|unsigned
-name|pb_maxirq
-decl_stmt|;
 name|int
 function_decl|(
 modifier|*
