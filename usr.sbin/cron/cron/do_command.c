@@ -21,11 +21,12 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: do_command.c,v 1.6 1995/09/10 13:02:56 joerg Exp $"
+literal|"$Id: do_command.c,v 1.6.2.1 1997/07/18 05:31:52 davidn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -417,10 +418,12 @@ name|e
 operator|->
 name|cmd
 init|;
+operator|(
 name|ch
 operator|=
 operator|*
 name|input_data
+operator|)
 condition|;
 name|input_data
 operator|++
@@ -886,18 +889,11 @@ operator|->
 name|envp
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"execl: couldn't exec `%s'\n"
+literal|"execl: couldn't exec `%s'"
 argument_list|,
 name|shell
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"execl"
 argument_list|)
 expr_stmt|;
 name|_exit
@@ -1003,11 +999,13 @@ expr_stmt|;
 comment|/* translation: 		 *	\% -> % 		 *	%  -> \n 		 *	\x -> \x	for all x != % 		 */
 while|while
 condition|(
+operator|(
 name|ch
 operator|=
 operator|*
 name|input_data
 operator|++
+operator|)
 condition|)
 block|{
 if|if
@@ -1290,8 +1288,10 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|MAILCMD
 argument_list|)
 expr_stmt|;

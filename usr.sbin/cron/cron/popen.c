@@ -13,23 +13,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)popen.c	5.7 (Berkeley) 2/14/89";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: popen.c,v 1.5 1994/01/15 20:43:43 vixie Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)popen.c	5.7 (Berkeley) 2/14/89"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,6 +170,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 operator|*
 name|type
 operator|!=
@@ -176,6 +180,7 @@ operator|*
 name|type
 operator|!=
 literal|'w'
+operator|)
 operator|||
 name|type
 index|[

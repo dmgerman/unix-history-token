@@ -21,11 +21,12 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cron.c,v 1.2 1996/06/30 22:11:51 wosch Exp $"
+literal|"$Id: cron.c,v 1.2.2.1 1997/08/29 05:15:05 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,9 +178,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:  %s [-x debugflag[,...]]\n"
-argument_list|,
-name|ProgramName
+literal|"usage: cron [-x debugflag[,...]]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
