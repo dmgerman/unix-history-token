@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symbols.c 1.6 %G%"
+literal|"@(#)symbols.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2059,29 +2059,7 @@ operator|->
 name|type
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|r
-operator|<
-expr|sizeof
-operator|(
-name|Word
-operator|)
-name|and
-name|isparam
-argument_list|(
-name|t
-argument_list|)
-condition|)
-block|{
-name|r
-operator|=
-sizeof|sizeof
-argument_list|(
-name|Word
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* 	     * 	    if (r< sizeof(Word) and isparam(t)) { 		r = sizeof(Word); 	    } 	     */
 break|break;
 case|case
 name|CONST
@@ -2330,29 +2308,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* NOTREACHED */
-block|}
-if|if
-condition|(
-name|r
-operator|<
-expr|sizeof
-operator|(
-name|Word
-operator|)
-name|and
-name|isparam
-argument_list|(
-name|sym
-argument_list|)
-condition|)
-block|{
-name|r
-operator|=
-sizeof|sizeof
-argument_list|(
-name|Word
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 name|r
