@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)paste.c	5.6 (Berkeley) %G%"
+literal|"@(#)paste.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -300,7 +300,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|_BSD_LINE_MAX
+name|_POSIX2_LINE_MAX
 operator|+
 literal|1
 index|]
@@ -781,7 +781,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|_BSD_LINE_MAX
+name|_POSIX2_LINE_MAX
 operator|+
 literal|1
 index|]
