@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_ip.c	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_ip.c	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"socket.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"socketvar.h"
 end_include
 
 begin_include
@@ -224,12 +230,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
-specifier|register
-name|struct
-name|sockaddr_in
-modifier|*
-name|sin
 decl_stmt|;
 if|if
 condition|(
@@ -489,7 +489,7 @@ condition|(
 name|nsip_lastin
 condition|)
 block|{
-name|m_free
+name|m_freem
 argument_list|(
 name|nsip_lastin
 argument_list|)
@@ -503,6 +503,9 @@ name|m0
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|M_COPYALL
 argument_list|)
 expr_stmt|;
@@ -773,11 +776,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENOBUFS
-operator|)
-return|;
+return|return;
 block|}
 name|IF_ENQUEUE
 argument_list|(
@@ -796,25 +795,13 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|bad
-label|:
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_block
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_macro
 name|nsipoutput
@@ -888,12 +875,6 @@ name|int
 name|len
 init|=
 literal|0
-decl_stmt|;
-name|struct
-name|in_addr
-name|in_src
-decl_stmt|,
-name|in_dst
 decl_stmt|;
 specifier|register
 name|struct
@@ -1264,18 +1245,6 @@ name|rq
 operator|->
 name|rq_ip
 decl_stmt|;
-name|int
-name|flags
-init|=
-name|rq
-operator|->
-name|rq_flags
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
 name|struct
 name|route
 name|ro
@@ -1284,14 +1253,6 @@ name|struct
 name|ifnet_en
 modifier|*
 name|ifn
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|struct
-name|sockaddr_in
-modifier|*
-name|dst
 decl_stmt|;
 name|struct
 name|sockaddr_in
@@ -1325,18 +1286,6 @@ operator|*
 operator|)
 name|ip_dst
 expr_stmt|;
-name|dst
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|ro
-operator|.
-name|ro_dst
-expr_stmt|;
 name|rtalloc
 argument_list|(
 operator|&
@@ -1351,15 +1300,11 @@ name|ro_rt
 operator|==
 literal|0
 operator|||
-operator|(
-name|ifp
-operator|=
 name|ro
 operator|.
 name|ro_rt
 operator|->
 name|rt_ifp
-operator|)
 operator|==
 literal|0
 condition|)
@@ -1546,6 +1491,9 @@ operator|*
 operator|)
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|SIOCSIFADDR
 argument_list|,
 operator|(

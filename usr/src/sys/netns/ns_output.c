@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_output.c	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_output.c	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -174,19 +174,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
 name|int
-name|len
-decl_stmt|,
-name|rlen
-decl_stmt|,
-name|off
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -228,6 +216,9 @@ name|m0
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|M_COPYALL
 argument_list|)
 expr_stmt|;

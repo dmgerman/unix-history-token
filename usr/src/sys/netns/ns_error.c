@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_error.c	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_error.c	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -74,6 +74,24 @@ include|#
 directive|include
 file|"ns_error.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|lint
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NS_ERRPRINTFS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -362,6 +380,9 @@ name|ns_err_num
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|type
 argument_list|)
 expr_stmt|;
@@ -373,6 +394,9 @@ name|ns_err_param
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|param
 argument_list|)
 expr_stmt|;
@@ -492,6 +516,9 @@ name|idp_sum
 operator|=
 literal|0xffff
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ns_output
 argument_list|(
 name|dtom
@@ -521,44 +548,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|sockproto
-name|ns_errroto
-init|=
-block|{
-name|AF_NS
-block|,
-name|NSPROTO_ERROR
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|sockaddr_ns
-name|ns_errsrc
-init|=
-block|{
-name|AF_NS
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|sockaddr_ns
-name|ns_errdst
-init|=
-block|{
-name|AF_NS
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|ns_printhost

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_input.c	6.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_input.c	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -446,6 +446,9 @@ name|m
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|M_COPYALL
 argument_list|)
 decl_stmt|;
@@ -1013,6 +1016,13 @@ name|int
 name|idp_abort
 parameter_list|()
 function_decl|;
+specifier|extern
+name|struct
+name|nspcb
+modifier|*
+name|idp_drop
+parameter_list|()
+function_decl|;
 name|int
 name|type
 decl_stmt|;
@@ -1112,6 +1122,9 @@ name|type
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|type
 argument_list|)
 expr_stmt|;
@@ -1138,6 +1151,9 @@ index|]
 argument_list|,
 name|idp_abort
 argument_list|,
+operator|(
+name|long
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1176,6 +1192,9 @@ operator|->
 name|nsp_faddr
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|idp_drop
 argument_list|(
 name|nsp
@@ -2073,6 +2092,9 @@ name|m
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|M_COPYALL
 argument_list|)
 decl_stmt|;

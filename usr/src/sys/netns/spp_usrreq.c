@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)spp_usrreq.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)spp_usrreq.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -228,9 +228,6 @@ name|struct
 name|socket
 modifier|*
 name|so
-decl_stmt|;
-name|int
-name|len
 decl_stmt|;
 name|short
 name|ostate
@@ -859,6 +856,9 @@ name|spp_trace
 argument_list|(
 name|SA_INPUT
 argument_list|,
+operator|(
+name|u_char
+operator|)
 name|ostate
 argument_list|,
 name|cb
@@ -903,6 +903,9 @@ goto|goto
 name|drop
 goto|;
 block|}
+operator|(
+name|void
+operator|)
 name|spp_output
 argument_list|(
 name|cb
@@ -993,6 +996,9 @@ name|spp_trace
 argument_list|(
 name|SA_DROP
 argument_list|,
+operator|(
+name|u_char
+operator|)
 name|ostate
 argument_list|,
 name|cb
@@ -1030,6 +1036,9 @@ name|spp_trace
 argument_list|(
 name|SA_DROP
 argument_list|,
+operator|(
+name|u_char
+operator|)
 name|ostate
 argument_list|,
 name|cb
@@ -1712,6 +1721,16 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_function_decl
+specifier|extern
+name|struct
+name|nspcb
+modifier|*
+name|idp_drop
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|ns_errp
@@ -1831,6 +1850,9 @@ name|type
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|type
 argument_list|)
 expr_stmt|;
@@ -1901,8 +1923,16 @@ name|nsp
 operator|->
 name|nsp_pcb
 condition|)
+operator|(
+name|void
+operator|)
 name|spp_drop
 argument_list|(
+operator|(
+expr|struct
+name|sppcb
+operator|*
+operator|)
 name|nsp
 operator|->
 name|nsp_pcb
@@ -1917,6 +1947,9 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|idp_drop
 argument_list|(
 name|nsp
@@ -1934,8 +1967,15 @@ block|}
 block|}
 end_switch
 
+begin_ifdef
+unit|}
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_expr_stmt
-unit|}  int
+unit|int
 name|spp_fixmtu
 argument_list|(
 name|nsp
@@ -2137,6 +2177,11 @@ block|}
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|spp_output_cnt
@@ -2220,10 +2265,6 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|flags
-decl_stmt|,
-name|debit
-decl_stmt|,
 name|mtu
 init|=
 name|cb
@@ -2683,6 +2724,9 @@ name|si_len
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -2700,15 +2744,13 @@ name|s_seq
 operator|++
 expr_stmt|;
 block|}
-name|output
-label|:
 comment|/* 	 * update window 	 */
 block|{
 specifier|register
 name|struct
 name|sockbuf
 modifier|*
-name|sb
+name|sb2
 init|=
 operator|&
 name|so
@@ -2720,11 +2762,11 @@ name|credit
 init|=
 operator|(
 operator|(
-name|sb
+name|sb2
 operator|->
 name|sb_mbmax
 operator|-
-name|sb
+name|sb2
 operator|->
 name|sb_mbcnt
 operator|)
@@ -2991,6 +3033,9 @@ name|m
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|M_COPYALL
 argument_list|)
 expr_stmt|;
@@ -3826,8 +3871,6 @@ name|name
 condition|)
 block|{
 name|int
-name|mask
-decl_stmt|,
 modifier|*
 name|ok
 decl_stmt|;
@@ -4608,6 +4651,9 @@ break|break;
 case|case
 name|PRU_ABORT
 case|:
+operator|(
+name|void
+operator|)
 name|spp_drop
 argument_list|(
 name|cb
@@ -4810,13 +4856,16 @@ name|spp_trace
 argument_list|(
 name|SA_USER
 argument_list|,
+operator|(
+name|u_char
+operator|)
 name|ostate
 argument_list|,
 name|cb
 argument_list|,
 operator|(
 expr|struct
-name|sphdr
+name|spidp
 operator|*
 operator|)
 literal|0
@@ -5322,6 +5371,9 @@ end_decl_stmt
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|spp_close
 argument_list|(
 operator|(
