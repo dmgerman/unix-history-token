@@ -497,6 +497,13 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|kdb_dbbe
+operator|!=
+name|NULL
+condition|)
+block|{
 name|strncpy
 argument_list|(
 name|buf
@@ -520,6 +527,13 @@ argument_list|)
 operator|-
 literal|1
 index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+else|else
+operator|*
+name|buf
 operator|=
 literal|'\0'
 expr_stmt|;
