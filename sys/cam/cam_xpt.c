@@ -1379,6 +1379,29 @@ literal|255
 block|}
 block|,
 block|{
+comment|/* 		 * The Hitachi CJ series with J8A8 firmware apparantly has 		 * problems with tagged commands. 		 * PR: 23536 		 * Reported by: amagai@nue.org 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"HITACHI"
+block|,
+literal|"DK32CJ*"
+block|,
+literal|"J8A8"
+block|}
+block|,
+name|CAM_QUIRK_NOLUNS
+block|,
+comment|/*mintags*/
+literal|0
+block|,
+comment|/*maxtags*/
+literal|0
+block|}
+block|,
+block|{
 comment|/* 		 * This old revision of the TDC3600 is also SCSI-1, and 		 * hangs upon serial number probing. 		 */
 block|{
 name|T_SEQUENTIAL
