@@ -635,7 +635,9 @@ name|ksp
 init|=
 name|type
 decl_stmt|;
-comment|/* #ifdef INVARIANTS */
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 comment|/* 	 * To make sure that WAITOK or NOWAIT is set, but not more than 	 * one, and check against the API botches that are common. 	 */
 name|indx
 operator|=
@@ -710,7 +712,8 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* #endif */
+endif|#
+directive|endif
 if|#
 directive|if
 literal|0

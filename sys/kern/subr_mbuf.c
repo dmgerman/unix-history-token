@@ -2652,7 +2652,9 @@ name|void
 modifier|*
 name|m
 decl_stmt|;
-comment|/* #ifdef INVARIANTS */
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|int
 name|flags
 decl_stmt|;
@@ -2720,7 +2722,8 @@ name|M_TRYWAIT
 expr_stmt|;
 block|}
 block|}
-comment|/* #endif */
+endif|#
+directive|endif
 name|m
 operator|=
 name|NULL
