@@ -189,11 +189,11 @@ name|c_rdev
 decl_stmt|;
 comment|/* for devices, device number */
 name|int32_t
-name|c_createtimensec
+name|c_birthtimensec
 decl_stmt|;
 comment|/* creation time, nanosecs */
 name|int64_t
-name|c_createtime
+name|c_birthtime
 decl_stmt|;
 comment|/* creation time, seconds */
 name|int64_t

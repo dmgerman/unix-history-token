@@ -466,6 +466,10 @@ name|time_t
 name|mtime_sec
 decl_stmt|;
 comment|/* modified time seconds */
+name|time_t
+name|birthtime_sec
+decl_stmt|;
+comment|/* creation time seconds */
 name|int
 name|atime_nsec
 decl_stmt|;
@@ -474,6 +478,10 @@ name|int
 name|mtime_nsec
 decl_stmt|;
 comment|/* modified time nanoseconds */
+name|int
+name|birthtime_nsec
+decl_stmt|;
+comment|/* creation time nanoseconds */
 name|off_t
 name|size
 decl_stmt|;
