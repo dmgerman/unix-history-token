@@ -21,11 +21,22 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|__GNUC__
+end_if
+
 begin_warning
 warning|#
 directive|warning
 literal|"Don't #include ioctl.h in the kernel.  Include xxxio.h instead."
 end_warning
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
