@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ln.c	4.13 (Berkeley) %G%"
+literal|"@(#)ln.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_decl_stmt
@@ -275,9 +281,21 @@ name|buf
 argument_list|)
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"ln: %s: %s\n"
+argument_list|,
 name|sourcedir
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -288,15 +306,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
+operator|!
+name|S_ISDIR
+argument_list|(
 name|buf
 operator|.
 name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|!=
-name|S_IFDIR
+argument_list|)
 condition|)
 name|usage
 argument_list|()
@@ -333,7 +349,7 @@ name|exitval
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -364,10 +380,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|struct
 name|stat
 name|buf
@@ -380,14 +392,6 @@ index|]
 decl_stmt|,
 modifier|*
 name|cp
-decl_stmt|,
-modifier|*
-name|rindex
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strcpy
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -407,9 +411,21 @@ name|buf
 argument_list|)
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"ln: %s: %s\n"
+argument_list|,
 name|target
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -435,9 +451,12 @@ operator|==
 name|S_IFDIR
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"%s is a directory.\n"
+literal|"ln: %s is a directory.\n"
 argument_list|,
 name|target
 argument_list|)
@@ -528,9 +547,21 @@ name|source
 argument_list|)
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"ln: %s: %s\n"
+argument_list|,
 name|source
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -552,11 +583,14 @@ specifier|static
 name|usage
 argument_list|()
 block|{
-name|fputs
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"usage:\tln [-s] targetname [sourcename]\n\tln [-s] targetname1 targetname2 [... targetnameN] sourcedirectory\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"usage:\tln [-s] file1 file2\n\tln [-s] file ... directory\n"
 argument_list|)
 block|;
 name|exit
