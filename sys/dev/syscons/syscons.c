@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.208 1997/04/03 21:42:42 brian Exp $  */
+comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.209 1997/04/10 12:26:50 yokota Exp $  */
 end_comment
 
 begin_include
@@ -1180,15 +1180,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|void
+name|timeout_t
 name|scrn_timer
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -1562,17 +1559,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|void
+name|timeout_t
 name|blink_screen
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -2832,7 +2824,9 @@ expr_stmt|;
 block|}
 comment|/* get screen update going */
 name|scrn_timer
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 name|update_leds
 argument_list|(
@@ -8566,7 +8560,11 @@ begin_function
 specifier|static
 name|void
 name|scrn_timer
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
 block|{
 name|scr_stat
 modifier|*
@@ -8631,12 +8629,9 @@ condition|)
 block|{
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|scrn_timer
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|hz
 operator|/
@@ -9026,12 +9021,9 @@ argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|scrn_timer
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|hz
 operator|/
@@ -21935,9 +21927,6 @@ argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|blink_screen
 argument_list|,
 name|cur_console
@@ -21976,11 +21965,17 @@ specifier|static
 name|void
 name|blink_screen
 parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|scr_stat
 modifier|*
 name|scp
-parameter_list|)
-block|{
+init|=
+name|arg
+decl_stmt|;
 if|if
 condition|(
 name|blink_in_progress
@@ -22044,9 +22039,6 @@ operator|--
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|blink_screen
 argument_list|,
 name|scp
