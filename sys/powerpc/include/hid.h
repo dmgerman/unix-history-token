@@ -137,7 +137,7 @@ value|0x00800000
 end_define
 
 begin_comment
-comment|/* High BAT enable (7457) */
+comment|/* High BAT enable (74[45][578])  */
 end_comment
 
 begin_define
@@ -199,7 +199,7 @@ begin_define
 define|#
 directive|define
 name|HID0_BHTCLR
-value|0x00080000
+value|0x00040000
 end_define
 
 begin_comment
@@ -221,7 +221,7 @@ begin_define
 define|#
 directive|define
 name|HID0_XAEN
-value|0x00040000
+value|0x00020000
 end_define
 
 begin_comment
@@ -341,6 +341,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HID0_XBSEN
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Extended BAT block size enable (7455+)*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HID0_SGE
 value|0x00000080
 end_define
@@ -374,12 +385,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HID0_LRSTK
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Link register stack enable (7450) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HID0_ABE
 value|0x00000008
 end_define
 
 begin_comment
 comment|/* Enable address broadcast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HID0_FOLD
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Branch folding enable (7450) */
 end_comment
 
 begin_define
