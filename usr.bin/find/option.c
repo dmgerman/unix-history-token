@@ -620,6 +620,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|"-not"
+block|,
+name|c_simple
+block|,
+name|f_not
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"-o"
 block|,
 name|c_simple
