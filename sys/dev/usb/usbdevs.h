@@ -5271,6 +5271,17 @@ begin_comment
 comment|/* USB10TA Ethernet */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_LINKSYS_USB10TX2
+value|0x400b
+end_define
+
+begin_comment
+comment|/* USB10TX */
+end_comment
+
 begin_comment
 comment|/* Logitech products */
 end_comment
