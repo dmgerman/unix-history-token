@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clas.c 1.9 %G%"
+literal|"@(#)clas.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -253,6 +253,9 @@ name|TSET
 operator|)
 return|;
 case|case
+name|CRANGE
+case|:
+case|case
 name|RANGE
 case|:
 name|p
@@ -430,6 +433,12 @@ operator|->
 name|class
 operator|==
 name|RANGE
+operator|||
+name|p
+operator|->
+name|class
+operator|==
+name|CRANGE
 condition|)
 name|p
 operator|=
@@ -520,12 +529,14 @@ name|class
 operator|==
 name|RANGE
 condition|)
+block|{
 name|p
 operator|=
 name|p
 operator|->
 name|type
 expr_stmt|;
+block|}
 comment|/* 	 * the following character/class 	 * associations are made: 	 * 	 *	s	scalar 	 *	b	Boolean 	 *	c	character 	 *	i	integer 	 *	d	double (real) 	 *	t	set 	 */
 switch|switch
 condition|(
@@ -551,6 +562,60 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
+break|break;
+case|case
+name|CRANGE
+case|:
+comment|/* 			 * find the base type of a conformant array range 			 */
+switch|switch
+condition|(
+name|classify
+argument_list|(
+name|p
+operator|->
+name|type
+argument_list|)
+condition|)
+block|{
+case|case
+name|TBOOL
+case|:
+name|i
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|TCHAR
+case|:
+name|i
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+case|case
+name|TINT
+case|:
+name|i
+operator|=
+literal|3
+expr_stmt|;
+break|break;
+case|case
+name|TSCAL
+case|:
+name|i
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"isa"
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 default|default:
 name|i

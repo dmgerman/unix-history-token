@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1979 Regents of the University of California */
+comment|/* Copyright (c) 1984 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[]="@(#)tree_ty.h	1.4	(Berkeley)	83/10/11"; */
+comment|/* static char sccsid[]="@(#)tree_ty.h	1.5	(Berkeley)	84/02/08"; */
 end_comment
 
 begin_typedef
@@ -491,7 +491,35 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* T_TYARY */
+comment|/* T_TYCRANG */
+block|{
+name|int
+name|line_no
+decl_stmt|;
+name|struct
+name|tnode
+modifier|*
+name|lwb_var
+decl_stmt|;
+name|struct
+name|tnode
+modifier|*
+name|upb_var
+decl_stmt|;
+name|struct
+name|tnode
+modifier|*
+name|type
+decl_stmt|;
+block|}
+name|CRANG_TY
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+comment|/* T_TYARY, T_TYCARY */
 block|{
 name|int
 name|line_no
@@ -946,6 +974,9 @@ decl_stmt|;
 name|RANG_TY
 name|t_rang_ty
 decl_stmt|;
+name|CRANG_TY
+name|t_crang_ty
+decl_stmt|;
 name|ARY_TY
 name|t_ary_ty
 decl_stmt|;
@@ -1130,6 +1161,13 @@ define|#
 directive|define
 name|rang_ty
 value|tree_ele.t_rang_ty
+end_define
+
+begin_define
+define|#
+directive|define
+name|crang_ty
+value|tree_ele.t_crang_ty
 end_define
 
 begin_define

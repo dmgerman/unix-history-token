@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)tree.h 1.3 %G%"; */
+comment|/* static	char sccsid[] = "@(#)tree.h 1.4 %G%"; */
 end_comment
 
 begin_define
@@ -565,6 +565,20 @@ define|#
 directive|define
 name|T_LAST
 value|81
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_TYCRANG
+value|82
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_TYCARY
+value|83
 end_define
 
 end_unit

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.18 %G%"
+literal|"@(#)var.c 1.19 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1113,6 +1113,18 @@ argument_list|)
 operator|)
 return|;
 case|case
+name|CRANGE
+case|:
+name|p
+operator|=
+name|p
+operator|->
+name|type
+expr_stmt|;
+goto|goto
+name|loop
+goto|;
+case|case
 name|RANGE
 case|:
 if|if
@@ -1442,6 +1454,9 @@ return|return
 name|A_FILET
 return|;
 case|case
+name|CRANGE
+case|:
+case|case
 name|RANGE
 case|:
 if|if
@@ -1709,6 +1724,22 @@ argument_list|(
 literal|"ary"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If it is a conformant array, we cannot find the width from 	 * the type. 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|chain
+operator|->
+name|class
+operator|==
+name|CRANGE
+condition|)
+return|return
+operator|(
+name|NIL
+operator|)
+return|;
 name|s
 operator|=
 name|lwidth

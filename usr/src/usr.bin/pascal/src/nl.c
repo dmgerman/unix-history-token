@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nl.c 1.14 %G%"
+literal|"@(#)nl.c 1.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1913,6 +1913,8 @@ block|,
 literal|"FPROC"
 block|,
 literal|"FFUNC"
+block|,
+literal|"CRANGE"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2372,6 +2374,33 @@ name|range
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CRANGE
+case|:
+name|printf
+argument_list|(
+literal|"\t%s..%s"
+argument_list|,
+name|p
+operator|->
+name|nptr
+index|[
+literal|0
+index|]
+operator|->
+name|symbol
+argument_list|,
+name|p
+operator|->
+name|nptr
+index|[
+literal|1
+index|]
+operator|->
+name|symbol
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3386,6 +3415,12 @@ operator|==
 name|rp
 operator|->
 name|symbol
+operator|&&
+name|p
+operator|->
+name|symbol
+operator|!=
+name|NIL
 operator|&&
 name|p
 operator|->

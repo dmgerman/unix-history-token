@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* static	char sccsid[] = "@(#)OPnames.h 1.7 %G%"; */
+comment|/* static	char sccsid[] = "@(#)OPnames.h 1.8 %G%"; */
 end_comment
 
 begin_ifndef
@@ -78,7 +78,7 @@ literal|" OR"
 block|,
 literal|" NOT"
 block|,
-literal|0
+literal|" VAS"
 block|,
 literal|" AS2"
 block|,
@@ -312,13 +312,13 @@ literal|" BUFF"
 block|,
 literal|" HALT"
 block|,
-literal|0
+literal|" VINX2"
 block|,
-literal|0
+literal|" VINX24"
 block|,
-literal|0
+literal|" VINX42"
 block|,
-literal|0
+literal|" VINX4"
 block|,
 literal|"*ORD2"
 block|,

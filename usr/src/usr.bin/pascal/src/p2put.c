@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p2put.c 1.15 %G%"
+literal|"@(#)p2put.c 1.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2089,6 +2089,9 @@ name|SCAL
 case|:
 case|case
 name|RANGE
+case|:
+case|case
+name|CRANGE
 case|:
 if|if
 condition|(

@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)0.h 1.22 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 1.23 %G%"; */
 end_comment
 
 begin_define
@@ -627,6 +627,15 @@ decl_stmt|;
 name|double
 name|un_real
 decl_stmt|;
+name|struct
+name|nl
+modifier|*
+name|un_nptr
+index|[
+literal|5
+index|]
+decl_stmt|;
+comment|/* Points to conformant array bounds */
 block|}
 name|nl_un
 union|;
@@ -704,6 +713,13 @@ define|#
 directive|define
 name|real
 value|nl_un.un_real
+end_define
+
+begin_define
+define|#
+directive|define
+name|nptr
+value|nl_un.un_nptr
 end_define
 
 begin_decl_stmt
@@ -1243,6 +1259,13 @@ define|#
 directive|define
 name|FFUNC
 value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRANGE
+value|25
 end_define
 
 begin_comment
