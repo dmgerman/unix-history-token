@@ -54,6 +54,16 @@ parameter_list|)
 value|(!(c)->buffer.dl)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ROUND
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& DMA_ALIGN_MASK)
+end_define
+
 begin_comment
 comment|/* #define DEB(x) x */
 end_comment
@@ -3218,11 +3228,6 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-comment|/* rely on length& DMA_ALIGN_MASK == 0 */
-name|length
-operator|&=
-name|DMA_ALIGN_MASK
-expr_stmt|;
 if|if
 condition|(
 name|length
@@ -3316,7 +3321,7 @@ while|while
 condition|(
 name|length
 operator|>
-literal|0
+literal|1
 condition|)
 block|{
 operator|*
@@ -3358,6 +3363,25 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|length
+operator|==
+literal|1
+condition|)
+operator|*
+operator|(
+name|b
+operator|->
+name|buf
+operator|+
+name|i
+operator|)
+operator|=
+name|data
+operator|&
+literal|0xff
+expr_stmt|;
 block|}
 end_function
 
@@ -5405,6 +5429,19 @@ operator|->
 name|blksz
 operator|=
 name|blksz
+expr_stmt|;
+name|RANGE
+argument_list|(
+name|blksz
+argument_list|,
+literal|16
+argument_list|,
+name|b
+operator|->
+name|bufsize
+operator|/
+literal|2
+argument_list|)
 expr_stmt|;
 name|b
 operator|->
