@@ -1482,6 +1482,7 @@ operator|==
 name|pci_parallel
 condition|)
 block|{
+comment|/* Do the PCI side of things: Enable the Card Change int */
 name|reg
 operator|=
 name|CB_SM_CD
@@ -1501,10 +1502,30 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
+comment|/* 		 * TI Chips need us to set the following.  We tell the 		 * controller to route things via PCI interrupts.  Also 		 * we clear the interrupt number in the STAT_INT register 		 * as well.  The TI-12xx and newer chips require one or the 		 * other of these to happen, depending on what is set in the 		 * diagnostic register.  I do both on the theory that other 		 * chips might need one or the other and that no harm will 		 * come from it.  If there is harm, then I'll make it a bit 		 * in the tables. 		 */
+name|pcic_setb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_INT_GEN
+argument_list|,
+name|PCIC_INTR_ENA
+argument_list|)
+expr_stmt|;
+name|pcic_clrb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_STAT_INT
+argument_list|,
+name|PCIC_CSCSELECT
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* Management IRQ changes */
+comment|/* 		 * The PCIC_INTR_ENA bit means either "tie the function 		 * and csc interrupts together" or "Route csc interrupts 		 * via PCI" or "Reserved".  In any case, we want to clear 		 * it since we're using ISA interrupts. 		 */
 name|pcic_clrb
 argument_list|(
 name|sp
@@ -1532,10 +1553,10 @@ argument_list|,
 operator|(
 name|irq
 operator|<<
-literal|4
+name|PCIC_SI_IRQ_SHIFT
 operator|)
 operator||
-literal|0x8
+name|PCIC_CDEN
 argument_list|)
 expr_stmt|;
 block|}
@@ -2968,17 +2989,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|sp
-operator|->
-name|putb
-argument_list|(
-name|sp
-argument_list|,
-name|PCIC_POWER
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/*	sp->putb(sp, PCIC_POWER, 0); */
 block|}
 end_function
 

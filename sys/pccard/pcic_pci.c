@@ -819,8 +819,10 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|u_long
+name|u_int32_t
 name|syscntl
+decl_stmt|,
+name|diagctl
 decl_stmt|,
 name|devcntl
 decl_stmt|,
@@ -911,6 +913,32 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"TI12XX PCI Config Reg: "
+argument_list|)
+expr_stmt|;
+name|diagctl
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|TI12XX_PCI_DIAGNOSTIC
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|diagctl
+operator||=
+name|TI12XX_DIAG_CSC_INTR
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|TI12XX_PCI_DIAGNOSTIC
+argument_list|,
+name|diagctl
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1760,6 +1788,16 @@ literal|0xffffffff
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * TI chips also require us to read the old ExCA register for 	 * card status change when we route CSC via PCI!  So, we go ahead 	 * and read it to clear the bits.  Maybe we should check the status 	 * ala the ISA interrupt handler, but those changes should be caught 	 * in the CD change. 	 */
+name|sp
+operator|->
+name|getb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_STAT_CHG
+argument_list|)
+expr_stmt|;
 comment|/* Now call children interrupts if any */
 name|stat
 operator|=
@@ -1778,10 +1816,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sp
-operator|->
-name|intr
-operator|&&
 operator|(
 name|stat
 operator|&
@@ -1789,6 +1823,15 @@ name|CB_SS_CD
 operator|)
 operator|==
 literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|sp
+operator|->
+name|intr
+operator|!=
+name|NULL
 condition|)
 name|sp
 operator|->
@@ -1799,6 +1842,7 @@ operator|->
 name|argp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
