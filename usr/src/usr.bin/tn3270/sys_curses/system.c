@@ -170,7 +170,7 @@ specifier|static
 name|long
 name|storage
 index|[
-literal|250
+literal|1000
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -927,7 +927,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"(Enountered in file %s at line %s.)\n"
+literal|"(Encountered in file %s at line %d.)\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -1085,7 +1085,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"(Enountered in file %s at line %s.)\n"
+literal|"(Encountered in file %s at line %d.)\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -1196,7 +1196,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"(Encountered at %s, %s.)\n"
+literal|"(Encountered at %s, %d.)\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -1448,7 +1448,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"(Encountered in file %s, line %s.)\n"
+literal|"(Encountered in file %s, line %d.)\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -1467,10 +1467,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|storage_accessed
-operator|=
-literal|1
-expr_stmt|;
 name|freestorage
 argument_list|()
 expr_stmt|;
@@ -1480,6 +1476,10 @@ name|location
 argument_list|,
 name|length
 argument_list|)
+expr_stmt|;
+name|storage_accessed
+operator|=
+literal|1
 expr_stmt|;
 block|}
 return|return
@@ -1542,7 +1542,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"(Encountered in file %s, line %s.)\n"
+literal|"(Encountered in file %s, line %d.)\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -2029,6 +2029,14 @@ argument_list|()
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|i
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -2045,9 +2053,11 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+block|}
 name|kill_connection
 argument_list|()
 expr_stmt|;
+break|break;
 block|}
 block|}
 return|return
