@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ik.c	1.2	86/11/29	*/
+comment|/*	ik.c	1.3	86/12/11	*/
 end_comment
 
 begin_include
@@ -435,25 +435,36 @@ name|ui_hd
 operator|->
 name|vh_lastiv
 expr_stmt|;
-comment|/*          * Try and reset the PS300.  Since this          * won't work if it's powered off, we          * can't use sucess/failure to decide          * if the device is present.          */
+comment|/* 	 * Use extended non-privileged address modifier to 	 * insure DMA to/from intermediate buffer works when 	 * buffer is not in lower 16Mb of memory (also avoids 	 * other 24-bit devices mapped into overlapping regions). 	 */
+name|ik
+operator|->
+name|ik_mod
+operator|=
+literal|0xf1
+expr_stmt|;
+comment|/* address modifier */
+comment|/* 	 * Try and reset the PS300.  Since this 	 * won't work if it's powered off, we 	 * can't use sucess/failure to decide 	 * if the device is present. 	 */
 name|br
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-operator|!
+operator|(
+name|void
+operator|)
 name|psreset
 argument_list|(
 name|ik
 argument_list|,
 name|IKCSR_IENA
 argument_list|)
-operator|||
+expr_stmt|;
+if|if
+condition|(
 name|br
 operator|==
 literal|0
 condition|)
+comment|/* XXX */
 name|br
 operator|=
 literal|0x18
@@ -516,7 +527,14 @@ operator|->
 name|ik_csr
 operator|=
 name|IKCSR_FNC3
+operator||
+name|iena
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|iena
+condition|)
 return|return
 operator|(
 name|dioread
@@ -525,6 +543,11 @@ name|ik
 argument_list|)
 operator|==
 name|PS_RESET
+operator|)
+return|;
+return|return
+operator|(
+literal|1
 operator|)
 return|;
 block|}
@@ -547,50 +570,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|ikdevice
-modifier|*
-name|ik
-decl_stmt|;
-name|ikinfo
-index|[
-name|vi
-operator|->
-name|ui_unit
-index|]
-operator|=
-name|vi
-expr_stmt|;
-name|ik
-operator|=
-operator|(
-expr|struct
-name|ikdevice
-operator|*
-operator|)
-name|vi
-operator|->
-name|ui_addr
-expr_stmt|;
-name|ik
-operator|->
-name|ik_vec
-operator|=
-name|IKVEC_BASE
-operator|+
-name|vi
-operator|->
-name|ui_unit
-expr_stmt|;
-comment|/* interrupt vector */
-name|ik
-operator|->
-name|ik_mod
-operator|=
-name|IKMOD_STD
-expr_stmt|;
-comment|/* address modifier */
 name|ik_softc
 index|[
 name|vi
@@ -775,7 +754,7 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-comment|/*                  * Perform PS300 attach for first process.                  */
+comment|/* 		 * Perform PS300 attach for first process. 		 */
 if|if
 condition|(
 operator|!
@@ -803,7 +782,7 @@ literal|1
 argument_list|)
 condition|)
 block|{
-comment|/*                                  * If attach fails, perform a hard                                  * reset once, then retry the command.                                  */
+comment|/* 				 * If attach fails, perform a hard 				 * reset once, then retry the command. 				 */
 name|ik
 operator|=
 operator|(
@@ -1201,7 +1180,7 @@ name|uio_iovcnt
 operator|--
 control|)
 block|{
-comment|/*                  * Hack way to set PS300 address w/o doing an lseek                  * and specify write physical w/ refresh synchronization.                  */
+comment|/* 		 * Hack way to set PS300 address w/o doing an lseek 		 * and specify write physical w/ refresh synchronization. 		 */
 if|if
 condition|(
 name|iov
@@ -1333,7 +1312,7 @@ name|B_BUSY
 operator||
 name|rw
 expr_stmt|;
-comment|/*                  * Construct address descriptor in buffer.                  */
+comment|/* 		 * Construct address descriptor in buffer. 		 */
 name|ap
 operator|=
 operator|(
@@ -1503,9 +1482,9 @@ name|NBPG
 control|)
 name|mtpr
 argument_list|(
-name|cp
-argument_list|,
 name|P1DC
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1790,7 +1769,7 @@ name|buf
 modifier|*
 name|dp
 decl_stmt|;
-comment|/*          * Put request at end of controller queue.          */
+comment|/* 	 * Put request at end of controller queue. 	 */
 name|dp
 operator|=
 operator|&
@@ -1928,7 +1907,7 @@ name|unit
 decl_stmt|;
 name|loop
 label|:
-comment|/*          * Pull a request off the controller queue          */
+comment|/* 	 * Pull a request off the controller queue 	 */
 if|if
 condition|(
 operator|(
@@ -1950,7 +1929,7 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-comment|/*          * Mark controller busy and process this request.          */
+comment|/* 	 * Mark controller busy and process this request. 	 */
 name|dp
 operator|->
 name|b_active
@@ -2019,7 +1998,7 @@ case|case
 name|PS_WRPHY_SYNC
 case|:
 comment|/* physical i/o write w/ sync */
-comment|/*                  * Handshake command and, optionally,                  * byte count and byte swap flag.                  */
+comment|/* 		 * Handshake command and, optionally, 		 * byte count and byte swap flag. 		 */
 if|if
 condition|(
 name|sc
@@ -2083,7 +2062,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/*                  * Set timeout and wait for an attention interrupt.                  */
+comment|/* 		 * Set timeout and wait for an attention interrupt. 		 */
 name|sc
 operator|->
 name|is_timeout
@@ -2261,7 +2240,7 @@ name|FETCHWORD
 parameter_list|(
 name|i
 parameter_list|)
-value|{ \         int v; \ \         v = dioread(ik); \         if (v == -1) { \                 sc->is_error = PSERROR_NAMETIMO; \                 goto bad; \         } \         sc->is_nameaddr.w[i] = v; \ }
+value|{ \ 	int v; \ \ 	v = dioread(ik); \ 	if (v == -1) { \ 		sc->is_error = PSERROR_NAMETIMO; \ 		goto bad; \ 	} \ 	sc->is_nameaddr.w[i] = v; \ }
 end_define
 
 begin_comment
@@ -2337,7 +2316,7 @@ index|]
 operator|->
 name|ui_addr
 expr_stmt|;
-comment|/*          * Discard all non-attention interrupts.  The          * interrupts we're throwing away should all be          * associated with DMA completion.          */
+comment|/* 	 * Discard all non-attention interrupts.  The 	 * interrupts we're throwing away should all be 	 * associated with DMA completion. 	 */
 name|data
 operator|=
 name|ik
@@ -2373,7 +2352,7 @@ name|IKPULSE_SIENA
 expr_stmt|;
 return|return;
 block|}
-comment|/*          * Fetch attention code immediately.          */
+comment|/* 	 * Fetch attention code immediately. 	 */
 name|ik
 operator|->
 name|ik_csr
@@ -2390,7 +2369,7 @@ name|ik_pulse
 operator|=
 name|IKPULSE_FNC2
 expr_stmt|;
-comment|/*          * Get device and block structures, and a pointer          * to the vba_device for the device.  We receive an          * unsolicited interrupt whenever the PS300 is power          * cycled (so ignore it in that case).          */
+comment|/* 	 * Get device and block structures, and a pointer 	 * to the vba_device for the device.  We receive an 	 * unsolicited interrupt whenever the PS300 is power 	 * cycled (so ignore it in that case). 	 */
 name|dp
 operator|=
 operator|&
@@ -2508,7 +2487,7 @@ goto|goto
 name|enable
 goto|;
 block|}
-comment|/*                  * Address should be present, extract it one                  * word at a time from the PS300 (yech).                  */
+comment|/* 		 * Address should be present, extract it one 		 * word at a time from the PS300 (yech). 		 */
 if|if
 condition|(
 name|data
@@ -3032,7 +3011,7 @@ name|csr
 decl_stmt|;
 name|top
 label|:
-comment|/*          * Deposit data and generate dr300 attention          */
+comment|/* 	 * Deposit data and generate dr300 attention 	 */
 name|ik
 operator|->
 name|ik_data
@@ -3088,7 +3067,7 @@ operator|==
 name|IKCSR_DONE
 condition|)
 block|{
-comment|/*                           * Done, complete handshake by notifying dr300.                          */
+comment|/*  			 * Done, complete handshake by notifying dr300. 			 */
 name|ik
 operator|->
 name|ik_csr
