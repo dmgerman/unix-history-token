@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sethostent.c	6.6 (Berkeley) %G%"
+literal|"@(#)sethostent.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,34 +106,6 @@ expr_stmt|;
 name|_res_close
 argument_list|()
 expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|sethostfile
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|name
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-ifdef|#
-directive|ifdef
-name|lint
-name|name
-operator|=
-name|name
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
