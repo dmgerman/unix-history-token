@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -211,12 +211,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_SUPERBLK
+name|M_MAPMEM
 value|15
 end_define
 
 begin_comment
-comment|/* super block data */
+comment|/* mapped memory descriptors */
 end_comment
 
 begin_define
@@ -310,8 +310,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_VNODE
+name|M_NFSNODE
 value|24
+end_define
+
+begin_comment
+comment|/* NFS vnode private part */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_VNODE
+value|25
 end_define
 
 begin_comment
@@ -322,7 +333,7 @@ begin_define
 define|#
 directive|define
 name|M_CACHE
-value|25
+value|26
 end_define
 
 begin_comment
@@ -333,7 +344,7 @@ begin_define
 define|#
 directive|define
 name|M_DQUOT
-value|26
+value|27
 end_define
 
 begin_comment
@@ -344,22 +355,11 @@ begin_define
 define|#
 directive|define
 name|M_UFSMNT
-value|27
-end_define
-
-begin_comment
-comment|/* UFS mount structure */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_MAPMEM
 value|28
 end_define
 
 begin_comment
-comment|/* mapped memory descriptors */
+comment|/* UFS mount structure */
 end_comment
 
 begin_define
@@ -530,8 +530,41 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_LFSNODE
+value|44
+end_define
+
+begin_comment
+comment|/* LFS vnode private part */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FFSNODE
+value|45
+end_define
+
+begin_comment
+comment|/* FFS vnode private part */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_MFSNODE
+value|46
+end_define
+
+begin_comment
+comment|/* MFS vnode private part */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_TEMP
-value|49
+value|74
 end_define
 
 begin_comment
@@ -542,7 +575,7 @@ begin_define
 define|#
 directive|define
 name|M_LAST
-value|50
+value|75
 end_define
 
 begin_comment
@@ -583,8 +616,8 @@ value|\ 	"gprof",
 comment|/* 13 M_GPROF */
 value|\ 	"ioctlops",
 comment|/* 14 M_IOCTLOPS */
-value|\ 	"superblk",
-comment|/* 15 M_SUPERBLK */
+value|\ 	"mapmem",
+comment|/* 15 M_MAPMEM */
 value|\ 	"cred",
 comment|/* 16 M_CRED */
 value|\ 	"pgrp",
@@ -601,16 +634,16 @@ value|\ 	"NFS req",
 comment|/* 22 M_NFSREQ */
 value|\ 	"NFS mount",
 comment|/* 23 M_NFSMNT */
+value|\ 	"NFS node",
+comment|/* 24 M_NFSNODE */
 value|\ 	"vnodes",
-comment|/* 24 M_VNODE */
+comment|/* 25 M_VNODE */
 value|\ 	"namecache",
-comment|/* 25 M_CACHE */
+comment|/* 26 M_CACHE */
 value|\ 	"UFS quota",
-comment|/* 26 M_DQUOT */
+comment|/* 27 M_DQUOT */
 value|\ 	"UFS mount",
-comment|/* 27 M_UFSMNT */
-value|\ 	"mapmem",
-comment|/* 28 M_MAPMEM */
+comment|/* 28 M_UFSMNT */
 value|\ 	"shm",
 comment|/* 29 M_SHM */
 value|\ 	"VM map",
@@ -641,8 +674,14 @@ value|\ 	"subproc",
 comment|/* 42 M_SUBPROC */
 value|\ 	"LFS segment",
 comment|/* 43 M_SEGMENT */
-value|\ 	NULL, NULL, NULL, NULL, NULL, \ 	"temp",
-comment|/* 49 M_TEMP */
+value|\ 	"LFS node",
+comment|/* 44 M_LFSNODE */
+value|\ 	"FFS node",
+comment|/* 45 M_FFSNODE */
+value|\ 	"MFS node",
+comment|/* 46 M_MFSNODE */
+value|\ 	NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, \ 	"temp",
+comment|/* 74 M_TEMP */
 value|\ }
 end_define
 
