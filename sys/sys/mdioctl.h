@@ -42,23 +42,122 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VNIOCSET
+name|VNIOCATTACH
 value|_IOWR('F', 0, struct vn_ioctl)
 end_define
 
 begin_comment
-comment|/* enable disk */
+comment|/* attach file */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VNIOCCLR
-value|_IOW('F', 1, struct vn_ioctl)
+name|VNIOCDETACH
+value|_IOWR('F', 1, struct vn_ioctl)
 end_define
 
 begin_comment
-comment|/* disable disk */
+comment|/* detach disk */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VNIOCGSET
+value|_IOWR('F', 2, u_long )
+end_define
+
+begin_comment
+comment|/* set global option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VNIOCGCLEAR
+value|_IOWR('F', 3, u_long )
+end_define
+
+begin_comment
+comment|/* reset --//-- */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VNIOCUSET
+value|_IOWR('F', 4, u_long )
+end_define
+
+begin_comment
+comment|/* set unit option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VNIOCUCLEAR
+value|_IOWR('F', 5, u_long )
+end_define
+
+begin_comment
+comment|/* reset --//-- */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VN_LABELS
+value|0x1
+end_define
+
+begin_comment
+comment|/* Use disk(/slice) labels */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VN_FOLLOW
+value|0x2
+end_define
+
+begin_comment
+comment|/* Debug flow in vn driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VN_DEBUG
+value|0x4
+end_define
+
+begin_comment
+comment|/* Debug data in vn driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VN_IO
+value|0x8
+end_define
+
+begin_comment
+comment|/* Debug I/O in vn driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VN_DONTCLUSTER
+value|0x10
+end_define
+
+begin_comment
+comment|/* Don't cluster */
 end_comment
 
 end_unit
