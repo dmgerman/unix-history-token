@@ -995,6 +995,10 @@ literal|"-o"
 argument_list|,
 name|name_mod
 argument_list|,
+literal|"-u"
+argument_list|,
+literal|"-q"
+argument_list|,
 name|path
 argument_list|,
 operator|(
