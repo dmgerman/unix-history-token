@@ -1769,7 +1769,7 @@ return|return;
 block|}
 name|free
 argument_list|(
-name|buf
+name|addr
 argument_list|,
 name|M_DEVBUF
 argument_list|)
