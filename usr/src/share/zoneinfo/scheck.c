@@ -1,15 +1,38 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Arthur David Olson of the National Cancer Institute.  *  * %sccs.include.redist.c%  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOID
-end_ifndef
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)scheck.c	5.3 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -25,19 +48,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !defined lint */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined NOID */
-end_comment
 
 begin_comment
 comment|/*LINTLIBRARY*/
