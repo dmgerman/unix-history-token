@@ -149,7 +149,7 @@ end_function_decl
 begin_decl_stmt
 name|struct
 name|isa_driver
-name|spidriver
+name|spigotdriver
 init|=
 block|{
 name|spigot_probe
