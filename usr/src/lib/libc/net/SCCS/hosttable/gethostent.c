@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gethostent.c	4.5	83/01/02	*/
+comment|/*	gethostent.c	4.6	83/12/21	*/
 end_comment
 
 begin_include
