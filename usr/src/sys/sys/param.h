@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	6.8	85/05/05	*/
+comment|/*	param.h	6.9	85/06/07	*/
 end_comment
 
 begin_comment
@@ -726,6 +726,17 @@ parameter_list|,
 name|y
 parameter_list|)
 value|((((x)+((y)-1))/(y))*(y))
+end_define
+
+begin_comment
+comment|/*  * Maximum size of hostname recognized and stroed in the kernel.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXHOSTNAMELEN
+value|32
 end_define
 
 end_unit
