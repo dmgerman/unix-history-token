@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.7 (Berkeley) %G%"
+literal|"@(#)main.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2405,6 +2405,11 @@ end_macro
 
 begin_block
 block|{
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|longjmp
 argument_list|(
 name|toplevel
