@@ -2587,7 +2587,7 @@ name|config_text1
 index|[]
 init|=
 literal|"Interface              Max        Max\n"
-literal|"Index Name     PCR     VPI  VCI   VPCs VCCs  ESI          Media\n"
+literal|"Index Name     PCR     VPI  VCI   VPCs VCCs  ESI\n"
 decl_stmt|;
 specifier|static
 specifier|const
