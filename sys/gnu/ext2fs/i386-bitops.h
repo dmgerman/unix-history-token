@@ -1,8 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*  * this is mixture of i386/bitops.h and asm/string.h  * taken from the Linux source tree   *  * XXX replace with Mach routines or reprogram in C  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -68,7 +64,7 @@ name|oldbit
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("btsl %2,%1\n\tsbbl %0,%0" 		:"=r" (oldbit),"=m" (ADDR) 		:"ir" (nr));
+asm|("btsl %2,%1\n\tsbbl %0,%0" 		:"=r" (oldbit),"=m" (ADDR) 		:"r" (nr));
 return|return
 name|oldbit
 return|;
@@ -94,7 +90,7 @@ name|oldbit
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("btrl %2,%1\n\tsbbl %0,%0" 		:"=r" (oldbit),"=m" (ADDR) 		:"ir" (nr));
+asm|("btrl %2,%1\n\tsbbl %0,%0" 		:"=r" (oldbit),"=m" (ADDR) 		:"r" (nr));
 return|return
 name|oldbit
 return|;
@@ -120,7 +116,7 @@ name|oldbit
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("btcl %2,%1\n\tsbbl %0,%0" 		:"=r" (oldbit),"=m" (ADDR) 		:"ir" (nr));
+asm|("btcl %2,%1\n\tsbbl %0,%0" 		:"=r" (oldbit),"=m" (ADDR) 		:"r" (nr));
 return|return
 name|oldbit
 return|;
@@ -150,7 +146,7 @@ name|oldbit
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("btl %2,%1\n\tsbbl %0,%0" 		:"=r" (oldbit) 		:"m" (ADDR),"ir" (nr));
+asm|("btl %2,%1\n\tsbbl %0,%0" 		:"=r" (oldbit) 		:"m" (ADDR),"r" (nr));
 return|return
 name|oldbit
 return|;
@@ -186,7 +182,7 @@ condition|)
 return|return
 literal|0
 return|;
-asm|__asm__(" 		cld 		movl $-1,%%eax 		xorl %%edx,%%edx 		repe; scasl 		je 1f 		xorl -4(%%edi),%%eax 		subl $4,%%edi 		bsfl %%eax,%%edx 1:		subl %%ebx,%%edi 		shll $3,%%edi 		addl %%edi,%%edx" 		:"=d" (res) 		:"c" ((size + 31)>> 5), "D" (addr), "b" (addr) 		:"ax", "cx", "di");
+asm|__asm__(" 		cld 		movl $-1,%%eax 		repe; scasl 		je 1f 		subl $4,%%edi 		movl (%%edi),%%eax 		notl %%eax 		bsfl %%eax,%%edx 		jmp 2f 1:		xorl %%edx,%%edx 2:		subl %%ebx,%%edi 		shll $3,%%edi 		addl %%edi,%%edx" 		:"=d" (res) 		:"c" ((size + 31)>> 5), "D" (addr), "b" (addr) 		:"ax", "bx", "cx", "di");
 return|return
 name|res
 return|;
@@ -329,48 +325,6 @@ block|{
 asm|__asm__("bsfl %1,%0" 		:"=r" (word) 		:"r" (~word));
 return|return
 name|word
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*   * memscan() taken from linux asm/string.h  */
-end_comment
-
-begin_comment
-comment|/*  * find the first occurrence of byte 'c', or 1 past the area if none  */
-end_comment
-
-begin_function
-specifier|extern
-specifier|inline
-name|char
-modifier|*
-name|memscan
-parameter_list|(
-name|void
-modifier|*
-name|addr
-parameter_list|,
-name|unsigned
-name|char
-name|c
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|size
-condition|)
-return|return
-name|addr
-return|;
-asm|__asm__("cld                 repnz; scasb                 jnz 1f                 dec %%edi 1:              "                 : "=D" (addr), "=c" (size)                 : "0" (addr), "1" (size), "a" (c));
-return|return
-name|addr
 return|;
 block|}
 end_function
