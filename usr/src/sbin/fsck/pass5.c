@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass5.c	8.7 (Berkeley) %G%"
+literal|"@(#)pass5.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -64,12 +70,10 @@ directive|include
 file|"fsck.h"
 end_include
 
-begin_macro
+begin_function
+name|void
 name|pass5
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|c
@@ -773,9 +777,16 @@ name|cg_iusedoff
 expr_stmt|;
 break|break;
 default|default:
-name|errexit
+name|sumsize
+operator|=
+literal|0
+expr_stmt|;
+comment|/* keep lint happy */
+name|errx
 argument_list|(
-literal|"UNKNOWN ROTATIONAL TABLE FORMAT %d\n"
+name|EEXIT
+argument_list|,
+literal|"UNKNOWN ROTATIONAL TABLE FORMAT %d"
 argument_list|,
 name|fs
 operator|->
@@ -1297,8 +1308,10 @@ operator|<
 name|ROOTINO
 condition|)
 break|break;
-name|errexit
+name|errx
 argument_list|(
+name|EEXIT
+argument_list|,
 literal|"BAD STATE %d FOR INODE I=%d"
 argument_list|,
 name|statemap
@@ -2138,7 +2151,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

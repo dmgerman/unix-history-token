@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass2.c	8.7 (Berkeley) %G%"
+literal|"@(#)pass2.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -84,21 +84,43 @@ value|(sizeof (struct dirtemplate))
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
-name|pass2check
-argument_list|()
-decl_stmt|,
 name|blksort
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|pass2
-argument_list|()
-end_macro
+begin_decl_stmt
+specifier|static
+name|int
+name|pass2check
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inodesc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_block
+begin_function
+name|void
+name|pass2
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -163,9 +185,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|errexit
+name|exit
 argument_list|(
-literal|""
+name|EEXIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -181,9 +203,11 @@ argument_list|)
 operator|!=
 name|ROOTINO
 condition|)
-name|errexit
+name|errx
 argument_list|(
-literal|"CANNOT ALLOCATE ROOT INODE\n"
+name|EEXIT
+argument_list|,
+literal|"CANNOT ALLOCATE ROOT INODE"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -221,9 +245,11 @@ argument_list|)
 operator|!=
 name|ROOTINO
 condition|)
-name|errexit
+name|errx
 argument_list|(
-literal|"CANNOT ALLOCATE ROOT INODE\n"
+name|EEXIT
+argument_list|,
+literal|"CANNOT ALLOCATE ROOT INODE"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -237,9 +263,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|errexit
+name|exit
 argument_list|(
-literal|""
+name|EEXIT
 argument_list|)
 expr_stmt|;
 break|break;
@@ -280,9 +306,11 @@ argument_list|)
 operator|!=
 name|ROOTINO
 condition|)
-name|errexit
+name|errx
 argument_list|(
-literal|"CANNOT ALLOCATE ROOT INODE\n"
+name|EEXIT
+argument_list|,
+literal|"CANNOT ALLOCATE ROOT INODE"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -296,9 +324,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|errexit
+name|exit
 argument_list|(
-literal|""
+name|EEXIT
 argument_list|)
 expr_stmt|;
 name|dp
@@ -330,8 +358,10 @@ name|DSTATE
 case|:
 break|break;
 default|default:
-name|errexit
+name|errx
 argument_list|(
+name|EEXIT
+argument_list|,
 literal|"BAD STATE %d FOR ROOT INODE"
 argument_list|,
 name|statemap
@@ -947,24 +977,20 @@ name|propagate
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|pass2check
-argument_list|(
-argument|idesc
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|idesc
+parameter_list|)
 name|struct
 name|inodesc
 modifier|*
 name|idesc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2570,8 +2596,10 @@ operator|--
 expr_stmt|;
 break|break;
 default|default:
-name|errexit
+name|errx
 argument_list|(
+name|EEXIT
+argument_list|,
 literal|"BAD STATE %d FOR INODE I=%d"
 argument_list|,
 name|statemap
@@ -2617,33 +2645,30 @@ name|ALTERED
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Routine to sort disk blocks.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|blksort
-argument_list|(
-argument|inpp1
-argument_list|,
-argument|inpp2
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|inoinfo
+parameter_list|(
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|)
+specifier|const
+name|void
 modifier|*
-modifier|*
-name|inpp1
+name|arg1
 decl_stmt|,
-modifier|*
-modifier|*
-name|inpp2
+decl|*
+name|arg2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -2651,7 +2676,13 @@ return|return
 operator|(
 operator|(
 operator|*
-name|inpp1
+operator|(
+expr|struct
+name|inoinfo
+operator|*
+operator|*
+operator|)
+name|arg1
 operator|)
 operator|->
 name|i_blks
@@ -2661,7 +2692,13 @@ index|]
 operator|-
 operator|(
 operator|*
-name|inpp2
+operator|(
+expr|struct
+name|inoinfo
+operator|*
+operator|*
+operator|)
+name|arg2
 operator|)
 operator|->
 name|i_blks

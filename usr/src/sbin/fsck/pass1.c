@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	8.3 (Berkeley) %G%"
+literal|"@(#)pass1.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -90,28 +90,28 @@ name|dupblk
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|pass1check
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_decl_stmt
+specifier|static
+name|void
+name|checkinode
+name|__P
+argument_list|(
+operator|(
+name|ino_t
+name|inumber
+operator|,
+expr|struct
+name|inodesc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|struct
-name|dinode
-modifier|*
-name|getnextinode
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_macro
+begin_function
+name|void
 name|pass1
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|ino_t
 name|inumber
@@ -310,33 +310,26 @@ name|freeinodebuf
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|checkinode
-argument_list|(
-argument|inumber
-argument_list|,
-argument|idesc
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|inumber
+parameter_list|,
+name|idesc
+parameter_list|)
 name|ino_t
 name|inumber
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|inodesc
 modifier|*
 name|idesc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -690,8 +683,10 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|errexit
+name|errx
 argument_list|(
+name|EEXIT
+argument_list|,
 literal|"cannot read symlink"
 argument_list|)
 expr_stmt|;
@@ -1079,9 +1074,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|errexit
+name|exit
 argument_list|(
-literal|""
+name|EEXIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1378,22 +1373,20 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|pass1check
-argument_list|(
+parameter_list|(
 name|idesc
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|inodesc
-operator|*
+modifier|*
 name|idesc
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|int
 name|res
@@ -1488,9 +1481,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|errexit
+name|exit
 argument_list|(
-literal|""
+name|EEXIT
 argument_list|)
 expr_stmt|;
 return|return
@@ -1604,9 +1597,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|errexit
+name|exit
 argument_list|(
-literal|""
+name|EEXIT
 argument_list|)
 expr_stmt|;
 return|return
@@ -1652,9 +1645,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|errexit
+name|exit
 argument_list|(
-literal|""
+name|EEXIT
 argument_list|)
 expr_stmt|;
 return|return
@@ -1761,7 +1754,7 @@ name|res
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

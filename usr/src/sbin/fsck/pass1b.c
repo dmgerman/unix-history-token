@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1b.c	8.2 (Berkeley) %G%"
+literal|"@(#)pass1b.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,13 +64,6 @@ directive|include
 file|"fsck.h"
 end_include
 
-begin_function_decl
-name|int
-name|pass1bcheck
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -80,12 +73,25 @@ name|duphead
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|pass1b
-argument_list|()
-end_macro
+begin_decl_stmt
+specifier|static
+name|int
+name|pass1bcheck
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inodesc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_block
+begin_function
+name|void
+name|pass1b
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -229,22 +235,21 @@ return|return;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|int
 name|pass1bcheck
-argument_list|(
+parameter_list|(
 name|idesc
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|inodesc
-operator|*
+modifier|*
 name|idesc
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -386,7 +391,7 @@ name|res
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

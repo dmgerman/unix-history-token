@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	8.6 (Berkeley) %G%"
+literal|"@(#)inode.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,13 +61,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<pwd.h>
 end_include
 
 begin_include
@@ -89,33 +89,46 @@ name|startinum
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|ckinode
-argument_list|(
-argument|dp
-argument_list|,
-argument|idesc
-argument_list|)
-end_macro
-
 begin_decl_stmt
+specifier|static
+name|int
+name|iblock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inodesc
+operator|*
+operator|,
+name|long
+name|ilevel
+operator|,
+name|quad_t
+name|isize
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|ckinode
+parameter_list|(
+name|dp
+parameter_list|,
+name|idesc
+parameter_list|)
 name|struct
 name|dinode
 modifier|*
 name|dp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|inodesc
 modifier|*
 name|idesc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|ufs_daddr_t
 modifier|*
@@ -464,40 +477,30 @@ name|KEEPON
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|iblock
-argument_list|(
-argument|idesc
-argument_list|,
-argument|ilevel
-argument_list|,
-argument|isize
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|idesc
+parameter_list|,
+name|ilevel
+parameter_list|,
+name|isize
+parameter_list|)
 name|struct
 name|inodesc
 modifier|*
 name|idesc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|long
 name|ilevel
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|quad_t
 name|isize
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|ufs_daddr_t
 modifier|*
@@ -533,14 +536,6 @@ name|buf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|;
-specifier|extern
-name|int
-name|dirscan
-argument_list|()
-decl_stmt|,
-name|pass1check
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -893,34 +888,26 @@ name|KEEPON
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check that a block in a legal block number.  * Return 0 if in range, 1 if out of range.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|chkrange
-argument_list|(
-argument|blk
-argument_list|,
-argument|cnt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|blk
+parameter_list|,
+name|cnt
+parameter_list|)
 name|ufs_daddr_t
 name|blk
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cnt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1097,7 +1084,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * General purpose interface for reading inodes.  */
@@ -1128,9 +1115,11 @@ name|inumber
 operator|>
 name|maxino
 condition|)
-name|errexit
+name|errx
 argument_list|(
-literal|"bad inode number %d to ginode\n"
+name|EEXIT
+argument_list|,
+literal|"bad inode number %d to ginode"
 argument_list|,
 name|inumber
 argument_list|)
@@ -1302,9 +1291,11 @@ name|inumber
 operator|>
 name|maxino
 condition|)
-name|errexit
+name|errx
 argument_list|(
-literal|"bad inode number %d to nextinode\n"
+name|EEXIT
+argument_list|,
+literal|"bad inode number %d to nextinode"
 argument_list|,
 name|inumber
 argument_list|)
@@ -1397,12 +1388,10 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|resetinodebuf
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|startinum
 operator|=
@@ -1513,9 +1502,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errexit
+name|errx
 argument_list|(
-literal|"Cannot allocate space for inode buffer\n"
+name|EEXIT
+argument_list|,
+literal|"Cannot allocate space for inode buffer"
 argument_list|)
 expr_stmt|;
 while|while
@@ -1533,14 +1524,12 @@ name|nextino
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|freeinodebuf
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1562,34 +1551,29 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Routines to maintain information about directory inodes.  * This is built during the first pass and used during the  * second and third passes.  *  * Enter inodes into the cache.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|cacheino
-argument_list|(
+parameter_list|(
 name|dp
-argument_list|,
+parameter_list|,
 name|inumber
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|dinode
-operator|*
+modifier|*
 name|dp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|ino_t
 name|inumber
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1824,8 +1808,10 @@ name|inpsort
 operator|==
 name|NULL
 condition|)
-name|errexit
+name|errx
 argument_list|(
+name|EEXIT
+argument_list|,
 literal|"cannot increase directory list"
 argument_list|)
 expr_stmt|;
@@ -1839,7 +1825,7 @@ operator|=
 name|inp
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Look up an inode cache structure.  */
@@ -1898,9 +1884,11 @@ name|inp
 operator|)
 return|;
 block|}
-name|errexit
+name|errx
 argument_list|(
-literal|"cannot find inode %d\n"
+name|EEXIT
+argument_list|,
+literal|"cannot find inode %d"
 argument_list|,
 name|inumber
 argument_list|)
@@ -1922,12 +1910,10 @@ begin_comment
 comment|/*  * Clean up all the inode cache structure.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|inocleanup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -1999,14 +1985,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|inodirty
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|dirty
 argument_list|(
@@ -2014,39 +1998,31 @@ name|pbp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|clri
-argument_list|(
+parameter_list|(
 name|idesc
-argument_list|,
+parameter_list|,
 name|type
-argument_list|,
+parameter_list|,
 name|flag
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|inodesc
-operator|*
+modifier|*
 name|idesc
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2152,24 +2128,19 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|findname
-argument_list|(
-argument|idesc
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|idesc
+parameter_list|)
 name|struct
 name|inodesc
 modifier|*
 name|idesc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2224,24 +2195,19 @@ name|FOUND
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|findino
-argument_list|(
-argument|idesc
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|idesc
+parameter_list|)
 name|struct
 name|inodesc
 modifier|*
 name|idesc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2316,22 +2282,17 @@ name|KEEPON
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|pinode
-argument_list|(
-argument|ino
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ino
+parameter_list|)
 name|ino_t
 name|ino
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2481,39 +2442,28 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|blkerror
-argument_list|(
-argument|ino
-argument_list|,
-argument|type
-argument_list|,
-argument|blk
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ino
+parameter_list|,
+name|type
+parameter_list|,
+name|blk
+parameter_list|)
 name|ino_t
 name|ino
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ufs_daddr_t
 name|blk
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|pfatal
 argument_list|(
@@ -2569,8 +2519,10 @@ name|DCLEAR
 case|:
 return|return;
 default|default:
-name|errexit
+name|errx
 argument_list|(
+name|EEXIT
+argument_list|,
 literal|"BAD STATE %d TO BLKERR"
 argument_list|,
 name|statemap
@@ -2582,7 +2534,7 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * allocate an unused inode  */
@@ -2838,30 +2790,20 @@ begin_comment
 comment|/*  * deallocate an inode  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|freeino
-argument_list|(
-argument|ino
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ino
+parameter_list|)
 name|ino_t
 name|ino
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|inodesc
 name|idesc
 decl_stmt|;
-specifier|extern
-name|int
-name|pass4check
-parameter_list|()
-function_decl|;
 name|struct
 name|dinode
 modifier|*
@@ -2938,7 +2880,7 @@ name|n_files
 operator|--
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass3.c	8.1 (Berkeley) %G%"
+literal|"@(#)pass3.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,12 +58,10 @@ directive|include
 file|"fsck.h"
 end_include
 
-begin_macro
+begin_function
+name|void
 name|pass3
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -234,7 +232,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
