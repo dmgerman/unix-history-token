@@ -514,7 +514,7 @@ index|[
 literal|12
 index|]
 parameter_list|,
-name|int
+name|size_t
 name|unlen
 parameter_list|,
 name|u_int
@@ -537,7 +537,7 @@ name|u_char
 modifier|*
 name|un
 parameter_list|,
-name|int
+name|size_t
 name|unlen
 parameter_list|,
 name|struct
@@ -568,7 +568,7 @@ name|u_char
 modifier|*
 name|un
 parameter_list|,
-name|int
+name|size_t
 name|unlen
 parameter_list|,
 name|int
@@ -622,7 +622,7 @@ name|u_char
 modifier|*
 name|un
 parameter_list|,
-name|int
+name|size_t
 name|unlen
 parameter_list|,
 name|struct
@@ -634,7 +634,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|size_t
 name|winLenFixup
 parameter_list|(
 specifier|const
@@ -642,7 +642,7 @@ name|u_char
 modifier|*
 name|un
 parameter_list|,
-name|int
+name|size_t
 name|unlen
 parameter_list|)
 function_decl|;
