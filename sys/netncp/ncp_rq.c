@@ -150,9 +150,9 @@ modifier|*
 name|ncp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -205,7 +205,7 @@ name|fn
 argument_list|,
 name|ncp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -254,9 +254,9 @@ modifier|*
 name|ncp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -279,7 +279,7 @@ name|fn
 argument_list|,
 name|ncp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -305,9 +305,9 @@ modifier|*
 name|ncp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -339,7 +339,7 @@ name|fn
 argument_list|,
 name|ncp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -406,9 +406,9 @@ modifier|*
 name|ncp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -465,9 +465,9 @@ name|error
 return|;
 name|rqp
 operator|->
-name|nr_p
+name|nr_td
 operator|=
-name|p
+name|td
 expr_stmt|;
 name|rqp
 operator|->
@@ -1194,13 +1194,13 @@ operator|->
 name|nr_conn
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|conn
 operator|->
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|socket
@@ -1280,13 +1280,13 @@ return|;
 block|}
 if|if
 condition|(
-name|p
+name|td
 operator|==
 name|NULL
 condition|)
-name|p
+name|td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 comment|/* XXX maybe procpage ? */
 comment|/* 	 * Flush out replies on previous reqs 	 */
@@ -1612,7 +1612,7 @@ name|ncp_sock_rselect
 argument_list|(
 name|so
 argument_list|,
-name|p
+name|td
 argument_list|,
 operator|&
 name|tv
@@ -1634,7 +1634,7 @@ name|ncp_chkintr
 argument_list|(
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2204,7 +2204,7 @@ name|conn
 argument_list|,
 name|conn
 operator|->
-name|procp
+name|td
 argument_list|,
 name|conn
 operator|->
@@ -2265,7 +2265,7 @@ name|ncp
 argument_list|,
 name|rqp
 operator|->
-name|nr_p
+name|nr_td
 argument_list|,
 name|rqp
 operator|->
@@ -2366,7 +2366,7 @@ name|ncp
 argument_list|,
 name|rqp
 operator|->
-name|nr_p
+name|nr_td
 argument_list|)
 expr_stmt|;
 name|out

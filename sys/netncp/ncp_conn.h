@@ -492,7 +492,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/lockmgr.h>
 end_include
 
 begin_endif
@@ -559,9 +559,9 @@ name|nh_conn
 decl_stmt|;
 comment|/* which conn we are refernce */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|nh_proc
+name|nh_td
 decl_stmt|;
 comment|/* who owns the handle	*/
 name|int
@@ -647,9 +647,9 @@ name|nc_lwant
 decl_stmt|;
 comment|/* number of wanted locks */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 comment|/* pid currently operates */
 name|struct
@@ -843,6 +843,7 @@ name|ncp_conn
 modifier|*
 name|conn
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|checker

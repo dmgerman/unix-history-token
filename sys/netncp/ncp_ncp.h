@@ -345,12 +345,6 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|ucred
 struct_decl|;
 end_struct_decl
@@ -438,9 +432,9 @@ modifier|*
 name|target
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -491,9 +485,9 @@ modifier|*
 name|passwd
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -526,9 +520,9 @@ modifier|*
 name|passwd
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred

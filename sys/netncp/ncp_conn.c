@@ -185,9 +185,9 @@ modifier|*
 name|conn
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -375,9 +375,9 @@ name|int
 name|flags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 return|return
@@ -392,7 +392,7 @@ name|LK_CANRECURSE
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -403,9 +403,9 @@ name|void
 name|ncp_conn_unlocklist
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|lockmgr
@@ -417,7 +417,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -524,9 +524,9 @@ modifier|*
 name|conn
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -563,7 +563,7 @@ name|LK_CANRECURSE
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -581,7 +581,7 @@ name|ncp_chkintr
 argument_list|(
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -600,7 +600,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -627,7 +627,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -636,9 +636,9 @@ return|;
 block|}
 name|conn
 operator|->
-name|procp
+name|td
 operator|=
-name|p
+name|td
 expr_stmt|;
 comment|/* who currently operates */
 name|conn
@@ -663,9 +663,9 @@ modifier|*
 name|conn
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -702,7 +702,7 @@ name|ncp_conn_lock_any
 argument_list|(
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -725,9 +725,9 @@ modifier|*
 name|conn
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -759,7 +759,7 @@ condition|)
 block|{
 name|ncp_conn_unlocklist
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -773,7 +773,7 @@ operator|++
 expr_stmt|;
 name|ncp_conn_unlocklist
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -782,7 +782,7 @@ name|ncp_conn_lock_any
 argument_list|(
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -826,9 +826,9 @@ modifier|*
 name|conn
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 comment|/* 	 * note, that LK_RELASE will do wakeup() instead of wakeup_one(). 	 * this will do a little overhead 	 */
@@ -843,7 +843,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -858,14 +858,15 @@ name|ncp_conn
 modifier|*
 name|conn
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|checker
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 if|if
@@ -941,7 +942,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * create, fill with defaults and return in locked state  */
+comment|/*  * create, fill with defaults and return in locked state  */
 end_comment
 
 begin_function
@@ -954,9 +955,9 @@ modifier|*
 name|cap
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -1220,7 +1221,7 @@ name|ncp_conn_lock_any
 argument_list|(
 name|ncp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|ncp
 operator|->
@@ -1236,7 +1237,7 @@ name|ncp_conn_locklist
 argument_list|(
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|SLIST_INSERT_HEAD
@@ -1251,7 +1252,7 @@ argument_list|)
 expr_stmt|;
 name|ncp_conn_unlocklist
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1277,9 +1278,9 @@ name|ncp
 parameter_list|)
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|int
 name|error
@@ -1318,11 +1319,11 @@ return|return
 name|EACCES
 return|;
 block|}
-name|p
+name|td
 operator|=
 name|ncp
 operator|->
-name|procp
+name|td
 expr_stmt|;
 name|error
 operator|=
@@ -1332,7 +1333,7 @@ name|ncp
 argument_list|,
 name|__func__
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1406,7 +1407,7 @@ name|ncp_conn_unlock
 argument_list|(
 name|ncp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * if signal is raised - how I do react ? 	 */
@@ -1421,7 +1422,7 @@ name|LK_DRAIN
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|lockdestroy
@@ -1469,7 +1470,7 @@ name|ncp_conn_locklist
 argument_list|(
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|SLIST_REMOVE
@@ -1489,7 +1490,7 @@ operator|--
 expr_stmt|;
 name|ncp_conn_unlocklist
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1683,9 +1684,9 @@ modifier|*
 name|conn
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -1751,7 +1752,7 @@ name|li
 operator|.
 name|password
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -1780,7 +1781,7 @@ argument_list|,
 operator|&
 name|user
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -1809,7 +1810,7 @@ name|li
 operator|.
 name|password
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -1835,7 +1836,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Lookup connection by handle, return a locked conn descriptor   */
+comment|/*  * Lookup connection by handle, return a locked conn descriptor  */
 end_comment
 
 begin_function
@@ -1846,9 +1847,9 @@ name|int
 name|ref
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -1879,7 +1880,7 @@ name|ncp_conn_locklist
 argument_list|(
 name|LK_SHARED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|SLIST_FOREACH
@@ -1908,7 +1909,7 @@ condition|)
 block|{
 name|ncp_conn_unlocklist
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1923,7 +1924,7 @@ name|ncp_conn_lock2
 argument_list|(
 name|ncp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -1962,9 +1963,9 @@ modifier|*
 name|li
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -2000,7 +2001,7 @@ name|ncp_conn_locklist
 argument_list|(
 name|LK_SHARED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|SLIST_FOREACH
@@ -2143,7 +2144,7 @@ condition|)
 block|{
 name|ncp_conn_unlocklist
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2158,7 +2159,7 @@ name|ncp_conn_lock2
 argument_list|(
 name|ncp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -2184,7 +2185,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Lookup connection by server/user pair, return a locked conn descriptor.  * if li is NULL or server/user pair incomplete, try to select best connection   * based on owner.  * Connection selected in next order:  * 1. Try to search conn with ucred owner, if li is NULL also find a primary  * 2. If 1. fails try to get first suitable shared connection  * 3. If 2. fails then nothing can help to poor ucred owner  */
+comment|/*  * Lookup connection by server/user pair, return a locked conn descriptor.  * if li is NULL or server/user pair incomplete, try to select best connection  * based on owner.  * Connection selected in next order:  * 1. Try to search conn with ucred owner, if li is NULL also find a primary  * 2. If 1. fails try to get first suitable shared connection  * 3. If 2. fails then nothing can help to poor ucred owner  */
 end_comment
 
 begin_function
@@ -2197,9 +2198,9 @@ modifier|*
 name|li
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -2275,7 +2276,7 @@ name|ncp_conn_locklist
 argument_list|(
 name|LK_SHARED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|SLIST_FOREACH
@@ -2462,7 +2463,7 @@ condition|)
 block|{
 name|ncp_conn_unlocklist
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2477,7 +2478,7 @@ name|ncp_conn_lock2
 argument_list|(
 name|ncp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -2549,7 +2550,7 @@ name|LK_SHARED
 argument_list|,
 name|conn
 operator|->
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|SLIST_FOREACH
@@ -2587,7 +2588,7 @@ name|ncp_conn_unlocklist
 argument_list|(
 name|conn
 operator|->
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2607,7 +2608,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Lease conn to given proc, returning unique handle  * problem: how locks should be applied ?  */
+comment|/*  * Lease conn to given proc, returning unique handle  * problem: how locks should be applied ?  */
 end_comment
 
 begin_function
@@ -2620,9 +2621,9 @@ modifier|*
 name|conn
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ncp_handle
@@ -2645,7 +2646,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|SLIST_FOREACH
@@ -2664,11 +2665,11 @@ name|nh_conn
 operator|==
 name|conn
 operator|&&
-name|p
+name|td
 operator|==
 name|refp
 operator|->
-name|nh_proc
+name|nh_td
 condition|)
 break|break;
 if|if
@@ -2700,7 +2701,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2745,9 +2746,9 @@ operator|++
 expr_stmt|;
 name|refp
 operator|->
-name|nh_proc
+name|nh_td
 operator|=
-name|p
+name|td
 expr_stmt|;
 name|refp
 operator|->
@@ -2781,7 +2782,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2804,9 +2805,9 @@ modifier|*
 name|handle
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|int
 name|force
@@ -2828,7 +2829,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|refp
@@ -2903,7 +2904,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2924,9 +2925,9 @@ name|int
 name|connHandle
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ncp_handle
@@ -2949,7 +2950,7 @@ name|LK_SHARED
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|SLIST_FOREACH
@@ -2964,9 +2965,9 @@ if|if
 condition|(
 name|refp
 operator|->
-name|nh_proc
+name|nh_td
 operator|==
-name|p
+name|td
 operator|&&
 name|refp
 operator|->
@@ -2984,7 +2985,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3018,9 +3019,9 @@ name|int
 name|ncp_conn_putprochandles
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -3045,7 +3046,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 for|for
@@ -3078,9 +3079,9 @@ if|if
 condition|(
 name|hp
 operator|->
-name|nh_proc
+name|nh_td
 operator|!=
-name|p
+name|td
 condition|)
 continue|continue;
 name|haveone
@@ -3126,7 +3127,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3318,7 +3319,7 @@ name|LK_SHARED
 argument_list|,
 name|req
 operator|->
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -3429,7 +3430,7 @@ name|ncp_conn_unlocklist
 argument_list|(
 name|req
 operator|->
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
