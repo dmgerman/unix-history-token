@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	3.6	%G%	*/
+comment|/*	init_main.c	3.7	%G%	*/
 end_comment
 
 begin_include
@@ -103,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|"../h/cmap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/text.h"
 end_include
 
 begin_comment
@@ -437,6 +443,25 @@ argument_list|)
 argument_list|)
 argument_list|,
 name|P0BR
+argument_list|)
+expr_stmt|;
+name|swpexpand
+argument_list|(
+name|u
+operator|.
+name|u_dsize
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|u
+operator|.
+name|u_dmap
+argument_list|,
+operator|&
+name|u
+operator|.
+name|u_smap
 argument_list|)
 expr_stmt|;
 operator|(

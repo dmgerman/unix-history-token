@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_vnops.c	3.3	%G%	*/
+comment|/*	ufs_vnops.c	3.4	%G%	*/
 end_comment
 
 begin_include
@@ -1229,6 +1229,17 @@ name|EBUSY
 expr_stmt|;
 return|return;
 block|}
+name|mpurge
+argument_list|(
+name|mp
+operator|-
+operator|&
+name|mount
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 name|bdevsw
