@@ -1098,6 +1098,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_SYS_linux_mremap
+value|163
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_SYS_linux_chown
 value|182
 end_define

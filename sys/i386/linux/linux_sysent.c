@@ -1844,16 +1844,16 @@ block|}
 block|,
 comment|/* 162 = nanosleep */
 block|{
-literal|0
+literal|4
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|linux_mremap
 block|}
 block|,
-comment|/* 163 = mremap */
+comment|/* 163 = linux_mremap */
 block|{
 literal|0
 block|,
