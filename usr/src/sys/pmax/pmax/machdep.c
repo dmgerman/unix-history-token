@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1722,7 +1722,7 @@ argument_list|(
 name|KN02_SYS_CSR
 argument_list|)
 decl_stmt|;
-comment|/* disable all TURBOchannel interrupts */
+comment|/* 		 * Enable ECC memory correction, turn off LEDs, and 		 * disable all TURBOchannel interrupts. 		 */
 name|i
 operator|=
 operator|*
@@ -1731,14 +1731,20 @@ expr_stmt|;
 operator|*
 name|csr_addr
 operator|=
+operator|(
 name|i
 operator|&
 operator|~
 operator|(
 name|KN02_CSR_WRESERVED
 operator||
-literal|0xFF
+name|KN02_CSR_IOINTEN
 operator|)
+operator|)
+operator||
+name|KN02_CSR_CORRECT
+operator||
+literal|0xff
 expr_stmt|;
 name|tc_slot_hand_fill
 operator|=
@@ -2265,7 +2271,7 @@ name|RB_NOSYNC
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Find out how much memory is available. 	 */
+comment|/* 	 * Find out how much memory is available. 	 * Be careful to save and restore the original contents for msgbuf. 	 */
 name|physmem
 operator|=
 name|btoc
@@ -2309,6 +2315,15 @@ literal|4
 argument_list|)
 condition|)
 break|break;
+name|i
+operator|=
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|cp
+expr_stmt|;
 operator|*
 operator|(
 name|int
@@ -2318,7 +2333,7 @@ name|cp
 operator|=
 literal|0xa5a5a5a5
 expr_stmt|;
-comment|/* 		 * Data will persist on the bus if we read it right 		 * away. Have to be tricky here. 		 */
+comment|/* 		 * Data will persist on the bus if we read it right away. 		 * Have to be tricky here. 		 */
 operator|(
 operator|(
 name|int
@@ -2347,6 +2362,15 @@ operator|!=
 literal|0xa5a5a5a5
 condition|)
 break|break;
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|cp
+operator|=
+name|i
+expr_stmt|;
 name|cp
 operator|+=
 name|NBPG
