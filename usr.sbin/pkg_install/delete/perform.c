@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.14 1997/10/08 07:46:52 charnier Exp $"
+literal|"$Id: perform.c,v 1.15 1997/10/13 15:03:52 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,11 +238,12 @@ argument_list|,
 name|FILENAME_MAX
 argument_list|)
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -250,6 +251,7 @@ argument_list|,
 literal|"unable to get current working directory!"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|chdir
@@ -584,11 +586,12 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -596,6 +599,7 @@ argument_list|,
 literal|"Toto! This doesn't look like Kansas anymore!"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -728,11 +732,12 @@ argument_list|(
 name|CONTENTS_FNAME
 argument_list|)
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -745,6 +750,7 @@ name|CONTENTS_FNAME
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_function
 
 begin_function
@@ -755,7 +761,10 @@ name|int
 name|sig
 parameter_list|)
 block|{
-comment|/* Nothing to do */
+if|if
+condition|(
+name|sig
+condition|)
 name|exit
 argument_list|(
 literal|1

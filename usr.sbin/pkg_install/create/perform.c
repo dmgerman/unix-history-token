@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.43 1998/09/08 03:15:41 jkh Exp $"
+literal|"$Id: perform.c,v 1.44 1998/09/08 10:42:24 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,11 +200,12 @@ condition|(
 operator|!
 name|pkg_in
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -214,6 +215,7 @@ argument_list|,
 name|Contents
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|plist
 operator|.
@@ -768,11 +770,12 @@ condition|(
 operator|!
 name|fp
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -782,6 +785,7 @@ argument_list|,
 name|CONTENTS_FNAME
 argument_list|)
 expr_stmt|;
+block|}
 name|write_plist
 argument_list|(
 operator|&
@@ -797,11 +801,12 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -811,6 +816,7 @@ argument_list|,
 name|CONTENTS_FNAME
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* And stick it into a tar ball */
 name|make_dist
 argument_list|(
@@ -1079,11 +1085,12 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1091,6 +1098,7 @@ argument_list|,
 literal|"cannot create pipe"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1103,11 +1111,12 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1115,6 +1124,7 @@ argument_list|,
 literal|"cannot fork process for tar"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|pid
@@ -1196,11 +1206,12 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1208,6 +1219,7 @@ argument_list|,
 literal|"fdopen failed"
 argument_list|)
 expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|totar
@@ -1394,11 +1406,12 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1408,6 +1421,7 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1422,11 +1436,12 @@ condition|(
 operator|!
 name|Comment
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1434,16 +1449,18 @@ argument_list|,
 literal|"required package comment string is missing (-c comment)"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
 name|Desc
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1451,16 +1468,18 @@ argument_list|,
 literal|"required package description string is missing (-d desc)"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
 name|Contents
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1468,6 +1487,7 @@ argument_list|,
 literal|"required package contents list is missing (-f [-]file)"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

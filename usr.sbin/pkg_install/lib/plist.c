@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: plist.c,v 1.25 1998/07/18 22:19:11 hoek Exp $"
+literal|"$Id: plist.c,v 1.26 1998/09/01 06:58:11 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1101,11 +1101,12 @@ name|cmd
 operator|==
 name|FAIL
 condition|)
+block|{
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+expr_stmt|;
 name|errx
 argument_list|(
 literal|2
@@ -1115,6 +1116,7 @@ argument_list|,
 name|pline
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
@@ -1708,6 +1710,11 @@ expr_stmt|;
 if|if
 condition|(
 name|isdir
+argument_list|(
+name|tmp
+argument_list|)
+operator|&&
+name|fexists
 argument_list|(
 name|tmp
 argument_list|)

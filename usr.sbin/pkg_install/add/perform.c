@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.51 1998/08/27 14:59:55 jkh Exp $"
+literal|"$Id: perform.c,v 1.52 1998/09/08 03:02:45 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2308,7 +2308,7 @@ name|void
 name|cleanup
 parameter_list|(
 name|int
-name|signo
+name|sig
 parameter_list|)
 block|{
 specifier|static
@@ -2329,13 +2329,13 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|signo
+name|sig
 condition|)
 name|printf
 argument_list|(
 literal|"Signal %d received, cleaning up..\n"
 argument_list|,
-name|signo
+name|sig
 argument_list|)
 expr_stmt|;
 if|if
@@ -2363,6 +2363,10 @@ name|leave_playpen
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sig
+condition|)
 name|exit
 argument_list|(
 literal|1
