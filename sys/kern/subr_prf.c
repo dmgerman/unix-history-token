@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -98,6 +104,23 @@ include|#
 directive|include
 file|<sys/uio.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Note that stdarg.h and the ANSI style va_start macro is used for both  * ANSI and traditional C compilers.  */
@@ -4216,23 +4239,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_include
-include|#
-directive|include
-file|"opt_ddb.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|DDB
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<ddb/ddb.h>
-end_include
 
 begin_macro
 name|DB_SHOW_COMMAND
