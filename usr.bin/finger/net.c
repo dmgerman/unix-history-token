@@ -454,8 +454,6 @@ block|{
 name|int
 name|cnt
 decl_stmt|,
-name|error
-decl_stmt|,
 name|line_len
 decl_stmt|,
 name|s
@@ -618,6 +616,10 @@ index|]
 operator|.
 name|iov_base
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|name
 expr_stmt|;
 name|iov

@@ -769,16 +769,15 @@ operator|->
 name|next
 control|)
 block|{
-switch|switch
+if|if
 condition|(
 name|w
 operator|->
 name|info
+operator|==
+name|LOGGEDIN
 condition|)
 block|{
-case|case
-name|LOGGEDIN
-case|:
 name|tp
 operator|=
 name|localtime
@@ -948,10 +947,8 @@ argument_list|(
 literal|" (messages off)"
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|LASTLOG
-case|:
+block|}
+elseif|else
 if|if
 condition|(
 name|w
@@ -961,16 +958,16 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+name|cpr
+operator|=
 name|printf
 argument_list|(
 literal|"Never logged in."
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
+else|else
+block|{
 name|tp
 operator|=
 name|localtime
@@ -1050,7 +1047,6 @@ operator|->
 name|tty
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 if|if
 condition|(
@@ -1478,6 +1474,10 @@ name|fd
 decl_stmt|,
 name|nr
 decl_stmt|;
+name|lastc
+operator|=
+literal|'\0'
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1868,6 +1868,7 @@ argument_list|(
 name|ch
 argument_list|)
 operator|||
+operator|(
 operator|!
 name|meta
 operator|&&
@@ -1883,6 +1884,7 @@ operator|||
 name|ch
 operator|==
 literal|'\n'
+operator|)
 operator|)
 condition|)
 operator|(
