@@ -2253,9 +2253,7 @@ parameter_list|)
 block|{
 switch|switch
 condition|(
-operator|(
 name|what
-operator|)
 condition|)
 block|{
 case|case
@@ -2276,18 +2274,14 @@ condition|(
 operator|!
 name|mtx_owned
 argument_list|(
-operator|(
 name|m
-operator|)
 argument_list|)
 condition|)
 name|panic
 argument_list|(
 literal|"mutex %s not owned at %s:%d"
 argument_list|,
-operator|(
 name|m
-operator|)
 operator|->
 name|mtx_description
 argument_list|,
@@ -2300,18 +2294,14 @@ if|if
 condition|(
 name|mtx_recursed
 argument_list|(
-operator|(
 name|m
-operator|)
 argument_list|)
 condition|)
 block|{
 if|if
 condition|(
 operator|(
-operator|(
 name|what
-operator|)
 operator|&
 name|MA_NOTRECURSED
 operator|)
@@ -2322,9 +2312,7 @@ name|panic
 argument_list|(
 literal|"mutex %s recursed at %s:%d"
 argument_list|,
-operator|(
 name|m
-operator|)
 operator|->
 name|mtx_description
 argument_list|,
@@ -2338,9 +2326,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-operator|(
 name|what
-operator|)
 operator|&
 name|MA_RECURSED
 operator|)
@@ -2352,9 +2338,7 @@ name|panic
 argument_list|(
 literal|"mutex %s unrecursed at %s:%d"
 argument_list|,
-operator|(
 name|m
-operator|)
 operator|->
 name|mtx_description
 argument_list|,
@@ -2372,18 +2356,14 @@ if|if
 condition|(
 name|mtx_owned
 argument_list|(
-operator|(
 name|m
-operator|)
 argument_list|)
 condition|)
 name|panic
 argument_list|(
 literal|"mutex %s owned at %s:%d"
 argument_list|,
-operator|(
 name|m
-operator|)
 operator|->
 name|mtx_description
 argument_list|,
