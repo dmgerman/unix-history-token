@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993, 1994, 1995, 1996, 1997  *      The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * L2TP support contributed by Motonori Shindo (mshindo@ascend.co.jp)  */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/l2tp.h,v 1.4 2000/12/17 23:07:49 guy Exp $ (LBL) */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1991, 1993, 1994, 1995, 1996, 1997  *      The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * L2TP support contributed by Motonori Shindo (mshindo@mshindo.net)  */
 end_comment
 
 begin_define
@@ -308,7 +312,7 @@ specifier|const
 name|u_char
 modifier|*
 parameter_list|,
-name|u_int
+name|u_int32_t
 parameter_list|)
 function_decl|;
 block|}
@@ -319,25 +323,25 @@ begin_struct
 struct|struct
 name|l2tp_call_errors
 block|{
-name|u_short
+name|u_int16_t
 name|reserved
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|crc_errs
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|framing_errs
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|hardware_overruns
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|buffer_overruns
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|timeout_errs
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|alignment_errs
 decl_stmt|;
 block|}
@@ -348,13 +352,13 @@ begin_struct
 struct|struct
 name|l2tp_accm
 block|{
-name|u_short
+name|u_int16_t
 name|reserved
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|send_accm
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|recv_accm
 decl_stmt|;
 block|}

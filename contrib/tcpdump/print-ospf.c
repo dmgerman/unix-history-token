@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf.c,v 1.27 1999/11/21 09:36:58 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf.c,v 1.29 2000/09/29 04:58:45 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,24 +69,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
@@ -112,6 +94,12 @@ begin_include
 include|#
 directive|include
 file|"ospf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip.h"
 end_include
 
 begin_struct

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ripng.c,v 1.2.2.1 2000/01/11 06:58:26 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ripng.c,v 1.7 2000/10/07 05:46:21 itojun Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,36 +81,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -118,12 +88,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip6.h>
 end_include
 
 begin_include

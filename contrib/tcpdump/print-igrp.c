@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-igrp.c,v 1.11 1999/11/21 09:36:53 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-igrp.c,v 1.15 2000/09/29 04:58:40 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,36 +73,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -128,6 +98,12 @@ begin_include
 include|#
 directive|include
 file|"igrp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip.h"
 end_include
 
 begin_include
@@ -517,14 +493,20 @@ name|op2str
 argument_list|,
 literal|"op-#%d"
 argument_list|,
+name|IGRP_OP
+argument_list|(
 name|hdr
 operator|->
-name|ig_op
+name|ig_vop
+argument_list|)
 argument_list|)
 argument_list|,
+name|IGRP_V
+argument_list|(
 name|hdr
 operator|->
-name|ig_v
+name|ig_vop
+argument_list|)
 argument_list|,
 name|hdr
 operator|->

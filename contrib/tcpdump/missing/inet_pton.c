@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999 Kungliga Tekniska Högskolan  * (Royal Institut
 end_comment
 
 begin_comment
-comment|/* $Id: inet_pton.c,v 1.1.2.1 2000/01/11 06:58:30 fenner Exp $ */
+comment|/* $Id: inet_pton.c,v 1.2 2000/01/09 21:35:46 fenner Exp $ */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/missing/inet_pton.c,v 1.1.2.1 2000/01/11 06:58:30 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/missing/inet_pton.c,v 1.2 2000/01/09 21:35:46 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 

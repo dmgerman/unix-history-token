@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-dhcp6.c,v 1.3 1999/12/22 06:27:20 itojun Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-dhcp6.c,v 1.12 2000/10/24 00:56:50 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,12 +60,6 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_struct_decl
 struct_decl|struct
 name|mbuf
@@ -78,17 +72,6 @@ name|rtentry
 struct_decl|;
 end_struct_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -100,23 +83,6 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_MEMORY_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<memory.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -167,25 +133,22 @@ literal|0
 end_if
 
 begin_endif
-unit|static void dhcp6opttab_init __P((void)); static struct dhcp6_opt *dhcp6opttab_byname __P((char *));
+unit|static void dhcp6opttab_init (void); static struct dhcp6_opt *dhcp6opttab_byname (char *);
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|dhcp6_opt
 modifier|*
 name|dhcp6opttab_bycode
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -218,17 +181,7 @@ block|, }
 block|,
 comment|/* General Extension */
 block|{
-literal|2
-block|,
-literal|4
-block|,
-literal|"Time Offset"
-block|,
-name|OT6_NUM
-block|, }
-block|,
-block|{
-literal|3
+literal|8193
 block|,
 name|OL6_N
 block|,
@@ -238,7 +191,7 @@ name|OT6_STR
 block|, }
 block|,
 block|{
-literal|6
+literal|8194
 block|,
 name|OL6_16N
 block|,
@@ -248,7 +201,7 @@ name|OT6_V6
 block|, }
 block|,
 block|{
-literal|10
+literal|8195
 block|,
 name|OL6_N
 block|,
@@ -257,29 +210,28 @@ block|,
 name|OT6_STR
 block|, }
 block|,
-comment|/* Application and Service Parameters */
 block|{
-literal|16
+literal|8196
 block|,
 name|OL6_N
 block|,
-literal|"Directory Agent"
+literal|"SLP Agent"
 block|,
 name|OT6_NONE
 block|, }
 block|,
 block|{
-literal|17
+literal|8197
 block|,
 name|OL6_N
 block|,
-literal|"Service Scope"
+literal|"SLP Scope"
 block|,
 name|OT6_NONE
 block|, }
 block|,
 block|{
-literal|18
+literal|8198
 block|,
 name|OL6_16N
 block|,
@@ -289,7 +241,7 @@ name|OT6_V6
 block|, }
 block|,
 block|{
-literal|19
+literal|8199
 block|,
 name|OL6_N
 block|,
@@ -299,7 +251,7 @@ name|OT6_STR
 block|, }
 block|,
 block|{
-literal|20
+literal|8200
 block|,
 name|OL6_16N
 block|,
@@ -309,7 +261,7 @@ name|OT6_V6
 block|, }
 block|,
 block|{
-literal|21
+literal|8201
 block|,
 name|OL6_N
 block|,
@@ -319,7 +271,7 @@ name|OT6_STR
 block|, }
 block|,
 block|{
-literal|22
+literal|8202
 block|,
 name|OL6_16N
 block|,
@@ -330,7 +282,7 @@ block|, }
 block|,
 comment|/* TCP Parameters */
 block|{
-literal|32
+literal|8203
 block|,
 literal|4
 block|,
@@ -341,7 +293,7 @@ block|, }
 block|,
 comment|/* DHCPv6 Extensions */
 block|{
-literal|40
+literal|8204
 block|,
 literal|4
 block|,
@@ -351,7 +303,7 @@ name|OT6_NUM
 block|, }
 block|,
 block|{
-literal|41
+literal|8205
 block|,
 name|OL6_N
 block|,
@@ -361,7 +313,27 @@ name|OT6_NONE
 block|, }
 block|,
 block|{
-literal|48
+literal|8206
+block|,
+name|OL6_N
+block|,
+literal|"Extension Request"
+block|,
+name|OT6_NONE
+block|, }
+block|,
+block|{
+literal|8207
+block|,
+name|OL6_N
+block|,
+literal|"Subnet Prefix"
+block|,
+name|OT6_NONE
+block|, }
+block|,
+block|{
+literal|8208
 block|,
 name|OL6_N
 block|,
@@ -371,7 +343,7 @@ name|OT6_NONE
 block|, }
 block|,
 block|{
-literal|49
+literal|8209
 block|,
 name|OL6_N
 block|,
@@ -381,7 +353,7 @@ name|OT6_STR
 block|, }
 block|,
 block|{
-literal|64
+literal|8210
 block|,
 name|OL6_N
 block|,
@@ -391,7 +363,7 @@ name|OT6_STR
 block|, }
 block|,
 block|{
-literal|66
+literal|8211
 block|,
 literal|16
 block|,
@@ -401,7 +373,7 @@ name|OT6_V6
 block|, }
 block|,
 block|{
-literal|67
+literal|8212
 block|,
 literal|16
 block|,
@@ -411,17 +383,7 @@ name|OT6_V6
 block|, }
 block|,
 block|{
-literal|68
-block|,
-name|OL6_N
-block|,
-literal|"DHCP Relay ICMP Error Message"
-block|,
-name|OT6_NONE
-block|, }
-block|,
-block|{
-literal|84
+literal|8213
 block|,
 name|OL6_N
 block|,
@@ -431,7 +393,7 @@ name|OT6_NONE
 block|, }
 block|,
 block|{
-literal|85
+literal|8214
 block|,
 literal|4
 block|,
@@ -570,11 +532,6 @@ operator|==
 name|ep
 condition|)
 return|return;
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|cp
@@ -582,6 +539,18 @@ operator|<
 name|ep
 condition|)
 block|{
+if|if
+condition|(
+name|ep
+operator|-
+name|cp
+operator|<
+sizeof|sizeof
+argument_list|(
+name|u_int16_t
+argument_list|)
+condition|)
+break|break;
 name|code
 operator|=
 name|ntohs
@@ -598,6 +567,20 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|-
+name|cp
+operator|<
+sizeof|sizeof
+argument_list|(
+name|u_int16_t
+argument_list|)
+operator|*
+literal|2
+condition|)
+break|break;
 if|if
 condition|(
 name|code
@@ -625,6 +608,17 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|-
+name|cp
+operator|<
+name|len
+operator|+
+literal|4
+condition|)
+break|break;
 name|p
 operator|=
 name|dhcp6opttab_bycode
@@ -721,7 +715,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[|%s]"
+literal|" [|%s]"
 argument_list|,
 name|p
 operator|->
@@ -732,7 +726,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"(%s, "
+literal|" (%s, "
 argument_list|,
 name|p
 operator|->
@@ -936,10 +930,10 @@ parameter_list|,
 name|u_int
 name|length
 parameter_list|,
-name|u_short
+name|u_int16_t
 name|sport
 parameter_list|,
-name|u_short
+name|u_int16_t
 name|dport
 parameter_list|)
 block|{
@@ -955,6 +949,9 @@ decl_stmt|;
 name|u_char
 modifier|*
 name|extp
+decl_stmt|;
+name|u_int16_t
+name|field16
 decl_stmt|;
 name|printf
 argument_list|(
@@ -997,6 +994,8 @@ name|DH6_SOLICIT
 case|:
 if|if
 condition|(
+operator|!
+operator|(
 name|vflag
 operator|&&
 name|TTEST
@@ -1007,50 +1006,123 @@ name|dh6_sol
 operator|.
 name|dh6sol_relayaddr
 argument_list|)
+operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|" solicit("
+literal|" solicit"
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
+name|printf
+argument_list|(
+literal|" solicit ("
+argument_list|)
+expr_stmt|;
+comment|/*)*/
 if|if
 condition|(
-operator|(
 name|dh6
 operator|->
 name|dh6_sol
 operator|.
 name|dh6sol_flags
+operator|!=
+literal|0
+condition|)
+block|{
+name|u_int8_t
+name|f
+init|=
+name|dh6
+operator|->
+name|dh6_sol
+operator|.
+name|dh6sol_flags
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"%s%s "
+argument_list|,
+operator|(
+name|f
+operator|&
+name|DH6SOL_PREFIX
+operator|)
+condition|?
+literal|"P"
+else|:
+literal|""
+argument_list|,
+operator|(
+name|f
 operator|&
 name|DH6SOL_CLOSE
 operator|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
+condition|?
 literal|"C"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+block|}
+name|memcpy
+argument_list|(
+operator|&
+name|field16
+argument_list|,
+operator|&
 name|dh6
 operator|->
 name|dh6_sol
 operator|.
-name|dh6sol_flags
-operator|!=
-literal|0
+name|dh6sol_plen_id
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|field16
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|field16
+operator|=
+name|ntohs
+argument_list|(
+name|field16
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|field16
+operator|&
+operator|~
+name|DH6SOL_SOLICIT_PLEN_MASK
 condition|)
 name|printf
 argument_list|(
-literal|" "
+literal|"plen=%d "
+argument_list|,
+name|DH6SOL_SOLICIT_PLEN
+argument_list|(
+name|field16
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cliaddr=%s"
+literal|"solicit-ID=%d"
+argument_list|,
+name|DH6SOL_SOLICIT_ID
+argument_list|(
+name|field16
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" cliaddr=%s"
 argument_list|,
 name|ip6addr_string
 argument_list|(
@@ -1078,16 +1150,10 @@ name|dh6sol_relayaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/*(*/
 name|printf
 argument_list|(
 literal|")"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|printf
-argument_list|(
-literal|" solicit"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1120,46 +1186,43 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|" advert("
+literal|" advert ("
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|dh6
-operator|->
-name|dh6_adv
-operator|.
-name|dh6adv_flags
+comment|/*)*/
+name|memcpy
+argument_list|(
 operator|&
-name|DH6ADV_SERVPRESENT
-operator|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"S"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+name|field16
+argument_list|,
+operator|&
 name|dh6
 operator|->
 name|dh6_adv
 operator|.
-name|dh6adv_flags
-operator|!=
-literal|0
-condition|)
-name|printf
+name|dh6adv_rsv_id
+argument_list|,
+sizeof|sizeof
 argument_list|(
-literal|" "
+name|field16
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"pref=%u"
+literal|"solicit-ID=%d"
+argument_list|,
+name|ntohs
+argument_list|(
+name|field16
+argument_list|)
+operator|&
+name|DH6SOL_SOLICIT_ID_MASK
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" pref=%u"
 argument_list|,
 name|dh6
 operator|->
@@ -1237,6 +1300,7 @@ argument_list|,
 name|ep
 argument_list|)
 expr_stmt|;
+comment|/*(*/
 name|printf
 argument_list|(
 literal|")"
@@ -1272,81 +1336,56 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|" request("
+literal|" request ("
 argument_list|)
 expr_stmt|;
+comment|/*)*/
 if|if
 condition|(
-operator|(
 name|dh6
 operator|->
 name|dh6_req
 operator|.
 name|dh6req_flags
+operator|!=
+literal|0
+condition|)
+block|{
+name|u_int8_t
+name|f
+init|=
+name|dh6
+operator|->
+name|dh6_req
+operator|.
+name|dh6req_flags
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"%s%s "
+argument_list|,
+operator|(
+name|f
 operator|&
 name|DH6REQ_CLOSE
 operator|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
+condition|?
 literal|"C"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+else|:
+literal|""
+argument_list|,
 operator|(
-name|dh6
-operator|->
-name|dh6_req
-operator|.
-name|dh6req_flags
-operator|&
-name|DH6REQ_SERVPRESENT
-operator|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"S"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|dh6
-operator|->
-name|dh6_req
-operator|.
-name|dh6req_flags
+name|f
 operator|&
 name|DH6REQ_REBOOT
 operator|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
+condition|?
 literal|"R"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dh6
-operator|->
-name|dh6_req
-operator|.
-name|dh6req_flags
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"xid=0x%04x"
@@ -1388,60 +1427,40 @@ name|dh6req_relayaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|extp
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
-operator|(
-operator|&
-name|dh6
-operator|->
-name|dh6_req
-operator|)
-operator|+
-literal|1
-operator|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|dh6
-operator|->
-name|dh6_req
-operator|.
-name|dh6req_flags
-operator|&
-name|DH6REQ_SERVPRESENT
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|" servaddr=%s"
 argument_list|,
 name|ip6addr_string
 argument_list|(
-name|extp
+operator|&
+name|dh6
+operator|->
+name|dh6_req
+operator|.
+name|dh6req_serveraddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|extp
-operator|+=
-literal|16
-expr_stmt|;
-block|}
 name|dhcp6ext_print
 argument_list|(
-name|extp
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+operator|&
+name|dh6
+operator|->
+name|dh6_req
+operator|+
+literal|1
+operator|)
 argument_list|,
 name|ep
 argument_list|)
 expr_stmt|;
+comment|/*(*/
 name|printf
 argument_list|(
 literal|")"
@@ -1477,9 +1496,10 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|" reply("
+literal|" reply ("
 argument_list|)
 expr_stmt|;
+comment|/*)*/
 if|if
 condition|(
 operator|(
@@ -1489,29 +1509,14 @@ name|dh6_rep
 operator|.
 name|dh6rep_flagandstat
 operator|&
-name|DH6REP_CLIPRESENT
+name|DH6REP_RELAYPRESENT
 operator|)
 operator|!=
 literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"C"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dh6
-operator|->
-name|dh6_rep
-operator|.
-name|dh6rep_flagandstat
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|" "
+literal|"R "
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1525,6 +1530,32 @@ operator|.
 name|dh6rep_flagandstat
 operator|&
 name|DH6REP_STATMASK
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" xid=0x%04x"
+argument_list|,
+name|dh6
+operator|->
+name|dh6_rep
+operator|.
+name|dh6rep_xid
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" cliaddr=%s"
+argument_list|,
+name|ip6addr_string
+argument_list|(
+operator|&
+name|dh6
+operator|->
+name|dh6_rep
+operator|.
+name|dh6rep_cliaddr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|extp
@@ -1553,7 +1584,7 @@ name|dh6_rep
 operator|.
 name|dh6rep_flagandstat
 operator|&
-name|DH6REP_CLIPRESENT
+name|DH6REP_RELAYPRESENT
 operator|)
 operator|!=
 literal|0
@@ -1561,7 +1592,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" cliaddr=%s"
+literal|" relayaddr=%s"
 argument_list|,
 name|ip6addr_string
 argument_list|(
@@ -1571,7 +1602,11 @@ argument_list|)
 expr_stmt|;
 name|extp
 operator|+=
-literal|16
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
 expr_stmt|;
 block|}
 name|dhcp6ext_print
@@ -1581,6 +1616,7 @@ argument_list|,
 name|ep
 argument_list|)
 expr_stmt|;
+comment|/*(*/
 name|printf
 argument_list|(
 literal|")"

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.15.2.1 2000/01/25 18:29:05 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.23 2000/10/03 02:55:00 itojun Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,18 +66,6 @@ directive|include
 file|<netinet/in.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
 begin_comment
 comment|/*  * XXX: We consider a case where IPv6 is not ready yet for portability,  * but PIM dependent defintions should be independent of IPv6...  */
 end_comment
@@ -89,18 +77,18 @@ block|{
 name|u_int8_t
 name|pim_typever
 decl_stmt|;
-comment|/* upper 4bit: the PIM message type, currently they are: 			 * Hello, Register, Register-Stop, Join/Prune, 			 * Bootstrap, Assert, Graft (PIM-DM only), 			 * Graft-Ack (PIM-DM only), C-RP-Adv 			 */
-comment|/* lower 4bit: PIM version number; 2 for PIMv2 */
+comment|/* upper 4bit: PIM version number; 2 for PIMv2 */
+comment|/* lower 4bit: the PIM message type, currently they are: 			 * Hello, Register, Register-Stop, Join/Prune, 			 * Bootstrap, Assert, Graft (PIM-DM only), 			 * Graft-Ack (PIM-DM only), C-RP-Adv 			 */
 define|#
 directive|define
-name|PIM_TYPE
+name|PIM_VER
 parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0xf0)>> 4)
 define|#
 directive|define
-name|PIM_VER
+name|PIM_TYPE
 parameter_list|(
 name|x
 parameter_list|)
@@ -151,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|"extract.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip.h"
 end_include
 
 begin_function_decl
@@ -1894,7 +1888,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"v2"
+literal|"pim v2"
 argument_list|)
 expr_stmt|;
 name|pimv2_print
@@ -1911,7 +1905,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"v%d"
+literal|"pim v%d"
 argument_list|,
 name|PIM_VER
 argument_list|(
@@ -2541,6 +2535,20 @@ operator|>=
 name|ep
 condition|)
 return|return;
+if|if
+condition|(
+name|ep
+operator|>
+name|bp
+operator|+
+name|len
+condition|)
+name|ep
+operator|=
+name|bp
+operator|+
+name|len
+expr_stmt|;
 name|TCHECK
 argument_list|(
 name|pim
@@ -2932,9 +2940,10 @@ name|bp
 expr_stmt|;
 switch|switch
 condition|(
+name|IP_V
+argument_list|(
 name|ip
-operator|->
-name|ip_v
+argument_list|)
 condition|)
 block|{
 case|case
@@ -2984,9 +2993,10 @@ name|printf
 argument_list|(
 literal|" IP ver %d"
 argument_list|,
+name|IP_V
+argument_list|(
 name|ip
-operator|->
-name|ip_v
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3862,8 +3872,6 @@ name|printf
 argument_list|(
 literal|" RPcnt=%d"
 argument_list|,
-name|frpcnt
-operator|=
 name|bp
 index|[
 literal|0
@@ -3898,6 +3906,8 @@ name|printf
 argument_list|(
 literal|" FRPcnt=%d"
 argument_list|,
+name|frpcnt
+operator|=
 name|bp
 index|[
 literal|1

@@ -27,7 +27,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/tcpdump.c,v 1.138.2.1 2000/01/11 07:34:00 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/tcpdump.c,v 1.158 2000/12/21 10:43:24 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,18 +115,6 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
 end_include
 
 begin_include
@@ -299,6 +287,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|uflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Print undecoded NFS handles */
+end_comment
+
+begin_decl_stmt
+name|int
 name|vflag
 decl_stmt|;
 end_decl_stmt
@@ -325,19 +325,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* print packet in ascii as well as hex */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|ahsecret
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* AH secret key */
 end_comment
 
 begin_decl_stmt
@@ -377,28 +364,11 @@ comment|/* seconds offset from gmt to local time */
 end_comment
 
 begin_comment
-comment|/* Externs */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|bpf_dump
-parameter_list|(
-name|struct
-name|bpf_program
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Forwards */
 end_comment
 
 begin_function_decl
+specifier|static
 name|RETSIGTYPE
 name|cleanup
 parameter_list|(
@@ -408,8 +378,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|__dead
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -417,7 +386,7 @@ name|void
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
-function_decl|(volatile
+function_decl|(noreturn
 end_function_decl
 
 begin_empty_stmt
@@ -466,7 +435,7 @@ name|DLT_EN10MB
 block|}
 block|,
 block|{
-name|ether_if_print
+name|token_if_print
 block|,
 name|DLT_IEEE802
 block|}
@@ -489,6 +458,17 @@ block|{
 name|cip_if_print
 block|,
 name|DLT_CIP
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DLT_ATM_CLIP
+block|{
+name|cip_if_print
+block|,
+name|DLT_ATM_CLIP
 block|}
 block|,
 endif|#
@@ -529,6 +509,17 @@ block|,
 name|DLT_NULL
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|DLT_LOOP
+block|{
+name|null_if_print
+block|,
+name|DLT_LOOP
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|raw_if_print
 block|,
@@ -543,11 +534,33 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|DLT_CHDLC
+name|DLT_C_HDLC
 block|{
 name|chdlc_if_print
 block|,
-name|DLT_CHDLC
+name|DLT_C_HDLC
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DLT_PPP_SERIAL
+block|{
+name|ppp_hdlc_if_print
+block|,
+name|DLT_PPP_SERIAL
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DLT_LINUX_SLL
+block|{
+name|sll_if_print
+block|,
+name|DLT_LINUX_SLL
 block|}
 block|,
 endif|#
@@ -603,7 +616,7 @@ name|f
 return|;
 name|error
 argument_list|(
-literal|"unknown data link type 0x%x"
+literal|"unknown data link type %d"
 argument_list|,
 name|type
 argument_list|)
@@ -772,6 +785,11 @@ condition|(
 name|abort_on_misalignment
 argument_list|(
 name|ebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ebuf
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -808,11 +826,12 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ac:deE:fF:i:lnNm:Opqr:Rs:StT:vw:xXY"
+literal|"ac:deE:fF:i:lm:nNOpqr:Rs:StT:uvw:xXY"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -826,19 +845,6 @@ operator|++
 name|aflag
 expr_stmt|;
 break|break;
-if|#
-directive|if
-literal|0
-block|case 'A':
-ifndef|#
-directive|ifndef
-name|CRYPTO
-block|warning("crypto code not compiled in");
-endif|#
-directive|endif
-block|ahsecret = optarg; 			break;
-endif|#
-directive|endif
 case|case
 literal|'c'
 case|:
@@ -882,7 +888,7 @@ literal|'E'
 case|:
 ifndef|#
 directive|ifndef
-name|CRYPTO
+name|HAVE_LIBCRYPTO
 name|warning
 argument_list|(
 literal|"crypto code not compiled in"
@@ -1056,18 +1062,41 @@ break|break;
 case|case
 literal|'s'
 case|:
+block|{
+name|char
+modifier|*
+name|end
+decl_stmt|;
 name|snaplen
 operator|=
-name|atoi
+name|strtol
 argument_list|(
 name|optarg
+argument_list|,
+operator|&
+name|end
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|optarg
+operator|==
+name|end
+operator|||
+operator|*
+name|end
+operator|!=
+literal|'\0'
+operator|||
 name|snaplen
-operator|<=
+operator|<
 literal|0
+operator|||
+name|snaplen
+operator|>
+literal|65535
 condition|)
 name|error
 argument_list|(
@@ -1076,7 +1105,19 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|snaplen
+operator|==
+literal|0
+condition|)
+name|snaplen
+operator|=
+literal|65535
+expr_stmt|;
 break|break;
+block|}
 case|case
 literal|'S'
 case|:
@@ -1189,6 +1230,22 @@ name|packettype
 operator|=
 name|PT_SNMP
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"cnfp"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|packettype
+operator|=
+name|PT_CNFP
+expr_stmt|;
 else|else
 name|error
 argument_list|(
@@ -1196,6 +1253,13 @@ literal|"unknown packet type `%s'"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+operator|++
+name|uflag
 expr_stmt|;
 break|break;
 case|case
@@ -1759,6 +1823,7 @@ comment|/* make a clean exit on interrupts */
 end_comment
 
 begin_function
+specifier|static
 name|RETSIGTYPE
 name|cleanup
 parameter_list|(
@@ -2044,7 +2109,7 @@ block|}
 end_function
 
 begin_function
-name|__dead
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -2094,7 +2159,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-adeflnNOpqStvxX] [-c count] [ -F file ]\n"
+literal|"Usage: %s [-adeflnNOpqStuvxX] [-c count] [ -F file ]\n"
 argument_list|,
 name|program_name
 argument_list|)

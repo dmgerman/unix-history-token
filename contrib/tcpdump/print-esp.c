@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-esp.c,v 1.5 1999/12/15 08:10:18 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-esp.c,v 1.17 2000/12/12 09:58:41 itojun Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,73 +79,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_icmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
 end_include
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CRYPTO
+name|HAVE_LIBCRYPTO
 end_ifdef
 
 begin_include
@@ -205,6 +145,18 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ip.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"esp.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -214,71 +166,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netinet/ip6.h>
+file|"ip6.h"
 end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* there's no standard definition so we are on our own */
-end_comment
-
-begin_struct
-struct|struct
-name|esp
-block|{
-name|u_int32_t
-name|esp_spi
-decl_stmt|;
-comment|/* ESP */
-comment|/*variable size, 32bit bound*/
-comment|/* Initialization Vector */
-comment|/*variable size*/
-comment|/* Payload data */
-comment|/*variable size*/
-comment|/* padding */
-comment|/*8bit*/
-comment|/* pad size */
-comment|/*8bit*/
-comment|/* next header */
-comment|/*8bit*/
-comment|/* next header */
-comment|/*variable size, 32bit bound*/
-comment|/* Authentication data (new IPsec) */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|newesp
-block|{
-name|u_int32_t
-name|esp_spi
-decl_stmt|;
-comment|/* ESP */
-name|u_int32_t
-name|esp_seq
-decl_stmt|;
-comment|/* Sequence number */
-comment|/*variable size*/
-comment|/* (IV and) Payload data */
-comment|/*variable size*/
-comment|/* padding */
-comment|/*8bit*/
-comment|/* pad size */
-comment|/*8bit*/
-comment|/* next header */
-comment|/*8bit*/
-comment|/* next header */
-comment|/*variable size, 32bit bound*/
-comment|/* Authentication data */
-block|}
-struct|;
-end_struct
 
 begin_include
 include|#
@@ -408,7 +302,7 @@ operator|->
 name|esp_spi
 argument_list|)
 expr_stmt|;
-comment|/* 'ep' points to the end of avaible data. */
+comment|/* 'ep' points to the end of available data. */
 name|ep
 operator|=
 name|snapend
@@ -447,7 +341,7 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|"ESP(spi=%u"
+literal|"ESP(spi=0x%08x"
 argument_list|,
 name|spi
 argument_list|)
@@ -735,9 +629,10 @@ name|bp2
 expr_stmt|;
 switch|switch
 condition|(
+name|IP_V
+argument_list|(
 name|ip
-operator|->
-name|ip_v
+argument_list|)
 condition|)
 block|{
 ifdef|#
@@ -876,7 +771,7 @@ name|DESCBC
 case|:
 ifdef|#
 directive|ifdef
-name|CRYPTO
+name|HAVE_LIBCRYPTO
 block|{
 name|u_char
 name|iv
@@ -1048,13 +943,13 @@ name|fail
 goto|;
 endif|#
 directive|endif
-comment|/*CRYPTO*/
+comment|/*HAVE_LIBCRYPTO*/
 case|case
 name|BLOWFISH
 case|:
 ifdef|#
 directive|ifdef
-name|CRYPTO
+name|HAVE_LIBCRYPTO
 block|{
 name|BF_KEY
 name|schedule
@@ -1126,7 +1021,7 @@ name|fail
 goto|;
 endif|#
 directive|endif
-comment|/*CRYPTO*/
+comment|/*HAVE_LIBCRYPTO*/
 case|case
 name|RC5
 case|:
@@ -1134,7 +1029,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CRYPTO
+name|HAVE_LIBCRYPTO
 argument_list|)
 operator|&&
 name|defined
@@ -1214,7 +1109,7 @@ name|fail
 goto|;
 endif|#
 directive|endif
-comment|/*CRYPTO*/
+comment|/*HAVE_LIBCRYPTO*/
 case|case
 name|CAST128
 case|:
@@ -1222,7 +1117,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CRYPTO
+name|HAVE_LIBCRYPTO
 argument_list|)
 operator|&&
 name|defined
@@ -1306,7 +1201,7 @@ name|fail
 goto|;
 endif|#
 directive|endif
-comment|/*CRYPTO*/
+comment|/*HAVE_LIBCRYPTO*/
 case|case
 name|DES3CBC
 case|:
@@ -1314,7 +1209,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CRYPTO
+name|HAVE_LIBCRYPTO
 argument_list|)
 block|{
 name|des_key_schedule
@@ -1438,7 +1333,7 @@ name|fail
 goto|;
 endif|#
 directive|endif
-comment|/*CRYPTO*/
+comment|/*HAVE_LIBCRYPTO*/
 case|case
 name|NONE
 case|:

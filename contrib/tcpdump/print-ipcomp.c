@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ipcomp.c,v 1.2.2.2 2000/01/25 18:31:10 itojun Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ipcomp.c,v 1.13 2000/12/12 09:58:41 itojun Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,67 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_icmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
 end_include
 
 begin_include
@@ -143,23 +83,6 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -292,7 +215,7 @@ operator|->
 name|comp_cpi
 argument_list|)
 expr_stmt|;
-comment|/* 'ep' points to the end of avaible data. */
+comment|/* 'ep' points to the end of available data. */
 name|ep
 operator|=
 name|snapend
@@ -331,7 +254,7 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|"IPComp(cpi=%u)"
+literal|"IPComp(cpi=0x%04x)"
 argument_list|,
 name|cpi
 argument_list|)

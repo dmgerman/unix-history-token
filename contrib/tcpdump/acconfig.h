@@ -10,16 +10,6 @@ expr|@
 end_expr_stmt
 
 begin_comment
-comment|/* Define if you have SSLeay XXX why isn't this HAVE_LIBCRYPTO? */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CRYPTO
-end_undef
-
-begin_comment
 comment|/* Define if you have SSLeay 0.9.0b with the buggy cast128. */
 end_comment
 
@@ -30,14 +20,8 @@ name|HAVE_BUGGY_CAST128
 end_undef
 
 begin_comment
-comment|/* Define both to enable IPv6 support XXX why 2? ENABLE_IPV6 is not used. */
+comment|/* Define if you enable IPv6 support */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ENABLE_IPV6
-end_undef
 
 begin_undef
 undef|#
@@ -63,34 +47,6 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_SMI_H
-end_undef
-
-begin_comment
-comment|/* Is T_AAAA predefined? */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_AAAA
-end_undef
-
-begin_comment
-comment|/* Fallback definition if not in headers */
-end_comment
-
-begin_comment
-comment|/* XXX why is this not #ifndef HAVE_AAA #define T_AAAA ... ? */
-end_comment
-
-begin_comment
-comment|/* XXX or even #ifndef T_AAAA ... */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|T_AAAA
 end_undef
 
 begin_comment
@@ -121,16 +77,6 @@ begin_undef
 undef|#
 directive|undef
 name|ETHER_HEADER_HAS_EA
-end_undef
-
-begin_comment
-comment|/*  * define if struct ether_arp.arp_sha is a struct with ether_addr_octet  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ETHER_ARP_HAS_EA
 end_undef
 
 begin_comment
@@ -194,16 +140,6 @@ name|HAVE_INADDRSZ
 end_undef
 
 begin_comment
-comment|/* define if you have<net/slip.h> */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_NET_SLIP_H
-end_undef
-
-begin_comment
 comment|/* define if this is a development version, to use additional prototypes. */
 end_comment
 
@@ -254,6 +190,16 @@ name|HAVE_SOCKADDR_STORAGE
 end_undef
 
 begin_comment
+comment|/* define if you have both getipnodebyname() and getipnodebyaddr() */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|USE_GETIPNODEBY
+end_undef
+
+begin_comment
 comment|/* define if unaligned memory accesses fail */
 end_comment
 
@@ -301,16 +247,6 @@ begin_undef
 undef|#
 directive|undef
 name|_SUN
-end_undef
-
-begin_comment
-comment|/* OSF hack: "Workaround around ip_hl vs. ip_vhl problem in netinet/ip.h" */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|__STDC__
 end_undef
 
 begin_comment
