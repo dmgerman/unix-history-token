@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)condevs.c	5.16 (Berkeley) %G%"
+literal|"@(#)condevs.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1571,6 +1571,17 @@ block|}
 block|}
 if|if
 condition|(
+name|acustatus
+operator|<
+literal|1
+condition|)
+name|acustatus
+operator|=
+literal|1
+expr_stmt|;
+comment|/* has been found */
+if|if
+condition|(
 name|mlock
 argument_list|(
 name|dev
@@ -1581,17 +1592,6 @@ operator|==
 name|FAIL
 condition|)
 continue|continue;
-if|if
-condition|(
-name|acustatus
-operator|<
-literal|1
-condition|)
-name|acustatus
-operator|=
-literal|1
-expr_stmt|;
-comment|/* has been found */
 ifdef|#
 directive|ifdef
 name|DIALINOUT
