@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.75 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.76 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2654,11 +2654,13 @@ condition|(
 name|f
 operator|==
 name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|optional
 condition|)
-block|{
 name|syserr
 argument_list|(
 literal|"fileclass: cannot open %s"
