@@ -661,7 +661,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"Use \"%s\" for \"%s\"\n"
+literal|"\"%s\" is an alias for \"%s\"\n"
 argument_list|,
 name|ypaliases
 index|[
