@@ -3270,6 +3270,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|reg
@@ -3279,6 +3280,12 @@ operator|==
 name|CSRVAL_T10SBP2
 condition|)
 break|break;
+name|crom_next
+argument_list|(
+name|cc
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* get firmware revision */
 name|reg
 operator|=
