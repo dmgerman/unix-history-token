@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1415,6 +1415,28 @@ operator|->
 name|snd_nxt
 operator|--
 expr_stmt|;
+comment|/* 	 * If we are doing retransmissions, then snd_nxt will 	 * not reflect the first unsent octet.  For ACK only 	 * packets, we do not want the sequence number of the 	 * retransmitted packet, we want the sequence number 	 * of the next unsent octet.  So, if there is no data 	 * (and no SYN or FIN), use snd_max instead of snd_nxt 	 * when filling in ti_seq.  But if we are in persist 	 * state, snd_max might reflect one byte beyond the 	 * right edge of the window, so use snd_nxt in that 	 * case, since we know we aren't doing a retransmission. 	 * (retransmit and persist are mutually exclusive...) 	 */
+if|if
+condition|(
+name|len
+operator|||
+operator|(
+name|flags
+operator|&
+operator|(
+name|TH_SYN
+operator||
+name|TH_FIN
+operator|)
+operator|)
+operator|||
+name|tp
+operator|->
+name|t_timer
+index|[
+name|TCPT_PERSIST
+index|]
+condition|)
 name|ti
 operator|->
 name|ti_seq
@@ -1424,6 +1446,18 @@ argument_list|(
 name|tp
 operator|->
 name|snd_nxt
+argument_list|)
+expr_stmt|;
+else|else
+name|ti
+operator|->
+name|ti_seq
+operator|=
+name|htonl
+argument_list|(
+name|tp
+operator|->
+name|snd_max
 argument_list|)
 expr_stmt|;
 name|ti
