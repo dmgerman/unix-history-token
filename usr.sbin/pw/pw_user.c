@@ -6334,7 +6334,7 @@ literal|16
 argument_list|,
 name|len
 operator|-
-name|n
+name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6371,6 +6371,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|srandomdev
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
