@@ -1180,6 +1180,9 @@ name|mc_addr_count
 parameter_list|,
 name|uint32_t
 name|pad
+parameter_list|,
+name|uint32_t
+name|rar_used_count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1471,7 +1474,8 @@ name|em_hw
 modifier|*
 name|hw
 parameter_list|,
-name|uint32_t
+name|unsigned
+name|long
 name|port
 parameter_list|)
 function_decl|;
@@ -1501,7 +1505,8 @@ name|em_hw
 modifier|*
 name|hw
 parameter_list|,
-name|uint32_t
+name|unsigned
+name|long
 name|port
 parameter_list|,
 name|uint32_t
@@ -5540,7 +5545,8 @@ decl_stmt|;
 name|em_ffe_config
 name|ffe_config_state
 decl_stmt|;
-name|uint32_t
+name|unsigned
+name|long
 name|io_base
 decl_stmt|;
 name|uint32_t
@@ -5674,6 +5680,9 @@ name|dsp_config_state
 decl_stmt|;
 name|boolean_t
 name|get_link_status
+decl_stmt|;
+name|boolean_t
+name|serdes_link_down
 decl_stmt|;
 name|boolean_t
 name|tbi_compatibility_en
@@ -8147,6 +8156,17 @@ end_define
 
 begin_comment
 comment|/* Buffer size extension */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RCTL_SECRC
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Strip Ethernet CRC */
 end_comment
 
 begin_comment
