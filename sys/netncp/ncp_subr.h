@@ -455,36 +455,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|ncp_sysctlbyname
-parameter_list|(
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|void
-modifier|*
-name|old
-parameter_list|,
-name|size_t
-modifier|*
-name|oldlenp
-parameter_list|,
-name|void
-modifier|*
-name|new
-parameter_list|,
-name|size_t
-name|newlen
-parameter_list|,
-name|size_t
-modifier|*
-name|retval
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* ncp_crypt.c */
 end_comment

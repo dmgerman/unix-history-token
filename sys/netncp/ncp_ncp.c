@@ -886,8 +886,10 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ncp_sysctlbyname
+name|kernel_sysctlbyname
 argument_list|(
+name|curproc
+argument_list|,
 literal|"net.ipx.ipx.checksum"
 argument_list|,
 operator|&
