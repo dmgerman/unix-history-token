@@ -249,7 +249,7 @@ literal|"Macros for Big-Endians are incomplete"
 end_error
 
 begin_comment
-comment|/* #define htoles(x)	((u_int16_t)(x)) #define letohs(x)	((u_int16_t)(x)) #define	htolel(x)	((u_int32_t)(x)) #define	letohl(x)	((u_int32_t)(x)) */
+comment|/* #define	htoles(x)	((u_int16_t)(x)) #define	letohs(x)	((u_int16_t)(x)) #define	htolel(x)	((u_int32_t)(x)) #define	letohl(x)	((u_int32_t)(x)) */
 end_comment
 
 begin_endif
