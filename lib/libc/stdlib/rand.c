@@ -295,7 +295,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * sranddev:  *  * Many programs choose the seed value in a totally predictable manner.  * This often causes problems.  We seed the generator using the much more  * secure urandom(4) interface.  */
+comment|/*  * sranddev:  *  * Many programs choose the seed value in a totally predictable manner.  * This often causes problems.  We seed the generator using the much more  * secure random(4) interface.  */
 end_comment
 
 begin_function
