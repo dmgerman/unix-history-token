@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mdXhl.c  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  */
+comment|/* mdXhl.c * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  */
 end_comment
 
 begin_include
@@ -210,6 +210,7 @@ name|buf
 parameter_list|)
 block|{
 return|return
+operator|(
 name|MDXFileChunk
 argument_list|(
 name|filename
@@ -220,6 +221,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -459,6 +461,7 @@ return|return
 literal|0
 return|;
 return|return
+operator|(
 name|MDXEnd
 argument_list|(
 operator|&
@@ -466,6 +469,7 @@ name|ctx
 argument_list|,
 name|buf
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -510,6 +514,7 @@ name|len
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|MDXEnd
 argument_list|(
 operator|&
@@ -517,6 +522,7 @@ name|ctx
 argument_list|,
 name|buf
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
