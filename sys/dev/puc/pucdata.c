@@ -2648,6 +2648,53 @@ block|}
 block|, 	    }
 block|, 	}
 block|,
+comment|/* Lava Computers newer Quattro-PCI serial ports */
+block|{
+literal|"Lava Computers Quattro-PCI serial port"
+block|,
+block|{
+literal|0x1407
+block|,
+literal|0x0120
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xfffc
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x10
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x14
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+block|}
+block|, 	    }
+block|, 	}
+block|,
 comment|/* Lava Computers DSerial PCI serial ports */
 block|{
 literal|"Lava Computers serial port"
