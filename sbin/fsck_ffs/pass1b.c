@@ -220,7 +220,7 @@ operator|.
 name|fs_ncg
 argument_list|)
 expr_stmt|;
-name|got_siginfo
+name|got_sigalarm
 operator|=
 literal|0
 expr_stmt|;
