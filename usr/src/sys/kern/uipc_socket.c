@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.75	83/05/27	*/
+comment|/*	uipc_socket.c	4.76	83/06/14	*/
 end_comment
 
 begin_include
@@ -1242,12 +1242,6 @@ return|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
 begin_expr_stmt
 name|soconnect2
 argument_list|(
@@ -1293,7 +1287,7 @@ operator|->
 name|pr_usrreq
 call|)
 argument_list|(
-name|so
+name|so1
 argument_list|,
 name|PRU_CONNECT2
 argument_list|,
@@ -1331,11 +1325,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|sodisconnect
