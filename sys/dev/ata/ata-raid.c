@@ -1007,7 +1007,7 @@ name|rdp
 operator|->
 name|disk
 argument_list|,
-name|DISKFLAG_NOGIANT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
