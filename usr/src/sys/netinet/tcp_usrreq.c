@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_usrreq.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_usrreq.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -316,6 +316,35 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 		 * The following corrects an mbuf leak under rare 		 * circumstances, but has not been fully tested. 		 */
+block|if (m&& req != PRU_SENSE) 			m_freem(m);
+else|#
+directive|else
+comment|/* safer version of fix for mbuf leak */
+if|if
+condition|(
+name|m
+operator|&&
+operator|(
+name|req
+operator|==
+name|PRU_SEND
+operator|||
+name|req
+operator|==
+name|PRU_SENDOOB
+operator|)
+condition|)
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EINVAL
