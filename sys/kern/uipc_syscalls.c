@@ -402,7 +402,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int
 name|sf_buf_alloc_want
 decl_stmt|;
 end_decl_stmt
@@ -7042,6 +7042,10 @@ name|free_list
 argument_list|)
 expr_stmt|;
 block|}
+name|sf_buf_alloc_want
+operator|=
+literal|0
+expr_stmt|;
 name|mtx_exit
 argument_list|(
 operator|&
@@ -7098,8 +7102,7 @@ name|NULL
 condition|)
 block|{
 name|sf_buf_alloc_want
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 name|msleep
 argument_list|(
@@ -7277,10 +7280,9 @@ name|sf_buf_alloc_want
 condition|)
 block|{
 name|sf_buf_alloc_want
-operator|=
-literal|0
+operator|--
 expr_stmt|;
-name|wakeup
+name|wakeup_one
 argument_list|(
 operator|&
 name|sf_freelist
