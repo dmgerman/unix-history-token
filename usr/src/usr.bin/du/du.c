@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	5.14 (Berkeley) %G%"
+literal|"@(#)du.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,7 +113,7 @@ operator|,
 name|int
 operator|*
 operator|,
-name|int
+name|long
 operator|*
 operator|)
 argument_list|)
@@ -177,10 +177,11 @@ name|listdirs
 decl_stmt|,
 name|listfiles
 decl_stmt|;
+name|long
+name|blocksize
+decl_stmt|;
 name|int
 name|aflag
-decl_stmt|,
-name|blocksize
 decl_stmt|,
 name|ch
 decl_stmt|,
