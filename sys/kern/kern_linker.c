@@ -1473,11 +1473,19 @@ if|if
 condition|(
 name|foundfile
 condition|)
-comment|/* Format not recognized (or unloadable). */
+block|{
+comment|/* 		 * Format not recognized or otherwise unloadable. 		 * When loading a module that is statically built into 		 * the kernel EEXIST percolates back up as the return 		 * value.  Preserve this so that apps like sysinstall 		 * can recognize this special case and not post bogus 		 * dialog boxes. 		 */
+if|if
+condition|(
+name|error
+operator|!=
+name|EEXIST
+condition|)
 name|error
 operator|=
 name|ENOEXEC
 expr_stmt|;
+block|}
 else|else
 name|error
 operator|=
