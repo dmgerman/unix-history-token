@@ -118,9 +118,10 @@ name|uint32_t
 name|datagram_size
 range|:
 literal|12
+decl_stmt|;
 name|uint32_t
 name|ether_type
-operator|:
+range|:
 literal|16
 decl_stmt|;
 name|uint32_t
@@ -191,9 +192,10 @@ name|uint32_t
 name|datagram_size
 range|:
 literal|12
+decl_stmt|;
 name|uint32_t
 name|reserved2
-operator|:
+range|:
 literal|4
 decl_stmt|;
 name|uint32_t
