@@ -3901,6 +3901,22 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 			 * Remember addr if jailed, to prevent rebinding. 			 */
+if|if
+condition|(
+name|jailed
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|)
+condition|)
+name|inp
+operator|->
+name|inp_laddr
+operator|=
+name|laddr
+expr_stmt|;
 name|inp
 operator|->
 name|inp_lport
