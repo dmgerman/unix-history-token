@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termios.c	5.6 (Berkeley) %G%"
+literal|"@(#)termios.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -464,10 +464,6 @@ name|c_ospeed
 operator|=
 name|speed
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
 block|}
 end_function
 
@@ -857,6 +853,7 @@ name|struct
 name|termios
 name|term
 decl_stmt|;
+name|unsigned
 name|char
 name|c
 decl_stmt|;
@@ -873,7 +870,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-empty_stmt|;
 return|return
 operator|(
 operator|-
