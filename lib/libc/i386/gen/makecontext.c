@@ -401,17 +401,25 @@ name|intptr_t
 operator|)
 name|ucp
 expr_stmt|;
-comment|/* 		 * Set the machine context to point to the top of the 		 * stack and the program counter to the context start 		 * wrapper.  Note that setcontext() pushes the return 		 * address onto the top of the stack, so allow for this 		 * by adjusting the stack downward 1 slot.  Also set 		 * %ebp to point to the base of the stack where ucp 		 * is stored. 		 */
+comment|/* 		 * Set the machine context to point to the top of the 		 * stack and the program counter to the context start 		 * wrapper.  Note that setcontext() pushes the return 		 * address onto the top of the stack, so allow for this 		 * by adjusting the stack downward 1 slot.  Also set 		 * %esi to point to the base of the stack where ucp 		 * is stored. 		 */
+name|ucp
+operator|->
+name|uc_mcontext
+operator|.
+name|mc_esi
+operator|=
+operator|(
+name|int
+operator|)
+name|argp
+expr_stmt|;
 name|ucp
 operator|->
 name|uc_mcontext
 operator|.
 name|mc_ebp
 operator|=
-operator|(
-name|int
-operator|)
-name|argp
+literal|0
 expr_stmt|;
 name|ucp
 operator|->
