@@ -8187,7 +8187,7 @@ name|ifma
 operator|->
 name|ifma_protospec
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|rt_newmaddrmsg
 argument_list|(
@@ -8345,7 +8345,7 @@ name|ifma
 operator|->
 name|ifma_protospec
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|s
 operator|=
