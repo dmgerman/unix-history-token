@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	6.6 (Berkeley) %G%"
+literal|"@(#)res_comp.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,17 +49,11 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arpa/nameser.h>
 end_include
 
 begin_comment
-comment|/*  * Expand compressed domain name 'comp_dn' to full domain name.  * Expanded names are converted to lower case.  * 'msg' is a pointer to the begining of the message,  * 'eomorig' points to the first location after the message,  * 'exp_dn' is a pointer to a buffer of size 'length' for the result.  * Return size of compressed name or -1 if there was an error.  */
+comment|/*  * Expand compressed domain name 'comp_dn' to full domain name.  * 'msg' is a pointer to the begining of the message,  * 'eomorig' points to the first location after the message,  * 'exp_dn' is a pointer to a buffer of size 'length' for the result.  * Return size of compressed name or -1 if there was an error.  */
 end_comment
 
 begin_macro
@@ -212,29 +206,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|isupper
-argument_list|(
+operator|(
 name|c
 operator|=
 operator|*
 name|cp
 operator|++
-argument_list|)
-condition|)
-operator|*
-name|dn
-operator|++
-operator|=
-name|tolower
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-if|if
-condition|(
-name|c
+operator|)
 operator|==
 literal|'.'
 condition|)
@@ -268,7 +246,6 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|cp
