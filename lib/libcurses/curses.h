@@ -449,7 +449,7 @@ name|CA
 decl_stmt|,
 name|DA
 decl_stmt|,
-name|DB
+name|cDB
 decl_stmt|,
 name|EO
 decl_stmt|,
