@@ -87,9 +87,13 @@ define|\
 value|((void *)((char *)((b)->nb_startva) + (b)->nb_byteoffset))
 end_define
 
+begin_comment
+comment|/*-  * The ndis_kspin_lock type is called KSPIN_LOCK in MS-Windows.  * According to the Windows DDK header files, KSPIN_LOCK is defined like this:  *	typedef ULONG_PTR KSPIN_LOCK;  *  * From basetsd.h (SDK, Feb. 2003):  * 	typedef [public] unsigned __int3264 ULONG_PTR, *PULONG_PTR;  * 	typedef unsigned __int64 ULONG_PTR, *PULONG_PTR;  * 	typedef _W64 unsigned long ULONG_PTR, *PULONG_PTR;  *   * The keyword __int3264 specifies an integral type that has the following  * properties:  *	+ It is 32-bit on 32-bit platforms  *	+ It is 64-bit on 64-bit platforms  *	+ It is 32-bit on the wire for backward compatibility.  *	  It gets truncated on the sending side and extended appropriately  *	  (signed or unsigned) on the receiving side.  *  * Thus register_t seems the proper mapping onto FreeBSD for spin locks.  */
+end_comment
+
 begin_typedef
 typedef|typedef
-name|uint32_t
+name|register_t
 name|kspin_lock
 typedef|;
 end_typedef

@@ -82,7 +82,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|uint32_t
+name|register_t
 name|ndis_kspin_lock
 typedef|;
 end_typedef
