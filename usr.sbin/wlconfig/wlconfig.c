@@ -543,7 +543,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Adapter compatability : "
+literal|"Adapter compatibility : "
 argument_list|)
 expr_stmt|;
 if|if
