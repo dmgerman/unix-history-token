@@ -187,7 +187,7 @@ begin_define
 define|#
 directive|define
 name|SCHED_QUANTUM
-value|(hz / 10);
+value|(hz / 10)
 end_define
 
 begin_comment
