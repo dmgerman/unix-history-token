@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.12 1995/05/17 16:16:10 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE"  * license, so buy him a beer if you like it!  Buy him a beer for me, too!  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.13 1995/05/18 02:42:33 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE"  * license, so buy him a beer if you like it!  Buy him a beer for me, too!  */
 end_comment
 
 begin_include
@@ -1191,6 +1191,41 @@ argument_list|(
 name|omask
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DebugFD
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|dup2
+argument_list|(
+name|DebugFD
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|dup2
+argument_list|(
+name|DebugFD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|dup2
+argument_list|(
+name|DebugFD
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|msgInfo
+argument_list|(
+literal|"Command output is on debugging screen - type ALT-F2 to see it"
+argument_list|)
+expr_stmt|;
+block|}
 name|execl
 argument_list|(
 literal|"/stand/sh"
