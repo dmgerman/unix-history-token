@@ -1301,7 +1301,7 @@ name|TRACE0
 parameter_list|(
 name|arg
 parameter_list|)
-value|if(fd_debug) printf(arg)
+value|do { if (fd_debug) printf(arg); } while (0)
 end_define
 
 begin_define
@@ -1313,7 +1313,7 @@ name|arg1
 parameter_list|,
 name|arg2
 parameter_list|)
-value|if(fd_debug) printf(arg1, arg2)
+value|do { if (fd_debug) printf(arg1, arg2); } while (0)
 end_define
 
 begin_else
@@ -1332,6 +1332,7 @@ name|TRACE0
 parameter_list|(
 name|arg
 parameter_list|)
+value|do { } while (0)
 end_define
 
 begin_define
@@ -1343,6 +1344,7 @@ name|arg1
 parameter_list|,
 name|arg2
 parameter_list|)
+value|do { } while (0)
 end_define
 
 begin_endif
@@ -11336,15 +11338,55 @@ name|FDC_DEBUG
 case|case
 name|FD_DEBUG
 case|:
+if|if
+condition|(
+operator|(
 name|fd_debug
-operator|=
+operator|!=
+literal|0
+operator|)
+operator|!=
+operator|(
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|addr
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|fd_debug
+operator|=
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|addr
+operator|!=
+literal|0
+operator|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"fd%d: debugging turned %s\n"
+argument_list|,
+name|fd
+operator|->
+name|fdu
+argument_list|,
+name|fd_debug
+condition|?
+literal|"on"
+else|:
+literal|"off"
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 endif|#
 directive|endif
