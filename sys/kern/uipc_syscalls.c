@@ -6228,7 +6228,7 @@ end_comment
 
 begin_function
 name|int
-name|getsockname1
+name|getsockname
 parameter_list|(
 name|p
 parameter_list|,
@@ -6696,7 +6696,7 @@ end_comment
 
 begin_function
 name|int
-name|getpeername1
+name|getpeername
 parameter_list|(
 name|p
 parameter_list|,
