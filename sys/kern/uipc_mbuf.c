@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_param.h"
 end_include
 
@@ -37,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -208,6 +220,24 @@ literal|0
 block|KASSERT(to->m_flags& M_PKTHDR, 	    ("m_copy_pkthdr() called on non-header"));
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|MAC
+if|if
+condition|(
+name|to
+operator|->
+name|m_flags
+operator|&
+name|M_PKTHDR
+condition|)
+name|mac_destroy_mbuf
+argument_list|(
+name|to
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|to
 operator|->
 name|m_data
@@ -234,6 +264,26 @@ name|from
 operator|->
 name|m_pkthdr
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_init_mbuf
+argument_list|(
+name|to
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* XXXMAC no way to fail */
+name|mac_create_mbuf_from_mbuf
+argument_list|(
+name|from
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|from
 operator|->
 name|m_pkthdr
@@ -317,6 +367,16 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_destroy_mbuf
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|m
 operator|->
 name|m_flags
