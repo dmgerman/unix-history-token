@@ -11874,6 +11874,10 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|hostname
+operator|=
+name|hostp
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -13145,6 +13149,10 @@ argument_list|)
 expr_stmt|;
 name|af_unix
 label|:
+name|connected
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|autologin
