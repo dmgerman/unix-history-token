@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.5 (Berkeley) 83/03/03"
+literal|"@(#)main.c	4.6 (Berkeley) 84/11/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,6 +347,8 @@ name|int
 name|intrupt
 parameter_list|()
 function_decl|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|op
@@ -355,8 +357,6 @@ name|options
 operator|+
 literal|1
 decl_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|METERFILE
