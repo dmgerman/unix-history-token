@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mesg.c	5.1 (Berkeley) %G%"
+literal|"@(#)mesg.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,7 +95,6 @@ file|<string.h>
 end_include
 
 begin_decl_stmt
-specifier|static
 name|void
 name|err
 name|__P
@@ -113,7 +112,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|usage
 name|__P
@@ -373,7 +371,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|usage
 parameter_list|()
