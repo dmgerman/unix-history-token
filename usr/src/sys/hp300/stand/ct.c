@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ct.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ct.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/types.h"
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -829,7 +829,7 @@ if|if
 condition|(
 name|func
 operator|==
-name|READ
+name|F_READ
 condition|)
 block|{
 name|ct_ioc
@@ -860,7 +860,7 @@ if|if
 condition|(
 name|func
 operator|==
-name|WRITE
+name|F_WRITE
 condition|)
 block|{
 name|ct_ioc
@@ -1005,11 +1005,11 @@ name|i_cc
 argument_list|,
 name|func
 operator|!=
-name|WRITE
+name|F_WRITE
 condition|?
-name|READ
+name|F_READ
 else|:
-name|WRITE
+name|F_WRITE
 argument_list|)
 expr_stmt|;
 name|hpibswait
