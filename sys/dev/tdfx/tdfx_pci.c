@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus_private.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -963,9 +957,10 @@ argument_list|(
 operator|&
 name|tdfx_cdev
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|dev
-operator|->
-name|unit
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -975,9 +970,10 @@ literal|02660
 argument_list|,
 literal|"3dfx%x"
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|dev
-operator|->
-name|unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
