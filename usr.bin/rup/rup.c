@@ -963,10 +963,6 @@ block|{
 name|int
 name|ch
 decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 while|while
 condition|(
 operator|(

@@ -1,8 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_function
@@ -21,15 +31,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
 name|int
 name|c
 decl_stmt|;

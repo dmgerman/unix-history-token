@@ -439,15 +439,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|;

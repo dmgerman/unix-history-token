@@ -188,15 +188,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 specifier|register
 name|int
 name|pid

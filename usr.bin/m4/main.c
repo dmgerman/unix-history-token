@@ -625,21 +625,6 @@ name|MAXKEYS
 value|(sizeof(keywrds)/sizeof(struct keyblk))
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|macro
@@ -650,14 +635,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|initkwds
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|getopt
 parameter_list|()
 function_decl|;
 end_function_decl
