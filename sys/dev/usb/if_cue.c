@@ -464,7 +464,9 @@ name|Static
 name|u_int32_t
 name|cue_crc
 parameter_list|(
-name|caddr_t
+specifier|const
+name|uint8_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1492,11 +1494,13 @@ name|Static
 name|u_int32_t
 name|cue_crc
 parameter_list|(
-name|caddr_t
+specifier|const
+name|uint8_t
+modifier|*
 name|addr
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|idx
 decl_stmt|,
 name|bit
