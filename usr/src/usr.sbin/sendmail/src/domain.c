@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.42 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.43 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.42 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.43 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2438,6 +2438,18 @@ continue|continue;
 case|case
 name|T_CNAME
 case|:
+if|if
+condition|(
+name|DontExpandCnames
+condition|)
+block|{
+comment|/* got CNAME -- guaranteed canonical */
+name|amatch
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|loopcnt

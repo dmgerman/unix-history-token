@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.100 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.101 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5236,6 +5236,16 @@ directive|define
 name|O_MAXCHILDREN
 value|0x8d
 comment|/* 	"MaxDaemonChildren",	O_MAXCHILDREN,	FALSE, */
+define|#
+directive|define
+name|O_KEEPCNAMES
+value|0x8e
+literal|"DontExpandCnames"
+block|,
+name|O_KEEPCNAMES
+block|,
+name|FALSE
+block|,
 name|NULL
 block|,
 literal|'\0'
@@ -7617,6 +7627,19 @@ argument_list|(
 name|val
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|O_KEEPCNAMES
+case|:
+comment|/* don't expand CNAME records */
+name|DontExpandCnames
+operator|=
+name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 if|if
 condition|(
