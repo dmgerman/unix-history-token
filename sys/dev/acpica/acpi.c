@@ -4274,7 +4274,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* Copy the bus tag from the pre-allocated resource. */
+comment|/* Copy the bus tag and handle from the pre-allocated resource. */
 name|rman_set_bustag
 argument_list|(
 name|res
@@ -4287,19 +4287,14 @@ name|res
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|SYS_RES_IOPORT
-condition|)
 name|rman_set_bushandle
 argument_list|(
 name|res
 argument_list|,
+name|rman_get_bushandle
+argument_list|(
 name|res
-operator|->
-name|r_start
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* If requested, activate the resource using the parent's method. */
