@@ -4481,12 +4481,9 @@ name|ip_dst
 expr_stmt|;
 name|plen
 operator|=
-name|ntohs
-argument_list|(
 name|ip
 operator|->
 name|ip_len
-argument_list|)
 expr_stmt|;
 block|}
 else|else
