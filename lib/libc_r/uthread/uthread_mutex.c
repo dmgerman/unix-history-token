@@ -2094,10 +2094,6 @@ argument_list|,
 name|_thread_run
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
-name|EINTR
-expr_stmt|;
 block|}
 comment|/* Unlock the mutex structure: */
 name|_SPINUNLOCK
@@ -2584,7 +2580,23 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 					 * Allow the new owner of the mutex to 					 * run: 					 */
+comment|/* 					 * Unless the new owner of the mutex is 					 * currently suspended, allow the owner 					 * to run.  If the thread is suspended, 					 * make a note that the thread isn't in 					 * a wait queue any more. 					 */
+if|if
+condition|(
+operator|(
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_owner
+operator|->
+name|state
+operator|!=
+name|PS_SUSPENDED
+operator|)
+condition|)
+block|{
 name|PTHREAD_NEW_STATE
 argument_list|(
 operator|(
@@ -2597,6 +2609,21 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_owner
+operator|->
+name|suspended
+operator|=
+name|SUSP_NOWAIT
+expr_stmt|;
+block|}
 comment|/* 					 * Add the mutex to the threads list of 					 * owned mutexes: 					 */
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -2918,7 +2945,23 @@ operator|)
 operator|->
 name|m_prio
 expr_stmt|;
-comment|/* 					 * Allow the new owner of the mutex to 					 * run: 					 */
+comment|/* 					 * Unless the new owner of the mutex is 					 * currently suspended, allow the owner 					 * to run.  If the thread is suspended, 					 * make a note that the thread isn't in 					 * a wait queue any more. 					 */
+if|if
+condition|(
+operator|(
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_owner
+operator|->
+name|state
+operator|!=
+name|PS_SUSPENDED
+operator|)
+condition|)
+block|{
 name|PTHREAD_NEW_STATE
 argument_list|(
 operator|(
@@ -2931,6 +2974,21 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_owner
+operator|->
+name|suspended
+operator|=
+name|SUSP_NOWAIT
+expr_stmt|;
+block|}
 block|}
 block|}
 break|break;
@@ -3277,7 +3335,23 @@ operator|)
 operator|->
 name|m_prio
 expr_stmt|;
-comment|/* 					 * Allow the new owner of the mutex to 					 * run: 					 */
+comment|/* 					 * Unless the new owner of the mutex is 					 * currently suspended, allow the owner 					 * to run.  If the thread is suspended, 					 * make a note that the thread isn't in 					 * a wait queue any more. 					 */
+if|if
+condition|(
+operator|(
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_owner
+operator|->
+name|state
+operator|!=
+name|PS_SUSPENDED
+operator|)
+condition|)
+block|{
 name|PTHREAD_NEW_STATE
 argument_list|(
 operator|(
@@ -3290,6 +3364,21 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_owner
+operator|->
+name|suspended
+operator|=
+name|SUSP_NOWAIT
+expr_stmt|;
+block|}
 block|}
 block|}
 break|break;
