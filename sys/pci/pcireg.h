@@ -1059,13 +1059,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCIS_SERIALBUS
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCIS_SERIALBUS
+name|PCIS_SERIALBUS_SMBUS
+value|0x05
 end_define
 
 begin_define
