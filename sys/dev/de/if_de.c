@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.86 1999/06/01 19:17:59 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.108 1999/07/06 19:23:23 des Exp $ */
+comment|/*	$Id: if_de.c,v 1.109 1999/08/09 12:29:29 peter Exp $ */
 end_comment
 
 begin_comment
@@ -135,65 +135,6 @@ name|__FreeBSD__
 argument_list|)
 end_if
 
-begin_comment
-comment|/* In case somebody is trying to run this on an older 2.2 or 3.0 */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD_version
-end_ifndef
-
-begin_comment
-comment|/* defined in sys/param.h on current code */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD__
-operator|>=
-literal|3
-end_if
-
-begin_define
-define|#
-directive|define
-name|__FreeBSD_version
-value|300000
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__FreeBSD_version
-value|200000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300000
-end_if
-
 begin_include
 include|#
 directive|include
@@ -205,11 +146,6 @@ include|#
 directive|include
 file|"opt_ipx.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -16472,10 +16408,6 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|300000
 name|struct
 name|ifmultiaddr
 modifier|*
@@ -16566,10 +16498,6 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|300000
 name|multicnt
 operator|=
 literal|0
@@ -16693,10 +16621,6 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|300000
 for|for
 control|(
 name|ifma
@@ -17190,10 +17114,6 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|300000
 for|for
 control|(
 name|ifma
@@ -21104,10 +21024,6 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|300000
 argument|tulip_addr_filter(sc);
 comment|/* reset multicast filtering */
 argument|tulip_init(sc); 	    error =
@@ -21418,10 +21334,6 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|300000
 argument|ifp->if_snd.ifq_maxlen = ifqmaxlen;
 endif|#
 directive|endif
@@ -22016,11 +21928,6 @@ parameter_list|(
 name|r
 parameter_list|)
 value|pci_conf_read(config_id, (r))
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300000
 define|#
 directive|define
 name|PCI_GETBUSDEVINFO
@@ -22031,20 +21938,6 @@ value|((void)((sc)->tulip_pci_busno = (config_id->bus),
 comment|/* XXX */
 value|\ 					(sc)->tulip_pci_devno = (config_id->slot)))
 comment|/* XXX */
-else|#
-directive|else
-define|#
-directive|define
-name|PCI_GETBUSDEVINFO
-parameter_list|(
-name|sc
-parameter_list|)
-value|((void)((sc)->tulip_pci_busno = ((config_id.cfg1>> 16)& 0xFF),
-comment|/* XXX */
-value|\ 					(sc)->tulip_pci_devno = ((config_id.cfg1>> 11)& 0x1F)))
-comment|/* XXX */
-endif|#
-directive|endif
 endif|#
 directive|endif
 if|#

@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_devar.h,v 1.32 1999/04/01 14:55:25 tsubai Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_devar.h,v 1.14 1999/07/06 19:23:25 des Exp $ */
+comment|/*	$Id: if_devar.h,v 1.15 1999/08/08 19:56:06 peter Exp $ */
 end_comment
 
 begin_comment
@@ -201,32 +201,6 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|__FreeBSD_version
-operator|<
-literal|300000
-end_if
-
-begin_typedef
-typedef|typedef
-name|u_long
-name|uintptr_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
 name|__NetBSD__
 argument_list|)
 end_if
@@ -238,10 +212,6 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|300000
 end_if
 
 begin_typedef
@@ -3733,37 +3703,12 @@ name|ifnet_ret_t
 typedef|;
 end_typedef
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300000
-end_if
-
 begin_typedef
 typedef|typedef
 name|u_long
 name|ioctl_cmd_t
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|int
-name|ioctl_cmd_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
