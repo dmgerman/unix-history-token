@@ -5820,8 +5820,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 name|SPP_FMT
 literal|"cisco unknown packet type: 0x%lx\n"
 argument_list|,
@@ -6675,8 +6678,11 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|">\n"
 argument_list|)
 expr_stmt|;
@@ -6867,8 +6873,11 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|">\n"
 argument_list|)
 expr_stmt|;
@@ -6926,8 +6935,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 name|SPP_FMT
 literal|"%s invalid conf-req length %d\n"
 argument_list|,
@@ -7228,8 +7240,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 name|SPP_FMT
 literal|"%s id mismatch 0x%x != 0x%x\n"
 argument_list|,
@@ -7497,8 +7512,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 name|SPP_FMT
 literal|"%s id mismatch 0x%x != 0x%x\n"
 argument_list|,
@@ -8228,8 +8246,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 name|SPP_FMT
 literal|"lcp echo req but lcp closed\n"
 argument_list|,
@@ -8257,8 +8278,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 name|SPP_FMT
 literal|"invalid lcp echo request "
 literal|"packet length: %d bytes\n"
@@ -8377,8 +8401,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 name|SPP_FMT
 literal|"got lcp echo req, sending echo rep\n"
 argument_list|,
@@ -8455,8 +8482,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 name|SPP_FMT
 literal|"lcp invalid echo reply "
 literal|"packet length: %d bytes\n"
@@ -8475,8 +8505,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 name|SPP_FMT
 literal|"lcp got echo rep\n"
 argument_list|,
@@ -8538,8 +8571,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 name|SPP_FMT
 literal|"%s send code-rej for 0x%x\n"
 argument_list|,
@@ -9922,8 +9958,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"(incoming call)\n"
 argument_list|)
 expr_stmt|;
@@ -9946,8 +9985,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -10331,8 +10373,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" %s "
 argument_list|,
 name|sppp_lcp_opt_name
@@ -10375,8 +10420,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[invalid] "
 argument_list|)
 expr_stmt|;
@@ -10403,8 +10451,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[invalid] "
 argument_list|)
 expr_stmt|;
@@ -10423,8 +10474,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[invalid] "
 argument_list|)
 expr_stmt|;
@@ -10464,8 +10518,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[invalid chap len] "
 argument_list|)
 expr_stmt|;
@@ -10487,8 +10544,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[not configured] "
 argument_list|)
 expr_stmt|;
@@ -10508,8 +10568,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[rej] "
 argument_list|)
 expr_stmt|;
@@ -10552,8 +10615,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" send conf-rej\n"
 argument_list|)
 expr_stmt|;
@@ -10583,8 +10649,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -10656,8 +10725,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" %s "
 argument_list|,
 name|sppp_lcp_opt_name
@@ -10726,8 +10798,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"0x%lx "
 argument_list|,
 name|nmagic
@@ -10808,8 +10883,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[glitch] "
 argument_list|)
 expr_stmt|;
@@ -10899,8 +10977,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[empty] "
 argument_list|)
 expr_stmt|;
@@ -10910,8 +10991,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[non-empty] "
 argument_list|)
 expr_stmt|;
@@ -10965,8 +11049,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"%lu "
 argument_list|,
 name|sp
@@ -11012,8 +11099,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[mine %s != his %s] "
 argument_list|,
 name|sppp_proto_name
@@ -11075,8 +11165,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[chap not MD5] "
 argument_list|)
 expr_stmt|;
@@ -11145,8 +11238,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" max_failure (%d) exceeded, "
 literal|"send conf-rej\n"
 argument_list|,
@@ -11181,8 +11277,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" send conf-nak\n"
 argument_list|)
 expr_stmt|;
@@ -11214,8 +11313,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" send conf-ack\n"
 argument_list|)
 expr_stmt|;
@@ -11384,8 +11486,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" %s "
 argument_list|,
 name|sppp_lcp_opt_name
@@ -11478,8 +11583,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[don't insist on auth "
 literal|"for callout]"
 argument_list|)
@@ -11503,8 +11611,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[access denied]\n"
 argument_list|)
 expr_stmt|;
@@ -11522,8 +11633,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -11654,8 +11768,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" %s "
 argument_list|,
 name|sppp_lcp_opt_name
@@ -11754,8 +11871,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"magic glitch "
 argument_list|)
 expr_stmt|;
@@ -11811,8 +11931,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"%lu "
 argument_list|,
 name|magic
@@ -11858,8 +11981,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"%d "
 argument_list|,
 name|mru
@@ -11909,8 +12035,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[access denied]\n"
 argument_list|)
 expr_stmt|;
@@ -11928,8 +12057,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -13490,8 +13622,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" %s "
 argument_list|,
 name|sppp_ipcp_opt_name
@@ -13531,8 +13666,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[invalid] "
 argument_list|)
 expr_stmt|;
@@ -13543,8 +13681,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[rej] "
 argument_list|)
 expr_stmt|;
@@ -13587,8 +13728,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" send conf-rej\n"
 argument_list|)
 expr_stmt|;
@@ -13618,8 +13762,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -13703,8 +13850,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" %s "
 argument_list|,
 name|sppp_ipcp_opt_name
@@ -13774,8 +13924,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"%s [ack] "
 argument_list|,
 name|sppp_dotted_quad
@@ -13807,14 +13960,20 @@ name|desiredaddr
 operator|==
 literal|0
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[addr requested] "
 argument_list|)
 expr_stmt|;
 else|else
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"%s [not agreed] "
 argument_list|,
 name|sppp_dotted_quad
@@ -13966,8 +14125,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"still need hisaddr "
 argument_list|)
 expr_stmt|;
@@ -13981,8 +14143,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" send conf-nak\n"
 argument_list|)
 expr_stmt|;
@@ -14010,8 +14175,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" send conf-ack\n"
 argument_list|)
 expr_stmt|;
@@ -14182,8 +14350,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" %s "
 argument_list|,
 name|sppp_ipcp_opt_name
@@ -14223,8 +14394,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -14372,8 +14546,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" %s "
 argument_list|,
 name|sppp_ipcp_opt_name
@@ -14451,8 +14628,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[wantaddr %s] "
 argument_list|,
 name|sppp_dotted_quad
@@ -14484,8 +14664,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"[agree] "
 argument_list|)
 expr_stmt|;
@@ -14506,8 +14689,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -15011,8 +15197,11 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|">\n"
 argument_list|)
 expr_stmt|;
@@ -15068,8 +15257,11 @@ argument_list|,
 name|name_len
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" value-size=%d value="
 argument_list|,
 name|value_len
@@ -15082,8 +15274,11 @@ argument_list|,
 name|value_len
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|">\n"
 argument_list|)
 expr_stmt|;
@@ -15235,8 +15430,11 @@ operator|>
 literal|4
 condition|)
 block|{
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|": "
 argument_list|)
 expr_stmt|;
@@ -15258,8 +15456,11 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -15364,8 +15565,11 @@ operator|>
 literal|4
 condition|)
 block|{
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|": "
 argument_list|)
 expr_stmt|;
@@ -15387,8 +15591,11 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -15512,8 +15719,11 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|">\n"
 argument_list|)
 expr_stmt|;
@@ -15616,8 +15826,11 @@ argument_list|,
 name|name_len
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" != expected "
 argument_list|)
 expr_stmt|;
@@ -15641,8 +15854,11 @@ name|AUTHNAMELEN
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -15707,8 +15923,11 @@ argument_list|,
 name|name_len
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" value-size=%d value="
 argument_list|,
 name|value_len
@@ -15721,8 +15940,11 @@ argument_list|,
 name|value_len
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|">\n"
 argument_list|)
 expr_stmt|;
@@ -16032,8 +16254,11 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|">\n"
 argument_list|)
 expr_stmt|;
@@ -16517,16 +16742,22 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"next re-challenge in %d seconds\n"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
 else|else
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"re-challenging supressed\n"
 argument_list|)
 expr_stmt|;
@@ -17105,8 +17336,11 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|">\n"
 argument_list|)
 expr_stmt|;
@@ -17173,8 +17407,11 @@ argument_list|,
 name|name_len
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" passwd="
 argument_list|)
 expr_stmt|;
@@ -17189,8 +17426,11 @@ argument_list|,
 name|passwd_len
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|">\n"
 argument_list|)
 expr_stmt|;
@@ -17455,8 +17695,11 @@ operator|&&
 name|name_len
 condition|)
 block|{
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|": "
 argument_list|)
 expr_stmt|;
@@ -17476,8 +17719,11 @@ name|name_len
 argument_list|)
 expr_stmt|;
 block|}
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -17610,8 +17856,11 @@ operator|&&
 name|name_len
 condition|)
 block|{
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|": "
 argument_list|)
 expr_stmt|;
@@ -17631,8 +17880,11 @@ name|name_len
 argument_list|)
 expr_stmt|;
 block|}
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -17706,8 +17958,11 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|">\n"
 argument_list|)
 expr_stmt|;
@@ -18779,8 +19034,11 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|">\n"
 argument_list|)
 expr_stmt|;
@@ -20967,8 +21225,11 @@ if|if
 condition|(
 name|len
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" %*D"
 argument_list|,
 name|len
@@ -21023,16 +21284,22 @@ name|c
 operator|>
 literal|'~'
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\\x%x"
 argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
 else|else
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"%c"
 argument_list|,
 name|c

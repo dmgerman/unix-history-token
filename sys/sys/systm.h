@@ -513,28 +513,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|addlog
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|__printflike
-argument_list|(
-literal|1
-argument_list|,
-literal|2
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|kvprintf
 name|__P
 argument_list|(
@@ -572,7 +550,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|log
 name|__P
 argument_list|(
