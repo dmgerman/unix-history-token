@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.31 (Berkeley) %G%"
+literal|"@(#)mount.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1869,11 +1869,45 @@ if|if
 condition|(
 name|flags
 operator|&
-name|M_UPDATE
+name|M_QUOTA
 condition|)
 name|printf
 argument_list|(
-literal|" (update only)"
+literal|" (with quotas)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|M_LOCAL
+condition|)
+name|printf
+argument_list|(
+literal|" (local)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|M_EXPORTED
+condition|)
+if|if
+condition|(
+name|flags
+operator|&
+name|M_EXRDONLY
+condition|)
+name|printf
+argument_list|(
+literal|" (NFS exported read-only)"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" (NFS exported)"
 argument_list|)
 expr_stmt|;
 name|printf
