@@ -4224,7 +4224,7 @@ name|fprintf
 argument_list|(
 name|asm_out_file
 argument_list|,
-literal|"\t%s ULEB128 number - value = %u"
+literal|"\t%s ULEB128 number - value = %lu"
 argument_list|,
 name|ASM_COMMENT_START
 argument_list|,
@@ -4386,7 +4386,7 @@ name|fprintf
 argument_list|(
 name|asm_out_file
 argument_list|,
-literal|"\t%s SLEB128 number - value = %d"
+literal|"\t%s SLEB128 number - value = %ld"
 argument_list|,
 name|ASM_COMMENT_START
 argument_list|,

@@ -4984,7 +4984,7 @@ literal|'\0'
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s %3u "
+literal|"%s %3lu "
 argument_list|,
 name|mbuf
 argument_list|,
@@ -5070,7 +5070,7 @@ name|CP_IFBLK
 condition|)
 name|printf
 argument_list|(
-literal|"%3u, %3u "
+literal|"%3lu, %3lu "
 argument_list|,
 name|file_hdr
 operator|->

@@ -2888,7 +2888,7 @@ parameter_list|,
 name|VALUE
 parameter_list|)
 define|\
-value|do { long l[2];								\      REAL_VALUE_TO_TARGET_DOUBLE (VALUE, l);				\      if (sizeof (int) == sizeof (long))					\        fprintf (FILE, "%s 0x%x,0x%x\n", ASM_LONG, l[0], l[1]);		\      else								\        fprintf (FILE, "%s 0x%lx,0x%lx\n", ASM_LONG, l[0], l[1]);	\    } while (0)
+value|do { long l[2];								\      REAL_VALUE_TO_TARGET_DOUBLE (VALUE, l);				\      if (sizeof (int) == sizeof (long))					\        fprintf (FILE, "%s 0x%x,0x%x\n", ASM_LONG, (int) l[0], (int) l[1]); \      else								\        fprintf (FILE, "%s 0x%lx,0x%lx\n", ASM_LONG, l[0], l[1]);	\    } while (0)
 end_define
 
 begin_comment
@@ -2911,7 +2911,7 @@ parameter_list|,
 name|VALUE
 parameter_list|)
 define|\
-value|do { long l[3];						\      REAL_VALUE_TO_TARGET_LONG_DOUBLE (VALUE, l);	\      if (sizeof (int) == sizeof (long))			\        fprintf (FILE, "%s 0x%x,0x%x,0x%x\n", ASM_LONG, l[0], l[1], l[2]); \      else						\        fprintf (FILE, "%s 0x%lx,0x%lx,0x%lx\n", ASM_LONG, l[0], l[1], l[2]); \    } while (0)
+value|do { long l[3];						\      REAL_VALUE_TO_TARGET_LONG_DOUBLE (VALUE, l);	\      if (sizeof (int) == sizeof (long))			\        fprintf (FILE, "%s 0x%x,0x%x,0x%x\n", ASM_LONG,	\ 		(int) l[0], (int) l[1], (int) l[2]);	\      else						\        fprintf (FILE, "%s 0x%lx,0x%lx,0x%lx\n", ASM_LONG, l[0], l[1], l[2]); \    } while (0)
 end_define
 
 begin_comment
@@ -2928,7 +2928,7 @@ parameter_list|,
 name|VALUE
 parameter_list|)
 define|\
-value|do { long l;						\      REAL_VALUE_TO_TARGET_SINGLE (VALUE, l);		\      if (sizeof (int) == sizeof (long))			\        fprintf ((FILE), "%s 0x%x\n", ASM_LONG, l);	\      else						\        fprintf ((FILE), "%s 0x%lx\n", ASM_LONG, l);	\    } while (0)
+value|do { long l;						\      REAL_VALUE_TO_TARGET_SINGLE (VALUE, l);		\      if (sizeof (int) == sizeof (long))			\        fprintf ((FILE), "%s 0x%x\n", ASM_LONG, (int) l); \      else						\        fprintf ((FILE), "%s 0x%lx\n", ASM_LONG, l);	\    } while (0)
 end_define
 
 begin_comment

@@ -11069,7 +11069,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"0x%x"
+literal|"0x%lx"
 argument_list|,
 name|l
 argument_list|)
