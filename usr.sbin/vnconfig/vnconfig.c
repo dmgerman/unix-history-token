@@ -2073,6 +2073,12 @@ name|l
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Close the device now, as we may want to mount it. 	 */
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Enable special functions on the device 	 */
 if|if
 condition|(
@@ -2193,11 +2199,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* done: */
-name|fclose
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
 name|fflush
 argument_list|(
 name|stdout
