@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)symorder.c	3.2 (Berkeley) %G%; /*  * symorder - reorder symbol table  */ #include<stdio.h> #include<pagsiz.h> #include<sys/types.h> #include<stat.h> #include<a.out.h>  #define SPACE 100  struct	nlist order[SPACE];  char	*savestr(); struct	nlist nl1, nl2; struct	exec exec; FILE	*strf; off_t	sa, ss; struct	stat stb; int	nsym = 0; int	symfound = 0; char	asym[BUFSIZ];  main(argc, argv) 	char **argv; { 	register struct nlist *p, *q; 	register FILE *f; 	register int na, i, j; 	int maxlen; 	int n, o;  	if(argc != 3) { 		fprintf(stderr, "
+literal|"@(#)symorder.c	4.1 (Berkeley) %G%; /*  * symorder - reorder symbol table  */ #include<stdio.h> #include<pagsiz.h> #include<sys/types.h> #include<stat.h> #include<a.out.h>  #define SPACE 100  struct	nlist order[SPACE];  char	*savestr(); struct	nlist nl1, nl2; struct	exec exec; FILE	*strf; off_t	sa, ss; struct	stat stb; int	nsym = 0; int	symfound = 0; char	asym[BUFSIZ];  main(argc, argv) 	char **argv; { 	register struct nlist *p, *q; 	register FILE *f; 	register int na, i, j; 	int maxlen; 	int n, o;  	if(argc != 3) { 		fprintf(stderr, "
 name|Usage
 operator|:
 name|symorder
