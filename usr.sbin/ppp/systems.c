@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.40 1998/10/31 17:38:47 brian Exp $  *  *  TODO:  */
+comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.41 1999/02/02 09:35:30 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -1198,6 +1198,10 @@ name|SYSTEM_EXEC
 value|3
 end_define
 
+begin_comment
+comment|/* Returns -2 for ``file not found'' and -1 for ``label not found'' */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1345,10 +1349,8 @@ name|filename
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|-
-literal|1
-operator|)
+literal|2
 return|;
 block|}
 name|log_Printf
@@ -1795,6 +1797,8 @@ name|int
 name|def
 decl_stmt|,
 name|how
+decl_stmt|,
+name|rs
 decl_stmt|;
 name|def
 operator|=
@@ -1829,8 +1833,8 @@ name|modereq
 operator|=
 name|mode
 expr_stmt|;
-if|if
-condition|(
+name|rs
+operator|=
 name|ReadSystem
 argument_list|(
 name|NULL
@@ -1845,19 +1849,33 @@ name|NULL
 argument_list|,
 name|how
 argument_list|)
-operator|!=
-literal|0
-operator|&&
-name|def
-condition|)
-return|return
-literal|"Configuration label not found"
-return|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|def
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+name|rs
+operator|==
+operator|-
+literal|1
+condition|)
+name|rs
+operator|=
+literal|0
+expr_stmt|;
+comment|/* we don't care that ``default'' doesn't exist */
+if|if
+condition|(
+name|rs
+operator|==
+literal|0
+condition|)
+name|rs
+operator|=
 name|ReadSystem
 argument_list|(
 name|NULL
@@ -1872,12 +1890,31 @@ name|NULL
 argument_list|,
 name|how
 argument_list|)
-operator|!=
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|rs
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 literal|"Configuration label not found"
 return|;
+if|if
+condition|(
+name|rs
+operator|==
+operator|-
+literal|2
+condition|)
+return|return
+name|_PATH_PPP
+literal|"/"
+name|CONFFILE
+literal|": File not found"
+return|;
+block|}
 if|if
 condition|(
 name|how
