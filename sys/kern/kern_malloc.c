@@ -2241,14 +2241,8 @@ literal|0
 init|;
 name|i
 operator|<
-literal|8
-operator|*
-sizeof|sizeof
-argument_list|(
-name|type
-operator|->
-name|ks_size
-argument_list|)
+literal|32
+comment|/* 8 * sizeof(type->ks_size) */
 condition|;
 name|i
 operator|++
