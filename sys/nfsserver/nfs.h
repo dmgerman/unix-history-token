@@ -3242,6 +3242,8 @@ operator|,
 expr|struct
 name|vattr
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
