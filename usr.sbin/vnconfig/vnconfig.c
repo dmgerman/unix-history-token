@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vnconfig.c,v 1.9 1999/03/14 09:20:01 julian Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

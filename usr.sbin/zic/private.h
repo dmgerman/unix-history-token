@@ -16,7 +16,7 @@ comment|/* ** This file is in the public domain, so clarified as of ** 1996-06-0
 end_comment
 
 begin_comment
-comment|/*  * FreeBSD modifications: separate libc's privates from zic's.  * This makes it easier when we need to update one but not the other.  * I have removed all of the ifdef spaghetti which is not relevant to  * zic from this file.  *  *	$Id: private.h,v 1.2 1999/01/21 17:12:49 wollman Exp $  */
+comment|/*  * FreeBSD modifications: separate libc's privates from zic's.  * This makes it easier when we need to update one but not the other.  * I have removed all of the ifdef spaghetti which is not relevant to  * zic from this file.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment

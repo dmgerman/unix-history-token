@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rtprio.c,v 1.6 1998/05/19 20:52:31 dufault Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

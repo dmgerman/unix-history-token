@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tzsetup.c,v 1.13 1999/06/23 03:31:36 mharo Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

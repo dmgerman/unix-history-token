@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pciconf.c,v 1.7 1998/11/12 00:22:30 ken Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

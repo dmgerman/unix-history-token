@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: boot0cfg.c,v 1.5 1999/06/21 14:40:59 rnordier Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

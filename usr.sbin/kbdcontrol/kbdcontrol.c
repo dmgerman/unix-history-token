@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kbdcontrol.c,v 1.26 1999/06/22 14:15:34 yokota Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

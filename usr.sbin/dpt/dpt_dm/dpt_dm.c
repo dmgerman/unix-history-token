@@ -8,7 +8,7 @@ comment|/* dpt_dm.c: Dump a DPT metrics structure */
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_dm.c,v 1.1 1998/08/03 16:43:36 root Exp root $"
+empty|#ident "$FreeBSD$"
 end_empty
 
 begin_include

@@ -8,7 +8,7 @@ comment|/* dpt_ctls.c:  Dunp a the number of configured DPT HBAs */
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_ctls.c,v 1.1 1998/01/26 06:20:39 julian Exp $"
+empty|#ident "$FreeBSD$"
 end_empty
 
 begin_include

@@ -4,7 +4,7 @@ comment|/* Copyright 1993,1994 by Paul Vixie  * All rights reserved  *  * Distri
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_if

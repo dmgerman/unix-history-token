@@ -8,7 +8,7 @@ comment|/* dpt_ctlinfo.c:  Dunp a DPT HBA Information Block */
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_ctlinfo.c,v 1.1 1998/01/26 06:20:37 julian Exp $"
+empty|#ident "$FreeBSD$"
 end_empty
 
 begin_include

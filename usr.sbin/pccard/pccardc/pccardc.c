@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pccardc.c,v 1.7 1998/02/26 14:36:01 hosokawa Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
