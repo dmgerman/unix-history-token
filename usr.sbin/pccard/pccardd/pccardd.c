@@ -825,7 +825,10 @@ block|{
 case|case
 literal|'I'
 case|:
-comment|/* use_kern_irq = 0; */
+name|use_kern_irq
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|'d'
