@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfsm_subs.h	8.1 (Berkeley) 6/16/93  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfsm_subs.h	8.2 (Berkeley) 3/30/95  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NFS_NFSM_SUBS_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NFS_NFSM_SUBS_H_
+end_define
 
 begin_comment
 comment|/*  * These macros do strange and peculiar things to mbuf chains for  * the assistance of the nfs code. To attempt to use them for any  * other purpose will be dangerous. (they make weird assumptions)  */
@@ -95,7 +107,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|{ t1 = mtod(md, caddr_t)+md->m_len-dpos; \ 		if (t1>= (s)) { \ 			(a) = (c)(dpos); \ 			dpos += (s); \ 		} else if (error = nfsm_disct(&md,&dpos, (s), t1,&cp2)) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} else { \ 			(a) = (c)cp2; \ 		} }
+value|{ t1 = mtod(md, caddr_t)+md->m_len-dpos; \ 		if (t1>= (s)) { \ 			(a) = (c)(dpos); \ 			dpos += (s); \ 		} else if (t1 = nfsm_disct(&md,&dpos, (s), t1,&cp2)) { \ 			error = t1; \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} else { \ 			(a) = (c)cp2; \ 		} }
 end_define
 
 begin_define
@@ -104,9 +116,11 @@ directive|define
 name|nfsm_fhtom
 parameter_list|(
 name|v
+parameter_list|,
+name|v3
 parameter_list|)
 define|\
-value|nfsm_build(cp,caddr_t,NFSX_FH); \ 		bcopy((caddr_t)&(VTONFS(v)->n_fh), cp, NFSX_FH)
+value|{ if (v3) { \ 			t2 = nfsm_rndup(VTONFS(v)->n_fhsize) + NFSX_UNSIGNED; \ 			if (t2<= M_TRAILINGSPACE(mb)) { \ 				nfsm_build(tl, u_long *, t2); \ 				*tl++ = txdr_unsigned(VTONFS(v)->n_fhsize); \ 				*(tl + ((t2>>2) - 2)) = 0; \ 				bcopy((caddr_t)VTONFS(v)->n_fhp,(caddr_t)tl, \ 					VTONFS(v)->n_fhsize); \ 			} else if (t2 = nfsm_strtmbuf(&mb,&bpos, \ 				(caddr_t)VTONFS(v)->n_fhp, VTONFS(v)->n_fhsize)) { \ 				error = t2; \ 				m_freem(mreq); \ 				goto nfsmout; \ 			} \ 		} else { \ 			nfsm_build(cp, caddr_t, NFSX_V2FH); \ 			bcopy((caddr_t)VTONFS(v)->n_fhp, cp, NFSX_V2FH); \ 		} }
 end_define
 
 begin_define
@@ -115,9 +129,22 @@ directive|define
 name|nfsm_srvfhtom
 parameter_list|(
 name|f
+parameter_list|,
+name|v3
 parameter_list|)
 define|\
-value|nfsm_build(cp,caddr_t,NFSX_FH); \ 		bcopy((caddr_t)(f), cp, NFSX_FH)
+value|{ if (v3) { \ 			nfsm_build(tl, u_long *, NFSX_UNSIGNED + NFSX_V3FH); \ 			*tl++ = txdr_unsigned(NFSX_V3FH); \ 			bcopy((caddr_t)(f), (caddr_t)tl, NFSX_V3FH); \ 		} else { \ 			nfsm_build(cp, caddr_t, NFSX_V2FH); \ 			bcopy((caddr_t)(f), cp, NFSX_V2FH); \ 		} }
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_srvpostop_fh
+parameter_list|(
+name|f
+parameter_list|)
+define|\
+value|{ nfsm_build(tl, u_long *, 2 * NFSX_UNSIGNED + NFSX_V3FH); \ 		*tl++ = nfs_true; \ 		*tl++ = txdr_unsigned(NFSX_V3FH); \ 		bcopy((caddr_t)(f), (caddr_t)tl, NFSX_V3FH); \ 		}
 end_define
 
 begin_define
@@ -128,9 +155,28 @@ parameter_list|(
 name|d
 parameter_list|,
 name|v
+parameter_list|,
+name|v3
+parameter_list|,
+name|f
 parameter_list|)
 define|\
-value|{ struct nfsnode *np; nfsv2fh_t *fhp; \ 		nfsm_dissect(fhp,nfsv2fh_t *,NFSX_FH); \ 		if (error = nfs_nget((d)->v_mount, fhp,&np)) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} \ 		(v) = NFSTOV(np); \ 		nfsm_loadattr(v, (struct vattr *)0); \ 		}
+value|{ struct nfsnode *ttnp; nfsfh_t *ttfhp; int ttfhsize; \ 		if (v3) { \ 			nfsm_dissect(tl, u_long *, NFSX_UNSIGNED); \ 			(f) = fxdr_unsigned(int, *tl); \ 		} else \ 			(f) = 1; \ 		if (f) { \ 			nfsm_getfh(ttfhp, ttfhsize, (v3)); \ 			if (t1 = nfs_nget((d)->v_mount, ttfhp, ttfhsize, \&ttnp)) { \ 				error = t1; \ 				m_freem(mrep); \ 				goto nfsmout; \ 			} \ 			(v) = NFSTOV(ttnp); \ 		} \ 		if (v3) { \ 			nfsm_dissect(tl, u_long *, NFSX_UNSIGNED); \ 			if (f) \ 				(f) = fxdr_unsigned(int, *tl); \ 			else if (fxdr_unsigned(int, *tl)) \ 				nfsm_adv(NFSX_V3FATTR); \ 		} \ 		if (f) \ 			nfsm_loadattr((v), (struct vattr *)0); \ 		}
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_getfh
+parameter_list|(
+name|f
+parameter_list|,
+name|s
+parameter_list|,
+name|v3
+parameter_list|)
+define|\
+value|{ if (v3) { \ 			nfsm_dissect(tl, u_long *, NFSX_UNSIGNED); \ 			if (((s) = fxdr_unsigned(int, *tl))<= 0 || \ 				(s)> NFSX_V3FHMAX) { \ 				m_freem(mrep); \ 				error = EBADRPC; \ 				goto nfsmout; \ 			} \ 		} else \ 			(s) = NFSX_V2FH; \ 		nfsm_dissect((f), nfsfh_t *, nfsm_rndup(s)); }
 end_define
 
 begin_define
@@ -143,7 +189,68 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|{ struct vnode *tvp = (v); \ 		if (error = nfs_loadattrcache(&tvp,&md,&dpos, (a))) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} \ 		(v) = tvp; }
+value|{ struct vnode *ttvp = (v); \ 		if (t1 = nfs_loadattrcache(&ttvp,&md,&dpos, (a))) { \ 			error = t1; \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} \ 		(v) = ttvp; }
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_postop_attr
+parameter_list|(
+name|v
+parameter_list|,
+name|f
+parameter_list|)
+define|\
+value|{ struct vnode *ttvp = (v); \ 		nfsm_dissect(tl, u_long *, NFSX_UNSIGNED); \ 		if ((f) = fxdr_unsigned(int, *tl)) { \ 			if (t1 = nfs_loadattrcache(&ttvp,&md,&dpos, \ 				(struct vattr *)0)) { \ 				error = t1; \ 				(f) = 0; \ 				m_freem(mrep); \ 				goto nfsmout; \ 			} \ 			(v) = ttvp; \ 		} }
+end_define
+
+begin_comment
+comment|/* Used as (f) for nfsm_wcc_data() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSV3_WCCRATTR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSV3_WCCCHK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_wcc_data
+parameter_list|(
+name|v
+parameter_list|,
+name|f
+parameter_list|)
+define|\
+value|{ int ttattrf, ttretf = 0; \ 		nfsm_dissect(tl, u_long *, NFSX_UNSIGNED); \ 		if (*tl == nfs_true) { \ 			nfsm_dissect(tl, u_long *, 6 * NFSX_UNSIGNED); \ 			if (f) \ 				ttretf = (VTONFS(v)->n_mtime == \ 					fxdr_unsigned(u_long, *(tl + 2))); \ 		} \ 		nfsm_postop_attr((v), ttattrf); \ 		if (f) { \ 			(f) = ttretf; \ 		} else { \ 			(f) = ttattrf; \ 		} }
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_v3sattr
+parameter_list|(
+name|s
+parameter_list|,
+name|a
+parameter_list|,
+name|u
+parameter_list|,
+name|g
+parameter_list|)
+define|\
+value|{ (s)->sa_modetrue = nfs_true; \ 		(s)->sa_mode = vtonfsv3_mode((a)->va_mode); \ 		(s)->sa_uidtrue = nfs_true; \ 		(s)->sa_uid = txdr_unsigned(u); \ 		(s)->sa_gidtrue = nfs_true; \ 		(s)->sa_gid = txdr_unsigned(g); \ 		(s)->sa_sizefalse = nfs_false; \ 		(s)->sa_atimetype = txdr_unsigned(NFSV3SATTRTIME_TOCLIENT); \ 		txdr_nfsv3time(&(a)->va_atime,&(s)->sa_atime); \ 		(s)->sa_mtimetype = txdr_unsigned(NFSV3SATTRTIME_TOCLIENT); \ 		txdr_nfsv3time(&(a)->va_mtime,&(s)->sa_mtime); \ 		}
 end_define
 
 begin_define
@@ -175,6 +282,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|nfsm_srvnamesiz
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|{ nfsm_dissect(tl,u_long *,NFSX_UNSIGNED); \ 		if (((s) = fxdr_unsigned(long,*tl))> NFS_MAXNAMLEN) \ 			error = NFSERR_NAMETOL; \ 		if ((s)<= 0) \ 			error = EBADRPC; \ 		if (error) \ 			nfsm_reply(0); \ 		}
+end_define
+
+begin_define
+define|#
+directive|define
 name|nfsm_mtouio
 parameter_list|(
 name|p
@@ -182,7 +300,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|if ((s)> 0&& \ 		   (error = nfsm_mbuftouio(&md,(p),(s),&dpos))) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		}
+value|if ((s)> 0&& \ 		   (t1 = nfsm_mbuftouio(&md,(p),(s),&dpos))) { \ 			error = t1; \ 			m_freem(mrep); \ 			goto nfsmout; \ 		}
 end_define
 
 begin_define
@@ -195,7 +313,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|if (error = nfsm_uiotombuf((p),&mb,(s),&bpos)) { \ 			m_freem(mreq); \ 			goto nfsmout; \ 		}
+value|if (t1 = nfsm_uiotombuf((p),&mb,(s),&bpos)) { \ 			error = t1; \ 			m_freem(mreq); \ 			goto nfsmout; \ 		}
 end_define
 
 begin_define
@@ -244,7 +362,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|if (error = nfs_request((v), mreq, (t), (p), \ 		   (c),&mrep,&md,&dpos)) \ 			goto nfsmout
+value|if (error = nfs_request((v), mreq, (t), (p), \ 		   (c),&mrep,&md,&dpos)) { \ 			if (error& NFSERR_RETERR) \ 				error&= ~NFSERR_RETERR; \ 			else \ 				goto nfsmout; \ 		}
 end_define
 
 begin_define
@@ -259,7 +377,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|if ((s)> (m)) { \ 			m_freem(mreq); \ 			error = ENAMETOOLONG; \ 			goto nfsmout; \ 		} \ 		t2 = nfsm_rndup(s)+NFSX_UNSIGNED; \ 		if (t2<= M_TRAILINGSPACE(mb)) { \ 			nfsm_build(tl,u_long *,t2); \ 			*tl++ = txdr_unsigned(s); \ 			*(tl+((t2>>2)-2)) = 0; \ 			bcopy((caddr_t)(a), (caddr_t)tl, (s)); \ 		} else if (error = nfsm_strtmbuf(&mb,&bpos, (a), (s))) { \ 			m_freem(mreq); \ 			goto nfsmout; \ 		}
+value|if ((s)> (m)) { \ 			m_freem(mreq); \ 			error = ENAMETOOLONG; \ 			goto nfsmout; \ 		} \ 		t2 = nfsm_rndup(s)+NFSX_UNSIGNED; \ 		if (t2<= M_TRAILINGSPACE(mb)) { \ 			nfsm_build(tl,u_long *,t2); \ 			*tl++ = txdr_unsigned(s); \ 			*(tl+((t2>>2)-2)) = 0; \ 			bcopy((caddr_t)(a), (caddr_t)tl, (s)); \ 		} else if (t2 = nfsm_strtmbuf(&mb,&bpos, (a), (s))) { \ 			error = t2; \ 			m_freem(mreq); \ 			goto nfsmout; \ 		}
 end_define
 
 begin_define
@@ -278,7 +396,20 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|{ \ 		nfsd->nd_repstat = error; \ 		if (error) \ 		   (void) nfs_rephead(0, nfsd, error, cache,&frev, \ 			mrq,&mb,&bpos); \ 		else \ 		   (void) nfs_rephead((s), nfsd, error, cache,&frev, \ 			mrq,&mb,&bpos); \ 		m_freem(mrep); \ 		mreq = *mrq; \ 		if (error) \ 			return(0); \ 		}
+value|{ \ 		nfsd->nd_repstat = error; \ 		if (error&& !(nfsd->nd_flag& ND_NFSV3)) \ 		   (void) nfs_rephead(0, nfsd, slp, error, cache,&frev, \ 			mrq,&mb,&bpos); \ 		else \ 		   (void) nfs_rephead((s), nfsd, slp, error, cache,&frev, \ 			mrq,&mb,&bpos); \ 		m_freem(mrep); \ 		mreq = *mrq; \ 		if (error&& (!(nfsd->nd_flag& ND_NFSV3) || \ 			error == EBADRPC)) \ 			return(0); \ 		}
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_writereply
+parameter_list|(
+name|s
+parameter_list|,
+name|v3
+parameter_list|)
+define|\
+value|{ \ 		nfsd->nd_repstat = error; \ 		if (error&& !(v3)) \ 		   (void) nfs_rephead(0, nfsd, slp, error, cache,&frev, \&mreq,&mb,&bpos); \ 		else \ 		   (void) nfs_rephead((s), nfsd, slp, error, cache,&frev, \&mreq,&mb,&bpos); \ 		}
 end_define
 
 begin_define
@@ -289,7 +420,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|t1 = mtod(md, caddr_t)+md->m_len-dpos; \ 		if (t1>= (s)) { \ 			dpos += (s); \ 		} else if (error = nfs_adv(&md,&dpos, (s), t1)) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		}
+value|{ t1 = mtod(md, caddr_t)+md->m_len-dpos; \ 		if (t1>= (s)) { \ 			dpos += (s); \ 		} else if (t1 = nfs_adv(&md,&dpos, (s), t1)) { \ 			error = t1; \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} }
 end_define
 
 begin_define
@@ -300,7 +431,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|nfsm_dissect(tl, u_long *, NFSX_FH); \ 		bcopy((caddr_t)tl, (caddr_t)f, NFSX_FH)
+value|{ if (nfsd->nd_flag& ND_NFSV3) { \ 			nfsm_dissect(tl, u_long *, NFSX_UNSIGNED); \ 			if (fxdr_unsigned(int, *tl) != NFSX_V3FH) { \ 				error = EBADRPC; \ 				nfsm_reply(0); \ 			} \ 		} \ 		nfsm_dissect(tl, u_long *, NFSX_V3FH); \ 		bcopy((caddr_t)tl, (caddr_t)(f), NFSX_V3FH); \ 		if ((nfsd->nd_flag& ND_NFSV3) == 0) \ 			nfsm_adv(NFSX_V2FH - NFSX_V3FH); \ 		}
 end_define
 
 begin_define
@@ -315,9 +446,60 @@ begin_define
 define|#
 directive|define
 name|nfsm_srvfillattr
+parameter_list|(
+name|a
+parameter_list|,
+name|f
+parameter_list|)
 define|\
-value|fp->fa_type = vtonfs_type(vap->va_type); \ 	fp->fa_mode = vtonfs_mode(vap->va_type, vap->va_mode); \ 	fp->fa_nlink = txdr_unsigned(vap->va_nlink); \ 	fp->fa_uid = txdr_unsigned(vap->va_uid); \ 	fp->fa_gid = txdr_unsigned(vap->va_gid); \ 	if (nfsd->nd_nqlflag == NQL_NOVAL) { \ 		fp->fa_nfsblocksize = txdr_unsigned(vap->va_blocksize); \ 		if (vap->va_type == VFIFO) \ 			fp->fa_nfsrdev = 0xffffffff; \ 		else \ 			fp->fa_nfsrdev = txdr_unsigned(vap->va_rdev); \ 		fp->fa_nfsfsid = txdr_unsigned(vap->va_fsid); \ 		fp->fa_nfsfileid = txdr_unsigned(vap->va_fileid); \ 		fp->fa_nfssize = txdr_unsigned(vap->va_size); \ 		fp->fa_nfsblocks = txdr_unsigned(vap->va_bytes / NFS_FABLKSIZE); \ 		txdr_nfstime(&vap->va_atime,&fp->fa_nfsatime); \ 		txdr_nfstime(&vap->va_mtime,&fp->fa_nfsmtime); \ 		fp->fa_nfsctime.nfs_sec = txdr_unsigned(vap->va_ctime.ts_sec); \ 		fp->fa_nfsctime.nfs_usec = txdr_unsigned(vap->va_gen); \ 	} else { \ 		fp->fa_nqblocksize = txdr_unsigned(vap->va_blocksize); \ 		if (vap->va_type == VFIFO) \ 			fp->fa_nqrdev = 0xffffffff; \ 		else \ 			fp->fa_nqrdev = txdr_unsigned(vap->va_rdev); \ 		fp->fa_nqfsid = txdr_unsigned(vap->va_fsid); \ 		fp->fa_nqfileid = txdr_unsigned(vap->va_fileid); \ 		txdr_hyper(&vap->va_size,&fp->fa_nqsize); \ 		txdr_hyper(&vap->va_bytes,&fp->fa_nqbytes); \ 		txdr_nqtime(&vap->va_atime,&fp->fa_nqatime); \ 		txdr_nqtime(&vap->va_mtime,&fp->fa_nqmtime); \ 		txdr_nqtime(&vap->va_ctime,&fp->fa_nqctime); \ 		fp->fa_nqflags = txdr_unsigned(vap->va_flags); \ 		fp->fa_nqgen = txdr_unsigned(vap->va_gen); \ 		txdr_hyper(&vap->va_filerev,&fp->fa_nqfilerev); \ 	}
+value|nfsm_srvfattr(nfsd, (a), (f))
 end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_srvwcc_data
+parameter_list|(
+name|br
+parameter_list|,
+name|b
+parameter_list|,
+name|ar
+parameter_list|,
+name|a
+parameter_list|)
+define|\
+value|nfsm_srvwcc(nfsd, (br), (b), (ar), (a),&mb,&bpos)
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_srvpostop_attr
+parameter_list|(
+name|r
+parameter_list|,
+name|a
+parameter_list|)
+define|\
+value|nfsm_srvpostopattr(nfsd, (r), (a),&mb,&bpos)
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_srvsattr
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|{ nfsm_dissect(tl, u_long *, NFSX_UNSIGNED); \ 		if (*tl == nfs_true) { \ 			nfsm_dissect(tl, u_long *, NFSX_UNSIGNED); \ 			(a)->va_mode = nfstov_mode(*tl); \ 		} \ 		nfsm_dissect(tl, u_long *, NFSX_UNSIGNED); \ 		if (*tl == nfs_true) { \ 			nfsm_dissect(tl, u_long *, NFSX_UNSIGNED); \ 			(a)->va_uid = fxdr_unsigned(uid_t, *tl); \ 		} \ 		nfsm_dissect(tl, u_long *, NFSX_UNSIGNED); \ 		if (*tl == nfs_true) { \ 			nfsm_dissect(tl, u_long *, NFSX_UNSIGNED); \ 			(a)->va_gid = fxdr_unsigned(gid_t, *tl); \ 		} \ 		nfsm_dissect(tl, u_long *, NFSX_UNSIGNED); \ 		if (*tl == nfs_true) { \ 			nfsm_dissect(tl, u_long *, 2 * NFSX_UNSIGNED); \ 			fxdr_hyper(tl,&(a)->va_size); \ 		} \ 		nfsm_dissect(tl, u_long *, NFSX_UNSIGNED); \ 		switch (fxdr_unsigned(int, *tl)) { \ 		case NFSV3SATTRTIME_TOCLIENT: \ 			nfsm_dissect(tl, u_long *, 2 * NFSX_UNSIGNED); \ 			fxdr_nfsv3time(tl,&(a)->va_atime); \ 			break; \ 		case NFSV3SATTRTIME_TOSERVER: \ 			(a)->va_atime.ts_sec = time.tv_sec; \ 			(a)->va_atime.ts_nsec = time.tv_usec * 1000; \ 			break; \ 		}; \ 		nfsm_dissect(tl, u_long *, NFSX_UNSIGNED); \ 		switch (fxdr_unsigned(int, *tl)) { \ 		case NFSV3SATTRTIME_TOCLIENT: \ 			nfsm_dissect(tl, u_long *, 2 * NFSX_UNSIGNED); \ 			fxdr_nfsv3time(tl,&(a)->va_mtime); \ 			break; \ 		case NFSV3SATTRTIME_TOSERVER: \ 			(a)->va_mtime.ts_sec = time.tv_sec; \ 			(a)->va_mtime.ts_nsec = time.tv_usec * 1000; \ 			break; \ 		}; }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
