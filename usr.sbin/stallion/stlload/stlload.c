@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: stlload.c,v 1.7 1997/10/20 12:51:29 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1663,14 +1663,8 @@ name|stat
 name|statinfo
 decl_stmt|;
 name|int
-name|optind
-decl_stmt|,
 name|c
 decl_stmt|;
-name|optind
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1682,7 +1676,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"hvVRB:i:b:d:t:r:"
+literal|"hvVRB:i:b:c:t:r:"
 argument_list|)
 operator|)
 operator|!=
@@ -1765,7 +1759,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'d'
+literal|'c'
 case|:
 name|memdevice
 operator|=
