@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.17 (Berkeley) %G%  *  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.18 (Berkeley) %G%  *  */
 end_comment
 
 begin_comment
@@ -574,11 +574,6 @@ name|ra_dsize
 decl_stmt|;
 comment|/* size in sectors */
 comment|/*	u_long	ra_type;	/* drive type */
-define|#
-directive|define
-name|RA_TYPE_RX50
-value|7
-comment|/* special: see udaopen */
 name|u_long
 name|ra_mediaid
 decl_stmt|;
@@ -2038,14 +2033,6 @@ name|udawstart
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ui
-operator|->
-name|ui_dk
-operator|>=
-literal|0
-condition|)
 comment|/* 	 * Floppies cannot be brought on line unless there is 	 * a disk in the drive.  Since an ONLINE while cold 	 * takes ten seconds to fail, and (when notyet becomes now) 	 * no sensible person will swap to one, we just 	 * defer the ONLINE until someone tries to use the drive. 	 * 	 * THIS ASSUMES THAT DRIVE TYPES ?X? ARE FLOPPIES 	 */
 if|if
 condition|(
@@ -2073,6 +2060,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|ui
+operator|->
+name|ui_dk
+operator|>=
+literal|0
+condition|)
 name|dk_mspw
 index|[
 name|ui
@@ -2105,31 +2100,6 @@ index|]
 operator|=
 name|ui
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* 	 * RX50s cannot be brought on line unless there is 	 * a floppy in the drive.  Since an ONLINE while cold 	 * takes ten seconds to fail, and (when notyet becomes now) 	 * no sensible person will swap to an RX50, we just 	 * defer the ONLINE until someone tries to use the drive. 	 */
-if|if
-condition|(
-name|ra_info
-index|[
-name|unit
-index|]
-operator|.
-name|ra_type
-operator|==
-name|RA_TYPE_RX50
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|": rx50"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|uda_rainit
@@ -3052,10 +3022,6 @@ end_block
 
 begin_comment
 comment|/* ARGSUSED */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
