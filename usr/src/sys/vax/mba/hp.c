@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.63	83/02/05	*/
+comment|/*	hp.c	4.64	83/02/10	*/
 end_comment
 
 begin_ifdef
@@ -217,22 +217,11 @@ literal|0
 block|,
 literal|0
 block|,
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 literal|291280
 block|,
 literal|118
 block|,
 comment|/* G=cyl 118 thru 814 */
-else|#
-directive|else
-literal|291346
-block|,
-literal|118
-block|,
-endif|#
-directive|endif
 literal|0
 block|,
 literal|0
@@ -271,22 +260,11 @@ literal|0
 block|,
 literal|0
 block|,
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 literal|81984
 block|,
 literal|310
 block|,
 comment|/* G=cyl 310 thru 822 */
-else|#
-directive|else
-literal|82080
-block|,
-literal|310
-block|,
-endif|#
-directive|endif
 literal|0
 block|,
 literal|0
@@ -323,9 +301,6 @@ block|,
 literal|589
 block|,
 comment|/* E=cyl 589 thru 680 */
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 literal|86240
 block|,
 literal|681
@@ -336,18 +311,6 @@ block|,
 literal|562
 block|,
 comment|/* G=cyl 562 thru 822 */
-else|#
-directive|else
-literal|86336
-block|,
-literal|681
-block|,
-literal|158688
-block|,
-literal|562
-block|,
-endif|#
-directive|endif
 literal|291346
 block|,
 literal|82
@@ -458,37 +421,34 @@ literal|16640
 block|,
 literal|0
 block|,
-comment|/* A=cyl   0 thru  12 */
+comment|/* A=cyl 0 thru 12 */
 literal|34560
 block|,
 literal|13
 block|,
-comment|/* B=cyl  13 thru  39 */
+comment|/* B=cyl 13 thru 39 */
 literal|1079040
 block|,
 literal|0
 block|,
-comment|/* C=cyl   0 thru 842 - whole disk */
+comment|/* C=cyl 0 thru 842 */
 literal|0
 block|,
 literal|0
 block|,
-comment|/* D unused */
 literal|0
 block|,
 literal|0
 block|,
-comment|/* E unused */
 literal|0
 block|,
 literal|0
 block|,
-comment|/* F unused */
 literal|513280
 block|,
 literal|40
 block|,
-comment|/* G=cyl  40 thru 440 */
+comment|/* G=cyl 40 thru 440 */
 literal|513280
 block|,
 literal|441
@@ -533,22 +493,11 @@ literal|0
 block|,
 literal|0
 block|,
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 literal|213664
 block|,
 literal|155
 block|,
 comment|/* H=cyl 155 thru 822 */
-else|#
-directive|else
-literal|213760
-block|,
-literal|155
-block|,
-endif|#
-directive|endif
 block|}
 struct|,
 name|hpam_sizes
@@ -1131,12 +1080,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOBADSECT
-end_ifndef
-
 begin_decl_stmt
 name|struct
 name|buf
@@ -1156,11 +1099,6 @@ name|NHP
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* SHOULD CONSOLIDATE ALL THIS STUFF INTO A STRUCTURE */
@@ -2216,9 +2154,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 name|struct
 name|buf
 modifier|*
@@ -2232,8 +2167,6 @@ operator|->
 name|mi_unit
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 name|hpinit
 index|[
 name|mi
@@ -2301,9 +2234,6 @@ argument_list|(
 name|mi
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 if|if
 condition|(
 operator|!
@@ -2394,8 +2324,6 @@ operator|=
 name|bbp
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -2836,9 +2764,6 @@ name|retry
 init|=
 literal|0
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 if|if
 condition|(
 name|bp
@@ -2863,8 +2788,6 @@ name|MBD_RESTARTED
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|hpaddr
@@ -3059,9 +2982,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 if|if
 condition|(
 name|hpecc
@@ -3077,8 +2997,6 @@ name|MBD_RESTARTED
 operator|)
 return|;
 else|else
-endif|#
-directive|endif
 goto|goto
 name|hard
 goto|;
@@ -3299,9 +3217,6 @@ operator|!
 name|ML11
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 if|if
 condition|(
 name|hpecc
@@ -3317,8 +3232,6 @@ name|MBD_RESTARTED
 operator|)
 return|;
 else|else
-endif|#
-directive|endif
 goto|goto
 name|hard
 goto|;
@@ -4075,9 +3988,6 @@ operator||=
 literal|0xffff0000
 expr_stmt|;
 comment|/* sxt */
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 if|if
 condition|(
 name|flag
@@ -4091,8 +4001,6 @@ operator|->
 name|b_error
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|npf
 operator|=
 name|btop
@@ -4401,9 +4309,6 @@ argument_list|)
 operator|)
 expr_stmt|;
 break|break;
-ifndef|#
-directive|ifndef
-name|NOBADSECT
 case|case
 name|BSE
 case|:
@@ -4624,8 +4529,6 @@ literal|0
 operator|)
 return|;
 break|break;
-endif|#
-directive|endif
 block|}
 name|rp
 operator|->
