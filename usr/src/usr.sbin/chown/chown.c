@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chown.c	5.13 (Berkeley) %G%"
+literal|"@(#)chown.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,7 +101,6 @@ file|<ctype.h>
 end_include
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ischown
 decl_stmt|,
@@ -118,7 +117,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|gname
@@ -403,7 +401,6 @@ block|}
 end_function
 
 begin_expr_stmt
-specifier|static
 name|setgid
 argument_list|(
 name|s
@@ -529,7 +526,6 @@ block|}
 end_block
 
 begin_expr_stmt
-specifier|static
 name|setuid
 argument_list|(
 name|s
@@ -656,17 +652,19 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|change
 argument_list|(
 argument|file
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|file
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -867,17 +865,19 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|chownerr
 argument_list|(
 argument|file
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|file
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1033,17 +1033,19 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|err
 argument_list|(
 argument|s
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1088,10 +1090,12 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|usage
 argument_list|()
+end_macro
+
+begin_block
 block|{
 operator|(
 name|void
@@ -1105,19 +1109,20 @@ argument_list|,
 name|myname
 argument_list|,
 name|ischown
-operator|?
+condition|?
 literal|"owner[.group]"
-operator|:
+else|:
 literal|"group"
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 operator|-
 literal|1
 argument_list|)
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
