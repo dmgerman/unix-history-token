@@ -2152,6 +2152,19 @@ condition|)
 name|yp_manycast
 operator|++
 expr_stmt|;
+else|else
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"unknown option: %s"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* blow away everything in BINDINGDIR (if it exists) */
 if|if
