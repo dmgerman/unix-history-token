@@ -757,7 +757,7 @@ parameter_list|,
 name|T
 parameter_list|)
 define|\ 									\
-value|static __inline T pci_get_ ## A(device_t dev)				\ {									\ 	uintptr_t v;							\ 	BUS_READ_IVAR(device_get_parent(dev), dev, PCI_IVAR_ ## B,&v);	\ 	return (T) v;							\ }									\ 									\ static __inline void pci_set_ ## A(device_t dev, T t)			\ {									\ 	u_long v = (u_long) t;						\ 	BUS_WRITE_IVAR(device_get_parent(dev), dev, PCI_IVAR_ ## B, v);	\ }
+value|static __inline T pci_get_ ## A(device_t dev)				\ {									\ 	uintptr_t v;							\ 	BUS_READ_IVAR(device_get_parent(dev), dev, PCI_IVAR_ ## B,&v);	\ 	return (T) v;							\ }									\ 									\ static __inline void pci_set_ ## A(device_t dev, T t)			\ {									\ 	uintptr_t v = (uintptr_t) t;					\ 	BUS_WRITE_IVAR(device_get_parent(dev), dev, PCI_IVAR_ ## B, v);	\ }
 end_define
 
 begin_macro
@@ -936,6 +936,12 @@ argument|u_int8_t
 argument_list|)
 end_macro
 
+begin_undef
+undef|#
+directive|undef
+name|PCI_ACCESSOR
+end_undef
+
 begin_function
 specifier|static
 name|__inline
@@ -1037,7 +1043,7 @@ parameter_list|,
 name|T
 parameter_list|)
 define|\ 									 \
-value|static __inline T pcib_get_ ## A(device_t dev)				 \ {									 \ 	uintptr_t v;							 \ 	BUS_READ_IVAR(device_get_parent(dev), dev, PCIB_IVAR_ ## B,&v); \ 	return (T) v;							 \ }									 \ 									 \ static __inline void pcib_set_ ## A(device_t dev, T t)			 \ {									 \ 	u_long v = (u_long) t;						 \ 	BUS_WRITE_IVAR(device_get_parent(dev), dev, PCIB_IVAR_ ## B, v); \ }
+value|static __inline T pcib_get_ ## A(device_t dev)				 \ {									 \ 	uintptr_t v;							 \ 	BUS_READ_IVAR(device_get_parent(dev), dev, PCIB_IVAR_ ## B,&v); \ 	return (T) v;							 \ }									 \ 									 \ static __inline void pcib_set_ ## A(device_t dev, T t)			 \ {									 \ 	uintptr_t v = (uintptr_t) t;					 \ 	BUS_WRITE_IVAR(device_get_parent(dev), dev, PCIB_IVAR_ ## B, v); \ }
 end_define
 
 begin_macro
@@ -1050,6 +1056,12 @@ argument_list|,
 argument|u_int32_t
 argument_list|)
 end_macro
+
+begin_undef
+undef|#
+directive|undef
+name|PCIB_ACCESSOR
+end_undef
 
 begin_endif
 endif|#
