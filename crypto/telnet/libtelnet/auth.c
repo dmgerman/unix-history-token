@@ -931,6 +931,11 @@ name|x
 decl_stmt|;
 if|if
 condition|(
+name|AUTHTYPE_NAME
+argument_list|(
+literal|0
+argument_list|)
+operator|&&
 operator|!
 name|strcasecmp
 argument_list|(
@@ -971,6 +976,11 @@ control|)
 block|{
 if|if
 condition|(
+name|AUTHTYPE_NAME
+argument_list|(
+name|x
+argument_list|)
+operator|&&
 operator|!
 name|strcasecmp
 argument_list|(
