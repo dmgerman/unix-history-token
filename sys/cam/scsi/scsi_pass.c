@@ -1387,7 +1387,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* 	 * Don't allow access when we're running at a high securelvel. 	 */
+comment|/* 	 * Don't allow access when we're running at a high securelevel. 	 */
 if|if
 condition|(
 name|securelevel
