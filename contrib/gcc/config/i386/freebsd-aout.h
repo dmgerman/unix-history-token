@@ -4,21 +4,6 @@ comment|/* Definitions of target machine for GNU compiler for Intel 80386    run
 end_comment
 
 begin_comment
-comment|/* This goes away when the math-emulator is fixed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_CPU_DEFAULT
-value|0400
-end_define
-
-begin_comment
-comment|/* TARGET_NO_FANCY_MATH_387 */
-end_comment
-
-begin_comment
 comment|/* This is tested by i386gas.h.  */
 end_comment
 
@@ -53,6 +38,24 @@ include|#
 directive|include
 file|"i386/perform.h"
 end_include
+
+begin_comment
+comment|/* This goes away when the math-emulator is fixed */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_DEFAULT
+define|\
+value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_NO_FANCY_MATH_387)
+end_define
 
 begin_undef
 undef|#
@@ -247,7 +250,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Don't default to pcc-struct-return, because gcc is the only compiler, and    we want to retain compatibility with older gcc versions.  */
+comment|/* Don't default to pcc-struct-return, because in FreeBSD we prefer the    superior nature of the older gcc way.  */
 end_comment
 
 begin_define
@@ -486,101 +489,6 @@ name|STARTFILE_SPEC
 define|\
 value|"%{shared:c++rt0.o%s} \    %{!shared:%{pg:gcrt0.o%s}%{!pg:%{static:scrt0.o%s}%{!static:crt0.o%s}}}"
 end_define
-
-begin_comment
-comment|/* This is defined when gcc is compiled in the BSD-directory-tree, and must  * make up for the gap to all the stuff done in the GNU-makefiles.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FREEBSD_NATIVE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|INCLUDE_DEFAULTS
-value|{ \ 	{ "/usr/include", 0, 0, 0 }, \ 	{ "/usr/include/g++", "G++", 1, 1 }, \ 	{ 0, 0, 0, 0} \ 	}
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|MD_EXEC_PREFIX
-end_undef
-
-begin_define
-define|#
-directive|define
-name|MD_EXEC_PREFIX
-value|"/usr/libexec/"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|STANDARD_STARTFILE_PREFIX
-end_undef
-
-begin_define
-define|#
-directive|define
-name|STANDARD_STARTFILE_PREFIX
-value|"/usr/lib"
-end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* This is very wrong!!! */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_TARGET_MACHINE
-value|"i386-unknown-freebsd_1.0"
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPLUSPLUS_INCLUDE_DIR
-value|"/usr/local/lib/gcc-lib/i386-unknown-freebsd_1.0/2.5.8/include"
-end_define
-
-begin_define
-define|#
-directive|define
-name|TOOL_INCLUDE_DIR
-value|"/usr/local/i386-unknown-freebsd_1.0/include"
-end_define
-
-begin_define
-define|#
-directive|define
-name|GCC_INCLUDE_DIR
-value|"/usr/local/lib/gcc-lib/i386-unknown-freebsd_1.0/2.5.8/include"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FREEBSD_NATIVE */
-end_comment
 
 end_unit
 
