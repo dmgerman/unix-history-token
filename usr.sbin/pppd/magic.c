@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: magic.c,v 1.5 1995/06/06 01:52:25 paulus Exp $"
+literal|"$Id: magic.c,v 1.7 1998/06/20 18:02:12 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -53,30 +59,6 @@ include|#
 directive|include
 file|"magic.h"
 end_include
-
-begin_decl_stmt
-specifier|static
-name|u_int32_t
-name|next
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Next value to return */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|gethostid
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -130,7 +112,7 @@ argument_list|)
 expr_stmt|;
 name|seed
 operator|=
-name|gethostid
+name|get_host_seed
 argument_list|()
 operator|^
 name|t

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * chap.h - Cryptographic Handshake Authentication Protocol definitions.  *  * Copyright (c) 1991 Gregory M. Christy  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the author.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.h,v 1.3 1994/09/21 06:47:37 paulus Exp $  */
+comment|/*  * chap.h - Challenge Handshake Authentication Protocol definitions.  *  * Copyright (c) 1993 The Australian National University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Australian National University.  The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Copyright (c) 1991 Gregory M. Christy  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the author.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.h,v 1.6 1997/08/19 17:52:34 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -44,6 +44,28 @@ end_define
 
 begin_comment
 comment|/* 16 bytes in a MD5 message digest */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHAP_MICROSOFT
+value|0x80
+end_define
+
+begin_comment
+comment|/* use Microsoft-compatible alg. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MS_CHAP_RESPONSE_LEN
+value|49
+end_define
+
+begin_comment
+comment|/* Response length for MS-CHAP */
 end_comment
 
 begin_define
@@ -96,11 +118,11 @@ begin_define
 define|#
 directive|define
 name|MAX_RESPONSE_LENGTH
-value|16
+value|64
 end_define
 
 begin_comment
-comment|/* sufficient for MD5 */
+comment|/* sufficient for MD5 or MS-CHAP */
 end_comment
 
 begin_comment
@@ -388,18 +410,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|ChapInit
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|ChapAuthWithPeer
 name|__P
 argument_list|(
@@ -433,90 +443,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|ChapLowerUp
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ChapLowerDown
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ChapInput
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|u_char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ChapProtocolReject
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ChapPrintPkt
-name|__P
-argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|,
-name|int
-operator|,
-name|void
-argument_list|(
-argument|*
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-operator|,
-name|void
-operator|*
-operator|)
-argument_list|)
+specifier|extern
+name|struct
+name|protent
+name|chap_protent
 decl_stmt|;
 end_decl_stmt
 

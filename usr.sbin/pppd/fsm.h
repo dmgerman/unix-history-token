@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * fsm.h - {Link, IP} Control Protocol Finite State Machine definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.h,v 1.5 1995/05/19 03:17:35 paulus Exp $  */
+comment|/*  * fsm.h - {Link, IP} Control Protocol Finite State Machine definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.h,v 1.6 1997/08/19 17:52:37 peter Exp $  */
 end_comment
 
 begin_comment
@@ -96,135 +96,8 @@ comment|/* Code Reject */
 end_comment
 
 begin_comment
-comment|/*  * Each FSM is described by a fsm_callbacks and a fsm structure.  */
+comment|/*  * Each FSM is described by an fsm structure and fsm callbacks.  */
 end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|fsm_callbacks
-block|{
-name|void
-function_decl|(
-modifier|*
-name|resetci
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Reset our Configuration Information */
-name|int
-function_decl|(
-modifier|*
-name|cilen
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Length of our Configuration Information */
-name|void
-function_decl|(
-modifier|*
-name|addci
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Add our Configuration Information */
-name|int
-function_decl|(
-modifier|*
-name|ackci
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* ACK our Configuration Information */
-name|int
-function_decl|(
-modifier|*
-name|nakci
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* NAK our Configuration Information */
-name|int
-function_decl|(
-modifier|*
-name|rejci
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Reject our Configuration Information */
-name|int
-function_decl|(
-modifier|*
-name|reqci
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Request peer's Configuration Information */
-name|void
-function_decl|(
-modifier|*
-name|up
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Called when fsm reaches OPENED state */
-name|void
-function_decl|(
-modifier|*
-name|down
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Called when fsm leaves OPENED state */
-name|void
-function_decl|(
-modifier|*
-name|starting
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Called when we want the lower layer */
-name|void
-function_decl|(
-modifier|*
-name|finished
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Called when we don't want the lower layer */
-name|void
-function_decl|(
-modifier|*
-name|protreject
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Called when Protocol-Reject received */
-name|void
-function_decl|(
-modifier|*
-name|retransmit
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Retransmission is necessary */
-name|int
-function_decl|(
-modifier|*
-name|extcode
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* Called when unknown code received */
-name|char
-modifier|*
-name|proto_name
-decl_stmt|;
-comment|/* String name for protocol (for messages) */
-block|}
-name|fsm_callbacks
-typedef|;
-end_typedef
 
 begin_typedef
 typedef|typedef
@@ -283,13 +156,257 @@ name|int
 name|maxnakloops
 decl_stmt|;
 comment|/* Maximum number of nak loops tolerated */
+name|struct
 name|fsm_callbacks
 modifier|*
 name|callbacks
 decl_stmt|;
 comment|/* Callback routines */
+name|char
+modifier|*
+name|term_reason
+decl_stmt|;
+comment|/* Reason for closing protocol */
+name|int
+name|term_reason_len
+decl_stmt|;
+comment|/* Length of term_reason */
 block|}
 name|fsm
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|fsm_callbacks
+block|{
+name|void
+argument_list|(
+argument|*resetci
+argument_list|)
+comment|/* Reset our Configuration Information */
+name|__P
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*cilen
+argument_list|)
+comment|/* Length of our Configuration Information */
+name|__P
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*addci
+argument_list|)
+comment|/* Add our Configuration Information */
+name|__P
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*ackci
+argument_list|)
+comment|/* ACK our Configuration Information */
+name|__P
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*nakci
+argument_list|)
+comment|/* NAK our Configuration Information */
+name|__P
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*rejci
+argument_list|)
+comment|/* Reject our Configuration Information */
+name|__P
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*reqci
+argument_list|)
+comment|/* Request peer's Configuration Information */
+name|__P
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*up
+argument_list|)
+comment|/* Called when fsm reaches OPENED state */
+name|__P
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*down
+argument_list|)
+comment|/* Called when fsm leaves OPENED state */
+name|__P
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*starting
+argument_list|)
+comment|/* Called when we want the lower layer */
+name|__P
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*finished
+argument_list|)
+comment|/* Called when we don't want the lower layer */
+name|__P
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*protreject
+argument_list|)
+comment|/* Called when Protocol-Reject received */
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*retransmit
+argument_list|)
+comment|/* Retransmission is necessary */
+name|__P
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*extcode
+argument_list|)
+comment|/* Called when unknown code received */
+name|__P
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+name|char
+modifier|*
+name|proto_name
+decl_stmt|;
+comment|/* String name for protocol (for messages) */
+block|}
+name|fsm_callbacks
 typedef|;
 end_typedef
 
@@ -555,6 +672,9 @@ name|__P
 argument_list|(
 operator|(
 name|fsm
+operator|*
+operator|,
+name|char
 operator|*
 operator|)
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: demand.c,v 1.3 1997/08/19 17:52:36 peter Exp $"
+literal|"$Id: demand.c,v 1.4 1998/03/22 05:32:51 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 

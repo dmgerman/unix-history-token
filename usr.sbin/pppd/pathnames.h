@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * define path names  *  * $Id: pathnames.h,v 1.3 1995/10/31 21:21:36 peter Exp $  */
+comment|/*  * define path names  *  * $Id: pathnames.h,v 1.8 1997/08/19 17:52:45 peter Exp $  */
 end_comment
 
 begin_ifdef
@@ -77,6 +77,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_AUTHUP
+value|"/etc/ppp/auth-up"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_AUTHDOWN
+value|"/etc/ppp/auth-down"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_TTYOPT
 value|"/etc/ppp/options."
 end_define
@@ -98,6 +112,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_PEERFILES
+value|"/etc/ppp/peers/"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_PPPDENY
 value|"/etc/ppp/ppp.deny"
 end_define
@@ -108,6 +129,35 @@ directive|define
 name|_PATH_PPPSHELLS
 value|"/etc/ppp/ppp.shells"
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPX_CHANGE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_PATH_IPXUP
+value|"/etc/ppp/ipx-up"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_IPXDOWN
+value|"/etc/ppp/ipx-down"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IPX_CHANGE */
+end_comment
 
 end_unit
 

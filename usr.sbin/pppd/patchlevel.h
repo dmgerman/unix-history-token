@@ -1,34 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: patchlevel.h,v 1.16 1995/07/11 06:41:07 paulus Exp $ */
+comment|/* $Id: patchlevel.h,v 1.9 1998/06/20 18:02:14 peter Exp $ */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PATCHLEVEL
-value|0
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
 name|VERSION
-value|"2.2"
+value|"2.3"
 end_define
 
 begin_define
 define|#
 directive|define
 name|IMPLEMENTATION
-value|"beta3"
+value|""
 end_define
 
 begin_define
 define|#
 directive|define
 name|DATE
-value|"11 July 95"
+value|"4 May 1998"
 end_define
 
 end_unit

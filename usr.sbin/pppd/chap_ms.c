@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chap_ms.c,v 1.4 1998/03/22 05:32:48 peter Exp $"
+literal|"$Id: chap_ms.c,v 1.5 1998/06/20 18:02:09 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 

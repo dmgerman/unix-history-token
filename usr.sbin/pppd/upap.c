@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: upap.c,v 1.6 1995/06/12 12:02:24 paulus Exp $"
+literal|"$Id: upap.c,v 1.7 1997/08/19 17:52:47 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,155 @@ directive|include
 file|"upap.h"
 end_include
 
+begin_comment
+comment|/*  * Protocol entry points.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|upap_init
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|upap_lowerup
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|upap_lowerdown
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|upap_input
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|upap_protrej
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|upap_printpkt
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
+name|int
+operator|,
+name|void
+argument_list|(
+argument|*
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|protent
+name|pap_protent
+init|=
+block|{
+name|PPP_PAP
+block|,
+name|upap_init
+block|,
+name|upap_input
+block|,
+name|upap_protrej
+block|,
+name|upap_lowerup
+block|,
+name|upap_lowerdown
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|upap_printpkt
+block|,
+name|NULL
+block|,
+literal|1
+block|,
+literal|"PAP"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|upap_state
 name|upap
@@ -90,7 +239,8 @@ name|upap_timeout
 name|__P
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -103,7 +253,8 @@ name|upap_reqtimeout
 name|__P
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -214,6 +365,7 @@ comment|/*  * upap_init - Initialize a UPAP unit.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|upap_init
 parameter_list|(
@@ -476,9 +628,6 @@ name|TIMEOUT
 argument_list|(
 name|upap_reqtimeout
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|u
 argument_list|,
 name|u
@@ -500,7 +649,8 @@ name|upap_timeout
 parameter_list|(
 name|arg
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|arg
 decl_stmt|;
 block|{
@@ -579,7 +729,8 @@ name|upap_reqtimeout
 parameter_list|(
 name|arg
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|arg
 decl_stmt|;
 block|{
@@ -626,6 +777,7 @@ comment|/*  * upap_lowerup - The lower layer is up.  *  * Start authenticating i
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|upap_lowerup
 parameter_list|(
@@ -718,9 +870,6 @@ name|TIMEOUT
 argument_list|(
 name|upap_reqtimeout
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|u
 argument_list|,
 name|u
@@ -737,6 +886,7 @@ comment|/*  * upap_lowerdown - The lower layer is down.  *  * Cancel all timeout
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|upap_lowerdown
 parameter_list|(
@@ -769,9 +919,6 @@ name|UNTIMEOUT
 argument_list|(
 name|upap_timeout
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|u
 argument_list|)
 expr_stmt|;
@@ -794,9 +941,6 @@ name|UNTIMEOUT
 argument_list|(
 name|upap_reqtimeout
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|u
 argument_list|)
 expr_stmt|;
@@ -820,6 +964,7 @@ comment|/*  * upap_protrej - Peer doesn't speak this protocol.  *  * This should
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|upap_protrej
 parameter_list|(
@@ -900,6 +1045,7 @@ comment|/*  * upap_input - Input UPAP packet.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|upap_input
 parameter_list|(
@@ -959,7 +1105,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"upap_input: rcvd short header."
+literal|"pap_input: rcvd short header."
 operator|)
 argument_list|)
 expr_stmt|;
@@ -998,7 +1144,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"upap_input: rcvd illegal length."
+literal|"pap_input: rcvd illegal length."
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1016,7 +1162,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"upap_input: rcvd short packet."
+literal|"pap_input: rcvd short packet."
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1143,7 +1289,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"upap_rauth: Rcvd id %d."
+literal|"pap_rauth: Rcvd id %d."
 operator|,
 name|id
 operator|)
@@ -1225,7 +1371,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"upap_rauth: rcvd short packet."
+literal|"pap_rauth: rcvd short packet."
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1264,7 +1410,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"upap_rauth: rcvd short packet."
+literal|"pap_rauth: rcvd short packet."
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1304,7 +1450,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"upap_rauth: rcvd short packet."
+literal|"pap_rauth: rcvd short packet."
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1342,6 +1488,13 @@ operator|&
 name|msglen
 argument_list|)
 expr_stmt|;
+name|BZERO
+argument_list|(
+name|rpasswd
+argument_list|,
+name|rpasswdlen
+argument_list|)
+expr_stmt|;
 name|upap_sresp
 argument_list|(
 name|u
@@ -1375,6 +1528,10 @@ operator|->
 name|us_unit
 argument_list|,
 name|PPP_PAP
+argument_list|,
+name|ruser
+argument_list|,
+name|ruserlen
 argument_list|)
 expr_stmt|;
 block|}
@@ -1408,9 +1565,6 @@ name|UNTIMEOUT
 argument_list|(
 name|upap_reqtimeout
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|u
 argument_list|)
 expr_stmt|;
@@ -1461,7 +1615,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"upap_rauthack: Rcvd id %d."
+literal|"pap_rauthack: Rcvd id %d."
 operator|,
 name|id
 operator|)
@@ -1493,7 +1647,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"upap_rauthack: rcvd short packet."
+literal|"pap_rauthack: rcvd short packet."
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1525,7 +1679,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"upap_rauthack: rcvd short packet."
+literal|"pap_rauthack: rcvd short packet."
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1608,7 +1762,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"upap_rauthnak: Rcvd id %d."
+literal|"pap_rauthnak: Rcvd id %d."
 operator|,
 name|id
 operator|)
@@ -1640,7 +1794,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"upap_rauthnak: rcvd short packet."
+literal|"pap_rauthnak: rcvd short packet."
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1672,7 +1826,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"upap_rauthnak: rcvd short packet."
+literal|"pap_rauthnak: rcvd short packet."
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1866,7 +2020,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"upap_sauth: Sent id %d."
+literal|"pap_sauth: Sent id %d."
 operator|,
 name|u
 operator|->
@@ -1878,9 +2032,6 @@ name|TIMEOUT
 argument_list|(
 name|upap_timeout
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|u
 argument_list|,
 name|u
@@ -2022,7 +2173,7 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"upap_sresp: Sent code %d, id %d."
+literal|"pap_sresp: Sent code %d, id %d."
 operator|,
 name|code
 operator|,
@@ -2038,6 +2189,7 @@ comment|/*  * upap_printpkt - print the contents of a PAP packet.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|upap_codenames
@@ -2054,6 +2206,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|upap_printpkt
 parameter_list|(
@@ -2421,7 +2574,7 @@ name|printer
 argument_list|(
 name|arg
 argument_list|,
-literal|"msg="
+literal|" "
 argument_list|)
 expr_stmt|;
 name|print_string

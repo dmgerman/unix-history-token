@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ipcp.h - IP Control Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.h,v 1.4 1995/10/31 21:21:09 peter Exp $  */
+comment|/*  * ipcp.h - IP Control Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.h,v 1.9 1998/06/20 18:02:11 peter Exp $  */
 end_comment
 
 begin_comment
@@ -39,45 +39,45 @@ end_define
 begin_define
 define|#
 directive|define
-name|CI_DNS1
+name|CI_MS_DNS1
 value|129
 end_define
 
 begin_comment
-comment|/* Primary DNS */
+comment|/* Primary DNS value */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CI_NBNS1
+name|CI_MS_WINS1
 value|130
 end_define
 
 begin_comment
-comment|/* Primary NBNS */
+comment|/* Primary WINS value */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CI_DNS2
+name|CI_MS_DNS2
 value|131
 end_define
 
 begin_comment
-comment|/* Secondary DNS */
+comment|/* Secondary DNS value */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CI_NBNS2
+name|CI_MS_WINS2
 value|132
 end_define
 
 begin_comment
-comment|/* Secondary NBNS */
+comment|/* Secondary WINS value */
 end_comment
 
 begin_define
@@ -229,6 +229,20 @@ decl_stmt|,
 name|hisaddr
 decl_stmt|;
 comment|/* Addresses in NETWORK BYTE ORDER */
+name|u_int32_t
+name|dnsaddr
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Primary and secondary MS DNS entries */
+name|u_int32_t
+name|winsaddr
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Primary and secondary MS WINS entries */
 block|}
 name|ipcp_options
 typedef|;
@@ -275,115 +289,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|ipcp_init
+name|char
+modifier|*
+name|ip_ntoa
 name|__P
 argument_list|(
 operator|(
-name|int
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|ipcp_open
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ipcp_close
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ipcp_lowerup
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ipcp_lowerdown
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ipcp_input
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|u_char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ipcp_protrej
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ipcp_printpkt
-name|__P
-argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|,
-name|int
-operator|,
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|,
-name|void
-operator|*
-operator|)
-argument_list|)
+specifier|extern
+name|struct
+name|protent
+name|ipcp_protent
 decl_stmt|;
 end_decl_stmt
 
