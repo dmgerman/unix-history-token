@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.80 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.81 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5838,6 +5838,19 @@ name|e
 operator|->
 name|e_class
 operator|>=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_paddr
+argument_list|,
+literal|"<>"
+argument_list|)
+operator|!=
 literal|0
 condition|)
 block|{
