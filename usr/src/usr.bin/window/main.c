@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.27 %G%"
+literal|"@(#)main.c	3.28 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,14 @@ name|tflag
 init|=
 literal|0
 decl_stmt|;
+name|nbufline
+operator|=
+name|NLINE
+expr_stmt|;
+name|escapec
+operator|=
+name|ESCAPEC
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -271,14 +279,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|nbufline
-operator|=
-name|NLINE
-expr_stmt|;
-name|escapec
-operator|=
-name|ESCAPEC
-expr_stmt|;
 if|if
 condition|(
 operator|(
