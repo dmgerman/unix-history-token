@@ -92,33 +92,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
-specifier|static
-name|void
-name|tco_setscales
-parameter_list|(
-name|struct
-name|timecounter
-modifier|*
-name|tc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|__inline
-name|unsigned
-name|tco_delta
-parameter_list|(
-name|struct
-name|timecounter
-modifier|*
-name|tc
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|time_t
 name|time_second
@@ -536,7 +509,7 @@ begin_function
 specifier|static
 name|__inline
 name|unsigned
-name|tco_delta
+name|tc_delta
 parameter_list|(
 name|struct
 name|timecounter
@@ -619,7 +592,7 @@ name|tc
 operator|->
 name|tc_scale
 operator|*
-name|tco_delta
+name|tc_delta
 argument_list|(
 name|tc
 argument_list|)
@@ -1044,7 +1017,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|tco_setscales
+name|tc_setscales
 parameter_list|(
 name|struct
 name|timecounter
@@ -1130,7 +1103,7 @@ name|tc_tweak
 operator|=
 name|tc
 expr_stmt|;
-name|tco_setscales
+name|tc_setscales
 argument_list|(
 name|tc
 argument_list|)
@@ -1483,7 +1456,7 @@ argument_list|(
 name|newtc
 argument_list|)
 expr_stmt|;
-name|tco_setscales
+name|tc_setscales
 argument_list|(
 name|newtc
 argument_list|)
@@ -1575,7 +1548,7 @@ argument_list|)
 expr_stmt|;
 name|delta
 operator|=
-name|tco_delta
+name|tc_delta
 argument_list|(
 name|tc
 argument_list|)
@@ -1608,7 +1581,7 @@ operator|*
 name|delta
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We may be inducing a tiny error here, the tc_poll_pps() may 	 * process a latched count which happens after the tco_delta() 	 * in sync_other_counter(), which would extend the previous 	 * counters parameters into the domain of this new one. 	 * Since the timewindow is very small for this, the error is 	 * going to be only a few weenieseconds (as Dave Mills would 	 * say), so lets just not talk more about it, OK ? 	 */
+comment|/* 	 * We may be inducing a tiny error here, the tc_poll_pps() may 	 * process a latched count which happens after the tc_delta() 	 * in sync_other_counter(), which would extend the previous 	 * counters parameters into the domain of this new one. 	 * Since the timewindow is very small for this, the error is 	 * going to be only a few weenieseconds (as Dave Mills would 	 * say), so lets just not talk more about it, OK ? 	 */
 if|if
 condition|(
 name|tco
@@ -1652,7 +1625,7 @@ name|tc
 argument_list|)
 expr_stmt|;
 comment|/* XXX only needed if xntpd runs */
-name|tco_setscales
+name|tc_setscales
 argument_list|(
 name|tc
 argument_list|)
