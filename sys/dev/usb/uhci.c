@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * USB Universal Host Controller driver.  * Handles e.g. PIIX3 and PIIX4.  *  * UHCI spec: http://www.intel.com/design/usb/uhci11d.pdf  * USB spec: http://www.usb.org/developers/data/usb11.pdf  * PIIXn spec: ftp://download.intel.com/design/intarch/datashts/29055002.pdf  *             ftp://download.intel.com/design/intarch/datashts/29056201.pdf  */
+comment|/*  * USB Universal Host Controller driver.  * Handles e.g. PIIX3 and PIIX4.  *  * UHCI spec: http://developer.intel.com/design/USB/UHCI11D.htm  * USB spec: http://www.usb.org/developers/data/usbspec.zip  * PIIXn spec: ftp://download.intel.com/design/intarch/datashts/29055002.pdf  *             ftp://download.intel.com/design/intarch/datashts/29056201.pdf  */
 end_comment
 
 begin_include
@@ -257,6 +257,13 @@ directive|ifdef
 name|UHCI_DEBUG
 end_ifdef
 
+begin_decl_stmt
+name|uhci_softc_t
+modifier|*
+name|thesc
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -283,9 +290,44 @@ begin_decl_stmt
 name|int
 name|uhcidebug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|uhcinoloop
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__NetBSD__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|bitmask_snprintf
+parameter_list|(
+name|q
+parameter_list|,
+name|f
+parameter_list|,
+name|b
+parameter_list|,
+name|l
+parameter_list|)
+value|snprintf((b), (l), "%b", (q), (f))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -327,6 +369,11 @@ directive|if
 name|defined
 argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
 argument_list|)
 end_if
 
@@ -613,7 +660,7 @@ literal|0
 end_if
 
 begin_endif
-unit|Static void		uhci_enter_ctl_q(uhci_softc_t *, uhci_soft_qh_t *, 				      uhci_intr_info_t *); Static void		uhci_exit_ctl_q(uhci_softc_t *, uhci_soft_qh_t *);
+unit|Static void		uhci_enter_ctl_q(uhci_softc_t *, uhci_soft_qh_t *, 					 uhci_intr_info_t *); Static void		uhci_exit_ctl_q(uhci_softc_t *, uhci_soft_qh_t *);
 endif|#
 directive|endif
 end_endif
@@ -1331,6 +1378,17 @@ end_ifdef
 begin_function_decl
 name|Static
 name|void
+name|uhci_dump_all
+parameter_list|(
+name|uhci_softc_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Static
+name|void
 name|uhci_dumpregs
 parameter_list|(
 name|uhci_softc_t
@@ -1379,6 +1437,27 @@ name|uhci_dump_td
 parameter_list|(
 name|uhci_soft_td_t
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Static
+name|void
+name|uhci_dump_ii
+parameter_list|(
+name|uhci_intr_info_t
+modifier|*
+name|ii
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|uhci_dump
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1496,7 +1575,7 @@ value|100
 end_define
 
 begin_comment
-comment|/* reset timeout */
+comment|/* ms, reset timeout */
 end_comment
 
 begin_define
@@ -1745,6 +1824,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UHCI_DEBUG
+name|thesc
+operator|=
+name|sc
+expr_stmt|;
 if|if
 condition|(
 name|uhcidebug
@@ -2096,7 +2179,7 @@ name|sqh
 operator|->
 name|elink
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|sqh
 operator|->
@@ -2220,18 +2303,23 @@ expr|struct
 name|uhci_pipe
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_suspend
-operator|=
-name|PWR_RESUME
-expr_stmt|;
 if|#
 directive|if
 name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+name|sc
+operator|->
+name|sc_suspend
+operator|=
+name|PWR_RESUME
+expr_stmt|;
 name|sc
 operator|->
 name|sc_powerhook
@@ -2446,6 +2534,11 @@ directive|if
 name|defined
 argument_list|(
 name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
 argument_list|)
 name|powerhook_disestablish
 argument_list|(
@@ -2771,7 +2864,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle suspend/resume.  *  * We need to switch to polling mode here, because this routine is  * called from an intterupt context.  This is all right since we  * are almost suspended anyway.  */
+comment|/*  * Handle suspend/resume.  *  * We need to switch to polling mode here, because this routine is  * called from an interrupt context.  This is all right since we  * are almost suspended anyway.  */
 end_comment
 
 begin_function
@@ -3523,14 +3616,68 @@ end_function
 begin_if
 if|#
 directive|if
-literal|0
+literal|1
 end_if
 
+begin_function
+name|void
+name|uhci_dump
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uhci_dump_all
+argument_list|(
+name|thesc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_endif
-unit|void uhci_dump() { 	uhci_softc_t *sc = uhci;  	uhci_dumpregs(sc); 	printf("intrs=%d\n", sc->sc_bus.no_intrs); 	printf("framelist[i].link = %08x\n", sc->sc_framelist[0].link); 	uhci_dump_qh(sc->sc_ctl_start->qh.hlink); }
 endif|#
 directive|endif
 end_endif
+
+begin_function
+name|void
+name|uhci_dump_all
+parameter_list|(
+name|uhci_softc_t
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|uhci_dumpregs
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"intrs=%d\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|no_intrs
+argument_list|)
+expr_stmt|;
+comment|/*printf("framelist[i].link = %08x\n", sc->sc_framelist[0].link);*/
+name|uhci_dump_qh
+argument_list|(
+name|sc
+operator|->
+name|sc_ctl_start
+operator|->
+name|qh
+operator|.
+name|hlink
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -4674,7 +4821,7 @@ name|status
 operator|==
 literal|0
 condition|)
-comment|/* nothing to be done (PCI shared interrupt) */
+comment|/* The interrupt was not for us. */
 return|return
 operator|(
 literal|0
@@ -4743,6 +4890,9 @@ name|ack
 operator||=
 name|UHCI_STS_RD
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UHCI_DEBUG
 name|printf
 argument_list|(
 literal|"%s: resume detect\n"
@@ -4757,6 +4907,8 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -5047,7 +5199,7 @@ condition|)
 block|{
 name|DPRINTFN
 argument_list|(
-literal|15
+literal|12
 argument_list|,
 operator|(
 literal|"uhci_check_intr: active ii=%p\n"
@@ -5106,7 +5258,7 @@ condition|)
 goto|goto
 name|done
 goto|;
-comment|/* 			 * We want short packets, 			 * and it is short: it's done 			 */
+comment|/* We want short packets, and it is short: it's done */
 if|if
 condition|(
 operator|(
@@ -5138,7 +5290,7 @@ goto|;
 block|}
 name|DPRINTFN
 argument_list|(
-literal|15
+literal|12
 argument_list|,
 operator|(
 literal|"uhci_check_intr: ii=%p std=%p still active\n"
@@ -5155,6 +5307,17 @@ return|return;
 block|}
 name|done
 label|:
+name|DPRINTFN
+argument_list|(
+literal|12
+argument_list|,
+operator|(
+literal|"uhci_check_intr: ii=%p done\n"
+operator|,
+name|ii
+operator|)
+argument_list|)
+expr_stmt|;
 name|usb_untimeout
 argument_list|(
 name|uhci_timeout
@@ -5222,6 +5385,17 @@ decl_stmt|;
 name|int
 name|actlen
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|12
+argument_list|,
+operator|(
+literal|"uhci_idone: ii=%p\n"
+operator|,
+name|ii
+operator|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -5244,6 +5418,21 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UHCI_DEBUG
+name|printf
+argument_list|(
+literal|"uhci_idone: ii is done!\n   "
+argument_list|)
+expr_stmt|;
+name|uhci_dump_ii
+argument_list|(
+name|ii
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|printf
 argument_list|(
 literal|"uhci_idone: ii=%p is done!\n"
@@ -5251,6 +5440,8 @@ argument_list|,
 name|ii
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 name|ii
@@ -5624,6 +5815,33 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|UHCI_DEBUG
+name|char
+name|sbuf
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|bitmask_snprintf
+argument_list|(
+operator|(
+name|u_int32_t
+operator|)
+name|status
+argument_list|,
+literal|"\20\22BITSTUFF\23CRCTO\24NAK\25"
+literal|"BABBLE\26DBUFFER\27STALLED\30ACTIVE"
+argument_list|,
+name|sbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|DPRINTFN
 argument_list|(
 operator|(
@@ -5636,7 +5854,7 @@ literal|10
 argument_list|,
 operator|(
 literal|"uhci_idone: error, addr=%d, endpt=0x%02x, "
-literal|"status 0x%b\n"
+literal|"status 0x%s\n"
 operator|,
 name|xfer
 operator|->
@@ -5656,16 +5874,12 @@ name|edesc
 operator|->
 name|bEndpointAddress
 operator|,
-operator|(
-name|int
-operator|)
-name|status
-operator|,
-literal|"\20\22BITSTUFF\23CRCTO\24NAK\25BABBLE\26DBUFFER\27"
-literal|"STALLED\30ACTIVE"
+name|sbuf
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|status
@@ -5705,6 +5919,17 @@ expr_stmt|;
 name|usb_transfer_complete
 argument_list|(
 name|xfer
+argument_list|)
+expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|12
+argument_list|,
+operator|(
+literal|"uhci_idone: ii=%p done\n"
+operator|,
+name|ii
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6002,22 +6227,82 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|void uhci_reset(void *p) { 	uhci_softc_t *sc = p; 	int n;  	UHCICMD(sc, UHCI_CMD_HCRESET);
+begin_function
+name|void
+name|uhci_reset
+parameter_list|(
+name|uhci_softc_t
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|int
+name|n
+decl_stmt|;
+name|UHCICMD
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_CMD_HCRESET
+argument_list|)
+expr_stmt|;
 comment|/* The reset bit goes low when the controller is done. */
-end_comment
-
-begin_endif
-unit|for (n = 0; n< UHCI_RESET_TIMEOUT&&  		    (UREAD2(sc, UHCI_CMD)& UHCI_CMD_HCRESET); n++) 		delay(100); 	if (n>= UHCI_RESET_TIMEOUT) 		printf("%s: controller did not reset\n",  		       USBDEVNAME(sc->sc_bus.bdev)); }
-endif|#
-directive|endif
-end_endif
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+name|UHCI_RESET_TIMEOUT
+operator|&&
+operator|(
+name|UREAD2
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_CMD
+argument_list|)
+operator|&
+name|UHCI_CMD_HCRESET
+operator|)
+condition|;
+name|n
+operator|++
+control|)
+name|usb_delay_ms
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>=
+name|UHCI_RESET_TIMEOUT
+condition|)
+name|printf
+argument_list|(
+literal|"%s: controller did not reset\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|usbd_status
@@ -6982,7 +7267,7 @@ literal|1
 expr_stmt|;
 name|lastp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|lastlink
 operator|=
@@ -7061,7 +7346,7 @@ name|sc
 argument_list|,
 name|lastp
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -7321,7 +7606,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/* Pipe isn't running (otherwise err would be USBD_INPROG), 	 * start first 	 */
+comment|/*  	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
 return|return
 operator|(
 name|uhci_device_bulk_start
@@ -7889,7 +8174,7 @@ name|stdstart
 init|;
 name|std
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|std
 operator|=
@@ -8041,6 +8326,17 @@ operator|=
 name|splusb
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|ii
+operator|->
+name|isdone
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 name|usb_transfer_complete
 argument_list|(
 name|xfer
@@ -8119,7 +8415,6 @@ operator|->
 name|iinfo
 argument_list|)
 expr_stmt|;
-comment|/* XXX free other resources */
 block|}
 end_function
 
@@ -8151,7 +8446,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/* Pipe isn't running (otherwise err would be USBD_INPROG), 	 * start first 	 */
+comment|/*  	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
 return|return
 operator|(
 name|uhci_device_ctrl_start
@@ -8286,7 +8581,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/* Pipe isn't running (otherwise err would be USBD_INPROG), 	 * start first 	 */
+comment|/*  	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
 return|return
 operator|(
 name|uhci_device_intr_start
@@ -9445,7 +9740,7 @@ name|link
 operator|.
 name|std
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|stat
 operator|->
@@ -9922,7 +10217,7 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-comment|/* and put on interrupt list if the pipe wasn't running */
+comment|/* and start if the pipe wasn't running */
 if|if
 condition|(
 operator|!
@@ -10058,6 +10353,13 @@ name|USBD_IN_PROGRESS
 condition|)
 block|{
 comment|/* This request has already been entered into the frame list */
+name|printf
+argument_list|(
+literal|"uhci_device_isoc_enter: xfer=%p in frame list\n"
+argument_list|,
+name|xfer
+argument_list|)
+expr_stmt|;
 comment|/* XXX */
 block|}
 ifdef|#
@@ -10383,6 +10685,17 @@ name|s
 decl_stmt|,
 name|i
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+operator|(
+literal|"uhci_device_isoc_start: xfer=%p\n"
+operator|,
+name|xfer
+operator|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -10437,6 +10750,29 @@ index|[
 name|i
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|end
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"uhci_device_isoc_start: end == NULL\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|USBD_INVAL
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 name|s
 operator|=
 name|splusb
@@ -10487,7 +10823,6 @@ name|ii
 operator|->
 name|isdone
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"uhci_device_isoc_start: not done, ii=%p\n"
@@ -10495,7 +10830,6 @@ argument_list|,
 name|ii
 argument_list|)
 expr_stmt|;
-block|}
 name|ii
 operator|->
 name|isdone
@@ -11350,6 +11684,61 @@ name|list
 argument_list|)
 expr_stmt|;
 comment|/* remove from active list */
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|xfer
+operator|->
+name|busy_free
+operator|!=
+name|XFER_BUSY
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"uhci_device_isoc_done: xfer=%p not busy 0x%08x\n"
+argument_list|,
+name|xfer
+argument_list|,
+name|xfer
+operator|->
+name|busy_free
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|ii
+operator|->
+name|stdend
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"uhci_device_isoc_done: xfer=%p stdend==NULL\n"
+argument_list|,
+name|xfer
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UHCI_DEBUG
+name|uhci_dump_ii
+argument_list|(
+name|ii
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -11454,7 +11843,7 @@ name|sqh
 operator|->
 name|elink
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|sqh
 operator|->
@@ -11476,7 +11865,7 @@ name|ii
 operator|->
 name|stdstart
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* XXX Wasteful. */
@@ -11496,6 +11885,15 @@ decl_stmt|,
 modifier|*
 name|dataend
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+operator|(
+literal|"uhci_device_intr_done: requeing\n"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* This alloc cannot fail since we freed the chain above. */
 name|uhci_alloc_std_chain
 argument_list|(
@@ -11687,6 +12085,15 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* mark as inactive */
+name|DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+operator|(
+literal|"uhci_device_intr_done: removing\n"
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -11891,7 +12298,7 @@ name|ii
 operator|->
 name|stdstart
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|DPRINTFN
@@ -12442,7 +12849,7 @@ name|sqh
 operator|->
 name|elink
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|sqh
 operator|->
@@ -13100,7 +13507,7 @@ comment|/* class */
 name|UDSUBCLASS_HUB
 block|,
 comment|/* subclass */
-literal|0
+name|UDPROTO_FSHUB
 block|,
 comment|/* protocol */
 literal|64
@@ -13184,7 +13591,7 @@ name|UICLASS_HUB
 block|,
 name|UISUBCLASS_HUB
 block|,
-literal|0
+name|UIPROTO_FSHUB
 block|,
 literal|0
 block|}
@@ -13395,7 +13802,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/* Pipe isn't running (otherwise err would be USBD_INPROG), 	 * start first 	 */
+comment|/*  	 * Pipe isn't running (otherwise err would be USBD_INPROG), 	 * so start it first. 	 */
 return|return
 operator|(
 name|uhci_root_ctrl_start
