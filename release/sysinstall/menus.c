@@ -9977,10 +9977,11 @@ literal|"Each item in this list will set what it considers to\n"
 literal|"be \"appropriate\" values in that category for various\n"
 literal|"security-related knobs in /etc/rc.conf."
 block|,
-literal|"Select a canned security profile."
+literal|"Select a canned security profile - F1 for help"
 block|,
-name|NULL
+literal|"security"
 block|,
+comment|/* help file */
 block|{
 block|{
 literal|"X Exit"

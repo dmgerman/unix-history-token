@@ -2563,8 +2563,8 @@ literal|"This means that most \"popular\" network services and\n"
 literal|"mechanisms like inetd(8) have been enabled by default\n"
 literal|"for a comfortable user experience but with possible\n"
 literal|"trade-offs in system security.  If this bothers you and\n"
-literal|"you know exactly what you are doing, select the high\n"
-literal|"high security profile instead.\n\n"
+literal|"you know exactly what you are doing, select one of the\n"
+literal|"other security profiles instead.\n\n"
 literal|"To change any of these settings later, edit /etc/rc.conf"
 argument_list|)
 expr_stmt|;
@@ -2641,9 +2641,9 @@ literal|"Liberal security settings have been selected.\n\n"
 literal|"This means that most \"popular\" network services and\n"
 literal|"mechanisms like inetd(8) have been enabled by default\n"
 literal|"for the most comfortable user experience but with possible\n"
-literal|"trade-offs in system security.  If this bothers you, select\n"
-literal|"the medium security profile or, if you know exactly what you\n"
-literal|"are doing, the high security profile instead.\n\n"
+literal|"trade-offs in system security.  If this bothers you and\n"
+literal|"you know exactly what you are doing, select one of the\n"
+literal|"other security profiles instead.\n\n"
 literal|"To change any of these settings later, edit /etc/rc.conf"
 argument_list|)
 expr_stmt|;
