@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	2.2.1.1	%G%"
+literal|"@(#)collect.c	2.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,6 +203,12 @@ literal|'\0'
 expr_stmt|;
 while|while
 condition|(
+operator|!
+name|feof
+argument_list|(
+name|stdin
+argument_list|)
+operator|&&
 name|fgets
 argument_list|(
 name|buf
