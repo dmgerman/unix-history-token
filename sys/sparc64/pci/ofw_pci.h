@@ -15,6 +15,12 @@ directive|define
 name|_SPARC64_PCI_OFW_PCI_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/ofw_bus.h>
+end_include
+
 begin_comment
 comment|/* PCI range child spaces. XXX: are these MI? */
 end_comment
@@ -150,9 +156,17 @@ name|u_int32_t
 name|ofw_pci_route_intr
 parameter_list|(
 name|phandle_t
+parameter_list|,
+name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|obr_callback_t
+name|ofw_pci_orb_callback
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|u_int8_t
@@ -176,6 +190,8 @@ parameter_list|(
 name|device_t
 parameter_list|,
 name|phandle_t
+parameter_list|,
+name|u_int32_t
 parameter_list|,
 name|struct
 name|ofw_pci_bdesc

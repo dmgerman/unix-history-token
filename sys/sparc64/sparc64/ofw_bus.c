@@ -486,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Apply the OpenFirmware algorithm for mapping an interrupt. First, the  * 'interrupts' and 'reg' properties are retrieved; those are matched against  * the interrupt map of the next higher node. If there is no match or no such  * propery, we go to the next higher node, using the 'reg' property of the node  * that was just processed unusccessfully.  * When a match occurs, we continue to search, using the new interrupt  * specification that was just found.  * When the root node is reached with at least one successful mapping performed,  * and the format is right, the interrupt number is returned.  *  * This should work for all bus systems.  */
+comment|/*  * Apply the OpenFirmware algorithm for mapping an interrupt. First, the  * 'interrupts' and 'reg' properties are retrieved; those are matched against  * the interrupt map of the next higher node. If there is no match or no such  * propery, we go to the next higher node, using the 'reg' property of the node  * that was just processed unusccessfully.  * When a match occurs, we should continue to search, using the new interrupt  * specification that was just found; this is currently not performed  * (see below).  * When the root node is reached with at least one successful mapping performed,  * and the format is right, the interrupt number is returned.  *  * This should work for all bus systems.  */
 end_comment
 
 begin_function
@@ -498,6 +498,10 @@ name|node
 parameter_list|,
 name|int
 name|intrp
+parameter_list|,
+name|obr_callback_t
+modifier|*
+name|cb
 parameter_list|)
 block|{
 name|u_int8_t
@@ -719,7 +723,63 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+comment|/* 			 * Use the callback to allow caller-specific workarounds 			 * for firmware bugs (missing properties). 			 */
+if|if
+condition|(
+name|cb
+operator|!=
+name|NULL
+condition|)
+block|{
+name|tisz
+operator|=
+name|cb
+argument_list|(
+name|parent
+argument_list|,
+name|intr
+argument_list|,
+name|isz
+argument_list|,
+name|reg
+argument_list|,
+name|regsz
+argument_list|,
+operator|&
+name|tintr
+argument_list|,
+operator|&
+name|found
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tisz
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|isz
+operator|=
+name|tisz
+expr_stmt|;
+name|free
+argument_list|(
+name|intr
+argument_list|,
+name|M_OFWPROP
+argument_list|)
+expr_stmt|;
+name|intr
+operator|=
+name|tintr
+expr_stmt|;
+block|}
+block|}
 continue|continue;
+block|}
 if|if
 condition|(
 name|OF_getprop

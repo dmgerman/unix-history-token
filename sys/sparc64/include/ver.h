@@ -182,6 +182,14 @@ name|cpu_impl
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|sparc64_model
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Known implementations. */
 end_comment

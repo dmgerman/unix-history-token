@@ -523,6 +523,8 @@ argument_list|(
 name|node
 argument_list|,
 name|ino
+argument_list|,
+name|ofw_pci_orb_callback
 argument_list|)
 expr_stmt|;
 block|}

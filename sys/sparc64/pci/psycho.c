@@ -3039,6 +3039,10 @@ name|sc
 operator|->
 name|sc_node
 argument_list|,
+name|sc
+operator|->
+name|sc_ign
+argument_list|,
 operator|&
 name|obd
 argument_list|)

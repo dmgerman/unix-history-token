@@ -483,6 +483,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+name|sparc64_model
+index|[
+literal|32
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|timecounter_get_t
 name|tick_get_timecount
@@ -712,6 +721,13 @@ name|PCPU_GET
 argument_list|(
 name|cpuid
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Model: %s\n"
+argument_list|,
+name|sparc64_model
 argument_list|)
 expr_stmt|;
 name|vm_ksubmap_init
@@ -1474,6 +1490,22 @@ expr_stmt|;
 name|tick_init
 argument_list|(
 name|clock
+argument_list|)
+expr_stmt|;
+name|OF_getprop
+argument_list|(
+name|root
+argument_list|,
+literal|"name"
+argument_list|,
+name|sparc64_model
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sparc64_model
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

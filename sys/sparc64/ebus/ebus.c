@@ -1844,6 +1844,8 @@ name|intrs
 index|[
 name|i
 index|]
+argument_list|,
+name|ofw_pci_orb_callback
 argument_list|)
 expr_stmt|;
 if|if
