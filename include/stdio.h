@@ -630,7 +630,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|size_t
+name|int
 operator|,
 name|FILE
 operator|*
@@ -810,7 +810,6 @@ name|ftell
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|FILE
 operator|*
 operator|)
