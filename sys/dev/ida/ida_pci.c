@@ -554,6 +554,15 @@ name|ida_v4_access
 block|}
 block|,
 block|{
+literal|0x40480E11
+block|,
+literal|"Compaq RAID LC2 controller"
+block|,
+operator|&
+name|ida_v4_access
+block|}
+block|,
+block|{
 literal|0x40500E11
 block|,
 literal|"Compaq Smart Array 4200 controller"
@@ -851,6 +860,14 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|u_int32_t
+name|id
+init|=
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|struct
 name|ida_softc
 modifier|*
@@ -941,9 +958,7 @@ name|IDA_PCI_MEMADDR
 expr_stmt|;
 if|if
 condition|(
-name|board
-operator|->
-name|board
+name|id
 operator|==
 name|IDA_DEVICEID_DEC_SMART
 condition|)
