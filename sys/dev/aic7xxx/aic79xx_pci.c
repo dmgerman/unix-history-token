@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *	aic7901 and aic7902 SCSI controllers  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx_pci.c#61 $  *  * $FreeBSD$  */
+comment|/*  * Product specific probe and attach routines for:  *	aic7901 and aic7902 SCSI controllers  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx_pci.c#66 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -197,6 +197,13 @@ define|#
 directive|define
 name|ID_AHA_39320
 value|0x8010900500409005ull
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AHA_39320A
+value|0x8016900500409005ull
 end_define
 
 begin_define
@@ -461,6 +468,16 @@ block|,
 name|ID_ALL_MASK
 block|,
 literal|"Adaptec 39320 Ultra320 SCSI adapter"
+block|,
+name|ahd_aic7902_setup
+block|}
+block|,
+block|{
+name|ID_AHA_39320A
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec 39320A Ultra320 SCSI adapter"
 block|,
 name|ahd_aic7902_setup
 block|}
@@ -2917,6 +2934,7 @@ index|[]
 init|=
 block|{
 literal|"%s: Received split response in %s.\n"
+block|,
 literal|"%s: Received split completion error message in %s\n"
 block|,
 literal|"%s: Receive overrun in %s\n"
@@ -2930,7 +2948,7 @@ block|,
 literal|"%s: Split completion byte count error in %s\n"
 block|,
 literal|"%s: Signaled Target-abort to early terminate a split in %s\n"
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -3101,7 +3119,7 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* Clear latched errors.  So our interupt deasserts. */
+comment|/* Clear latched errors.  So our interrupt deasserts. */
 name|ahd_outb
 argument_list|(
 name|ahd
@@ -3401,7 +3419,7 @@ argument_list|,
 name|DCHSPLTSTAT1
 argument_list|)
 expr_stmt|;
-comment|/* Clear latched errors.  So our interupt deasserts. */
+comment|/* Clear latched errors.  So our interrupt deasserts. */
 name|ahd_outb
 argument_list|(
 name|ahd
@@ -3457,7 +3475,7 @@ argument_list|,
 name|SGSPLTSTAT1
 argument_list|)
 expr_stmt|;
-comment|/* Clear latched errors.  So our interupt deasserts. */
+comment|/* Clear latched errors.  So our interrupt deasserts. */
 name|ahd_outb
 argument_list|(
 name|ahd
@@ -3891,6 +3909,8 @@ operator||
 name|AHD_ABORT_LQI_BUG
 operator||
 name|AHD_INTCOLLISION_BUG
+operator||
+name|AHD_EARLY_REQ_BUG
 expr_stmt|;
 comment|/* 		 * IO Cell paramter setup. 		 */
 name|AHD_SET_PRECOMP

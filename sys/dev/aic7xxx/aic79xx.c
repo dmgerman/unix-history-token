@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core routines and tables shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2003 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.c#156 $  *  * $FreeBSD$  */
+comment|/*  * Core routines and tables shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2003 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.c#165 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -5896,6 +5896,29 @@ elseif|else
 if|if
 condition|(
 operator|(
+name|lqistat1
+operator|&
+name|LQICRCI_NLQ
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * This status can be delayed during some 		 * streaming operations.  The SCSIPHASE 		 * handler has already dealt with this case 		 * so just clear the error. 		 */
+name|ahd_outb
+argument_list|(
+name|ahd
+argument_list|,
+name|CLRLQIINT1
+argument_list|,
+name|CLRLQICRCI_NLQ
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
 name|status
 operator|&
 name|BUSFREE
@@ -7254,23 +7277,6 @@ argument_list|(
 literal|"SCB not valid during LQOBUSFREE"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Return the LQO manager to its idle loop.  It will 		 * not do this automatically if the busfree occurs 		 * after the first REQ of either the LQ or command 		 * packet or between the LQ and command packet. 		 */
-name|ahd_outb
-argument_list|(
-name|ahd
-argument_list|,
-name|LQCTL2
-argument_list|,
-name|ahd_inb
-argument_list|(
-name|ahd
-argument_list|,
-name|LQCTL2
-argument_list|)
-operator||
-name|LQOTOIDLE
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Clear the status. 		 */
 name|ahd_outb
 argument_list|(
@@ -7319,6 +7325,11 @@ operator|~
 name|ENSELO
 argument_list|)
 expr_stmt|;
+name|ahd_flush_device_writes
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|ahd_outb
 argument_list|(
 name|ahd
@@ -7326,6 +7337,23 @@ argument_list|,
 name|CLRSINT0
 argument_list|,
 name|CLRSELDO
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Return the LQO manager to its idle loop.  It will 		 * not do this automatically if the busfree occurs 		 * after the first REQ of either the LQ or command 		 * packet or between the LQ and command packet. 		 */
+name|ahd_outb
+argument_list|(
+name|ahd
+argument_list|,
+name|LQCTL2
+argument_list|,
+name|ahd_inb
+argument_list|(
+name|ahd
+argument_list|,
+name|LQCTL2
+argument_list|)
+operator||
+name|LQOTOIDLE
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Update the waiting for selection queue so 		 * we restart on the correct SCB. 		 */
@@ -7370,10 +7398,6 @@ argument_list|,
 name|WAITING_TID_TAIL
 argument_list|)
 expr_stmt|;
-name|next
-operator|=
-name|SCB_LIST_NULL
-expr_stmt|;
 if|if
 condition|(
 name|waiting_t
@@ -7389,6 +7413,10 @@ name|WAITING_TID_TAIL
 argument_list|,
 name|scbid
 argument_list|)
+expr_stmt|;
+name|next
+operator|=
+name|SCB_LIST_NULL
 expr_stmt|;
 block|}
 else|else
@@ -7607,6 +7635,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"Unexpected PKT busfree condition\n"
+argument_list|)
+expr_stmt|;
+name|ahd_dump_card_state
+argument_list|(
+name|ahd
 argument_list|)
 expr_stmt|;
 name|ahd_abort_scbs
@@ -21895,6 +21928,15 @@ argument_list|(
 name|ahd
 argument_list|)
 expr_stmt|;
+name|ahd_set_modes
+argument_list|(
+name|ahd
+argument_list|,
+name|AHD_MODE_SCSI
+argument_list|,
+name|AHD_MODE_SCSI
+argument_list|)
+expr_stmt|;
 name|sxfrctl1
 operator|=
 name|ahd_inb
@@ -22080,7 +22122,16 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* After a reset, we know the state of the mode register. */
+comment|/* 	 * Mode should be SCSI after a chip reset, but lets 	 * set it just to be safe. 	 */
+name|ahd_set_modes
+argument_list|(
+name|ahd
+argument_list|,
+name|AHD_MODE_SCSI
+argument_list|,
+name|AHD_MODE_SCSI
+argument_list|)
+expr_stmt|;
 name|ahd_known_modes
 argument_list|(
 name|ahd
@@ -22088,6 +22139,27 @@ argument_list|,
 name|AHD_MODE_SCSI
 argument_list|,
 name|AHD_MODE_SCSI
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Restore SXFRCTL1. 	 * 	 * We must always initialize STPWEN to 1 before we 	 * restore the saved values.  STPWEN is initialized 	 * to a tri-state condition which can only be cleared 	 * by turning it on. 	 */
+name|ahd_outb
+argument_list|(
+name|ahd
+argument_list|,
+name|SXFRCTL1
+argument_list|,
+name|sxfrctl1
+operator||
+name|STPWEN
+argument_list|)
+expr_stmt|;
+name|ahd_outb
+argument_list|(
+name|ahd
+argument_list|,
+name|SXFRCTL1
+argument_list|,
+name|sxfrctl1
 argument_list|)
 expr_stmt|;
 comment|/* Determine chip configuration */
@@ -22119,28 +22191,7 @@ name|features
 operator||=
 name|AHD_WIDE
 expr_stmt|;
-comment|/* 	 * Restore SXFRCTL1. 	 * 	 * We must always initialize STPWEN to 1 before we 	 * restore the saved values.  STPWEN is initialized 	 * to a tri-state condition which can only be cleared 	 * by turning it on. 	 */
-name|ahd_outb
-argument_list|(
-name|ahd
-argument_list|,
-name|SXFRCTL1
-argument_list|,
-name|sxfrctl1
-operator||
-name|STPWEN
-argument_list|)
-expr_stmt|;
-name|ahd_outb
-argument_list|(
-name|ahd
-argument_list|,
-name|SXFRCTL1
-argument_list|,
-name|sxfrctl1
-argument_list|)
-expr_stmt|;
-comment|/* 	 * If a recovery action has forced a chip reset, 	 * re-initialize the chip to our likeing. 	 */
+comment|/* 	 * If a recovery action has forced a chip reset, 	 * re-initialize the chip to our liking. 	 */
 if|if
 condition|(
 name|ahd
@@ -22615,7 +22666,7 @@ operator|->
 name|parent_dmat
 argument_list|,
 comment|/*alignment*/
-literal|1
+literal|8
 argument_list|,
 comment|/*boundary*/
 name|BUS_SPACE_MAXADDR_32BIT
@@ -26855,6 +26906,8 @@ argument_list|,
 name|CURRFIFODEF
 operator||
 name|WIDERESEN
+operator||
+name|SHVALIDSTDIS
 argument_list|)
 expr_stmt|;
 if|if
@@ -28464,8 +28517,7 @@ name|user
 operator|.
 name|offset
 operator|=
-operator|~
-literal|0
+name|MAX_OFFSET
 expr_stmt|;
 name|tinfo
 operator|->
@@ -29529,6 +29581,9 @@ modifier|*
 name|ahd
 parameter_list|)
 block|{
+name|ahd_mode_state
+name|saved_modes
+decl_stmt|;
 name|u_int
 name|intstat
 decl_stmt|;
@@ -29547,10 +29602,6 @@ operator|->
 name|flags
 operator||=
 name|AHD_ALL_INTERRUPTS
-expr_stmt|;
-name|intstat
-operator|=
-literal|0
 expr_stmt|;
 name|paused
 operator|=
@@ -29589,6 +29640,22 @@ expr_stmt|;
 name|ahd_clear_critical_section
 argument_list|(
 name|ahd
+argument_list|)
+expr_stmt|;
+name|saved_modes
+operator|=
+name|ahd_save_modes
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
+name|ahd_set_modes
+argument_list|(
+name|ahd
+argument_list|,
+name|AHD_MODE_SCSI
+argument_list|,
+name|AHD_MODE_SCSI
 argument_list|)
 expr_stmt|;
 if|if
@@ -29691,32 +29758,6 @@ operator||
 name|ENSELO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|intstat
-operator|==
-literal|0xFF
-operator|&&
-operator|(
-name|ahd
-operator|->
-name|features
-operator|&
-name|AHD_REMOVABLE
-operator|)
-operator|!=
-literal|0
-condition|)
-break|break;
-block|}
-do|while
-condition|(
-operator|--
-name|maxloops
-operator|&&
-operator|(
-operator|(
-operator|(
 name|intstat
 operator|=
 name|ahd_inb
@@ -29725,7 +29766,32 @@ name|ahd
 argument_list|,
 name|INTSTAT
 argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|--
+name|maxloops
+operator|&&
+operator|(
+name|intstat
+operator|!=
+literal|0xFF
+operator|||
+operator|(
+name|ahd
+operator|->
+name|features
+operator|&
+name|AHD_REMOVABLE
 operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|intstat
 operator|&
 name|INT_PEND
 operator|)
@@ -29785,6 +29851,13 @@ name|flags
 operator|&=
 operator|~
 name|AHD_ALL_INTERRUPTS
+expr_stmt|;
+name|ahd_restore_modes
+argument_list|(
+name|ahd
+argument_list|,
+name|saved_modes
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -36147,7 +36220,7 @@ name|sg_prefetch_align
 operator|==
 literal|0
 condition|)
-name|sg_prefetch_cnt
+name|sg_prefetch_align
 operator|=
 literal|8
 expr_stmt|;

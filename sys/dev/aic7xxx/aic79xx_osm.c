@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Bus independent FreeBSD shim for the aic7xxx based adaptec SCSI controllers  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2001-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/aic7xxx/freebsd/dev/aic7xxx/aic79xx_osm.c#25 $  *  * $FreeBSD$  */
+comment|/*  * Bus independent FreeBSD shim for the aic7xxx based adaptec SCSI controllers  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2001-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/aic7xxx/freebsd/dev/aic7xxx/aic79xx_osm.c#26 $  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -6068,6 +6068,7 @@ block|{
 name|u_long
 name|s
 decl_stmt|;
+comment|/* 				 * Should CAM start to support CDB sizes 				 * greater than 16 bytes, we could use 				 * the sense buffer to store the CDB. 				 */
 name|ahd_set_transaction_status
 argument_list|(
 name|scb
@@ -6129,6 +6130,8 @@ name|shared_data
 operator|.
 name|idata
 operator|.
+name|cdb_from_host
+operator|.
 name|cdbptr
 operator|=
 name|ahd_htole64
@@ -6142,6 +6145,26 @@ name|cdb_io
 operator|.
 name|cdb_ptr
 argument_list|)
+expr_stmt|;
+name|hscb
+operator|->
+name|shared_data
+operator|.
+name|idata
+operator|.
+name|cdb_from_host
+operator|.
+name|cdblen
+operator|=
+name|csio
+operator|->
+name|cdb_len
+expr_stmt|;
+name|hscb
+operator|->
+name|cdb_len
+operator||=
+name|SCB_CDB_LEN_PTR
 expr_stmt|;
 block|}
 else|else
