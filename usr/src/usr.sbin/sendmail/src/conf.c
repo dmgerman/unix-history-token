@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.82 (Berkeley) %G%"
+literal|"@(#)conf.c	8.83 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4492,7 +4492,9 @@ name|open
 argument_list|(
 literal|"/dev/tty"
 argument_list|,
-literal|2
+name|O_RDWR
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.52 (Berkeley) %G%"
+literal|"@(#)main.c	8.53 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -674,6 +674,8 @@ argument_list|(
 literal|"/dev/null"
 argument_list|,
 name|O_RDWR
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
