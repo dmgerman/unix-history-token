@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.90 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.91 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4499,16 +4499,38 @@ expr_stmt|;
 comment|/* reset user and group */
 if|if
 condition|(
-operator|!
 name|bitnset
 argument_list|(
-name|M_RESTR
+name|M_SPECIFIC_UID
 argument_list|,
 name|m
 operator|->
 name|m_flags
 argument_list|)
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|setgid
+argument_list|(
+name|m
+operator|->
+name|m_gid
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setuid
+argument_list|(
+name|m
+operator|->
+name|m_uid
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 if|if
 condition|(
