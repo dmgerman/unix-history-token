@@ -12977,15 +12977,6 @@ name|int
 name|error
 decl_stmt|;
 comment|/* 	 * We have to try and flush any buffered writes here if we were writing. 	 * 	 * The SCSI specification is vague enough about situations like 	 * different sized blocks in a tape drive buffer as to make one 	 * wary about trying to figure out the actual block location value 	 * if data is in the tape drive buffer. 	 */
-name|ccb
-operator|=
-name|cam_periph_getccb
-argument_list|(
-name|periph
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|softc
@@ -13020,6 +13011,15 @@ name|error
 operator|)
 return|;
 block|}
+name|ccb
+operator|=
+name|cam_periph_getccb
+argument_list|(
+name|periph
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|scsi_read_position
 argument_list|(
 operator|&
