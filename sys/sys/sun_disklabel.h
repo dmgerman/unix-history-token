@@ -48,6 +48,17 @@ value|512
 end_define
 
 begin_comment
+comment|/*  * XXX: I am actually not sure if this should be "16 sectors" or "8192 bytes".  * XXX: Considering that Sun went to the effort of getting 512 byte compatible  * XXX: CDROM drives produced my guess is that Sun computers stand little or  * XXX: even no chance of running, much less booting on !=512 byte media.  * XXX: Define this is in terms of bytes since that is easier for us.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUN_BOOTSIZE
+value|8192
+end_define
+
+begin_comment
 comment|/* partition info */
 end_comment
 
