@@ -202,7 +202,9 @@ name|td
 operator|->
 name|td_ucred
 decl_stmt|;
-comment|/* Check for user match. */
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|cred
@@ -222,27 +224,32 @@ operator|->
 name|uid
 condition|)
 block|{
+comment|/* 		 * For a non-create/owner, we require privilege to 		 * modify the object protections.  Note: some other 		 * implementations permit IPC_M to be delegated to 		 * unprivileged non-creator/owner uids/gids. 		 */
 if|if
 condition|(
 name|mode
 operator|&
 name|IPC_M
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|suser
 argument_list|(
 name|td
 argument_list|)
-operator|==
-literal|0
-condition|?
-literal|0
-else|:
-name|EPERM
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
 operator|)
 return|;
-comment|/* Check for group match. */
+block|}
+comment|/* 		 * Try to match against creator/owner group; if not, fall 		 * back on other. 		 */
 name|mode
 operator|>>=
 literal|3
@@ -269,12 +276,14 @@ argument_list|,
 name|cred
 argument_list|)
 condition|)
-comment|/* Check for `other' match. */
 name|mode
 operator|>>=
 literal|3
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* 		 * Always permit the creator/owner to update the object 		 * protections regardless of whether the object mode 		 * permits it. 		 */
 if|if
 condition|(
 name|mode
@@ -286,6 +295,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(
