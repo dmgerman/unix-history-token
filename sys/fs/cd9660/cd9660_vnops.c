@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -655,6 +661,7 @@ operator|->
 name|i_dev
 argument_list|)
 expr_stmt|;
+comment|/* XXX WRONG! */
 name|vap
 operator|->
 name|va_fileid
