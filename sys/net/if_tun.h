@@ -19,68 +19,9 @@ directive|define
 name|_NET_IF_TUN_H_
 end_define
 
-begin_struct
-struct|struct
-name|tun_softc
-block|{
-name|u_short
-name|tun_flags
-decl_stmt|;
-comment|/* misc flags */
-define|#
-directive|define
-name|TUN_OPEN
-value|0x0001
-define|#
-directive|define
-name|TUN_INITED
-value|0x0002
-define|#
-directive|define
-name|TUN_RCOLL
-value|0x0004
-define|#
-directive|define
-name|TUN_IASET
-value|0x0008
-define|#
-directive|define
-name|TUN_DSTADDR
-value|0x0010
-define|#
-directive|define
-name|TUN_RWAIT
-value|0x0040
-define|#
-directive|define
-name|TUN_ASYNC
-value|0x0080
-define|#
-directive|define
-name|TUN_READY
-value|(TUN_OPEN | TUN_INITED)
-name|struct
-name|ifnet
-name|tun_if
-decl_stmt|;
-comment|/* the interface */
-name|int
-name|tun_pgrp
-decl_stmt|;
-comment|/* the process group - if any */
-name|struct
-name|selinfo
-name|tun_rsel
-decl_stmt|;
-comment|/* read select */
-name|struct
-name|selinfo
-name|tun_wsel
-decl_stmt|;
-comment|/* write select (not used) */
-block|}
-struct|;
-end_struct
+begin_comment
+comment|/* Refer to if_tunvar.h for the softc stuff */
+end_comment
 
 begin_comment
 comment|/* Maximum transmit packet size (default) */
