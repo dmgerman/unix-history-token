@@ -150,17 +150,25 @@ name|SIGINFO
 argument_list|)
 expr_stmt|;
 comment|/* Check to see if a pending signal is in the wait mask. */
-if|if
-condition|(
 name|tempset
 operator|=
-operator|(
 name|_thread_run
 operator|->
 name|sigpend
-operator|&
+expr_stmt|;
+name|SIGSETAND
+argument_list|(
+name|tempset
+argument_list|,
 name|waitset
-operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SIGNOTEMPTY
+argument_list|(
+name|tempset
+argument_list|)
 condition|)
 block|{
 comment|/* Enter a loop to find a pending signal: */

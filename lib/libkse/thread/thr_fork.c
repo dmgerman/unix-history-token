@@ -105,11 +105,13 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Reset signals pending for the running thread: */
+name|sigemptyset
+argument_list|(
+operator|&
 name|_thread_run
 operator|->
 name|sigpend
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Create a pipe that is written to by the signal handler to 		 * prevent signals being missed in calls to 		 * _thread_sys_select:  		 */
 if|if

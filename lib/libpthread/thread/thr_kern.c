@@ -149,8 +149,7 @@ begin_function
 name|void
 name|_thread_kern_sched
 parameter_list|(
-name|struct
-name|sigcontext
+name|ucontext_t
 modifier|*
 name|scp
 parameter_list|)

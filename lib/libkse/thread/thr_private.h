@@ -1263,8 +1263,7 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Saved signal context used in call to sigreturn by 	 * _thread_kern_sched if sig_saved is TRUE. 	 */
-name|struct
-name|sigcontext
+name|ucontext_t
 name|saved_sigcontext
 decl_stmt|;
 comment|/*  	 * Saved jump buffer used in call to longjmp by _thread_kern_sched 	 * if sig_saved is FALSE. 	 */
@@ -2824,8 +2823,7 @@ begin_function_decl
 name|void
 name|_thread_kern_sched
 parameter_list|(
-name|struct
-name|sigcontext
+name|ucontext_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2907,8 +2905,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|struct
-name|sigcontext
+name|ucontext_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2920,8 +2917,7 @@ name|_thread_sig_handle
 parameter_list|(
 name|int
 parameter_list|,
-name|struct
-name|sigcontext
+name|ucontext_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3067,8 +3063,7 @@ begin_function_decl
 name|int
 name|_thread_sys_sigreturn
 parameter_list|(
-name|struct
-name|sigcontext
+name|ucontext_t
 modifier|*
 parameter_list|)
 function_decl|;

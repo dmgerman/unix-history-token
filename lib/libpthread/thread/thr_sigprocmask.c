@@ -6,6 +6,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -91,12 +109,15 @@ case|case
 name|SIG_BLOCK
 case|:
 comment|/* Add signals to the existing mask: */
+name|SIGSETOR
+argument_list|(
 name|_thread_run
 operator|->
 name|sigmask
-operator||=
+argument_list|,
 operator|*
 name|set
+argument_list|)
 expr_stmt|;
 break|break;
 comment|/* Unblock signals: */
@@ -104,15 +125,15 @@ case|case
 name|SIG_UNBLOCK
 case|:
 comment|/* Clear signals from the existing mask: */
+name|SIGSETNAND
+argument_list|(
 name|_thread_run
 operator|->
 name|sigmask
-operator|&=
-operator|~
-operator|(
+argument_list|,
 operator|*
 name|set
-operator|)
+argument_list|)
 expr_stmt|;
 break|break;
 comment|/* Set the signal process mask: */
