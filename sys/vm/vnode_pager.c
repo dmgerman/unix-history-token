@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  * Copyright (c) 1993,1994 John S. Dyson  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vnode_pager.c	7.5 (Berkeley) 4/20/91  *	$Id: vnode_pager.c,v 1.17 1994/04/05 03:23:53 davidg Exp $  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  * Copyright (c) 1993,1994 John S. Dyson  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vnode_pager.c	7.5 (Berkeley) 4/20/91  *	$Id: vnode_pager.c,v 1.2 1994/05/25 09:21:11 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Page to/from files (vnodes).  *  * TODO:  *	pageouts  *	fix creden
 end_comment
 
 begin_comment
-comment|/*  * MODIFICATIONS:  * John S. Dyson  08 Dec 93  *  * This file in conjunction with some vm_fault mods, eliminate the performance  * advantage for using the buffer cache and minimize memory copies.  *  * 1) Supports multiple - block reads  * 2) Bypasses buffer cache for reads  *   * TODO:  *  * 1) Totally bypass buffer cache for reads  *    (Currently will still sometimes use buffer cache for reads)  * 2) Bypass buffer cache for writes  *    (Code does not support it, but mods are simple)  */
+comment|/*  * MODIFICATIONS:  * John S. Dyson  08 Dec 93  *  * This file in conjunction with some vm_fault mods, eliminate the performance  * advantage for using the buffer cache and minimize memory copies.  *  * 1) Supports multiple - block reads  * 2) Bypasses buffer cache for reads  *  * TODO:  *  * 1) Totally bypass buffer cache for reads  *    (Currently will still sometimes use buffer cache for reads)  * 2) Bypass buffer cache for writes  *    (Code does not support it, but mods are simple)  */
 end_comment
 
 begin_include
@@ -344,7 +344,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 	 * Vnodes keep a pointer to any associated pager so no need to 	 * lookup with vm_pager_lookup. 	 */
+comment|/* 	 * Vnodes keep a pointer to any associated pager so no need to lookup 	 * with vm_pager_lookup. 	 */
 name|vp
 operator|=
 operator|(
@@ -592,7 +592,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * vm_object_lookup() will remove the object from the 		 * cache if found and also gain a reference to the object. 		 */
+comment|/* 		 * vm_object_lookup() will remove the object from the cache if 		 * found and also gain a reference to the object. 		 */
 name|object
 operator|=
 name|vm_object_lookup
@@ -986,9 +986,6 @@ name|daddr_t
 name|bn
 decl_stmt|;
 name|int
-name|run
-decl_stmt|;
-name|int
 name|err
 decl_stmt|;
 comment|/* 	 * Offset beyond end of file, do not have the page 	 */
@@ -1007,7 +1004,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* 	 * Read the index to find the disk block to read 	 * from.  If there is no block, report that we don't 	 * have this data. 	 * 	 * Assumes that the vnode has whole page or nothing. 	 */
+comment|/* 	 * Read the index to find the disk block to read from.  If there is no 	 * block, report that we don't have this data. 	 *  	 * Assumes that the vnode has whole page or nothing. 	 */
 name|err
 operator|=
 name|VOP_BMAP
@@ -1150,7 +1147,7 @@ operator|->
 name|vnp_size
 condition|)
 return|return;
-comment|/* 	 * No object. 	 * This can happen during object termination since 	 * vm_object_page_clean is called after the object 	 * has been removed from the hash table, and clean 	 * may cause vnode write operations which can wind 	 * up back here. 	 */
+comment|/* 	 * No object. This can happen during object termination since 	 * vm_object_page_clean is called after the object has been removed 	 * from the hash table, and clean may cause vnode write operations 	 * which can wind up back here. 	 */
 name|object
 operator|=
 name|vm_object_lookup
@@ -1165,20 +1162,14 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * File has shrunk. 	 * Toss any cached pages beyond the new EOF. 	 */
+comment|/* 	 * File has shrunk. Toss any cached pages beyond the new EOF. 	 */
 if|if
 condition|(
-name|round_page
-argument_list|(
 name|nsize
-argument_list|)
 operator|<
-name|round_page
-argument_list|(
 name|vnp
 operator|->
 name|vnp_size
-argument_list|)
 condition|)
 block|{
 name|vm_object_lock
@@ -1190,20 +1181,17 @@ name|vm_object_page_remove
 argument_list|(
 name|object
 argument_list|,
+name|round_page
+argument_list|(
 operator|(
 name|vm_offset_t
 operator|)
-name|round_page
-argument_list|(
 name|nsize
 argument_list|)
 argument_list|,
-name|round_page
-argument_list|(
 name|vnp
 operator|->
 name|vnp_size
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|vm_object_unlock
@@ -1211,6 +1199,143 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+comment|/* 		 * this gets rid of garbage at the end of a page that is now 		 * only partially backed by the vnode... 		 */
+if|if
+condition|(
+name|nsize
+operator|&
+name|PAGE_MASK
+condition|)
+block|{
+name|vm_offset_t
+name|kva
+decl_stmt|;
+name|vm_page_t
+name|m
+decl_stmt|;
+name|m
+operator|=
+name|vm_page_lookup
+argument_list|(
+name|object
+argument_list|,
+name|trunc_page
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|nsize
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+condition|)
+block|{
+name|kva
+operator|=
+name|vm_pager_map_page
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|kva
+operator|+
+operator|(
+name|nsize
+operator|&
+name|PAGE_MASK
+operator|)
+argument_list|,
+name|round_page
+argument_list|(
+name|nsize
+argument_list|)
+operator|-
+name|nsize
+argument_list|)
+expr_stmt|;
+name|vm_pager_unmap_page
+argument_list|(
+name|kva
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+else|else
+block|{
+comment|/* 		 * this allows the filesystem and VM cache to stay in sync if 		 * the VM page hasn't been modified...  After the page is 		 * removed -- it will be faulted back in from the filesystem 		 * cache. 		 */
+if|if
+condition|(
+name|vnp
+operator|->
+name|vnp_size
+operator|&
+name|PAGE_MASK
+condition|)
+block|{
+name|vm_page_t
+name|m
+decl_stmt|;
+name|m
+operator|=
+name|vm_page_lookup
+argument_list|(
+name|object
+argument_list|,
+name|trunc_page
+argument_list|(
+name|vnp
+operator|->
+name|vnp_size
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|&&
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_CLEAN
+operator|)
+condition|)
+block|{
+name|vm_object_lock
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+name|vm_object_page_remove
+argument_list|(
+name|object
+argument_list|,
+name|vnp
+operator|->
+name|vnp_size
+argument_list|,
+name|vnp
+operator|->
+name|vnp_size
+argument_list|)
+expr_stmt|;
+name|vm_object_unlock
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 name|vnp
 operator|->
@@ -1220,6 +1345,15 @@ operator|(
 name|vm_offset_t
 operator|)
 name|nsize
+expr_stmt|;
+name|object
+operator|->
+name|size
+operator|=
+name|round_page
+argument_list|(
+name|nsize
+argument_list|)
 expr_stmt|;
 name|vm_object_deallocate
 argument_list|(
@@ -1264,7 +1398,7 @@ condition|(
 name|pager
 condition|)
 block|{
-comment|/* 		 * Save the next pointer now since uncaching may 		 * terminate the object and render pager invalid 		 */
+comment|/* 		 * Save the next pointer now since uncaching may terminate the 		 * object and render pager invalid 		 */
 name|vp
 operator|=
 operator|(
@@ -1369,7 +1503,7 @@ operator|(
 name|TRUE
 operator|)
 return|;
-comment|/* 	 * Unlock the vnode if it is currently locked. 	 * We do this since uncaching the object may result 	 * in its destruction which may initiate paging 	 * activity which may necessitate locking the vnode. 	 */
+comment|/* 	 * Unlock the vnode if it is currently locked. We do this since 	 * uncaching the object may result in its destruction which may 	 * initiate paging activity which may necessitate locking the vnode. 	 */
 name|locked
 operator|=
 name|VOP_ISLOCKED
@@ -1386,7 +1520,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Must use vm_object_lookup() as it actually removes 	 * the object from the cache list. 	 */
+comment|/* 	 * Must use vm_object_lookup() as it actually removes the object from 	 * the cache list. 	 */
 name|object
 operator|=
 name|vm_object_lookup
@@ -1438,32 +1572,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * Remove vnode associated object from the object cache.  *  * XXX unlock the vnode if it is currently locked.  * We must do this since uncaching the object may result in its  * destruction which may initiate paging activity which may necessitate  * re-locking the vnode.  */
-end_comment
-
-begin_comment
-unit|boolean_t vnode_pager_uncache(vp) 	register struct vnode *vp; { 	register vm_object_t object; 	boolean_t uncached; 	vm_pager_t pager;
-comment|/* 	 * Not a mapped vnode 	 */
-end_comment
-
-begin_comment
-unit|pager = (vm_pager_t)vp->v_vmdata; 	if (pager == NULL) 		return (TRUE);
-comment|/* 	 * Must use vm_object_lookup() as it actually removes 	 * the object from the cache list. 	 */
-end_comment
-
-begin_endif
-unit|object = vm_object_lookup(pager); 	if (object) { 		uncached = (object->ref_count<= 1); 		VOP_UNLOCK(vp); 		pager_cache(object, FALSE); 		VOP_LOCK(vp); 	} else 		uncached = TRUE; 	return(uncached); }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -1530,9 +1638,6 @@ name|int
 name|vblock
 decl_stmt|,
 name|voffset
-decl_stmt|;
-name|int
-name|run
 decl_stmt|;
 name|bsize
 operator|=
@@ -1694,9 +1799,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|run
-decl_stmt|;
 name|paging_offset
 operator|=
 name|m
@@ -1766,7 +1868,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 	 * calculate logical block and offset 	 */
+comment|/* 		 * calculate logical block and offset 		 */
 name|block
 operator|=
 name|foff
@@ -1795,7 +1897,7 @@ block|{
 name|int
 name|amount
 decl_stmt|;
-comment|/* 	 * wait until the buffer is avail or gone 	 */
+comment|/* 			 * wait until the buffer is avail or gone 			 */
 if|if
 condition|(
 name|bp
@@ -1851,7 +1953,7 @@ name|vnp_size
 operator|-
 name|foff
 expr_stmt|;
-comment|/* 		 * make sure that this page is in the buffer 		 */
+comment|/* 			 * make sure that this page is in the buffer 			 */
 if|if
 condition|(
 operator|(
@@ -1878,7 +1980,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 			 * copy the data from the buffer 			 */
+comment|/* 				 * copy the data from the buffer 				 */
 name|bcopy
 argument_list|(
 name|bp
@@ -2148,7 +2250,7 @@ name|error
 operator|=
 name|EIO
 expr_stmt|;
-comment|/* 	 * free the buffer header back to the swap buffer pool 	 */
+comment|/* 			 * free the buffer header back to the swap buffer pool 			 */
 name|relpbuf
 argument_list|(
 name|bp
@@ -2578,9 +2680,6 @@ decl_stmt|,
 name|firstaddr
 decl_stmt|;
 name|int
-name|run
-decl_stmt|;
-name|int
 name|block
 decl_stmt|,
 name|offset
@@ -2619,7 +2718,7 @@ index|]
 operator|->
 name|object
 expr_stmt|;
-comment|/* all vm_page_t items are in same object */
+comment|/* all vm_page_t items are in same 					 * object */
 name|paging_offset
 operator|=
 name|object
@@ -2643,7 +2742,7 @@ operator|.
 name|f_iosize
 expr_stmt|;
 comment|/* get the UNDERLYING device for the file with VOP_BMAP() */
-comment|/* 	 * originally, we did not check for an error return 	 * value -- assuming an fs always has a bmap entry point 	 * -- that assumption is wrong!!! 	 */
+comment|/* 	 * originally, we did not check for an error return value -- assuming 	 * an fs always has a bmap entry point -- that assumption is wrong!!! 	 */
 name|kva
 operator|=
 literal|0
@@ -2814,7 +2913,7 @@ name|reqpage
 index|]
 argument_list|)
 return|;
-comment|/* 	 * if the blocksize is smaller than a page size, then use 	 * special small filesystem code.  NFS sometimes has a small 	 * blocksize, but it can handle large reads itself. 	 */
+comment|/* 		 * if the blocksize is smaller than a page size, then use 		 * special small filesystem code.  NFS sometimes has a small 		 * blocksize, but it can handle large reads itself. 		 */
 block|}
 elseif|else
 if|if
@@ -2893,7 +2992,7 @@ argument_list|)
 return|;
 block|}
 comment|/*  * here on direct device I/O  */
-comment|/* 	 * This pathetic hack gets data from the buffer cache, if it's there. 	 * I believe that this is not really necessary, and the ends can 	 * be gotten by defaulting to the normal vfs read behavior, but this 	 * might be more efficient, because the will NOT invoke read-aheads 	 * and one of the purposes of this code is to bypass the buffer 	 * cache and keep from flushing it by reading in a program. 	 */
+comment|/* 	 * This pathetic hack gets data from the buffer cache, if it's there. 	 * I believe that this is not really necessary, and the ends can be 	 * gotten by defaulting to the normal vfs read behavior, but this 	 * might be more efficient, because the will NOT invoke read-aheads 	 * and one of the purposes of this code is to bypass the buffer cache 	 * and keep from flushing it by reading in a program. 	 */
 comment|/* 	 * calculate logical block and offset 	 */
 name|block
 operator|=
@@ -2928,7 +3027,7 @@ block|{
 name|int
 name|amount
 decl_stmt|;
-comment|/* 	 * wait until the buffer is avail or gone 	 */
+comment|/* 		 * wait until the buffer is avail or gone 		 */
 if|if
 condition|(
 name|bp
@@ -3190,7 +3289,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Make sure that our I/O request is contiguous. 	 * Scan backward and stop for the first discontiguous 	 *	entry or stop for a page being in buffer cache. 	 */
+comment|/* 	 * Make sure that our I/O request is contiguous. Scan backward and 	 * stop for the first discontiguous entry or stop for a page being in 	 * buffer cache. 	 */
 name|failflag
 operator|=
 literal|0
@@ -3286,7 +3385,7 @@ name|i
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Scan forward and stop for the first non-contiguous 	 * entry or stop for a page being in buffer cache. 	 */
+comment|/* 	 * Scan forward and stop for the first non-contiguous entry or stop 	 * for a page being in buffer cache. 	 */
 name|failflag
 operator|=
 literal|0
@@ -3391,7 +3490,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 	 * the first and last page have been calculated now, move input 	 * pages to be zero based... 	 */
+comment|/* 	 * the first and last page have been calculated now, move input pages 	 * to be zero based... 	 */
 name|count
 operator|=
 name|last
@@ -3851,8 +3950,8 @@ operator|!=
 name|reqpage
 condition|)
 block|{
-comment|/* 			 * whether or not to leave the page activated 			 * is up in the air, but we should put the page 			 * on a page queue somewhere. (it already is in 			 * the object). 			 * Result: It appears that emperical results show 			 * that deactivating pages is best. 			 */
-comment|/* 			 * just in case someone was asking for this 			 * page we now tell them that it is ok to use 			 */
+comment|/* 			 * whether or not to leave the page activated is up in 			 * the air, but we should put the page on a page queue 			 * somewhere. (it already is in the object). Result: 			 * It appears that emperical results show that 			 * deactivating pages is best. 			 */
+comment|/* 			 * just in case someone was asking for this page we 			 * now tell them that it is ok to use 			 */
 if|if
 condition|(
 operator|!
@@ -3884,15 +3983,6 @@ name|flags
 operator|&=
 operator|~
 name|PG_FAKE
-expr_stmt|;
-name|m
-index|[
-name|i
-index|]
-operator|->
-name|act_count
-operator|=
-literal|2
 expr_stmt|;
 block|}
 else|else
@@ -4229,9 +4319,6 @@ name|vm_offset_t
 name|bsize
 decl_stmt|;
 name|int
-name|run
-decl_stmt|;
-name|int
 name|error
 init|=
 literal|0
@@ -4310,7 +4397,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 	 * calculate logical block and offset 	 */
+comment|/* 		 * calculate logical block and offset 		 */
 name|fileaddr
 operator|=
 name|vnode_pager_addr
@@ -4593,7 +4680,7 @@ name|error
 operator|=
 name|EIO
 expr_stmt|;
-comment|/* 	 * free the buffer header back to the swap buffer pool 	 */
+comment|/* 			 * free the buffer header back to the swap buffer pool 			 */
 name|relpbuf
 argument_list|(
 name|bp
@@ -4703,9 +4790,6 @@ name|vm_offset_t
 name|reqaddr
 decl_stmt|;
 name|int
-name|run
-decl_stmt|;
-name|int
 name|bsize
 decl_stmt|;
 name|int
@@ -4770,7 +4854,7 @@ index|]
 operator|=
 name|VM_PAGER_AGAIN
 expr_stmt|;
-comment|/* 	 * if the filesystem does not have a bmap, then use the 	 * old code 	 */
+comment|/* 	 * if the filesystem does not have a bmap, then use the old code 	 */
 if|if
 condition|(
 name|VOP_BMAP
@@ -4847,7 +4931,7 @@ literal|0
 index|]
 return|;
 block|}
-comment|/* 	 * if the filesystem has a small blocksize, then use 	 * the small block filesystem output code 	 */
+comment|/* 	 * if the filesystem has a small blocksize, then use the small block 	 * filesystem output code 	 */
 if|if
 condition|(
 operator|(
@@ -5093,7 +5177,7 @@ argument_list|,
 name|foff
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Scan forward and stop for the first non-contiguous 	 * entry or stop for a page being in buffer cache. 	 */
+comment|/* 	 * Scan forward and stop for the first non-contiguous entry or stop 	 * for a page being in buffer cache. 	 */
 for|for
 control|(
 name|i
@@ -5282,7 +5366,6 @@ name|filblock
 argument_list|)
 condition|)
 block|{
-comment|/* printf("invalidating: %d\n", filblock); */
 name|fbp
 operator|=
 name|getblk
@@ -5300,6 +5383,56 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fbp
+operator|->
+name|b_flags
+operator|&
+name|B_DELWRI
+condition|)
+block|{
+if|if
+condition|(
+name|fbp
+operator|->
+name|b_bufsize
+operator|<=
+name|PAGE_SIZE
+condition|)
+name|fbp
+operator|->
+name|b_flags
+operator|&=
+operator|~
+name|B_DELWRI
+expr_stmt|;
+else|else
+block|{
+name|bwrite
+argument_list|(
+name|fbp
+argument_list|)
+expr_stmt|;
+name|fbp
+operator|=
+name|getblk
+argument_list|(
+name|vp
+argument_list|,
+name|filblock
+argument_list|,
+name|fbp
+operator|->
+name|b_bufsize
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|fbp
 operator|->
 name|b_flags
