@@ -12003,6 +12003,20 @@ literal|"saver=warp"
 block|}
 block|,
 block|{
+literal|"Dragon"
+block|,
+literal|"Dragon screensaver (graphics)"
+block|,
+name|dmenuVarCheck
+block|,
+name|configSaver
+block|,
+name|NULL
+block|,
+literal|"saver=dragon"
+block|}
+block|,
+block|{
 literal|"Timeout"
 block|,
 literal|"Set the screen saver timeout interval"
