@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -25,18 +25,6 @@ begin_include
 include|#
 directive|include
 file|"sys/vmmeter.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/user.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/cmap.h"
 end_include
 
 begin_include
@@ -102,19 +90,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vm/vm_param.h"
+file|"vm/vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_map.h"
+file|"sys/user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/pmap.h"
+file|"pte.h"
 end_include
 
 begin_function
@@ -173,11 +161,15 @@ operator|*
 operator|)
 literal|0
 decl_stmt|;
-name|vm_map_t
-name|map
+name|struct
+name|vmspace
+modifier|*
+name|vms
 init|=
 operator|(
-name|vm_map_t
+expr|struct
+name|vmspace
+operator|*
 operator|)
 literal|0
 decl_stmt|;
@@ -227,12 +219,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_MAP %d\n"
+literal|"#define\tP_VMSPACE %d\n"
 argument_list|,
 operator|&
 name|p
 operator|->
-name|p_map
+name|p_vmspace
 argument_list|)
 expr_stmt|;
 name|printf
@@ -240,8 +232,10 @@ argument_list|(
 literal|"#define\tPMAP %d\n"
 argument_list|,
 operator|&
-name|map
+name|vms
 operator|->
+name|vm_map
+operator|.
 name|pmap
 argument_list|)
 expr_stmt|;
@@ -535,32 +529,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tU_PROCP %d\n"
-argument_list|,
-operator|&
-name|up
-operator|->
-name|u_procp
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tU_RU %d\n"
-argument_list|,
-operator|&
-name|up
-operator|->
-name|u_ru
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#define\tU_PROF %d\n"
 argument_list|,
 operator|&
 name|up
 operator|->
-name|u_prof
+name|u_stats
+operator|.
+name|p_prof
 argument_list|)
 expr_stmt|;
 name|printf
@@ -570,7 +546,9 @@ argument_list|,
 operator|&
 name|up
 operator|->
-name|u_prof
+name|u_stats
+operator|.
+name|p_prof
 operator|.
 name|pr_scale
 argument_list|)
@@ -1215,9 +1193,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tSYS_execv %d\n"
+literal|"#define\tSYS_execve %d\n"
 argument_list|,
-name|SYS_execv
+name|SYS_execve
 argument_list|)
 expr_stmt|;
 name|printf
