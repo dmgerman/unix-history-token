@@ -382,7 +382,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"null0:<null device, zero device>\n"
+literal|"null:<null device, zero device>\n"
 argument_list|)
 expr_stmt|;
 name|zbuf
