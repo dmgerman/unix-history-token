@@ -5055,7 +5055,7 @@ name|AF_INET
 expr_stmt|;
 else|else
 block|{
-name|close
+name|_close
 argument_list|(
 name|s
 argument_list|)
@@ -5082,7 +5082,7 @@ operator|=
 name|AF_INET6
 expr_stmt|;
 else|else
-name|close
+name|_close
 argument_list|(
 name|s
 argument_list|)
@@ -5116,7 +5116,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|close
+name|_close
 argument_list|(
 name|s
 argument_list|)
