@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)script.c	5.8 (Berkeley) %G%"
+literal|"@(#)script.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -885,7 +885,7 @@ name|fprintf
 argument_list|(
 name|fscript
 argument_list|,
-literal|"\nscript done on %s"
+literal|"\nScript done on %s"
 argument_list|,
 name|ctime
 argument_list|(
