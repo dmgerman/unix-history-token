@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fseek.c	5.7 (Berkeley) %G%"
+literal|"@(#)fseek.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -529,7 +529,10 @@ name|fp
 operator|->
 name|_cookie
 argument_list|,
-literal|0L
+operator|(
+name|fpos_t
+operator|)
+literal|0
 argument_list|,
 name|SEEK_CUR
 argument_list|)
@@ -822,6 +825,9 @@ name|fp
 operator|->
 name|_cookie
 argument_list|,
+operator|(
+name|fpos_t
+operator|)
 name|offset
 argument_list|,
 name|whence
