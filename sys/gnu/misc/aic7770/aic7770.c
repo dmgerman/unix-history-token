@@ -841,13 +841,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"unsigned char seqprog[] = {\n"
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -898,13 +891,6 @@ index|]
 index|[
 literal|0
 index|]
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"};\n"
 argument_list|)
 expr_stmt|;
 block|}
