@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.93 1998/07/18 23:27:15 alex Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.94 1998/08/03 17:23:37 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -382,7 +382,7 @@ name|print_ip
 parameter_list|(
 name|a
 parameter_list|)
-value|printf("%ld.%ld.%ld.%ld",(ntohl(a.s_addr)>>24)&0xFF,\ 				 		  (ntohl(a.s_addr)>>16)&0xFF,\ 						  (ntohl(a.s_addr)>>8)&0xFF,\ 						  (ntohl(a.s_addr))&0xFF);
+value|printf("%d.%d.%d.%d",				\ 			    (int)(ntohl(a.s_addr)>> 24)& 0xFF,	\ 			    (int)(ntohl(a.s_addr)>> 16)& 0xFF,	\ 			    (int)(ntohl(a.s_addr)>> 8)& 0xFF,		\ 			    (int)(ntohl(a.s_addr))& 0xFF);
 end_define
 
 begin_define
