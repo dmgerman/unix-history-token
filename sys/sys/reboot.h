@@ -170,7 +170,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* user serial port as console */
+comment|/* use serial port as console */
 end_comment
 
 begin_define
@@ -192,7 +192,7 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* if you can, turn the power off */
+comment|/* turn the power off if possible */
 end_comment
 
 begin_define
@@ -214,7 +214,7 @@ value|0x10000
 end_define
 
 begin_comment
-comment|/* Come up with the console muted */
+comment|/* start up with the console muted */
 end_comment
 
 begin_define
@@ -225,7 +225,7 @@ value|0x20000
 end_define
 
 begin_comment
-comment|/* don't boot to normal operation, do selftest */
+comment|/* don't complete the boot; do selftest */
 end_comment
 
 begin_define
@@ -435,6 +435,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_SYS_REBOOT_H_ */
+end_comment
 
 end_unit
 
