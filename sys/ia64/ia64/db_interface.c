@@ -2543,6 +2543,9 @@ argument_list|(
 name|DDB_REGS
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -3270,6 +3273,11 @@ name|caddr_t
 operator|)
 operator|&
 name|high
+argument_list|)
+expr_stmt|;
+name|ia64_fc
+argument_list|(
+name|addr
 argument_list|)
 expr_stmt|;
 block|}
