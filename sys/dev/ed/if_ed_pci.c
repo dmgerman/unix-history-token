@@ -258,15 +258,16 @@ name|desc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
-else|else
-block|{
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
-block|}
 block|}
 end_function
 
