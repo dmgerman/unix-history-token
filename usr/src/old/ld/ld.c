@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c 4.1 %G%"
+literal|"@(#)ld.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5955,15 +5955,31 @@ name|a_text
 expr_stmt|;
 name|dorigin
 operator|+=
+name|round
+argument_list|(
 name|filhdr
 operator|.
 name|a_data
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|borigin
 operator|+=
+name|round
+argument_list|(
 name|filhdr
 operator|.
 name|a_bss
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
