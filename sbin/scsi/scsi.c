@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * (julian@tfs.com julian@dialix.oz.au)  *  * User SCSI hooks added by Peter Dufault:  *  * Copyright (c) 1994 HD Associates  * (contact: dufault@hda.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of HD Associates  *    may not be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY HD ASSOCIATES ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL HD ASSOCIATES BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scsi.c,v 1.11 1996/04/06 11:00:28 joerg Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * (julian@tfs.com julian@dialix.oz.au)  *  * User SCSI hooks added by Peter Dufault:  *  * Copyright (c) 1994 HD Associates  * (contact: dufault@hda.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of HD Associates  *    may not be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY HD ASSOCIATES ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL HD ASSOCIATES BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scsi.c,v 1.12 1996/10/05 17:40:20 joerg Exp $  */
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_decl_stmt
@@ -208,23 +214,27 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"Usage:\n"
-literal|"\n"
-literal|"  scsi -f device -d debug_level                    # To set debug level\n"
-literal|"  scsi -f device [-v] -z seconds                   # To freeze bus\n"
-literal|"  scsi -f device -m page [-P pc]                   # To read mode pages\n"
-literal|"  scsi -f device -p [-b bus] [-l lun]              # To probe all devices\n"
-literal|"  scsi -f device -r [-b bus] [-t targ] [-l lun]    # To reprobe a device\n"
-literal|"  scsi -f device [-v] [-s seconds] -c cmd_fmt [arg0 ... argn] # A command...\n"
-literal|"                 -o count out_fmt [arg0 ... argn]  #   EITHER (data out)\n"
-literal|"                 -i count in_fmt                   #   OR     (data in)\n"
-literal|"\n"
-literal|"\"out_fmt\" can be \"-\" to read output data from stdin;\n"
-literal|"\"in_fmt\" can be \"-\" to write input data to stdout;\n"
-literal|"\n"
-literal|"If debugging is not compiled in the kernel, \"-d\" will have no effect\n"
+name|stderr
+argument_list|,
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: scsi -f device -d debug_level"
+argument_list|,
+literal|"       scsi -f device [-v] -z seconds"
+argument_list|,
+literal|"       scsi -f device -m page [-P pc] [-e]"
+argument_list|,
+literal|"       scsi -f device -p [-b bus] [-l lun]"
+argument_list|,
+literal|"       scsi -f device -r [-b bus] [-t targ] [-l lun]"
+argument_list|,
+literal|"       scsi -f device [-v] [-s seconds] -c cmd_fmt [arg0 ... argn]"
+argument_list|,
+literal|"                      -o count out_fmt [arg0 ... argn]"
+argument_list|,
+literal|"                      -i count in_fmt"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -371,35 +381,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+name|errno
 argument_list|,
-literal|"%s: unable to open device %s: %s\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"unable to open device %s"
 argument_list|,
 name|optarg
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|errno
-argument_list|)
-expr_stmt|;
-block|}
 name|fflag
 operator|=
 literal|1
@@ -2853,18 +2843,6 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|struct
-name|get_hook
-modifier|*
-name|h
-init|=
-operator|(
-expr|struct
-name|get_hook
-operator|*
-operator|)
-name|hook
-decl_stmt|;
 name|int
 name|arg
 init|=
@@ -4132,9 +4110,6 @@ condition|(
 name|commandflag
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|char
 modifier|*
 name|fmt
