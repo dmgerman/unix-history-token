@@ -6157,7 +6157,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|old_getty
+name|old_window
 condition|)
 name|free
 argument_list|(
