@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.10 1995/09/29 05:17:01 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.11 1995/09/30 06:40:23 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -71,29 +71,12 @@ block|,
 block|{
 literal|"Options"
 block|,
-literal|"Select various options for this utility."
+literal|"Go to options editor."
 block|,
 comment|/* O */
-name|DMENU_SUBMENU
+name|DMENU_CALL
 block|,
-operator|&
-name|MenuOptions
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Custom"
-block|,
-literal|"Begin a custom installation"
-block|,
-comment|/* C */
-name|DMENU_SUBMENU
-block|,
-operator|&
-name|MenuInstallCustom
+name|optionsEditor
 block|,
 literal|0
 block|,
@@ -117,10 +100,27 @@ literal|0
 block|}
 block|,
 block|{
+literal|"Custom"
+block|,
+literal|"Begin a custom installation"
+block|,
+comment|/* C */
+name|DMENU_SUBMENU
+block|,
+operator|&
+name|MenuInstallCustom
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"Fixit"
 block|,
 literal|"Mount fixit floppy and go into repair mode"
 block|,
+comment|/* F */
 name|DMENU_CALL
 block|,
 operator|&
@@ -136,6 +136,7 @@ literal|"Configure"
 block|,
 literal|"Do post-install configuration of FreeBSD"
 block|,
+comment|/* C (dup) */
 name|DMENU_SUBMENU
 block|,
 operator|&
@@ -871,7 +872,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a network interface type"
 block|,
-literal|"FreeBSD can be installed directly over a network, using NFS or FTP.\n If you are using PPP over a serial device (cuaa0 or cuaa1) as opposed\n\ to a direct ethernet connection, then you may first need to dial your\n\ service provider using the ppp utility we provide for that purpose.\n\ You can also install over a parallel port using a special \"laplink\"\n\ cable, though this only works if you have another FreeBSD machine running\n\ a fairly recent (2.0R or later) release to talk to.\n\n\ To use PPP select one of the serial devices, otherwise select lp0 for\n\ the parallel port or one of the ethernet controllers (if you have one)\n\ for an ethernet installation."
+literal|"If you are using PPP over a serial device (cuaa0 or cuaa1) as opposed\n\ to a direct ethernet connection, then you may first need to dial your\n\ service provider using the ppp utility we provide for that purpose.\n\ You can also install over a parallel port using a special \"laplink\"\n\ cable, though this only works if you have another FreeBSD machine running\n\ a fairly recent (2.0R or later) release to talk to.\n\n\ To use PPP select one of the serial devices, otherwise select lp0 for\n\ the parallel port or one of the ethernet controllers (if you have one)\n\ for an ethernet installation."
 block|,
 literal|"Press F1 to read network configuration manual"
 block|,
@@ -1466,7 +1467,7 @@ block|,
 block|{
 literal|"XFree86"
 block|,
-literal|"The XFree86 3.2 distribution [?]"
+literal|"The XFree86 3.1.2 distribution [?]"
 block|,
 name|DMENU_CALL
 block|,
@@ -1919,9 +1920,9 @@ init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
-literal|"XFree86 3.2 Distribution"
+literal|"XFree86 3.1.2 Distribution"
 block|,
-literal|"Please select the components you need from the XFree86 3.2\n\ distribution.  We recommend that you select what you need from the basic\n\ components set and at least one entry from the Server and Font set menus."
+literal|"Please select the components you need from the XFree86 3.1.2\n\ distribution.  We recommend that you select what you need from the basic\n\ components set and at least one entry from the Server and Font set menus."
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
@@ -2020,7 +2021,7 @@ name|DMENU_MULTIPLE_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"XFree86 3.1.1 base distribution types"
+literal|"XFree86 3.1.2 base distribution types"
 block|,
 literal|"Please check off the basic XFree86 components you wish to install."
 block|,
@@ -2098,6 +2099,23 @@ name|dmenuFlagCheck
 block|}
 block|,
 block|{
+literal|"etc"
+block|,
+literal|"XFree86 etc files [100K]"
+block|,
+name|DMENU_SET_FLAG
+block|,
+operator|&
+name|XF86Dists
+block|,
+name|DIST_XF86_ETC
+block|,
+literal|0
+block|,
+name|dmenuFlagCheck
+block|}
+block|,
+block|{
 literal|"doc"
 block|,
 literal|"READMEs and XFree86 specific man pages [500K]"
@@ -2125,6 +2143,23 @@ operator|&
 name|XF86Dists
 block|,
 name|DIST_XF86_MAN
+block|,
+literal|0
+block|,
+name|dmenuFlagCheck
+block|}
+block|,
+block|{
+literal|"ctrb"
+block|,
+literal|"Various contributed binaries (ico, xman, etc) [500K]"
+block|,
+name|DMENU_SET_FLAG
+block|,
+operator|&
+name|XF86Dists
+block|,
+name|DIST_XF86_CTRB
 block|,
 literal|0
 block|,
@@ -2166,6 +2201,23 @@ name|dmenuFlagCheck
 block|}
 block|,
 block|{
+literal|"ubin"
+block|,
+literal|"X extra user binaries (rstartd, et al) [2K]"
+block|,
+name|DMENU_SET_FLAG
+block|,
+operator|&
+name|XF86Dists
+block|,
+name|DIST_XF86_UBIN
+block|,
+literal|0
+block|,
+name|dmenuFlagCheck
+block|}
+block|,
+block|{
 literal|"pex"
 block|,
 literal|"PEX fonts and libs needed by PEX apps [500K]"
@@ -2185,7 +2237,7 @@ block|,
 block|{
 literal|"sources"
 block|,
-literal|"XFree86 3.2 standard + contrib sources [200MB]"
+literal|"XFree86 3.1.2 standard + contrib sources [200MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2253,6 +2305,23 @@ operator|&
 name|XF86FontDists
 block|,
 name|DIST_XF86_FONTS_100
+block|,
+literal|0
+block|,
+name|dmenuFlagCheck
+block|}
+block|,
+block|{
+literal|"fcyr"
+block|,
+literal|"Cyrillic Fonts [1.8MB]"
+block|,
+name|DMENU_SET_FLAG
+block|,
+operator|&
+name|XF86FontDists
+block|,
+name|DIST_XF86_FONTS_CYR
 block|,
 literal|0
 block|,
@@ -2575,364 +2644,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Local work func for MenuOptions */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|clearFlags
-parameter_list|(
-name|char
-modifier|*
-name|str
-parameter_list|)
-block|{
-name|OptFlags
-operator|=
-literal|0
-expr_stmt|;
-return|return
-literal|1
-return|;
-comment|/* Gross, but forces menu rebuild */
-block|}
-end_function
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|userPassCheck
-parameter_list|(
-name|DMenuItem
-modifier|*
-name|item
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|cp
-init|=
-name|getenv
-argument_list|(
-name|FTP_USER
-argument_list|)
-decl_stmt|;
-return|return
-operator|(
-name|cp
-operator|&&
-operator|*
-name|cp
-operator|)
-condition|?
-literal|"ON"
-else|:
-literal|"OFF"
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|ftpFlagCheck
-parameter_list|(
-name|DMenuItem
-modifier|*
-name|item
-parameter_list|)
-block|{
-comment|/* Verify that everything's sane */
-if|if
-condition|(
-operator|(
-name|OptFlags
-operator|&
-operator|(
-name|OPT_FTP_ABORT
-operator|+
-name|OPT_FTP_RESELECT
-operator|)
-operator|)
-operator|==
-operator|(
-name|OPT_FTP_ABORT
-operator|+
-name|OPT_FTP_RESELECT
-operator|)
-condition|)
-name|OptFlags
-operator|&=
-operator|~
-name|OPT_FTP_RESELECT
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|OptFlags
-operator|&
-operator|(
-name|OPT_FTP_ABORT
-operator|+
-name|OPT_FTP_RESELECT
-operator|)
-operator|)
-condition|)
-name|OptFlags
-operator||=
-name|OPT_FTP_ABORT
-expr_stmt|;
-if|if
-condition|(
-operator|*
-operator|(
-operator|(
-name|unsigned
-name|int
-operator|*
-operator|)
-name|item
-operator|->
-name|ptr
-operator|)
-operator|&
-name|item
-operator|->
-name|parm
-condition|)
-return|return
-literal|"ON"
-return|;
-return|return
-literal|"OFF"
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* The installation options menu */
-end_comment
-
-begin_decl_stmt
-name|DMenu
-name|MenuOptions
-init|=
-block|{
-name|DMENU_MULTIPLE_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
-block|,
-literal|"Choose Installation Options"
-block|,
-literal|"The following options control how this utility will deal\n\ with various possible error conditions and how verbose it will\n\ be at various stages."
-block|,
-literal|"Press F1 for more help on these options"
-block|,
-literal|"options"
-block|,
-block|{
-block|{
-literal|"FTP Options"
-block|,
-literal|"Set FTP specific options"
-block|,
-name|DMENU_SUBMENU
-block|,
-operator|&
-name|MenuFTPOptions
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"NFS Secure"
-block|,
-literal|"NFS server talks only on a secure port"
-block|,
-name|DMENU_SET_FLAG
-block|,
-operator|&
-name|OptFlags
-block|,
-name|OPT_NFS_SECURE
-block|,
-literal|0
-block|,
-name|dmenuFlagCheck
-block|}
-block|,
-block|{
-literal|"NFS Slow"
-block|,
-literal|"User is using a slow PC or ethernet card"
-block|,
-name|DMENU_SET_FLAG
-block|,
-operator|&
-name|OptFlags
-block|,
-name|OPT_SLOW_ETHER
-block|,
-literal|0
-block|,
-name|dmenuFlagCheck
-block|}
-block|,
-block|{
-literal|"Debugging"
-block|,
-literal|"Turn on the extra debugging flag"
-block|,
-name|DMENU_SET_FLAG
-block|,
-operator|&
-name|OptFlags
-block|,
-name|OPT_DEBUG
-block|,
-literal|0
-block|,
-name|dmenuFlagCheck
-block|}
-block|,
-block|{
-literal|"Yes To All"
-block|,
-literal|"Assume \"Yes\" answers to all non-critical dialogs"
-block|,
-name|DMENU_SET_FLAG
-block|,
-operator|&
-name|OptFlags
-block|,
-name|OPT_NO_CONFIRM
-block|,
-literal|0
-block|,
-name|dmenuFlagCheck
-block|}
-block|,
-block|{
-literal|"Clear"
-block|,
-literal|"Clear All Option Flags"
-block|,
-name|DMENU_CALL
-block|,
-name|clearFlags
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|DMENU_CANCEL
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|NULL
-block|}
-block|}
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|DMenu
-name|MenuFTPOptions
-init|=
-block|{
-name|DMENU_MULTIPLE_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
-block|,
-literal|"Choose FTP Options"
-block|,
-literal|"This menu allows you to customize the behavior of FTP transfers\n\ for an FTP installation.  To select \"Active\" or \"Passive\" mode\n\ FTP, see the Media menu."
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-block|{
-block|{
-literal|"FTP Abort"
-block|,
-literal|"On transfer failure, abort"
-block|,
-name|DMENU_SET_FLAG
-block|,
-operator|&
-name|OptFlags
-block|,
-name|OPT_FTP_ABORT
-block|,
-literal|0
-block|,
-name|ftpFlagCheck
-block|}
-block|,
-block|{
-literal|"FTP Reselect"
-block|,
-literal|"On transfer failure, ask for another host"
-block|,
-name|DMENU_SET_FLAG
-block|,
-operator|&
-name|OptFlags
-block|,
-name|OPT_FTP_RESELECT
-block|,
-literal|0
-block|,
-name|ftpFlagCheck
-block|}
-block|,
-block|{
-literal|"FTP userpass"
-block|,
-literal|"Specify username and password instead of anonymous"
-block|,
-name|DMENU_CALL
-block|,
-name|mediaSetFtpUserPass
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|userPassCheck
-block|}
-block|,
-block|{
-name|NULL
-block|}
-block|}
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* The main installation menu */
 end_comment
 
@@ -3027,12 +2738,11 @@ block|,
 block|{
 literal|"Options"
 block|,
-literal|"Go to Options submenu"
+literal|"Go to Options screen"
 block|,
-name|DMENU_SUBMENU
+name|DMENU_CALL
 block|,
-operator|&
-name|MenuOptions
+name|optionsEditor
 block|,
 literal|0
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.31.2.5 1995/09/22 23:35:17 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.31.2.6 1995/09/23 22:20:10 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -223,7 +223,11 @@ operator|)
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"WARNING:  The detected geometry is incorrect!  Please adjust it to\nthe correct values manually with the (G)eometry command.  If you are\nunsure about the correct geometry (which may be \"translated\"), please\nconsult the Hardware Guide in the Documentation submenu."
+literal|"WARNING:  The detected geometry is incorrect!  Please adjust\n"
+literal|"it to the correct values manually with the (G)eometry command.\n"
+literal|"If you are unsure about the correct geometry (which may be\n"
+literal|"\"translated\"), please consult the Hardware Guide in the\n"
+literal|"Documentation submenu."
 argument_list|)
 expr_stmt|;
 name|attrset
@@ -472,7 +476,7 @@ literal|17
 argument_list|,
 literal|0
 argument_list|,
-literal|"D = Delete Partition   G = Set BIOS Geometry  S = Set Bootable"
+literal|"D = Delete Partition   G = Set Drive Geometry S = Set Bootable"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -597,6 +601,9 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+name|print_command_summary
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|chunking
@@ -606,9 +613,6 @@ name|print_chunks
 argument_list|(
 name|d
 argument_list|)
-expr_stmt|;
-name|print_command_summary
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -656,6 +660,9 @@ literal|'\014'
 case|:
 comment|/* ^L */
 name|clear
+argument_list|()
+expr_stmt|;
+name|print_command_summary
 argument_list|()
 expr_stmt|;
 continue|continue;
@@ -747,8 +754,9 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Do you want to use the regular way to keep the disk\n"
-literal|"cooperative with the usual BIOS partitioning schemes?"
+literal|"Do you want to do this with a true partition entry\n"
+literal|"so as to keep this cooperative with any future poss-\n"
+literal|"ible operating systems on the drive(s)?"
 argument_list|)
 condition|)
 name|All_FreeBSD
@@ -768,18 +776,15 @@ operator|=
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"This is dangerous in that it will make the drive absolutely\n"
-literal|"uncooperative to other potential operating systems on the\n"
-literal|"same disk.  It will rather lead to a totally dedicated disk,\n"
+literal|"This is dangerous in that it will make the drive totally\n"
+literal|"uncooperative with other potential operating systems on the\n"
+literal|"same disk.  It will lead instead to a totally dedicated disk,\n"
 literal|"starting at the very first sector, bypassing all BIOS geometry\n"
 literal|"considerations.\n"
-literal|"You will run into serious troubles for ST-506 and ESDI drives,\n"
-literal|"and you might suffer a great pain when applying this to some\n"
-literal|"IDE drives (e.g. drives running under control of some sort of\n"
-literal|"a disk manager).  SCSI drives are considered less harmful.\n"
-literal|"Whenever you'll get this disk within the reach of some DOS\n"
-literal|"\"fdisk\" utility, little red daemons will jump out of your\n"
-literal|"drive and eat you up!\n\n"
+literal|"You will run into serious trouble with ST-506 and ESDI drives\n"
+literal|"and possibly some IDE drives (e.g. drives running under the\n"
+literal|"control of sort of disk manager).  SCSI drives are considerably\n"
+literal|"less at risk.\n\n"
 literal|"Do you insist on dedicating the entire disk this way?"
 argument_list|)
 expr_stmt|;
@@ -1197,7 +1202,11 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Are you sure you want to write this now?  You do also\nhave the option of not modifying the disk until *all*\nconfiguration information has been entered, at which\npoint you can do it all at once.  If you're unsure, then\nchoose No at this dialog."
+literal|"Are you sure you want to write this now?  You do also\n"
+literal|"have the option of not modifying the disk until *all*\n"
+literal|"configuration information has been entered, at which\n"
+literal|"point you can do it all at once.  If you're unsure, then\n"
+literal|"choose No at this dialog."
 argument_list|)
 condition|)
 name|diskPartitionWrite
@@ -1514,7 +1523,9 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"No disks found!  Please verify that your disk controller is being\nproperly probed at boot time.  See the Hardware Guide on the Documentation menu\nfor clues on diagnosing this type of problem."
+literal|"No disks found!  Please verify that your disk controller is being\n"
+literal|"properly probed at boot time.  See the Hardware Guide on the\n"
+literal|"Documentation menu for clues on diagnosing this type of problem."
 argument_list|)
 expr_stmt|;
 return|return
@@ -1581,7 +1592,11 @@ name|menu
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"No devices suitable for installation found!\n\nPlease verify that your disk controller (and attached drives) were detected properly.  This can be done by selecting the ``Bootmsg'' option on the main menu and reviewing the boot messages carefully."
+literal|"No devices suitable for installation found!\n\n"
+literal|"Please verify that your disk controller (and attached drives)\n"
+literal|"were detected properly.  This can be done by selecting the\n"
+literal|"``Bootmsg'' option on the main menu and reviewing the boot\n"
+literal|"messages carefully."
 argument_list|)
 expr_stmt|;
 else|else

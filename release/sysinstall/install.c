@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.11 1995/09/29 05:16:58 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.12 1995/09/30 19:13:28 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -63,14 +63,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_decl_stmt
-name|Boolean
-name|SystemWasInstalled
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|Boolean
@@ -91,20 +83,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
-name|Chunk
-modifier|*
-name|rootdev
-decl_stmt|;
-end_decl_stmt
+name|void
+name|create_termcap
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
 name|Boolean
 name|checkLabels
 parameter_list|(
-name|void
+name|Chunk
+modifier|*
+modifier|*
+name|rdev
 parameter_list|)
 block|{
 name|Device
@@ -124,6 +121,9 @@ modifier|*
 name|c2
 decl_stmt|,
 modifier|*
+name|rootdev
+decl_stmt|,
+modifier|*
 name|swapdev
 decl_stmt|,
 modifier|*
@@ -132,6 +132,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+operator|*
+name|rdev
+operator|=
 name|rootdev
 operator|=
 name|swapdev
@@ -516,6 +519,11 @@ return|return
 name|FALSE
 return|;
 block|}
+operator|*
+name|rdev
+operator|=
+name|rootdev
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -609,7 +617,10 @@ if|if
 condition|(
 name|msgYesNo
 argument_list|(
-literal|"Last Chance!  Are you SURE you want continue the installation?\n\nIf you're running this on an existing system, we STRONGLY\nencourage you to make proper backups before proceeding.\nWe take no responsibility for lost disk contents!"
+literal|"Last Chance!  Are you SURE you want continue the installation?\n\n"
+literal|"If you're running this on an existing system, we STRONGLY\n"
+literal|"encourage you to make proper backups before proceeding.\n"
+literal|"We take no responsibility for lost disk contents!"
 argument_list|)
 condition|)
 return|return
@@ -908,6 +919,40 @@ name|DialogActive
 operator|=
 name|FALSE
 expr_stmt|;
+comment|/* Try to leach a big /tmp off the fixit floppy */
+if|if
+condition|(
+name|access
+argument_list|(
+literal|"/tmp"
+argument_list|,
+name|X_OK
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|symlink
+argument_list|(
+literal|"/mnt2/tmp"
+argument_list|,
+literal|"/tmp"
+argument_list|)
+expr_stmt|;
+comment|/* Link the spwd.db file */
+operator|(
+name|void
+operator|)
+name|symlink
+argument_list|(
+literal|"/mnt2/etc/spwd.db"
+argument_list|,
+literal|"/etc/spwd.db"
+argument_list|)
+expr_stmt|;
+name|create_termcap
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1033,8 +1078,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-operator|!
-name|Dists
+literal|1
 condition|)
 block|{
 name|dmenuOpenSimple
@@ -1043,6 +1087,17 @@ operator|&
 name|MenuInstallType
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Dists
+operator|||
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"No distributions selected.  Are you sure you wish to continue?"
+argument_list|)
+condition|)
+break|break;
 block|}
 name|msgConfirm
 argument_list|(
@@ -1073,7 +1128,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * What happens when we select "Commit" in the custom installation menu.  *  * This is broken into multiple stages so that the user can do a full installation but come  * back here again to load more distributions, perhaps from a different media type.  * This would allow, for example, the user to load the majority of the system from CDROM  * and then use ftp to load just the DES dist.  */
+comment|/*  * What happens when we select "Commit" in the custom installation menu.  *  * This is broken into multiple stages so that the user can do a full installation but come back here  * again to load more distributions, perhaps from a different media type.  This would allow, for  * example, the user to load the majority of the system from CDROM and then use ftp to load just the  * DES dist.  */
 end_comment
 
 begin_function
@@ -1085,14 +1140,6 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-name|Device
-modifier|*
-modifier|*
-name|devs
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1105,9 +1152,6 @@ return|;
 if|if
 condition|(
 name|RunningAsInit
-operator|&&
-operator|!
-name|SystemWasInstalled
 condition|)
 block|{
 if|if
@@ -1128,9 +1172,6 @@ condition|(
 name|RunningAsInit
 operator|&&
 operator|!
-name|SystemWasInstalled
-operator|&&
-operator|!
 name|root_extract
 argument_list|()
 condition|)
@@ -1144,17 +1185,6 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* If we're about to extract the bin dist again, reset the installed state */
-if|if
-condition|(
-name|Dists
-operator|&
-name|DIST_BIN
-condition|)
-name|SystemWasInstalled
-operator|=
-name|FALSE
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1166,11 +1196,72 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|SystemWasInstalled
-operator|&&
+name|installFixup
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+comment|/* We get a NULL value for str if run from installExpress(), in which case we don't want to print the following */
+if|if
+condition|(
+name|str
+condition|)
+block|{
+if|if
+condition|(
+name|Dists
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Installation completed with some errors.  You may wish\nto scroll through the debugging messages on ALT-F2 with the scroll-lock\nfeature.  Press [ENTER] to return to the installation menu."
+argument_list|)
+expr_stmt|;
+else|else
+name|msgConfirm
+argument_list|(
+literal|"Installation completed successfully, now  press [ENTER] to return\nto the main menu. If you have any network devices you have not yet\nconfigured, see the Interface configuration item on the\nConfiguration menu."
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|Boolean
+name|installFixup
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|Device
+modifier|*
+modifier|*
+name|devs
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/* XXX At some point maybe we want to make the selection of kernel configurable here XXX */
+if|if
+condition|(
 name|access
 argument_list|(
 literal|"/kernel"
+argument_list|,
+name|R_OK
+argument_list|)
+operator|&&
+operator|!
+name|access
+argument_list|(
+literal|"/kernel.GENERIC"
 argument_list|,
 name|R_OK
 argument_list|)
@@ -1189,18 +1280,12 @@ argument_list|(
 literal|"Unable to link /kernel into place!"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 block|}
 comment|/* Resurrect /dev after bin distribution screws it up */
 if|if
 condition|(
 name|RunningAsInit
-operator|&&
-operator|!
-name|SystemWasInstalled
 condition|)
 block|{
 name|msgNotify
@@ -1282,6 +1367,17 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
+name|devs
+index|[
+name|i
+index|]
+operator|->
+name|enabled
+condition|)
+continue|continue;
+if|if
+condition|(
+operator|!
 name|disk
 operator|->
 name|chunks
@@ -1343,6 +1439,7 @@ operator|->
 name|name
 argument_list|)
 condition|)
+block|{
 name|msgConfirm
 argument_list|(
 literal|"Unable to make slice entries for %s!"
@@ -1352,6 +1449,10 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 block|}
 block|}
 block|}
@@ -1380,37 +1481,8 @@ argument_list|,
 literal|0755
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-comment|/* We get a NULL value for str if run from installExpress(), in which case we don't want to print the following */
-if|if
-condition|(
-name|str
-condition|)
-block|{
-if|if
-condition|(
-name|Dists
-condition|)
-name|msgConfirm
-argument_list|(
-literal|"Installation completed with some errors.  You may wish\nto scroll through the debugging messages on ALT-F2 with the scroll-lock\nfeature.  Press [ENTER] to return to the installation menu."
-argument_list|)
-expr_stmt|;
-else|else
-name|msgConfirm
-argument_list|(
-literal|"Installation completed successfully, now  press [ENTER] to return\nto the main menu. If you have any network devices you have not yet\nconfigured, see the Interface configuration item on the\nConfiguration menu."
-argument_list|)
-expr_stmt|;
-block|}
-name|SystemWasInstalled
-operator|=
-name|TRUE
-expr_stmt|;
 return|return
-literal|0
+literal|1
 return|;
 block|}
 end_function
@@ -1439,6 +1511,9 @@ name|c1
 decl_stmt|,
 modifier|*
 name|c2
+decl_stmt|,
+modifier|*
+name|rootdev
 decl_stmt|;
 name|Device
 modifier|*
@@ -1462,12 +1537,14 @@ if|if
 condition|(
 operator|!
 name|checkLabels
-argument_list|()
+argument_list|(
+operator|&
+name|rootdev
+argument_list|)
 condition|)
 return|return
 name|FALSE
 return|;
-comment|/* checkLabels sets global rootdev so as to avoid a wasted extra search */
 name|p
 operator|=
 operator|(
@@ -1480,15 +1557,6 @@ name|private
 expr_stmt|;
 name|command_clear
 argument_list|()
-expr_stmt|;
-name|devs
-operator|=
-name|deviceFind
-argument_list|(
-name|NULL
-argument_list|,
-name|DEVICE_TYPE_DISK
-argument_list|)
 expr_stmt|;
 comment|/* First, create and mount the root device */
 if|if
@@ -1664,6 +1732,15 @@ name|FALSE
 return|;
 block|}
 comment|/* Now buzz through the rest of the partitions and mount them too */
+name|devs
+operator|=
+name|deviceFind
+argument_list|(
+name|NULL
+argument_list|,
+name|DEVICE_TYPE_DISK
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2353,6 +2430,114 @@ block|}
 return|return
 name|status
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|create_termcap
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|caps
+index|[]
+init|=
+block|{
+name|termcap_vt100
+block|,
+name|termcap_cons25
+block|,
+name|termcap_cons25_m
+block|,
+name|termcap_cons25r
+block|,
+name|termcap_cons25r_m
+block|,
+name|termcap_cons25l1
+block|,
+name|termcap_cons25l1_m
+block|,
+name|NULL
+block|,     }
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|cp
+decl_stmt|;
+if|if
+condition|(
+name|access
+argument_list|(
+literal|"/usr/share/misc/termcap"
+argument_list|,
+name|R_OK
+argument_list|)
+condition|)
+block|{
+name|system
+argument_list|(
+literal|"mkdir -p /usr/share/misc"
+argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+name|fopen
+argument_list|(
+literal|"/usr/share/misc/termcap"
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|fp
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Unable to initialize termcap file. Some screen-oriented\n"
+literal|"utilities may not work."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|cp
+operator|=
+name|caps
+expr_stmt|;
+while|while
+condition|(
+name|cp
+condition|)
+name|fputs
+argument_list|(
+operator|*
+operator|(
+name|cp
+operator|++
+operator|)
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

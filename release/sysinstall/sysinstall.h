@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.42.2.3 1995/09/23 22:03:17 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.42.2.4 1995/09/25 00:52:13 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -210,7 +210,7 @@ value|50
 end_define
 
 begin_comment
-comment|/* Internal flag variables */
+comment|/* Internal environment variables */
 end_comment
 
 begin_define
@@ -244,6 +244,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TAPE_BLOCKSIZE
+value|"_tapeBlocksize"
+end_define
+
+begin_define
+define|#
+directive|define
 name|FTP_USER
 value|"_ftpUser"
 end_define
@@ -253,6 +260,13 @@ define|#
 directive|define
 name|FTP_PASS
 value|"_ftpPass"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_TAPE_BLOCKSIZE
+value|"10"
 end_define
 
 begin_define
@@ -323,6 +337,20 @@ define|#
 directive|define
 name|OPT_LEAVE_NETWORK_UP
 value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_CPIO_HIGH
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_DEFAULT_FLAGS
+value|(OPT_FTP_PASSIVE | OPT_FTP_ABORT| OPT_CPIO_HIGH)
 end_define
 
 begin_define
@@ -803,6 +831,55 @@ name|PartInfo
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* An option */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_opt
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|char
+modifier|*
+name|desc
+decl_stmt|;
+enum|enum
+block|{
+name|OPT_IS_STRING
+block|,
+name|OPT_IS_INT
+block|,
+name|OPT_IS_FLAG
+block|,
+name|OPT_IS_FUNC
+block|}
+name|type
+enum|;
+name|void
+modifier|*
+name|data
+decl_stmt|;
+name|int
+name|aux
+decl_stmt|;
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|check
+function_decl|)
+parameter_list|()
+function_decl|;
+block|}
+name|Option
+typedef|;
+end_typedef
+
 begin_typedef
 typedef|typedef
 name|int
@@ -841,6 +918,17 @@ define|#
 directive|define
 name|EXTRAS_FIELD_LEN
 value|256
+end_define
+
+begin_comment
+comment|/* Verbosity levels for CPIO - yuck */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPIO_VERBOSITY
+value|(optionIsSet(OPT_CPIO_HIGH) ? "-v" : "-V")
 end_define
 
 begin_comment
@@ -2401,18 +2489,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|int
-name|mediaSetFtpUserPass
-parameter_list|(
-name|char
-modifier|*
-name|str
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* globals.c */
 end_comment
@@ -2463,6 +2539,16 @@ parameter_list|(
 name|char
 modifier|*
 name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|Boolean
+name|installFixup
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2856,6 +2942,30 @@ begin_function_decl
 specifier|extern
 name|int
 name|mediaSetNFS
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|mediaSetFtpUserPass
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|mediaSetTapeBlocksize
 parameter_list|(
 name|char
 modifier|*
@@ -3407,6 +3517,33 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* options.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|optionsEditor
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|Boolean
+name|optionIsSet
+parameter_list|(
+name|int
+name|opt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* system.c */
 end_comment
 
@@ -3574,6 +3711,17 @@ end_function_decl
 begin_comment
 comment|/* tape.c */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|mediaTapeBlocksize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
