@@ -158,12 +158,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<db.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<paths.h>
 end_include
 
@@ -3306,6 +3300,32 @@ specifier|static
 name|int
 name|argc
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ISALIVE
+argument_list|(
+name|kd
+argument_list|)
+condition|)
+block|{
+name|_kvm_err
+argument_list|(
+name|kd
+argument_list|,
+name|kd
+operator|->
+name|program
+argument_list|,
+literal|"cannot read user space from dead kernel"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|!
