@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	4.1 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -525,16 +525,6 @@ name|disconnect
 block|}
 block|,
 block|{
-literal|"connect"
-block|,
-name|connecthelp
-block|,
-literal|0
-block|,
-name|setpeer
-block|}
-block|,
-block|{
 literal|"delete"
 block|,
 name|deletehelp
@@ -632,6 +622,16 @@ block|,
 literal|0
 block|,
 name|makedir
+block|}
+block|,
+block|{
+literal|"open"
+block|,
+name|connecthelp
+block|,
+literal|0
+block|,
+name|setpeer
 block|}
 block|,
 block|{
