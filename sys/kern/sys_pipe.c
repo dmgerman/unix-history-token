@@ -1338,17 +1338,10 @@ name|int
 name|size
 decl_stmt|;
 block|{
-name|struct
-name|vm_object
-modifier|*
-name|object
-decl_stmt|;
 name|caddr_t
 name|buffer
 decl_stmt|;
 name|int
-name|npages
-decl_stmt|,
 name|error
 decl_stmt|;
 specifier|static
@@ -1391,22 +1384,7 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
-name|npages
-operator|=
-name|size
-operator|/
-name|PAGE_SIZE
-expr_stmt|;
-comment|/* 	 * Create an object, I don't like the idea of paging to/from 	 * kernel_object. 	 * XXX -- minor change needed here for NetBSD/OpenBSD VM systems. 	 */
-name|object
-operator|=
-name|vm_object_allocate
-argument_list|(
-name|OBJT_DEFAULT
-argument_list|,
-name|npages
-argument_list|)
-expr_stmt|;
+comment|/* 	 * XXX -- minor change needed here for NetBSD/OpenBSD VM systems. 	 */
 name|buffer
 operator|=
 operator|(
@@ -1417,14 +1395,14 @@ argument_list|(
 name|pipe_map
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Insert the object into the kernel map, and allocate kva for it. 	 * The map entry is, by default, pageable. 	 * XXX -- minor change needed here for NetBSD/OpenBSD VM systems. 	 */
+comment|/* 	 * The map entry is, by default, pageable. 	 * XXX -- minor change needed here for NetBSD/OpenBSD VM systems. 	 */
 name|error
 operator|=
 name|vm_map_find
 argument_list|(
 name|pipe_map
 argument_list|,
-name|object
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -1453,11 +1431,6 @@ operator|!=
 name|KERN_SUCCESS
 condition|)
 block|{
-name|vm_object_deallocate
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ppsratecheck
