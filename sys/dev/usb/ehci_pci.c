@@ -466,6 +466,11 @@ name|USBREV_UNKNOWN
 expr_stmt|;
 break|break;
 block|}
+name|pci_enable_busmaster
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
 name|rid
 operator|=
 name|PCI_CBMEM

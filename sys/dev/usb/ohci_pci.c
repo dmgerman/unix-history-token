@@ -586,6 +586,11 @@ name|usbrev
 operator|=
 name|USBREV_1_0
 expr_stmt|;
+name|pci_enable_busmaster
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
 name|rid
 operator|=
 name|PCI_CBMEM
