@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c 4.6 81/08/20"
+literal|"@(#)func.c 4.7 82/12/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -3860,12 +3860,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_include
-include|#
-directive|include
-file|<sys/vlimit.h>
-end_include
-
 begin_struct
 struct|struct
 name|limits
@@ -3889,15 +3883,7 @@ name|limits
 index|[]
 init|=
 block|{
-name|LIM_NORAISE
-block|,
-literal|"noraise"
-block|,
-literal|1
-block|,
-literal|""
-block|,
-name|LIM_CPU
+name|RLIMIT_CPU
 block|,
 literal|"cputime"
 block|,
@@ -3905,7 +3891,7 @@ literal|1
 block|,
 literal|"seconds"
 block|,
-name|LIM_FSIZE
+name|RLIMIT_FSIZE
 block|,
 literal|"filesize"
 block|,
@@ -3913,7 +3899,7 @@ literal|1024
 block|,
 literal|"kbytes"
 block|,
-name|LIM_DATA
+name|RLIMIT_DATA
 block|,
 literal|"datasize"
 block|,
@@ -3921,7 +3907,7 @@ literal|1024
 block|,
 literal|"kbytes"
 block|,
-name|LIM_STACK
+name|RLIMIT_STACK
 block|,
 literal|"stacksize"
 block|,
@@ -3929,7 +3915,7 @@ literal|1024
 block|,
 literal|"kbytes"
 block|,
-name|LIM_CORE
+name|RLIMIT_CORE
 block|,
 literal|"coredumpsize"
 block|,
@@ -3937,7 +3923,7 @@ literal|1024
 block|,
 literal|"kbytes"
 block|,
-name|LIM_MAXRSS
+name|RLIMIT_RSS
 block|,
 literal|"memoryuse"
 block|,
@@ -4093,24 +4079,6 @@ control|)
 name|plim
 argument_list|(
 name|lp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vlimit
-argument_list|(
-name|LIM_NORAISE
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-operator|&&
-name|getuid
-argument_list|()
-condition|)
-name|printf
-argument_list|(
-literal|"Limits cannot be raised\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4274,17 +4242,6 @@ operator|*
 name|v
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|lp
-operator|->
-name|limconst
-operator|==
-name|LIM_NORAISE
-condition|)
-goto|goto
-name|badscal
-goto|;
 switch|switch
 condition|(
 operator|*
@@ -4300,7 +4257,7 @@ name|lp
 operator|->
 name|limconst
 operator|!=
-name|LIM_CPU
+name|RLIMIT_CPU
 condition|)
 goto|goto
 name|badscal
@@ -4333,7 +4290,7 @@ name|lp
 operator|->
 name|limconst
 operator|!=
-name|LIM_CPU
+name|RLIMIT_CPU
 condition|)
 goto|goto
 name|badscal
@@ -4359,7 +4316,7 @@ name|lp
 operator|->
 name|limconst
 operator|==
-name|LIM_CPU
+name|RLIMIT_CPU
 condition|)
 block|{
 name|limtail
@@ -4384,7 +4341,7 @@ name|lp
 operator|->
 name|limconst
 operator|==
-name|LIM_CPU
+name|RLIMIT_CPU
 condition|)
 goto|goto
 name|badscal
@@ -4417,7 +4374,7 @@ name|lp
 operator|->
 name|limconst
 operator|!=
-name|LIM_CPU
+name|RLIMIT_CPU
 condition|)
 goto|goto
 name|badscal
@@ -4439,7 +4396,7 @@ name|lp
 operator|->
 name|limconst
 operator|==
-name|LIM_CPU
+name|RLIMIT_CPU
 condition|)
 goto|goto
 name|badscal
@@ -4468,7 +4425,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|INFINITY
+name|RLIM_INFINITY
 operator|)
 return|;
 default|default:
@@ -4570,9 +4527,9 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
-name|lim
+name|struct
+name|rlimit
+name|rlim
 decl_stmt|;
 name|printf
 argument_list|(
@@ -4583,23 +4540,23 @@ operator|->
 name|limname
 argument_list|)
 expr_stmt|;
-name|lim
-operator|=
-name|vlimit
+name|getrlimit
 argument_list|(
 name|lp
 operator|->
 name|limconst
 argument_list|,
-operator|-
-literal|1
+operator|&
+name|rlim
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lim
+name|rlim
+operator|.
+name|rlim_cur
 operator|==
-name|INFINITY
+name|RLIM_INFINITY
 condition|)
 name|printf
 argument_list|(
@@ -4613,14 +4570,16 @@ name|lp
 operator|->
 name|limconst
 operator|==
-name|LIM_CPU
+name|RLIMIT_CPU
 condition|)
 name|psecs
 argument_list|(
 operator|(
 name|long
 operator|)
-name|lim
+name|rlim
+operator|.
+name|rlim_cur
 argument_list|)
 expr_stmt|;
 else|else
@@ -4628,7 +4587,9 @@ name|printf
 argument_list|(
 literal|"%d %s"
 argument_list|,
-name|lim
+name|rlim
+operator|.
+name|rlim_cur
 operator|/
 name|lp
 operator|->
@@ -4700,7 +4661,7 @@ name|setlim
 argument_list|(
 name|lp
 argument_list|,
-name|INFINITY
+name|RLIM_INFINITY
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4724,7 +4685,7 @@ name|setlim
 argument_list|(
 name|lp
 argument_list|,
-name|INFINITY
+name|RLIM_INFINITY
 argument_list|)
 expr_stmt|;
 block|}
@@ -4748,15 +4709,36 @@ end_expr_stmt
 
 begin_block
 block|{
-if|if
-condition|(
-name|vlimit
+name|struct
+name|rlimit
+name|rlim
+decl_stmt|;
+name|getrlimit
 argument_list|(
 name|lp
 operator|->
 name|limconst
 argument_list|,
+operator|&
+name|rlim
+argument_list|)
+expr_stmt|;
+name|rlim
+operator|.
+name|rlim_cur
+operator|=
 name|limit
+expr_stmt|;
+if|if
+condition|(
+name|setrlimit
+argument_list|(
+name|lp
+operator|->
+name|limconst
+argument_list|,
+operator|&
+name|rlim
 argument_list|)
 operator|<
 literal|0

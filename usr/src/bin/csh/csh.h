@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* csh.h 4.4 %G% */
+comment|/* csh.h 4.5 82/12/30 */
 end_comment
 
 begin_include
@@ -9,22 +9,17 @@ directive|include
 file|"sh.local.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMUNIX
-end_ifdef
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/vtimes.h>
+file|<resource.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * C shell  *  * Bill Joy, UC Berkeley  * October, 1978; May 1980  *  * Jim Kulp, IIASA, Laxenburg Austria  * April, 1980  */
@@ -336,6 +331,13 @@ end_decl_stmt
 begin_comment
 comment|/* Time at which the shell started */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|rusage
+name|ru0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Miscellany  */
@@ -810,12 +812,6 @@ begin_comment
 comment|/*  * Labuf implements a general buffer for lookahead during lexical operations.  * Text which is to be placed in the input stream can be stuck here.  * We stick parsed ahead $ constructs during initial input,  * process id's from `$$', and modified variable values (from qualifiers  * during expansion in sh.dol.c) here.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMUNIX
-end_ifdef
-
 begin_decl_stmt
 name|char
 name|labuf
@@ -824,25 +820,6 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|char
-name|labuf
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|char
@@ -2140,24 +2117,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|Vdp
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMUNIX
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|vtimes
-name|zvms
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* proc.h 4.1 %G% */
+comment|/* proc.h 4.2 %G% */
 end_comment
 
 begin_comment
@@ -70,15 +70,10 @@ name|long
 name|p_utime
 decl_stmt|;
 comment|/* user cpu time */
-ifdef|#
-directive|ifdef
-name|VMUNIX
 name|struct
-name|vtimes
-name|p_vtimes
+name|rusage
+name|p_rusage
 decl_stmt|;
-endif|#
-directive|endif
 name|char
 modifier|*
 name|p_command
