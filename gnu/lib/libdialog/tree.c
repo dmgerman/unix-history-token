@@ -1719,6 +1719,7 @@ name|key
 operator|==
 literal|'+'
 condition|)
+block|{
 if|if
 condition|(
 name|choice
@@ -1951,6 +1952,7 @@ name|choice
 operator|+
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|i
@@ -4653,6 +4655,7 @@ name|in_string
 operator|==
 name|FS
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -4681,6 +4684,7 @@ name|in_string
 operator|+
 literal|1
 expr_stmt|;
+block|}
 block|}
 name|in_string
 operator|++

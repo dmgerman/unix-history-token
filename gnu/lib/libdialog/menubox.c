@@ -1802,6 +1802,7 @@ argument_list|(
 name|key
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 name|choice
@@ -2018,6 +2019,7 @@ name|choice
 operator|+
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|i
