@@ -1,7 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$OpenBSD: v3451.c,v 1.6 2001/10/24 18:38:58 millert Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$NetBSD: v3451.c,v 1.6 1997/02/11 09:24:20 mrg Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#
@@ -9,15 +31,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)v3451.c	8.1 (Berkeley) 6/6/93"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)v3451.c	8.1 (Berkeley) 6/6/93"; static char rcsid[] = "$OpenBSD: v3451.c,v 1.6 2001/10/24 18:38:58 millert Exp $";
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -35,12 +59,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"tipconf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"tip.h"
 end_include
 
@@ -51,28 +69,47 @@ name|Sjbuf
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|v3451_dialer
-argument_list|(
-name|num
-argument_list|,
-name|acu
-argument_list|)
-specifier|register
-name|char
-operator|*
-name|num
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|int
+name|expect
+argument_list|()
+decl_stmt|,
+name|notin
+argument_list|()
+decl_stmt|,
+name|prefix
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|void
+name|vawrite
+argument_list|()
+decl_stmt|,
+name|alarmtr
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|v3451_dialer
+parameter_list|(
+name|num
+parameter_list|,
+name|acu
+parameter_list|)
+name|char
+modifier|*
+name|num
+decl_stmt|;
 name|char
 modifier|*
 name|acu
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|sig_t
 name|func
@@ -92,10 +129,6 @@ argument_list|)
 argument_list|)
 operator|<
 literal|1200
-decl_stmt|,
-name|rw
-init|=
-literal|2
 decl_stmt|;
 name|char
 name|phone
@@ -103,27 +136,10 @@ index|[
 literal|50
 index|]
 decl_stmt|;
-if|#
-directive|if
-name|ACULOG
-name|char
-name|line
-index|[
-literal|80
-index|]
+name|struct
+name|termios
+name|cntrl
 decl_stmt|;
-endif|#
-directive|endif
-specifier|static
-name|int
-name|expect
-parameter_list|()
-function_decl|;
-specifier|static
-name|void
-name|vawrite
-parameter_list|()
-function_decl|;
 comment|/* 	 * Get in synch 	 */
 name|vawrite
 argument_list|(
@@ -175,8 +191,8 @@ argument_list|(
 literal|"can't synchronize with vadic 3451\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ACULOG
 name|logent
 argument_list|(
@@ -200,8 +216,29 @@ literal|0
 operator|)
 return|;
 block|}
-name|acu_hupcl
-argument_list|()
+name|tcgetattr
+argument_list|(
+name|FD
+argument_list|,
+operator|&
+name|cntrl
+argument_list|)
+expr_stmt|;
+name|term
+operator|.
+name|c_cflag
+operator||=
+name|HUPCL
+expr_stmt|;
+name|tcsetattr
+argument_list|(
+name|FD
+argument_list|,
+name|TCSANOW
+argument_list|,
+operator|&
+name|cntrl
+argument_list|)
 expr_stmt|;
 name|sleep
 argument_list|(
@@ -231,8 +268,8 @@ argument_list|(
 literal|"Vadic will not accept dial command\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ACULOG
 name|logent
 argument_list|(
@@ -256,18 +293,19 @@ literal|0
 operator|)
 return|;
 block|}
-name|strcpy
+operator|(
+name|void
+operator|)
+name|snprintf
 argument_list|(
 name|phone
+argument_list|,
+sizeof|sizeof
+name|phone
+argument_list|,
+literal|"%s\r"
 argument_list|,
 name|num
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|phone
-argument_list|,
-literal|"\r"
 argument_list|)
 expr_stmt|;
 name|vawrite
@@ -293,8 +331,8 @@ argument_list|(
 literal|"Vadic will not accept phone number\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ACULOG
 name|logent
 argument_list|(
@@ -360,8 +398,8 @@ argument_list|(
 literal|"Vadic failed to dial\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ACULOG
 name|logent
 argument_list|(
@@ -425,8 +463,8 @@ argument_list|(
 literal|"call failed\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ACULOG
 name|logent
 argument_list|(
@@ -450,14 +488,11 @@ literal|0
 operator|)
 return|;
 block|}
-name|ioctl
+name|tcflush
 argument_list|(
 name|FD
 argument_list|,
-name|TIOCFLUSH
-argument_list|,
-operator|&
-name|rw
+name|TCIOFLUSH
 argument_list|)
 expr_stmt|;
 return|return
@@ -466,14 +501,12 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|v3451_disconnect
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|close
 argument_list|(
@@ -481,14 +514,12 @@ name|FD
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|v3451_abort
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|close
 argument_list|(
@@ -496,7 +527,7 @@ name|FD
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -507,7 +538,6 @@ name|cp
 parameter_list|,
 name|delay
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -542,20 +572,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|expect
-argument_list|(
+parameter_list|(
 name|cp
-argument_list|)
-specifier|register
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|cp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|char
 name|buf
@@ -563,7 +590,6 @@ index|[
 literal|300
 index|]
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|rp
@@ -579,16 +605,6 @@ name|online
 init|=
 literal|0
 decl_stmt|;
-specifier|static
-name|int
-name|notin
-parameter_list|()
-function_decl|;
-specifier|static
-name|void
-name|alarmtr
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|strcmp
@@ -751,7 +767,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -789,11 +805,6 @@ end_function
 
 begin_block
 block|{
-specifier|static
-name|int
-name|prefix
-parameter_list|()
-function_decl|;
 for|for
 control|(
 init|;
@@ -825,27 +836,26 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|prefix
-argument_list|(
+parameter_list|(
 name|s1
-argument_list|,
+parameter_list|,
 name|s2
-argument_list|)
-specifier|register
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|s1
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|s2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
-specifier|register
 name|char
 name|c
 decl_stmt|;

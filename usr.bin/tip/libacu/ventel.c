@@ -1,7 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$OpenBSD: ventel.c,v 1.7 2001/11/19 19:02:16 mpech Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$NetBSD: ventel.c,v 1.6 1997/02/11 09:24:21 mrg Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#
@@ -16,21 +38,10 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)ventel.c	8.1 (Berkeley) 6/6/93";
+unit|static char sccsid[] = "@(#)ventel.c	8.1 (Berkeley) 6/6/93"; static char rcsid[] = "$OpenBSD: ventel.c,v 1.7 2001/11/19 19:02:16 mpech Exp $";
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -48,19 +59,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"tipconf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"tip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
 end_include
 
 begin_define
@@ -93,6 +104,25 @@ name|jmp_buf
 name|timeoutbuf
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|gobble
+argument_list|()
+decl_stmt|,
+name|vensync
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|echo
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * some sleep calls have been replaced by this macro  * because some ventel modems require two<cr>s in less than  * a second in order to 'wake up'... yes, it is dirty...  */
@@ -128,55 +158,40 @@ name|DELAY
 parameter_list|(
 name|n
 parameter_list|)
-value|{ register long N = (n); while (--N> 0); }
+value|do { long N = (n); while (--N> 0); } while (0)
 end_define
 
-begin_macro
+begin_define
+define|#
+directive|define
 name|busyloop
-argument_list|(
-argument|n
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|DELAY
-argument_list|(
+parameter_list|(
 name|n
-argument_list|)
-expr_stmt|;
-block|}
-end_block
+parameter_list|)
+value|do { DELAY(n); } while (0)
+end_define
 
-begin_expr_stmt
+begin_function
+name|int
 name|ven_dialer
-argument_list|(
+parameter_list|(
 name|num
-argument_list|,
+parameter_list|,
 name|acu
-argument_list|)
-specifier|register
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|num
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|acu
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|connected
 init|=
@@ -186,28 +201,15 @@ name|char
 modifier|*
 name|msg
 decl_stmt|,
-modifier|*
-name|index
-argument_list|()
-decl_stmt|,
 name|line
 index|[
 literal|80
 index|]
 decl_stmt|;
-specifier|static
-name|int
-name|gobble
-argument_list|()
-decl_stmt|,
-name|vensync
-argument_list|()
+name|struct
+name|termios
+name|cntrl
 decl_stmt|;
-specifier|static
-name|void
-name|echo
-parameter_list|()
-function_decl|;
 comment|/* 	 * Get in synch with a couple of carriage returns 	 */
 if|if
 condition|(
@@ -223,8 +225,8 @@ argument_list|(
 literal|"can't synchronize with ventel\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ACULOG
 name|logent
 argument_list|(
@@ -268,8 +270,29 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-name|acu_hupcl
-argument_list|()
+name|tcgetattr
+argument_list|(
+name|FD
+argument_list|,
+operator|&
+name|cntrl
+argument_list|)
+expr_stmt|;
+name|cntrl
+operator|.
+name|c_cflag
+operator||=
+name|HUPCL
+expr_stmt|;
+name|tcsetattr
+argument_list|(
+name|FD
+argument_list|,
+name|TCSANOW
+argument_list|,
+operator|&
+name|cntrl
+argument_list|)
 expr_stmt|;
 name|echo
 argument_list|(
@@ -347,22 +370,29 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-name|acu_flush
-argument_list|()
+name|tcflush
+argument_list|(
+name|FD
+argument_list|,
+name|TCIOFLUSH
+argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ACULOG
 if|if
 condition|(
 name|timeout
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"%d second dial timeout"
+literal|"%ld second dial timeout"
 argument_list|,
 name|number
 argument_list|(
@@ -421,7 +451,7 @@ return|;
 comment|/* call failed, parse response for user */
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -445,7 +475,7 @@ name|line
 init|;
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,
@@ -525,14 +555,12 @@ name|connected
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|ven_disconnect
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|close
 argument_list|(
@@ -540,14 +568,12 @@ name|FD
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|ven_abort
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|write
 argument_list|(
@@ -564,7 +590,7 @@ name|FD
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -573,7 +599,6 @@ name|echo
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
@@ -691,7 +716,6 @@ name|match
 parameter_list|,
 name|response
 parameter_list|)
-specifier|register
 name|char
 name|match
 decl_stmt|;
@@ -700,7 +724,6 @@ name|response
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -960,9 +983,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|perror
 argument_list|(
-literal|"ioctl"
+literal|"tip: ioctl"
 argument_list|)
 expr_stmt|;
 continue|continue;

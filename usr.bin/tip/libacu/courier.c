@@ -1,7 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$OpenBSD: courier.c,v 1.9 2001/10/24 18:38:58 millert Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$NetBSD: courier.c,v 1.7 1997/02/11 09:24:16 mrg Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#
@@ -9,16 +31,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)courier.c	8.1 (Berkeley) 6/6/93"; static char rcsid[] = "$OpenBSD: courier.c,v 1.9 2001/10/24 18:38:58 millert Exp $";
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -26,14 +49,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Routines for calling up on a Courier modem.  * Derived from Hayes driver.  */
+comment|/* not lint */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"tipconf.h"
-end_include
+begin_comment
+comment|/*  * Routines for calling up on a Courier modem.  * Derived from Hayes driver.  */
+end_comment
 
 begin_include
 include|#
@@ -44,19 +65,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acucommon.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_define
@@ -101,44 +116,62 @@ name|intbuf
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|coursync
+argument_list|()
+decl_stmt|,
+name|cour_connect
+argument_list|()
+decl_stmt|,
+name|cour_swallow
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|cour_nap
 parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|cour_dialer
-argument_list|(
-name|num
-argument_list|,
-name|acu
-argument_list|)
-specifier|register
-name|char
-operator|*
-name|num
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
+name|void
+name|cour_disconnect
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|cour_dialer
+parameter_list|(
+name|num
+parameter_list|,
+name|acu
+parameter_list|)
+name|char
+modifier|*
+name|num
+decl_stmt|;
 name|char
 modifier|*
 name|acu
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ACULOG
 name|char
 name|line
@@ -148,13 +181,9 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-specifier|static
-name|int
-name|cour_connect
-argument_list|()
-decl_stmt|,
-name|cour_swallow
-argument_list|()
+name|struct
+name|termios
+name|cntrl
 decl_stmt|;
 if|if
 condition|(
@@ -173,8 +202,29 @@ argument_list|,
 name|acu
 argument_list|)
 expr_stmt|;
-name|acu_hupcl
-argument_list|()
+name|tcgetattr
+argument_list|(
+name|FD
+argument_list|,
+operator|&
+name|cntrl
+argument_list|)
+expr_stmt|;
+name|cntrl
+operator|.
+name|c_cflag
+operator||=
+name|HUPCL
+expr_stmt|;
+name|tcsetattr
+argument_list|(
+name|FD
+argument_list|,
+name|TCSAFLUSH
+argument_list|,
+operator|&
+name|cntrl
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Get in synch. 	 */
 if|if
@@ -191,8 +241,8 @@ argument_list|(
 literal|"can't synchronize with courier\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ACULOG
 name|logent
 argument_list|(
@@ -249,16 +299,13 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|ioctl
+name|tcflush
 argument_list|(
 name|FD
 argument_list|,
-name|TIOCFLUSH
-argument_list|,
-literal|0
+name|TCIOFLUSH
 argument_list|)
 expr_stmt|;
-comment|/* flush any clutter */
 name|cour_write
 argument_list|(
 name|FD
@@ -343,19 +390,22 @@ operator|=
 name|cour_connect
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|ACULOG
 if|if
 condition|(
 name|timeout
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"%d second dial timeout"
+literal|"%ld second dial timeout"
 argument_list|,
 name|number
 argument_list|(
@@ -396,14 +446,12 @@ name|connected
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|cour_disconnect
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* first hang up the modem*/
 name|ioctl
@@ -439,14 +487,12 @@ name|FD
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|cour_abort
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|cour_write
 argument_list|(
@@ -462,7 +508,7 @@ name|cour_disconnect
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -496,7 +542,6 @@ name|cour_swallow
 parameter_list|(
 name|match
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|match
@@ -975,19 +1020,48 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|acu_setspeed
+name|struct
+name|termios
+name|cntrl
+decl_stmt|;
+name|tcgetattr
 argument_list|(
+name|FD
+argument_list|,
+operator|&
+name|cntrl
+argument_list|)
+expr_stmt|;
+name|cfsetospeed
+argument_list|(
+operator|&
+name|cntrl
+argument_list|,
 name|bm
 operator|->
 name|baud
 argument_list|)
-condition|)
-goto|goto
-name|error
-goto|;
+expr_stmt|;
+name|cfsetispeed
+argument_list|(
+operator|&
+name|cntrl
+argument_list|,
+name|bm
+operator|->
+name|baud
+argument_list|)
+expr_stmt|;
+name|tcsetattr
+argument_list|(
+name|FD
+argument_list|,
+name|TCSAFLUSH
+argument_list|,
+operator|&
+name|cntrl
+argument_list|)
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGALRM
@@ -1053,8 +1127,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|error1
-label|:
 name|printf
 argument_list|(
 literal|"%s\r\n"
@@ -1062,8 +1134,6 @@ argument_list|,
 name|dialer_buf
 argument_list|)
 expr_stmt|;
-name|error
-label|:
 name|signal
 argument_list|(
 name|SIGALRM
@@ -1111,16 +1181,13 @@ operator|<
 name|MAXRETRY
 condition|)
 block|{
-name|ioctl
+name|tcflush
 argument_list|(
 name|FD
 argument_list|,
-name|TIOCFLUSH
-argument_list|,
-literal|0
+name|TCIOFLUSH
 argument_list|)
 expr_stmt|;
-comment|/* flush any clutter */
 name|cour_write
 argument_list|(
 name|FD
@@ -1196,7 +1263,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -1204,14 +1271,14 @@ literal|'0'
 argument_list|)
 operator|||
 operator|(
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
 literal|'O'
 argument_list|)
 operator|&&
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -1287,37 +1354,27 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|cour_write
-argument_list|(
-argument|fd
-argument_list|,
-argument|cp
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fd
+parameter_list|,
+name|cp
+parameter_list|,
+name|n
+parameter_list|)
 name|int
 name|fd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -1334,7 +1391,7 @@ argument_list|)
 condition|)
 name|write
 argument_list|(
-name|STDOUT_FILENO
+literal|1
 argument_list|,
 name|cp
 argument_list|,
@@ -1343,8 +1400,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|acu_flush
-argument_list|()
+name|tcdrain
+argument_list|(
+name|fd
+argument_list|)
 expr_stmt|;
 name|cour_nap
 argument_list|()
@@ -1368,15 +1427,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|acu_flush
-argument_list|()
+name|tcdrain
+argument_list|(
+name|fd
+argument_list|)
 expr_stmt|;
 name|cour_nap
 argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -1440,7 +1501,7 @@ condition|)
 return|return;
 name|write
 argument_list|(
-name|STDOUT_FILENO
+literal|1
 argument_list|,
 name|buf
 argument_list|,
@@ -1455,24 +1516,43 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
-name|cour_nap
-argument_list|()
-end_macro
+begin_comment
+comment|/* Give the courier 50 milliseconds between characters */
+end_comment
 
-begin_block
+begin_function
+name|void
+name|cour_nap
+parameter_list|()
 block|{
-name|acu_nap
-argument_list|(
+name|struct
+name|timespec
+name|ts
+decl_stmt|;
+name|ts
+operator|.
+name|tv_sec
+operator|=
+literal|0
+expr_stmt|;
+name|ts
+operator|.
+name|tv_nsec
+operator|=
 literal|50
+operator|*
+literal|1000000
+expr_stmt|;
+name|nanosleep
+argument_list|(
+operator|&
+name|ts
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
-comment|/* end of courier.c */
-end_comment
+end_function
 
 end_unit
 
