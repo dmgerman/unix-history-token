@@ -104,6 +104,32 @@ block|}
 end_function
 
 begin_comment
+comment|/**  * Returns a reference to the data contained in the buffer.  *    * @note Adding data to the Buffer object may invalidate the reference.  */
+end_comment
+
+begin_function
+specifier|inline
+name|char
+modifier|*
+name|Buf_Data
+parameter_list|(
+specifier|const
+name|Buffer
+modifier|*
+name|bp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|bp
+operator|->
+name|buf
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * Expand the buffer to hold the number of additional bytes, plus  * space to store a terminating NULL byte.  */
 end_comment
 
@@ -576,6 +602,41 @@ name|str
 argument_list|)
 argument_list|,
 name|str
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Append characters in buf to Buffer object  */
+end_comment
+
+begin_function
+name|void
+name|Buf_AppendBuf
+parameter_list|(
+name|Buffer
+modifier|*
+name|bp
+parameter_list|,
+specifier|const
+name|Buffer
+modifier|*
+name|buf
+parameter_list|)
+block|{
+name|Buf_AddBytes
+argument_list|(
+name|bp
+argument_list|,
+name|Buf_Size
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|buf
+operator|->
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
