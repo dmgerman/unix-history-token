@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	4.18	83/06/12	*/
+comment|/*	if.h	4.19	83/06/12	*/
 end_comment
 
 begin_comment
@@ -237,6 +237,17 @@ end_define
 
 begin_comment
 comment|/* avoid use of trailers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_RUNNING
+value|0x40
+end_define
+
+begin_comment
+comment|/* resources allocated */
 end_comment
 
 begin_comment
