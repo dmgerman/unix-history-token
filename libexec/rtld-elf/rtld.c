@@ -4875,6 +4875,14 @@ name|p
 init|=
 name|ld_preload
 decl_stmt|;
+specifier|static
+specifier|const
+name|char
+name|delim
+index|[]
+init|=
+literal|" \t:;"
+decl_stmt|;
 if|if
 condition|(
 name|p
@@ -4890,7 +4898,7 @@ name|strspn
 argument_list|(
 name|p
 argument_list|,
-literal|":;"
+name|delim
 argument_list|)
 expr_stmt|;
 while|while
@@ -4908,7 +4916,7 @@ name|strcspn
 argument_list|(
 name|p
 argument_list|,
-literal|":;"
+name|delim
 argument_list|)
 decl_stmt|;
 name|char
@@ -4982,7 +4990,7 @@ name|strspn
 argument_list|(
 name|p
 argument_list|,
-literal|":;"
+name|delim
 argument_list|)
 expr_stmt|;
 block|}
