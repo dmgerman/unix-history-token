@@ -89,8 +89,8 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|vfs_nmount_t
-name|devfs_nmount
+name|vfs_mount_t
+name|devfs_mount
 decl_stmt|;
 end_decl_stmt
 
@@ -122,29 +122,18 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|devfs_nmount
+name|devfs_mount
 parameter_list|(
-name|mp
-parameter_list|,
-name|ndp
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
-name|struct
-name|nameidata
-modifier|*
-name|ndp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|error
@@ -817,9 +806,9 @@ name|devfs_vfsops
 init|=
 block|{
 operator|.
-name|vfs_nmount
+name|vfs_mount
 operator|=
-name|devfs_nmount
+name|devfs_mount
 block|,
 operator|.
 name|vfs_root

@@ -122,8 +122,8 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|vfs_mount_t
-name|portal_mount
+name|vfs_omount_t
+name|portal_omount
 decl_stmt|;
 end_decl_stmt
 
@@ -155,15 +155,13 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|portal_mount
+name|portal_omount
 parameter_list|(
 name|mp
 parameter_list|,
 name|path
 parameter_list|,
 name|data
-parameter_list|,
-name|ndp
 parameter_list|,
 name|td
 parameter_list|)
@@ -178,11 +176,6 @@ name|path
 decl_stmt|;
 name|caddr_t
 name|data
-decl_stmt|;
-name|struct
-name|nameidata
-modifier|*
-name|ndp
 decl_stmt|;
 name|struct
 name|thread
@@ -1004,9 +997,9 @@ name|portal_vfsops
 init|=
 block|{
 operator|.
-name|vfs_mount
+name|vfs_omount
 operator|=
-name|portal_mount
+name|portal_omount
 block|,
 operator|.
 name|vfs_root

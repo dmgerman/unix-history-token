@@ -108,7 +108,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vfs_nmount_t
+name|vfs_mount_t
 name|union_mount
 decl_stmt|;
 end_decl_stmt
@@ -138,19 +138,12 @@ name|union_mount
 parameter_list|(
 name|mp
 parameter_list|,
-name|ndp
-parameter_list|,
 name|td
 parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
-name|struct
-name|nameidata
-modifier|*
-name|ndp
 decl_stmt|;
 name|struct
 name|thread
@@ -217,6 +210,16 @@ decl_stmt|;
 name|struct
 name|componentname
 name|fakecn
+decl_stmt|;
+name|struct
+name|nameidata
+name|nd
+decl_stmt|,
+modifier|*
+name|ndp
+init|=
+operator|&
+name|nd
 decl_stmt|;
 name|UDEBUG
 argument_list|(
@@ -1747,7 +1750,7 @@ operator|=
 name|union_init
 block|,
 operator|.
-name|vfs_nmount
+name|vfs_mount
 operator|=
 name|union_mount
 block|,

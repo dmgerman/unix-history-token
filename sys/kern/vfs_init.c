@@ -1667,6 +1667,34 @@ name|vfsops
 decl_stmt|;
 if|if
 condition|(
+name|vfc
+operator|->
+name|vfc_version
+operator|!=
+name|VFS_VERSION
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ERROR: filesystem %s, unsupported ABI version %x\n"
+argument_list|,
+name|vfc
+operator|->
+name|vfc_name
+argument_list|,
+name|vfc
+operator|->
+name|vfc_version
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|vfs_byname
 argument_list|(
 name|vfc
@@ -1775,12 +1803,12 @@ name|NULL
 operator|||
 name|vfsops
 operator|->
-name|vfs_nmount
+name|vfs_omount
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"Filesystem %s has no (n)mount op"
+literal|"Filesystem %s has no (o)mount op"
 operator|,
 name|vfc
 operator|->

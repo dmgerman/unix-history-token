@@ -173,8 +173,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vfs_mount_t
-name|cd9660_mount
+name|vfs_omount_t
+name|cd9660_omount
 decl_stmt|;
 end_decl_stmt
 
@@ -238,9 +238,9 @@ operator|=
 name|cd9660_init
 block|,
 operator|.
-name|vfs_mount
+name|vfs_omount
 operator|=
-name|cd9660_mount
+name|cd9660_omount
 block|,
 operator|.
 name|vfs_root
@@ -748,15 +748,13 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|cd9660_mount
+name|cd9660_omount
 parameter_list|(
 name|mp
 parameter_list|,
 name|path
 parameter_list|,
 name|data
-parameter_list|,
-name|ndp
 parameter_list|,
 name|td
 parameter_list|)
@@ -771,11 +769,6 @@ name|path
 decl_stmt|;
 name|caddr_t
 name|data
-decl_stmt|;
-name|struct
-name|nameidata
-modifier|*
-name|ndp
 decl_stmt|;
 name|struct
 name|thread
@@ -807,6 +800,10 @@ modifier|*
 name|imp
 init|=
 literal|0
+decl_stmt|;
+name|struct
+name|nameidata
+name|ndp
 decl_stmt|;
 if|if
 condition|(
@@ -912,6 +909,7 @@ block|}
 comment|/* 	 * Not an update, or updating the name: look up the name 	 * and verify that it refers to a sensible block device. 	 */
 name|NDINIT
 argument_list|(
+operator|&
 name|ndp
 argument_list|,
 name|LOOKUP
@@ -934,6 +932,7 @@ name|error
 operator|=
 name|namei
 argument_list|(
+operator|&
 name|ndp
 argument_list|)
 operator|)
@@ -945,6 +944,7 @@ operator|)
 return|;
 name|NDFREE
 argument_list|(
+operator|&
 name|ndp
 argument_list|,
 name|NDF_ONLY_PNBUF
@@ -953,7 +953,7 @@ expr_stmt|;
 name|devvp
 operator|=
 name|ndp
-operator|->
+operator|.
 name|ni_vp
 expr_stmt|;
 if|if

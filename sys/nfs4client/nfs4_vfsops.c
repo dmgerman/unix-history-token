@@ -394,8 +394,8 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|vfs_mount_t
-name|nfs_mount
+name|vfs_omount_t
+name|nfs_omount
 decl_stmt|;
 end_decl_stmt
 
@@ -444,9 +444,9 @@ operator|=
 name|nfs4_init
 block|,
 operator|.
-name|vfs_mount
+name|vfs_omount
 operator|=
-name|nfs_mount
+name|nfs_omount
 block|,
 operator|.
 name|vfs_root
@@ -1761,7 +1761,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|nfs_mount
+name|nfs_omount
 parameter_list|(
 name|struct
 name|mount
@@ -1774,11 +1774,6 @@ name|path
 parameter_list|,
 name|caddr_t
 name|data
-parameter_list|,
-name|struct
-name|nameidata
-modifier|*
-name|ndp
 parameter_list|,
 name|struct
 name|thread

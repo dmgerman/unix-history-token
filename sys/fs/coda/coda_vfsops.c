@@ -263,6 +263,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|vfs_omount_t
+name|coda_omount
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|coda_vfsopstats_init
@@ -350,15 +357,13 @@ end_comment
 
 begin_function
 name|int
-name|coda_mount
+name|coda_omount
 parameter_list|(
 name|vfsp
 parameter_list|,
 name|path
 parameter_list|,
 name|data
-parameter_list|,
-name|ndp
 parameter_list|,
 name|td
 parameter_list|)
@@ -377,12 +382,6 @@ name|caddr_t
 name|data
 decl_stmt|;
 comment|/* Need to define a data type for this in netbsd? */
-name|struct
-name|nameidata
-modifier|*
-name|ndp
-decl_stmt|;
-comment|/* Clobber this to lookup the device name */
 name|struct
 name|thread
 modifier|*
@@ -427,6 +426,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|struct
+name|nameidata
+name|ndp
+decl_stmt|;
 name|ENTRY
 expr_stmt|;
 name|coda_vfsopstats_init
@@ -462,6 +465,7 @@ block|}
 comment|/* Validate mount device.  Similar to getmdev(). */
 name|NDINIT
 argument_list|(
+operator|&
 name|ndp
 argument_list|,
 name|LOOKUP
@@ -479,13 +483,14 @@ name|error
 operator|=
 name|namei
 argument_list|(
+operator|&
 name|ndp
 argument_list|)
 expr_stmt|;
 name|dvp
 operator|=
 name|ndp
-operator|->
+operator|.
 name|ni_vp
 expr_stmt|;
 if|if
@@ -525,6 +530,7 @@ argument_list|)
 expr_stmt|;
 name|NDFREE
 argument_list|(
+operator|&
 name|ndp
 argument_list|,
 name|NDF_ONLY_PNBUF
@@ -549,6 +555,7 @@ argument_list|)
 expr_stmt|;
 name|NDFREE
 argument_list|(
+operator|&
 name|ndp
 argument_list|,
 name|NDF_ONLY_PNBUF
@@ -754,7 +761,7 @@ argument_list|(
 literal|1
 argument_list|,
 argument|myprintf((
-literal|"coda_mount returned %d\n"
+literal|"coda_omount returned %d\n"
 argument|,error));
 argument_list|)
 empty_stmt|;
@@ -1099,7 +1106,7 @@ operator|->
 name|mi_vfsp
 condition|)
 block|{
-comment|/* 	 * Cache the root across calls. We only need to pass the request 	 * on to Venus if the root vnode is the dummy we installed in 	 * coda_mount() with all c_fid members zeroed. 	 * 	 * XXX In addition, if we are called between coda_mount() and 	 * coda_start(), we assume that the request is from vfs_mount() 	 * (before the call to checkdirs()) and return the dummy root 	 * node to avoid a deadlock. This bug is fixed in the Coda CVS 	 * repository but not in any released versions as of 6 Mar 2003. 	 */
+comment|/* 	 * Cache the root across calls. We only need to pass the request 	 * on to Venus if the root vnode is the dummy we installed in 	 * coda_omount() with all c_fid members zeroed. 	 * 	 * XXX In addition, if we are called between coda_omount() and 	 * coda_start(), we assume that the request is from vfs_omount() 	 * (before the call to checkdirs()) and return the dummy root 	 * node to avoid a deadlock. This bug is fixed in the Coda CVS 	 * repository but not in any released versions as of 6 Mar 2003. 	 */
 if|if
 condition|(
 name|memcmp
@@ -2116,9 +2123,9 @@ name|coda_vfsops
 init|=
 block|{
 operator|.
-name|vfs_mount
+name|vfs_omount
 operator|=
-name|coda_mount
+name|coda_omount
 block|,
 operator|.
 name|vfs_root

@@ -1333,19 +1333,17 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Filesystem configuration information. One of these exists for each  * type of filesystem supported by the kernel. These are searched at  * mount time to identify the requested filesystem.  */
+comment|/*  * Filesystem configuration information. One of these exists for each  * type of filesystem supported by the kernel. These are searched at  * mount time to identify the requested filesystem.  *  * XXX: Never change the first two arguments!  */
 end_comment
 
 begin_struct
 struct|struct
 name|vfsconf
 block|{
-name|struct
-name|vfsops
-modifier|*
-name|vfc_vfsops
+name|u_int
+name|vfc_version
 decl_stmt|;
-comment|/* filesystem operations vector */
+comment|/* ABI version number */
 name|char
 name|vfc_name
 index|[
@@ -1353,6 +1351,12 @@ name|MFSNAMELEN
 index|]
 decl_stmt|;
 comment|/* filesystem type name */
+name|struct
+name|vfsops
+modifier|*
+name|vfc_vfsops
+decl_stmt|;
+comment|/* filesystem operations vector */
 name|int
 name|vfc_typenum
 decl_stmt|;
@@ -1958,7 +1962,7 @@ end_struct_decl
 begin_typedef
 typedef|typedef
 name|int
-name|vfs_mount_t
+name|vfs_omount_t
 parameter_list|(
 name|struct
 name|mount
@@ -1971,11 +1975,6 @@ name|path
 parameter_list|,
 name|caddr_t
 name|data
-parameter_list|,
-name|struct
-name|nameidata
-modifier|*
-name|ndp
 parameter_list|,
 name|struct
 name|thread
@@ -2283,17 +2282,12 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|int
-name|vfs_nmount_t
+name|vfs_mount_t
 parameter_list|(
 name|struct
 name|mount
 modifier|*
 name|mp
-parameter_list|,
-name|struct
-name|nameidata
-modifier|*
-name|ndp
 parameter_list|,
 name|struct
 name|thread
@@ -2331,6 +2325,10 @@ block|{
 name|vfs_mount_t
 modifier|*
 name|vfs_mount
+decl_stmt|;
+name|vfs_omount_t
+modifier|*
+name|vfs_omount
 decl_stmt|;
 name|vfs_start_t
 modifier|*
@@ -2385,10 +2383,6 @@ modifier|*
 name|vfs_extattrctl
 decl_stmt|;
 comment|/* Additions below are not binary compatible with 5.0 and below. */
-name|vfs_nmount_t
-modifier|*
-name|vfs_nmount
-decl_stmt|;
 name|vfs_sysctl_t
 modifier|*
 name|vfs_sysctl
@@ -2400,21 +2394,19 @@ end_struct
 begin_define
 define|#
 directive|define
-name|VFS_NMOUNT
+name|VFS_MOUNT
 parameter_list|(
 name|MP
 parameter_list|,
-name|NDP
-parameter_list|,
 name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_nmount)(MP, NDP, P)
+value|(*(MP)->mnt_op->vfs_mount)(MP, P)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VFS_MOUNT
+name|VFS_OMOUNT
 parameter_list|(
 name|MP
 parameter_list|,
@@ -2422,12 +2414,10 @@ name|PATH
 parameter_list|,
 name|DATA
 parameter_list|,
-name|NDP
-parameter_list|,
 name|P
 parameter_list|)
 define|\
-value|(*(MP)->mnt_op->vfs_mount)(MP, PATH, DATA, NDP, P)
+value|(*(MP)->mnt_op->vfs_omount)(MP, PATH, DATA, P)
 end_define
 
 begin_define
@@ -2623,6 +2613,24 @@ directive|include
 file|<sys/module.h>
 end_include
 
+begin_comment
+comment|/*  * Version numbers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFS_VERSION_00
+value|0x19660120
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFS_VERSION
+value|VFS_VERSION_00
+end_define
+
 begin_define
 define|#
 directive|define
@@ -2635,7 +2643,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|static struct vfsconf fsname ## _vfsconf = {		\ 		.vfc_vfsops =&vfsops,				\ 		.vfc_name = #fsname,				\ 		.vfc_typenum = -1,				\ 		.vfc_flags = flags,				\ 	};							\ 	static moduledata_t fsname ## _mod = {			\ 		#fsname,					\ 		vfs_modevent,					\& fsname ## _vfsconf				\ 	};							\ 	DECLARE_MODULE(fsname, fsname ## _mod, SI_SUB_VFS, SI_ORDER_MIDDLE)
+value|static struct vfsconf fsname ## _vfsconf = {		\ 		.vfc_version = VFS_VERSION,			\ 		.vfc_name = #fsname,				\ 		.vfc_vfsops =&vfsops,				\ 		.vfc_typenum = -1,				\ 		.vfc_flags = flags,				\ 	};							\ 	static moduledata_t fsname ## _mod = {			\ 		#fsname,					\ 		vfs_modevent,					\& fsname ## _vfsconf				\ 	};							\ 	DECLARE_MODULE(fsname, fsname ## _mod, SI_SUB_VFS, SI_ORDER_MIDDLE)
 end_define
 
 begin_decl_stmt

@@ -94,7 +94,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|vfs_nmount_t
+name|vfs_mount_t
 name|fdesc_mount
 decl_stmt|;
 end_decl_stmt
@@ -122,27 +122,16 @@ specifier|static
 name|int
 name|fdesc_mount
 parameter_list|(
-name|mp
-parameter_list|,
-name|ndp
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
-name|struct
-name|nameidata
-modifier|*
-name|ndp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|error
@@ -764,7 +753,7 @@ operator|=
 name|fdesc_init
 block|,
 operator|.
-name|vfs_nmount
+name|vfs_mount
 operator|=
 name|fdesc_mount
 block|,

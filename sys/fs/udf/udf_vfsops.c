@@ -231,7 +231,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vfs_nmount_t
+name|vfs_mount_t
 name|udf_mount
 decl_stmt|;
 end_decl_stmt
@@ -305,7 +305,7 @@ operator|=
 name|udf_init
 block|,
 operator|.
-name|vfs_nmount
+name|vfs_mount
 operator|=
 name|udf_mount
 block|,
@@ -591,11 +591,6 @@ modifier|*
 name|mp
 parameter_list|,
 name|struct
-name|nameidata
-modifier|*
-name|ndp
-parameter_list|,
-name|struct
 name|thread
 modifier|*
 name|td
@@ -644,6 +639,16 @@ name|len
 decl_stmt|,
 modifier|*
 name|udf_flags
+decl_stmt|;
+name|struct
+name|nameidata
+name|nd
+decl_stmt|,
+modifier|*
+name|ndp
+init|=
+operator|&
+name|nd
 decl_stmt|;
 name|opts
 operator|=

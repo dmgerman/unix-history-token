@@ -259,8 +259,8 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|vfs_mount_t
-name|nwfs_mount
+name|vfs_omount_t
+name|nwfs_omount
 decl_stmt|;
 end_decl_stmt
 
@@ -326,9 +326,9 @@ operator|=
 name|nwfs_init
 block|,
 operator|.
-name|vfs_mount
+name|vfs_omount
 operator|=
-name|nwfs_mount
+name|nwfs_omount
 block|,
 operator|.
 name|vfs_quotactl
@@ -630,7 +630,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|nwfs_mount
+name|nwfs_omount
 parameter_list|(
 name|struct
 name|mount
@@ -643,11 +643,6 @@ name|path
 parameter_list|,
 name|caddr_t
 name|data
-parameter_list|,
-name|struct
-name|nameidata
-modifier|*
-name|ndp
 parameter_list|,
 name|struct
 name|thread

@@ -82,8 +82,8 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|vfs_mount_t
-name|umapfs_mount
+name|vfs_omount_t
+name|umapfs_omount
 decl_stmt|;
 end_decl_stmt
 
@@ -164,7 +164,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|umapfs_mount
+name|umapfs_omount
 parameter_list|(
 name|mp
 parameter_list|,
@@ -1812,9 +1812,9 @@ operator|=
 name|umapfs_init
 block|,
 operator|.
-name|vfs_mount
+name|vfs_omount
 operator|=
-name|umapfs_mount
+name|umapfs_omount
 block|,
 operator|.
 name|vfs_quotactl

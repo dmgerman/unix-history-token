@@ -208,8 +208,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vfs_mount_t
-name|hpfs_mount
+name|vfs_omount_t
+name|hpfs_omount
 decl_stmt|;
 end_decl_stmt
 
@@ -294,7 +294,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|hpfs_mount
+name|hpfs_omount
 parameter_list|(
 name|struct
 name|mount
@@ -307,11 +307,6 @@ name|path
 parameter_list|,
 name|caddr_t
 name|data
-parameter_list|,
-name|struct
-name|nameidata
-modifier|*
-name|ndp
 parameter_list|,
 name|struct
 name|thread
@@ -343,10 +338,14 @@ name|hpmp
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|nameidata
+name|ndp
+decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"hpfs_mount():\n"
+literal|"hpfs_omount():\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -392,7 +391,7 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"hpfs_mount: MNT_UPDATE: "
+literal|"hpfs_omount: MNT_UPDATE: "
 operator|)
 argument_list|)
 expr_stmt|;
@@ -444,7 +443,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"hpfs_mount: vfs_export failed %d\n"
+literal|"hpfs_omount: vfs_export failed %d\n"
 argument_list|,
 name|err
 argument_list|)
@@ -482,6 +481,7 @@ block|}
 comment|/* 	 * Not an update, or updating the name: look up the name 	 * and verify that it refers to a sensible block device. 	 */
 name|NDINIT
 argument_list|(
+operator|&
 name|ndp
 argument_list|,
 name|LOOKUP
@@ -501,6 +501,7 @@ name|err
 operator|=
 name|namei
 argument_list|(
+operator|&
 name|ndp
 argument_list|)
 expr_stmt|;
@@ -517,7 +518,7 @@ block|}
 name|devvp
 operator|=
 name|ndp
-operator|->
+operator|.
 name|ni_vp
 expr_stmt|;
 if|if
@@ -535,7 +536,7 @@ goto|goto
 name|error_2
 goto|;
 comment|/* 	 ******************** 	 * NEW MOUNT 	 ******************** 	 */
-comment|/* 	 * Since this is a new mount, we want the names for 	 * the device and the mount point copied in.  If an 	 * error occurs, the mountpoint is discarded by the 	 * upper level code.  Note that vfs_mount() handles 	 * copying the mountpoint f_mntonname for us, so we 	 * don't have to do it here unless we want to set it 	 * to something other than "path" for some rason. 	 */
+comment|/* 	 * Since this is a new mount, we want the names for 	 * the device and the mount point copied in.  If an 	 * error occurs, the mountpoint is discarded by the 	 * upper level code.  Note that vfs_omount() handles 	 * copying the mountpoint f_mntonname for us, so we 	 * don't have to do it here unless we want to set it 	 * to something other than "path" for some rason. 	 */
 comment|/* Save "mounted from" info for mount point (NULL pad)*/
 name|copyinstr
 argument_list|(
@@ -628,6 +629,7 @@ expr_stmt|;
 name|error_1
 label|:
 comment|/* no state to back out*/
+comment|/* XXX: Missing NDFREE(&ndp, ...) */
 name|success
 label|:
 return|return
@@ -2525,9 +2527,9 @@ operator|=
 name|hpfs_init
 block|,
 operator|.
-name|vfs_mount
+name|vfs_omount
 operator|=
-name|hpfs_mount
+name|hpfs_omount
 block|,
 operator|.
 name|vfs_root

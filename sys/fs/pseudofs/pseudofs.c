@@ -1143,11 +1143,6 @@ modifier|*
 name|mp
 parameter_list|,
 name|struct
-name|nameidata
-modifier|*
-name|ndp
-parameter_list|,
-name|struct
 name|thread
 modifier|*
 name|td

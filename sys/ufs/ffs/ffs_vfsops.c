@@ -210,15 +210,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ffs_reload
 parameter_list|(
 name|struct
 name|mount
-modifier|*
-parameter_list|,
-name|struct
-name|ucred
 modifier|*
 parameter_list|,
 name|struct
@@ -323,6 +320,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|vfs_omount_t
+name|ffs_omount
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|vfsops
 name|ufs_vfsops
@@ -344,9 +348,9 @@ operator|=
 name|ffs_init
 block|,
 operator|.
-name|vfs_mount
+name|vfs_omount
 operator|=
-name|ffs_mount
+name|ffs_omount
 block|,
 operator|.
 name|vfs_quotactl
@@ -409,50 +413,31 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * ffs_mount  *  * Called when mounting local physical media  *  * PARAMETERS:  *		mountroot  *			mp	mount point structure  *			path	NULL (flag for root mount!!!)  *			data<unused>  *			ndp<unused>  *			p	process (user credentials check [statfs])  *  *		mount  *			mp	mount point structure  *			path	path to mount point  *			data	pointer to argument struct in user space  *			ndp	mount point namei() return (used for  *				credentials on reload), reused to look  *				up block device.  *			p	process (user credentials check)  *  * RETURNS:	0	Success  *		!0	error number (errno.h)  *  * LOCK STATE:  *  *		ENTRY  *			mount point is locked  *		EXIT  *			mount point is locked  *  * NOTES:  *		A NULL path can be used for a flag since the mount  *		system call will fail with EFAULT in copyinstr in  *		namei() if it is a genuine NULL from the user.  */
+comment|/*  * ffs_omount  *  * Called when mounting local physical media  *  * PARAMETERS:  *		mountroot  *			mp	mount point structure  *			path	NULL (flag for root mount!!!)  *			data<unused>  *			ndp<unused>  *			p	process (user credentials check [statfs])  *  *		mount  *			mp	mount point structure  *			path	path to mount point  *			data	pointer to argument struct in user space  *			ndp	mount point namei() return (used for  *				credentials on reload), reused to look  *				up block device.  *			p	process (user credentials check)  *  * RETURNS:	0	Success  *		!0	error number (errno.h)  *  * LOCK STATE:  *  *		ENTRY  *			mount point is locked  *		EXIT  *			mount point is locked  *  * NOTES:  *		A NULL path can be used for a flag since the mount  *		system call will fail with EFAULT in copyinstr in  *		namei() if it is a genuine NULL from the user.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
-name|ffs_mount
+name|ffs_omount
 parameter_list|(
-name|mp
-parameter_list|,
-name|path
-parameter_list|,
-name|data
-parameter_list|,
-name|ndp
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
-comment|/* mount struct pointer*/
+parameter_list|,
 name|char
 modifier|*
 name|path
-decl_stmt|;
-comment|/* path to mount point*/
+parameter_list|,
 name|caddr_t
 name|data
-decl_stmt|;
-comment|/* arguments to FS specific mount*/
-name|struct
-name|nameidata
-modifier|*
-name|ndp
-decl_stmt|;
-comment|/* mount point credentials*/
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
-comment|/* process requesting mount*/
+parameter_list|)
 block|{
 name|size_t
 name|size
@@ -488,6 +473,10 @@ name|flags
 decl_stmt|;
 name|mode_t
 name|accessmode
+decl_stmt|;
+name|struct
+name|nameidata
+name|ndp
 decl_stmt|;
 if|if
 condition|(
@@ -976,12 +965,6 @@ name|ffs_reload
 argument_list|(
 name|mp
 argument_list|,
-name|ndp
-operator|->
-name|ni_cnd
-operator|.
-name|cn_cred
-argument_list|,
 name|td
 argument_list|)
 operator|)
@@ -1347,6 +1330,7 @@ block|}
 comment|/* 	 * Not an update, or updating the name: look up the name 	 * and verify that it refers to a sensible disk device. 	 */
 name|NDINIT
 argument_list|(
+operator|&
 name|ndp
 argument_list|,
 name|LOOKUP
@@ -1369,6 +1353,7 @@ name|error
 operator|=
 name|namei
 argument_list|(
+operator|&
 name|ndp
 argument_list|)
 operator|)
@@ -1382,6 +1367,7 @@ operator|)
 return|;
 name|NDFREE
 argument_list|(
+operator|&
 name|ndp
 argument_list|,
 name|NDF_ONLY_PNBUF
@@ -1390,7 +1376,7 @@ expr_stmt|;
 name|devvp
 operator|=
 name|ndp
-operator|->
+operator|.
 name|ni_vp
 expr_stmt|;
 if|if
@@ -1629,30 +1615,20 @@ comment|/*  * Reload all incore data for a filesystem (used after running fsck o
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ffs_reload
 parameter_list|(
-name|mp
-parameter_list|,
-name|cred
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vnode
@@ -1749,7 +1725,9 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|cred
+name|td
+operator|->
+name|td_ucred
 argument_list|,
 name|td
 argument_list|,
@@ -2287,7 +2265,9 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|cred
+name|td
+operator|->
+name|td_ucred
 argument_list|,
 name|td
 argument_list|,

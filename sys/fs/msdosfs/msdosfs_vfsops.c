@@ -278,8 +278,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vfs_mount_t
-name|msdosfs_mount
+name|vfs_omount_t
+name|msdosfs_omount
 decl_stmt|;
 end_decl_stmt
 
@@ -624,15 +624,13 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|msdosfs_mount
+name|msdosfs_omount
 parameter_list|(
 name|mp
 parameter_list|,
 name|path
 parameter_list|,
 name|data
-parameter_list|,
-name|ndp
 parameter_list|,
 name|td
 parameter_list|)
@@ -647,11 +645,6 @@ name|path
 decl_stmt|;
 name|caddr_t
 name|data
-decl_stmt|;
-name|struct
-name|nameidata
-modifier|*
-name|ndp
 decl_stmt|;
 name|struct
 name|thread
@@ -677,6 +670,10 @@ modifier|*
 name|pmp
 init|=
 name|NULL
+decl_stmt|;
+name|struct
+name|nameidata
+name|ndp
 decl_stmt|;
 name|size_t
 name|size
@@ -1052,6 +1049,7 @@ block|}
 comment|/* 	 * Not an update, or updating the name: look up the name 	 * and verify that it refers to a sensible disk device. 	 */
 name|NDINIT
 argument_list|(
+operator|&
 name|ndp
 argument_list|,
 name|LOOKUP
@@ -1071,6 +1069,7 @@ name|error
 operator|=
 name|namei
 argument_list|(
+operator|&
 name|ndp
 argument_list|)
 expr_stmt|;
@@ -1086,11 +1085,12 @@ return|;
 name|devvp
 operator|=
 name|ndp
-operator|->
+operator|.
 name|ni_vp
 expr_stmt|;
 name|NDFREE
 argument_list|(
+operator|&
 name|ndp
 argument_list|,
 name|NDF_ONLY_PNBUF
@@ -1367,7 +1367,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"msdosfs_mount(): mp %p, pmp %p, inusemap %p\n"
+literal|"msdosfs_omount(): mp %p, pmp %p, inusemap %p\n"
 argument_list|,
 name|mp
 argument_list|,
@@ -4410,9 +4410,9 @@ operator|=
 name|msdosfs_init
 block|,
 operator|.
-name|vfs_mount
+name|vfs_omount
 operator|=
-name|msdosfs_mount
+name|msdosfs_omount
 block|,
 operator|.
 name|vfs_root

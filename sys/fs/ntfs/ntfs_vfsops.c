@@ -264,8 +264,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vfs_mount_t
-name|ntfs_mount
+name|vfs_omount_t
+name|ntfs_omount
 decl_stmt|;
 end_decl_stmt
 
@@ -346,7 +346,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ntfs_mount
+name|ntfs_omount
 parameter_list|(
 name|struct
 name|mount
@@ -359,11 +359,6 @@ name|path
 parameter_list|,
 name|caddr_t
 name|data
-parameter_list|,
-name|struct
-name|nameidata
-modifier|*
-name|ndp
 parameter_list|,
 name|struct
 name|thread
@@ -390,6 +385,10 @@ decl_stmt|;
 name|struct
 name|ntfs_args
 name|args
+decl_stmt|;
+name|struct
+name|nameidata
+name|ndp
 decl_stmt|;
 comment|/* 	 * Use NULL path to flag a root mount 	 */
 if|if
@@ -538,6 +537,7 @@ block|}
 comment|/* 	 * Not an update, or updating the name: look up the name 	 * and verify that it refers to a sensible block device. 	 */
 name|NDINIT
 argument_list|(
+operator|&
 name|ndp
 argument_list|,
 name|LOOKUP
@@ -557,6 +557,7 @@ name|err
 operator|=
 name|namei
 argument_list|(
+operator|&
 name|ndp
 argument_list|)
 expr_stmt|;
@@ -572,6 +573,7 @@ goto|;
 block|}
 name|NDFREE
 argument_list|(
+operator|&
 name|ndp
 argument_list|,
 name|NDF_ONLY_PNBUF
@@ -580,7 +582,7 @@ expr_stmt|;
 name|devvp
 operator|=
 name|ndp
-operator|->
+operator|.
 name|ni_vp
 expr_stmt|;
 if|if
@@ -721,6 +723,7 @@ expr_stmt|;
 name|error_1
 label|:
 comment|/* no state to back out*/
+comment|/* XXX: missing NDFREE(&ndp, ...) */
 name|success
 label|:
 return|return
@@ -3495,9 +3498,9 @@ operator|=
 name|ntfs_init
 block|,
 operator|.
-name|vfs_mount
+name|vfs_omount
 operator|=
-name|ntfs_mount
+name|ntfs_omount
 block|,
 operator|.
 name|vfs_root

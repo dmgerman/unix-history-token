@@ -430,12 +430,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|vfs_mount_t
-name|ffs_mount
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|int
 name|ffs_reallocblks
