@@ -1834,7 +1834,7 @@ modifier|*
 name|iov
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
 name|td
 init|=
