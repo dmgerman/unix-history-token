@@ -2186,9 +2186,7 @@ name|errno
 operator|==
 name|EINTR
 condition|)
-block|{
 continue|continue;
-block|}
 comment|/*FALLTHROUGH*/
 case|case
 literal|0
