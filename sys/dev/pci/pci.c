@@ -3160,7 +3160,9 @@ operator|==
 literal|0xffffffff
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 comment|/* skip invalid entry */
 name|PCIB_WRITE_CONFIG
@@ -3509,7 +3511,9 @@ name|f
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -3530,7 +3534,9 @@ name|f
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 endif|#
 directive|endif
@@ -3563,6 +3569,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
 name|ln2range
 operator|==
 literal|64
@@ -3571,6 +3578,7 @@ condition|?
 literal|2
 else|:
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -4012,7 +4020,9 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 name|pci_add_children
 argument_list|(
@@ -4108,7 +4118,9 @@ operator|++
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5663,11 +5675,15 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5760,16 +5776,22 @@ case|case
 name|PCI_IVAR_FUNCTION
 case|:
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 comment|/* disallow for now */
 default|default:
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5869,7 +5891,6 @@ operator|==
 literal|0
 operator|)
 operator|&&
-comment|/* 0 bad? */
 operator|(
 name|cfg
 operator|->
@@ -5942,6 +5963,7 @@ block|}
 block|}
 block|}
 return|return
+operator|(
 name|resource_list_alloc
 argument_list|(
 name|rl
@@ -5962,6 +5984,7 @@ name|count
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -6115,7 +6138,7 @@ name|rid
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* I don't understand the next line */
+comment|/*  	 * Why do we turn off the PCI configuration BAR when we delete a 	 * resource? -- imp 	 */
 name|pci_write_config
 argument_list|(
 name|child
@@ -6232,6 +6255,7 @@ operator|->
 name|cfg
 decl_stmt|;
 return|return
+operator|(
 name|PCIB_READ_CONFIG
 argument_list|(
 name|device_get_parent
@@ -6255,6 +6279,7 @@ name|reg
 argument_list|,
 name|width
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -6368,7 +6393,9 @@ case|:
 break|break;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
