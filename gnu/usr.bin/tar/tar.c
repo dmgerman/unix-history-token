@@ -2676,7 +2676,7 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"\ -B, --read-full-blocks	reblock as we read (for reading 4.2BSD pipes)\n\ -C, --directory DIR	change to directory DIR\n\ --checkpoint		print directory names while reading the archive\n\ "
+literal|"\ -B, --read-full-blocks	reblock as we read (for reading 4.2BSD pipes)\n\ -C, --directory DIR	change to directory DIR\n\ --checkpoint		print number of buffer reads/writes\n\ "
 argument_list|,
 name|stdout
 argument_list|)
@@ -2693,7 +2693,7 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"\ --force-local		archive file is local even if has a colon\n\ -F, --info-script F\n\     --new-volume-script F run script at end of each tape (implies -M)\n\ -G, --incremental	create/list/extract old GNU-format incremental backup\n\ -g, --listed-incremental F create/list/extract new GNU-format incremental backup\n\ -h, --dereference	don't dump symlinks; dump the files they point to\n\ -i, --ignore-zeros	ignore blocks of zeros in archive (normally mean EOF)\n\ --ignore-failed-read	don't exit with non-zero status on unreadable files\n\ -k, --keep-old-files	keep existing files; don't overwrite them from archive\n\ -K, --starting-file F	begin at file F in the archive\n\ -l, --one-file-system	stay in local file system when creating an archive\n\ -L, --tape-length N	change tapes after writing N*1024 bytes\n\ "
+literal|"\ --force-local		archive file is local even if it has a colon\n\ -F, --info-script F\n\     --new-volume-script F run script at end of each tape (implies -M)\n\ -G, --incremental	create/list/extract old GNU-format incremental backup\n\ -g, --listed-incremental F create/list/extract new GNU-format incremental backup\n\ -h, --dereference	don't dump symlinks; dump the files they point to\n\ -i, --ignore-zeros	ignore blocks of zeros in archive (normally mean EOF)\n\ --ignore-failed-read	don't exit with non-zero status on unreadable files\n\ -k, --keep-old-files	keep existing files; don't overwrite them from archive\n\ -K, --starting-file F	begin at file F in the archive\n\ -l, --one-file-system	stay in local file system when creating an archive\n\ -L, --tape-length N	change tapes after writing N*1024 bytes\n\ "
 argument_list|,
 name|stdout
 argument_list|)
@@ -2701,7 +2701,7 @@ expr_stmt|;
 comment|/* KLUDGE */
 name|fputs
 argument_list|(
-literal|"\ -m, --modification-time	don't extract file modified time\n\ -M, --multi-volume	create/list/extract multi-volume archive\n\ -n, --norecurse		don't recurse into subdircectories\n\ -N, --after-date DATE,\n\     --newer DATE	only store files newer than DATE\n\ -o, --old-archive,\n\     --portability	write a V7 format archive, rather than ANSI format\n\ -O, --to-stdout		extract files to standard output\n\ -p, --same-permissions,\n\     --preserve-permissions extract all protection information\n\ -P, --absolute-paths	don't strip leading `/'s from file names\n\ --preserve		like -p -s\n\ "
+literal|"\ -m, --modification-time	don't extract file modified time\n\ -M, --multi-volume	create/list/extract multi-volume archive\n\ -n, --norecurse		don't recurse into subdircectories\n\ --volno-file F		use volume number to start with from file F\n\ -N, --after-date DATE,\n\     --newer DATE	only store files with creation time newer than DATE\n\ --newer-mtime DATE	only store files with modification time newer than DATE\n\ -o, --old-archive,\n\     --portability	write a V7 format archive, rather than ANSI format\n\ -O, --to-stdout		extract files to standard output\n\ -p, --same-permissions,\n\     --preserve-permissions extract all protection information\n\ -P, --absolute-paths	don't strip leading `/'s from file names\n\ --preserve		like -p -s\n\ "
 argument_list|,
 name|stdout
 argument_list|)
@@ -2709,7 +2709,7 @@ expr_stmt|;
 comment|/* KLUDGE */
 name|fputs
 argument_list|(
-literal|"\ -R, --record-number	show record number within archive with each message\n\ --remove-files		remove files after adding them to the archive\n\ -s, --same-order,\n\     --preserve-order	list of names to extract is sorted to match archive\n\ --same-owner		create extracted files with the same ownership \n\ -S, --sparse		handle sparse files efficiently\n\ -T, --files-from F	get names to extract or create from file F\n\ --null			-T reads null-terminated names, disable -C\n\ --totals		print total bytes written with --create\n\ -v, --verbose		verbosely list files processed\n\ -V, --label NAME	create archive with volume name NAME\n\ --version		print tar program version number\n\ -w, --interactive,\n\     --confirmation	ask for confirmation for every action\n\ "
+literal|"\ -R, --record-number	show record number within archive with each message\n\ --remove-files		remove files after adding them to the archive\n\ -s, --same-order,\n\     --preserve-order	list of names to extract is sorted to match archive\n\ --same-owner		create extracted files with the same ownership \n\ --show-omitted-dirs	show omitted directories while processing the archive.\n\ -S, --sparse		handle sparse files efficiently\n\ -T, --files-from F	get names to extract or create from file F\n\ --null			-T reads null-terminated names, disable -C\n\ --totals		print total bytes written with --create\n\ -v, --verbose		verbosely list files processed\n\ -V, --label NAME	create archive with volume name NAME\n\ --version		print tar program version number\n\ -w, --interactive,\n\     --confirmation	ask for confirmation for every action\n\ "
 argument_list|,
 name|stdout
 argument_list|)
