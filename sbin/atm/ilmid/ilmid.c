@@ -9659,6 +9659,14 @@ operator|&
 name|bpp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Log
+operator|&&
+name|Debug_Level
+operator|>
+literal|1
+condition|)
 name|print_pdu
 argument_list|(
 name|PDU_RECV
