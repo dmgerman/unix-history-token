@@ -5582,7 +5582,7 @@ expr|*
 name|psinfo
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For backward compatibility, we dump the registers of the current 	 * thread (as passed to us in td) first and set pr_pid to the PID of 	 * the process.  We then dump the other threads, but with pr_pid set 	 * to the TID of the thread itself. This has two advantages: 	 * 1) We preserve the meaning of pr_pid for as much as is possible. 	 * 2) The debugger will select the current thread as its initial 	 *    "thread", which is likely what we want. 	 */
+comment|/* 	 * To have the debugger select the right thread (LWP) as the initial 	 * thread, we dump the state of the thread passed to us in td first. 	 * This is the thread that causes the core dump and thus likely to 	 * be the right thread one wants to have selected in the debugger. 	 */
 name|thr
 operator|=
 name|td
@@ -5652,16 +5652,6 @@ name|status
 operator|->
 name|pr_pid
 operator|=
-operator|(
-name|thr
-operator|==
-name|td
-operator|)
-condition|?
-name|p
-operator|->
-name|p_pid
-else|:
 name|thr
 operator|->
 name|td_tid
