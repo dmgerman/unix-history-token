@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1460,7 +1466,7 @@ name|qflag
 condition|)
 name|printf
 argument_list|(
-literal|"%6lu %12.2f cpu %12quk mem %12qu io %s\n"
+literal|"%6lu %12.2f cpu %12juk mem %12ju io %s\n"
 argument_list|,
 name|ci
 operator|.
@@ -1481,10 +1487,16 @@ name|double
 operator|)
 name|AHZ
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ci
 operator|.
 name|ci_mem
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ci
 operator|.
 name|ci_io

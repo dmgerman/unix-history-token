@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1481,12 +1487,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s (%qu) -- "
+literal|"%s (%ju) -- "
 argument_list|,
 name|cip
 operator|->
 name|ci_comm
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|cip
 operator|->
 name|ci_calls
@@ -1684,8 +1693,11 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8qu "
+literal|"%8ju "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|cip
 operator|->
 name|ci_calls
@@ -2080,8 +2092,11 @@ name|Dflag
 condition|)
 name|printf
 argument_list|(
-literal|"%10qutio "
+literal|"%10jutio "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|cip
 operator|->
 name|ci_io
@@ -2105,8 +2120,11 @@ name|Kflag
 condition|)
 name|printf
 argument_list|(
-literal|"%10quk*sec "
+literal|"%10juk*sec "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|cip
 operator|->
 name|ci_mem

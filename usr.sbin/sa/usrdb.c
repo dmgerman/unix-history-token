@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1029,7 +1035,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-*s %9qu "
+literal|"%-*s %9ju "
 argument_list|,
 name|MAXLOGNAME
 operator|-
@@ -1044,6 +1050,9 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ui
 operator|->
 name|ui_calls
@@ -1098,8 +1107,12 @@ name|dflag
 condition|)
 name|printf
 argument_list|(
-literal|"%12qu%s"
+literal|"%12ju%s"
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|ui
 operator|->
 name|ui_io
@@ -1107,6 +1120,7 @@ operator|/
 name|ui
 operator|->
 name|ui_calls
+argument_list|)
 argument_list|,
 literal|"avio"
 argument_list|)
@@ -1114,8 +1128,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%12qu%s"
+literal|"%12ju%s"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ui
 operator|->
 name|ui_io
@@ -1144,8 +1161,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%12qu%s"
+literal|"%12ju%s"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ui
 operator|->
 name|ui_mem
