@@ -2456,7 +2456,7 @@ argument_list|(
 operator|&
 name|tmp
 argument_list|,
-literal|"0x%qx"
+literal|"0x%llx"
 argument_list|,
 name|t
 argument_list|)

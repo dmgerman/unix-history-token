@@ -979,7 +979,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%qd\t%s\n"
+literal|"%lld\t%s\n"
 argument_list|,
 operator|(
 name|long

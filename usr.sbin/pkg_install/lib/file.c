@@ -903,7 +903,7 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"%s: short read on '%s' - did not get %qd bytes"
+literal|"%s: short read on '%s' - did not get %lld bytes"
 argument_list|,
 name|__func__
 argument_list|,

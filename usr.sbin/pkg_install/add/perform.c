@@ -573,7 +573,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unable to make playpen for %qd bytes"
+literal|"unable to make playpen for %lld bytes"
 argument_list|,
 operator|(
 name|long
@@ -817,7 +817,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"projected size of %qd exceeds available free space.\n"
+literal|"projected size of %lld exceeds available free space.\n"
 literal|"Please set your PKG_TMPDIR variable to point to a location with more\n"
 literal|"free space and try again"
 argument_list|,

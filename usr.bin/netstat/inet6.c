@@ -2915,42 +2915,42 @@ name|p
 argument_list|(
 name|icp6s_nd_badopt
 argument_list|,
-literal|"\t%qu message%s with bad ND options\n"
+literal|"\t%llu message%s with bad ND options\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badns
 argument_list|,
-literal|"\t%qu bad neighbor solicitation message%s\n"
+literal|"\t%llu bad neighbor solicitation message%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badna
 argument_list|,
-literal|"\t%qu bad neighbor advertisement message%s\n"
+literal|"\t%llu bad neighbor advertisement message%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badrs
 argument_list|,
-literal|"\t%qu bad router solicitation message%s\n"
+literal|"\t%llu bad router solicitation message%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badra
 argument_list|,
-literal|"\t%qu bad router advertisement message%s\n"
+literal|"\t%llu bad router advertisement message%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_badredirect
 argument_list|,
-literal|"\t%qu bad redirect message%s\n"
+literal|"\t%llu bad redirect message%s\n"
 argument_list|)
 expr_stmt|;
 name|p
