@@ -2655,7 +2655,7 @@ argument_list|,
 operator|&
 name|vmf
 operator|.
-name|vmf_di
+name|vmf_bx
 argument_list|)
 expr_stmt|;
 name|bcopy
