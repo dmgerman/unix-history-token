@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.26	82/12/17	*/
+comment|/*	param.h	4.27	83/01/17	*/
 end_comment
 
 begin_comment
@@ -476,11 +476,22 @@ else|#
 directive|else
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|"../h/types.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
