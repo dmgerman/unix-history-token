@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/nfs.h>
+file|<nfs/nfsv2.h>
 end_include
 
 begin_include
