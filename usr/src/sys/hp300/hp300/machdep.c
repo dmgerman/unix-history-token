@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.74 92/12/20$  *  *	@(#)machdep.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.74 92/12/20$  *  *	@(#)machdep.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -6348,11 +6348,6 @@ init|=
 literal|0
 decl_stmt|;
 specifier|volatile
-name|struct
-name|pte
-name|opte
-decl_stmt|;
-specifier|volatile
 name|int
 name|pg
 decl_stmt|,
@@ -6376,11 +6371,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
-name|ip
-operator|=
-operator|&
-name|found
-expr_stmt|;
 name|i
 operator|=
 name|o
@@ -6495,6 +6485,14 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|ip
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+name|vmmap
+expr_stmt|;
 for|for
 control|(
 name|o
@@ -6515,17 +6513,8 @@ control|)
 name|i
 operator|=
 operator|*
-operator|(
-name|int
-operator|*
-operator|)
-operator|(
-operator|&
-name|vmmap
-index|[
-name|o
-index|]
-operator|)
+name|ip
+operator|++
 expr_stmt|;
 block|}
 comment|/* 	 * Getting here implies no fault was found.  Should never happen. 	 */
