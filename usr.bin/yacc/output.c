@@ -872,6 +872,30 @@ argument_list|,
 name|symbol_prefix
 argument_list|)
 expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yysslim %ssslim\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
+operator|++
+name|outline
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|code_file
+argument_list|,
+literal|"#define yystacksize %sstacksize\n"
+argument_list|,
+name|symbol_prefix
+argument_list|)
+expr_stmt|;
 block|}
 operator|++
 name|outline
