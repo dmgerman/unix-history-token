@@ -1394,6 +1394,15 @@ name|r
 decl_stmt|,
 name|rc
 decl_stmt|;
+if|if
+condition|(
+name|arg
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 switch|switch
 condition|(
 name|cmd
