@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.52	82/03/15	*/
+comment|/*	machdep.c	4.53	82/05/19	*/
 end_comment
 
 begin_include
@@ -865,8 +865,12 @@ name|rminit
 argument_list|(
 name|mbmap
 argument_list|,
+operator|(
 name|nmbclusters
 operator|-
+literal|1
+operator|)
+operator|*
 name|CLSIZE
 argument_list|,
 name|CLSIZE
