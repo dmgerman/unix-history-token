@@ -2703,6 +2703,21 @@ goto|goto
 name|forward
 goto|;
 comment|/* do not apply to packets from ether_output */
+if|if
+condition|(
+name|ntohs
+argument_list|(
+name|eh
+operator|->
+name|ether_type
+argument_list|)
+operator|!=
+name|ETHERTYPE_IP
+condition|)
+goto|goto
+name|forward
+goto|;
+comment|/* not an IP packet, ipfw is not appropriate */
 comment|/* 	 * In this section, canfree=1 means m is the same as *m0. 	 * canfree==0 means m is a copy. We need to make a copy here 	 * (to be destroyed on exit from the firewall section) because 	 * the firewall itself might destroy the packet. 	 * (This is not very smart... i should really change ipfw to 	 * leave the pkt alive!) 	 */
 if|if
 condition|(
