@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.24 1998/02/18 09:28:43 jkh Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.25 1998/02/22 15:09:46 ache Exp $ */
 end_comment
 
 begin_comment
@@ -547,6 +547,32 @@ argument_list|(
 name|pmp
 operator|->
 name|pm_u2w
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pmp
+operator|->
+name|pm_flags
+operator|&
+name|MSDOSFSMNT_ULTABLE
+condition|)
+name|bcopy
+argument_list|(
+name|argp
+operator|->
+name|ul
+argument_list|,
+name|pmp
+operator|->
+name|pm_ul
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pmp
+operator|->
+name|pm_ul
 argument_list|)
 argument_list|)
 expr_stmt|;
