@@ -8340,7 +8340,7 @@ name|CAM_DEBUG_INFO
 expr_stmt|;
 break|break;
 case|case
-literal|'S'
+literal|'T'
 case|:
 name|arglist
 operator||=
@@ -8356,7 +8356,7 @@ name|CAM_DEBUG_TRACE
 expr_stmt|;
 break|break;
 case|case
-literal|'T'
+literal|'S'
 case|:
 name|arglist
 operator||=
