@@ -337,6 +337,38 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * This tunable is here for compatibility.  It will allow the user  * to switch between the new mode (first rule matches) and the old  * functionality (all rules match).  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mac_bsdextended_firstmatch_enabled
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_security_mac_bsdextended
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|firstmatch_enabled
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|mac_bsdextended_firstmatch_enabled
+argument_list|,
+literal|0
+argument_list|,
+literal|"Disable/enable match first rule functionality"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -1095,6 +1127,17 @@ name|EACCES
 operator|)
 return|;
 block|}
+comment|/* 	 * If the rule matched and allowed access and first match is 	 * enabled, then return success. 	 */
+if|if
+condition|(
+name|mac_bsdextended_firstmatch_enabled
+condition|)
+return|return
+operator|(
+name|EJUSTRETURN
+operator|)
+return|;
+else|else
 return|return
 operator|(
 literal|0
@@ -1204,6 +1247,13 @@ argument_list|,
 name|acc_mode
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|EJUSTRETURN
+condition|)
+break|break;
 if|if
 condition|(
 name|error
