@@ -610,6 +610,18 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IF_MASK
+parameter_list|(
+name|s
+parameter_list|,
+name|w
+parameter_list|)
+value|(((1<< (w)) - 1)<< (s))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IF_EXTRACT
 parameter_list|(
 name|x
@@ -618,7 +630,7 @@ name|s
 parameter_list|,
 name|w
 parameter_list|)
-value|(((x)>> (s))& ((1<< (w)) - 1))
+value|(((x)& IF_MASK((s), (w)))>> (s))
 end_define
 
 begin_define
@@ -2550,211 +2562,177 @@ comment|/*  * OPF values (floating point instructions, IMPLDEP)  */
 end_comment
 
 begin_comment
-comment|/* FPop1 */
+comment|/*  * These values are or'ed to the FPop values to get the instructions.  * They describe the operand type(s).  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INSFP1_FMOVs
+name|INSFP_i
+value|0x000
+end_define
+
+begin_comment
+comment|/* 32-bit int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSFP_s
 value|0x001
 end_define
 
+begin_comment
+comment|/* 32-bit single */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|INSFP1_FMOVd
+name|INSFP_d
 value|0x002
 end_define
 
+begin_comment
+comment|/* 64-bit double */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|INSFP1_FMOVq
+name|INSFP_q
 value|0x003
 end_define
 
-begin_define
-define|#
-directive|define
-name|INSFP1_FNEGs
-value|0x005
-end_define
+begin_comment
+comment|/* 128-bit quad */
+end_comment
+
+begin_comment
+comment|/* FPop1. The comments give the types for which this instruction is defined. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|INSFP1_FNEGd
-value|0x006
+name|INSFP1_FMOV
+value|0x000
 end_define
+
+begin_comment
+comment|/* s, d, q */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|INSFP1_FNEGq
-value|0x007
+name|INSFP1_FNEG
+value|0x004
 end_define
+
+begin_comment
+comment|/* s, d, q */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|INSFP1_FABSs
-value|0x009
+name|INSFP1_FABS
+value|0x008
 end_define
+
+begin_comment
+comment|/* s, d, q */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|INSFP1_FABSd
-value|0x00a
+name|INSFP1_FSQRT
+value|0x028
 end_define
+
+begin_comment
+comment|/* s, d, q */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|INSFP1_FABSq
-value|0x00b
+name|INSFP1_FADD
+value|0x040
 end_define
+
+begin_comment
+comment|/* s, d, q */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|INSFP1_FSQRTs
-value|0x029
+name|INSFP1_FSUB
+value|0x044
 end_define
+
+begin_comment
+comment|/* s, d, q */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|INSFP1_FSQRTd
-value|0x02a
+name|INSFP1_FMUL
+value|0x048
 end_define
+
+begin_comment
+comment|/* s, d, q */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|INSFP1_FSQRTq
-value|0x02b
+name|INSFP1_FDIV
+value|0x04c
 end_define
 
-begin_define
-define|#
-directive|define
-name|INSFP1_FADDs
-value|0x041
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP1_FADDd
-value|0x042
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP1_FADDq
-value|0x043
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP1_FSUBs
-value|0x045
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP1_FSUBd
-value|0x046
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP1_FSUBq
-value|0x047
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP1_FMULs
-value|0x049
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP1_FMULd
-value|0x04a
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP1_FMULq
-value|0x04b
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP1_FDIVs
-value|0x04d
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP1_FDIVd
-value|0x04e
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP1_FDIVq
-value|0x04f
-end_define
+begin_comment
+comment|/* s, d, q */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|INSFP1_FsMULd
-value|0x069
+value|0x068
 end_define
+
+begin_comment
+comment|/* s */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|INSFP1_FdMULq
-value|0x06e
+value|0x06c
 end_define
+
+begin_comment
+comment|/* d */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|INSFP1_FsTOx
-value|0x081
+name|INSFP1_FTOx
+value|0x080
 end_define
 
-begin_define
-define|#
-directive|define
-name|INSFP1_FdTOx
-value|0x082
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP1_FqTOx
-value|0x083
-end_define
+begin_comment
+comment|/* s, d, q */
+end_comment
 
 begin_define
 define|#
@@ -2763,12 +2741,20 @@ name|INSFP1_FxTOs
 value|0x084
 end_define
 
+begin_comment
+comment|/* special: i only */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|INSFP1_FxTOd
 value|0x088
 end_define
+
+begin_comment
+comment|/* special: i only */
+end_comment
 
 begin_define
 define|#
@@ -2777,68 +2763,53 @@ name|INSFP1_FxTOq
 value|0x08c
 end_define
 
+begin_comment
+comment|/* special: i only */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|INSFP1_FiTOs
+name|INSFP1_FTOs
 value|0x0c4
 end_define
 
-begin_define
-define|#
-directive|define
-name|INSFP1_FdTOs
-value|0x0c6
-end_define
+begin_comment
+comment|/* i, d, q */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|INSFP1_FqTOs
-value|0x0c7
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP1_FiTOd
+name|INSFP1_FTOd
 value|0x0c8
 end_define
 
-begin_define
-define|#
-directive|define
-name|INSFP1_FsTOd
-value|0x0c9
-end_define
+begin_comment
+comment|/* i, s, q */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|INSFP1_FqTOd
-value|0x0cb
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP1_FiTOq
+name|INSFP1_FTOq
 value|0x0cc
 end_define
 
-begin_define
-define|#
-directive|define
-name|INSFP1_FsTOq
-value|0x0cd
-end_define
+begin_comment
+comment|/* i, s, d */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|INSFP1_FdTOq
-value|0x0ce
+name|INSFP1_FTOi
+value|0x0d0
 end_define
+
+begin_comment
+comment|/* i, s, d */
+end_comment
 
 begin_comment
 comment|/* FPop2 */
@@ -2851,8 +2822,15 @@ name|INSFP2_FMOV_CCMUL
 value|0x40
 end_define
 
+begin_define
+define|#
+directive|define
+name|INSFP2_FMOV_CCOFFS
+value|0x00
+end_define
+
 begin_comment
-comment|/* use the IFCC_* constants for cc */
+comment|/* Use the IFCC_* constants for cc. Operand types: s, d, q */
 end_comment
 
 begin_define
@@ -2860,46 +2838,10 @@ define|#
 directive|define
 name|INSFP2_FMOV_CC
 parameter_list|(
-name|i
-parameter_list|,
 name|cc
 parameter_list|)
-value|(i + (cc) * INSFP2_FMOV_CCMUL)
+value|((cc) * INSFP2_FMOV_CCMUL + INSFP2_FMOV_CCOFFS)
 end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP2_FMOVs
-parameter_list|(
-name|cc
-parameter_list|)
-value|INSFP2_FMOV_CC(0x01, (cc))
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP2_FMOVd
-parameter_list|(
-name|cc
-parameter_list|)
-value|INSFP2_FMOV_CC(0x02, (cc))
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP2_FMOVq
-parameter_list|(
-name|cc
-parameter_list|)
-value|INSFP2_FMOV_CC(0x03, (cc))
-end_define
-
-begin_comment
-comment|/* use the IRCOND_* constants for rc */
-end_comment
 
 begin_define
 define|#
@@ -2911,86 +2853,45 @@ end_define
 begin_define
 define|#
 directive|define
+name|INSFP2_FMOV_RCOFFS
+value|0x04
+end_define
+
+begin_comment
+comment|/* Use the IRCOND_* constants for rc. Operand types: s, d, q */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INSFP2_FMOV_RC
 parameter_list|(
-name|i
-parameter_list|,
 name|rc
 parameter_list|)
-value|(i + (rc) * INSFP2_FMOV_RCMUL)
+value|((rc) * INSFP2_FMOV_RCMUL + INSFP2_FMOV_RCOFFS)
 end_define
 
 begin_define
 define|#
 directive|define
-name|INSFP2_FMOVRsZ
-parameter_list|(
-name|rc
-parameter_list|)
-value|INSFP2_FMOV_RC(0x05, (rc))
+name|INSFP2_FCMP
+value|0x050
 end_define
+
+begin_comment
+comment|/* s, d, q */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|INSFP2_FMOVRdZ
-parameter_list|(
-name|rc
-parameter_list|)
-value|INSFP2_FMOV_RC(0x06, (rc))
+name|INSFP2_FCMPE
+value|0x054
 end_define
 
-begin_define
-define|#
-directive|define
-name|INSFP2_FMOVRqZ
-parameter_list|(
-name|rc
-parameter_list|)
-value|INSFP2_FMOV_RC(0x07, (rc))
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP2_FCMPs
-value|0x051
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP2_FCMPd
-value|0x052
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP2_FCMPq
-value|0x053
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP2_FCMPEs
-value|0x055
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP2_FCMPEd
-value|0x056
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSFP2_FCMPEq
-value|0x057
-end_define
+begin_comment
+comment|/* s, d, q */
+end_comment
 
 begin_comment
 comment|/* IMPLDEP1 for Sun UltraSparc */
@@ -3757,7 +3658,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IRCOND_RZ
+name|IRCOND_Z
 value|0x01
 end_define
 
@@ -3822,6 +3723,26 @@ begin_define
 define|#
 directive|define
 name|IFCC_FCC
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)& 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCC_GET_FCC
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)& 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFCC_ISFCC
 parameter_list|(
 name|c
 parameter_list|)
