@@ -832,7 +832,7 @@ name|win
 operator|->
 name|_bkgd
 operator|=
-literal|' '
+name|BLANK
 expr_stmt|;
 name|win
 operator|->

@@ -894,13 +894,6 @@ begin_comment
 comment|/* **	ClrUpdate(scr) ** **	Update by clearing and redrawing the entire screen. ** */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|BLANK
-value|' '|A_NORMAL
-end_define
-
 begin_function
 specifier|static
 name|void

@@ -39,6 +39,14 @@ name|chtype
 modifier|*
 name|end
 decl_stmt|;
+name|chtype
+name|blank
+init|=
+name|_nc_background
+argument_list|(
+name|win
+argument_list|)
+decl_stmt|;
 name|T
 argument_list|(
 operator|(
@@ -107,11 +115,7 @@ expr_stmt|;
 operator|*
 name|temp1
 operator|=
-literal|' '
-operator||
-name|win
-operator|->
-name|_attrs
+name|blank
 expr_stmt|;
 name|win
 operator|->

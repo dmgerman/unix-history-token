@@ -799,6 +799,27 @@ name|hidden
 operator|=
 name|TRUE
 expr_stmt|;
+comment|/* For simulated SLK's it's looks much more natural to 	   inherit those attributes from the standard screen */
+name|slk
+operator|->
+name|win
+operator|->
+name|_bkgd
+operator|=
+name|stdscr
+operator|->
+name|_bkgd
+expr_stmt|;
+name|slk
+operator|->
+name|win
+operator|->
+name|_attrs
+operator|=
+name|stdscr
+operator|->
+name|_attrs
+expr_stmt|;
 name|werase
 argument_list|(
 name|slk

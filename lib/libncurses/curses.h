@@ -798,12 +798,14 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-specifier|extern
-name|char
-name|ttytype
-index|[]
-decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* MYTINFO not have it */
+block|extern char ttytype[];
 comment|/* needed for backward compatibility */
+endif|#
+directive|endif
 specifier|extern
 name|int
 name|tigetflag
@@ -2277,6 +2279,16 @@ parameter_list|,
 name|ch
 parameter_list|)
 value|((win)->_bkgd = ch)
+end_define
+
+begin_define
+define|#
+directive|define
+name|getbkgd
+parameter_list|(
+name|win
+parameter_list|)
+value|((win)->_bkgd)
 end_define
 
 begin_comment
