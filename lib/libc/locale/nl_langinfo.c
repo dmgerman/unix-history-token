@@ -532,7 +532,14 @@ case|:
 comment|/* deprecated */
 name|ret
 operator|=
-literal|""
+operator|(
+name|char
+operator|*
+operator|)
+name|__get_current_messages_locale
+argument_list|()
+operator|->
+name|yesstr
 expr_stmt|;
 break|break;
 case|case
@@ -541,7 +548,14 @@ case|:
 comment|/* deprecated */
 name|ret
 operator|=
-literal|""
+operator|(
+name|char
+operator|*
+operator|)
+name|__get_current_messages_locale
+argument_list|()
+operator|->
+name|nostr
 expr_stmt|;
 break|break;
 case|case
