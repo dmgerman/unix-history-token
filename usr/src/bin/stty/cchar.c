@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cchar.c	5.5 (Berkeley) %G%"
+literal|"@(#)cchar.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,18 +200,6 @@ block|,
 name|VREPRINT
 block|,
 name|CREPRINT
-block|,
-literal|"xoff"
-block|,
-name|VSTOP
-block|,
-name|CSTOP
-block|,
-literal|"xon"
-block|,
-name|VSTART
-block|,
-name|CSTART
 block|,
 name|NULL
 block|, }
