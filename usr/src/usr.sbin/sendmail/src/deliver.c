@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.100 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.101 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3957,6 +3957,17 @@ name|mci
 operator|->
 name|mci_host
 expr_stmt|;
+name|message
+argument_list|(
+literal|"Using cached connection to %s via %s..."
+argument_list|,
+name|hostbuf
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|mci
@@ -3990,7 +4001,7 @@ argument_list|)
 expr_stmt|;
 name|message
 argument_list|(
-literal|"Connecting to %s (%s)..."
+literal|"Connecting to %s via %s..."
 argument_list|,
 name|hostbuf
 argument_list|,
@@ -4168,6 +4179,40 @@ comment|/* DAEMON */
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|host
+operator|==
+name|NULL
+operator|||
+name|host
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|message
+argument_list|(
+literal|"Connecting to %s..."
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|)
+expr_stmt|;
+else|else
+name|message
+argument_list|(
+literal|"Connecting to %s via %s..."
+argument_list|,
+name|host
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TrafficLogFile
