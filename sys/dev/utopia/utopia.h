@@ -139,6 +139,17 @@ begin_comment
 comment|/* 21 bit LE hex */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UTP_REGT_INT18
+value|0x8
+end_define
+
+begin_comment
+comment|/* 18 bit LE hex */
+end_comment
+
 begin_comment
 comment|/* number of additional registers per type */
 end_comment
@@ -147,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|UTP_REG_ADD
-value|0, 0, 1, 1, 1, 2, 2, 2
+value|0, 0, 1, 1, 1, 2, 2, 2, 2
 end_define
 
 begin_comment
@@ -392,6 +403,13 @@ define|#
 directive|define
 name|UTP_TYPE_IDT77155
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|UTP_TYPE_CX28250
+value|6
 end_define
 
 begin_comment
