@@ -13,67 +13,8 @@ begin_comment
 comment|/*  * System Disk ioctls  */
 end_comment
 
-begin_struct
-struct|struct
-name|mlxd_rebuild
-block|{
-name|int
-name|rb_channel
-decl_stmt|;
-name|int
-name|rb_target
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|mlxd_rebuild_status
-block|{
-name|int
-name|rs_drive
-decl_stmt|;
-name|int
-name|rs_size
-decl_stmt|;
-name|int
-name|rs_remaining
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|MLXD_STATUS
-value|_IOR ('M', 100, int)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MLXD_REBUILDASYNC
-value|_IOW ('M', 101, struct mlxd_rebuild)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MLXD_CHECKASYNC
-value|_IOW ('M', 102, int)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MLXD_REBUILDSTAT
-value|_IOR ('M', 103, struct mlxd_rebuild_status)
-end_define
-
 begin_comment
-comment|/*  * System Disk status values  */
+comment|/* system disk status values */
 end_comment
 
 begin_define
@@ -93,16 +34,27 @@ end_define
 begin_define
 define|#
 directive|define
-name|MLX_SYSD_REBUILD
-value|0xfe
+name|MLX_SYSD_OFFLINE
+value|0xff
 end_define
 
 begin_define
 define|#
 directive|define
-name|MLX_SYSD_OFFLINE
-value|0xff
+name|MLXD_STATUS
+value|_IOR ('M', 100, int)
 end_define
+
+begin_define
+define|#
+directive|define
+name|MLXD_CHECKASYNC
+value|_IOR ('M', 101, int)
+end_define
+
+begin_comment
+comment|/* command result returned in argument */
+end_comment
 
 begin_comment
 comment|/*  * Controller ioctls  */
@@ -172,6 +124,59 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|mlx_rebuild_request
+block|{
+name|int
+name|rr_channel
+decl_stmt|;
+name|int
+name|rr_target
+decl_stmt|;
+name|int
+name|rr_status
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mlx_rebuild_status
+block|{
+name|u_int16_t
+name|rs_code
+decl_stmt|;
+define|#
+directive|define
+name|MLX_REBUILDSTAT_REBUILDCHECK
+value|0x0000
+define|#
+directive|define
+name|MLX_REBUILDSTAT_ADDCAPACITY
+value|0x0400
+define|#
+directive|define
+name|MLX_REBUILDSTAT_ADDCAPACITYINIT
+value|0x0500
+define|#
+directive|define
+name|MLX_REBUILDSTAT_IDLE
+value|0xffff
+name|u_int16_t
+name|rs_drive
+decl_stmt|;
+name|int
+name|rs_size
+decl_stmt|;
+name|int
+name|rs_remaining
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -205,6 +210,27 @@ define|#
 directive|define
 name|MLX_COMMAND
 value|_IOWR('M', 4, struct mlx_usercommand)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX_REBUILDASYNC
+value|_IOWR('M', 5, struct mlx_rebuild_request)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX_REBUILDSTAT
+value|_IOR ('M', 6, struct mlx_rebuild_status)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX_GET_SYSDRIVE
+value|_IOWR('M', 7, int)
 end_define
 
 end_unit

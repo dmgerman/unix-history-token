@@ -229,7 +229,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|devclass_t
 name|mlxd_devclass
 decl_stmt|;
@@ -240,15 +239,6 @@ specifier|static
 name|struct
 name|cdevsw
 name|mlxddisk_cdevsw
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|disks_registered
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1127,8 +1117,11 @@ name|si_drv1
 operator|=
 name|sc
 expr_stmt|;
-name|disks_registered
-operator|++
+name|sc
+operator|->
+name|mlxd_dev_t
+operator|=
+name|dsk
 expr_stmt|;
 comment|/* set maximum I/O size */
 name|dsk
@@ -1190,18 +1183,11 @@ operator|->
 name|mlxd_stats
 argument_list|)
 expr_stmt|;
-comment|/* hack to handle lack of destroy_disk() */
-if|if
-condition|(
-operator|--
-name|disks_registered
-operator|==
-literal|0
-condition|)
-name|cdevsw_remove
+name|disk_destroy
 argument_list|(
-operator|&
-name|mlxddisk_cdevsw
+name|sc
+operator|->
+name|mlxd_dev_t
 argument_list|)
 expr_stmt|;
 return|return
