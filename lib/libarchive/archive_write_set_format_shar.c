@@ -730,6 +730,40 @@ break|break;
 case|case
 name|S_IFDIR
 case|:
+name|archive_entry_set_size
+argument_list|(
+name|entry
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Don't bother trying to recreate '.' */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"."
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"./"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+break|break;
 case|case
 name|S_IFIFO
 case|:
@@ -827,17 +861,35 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+comment|/* If there is a / character, try to create the dir. */
 if|if
 condition|(
 name|pp
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|*
 name|pp
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* Try to avoid a lot of redundant mkdir commands. */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"."
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Don't try to "mkdir ." */
+block|}
+elseif|else
 if|if
 condition|(
 name|shar
@@ -948,6 +1000,7 @@ name|last_dir
 operator|=
 name|p
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Handle file-type specific issues. */
