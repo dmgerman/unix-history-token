@@ -642,7 +642,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * _inactive is called when the pfsnode  * is vrele'd and the reference count goes  * to zero.  (vp) will be on the vnode free  * list, so to get it back vget() must be  * used.  *  * for procfs, check if the process is still  * alive and if it isn't then just throw away  * the vnode by calling vgone().  this may  * be overkill and a waste of time since the  * chances are that the process will still be  * there and PFIND is not free.  *  * (vp) is not locked on entry or exit.  */
+comment|/*  * _inactive is called when the pfsnode  * is vrele'd and the reference count goes  * to zero.  (vp) will be on the vnode free  * list, so to get it back vget() must be  * used.  *  * for procfs, check if the process is still  * alive and if it isn't then just throw away  * the vnode by calling VOP_REVOKE().  this may  * be overkill and a waste of time since the  * chances are that the process will still be  * there and PFIND is not free.  *  * (vp) is not locked on entry or exit.  */
 end_comment
 
 begin_macro
@@ -686,11 +686,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|vgone
+name|VOP_REVOKE
 argument_list|(
 name|ap
 operator|->
 name|a_vp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return

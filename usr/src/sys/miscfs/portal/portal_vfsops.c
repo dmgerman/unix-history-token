@@ -714,9 +714,11 @@ name|rootvp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * And blow it away for future re-use 	 */
-name|vgone
+name|VOP_REVOKE
 argument_list|(
 name|rootvp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Shutdown the socket.  This will cause the select in the 	 * daemon to wake up, and then the accept will get ECONNABORTED 	 * which it interprets as a request to go and bury itself. 	 */

@@ -658,9 +658,11 @@ name|rootvp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * And blow it away for future re-use 	 */
-name|vgone
+name|VOP_REVOKE
 argument_list|(
 name|rootvp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Finally, throw away the kernfs_mount structure 	 */
