@@ -3,11 +3,20 @@ begin_comment
 comment|/*  * (C)opyright 1992-1998 Darren Reed.  * (C)opyright 1997 Marc Boucher.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sgi
-end_ifdef
+argument_list|)
+operator|&&
+operator|(
+name|IRIX
+operator|>
+literal|602
+operator|)
+end_if
 
 begin_include
 include|#

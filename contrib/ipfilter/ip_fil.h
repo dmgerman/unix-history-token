@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.29.2.33 2002/06/04 14:46:28 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.29.2.34 2002/10/01 15:23:37 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -336,6 +336,13 @@ name|SIOCGFRST
 value|_IOWR('r', 83, struct ipfrstat *)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIOCIPFL6
+value|_IOWR('r', 84, int)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -507,6 +514,13 @@ define|#
 directive|define
 name|SIOCGFRST
 value|_IOWR(r, 83, struct ipfrstat *)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCIPFL6
+value|_IOWR(r, 84, int)
 end_define
 
 begin_endif
@@ -2112,11 +2126,9 @@ decl_stmt|;
 name|u_int
 name|ipl_count
 decl_stmt|;
-name|u_long
-name|ipl_sec
-decl_stmt|;
-name|u_long
-name|ipl_usec
+name|struct
+name|timeval
+name|ipl_tv
 decl_stmt|;
 name|size_t
 name|ipl_dsize
@@ -2130,6 +2142,20 @@ block|}
 name|iplog_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ipl_sec
+value|ipl_tv.tv_sec
+end_define
+
+begin_define
+define|#
+directive|define
+name|ipl_usec
+value|ipl_tv.tv_usec
+end_define
 
 begin_define
 define|#
@@ -4159,6 +4185,8 @@ name|__P
 argument_list|(
 operator|(
 name|minor_t
+operator|,
+name|int
 operator|,
 name|int
 operator|)

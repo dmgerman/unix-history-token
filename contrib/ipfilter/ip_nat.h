@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.17.2.27 2002/08/28 12:45:51 darrenr Exp $  */
+comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.17.2.28 2002/11/03 13:06:21 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -385,6 +385,10 @@ name|u_char
 name|nat_p
 decl_stmt|;
 comment|/* protocol for NAT */
+name|u_32_t
+name|nat_mssclamp
+decl_stmt|;
+comment|/* if != zero clamp MSS to this */
 name|struct
 name|ipnat
 modifier|*
@@ -519,6 +523,10 @@ name|u_32_t
 name|in_flags
 decl_stmt|;
 comment|/* From here to in_dport must be reflected */
+name|u_32_t
+name|in_mssclamp
+decl_stmt|;
+comment|/* if != zero clamp MSS to this */
 name|u_short
 name|in_spare
 decl_stmt|;

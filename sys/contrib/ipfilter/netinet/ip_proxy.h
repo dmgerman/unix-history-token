@@ -499,6 +499,9 @@ decl_stmt|;
 name|int
 name|ftps_cmds
 decl_stmt|;
+name|int
+name|ftps_cmd
+decl_stmt|;
 name|char
 name|ftps_buf
 index|[

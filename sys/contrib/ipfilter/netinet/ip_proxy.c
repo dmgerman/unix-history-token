@@ -34,11 +34,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sgi
-end_ifdef
+argument_list|)
+operator|&&
+operator|(
+name|IRIX
+operator|>
+literal|602
+operator|)
+end_if
 
 begin_include
 include|#
@@ -1825,6 +1834,20 @@ block|{
 if|#
 directive|if
 name|PROXY_DEBUG
+operator|||
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|)
 name|printf
 argument_list|(
 literal|"proxy tcp checksum failure\n"
@@ -1847,7 +1870,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* 			 * Don't both the proxy with these...or in fact, should 			 * we free up proxy stuff when seen? 			 */
+comment|/* 			 * Don't bother the proxy with these...or in fact, 			 * should we free up proxy stuff when seen? 			 */
 if|if
 condition|(
 operator|(
@@ -1956,6 +1979,20 @@ block|{
 if|#
 directive|if
 name|PROXY_DEBUG
+operator|||
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|)
 name|printf
 argument_list|(
 literal|"proxy says bad packet received\n"
@@ -1978,6 +2015,20 @@ block|{
 if|#
 directive|if
 name|PROXY_DEBUG
+operator|||
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|)
 name|printf
 argument_list|(
 literal|"proxy says free app proxy data\n"

@@ -7,11 +7,20 @@ begin_comment
 comment|/* tcpdump -n  00:05:47.816843 128.231.76.76.3291> 224.2.252.231.36573: udp 36 (encap)  tcpdump -nq  00:33:48.410771 192.73.213.11.1463> 224.2.248.153.59360: udp 31 (encap)  tcpdump -nqt  128.250.133.13.23> 128.250.20.20.2419: tcp 27  tcpdump -nqtt  123456789.1234567 128.250.133.13.23> 128.250.20.20.2419: tcp 27  tcpdump -nqte  8:0:20:f:65:f7 0:0:c:1:8a:c5 81: 128.250.133.13.23> 128.250.20.20.2419: tcp 27  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sgi
-end_ifdef
+argument_list|)
+operator|&&
+operator|(
+name|IRIX
+operator|>
+literal|602
+operator|)
+end_if
 
 begin_include
 include|#
@@ -234,7 +243,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_td.c,v 2.2.2.3 2002/06/27 14:29:17 darrenr Exp $"
+literal|"@(#)$Id: ipft_td.c,v 2.2.2.4 2002/12/06 11:40:26 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

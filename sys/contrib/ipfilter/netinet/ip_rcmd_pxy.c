@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: ip_rcmd_pxy.c,v 1.4.2.5 2001/10/30 16:38:14 darrenr Exp $  */
+comment|/*  * $Id: ip_rcmd_pxy.c,v 1.4.2.6 2002/10/01 15:24:59 darrenr Exp $  */
 end_comment
 
 begin_comment
@@ -818,6 +818,12 @@ operator|->
 name|th_off
 operator|=
 literal|5
+expr_stmt|;
+name|tcp2
+operator|->
+name|th_flags
+operator|=
+name|TH_SYN
 expr_stmt|;
 name|fi
 operator|.

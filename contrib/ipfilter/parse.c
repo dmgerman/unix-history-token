@@ -3,11 +3,20 @@ begin_comment
 comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sgi
-end_ifdef
+argument_list|)
+operator|&&
+operator|(
+name|IRIX
+operator|>
+literal|602
+operator|)
+end_if
 
 begin_include
 include|#
@@ -1044,6 +1053,34 @@ name|fr_flags
 operator||=
 name|FR_AUTH
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strncasecmp
+argument_list|(
+operator|*
+operator|(
+name|cpp
+operator|+
+literal|1
+operator|)
+argument_list|,
+literal|"return-rst"
+argument_list|,
+literal|10
+argument_list|)
+condition|)
+block|{
+name|fil
+operator|.
+name|fr_flags
+operator||=
+name|FR_RETRST
+expr_stmt|;
+name|cpp
+operator|++
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -5814,7 +5851,7 @@ operator|*
 operator|*
 name|cp
 argument_list|,
-literal|"(use numeric value instead\n"
+literal|"(use numeric value instead)\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6862,11 +6899,30 @@ name|fr_flags
 operator|&
 name|FR_AUTH
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"auth"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fp
+operator|->
+name|fr_flags
+operator|&
+name|FR_RETMASK
+operator|)
+operator|==
+name|FR_RETRST
+condition|)
+name|printf
+argument_list|(
+literal|" return-rst"
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(

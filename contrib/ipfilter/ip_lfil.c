@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_lfil.c,v 2.6.2.4 2002/03/06 09:44:11 darrenr Exp $"
+literal|"@(#)$Id: ip_lfil.c,v 2.6.2.5 2002/10/03 13:47:19 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1913,47 +1913,6 @@ sizeof|sizeof
 argument_list|(
 name|ipfrstat_t
 argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|SIOCAUTHW
-case|:
-case|case
-name|SIOCAUTHR
-case|:
-if|if
-condition|(
-operator|!
-operator|(
-name|mode
-operator|&
-name|FWRITE
-operator|)
-condition|)
-block|{
-name|error
-operator|=
-name|EPERM
-expr_stmt|;
-break|break;
-block|}
-case|case
-name|SIOCATHST
-case|:
-name|error
-operator|=
-name|fr_auth_ioctl
-argument_list|(
-name|data
-argument_list|,
-name|mode
-argument_list|,
-name|cmd
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 break|break;

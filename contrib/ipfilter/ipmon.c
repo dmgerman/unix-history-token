@@ -25,11 +25,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sgi
-end_ifdef
+argument_list|)
+operator|&&
+operator|(
+name|IRIX
+operator|>
+literal|602
+operator|)
+end_if
 
 begin_include
 include|#
@@ -388,7 +397,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipmon.c,v 2.12.2.36 2002/08/22 15:12:23 darrenr Exp $"
+literal|"@(#)$Id: ipmon.c,v 2.12.2.37 2002/12/06 11:40:26 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
