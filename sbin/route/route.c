@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.17 1996/11/01 20:30:37 wollman Exp $"
+literal|"$Id: route.c,v 1.18 1996/12/10 17:07:30 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6587,6 +6587,10 @@ literal|"RTM_DELADDR: address being removed from iface"
 block|,
 literal|"RTM_IFINFO: iface status change"
 block|,
+literal|"RTM_NEWMADDR: new multicast group membership on iface"
+block|,
+literal|"RTM_DELMADDR: multicast group membership removed from iface"
+block|,
 literal|0
 block|, }
 decl_stmt|;
@@ -6662,6 +6666,16 @@ name|ifa_msghdr
 modifier|*
 name|ifam
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RTM_NEWMADDR
+name|struct
+name|ifma_msghdr
+modifier|*
+name|ifmam
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|verbose
@@ -6827,6 +6841,44 @@ name|ifam_addrs
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|RTM_NEWMADDR
+case|case
+name|RTM_NEWMADDR
+case|:
+case|case
+name|RTM_DELMADDR
+case|:
+name|ifmam
+operator|=
+operator|(
+expr|struct
+name|ifma_msghdr
+operator|*
+operator|)
+name|rtm
+expr_stmt|;
+name|pmsg_addrs
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|ifmam
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|ifmam
+operator|->
+name|ifmam_addrs
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 default|default:
 operator|(
 name|void
