@@ -734,7 +734,7 @@ name|ether_output
 parameter_list|(
 name|ifp
 parameter_list|,
-name|m0
+name|m
 parameter_list|,
 name|dst
 parameter_list|,
@@ -749,7 +749,7 @@ decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
-name|m0
+name|m
 decl_stmt|;
 name|struct
 name|sockaddr
@@ -786,14 +786,6 @@ name|edst
 index|[
 literal|6
 index|]
-decl_stmt|;
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
-init|=
-name|m0
 decl_stmt|;
 specifier|register
 name|struct

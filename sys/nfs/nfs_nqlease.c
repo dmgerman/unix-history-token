@@ -2374,12 +2374,6 @@ operator|->
 name|lc_host
 decl_stmt|;
 specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-specifier|register
 name|int
 name|siz
 decl_stmt|;
@@ -2394,6 +2388,9 @@ name|lc_morehosts
 decl_stmt|;
 name|struct
 name|mbuf
+modifier|*
+name|m
+decl_stmt|,
 modifier|*
 name|mreq
 decl_stmt|,
@@ -4743,12 +4740,6 @@ name|caddr_t
 name|cp
 decl_stmt|;
 specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4774,6 +4765,9 @@ literal|0
 decl_stmt|;
 name|struct
 name|mbuf
+modifier|*
+name|m
+decl_stmt|,
 modifier|*
 name|mreq
 decl_stmt|,

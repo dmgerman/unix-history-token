@@ -864,12 +864,6 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-specifier|register
-name|struct
 name|ipx
 modifier|*
 name|ipx
@@ -891,6 +885,11 @@ name|struct
 name|route
 modifier|*
 name|ro
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
 decl_stmt|;
 name|struct
 name|mbuf

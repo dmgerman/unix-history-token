@@ -668,7 +668,6 @@ name|so
 parameter_list|,
 name|dst
 parameter_list|)
-specifier|register
 name|struct
 name|mbuf
 modifier|*

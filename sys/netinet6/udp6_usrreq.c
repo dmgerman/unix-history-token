@@ -1999,7 +1999,6 @@ name|inpcb
 modifier|*
 name|in6p
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*

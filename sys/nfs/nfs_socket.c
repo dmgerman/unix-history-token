@@ -4210,9 +4210,6 @@ specifier|register
 name|struct
 name|mbuf
 modifier|*
-name|m
-decl_stmt|,
-modifier|*
 name|mrep
 decl_stmt|,
 modifier|*
@@ -4240,6 +4237,9 @@ name|nmp
 decl_stmt|;
 name|struct
 name|mbuf
+modifier|*
+name|m
+decl_stmt|,
 modifier|*
 name|md
 decl_stmt|,

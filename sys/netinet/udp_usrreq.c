@@ -3002,7 +3002,6 @@ name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*

@@ -2158,12 +2158,6 @@ name|p
 decl_stmt|;
 block|{
 specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-specifier|register
 name|int
 name|siz
 decl_stmt|;
@@ -2191,6 +2185,9 @@ name|NULL
 decl_stmt|;
 name|struct
 name|mbuf
+modifier|*
+name|m
+decl_stmt|,
 modifier|*
 name|mreq
 decl_stmt|;
