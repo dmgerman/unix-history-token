@@ -84,7 +84,12 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|Ex_fmt
+name|Ef_fmt
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|EF_fmt
 decl_stmt|;
 block|}
 struct|;

@@ -125,7 +125,7 @@ define|#
 directive|define
 name|LCTIME_SIZE_2
 define|\
-value|(offsetof(struct lc_time_T, Ex_fmt) / sizeof(char *))
+value|(offsetof(struct lc_time_T, Ef_fmt) / sizeof(char *))
 end_define
 
 begin_decl_stmt
@@ -226,7 +226,7 @@ comment|/* 	** x_fmt 	** Since the C language standard calls for 	** "date, usin
 literal|"%m/%d/%y"
 block|,
 comment|/* 	** c_fmt (ctime-compatible) 	** Note that 	**	"%a %b %d %H:%M:%S %Y" 	** is used by Solaris 2.3. 	*/
-literal|"%a %Ex %X %Y"
+literal|"%a %Ef %X %Y"
 block|,
 comment|/* am */
 literal|"AM"
@@ -235,7 +235,7 @@ comment|/* pm */
 literal|"PM"
 block|,
 comment|/* date_fmt */
-literal|"%a %Ex %X %Z %Y"
+literal|"%a %Ef %X %Z %Y"
 block|,
 block|{
 literal|"January"
@@ -263,8 +263,11 @@ block|,
 literal|"December"
 block|}
 block|,
-comment|/* Ex_fmt 	** To determine months / day order 	*/
+comment|/* Ef_fmt 	** To determine short months / day order 	*/
 literal|"%b %e"
+block|,
+comment|/* EF_fmt 	** To determine long months / day order 	*/
+literal|"%B %e"
 block|}
 decl_stmt|;
 end_decl_stmt
