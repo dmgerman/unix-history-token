@@ -73,6 +73,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fnmatch.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mtree.h"
 end_include
 
@@ -365,6 +371,7 @@ name|flags
 operator|&
 name|F_MAGIC
 operator|&&
+operator|!
 name|fnmatch
 argument_list|(
 name|ep
@@ -376,8 +383,6 @@ operator|->
 name|fts_name
 argument_list|,
 name|FNM_PATHNAME
-operator||
-name|FNM_QUOTE
 argument_list|)
 operator|||
 operator|!
