@@ -1427,7 +1427,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|i386
+name|__i386__
 argument_list|)
 name|u_int
 name|sl_irq
