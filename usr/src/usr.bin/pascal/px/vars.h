@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)vars.h 1.10 %G%"; */
+comment|/* static char sccsid[] = "@(#)vars.h 1.11 %G%"; */
 end_comment
 
 begin_include
@@ -42,7 +42,7 @@ begin_define
 define|#
 directive|define
 name|HZ
-value|60
+value|100
 end_define
 
 begin_define
