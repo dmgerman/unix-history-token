@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Definitions for sysctl call.  * The sysctl call uses a hierarchical name for objects  * that can be examined or modified.  * The name is expressed as a sequence of integers.  * Like a file path name, the meaning of each component  * depends on its place in the hierarchy.  * The top-level and kern identifiers are defined here,  * and other identifiers are defined in the respective  * subsystem header files.  */
+comment|/*  * Definitions for sysctl call.  The sysctl call uses a hierarchical name  * for objects that can be examined or modified.  The name is expressed as  * a sequence of integers.  Like a file path name, the meaning of each  * component depends on its place in the hierarchy.  The top-level and kern  * identifiers are defined here, and other identifiers are defined in the  * respective subsystem header files.  */
 end_comment
 
 begin_define
@@ -524,7 +524,7 @@ name|KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Internal sysctl function calling convention:  *	(*sysctlfn)(name, namelen, oldval, oldlenp, newval, newlen);  * The name parameter points at the next component of the name  * to be interpreted.  The namelen parameter is the number of integers  * in the name.  */
+comment|/*  * Internal sysctl function calling convention:  *  *	(*sysctlfn)(name, namelen, oldval, oldlenp, newval, newlen);  *  * The name parameter points at the next component of the name to be  * interpreted.  The namelen parameter is the number of integers in  * the name.  */
 end_comment
 
 begin_typedef
@@ -544,13 +544,13 @@ operator|,
 name|void
 operator|*
 operator|,
-name|u_int
+name|size_t
 operator|*
 operator|,
 name|void
 operator|*
 operator|,
-name|u_int
+name|size_t
 operator|,
 expr|struct
 name|proc
@@ -569,13 +569,13 @@ operator|(
 name|void
 operator|*
 operator|,
-name|u_int
+name|size_t
 operator|*
 operator|,
 name|void
 operator|*
 operator|,
-name|u_int
+name|size_t
 operator|,
 name|int
 operator|*
@@ -593,7 +593,7 @@ operator|(
 name|void
 operator|*
 operator|,
-name|u_int
+name|size_t
 operator|*
 operator|,
 name|void
@@ -614,13 +614,13 @@ operator|(
 name|void
 operator|*
 operator|,
-name|u_int
+name|size_t
 operator|*
 operator|,
 name|void
 operator|*
 operator|,
-name|u_int
+name|size_t
 operator|,
 name|char
 operator|*
@@ -640,7 +640,7 @@ operator|(
 name|void
 operator|*
 operator|,
-name|u_int
+name|size_t
 operator|*
 operator|,
 name|void
@@ -662,7 +662,7 @@ operator|(
 name|void
 operator|*
 operator|,
-name|u_int
+name|size_t
 operator|*
 operator|,
 name|void
@@ -683,7 +683,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* KERNEL */
+comment|/* !KERNEL */
 end_comment
 
 begin_include
@@ -702,18 +702,18 @@ operator|(
 name|int
 operator|*
 operator|,
-name|int
+name|u_int
 operator|,
 name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|*
 operator|,
 name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
