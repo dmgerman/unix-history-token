@@ -445,14 +445,27 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|isync
-argument_list|()
-expr_stmt|;
-block|}
+comment|/* 		 * Clear battable[] translations 		 */
+asm|__asm __volatile("mtdbatu 2, %0\n"
+literal|"mtdbatu 3, %0"
+operator|:
+operator|:
+literal|"r"
+operator|(
+literal|0
+operator|)
+block|)
+empty_stmt|;
 end_if
 
 begin_expr_stmt
-name|result
+name|isync
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|} 	 	result
 operator|=
 name|ofwcall
 argument_list|(
