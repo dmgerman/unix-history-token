@@ -23170,6 +23170,31 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The uses a Restart Instruction value of one to represent 	 * the L+X slot of an MLX template bundle but the opcode is 	 * actually in slot two. 	 */
+if|if
+condition|(
+operator|(
+name|b
+operator|.
+name|template
+operator|==
+literal|4
+operator|||
+name|b
+operator|.
+name|template
+operator|==
+literal|5
+operator|)
+operator|&&
+name|slot
+operator|==
+literal|1
+condition|)
+name|slot
+operator|=
+literal|2
+expr_stmt|;
 if|if
 condition|(
 name|b
@@ -23242,6 +23267,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Handle MLX bundles by advancing from slot one to the 	 * following bundle. 	 */
 if|if
 condition|(
 name|b
@@ -23265,7 +23291,7 @@ literal|0
 condition|)
 name|loc
 operator|+=
-literal|2
+literal|1
 expr_stmt|;
 else|else
 name|loc
