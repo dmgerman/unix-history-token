@@ -1581,38 +1581,28 @@ comment|/* don't deallocate it, just remove it */
 block|}
 block|}
 block|}
+return|return
+name|drive
+return|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|drive
-operator|->
-name|lasterror
-operator|==
-literal|0
-condition|)
-name|drive
-operator|->
-name|lasterror
-operator|=
-name|ENODEV
-expr_stmt|;
+comment|/* not ours, */
 name|close_drive
 argument_list|(
 name|drive
 argument_list|)
 expr_stmt|;
+name|free_drive
+argument_list|(
 name|drive
-operator|->
-name|state
-operator|=
-name|drive_down
+argument_list|)
 expr_stmt|;
-block|}
+comment|/* get rid of it */
 return|return
-name|drive
+name|NULL
 return|;
+block|}
 block|}
 end_function
 
@@ -3489,10 +3479,6 @@ comment|/* UNIX partition */
 name|int
 name|slice
 decl_stmt|;
-name|int
-name|founddrive
-decl_stmt|;
-comment|/* flag when we find a vinum drive */
 while|while
 condition|(
 operator|*
@@ -3591,11 +3577,6 @@ operator|-
 name|partname
 expr_stmt|;
 comment|/* remaining length in partition name */
-name|founddrive
-operator|=
-literal|0
-expr_stmt|;
-comment|/* no vinum drive found yet on this spindle */
 comment|/* first try the partition table */
 for|for
 control|(
@@ -3655,30 +3636,10 @@ expr_stmt|;
 comment|/* try to open it */
 if|if
 condition|(
-operator|(
 name|drive
-operator|->
-name|lasterror
-operator|!=
-literal|0
-operator|)
-comment|/* didn't work, */
-operator|||
-operator|(
-name|drive
-operator|->
-name|state
-operator|<
-name|drive_down
-operator|)
 condition|)
-name|free_drive
-argument_list|(
-name|drive
-argument_list|)
-expr_stmt|;
-comment|/* get rid of it */
-elseif|else
+block|{
+comment|/* got something, */
 if|if
 condition|(
 name|drive
@@ -3744,15 +3705,17 @@ comment|/* which is no longer newly born */
 name|gooddrives
 operator|++
 expr_stmt|;
-name|founddrive
-operator|++
-expr_stmt|;
 block|}
 block|}
 block|}
+block|}
+ifdef|#
+directive|ifdef
+name|__i386__
+comment|/* 	 * This is a kludge.  Probably none of this 	 * should be here. 	 */
 if|if
 condition|(
-name|founddrive
+name|gooddrives
 operator|==
 literal|0
 condition|)
@@ -3801,30 +3764,10 @@ expr_stmt|;
 comment|/* try to open it */
 if|if
 condition|(
-operator|(
 name|drive
-operator|->
-name|lasterror
-operator|!=
-literal|0
-operator|)
-comment|/* didn't work, */
-operator|||
-operator|(
-name|drive
-operator|->
-name|state
-operator|<
-name|drive_down
-operator|)
 condition|)
-name|free_drive
-argument_list|(
-name|drive
-argument_list|)
-expr_stmt|;
-comment|/* get rid of it */
-elseif|else
+block|{
+comment|/* got something, */
 if|if
 condition|(
 name|drive
@@ -3893,6 +3836,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+block|}
+endif|#
+directive|endif
 block|}
 name|Free
 argument_list|(
