@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.6	%G%	*/
+comment|/*	machdep.c	4.7	%G%	*/
 end_comment
 
 begin_include
@@ -93,12 +93,40 @@ directive|include
 file|"../h/reboot.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/conf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<frame.h>
+end_include
+
+begin_decl_stmt
+name|int
+name|coresw
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|printsw
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 4.1) 11/10/80 \n"
+literal|"VM/UNIX (Berkeley Version machdep.c) 81/02/07 \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -247,8 +275,7 @@ name|maxmem
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 */
-comment|/* Bell labs style comment */
+comment|/* 	 * Clear warm-restart inhibit flag. 	 */
 name|tocons
 argument_list|(
 name|TXDB_CWSI
@@ -460,7 +487,7 @@ goto|goto
 name|check
 goto|;
 block|}
-comment|/* 	 * Have been told that VMS keeps time internally with base TODRZERO. 	 * If this is correct, then this routine and VMS should maintain 	 * the same date, and switching shouldn't be painful. 	 */
+comment|/* 	 * Have been told that VMS keeps time internally with base TODRZERO. 	 * If this is correct, then this routine and VMS should maintain 	 * the same date, and switching shouldn't be painful. 	 * (Unfortunately, VMS keeps local time, so when you run UNIX 	 * and VMS, VMS runs on GMT...). 	 */
 if|if
 condition|(
 name|todr
@@ -1141,45 +1168,10 @@ end_macro
 
 begin_block
 block|{
-struct|struct
+name|struct
 name|frame
-block|{
-name|int
-name|handler
-decl_stmt|;
-name|unsigned
-name|int
-name|psw
-range|:
-literal|16
-decl_stmt|,
-name|mask
-range|:
-literal|12
-decl_stmt|,
-range|:
-literal|1
-decl_stmt|,
-name|s
-range|:
-literal|1
-decl_stmt|,
-name|spa
-range|:
-literal|2
-decl_stmt|;
-name|int
-name|savap
-decl_stmt|;
-name|int
-name|savfp
-decl_stmt|;
-name|int
-name|savpc
-decl_stmt|;
-block|}
 name|frame
-struct|;
+decl_stmt|;
 specifier|register
 name|int
 name|sp
@@ -1245,7 +1237,7 @@ index|]
 operator|=
 name|frame
 operator|.
-name|savpc
+name|fr_savpc
 expr_stmt|;
 name|u
 operator|.
@@ -1256,7 +1248,7 @@ index|]
 operator|=
 name|frame
 operator|.
-name|savfp
+name|fr_savfp
 expr_stmt|;
 name|u
 operator|.
@@ -1267,13 +1259,13 @@ index|]
 operator|=
 name|frame
 operator|.
-name|savap
+name|fr_savap
 expr_stmt|;
 name|mask
 operator|=
 name|frame
 operator|.
-name|mask
+name|fr_mask
 expr_stmt|;
 for|for
 control|(
@@ -1328,7 +1320,7 @@ name|sp
 operator|+=
 name|frame
 operator|.
-name|spa
+name|fr_spa
 expr_stmt|;
 name|u
 operator|.
@@ -1350,13 +1342,13 @@ operator|)
 operator||
 name|frame
 operator|.
-name|psw
+name|fr_psw
 expr_stmt|;
 if|if
 condition|(
 name|frame
 operator|.
-name|s
+name|fr_s
 condition|)
 name|sp
 operator|+=
@@ -1912,26 +1904,43 @@ name|howto
 operator|&
 name|RB_HALT
 condition|)
-name|tocons
+block|{
+name|printf
 argument_list|(
-name|TXDB_DONE
+literal|"halting (in tight loop); hit\n\t^P\n\tHALT\n\n"
 argument_list|)
 expr_stmt|;
-elseif|else
+name|mtpr
+argument_list|(
+name|IPL
+argument_list|,
+literal|0x1f
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+empty_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|panic
 operator|==
 name|RB_PANIC
 condition|)
-empty_stmt|;
-comment|/* cold or warm start */
-else|else
+name|doadump
+argument_list|()
+expr_stmt|;
 name|tocons
 argument_list|(
 name|TXDB_BOOT
 argument_list|)
 expr_stmt|;
+block|}
 if|#
 directive|if
 name|VAX
@@ -1995,6 +2004,68 @@ argument_list|(
 name|TXDB
 argument_list|,
 name|c
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Doadump comes here after turning off memory management and  * getting on the dump stack, either when called above, or by  * the auto-restart code.  */
+end_comment
+
+begin_macro
+name|dumpsys
+argument_list|()
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+operator|(
+name|minor
+argument_list|(
+name|dumpdev
+argument_list|)
+operator|&
+literal|07
+operator|)
+operator|!=
+literal|1
+condition|)
+return|return;
+name|printf
+argument_list|(
+literal|"\ndumping to dev %x, offset %d\n"
+argument_list|,
+name|dumpdev
+argument_list|,
+name|dumplo
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"dump %s\n"
+argument_list|,
+operator|(
+operator|*
+name|bdevsw
+index|[
+name|major
+argument_list|(
+name|dumpdev
+argument_list|)
+index|]
+operator|.
+name|d_dump
+operator|)
+operator|(
+name|dumpdev
+operator|)
+condition|?
+literal|"failed"
+else|:
+literal|"succeeded"
 argument_list|)
 expr_stmt|;
 block|}
