@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwgets.c	1.3 83/07/22"
+literal|"@(#)wwgets.c	1.4 83/07/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,9 +149,32 @@ operator|)
 operator|>
 literal|0
 condition|)
+block|{
 name|ibufc
 operator|+=
 name|n
+expr_stmt|;
+name|nreadc
+operator|+=
+name|n
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+name|nreadz
+operator|++
+expr_stmt|;
+else|else
+name|nreade
+operator|++
+expr_stmt|;
+name|nread
+operator|++
 expr_stmt|;
 block|}
 block|}

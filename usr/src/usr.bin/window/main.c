@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.6 83/07/22"
+literal|"@(#)main.c	1.7 83/07/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -283,9 +283,32 @@ operator|)
 operator|<
 literal|0
 condition|)
+block|{
 name|ibufc
 operator|=
 literal|0
+expr_stmt|;
+name|nreade
+operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ibufc
+operator|==
+literal|0
+condition|)
+name|nreadz
+operator|++
+expr_stmt|;
+else|else
+name|nreadc
+operator|+=
+name|ibufc
+expr_stmt|;
+name|nread
+operator|++
 expr_stmt|;
 block|}
 comment|/* 		 * Weird loop.  Copy the buffer to the pty stopping 		 * on the escape character in a hopefully efficient 		 * way. 		 * Probably a good thing to make ibufc == 1 a special 		 * case. 		 */

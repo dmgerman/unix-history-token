@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)ww.h	1.5 83/07/22		*/
+comment|/*	@(#)ww.h	1.6 83/07/27		*/
 end_comment
 
 begin_include
@@ -261,6 +261,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|wwnwrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|wwnwritec
 decl_stmt|;
 end_decl_stmt
 

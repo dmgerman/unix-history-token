@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	1.5 83/07/26"
+literal|"@(#)cmd2.c	1.6 83/07/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -646,7 +646,7 @@ name|w
 operator|=
 name|openwin
 argument_list|(
-literal|22
+literal|6
 argument_list|,
 literal|"IO Statics"
 argument_list|)
@@ -668,9 +668,26 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"nread: %d\r\n"
+literal|"nread\tnreadz\tnreade\tnreadc\tnwrite\tnwritec\r\n"
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"%d\t%d\t%d\t%d\t%d\t%d\r\n"
 argument_list|,
 name|nread
+argument_list|,
+name|nreadz
+argument_list|,
+name|nreade
+argument_list|,
+name|nreadc
+argument_list|,
+name|wwnwrite
+argument_list|,
+name|wwnwritec
 argument_list|)
 expr_stmt|;
 name|waitnl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)defs.h	1.3 83/07/22		*/
+comment|/*	@(#)defs.h	1.4 83/07/27		*/
 end_comment
 
 begin_include
@@ -37,6 +37,24 @@ end_define
 begin_decl_stmt
 name|int
 name|nread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nreade
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nreadz
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nreadc
 decl_stmt|;
 end_decl_stmt
 

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwwrite.c	1.4 83/07/22"
+literal|"@(#)wwwrite.c	1.5 83/07/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,8 +29,12 @@ end_include
 begin_decl_stmt
 name|int
 name|wwnwrite
-init|=
-literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|wwnwritec
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +92,9 @@ operator|-
 literal|1
 return|;
 name|wwnwrite
+operator|++
+expr_stmt|;
+name|wwnwritec
 operator|+=
 name|n
 expr_stmt|;
