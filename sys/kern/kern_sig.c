@@ -8133,15 +8133,14 @@ argument_list|(
 name|sig
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If this thread is blocking this signal then we'll leave it in the 	 * proc so that we can find it in the first thread that unblocks 	 * it--  unless the signal is meant for the thread and not the process. 	 */
-if|if
-condition|(
-name|target
-operator|==
-name|SIGTARGET_P
-condition|)
+comment|/* 	 * If the signal is blocked and not destined for this thread, then 	 * assign it to the process so that we can find it later in the first 	 * thread that unblocks it.  Otherwise, assign it to this thread now. 	 */
 name|siglist
 operator|=
+operator|(
+name|target
+operator|!=
+name|SIGTARGET_TD
+operator|&&
 name|SIGISMEMBER
 argument_list|(
 name|td
@@ -8150,20 +8149,13 @@ name|td_sigmask
 argument_list|,
 name|sig
 argument_list|)
+operator|)
 condition|?
 operator|&
 name|p
 operator|->
 name|p_siglist
 else|:
-operator|&
-name|td
-operator|->
-name|td_siglist
-expr_stmt|;
-else|else
-name|siglist
-operator|=
 operator|&
 name|td
 operator|->
