@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cpufunc.h,v 1.88 1999/07/23 23:45:19 alc Exp $  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cpufunc.h,v 1.89 1999/08/19 00:32:48 peter Exp $  */
 end_comment
 
 begin_comment
@@ -192,35 +192,37 @@ end_function
 begin_define
 define|#
 directive|define
-name|HAVE_INLINE_FFS
+name|HAVE_INLINE__BSFL
 end_define
 
-begin_if
-if|#
-directive|if
-name|__GNUC__
-operator|==
-literal|2
-operator|&&
-name|__GNUC_MINOR__
-operator|>
-literal|8
-end_if
+begin_function
+specifier|static
+name|__inline
+name|int
+name|__bsfl
+parameter_list|(
+name|int
+name|mask
+parameter_list|)
+block|{
+name|int
+name|result
+decl_stmt|;
+comment|/* 	 * bsfl turns out to be not all that slow on 486's.  It can beaten 	 * using a binary search to reduce to 4 bits and then a table lookup, 	 * but only if the code is inlined and in the cache, and the code 	 * is quite large so inlining it probably busts the cache. 	 */
+asm|__asm __volatile("bsfl %0,%0" : "=r" (result) : "0" (mask));
+return|return
+operator|(
+name|result
+operator|)
+return|;
+block|}
+end_function
 
 begin_define
 define|#
 directive|define
-name|ffs
-parameter_list|(
-name|mask
-parameter_list|)
-value|__builtin_ffs(mask)
+name|HAVE_INLINE_FFS
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_function
 specifier|static
@@ -232,50 +234,35 @@ name|int
 name|mask
 parameter_list|)
 block|{
-name|int
-name|result
-decl_stmt|;
-comment|/* 	 * bsfl turns out to be not all that slow on 486's.  It can beaten 	 * using a binary search to reduce to 4 bits and then a table lookup, 	 * but only if the code is inlined and in the cache, and the code 	 * is quite large so inlining it probably busts the cache. 	 * 	 * Note that gcc-2's builtin ffs would be used if we didn't declare 	 * this inline or turn off the builtin.  The builtin is faster but 	 * broken in gcc-2.4.5 and slower but working in gcc-2.5 and 2.6. 	 */
-asm|__asm __volatile("testl %0,%0; je 1f; bsfl %0,%0; incl %0; 1:"
-block|:
-literal|"=r"
-operator|(
-name|result
-operator|)
-operator|:
-literal|"0"
-operator|(
-name|mask
-operator|)
-block|)
-function|;
-end_function
-
-begin_return
+comment|/* 	 * Note that gcc-2's builtin ffs would be used if we didn't declare 	 * this inline or turn off the builtin.  The builtin is faster but 	 * broken in gcc-2.4.5 and slower but working in gcc-2.5 and 2.6. 	 */
 return|return
-operator|(
-name|result
-operator|)
+name|mask
+operator|==
+literal|0
+condition|?
+name|mask
+else|:
+name|__bsfl
+argument_list|(
+name|mask
+argument_list|)
+operator|+
+literal|1
 return|;
-end_return
-
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
+block|}
+end_function
 
 begin_define
 define|#
 directive|define
-name|HAVE_INLINE_FLS
+name|HAVE_INLINE__BSRL
 end_define
 
 begin_function
-unit|static
+specifier|static
 name|__inline
 name|int
-name|fls
+name|__bsrl
 parameter_list|(
 name|int
 name|mask
@@ -284,31 +271,49 @@ block|{
 name|int
 name|result
 decl_stmt|;
-asm|__asm __volatile("testl %0,%0; je 1f; bsrl %0,%0; incl %0; 1:"
-block|:
-literal|"=r"
-operator|(
-name|result
-operator|)
-operator|:
-literal|"0"
-operator|(
-name|mask
-operator|)
-block|)
-function|;
-end_function
-
-begin_return
+asm|__asm __volatile("bsrl %0,%0" : "=r" (result) : "0" (mask));
 return|return
 operator|(
 name|result
 operator|)
 return|;
-end_return
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|HAVE_INLINE_FLS
+end_define
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|fls
+parameter_list|(
+name|int
+name|mask
+parameter_list|)
+block|{
+return|return
+name|mask
+operator|==
+literal|0
+condition|?
+name|mask
+else|:
+name|__bsrl
+argument_list|(
+name|mask
+argument_list|)
+operator|+
+literal|1
+return|;
+block|}
+end_function
 
 begin_if
-unit|}
 if|#
 directive|if
 name|__GNUC__
@@ -374,7 +379,7 @@ value|(						\ 	__builtin_constant_p(port)&& ((port)& 0xffff)< 0x100		\&& (port)
 end_define
 
 begin_function
-unit|static
+specifier|static
 name|__inline
 name|u_char
 name|inbc
