@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -18,7 +22,7 @@ modifier|*
 specifier|const
 name|version_string
 init|=
-literal|"3.1 20020509 (prerelease)"
+literal|"3.1 [FreeBSD] 20020509 (prerelease)"
 decl_stmt|;
 end_decl_stmt
 
