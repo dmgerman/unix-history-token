@@ -657,6 +657,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|log_console
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|uio
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|printf
 name|__P

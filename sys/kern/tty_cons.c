@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/reboot.h>
 end_include
 
@@ -43,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
@@ -1324,6 +1324,11 @@ operator|=
 name|cn_tab
 operator|->
 name|cn_dev
+expr_stmt|;
+name|log_console
+argument_list|(
+name|uio
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
