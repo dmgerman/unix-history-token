@@ -173,6 +173,10 @@ begin_comment
 comment|/* O/O */
 end_comment
 
+begin_comment
+comment|/* Obsolete */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -565,7 +569,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* SPI3 */
+comment|/* SPI3/SPI4 */
 end_comment
 
 begin_define
@@ -573,6 +577,41 @@ define|#
 directive|define
 name|MSG_EXT_PPR_LEN
 value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_EXT_PPR_PCOMP_EN
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_EXT_PPR_RTI
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_EXT_PPR_RD_STRM
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_EXT_PPR_WR_FLOW
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_EXT_PPR_HOLD_MCS
+value|0x08
 end_define
 
 begin_define
