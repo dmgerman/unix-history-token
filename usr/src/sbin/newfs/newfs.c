@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.23 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1404,69 +1404,11 @@ expr_stmt|;
 if|if
 condition|(
 name|cp
-operator|!=
+operator|==
 literal|0
 condition|)
-name|special
-operator|=
-name|cp
-operator|+
-literal|1
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|special
-operator|==
-literal|'r'
-if|#
-directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-operator|&&
-name|special
-index|[
-literal|1
-index|]
-operator|!=
-literal|'a'
-operator|&&
-name|special
-index|[
-literal|1
-index|]
-operator|!=
-literal|'b'
-condition|)
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|hp300
-argument_list|)
-operator|&&
-name|special
-index|[
-literal|1
-index|]
-operator|!=
-literal|'d'
-block|)
-endif|#
-directive|endif
-function|special++;
-end_function
-
-begin_expr_stmt
+block|{
+comment|/* 		 * No path prefix; try /dev/r%s then /dev/%s. 		 */
 operator|(
 name|void
 operator|)
@@ -1474,23 +1416,45 @@ name|sprintf
 argument_list|(
 name|device
 argument_list|,
-literal|"%s/r%s"
+literal|"%sr%s"
 argument_list|,
 name|_PATH_DEV
 argument_list|,
 name|special
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+if|if
+condition|(
+name|stat
+argument_list|(
+name|device
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|device
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|_PATH_DEV
+argument_list|,
+name|special
+argument_list|)
+expr_stmt|;
 name|special
 operator|=
 name|device
 expr_stmt|;
-end_expr_stmt
-
-begin_if
+block|}
 if|if
 condition|(
 operator|!
@@ -1531,9 +1495,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|fsi
 operator|=
 name|open
@@ -1543,9 +1504,6 @@ argument_list|,
 name|O_RDONLY
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|fsi
@@ -1564,9 +1522,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|fstat
@@ -1591,9 +1546,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -1606,16 +1558,13 @@ operator|)
 operator|!=
 name|S_IFCHR
 condition|)
-name|fatal
+name|printf
 argument_list|(
-literal|"%s: not a character device"
+literal|"%s: not a character device\n"
 argument_list|,
 name|special
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|cp
 operator|=
 name|index
@@ -1630,9 +1579,6 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|cp
@@ -1668,15 +1614,9 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|COMPAT
-end_ifdef
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -1693,14 +1633,8 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_expr_stmt
 name|lp
 operator|=
 name|getdisklabel
@@ -1710,9 +1644,6 @@ argument_list|,
 name|fsi
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|isdigit
@@ -1745,9 +1676,6 @@ operator|-
 literal|'a'
 index|]
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|pp
@@ -1769,9 +1697,6 @@ operator|*
 name|cp
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|fssize
@@ -1784,9 +1709,6 @@ name|pp
 operator|->
 name|p_size
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|fssize
@@ -1815,9 +1737,6 @@ operator|->
 name|p_size
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|rpm
@@ -1842,9 +1761,6 @@ operator|=
 literal|3600
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|ntracks
@@ -1875,9 +1791,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|nsectors
@@ -1908,9 +1821,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|sectorsize
@@ -1941,9 +1851,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|trackskew
@@ -1969,9 +1876,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|interleave
@@ -1996,9 +1900,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|fsize
@@ -2030,9 +1931,6 @@ name|d_secsize
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|bsize
@@ -2068,9 +1966,6 @@ name|fsize
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|density
@@ -2083,9 +1978,6 @@ name|NFPI
 operator|*
 name|fsize
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|minfree
@@ -2116,9 +2008,6 @@ operator|=
 name|FS_OPTSPACE
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|trackspares
@@ -2144,18 +2033,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|nphyssectors
 operator|=
 name|nsectors
 operator|+
 name|trackspares
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|cylspares
@@ -2181,9 +2064,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|secpercyl
 operator|=
 name|nsectors
@@ -2192,9 +2072,6 @@ name|ntracks
 operator|-
 name|cylspares
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|secpercyl
@@ -2220,9 +2097,6 @@ operator|->
 name|d_secpercyl
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|maxbpg
@@ -2236,66 +2110,48 @@ argument_list|(
 name|bsize
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|headswitch
 operator|=
 name|lp
 operator|->
 name|d_headswitch
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|trackseek
 operator|=
 name|lp
 operator|->
 name|d_trkseek
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* label may be 0 if faked up by kernel */
 name|bbsize
 operator|=
 name|lp
 operator|->
 name|d_bbsize
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sbsize
 operator|=
 name|lp
 operator|->
 name|d_sbsize
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+endif|#
+directive|endif
 name|oldpartition
 operator|=
 operator|*
 name|pp
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|tahoe
-end_ifdef
-
-begin_expr_stmt
 name|realsectorsize
 operator|=
 name|sectorsize
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|sectorsize
@@ -2338,14 +2194,8 @@ operator|/=
 name|secperblk
 expr_stmt|;
 block|}
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_expr_stmt
 name|mkfs
 argument_list|(
 name|pp
@@ -2357,15 +2207,9 @@ argument_list|,
 name|fso
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|tahoe
-end_ifdef
-
-begin_if
 if|if
 condition|(
 name|realsectorsize
@@ -2380,14 +2224,8 @@ name|DEV_BSIZE
 operator|/
 name|realsectorsize
 expr_stmt|;
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -2415,9 +2253,6 @@ argument_list|,
 name|lp
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -2428,17 +2263,11 @@ argument_list|(
 name|fso
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|close
 argument_list|(
 name|fsi
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|mfs
@@ -2509,31 +2338,28 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_ifdef
-unit|}
 ifdef|#
 directive|ifdef
 name|COMPAT
 end_ifdef
 
-begin_expr_stmt
-unit|char
+begin_decl_stmt
+name|char
 name|lmsg
 index|[]
-operator|=
+init|=
 literal|"%s: can't read disk label; disk type must be specified"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
@@ -2607,18 +2433,38 @@ block|{
 name|struct
 name|disklabel
 modifier|*
+name|lp
+decl_stmt|,
+modifier|*
 name|getdiskbyname
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|;
 name|unlabeled
 operator|++
 expr_stmt|;
-return|return
-operator|(
+name|lp
+operator|=
 name|getdiskbyname
 argument_list|(
 name|disktype
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: unknown disk type"
+argument_list|,
+name|disktype
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|lp
 operator|)
 return|;
 block|}
@@ -2949,7 +2795,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|fatal
 argument_list|(
 literal|"lseek to badsector area: %s"
@@ -3005,15 +2850,27 @@ block|}
 endif|#
 directive|endif
 block|}
+end_block
+
+begin_comment
 comment|/*VARARGS*/
+end_comment
+
+begin_macro
 name|fatal
 argument_list|(
 argument|fmt
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|va_list
 name|ap
@@ -3064,8 +2921,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_macro
 name|usage
 argument_list|()
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -3097,9 +2960,18 @@ else|#
 directive|else
 literal|""
 block|)
+end_block
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3107,6 +2979,9 @@ argument_list|,
 literal|"where fsoptions are:\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3114,6 +2989,9 @@ argument_list|,
 literal|"\t-N do not create file system, just print out parameters\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3121,9 +2999,15 @@ argument_list|,
 literal|"\t-S sector size\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|COMPAT
+end_ifdef
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3131,8 +3015,14 @@ argument_list|,
 literal|"\t-T disktype\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3140,6 +3030,9 @@ argument_list|,
 literal|"\t-a maximum contiguous blocks\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3147,6 +3040,9 @@ argument_list|,
 literal|"\t-b block size\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3154,6 +3050,9 @@ argument_list|,
 literal|"\t-c cylinders/group\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3161,6 +3060,9 @@ argument_list|,
 literal|"\t-d rotational delay between contiguous blocks\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3168,6 +3070,9 @@ argument_list|,
 literal|"\t-e maximum blocks per file in a cylinder group\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3175,6 +3080,9 @@ argument_list|,
 literal|"\t-f frag size\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3182,6 +3090,9 @@ argument_list|,
 literal|"\t-i number of bytes per inode\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3189,6 +3100,9 @@ argument_list|,
 literal|"\t-k sector 0 skew, per track\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3196,6 +3110,9 @@ argument_list|,
 literal|"\t-l hardware sector interleave\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3203,6 +3120,9 @@ argument_list|,
 literal|"\t-m minimum free space %%\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3210,6 +3130,9 @@ argument_list|,
 literal|"\t-n number of distinguished rotational positions\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3217,6 +3140,9 @@ argument_list|,
 literal|"\t-o optimization preference (`space' or `time')\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3224,6 +3150,9 @@ argument_list|,
 literal|"\t-p spare sectors per track\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3231,6 +3160,9 @@ argument_list|,
 literal|"\t-s file system size (sectors)\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3238,6 +3170,9 @@ argument_list|,
 literal|"\t-r revolutions/minute\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3245,6 +3180,9 @@ argument_list|,
 literal|"\t-t tracks/cylinder\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3252,6 +3190,9 @@ argument_list|,
 literal|"\t-u sectors/track\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -3259,13 +3200,16 @@ argument_list|,
 literal|"\t-x spare sectors per cylinder\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-end_block
+end_expr_stmt
 
+unit|}
 end_unit
 
