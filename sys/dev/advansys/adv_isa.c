@@ -416,6 +416,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|struct
+name|adv_softc
+modifier|*
+name|adv
+decl_stmt|;
 if|if
 condition|(
 name|port_addr
@@ -483,14 +488,24 @@ argument_list|(
 name|iores
 argument_list|)
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* 			 * Got one.  Now allocate our softc 			 * and see if we can initialize the card. 			 */
-name|struct
-name|adv_softc
-modifier|*
-name|adv
-decl_stmt|;
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+literal|0
+argument_list|,
+name|iores
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 		 * Got one.  Now allocate our softc 		 * and see if we can initialize the card. 		 */
 name|adv
 operator|=
 name|adv_alloc
@@ -514,10 +529,23 @@ name|adv
 operator|==
 name|NULL
 condition|)
+block|{
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+literal|0
+argument_list|,
+name|iores
+argument_list|)
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
-comment|/* 			 * Stop the chip. 			 */
+block|}
+comment|/* 		 * Stop the chip. 		 */
 name|ADV_OUTB
 argument_list|(
 name|adv
@@ -536,7 +564,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Determine the chip version. 			 */
+comment|/* 		 * Determine the chip version. 		 */
 name|adv
 operator|->
 name|chip_version
@@ -700,7 +728,7 @@ literal|"advisaprobe: Unknown card revision\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Allocate a parent dmatag for all tags created 			 * by the MI portions of the advansys driver 			 */
+comment|/* 		 * Allocate a parent dmatag for all tags created 		 * by the MI portions of the advansys driver 		 */
 comment|/* XXX Should be a child of the ISA bus dma tag */
 name|error
 operator|=
@@ -766,6 +794,17 @@ argument_list|(
 name|adv
 argument_list|)
 expr_stmt|;
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+literal|0
+argument_list|,
+name|iores
+argument_list|)
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
@@ -829,6 +868,17 @@ argument_list|(
 name|adv
 argument_list|)
 expr_stmt|;
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+literal|0
+argument_list|,
+name|iores
+argument_list|)
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
@@ -864,6 +914,17 @@ expr_stmt|;
 name|adv_free
 argument_list|(
 name|adv
+argument_list|)
+expr_stmt|;
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+literal|0
+argument_list|,
+name|iores
 argument_list|)
 expr_stmt|;
 return|return
@@ -910,6 +971,17 @@ block|{
 name|adv_free
 argument_list|(
 name|adv
+argument_list|)
+expr_stmt|;
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+literal|0
+argument_list|,
+name|iores
 argument_list|)
 expr_stmt|;
 return|return
@@ -1084,6 +1156,17 @@ argument_list|(
 name|adv
 argument_list|)
 expr_stmt|;
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+literal|0
+argument_list|,
+name|iores
+argument_list|)
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
@@ -1099,7 +1182,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
 block|}
 return|return
 name|ENXIO
