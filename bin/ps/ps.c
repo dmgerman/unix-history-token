@@ -778,7 +778,8 @@ name|char
 name|lfmt
 index|[]
 init|=
-literal|"uid,pid,ppid,cpu,pri,nice,vsz,rss,mwchan,state,tt,time,command"
+literal|"uid,pid,ppid,cpu,pri,nice,vsz,rss,mwchan,state,"
+literal|"tt,time,command"
 decl_stmt|;
 end_decl_stmt
 
@@ -818,7 +819,8 @@ name|char
 name|vfmt
 index|[]
 init|=
-literal|"pid,state,time,sl,re,pagein,vsz,rss,lim,tsiz,%cpu,%mem,command"
+literal|"pid,state,time,sl,re,pagein,vsz,rss,lim,tsiz,"
+literal|"%cpu,%mem,command"
 decl_stmt|;
 end_decl_stmt
 
