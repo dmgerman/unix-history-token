@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,14 +20,20 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: m_global.c,v 1.11 1999/05/16 17:25:14 juergen Exp $"
+literal|"$Id: m_global.c,v 1.12 2000/12/10 02:16:48 tom Exp $"
 argument_list|)
 end_macro
 
-begin_decl_stmt
-name|MENU
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|MENU
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_Default_Menu
-init|=
+operator|=
 block|{
 literal|16
 block|,
@@ -191,13 +197,19 @@ comment|/* options */
 literal|0
 comment|/* status */
 block|}
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-name|ITEM
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|ITEM
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_Default_Item
-init|=
+operator|=
 block|{
 block|{
 operator|(
@@ -278,8 +290,8 @@ operator|)
 literal|0
 comment|/* down */
 block|}
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  static void ComputeMaximum_NameDesc_Lenths(MENU *menu) |    |   Description   :  Calculates the maximum name and description lengths |                    of the items connected to the menu | |   Return Values :  - +--------------------------------------------------------------------------*/
@@ -520,19 +532,23 @@ begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  bool _nc_Connect_Items(MENU *menu, ITEM **items) | |   Description   :  Connect the items in the item array to the menu. |                    Decorate all the items with a number and a backward |                    pointer to the menu. | |   Return Values :  TRUE       - successfull connection |                    FALSE      - connection failed +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|bool
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|bool
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Connect_Items
-parameter_list|(
-name|MENU
-modifier|*
-name|menu
-parameter_list|,
-name|ITEM
-modifier|*
-modifier|*
-name|items
-parameter_list|)
+argument_list|(
+argument|MENU *menu
+argument_list|,
+argument|ITEM **items
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|ITEM
 modifier|*
@@ -752,20 +768,27 @@ name|FALSE
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  void _nc_Disconnect_Items(MENU *menu) |    |   Description   :  Disconnect the menus item array from the menu | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Disconnect_Items
-parameter_list|(
-name|MENU
-modifier|*
-name|menu
-parameter_list|)
+argument_list|(
+argument|MENU * menu
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -785,20 +808,27 @@ name|items
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  void _nc_Calculate_Item_Length_and_Width(MENU *menu) |    |   Description   :  Calculate the length of an item and the width of the |                    whole menu. | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Calculate_Item_Length_and_Width
-parameter_list|(
-name|MENU
-modifier|*
-name|menu
-parameter_list|)
+argument_list|(
+argument|MENU * menu
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|l
@@ -900,20 +930,27 @@ operator|=
 name|l
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  void _nc_Link_Item(MENU *menu) |    |   Description   :  Statically calculate for every item its four neighbours. |                    This depends on the orientation of the menu. This |                    static aproach simplifies navigation in the menu a lot. | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Link_Items
-parameter_list|(
-name|MENU
-modifier|*
-name|menu
-parameter_list|)
+argument_list|(
+argument|MENU * menu
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -1575,21 +1612,27 @@ block|}
 block|}
 block|}
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  void _nc_Show_Menu(const MENU *menu) |    |   Description   :  Update the window that is associated with the menu | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Show_Menu
-parameter_list|(
-specifier|const
-name|MENU
-modifier|*
-name|menu
-parameter_list|)
+argument_list|(
+argument|const MENU *menu
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|WINDOW
 modifier|*
@@ -1733,27 +1776,31 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  void _nc_New_TopRow_and_CurrentItem( |                            MENU *menu,  |                            int new_toprow,  |                            ITEM *new_current_item) |    |   Description   :  Redisplay the menu so that the given row becomes the |                    top row and the given item becomes the new current |                    item. | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_New_TopRow_and_CurrentItem
-parameter_list|(
-name|MENU
-modifier|*
-name|menu
-parameter_list|,
-name|int
-name|new_toprow
-parameter_list|,
-name|ITEM
-modifier|*
-name|new_current_item
-parameter_list|)
+argument_list|(
+argument|MENU *menu
+argument_list|,
+argument|int new_toprow
+argument_list|,
+argument|ITEM *new_current_item
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|ITEM
 modifier|*
@@ -1919,7 +1966,7 @@ name|new_current_item
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* m_global.c ends here */

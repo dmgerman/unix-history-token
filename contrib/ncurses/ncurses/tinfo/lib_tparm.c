@@ -38,7 +38,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tparm.c,v 1.47 2000/10/04 00:57:13 tom Exp $"
+literal|"$Id: lib_tparm.c,v 1.52 2001/03/11 15:12:48 tom Exp $"
 argument_list|)
 end_macro
 
@@ -78,6 +78,20 @@ name|stack_frame
 typedef|;
 end_typedef
 
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|_nc_tparm_err
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|stack_frame
@@ -92,6 +106,17 @@ begin_decl_stmt
 specifier|static
 name|int
 name|stack_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|tparam_base
+init|=
+literal|""
 decl_stmt|;
 end_decl_stmt
 
@@ -147,12 +172,21 @@ directive|if
 name|NO_LEAKS
 end_if
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_free_tparm
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -176,7 +210,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#
@@ -464,6 +498,26 @@ name|stack_ptr
 operator|++
 expr_stmt|;
 block|}
+else|else
+block|{
+name|DEBUG
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+literal|"npush: stack overflow: %s"
+operator|,
+name|_nc_visbuf
+argument_list|(
+name|tparam_base
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|_nc_tparm_err
+operator|++
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -512,6 +566,26 @@ operator|.
 name|num
 expr_stmt|;
 block|}
+else|else
+block|{
+name|DEBUG
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+literal|"npop: stack underflow: %s"
+operator|,
+name|_nc_visbuf
+argument_list|(
+name|tparam_base
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|_nc_tparm_err
+operator|++
+expr_stmt|;
+block|}
 return|return
 name|result
 return|;
@@ -557,6 +631,26 @@ operator|=
 name|x
 expr_stmt|;
 name|stack_ptr
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
+name|DEBUG
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+literal|"spush: stack overflow: %s"
+operator|,
+name|_nc_visbuf
+argument_list|(
+name|tparam_base
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|_nc_tparm_err
 operator|++
 expr_stmt|;
 block|}
@@ -628,6 +722,26 @@ operator|.
 name|data
 operator|.
 name|str
+expr_stmt|;
+block|}
+else|else
+block|{
+name|DEBUG
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+literal|"spop: stack underflow: %s"
+operator|,
+name|_nc_visbuf
+argument_list|(
+name|tparam_base
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|_nc_tparm_err
+operator|++
 expr_stmt|;
 block|}
 return|return
@@ -864,8 +978,11 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|s
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -1680,6 +1797,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|tparam_base
+operator|=
 name|string
 operator|++
 expr_stmt|;
@@ -2485,30 +2604,11 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* endwhile (*string) */
-if|if
-condition|(
-name|out_buff
-operator|==
-literal|0
-operator|&&
-operator|(
-name|out_buff
-operator|=
-name|typeCalloc
+name|get_space
 argument_list|(
-name|char
-argument_list|,
 literal|1
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+expr_stmt|;
 name|out_buff
 index|[
 name|out_used
@@ -2539,18 +2639,23 @@ return|;
 block|}
 end_function
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|tparm
-parameter_list|(
-name|NCURSES_CONST
-name|char
-modifier|*
-name|string
-parameter_list|,
-modifier|...
-parameter_list|)
+argument_list|(
+argument|NCURSES_CONST char *string
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|va_list
 name|ap
@@ -2559,6 +2664,10 @@ name|char
 modifier|*
 name|result
 decl_stmt|;
+name|_nc_tparm_err
+operator|=
+literal|0
+expr_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -2594,7 +2703,7 @@ return|return
 name|result
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

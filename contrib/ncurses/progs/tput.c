@@ -44,7 +44,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tput.c,v 1.24 2000/10/05 00:05:04 tom Exp $"
+literal|"$Id: tput.c,v 1.26 2001/03/24 21:59:48 tom Exp $"
 argument_list|)
 end_macro
 
@@ -246,6 +246,7 @@ specifier|static
 name|TParams
 name|tparm_type
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1707,8 +1708,11 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|cp
+argument_list|)
 argument_list|)
 condition|)
 operator|*

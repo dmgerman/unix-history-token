@@ -169,7 +169,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tset.c,v 0.47 2000/10/08 01:01:08 tom Exp $"
+literal|"$Id: tset.c,v 0.49 2001/02/24 23:29:33 tom Exp $"
 argument_list|)
 end_macro
 
@@ -292,7 +292,7 @@ name|LOWERCASE
 parameter_list|(
 name|c
 parameter_list|)
-value|((isalpha(c)&& isupper(c)) ? tolower(c) : (c))
+value|((isalpha(CharOf(c))&& isupper(CharOf(c))) ? tolower(CharOf(c)) : (c))
 end_define
 
 begin_function
@@ -498,8 +498,6 @@ name|int
 name|fd
 decl_stmt|,
 name|nr
-decl_stmt|,
-name|nw
 decl_stmt|;
 name|char
 name|buf
@@ -551,9 +549,6 @@ literal|0
 condition|)
 if|if
 condition|(
-operator|(
-name|nw
-operator|=
 name|write
 argument_list|(
 name|STDERR_FILENO
@@ -565,7 +560,6 @@ name|size_t
 operator|)
 name|nr
 argument_list|)
-operator|)
 operator|==
 operator|-
 literal|1
@@ -1988,8 +1982,6 @@ name|userarg
 parameter_list|)
 block|{
 name|int
-name|rval
-decl_stmt|,
 name|errret
 decl_stmt|;
 name|char
@@ -2187,8 +2179,11 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|s
+argument_list|)
 argument_list|)
 condition|)
 operator|*
@@ -2418,9 +2413,6 @@ block|}
 comment|/* Find the terminfo entry.  If it doesn't exist, ask the user. */
 while|while
 condition|(
-operator|(
-name|rval
-operator|=
 name|setupterm
 argument_list|(
 operator|(
@@ -2435,7 +2427,6 @@ argument_list|,
 operator|&
 name|errret
 argument_list|)
-operator|)
 operator|!=
 name|OK
 condition|)

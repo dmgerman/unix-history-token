@@ -4,19 +4,19 @@ comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** Thi
 end_comment
 
 begin_comment
-comment|/* $Id: tack.h,v 1.6 2000/03/04 21:10:07 tom Exp $ */
+comment|/* $Id: tack.h,v 1.8 2001/03/24 21:53:35 tom Exp $ */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_TACK_H
+name|NCURSES_TACK_H_incl
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_TACK_H
+name|NCURSES_TACK_H_incl
 value|1
 end_define
 
@@ -226,6 +226,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|CharOf
+parameter_list|(
+name|c
+parameter_list|)
+value|((unsigned char)(c))
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -2943,7 +2953,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _TACK_H */
+comment|/* NCURSES_TACK_H_incl */
 end_comment
 
 end_unit

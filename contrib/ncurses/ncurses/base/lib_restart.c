@@ -53,26 +53,29 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_restart.c,v 1.3 2000/09/02 18:09:44 tom Exp $"
+literal|"$Id: lib_restart.c,v 1.4 2000/12/10 01:26:52 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|restartterm
-parameter_list|(
-name|NCURSES_CONST
-name|char
-modifier|*
-name|termp
-parameter_list|,
-name|int
-name|filenum
-parameter_list|,
-name|int
-modifier|*
-name|errret
-parameter_list|)
+argument_list|(
+argument|NCURSES_CONST char *termp
+argument_list|,
+argument|int filenum
+argument_list|,
+argument|int *errret
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|saveecho
@@ -200,7 +203,7 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

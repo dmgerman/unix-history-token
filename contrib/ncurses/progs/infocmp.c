@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: infocmp.c,v 1.57 2000/10/01 01:26:25 tom Exp $"
+literal|"$Id: infocmp.c,v 1.60 2001/02/24 22:03:12 tom Exp $"
 argument_list|)
 end_macro
 
@@ -3514,13 +3514,6 @@ index|]
 decl_stmt|;
 name|ENTRY
 modifier|*
-name|tails
-index|[
-name|MAXCOMPARE
-index|]
-decl_stmt|;
-name|ENTRY
-modifier|*
 name|qp
 decl_stmt|,
 modifier|*
@@ -3716,13 +3709,6 @@ name|filecount
 index|]
 operator|=
 name|_nc_head
-expr_stmt|;
-name|tails
-index|[
-name|filecount
-index|]
-operator|=
-name|_nc_tail
 expr_stmt|;
 name|filecount
 operator|++
@@ -4910,8 +4896,11 @@ condition|(
 operator|!
 name|isalnum
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|s
+argument_list|)
 argument_list|)
 condition|)
 operator|*
@@ -5319,14 +5308,20 @@ if|if
 condition|(
 name|isascii
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|sp
+argument_list|)
 argument_list|)
 operator|&&
 name|isprint
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|sp
+argument_list|)
 argument_list|)
 operator|&&
 operator|*
@@ -5357,10 +5352,11 @@ name|tp
 argument_list|,
 literal|"\\%03o"
 argument_list|,
+name|CharOf
+argument_list|(
 operator|*
 name|sp
-operator|&
-literal|0xff
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|tp

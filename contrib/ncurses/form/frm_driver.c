@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: frm_driver.c,v 1.35 1999/05/16 17:20:52 juergen Exp $"
+literal|"$Id: frm_driver.c,v 1.38 2001/03/25 02:07:50 juergen Exp $"
 argument_list|)
 end_macro
 
@@ -1739,6 +1739,12 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|form
+operator|->
+name|w
+condition|)
 name|delwin
 argument_list|(
 name|form
@@ -1882,14 +1888,21 @@ begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int _nc_Position_Form_Cursor(FORM * form) |    |   Description   :  Position the cursor in the window for the current |                    field to be in sync. with the currow and curcol  |                    values. | |   Return Values :  E_OK              - success |                    E_BAD_ARGUMENT    - invalid form pointer |                    E_SYSTEM_ERROR    - form has no current field or |                                        field-window +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Position_Form_Cursor
-parameter_list|(
-name|FORM
-modifier|*
-name|form
-parameter_list|)
+argument_list|(
+argument|FORM * form
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|FIELD
 modifier|*
@@ -2012,20 +2025,27 @@ name|E_OK
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int _nc_Refresh_Current_Field(FORM * form) |    |   Description   :  Propagate the changes in the fields window to the |                    window of the form. | |   Return Values :  E_OK              - on success |                    E_BAD_ARGUMENT    - invalid form pointer |                    E_SYSTEM_ERROR    - general error +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Refresh_Current_Field
-parameter_list|(
-name|FORM
-modifier|*
-name|form
-parameter_list|)
+argument_list|(
+argument|FORM * form
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|WINDOW
 modifier|*
@@ -2481,7 +2501,7 @@ name|form
 argument_list|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static void Perform_Justification( |                                        FIELD  * field, |                                        WINDOW * win) |    |   Description   :  Output field with requested justification  | |   Return Values :  - +--------------------------------------------------------------------------*/
@@ -3309,14 +3329,21 @@ begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int _nc_Synchronize_Attributes(FIELD * field) |    |   Description   :  If a fields visual attributes have changed, this |                    routine is called to propagate those changes to the |                    screen.   | |   Return Values :  E_OK             - success |                    E_BAD_ARGUMENT   - invalid field pointer |                    E_SYSTEM_ERROR   - some severe basic error +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Synchronize_Attributes
-parameter_list|(
-name|FIELD
-modifier|*
-name|field
-parameter_list|)
+argument_list|(
+argument|FIELD * field
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|FORM
 modifier|*
@@ -3520,23 +3547,29 @@ name|res
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int _nc_Synchronize_Options(FIELD * field, |                                                Field_Options newopts) |    |   Description   :  If a fields options have changed, this routine is |                    called to propagate these changes to the screen and |                    to really change the behaviour of the field. | |   Return Values :  E_OK                - success |                    E_BAD_ARGUMENT      - invalid field pointer  |                    E_SYSTEM_ERROR      - some severe basic error +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Synchronize_Options
-parameter_list|(
-name|FIELD
-modifier|*
-name|field
-parameter_list|,
-name|Field_Options
-name|newopts
-parameter_list|)
+argument_list|(
+argument|FIELD *field
+argument_list|,
+argument|Field_Options newopts
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|Field_Options
 name|oldopts
@@ -3859,24 +3892,29 @@ name|res
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int _nc_Set_Current_Field(FORM  * form, |                                              FIELD * newfield) |    |   Description   :  Make the newfield the new current field. | |   Return Values :  E_OK                - success |                    E_BAD_ARGUMENT      - invalid form or field pointer  |                    E_SYSTEM_ERROR      - some severe basic error +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Set_Current_Field
-parameter_list|(
-name|FORM
-modifier|*
-name|form
-parameter_list|,
-name|FIELD
-modifier|*
-name|newfield
-parameter_list|)
+argument_list|(
+argument|FORM  *form
+argument_list|,
+argument|FIELD *newfield
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|FIELD
 modifier|*
@@ -4094,6 +4132,16 @@ operator|->
 name|w
 argument_list|)
 expr_stmt|;
+name|form
+operator|->
+name|w
+operator|=
+operator|(
+name|WINDOW
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 block|}
 name|field
 operator|=
@@ -4161,6 +4209,19 @@ operator|->
 name|current
 operator|=
 name|field
+expr_stmt|;
+if|if
+condition|(
+name|form
+operator|->
+name|w
+condition|)
+name|delwin
+argument_list|(
+name|form
+operator|->
+name|w
+argument_list|)
 expr_stmt|;
 name|form
 operator|->
@@ -4276,7 +4337,7 @@ name|E_OK
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_escape
 end_escape
@@ -9162,14 +9223,21 @@ begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  bool _nc_Internal_Validation(FORM * form ) |    |   Description   :  Validate the current field of the form.   | |   Return Values :  TRUE  - field is valid |                    FALSE - field is invalid +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|bool
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|bool
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Internal_Validation
-parameter_list|(
-name|FORM
-modifier|*
-name|form
-parameter_list|)
+argument_list|(
+argument|FORM *form
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|FIELD
 modifier|*
@@ -9256,7 +9324,7 @@ return|return
 name|TRUE
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*----------------------------------------------------------------------------   End of Helper routines for Field Validations.   --------------------------------------------------------------------------*/
@@ -9443,15 +9511,21 @@ begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  FIELD* _nc_First_Active_Field(FORM * form) |    |   Description   :  Get the first active field on the current page, |                    if there are such. If there are none, get the first |                    visible field on the page. If there are also none, |                    we return the first field on page and hope the best. | |   Return Values :  Pointer to calculated field. +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|FIELD
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|FIELD*
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_First_Active_Field
-parameter_list|(
-name|FORM
-modifier|*
-name|form
-parameter_list|)
+argument_list|(
+argument|FORM * form
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|FIELD
 modifier|*
@@ -9619,7 +9693,7 @@ name|proposed
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static FIELD *Previous_Field_On_Page(FIELD * field) |    |   Description   :  Get the previous field before the given field on the  |                    current page. The order of fields is the one defined by  |                    the fields array. Only visible and active fields are |                    counted. | |   Return Values :  Pointer to the previous field. +--------------------------------------------------------------------------*/
@@ -10709,21 +10783,25 @@ begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int _nc_Set_Form_Page(FORM * form, |                                          int page, |                                          FIELD * field) |    |   Description   :  Make the given page nr. the current page and make |                    the given field the current field on the page. If |                    for the field NULL is given, make the first field on |                    the page the current field. The routine acts only |                    if the requested page is not the current page. | |   Return Values :  E_OK                - success |                    != E_OK             - error from subordinate call +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_Set_Form_Page
-parameter_list|(
-name|FORM
-modifier|*
-name|form
-parameter_list|,
-name|int
-name|page
-parameter_list|,
-name|FIELD
-modifier|*
-name|field
-parameter_list|)
+argument_list|(
+argument|FORM * form
+argument_list|,
+argument|int page
+argument_list|,
+argument|FIELD * field
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|res
@@ -10851,7 +10929,7 @@ name|res
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  static int Next_Page_Number(const FORM * form) |    |   Description   :  Calculate the page number following the current page |                    number. This cycles if the highest page number is |                    reached.   | |   Return Values :  The next page number +--------------------------------------------------------------------------*/
@@ -12101,17 +12179,23 @@ begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int form_driver(FORM * form,int  c) |    |   Description   :  This is the workhorse of the forms system. It checks |                    to determine whether the character c is a request or |                    data. If it is a request, the form driver executes |                    the request and returns the result. If it is data |                    (printable character), it enters the data into the |                    current position in the current field. If it is not |                    recognized, the form driver assumes it is an application |                    defined command and returns E_UNKNOWN_COMMAND. |                    Application defined command should be defined relative |                    to MAX_FORM_COMMAND, the maximum value of a request. | |   Return Values :  E_OK              - success |                    E_SYSTEM_ERROR    - system error |                    E_BAD_ARGUMENT    - an argument is incorrect |                    E_NOT_POSTED      - form is not posted |                    E_INVALID_FIELD   - field contents are invalid |                    E_BAD_STATE       - called from inside a hook routine |                    E_REQUEST_DENIED  - request failed |                    E_UNKNOWN_COMMAND - command not known +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|form_driver
-parameter_list|(
-name|FORM
-modifier|*
-name|form
-parameter_list|,
-name|int
-name|c
-parameter_list|)
+argument_list|(
+argument|FORM * form
+argument_list|,
+argument|int  c
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|const
 name|Binding_Info
@@ -12497,7 +12581,7 @@ name|res
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_escape
 end_escape
@@ -12510,22 +12594,25 @@ begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int set_field_buffer(FIELD *field, |                                         int buffer, char *value) |    |   Description   :  Set the given buffer of the field to the given value. |                    Buffer 0 stores the displayed content of the field. |                    For dynamic fields this may grow the fieldbuffers if |                    the length of the value exceeds the current buffer |                    length. For buffer 0 only printable values are allowed. |                    For static fields, the value needs not to be zero ter- |                    minated. It is copied up to the length of the buffer.    | |   Return Values :  E_OK            - success |                    E_BAD_ARGUMENT  - invalid argument |                    E_SYSTEM_ERROR  - system error +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|set_field_buffer
-parameter_list|(
-name|FIELD
-modifier|*
-name|field
-parameter_list|,
-name|int
-name|buffer
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|value
-parameter_list|)
+argument_list|(
+argument|FIELD * field
+argument_list|,
+argument|int buffer
+argument_list|,
+argument|const char * value
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|char
 modifier|*
@@ -12736,6 +12823,10 @@ condition|(
 operator|!
 name|isprint
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|value
 index|[
 name|i
@@ -12987,25 +13078,29 @@ name|res
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  char *field_buffer(const FIELD *field,int buffer) |    |   Description   :  Return the address of the buffer for the field. | |   Return Values :  Pointer to buffer or NULL if arguments were invalid. +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|field_buffer
-parameter_list|(
-specifier|const
-name|FIELD
-modifier|*
-name|field
-parameter_list|,
-name|int
-name|buffer
-parameter_list|)
+argument_list|(
+argument|const FIELD * field
+argument_list|,
+argument|int  buffer
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -13042,7 +13137,7 @@ operator|)
 literal|0
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* frm_driver.c ends here */

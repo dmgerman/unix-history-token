@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: wresize.c,v 1.16 2000/03/05 00:14:35 tom Exp $"
+literal|"$Id: wresize.c,v 1.18 2000/12/10 02:43:28 tom Exp $"
 argument_list|)
 end_macro
 
@@ -62,20 +62,25 @@ parameter_list|)
 value|DOALLOC(p,chtype,n)
 end_define
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|wresize
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|int
-name|ToLines
-parameter_list|,
-name|int
-name|ToCols
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|int ToLines
+argument_list|,
+argument|int ToCols
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|int
@@ -852,7 +857,7 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -23,13 +23,12 @@ directive|include
 file|<tic.h>
 end_include
 
-begin_expr_stmt
+begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: home_terminfo.c,v 1.3 2000/10/04 02:31:53 tom Exp $"
+literal|"$Id: home_terminfo.c,v 1.6 2000/12/10 02:55:07 tom Exp $"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_define
 define|#
@@ -42,13 +41,21 @@ begin_comment
 comment|/* ncurses extension...fall back on user's private directory */
 end_comment
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_home_terminfo
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|char
 modifier|*
@@ -134,7 +141,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -26,26 +26,29 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_insstr.c,v 1.14 2000/04/29 21:16:41 tom Exp $"
+literal|"$Id: lib_insstr.c,v 1.17 2000/12/10 02:43:27 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|winsnstr
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|s
-parameter_list|,
-name|int
-name|n
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|const char *s
+argument_list|,
+argument|int n
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|code
@@ -213,6 +216,9 @@ name|winsch
 argument_list|(
 name|win
 argument_list|,
+operator|(
+name|chtype
+operator|)
 literal|'^'
 argument_list|)
 expr_stmt|;
@@ -291,7 +297,7 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

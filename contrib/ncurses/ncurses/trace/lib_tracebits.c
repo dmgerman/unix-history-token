@@ -26,7 +26,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tracebits.c,v 1.7 2000/09/02 18:08:37 tom Exp $"
+literal|"$Id: lib_tracebits.c,v 1.10 2001/03/24 21:58:23 tom Exp $"
 argument_list|)
 end_macro
 
@@ -300,14 +300,25 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_tracebits
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* describe the state of the terminal control bits exactly */
+end_comment
+
+begin_block
 block|{
 name|char
 modifier|*
@@ -698,6 +709,7 @@ block|{
 specifier|static
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -745,6 +757,7 @@ name|CS8
 block|}
 block|, 	}
 struct|;
+specifier|const
 name|char
 modifier|*
 name|result
@@ -1026,20 +1039,28 @@ name|buf
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_tracebits
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|static
 name|char
@@ -1052,7 +1073,7 @@ return|return
 name|tmp
 return|;
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#

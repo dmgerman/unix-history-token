@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: m_item_new.c,v 1.11 1999/05/16 17:28:49 juergen Exp $"
+literal|"$Id: m_item_new.c,v 1.12 2000/12/10 02:16:48 tom Exp $"
 argument_list|)
 end_macro
 
@@ -80,21 +80,23 @@ begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  ITEM *new_item(char *name, char *description) |    |   Description   :  Create a new item with name and description. Return |                    a pointer to this new item. |                    N.B.: an item must(!) have a name. | |   Return Values :  The item pointer or NULL if creation failed. +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|ITEM
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|ITEM *
+argument_list|)
+end_macro
+
+begin_macro
 name|new_item
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|description
-parameter_list|)
+argument_list|(
+argument|const char *name
+argument_list|,
+argument|const char *description
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|ITEM
 modifier|*
@@ -255,20 +257,27 @@ name|item
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  int free_item(ITEM *item) |    |   Description   :  Free the allocated storage for this item.  |                    N.B.: a connected item can't be freed. | |   Return Values :  E_OK              - success |                    E_BAD_ARGUMENT    - invalid value has been passed |                    E_CONNECTED       - item is still connected to a menu     +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|free_item
-parameter_list|(
-name|ITEM
-modifier|*
-name|item
-parameter_list|)
+argument_list|(
+argument|ITEM * item
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -302,25 +311,29 @@ name|E_OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  int set_menu_mark( MENU *menu, const char *mark ) |    |   Description   :  Set the mark string used to indicate the current |                    item (single-valued menu) or the selected items |                    (multi-valued menu). |                    The mark argument may be NULL, in which case no  |                    marker is used. |                    This might be a little bit tricky, because this may  |                    affect the geometry of the menu, which we don't allow  |                    if it is already posted. | |   Return Values :  E_OK               - success |                    E_BAD_ARGUMENT     - an invalid value has been passed |                    E_SYSTEM_ERROR     - no memory to store mark +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|set_menu_mark
-parameter_list|(
-name|MENU
-modifier|*
-name|menu
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|mark
-parameter_list|)
+argument_list|(
+argument|MENU * menu
+argument_list|,
+argument|const char * mark
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|l
@@ -543,23 +556,27 @@ name|E_OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  char *menu_mark(const MENU *menu) |    |   Description   :  Return a pointer to the marker string | |   Return Values :  The marker string pointer or NULL if no marker defined +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-specifier|const
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|const char *
+argument_list|)
+end_macro
+
+begin_macro
 name|menu_mark
-parameter_list|(
-specifier|const
-name|MENU
-modifier|*
-name|menu
-parameter_list|)
+argument_list|(
+argument|const MENU * menu
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 name|Normalize_Menu
@@ -570,7 +587,7 @@ operator|->
 name|mark
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* m_item_new.c */

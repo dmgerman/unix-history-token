@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fty_enum.c,v 1.13 2000/09/10 00:55:26 juergen Exp $"
+literal|"$Id: fty_enum.c,v 1.15 2000/12/09 23:46:12 tom Exp $"
 argument_list|)
 end_macro
 
@@ -163,9 +163,9 @@ name|kwds
 expr_stmt|;
 while|while
 condition|(
-operator|(
 name|kp
 operator|&&
+operator|(
 operator|*
 name|kp
 operator|++
@@ -1136,15 +1136,20 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|FIELDTYPE
-modifier|*
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|FIELDTYPE*
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|TYPE_ENUM
-init|=
+operator|=
 operator|&
 name|typeENUM
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* fty_enum.c ends here */

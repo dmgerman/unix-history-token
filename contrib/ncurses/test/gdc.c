@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Grand digital clock for curses compatible terminals  * Usage: gdc [-s] [n]   -- run for n seconds (default infinity)  * Flags: -s: scroll  *  * modified 10-18-89 for curses (jrl)  * 10-18-89 added signal handling  *  * $Id: gdc.c,v 1.15 2000/09/02 18:40:39 tom Exp $  */
+comment|/*  * Grand digital clock for curses compatible terminals  * Usage: gdc [-s] [n]   -- run for n seconds (default infinity)  * Flags: -s: scroll  *  * modified 10-18-89 for curses (jrl)  * 10-18-89 added signal handling  *  * $Id: gdc.c,v 1.16 2001/02/24 23:27:22 tom Exp $  */
 end_comment
 
 begin_include
@@ -486,12 +486,14 @@ name|t
 index|]
 operator|>>
 operator|(
+operator|(
 literal|4
 operator|-
 name|i
 operator|)
 operator|*
 literal|3
+operator|)
 operator|)
 operator|&
 literal|07
@@ -1483,6 +1485,7 @@ return|return
 name|EXIT_FAILURE
 return|;
 block|}
+comment|/* FALLTHRU */
 default|default:
 continue|continue;
 block|}

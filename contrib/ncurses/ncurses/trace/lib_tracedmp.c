@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tracedmp.c,v 1.13 1998/03/21 18:39:44 tom Exp $"
+literal|"$Id: lib_tracedmp.c,v 1.16 2000/12/10 03:02:45 tom Exp $"
 argument_list|)
 end_macro
 
@@ -30,19 +30,23 @@ directive|ifdef
 name|TRACE
 end_ifdef
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_tracedump
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|WINDOW
-modifier|*
-name|win
-parameter_list|)
+argument_list|(
+argument|const char *name
+argument_list|,
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -378,8 +382,8 @@ index|[
 name|j
 index|]
 operator|=
-operator|(
-operator|(
+name|CharOf
+argument_list|(
 name|win
 operator|->
 name|_line
@@ -393,10 +397,7 @@ name|j
 index|]
 operator|>>
 literal|8
-operator|)
-operator|&
-literal|0xff
-operator|)
+argument_list|)
 operator|+
 literal|' '
 expr_stmt|;
@@ -620,31 +621,43 @@ block|}
 block|}
 block|}
 block|}
-end_function
+end_block
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_function_decl
-specifier|extern
-name|void
-name|_nc_lib_tracedmp
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
 
-begin_function
-name|void
+begin_expr_stmt
+unit|)
 name|_nc_lib_tracedmp
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_lib_tracedmp
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{ }
-end_function
+end_block
 
 begin_endif
 endif|#

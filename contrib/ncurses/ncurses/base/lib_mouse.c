@@ -135,7 +135,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_mouse.c,v 1.55 2000/10/10 00:07:28 Ilya.Zakharevich Exp $"
+literal|"$Id: lib_mouse.c,v 1.57 2000/12/10 02:43:27 tom Exp $"
 argument_list|)
 end_macro
 
@@ -3523,15 +3523,25 @@ begin_comment
 comment|/**************************************************************************  *  * Mouse interface entry points for the API  *  **************************************************************************/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|getmouse
-parameter_list|(
-name|MEVENT
-modifier|*
-name|aevent
-parameter_list|)
+argument_list|(
+argument|MEVENT * aevent
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* grab a copy of the current mouse event */
+end_comment
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -3615,17 +3625,27 @@ name|ERR
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|ungetmouse
-parameter_list|(
-name|MEVENT
-modifier|*
-name|aevent
-parameter_list|)
+argument_list|(
+argument|MEVENT * aevent
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* enqueue a synthesized mouse event to be seen by the next wgetch() */
+end_comment
+
+begin_block
 block|{
 comment|/* stick the given event in the next-free slot */
 operator|*
@@ -3650,20 +3670,29 @@ name|KEY_MOUSE
 argument_list|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|mmask_t
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|mmask_t
+argument_list|)
+end_macro
+
+begin_macro
 name|mousemask
-parameter_list|(
-name|mmask_t
-name|newmask
-parameter_list|,
-name|mmask_t
-modifier|*
-name|oldmask
-parameter_list|)
+argument_list|(
+argument|mmask_t newmask
+argument_list|,
+argument|mmask_t * oldmask
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* set the mouse event mask */
+end_comment
+
+begin_block
 block|{
 name|mmask_t
 name|result
@@ -3776,24 +3805,31 @@ name|result
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|bool
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|bool
+argument_list|)
+end_macro
+
+begin_macro
 name|wenclose
-parameter_list|(
-specifier|const
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|int
-name|y
-parameter_list|,
-name|int
-name|x
-parameter_list|)
+argument_list|(
+argument|const WINDOW *win
+argument_list|,
+argument|int y
+argument_list|,
+argument|int x
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* check to see if given window encloses given screen location */
+end_comment
+
+begin_block
 block|{
 if|if
 condition|(
@@ -3856,16 +3892,27 @@ return|return
 name|FALSE
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|mouseinterval
-parameter_list|(
-name|int
-name|maxclick
-parameter_list|)
+argument_list|(
+argument|int maxclick
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* set the maximum mouse interval within which to recognize a click */
+end_comment
+
+begin_block
 block|{
 name|int
 name|oldval
@@ -3909,18 +3956,27 @@ name|oldval
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* This may be used by other routines to ask for the existence of mouse    support */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_has_mouse
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 operator|(
@@ -3934,28 +3990,29 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|bool
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|bool
+argument_list|)
+end_macro
+
+begin_macro
 name|wmouse_trafo
-parameter_list|(
-specifier|const
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|int
-modifier|*
-name|pY
-parameter_list|,
-name|int
-modifier|*
-name|pX
-parameter_list|,
-name|bool
-name|to_screen
-parameter_list|)
+argument_list|(
+argument|const WINDOW *win
+argument_list|,
+argument|int *pY
+argument_list|,
+argument|int *pX
+argument_list|,
+argument|bool to_screen
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|bool
 name|result
@@ -4081,7 +4138,7 @@ name|result
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* lib_mouse.c ends here */

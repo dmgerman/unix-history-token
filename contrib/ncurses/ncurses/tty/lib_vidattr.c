@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_vidattr.c,v 1.33 2000/10/09 22:45:29 tom Exp $"
+literal|"$Id: lib_vidattr.c,v 1.36 2000/12/10 03:05:48 tom Exp $"
 argument_list|)
 end_macro
 
@@ -83,22 +83,23 @@ define|\
 value|if (can_color&& (why)) { \ 		int old_pair = PAIR_NUMBER(old_attr); \ 		TR(TRACE_ATTRS, ("old pair = %d -- new pair = %d", old_pair, pair)); \ 		if ((pair != old_pair) \ 		 || (fix_pair0&& (pair == 0)) \ 		 || (reverse ^ ((old_attr& A_REVERSE) != 0))) { \ 			_nc_do_color(old_pair, pair, reverse, outc); \ 		} \ 	}
 end_define
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|vidputs
-parameter_list|(
-name|attr_t
-name|newmode
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|outc
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-parameter_list|)
+argument_list|(
+argument|attr_t newmode
+argument_list|,
+argument|int (*outc) (int)
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|static
 name|attr_t
@@ -258,20 +259,25 @@ operator|)
 condition|)
 block|{
 comment|/* 	 * If we had chosen the A_xxx definitions to correspond to the 	 * no_color_video mask, we could simply shift it up and mask off the 	 * attributes.  But we did not (actually copied Solaris' definitions). 	 * However, this is still simpler/faster than a lookup table. 	 * 	 * The 63 corresponds to A_STANDOUT, A_UNDERLINE, A_REVERSE, A_BLINK, 	 * A_DIM, A_BOLD which are 1:1 with no_color_video.  The bits that 	 * correspond to A_INVIS, A_PROTECT (192) must be shifted up 1 and 	 * A_ALTCHARSET (256) down 2 to line up.  We use the NCURSES_BITS 	 * macro so this will work properly for the wide-character layout. 	 */
+name|unsigned
+name|value
+init|=
+name|no_color_video
+decl_stmt|;
 name|attr_t
 name|mask
 init|=
 name|NCURSES_BITS
 argument_list|(
 operator|(
-name|no_color_video
+name|value
 operator|&
 literal|63
 operator|)
 operator||
 operator|(
 operator|(
-name|no_color_video
+name|value
 operator|&
 literal|192
 operator|)
@@ -281,7 +287,7 @@ operator|)
 operator||
 operator|(
 operator|(
-name|no_color_video
+name|value
 operator|&
 literal|256
 operator|)
@@ -294,13 +300,21 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|mask
 operator|&
 name|A_REVERSE
+operator|)
+operator|!=
+literal|0
 operator|&&
+operator|(
 name|newmode
 operator|&
 name|A_REVERSE
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|reverse
@@ -870,15 +884,23 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|vidattr
-parameter_list|(
-name|attr_t
-name|newmode
-parameter_list|)
+argument_list|(
+argument|attr_t newmode
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -906,14 +928,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|chtype
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|chtype
+argument_list|)
+end_macro
+
+begin_macro
 name|termattrs
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|chtype
 name|attrs
@@ -1018,7 +1049,7 @@ name|attrs
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: comp_scan.c,v 1.47 2000/09/24 01:15:17 tom Exp $"
+literal|"$Id: comp_scan.c,v 1.56 2001/04/21 18:53:34 tom Exp $"
 argument_list|)
 end_macro
 
@@ -63,71 +63,106 @@ parameter_list|)
 value|(ch == ' '  ||  ch == '\t')
 end_define
 
-begin_decl_stmt
-name|int
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_syntax
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* termcap or terminfo? */
 end_comment
 
-begin_decl_stmt
-name|long
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|long
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_curr_file_pos
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* file offset of current line */
 end_comment
 
-begin_decl_stmt
-name|long
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|long
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_comment_start
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* start of comment range before name */
 end_comment
 
-begin_decl_stmt
-name|long
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|long
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_comment_end
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* end of comment range before name */
 end_comment
 
-begin_decl_stmt
-name|long
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|long
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_start_line
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* start line of current entry */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|token
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|struct token
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_curr_token
-init|=
+operator|=
 block|{
 literal|0
 block|,
@@ -135,8 +170,8 @@ literal|0
 block|,
 literal|0
 block|}
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*****************************************************************************  *  * Token-grabbing machinery  *  *****************************************************************************/
@@ -193,13 +228,19 @@ directive|if
 name|NCURSES_EXT_FUNCS
 end_if
 
-begin_decl_stmt
-name|bool
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|bool
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_disable_period
-init|=
+operator|=
 name|FALSE
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* used by tic -a option */
@@ -308,12 +349,21 @@ begin_comment
 comment|/*  *	int  *	get_token()  *  *	Scans the input for the next token, storing the specifics in the  *	global structure 'curr_token' and returning one of the following:  *  *		NAMES		A line beginning in column 1.  'name'  *				will be set to point to everything up to but  *				not including the first separator on the line.  *		BOOLEAN		An entry consisting of a name followed by  *				a separator.  'name' will be set to point to  *				the name of the capability.  *		NUMBER		An entry of the form  *					name#digits,  *				'name' will be set to point to the capability  *				name and 'valnumber' to the number given.  *		STRING		An entry of the form  *					name=characters,  *				'name' is set to the capability name and  *				'valstring' to the string of characters, with  *				input translations done.  *		CANCEL		An entry of the form  *					name@,  *				'name' is set to the capability name and  *				'valnumber' to -1.  *		EOF		The end of the file has been reached.  *  *	A `separator' is either a comma or a semicolon, depending on whether  *	we are in termcap or terminfo mode.  *  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_get_token
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|bool silent
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|static
 specifier|const
@@ -579,6 +629,11 @@ name|ch
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|silent
+condition|)
 name|_nc_warning
 argument_list|(
 literal|"Illegal character (expected alphanumeric or %s) - %s"
@@ -587,6 +642,9 @@ name|terminfo_punct
 argument_list|,
 name|unctrl
 argument_list|(
+operator|(
+name|chtype
+operator|)
 name|ch
 argument_list|)
 argument_list|)
@@ -699,7 +757,7 @@ name|separator
 operator|=
 literal|','
 expr_stmt|;
-comment|/* 		     * Fall-through here is not an accident. 		     * The idea is that if we see a comma, we 		     * figure this is terminfo unless we 		     * subsequently run into a colon -- but 		     * we don't stop looking for that colon until 		     * hitting a newline.  This allows commas to 		     * be embedded in description fields of 		     * either syntax. 		     */
+comment|/* 		     * Fall-through here is not an accident.  The idea is that 		     * if we see a comma, we figure this is terminfo unless we 		     * subsequently run into a colon -- but we don't stop 		     * looking for that colon until hitting a newline.  This 		     * allows commas to be embedded in description fields of 		     * either syntax. 		     */
 comment|/* FALLTHRU */
 block|}
 else|else
@@ -731,7 +789,7 @@ operator|==
 name|ERR
 condition|)
 block|{
-comment|/* 		 * Grrr...what we ought to do here is barf, 		 * complaining that the entry is malformed. 		 * But because a couple of name fields in the 		 * 8.2 termcap file end with |\, we just have 		 * to assume it's termcap syntax. 		 */
+comment|/* 		 * Grrr...what we ought to do here is barf, complaining that 		 * the entry is malformed.  But because a couple of name fields 		 * in the 8.2 termcap file end with |\, we just have to assume 		 * it's termcap syntax. 		 */
 name|_nc_syntax
 operator|=
 name|SYN_TERMCAP
@@ -778,7 +836,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-comment|/* 	     * This is the soonest we have the terminal name 	     * fetched.  Set up for following warning messages. 	     */
+comment|/* 	     * This is the soonest we have the terminal name fetched.  Set up 	     * for following warning messages. 	     */
 name|ptr
 operator|=
 name|strchr
@@ -827,7 +885,7 @@ name|ptr
 operator|=
 name|ch
 expr_stmt|;
-comment|/* 	     * Compute the boundary between the aliases and the 	     * description field for syntax-checking purposes. 	     */
+comment|/* 	     * Compute the boundary between the aliases and the description 	     * field for syntax-checking purposes. 	     */
 name|desc
 operator|=
 name|strrchr
@@ -839,6 +897,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|silent
+operator|&&
 name|desc
 condition|)
 block|{
@@ -890,7 +951,7 @@ argument_list|(
 name|buffer
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Whitespace in a name field other than the long name 	     * can confuse rdist and some termcap tools.  Slashes 	     * are a no-no.  Other special characters can be 	     * dangerous due to shell expansion. 	     */
+comment|/* 	     * Whitespace in a name field other than the long name can confuse 	     * rdist and some termcap tools.  Slashes are a no-no.  Other 	     * special characters can be dangerous due to shell expansion. 	     */
 for|for
 control|(
 name|ptr
@@ -909,11 +970,19 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|ptr
 argument_list|)
+argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|silent
+condition|)
 name|_nc_warning
 argument_list|(
 literal|"whitespace in name or alias field"
@@ -930,6 +999,11 @@ operator|==
 literal|'/'
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|silent
+condition|)
 name|_nc_warning
 argument_list|(
 literal|"slashes aren't allowed in names or aliases"
@@ -949,6 +1023,11 @@ name|ptr
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|silent
+condition|)
 name|_nc_warning
 argument_list|(
 literal|"dubious character `%c' in name or alias field"
@@ -1086,6 +1165,9 @@ argument_list|()
 operator|)
 operator|!=
 name|separator
+operator|&&
+operator|!
+name|silent
 condition|)
 name|_nc_warning
 argument_list|(
@@ -1095,6 +1177,9 @@ name|buffer
 argument_list|,
 name|unctrl
 argument_list|(
+operator|(
+name|chtype
+operator|)
 name|ch
 argument_list|)
 argument_list|)
@@ -1170,6 +1255,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|silent
+condition|)
+block|{
+if|if
+condition|(
 name|numchk
 operator|==
 name|numbuf
@@ -1201,6 +1292,7 @@ argument_list|(
 literal|"Missing separator"
 argument_list|)
 expr_stmt|;
+block|}
 name|_nc_curr_token
 operator|.
 name|tk_name
@@ -1237,6 +1329,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|silent
+operator|&&
 name|ch
 operator|!=
 name|separator
@@ -1277,12 +1372,20 @@ name|type
 operator|=
 name|UNDEF
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|silent
+condition|)
 name|_nc_warning
 argument_list|(
 literal|"Illegal character - %s"
 argument_list|,
 name|unctrl
 argument_list|(
+operator|(
+name|chtype
+operator|)
 name|ch
 argument_list|)
 argument_list|)
@@ -1432,7 +1535,9 @@ comment|/* if commented out, use the next one */
 name|type
 operator|=
 name|_nc_get_token
-argument_list|()
+argument_list|(
+name|silent
+argument_list|)
 expr_stmt|;
 name|DEBUG
 argument_list|(
@@ -1444,6 +1549,14 @@ operator|,
 name|_nc_curr_token
 operator|.
 name|tk_name
+operator|!=
+literal|0
+condition|?
+name|_nc_curr_token
+operator|.
+name|tk_name
+else|:
+literal|"<null>"
 operator|,
 name|type
 operator|)
@@ -1455,24 +1568,29 @@ name|type
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  *	char  *	trans_string(ptr)  *  *	Reads characters using next_char() until encountering a separator, nl,  *	or end-of-file.  The returned value is the character which caused  *	reading to stop.  The following translations are done on the input:  *  *		^X  goes to  ctrl-X (i.e. X& 037)  *		{\E,\n,\r,\b,\t,\f}  go to  *			{ESCAPE,newline,carriage-return,backspace,tab,formfeed}  *		{\^,\\}  go to  {carat,backslash}  *		\ddd (for ddd = up to three octal digits)  goes to the character ddd  *  *		\e == \E  *		\0 == \200  *  */
 end_comment
 
-begin_function
-name|char
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_trans_string
-parameter_list|(
-name|char
-modifier|*
-name|ptr
-parameter_list|,
-name|char
-modifier|*
-name|last
-parameter_list|)
+argument_list|(
+argument|char *ptr
+argument_list|,
+argument|char *last
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|count
@@ -1481,6 +1599,8 @@ literal|0
 decl_stmt|;
 name|int
 name|number
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|i
@@ -2084,21 +2204,29 @@ name|ch
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  *	_nc_push_token()  *  *	Push a token of given type so that it will be reread by the next  *	get_token() call.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_push_token
-parameter_list|(
-name|int
-name|tokclass
-parameter_list|)
+argument_list|(
+argument|int tokclass
+argument_list|)
+end_macro
+
+begin_block
 block|{
-comment|/*      * This implementation is kind of bogus, it will fail if we ever do      * more than one pushback at a time between get_token() calls.  It      * relies on the fact that curr_tok is static storage that nothing      * but get_token() touches.      */
+comment|/*      * This implementation is kind of bogus, it will fail if we ever do more      * than one pushback at a time between get_token() calls.  It relies on the      * fact that curr_tok is static storage that nothing but get_token()      * touches.      */
 name|pushtype
 operator|=
 name|tokclass
@@ -2124,19 +2252,27 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Panic mode error recovery - skip everything until a "ch" is found.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_panic_mode
-parameter_list|(
-name|char
-name|ch
-parameter_list|)
+argument_list|(
+argument|char ch
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|c
@@ -2168,7 +2304,7 @@ condition|)
 return|return;
 block|}
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*****************************************************************************  *  * Character-stream handling  *  *****************************************************************************/
@@ -2221,18 +2357,23 @@ begin_comment
 comment|/*  *	_nc_reset_input()  *  *	Resets the input-reading routines.  Used on initialization,  *	or after a seek has been done.  Exactly one argument must be  *	non-null.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_reset_input
-parameter_list|(
-name|FILE
-modifier|*
-name|fp
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|)
+argument_list|(
+argument|FILE * fp
+argument_list|,
+argument|char *buf
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|pushtype
 operator|=
@@ -2274,7 +2415,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  *	int last_char()  *  *	Returns the final nonblank character on the current input buffer  */
@@ -2307,10 +2448,13 @@ condition|(
 operator|!
 name|isspace
 argument_list|(
+name|CharOf
+argument_list|(
 name|bufptr
 index|[
 name|len
 index|]
+argument_list|)
 argument_list|)
 condition|)
 return|return
@@ -2344,6 +2488,7 @@ operator|!
 name|yyin
 condition|)
 block|{
+comment|/* 	 * An string with an embedded null will truncate the input.  This is 	 * intentional (we don't read binary files here). 	 */
 if|if
 condition|(
 operator|*
@@ -2384,19 +2529,82 @@ operator|*
 name|bufptr
 condition|)
 block|{
-comment|/* 	 * In theory this could be recoded to do its I/O one 	 * character at a time, saving the buffer space.  In 	 * practice, this turns out to be quite hard to get 	 * completely right.  Try it and see.  If you succeed, 	 * don't forget to hack push_back() correspondingly. 	 */
+comment|/* 	 * In theory this could be recoded to do its I/O one character at a 	 * time, saving the buffer space.  In practice, this turns out to be 	 * quite hard to get completely right.  Try it and see.  If you 	 * succeed, don't forget to hack push_back() correspondingly. 	 */
 specifier|static
 name|char
-name|line
-index|[
-name|LEXBUFSIZ
-index|]
+modifier|*
+name|result
+decl_stmt|;
+specifier|static
+name|size_t
+name|allocated
+decl_stmt|;
+name|size_t
+name|used
 decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
 do|do
 block|{
+name|bufstart
+operator|=
+literal|0
+expr_stmt|;
+name|used
+operator|=
+literal|0
+expr_stmt|;
+do|do
+block|{
+if|if
+condition|(
+name|used
+operator|+
+operator|(
+name|LEXBUFSIZ
+operator|/
+literal|4
+operator|)
+operator|>=
+name|allocated
+condition|)
+block|{
+name|allocated
+operator|+=
+operator|(
+name|allocated
+operator|+
+name|LEXBUFSIZ
+operator|)
+expr_stmt|;
+name|result
+operator|=
+name|_nc_doalloc
+argument_list|(
+name|result
+argument_list|,
+name|allocated
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EOF
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|used
+operator|==
+literal|0
+condition|)
 name|_nc_curr_file_pos
 operator|=
 name|ftell
@@ -2406,20 +2614,31 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|bufstart
-operator|=
 name|fgets
 argument_list|(
-name|line
+name|result
+operator|+
+name|used
 argument_list|,
-name|LEXBUFSIZ
+name|allocated
+operator|-
+name|used
 argument_list|,
 name|yyin
 argument_list|)
-operator|)
 operator|!=
 name|NULL
+condition|)
+block|{
+name|bufstart
+operator|=
+name|result
+expr_stmt|;
+if|if
+condition|(
+name|used
+operator|==
+literal|0
 condition|)
 block|{
 name|_nc_curr_line
@@ -2430,41 +2649,41 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|used
+operator|!=
+literal|0
+condition|)
+name|strcat
+argument_list|(
+name|result
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
 name|bufptr
 operator|=
 name|bufstart
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|bufstart
-operator|!=
-name|NULL
-operator|&&
-name|line
-index|[
-literal|0
-index|]
-operator|==
-literal|'#'
-condition|)
-do|;
-if|if
-condition|(
-name|bufstart
-operator|==
-name|NULL
-operator|||
-operator|*
-name|bufstart
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|EOF
 operator|)
-return|;
+operator|!=
+literal|0
+condition|)
+block|{
+name|used
+operator|=
+name|strlen
+argument_list|(
+name|bufptr
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|iswhite
@@ -2476,7 +2695,7 @@ condition|)
 name|bufptr
 operator|++
 expr_stmt|;
-comment|/* 	 * Treat a trailing<cr><lf> the same as a<newline> so we can read 	 * files on OS/2, etc. 	 */
+comment|/* 		     * Treat a trailing<cr><lf> the same as a<newline> so we 		     * can read files on OS/2, etc. 		     */
 if|if
 condition|(
 operator|(
@@ -2533,14 +2752,18 @@ literal|'\0'
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If we don't have a trailing newline, it's because the line is simply 	 * too long.  Give up.  (FIXME:  We could instead reallocate the line 	 * buffer and allow arbitrary-length lines). 	 */
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-operator|||
+block|}
+else|else
+block|{
+return|return
 operator|(
+name|EOF
+operator|)
+return|;
+block|}
+block|}
+do|while
+condition|(
 name|bufptr
 index|[
 name|len
@@ -2549,13 +2772,21 @@ literal|1
 index|]
 operator|!=
 literal|'\n'
-operator|)
 condition|)
-return|return
-operator|(
-name|EOF
-operator|)
-return|;
+do|;
+comment|/* complete a line */
+block|}
+do|while
+condition|(
+name|result
+index|[
+literal|0
+index|]
+operator|==
+literal|'#'
+condition|)
+do|;
+comment|/* ignore comments */
 block|}
 name|first_column
 operator|=
@@ -2676,10 +2907,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* comp_scan.c ends here */
-end_comment
 
 end_unit
 

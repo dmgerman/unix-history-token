@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_color.c,v 1.53 2000/09/02 18:02:15 tom Exp $"
+literal|"$Id: lib_color.c,v 1.55 2000/12/10 02:43:27 tom Exp $"
 argument_list|)
 end_macro
 
@@ -40,21 +40,33 @@ begin_comment
 comment|/*  * These should be screen structure members.  They need to be globals for  * historical reasons.  So we assign them in start_color() and also in  * set_term()'s screen-switching logic.  */
 end_comment
 
-begin_decl_stmt
-name|int
-name|COLOR_PAIRS
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|int
+argument_list|)
+end_macro
 
-begin_decl_stmt
-name|int
-name|COLORS
-init|=
+begin_expr_stmt
+name|COLOR_PAIRS
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|COLORS
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Given a RGB range of 0..1000, we'll normally set the individual values  * to about 2/3 of the maximum, leaving full-range for bold/bright colors.  */
@@ -607,12 +619,21 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|start_color
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|n
@@ -930,7 +951,7 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* This function was originally written by Daniel Weaver<danw@znyx.com> */
@@ -1181,19 +1202,25 @@ begin_comment
 comment|/*  * Extension (1997/1/18) - Allow negative f/b values to set default color  * values.  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|init_pair
-parameter_list|(
-name|short
-name|pair
-parameter_list|,
-name|short
-name|f
-parameter_list|,
-name|short
-name|b
-parameter_list|)
+argument_list|(
+argument|short pair
+argument_list|,
+argument|short f
+argument_list|,
+argument|short b
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|unsigned
 name|result
@@ -1653,24 +1680,29 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|init_color
-parameter_list|(
-name|short
-name|color
-parameter_list|,
-name|short
-name|r
-parameter_list|,
-name|short
-name|g
-parameter_list|,
-name|short
-name|b
-parameter_list|)
+argument_list|(
+argument|short color
+argument_list|,
+argument|short r
+argument_list|,
+argument|short g
+argument_list|,
+argument|short b
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -1859,14 +1891,23 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|bool
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|bool
+argument_list|)
+end_macro
+
+begin_macro
 name|can_change_color
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -1892,14 +1933,23 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|bool
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|bool
+argument_list|)
+end_macro
+
+begin_macro
 name|has_colors
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -1963,27 +2013,29 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|color_content
-parameter_list|(
-name|short
-name|color
-parameter_list|,
-name|short
-modifier|*
-name|r
-parameter_list|,
-name|short
-modifier|*
-name|g
-parameter_list|,
-name|short
-modifier|*
-name|b
-parameter_list|)
+argument_list|(
+argument|short color
+argument_list|,
+argument|short *r
+argument_list|,
+argument|short *g
+argument_list|,
+argument|short *b
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -2072,23 +2124,27 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|pair_content
-parameter_list|(
-name|short
-name|pair
-parameter_list|,
-name|short
-modifier|*
-name|f
-parameter_list|,
-name|short
-modifier|*
-name|b
-parameter_list|)
+argument_list|(
+argument|short pair
+argument_list|,
+argument|short *f
+argument_list|,
+argument|short *b
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -2171,30 +2227,29 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_do_color
-parameter_list|(
-name|int
-name|old_pair
-parameter_list|,
-name|int
-name|pair
-parameter_list|,
-name|bool
-name|reverse
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|outc
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-parameter_list|)
+argument_list|(
+argument|int old_pair
+argument_list|,
+argument|int pair
+argument_list|,
+argument|bool reverse
+argument_list|,
+argument|int (*outc) (int)
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|NCURSES_COLOR_T
 name|fg
@@ -2491,7 +2546,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 end_unit
 

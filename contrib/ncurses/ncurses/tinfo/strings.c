@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id"
+literal|"$Id: strings.c,v 1.3 2000/12/10 02:55:08 tom Exp $"
 argument_list|)
 end_macro
 
@@ -35,21 +35,23 @@ operator|!
 name|HAVE_STRSTR
 end_if
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_strstr
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|haystack
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|needle
-parameter_list|)
+argument_list|(
+argument|const char *haystack
+argument_list|,
+argument|const char *needle
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|size_t
 name|len1
@@ -116,7 +118,7 @@ return|return
 name|result
 return|;
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#
@@ -127,22 +129,25 @@ begin_comment
 comment|/*  * Initialize the descriptor so we can append to it.  */
 end_comment
 
-begin_function
-name|string_desc
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|string_desc *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_str_init
-parameter_list|(
-name|string_desc
-modifier|*
-name|dst
-parameter_list|,
-name|char
-modifier|*
-name|src
-parameter_list|,
-name|size_t
-name|len
-parameter_list|)
+argument_list|(
+argument|string_desc * dst
+argument_list|,
+argument|char *src
+argument_list|,
+argument|size_t len
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -187,24 +192,29 @@ return|return
 name|dst
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Initialize the descriptor for only tracking the amount of memory used.  */
 end_comment
 
-begin_function
-name|string_desc
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|string_desc *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_str_null
-parameter_list|(
-name|string_desc
-modifier|*
-name|dst
-parameter_list|,
-name|size_t
-name|len
-parameter_list|)
+argument_list|(
+argument|string_desc * dst
+argument_list|,
+argument|size_t len
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 name|_nc_str_init
@@ -217,25 +227,29 @@ name|len
 argument_list|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Copy a descriptor  */
 end_comment
 
-begin_function
-name|string_desc
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|string_desc *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_str_copy
-parameter_list|(
-name|string_desc
-modifier|*
-name|dst
-parameter_list|,
-name|string_desc
-modifier|*
-name|src
-parameter_list|)
+argument_list|(
+argument|string_desc * dst
+argument_list|,
+argument|string_desc * src
+argument_list|)
+end_macro
+
+begin_block
 block|{
 operator|*
 name|dst
@@ -247,25 +261,29 @@ return|return
 name|dst
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Replaces strcat into a fixed buffer, returning false on failure.  */
 end_comment
 
-begin_function
-name|bool
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|bool
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_safe_strcat
-parameter_list|(
-name|string_desc
-modifier|*
-name|dst
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|src
-parameter_list|)
+argument_list|(
+argument|string_desc * dst
+argument_list|,
+argument|const char *src
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -331,25 +349,29 @@ return|return
 name|FALSE
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Replaces strcpy into a fixed buffer, returning false on failure.  */
 end_comment
 
-begin_function
-name|bool
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|bool
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_safe_strcpy
-parameter_list|(
-name|string_desc
-modifier|*
-name|dst
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|src
-parameter_list|)
+argument_list|(
+argument|string_desc * dst
+argument_list|,
+argument|const char *src
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -419,7 +441,7 @@ return|return
 name|FALSE
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

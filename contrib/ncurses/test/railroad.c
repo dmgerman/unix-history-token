@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Author: Thomas E. Dickey<dickey@clark.net> 2000  *  * $Id: railroad.c,v 1.3 2000/09/24 00:20:33 tom Exp $  *  * A simple demo of the termcap interface.  */
+comment|/*  * Author: Thomas E. Dickey<dickey@clark.net> 2000  *  * $Id: railroad.c,v 1.5 2001/03/24 22:01:42 tom Exp $  *  * A simple demo of the termcap interface.  */
 end_comment
 
 begin_include
@@ -425,10 +425,10 @@ name|first
 operator|=
 name|length
 operator|-
-literal|1
+literal|2
 init|;
 name|first
-operator|>
+operator|>=
 operator|(
 name|string
 operator|-
@@ -983,12 +983,19 @@ else|else
 block|{
 specifier|static
 name|char
+name|world
+index|[]
+init|=
+literal|"Hello World"
+decl_stmt|;
+specifier|static
+name|char
 modifier|*
 name|hello
 index|[]
 init|=
 block|{
-literal|"Hello World"
+name|world
 block|,
 literal|0
 block|}

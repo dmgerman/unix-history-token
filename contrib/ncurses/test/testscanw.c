@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gleaned from a web-search, shows a bug combining scanw and implicit scroll.  * Date:  1997/03/17  * From:  bayern@morpheus.cis.yale.edu  *  * $Id: testscanw.c,v 1.5 1997/09/20 14:16:20 tom Exp $  */
+comment|/* gleaned from a web-search, shows a bug combining scanw and implicit scroll.  * Date:  1997/03/17  * From:  bayern@morpheus.cis.yale.edu  *  * $Id: testscanw.c,v 1.6 2000/11/04 23:32:56 tom Exp $  */
 end_comment
 
 begin_include
@@ -63,7 +63,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|trace(TRACE_UPDATE|TRACE_CALLS);
+block|trace(TRACE_UPDATE | TRACE_CALLS);
 endif|#
 directive|endif
 while|while
@@ -77,11 +77,14 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|argv
 index|[
 literal|1
 index|]
+argument_list|)
 argument_list|)
 condition|)
 name|move

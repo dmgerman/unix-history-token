@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: ansi.c,v 1.5 2000/04/22 21:06:57 tom Exp $"
+literal|"$Id: ansi.c,v 1.8 2001/03/24 22:00:27 tom Exp $"
 argument_list|)
 end_macro
 
@@ -813,6 +813,10 @@ argument_list|)
 expr_stmt|;
 name|read_key
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|ansi_buf
 argument_list|,
 sizeof|sizeof
@@ -1004,6 +1008,7 @@ name|int
 name|expected
 parameter_list|)
 block|{
+name|unsigned
 name|char
 modifier|*
 name|s
@@ -1022,12 +1027,13 @@ literal|0
 expr_stmt|;
 name|ch
 operator|=
+name|CharOf
+argument_list|(
 name|pack_buf
 index|[
 literal|0
 index|]
-operator|&
-literal|0xff
+argument_list|)
 expr_stmt|;
 name|ansi_value
 index|[
@@ -1217,6 +1223,11 @@ decl_stmt|;
 name|char
 modifier|*
 name|s
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|t
 decl_stmt|;
 name|lc
 operator|=
@@ -1466,12 +1477,13 @@ break|break;
 block|}
 name|j
 operator|=
+name|CharOf
+argument_list|(
 name|pack_buf
 index|[
 literal|0
 index|]
-operator|&
-literal|0xff
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1487,13 +1499,13 @@ block|{
 name|put_crlf
 argument_list|()
 expr_stmt|;
-name|s
+name|t
 operator|=
 literal|"*** The above request gives illegal response ***"
 expr_stmt|;
 name|ptext
 argument_list|(
-name|s
+name|t
 argument_list|)
 expr_stmt|;
 for|for
@@ -1502,7 +1514,7 @@ name|j
 operator|=
 name|strlen
 argument_list|(
-name|s
+name|t
 argument_list|)
 init|;
 name|j
@@ -1522,6 +1534,11 @@ name|s
 operator|=
 name|expand
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|ansi_buf
 argument_list|)
 expr_stmt|;
@@ -1885,15 +1902,16 @@ init|;
 operator|(
 name|ch
 operator|=
-operator|(
+name|CharOf
+argument_list|(
 name|ansi_buf
 index|[
 name|k
 index|]
-operator|&
-literal|0xff
+argument_list|)
 operator|)
-operator|)
+operator|!=
+literal|0
 condition|;
 name|k
 operator|++
@@ -1928,6 +1946,11 @@ name|s
 operator|=
 name|expand
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 operator|&
 name|ansi_buf
 index|[
@@ -2519,6 +2542,11 @@ name|s
 operator|=
 name|expand
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|ansi_buf
 argument_list|)
 expr_stmt|;

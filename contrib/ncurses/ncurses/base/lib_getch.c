@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_getch.c,v 1.50 2000/10/09 23:53:57 Ilya.Zakharevich Exp $"
+literal|"$Id: lib_getch.c,v 1.54 2000/12/10 02:43:27 tom Exp $"
 argument_list|)
 end_macro
 
@@ -30,13 +30,19 @@ directive|include
 file|<fifo_defs.h>
 end_include
 
-begin_decl_stmt
-name|int
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|ESCDELAY
-init|=
+operator|=
 literal|1000
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* max interval betw. chars in funkeys, in millisecs */
@@ -166,7 +172,6 @@ block|{
 name|int
 name|n
 decl_stmt|;
-name|unsigned
 name|int
 name|ch
 decl_stmt|;
@@ -270,9 +275,10 @@ argument_list|)
 expr_stmt|;
 name|ch
 operator|=
+name|CharOf
+argument_list|(
 name|c2
-operator|&
-literal|0xff
+argument_list|)
 expr_stmt|;
 block|}
 ifdef|#
@@ -476,14 +482,21 @@ parameter_list|)
 value|(\ 	(is_wintouched(win) || (win->_flags& _HASMOVED)) \&& !(win->_flags& _ISPAD))
 end_define
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|wgetch
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|ch
@@ -1046,7 +1059,7 @@ name|ch
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* **      int **      kgetch() ** **      Get an input character, but take care of keypad sequences, returning **      an appropriate code when one matches the input.  After each character **      is received, set an alarm call based on ESCDELAY.  If no more of the **      sequence is received by the time the alarm goes off, pass through **      the sequence gotten so far. ** **	This function must be called when there is no cooked keys in queue. **	(that is head==-1 || peek==head) ** */

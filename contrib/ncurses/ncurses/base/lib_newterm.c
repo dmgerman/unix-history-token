@@ -59,7 +59,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_newterm.c,v 1.48 2000/09/02 18:11:42 tom Exp $"
+literal|"$Id: lib_newterm.c,v 1.50 2000/12/10 02:43:27 tom Exp $"
 argument_list|)
 end_macro
 
@@ -187,38 +187,48 @@ name|FALSE
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|filter
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|filter_mode
 operator|=
 name|TRUE
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|SCREEN
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|SCREEN *
+argument_list|)
+end_macro
+
+begin_macro
 name|newterm
-parameter_list|(
-name|NCURSES_CONST
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|FILE
-modifier|*
-name|ofp
-parameter_list|,
-name|FILE
-modifier|*
-name|ifp
-parameter_list|)
+argument_list|(
+argument|NCURSES_CONST char *name
+argument_list|,
+argument|FILE * ofp
+argument_list|,
+argument|FILE * ifp
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|errret
@@ -711,7 +721,7 @@ name|SP
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

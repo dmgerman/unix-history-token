@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $Id: tic.h,v 1.35 2000/09/09 19:47:16 tom Exp $  *	tic.h - Global variables and structures for the terminfo  *			compiler.  */
+comment|/*  * $Id: tic.h,v 1.38 2001/03/11 15:12:08 tom Exp $  *	tic.h - Global variables and structures for the terminfo  *			compiler.  */
 end_comment
 
 begin_ifndef
@@ -126,41 +126,50 @@ parameter_list|)
 comment|/*nothing*/
 endif|#
 directive|endif
-specifier|extern
-name|unsigned
-name|_nc_tracing
-decl_stmt|;
-specifier|extern
-name|void
-name|_nc_tracef
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|GCC_PRINTFLIKE
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
+extern|extern NCURSES_EXPORT_VAR(unsigned
 block|)
-empty_stmt|;
+name|_nc_tracing
+expr_stmt|;
 end_extern
 
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_macro
+unit|)
+name|_nc_tracef
+argument_list|(
+argument|char *
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|GCC_PRINTFLIKE
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(const char *
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_visbuf
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * These are the types of tokens returned by the scanner.  The first  * three are also used in the hash table of capability names.  The scanner  * returns one of these values after loading the specifics into the global  * structure curr_token.  */
@@ -269,13 +278,15 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|token
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(struct token
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_curr_token
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* 	 * List of keynames with their corresponding code. 	 */
@@ -297,15 +308,16 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|kn
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(const struct kn
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_key_names
 index|[]
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* 	 * Offsets to string capabilities, with the corresponding functionkey 	 * codes. 	 */
@@ -338,31 +350,34 @@ name|_nc_tinfo_fkeys
 value|_nc_tinfo_fkeysf()
 end_define
 
-begin_function_decl
-specifier|extern
-name|struct
-name|tinfo_fkeys
-modifier|*
+begin_extern
+extern|extern NCURSES_EXPORT(struct tinfo_fkeys *
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tinfo_fkeysf
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|tinfo_fkeys
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(struct tinfo_fkeys
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tinfo_fkeys
 index|[]
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -422,77 +437,85 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|name_table_entry
-modifier|*
-specifier|const
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(int
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_tparm_err
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(const struct name_table_entry * const
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_info_hash_table
 index|[]
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|name_table_entry
-modifier|*
-specifier|const
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(const struct name_table_entry * const
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_cap_hash_table
 index|[]
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|alias
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(const struct alias
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_capalias_table
 index|[]
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|alias
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(const struct alias
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_infoalias_table
 index|[]
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-specifier|const
-name|struct
-name|name_table_entry
-modifier|*
+begin_extern
+extern|extern NCURSES_EXPORT(const struct name_table_entry *
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_get_table
-parameter_list|(
+argument_list|(
 name|bool
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-specifier|const
-name|struct
-name|name_table_entry
-modifier|*
-specifier|const
-modifier|*
+begin_extern
+extern|extern NCURSES_EXPORT(const struct name_table_entry * const *
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_get_hash_table
-parameter_list|(
+argument_list|(
 name|bool
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -625,155 +648,197 @@ begin_comment
 comment|/* access.c */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
+begin_extern
+extern|extern NCURSES_EXPORT(char *
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_basename
-parameter_list|(
+argument_list|(
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* comp_hash.c: name lookup */
 end_comment
 
-begin_function_decl
-name|struct
-name|name_table_entry
-specifier|const
-modifier|*
-name|_nc_find_entry
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|name_table_entry
-modifier|*
-specifier|const
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_extern
+extern|extern NCURSES_EXPORT(struct name_table_entry const *
+end_extern
 
-begin_function_decl
-name|struct
-name|name_table_entry
-specifier|const
-modifier|*
-name|_nc_find_type_entry
-parameter_list|(
+begin_expr_stmt
+unit|)
+name|_nc_find_entry
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
+operator|*
+argument_list|,
 specifier|const
-name|struct
+expr|struct
 name|name_table_entry
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+specifier|const
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(struct name_table_entry const *
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_find_type_entry
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|int
+argument_list|,
+specifier|const
+expr|struct
+name|name_table_entry
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* comp_scan.c: lexical analysis */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|int
+begin_extern
+extern|extern NCURSES_EXPORT(int
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_get_token
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|bool
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|void
-name|_nc_push_token
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
 
-begin_function_decl
-specifier|extern
-name|void
-name|_nc_reset_input
-parameter_list|(
-name|FILE
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
+begin_expr_stmt
+unit|)
 name|_nc_panic_mode
-parameter_list|(
+argument_list|(
 name|char
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|_nc_curr_line
-decl_stmt|;
-end_decl_stmt
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+unit|)
+name|_nc_push_token
+argument_list|(
 name|int
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_reset_input
+argument_list|(
+name|FILE
+operator|*
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(int
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_curr_col
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|long
-name|_nc_curr_file_pos
-decl_stmt|;
-end_decl_stmt
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(int
+end_extern
 
-begin_decl_stmt
-specifier|extern
-name|long
-name|_nc_comment_start
-decl_stmt|,
-name|_nc_comment_end
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+unit|)
+name|_nc_curr_line
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(int
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_syntax
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|long
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(long
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_comment_end
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(long
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_comment_start
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(long
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_curr_file_pos
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(long
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_start_line
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -793,214 +858,250 @@ begin_comment
 comment|/* comp_error.c: warning& abort messages */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_set_source
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
+operator|*
 specifier|const
 name|name
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|void
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_get_type
-parameter_list|(
+argument_list|(
 name|char
-modifier|*
+operator|*
 name|name
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|void
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_set_type
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
+operator|*
 specifier|const
 name|name
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|void
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_macro
+unit|)
 name|_nc_syserr_abort
 argument_list|(
-specifier|const
-name|char
-operator|*
-specifier|const
+argument|const char *const
 argument_list|,
-operator|...
+argument|...
 argument_list|)
+end_macro
+
+begin_macro
 name|GCC_PRINTFLIKE
 argument_list|(
 literal|1
 argument_list|,
 literal|2
 argument_list|)
-name|GCC_NORETURN
-decl_stmt|;
-end_decl_stmt
+end_macro
 
-begin_decl_stmt
-specifier|extern
-name|void
+begin_expr_stmt
+name|GCC_NORETURN
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
+
+begin_macro
+unit|)
 name|_nc_err_abort
 argument_list|(
-specifier|const
-name|char
-operator|*
-specifier|const
+argument|const char *const
 argument_list|,
-operator|...
+argument|...
 argument_list|)
+end_macro
+
+begin_macro
 name|GCC_PRINTFLIKE
 argument_list|(
 literal|1
 argument_list|,
 literal|2
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|GCC_NORETURN
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
-begin_function_decl
-specifier|extern
-name|void
-name|_nc_warning
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-specifier|const
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|GCC_PRINTFLIKE
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
-end_function_decl
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
 
-begin_empty_stmt
+begin_macro
 unit|)
-empty_stmt|;
-end_empty_stmt
+name|_nc_warning
+argument_list|(
+argument|const char *const
+argument_list|,
+argument|...
+argument_list|)
+end_macro
 
-begin_decl_stmt
-specifier|extern
-name|bool
+begin_expr_stmt
+name|GCC_PRINTFLIKE
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(bool
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_suppress_warnings
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* comp_expand.c: expand string into readable form */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
+begin_extern
+extern|extern NCURSES_EXPORT(char *
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tic_expand
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|bool
-parameter_list|,
+argument_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* comp_scan.c: decode string from readable form */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|char
+begin_extern
+extern|extern NCURSES_EXPORT(char
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_trans_string
-parameter_list|(
+argument_list|(
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* captoinfo.c: capability conversion */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|_nc_captoinfo
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-specifier|const
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_extern
+extern|extern NCURSES_EXPORT(char *
+end_extern
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|_nc_infotocap
-parameter_list|(
+begin_expr_stmt
+unit|)
+name|_nc_captoinfo
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|int
 specifier|const
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(char *
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_infotocap
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|int
+specifier|const
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* lib_tputs.c */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
+begin_extern
+extern|extern NCURSES_EXPORT_VAR(int
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_nulls_sent
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Add one for every null sent */
@@ -1023,33 +1124,37 @@ begin_comment
 comment|/* read_entry.c */
 end_comment
 
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
+begin_extern
+extern|extern NCURSES_EXPORT(const char *
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tic_dir
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* write_entry.c */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|int
+begin_extern
+extern|extern NCURSES_EXPORT(int
+end_extern
+
+begin_expr_stmt
+unit|)
 name|_nc_tic_written
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#

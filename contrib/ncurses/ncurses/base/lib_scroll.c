@@ -20,33 +20,33 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_scroll.c,v 1.17 2000/04/29 21:10:51 tom Exp $"
+literal|"$Id: lib_scroll.c,v 1.20 2000/12/10 02:54:03 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_scroll_window
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|int
-specifier|const
-name|n
-parameter_list|,
-name|NCURSES_SIZE_T
-specifier|const
-name|top
-parameter_list|,
-name|NCURSES_SIZE_T
-specifier|const
-name|bottom
-parameter_list|,
-name|chtype
-name|blank
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|int const n
+argument_list|,
+argument|NCURSES_SIZE_T const top
+argument_list|,
+argument|NCURSES_SIZE_T const bottom
+argument_list|,
+argument|chtype blank
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|line
@@ -374,19 +374,25 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|wscrl
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-name|int
-name|n
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|int n
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -495,7 +501,7 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

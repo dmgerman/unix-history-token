@@ -20,27 +20,29 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_addstr.c,v 1.18 2000/07/29 16:42:41 tom Exp $"
+literal|"$Id: lib_addstr.c,v 1.19 2000/12/10 01:24:50 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|waddnstr
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|astr
-parameter_list|,
-name|int
-name|n
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|const char *const astr
+argument_list|,
+argument|int n
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|unsigned
 specifier|const
@@ -214,25 +216,27 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|waddchnstr
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|,
-specifier|const
-name|chtype
-modifier|*
-specifier|const
-name|astr
-parameter_list|,
-name|int
-name|n
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|const chtype * const astr
+argument_list|,
+argument|int n
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|NCURSES_SIZE_T
 name|y
@@ -411,7 +415,7 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

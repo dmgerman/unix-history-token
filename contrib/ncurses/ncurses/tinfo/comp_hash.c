@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -59,7 +59,7 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/*nothing*/
+comment|/*nothing */
 end_comment
 
 begin_endif
@@ -70,7 +70,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: comp_hash.c,v 1.21 1999/06/26 21:25:11 tom Exp $"
+literal|"$Id: comp_hash.c,v 1.24 2000/12/10 02:55:07 tom Exp $"
 argument_list|)
 end_macro
 
@@ -112,7 +112,7 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/*nothing*/
+comment|/*nothing */
 end_comment
 
 begin_include
@@ -349,26 +349,23 @@ directive|ifndef
 name|MAIN_PROGRAM
 end_ifndef
 
-begin_function
-name|struct
-name|name_table_entry
-specifier|const
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|struct name_table_entry const *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_find_entry
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|string
-parameter_list|,
-specifier|const
-name|struct
-name|name_table_entry
-modifier|*
-specifier|const
-modifier|*
-name|hash_table
-parameter_list|)
+argument_list|(
+argument|const char *string
+argument_list|,
+argument|const struct name_table_entry *const *hash_table
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|hashvalue
@@ -444,33 +441,31 @@ name|ptr
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  *	struct name_table_entry *  *	find_type_entry(string, type, table)  *  *	Finds the first entry for the given name with the given type in the  *	given table if present (as distinct from find_entry, which finds the  *	the last entry regardless of type).  You can use this if you detect  *	a name clash.  It's slower, though.  Returns a pointer to the entry  *	in the table or 0 if not found.  */
 end_comment
 
-begin_function
-name|struct
-name|name_table_entry
-specifier|const
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|struct name_table_entry const *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_find_type_entry
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|string
-parameter_list|,
-name|int
-name|type
-parameter_list|,
-specifier|const
-name|struct
-name|name_table_entry
-modifier|*
-name|table
-parameter_list|)
+argument_list|(
+argument|const char *string
+argument_list|,
+argument|int type
+argument_list|,
+argument|const struct name_table_entry *table
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|struct
 name|name_table_entry
@@ -530,7 +525,7 @@ name|NULL
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#
@@ -642,14 +637,17 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|s
+argument_list|)
 argument_list|)
 condition|;
 name|s
 operator|++
 control|)
-comment|/*EMPTY*/
+comment|/*EMPTY */
 empty_stmt|;
 if|if
 condition|(
@@ -735,11 +733,14 @@ name|s
 operator|&&
 name|isspace
 argument_list|(
+name|CharOf
+argument_list|(
 operator|*
 name|s
 argument_list|)
+argument_list|)
 condition|)
-comment|/*EMPTY*/
+comment|/*EMPTY */
 empty_stmt|;
 name|buffer
 operator|=
@@ -852,7 +853,7 @@ name|StrCount
 init|=
 literal|0
 decl_stmt|;
-comment|/* The first argument is the column-number (starting with 0). 	 * The second is the root name of the tables to generate. 	 */
+comment|/* The first argument is the column-number (starting with 0).      * The second is the root name of the tables to generate.      */
 if|if
 condition|(
 name|argc
@@ -905,7 +906,7 @@ name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Read the table into our arrays. 	 */
+comment|/*      * Read the table into our arrays.      */
 for|for
 control|(
 name|n
@@ -1129,7 +1130,7 @@ argument_list|,
 name|hash_table
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Write the compiled tables to standard output 	 */
+comment|/*      * Write the compiled tables to standard output      */
 name|printf
 argument_list|(
 literal|"static struct name_table_entry const _nc_%s_table[] =\n"

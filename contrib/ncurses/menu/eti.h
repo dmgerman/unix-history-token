@@ -10,13 +10,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ETI_ERRNO_H_
+name|NCURSES_ETI_H_incl
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_ETI_ERRNO_H_
+name|NCURSES_ETI_H_incl
+value|1
 end_define
 
 begin_define

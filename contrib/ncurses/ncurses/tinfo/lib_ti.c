@@ -28,19 +28,25 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_ti.c,v 1.20 2000/02/13 01:01:26 tom Exp $"
+literal|"$Id: lib_ti.c,v 1.22 2000/12/10 02:55:08 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|tigetflag
-parameter_list|(
-name|NCURSES_CONST
-name|char
-modifier|*
-name|str
-parameter_list|)
+argument_list|(
+argument|NCURSES_CONST char *str
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -127,17 +133,23 @@ name|ABSENT_BOOLEAN
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|tigetnum
-parameter_list|(
-name|NCURSES_CONST
-name|char
-modifier|*
-name|str
-parameter_list|)
+argument_list|(
+argument|NCURSES_CONST char *str
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -242,18 +254,23 @@ argument_list|)
 expr_stmt|;
 comment|/* Solaris returns a -1 instead */
 block|}
-end_function
+end_block
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|tigetstr
-parameter_list|(
-name|NCURSES_CONST
-name|char
-modifier|*
-name|str
-parameter_list|)
+argument_list|(
+argument|NCURSES_CONST char *str
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -340,7 +357,7 @@ name|CANCELLED_STRING
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

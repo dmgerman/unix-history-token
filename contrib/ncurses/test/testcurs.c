@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * This is a test program for the PDCurses screen package for IBM PC type  * machines.  *  * This program was written by John Burnell (johnb@kea.am.dsir.govt.nz)  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either  *                  PDCurses or under Unix System V, R4  *  * $Id: testcurs.c,v 1.22 2000/06/17 23:23:34 tom Exp $  */
+comment|/*  *  * This is a test program for the PDCurses screen package for IBM PC type  * machines.  *  * This program was written by John Burnell (johnb@kea.am.dsir.govt.nz)  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either  *                  PDCurses or under Unix System V, R4  *  * $Id: testcurs.c,v 1.24 2001/02/24 22:13:23 tom Exp $  */
 end_comment
 
 begin_include
@@ -243,7 +243,7 @@ begin_define
 define|#
 directive|define
 name|MAX_OPTIONS
-value|((sizeof(command)/sizeof(command[0])))
+value|SIZEOF(command)
 end_define
 
 begin_decl_stmt
@@ -905,8 +905,6 @@ name|int
 name|half
 decl_stmt|;
 name|int
-name|OldX
-decl_stmt|,
 name|OldY
 decl_stmt|;
 name|NCURSES_CONST
@@ -921,13 +919,11 @@ argument_list|(
 name|win
 argument_list|)
 expr_stmt|;
-name|getmaxyx
+name|OldY
+operator|=
+name|getmaxy
 argument_list|(
 name|win
-argument_list|,
-name|OldY
-argument_list|,
-name|OldX
 argument_list|)
 expr_stmt|;
 name|half

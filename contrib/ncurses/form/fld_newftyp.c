@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fld_newftyp.c,v 1.5 1999/05/16 17:18:54 juergen Exp $"
+literal|"$Id: fld_newftyp.c,v 1.6 2000/12/10 02:09:38 tom Exp $"
 argument_list|)
 end_macro
 
@@ -71,16 +71,20 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|const
-name|FIELDTYPE
-modifier|*
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|const FIELDTYPE*
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_Default_FieldType
-init|=
+operator|=
 operator|&
 name|default_fieldtype
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_escape
 end_escape
@@ -89,40 +93,23 @@ begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  FIELDTYPE *new_fieldtype( |                       bool (* const field_check)(FIELD *,const void *), |                       bool (* const char_check) (int, const void *) )  |    |   Description   :  Create a new fieldtype. The application programmer must |                    write a field_check and a char_check function and give |                    them as input to this call. |                    If an error occurs, errno is set to                     |                       E_BAD_ARGUMENT  - invalid arguments |                       E_SYSTEM_ERROR  - system error (no memory) | |   Return Values :  Fieldtype pointer or NULL if error occured +--------------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
-name|FIELDTYPE
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|FIELDTYPE *
+argument_list|)
+end_macro
+
+begin_macro
 name|new_fieldtype
 argument_list|(
-name|bool
-argument_list|(
-operator|*
-specifier|const
-name|field_check
-argument_list|)
-argument_list|(
-name|FIELD
-operator|*
+argument|bool (* const field_check)(FIELD *,const void *)
 argument_list|,
-specifier|const
-name|void
-operator|*
+argument|bool (* const char_check) (int,const void *)
 argument_list|)
-argument_list|,
-name|bool
-argument_list|(
-operator|*
-specifier|const
-name|char_check
-argument_list|)
-argument_list|(
-name|int
-argument_list|,
-specifier|const
-name|void
-operator|*
-argument_list|)
-argument_list|)
+end_macro
+
+begin_block
 block|{
 name|FIELDTYPE
 modifier|*
@@ -203,20 +190,27 @@ return|return
 name|nftyp
 return|;
 block|}
-end_decl_stmt
+end_block
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform   |   Function      :  int free_fieldtype(FIELDTYPE *typ) |    |   Description   :  Release the memory associated with this fieldtype. | |   Return Values :  E_OK            - success |                    E_CONNECTED     - there are fields referencing the type |                    E_BAD_ARGUMENT  - invalid fieldtype pointer +--------------------------------------------------------------------------*/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|free_fieldtype
-parameter_list|(
-name|FIELDTYPE
-modifier|*
-name|typ
-parameter_list|)
+argument_list|(
+argument|FIELDTYPE *typ
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -301,7 +295,7 @@ name|E_OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* fld_newftyp.c ends here */

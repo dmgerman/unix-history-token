@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: read_entry.c,v 1.69 2000/10/10 00:57:40 Todd.Miller Exp $"
+literal|"$Id: read_entry.c,v 1.72 2000/12/10 02:55:08 tom Exp $"
 argument_list|)
 end_macro
 
@@ -136,17 +136,21 @@ begin_comment
 comment|/*  * Record the "official" location of the terminfo directory, according to  * the place where we're writing to, or the normal default, if not.  */
 end_comment
 
-begin_function
-specifier|const
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|const char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_tic_dir
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|)
+argument_list|(
+argument|const char *path
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|static
 specifier|const
@@ -217,21 +221,27 @@ return|return
 name|result
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Special fix to prevent the terminfo directory from being moved after tic  * has chdir'd to it.  If we let it be changed, then if $TERMINFO has a  * relative path, we'll lose track of the actual directory.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_keep_tic_dir
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|)
+argument_list|(
+argument|const char *path
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|_nc_tic_dir
 argument_list|(
@@ -243,7 +253,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -2036,21 +2046,27 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_read_file_entry
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|filename
-parameter_list|,
-name|TERMTYPE
-modifier|*
-name|ptr
-parameter_list|)
+argument_list|(
+argument|const char *const filename
+argument_list|,
+argument|TERMTYPE * ptr
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* return 1 if read, 0 if not found or garbled */
+end_comment
+
+begin_block
 block|{
 name|int
 name|code
@@ -2144,7 +2160,7 @@ name|code
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Build a terminfo pathname and try to read the data.  Returns 1 on success,  * 0 on failure.  */
@@ -2310,7 +2326,7 @@ literal|0
 operator|||
 name|c
 operator|==
-literal|':'
+name|NCURSES_PATHSEP
 condition|)
 block|{
 operator|*
@@ -2389,26 +2405,25 @@ begin_comment
 comment|/*  *	_nc_read_entry(char *tn, char *filename, TERMTYPE *tp)  *  *	Find and read the compiled entry for a given terminal type,  *	if it exists.  We take pains here to make sure no combination  *	of environment variables and terminal type name can be used to  *	overrun the file buffer.  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_read_entry
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|tn
-parameter_list|,
-name|char
-modifier|*
-specifier|const
-name|filename
-parameter_list|,
-name|TERMTYPE
-modifier|*
-specifier|const
-name|tp
-parameter_list|)
+argument_list|(
+argument|const char *const tn
+argument_list|,
+argument|char *const filename
+argument_list|,
+argument|TERMTYPE * const tp
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|char
 modifier|*
@@ -2598,7 +2613,7 @@ return|;
 endif|#
 directive|endif
 block|}
-end_function
+end_block
 
 end_unit
 

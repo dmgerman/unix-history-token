@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Author:  Thomas E. Dickey<dickey@clark.net> 1998  *  * $Id: filter.c,v 1.4 2000/09/02 18:50:38 tom Exp $  */
+comment|/*  * Author:  Thomas E. Dickey<dickey@clark.net> 1998  *  * $Id: filter.c,v 1.5 2001/02/24 22:11:58 tom Exp $  */
 end_comment
 
 begin_include
@@ -126,10 +126,6 @@ index|[]
 name|GCC_UNUSED
 parameter_list|)
 block|{
-name|SCREEN
-modifier|*
-name|sp
-decl_stmt|;
 name|char
 name|buffer
 index|[
@@ -142,8 +138,9 @@ decl_stmt|;
 name|filter
 argument_list|()
 expr_stmt|;
-name|sp
-operator|=
+operator|(
+name|void
+operator|)
 name|newterm
 argument_list|(
 operator|(

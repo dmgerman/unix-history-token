@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: charset.c,v 1.4 2000/03/04 20:30:52 tom Exp $"
+literal|"$Id: charset.c,v 1.6 2000/11/05 00:22:00 tom Exp $"
 argument_list|)
 end_macro
 
@@ -2352,10 +2352,13 @@ if|if
 condition|(
 name|isgraph
 argument_list|(
+name|CharOf
+argument_list|(
 name|acs_chars
 index|[
 name|i
 index|]
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -2380,14 +2383,13 @@ name|temp
 argument_list|,
 literal|" 0x%02x"
 argument_list|,
-operator|(
+name|CharOf
+argument_list|(
 name|acs_chars
 index|[
 name|i
 index|]
-operator|&
-literal|0xff
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

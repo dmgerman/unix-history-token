@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: comp_expand.c,v 1.11 1999/03/07 00:51:07 tom Exp $"
+literal|"$Id: comp_expand.c,v 1.15 2000/12/10 01:30:10 tom Exp $"
 argument_list|)
 end_macro
 
@@ -96,22 +96,25 @@ parameter_list|)
 value|(CHAR_OF(s)< 127&& isprint(CHAR_OF(s)))
 end_define
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_tic_expand
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|srcp
-parameter_list|,
-name|bool
-name|tic_format
-parameter_list|,
-name|int
-name|numbers
-parameter_list|)
+argument_list|(
+argument|const char *srcp
+argument_list|,
+argument|bool tic_format
+argument_list|,
+argument|int numbers
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|static
 name|char
@@ -127,9 +130,6 @@ name|bufp
 decl_stmt|;
 specifier|const
 name|char
-modifier|*
-name|ptr
-decl_stmt|,
 modifier|*
 name|str
 init|=
@@ -209,21 +209,16 @@ name|bufp
 operator|=
 literal|0
 expr_stmt|;
-name|ptr
-operator|=
-name|str
-expr_stmt|;
 while|while
 condition|(
 operator|(
 name|ch
 operator|=
-operator|(
+name|CharOf
+argument_list|(
 operator|*
 name|str
-operator|&
-literal|0xff
-operator|)
+argument_list|)
 operator|)
 operator|!=
 literal|0
@@ -253,7 +248,7 @@ operator|*
 name|str
 operator|++
 expr_stmt|;
-comment|/* 			 * Though the character literals are more compact, most 			 * terminal descriptions use numbers and are not easy 			 * to read in character-literal form. 			 */
+comment|/* 	     * Though the character literals are more compact, most 	     * terminal descriptions use numbers and are not easy 	     * to read in character-literal form. 	     */
 switch|switch
 condition|(
 name|numbers
@@ -335,7 +330,7 @@ name|str
 expr_stmt|;
 block|}
 break|break;
-comment|/* 			 * If we have a "%{number}", try to translate it into 			 * a "%'char'" form, since that will run a little faster 			 * when we're interpreting it.  Also, having one form 			 * for the constant makes it simpler to compare terminal 			 * descriptions. 			 */
+comment|/* 		 * If we have a "%{number}", try to translate it into 		 * a "%'char'" form, since that will run a little faster 		 * when we're interpreting it.  Also, having one form 		 * for the constant makes it simpler to compare terminal 		 * descriptions. 		 */
 case|case
 literal|1
 case|:
@@ -350,10 +345,13 @@ name|L_BRACE
 operator|&&
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 name|str
 index|[
 literal|1
 index|]
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -710,7 +708,7 @@ if|#
 directive|if
 literal|0
 comment|/* FIXME: this would be more readable (in fact the whole 'islong' logic should be removed) */
-if|else if (ch == '\b') { 			buffer[bufp++] = '\\'; 			buffer[bufp++] = 'b'; 		} 		else if (ch == '\f') { 			buffer[bufp++] = '\\'; 			buffer[bufp++] = 'f'; 		} 		else if (ch == '\t'&& islong) { 			buffer[bufp++] = '\\'; 			buffer[bufp++] = 't'; 		}
+if|else if (ch == '\b') { 	    buffer[bufp++] = '\\'; 	    buffer[bufp++] = 'b'; 	} else if (ch == '\f') { 	    buffer[bufp++] = '\\'; 	    buffer[bufp++] = 'f'; 	} else if (ch == '\t'&& islong) { 	    buffer[bufp++] = '\\'; 	    buffer[bufp++] = 't'; 	}
 endif|#
 directive|endif
 elseif|else
@@ -810,10 +808,13 @@ name|islong
 operator|||
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 name|str
 index|[
 literal|1
 index|]
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -882,7 +883,7 @@ name|buffer
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

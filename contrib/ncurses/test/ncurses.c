@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/****************************************************************************  NAME    ncurses.c --- ncurses library exerciser  SYNOPSIS    ncurses  DESCRIPTION    An interactive test module for the ncurses library.  AUTHOR    Author: Eric S. Raymond<esr@snark.thyrsus.com> 1993  $Id: ncurses.c,v 1.138 2000/09/17 01:24:00 tom Exp $  ***************************************************************************/
+comment|/****************************************************************************  NAME    ncurses.c --- ncurses library exerciser  SYNOPSIS    ncurses  DESCRIPTION    An interactive test module for the ncurses library.  AUTHOR    Author: Eric S. Raymond<esr@snark.thyrsus.com> 1993  $Id: ncurses.c,v 1.143 2001/05/12 23:49:04 tom Exp $  ***************************************************************************/
 end_comment
 
 begin_include
@@ -439,6 +439,28 @@ end_define
 
 begin_comment
 comment|/* this is the background character */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|max_colors
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the actual number of colors we'll use */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|max_pairs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ...and the number of color pairs */
 end_comment
 
 begin_comment
@@ -1110,8 +1132,6 @@ name|TRUE
 decl_stmt|;
 name|int
 name|y
-decl_stmt|,
-name|x
 decl_stmt|;
 name|refresh
 argument_list|()
@@ -1158,10 +1178,13 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+name|CharOf
+argument_list|(
 name|buf
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -1353,13 +1376,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|getyx
+name|y
+operator|=
+name|getcury
 argument_list|(
 name|stdscr
-argument_list|,
-name|y
-argument_list|,
-name|x
 argument_list|)
 expr_stmt|;
 if|if
@@ -1797,17 +1818,9 @@ literal|0
 init|;
 name|n
 operator|<
-sizeof|sizeof
+name|SIZEOF
 argument_list|(
 name|table
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|table
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|n
@@ -1911,9 +1924,6 @@ operator|-
 literal|'0'
 operator|)
 expr_stmt|;
-return|return
-name|TRUE
-return|;
 block|}
 elseif|else
 if|if
@@ -1936,9 +1946,6 @@ argument_list|(
 name|curscr
 argument_list|)
 expr_stmt|;
-return|return
-name|TRUE
-return|;
 block|}
 elseif|else
 if|if
@@ -2036,7 +2043,7 @@ condition|(
 operator|*
 name|fg
 operator|>=
-name|COLORS
+name|max_colors
 condition|)
 operator|*
 name|fg
@@ -2053,7 +2060,7 @@ condition|)
 operator|*
 name|fg
 operator|=
-name|COLORS
+name|max_colors
 operator|-
 literal|1
 expr_stmt|;
@@ -2062,7 +2069,7 @@ condition|(
 operator|*
 name|bg
 operator|>=
-name|COLORS
+name|max_colors
 condition|)
 operator|*
 name|bg
@@ -2079,13 +2086,10 @@ condition|)
 operator|*
 name|bg
 operator|=
-name|COLORS
+name|max_colors
 operator|-
 literal|1
 expr_stmt|;
-return|return
-name|TRUE
-return|;
 block|}
 else|else
 block|{
@@ -2117,12 +2121,9 @@ return|return
 name|FALSE
 return|;
 block|}
-return|return
-name|TRUE
-return|;
 block|}
 return|return
-name|FALSE
+name|TRUE
 return|;
 block|}
 end_function
@@ -2173,7 +2174,7 @@ operator|*
 operator|)
 name|calloc
 argument_list|(
-name|COLOR_PAIRS
+name|max_pairs
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2229,7 +2230,7 @@ init|=
 operator|(
 name|fg
 operator|*
-name|COLORS
+name|max_colors
 operator|)
 operator|+
 name|bg
@@ -2603,7 +2604,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|COLORS
+name|max_colors
 operator|>
 literal|8
 condition|)
@@ -2674,7 +2675,7 @@ expr_stmt|;
 name|width
 operator|=
 operator|(
-name|COLORS
+name|max_colors
 operator|>
 literal|8
 operator|)
@@ -2686,7 +2687,7 @@ expr_stmt|;
 name|hello
 operator|=
 operator|(
-name|COLORS
+name|max_colors
 operator|>
 literal|8
 operator|)
@@ -2712,7 +2713,7 @@ block|{
 name|top
 operator|=
 operator|(
-name|COLORS
+name|max_colors
 operator|>
 literal|8
 operator|)
@@ -2722,7 +2723,7 @@ else|:
 name|base
 operator|*
 operator|(
-name|COLORS
+name|max_colors
 operator|+
 literal|3
 operator|)
@@ -2743,9 +2744,9 @@ literal|0
 argument_list|,
 literal|"%dx%d matrix of foreground/background colors, bright *%s*\n"
 argument_list|,
-name|COLORS
+name|max_colors
 argument_list|,
-name|COLORS
+name|max_colors
 argument_list|,
 name|base
 condition|?
@@ -2762,7 +2763,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|COLORS
+name|max_colors
 condition|;
 name|i
 operator|++
@@ -2792,7 +2793,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|COLORS
+name|max_colors
 condition|;
 name|i
 operator|++
@@ -2818,7 +2819,7 @@ literal|1
 init|;
 name|i
 operator|<
-name|COLOR_PAIRS
+name|max_pairs
 condition|;
 name|i
 operator|++
@@ -2830,11 +2831,11 @@ name|i
 argument_list|,
 name|i
 operator|%
-name|COLORS
+name|max_colors
 argument_list|,
 name|i
 operator|/
-name|COLORS
+name|max_colors
 argument_list|)
 expr_stmt|;
 name|attron
@@ -2869,13 +2870,13 @@ operator|+
 operator|(
 name|i
 operator|/
-name|COLORS
+name|max_colors
 operator|)
 argument_list|,
 operator|(
 name|i
 operator|%
-name|COLORS
+name|max_colors
 operator|+
 literal|1
 operator|)
@@ -2894,7 +2895,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|COLORS
+name|max_colors
 operator|>
 literal|8
 operator|)
@@ -3047,17 +3048,6 @@ literal|0
 decl_stmt|;
 name|int
 name|last_c
-decl_stmt|;
-name|int
-name|max_colors
-init|=
-name|COLORS
-operator|>
-literal|16
-condition|?
-literal|16
-else|:
-name|COLORS
 decl_stmt|;
 name|refresh
 argument_list|()
@@ -5532,8 +5522,6 @@ name|size_t
 name|n
 decl_stmt|;
 name|int
-name|y
-decl_stmt|,
 name|x
 decl_stmt|;
 name|bool
@@ -5675,13 +5663,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|getyx
+name|x
+operator|=
+name|getcurx
 argument_list|(
 name|stdscr
-argument_list|,
-name|y
-argument_list|,
-name|x
 argument_list|)
 expr_stmt|;
 name|addstr
@@ -11080,10 +11066,7 @@ argument_list|(
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|c
-operator|=
-name|KEY_REFRESH
-expr_stmt|;
+comment|/* FALLTHRU */
 case|case
 name|CTRL
 argument_list|(
@@ -14507,17 +14490,9 @@ literal|0
 init|;
 name|n
 operator|<
-sizeof|sizeof
+name|SIZEOF
 argument_list|(
 name|lookup
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|lookup
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|n
@@ -15901,17 +15876,9 @@ literal|0
 init|;
 name|n
 operator|<
-sizeof|sizeof
+name|SIZEOF
 argument_list|(
 name|tbl
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|tbl
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|n
@@ -16418,7 +16385,17 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|NCURSES_VERSION
+name|NCURSES_VERSION_PATCH
+name|max_colors
+operator|=
+name|COLORS
+operator|>
+literal|16
+condition|?
+literal|16
+else|:
+name|COLORS
+expr_stmt|;
 if|if
 condition|(
 name|default_colors
@@ -16426,6 +16403,11 @@ condition|)
 name|use_default_colors
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|NCURSES_VERSION_PATCH
+operator|>=
+literal|20000708
 elseif|else
 if|if
 condition|(
@@ -16440,6 +16422,39 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+else|#
+directive|else
+comment|/* normal SVr4 curses */
+name|max_colors
+operator|=
+name|COLORS
+operator|>
+literal|8
+condition|?
+literal|8
+else|:
+name|COLORS
+expr_stmt|;
+endif|#
+directive|endif
+name|max_pairs
+operator|=
+operator|(
+name|max_colors
+operator|*
+name|max_colors
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|max_pairs
+operator|<
+name|COLOR_PAIRS
+condition|)
+name|max_pairs
+operator|=
+name|COLOR_PAIRS
+expr_stmt|;
 block|}
 name|set_terminal_modes
 argument_list|()
@@ -16751,7 +16766,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+name|CharOf
+argument_list|(
 name|ch
+argument_list|)
 argument_list|)
 condition|)
 block|{

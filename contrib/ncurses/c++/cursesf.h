@@ -4,7 +4,7 @@ comment|// * This makes emacs happy -*-Mode: C++;-*-
 end_comment
 
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -12,19 +12,20 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|// $Id: cursesf.h,v 1.12 2000/07/15 21:08:25 tom Exp $
+comment|// $Id: cursesf.h,v 1.15 2001/03/24 21:41:23 tom Exp $
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CURSESF_H
+name|NCURSES_CURSESF_H_incl
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CURSESF_H
+name|NCURSES_CURSESF_H_incl
+value|1
 end_define
 
 begin_include
@@ -71,6 +72,7 @@ end_comment
 
 begin_decl_stmt
 name|class
+name|NCURSES_IMPEXP
 name|NCursesFormField
 decl_stmt|;
 end_decl_stmt
@@ -89,6 +91,7 @@ end_comment
 
 begin_decl_stmt
 name|class
+name|NCURSES_IMPEXP
 name|NCursesFieldType
 block|{
 name|friend
@@ -195,6 +198,7 @@ end_comment
 
 begin_decl_stmt
 name|class
+name|NCURSES_IMPEXP
 name|NCursesFormField
 block|{
 name|friend
@@ -1055,6 +1059,7 @@ end_comment
 
 begin_decl_stmt
 name|class
+name|NCURSES_IMPEXP
 name|NCursesForm
 range|:
 name|public
@@ -2332,6 +2337,7 @@ name|class
 name|T
 operator|>
 name|class
+name|NCURSES_IMPEXP
 name|NCursesUserField
 operator|:
 name|public
@@ -2492,6 +2498,7 @@ name|class
 name|T
 operator|>
 name|class
+name|NCURSES_IMPEXP
 name|NCursesUserForm
 operator|:
 name|public
@@ -2764,6 +2771,7 @@ end_comment
 
 begin_decl_stmt
 name|class
+name|NCURSES_IMPEXP
 name|Alpha_Field
 range|:
 name|public
@@ -2819,6 +2827,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|class
+name|NCURSES_IMPEXP
 name|Alphanumeric_Field
 range|:
 name|public
@@ -2874,6 +2883,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|class
+name|NCURSES_IMPEXP
 name|Integer_Field
 range|:
 name|public
@@ -2954,6 +2964,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|class
+name|NCURSES_IMPEXP
 name|Numeric_Field
 range|:
 name|public
@@ -3034,6 +3045,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|class
+name|NCURSES_IMPEXP
 name|Regular_Expression_Field
 range|:
 name|public
@@ -3096,14 +3108,15 @@ name|expr
 argument_list|)
 index|]
 block|;
-call|(
+operator|(
+operator|::
 name|strcpy
-call|)
-argument_list|(
+operator|)
+operator|(
 name|regex
-argument_list|,
+expr|,
 name|expr
-argument_list|)
+operator|)
 block|;   }
 operator|~
 name|Regular_Expression_Field
@@ -3119,6 +3132,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|class
+name|NCURSES_IMPEXP
 name|Enumeration_Field
 range|:
 name|public
@@ -3208,6 +3222,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|class
+name|NCURSES_IMPEXP
 name|IPV4_Address_Field
 range|:
 name|public
@@ -3271,6 +3286,7 @@ end_comment
 
 begin_decl_stmt
 name|class
+name|NCURSES_IMPEXP
 name|UserDefinedFieldType
 range|:
 name|public
@@ -3409,6 +3425,7 @@ end_comment
 
 begin_decl_stmt
 name|class
+name|NCURSES_IMPEXP
 name|UserDefinedFieldType_With_Choice
 range|:
 name|public
@@ -3501,7 +3518,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// _CURSESF_H
+comment|// NCURSES_CURSESF_H_incl
 end_comment
 
 end_unit

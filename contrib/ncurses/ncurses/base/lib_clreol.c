@@ -20,18 +20,25 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_clreol.c,v 1.16 2000/04/29 21:14:54 tom Exp $"
+literal|"$Id: lib_clreol.c,v 1.19 2000/12/10 02:43:26 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|wclrtoeol
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|code
@@ -87,11 +94,15 @@ decl_stmt|;
 comment|/* 	 * If we have just wrapped the cursor, the clear applies to the 	 * new line, unless we are at the lower right corner. 	 */
 if|if
 condition|(
+operator|(
 name|win
 operator|->
 name|_flags
 operator|&
 name|_WRAPPED
+operator|)
+operator|!=
+literal|0
 operator|&&
 name|y
 operator|<
@@ -111,11 +122,15 @@ block|}
 comment|/* 	 * There's no point in clearing if we're not on a legal 	 * position, either. 	 */
 if|if
 condition|(
+operator|(
 name|win
 operator|->
 name|_flags
 operator|&
 name|_WRAPPED
+operator|)
+operator|!=
+literal|0
 operator|||
 name|y
 operator|>
@@ -216,7 +231,7 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

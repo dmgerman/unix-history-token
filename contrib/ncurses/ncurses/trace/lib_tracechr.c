@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tracechr.c,v 1.2 2000/04/01 20:17:26 tom Exp $"
+literal|"$Id: lib_tracechr.c,v 1.4 2000/12/10 03:02:45 tom Exp $"
 argument_list|)
 end_macro
 
@@ -30,16 +30,21 @@ directive|ifdef
 name|TRACE
 end_ifdef
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|_tracechar
-parameter_list|(
-specifier|const
-name|unsigned
-name|char
-name|ch
-parameter_list|)
+argument_list|(
+argument|const unsigned char ch
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|static
 name|char
@@ -74,31 +79,43 @@ name|crep
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_function_decl
-specifier|extern
-name|void
-name|_nc_lib_tracechr
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_extern
+extern|extern NCURSES_EXPORT(void
+end_extern
 
-begin_function
-name|void
+begin_expr_stmt
+unit|)
 name|_nc_lib_tracechr
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_lib_tracechr
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{ }
-end_function
+end_block
 
 begin_endif
 endif|#

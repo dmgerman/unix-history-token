@@ -107,7 +107,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_twait.c,v 1.39 2000/08/26 19:34:15 tom Exp $"
+literal|"$Id: lib_twait.c,v 1.41 2000/12/10 03:04:30 tom Exp $"
 argument_list|)
 end_macro
 
@@ -257,20 +257,25 @@ begin_comment
 comment|/*  * Wait a specified number of milliseconds, returning nonzero if the timer  * didn't expire before there is activity on the specified file descriptors.  * The file-descriptors are specified by the mode:  *	0 - none (absolute time)  *	1 - ncurses' normal input-descriptor  *	2 - mouse descriptor, if any  *	3 - either input or mouse.  * We return a mask that corresponds to the mode (e.g., 2 for mouse activity).  *  * If the milliseconds given are -1, the wait blocks until activity on the  * descriptors.  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_timed_wait
-parameter_list|(
-name|int
-name|mode
-parameter_list|,
-name|int
-name|milliseconds
-parameter_list|,
-name|int
-modifier|*
-name|timeleft
-parameter_list|)
+argument_list|(
+argument|int mode
+argument_list|,
+argument|int milliseconds
+argument_list|,
+argument|int *timeleft
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|fd
@@ -937,7 +942,7 @@ name|result
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -20,18 +20,25 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_clrbot.c,v 1.15 2000/04/29 21:15:26 tom Exp $"
+literal|"$Id: lib_clrbot.c,v 1.17 2000/12/10 02:43:26 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|wclrtobot
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|code
@@ -199,7 +206,7 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

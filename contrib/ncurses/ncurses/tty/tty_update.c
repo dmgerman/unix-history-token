@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -150,7 +150,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tty_update.c,v 1.146 2000/10/07 01:11:44 tom Exp $"
+literal|"$Id: tty_update.c,v 1.151 2001/02/03 23:41:55 tom Exp $"
 argument_list|)
 end_macro
 
@@ -1066,64 +1066,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * No one supports recursive inline functions.  However, gcc is quieter if we  * instantiate the recursive part separately.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|CC_HAS_INLINE_FUNCS
-end_if
-
-begin_function_decl
-specifier|static
-name|void
-name|callPutChar
-parameter_list|(
-name|chtype
-specifier|const
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|callPutChar
-parameter_list|(
-name|ch
-parameter_list|)
-value|PutChar(ch)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-specifier|static
-specifier|inline
-name|void
-name|PutChar
-parameter_list|(
-name|chtype
-specifier|const
-name|ch
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* forward declaration */
-end_comment
-
-begin_comment
 comment|/* put char at lower right corner */
 end_comment
 
@@ -1228,7 +1170,7 @@ operator|-
 literal|2
 argument_list|)
 expr_stmt|;
-name|callPutChar
+name|PutAttrChar
 argument_list|(
 name|ch
 argument_list|)
@@ -1983,35 +1925,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|CC_HAS_INLINE_FUNCS
-end_if
-
-begin_function
-specifier|static
-name|void
-name|callPutChar
-parameter_list|(
-name|chtype
-specifier|const
-name|ch
-parameter_list|)
-block|{
-name|PutChar
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* leave unbracketed here so 'indent' works */
 end_comment
@@ -2029,12 +1942,21 @@ define|\
 value|win->_line[row].firstchar = _NOCHANGE; \ 		win->_line[row].lastchar = _NOCHANGE; \ 		if_USE_SCROLL_HINTS(win->_line[row].oldindex = row)
 end_define
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|doupdate
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -3058,10 +2980,11 @@ condition|)
 block|{
 name|MARK_NOCHANGE
 argument_list|(
-argument|newscr
+name|newscr
 argument_list|,
-argument|i
+name|i
 argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3074,10 +2997,11 @@ condition|)
 block|{
 name|MARK_NOCHANGE
 argument_list|(
-argument|curscr
+name|curscr
 argument_list|,
-argument|i
+name|i
 argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -3100,10 +3024,11 @@ control|)
 block|{
 name|MARK_NOCHANGE
 argument_list|(
-argument|newscr
+name|newscr
 argument_list|,
-argument|i
+name|i
 argument_list|)
+expr_stmt|;
 block|}
 for|for
 control|(
@@ -3123,10 +3048,11 @@ control|)
 block|{
 name|MARK_NOCHANGE
 argument_list|(
-argument|curscr
+name|curscr
 argument_list|,
-argument|i
+name|i
 argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3236,7 +3162,7 @@ name|OK
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  *	ClrBlank(win)  *  *	Returns the attributed character that corresponds to the "cleared"  *	screen.  If the terminal has the back-color-erase feature, this will be  *	colored according to the wbkgd() call.  *  *	We treat 'curscr' specially because it isn't supposed to be set directly  *	in the wbkgd() call.  Assume 'stdscr' for this case.  */
@@ -5344,6 +5270,9 @@ condition|)
 block|{
 name|_nc_do_color
 argument_list|(
+operator|(
+name|int
+operator|)
 name|COLOR_PAIR
 argument_list|(
 name|SP
@@ -5929,15 +5858,21 @@ begin_comment
 comment|/* **	_nc_outstr(char *str) ** **	Emit a string without waiting for update. */
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_outstr
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|str
-parameter_list|)
+argument_list|(
+argument|const char *str
+argument_list|)
+end_macro
+
+begin_block
 block|{
 operator|(
 name|void
@@ -5951,7 +5886,7 @@ name|_nc_flush
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Physical-scrolling support  *  * This code was adapted from Keith Bostic's hardware scrolling  * support for 4.4BSD curses.  I (esr) translated it to use terminfo  * capabilities, narrowed the call interface slightly, and cleaned  * up some convoluted tests.  I also added support for the memory_above  * memory_below, and non_dest_scroll_region capabilities.  *  * For this code to work, we must have either  * change_scroll_region and scroll forward/reverse commands, or  * insert and delete line capabilities.  * When the scrolling region has been set, the cursor has to  * be at the last line of the region to make the scroll up  * happen, or on the first line of region to scroll down.  *  * This code makes one aesthetic decision in the opposite way from  * BSD curses.  BSD curses preferred pairs of il/dl operations  * over scrolls, allegedly because il/dl looked faster.  We, on  * the other hand, prefer scrolls because (a) they're just as fast  * on many terminals and (b) using them avoids bouncing an  * unchanged bottom section of the screen up and down, which is  * visually nasty.  *  * (lav): added more cases, used dl/il when bot==maxy and in csr case.  *  * I used assumption that capabilities il/il1/dl/dl1 work inside  * changed scroll region not shifting screen contents outside of it.  * If there are any terminals behaving different way, it would be  * necessary to add some conditions to scroll_csr_forward/backward.  */
@@ -6974,23 +6909,31 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_scrolln
-parameter_list|(
-name|int
-name|n
-parameter_list|,
-name|int
-name|top
-parameter_list|,
-name|int
-name|bot
-parameter_list|,
-name|int
-name|maxy
-parameter_list|)
+argument_list|(
+argument|int n
+argument_list|,
+argument|int top
+argument_list|,
+argument|int bot
+argument_list|,
+argument|int maxy
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* scroll region from top to bot by n lines */
+end_comment
+
+begin_block
 block|{
 name|chtype
 name|blank
@@ -7650,14 +7593,23 @@ name|OK
 operator|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_screen_resume
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/* make sure terminal is in a sane known state */
 name|SP
@@ -7752,31 +7704,49 @@ name|exit_am_mode
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_screen_init
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|_nc_screen_resume
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* wrap up screen handling */
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_screen_wrap
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|UpdateAttrs
 argument_list|(
@@ -7864,7 +7834,7 @@ block|}
 endif|#
 directive|endif
 block|}
-end_function
+end_block
 
 begin_if
 if|#
@@ -7872,13 +7842,21 @@ directive|if
 name|USE_XMC_SUPPORT
 end_if
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_do_xmc_glitch
-parameter_list|(
-name|attr_t
-name|previous
-parameter_list|)
+argument_list|(
+argument|attr_t previous
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|attr_t
 name|chg
@@ -7949,7 +7927,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#

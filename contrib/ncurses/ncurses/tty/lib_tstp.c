@@ -55,7 +55,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tstp.c,v 1.22 2000/09/02 18:33:17 tom Exp $"
+literal|"$Id: lib_tstp.c,v 1.24 2000/12/10 03:04:30 tom Exp $"
 argument_list|)
 end_macro
 
@@ -874,13 +874,21 @@ begin_comment
 comment|/*  * This is invoked once at the beginning (e.g., from 'initscr()'), to  * initialize the signal catchers, and thereafter when spawning a shell (and  * returning) to disable/enable the SIGTSTP (i.e., ^Z) catcher.  *  * If the application has already set one of the signals, we'll not modify it  * (during initialization).  *  * The XSI document implies that we shouldn't keep the SIGTSTP handler if  * the caller later changes its mind, but that doesn't seem correct.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_signal_handler
-parameter_list|(
-name|bool
-name|enable
-parameter_list|)
+argument_list|(
+argument|bool enable
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|#
 directive|if
@@ -1153,7 +1161,7 @@ endif|#
 directive|endif
 comment|/* !USE_SIGTSTP */
 block|}
-end_function
+end_block
 
 end_unit
 

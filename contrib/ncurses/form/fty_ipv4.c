@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fty_ipv4.c,v 1.2 1997/04/26 22:06:00 tom Exp $"
+literal|"$Id: fty_ipv4.c,v 1.4 2000/12/09 23:46:12 tom Exp $"
 argument_list|)
 end_macro
 
@@ -72,6 +72,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|bp
 argument_list|)
@@ -121,6 +125,10 @@ name|bp
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|bp
 argument_list|)
@@ -248,15 +256,20 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|FIELDTYPE
-modifier|*
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|FIELDTYPE*
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|TYPE_IPV4
-init|=
+operator|=
 operator|&
 name|typeIPV4
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* fty_ipv4.c ends here */

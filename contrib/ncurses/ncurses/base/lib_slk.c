@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_slk.c,v 1.17 1999/10/30 23:00:16 tom Exp $"
+literal|"$Id: lib_slk.c,v 1.20 2000/12/10 02:43:27 tom Exp $"
 argument_list|)
 end_macro
 
@@ -44,13 +44,19 @@ begin_comment
 comment|/*  * We'd like to move these into the screen context structure, but cannot,  * because slk_init() is called before initscr()/newterm().  */
 end_comment
 
-begin_decl_stmt
-name|int
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_slk_format
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* one more than format specified in slk_init() */
@@ -155,6 +161,9 @@ index|]
 operator|.
 name|x
 argument_list|,
+operator|(
+name|chtype
+operator|)
 literal|'F'
 argument_list|)
 expr_stmt|;
@@ -168,6 +177,9 @@ name|waddch
 argument_list|(
 name|win
 argument_list|,
+operator|(
+name|chtype
+operator|)
 literal|'1'
 operator|+
 name|i
@@ -179,6 +191,9 @@ name|waddch
 argument_list|(
 name|win
 argument_list|,
+operator|(
+name|chtype
+operator|)
 literal|'1'
 argument_list|)
 expr_stmt|;
@@ -186,6 +201,9 @@ name|waddch
 argument_list|(
 name|win
 argument_list|,
+operator|(
+name|chtype
+operator|)
 literal|'0'
 operator|+
 operator|(
@@ -206,17 +224,23 @@ begin_comment
 comment|/*  * Initialize soft labels.  * Called from newterm()  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_slk_initialize
-parameter_list|(
-name|WINDOW
-modifier|*
-name|stwin
-parameter_list|,
-name|int
-name|cols
-parameter_list|)
+argument_list|(
+argument|WINDOW *stwin
+argument_list|,
+argument|int cols
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -569,8 +593,8 @@ name|_nc_slk_format
 operator|>=
 literal|3
 condition|)
-comment|/* PC style */
 block|{
+comment|/* PC style */
 name|int
 name|gap
 init|=
@@ -955,7 +979,7 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-comment|/* We now reset the format so that the next newterm has again 	 * per default no SLK keys and may call slk_init again to 	 * define a new layout. (juergen 03-Mar-1999) 	 */
+comment|/* We now reset the format so that the next newterm has again      * per default no SLK keys and may call slk_init again to      * define a new layout. (juergen 03-Mar-1999)      */
 name|SP
 operator|->
 name|slk_format
@@ -972,18 +996,27 @@ name|res
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Restore the soft labels on the screen.  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|slk_restore
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -1041,7 +1074,7 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

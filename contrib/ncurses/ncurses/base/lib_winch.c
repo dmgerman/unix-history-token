@@ -20,18 +20,25 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_winch.c,v 1.2 2000/07/29 16:41:44 tom Exp $"
+literal|"$Id: lib_winch.c,v 1.4 2000/12/10 02:43:28 tom Exp $"
 argument_list|)
 end_macro
 
-begin_function
-name|chtype
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|chtype
+argument_list|)
+end_macro
+
+begin_macro
 name|winch
-parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-parameter_list|)
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|T
 argument_list|(
@@ -81,7 +88,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 end_unit
 

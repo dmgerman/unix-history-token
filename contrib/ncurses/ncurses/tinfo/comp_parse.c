@@ -38,7 +38,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: comp_parse.c,v 1.41 2000/10/03 09:53:49 tom Exp $"
+literal|"$Id: comp_parse.c,v 1.48 2001/01/15 00:44:51 tom Exp $"
 argument_list|)
 end_macro
 
@@ -54,7 +54,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|NCURSES_IMPEXP
 name|void
+name|NCURSES_API
 function_decl|(
 modifier|*
 name|_nc_check_termtype
@@ -76,19 +78,33 @@ begin_comment
 comment|/*  *  The entry list is a doubly linked list with NULLs terminating the lists:  *  *	  ---------   ---------   ---------  *	  |       |   |       |   |       |   offset  *        |-------|   |-------|   |-------|  *	  |   ----+-->|   ----+-->|  NULL |   next  *	  |-------|   |-------|   |-------|  *	  |  NULL |<--+----   |<--+----   |   last  *	  ---------   ---------   ---------  *	      ^                       ^  *	      |                       |  *	      |                       |  *	   _nc_head                _nc_tail  */
 end_comment
 
-begin_decl_stmt
-name|ENTRY
-modifier|*
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|ENTRY *
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_head
-init|=
+operator|=
 literal|0
-decl_stmt|,
-modifier|*
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|ENTRY *
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|_nc_tail
-init|=
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -154,15 +170,25 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_free_entries
-parameter_list|(
-name|ENTRY
-modifier|*
-name|headp
-parameter_list|)
+argument_list|(
+argument|ENTRY * headp
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* free the allocated storage consumed by list entries */
+end_comment
+
+begin_block
 block|{
 name|ENTRY
 modifier|*
@@ -227,7 +253,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -267,7 +293,7 @@ decl_stmt|;
 if|if
 condition|(
 name|len
-operator|>=
+operator|>
 name|MAX_NAME_SIZE
 condition|)
 name|len
@@ -309,19 +335,27 @@ return|;
 block|}
 end_function
 
-begin_function
-name|bool
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|bool
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_entry_match
-parameter_list|(
-name|char
-modifier|*
-name|n1
-parameter_list|,
-name|char
-modifier|*
-name|n2
-parameter_list|)
+argument_list|(
+argument|char *n1
+argument_list|,
+argument|char *n2
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* do any of the aliases in a pair of terminal names match? */
+end_comment
+
+begin_block
 block|{
 name|char
 modifier|*
@@ -456,41 +490,39 @@ name|FALSE
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/****************************************************************************  *  * Entry compiler and resolution logic  *  ****************************************************************************/
 end_comment
 
-begin_function
-name|void
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_read_entry_source
-parameter_list|(
-name|FILE
-modifier|*
-name|fp
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|literal
-parameter_list|,
-name|bool
-name|silent
-parameter_list|,
-name|bool
-function_decl|(
-modifier|*
-name|hook
-function_decl|)
-parameter_list|(
-name|ENTRY
-modifier|*
-parameter_list|)
-parameter_list|)
+argument_list|(
+argument|FILE * fp
+argument_list|,
+argument|char *buf
+argument_list|,
+argument|int literal
+argument_list|,
+argument|bool silent
+argument_list|,
+argument|bool(*hook) (ENTRY *)
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* slurp all entries in the given file into core */
+end_comment
+
+begin_block
 block|{
 name|ENTRY
 name|thisentry
@@ -560,6 +592,8 @@ condition|(
 operator|!
 name|isalnum
 argument_list|(
+name|CharOf
+argument_list|(
 name|thisentry
 operator|.
 name|tterm
@@ -568,6 +602,7 @@ name|term_names
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 condition|)
 name|_nc_err_abort
@@ -681,16 +716,27 @@ operator|=
 name|oldsuppress
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|_nc_resolve_uses
-parameter_list|(
-name|bool
-name|fullresolve
-parameter_list|)
+argument_list|(
+argument|bool fullresolve
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* try to resolve all use capabilities */
+end_comment
+
+begin_block
 block|{
 name|ENTRY
 modifier|*
@@ -746,6 +792,7 @@ name|for_entry_list
 argument_list|(
 argument|rp
 argument_list|)
+block|{
 if|if
 condition|(
 name|qp
@@ -826,6 +873,7 @@ name|term_names
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -954,6 +1002,7 @@ name|for_entry_list
 argument_list|(
 argument|rp
 argument_list|)
+block|{
 if|if
 condition|(
 name|rp
@@ -1002,6 +1051,7 @@ name|foundit
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 block|}
 comment|/* if that didn't work, try to merge in a compiled entry */
 if|if
@@ -1379,6 +1429,13 @@ name|tterm
 operator|=
 name|merged
 expr_stmt|;
+name|_nc_wrap_entry
+argument_list|(
+name|qp
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
 comment|/* 		     * We know every entry is resolvable because name resolution 		     * didn't bomb.  So go back for another pass. 		     */
 comment|/* FALLTHRU */
 name|incomplete
@@ -1416,8 +1473,12 @@ argument|j
 argument_list|,
 argument|&(qp->tterm)
 argument_list|)
+block|{
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|qp
 operator|->
 name|tterm
@@ -1440,12 +1501,14 @@ index|]
 operator|=
 name|ABSENT_BOOLEAN
 expr_stmt|;
+block|}
 name|for_each_number
 argument_list|(
 argument|j
 argument_list|,
 argument|&(qp->tterm)
 argument_list|)
+block|{
 if|if
 condition|(
 name|qp
@@ -1470,12 +1533,14 @@ index|]
 operator|=
 name|ABSENT_NUMERIC
 expr_stmt|;
+block|}
 name|for_each_string
 argument_list|(
 argument|j
 argument_list|,
 argument|&(qp->tterm)
 argument_list|)
+block|{
 if|if
 condition|(
 name|qp
@@ -1500,6 +1565,7 @@ index|]
 operator|=
 name|ABSENT_STRING
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/*      * We'd like to free entries read in off disk at this point, but can't.      * The merge_entry() code doesn't copy the strings in the use entries,      * it just aliases them.  If this ever changes, do a      * free_entries(lastread) here.      */
@@ -1576,7 +1642,7 @@ name|TRUE
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * This bit of legerdemain turns all the terminfo variable names into  * references to locations in the arrays Booleans, Numbers, and Strings ---  * precisely what's needed.  */
