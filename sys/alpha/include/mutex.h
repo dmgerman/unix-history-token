@@ -1382,7 +1382,7 @@ name|tid
 parameter_list|,
 name|type
 parameter_list|)
-value|do {				     \ 	if (atomic_cmpset_64(&(mp)->mtx_lock, MTX_UNOWNED, (tid)) == 0) {    \ 		if (((mp)->mtx_lock& MTX_FLAGMASK) != (tid))		     \ 			mtx_enter_hard(mp, (type)& MTX_HARDOPTS, 0);	     \ 		else {							     \ 			if (((mp)->mtx_lock& MTX_RECURSE) == 0)	     \ 				atomic_set_64(&(mp)->mtx_lock, MTX_RECURSE); \ 			(mp)->mtx_recurse++;				     \ 		}							     \ 	} else {							     \ 		alpha_mb();						     \ 	}								     \ } while (0)
+value|do {				     \ 	if (atomic_cmpset_64(&(mp)->mtx_lock, MTX_UNOWNED, (tid)) == 0) {    \ 		if (((mp)->mtx_lock& MTX_FLAGMASK) != (tid))		     \ 			mtx_enter_hard(mp, (type)& MTX_HARDOPTS, 0);	     \ 		else {							     \ 			atomic_set_64(&(mp)->mtx_lock, MTX_RECURSE);	     \ 			(mp)->mtx_recurse++;				     \ 		}							     \ 	} else {							     \ 		alpha_mb();						     \ 	}								     \ } while (0)
 end_define
 
 begin_comment
@@ -1468,7 +1468,7 @@ name|_exitlock_spin
 parameter_list|(
 name|mp
 parameter_list|)
-value|do {						\ 	int _ipl = (mp)->mtx_saveipl;					\ 	alpha_mb();							\ 	if ((mp)->mtx_recurse == 0 || (--(mp)->mtx_recurse) == 0)	\ 		atomic_cmpset_64(&(mp)->mtx_lock, (mp)->mtx_lock,	\ 		    MTX_UNOWNED);					\ 	alpha_pal_swpipl(_ipl);						\ } while (0)
+value|do {						\ 	alpha_mb();							\ 	if ((mp)->mtx_recurse == 0) {					\ 		int _ipl = (mp)->mtx_saveipl;				\ 		atomic_cmpset_64(&(mp)->mtx_lock, (mp)->mtx_lock,	\ 		    MTX_UNOWNED);					\ 		alpha_pal_swpipl(_ipl);					\ 	} else {							\ 		(mp)->mtx_recurse--;					\ 	}								\ } while (0)
 end_define
 
 begin_comment
