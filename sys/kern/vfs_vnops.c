@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_vnops.c	8.2 (Berkeley) 1/21/94  * $Id: vfs_vnops.c,v 1.36 1997/04/04 17:47:40 dfr Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_vnops.c	8.2 (Berkeley) 1/21/94  * $Id: vfs_vnops.c,v 1.37 1997/09/02 20:06:04 bde Exp $  */
 end_comment
 
 begin_include
@@ -146,7 +146,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|vn_select
+name|vn_poll
 name|__P
 argument_list|(
 operator|(
@@ -156,7 +156,12 @@ operator|*
 name|fp
 operator|,
 name|int
-name|which
+name|events
+operator|,
+expr|struct
+name|ucred
+operator|*
+name|cred
 operator|,
 expr|struct
 name|proc
@@ -205,7 +210,7 @@ name|vn_write
 block|,
 name|vn_ioctl
 block|,
-name|vn_select
+name|vn_poll
 block|,
 name|vn_closefile
 block|}
@@ -2256,17 +2261,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * File table vnode select routine.  */
+comment|/*  * File table vnode poll routine.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|vn_select
+name|vn_poll
 parameter_list|(
 name|fp
 parameter_list|,
-name|which
+name|events
+parameter_list|,
+name|cred
 parameter_list|,
 name|p
 parameter_list|)
@@ -2276,7 +2283,12 @@ modifier|*
 name|fp
 decl_stmt|;
 name|int
-name|which
+name|events
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|cred
 decl_stmt|;
 name|struct
 name|proc
@@ -2286,7 +2298,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|VOP_SELECT
+name|VOP_POLL
 argument_list|(
 operator|(
 operator|(
@@ -2299,15 +2311,9 @@ operator|->
 name|f_data
 operator|)
 argument_list|,
-name|which
+name|events
 argument_list|,
-name|fp
-operator|->
-name|f_flag
-argument_list|,
-name|fp
-operator|->
-name|f_cred
+name|cred
 argument_list|,
 name|p
 argument_list|)
