@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	4.10 84/01/30"
+literal|"@(#)rcp.c	4.10 84/02/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -2755,6 +2755,17 @@ expr_stmt|;
 name|dir
 operator|=
 name|nambuf
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|dir
+operator|==
+literal|'\0'
+condition|)
+name|dir
+operator|=
+literal|"/"
 expr_stmt|;
 block|}
 if|if
