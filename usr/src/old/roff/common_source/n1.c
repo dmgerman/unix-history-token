@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n1.c	4.4 %G%"
+literal|"@(#)n1.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_decl_stmt
@@ -2415,31 +2421,45 @@ end_macro
 
 begin_block
 block|{
-name|long
-name|tt
-decl_stmt|;
 specifier|register
 name|i
 expr_stmt|;
-name|time
+name|struct
+name|timeval
+name|t
+decl_stmt|;
+name|struct
+name|timezone
+name|tz
+decl_stmt|;
+name|gettimeofday
 argument_list|(
 operator|&
-name|tt
+name|t
+argument_list|,
+operator|&
+name|tz
 argument_list|)
 expr_stmt|;
-name|tt
+name|t
+operator|.
+name|tv_sec
 operator|-=
-literal|3600
+literal|60
 operator|*
-name|ZONE
+name|tz
+operator|.
+name|tz_minuteswest
 expr_stmt|;
-comment|/*5hrs for EST*/
+comment|/* 5hrs for EST */
 name|v
 operator|.
 name|dy
 operator|=
 operator|(
-name|tt
+name|t
+operator|.
+name|tv_sec
 operator|/
 literal|86400L
 operator|)
