@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.23	83/02/20	*/
+comment|/*	if_dmc.c	4.24	83/02/20	*/
 end_comment
 
 begin_include
@@ -33,7 +33,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * DMC11 device driver, internet version  *  * TODO  *	allow more than one outstanding read or write.  */
+comment|/*  * DMC11 device driver, internet version  *  * TODO  *	allow more than one outstanding read or write.  *  * UNTESTED WITH 4.1C  */
 end_comment
 
 begin_include
