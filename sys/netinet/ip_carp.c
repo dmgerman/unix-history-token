@@ -732,26 +732,11 @@ define|#
 directive|define
 name|CARP_LOG
 parameter_list|(
-name|sc
-parameter_list|,
-name|s
+modifier|...
 parameter_list|)
 define|\
-value|if (carp_opts[CARPCTL_LOG]) {					\ 		if (sc != NULL) 					\ 			log(LOG_INFO, "%s: ", (sc)->sc_if.if_xname);	\ 		else							\ 			log(LOG_INFO, "carp: ");			\ 		printf s;						\
-comment|/*		addlog s; addlog("\n");	*/
-value|\ }
+value|if (carp_opts[CARPCTL_LOG]> 0)			\ 		log(LOG_INFO, __VA_ARGS__);		\  #define	CARP_DEBUG(...)					\ 	if (carp_opts[CARPCTL_LOG]> 1)			\ 		log(LOG_DEBUG, __VA_ARGS__);		\  void	carp_hmac_prepare(struct carp_softc *);
 end_define
-
-begin_function_decl
-name|void
-name|carp_hmac_prepare
-parameter_list|(
-name|struct
-name|carp_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -808,10 +793,6 @@ name|carp_input_c
 parameter_list|(
 name|struct
 name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|carp_softc
 modifier|*
 parameter_list|,
 name|struct
@@ -2359,13 +2340,6 @@ name|hlen
 parameter_list|)
 block|{
 name|struct
-name|carp_softc
-modifier|*
-name|sc
-init|=
-name|NULL
-decl_stmt|;
-name|struct
 name|ip
 modifier|*
 name|ip
@@ -2431,11 +2405,8 @@ operator|++
 expr_stmt|;
 name|CARP_LOG
 argument_list|(
-name|sc
+literal|"carp_input: packet received on non-carp interface: %s"
 argument_list|,
-operator|(
-literal|"packet received on non-carp interface: %s"
-operator|,
 name|m
 operator|->
 name|m_pkthdr
@@ -2443,7 +2414,6 @@ operator|.
 name|rcvif
 operator|->
 name|if_xname
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -2470,15 +2440,12 @@ operator|++
 expr_stmt|;
 name|CARP_LOG
 argument_list|(
-name|sc
+literal|"carp_input: received ttl %d != 255i on %s"
 argument_list|,
-operator|(
-literal|"received ttl %d != 255i on %s"
-operator|,
 name|ip
 operator|->
 name|ip_ttl
-operator|,
+argument_list|,
 name|m
 operator|->
 name|m_pkthdr
@@ -2486,7 +2453,6 @@ operator|.
 name|rcvif
 operator|->
 name|if_xname
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -2528,11 +2494,9 @@ operator|++
 expr_stmt|;
 name|CARP_LOG
 argument_list|(
-name|sc
+literal|"carp_input: received len %zd< "
+literal|"sizeof(struct carp_header)"
 argument_list|,
-operator|(
-literal|"received len %zd< sizeof(struct carp_header)"
-operator|,
 name|m
 operator|->
 name|m_len
@@ -2542,7 +2506,6 @@ argument_list|(
 expr|struct
 name|ip
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -2594,7 +2557,11 @@ operator|.
 name|carps_hdrops
 operator|++
 expr_stmt|;
-comment|/* CARP_LOG ? */
+name|CARP_LOG
+argument_list|(
+literal|"carp_input: pullup failed"
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|ip
@@ -2655,17 +2622,14 @@ operator|++
 expr_stmt|;
 name|CARP_LOG
 argument_list|(
-name|sc
+literal|"carp_input: packet too short %d on %s"
 argument_list|,
-operator|(
-literal|"packet too short %d on %s"
-operator|,
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|len
-operator|,
+argument_list|,
 name|m
 operator|->
 name|m_pkthdr
@@ -2673,7 +2637,6 @@ operator|.
 name|rcvif
 operator|->
 name|if_xname
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -2760,11 +2723,8 @@ operator|++
 expr_stmt|;
 name|CARP_LOG
 argument_list|(
-name|sc
+literal|"carp_input: checksum failed on %s"
 argument_list|,
-operator|(
-literal|"checksum failed on %s"
-operator|,
 name|m
 operator|->
 name|m_pkthdr
@@ -2772,7 +2732,6 @@ operator|.
 name|rcvif
 operator|->
 name|if_xname
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -2791,8 +2750,6 @@ expr_stmt|;
 name|carp_input_c
 argument_list|(
 name|m
-argument_list|,
-name|sc
 argument_list|,
 name|ch
 argument_list|,
@@ -2833,13 +2790,6 @@ name|m
 init|=
 operator|*
 name|mp
-decl_stmt|;
-name|struct
-name|carp_softc
-modifier|*
-name|sc
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|ip6_hdr
@@ -2909,11 +2859,9 @@ operator|++
 expr_stmt|;
 name|CARP_LOG
 argument_list|(
-name|sc
+literal|"carp6_input: packet received on non-carp "
+literal|"interface: %s"
 argument_list|,
-operator|(
-literal|"packet received on non-carp interface: %s"
-operator|,
 name|m
 operator|->
 name|m_pkthdr
@@ -2921,7 +2869,6 @@ operator|.
 name|rcvif
 operator|->
 name|if_xname
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -2952,15 +2899,12 @@ operator|++
 expr_stmt|;
 name|CARP_LOG
 argument_list|(
-name|sc
+literal|"carp6_input: received ttl %d != 255 on %s"
 argument_list|,
-operator|(
-literal|"received ttl %d != 255 on %s"
-operator|,
 name|ip6
 operator|->
 name|ip6_hlim
-operator|,
+argument_list|,
 name|m
 operator|->
 name|m_pkthdr
@@ -2968,7 +2912,6 @@ operator|.
 name|rcvif
 operator|->
 name|if_xname
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -3023,13 +2966,10 @@ operator|++
 expr_stmt|;
 name|CARP_LOG
 argument_list|(
-name|sc
+literal|"carp6_input: packet size %u too small on %s"
 argument_list|,
-operator|(
-literal|"packet size %u too small on %s"
-operator|,
 name|len
-operator|,
+argument_list|,
 name|m
 operator|->
 name|m_pkthdr
@@ -3037,7 +2977,6 @@ operator|.
 name|rcvif
 operator|->
 name|if_xname
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3075,11 +3014,8 @@ operator|++
 expr_stmt|;
 name|CARP_LOG
 argument_list|(
-name|sc
+literal|"carp6_input: checksum failed, on %s"
 argument_list|,
-operator|(
-literal|"checksum failed, on %s"
-operator|,
 name|m
 operator|->
 name|m_pkthdr
@@ -3087,7 +3023,6 @@ operator|.
 name|rcvif
 operator|->
 name|if_xname
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -3111,8 +3046,6 @@ expr_stmt|;
 name|carp_input_c
 argument_list|(
 name|m
-argument_list|,
-name|sc
 argument_list|,
 name|ch
 argument_list|,
@@ -3146,11 +3079,6 @@ modifier|*
 name|m
 parameter_list|,
 name|struct
-name|carp_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
 name|carp_header
 modifier|*
 name|ch
@@ -3169,6 +3097,11 @@ operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
+decl_stmt|;
+name|struct
+name|carp_softc
+modifier|*
+name|sc
 decl_stmt|;
 name|u_int64_t
 name|tmp_counter
@@ -3401,15 +3334,17 @@ operator|++
 expr_stmt|;
 name|CARP_LOG
 argument_list|(
-name|sc
+literal|"%s; invalid version %d"
 argument_list|,
-operator|(
-literal|"invalid version %d"
-operator|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_xname
+argument_list|,
 name|ch
 operator|->
 name|carp_version
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -3450,11 +3385,13 @@ operator|++
 expr_stmt|;
 name|CARP_LOG
 argument_list|(
-name|sc
+literal|"%s: incorrect hash"
 argument_list|,
-operator|(
-literal|"incorrect hash"
-operator|)
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -3616,6 +3553,18 @@ operator|->
 name|sc_ad_tmo
 argument_list|)
 expr_stmt|;
+name|CARP_DEBUG
+argument_list|(
+literal|"%s: MASTER -> BACKUP "
+literal|"(more frequent advertisement received)"
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_xname
+argument_list|)
+expr_stmt|;
 name|carp_set_state
 argument_list|(
 name|sc
@@ -3662,6 +3611,18 @@ operator|<
 argument_list|)
 condition|)
 block|{
+name|CARP_DEBUG
+argument_list|(
+literal|"%s: BACKUP -> MASTER "
+literal|"(preempting a slower master)"
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_xname
+argument_list|)
+expr_stmt|;
 name|carp_master_down
 argument_list|(
 name|sc
@@ -3694,6 +3655,18 @@ operator|<
 argument_list|)
 condition|)
 block|{
+name|CARP_DEBUG
+argument_list|(
+literal|"%s: BACKUP -> MASTER "
+literal|"(master timed out)"
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_xname
+argument_list|)
+expr_stmt|;
 name|carp_master_down
 argument_list|(
 name|sc
@@ -6646,6 +6619,17 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
+name|CARP_DEBUG
+argument_list|(
+literal|"%s: INIT -> MASTER (preempting)"
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_xname
+argument_list|)
+expr_stmt|;
 name|carp_set_state
 argument_list|(
 name|sc
@@ -6663,6 +6647,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|CARP_DEBUG
+argument_list|(
+literal|"%s: INIT -> BACKUP"
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_xname
+argument_list|)
+expr_stmt|;
 name|carp_set_state
 argument_list|(
 name|sc
