@@ -214,25 +214,12 @@ name|overrun_physbase
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|adveisamatch
-parameter_list|(
-name|eisa_id_t
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 specifier|const
 name|char
 modifier|*
-name|adveisamatch
+name|adv_eisa_match
 parameter_list|(
 name|eisa_id_t
 name|type
@@ -278,7 +265,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|adveisaprobe
+name|adv_eisa_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -297,7 +284,7 @@ name|irq
 decl_stmt|;
 name|desc
 operator|=
-name|adveisamatch
+name|adv_eisa_match
 argument_list|(
 name|eisa_get_id
 argument_list|(
@@ -418,7 +405,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|adveisaattach
+name|adv_eisa_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -443,14 +430,6 @@ name|struct
 name|resource
 modifier|*
 name|irq
-decl_stmt|;
-name|int
-name|unit
-init|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|int
 name|rid
@@ -580,7 +559,7 @@ name|adv_b
 operator|=
 name|adv_alloc
 argument_list|(
-name|unit
+name|dev
 argument_list|,
 name|rman_get_bustag
 argument_list|(
@@ -690,7 +669,7 @@ name|adv
 operator|=
 name|adv_alloc
 argument_list|(
-name|unit
+name|dev
 argument_list|,
 name|rman_get_bustag
 argument_list|(
@@ -1168,14 +1147,14 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|adveisaprobe
+name|adv_eisa_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|adveisaattach
+name|adv_eisa_attach
 argument_list|)
 block|,
 block|{
@@ -1197,9 +1176,11 @@ literal|"adv"
 block|,
 name|adv_eisa_methods
 block|,
-literal|1
-block|,
-comment|/* unused */
+expr|sizeof
+operator|(
+expr|struct
+name|adv_softc
+operator|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1207,7 +1188,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|adv_devclass
+name|adv_eisa_devclass
 decl_stmt|;
 end_decl_stmt
 
@@ -1220,7 +1201,7 @@ name|eisa
 argument_list|,
 name|adv_eisa_driver
 argument_list|,
-name|adv_devclass
+name|adv_eisa_devclass
 argument_list|,
 literal|0
 argument_list|,
