@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.19 %G%"
+literal|"@(#)put.c 1.20 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1485,9 +1485,34 @@ name|op
 operator|==
 name|O_FOR4D
 condition|)
+block|{
 name|n
 operator|--
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ADDR32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|DEC11
+argument_list|)
+name|p
+index|[
+name|n
+operator|/
+literal|2
+index|]
+operator|<<=
+literal|16
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -3110,7 +3135,7 @@ block|{
 specifier|register
 name|i
 expr_stmt|;
-name|int
+name|short
 name|val
 decl_stmt|;
 if|if
@@ -3218,6 +3243,7 @@ name|i
 operator|<
 literal|1024
 condition|)
+block|{
 name|obuf
 index|[
 name|i
@@ -3225,6 +3251,7 @@ index|]
 operator|=
 name|val
 expr_stmt|;
+block|}
 else|else
 block|{
 name|lseek
