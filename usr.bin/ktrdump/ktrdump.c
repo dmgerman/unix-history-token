@@ -113,7 +113,7 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"usage: ktrdump [-c] [-f] [-t] [-e execfile] [-i ktrfile ] [-m corefile] [-o outfile]"
+value|"usage: ktrdump [-c] [-f] [-q] [-t] [-e execfile] [-i ktrfile ] [-m corefile] [-o outfile]"
 end_define
 
 begin_decl_stmt
@@ -197,6 +197,13 @@ begin_decl_stmt
 specifier|static
 name|int
 name|mflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|qflag
 decl_stmt|;
 end_decl_stmt
 
@@ -368,7 +375,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"cfte:i:m:o:"
+literal|"cfqte:i:m:o:"
 argument_list|)
 operator|)
 operator|!=
@@ -527,6 +534,13 @@ literal|"%s"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|qflag
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -863,6 +877,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Print a nice header. 	 */
+if|if
+condition|(
+operator|!
+name|qflag
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|out
@@ -981,6 +1001,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Now tear through the trace buffer. 	 */
 if|if
 condition|(
