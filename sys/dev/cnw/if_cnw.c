@@ -6984,13 +6984,6 @@ literal|0
 block|splx(s);
 endif|#
 directive|endif
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"unload\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
