@@ -141,17 +141,6 @@ directive|include
 file|"libdisk.h"
 end_include
 
-begin_function_decl
-name|struct
-name|chunk
-modifier|*
-name|New_Chunk
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|int
