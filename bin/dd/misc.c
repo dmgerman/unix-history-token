@@ -398,6 +398,9 @@ name|int
 name|sig
 decl_stmt|;
 block|{
+name|summary
+argument_list|()
+expr_stmt|;
 name|_exit
 argument_list|(
 name|sig
