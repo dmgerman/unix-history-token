@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)envelope.c	5.2 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -590,6 +590,21 @@ operator|->
 name|e_dfp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_df
+operator|!=
+name|NULL
+condition|)
+name|xunlink
+argument_list|(
+name|e
+operator|->
+name|e_df
+argument_list|)
+expr_stmt|;
 name|xunlink
 argument_list|(
 name|queuename
@@ -653,21 +668,6 @@ name|e
 argument_list|)
 expr_stmt|;
 comment|/* make sure that this envelope is marked unused */
-if|if
-condition|(
-name|e
-operator|->
-name|e_df
-operator|!=
-name|NULL
-condition|)
-name|xunlink
-argument_list|(
-name|e
-operator|->
-name|e_df
-argument_list|)
-expr_stmt|;
 name|e
 operator|->
 name|e_id
