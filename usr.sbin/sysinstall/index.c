@@ -2907,7 +2907,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|curr
@@ -2934,7 +2934,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|curr
@@ -3037,6 +3037,10 @@ name|kp
 operator|->
 name|name
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|pkg_checked
@@ -3049,9 +3053,12 @@ name|kp
 argument_list|,
 operator|(
 name|int
+operator|*
 operator|)
+operator|(
 operator|&
 name|lists
+operator|)
 argument_list|,
 operator|&
 name|curr
@@ -3089,7 +3096,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|curr

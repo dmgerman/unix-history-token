@@ -5024,6 +5024,7 @@ modifier|*
 name|data
 parameter_list|,
 name|int
+modifier|*
 name|aux
 parameter_list|,
 name|int
