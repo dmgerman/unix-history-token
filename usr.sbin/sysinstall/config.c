@@ -63,6 +63,12 @@ directive|include
 file|<sys/mount.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|Chunk
@@ -1834,6 +1840,13 @@ decl_stmt|;
 name|int
 name|write_header
 decl_stmt|;
+name|time_t
+name|t_loc
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 specifier|static
 name|int
 name|did_marker
@@ -1887,6 +1900,39 @@ argument_list|(
 name|rcSite
 argument_list|,
 literal|"# Enable network daemons for user convenience.\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|t_loc
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+operator|&&
+operator|(
+name|cp
+operator|=
+name|ctime
+argument_list|(
+operator|&
+name|t_loc
+argument_list|)
+operator|)
+condition|)
+name|fprintf
+argument_list|(
+name|rcSite
+argument_list|,
+literal|"# Created: %s"
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1957,6 +2003,27 @@ block|}
 name|fclose
 argument_list|(
 name|rcSite
+argument_list|)
+expr_stmt|;
+comment|/* Tidy up the resulting file if it's late enough in the installation 	for sort and uniq to be available */
+if|if
+condition|(
+name|file_readable
+argument_list|(
+literal|"/usr/bin/sort"
+argument_list|)
+operator|&&
+name|file_readable
+argument_list|(
+literal|"/usr/bin/uniq"
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|vsystem
+argument_list|(
+literal|"sort /etc/rc.conf | uniq> /etc/rc.conf.new&& mv /etc/rc.conf.new /etc/rc.conf"
 argument_list|)
 expr_stmt|;
 block|}
