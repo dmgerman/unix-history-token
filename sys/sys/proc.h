@@ -2280,6 +2280,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PS_XCPU
+value|0x00002
+end_define
+
+begin_comment
+comment|/* Exceeded CPU limit. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PS_PROFIL
 value|0x00004
 end_define

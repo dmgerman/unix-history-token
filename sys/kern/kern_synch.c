@@ -2715,12 +2715,6 @@ name|td
 operator|->
 name|td_kse
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|register struct rlimit *rlim;
-endif|#
-directive|endif
 name|u_int
 name|sched_nest
 decl_stmt|;
@@ -2862,15 +2856,41 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-comment|/* 	 * Check if the process exceeds its cpu resource allocation. 	 * If over max, kill it. 	 * 	 * XXX drop sched_lock, pickup Giant 	 */
-block|if (p->p_state != PRS_ZOMBIE&& 	    p->p_limit->p_cpulimit != RLIM_INFINITY&& 	    p->p_runtime> p->p_limit->p_cpulimit) { 		rlim =&p->p_rlimit[RLIMIT_CPU]; 		if (p->p_runtime / (rlim_t)1000000>= rlim->rlim_max) { 			mtx_unlock_spin(&sched_lock); 			PROC_LOCK(p); 			killproc(p, "exceeded maximum CPU limit"); 			mtx_lock_spin(&sched_lock); 			PROC_UNLOCK(p); 		} else { 			mtx_unlock_spin(&sched_lock); 			PROC_LOCK(p); 			psignal(p, SIGXCPU); 			mtx_lock_spin(&sched_lock); 			PROC_UNLOCK(p); 			if (rlim->rlim_cur< rlim->rlim_max) {
-comment|/* XXX: we should make a private copy */
-block|rlim->rlim_cur += 5; 			} 		} 	}
-endif|#
-directive|endif
+comment|/* 	 * Check if the process exceeds its cpu resource allocation. 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_state
+operator|!=
+name|PRS_ZOMBIE
+operator|&&
+name|p
+operator|->
+name|p_limit
+operator|->
+name|p_cpulimit
+operator|!=
+name|RLIM_INFINITY
+operator|&&
+name|p
+operator|->
+name|p_runtime
+operator|.
+name|sec
+operator|>
+name|p
+operator|->
+name|p_limit
+operator|->
+name|p_cpulimit
+condition|)
+name|p
+operator|->
+name|p_sflag
+operator||=
+name|PS_XCPU
+expr_stmt|;
 comment|/* 	 * Finish up stats for outgoing thread. 	 */
 name|cnt
 operator|.
