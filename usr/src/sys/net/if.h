@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if.h	6.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if.h	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -280,6 +280,34 @@ parameter_list|)
 value|{ \ 	(m)->m_act = (ifq)->ifq_head; \ 	if ((ifq)->ifq_tail == 0) \ 		(ifq)->ifq_tail = (m); \ 	(ifq)->ifq_head = (m); \ 	(ifq)->ifq_len++; \ }
 end_define
 
+begin_comment
+comment|/*  * Packets destined for level-1 protocol input routines  * have a pointer to the receiving interface prepended to the data.  * IF_DEQUEUEIF extracts and returns this pointer when dequeueing the packet.  * IF_ADJ should be used otherwise to adjust for its presence.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IF_ADJ
+parameter_list|(
+name|m
+parameter_list|)
+value|{ \ 	(m)->m_off += sizeof(struct ifnet *); \ 	(m)->m_len -= sizeof(struct ifnet *); \ 	if ((m)->m_len == 0) { \ 		struct mbuf *n; \ 		MFREE((m), n); \ 		(m) = n; \ 	} \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_DEQUEUEIF
+parameter_list|(
+name|ifq
+parameter_list|,
+name|m
+parameter_list|,
+name|ifp
+parameter_list|)
+value|{ \ 	(m) = (ifq)->ifq_head; \ 	if (m) { \ 		if (((ifq)->ifq_head = (m)->m_act) == 0) \ 			(ifq)->ifq_tail = 0; \ 		(m)->m_act = 0; \ 		(ifq)->ifq_len--; \ 		(ifp) = *(mtod((m), struct ifnet **)); \ 		IF_ADJ(m); \ 	} \ }
+end_define
+
 begin_define
 define|#
 directive|define
@@ -552,11 +580,19 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INET
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|BBNNET
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|struct
