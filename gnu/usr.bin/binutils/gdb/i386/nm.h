@@ -31,6 +31,23 @@ directive|include
 file|"solib.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_ELF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SVR4_SHARED_LIBS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* This is the amount to subtract from u.u_ar0    to get the offset in the core file of the register values.  */
 end_comment
@@ -94,6 +111,12 @@ directive|define
 name|PTRACE_ARG3_TYPE
 value|char*
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FREEBSD_ELF
+end_ifndef
 
 begin_comment
 comment|/* make structure definitions match up with those expected in solib.c */
@@ -420,6 +443,11 @@ directive|define
 name|ld_2
 value|d_sdt
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Return sizeof user struct to callers in less machine dependent routines */
