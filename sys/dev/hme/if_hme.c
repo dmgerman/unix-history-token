@@ -2653,7 +2653,9 @@ name|nsegs
 operator|==
 literal|1
 argument_list|,
+operator|(
 literal|"Too many segments returned!"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
