@@ -4568,15 +4568,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|variable_set2
-argument_list|(
-name|VAR_NEWFS_ARGS
-argument_list|,
-literal|"-b 8192 -f 1024"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 return|return
 name|DITEM_SUCCESS
 return|;
