@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.10 (Berkeley) %G%"
+literal|"@(#)process.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1127,6 +1127,24 @@ break|break;
 case|case
 literal|'x'
 case|:
+if|if
+condition|(
+name|hs
+operator|==
+name|NULL
+condition|)
+name|cspace
+argument_list|(
+operator|&
+name|HS
+argument_list|,
+literal|""
+argument_list|,
+literal|0
+argument_list|,
+name|REPLACE
+argument_list|)
+expr_stmt|;
 name|tspace
 operator|=
 name|PS
