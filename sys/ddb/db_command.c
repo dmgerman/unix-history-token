@@ -2508,8 +2508,11 @@ condition|)
 name|DB_ERROR
 argument_list|(
 operator|(
-literal|"Can't find process with pid %d\n"
+literal|"Can't find process with pid %ld\n"
 operator|,
+operator|(
+name|long
+operator|)
 name|pid
 operator|)
 argument_list|)
@@ -2527,8 +2530,11 @@ condition|)
 name|DB_ERROR
 argument_list|(
 operator|(
-literal|"Can't lock process with pid %d\n"
+literal|"Can't lock process with pid %ld\n"
 operator|,
+operator|(
+name|long
+operator|)
 name|pid
 operator|)
 argument_list|)
