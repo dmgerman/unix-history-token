@@ -38,6 +38,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHNLSET_JPNBCST
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHNLSET_MIN
 value|CHNLSET_NABCST
 end_define
@@ -46,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|CHNLSET_MAX
-value|CHNLSET_WEUROPE
+value|CHNLSET_JPNBCST
 end_define
 
 begin_comment
@@ -708,12 +715,53 @@ name|BT848_WEEPROM
 value|_IOWR('x', 50, struct eeProm)
 end_define
 
+begin_comment
+comment|/* write to EEProm */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|BT848_REEPROM
 value|_IOWR('x', 51, struct eeProm)
 end_define
+
+begin_comment
+comment|/* read from EEProm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_SIGNATURE
+value|_IOWR('x', 52, struct eeProm)
+end_define
+
+begin_comment
+comment|/* read card sig */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TVTUNER_SETAFC
+value|_IOW('x', 53, int)
+end_define
+
+begin_comment
+comment|/* turn AFC on/off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TVTUNER_GETAFC
+value|_IOR('x', 54, int)
+end_define
+
+begin_comment
+comment|/* query AFC on/off */
+end_comment
 
 begin_comment
 comment|/*  * XXX: more bad magic,  *      we need to fix the METEORGINPUT to return something public  *      duplicate them here for now...  */
