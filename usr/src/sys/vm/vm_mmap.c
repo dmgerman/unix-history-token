@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -721,7 +721,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Address (if FIXED) must be page aligned. 	 * Size is implicitly rounded to a page boundary. 	 */
+comment|/* 	 * Address (if FIXED) must be page aligned. 	 * Size is implicitly rounded to a page boundary. 	 * 	 * XXX most (all?) vendors require that the file offset be 	 * page aligned as well.  However, we already have applications 	 * (e.g. nlist) that rely on unrestricted alignment.  Since we 	 * support it, let it happen. 	 */
 name|addr
 operator|=
 operator|(
@@ -747,22 +747,12 @@ name|PAGE_MASK
 operator|)
 operator|)
 operator|||
-operator|(
-operator|(
-name|flags
-operator|&
-name|MAP_ANON
-operator|)
-operator|==
+if|#
+directive|if
 literal|0
-operator|&&
-operator|(
-name|pos
-operator|&
-name|PAGE_MASK
-operator|)
-operator|)
-operator|||
+expr|((flags& MAP_ANON) == 0&& (pos& PAGE_MASK)) ||
+endif|#
+directive|endif
 operator|(
 name|ssize_t
 operator|)
@@ -1626,28 +1616,13 @@ name|p_vmspace
 operator|->
 name|vm_map
 expr_stmt|;
-comment|/* 	 * Make sure entire range is allocated. 	 */
-if|if
-condition|(
-operator|!
-name|vm_map_check_protection
-argument_list|(
-name|map
-argument_list|,
-name|addr
-argument_list|,
-name|addr
-operator|+
-name|size
-argument_list|,
-name|VM_PROT_NONE
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
+comment|/* 	 * Make sure entire range is allocated. 	 * XXX this seemed overly restrictive, so we relaxed it. 	 */
+if|#
+directive|if
+literal|0
+block|if (!vm_map_check_protection(map, addr, addr + size, VM_PROT_NONE)) 		return(EINVAL);
+endif|#
+directive|endif
 comment|/* returns nothing but KERN_SUCCESS anyway */
 operator|(
 name|void
