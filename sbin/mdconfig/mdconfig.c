@@ -92,6 +92,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|mdmaybeload
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|query
 parameter_list|(
@@ -100,6 +109,15 @@ name|int
 parameter_list|,
 specifier|const
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usage
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -127,24 +145,6 @@ init|=
 name|UNSET
 enum|;
 end_enum
-
-begin_function_decl
-name|void
-name|mdmaybeload
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|void
