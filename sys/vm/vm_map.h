@@ -452,6 +452,10 @@ name|caddr_t
 name|vm_minsaddr
 decl_stmt|;
 comment|/* user VA at max stack growth */
+name|int
+name|vm_exitingcnt
+decl_stmt|;
+comment|/* several procsses zombied in exit1 */
 block|}
 struct|;
 end_struct

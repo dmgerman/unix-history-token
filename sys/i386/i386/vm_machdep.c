@@ -942,14 +942,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* and clean-out the vmspace */
-name|vmspace_free
-argument_list|(
-name|p
-operator|->
-name|p_vmspace
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

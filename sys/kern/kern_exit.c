@@ -172,6 +172,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/user.h>
 end_include
 
@@ -680,14 +686,20 @@ name|p
 operator|->
 name|p_vmspace
 expr_stmt|;
-comment|/* 	 * Release user portion of address space. 	 * This releases references to vnodes, 	 * which could cause I/O if the file has been unlinked. 	 * Need to do this early enough that we can still sleep. 	 * Can't free the entire vmspace as the kernel stack 	 * may be mapped within that space also. 	 */
+comment|/* 	 * Release user portion of address space. 	 * This releases references to vnodes, 	 * which could cause I/O if the file has been unlinked. 	 * Need to do this early enough that we can still sleep. 	 * Can't free the entire vmspace as the kernel stack 	 * may be mapped within that space also. 	 * 	 * Processes sharing the same vmspace may exit in one order, and 	 * get cleaned up by vmspace_exit() in a different order.  The 	 * last exiting process to reach this point releases as much of 	 * the environment as it can, and the last process cleaned up 	 * by vmspace_exit() (which decrements exitingcnt) cleans up the 	 * remainder. 	 */
+operator|++
+name|vm
+operator|->
+name|vm_exitingcnt
+expr_stmt|;
 if|if
 condition|(
+operator|--
 name|vm
 operator|->
 name|vm_refcnt
 operator|==
-literal|1
+literal|0
 condition|)
 block|{
 if|if
@@ -2015,7 +2027,7 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* 			 * Give machine-dependent layer a chance 			 * to free anything that cpu_exit couldn't 			 * release while still running in process context. 			 */
-name|cpu_wait
+name|vm_waitproc
 argument_list|(
 name|p
 argument_list|)

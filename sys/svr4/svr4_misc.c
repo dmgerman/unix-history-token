@@ -6239,11 +6239,12 @@ name|p_textvp
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Give machine-dependent layer a chance 			 * to free anything that cpu_exit couldn't 			 * release while still running in process context. 			 */
-name|cpu_wait
+name|vm_waitproc
 argument_list|(
 name|q
 argument_list|)
 expr_stmt|;
+comment|/* XXX what about process 'q' itself?  zfree? */
 if|#
 directive|if
 name|defined

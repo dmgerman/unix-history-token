@@ -904,6 +904,34 @@ block|}
 end_block
 
 begin_comment
+comment|/*  * Called after process has been wait(2)'ed apon and is being reaped.  * The idea is to reclaim resources that we could not reclaim while    * the process was still executing.  */
+end_comment
+
+begin_function
+name|void
+name|vm_waitproc
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|cpu_wait
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|vmspace_exitfree
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* and clean-out the vmspace */
+block|}
+end_function
+
+begin_comment
 comment|/*  * Set default limits for VM system.  * Called for proc 0, and then inherited by all others.  *  * XXX should probably act directly on proc0.  */
 end_comment
 
