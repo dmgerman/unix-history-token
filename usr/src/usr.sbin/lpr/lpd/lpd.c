@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpd.c	4.8 (Berkeley) %G%"
+literal|"@(#)lpd.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -776,6 +776,34 @@ block|{
 name|signal
 argument_list|(
 name|SIGCHLD
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTERM
 argument_list|,
 name|SIG_IGN
 argument_list|)

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	4.13 (Berkeley) %G%"
+literal|"@(#)printjob.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -442,7 +442,28 @@ argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
+name|SIGHUP
+argument_list|,
+name|onintr
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
 name|SIGINT
+argument_list|,
+name|onintr
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|onintr
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTERM
 argument_list|,
 name|onintr
 argument_list|)
@@ -4691,7 +4712,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Cleanup child processes when a SIGINT is caught.  */
+comment|/*  * Cleanup child processes when a signal is caught.  */
 end_comment
 
 begin_expr_stmt
