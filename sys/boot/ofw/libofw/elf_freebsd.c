@@ -15,11 +15,22 @@ directive|include
 file|<sys/linker.h>
 end_include
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_include
 include|#
 directive|include
 file|<machine/bootinfo.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -210,11 +221,12 @@ name|err
 decl_stmt|,
 name|bootdev
 decl_stmt|;
-name|struct
-name|bootinfo
-modifier|*
-name|bi
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct bootinfo		*bi;
+endif|#
+directive|endif
 name|vm_offset_t
 name|ssym
 decl_stmt|,
