@@ -98,12 +98,6 @@ begin_comment
 comment|/* command line option */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KLUDGELINEMODE
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -113,15 +107,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Client support for linemode */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KLUDGELINEMODE */
 end_comment
 
 begin_endif
