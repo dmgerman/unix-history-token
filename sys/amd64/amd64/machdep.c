@@ -4785,6 +4785,9 @@ argument_list|)
 operator|+
 name|KERNBASE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
 name|ksym_start
 operator|=
 name|MD_FETCH
@@ -4809,6 +4812,8 @@ name|void
 operator|*
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Init basic tunables, hz etc */
 name|init_param1
 argument_list|()
