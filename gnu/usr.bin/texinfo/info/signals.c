@@ -223,6 +223,9 @@ name|old_WINCH
 decl_stmt|,
 modifier|*
 name|old_INT
+decl_stmt|,
+modifier|*
+name|old_CONT
 decl_stmt|;
 end_decl_stmt
 
@@ -298,8 +301,31 @@ argument_list|,
 name|info_signal_handler
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIGCONT
+argument_list|)
+name|old_CONT
+operator|=
+operator|(
+name|SigHandler
+operator|*
+operator|)
+name|signal
+argument_list|(
+name|SIGCONT
+argument_list|,
+name|info_signal_handler
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+comment|/* SIGCONT */
+endif|#
+directive|endif
+comment|/* SIGWINCH */
 if|#
 directive|if
 name|defined
@@ -536,6 +562,39 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIGWINCH
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SIGCONT
+argument_list|)
+case|case
+name|SIGCONT
+case|:
+if|if
+condition|(
+name|old_CONT
+condition|)
+call|(
+name|void
+call|)
+argument_list|(
+name|old_CONT
+argument_list|)
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
+comment|/* pretend a SIGWINCH in case the terminal window size has changed 	 while we've been asleep */
+comment|/* FALLTROUGH */
+endif|#
+directive|endif
+comment|/* defined (SIGWINCH)&& defined(SIGCONT) */
 if|#
 directive|if
 name|defined

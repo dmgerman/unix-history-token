@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -537,6 +543,30 @@ name|term_invend
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* The string to turn on keypad transmit mode, if this term has one. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|term_ks
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The string to turn off keypad transmit mode, if this term has one. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|term_ke
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -588,6 +618,15 @@ argument_list|(
 name|term_begin_use
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|term_ks
+condition|)
+name|send_to_terminal
+argument_list|(
+name|term_ks
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -601,6 +640,15 @@ name|void
 name|terminal_end_using_terminal
 parameter_list|()
 block|{
+if|if
+condition|(
+name|term_ke
+condition|)
+name|send_to_terminal
+argument_list|(
+name|term_ke
+argument_list|)
+expr_stmt|;
 name|send_to_terminal
 argument_list|(
 name|term_end_use
@@ -712,6 +760,10 @@ begin_comment
 comment|/* The key sequences output by the arrow keys, if this terminal has any. */
 end_comment
 
+begin_comment
+comment|/* Also use PageUp, PageDown, Home, End, if available. */
+end_comment
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -725,6 +777,22 @@ name|term_kr
 decl_stmt|,
 modifier|*
 name|term_kl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|term_kP
+decl_stmt|,
+modifier|*
+name|term_kN
+decl_stmt|,
+modifier|*
+name|term_kh
+decl_stmt|,
+modifier|*
+name|term_kH
 decl_stmt|;
 end_decl_stmt
 
@@ -1790,6 +1858,20 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
+name|term_kP
+operator|=
+name|term_kN
+operator|=
+name|term_kh
+operator|=
+name|term_kH
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
 return|return;
 block|}
 name|BC
@@ -2144,7 +2226,7 @@ operator|)
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Attempt to find the arrow keys.  */
+comment|/* Attempt to find the arrow keys. */
 name|term_ku
 operator|=
 name|tgetstr
@@ -2180,6 +2262,67 @@ operator|=
 name|tgetstr
 argument_list|(
 literal|"kl"
+argument_list|,
+operator|&
+name|buffer
+argument_list|)
+expr_stmt|;
+name|term_kP
+operator|=
+name|tgetstr
+argument_list|(
+literal|"kP"
+argument_list|,
+operator|&
+name|buffer
+argument_list|)
+expr_stmt|;
+name|term_kN
+operator|=
+name|tgetstr
+argument_list|(
+literal|"kN"
+argument_list|,
+operator|&
+name|buffer
+argument_list|)
+expr_stmt|;
+name|term_kh
+operator|=
+name|tgetstr
+argument_list|(
+literal|"kh"
+argument_list|,
+operator|&
+name|buffer
+argument_list|)
+expr_stmt|;
+name|term_kH
+operator|=
+name|tgetstr
+argument_list|(
+literal|"kH"
+argument_list|,
+operator|&
+name|buffer
+argument_list|)
+expr_stmt|;
+comment|/* Enable keypad and cursor keys if ks defined */
+name|term_ks
+operator|=
+name|tgetstr
+argument_list|(
+literal|"ks"
+argument_list|,
+operator|&
+name|buffer
+argument_list|)
+expr_stmt|;
+name|term_ke
+operator|=
+name|tgetstr
+argument_list|(
+literal|"ke"
 argument_list|,
 operator|&
 name|buffer
