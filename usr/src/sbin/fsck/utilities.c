@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.32 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2104,6 +2104,29 @@ parameter_list|()
 function_decl|;
 if|if
 condition|(
+name|curdir
+operator|==
+name|ino
+operator|&&
+name|ino
+operator|==
+name|ROOTINO
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|namebuf
+argument_list|,
+literal|"/"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|busy
 operator|||
 operator|(
@@ -2385,6 +2408,11 @@ name|void
 name|catch
 parameter_list|()
 block|{
+if|if
+condition|(
+operator|!
+name|doinglevel2
+condition|)
 name|ckfini
 argument_list|()
 expr_stmt|;
