@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.69 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.70 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7409,6 +7409,41 @@ name|EX_IOERR
 expr_stmt|;
 block|}
 block|}
+comment|/* some mailers want extra blank line at end of message */
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|M_BLANKEND
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+operator|&&
+name|buf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|&&
+name|buf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\n'
+condition|)
+name|putline
+argument_list|(
+literal|""
+argument_list|,
+name|fp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
