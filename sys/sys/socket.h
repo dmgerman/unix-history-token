@@ -383,10 +383,6 @@ comment|/* get socket type */
 end_comment
 
 begin_comment
-comment|/*efine	SO_PRIVSTATE	0x1009		   get/deny privileged state */
-end_comment
-
-begin_comment
 comment|/*  * Structure used for manipulating linger option.  */
 end_comment
 
