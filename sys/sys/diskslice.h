@@ -120,12 +120,7 @@ decl_stmt|;
 comment|/* BSD label, if any */
 name|void
 modifier|*
-name|ds_bdev
-decl_stmt|;
-comment|/* devfs token for whole slice */
-name|void
-modifier|*
-name|ds_cdev
+name|ds_dev
 decl_stmt|;
 comment|/* devfs token for raw whole slice */
 ifdef|#
@@ -153,32 +148,16 @@ endif|#
 directive|endif
 name|void
 modifier|*
-name|ds_bdevs
+name|ds_devs
 index|[
 name|MAXPARTITIONS
 index|]
 decl_stmt|;
 comment|/* XXX s.b. in label */
-name|void
-modifier|*
-name|ds_cdevs
-index|[
-name|MAXPARTITIONS
-index|]
-decl_stmt|;
-comment|/* XXX s.b. in label */
-name|u_char
-name|ds_bopenmask
-decl_stmt|;
-comment|/* bdevs open */
-name|u_char
-name|ds_copenmask
-decl_stmt|;
-comment|/* cdevs open */
 name|u_char
 name|ds_openmask
 decl_stmt|;
-comment|/* [bc]devs open */
+comment|/* devs open */
 name|u_char
 name|ds_wlabel
 decl_stmt|;
