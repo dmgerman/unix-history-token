@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of SCSI Direct Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_da.c,v 1.4 1998/09/19 04:59:35 gibbs Exp $  */
+comment|/*  * Implementation of SCSI Direct Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_da.c,v 1.5 1998/09/20 07:17:11 gibbs Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|"opt_hw_wdog.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -25,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -81,19 +75,11 @@ directive|include
 file|<machine/cons.h>
 end_include
 
-begin_comment
-comment|/* For cncheckc */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
 end_include
-
-begin_comment
-comment|/* For Maxmem */
-end_comment
 
 begin_include
 include|#
@@ -146,25 +132,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/cam_debug.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/scsi/scsi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cam/scsi/scsi_message.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/scsi/scsi_da.h>
 end_include
 
 begin_typedef
@@ -346,23 +314,6 @@ name|union
 name|ccb
 name|saved_ccb
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|b_devfs_token
-decl_stmt|;
-name|void
-modifier|*
-name|c_devfs_token
-decl_stmt|;
-name|void
-modifier|*
-name|ctl_devfs_token
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -935,16 +886,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|softc
-operator|->
-name|dk_slices
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 			 * If any partition is open, but the disk has 			 * been invalidated, disallow further opens. 			 */
+comment|/* 		 * If any partition is open, although the disk has 		 * been invalidated, disallow further opens. 		 */
 if|if
 condition|(
 name|dsisopen
@@ -966,7 +908,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* Invalidate our pack information */
+comment|/* Invalidate our pack information. */
 name|dsgone
 argument_list|(
 operator|&
@@ -975,7 +917,6 @@ operator|->
 name|dk_slices
 argument_list|)
 expr_stmt|;
-block|}
 name|softc
 operator|->
 name|flags
@@ -1112,6 +1053,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|struct
+name|ccb_getdev
+name|cgd
+decl_stmt|;
 comment|/* Build label for whole disk. */
 name|bzero
 argument_list|(
@@ -1129,6 +1074,91 @@ operator|.
 name|d_type
 operator|=
 name|DTYPE_SCSI
+expr_stmt|;
+comment|/* 		 * Grab the inquiry data to get the vendor and product names. 		 * Put them in the typename and packname for the label. 		 */
+name|xpt_setup_ccb
+argument_list|(
+operator|&
+name|cgd
+operator|.
+name|ccb_h
+argument_list|,
+name|periph
+operator|->
+name|path
+argument_list|,
+comment|/*priority*/
+literal|1
+argument_list|)
+expr_stmt|;
+name|cgd
+operator|.
+name|ccb_h
+operator|.
+name|func_code
+operator|=
+name|XPT_GDEV_TYPE
+expr_stmt|;
+name|xpt_action
+argument_list|(
+operator|(
+expr|union
+name|ccb
+operator|*
+operator|)
+operator|&
+name|cgd
+argument_list|)
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|label
+operator|.
+name|d_typename
+argument_list|,
+name|cgd
+operator|.
+name|inq_data
+operator|.
+name|vendor
+argument_list|,
+name|min
+argument_list|(
+name|SID_VENDOR_SIZE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|label
+operator|.
+name|d_typename
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|label
+operator|.
+name|d_packname
+argument_list|,
+name|cgd
+operator|.
+name|inq_data
+operator|.
+name|product
+argument_list|,
+name|min
+argument_list|(
+name|SID_PRODUCT_SIZE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|label
+operator|.
+name|d_packname
+argument_list|)
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|label
 operator|.
@@ -1470,6 +1500,27 @@ operator|->
 name|dk_slices
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dsisopen
+argument_list|(
+name|softc
+operator|->
+name|dk_slices
+argument_list|)
+condition|)
+block|{
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|ccb
 operator|=
 name|cam_periph_getccb
@@ -5017,76 +5068,10 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* 					 * If we have sense information, go 					 * ahead and print it out. 					 * Otherwise, just say that we  					 * couldn't attach. 					 */
 if|if
 condition|(
-operator|(
 name|have_sense
-operator|)
-operator|&&
-operator|(
-name|asc
-operator|||
-name|ascq
-operator|)
-operator|&&
-operator|(
-name|error_code
-operator|==
-name|SSD_CURRENT_ERROR
-operator|)
 condition|)
-name|sprintf
-argument_list|(
-name|announce_buf
-argument_list|,
-literal|"fatal error: %s, %s "
-literal|"-- failed to attach "
-literal|"to device"
-argument_list|,
-name|scsi_sense_key_text
-index|[
-name|sense_key
-index|]
-argument_list|,
-name|scsi_sense_desc
-argument_list|(
-name|asc
-argument_list|,
-name|ascq
-argument_list|,
-operator|&
-name|cgd
-operator|.
-name|inq_data
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-name|sprintf
-argument_list|(
-name|announce_buf
-argument_list|,
-literal|"fatal error, failed"
-literal|" to attach to device"
-argument_list|)
-expr_stmt|;
-comment|/* 					 * Just print out the error, not 					 * the full probe message, when we 					 * don't attach. 					 */
-name|printf
-argument_list|(
-literal|"%s%d: %s\n"
-argument_list|,
-name|periph
-operator|->
-name|periph_name
-argument_list|,
-name|periph
-operator|->
-name|unit_number
-argument_list|,
-name|announce_buf
-argument_list|)
-expr_stmt|;
 name|scsi_sense_print
 argument_list|(
 operator|&
@@ -5095,24 +5080,52 @@ operator|->
 name|csio
 argument_list|)
 expr_stmt|;
-comment|/* 					 * Free up resources. 					 */
-name|cam_extend_release
+else|else
+block|{
+name|xpt_print_path
 argument_list|(
-name|daperiphs
-argument_list|,
 name|periph
 operator|->
-name|unit_number
+name|path
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"got CAM status %#x\n"
+argument_list|,
+name|done_ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+argument_list|)
+expr_stmt|;
+block|}
+name|xpt_print_path
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"fatal error, failed"
+literal|" to attach to device"
+argument_list|)
+expr_stmt|;
+comment|/* 					 * Free up resources. 					 */
 name|cam_periph_invalidate
 argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-name|periph
+name|announce_buf
+index|[
+literal|0
+index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 block|}
 block|}
@@ -5126,11 +5139,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|periph
+name|announce_buf
+index|[
+literal|0
+index|]
 operator|!=
-name|NULL
+literal|'\0'
 condition|)
-block|{
 name|xpt_announce_periph
 argument_list|(
 name|periph
@@ -5149,7 +5164,6 @@ argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 block|}
 case|case
