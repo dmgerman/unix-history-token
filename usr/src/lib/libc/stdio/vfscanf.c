@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfscanf.c	5.4 (Berkeley) %G%"
+literal|"@(#)vfscanf.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -528,6 +528,16 @@ name|nread
 operator|=
 literal|0
 expr_stmt|;
+name|base
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX just to keep gcc happy */
+name|ccfn
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* XXX just to keep gcc happy */
 for|for
 control|(
 init|;
