@@ -1609,6 +1609,27 @@ goto|goto
 name|out
 goto|;
 block|}
+if|if
+condition|(
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_type
+operator|==
+name|PTHREAD_MUTEX_RECURSIVE
+condition|)
+operator|(
+operator|*
+name|mutex
+operator|)
+operator|->
+name|m_data
+operator|.
+name|m_count
+operator|++
+expr_stmt|;
 comment|/* 	 * The mutex is now owned by curthread. 	 */
 name|_thread_critical_enter
 argument_list|(
@@ -2554,25 +2575,9 @@ literal|"Shouldn't resume here?\n"
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|PTHREAD_MUTEX_RECURSIVE
-case|:
-comment|/* Increment the lock count: */
-name|mutex
-operator|->
-name|m_data
-operator|.
-name|m_count
-operator|++
-expr_stmt|;
-break|break;
 default|default:
-comment|/* Trap invalid mutex types; */
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
+comment|/* Do Nothing */
+break|break;
 block|}
 return|return
 operator|(
