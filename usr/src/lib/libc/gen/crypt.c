@@ -20,7 +20,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crypt.c	5.2 (Berkeley) %G%"
+literal|"@(#)crypt.c	5.2.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2308,18 +2308,7 @@ name|ii
 operator|++
 control|)
 block|{
-comment|/* 		 * Set direction 		 */
-if|if
-condition|(
-name|edflag
-condition|)
-name|i
-operator|=
-literal|15
-operator|-
-name|ii
-expr_stmt|;
-else|else
+comment|/* 		 * Only encrypt for now. 		 */
 name|i
 operator|=
 name|ii
