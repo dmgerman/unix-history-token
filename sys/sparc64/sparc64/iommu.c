@@ -1455,7 +1455,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|microtime
+name|microuptime
 argument_list|(
 operator|&
 name|cur
@@ -1515,7 +1515,7 @@ argument_list|,
 operator|<=
 argument_list|)
 condition|)
-name|microtime
+name|microuptime
 argument_list|(
 operator|&
 name|cur
