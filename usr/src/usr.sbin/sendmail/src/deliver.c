@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.77
+literal|3.78
 operator|%
 name|G
 operator|%
@@ -5129,7 +5129,7 @@ expr_stmt|;
 block|}
 name|f
 operator|=
-name|fopen
+name|dfopen
 argument_list|(
 name|filename
 argument_list|,
@@ -5182,7 +5182,7 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-comment|/* reset ISUID& ISGID bits */
+comment|/* reset ISUID& ISGID bits for paranoid systems */
 operator|(
 name|void
 operator|)

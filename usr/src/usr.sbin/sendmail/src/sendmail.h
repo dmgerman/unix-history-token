@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.65		%G%"
+literal|"@(#)sendmail.h	3.66		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2040,6 +2040,15 @@ begin_function_decl
 specifier|extern
 name|bool
 name|sameaddr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|FILE
+modifier|*
+name|dfopen
 parameter_list|()
 function_decl|;
 end_function_decl
