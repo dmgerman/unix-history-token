@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)optr.c	1.4 (Berkeley) %G%"
+literal|"@(#)optr.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1071,6 +1071,20 @@ name|fmt
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|a1
+decl_stmt|,
+name|a2
+decl_stmt|,
+name|a3
+decl_stmt|,
+name|a4
+decl_stmt|,
+name|a5
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|fprintf
@@ -1154,6 +1168,20 @@ begin_decl_stmt
 name|char
 modifier|*
 name|fmt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|a1
+decl_stmt|,
+name|a2
+decl_stmt|,
+name|a3
+decl_stmt|,
+name|a4
+decl_stmt|,
+name|a5
 decl_stmt|;
 end_decl_stmt
 
@@ -1882,6 +1910,11 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
+name|int
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
 block|{
 return|return
 operator|(
@@ -1905,6 +1938,11 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
+name|int
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
 block|{
 return|return
 operator|(
