@@ -2225,6 +2225,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DC_RXSTAT_MIIERE
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
 name|DC_RXSTAT_WATCHDOG
 value|0x00000010
 end_define
@@ -2287,6 +2294,13 @@ define|#
 directive|define
 name|DC_RXSTAT_RXTYPE
 value|0x00003000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_RXSTAT_DE
+value|0x00004000
 end_define
 
 begin_define
