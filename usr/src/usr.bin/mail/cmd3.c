@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.6 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1148,13 +1148,6 @@ name|GTO
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mapf
-argument_list|(
-name|np
-argument_list|,
-name|rcv
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Delete my name from the reply list, 	 * and with it, all my alternate names. 	 */
 name|np
 operator|=
@@ -1371,13 +1364,6 @@ name|cp
 argument_list|,
 name|GCC
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|mapf
-argument_list|(
-name|np
-argument_list|,
-name|rcv
 argument_list|)
 expr_stmt|;
 name|np

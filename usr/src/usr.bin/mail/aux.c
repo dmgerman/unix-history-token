@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)aux.c	5.8 (Berkeley) %G%"
+literal|"@(#)aux.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1369,7 +1369,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Touch the indicated file.  * This is nifty for the shell.  * If we have the utime() system call, this is better served  * by using that, since it will work for empty files.  * On non-utime systems, we must sleep a second, then read.  */
+comment|/*  * Touch the indicated file.  * This is nifty for the shell.  */
 end_comment
 
 begin_macro
@@ -1388,9 +1388,6 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|UTIME
 name|struct
 name|stat
 name|statb
@@ -1405,23 +1402,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-else|#
-directive|else
-specifier|register
-name|int
-name|pid
-decl_stmt|,
-name|f
-decl_stmt|;
-name|char
-name|w
-decl_stmt|;
-endif|#
-directive|endif
-endif|UTIME
-ifdef|#
-directive|ifdef
-name|UTIME
 if|if
 condition|(
 name|stat
@@ -1467,46 +1447,6 @@ argument_list|,
 name|time_p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|sleep
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|f
-operator|=
-name|open
-argument_list|(
-name|name
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-return|return;
-name|read
-argument_list|(
-name|f
-argument_list|,
-operator|&
-name|w
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.8 (Berkeley) %G%"
+literal|"@(#)main.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,15 +149,6 @@ modifier|*
 name|optarg
 decl_stmt|;
 comment|/* 	 * Set up a reasonable environment. 	 * Figure out whether we are being run interactively, set up 	 * all the temporary files, buffer standard output, and so forth. 	 */
-ifdef|#
-directive|ifdef
-name|GETHOST
-name|inithost
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-endif|GETHOST
 name|mypid
 operator|=
 name|getpid

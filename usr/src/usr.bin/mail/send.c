@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)send.c	5.7 (Berkeley) %G%"
+literal|"@(#)send.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1155,13 +1155,6 @@ argument_list|(
 name|mtf
 argument_list|)
 expr_stmt|;
-name|to
-operator|=
-name|verify
-argument_list|(
-name|to
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|senderr
@@ -1696,9 +1689,6 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SENDMAIL
 if|if
 condition|(
 operator|(
@@ -1723,19 +1713,9 @@ argument_list|,
 name|namelist
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|SENDMAIL
-name|execv
-argument_list|(
-name|MAIL
-argument_list|,
-name|namelist
-argument_list|)
-expr_stmt|;
 name|perror
 argument_list|(
-name|MAIL
+name|deliver
 argument_list|)
 expr_stmt|;
 name|exit

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quit.c	5.5 (Berkeley) %G%"
+literal|"@(#)quit.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,7 +127,7 @@ condition|(
 name|readonly
 condition|)
 return|return;
-comment|/* 	 * See if there any messages to save in mbox.  If no, we 	 * can save copying mbox to /tmp and back. 	 * 	 * Check also to see if any files need to be preserved. 	 * Delete all untouched messages to keep them out of mbox. 	 * If all the messages are to be preserved, just exit with 	 * a message. 	 * 	 * If the luser has sent mail to himself, refuse to do 	 * anything with the mailbox, unless mail locking works. 	 */
+comment|/* 	 * See if there any messages to save in mbox.  If no, we 	 * can save copying mbox to /tmp and back. 	 * 	 * Check also to see if any files need to be preserved. 	 * Delete all untouched messages to keep them out of mbox. 	 * If all the messages are to be preserved, just exit with 	 * a message. 	 */
 name|fbuf
 operator|=
 name|fopen
@@ -156,28 +156,6 @@ argument_list|,
 name|LOCK_EX
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|CANLOCK
-if|if
-condition|(
-name|selfsent
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"You have new mail.\n"
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|fbuf
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-endif|#
-directive|endif
 name|rbuf
 operator|=
 name|NULL

@@ -1,70 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)pathnames.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)pathnames.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * Declarations and constants specific to an installation.  *  * Vax/Unix version 7.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GETHOST
-end_define
-
-begin_comment
-comment|/* System has gethostname syscall */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GETHOST
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|LOCAL
-value|EMPTYID
-end_define
-
-begin_comment
-comment|/* Dynamically determined local host */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LOCAL
-value|'j'
-end_define
-
-begin_comment
-comment|/* Local host id */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|GETHOST
-end_endif
-
-begin_define
-define|#
-directive|define
-name|MAIL
-value|"/bin/mail"
-end_define
-
-begin_comment
-comment|/* Name of mail sender */
 end_comment
 
 begin_define
@@ -140,6 +80,10 @@ name|THELPFILE
 value|"/usr/lib/Mail.tildehelp"
 end_define
 
+begin_comment
+comment|/* Name of casual tilde help */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -149,10 +93,6 @@ end_define
 
 begin_comment
 comment|/* Where to audit mail sending */
-end_comment
-
-begin_comment
-comment|/* Name of casual tilde help */
 end_comment
 
 begin_define
@@ -170,26 +110,6 @@ end_define
 
 begin_comment
 comment|/* New mail goes to end of mailbox */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CANLOCK
-end_define
-
-begin_comment
-comment|/* Locking protocol actually works */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UTIME
-end_define
-
-begin_comment
-comment|/* System implements utime(2) */
 end_comment
 
 end_unit
