@@ -130,6 +130,8 @@ name|blkoffset
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|orig_resid
 decl_stmt|;
 name|u_short
 name|mode
@@ -249,6 +251,12 @@ literal|0
 block|if ((u_quad_t)uio->uio_offset> fs->fs_maxfilesize) 		return (EFBIG);
 endif|#
 directive|endif
+name|orig_resid
+operator|=
+name|uio
+operator|->
+name|uio_resid
+expr_stmt|;
 for|for
 control|(
 name|error
@@ -594,7 +602,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
+name|orig_resid
+operator|>
+literal|0
+operator|&&
+operator|(
+name|error
+operator|==
+literal|0
+operator|||
+name|uio
+operator|->
+name|uio_resid
+operator|!=
+name|orig_resid
+operator|)
+operator|&&
 operator|(
 name|vp
 operator|->
@@ -604,6 +627,8 @@ name|mnt_flag
 operator|&
 name|MNT_NOATIME
 operator|)
+operator|==
+literal|0
 condition|)
 name|ip
 operator|->
