@@ -1434,15 +1434,19 @@ condition|(
 operator|(
 name|c
 operator|==
-literal|'t'
-operator|||
-name|c
-operator|==
 literal|'c'
 operator|||
 name|c
 operator|==
 literal|'d'
+operator|||
+name|c
+operator|==
+literal|'r'
+operator|||
+name|c
+operator|==
+literal|'t'
 operator|)
 operator|&&
 name|d
@@ -1513,7 +1517,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Comparison routine that clean_q() uses for scandir.  *  * The purpose of this sort is to have all `df' files end up immediately  * after the matching `cf' file.  For files matching `cf', `df', or `tf',  * it sorts by job number and machine, then by `cf', `df', or `tf', then  * by the sequence letter A-Z, a-z.    This routine may also see filenames  * which do not start with `cf', `df', or `tf' (such as `errs.*'), and  * those are simply sorted by the full filename.  */
+comment|/*  * Comparison routine that clean_q() uses for scandir.  *  * The purpose of this sort is to have all `df' files end up immediately  * after the matching `cf' file.  For files matching `cf', `df', `rf', or  * `tf', it sorts by job number and machine, then by `cf', `df', `rf', or  * `tf', and then by the sequence letter (which is A-Z, or a-z).    This  * routine may also see filenames which do not start with `cf', `df', `rf',  * or `tf' (such as `errs.*'), and those are simply sorted by the full  * filename.  *  * XXX  *   This assumes that all control files start with `cfA*', and it turns  *   out there are a few implementations of lpr which will create `cfB*'  *   filenames (they will have datafile names which start with `dfB*').  */
 end_comment
 
 begin_function
@@ -1606,7 +1610,7 @@ operator|)
 operator|->
 name|d_name
 expr_stmt|;
-comment|/* 	 * First separate filenames into cagatories.  Catagories are 	 * legitimate `cf', `df',& `tf' filenames, and "other" - in 	 * that order.  It is critical that the mapping be exactly 	 * the same for 'a' vs 'b', so define a macro for the job. 	 * 	 * [aside: the standard `cf' file has the jobnumber start in 	 * position 4, but some implementations have that as an extra 	 * file-sequence letter, and start the job number in position 5.] 	 */
+comment|/* 	 * First separate filenames into cagatories.  Catagories are 	 * legitimate `cf', `df', `rf'& `tf' filenames, and "other" - in 	 * that order.  It is critical that the mapping be exactly the 	 * same for 'a' vs 'b', so define a macro for the job. 	 * 	 * [aside: the standard `cf' file has the jobnumber start in 	 * position 4, but some implementations have that as an extra 	 * file-sequence letter, and start the job number in position 5.] 	 */
 define|#
 directive|define
 name|MAP_TO_CAT
@@ -1619,7 +1623,7 @@ name|jnum_X
 parameter_list|,
 name|seq_X
 parameter_list|)
-value|do { \ 	cat_X = cat_other;    \ 	ch = *(fname_X + 2);  \ 	jnum_X = fname_X + 3; \ 	seq_X = 0;            \ 	if ((*(fname_X + 1) == 'f')&& (isalpha(ch))) { \ 		seq_X = ch; \ 		if (*fname_X == 'c') \ 			cat_X = 1; \ 		else if (*fname_X == 'd') \ 			cat_X = 2; \ 		else if (*fname_X == 't') \ 			cat_X = 3; \ 		if (cat_X != cat_other) { \ 			ch = *jnum_X; \ 			if (!isdigit(ch)) { \ 				if (isalpha(ch)) { \ 					jnum_X++; \ 					ch = *jnum_X; \ 					seq_X = (seq_X<< 8) + ch; \ 				} \ 				if (!isdigit(ch)) \ 					cat_X = cat_other; \ 			} \ 		} \ 	} \ } while (0)
+value|do { \ 	cat_X = cat_other;    \ 	ch = *(fname_X + 2);  \ 	jnum_X = fname_X + 3; \ 	seq_X = 0;            \ 	if ((*(fname_X + 1) == 'f')&& (isalpha(ch))) { \ 		seq_X = ch; \ 		if (*fname_X == 'c') \ 			cat_X = 1; \ 		else if (*fname_X == 'd') \ 			cat_X = 2; \ 		else if (*fname_X == 'r') \ 			cat_X = 3; \ 		else if (*fname_X == 't') \ 			cat_X = 4; \ 		if (cat_X != cat_other) { \ 			ch = *jnum_X; \ 			if (!isdigit(ch)) { \ 				if (isalpha(ch)) { \ 					jnum_X++; \ 					ch = *jnum_X; \ 					seq_X = (seq_X<< 8) + ch; \ 				} \ 				if (!isdigit(ch)) \ 					cat_X = cat_other; \ 			} \ 		} \ 	} \ } while (0)
 name|MAP_TO_CAT
 argument_list|(
 name|fname_a
@@ -1697,7 +1701,7 @@ goto|goto
 name|have_res
 goto|;
 block|}
-comment|/* 	 * At this point, we know both files are legitimate `cf', `df', 	 * or `tf' files.  Compare them by job-number and machine name. 	 */
+comment|/* 	 * At this point, we know both files are legitimate `cf', `df', `rf', 	 * or `tf' files.  Compare them by job-number and machine name. 	 */
 name|res
 operator|=
 name|strcmp
@@ -2372,7 +2376,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Must be a df with no cf (otherwise, it would have 			 * been skipped above) or a tf file (which can always 			 * be removed if it's old enough). 			 */
+comment|/* 			 * Must be a df with no cf (otherwise, it would have 			 * been skipped above) or an rf or tf file (which can 			 * always be removed if it is old enough). 			 */
 name|rmcp
 operator|=
 literal|1
