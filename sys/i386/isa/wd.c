@@ -229,6 +229,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WDOPT_SLEEPHACK
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|WDOPT_MULTIMASK
 value|0x00ff
 end_define
@@ -758,7 +765,11 @@ comment|/* i/o port base */
 name|short
 name|dk_flags
 decl_stmt|;
-comment|/* drive characteistics found */
+comment|/* drive characteristics found */
+name|u_long
+name|cfg_flags
+decl_stmt|;
+comment|/* configured characteristics */
 define|#
 directive|define
 name|DKFL_SINGLE
@@ -1025,9 +1036,6 @@ name|struct
 name|disk
 modifier|*
 name|du
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1720,12 +1728,10 @@ operator|->
 name|id_iobase
 expr_stmt|;
 comment|/* 		 * Use the individual device flags or the controller 		 * flags. 		 */
-if|if
-condition|(
-name|wdgetctlr
-argument_list|(
 name|du
-argument_list|,
+operator|->
+name|cfg_flags
+operator|=
 name|wdup
 operator|->
 name|id_flags
@@ -1743,6 +1749,12 @@ operator|*
 name|unit
 operator|)
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|wdgetctlr
+argument_list|(
+name|du
 argument_list|)
 operator|==
 literal|0
@@ -1831,6 +1843,19 @@ argument_list|,
 name|du
 operator|->
 name|dk_multi
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|du
+operator|->
+name|cfg_flags
+operator|&
+name|WDOPT_SLEEPHACK
+condition|)
+name|printf
+argument_list|(
+literal|", sleep-hack"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3575,6 +3600,10 @@ operator|.
 name|b_active
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|WDDEBUG
+comment|/* 		 * These happen mostly because the power-mgt part of the 		 * bios shuts us down, and we just manage to see the 		 * interrupt from the "SLEEP" command.  		 */
 name|printf
 argument_list|(
 literal|"wdc%d: extra interrupt\n"
@@ -3582,6 +3611,8 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 name|bp
@@ -5544,6 +5575,36 @@ block|{
 name|u_int
 name|wdc
 decl_stmt|;
+name|wdc
+operator|=
+name|du
+operator|->
+name|dk_port
+expr_stmt|;
+if|if
+condition|(
+name|du
+operator|->
+name|cfg_flags
+operator|&
+name|WDOPT_SLEEPHACK
+condition|)
+if|if
+condition|(
+name|inb
+argument_list|(
+name|wdc
+operator|+
+name|wd_status
+argument_list|)
+operator|==
+name|WDCS_BUSY
+condition|)
+name|wdunwedge
+argument_list|(
+name|du
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|wdwait
@@ -5562,12 +5623,6 @@ operator|(
 literal|1
 operator|)
 return|;
-name|wdc
-operator|=
-name|du
-operator|->
-name|dk_port
-expr_stmt|;
 if|if
 condition|(
 name|command
@@ -6071,9 +6126,6 @@ name|struct
 name|disk
 modifier|*
 name|du
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 block|{
 name|int
@@ -6096,6 +6148,13 @@ modifier|*
 name|wp
 init|=
 name|NULL
+decl_stmt|;
+name|u_long
+name|flags
+init|=
+name|du
+operator|->
+name|cfg_flags
 decl_stmt|;
 name|again
 label|:
