@@ -613,7 +613,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: fdformat [-q] [-n | -v] [-f #] [-c #] [-s #] [-h #]"
+literal|"usage: fdformat [-y] [-q] [-n | -v] [-f #] [-c #] [-s #] [-h #]"
 argument_list|,
 literal|"                [-r #] [-g #] [-i #] [-S #] [-F #] [-t #] devname"
 argument_list|)
@@ -837,6 +837,10 @@ decl_stmt|,
 name|verify_only
 init|=
 literal|0
+decl_stmt|,
+name|confirm
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|fd
@@ -876,7 +880,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:c:s:h:r:g:S:F:t:i:qvn"
+literal|"f:c:s:h:r:g:S:F:t:i:qyvn"
 argument_list|)
 operator|)
 operator|!=
@@ -1024,6 +1028,14 @@ case|case
 literal|'q'
 case|:
 name|quiet
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'y'
+case|:
+name|confirm
 operator|=
 literal|1
 expr_stmt|;
@@ -1451,6 +1463,9 @@ if|if
 condition|(
 operator|!
 name|quiet
+operator|&&
+operator|!
+name|confirm
 condition|)
 block|{
 name|printf
