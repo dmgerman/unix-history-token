@@ -201,7 +201,7 @@ name|char
 modifier|*
 name|tar_opts
 init|=
-literal|"b:C:cF:f:HhjkLlmnOoPprtT:UuvwXxyZz"
+literal|"Bb:C:cF:f:HhjkLlmnOoPprtT:UuvwXxyZz"
 decl_stmt|;
 end_decl_stmt
 
@@ -499,6 +499,16 @@ block|,
 name|NULL
 block|,
 literal|'p'
+block|}
+block|,
+block|{
+literal|"read-full-blocks"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'B'
 block|}
 block|,
 block|{
@@ -902,12 +912,17 @@ condition|)
 block|{
 endif|#
 directive|endif
-comment|/* XXX TODO: Augment the compatibility notes below. */
 switch|switch
 condition|(
 name|opt
 condition|)
 block|{
+case|case
+literal|'B'
+case|:
+comment|/* GNU tar */
+comment|/* 			 * bsdtar is stream-based internally, so this 			 * option has no effect.  Just ignore it. 			 */
+break|break;
 case|case
 literal|'b'
 case|:
