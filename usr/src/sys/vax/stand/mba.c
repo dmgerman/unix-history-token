@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mba.c	7.2 (Berkeley) 2/21/87  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mba.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -68,6 +68,8 @@ name|mbastart
 argument_list|(
 name|io
 argument_list|,
+name|unit
+argument_list|,
 name|func
 argument_list|)
 specifier|register
@@ -80,6 +82,8 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
+name|unit
+decl_stmt|,
 name|func
 decl_stmt|;
 end_decl_stmt
@@ -95,7 +99,7 @@ name|mbamba
 argument_list|(
 name|io
 operator|->
-name|i_unit
+name|i_adapt
 argument_list|)
 decl_stmt|;
 name|struct
@@ -107,7 +111,9 @@ name|mbadrv
 argument_list|(
 name|io
 operator|->
-name|i_unit
+name|i_adapt
+argument_list|,
+name|unit
 argument_list|)
 decl_stmt|;
 specifier|register
@@ -120,16 +126,15 @@ name|mba
 operator|->
 name|mba_map
 decl_stmt|;
-name|int
-name|npf
-decl_stmt|;
 name|unsigned
+name|int
 name|v
 decl_stmt|;
 name|int
+name|npf
+decl_stmt|,
 name|o
-decl_stmt|;
-name|int
+decl_stmt|,
 name|vaddr
 decl_stmt|;
 name|v
@@ -247,6 +252,8 @@ expr_stmt|;
 name|mbawait
 argument_list|(
 name|io
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 return|return
@@ -269,6 +276,8 @@ expr_stmt|;
 name|mbawait
 argument_list|(
 name|io
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 return|return
@@ -351,6 +360,8 @@ block|}
 name|mbawait
 argument_list|(
 name|io
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -397,6 +408,8 @@ begin_expr_stmt
 name|mbawait
 argument_list|(
 name|io
+argument_list|,
+name|unit
 argument_list|)
 specifier|register
 expr|struct
@@ -405,6 +418,12 @@ operator|*
 name|io
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -417,7 +436,7 @@ name|mbamba
 argument_list|(
 name|io
 operator|->
-name|i_unit
+name|i_adapt
 argument_list|)
 decl_stmt|;
 name|struct
@@ -429,7 +448,9 @@ name|mbadrv
 argument_list|(
 name|io
 operator|->
-name|i_unit
+name|i_adapt
+argument_list|,
+name|unit
 argument_list|)
 decl_stmt|;
 while|while
