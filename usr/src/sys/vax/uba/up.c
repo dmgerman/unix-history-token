@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.18	81/02/21	*/
+comment|/*	up.c	4.19	81/02/22	*/
 end_comment
 
 begin_include
@@ -380,7 +380,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|uba_driver
-name|updriver
+name|scdriver
 init|=
 block|{
 name|upprobe
@@ -472,7 +472,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|int
+name|u_char
 name|up_offset
 index|[
 literal|16
@@ -510,7 +510,7 @@ block|,
 literal|0
 block|,
 literal|0
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -518,12 +518,11 @@ begin_decl_stmt
 name|struct
 name|buf
 name|rupbuf
+index|[
+name|NUP
+index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* GROT */
-end_comment
 
 begin_define
 define|#
@@ -2076,7 +2075,7 @@ comment|/*  * Handle a device interrupt.  *  * If the transferring drive needs a
 end_comment
 
 begin_expr_stmt
-name|upintr
+name|scintr
 argument_list|(
 name|sc21
 argument_list|)
@@ -2481,16 +2480,9 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-name|ubarelse
+name|ubadone
 argument_list|(
-name|ui
-operator|->
-name|ui_ubanum
-argument_list|,
-operator|&
 name|um
-operator|->
-name|um_ubinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -2750,14 +2742,47 @@ argument|dev
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
+specifier|register
+name|int
+name|unit
+init|=
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|>>
+literal|3
+decl_stmt|;
+if|if
+condition|(
+name|unit
+operator|>=
+name|NUP
+condition|)
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENXIO
+expr_stmt|;
+else|else
 name|physio
 argument_list|(
 name|upstrategy
 argument_list|,
 operator|&
 name|rupbuf
+index|[
+name|unit
+index|]
 argument_list|,
 name|dev
 argument_list|,
@@ -2776,14 +2801,47 @@ argument|dev
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
+specifier|register
+name|int
+name|unit
+init|=
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|>>
+literal|3
+decl_stmt|;
+if|if
+condition|(
+name|unit
+operator|>=
+name|NUP
+condition|)
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENXIO
+expr_stmt|;
+else|else
 name|physio
 argument_list|(
 name|upstrategy
 argument_list|,
 operator|&
 name|rupbuf
+index|[
+name|unit
+index|]
 argument_list|,
 name|dev
 argument_list|,
@@ -3436,16 +3494,9 @@ operator|&
 literal|0xf
 argument_list|)
 expr_stmt|;
-name|ubarelse
+name|ubadone
 argument_list|(
 name|um
-operator|->
-name|um_ubanum
-argument_list|,
-operator|&
-name|um
-operator|->
-name|um_ubinfo
 argument_list|)
 expr_stmt|;
 block|}

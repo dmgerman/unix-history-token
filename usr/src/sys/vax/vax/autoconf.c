@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.9	81/02/21	*/
+comment|/*	autoconf.c	4.10	81/02/22	*/
 end_comment
 
 begin_comment
@@ -2338,6 +2338,7 @@ operator|->
 name|ui_dk
 operator|=
 name|dkn
+operator|++
 expr_stmt|;
 else|else
 name|ui

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.20	81/02/21	*/
+comment|/*	dh.c	4.21	81/02/22	*/
 end_comment
 
 begin_include
@@ -3062,11 +3062,6 @@ operator|)
 operator||
 name|DH_IE
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|5
-argument_list|)
-expr_stmt|;
 name|unit
 operator|=
 literal|1
@@ -3085,6 +3080,11 @@ operator|->
 name|dhcar
 operator|=
 name|car
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|5
+argument_list|)
 expr_stmt|;
 name|addr
 operator|->

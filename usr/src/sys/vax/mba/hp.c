@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.10	81/02/21	*/
+comment|/*	hp.c	4.11	81/02/22	*/
 end_comment
 
 begin_include
@@ -1001,14 +1001,6 @@ operator|(
 name|MBU_DODATA
 operator|)
 return|;
-name|hpaddr
-operator|->
-name|hpdc
-operator|=
-name|bp
-operator|->
-name|b_cylin
-expr_stmt|;
 name|st
 operator|=
 operator|&
@@ -1122,6 +1114,15 @@ name|MBU_DODATA
 operator|)
 return|;
 block|}
+else|else
+name|hpaddr
+operator|->
+name|hpdc
+operator|=
+name|bp
+operator|->
+name|b_cylin
+expr_stmt|;
 if|if
 condition|(
 name|hpseek
