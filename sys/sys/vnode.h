@@ -1980,7 +1980,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|vnode
+modifier|*
 name|addaliasu
 name|__P
 argument_list|(
@@ -2878,6 +2880,11 @@ expr|struct
 name|vnode
 operator|*
 name|vp
+operator|,
+expr|struct
+name|mount
+operator|*
+name|mp
 operator|,
 name|int
 name|flags

@@ -3521,6 +3521,8 @@ name|vn_write_suspend_wait
 parameter_list|(
 name|vp
 parameter_list|,
+name|mp
+parameter_list|,
 name|flags
 parameter_list|)
 name|struct
@@ -3528,18 +3530,25 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-block|{
 name|struct
 name|mount
 modifier|*
 name|mp
 decl_stmt|;
 name|int
+name|flags
+decl_stmt|;
+block|{
+name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|vp
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -3573,6 +3582,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 comment|/* 	 * If we are not suspended or have not yet reached suspended 	 * mode, then let the operation proceed. 	 */
 if|if

@@ -4764,6 +4764,8 @@ name|vn_write_suspend_wait
 argument_list|(
 name|dqvp
 argument_list|,
+name|NULL
+argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;

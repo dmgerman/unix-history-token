@@ -862,6 +862,27 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|softdep_flushworklist
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|softdep_flushfiles
 name|__P
 argument_list|(

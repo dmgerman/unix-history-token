@@ -9659,6 +9659,8 @@ name|v_op
 operator|=
 name|specops
 expr_stmt|;
+name|vp
+operator|=
 name|addaliasu
 argument_list|(
 name|vp
@@ -9667,6 +9669,12 @@ name|ip
 operator|->
 name|i_rdev
 argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|i_vnode
+operator|=
+name|vp
 expr_stmt|;
 break|break;
 case|case

@@ -3988,6 +3988,8 @@ name|v_op
 operator|=
 name|cd9660_specop_p
 expr_stmt|;
+name|vp
+operator|=
 name|addaliasu
 argument_list|(
 name|vp
@@ -3998,6 +4000,12 @@ name|inode
 operator|.
 name|iso_rdev
 argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|i_vnode
+operator|=
+name|vp
 expr_stmt|;
 break|break;
 default|default:

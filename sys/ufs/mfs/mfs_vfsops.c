@@ -724,6 +724,8 @@ name|si_iosize_max
 operator|=
 name|DFLTPHYS
 expr_stmt|;
+name|devvp
+operator|=
 name|addaliasu
 argument_list|(
 name|devvp

@@ -178,6 +178,8 @@ name|vn_write_suspend_wait
 argument_list|(
 name|vp
 argument_list|,
+name|NULL
+argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
@@ -320,6 +322,8 @@ name|vn_write_suspend_wait
 argument_list|(
 name|vp
 argument_list|,
+name|NULL
+argument_list|,
 name|V_NOWAIT
 argument_list|)
 condition|)
@@ -340,6 +344,8 @@ operator|)
 name|vn_write_suspend_wait
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|,
 name|V_WAIT
 argument_list|)

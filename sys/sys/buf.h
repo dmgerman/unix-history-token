@@ -459,12 +459,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_UNUSED40
+name|B_VALIDSUSPWRT
 value|0x00000040
 end_define
 
 begin_comment
-comment|/* Old B_CALL */
+comment|/* Valid write during suspension. */
 end_comment
 
 begin_define
@@ -860,7 +860,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|lockinit(&(bp)->b_lock, PRIBIO + 4, buf_wmesg, 0, 0)
+value|lockinit(&(bp)->b_lock, PRIBIO + 4, buf_wmesg, 0, LK_CANRECURSE)
 end_define
 
 begin_comment
@@ -2075,6 +2075,17 @@ end_define
 
 begin_comment
 comment|/* Return indirect block buffer. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_NOWAIT
+value|0x08
+end_define
+
+begin_comment
+comment|/* do not sleep to await lock */
 end_comment
 
 begin_ifdef
