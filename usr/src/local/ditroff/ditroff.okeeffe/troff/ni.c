@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ni.c	2.1 (CWI) 85/07/18"
+literal|"@(#)ni.c	2.2 (CWI) 86/08/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,7 @@ index|[
 name|NS
 index|]
 init|=
-literal|"/usr/lib/term/tab."
+literal|"/usr/local/lib/ditroff/term/tab."
 decl_stmt|;
 end_decl_stmt
 
