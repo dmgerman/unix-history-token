@@ -534,11 +534,11 @@ name|SetOiaOnlineA
 parameter_list|(
 name|oia
 parameter_list|)
+value|SetOiaMyJob((oia))
 end_define
 
 begin_comment
-unit|\
-comment|/* Nothing defined for this */
+comment|/* Side-effect */
 end_comment
 
 begin_define
@@ -683,7 +683,7 @@ name|IsOiaTWait
 parameter_list|(
 name|oia
 parameter_list|)
-value|((oia)->input_inhibited[1]&OIA_TERMINAL_WAIT))
+value|((oia)->input_inhibited[1]&OIA_TERMINAL_WAIT)
 end_define
 
 begin_define
@@ -704,6 +704,36 @@ parameter_list|(
 name|oia
 parameter_list|)
 value|(oia)->input_inhibited[1] |= OIA_TERMINAL_WAIT
+end_define
+
+begin_define
+define|#
+directive|define
+name|IsOiaApiInhibit
+parameter_list|(
+name|oia
+parameter_list|)
+value|((oia)->input_inhibited[4]&   OIA_API_INHIBIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ResetOiaApiInhibit
+parameter_list|(
+name|oia
+parameter_list|)
+value|((oia)->input_inhibited[4]&= ~OIA_API_INHIBIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SetOiaApiInhibit
+parameter_list|(
+name|oia
+parameter_list|)
+value|((oia)->input_inhibited[4] |=  OIA_API_INHIBIT)
 end_define
 
 begin_comment
