@@ -4734,8 +4734,7 @@ name|sin6
 operator|.
 name|sin6_addr
 argument_list|)
-operator|==
-operator|-
+operator|!=
 literal|1
 condition|)
 block|{
