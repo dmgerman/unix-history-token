@@ -94,6 +94,7 @@ end_comment
 
 begin_enum
 enum|enum
+name|tok
 block|{
 comment|/* symbols */
 name|MIDNIGHT
@@ -180,12 +181,14 @@ end_comment
 begin_struct
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
 comment|/* token name */
-name|int
+name|enum
+name|tok
 name|value
 decl_stmt|;
 comment|/* token id */
@@ -629,7 +632,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|enum
+name|tok
 name|sc_tokid
 decl_stmt|;
 end_decl_stmt
@@ -655,7 +659,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parsetime.c,v 1.3 1995/04/12 02:42:35 ache Exp $"
+literal|"$Id: parsetime.c,v 1.4 1995/05/30 06:29:25 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -669,9 +673,11 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|enum
+name|tok
 name|parse_token
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|arg
@@ -824,7 +830,8 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|enum
+name|tok
 name|token
 parameter_list|()
 block|{
@@ -1121,7 +1128,8 @@ specifier|static
 name|void
 name|expect
 parameter_list|(
-name|int
+name|enum
+name|tok
 name|desired
 parameter_list|)
 block|{
@@ -2010,7 +2018,8 @@ operator|==
 name|DOT
 condition|)
 block|{
-name|int
+name|enum
+name|tok
 name|sep
 decl_stmt|;
 name|sep
