@@ -3016,6 +3016,9 @@ specifier|volatile
 name|int
 name|once
 decl_stmt|;
+name|int
+name|errsave
+decl_stmt|;
 if|if
 condition|(
 name|THR_IN_CRITICAL
@@ -3024,6 +3027,10 @@ name|curthread
 argument_list|)
 condition|)
 return|return;
+name|errsave
+operator|=
+name|errno
+expr_stmt|;
 name|once
 operator|=
 literal|0
@@ -3062,6 +3069,10 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+name|errno
+operator|=
+name|errsave
+expr_stmt|;
 block|}
 end_function
 
