@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.44 1996/04/25 17:31:21 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.45 1996/04/28 03:27:08 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -122,6 +122,17 @@ value|30
 end_define
 
 begin_comment
+comment|/* The bottom-most row we're allowed to scribble on */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHUNK_ROW_MAX
+value|16
+end_define
+
+begin_comment
 comment|/* All the chunks currently displayed on the screen */
 end_comment
 
@@ -151,6 +162,21 @@ begin_decl_stmt
 specifier|static
 name|int
 name|here
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ChunkPartStartRow
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
+modifier|*
+name|ChunkWin
 decl_stmt|;
 end_decl_stmt
 
@@ -647,6 +673,12 @@ name|Disk
 modifier|*
 name|d
 decl_stmt|;
+name|ChunkPartStartRow
+operator|=
+name|CHUNK_SLICE_START_ROW
+operator|+
+literal|3
+expr_stmt|;
 name|j
 operator|=
 name|p
@@ -758,6 +790,9 @@ name|c1
 expr_stmt|;
 operator|++
 name|j
+expr_stmt|;
+operator|++
+name|ChunkPartStartRow
 expr_stmt|;
 block|}
 block|}
@@ -957,6 +992,31 @@ operator|-
 literal|1
 else|:
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|ChunkWin
+condition|)
+name|wclear
+argument_list|(
+name|ChunkWin
+argument_list|)
+expr_stmt|;
+else|else
+name|ChunkWin
+operator|=
+name|newwin
+argument_list|(
+name|CHUNK_ROW_MAX
+operator|-
+name|ChunkPartStartRow
+argument_list|,
+literal|76
+argument_list|,
+name|ChunkPartStartRow
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1362,6 +1422,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 specifier|static
 name|unsigned
 name|char
@@ -1405,6 +1472,11 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
 argument_list|)
 expr_stmt|;
 if|if
@@ -1538,17 +1610,6 @@ value|38
 end_define
 
 begin_comment
-comment|/* How many mounted partitions to display in column before going to next */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHUNK_COLUMN_MAX
-value|5
-end_define
-
-begin_comment
 comment|/* stick this all up on the screen */
 end_comment
 
@@ -1588,9 +1649,6 @@ argument_list|,
 literal|"FreeBSD Disklabel Editor"
 argument_list|)
 expr_stmt|;
-name|clrtobot
-argument_list|()
-expr_stmt|;
 name|attrset
 argument_list|(
 name|A_NORMAL
@@ -1612,7 +1670,7 @@ control|)
 block|{
 name|mvaddstr
 argument_list|(
-name|CHUNK_PART_START_ROW
+name|ChunkPartStartRow
 operator|-
 literal|2
 argument_list|,
@@ -1629,7 +1687,7 @@ argument_list|)
 expr_stmt|;
 name|mvaddstr
 argument_list|(
-name|CHUNK_PART_START_ROW
+name|ChunkPartStartRow
 operator|-
 literal|1
 argument_list|,
@@ -1646,7 +1704,7 @@ argument_list|)
 expr_stmt|;
 name|mvaddstr
 argument_list|(
-name|CHUNK_PART_START_ROW
+name|ChunkPartStartRow
 operator|-
 literal|2
 argument_list|,
@@ -1663,7 +1721,7 @@ argument_list|)
 expr_stmt|;
 name|mvaddstr
 argument_list|(
-name|CHUNK_PART_START_ROW
+name|ChunkPartStartRow
 operator|-
 literal|1
 argument_list|,
@@ -1680,7 +1738,7 @@ argument_list|)
 expr_stmt|;
 name|mvaddstr
 argument_list|(
-name|CHUNK_PART_START_ROW
+name|ChunkPartStartRow
 operator|-
 literal|2
 argument_list|,
@@ -1699,7 +1757,7 @@ argument_list|)
 expr_stmt|;
 name|mvaddstr
 argument_list|(
-name|CHUNK_PART_START_ROW
+name|ChunkPartStartRow
 operator|-
 literal|1
 argument_list|,
@@ -1718,7 +1776,7 @@ argument_list|)
 expr_stmt|;
 name|mvaddstr
 argument_list|(
-name|CHUNK_PART_START_ROW
+name|ChunkPartStartRow
 operator|-
 literal|2
 argument_list|,
@@ -1735,7 +1793,7 @@ argument_list|)
 expr_stmt|;
 name|mvaddstr
 argument_list|(
-name|CHUNK_PART_START_ROW
+name|ChunkPartStartRow
 operator|-
 literal|1
 argument_list|,
@@ -1757,7 +1815,7 @@ name|CHUNK_SLICE_START_ROW
 expr_stmt|;
 name|prow
 operator|=
-name|CHUNK_PART_START_ROW
+literal|0
 expr_stmt|;
 name|pcol
 operator|=
@@ -1780,17 +1838,6 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|i
-operator|==
-name|here
-condition|)
-name|attrset
-argument_list|(
-name|A_REVERSE
-argument_list|)
-expr_stmt|;
 comment|/* Is it a slice entry displayed at the top? */
 if|if
 condition|(
@@ -1814,6 +1861,17 @@ name|i
 index|]
 operator|.
 name|c
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+name|here
+condition|)
+name|attrset
+argument_list|(
+name|A_REVERSE
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1854,8 +1912,26 @@ name|ONE_MEG
 operator|)
 argument_list|)
 expr_stmt|;
+name|attrset
+argument_list|(
+name|A_NORMAL
+argument_list|)
+expr_stmt|;
+name|clrtoeol
+argument_list|()
+expr_stmt|;
+name|move
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|refresh
+argument_list|()
+expr_stmt|;
 block|}
-comment|/* Otherwise it's a DOS, swap or filesystem entry, at the bottom */
+comment|/* Otherwise it's a DOS, swap or filesystem entry in the Chunk window */
 else|else
 block|{
 name|char
@@ -1896,15 +1972,15 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Go for two columns */
+comment|/* Go for two columns if we've written one full columns worth */
 if|if
 condition|(
 name|prow
 operator|==
 operator|(
-name|CHUNK_PART_START_ROW
-operator|+
-name|CHUNK_COLUMN_MAX
+name|CHUNK_ROW_MAX
+operator|-
+name|ChunkPartStartRow
 operator|)
 condition|)
 block|{
@@ -1914,7 +1990,7 @@ name|PART_OFF
 expr_stmt|;
 name|prow
 operator|=
-name|CHUNK_PART_START_ROW
+literal|0
 expr_stmt|;
 block|}
 name|memcpy
@@ -2183,8 +2259,23 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|mvaddstr
+if|if
+condition|(
+name|i
+operator|==
+name|here
+condition|)
+name|wattrset
 argument_list|(
+name|ChunkWin
+argument_list|,
+name|A_REVERSE
+argument_list|)
+expr_stmt|;
+name|mvwaddstr
+argument_list|(
+name|ChunkWin
+argument_list|,
 name|prow
 argument_list|,
 name|pcol
@@ -2192,21 +2283,29 @@ argument_list|,
 name|onestr
 argument_list|)
 expr_stmt|;
+name|wattrset
+argument_list|(
+name|ChunkWin
+argument_list|,
+name|A_NORMAL
+argument_list|)
+expr_stmt|;
+name|wrefresh
+argument_list|(
+name|ChunkWin
+argument_list|)
+expr_stmt|;
+name|move
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 operator|++
 name|prow
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|i
-operator|==
-name|here
-condition|)
-name|attrset
-argument_list|(
-name|A_NORMAL
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -2232,7 +2331,21 @@ literal|18
 argument_list|,
 literal|0
 argument_list|,
-literal|"C = Create      D = Delete         M = Mount   W = Write"
+literal|"C = Create      D = Delete         M = Mount"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|RunningAsInit
+condition|)
+name|mvprintw
+argument_list|(
+literal|18
+argument_list|,
+literal|48
+argument_list|,
+literal|"W = Write"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -2317,6 +2430,10 @@ decl_stmt|,
 name|key
 init|=
 literal|0
+decl_stmt|,
+name|first_time
+init|=
+literal|1
 decl_stmt|;
 name|Boolean
 name|labeling
@@ -2402,15 +2519,22 @@ condition|(
 name|labeling
 condition|)
 block|{
-name|clear
-argument_list|()
-expr_stmt|;
 name|print_label_chunks
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|first_time
+condition|)
+block|{
 name|print_command_summary
 argument_list|()
 expr_stmt|;
+name|first_time
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|msg
@@ -2446,9 +2570,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|refresh
-argument_list|()
-expr_stmt|;
 name|key
 operator|=
 name|toupper
@@ -2464,8 +2585,6 @@ condition|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|cnt
 decl_stmt|;
 case|case
 literal|'\014'
@@ -2593,60 +2712,7 @@ condition|)
 block|{
 name|msg
 operator|=
-literal|"You can only do this in a master partition (see top of screen)"
-expr_stmt|;
-break|break;
-block|}
-name|cnt
-operator|=
-name|i
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-name|label_chunk_info
-index|[
-name|i
-index|]
-operator|.
-name|c
-condition|)
-if|if
-condition|(
-name|label_chunk_info
-index|[
-name|i
-operator|++
-index|]
-operator|.
-name|type
-operator|!=
-name|PART_SLICE
-condition|)
-name|cnt
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|cnt
-operator|==
-operator|(
-name|CHUNK_COLUMN_MAX
-operator|*
-literal|2
-operator|)
-operator|+
-literal|4
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Sorry, I can't fit any more partitions on the screen!  You can get around\n"
-literal|"this limitation by partitioning your disks individually rather than all\n"
-literal|"at once.  This will be fixed just as soon as we get a scrolling partition\n"
-literal|"box written.  Sorry for the inconvenience!"
-argument_list|)
+literal|"You can only do this in a disk slice (at top of screen)"
 expr_stmt|;
 break|break;
 block|}
@@ -2671,10 +2737,11 @@ condition|)
 block|{
 name|msg
 operator|=
-literal|"Not enough space to create an additional FreeBSD partition"
+literal|"Not enough free space to create a new partition in the slice"
 expr_stmt|;
 break|break;
 block|}
+else|else
 block|{
 name|struct
 name|chunk
@@ -3179,65 +3246,6 @@ literal|"You can only do this in a master partition (see top of screen)"
 expr_stmt|;
 break|break;
 block|}
-else|else
-block|{
-name|int
-name|i
-decl_stmt|,
-name|cnt
-decl_stmt|;
-name|cnt
-operator|=
-name|i
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-name|label_chunk_info
-index|[
-name|i
-index|]
-operator|.
-name|c
-condition|)
-if|if
-condition|(
-name|label_chunk_info
-index|[
-name|i
-operator|++
-index|]
-operator|.
-name|type
-operator|!=
-name|PART_SLICE
-condition|)
-name|cnt
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|cnt
-operator|==
-operator|(
-name|CHUNK_COLUMN_MAX
-operator|*
-literal|2
-operator|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Sorry, I can't fit any more partitions on the screen!  You can get around\n"
-literal|"this limitation by partitioning your disks individually rather than all\n"
-literal|"at once.  This will be fixed just as soon as we get a scrolling partition\n"
-literal|"box written.  Sorry for the inconvenience!"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
 name|sz
 operator|=
 name|space_free
@@ -3263,6 +3271,7 @@ literal|"Not enough space to create an additional FreeBSD partition"
 expr_stmt|;
 break|break;
 block|}
+else|else
 block|{
 name|char
 modifier|*
@@ -4214,9 +4223,6 @@ argument_list|,
 literal|"yes"
 argument_list|)
 expr_stmt|;
-name|clear
-argument_list|()
-expr_stmt|;
 name|diskLabelCommit
 argument_list|(
 name|NULL
@@ -4245,6 +4251,13 @@ name|Device
 modifier|*
 modifier|*
 name|devs
+decl_stmt|;
+name|WINDOW
+modifier|*
+name|save
+init|=
+name|savescr
+argument_list|()
 decl_stmt|;
 name|dialog_clear
 argument_list|()
@@ -4345,6 +4358,11 @@ name|TRUE
 expr_stmt|;
 name|dialog_clear
 argument_list|()
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|save
+argument_list|)
 expr_stmt|;
 name|record_label_chunks
 argument_list|(
