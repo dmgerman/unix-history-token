@@ -2887,9 +2887,6 @@ operator|->
 name|mfdev
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PCI_DEBUG
 name|printf
 argument_list|(
 literal|"\tcmdreg=0x%04x, statreg=0x%04x, cachelnsz=%d (dwords)\n"
@@ -2942,9 +2939,6 @@ operator|*
 literal|250
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PCI_DEBUG */
 if|if
 condition|(
 name|cfg
