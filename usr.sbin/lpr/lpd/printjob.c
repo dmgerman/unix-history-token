@@ -1058,7 +1058,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 literal|""
 argument_list|,
@@ -1071,7 +1071,7 @@ name|void
 operator|)
 name|close
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|)
 expr_stmt|;
 comment|/* set up log file */
@@ -3569,7 +3569,7 @@ name|dup2
 argument_list|(
 name|fi
 argument_list|,
-literal|0
+name|STDIN_FILENO
 argument_list|)
 expr_stmt|;
 comment|/* file is stdin */
@@ -3580,7 +3580,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-literal|1
+name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
 comment|/* pipe is stdout */
@@ -4398,14 +4398,14 @@ name|dup2
 argument_list|(
 name|fi
 argument_list|,
-literal|0
+name|STDIN_FILENO
 argument_list|)
 expr_stmt|;
 name|dup2
 argument_list|(
 name|fo
 argument_list|,
-literal|1
+name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
 comment|/* setup stderr for the filter (child process) 		 * so it goes to our temporary errors file */
@@ -4432,7 +4432,7 @@ name|dup2
 argument_list|(
 name|n
 argument_list|,
-literal|2
+name|STDERR_FILENO
 argument_list|)
 expr_stmt|;
 name|closelog
@@ -6537,14 +6537,14 @@ name|dup2
 argument_list|(
 name|infd
 argument_list|,
-literal|0
+name|STDIN_FILENO
 argument_list|)
 expr_stmt|;
 name|dup2
 argument_list|(
 name|outfd
 argument_list|,
-literal|1
+name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
 name|errfd
@@ -6570,7 +6570,7 @@ name|dup2
 argument_list|(
 name|errfd
 argument_list|,
-literal|2
+name|STDERR_FILENO
 argument_list|)
 expr_stmt|;
 name|closelog
@@ -7510,7 +7510,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|0
+name|STDIN_FILENO
 argument_list|)
 expr_stmt|;
 name|closelog
@@ -7581,7 +7581,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-literal|1
+name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
 name|printf
@@ -7781,7 +7781,7 @@ name|void
 operator|)
 name|close
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
 block|}
@@ -8633,7 +8633,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|0
+name|STDIN_FILENO
 argument_list|)
 expr_stmt|;
 comment|/* pipe is std in */
@@ -8648,7 +8648,7 @@ name|tfd
 else|:
 name|pfd
 argument_list|,
-literal|1
+name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
 name|closelog

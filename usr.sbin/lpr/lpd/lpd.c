@@ -1787,7 +1787,7 @@ name|dup2
 argument_list|(
 name|s
 argument_list|,
-literal|1
+name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
 operator|(

@@ -425,7 +425,7 @@ name|void
 operator|)
 name|close
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|)
 expr_stmt|;
 comment|/* set up log file */
