@@ -225,11 +225,6 @@ directive|define
 name|VAR_MATCH_END
 value|4
 comment|/* Match at end of word */
-define|#
-directive|define
-name|VAR_NO_SUB
-value|8
-comment|/* Substitution is non-global and already done */
 block|}
 name|VarPattern
 typedef|;
@@ -2886,18 +2881,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|pattern
-operator|->
-name|flags
-operator|&
-name|VAR_NO_SUB
-operator|)
-operator|==
-literal|0
+literal|1
 condition|)
 block|{
-comment|/* 	 * Still substituting -- break it down into simple anchored cases 	 * and if none of them fits, perform the general substitution case. 	 */
+comment|/* substitute in each word of the variable */
+comment|/* 	 * Break substitution down into simple anchored cases 	 * and if none of them fits, perform the general substitution case. 	 */
 if|if
 condition|(
 operator|(
@@ -3239,7 +3227,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	     * Pattern is unanchored: search for the pattern in the word using 	     * String_FindSubstring, copying unmatched portions and the 	     * right-hand-side for each match found, handling non-global 	     * subsititutions correctly, etc. When the loop is done, any 	     * remaining part of the word (word and wordLen are adjusted 	     * accordingly through the loop) is copied straight into the 	     * buffer. 	     * addSpace is set FALSE as soon as a space is added to the 	     * buffer. 	     */
+comment|/* 	     * Pattern is unanchored: search for the pattern in the word using 	     * String_FindSubstring, copying unmatched portions and the 	     * right-hand-side for each match found, handling non-global 	     * substitutions correctly, etc. When the loop is done, any 	     * remaining part of the word (word and wordLen are adjusted 	     * accordingly through the loop) is copied straight into the 	     * buffer. 	     * addSpace is set FALSE as soon as a space is added to the 	     * buffer. 	     */
 specifier|register
 name|Boolean
 name|done
@@ -3379,15 +3367,7 @@ condition|(
 name|wordLen
 operator|==
 literal|0
-condition|)
-block|{
-name|done
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-if|if
-condition|(
+operator|||
 operator|(
 name|pattern
 operator|->
@@ -3402,12 +3382,6 @@ block|{
 name|done
 operator|=
 name|TRUE
-expr_stmt|;
-name|pattern
-operator|->
-name|flags
-operator||=
-name|VAR_NO_SUB
 expr_stmt|;
 block|}
 block|}
@@ -3472,27 +3446,7 @@ name|addSpace
 operator|)
 return|;
 block|}
-comment|/* 	 * Common code for anchored substitutions: if performed a substitution 	 * and it's not supposed to be global, mark the pattern as requiring 	 * no more substitutions. addSpace was set TRUE if characters were 	 * added to the buffer. 	 */
-if|if
-condition|(
-operator|(
-name|pattern
-operator|->
-name|flags
-operator|&
-name|VAR_SUB_GLOBAL
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|pattern
-operator|->
-name|flags
-operator||=
-name|VAR_NO_SUB
-expr_stmt|;
-block|}
+comment|/* 	 * Common code for anchored substitutions: 	 * addSpace was set TRUE if characters were added to the buffer. 	 */
 return|return
 operator|(
 name|addSpace
