@@ -156,7 +156,7 @@ name|sprintf
 argument_list|(
 argument|tbuf
 argument_list|,
-argument|_PATH_LOCK LOCKFMT
+argument|_PATH_UUCPLOCK LOCKFMT
 argument_list|,
 argument|ttyname
 argument_list|)
@@ -408,7 +408,7 @@ name|sprintf
 argument_list|(
 argument|tbuf
 argument_list|,
-argument|_PATH_LOCK LOCKFMT
+argument|_PATH_UUCPLOCK LOCKFMT
 argument_list|,
 argument|ttyname
 argument_list|)
