@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.13 1999/05/04 07:30:07 luigi Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.14 1999/05/04 16:20:30 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -1503,6 +1503,11 @@ if|if
 condition|(
 name|dst
 operator|==
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
 operator|&
 name|ro
 operator|->
@@ -1511,6 +1516,11 @@ condition|)
 comment|/* dst points into ro */
 name|dst
 operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
 operator|&
 operator|(
 name|pkt
@@ -1526,6 +1536,7 @@ name|dn_dst
 operator|=
 name|dst
 expr_stmt|;
+comment|/* XXX this can't be right! */
 block|}
 if|if
 condition|(
