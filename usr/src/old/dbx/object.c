@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)object.c 1.12 %G%"
+literal|"@(#)object.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3815,6 +3815,13 @@ name|lower
 operator|=
 name|getint
 argument_list|()
+expr_stmt|;
+name|skipchar
+argument_list|(
+name|curchar
+argument_list|,
+literal|';'
+argument_list|)
 expr_stmt|;
 name|t
 operator|->
