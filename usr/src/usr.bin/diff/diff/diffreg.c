@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.10 %G%"
+literal|"@(#)diffreg.c 4.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3457,7 +3457,8 @@ name|ctold
 decl_stmt|,
 name|ctnew
 decl_stmt|;
-name|char
+specifier|register
+name|int
 name|c
 decl_stmt|,
 name|d
@@ -4370,10 +4371,9 @@ begin_block
 block|{
 specifier|register
 name|i
-expr_stmt|;
-name|char
+operator|,
 name|c
-decl_stmt|;
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4857,7 +4857,7 @@ end_macro
 
 begin_block
 block|{
-name|char
+name|int
 name|ch
 decl_stmt|;
 name|int
@@ -5730,6 +5730,16 @@ end_block
 begin_define
 define|#
 directive|define
+name|POW2
+end_define
+
+begin_comment
+comment|/* define only if HALFLONG is 2**n */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HALFLONG
 value|16
 end_define
@@ -5853,10 +5863,23 @@ index|]
 operator|<<
 operator|(
 name|shift
-operator|%=
+ifdef|#
+directive|ifdef
+name|POW2
+operator|&=
 name|HALFLONG
+operator|-
+literal|1
 operator|)
 expr_stmt|;
+else|#
+directive|else
+operator|%=
+name|HALFLONG
+block|)
+empty_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 for|for
@@ -5902,13 +5925,28 @@ name|t
 operator|<<
 operator|(
 name|shift
-operator|%=
+ifdef|#
+directive|ifdef
+name|POW2
+operator|&=
 name|HALFLONG
+operator|-
+literal|1
 operator|)
 expr_stmt|;
+else|#
+directive|else
+operator|%=
+name|HALFLONG
+block|)
+empty_stmt|;
+endif|#
+directive|endif
 block|}
-block|}
-else|else
+end_block
+
+begin_block
+unit|} else
 block|{
 for|for
 control|(
@@ -5978,10 +6016,23 @@ index|]
 operator|<<
 operator|(
 name|shift
-operator|%=
+ifdef|#
+directive|ifdef
+name|POW2
+operator|&=
 name|HALFLONG
+operator|-
+literal|1
 operator|)
 expr_stmt|;
+else|#
+directive|else
+operator|%=
+name|HALFLONG
+block|)
+empty_stmt|;
+endif|#
+directive|endif
 name|shift
 operator|+=
 literal|7
@@ -5994,8 +6045,10 @@ break|break;
 block|}
 break|break;
 block|}
-block|}
-name|sum
+end_block
+
+begin_expr_stmt
+unit|} 	sum
 operator|=
 name|low
 argument_list|(
@@ -6007,6 +6060,9 @@ argument_list|(
 name|sum
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 operator|(
@@ -6026,28 +6082,25 @@ name|sum
 argument_list|)
 operator|)
 return|;
-block|}
-end_block
+end_return
 
 begin_include
+unit|}
 include|#
 directive|include
 file|<a.out.h>
 end_include
 
-begin_macro
-name|asciifile
-argument_list|(
-argument|f
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|FILE
-modifier|*
+begin_expr_stmt
+unit|asciifile
+operator|(
 name|f
-decl_stmt|;
-end_decl_stmt
+operator|)
+name|FILE
+operator|*
+name|f
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
