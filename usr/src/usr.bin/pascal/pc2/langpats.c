@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c 1.1 %G%"
+literal|"@(#)langpats.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,19 +74,19 @@ block|,
 block|{
 literal|"blkcpy\n"
 block|,
-literal|"	movl	4(sp),r1\n\ 	movl	8(sp),r3\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	(sp),r0\n\ 	bleq	1f\n\ 	subl2	r0,(sp)\n\ 	movc3	r0,(r1),(r3)\n\ 	brb	1b\n\ 1:\n\ 	movl	(sp)+,r0\n\ 	addl2	$8,sp\n\ 	movc3	r0,(r1),(r3)\n"
+literal|"	movl	4(sp),r1\n\ 	movl	8(sp),r3\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	(sp),r0\n\ 	jleq	1f\n\ 	subl2	r0,(sp)\n\ 	movc3	r0,(r1),(r3)\n\ 	jbr	1b\n\ 1:\n\ 	movl	(sp)+,r0\n\ 	addl2	$8,sp\n\ 	movc3	r0,(r1),(r3)\n"
 block|}
 block|,
 block|{
 literal|"blkclr\n"
 block|,
-literal|"	movl	4(sp),r3\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	(sp),r0\n\ 	bleq	1f\n\ 	subl2	r0,(sp)\n\ 	movc5	$0,(r1),$0,r0,(r3)\n\ 	brb	1b\n\ 1:\n\ 	movl	(sp)+,r0\n\ 	addl2	$4,sp\n\ 	movc5	$0,(r1),$0,r0,(r3)\n"
+literal|"	movl	4(sp),r3\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	(sp),r0\n\ 	jleq	1f\n\ 	subl2	r0,(sp)\n\ 	movc5	$0,(r1),$0,r0,(r3)\n\ 	jbr	1b\n\ 1:\n\ 	movl	(sp)+,r0\n\ 	addl2	$4,sp\n\ 	movc5	$0,(r1),$0,r0,(r3)\n"
 block|}
 block|,
 block|{
 literal|"LOCC\n"
 block|,
-literal|"	movl	(sp)+,r5\n\ 	movl	(sp)+,r4\n\ 	movl	(sp)+,r1\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	bleq	1f\n\ 	subl2	r0,r4\n\ 	locc	r5,r0,(r1)\n\ 	beql	1b\n\ 	addl2	r4,r0\n\ 	brb	2f\n\ 1:\n\ 	locc	r5,r4,(r1)\n\ 2:\n"
+literal|"	movl	(sp)+,r5\n\ 	movl	(sp)+,r4\n\ 	movl	(sp)+,r1\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jleq	1f\n\ 	subl2	r0,r4\n\ 	locc	r5,r0,(r1)\n\ 	jeql	1b\n\ 	addl2	r4,r0\n\ 	jbr	2f\n\ 1:\n\ 	locc	r5,r4,(r1)\n\ 2:\n"
 block|}
 block|,
 block|{
@@ -122,37 +122,37 @@ block|,
 block|{
 literal|"RELEQ\n"
 block|,
-literal|"	movl	(sp)+,r1\n\ 	cmpc3	r1,*(sp)+,*(sp)+\n\ 	beql	1f\n\ 	clrl	r0\n\ 	brb	2f\n\ 1:\n\ 	movl	$1,r0\n\ 2:\n"
+literal|"	movl	(sp)+,r4\n\ 	movl	(sp)+,r1\n\ 	movl	(sp)+,r3\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jleq	2f\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jeql	1b\n\ 	jbr	3f\n\ 2:\n\ 	cmpc3	r4,(r1),(r3)\n\ 	jneq	3f\n\ 	incl	r0\n\ 	jbr	4f\n\ 3:\n\ 	clrl	r0\n\ 4:\n"
 block|}
 block|,
 block|{
 literal|"RELNE\n"
 block|,
-literal|"	movl	(sp)+,r1\n\ 	cmpc3	r1,*(sp)+,*(sp)+\n\ 	bneq	1f\n\ 	clrl	r0\n\ 	brb	2f\n\ 1:\n\ 	movl	$1,r0\n\ 2:\n"
+literal|"	movl	(sp)+,r4\n\ 	movl	(sp)+,r1\n\ 	movl	(sp)+,r3\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jleq	2f\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jeql	1b\n\ 	jbr	3f\n\ 2:\n\ 	cmpc3	r4,(r1),(r3)\n\ 	jeql	4f\n\ 3:\n\ 	movl	$1,r0\n\ 4:\n"
 block|}
 block|,
 block|{
 literal|"RELSLT\n"
 block|,
-literal|"	movl	(sp)+,r1\n\ 	cmpc3	r1,*(sp)+,*(sp)+\n\ 	blss	1f\n\ 	clrl	r0\n\ 	brb	2f\n\ 1:\n\ 	movl	$1,r0\n\ 2:\n"
+literal|"	movl	(sp)+,r4\n\ 	movl	(sp)+,r1\n\ 	movl	(sp)+,r3\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jleq	2f\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jeql	1b\n\ 	jbr	3f\n\ 2:\n\ 	cmpc3	r4,(r1),(r3)\n\ 3:\n\ 	jlss	4f\n\ 	clrl	r0\n\ 	jbr	5f\n\ 4:\n\ 	movl	$1,r0\n\ 5:\n"
 block|}
 block|,
 block|{
 literal|"RELSLE\n"
 block|,
-literal|"	movl	(sp)+,r1\n\ 	cmpc3	r1,*(sp)+,*(sp)+\n\ 	bleq	1f\n\ 	clrl	r0\n\ 	brb	2f\n\ 1:\n\ 	movl	$1,r0\n\ 2:\n"
+literal|"	movl	(sp)+,r4\n\ 	movl	(sp)+,r1\n\ 	movl	(sp)+,r3\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jleq	2f\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jeql	1b\n\ 	jbr	3f\n\ 2:\n\ 	cmpc3	r4,(r1),(r3)\n\ 3:\n\ 	jleq	4f\n\ 	clrl	r0\n\ 	jbr	5f\n\ 4:\n\ 	movl	$1,r0\n\ 5:\n"
 block|}
 block|,
 block|{
 literal|"RELSGT\n"
 block|,
-literal|"	movl	(sp)+,r1\n\ 	cmpc3	r1,*(sp)+,*(sp)+\n\ 	bgtr	1f\n\ 	clrl	r0\n\ 	brb	2f\n\ 1:\n\ 	movl	$1,r0\n\ 2:\n"
+literal|"	movl	(sp)+,r4\n\ 	movl	(sp)+,r1\n\ 	movl	(sp)+,r3\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jleq	2f\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jeql	1b\n\ 	jbr	3f\n\ 2:\n\ 	cmpc3	r4,(r1),(r3)\n\ 3:\n\ 	jgtr	4f\n\ 	clrl	r0\n\ 	jbr	5f\n\ 4:\n\ 	movl	$1,r0\n\ 5:\n"
 block|}
 block|,
 block|{
 literal|"RELSGE\n"
 block|,
-literal|"	movl	(sp)+,r1\n\ 	cmpc3	r1,*(sp)+,*(sp)+\n\ 	bgeq	1f\n\ 	clrl	r0\n\ 	brb	2f\n\ 1:\n\ 	movl	$1,r0\n\ 2:\n"
+literal|"	movl	(sp)+,r4\n\ 	movl	(sp)+,r1\n\ 	movl	(sp)+,r3\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jleq	2f\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jeql	1b\n\ 	jbr	3f\n\ 2:\n\ 	cmpc3	r4,(r1),(r3)\n\ 3:\n\ 	jgeq	4f\n\ 	clrl	r0\n\ 	jbr	5f\n\ 4:\n\ 	movl	$1,r0\n\ 5:\n"
 block|}
 block|,
 block|{
@@ -176,7 +176,7 @@ block|,
 block|{
 literal|"IN\n"
 block|,
-literal|"	clrl	r0\n\ 	movl	(sp)+,r1\n\ 	subl2	(sp)+,r1\n\ 	cmpl	r1,(sp)+\n\ 	bgtru	1f\n\ 	bbc	r1,*(sp)+,1f\n\ 	movl	$1,r0\n\ 1:\n"
+literal|"	clrl	r0\n\ 	movl	(sp)+,r1\n\ 	subl2	(sp)+,r1\n\ 	cmpl	r1,(sp)+\n\ 	jgtru	1f\n\ 	jbc	r1,*(sp)+,1f\n\ 	movl	$1,r0\n\ 1:\n"
 block|}
 block|}
 struct|;
