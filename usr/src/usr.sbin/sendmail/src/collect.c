@@ -20,7 +20,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dlvrmail.h"
+file|"postbox.h"
 end_include
 
 begin_decl_stmt
@@ -29,12 +29,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.1	%G%"
+literal|"@(#)collect.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  MAKETEMP -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  While it is doing it, it looks for **	"From:" and "Sender:" fields to use as the from-person **	(but only if the -a flag is specified).  It prefers to **	to use the "Sender:" field. ** **	MIT seems to like to produce "Sent-By:" fields instead **	of "Sender:" fields.  We used to catch this, but it turns **	out that the "Sent-By:" field doesn't always correspond **	to someone real ("___057", for instance), as required by **	the protocol.  So we limp by..... ** **	Parameters: **		from -- the person we think it may be from.  If **			there is a "From" line, we will replace **			the name of the person by this.  If NULL, **			do no such replacement. ** **	Returns: **		Name of the "from" person extracted from the **		arpanet header. ** **	Side Effects: **		Temp file is created and filled. ** **	Called By: **		main ** **	Notes: **		This is broken off from main largely so that the **		temp buffer can be deallocated. */
+comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  While it is doing it, it looks for **	"From:" and "Sender:" fields to use as the from-person **	(but only if the -a flag is specified).  It prefers to **	to use the "Sender:" field. ** **	MIT seems to like to produce "Sent-By:" fields instead **	of "Sender:" fields.  We used to catch this, but it turns **	out that the "Sent-By:" field doesn't always correspond **	to someone real ("___057", for instance), as required by **	the protocol.  So we limp by..... ** **	Parameters: **		from -- the person we think it may be from.  If **			there is a "From" line, we will replace **			the name of the person by this.  If NULL, **			do no such replacement. ** **	Returns: **		Name of the "from" person extracted from the **		arpanet header. ** **	Side Effects: **		Temp file is created and filled. ** **	Called By: **		main ** **	Notes: **		This is broken off from main largely so that the **		temp buffer can be deallocated. */
 end_comment
 
 begin_decl_stmt
@@ -507,10 +507,8 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-name|flagset
+name|bitset
 argument_list|(
-name|H_CONCAT
-operator||
 name|H_DEFAULT
 argument_list|,
 name|h
@@ -528,25 +526,6 @@ name|NULL
 condition|)
 block|{
 comment|/* create a new node */
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|Debug
-condition|)
-name|printf
-argument_list|(
-literal|"new field '%s', value '%s'\n"
-argument_list|,
-name|fname
-argument_list|,
-name|fvalue
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 operator|*
 name|hp
 operator|=
@@ -638,7 +617,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|flagset
+name|bitset
 argument_list|(
 name|H_DEFAULT
 argument_list|,
@@ -649,29 +628,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* overriding default, throw out old value */
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|Debug
-condition|)
-name|printf
-argument_list|(
-literal|"overriding '%s', old='%s', new='%s'\n"
-argument_list|,
-name|fname
-argument_list|,
-name|h
-operator|->
-name|h_value
-argument_list|,
-name|fvalue
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 name|free
 argument_list|(
 name|h
@@ -700,25 +656,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|Debug
-condition|)
-name|printf
-argument_list|(
-literal|"installing '%s: %s'\n"
-argument_list|,
-name|fname
-argument_list|,
-name|fvalue
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 name|h
 operator|->
 name|h_value
@@ -804,29 +741,6 @@ name|int
 name|len
 decl_stmt|;
 comment|/* concatenate the two values */
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|Debug
-condition|)
-name|printf
-argument_list|(
-literal|"concat '%s: %s' with '%s'\n"
-argument_list|,
-name|fname
-argument_list|,
-name|h
-operator|->
-name|h_value
-argument_list|,
-name|fvalue
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 name|len
 operator|=
 name|strlen

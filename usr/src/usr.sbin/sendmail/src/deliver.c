@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dlvrmail.h"
+file|"postbox.h"
 end_include
 
 begin_ifdef
@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.1	%G%"
+literal|"@(#)deliver.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +71,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|addrq
+name|ADDRESS
 modifier|*
 name|to
 decl_stmt|;
@@ -184,6 +184,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|bool
+name|checkcompat
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* 	**  Compute receiving mailer, host, and to addreses. 	**	Do some initialization first.  To is the to address 	**	for error messages. 	*/
 end_comment
@@ -271,6 +279,33 @@ endif|DEBUG
 end_endif
 
 begin_comment
+comment|/* 	**  Check to see that these people are allowed to talk to each other. 	*/
+end_comment
+
+begin_if
+if|if
+condition|(
+operator|!
+name|checkcompat
+argument_list|(
+name|to
+argument_list|)
+condition|)
+return|return
+operator|(
+name|giveresponse
+argument_list|(
+name|EX_UNAVAILABLE
+argument_list|,
+name|TRUE
+argument_list|,
+name|m
+argument_list|)
+operator|)
+return|;
+end_if
+
+begin_comment
 comment|/* 	**  Remove quote bits from user/host. 	*/
 end_comment
 
@@ -329,7 +364,7 @@ end_comment
 begin_if
 if|if
 condition|(
-name|flagset
+name|bitset
 argument_list|(
 name|M_STRIPQ
 argument_list|,
@@ -429,7 +464,7 @@ block|}
 end_if
 
 begin_comment
-comment|/* 	**  See if the user exists. 	**	Strictly, this is only needed to print a pretty 	**	error message. 	** 	**>>>>>>>>>> This clause assumes that the local mailer 	**>> NOTE>> cannot do any further aliasing; that 	**>>>>>>>>>> function is subsumed by delivermail. 	*/
+comment|/* 	**  See if the user exists. 	**	Strictly, this is only needed to print a pretty 	**	error message. 	** 	**>>>>>>>>>> This clause assumes that the local mailer 	**>> NOTE>> cannot do any further aliasing; that 	**>>>>>>>>>> function is subsumed by postbox. 	*/
 end_comment
 
 begin_if
@@ -696,7 +731,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|flagset
+name|bitset
 argument_list|(
 name|M_RESTR
 argument_list|,
@@ -960,7 +995,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  GIVERESPONSE -- Interpret an error response from a mailer ** **	Parameters: **		stat -- the status code from the mailer (high byte **			only; core dumps must have been taken care of **			already). **		force -- if set, force an error message output, even **			if the mailer seems to like to print its own **			messages. **		m -- the mailer descriptor for this mailer. ** **	Returns: **		none. ** **	Side Effects: **		Errors may be incremented. **		ExitStat may be set. ** **	Called By: **		deliver */
+comment|/* **  GIVERESPONSE -- Interpret an error response from a mailer ** **	Parameters: **		stat -- the status code from the mailer (high byte **			only; core dumps must have been taken care of **			already). **		force -- if set, force an error message output, even **			if the mailer seems to like to print its own **			messages. **		m -- the mailer descriptor for this mailer. ** **	Returns: **		stat. ** **	Side Effects: **		Errors may be incremented. **		ExitStat may be set. ** **	Called By: **		deliver */
 end_comment
 
 begin_expr_stmt
@@ -1142,7 +1177,7 @@ condition|(
 name|force
 operator|||
 operator|!
-name|flagset
+name|bitset
 argument_list|(
 name|M_QUIET
 argument_list|,
@@ -1331,7 +1366,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|flagset
+name|bitset
 argument_list|(
 name|M_NEEDDATE
 argument_list|,
@@ -1382,7 +1417,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|flagset
+name|bitset
 argument_list|(
 name|M_NEEDFROM
 argument_list|,
@@ -1495,7 +1530,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|flagset
+name|bitset
 argument_list|(
 name|M_MSGID
 argument_list|,
@@ -1553,7 +1588,7 @@ control|)
 block|{
 if|if
 condition|(
-name|flagset
+name|bitset
 argument_list|(
 name|H_USED
 argument_list|,
@@ -1734,12 +1769,12 @@ specifier|register
 name|char
 name|c
 decl_stmt|;
-name|addrq
+name|ADDRESS
 modifier|*
 name|a
 decl_stmt|;
 specifier|extern
-name|addrq
+name|ADDRESS
 modifier|*
 name|parse
 parameter_list|()
@@ -1818,7 +1853,7 @@ argument_list|(
 name|q
 argument_list|,
 operator|(
-name|addrq
+name|ADDRESS
 operator|*
 operator|)
 name|NULL
@@ -1862,14 +1897,14 @@ argument_list|,
 name|targetq
 argument_list|)
 specifier|register
-name|addrq
+name|ADDRESS
 operator|*
 name|a
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|addrq
+name|ADDRESS
 modifier|*
 name|targetq
 decl_stmt|;
@@ -1878,7 +1913,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|addrq
+name|ADDRESS
 modifier|*
 name|q
 decl_stmt|;
@@ -1894,12 +1929,6 @@ modifier|*
 modifier|*
 name|pvp
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|xalloc
-parameter_list|()
-function_decl|;
 specifier|extern
 name|bool
 name|forward
@@ -2214,7 +2243,7 @@ expr_stmt|;
 comment|/* insert -f or -r flag as appropriate */
 if|if
 condition|(
-name|flagset
+name|bitset
 argument_list|(
 name|M_FOPT
 operator||
@@ -2230,7 +2259,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|flagset
+name|bitset
 argument_list|(
 name|M_FOPT
 argument_list|,

@@ -34,7 +34,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)arpadate.c	3.1	%G%"
+literal|"@(#)arpadate.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -286,7 +286,7 @@ operator|*
 name|q
 operator|++
 operator|=
-literal|'-'
+literal|' '
 expr_stmt|;
 name|p
 operator|=
@@ -325,7 +325,7 @@ operator|*
 name|q
 operator|++
 operator|=
-literal|'-'
+literal|' '
 expr_stmt|;
 name|p
 operator|=

@@ -8,7 +8,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dlvrmail.h"
+file|"postbox.h"
 end_include
 
 begin_ifdef
@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	2.3	%G%"
+literal|"@(#)err.c	3.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,7 +171,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"delivermail: %s\n"
+literal|"postbox: %s\n"
 argument_list|,
 name|errbuf
 argument_list|)

@@ -20,7 +20,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dlvrmail.h"
+file|"postbox.h"
 end_include
 
 begin_decl_stmt
@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	2.2	%G%"
+literal|"@(#)alias.c	3.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,11 +96,11 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|addrq
+name|ADDRESS
 modifier|*
 name|q
 decl_stmt|;
-name|addrq
+name|ADDRESS
 modifier|*
 name|q2
 decl_stmt|;
@@ -132,7 +132,7 @@ name|bool
 name|gotmatch
 decl_stmt|;
 specifier|auto
-name|addrq
+name|ADDRESS
 name|al
 decl_stmt|;
 specifier|extern
@@ -141,7 +141,7 @@ name|sameaddr
 parameter_list|()
 function_decl|;
 specifier|extern
-name|addrq
+name|ADDRESS
 modifier|*
 name|parse
 parameter_list|()
@@ -798,7 +798,7 @@ name|forward
 parameter_list|(
 name|user
 parameter_list|)
-name|addrq
+name|ADDRESS
 modifier|*
 name|user
 decl_stmt|;
