@@ -1331,7 +1331,7 @@ name|sprintf
 argument_list|(
 name|buff
 argument_list|,
-literal|"Content-length: %d\r\n"
+literal|"Content-length: %lld\r\n"
 argument_list|,
 name|file_status
 operator|.
