@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.32	%G%	*/
+comment|/*	machdep.c	3.33	%G%	*/
 end_comment
 
 begin_include
@@ -98,7 +98,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 3.32) %H% \n"
+literal|"VM/UNIX (Berkeley Version 3.33) %H% \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,7 +390,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: silly date in file system"
+literal|"WARNING: preposterous time in file system"
 argument_list|)
 expr_stmt|;
 name|time
