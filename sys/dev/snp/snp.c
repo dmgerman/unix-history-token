@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/poll.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/uio.h>
 end_include
 
@@ -151,8 +157,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_select_t
-name|snpselect
+name|d_poll_t
+name|snppoll
 decl_stmt|;
 end_decl_stmt
 
@@ -188,7 +194,7 @@ block|,
 name|nodevtotty
 block|,
 comment|/* snoop */
-name|snpselect
+name|snppoll
 block|,
 name|nommap
 block|,
@@ -2365,11 +2371,11 @@ end_function
 begin_function
 specifier|static
 name|int
-name|snpselect
+name|snppoll
 parameter_list|(
 name|dev
 parameter_list|,
-name|rw
+name|events
 parameter_list|,
 name|p
 parameter_list|)
@@ -2377,7 +2383,7 @@ name|dev_t
 name|dev
 decl_stmt|;
 name|int
-name|rw
+name|events
 decl_stmt|;
 name|struct
 name|proc
@@ -2404,27 +2410,22 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|rw
-operator|!=
-name|FREAD
-condition|)
-return|return
-literal|1
-return|;
-if|if
-condition|(
-name|snp
-operator|->
-name|snp_len
-operator|>
+name|int
+name|revents
+init|=
 literal|0
+decl_stmt|;
+comment|/* 	 * If snoop is down,we don't want to poll() forever so we return 1. 	 * Caller should see if we down via FIONREAD ioctl().The last should 	 * return -1 to indicate down state. 	 */
+if|if
+condition|(
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
 condition|)
-return|return
-literal|1
-return|;
-comment|/* 	 * If snoop is down,we don't want to select() forever so we return 1. 	 * Caller should see if we down via FIONREAD ioctl().The last should 	 * return -1 to indicate down state. 	 */
 if|if
 condition|(
 name|snp
@@ -2432,10 +2433,24 @@ operator|->
 name|snp_flags
 operator|&
 name|SNOOP_DOWN
+operator|||
+name|snp
+operator|->
+name|snp_len
+operator|>
+literal|0
 condition|)
-return|return
-literal|1
-return|;
+name|revents
+operator||=
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
+expr_stmt|;
+else|else
 name|selrecord
 argument_list|(
 name|p
@@ -2447,7 +2462,9 @@ name|snp_sel
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|revents
+operator|)
 return|;
 block|}
 end_function
