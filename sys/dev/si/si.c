@@ -647,15 +647,6 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|tty
-modifier|*
-name|si__tty
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|si_numunits
 decl_stmt|;
@@ -1274,11 +1265,6 @@ name|struct
 name|si_module
 modifier|*
 name|modp
-decl_stmt|;
-name|struct
-name|tty
-modifier|*
-name|tp
 decl_stmt|;
 name|struct
 name|speedtab
@@ -2375,8 +2361,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mem_fail
-label|:
 name|printf
 argument_list|(
 literal|"si%d: fail to malloc memory for port structs\n"
@@ -2393,44 +2377,6 @@ operator|->
 name|sc_nport
 operator|=
 name|nport
-expr_stmt|;
-comment|/* 	 * allocate tty structures for ports 	 */
-name|tp
-operator|=
-operator|(
-expr|struct
-name|tty
-operator|*
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|tp
-argument_list|)
-operator|*
-name|nport
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|==
-literal|0
-condition|)
-goto|goto
-name|mem_fail
-goto|;
-name|si__tty
-operator|=
-name|tp
 expr_stmt|;
 comment|/* 	 * Scan round the ports again, this time initialising. 	 */
 name|pp
@@ -2634,8 +2580,10 @@ name|pp
 operator|->
 name|sp_tty
 operator|=
-name|tp
-operator|++
+name|ttymalloc
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 name|pp
 operator|->
