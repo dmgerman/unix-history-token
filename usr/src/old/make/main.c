@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.11 (Berkeley) 88/09/13"
+literal|"@(#)main.c	4.12 (Berkeley) 90/03/26"
 decl_stmt|;
 end_decl_stmt
 
