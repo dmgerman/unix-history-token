@@ -110,6 +110,12 @@ block|}
 struct|;
 end_struct
 
+begin_struct_decl
+struct_decl|struct
+name|__file_lock
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * stdio state variables.  *  * The following always hold:  *  *	if (_flags&(__SLBF|__SWR)) == (__SLBF|__SWR),  *		_lbfsize is -_bf._size, else _lbfsize is 0  *	if _flags&__SRD, _w is 0  *	if _flags&__SWR, _r is 0  *  * This ensures that the getc and putc macros (or inline functions) never  * try to write or read from a file that is in `read' or `write' mode.  * (Moreover, they can, and do, automatically switch from read mode to  * write mode, and back, on "r+" and "w+" files.)  *  * _lbfsize is used only to make the inline line-buffered output stream  * code as compact as possible.  *  * _ub, _up, and _ur are used when ungetc() pushes back more characters  * than fit in the current _bf, or when ungetc() pushes back a character  * that does not match the previous one in _bf.  When this happens,  * _ub._base becomes non-nil (i.e., a stream has ungetc() data iff  * _ub._base!=NULL) and _up and _ur save the current values of _p and _r.  *  * NB: see WARNING above before changing the layout of this structure!  */
 end_comment
@@ -267,6 +273,12 @@ name|fpos_t
 name|_offset
 decl_stmt|;
 comment|/* current lseek offset (see WARNING) */
+name|struct
+name|__file_lock
+modifier|*
+name|_lock
+decl_stmt|;
+comment|/* used for MT-safety */
 block|}
 name|FILE
 typedef|;
@@ -359,6 +371,11 @@ directive|define
 name|__SALC
 value|0x4000
 comment|/* allocate string space dynamically */
+define|#
+directive|define
+name|__SIGN
+value|0x8000
+comment|/* ignore this file in _fwalk */
 comment|/*  * The following three definitions are for ANSI C, which took them  * from System V, which brilliantly took internal interface macros and  * made them official arguments to setvbuf(), without renaming them.  * Hence, these ugly _IOxxx names are *supposed* to appear in user code.  *  * Although numbered as their counterparts above, the implementation  * does not rely on this.  */
 define|#
 directive|define
