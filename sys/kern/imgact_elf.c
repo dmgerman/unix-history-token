@@ -1829,12 +1829,16 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * non static, as it can be overridden by start_init()  */
+end_comment
+
 begin_decl_stmt
-specifier|static
 name|int
 name|fallback_elf_brand
 init|=
-name|ELFOSABI_FREEBSD
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1852,7 +1856,8 @@ argument_list|,
 operator|&
 name|fallback_elf_brand
 argument_list|,
-name|ELFOSABI_FREEBSD
+operator|-
+literal|1
 argument_list|,
 literal|"ELF brand of last resort"
 argument_list|)
@@ -2665,18 +2670,6 @@ break|break;
 block|}
 block|}
 block|}
-comment|/* XXX - Assume FreeBSD after the branding method change. */
-if|if
-condition|(
-name|brand_info
-operator|==
-name|NULL
-condition|)
-name|brand_info
-operator|=
-operator|&
-name|freebsd_brand_info
-expr_stmt|;
 if|if
 condition|(
 name|brand_info
