@@ -7124,6 +7124,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|m3_codec_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Restore the ASSP state */
 for|for
 control|(
@@ -7213,6 +7218,28 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mixer_reinit
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"unable to reinitialize the mixer\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENXIO
+return|;
+block|}
 comment|/* Turn the channels back on */
 for|for
 control|(
