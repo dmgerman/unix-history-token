@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1999 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: i686_mem.c,v 1.1 1999/04/07 03:57:45 msmith Exp $  */
 end_comment
 
 begin_include
@@ -147,6 +147,7 @@ parameter_list|(
 name|struct
 name|mem_range_softc
 modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -159,13 +160,29 @@ parameter_list|(
 name|struct
 name|mem_range_softc
 modifier|*
+name|sc
 parameter_list|,
 name|struct
 name|mem_range_desc
 modifier|*
+name|mrd
 parameter_list|,
 name|int
 modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|i686_mrAPinit
+parameter_list|(
+name|struct
+name|mem_range_softc
+modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -180,7 +197,22 @@ block|{
 name|i686_mrinit
 block|,
 name|i686_mrset
+block|,
+name|i686_mrAPinit
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX for AP startup hook */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_int64_t
+name|mtrrcap
+decl_stmt|,
+name|mtrrdef
 decl_stmt|;
 end_decl_stmt
 
@@ -232,6 +264,19 @@ begin_function_decl
 specifier|static
 name|int
 name|i686_mrstore
+parameter_list|(
+name|struct
+name|mem_range_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|i686_mrstoreone
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -1046,13 +1091,57 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update the current CPU's MTRRs with those represented in the  * descriptor list.  */
+comment|/*  * Update running CPU(s) MTRRs to match the ranges in the descriptor  * list.  *  * XXX Must be called with interrupts enabled.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
 name|i686_mrstore
+parameter_list|(
+name|struct
+name|mem_range_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/*      * We should use all_but_self_ipi() to call other CPUs into a       * locking gate, then call a target function to do this work.      * The "proper" solution involves a generalised locking gate      * implementation, not ready yet.      */
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+endif|#
+directive|endif
+name|disable_intr
+argument_list|()
+expr_stmt|;
+comment|/* disable interrupts */
+return|return
+operator|(
+name|i686_mrstoreone
+argument_list|(
+name|sc
+argument_list|)
+operator|)
+return|;
+name|enable_intr
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Update the current CPU's MTRRs with those represented in the  * descriptor list.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|i686_mrstoreone
 parameter_list|(
 name|struct
 name|mem_range_softc
@@ -1078,21 +1167,6 @@ decl_stmt|;
 name|u_int
 name|cr4save
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-comment|/*      * We should use all_but_self_ipi() to call other CPUs into a       * locking gate, then call a target function to do this work.      * The "proper" solution involves a generalised locking gate      * implementation, not ready yet.      */
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-endif|#
-directive|endif
-name|disable_intr
-argument_list|()
-expr_stmt|;
-comment|/* disable interrupts */
 name|cr4save
 operator|=
 name|rcr4
@@ -1563,10 +1637,6 @@ name|cr4save
 argument_list|)
 expr_stmt|;
 comment|/* restore cr4 */
-name|enable_intr
-argument_list|()
-expr_stmt|;
-comment|/* enable interrupts */
 return|return
 operator|(
 literal|0
@@ -2321,11 +2391,6 @@ name|mem_range_desc
 modifier|*
 name|mrd
 decl_stmt|;
-name|u_int64_t
-name|mtrrcap
-decl_stmt|,
-name|mtrrdef
-decl_stmt|;
 name|int
 name|nmdesc
 init|=
@@ -2378,7 +2443,36 @@ literal|0xff
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Pentium Pro MTRR support enabled, default memory type is %s\n"
+literal|"Pentium Pro MTRR support enabled, default memory type is "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|mtrrdef
+operator|&
+literal|0xff
+operator|)
+operator|<
+operator|(
+sizeof|sizeof
+argument_list|(
+name|i686_mtrrtotext
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|i686_mtrrtotext
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s\n"
 argument_list|,
 name|i686_mtrrtotext
 index|[
@@ -2388,6 +2482,24 @@ literal|0xff
 index|]
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"unknown (0x%x)\n"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|mtrrdef
+operator|&
+literal|0xff
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* If fixed MTRRs supported and enabled */
 if|if
 condition|(
@@ -2657,6 +2769,38 @@ operator||=
 name|MDF_FIRMWARE
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Initialise MTRRs on an AP after the BSP has run the init code.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|i686_mrAPinit
+parameter_list|(
+name|struct
+name|mem_range_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|i686_mrstoreone
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* set MTRRs to match BSP */
+name|wrmsr
+argument_list|(
+name|MSR_MTRRdefType
+argument_list|,
+name|mtrrdef
+argument_list|)
+expr_stmt|;
+comment|/* set MTRR behaviour to match BSP */
 block|}
 end_function
 
