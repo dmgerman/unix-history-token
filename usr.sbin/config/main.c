@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.14.2.3 1997/09/16 06:57:09 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1842,7 +1842,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"unlink(%s, %s)"
+literal|"unlink(%s)"
 argument_list|,
 name|from_name
 argument_list|)
