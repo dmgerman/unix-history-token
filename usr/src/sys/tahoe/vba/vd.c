@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vd.c	1.6	86/01/20	*/
+comment|/*	vd.c	1.7	86/01/21	*/
 end_comment
 
 begin_include
@@ -137,7 +137,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../tahoevba/vddcreg.h"
+file|"../tahoevba/vdreg.h"
 end_include
 
 begin_undef
