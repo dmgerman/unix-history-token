@@ -3194,6 +3194,9 @@ operator|&
 name|vnode_pbuf_freecnt
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3344,6 +3347,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|error
