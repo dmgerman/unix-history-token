@@ -96,18 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netatalk/at_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatalk/at_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netipx/ipx.h>
 end_include
 

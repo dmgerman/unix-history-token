@@ -64,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/errno.h>
 end_include
 
@@ -94,19 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_dl.h>
 end_include
 
 begin_include
@@ -172,18 +154,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in_var.h>
 end_include
 
@@ -208,12 +178,6 @@ begin_include
 include|#
 directive|include
 file|<netatalk/at_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatalk/at_extern.h>
 end_include
 
 begin_endif
