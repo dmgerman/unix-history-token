@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fingerd.c,v 1.12 1999/04/06 23:05:56 brian Exp $"
+literal|"$Id: fingerd.c,v 1.13 1999/04/07 06:00:22 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -323,7 +323,7 @@ name|logerr
 argument_list|(
 literal|"illegal option -- %c"
 argument_list|,
-name|ch
+name|optopt
 argument_list|)
 expr_stmt|;
 block|}
