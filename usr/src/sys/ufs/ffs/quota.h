@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	quota.h	4.5	83/05/24	*/
+comment|/*	quota.h	4.6	83/05/27	*/
 end_comment
 
 begin_comment
 comment|/*  * MELBOURNE DISC QUOTAS  *  * Various junk to do with various quotas (etc) imposed upon  * the average user (big brother finally hits UNIX).  *  * The following structure exists in core for each logged on user.  * It contains global junk relevant to that user's quotas.  *  * The u_quota field of each user struct contains a pointer to  * the quota struct relevant to the current process, this is changed  * by 'setuid' sys call,&/or by the Q_SETUID quota() call.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
 
 begin_struct
 struct|struct
@@ -80,18 +74,26 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|QUOTA
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|NOQUOTA
 value|((struct quota *) 0)
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|QUOTA
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|struct
@@ -122,11 +124,6 @@ name|qfind
 argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -288,12 +285,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|QUOTA
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -385,11 +376,19 @@ name|LOSTDQUOT
 value|((struct dquot *) 1)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERNEL
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|QUOTA
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|struct
@@ -428,11 +427,6 @@ name|dqp
 argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
