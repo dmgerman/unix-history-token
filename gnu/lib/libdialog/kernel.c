@@ -1412,7 +1412,11 @@ name|waddstr
 argument_list|(
 name|win
 argument_list|,
-literal|"<"
+name|selected
+condition|?
+literal|"["
+else|:
+literal|" "
 argument_list|)
 expr_stmt|;
 name|temp
@@ -1515,7 +1519,11 @@ name|waddstr
 argument_list|(
 name|win
 argument_list|,
-literal|">"
+name|selected
+condition|?
+literal|"]"
+else|:
+literal|" "
 argument_list|)
 expr_stmt|;
 name|wmove
