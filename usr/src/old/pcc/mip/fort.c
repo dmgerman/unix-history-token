@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)fort.c	4.4 (Berkeley) %G%"
+literal|"@(#)fort.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -447,7 +447,7 @@ specifier|static
 name|char
 name|fbuf
 index|[
-literal|128
+name|BUFSIZ
 index|]
 decl_stmt|;
 if|if
@@ -461,7 +461,9 @@ if|if
 condition|(
 name|n
 operator|>
-literal|32
+name|BUFSIZ
+operator|/
+literal|4
 condition|)
 name|cerror
 argument_list|(
