@@ -4885,7 +4885,7 @@ block|,
 block|{
 literal|"XFree86"
 block|,
-literal|"The XFree86 3.3.4 distribution"
+literal|"The XFree86 3.3.5 distribution"
 block|,
 name|x11FlagCheck
 block|,
@@ -5554,9 +5554,9 @@ operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
-literal|"XFree86 3.3.4 Distribution"
+literal|"XFree86 3.3.5 Distribution"
 block|,
-literal|"Please select the components you need from the XFree86 3.3.4\n"
+literal|"Please select the components you need from the XFree86 3.3.5\n"
 literal|"distribution sets."
 block|,
 name|NULL
@@ -5663,7 +5663,7 @@ name|DMENU_CHECKLIST_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"XFree86 3.3.4 base distribution types"
+literal|"XFree86 3.3.5 base distribution types"
 block|,
 literal|"Please check off the basic XFree86 components you wish to install.\n"
 literal|"Bin, lib, and set are recommended for a minimum installaion."
@@ -5939,7 +5939,7 @@ directive|endif
 block|{
 literal|"sources"
 block|,
-literal|"XFree86 3.3.4 standard sources"
+literal|"XFree86 3.3.5 standard sources"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5962,7 +5962,7 @@ block|,
 block|{
 literal|"csources"
 block|,
-literal|"XFree86 3.3.4 contrib sources"
+literal|"XFree86 3.3.5 contrib sources"
 block|,
 name|dmenuFlagCheck
 block|,
