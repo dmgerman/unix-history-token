@@ -1579,21 +1579,11 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
-name|mrd
-operator|.
-name|mr_base
-operator|!=
-literal|0
-operator|)
-operator|&&
-operator|(
 name|mrd
 operator|.
 name|mr_len
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 comment|/* clear-by-base/len */
