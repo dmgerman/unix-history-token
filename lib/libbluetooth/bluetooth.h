@@ -71,7 +71,7 @@ end_include
 
 begin_function_decl
 name|__BEGIN_DECLS
-comment|/*  * Lunux BlueZ compatibility  */
+comment|/*  * Linux BlueZ compatibility  */
 define|#
 directive|define
 name|bacmp
