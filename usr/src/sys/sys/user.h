@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -92,44 +92,31 @@ decl_stmt|;
 comment|/* stack size (clicks) */
 name|struct
 name|dmap
-name|u_dmap
+name|u_pad1
+index|[
+literal|4
+index|]
 decl_stmt|;
-comment|/* disk map for data segment */
-name|struct
-name|dmap
-name|u_smap
-decl_stmt|;
-comment|/* disk map for stack segment */
-name|struct
-name|dmap
-name|u_cdmap
-decl_stmt|;
-comment|/* temp data segment disk map */
-name|struct
-name|dmap
-name|u_csmap
-decl_stmt|;
-comment|/* temp stack segment disk map */
 name|label_t
 name|u_ssave
 decl_stmt|;
 comment|/* label variable for swapping */
-name|segsz_t
-name|u_odsize
-decl_stmt|,
-name|u_ossize
+name|caddr_t
+name|u_taddr
 decl_stmt|;
-comment|/* for (clumsy) expansion swaps */
+comment|/* user virtual address of text */
+name|caddr_t
+name|u_daddr
+decl_stmt|;
+comment|/* user virtual address of data */
 name|time_t
 name|u_outime
 decl_stmt|;
 comment|/* user time at last sample */
-name|struct
-name|mapmem
-modifier|*
-name|u_mmap
+name|caddr_t
+name|u_maxsaddr
 decl_stmt|;
-comment|/* list of mapped memory regions */
+comment|/* user VA at max stack growth */
 comment|/* 1.3 - signal management */
 name|sig_t
 name|u_signal
@@ -351,6 +338,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|user
+modifier|*
 name|swaputl
 decl_stmt|;
 end_decl_stmt
@@ -359,6 +347,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|user
+modifier|*
 name|forkutl
 decl_stmt|;
 end_decl_stmt
@@ -367,6 +356,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|user
+modifier|*
 name|xswaputl
 decl_stmt|;
 end_decl_stmt
@@ -375,6 +365,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|user
+modifier|*
 name|xswap2utl
 decl_stmt|;
 end_decl_stmt
@@ -383,6 +374,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|user
+modifier|*
 name|pushutl
 decl_stmt|;
 end_decl_stmt
@@ -391,6 +383,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|user
+modifier|*
 name|vfutl
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3921,12 +3921,14 @@ name|v_flag
 operator|&
 name|VTEXT
 condition|)
-name|xrele
+operator|(
+name|void
+operator|)
+name|vnode_pager_uncache
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* try once to free text */
 name|out
 label|:
 if|if
@@ -7732,24 +7734,19 @@ block|}
 comment|/* 		 * If there's shared text associated with 		 * the inode, try to free it up once.  If 		 * we fail, we can't allow writing. 		 */
 if|if
 condition|(
+operator|(
 name|vp
 operator|->
 name|v_flag
 operator|&
 name|VTEXT
-condition|)
-name|xrele
+operator|)
+operator|&&
+operator|!
+name|vnode_pager_uncache
 argument_list|(
 name|vp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_flag
-operator|&
-name|VTEXT
 condition|)
 return|return
 operator|(

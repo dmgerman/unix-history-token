@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3591,6 +3591,7 @@ name|np
 operator|->
 name|n_size
 condition|)
+block|{
 name|np
 operator|->
 name|n_size
@@ -3599,6 +3600,16 @@ name|vap
 operator|->
 name|va_size
 expr_stmt|;
+name|vnode_pager_setsize
+argument_list|(
+name|vp
+argument_list|,
+name|np
+operator|->
+name|n_size
+argument_list|)
+expr_stmt|;
+block|}
 name|vap
 operator|->
 name|va_size_rsv
@@ -3941,6 +3952,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|np
 operator|->
 name|n_size
@@ -3949,6 +3961,16 @@ name|vap
 operator|->
 name|va_size
 expr_stmt|;
+name|vnode_pager_setsize
+argument_list|(
+name|vp
+argument_list|,
+name|np
+operator|->
+name|n_size
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(

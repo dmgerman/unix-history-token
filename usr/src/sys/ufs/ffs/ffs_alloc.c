@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -588,20 +588,13 @@ name|int
 name|cg
 decl_stmt|,
 name|request
+decl_stmt|,
+name|error
 decl_stmt|;
 name|daddr_t
 name|bprev
 decl_stmt|,
 name|bno
-decl_stmt|,
-name|bn
-decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|error
-decl_stmt|,
-name|count
 decl_stmt|;
 name|struct
 name|ucred
@@ -1154,19 +1147,6 @@ expr_stmt|;
 else|#
 directive|else
 else|SECSIZE
-name|bp
-operator|->
-name|b_blkno
-operator|=
-name|bn
-operator|=
-name|fsbtodb
-argument_list|(
-name|fs
-argument_list|,
-name|bno
-argument_list|)
-expr_stmt|;
 name|count
 operator|=
 name|howmany

@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.47 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.48 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * vnode op calls for sun nfs version 2  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"machine/pte.h"
-end_include
 
 begin_include
 include|#
@@ -58,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"malloc.h"
 end_include
 
@@ -95,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|"vnode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"text.h"
 end_include
 
 begin_include
@@ -8955,34 +8937,10 @@ operator|->
 name|b_proc
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If a text file has been modified since it was exec'd 			 * blow the process' out of the water. This is the 			 * closest we can come to "Text File Busy" in good old 			 * stateless nfs. 			 */
-if|if
-condition|(
 operator|(
-name|vp
-operator|->
-name|v_flag
-operator|&
-name|VTEXT
+name|void
 operator|)
-operator|&&
-operator|(
-name|vp
-operator|->
-name|v_text
-operator|->
-name|x_mtime
-operator|!=
-name|np
-operator|->
-name|n_vattr
-operator|.
-name|va_mtime
-operator|.
-name|tv_sec
-operator|)
-condition|)
-name|xinval
+name|vnode_pager_uncache
 argument_list|(
 name|vp
 argument_list|)

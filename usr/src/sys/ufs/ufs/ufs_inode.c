@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_inode.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_inode.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1898,6 +1898,16 @@ name|struct
 name|inode
 name|tip
 decl_stmt|;
+name|vnode_pager_setsize
+argument_list|(
+name|ITOV
+argument_list|(
+name|oip
+argument_list|)
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|oip
@@ -2127,34 +2137,15 @@ argument_list|,
 name|lbn
 argument_list|)
 expr_stmt|;
-name|bn
-operator|=
-name|bp
-operator|->
-name|b_blkno
-expr_stmt|;
-name|count
-operator|=
-name|howmany
+operator|(
+name|void
+operator|)
+name|vnode_pager_uncache
 argument_list|(
-name|size
-argument_list|,
-name|CLBYTES
-argument_list|)
-expr_stmt|;
-name|munhash
+name|ITOV
 argument_list|(
 name|oip
-operator|->
-name|i_devvp
-argument_list|,
-name|bn
-operator|+
-name|i
-operator|*
-name|CLBYTES
-operator|/
-name|DEV_BSIZE
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bzero
