@@ -323,6 +323,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|_f
+parameter_list|,
+name|int
+name|_ch_opts
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -336,6 +339,29 @@ name|struct
 name|printer
 modifier|*
 name|_pp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|fhosterr
+parameter_list|(
+name|int
+name|_dosys
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|_sysmsg
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|_usermsg
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -405,6 +431,28 @@ name|euid
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|LPD_NOPORTCHK
+value|0001
+end_define
+
+begin_comment
+comment|/* skip reserved-port check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LPD_LOGCONNERR
+value|0002
+end_define
+
+begin_comment
+comment|/* (sys)log connection errors */
+end_comment
+
 begin_function
 name|int
 name|main
@@ -419,6 +467,8 @@ name|argv
 parameter_list|)
 block|{
 name|int
+name|ch_options
+decl_stmt|,
 name|errs
 decl_stmt|,
 name|f
@@ -431,8 +481,6 @@ decl_stmt|,
 name|fromlen
 decl_stmt|,
 name|i
-decl_stmt|,
-name|options
 decl_stmt|,
 name|socket_debug
 decl_stmt|;
@@ -484,6 +532,10 @@ operator|=
 name|getuid
 argument_list|()
 expr_stmt|;
+name|ch_options
+operator|=
+literal|0
+expr_stmt|;
 name|socket_debug
 operator|=
 literal|0
@@ -530,7 +582,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dlp46"
+literal|"cdlpw46"
 argument_list|)
 operator|)
 operator|!=
@@ -542,6 +594,15 @@ condition|(
 name|i
 condition|)
 block|{
+case|case
+literal|'c'
+case|:
+comment|/* log all kinds of connection-errors to syslog */
+name|ch_options
+operator||=
+name|LPD_LOGCONNERR
+expr_stmt|;
+break|break;
 case|case
 literal|'d'
 case|:
@@ -561,6 +622,16 @@ literal|'p'
 case|:
 name|pflag
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'w'
+case|:
+comment|/* allow connections coming from a non-reserved port */
+comment|/* (done by some lpr-implementations for MS-Windows) */
+name|ch_options
+operator||=
+name|LPD_NOPORTCHK
 expr_stmt|;
 break|break;
 case|case
@@ -1685,6 +1756,8 @@ operator|*
 operator|)
 operator|&
 name|frominet
+argument_list|,
+name|ch_options
 argument_list|)
 expr_stmt|;
 block|}
@@ -2775,7 +2848,7 @@ value|":nobody::"
 end_define
 
 begin_comment
-comment|/*  * Check to see if the from host has access to the line printer.  */
+comment|/*  * Check to see if the host connecting to this host has access to any  * lpd services on this host.  */
 end_comment
 
 begin_function
@@ -2787,6 +2860,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|f
+parameter_list|,
+name|int
+name|ch_opts
 parameter_list|)
 block|{
 name|struct
@@ -2803,16 +2879,6 @@ specifier|register
 name|FILE
 modifier|*
 name|hostf
-decl_stmt|;
-name|int
-name|first
-init|=
-literal|1
-decl_stmt|;
-name|int
-name|good
-init|=
-literal|0
 decl_stmt|;
 name|char
 name|hostbuf
@@ -2834,52 +2900,32 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|addrlen
+name|errsav
+decl_stmt|,
+name|fpass
+decl_stmt|,
+name|good
+decl_stmt|,
+name|wantsl
 decl_stmt|;
-name|caddr_t
-name|addr
-decl_stmt|;
-name|error
+name|wantsl
 operator|=
-name|getnameinfo
-argument_list|(
-name|f
-argument_list|,
-name|f
-operator|->
-name|sa_len
-argument_list|,
-name|NULL
-argument_list|,
 literal|0
-argument_list|,
-name|serv
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|serv
-argument_list|)
-argument_list|,
-name|NI_NUMERICSERV
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
-operator|||
-name|atoi
-argument_list|(
-name|serv
-argument_list|)
-operator|>=
-name|IPPORT_RESERVED
+name|ch_opts
+operator|&
+name|LPD_LOGCONNERR
 condition|)
-name|fatal
-argument_list|(
-literal|0
-argument_list|,
-literal|"Malformed from address"
-argument_list|)
+name|wantsl
+operator|=
+literal|1
+expr_stmt|;
+comment|/* also syslog the errors */
+name|from_host
+operator|=
+literal|".na."
 expr_stmt|;
 comment|/* Need real hostname for temporary filenames */
 name|error
@@ -2911,6 +2957,10 @@ condition|(
 name|error
 condition|)
 block|{
+name|errsav
+operator|=
+name|error
+expr_stmt|;
 name|error
 operator|=
 name|getnameinfo
@@ -2941,21 +2991,29 @@ if|if
 condition|(
 name|error
 condition|)
-name|fatal
+name|fhosterr
 argument_list|(
-literal|0
+name|wantsl
 argument_list|,
-literal|"Host name for your address unknown"
+literal|"can not determine hostname for remote host (%d)"
+argument_list|,
+literal|"Host name for your address not known"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 else|else
-name|fatal
+name|fhosterr
 argument_list|(
-literal|0
+name|wantsl
 argument_list|,
-literal|"Host name for your address (%s) unknown"
+literal|"Host name for remote host (%s) not known (%d)"
+argument_list|,
+literal|"Host name for your address (%s) not known"
 argument_list|,
 name|hostbuf
+argument_list|,
+name|errsav
 argument_list|)
 expr_stmt|;
 block|}
@@ -3006,11 +3064,15 @@ if|if
 condition|(
 name|error
 condition|)
-name|fatal
+name|fhosterr
 argument_list|(
-literal|0
+name|wantsl
 argument_list|,
-literal|"Cannot print address"
+literal|"Cannot print IP address (error %d)"
+argument_list|,
+literal|"Cannot print IP address"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 name|from_ip
@@ -3078,9 +3140,11 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
-name|fatal
+name|fhosterr
 argument_list|(
-literal|0
+name|wantsl
+argument_list|,
+name|NULL
 argument_list|,
 literal|"reverse lookup results in non-FQDN %s"
 argument_list|,
@@ -3135,9 +3199,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|fatal
+name|fhosterr
 argument_list|(
-literal|0
+name|wantsl
+argument_list|,
+literal|"dns lookup for address %s failed: %s"
 argument_list|,
 literal|"hostname for your address (%s) unknown: %s"
 argument_list|,
@@ -3234,14 +3300,20 @@ name|good
 operator|==
 literal|0
 condition|)
-name|fatal
+name|fhosterr
 argument_list|(
-literal|0
+name|wantsl
+argument_list|,
+literal|"address for remote host (%s) not matched"
 argument_list|,
 literal|"address for your hostname (%s) not matched"
 argument_list|,
 name|from_ip
 argument_list|)
+expr_stmt|;
+name|fpass
+operator|=
+literal|1
 expr_stmt|;
 name|hostf
 operator|=
@@ -3287,7 +3359,9 @@ argument_list|(
 name|hostf
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|foundhost
+goto|;
 block|}
 operator|(
 name|void
@@ -3300,14 +3374,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|first
+name|fpass
 operator|==
 literal|1
 condition|)
 block|{
-name|first
+name|fpass
 operator|=
-literal|0
+literal|2
 expr_stmt|;
 name|hostf
 operator|=
@@ -3322,14 +3396,279 @@ goto|goto
 name|again
 goto|;
 block|}
-name|fatal
+name|fhosterr
 argument_list|(
-literal|0
+name|wantsl
 argument_list|,
-literal|"Your host does not have line printer access"
+literal|"refused connection from %s, sip=%s"
+argument_list|,
+literal|"Print-services are not available to your host (%s)."
+argument_list|,
+name|from_host
+argument_list|,
+name|from_ip
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
+name|foundhost
+label|:
+if|if
+condition|(
+name|ch_opts
+operator|&
+name|LPD_NOPORTCHK
+condition|)
+return|return;
+comment|/* skip the reserved-port check */
+name|error
+operator|=
+name|getnameinfo
+argument_list|(
+name|f
+argument_list|,
+name|f
+operator|->
+name|sa_len
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|serv
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|serv
+argument_list|)
+argument_list|,
+name|NI_NUMERICSERV
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|fhosterr
+argument_list|(
+name|wantsl
+argument_list|,
+name|NULL
+argument_list|,
+literal|"malformed from-address (%d)"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|atoi
+argument_list|(
+name|serv
+argument_list|)
+operator|>=
+name|IPPORT_RESERVED
+condition|)
+name|fhosterr
+argument_list|(
+name|wantsl
+argument_list|,
+name|NULL
+argument_list|,
+literal|"connected from invalid port (%s)"
+argument_list|,
+name|serv
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_comment
+comment|/*  * Handle fatal errors in chkhost.  The first message will optionally be sent  * to syslog, the second one is sent to the connecting host.  If the first  * message is NULL, then the same message is used for both.  Note that the  * argument list for both messages are assumed to be the same (or at least  * the initial arguments for one must be EXACTLY the same as the complete  * argument list for the other message).  *  * The idea is that the syslog message is meant for an administrator of a  * print server (the host receiving connections), while the usermsg is meant  * for a remote user who may or may not be clueful, and may or may not be  * doing something nefarious.  Some remote users (eg, MS-Windows...) may not  * even see whatever message is sent, which is why there's the option to  * start 'lpd' with the connection-errors also sent to syslog.  *  * Given that hostnames can theoretically be fairly long (well, over 250  * bytes), it would probably be helpful to have the 'from_host' field at  * the end of any error messages which include that info.  */
+end_comment
+
+begin_function
+name|void
+name|fhosterr
+parameter_list|(
+name|int
+name|dosys
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|sysmsg
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|usermsg
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|char
+modifier|*
+name|sbuf
+decl_stmt|,
+modifier|*
+name|ubuf
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|testone
+decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|usermsg
+argument_list|)
+expr_stmt|;
+name|vasprintf
+argument_list|(
+operator|&
+name|ubuf
+argument_list|,
+name|usermsg
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dosys
+condition|)
+block|{
+name|sbuf
+operator|=
+name|ubuf
+expr_stmt|;
+comment|/* assume sysmsg == NULL */
+if|if
+condition|(
+name|sysmsg
+operator|!=
+name|NULL
+condition|)
+block|{
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|usermsg
+argument_list|)
+expr_stmt|;
+name|vasprintf
+argument_list|(
+operator|&
+name|sbuf
+argument_list|,
+name|sysmsg
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 * If the first variable-parameter is not the 'from_host', 		 * then first write THAT information as a line to syslog. 		 */
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|usermsg
+argument_list|)
+expr_stmt|;
+name|testone
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|testone
+operator|!=
+name|from_host
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"for connection from %s:"
+argument_list|,
+name|from_host
+argument_list|)
+expr_stmt|;
+block|}
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+comment|/* now write the syslog message */
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"%s"
+argument_list|,
+name|sbuf
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"%s [@%s]: %s\n"
+argument_list|,
+name|progname
+argument_list|,
+name|local_host
+argument_list|,
+name|ubuf
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+comment|/*  	 * Add a minimal delay before exiting (and disconnecting from the 	 * sending-host).  This is just in case that machine responds by 	 * INSTANTLY retrying (and instantly re-failing...).  This may also 	 * give the other side more time to read the error message. 	 */
+name|sleep
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* a paranoid throttling measure */
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3809,7 +4148,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lpd [-dlp46] [port#]\n"
+literal|"usage: lpd [-cdlpw46] [port#]\n"
 argument_list|)
 expr_stmt|;
 else|#
@@ -3818,7 +4157,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lpd [-dlp] [port#]\n"
+literal|"usage: lpd [-cdlpw] [port#]\n"
 argument_list|)
 expr_stmt|;
 endif|#
