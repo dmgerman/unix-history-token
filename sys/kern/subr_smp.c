@@ -121,12 +121,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|cpumask_t
-name|all_cpus
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|cpumask_t
 name|idle_cpus_mask
 decl_stmt|;
 end_decl_stmt
@@ -159,6 +153,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* amazingly enough this is used in non SMP code XXX BUG! */
+end_comment
+
+begin_decl_stmt
+name|cpumask_t
+name|all_cpus
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
