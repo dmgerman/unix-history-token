@@ -3063,6 +3063,7 @@ comment|/*  * External interrupt service routine.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|rdpintr
 parameter_list|(

@@ -3226,6 +3226,7 @@ comment|/* Handle delayed events. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|rcpoll
 parameter_list|(
@@ -7099,6 +7100,7 @@ comment|/* Test the board. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|rc_test
 parameter_list|(

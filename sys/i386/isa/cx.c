@@ -452,6 +452,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|int
 name|cxopen
 parameter_list|(
@@ -1074,6 +1075,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|cxclose
 parameter_list|(
@@ -1290,6 +1292,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|cxioctl
 parameter_list|(
@@ -3027,6 +3030,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|cxoproc
 parameter_list|(
@@ -3979,6 +3983,7 @@ comment|/*  * Stop output on a line  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|cxstop
 parameter_list|(

@@ -1330,6 +1330,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|twopen
 parameter_list|(
@@ -1435,6 +1436,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|twclose
 parameter_list|(
@@ -1514,6 +1516,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|twread
 parameter_list|(
@@ -1622,6 +1625,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|twwrite
 parameter_list|(
@@ -1938,6 +1942,7 @@ comment|/*  * Determine if there is data available for reading  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|twpoll
 parameter_list|(

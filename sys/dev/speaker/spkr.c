@@ -2102,6 +2102,7 @@ comment|/* incoming buf */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|spkropen
 parameter_list|(
@@ -2215,6 +2216,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|spkrwrite
 parameter_list|(
@@ -2353,6 +2355,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|spkrclose
 parameter_list|(
@@ -2453,6 +2456,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|spkrioctl
 parameter_list|(
