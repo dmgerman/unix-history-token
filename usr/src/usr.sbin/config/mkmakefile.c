@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.21 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,12 @@ begin_include
 include|#
 directive|include
 file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -814,7 +820,7 @@ name|fprintf
 argument_list|(
 name|ofp
 argument_list|,
-literal|"GPROF.EX=/usr/src/lib/libc/%s/csu/gmon.ex\n"
+name|_PATH_GPROF
 argument_list|,
 name|machinename
 argument_list|)
