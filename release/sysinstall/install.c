@@ -2418,6 +2418,22 @@ condition|(
 operator|!
 name|msgNoYes
 argument_list|(
+literal|"Do you want to configure inetd and simple internet services?"
+argument_list|)
+condition|)
+name|configInetd
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgNoYes
+argument_list|(
 literal|"Do you want to have anonymous FTP access to this machine?"
 argument_list|)
 condition|)

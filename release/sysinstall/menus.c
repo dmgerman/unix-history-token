@@ -1008,6 +1008,20 @@ name|docBrowser
 block|}
 block|,
 block|{
+literal|" inetd Configuration"
+block|,
+literal|"Configure inetd and simple internet services."
+block|,
+name|dmenuVarCheck
+block|,
+name|configInetd
+block|,
+name|NULL
+block|,
+literal|"inetd_enable=YES"
+block|}
+block|,
+block|{
 literal|" Install, Standard"
 block|,
 literal|"A standard system installation."
@@ -1414,6 +1428,20 @@ block|,
 name|NULL
 block|,
 literal|"tzsetup"
+block|}
+block|,
+block|{
+literal|" TTYs"
+block|,
+literal|"Configure system ttys."
+block|,
+name|NULL
+block|,
+name|configEtcTtys
+block|,
+name|NULL
+block|,
+literal|"ttys"
 block|}
 block|,
 block|{
@@ -7724,6 +7752,20 @@ name|MenuStartup
 block|}
 block|,
 block|{
+literal|" TTYs"
+block|,
+literal|"Configure system ttys."
+block|,
+name|NULL
+block|,
+name|configEtcTtys
+block|,
+name|NULL
+block|,
+literal|"ttys"
+block|}
+block|,
+block|{
 literal|" Options"
 block|,
 literal|"View/Set various installation options"
@@ -8220,7 +8262,7 @@ literal|"This machine wants to run the inet daemon"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuToggleVariable
+name|configInetd
 block|,
 name|NULL
 block|,

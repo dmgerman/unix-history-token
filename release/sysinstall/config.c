@@ -4498,6 +4498,111 @@ end_function
 
 begin_function
 name|int
+name|configInetd
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|char
+name|cmd
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"The Internet Super Server (inetd) allows a number of simple Internet\n"
+literal|"services to be enabled, including finger, ftp, and telnetd.  Enabling\n"
+literal|"these services may increase risk of security problems by increasing\n"
+literal|"the exposure of your system.\n\n"
+literal|"With this in mind, do you wish to enable inetd?\n"
+argument_list|)
+condition|)
+block|{
+name|variable_set2
+argument_list|(
+literal|"inetd_enable"
+argument_list|,
+literal|"NO"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* If inetd is enabled, we'll need an inetd.conf */
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"inetd(8) relies on its configuration file, /etc/inetd.conf, to determine\n"
+literal|"which of its Internet services will be available.  The default FreeBSD\n"
+literal|"inetd.conf(5) leaves all services disabled by default, so they must be\n"
+literal|"specifically enabled in the configuration file before they will\n"
+literal|"function, even once inetd(8) is enabled.  Note that services for\n"
+literal|"IPv6 must be seperately enabled from IPv4 services.\n\n"
+literal|"Select [Yes] now to invoke an editor on /etc/inetd.conf, or [No] to\n"
+literal|"use the current settings.\n"
+argument_list|)
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|cmd
+argument_list|,
+literal|"%s /etc/inetd.conf"
+argument_list|,
+name|variable_get
+argument_list|(
+name|VAR_EDITOR
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|systemExecute
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+literal|"inetd_enable"
+argument_list|,
+literal|"YES"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|configNFSServer
 parameter_list|(
 name|dialogMenuItem
@@ -4655,6 +4760,77 @@ name|VAR_NFS_SERVER
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|DITEM_SUCCESS
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|configEtcTtys
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|char
+name|cmd
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
+comment|/* Simply prompt for confirmation, then edit away. */
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"Configuration of system TTYs requires editing the /etc/ttys file.\n"
+literal|"Typical configuration activities might include enabling getty(8)\n"
+literal|"on the first serial port to allow login via serial console after\n"
+literal|"reboot, or to enable xdm.  The default ttys file enables normal\n"
+literal|"virtual consoles, and most sites will not need to perform manual\n"
+literal|"configuration.\n\n"
+literal|"To load /etc/ttys in the editor, select [Yes], otherwise, [No]."
+argument_list|)
+condition|)
+block|{     }
+else|else
+block|{
+name|sprintf
+argument_list|(
+name|cmd
+argument_list|,
+literal|"%s /etc/ttys"
+argument_list|,
+name|variable_get
+argument_list|(
+name|VAR_EDITOR
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|systemExecute
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
+block|}
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 name|DITEM_SUCCESS
 return|;
