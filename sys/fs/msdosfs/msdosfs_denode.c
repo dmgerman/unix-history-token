@@ -272,6 +272,10 @@ name|curthread
 argument_list|,
 operator|&
 name|nvp
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -426,6 +430,10 @@ name|curthread
 argument_list|,
 operator|&
 name|xvp
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

@@ -2080,6 +2080,10 @@ argument_list|,
 name|curthread
 argument_list|,
 name|vpp
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2292,6 +2296,10 @@ argument_list|,
 name|curthread
 argument_list|,
 name|vpp
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

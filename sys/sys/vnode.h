@@ -3890,6 +3890,23 @@ begin_comment
 comment|/* vfs_hash.c */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|int
+name|vfs_hash_cmp_t
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_function_decl
 name|int
 name|vfs_hash_get
@@ -3915,6 +3932,14 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
+parameter_list|,
+name|vfs_hash_cmp_t
+modifier|*
+name|fn
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3944,6 +3969,14 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
+parameter_list|,
+name|vfs_hash_cmp_t
+modifier|*
+name|fn
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
