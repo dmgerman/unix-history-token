@@ -1349,7 +1349,7 @@ name|rman_set_bustag
 argument_list|(
 name|rv
 argument_list|,
-name|I386_BUS_SPACE_MEM
+name|AMD64_BUS_SPACE_MEM
 argument_list|)
 expr_stmt|;
 block|}
@@ -1365,7 +1365,7 @@ name|rman_set_bustag
 argument_list|(
 name|rv
 argument_list|,
-name|I386_BUS_SPACE_IO
+name|AMD64_BUS_SPACE_IO
 argument_list|)
 expr_stmt|;
 name|rman_set_bushandle
@@ -1445,7 +1445,7 @@ argument_list|(
 name|r
 argument_list|)
 operator|==
-name|I386_BUS_SPACE_MEM
+name|AMD64_BUS_SPACE_MEM
 condition|)
 block|{
 name|caddr_t
@@ -1598,7 +1598,7 @@ argument_list|(
 name|r
 argument_list|)
 operator|==
-name|I386_BUS_SPACE_MEM
+name|AMD64_BUS_SPACE_MEM
 operator|)
 operator|&&
 operator|(

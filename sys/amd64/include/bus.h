@@ -6,19 +6,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_I386_BUS_H_
+name|_AMD64_BUS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_I386_BUS_H_
+name|_AMD64_BUS_H_
 end_define
 
 begin_include
 include|#
 directive|include
-file|<machine/bus_at386.h>
+file|<machine/bus_amd64.h>
 end_include
 
 begin_include
@@ -28,7 +28,7 @@ file|<machine/bus_dma.h>
 end_include
 
 begin_comment
-comment|/*  * Stream accesses are the same as normal accesses on i386; there are no  * supported bus systems with an endianess different from the host one.  */
+comment|/*  * Stream accesses are the same as normal accesses on amd64; there are no  * supported bus systems with an endianess different from the host one.  */
 end_comment
 
 begin_define
@@ -535,7 +535,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _I386_BUS_H_ */
+comment|/* _AMD64_BUS_H_ */
 end_comment
 
 end_unit
