@@ -2601,7 +2601,7 @@ name|mtime
 operator|)
 return|;
 block|}
-comment|/*-  *-----------------------------------------------------------------------  * Dir_AddDir --  *	Add the given name to the end of the given path. The order of  *	the arguments is backwards so ParseDoDependency can do a  *	Lst_ForEach of its list of paths...  *  * Results:  *	none  *  * Side Effects:  *	A structure is added to the list and the directory is  *	read and hashed.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Dir_AddDir --  *	Add the given name to the end of the given path.  *  * Results:  *	none  *  * Side Effects:  *	A structure is added to the list and the directory is  *	read and hashed.  *-----------------------------------------------------------------------  */
 name|void
 name|Dir_AddDir
 parameter_list|(
