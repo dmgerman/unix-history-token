@@ -1857,13 +1857,6 @@ name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 comment|/* And put it in the ifaddr list */
-define|#
-directive|define
-name|IFP2AC
-parameter_list|(
-name|IFP
-parameter_list|)
-value|((struct arpcom *)IFP)
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa

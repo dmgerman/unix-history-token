@@ -506,6 +506,10 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|/*  * XXX These aliases are terribly dangerous because they could apply  * to anything.  */
+end_comment
+
 begin_define
 define|#
 directive|define

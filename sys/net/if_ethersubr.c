@@ -588,16 +588,6 @@ parameter_list|)
 value|do { error = (e); goto bad;} while (0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|IFP2AC
-parameter_list|(
-name|IFP
-parameter_list|)
-value|((struct arpcom *)IFP)
-end_define
-
 begin_function_decl
 name|int
 name|ether_ipfw_chk

@@ -112,16 +112,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|IFP2AC
-parameter_list|(
-name|IFP
-parameter_list|)
-value|((struct arpcom *)IFP)
-end_define
-
-begin_define
-define|#
-directive|define
 name|IFP2NG
 parameter_list|(
 name|ifp
