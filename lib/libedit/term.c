@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)term.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)term.c	8.2 (Berkeley) 4/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -4862,6 +4862,15 @@ index|[
 name|A_K_DN
 index|]
 operator|.
+name|key
+operator|=
+name|T_kd
+expr_stmt|;
+name|arrow
+index|[
+name|A_K_DN
+index|]
+operator|.
 name|fun
 operator|.
 name|cmd
@@ -4885,6 +4894,15 @@ operator|.
 name|name
 operator|=
 literal|"up"
+expr_stmt|;
+name|arrow
+index|[
+name|A_K_UP
+index|]
+operator|.
+name|key
+operator|=
+name|T_ku
 expr_stmt|;
 name|arrow
 index|[
@@ -4920,6 +4938,15 @@ index|[
 name|A_K_LT
 index|]
 operator|.
+name|key
+operator|=
+name|T_kl
+expr_stmt|;
+name|arrow
+index|[
+name|A_K_LT
+index|]
+operator|.
 name|fun
 operator|.
 name|cmd
@@ -4943,6 +4970,15 @@ operator|.
 name|name
 operator|=
 literal|"right"
+expr_stmt|;
+name|arrow
+index|[
+name|A_K_RT
+index|]
+operator|.
+name|key
+operator|=
+name|T_kr
 expr_stmt|;
 name|arrow
 index|[

@@ -1,22 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|lint
-argument_list|)
-end_if
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -24,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crt0.c	5.7 (Berkeley) 7/3/91"
+literal|"@(#)crt0.c	8.1 (Berkeley) 6/1/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,12 +25,30 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LIBC_SCCS and not lint */
+comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  *	C start up routine.  *	Robert Henry, UCB, 20 Oct 81  *  *	We make the following (true) assumption:  *	1) The only register variable that we can trust is the frame pointer,  *	ebp, which points to the base of the kernel calling frame.  */
+comment|/*  *	C start up routine.  *	Robert Henry, UCB, 20 Oct 81  *  *	We make the following (true) assumption:  *	1) The only register variable that we can trust is ebp,  *	which points to the base of the kernel calling frame.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_decl_stmt
 name|char
@@ -57,10 +66,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|errno
+specifier|static
+name|char
+name|empty
+index|[
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|__progname
 init|=
-literal|0
+name|empty
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fd
 decl_stmt|;
 end_decl_stmt
 
@@ -99,15 +126,6 @@ end_extern
 begin_asm
 unit|)
 asm|asm("start");
-end_asm
-
-begin_extern
-extern|extern			mcount(
-end_extern
-
-begin_asm
-unit|)
-asm|asm ("mcount");
 end_asm
 
 begin_macro
@@ -154,6 +172,7 @@ name|kframe
 modifier|*
 name|kfp
 decl_stmt|;
+comment|/* r10 */
 specifier|register
 name|char
 modifier|*
@@ -165,6 +184,10 @@ name|char
 modifier|*
 modifier|*
 name|argv
+decl_stmt|;
+specifier|extern
+name|int
+name|errno
 decl_stmt|;
 specifier|extern
 name|void
@@ -186,12 +209,10 @@ literal|0
 expr_stmt|;
 else|#
 directive|else
-else|not lint
-comment|/* just above the saved frame pointer */
-asm|asm ("lea 4(%%ebp), %0" : "=r" (kfp) );
+asm|asm("lea 4(%ebp),%ebx");
+comment|/* catch it quick */
 endif|#
 directive|endif
-endif|not lint
 for|for
 control|(
 name|argv
@@ -238,6 +259,40 @@ expr_stmt|;
 asm|asm("eprol:");
 ifdef|#
 directive|ifdef
+name|paranoid
+comment|/* 	 * The standard I/O library assumes that file descriptors 0, 1, and 2 	 * are open. If one of these descriptors is closed prior to the start  	 * of the process, I/O gets very confused. To avoid this problem, we 	 * insure that the first three file descriptors are open before calling 	 * main(). Normally this is undefined, as it adds two unnecessary 	 * system calls. 	 */
+do|do
+block|{
+name|fd
+operator|=
+name|open
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|fd
+operator|>=
+literal|0
+operator|&&
+name|fd
+operator|<
+literal|3
+condition|)
+do|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|MCRT0
 name|atexit
 argument_list|(
@@ -255,7 +310,46 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|MCRT0
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|argv
+index|[
+literal|0
+index|]
+condition|)
+if|if
+condition|(
+operator|(
+name|__progname
+operator|=
+name|strrchr
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|__progname
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+else|else
+operator|++
+name|__progname
+expr_stmt|;
 name|exit
 argument_list|(
 name|main
@@ -280,7 +374,7 @@ name|CRT0
 end_ifdef
 
 begin_comment
-comment|/*  * null mcount and moncontrol,  * just in case some routine is compiled for profiling  */
+comment|/*  * null moncontrol just in case some routine is compiled for profiling  */
 end_comment
 
 begin_macro
@@ -300,19 +394,9 @@ begin_block
 block|{  }
 end_block
 
-begin_macro
-name|mcount
-argument_list|()
-end_macro
-
-begin_block
-block|{ }
-end_block
-
 begin_endif
 endif|#
 directive|endif
-endif|CRT0
 end_endif
 
 end_unit

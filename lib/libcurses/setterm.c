@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1981, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	8.3 (Berkeley) 1/2/94"
+literal|"@(#)setterm.c	8.8 (Berkeley) 10/25/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,11 +34,9 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<curses.h>
-end_include
+begin_comment
+comment|/* TIOCGWINSZ on old systems. */
+end_comment
 
 begin_include
 include|#
@@ -55,7 +53,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"curses.h"
 end_include
 
 begin_decl_stmt
@@ -651,9 +661,12 @@ name|BT
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Test for cursor motion capbility. 	 * 	 * XXX 	 * This is truly stupid -- tgoto returns "OOPS" if it can't 	 * do cursor motions. 	 */
+comment|/* 	 * Test for cursor motion capbility. 	 * 	 * XXX 	 * This is truly stupid -- historically, tgoto returns "OOPS" if it 	 * can't do cursor motions.  Some systems have been fixed to return 	 * a NULL pointer. 	 */
 if|if
 condition|(
+operator|(
+name|p
+operator|=
 name|tgoto
 argument_list|(
 name|CM
@@ -662,9 +675,12 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-index|[
-literal|0
-index|]
+operator|)
+operator|==
+name|NULL
+operator|||
+operator|*
+name|p
 operator|==
 literal|'O'
 condition|)
@@ -707,27 +723,52 @@ argument_list|,
 name|__ttytype
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|!
-name|AL
-operator|&&
-operator|!
-name|al
-operator|)
-operator|||
-operator|(
-operator|!
-name|DL
-operator|&&
-operator|!
-name|dl
-operator|)
-condition|)
+comment|/* If no scrolling commands, no quick change. */
 name|__noqch
 operator|=
-literal|1
+operator|(
+name|CS
+operator|==
+name|NULL
+operator|||
+name|HO
+operator|==
+name|NULL
+operator|||
+name|SF
+operator|==
+name|NULL
+operator|&&
+name|sf
+operator|==
+name|NULL
+operator|||
+name|SR
+operator|==
+name|NULL
+operator|&&
+name|sr
+operator|==
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|AL
+operator|==
+name|NULL
+operator|&&
+name|al
+operator|==
+name|NULL
+operator|||
+name|DL
+operator|==
+name|NULL
+operator|&&
+name|dl
+operator|==
+name|NULL
+operator|)
 expr_stmt|;
 return|return
 operator|(

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_proc.c	8.3 (Berkeley) 9/23/93"
+literal|"@(#)kvm_proc.c	8.4 (Berkeley) 8/20/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -848,13 +848,15 @@ name|maxcnt
 operator|&&
 name|p
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|p
 operator|=
 name|proc
 operator|.
-name|p_next
+name|p_list
+operator|.
+name|le_next
 control|)
 block|{
 if|if
