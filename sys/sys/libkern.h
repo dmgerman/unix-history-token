@@ -975,6 +975,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|size_t
+name|strspn
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|strvalid
 parameter_list|(
