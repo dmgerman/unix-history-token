@@ -28,28 +28,14 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resource.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_comment
-comment|/* For need_resched */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/ipl.h>
-end_include
-
-begin_comment
-comment|/* For need_resched */
-end_comment
 
 begin_include
 include|#
@@ -515,6 +501,12 @@ name|RTP_PRIO_FIFO
 else|:
 name|RTP_PRIO_REALTIME
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|rtp_to_pri
 argument_list|(
 operator|&
@@ -528,6 +520,12 @@ argument_list|)
 expr_stmt|;
 name|need_resched
 argument_list|()
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -557,6 +555,12 @@ operator|->
 name|sched_priority
 argument_list|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|rtp_to_pri
 argument_list|(
 operator|&
@@ -571,6 +575,12 @@ expr_stmt|;
 comment|/* XXX Simply revert to whatever we had for last 			 *     normal scheduler priorities. 			 *     This puts a requirement 			 *     on the scheduling code: You must leave the 			 *     scheduling info alone. 			 */
 name|need_resched
 argument_list|()
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -631,8 +641,20 @@ modifier|*
 name|ksched
 parameter_list|)
 block|{
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|need_resched
 argument_list|()
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
