@@ -337,10 +337,6 @@ decl_stmt|;
 name|int
 name|serinst
 decl_stmt|;
-name|void
-modifier|*
-name|pool
-decl_stmt|;
 block|}
 name|epic_softc_t
 typedef|;
