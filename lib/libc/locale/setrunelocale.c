@@ -195,6 +195,10 @@ comment|/* 	 * The "C" and "POSIX" locale are always here. 	 */
 if|if
 condition|(
 operator|!
+operator|*
+name|encoding
+operator|||
+operator|!
 name|strcmp
 argument_list|(
 name|encoding
