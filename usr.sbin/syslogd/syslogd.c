@@ -1125,6 +1125,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|KeepKernFac
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Keep remotely logged kernel facility */
+end_comment
+
+begin_decl_stmt
+name|int
 name|allowaddr
 name|__P
 argument_list|(
@@ -1581,7 +1593,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:dl:f:m:p:nsuv"
+literal|"a:df:kl:m:np:suv"
 argument_list|)
 operator|)
 operator|!=
@@ -1626,6 +1638,15 @@ comment|/* configuration file */
 name|ConfFile
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+comment|/* keep remote kern fac */
+name|KeepKernFac
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3082,6 +3103,9 @@ name|pri
 argument_list|)
 operator|==
 name|LOG_KERN
+operator|&&
+operator|!
+name|KeepKernFac
 condition|)
 name|pri
 operator|=
