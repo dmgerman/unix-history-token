@@ -5234,7 +5234,7 @@ literal|2
 operator|)
 operator|)
 expr_stmt|;
-name|INP_INFO_RLOCK
+name|INP_INFO_WLOCK
 argument_list|(
 operator|&
 name|tcbinfo
@@ -5405,7 +5405,7 @@ name|th
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_INFO_RUNLOCK
+name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
