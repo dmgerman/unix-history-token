@@ -209,6 +209,8 @@ parameter_list|)
 block|{
 name|u_int32_t
 name|vid
+decl_stmt|,
+name|imsreg
 decl_stmt|;
 name|device_t
 name|child
@@ -283,10 +285,22 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Hook in the first CPU unit. 	 */
+if|if
+condition|(
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|tlsb_primary_cpu
 operator|=
 name|tdev
 expr_stmt|;
+block|}
+comment|/* 	 * Make this CPU a candidate for receiving interrupts. 	 */
 name|TLSB_PUT_NODEREG
 argument_list|(
 name|tdev
@@ -295,6 +309,15 @@ name|td_node
 argument_list|,
 name|TLCPUMASK
 argument_list|,
+name|TLSB_GET_NODEREG
+argument_list|(
+name|tdev
+operator|->
+name|td_node
+argument_list|,
+name|TLCPUMASK
+argument_list|)
+operator||
 operator|(
 literal|1
 operator|<<
@@ -302,7 +325,17 @@ name|vid
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Attach gbus. 	 */
+comment|/* 	 * Attach gbus for first instance. 	 */
+if|if
+condition|(
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|child
 operator|=
 name|device_add_child
@@ -336,6 +369,7 @@ argument_list|,
 name|tdev
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
