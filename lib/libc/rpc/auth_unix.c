@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: auth_unix.c,v 1.1 1994/08/07 18:35:39 wollman Exp $"
+literal|"$Id: auth_unix.c,v 1.2 1994/08/10 02:25:22 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -477,7 +477,7 @@ operator|=
 operator|(
 operator|(
 name|len
-operator|>
+operator|<
 name|authunix_maxgrouplist
 operator|)
 condition|?
