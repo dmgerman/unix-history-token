@@ -4200,7 +4200,7 @@ case|:
 comment|/* 		 * CTIO rejected by the firmware because an invalid RX_ID. 		 * Just print a message. 		 */
 name|PRINTF
 argument_list|(
-literal|"%s: CTIO2 completed with Invalid RX_ID 0x%x"
+literal|"%s: CTIO2 completed with Invalid RX_ID 0x%x\n"
 argument_list|,
 name|isp
 operator|->
