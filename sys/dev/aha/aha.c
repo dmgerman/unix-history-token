@@ -1620,6 +1620,29 @@ argument_list|,
 name|DEFAULT_CMD_TIMEOUT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: AOP_RETURN_EXT_BIOS_INFO - Failed."
+argument_list|,
+name|aha_name
+argument_list|(
+name|aha
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 name|error
 operator|=
 name|aha_cmd
@@ -1645,6 +1668,29 @@ argument_list|,
 name|DEFAULT_CMD_TIMEOUT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: AOP_MBOX_IF_ENABLE - Failed."
+argument_list|,
+name|aha_name
+argument_list|(
+name|aha
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 block|}
 if|if
 condition|(
@@ -6673,20 +6719,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* If we've allocated mailboxes, initialize them */
-if|if
-condition|(
-name|aha
-operator|->
-name|init_level
-operator|>
-literal|4
-condition|)
-name|ahainitmboxes
-argument_list|(
-name|aha
-argument_list|)
-expr_stmt|;
 comment|/* If we've attached to the XPT, tell it about the event */
 if|if
 condition|(
@@ -6759,6 +6791,21 @@ name|AMBI_ERROR
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* If we've allocated mailboxes, initialize them */
+comment|/* Must be done after we've aborted our queue, or aha_cmd fails */
+if|if
+condition|(
+name|aha
+operator|->
+name|init_level
+operator|>
+literal|4
+condition|)
+name|ahainitmboxes
+argument_list|(
+name|aha
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -6853,7 +6900,7 @@ expr_stmt|;
 comment|/* 	 * All commands except for the "start mailbox" and the "enable 	 * outgoing mailbox read interrupt" commands cannot be issued 	 * while there are pending transactions.  Freeze our SIMQ 	 * and wait for all completions to occur if necessary. 	 */
 name|timeout
 operator|=
-literal|100000
+literal|10000
 expr_stmt|;
 name|s
 operator|=
@@ -6889,7 +6936,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|100
+literal|10
 argument_list|)
 expr_stmt|;
 name|s
@@ -8168,6 +8215,11 @@ decl_stmt|;
 name|uint32_t
 name|paddr
 decl_stmt|;
+name|struct
+name|ccb_hdr
+modifier|*
+name|ccb_h
+decl_stmt|;
 name|accb
 operator|=
 operator|(
@@ -8275,11 +8327,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|struct
-name|ccb_hdr
-modifier|*
-name|ccb_h
-decl_stmt|;
 if|if
 condition|(
 operator|(
