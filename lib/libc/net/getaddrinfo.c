@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"reentrant.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -140,12 +146,6 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pthread.h>
 end_include
 
 begin_include
@@ -1561,14 +1561,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * XXX: Many dependencies are not thread-safe.  So, we share lock between  * getaddrinfo() and getipnodeby*().  Still, we cannot use  * getaddrinfo() and getipnodeby*() in conjunction with other  * functions which call them.  */
+comment|/*  * XXX: Many dependencies are not thread-safe.  Still, we cannot use  * getaddrinfo() in conjunction with other functions which call them.  */
 end_comment
 
 begin_decl_stmt
-name|pthread_mutex_t
-name|__getaddrinfo_thread_lock
+specifier|static
+name|mutex_t
+name|_getaddrinfo_thread_lock
 init|=
-name|PTHREAD_MUTEX_INITIALIZER
+name|MUTEX_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
@@ -1577,8 +1578,7 @@ define|#
 directive|define
 name|THREAD_LOCK
 parameter_list|()
-define|\
-value|if (__isthreaded) _pthread_mutex_lock(&__getaddrinfo_thread_lock);
+value|mutex_lock(&_getaddrinfo_thread_lock);
 end_define
 
 begin_define
@@ -1586,8 +1586,7 @@ define|#
 directive|define
 name|THREAD_UNLOCK
 parameter_list|()
-define|\
-value|if (__isthreaded) _pthread_mutex_unlock(&__getaddrinfo_thread_lock);
+value|mutex_unlock(&_getaddrinfo_thread_lock);
 end_define
 
 begin_comment
