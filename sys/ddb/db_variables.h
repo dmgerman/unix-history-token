@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_variables.h,v 1.3 1993/11/25 01:30:14 wollman Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_variables.h,v 1.4 1995/05/30 07:57:19 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -10,18 +10,43 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_DB_VARIABLES_H_
+name|_DDB_DB_VARIABLES_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_DB_VARIABLES_H_
+name|_DDB_DB_VARIABLES_H_
 end_define
 
 begin_comment
 comment|/*  * Debugger variables.  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|db_variable
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|int
+name|db_varfcn_t
+name|__P
+typedef|((struct
+name|db_variable
+modifier|*
+name|vp
+typedef|,
+name|db_expr_t
+modifier|*
+name|valuep
+typedef|,
+name|int
+name|op
+typedef|));
+end_typedef
 
 begin_struct
 struct|struct
@@ -38,15 +63,10 @@ name|valuep
 decl_stmt|;
 comment|/* value of variable */
 comment|/* function to call when reading/writing */
-name|int
-function_decl|(
+name|db_varfcn_t
 modifier|*
 name|fcn
-function_decl|)
-parameter_list|(
-comment|/* db_variable *vp, db_expr_t *valuep, int op */
-parameter_list|)
-function_decl|;
+decl_stmt|;
 define|#
 directive|define
 name|DB_VAR_GET
@@ -63,7 +83,7 @@ begin_define
 define|#
 directive|define
 name|FCN_NULL
-value|((int (*)())0)
+value|((db_varfcn_t *)0)
 end_define
 
 begin_decl_stmt
@@ -110,20 +130,22 @@ name|db_eregs
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|void
 name|db_read_variable
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|db_variable
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|db_expr_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -131,7 +153,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _DB_VARIABLES_H_ */
+comment|/* _!DDB_DB_VARIABLES_H_ */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_watch.h,v 1.3 1994/08/18 22:34:29 wollman Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_watch.h,v 1.4 1995/05/30 07:57:21 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_DDB_DB_WATCH_
+name|_DDB_DB_WATCH_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_DDB_DB_WATCH_
+name|_DDB_DB_WATCH_H_
 end_define
 
 begin_include
@@ -64,49 +64,81 @@ name|db_watchpoint_t
 typedef|;
 end_typedef
 
-begin_function_decl
-specifier|extern
-name|boolean_t
-name|db_find_watchpoint
-parameter_list|(
-comment|/* vm_map_t map, db_addr_t addr, 				     db_regs_t *regs */
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|db_set_watchpoint
-parameter_list|(
-comment|/* vm_map_t map, db_addr_t addr, vm_size_t size */
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|void
 name|db_delete_watchpoint
-parameter_list|(
-comment|/* vm_map_t map, db_addr_t addr */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|vm_map_t
+name|map
+operator|,
+name|db_addr_t
+name|addr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
+name|boolean_t
+name|db_find_watchpoint
+name|__P
+argument_list|(
+operator|(
+name|vm_map_t
+name|map
+operator|,
+name|db_addr_t
+name|addr
+operator|,
+name|db_regs_t
+operator|*
+name|regs
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|db_list_watchpoints
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|db_set_watchpoint
+name|__P
+argument_list|(
+operator|(
+name|vm_map_t
+name|map
+operator|,
+name|db_addr_t
+name|addr
+operator|,
+name|vm_size_t
+name|size
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|_DDB_DB_WATCH_
 end_endif
+
+begin_comment
+comment|/* !_DDB_DB_WATCH_H_ */
+end_comment
 
 end_unit
 
