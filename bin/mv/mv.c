@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mv.c,v 1.7 1993/11/09 18:58:03 jtc Exp $"
+literal|"$Id: mv.c,v 1.2 1993/11/22 23:54:24 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -943,6 +943,8 @@ operator|=
 name|sbp
 operator|->
 name|st_blksize
+operator|*
+literal|4
 argument_list|)
 operator|)
 condition|)

@@ -1114,6 +1114,8 @@ name|char
 name|buf
 index|[
 name|MAXBSIZE
+operator|*
+literal|4
 index|]
 decl_stmt|;
 specifier|register
@@ -1456,7 +1458,10 @@ name|from_fd
 argument_list|,
 name|buf
 argument_list|,
-name|MAXBSIZE
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 operator|)
 operator|>
