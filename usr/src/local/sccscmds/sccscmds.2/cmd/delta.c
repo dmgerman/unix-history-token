@@ -21,7 +21,7 @@ operator|)
 name|delta
 operator|.
 name|c
-literal|4.5
+literal|4.6
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -463,10 +463,7 @@ directive|ifdef
 name|LOGDELTA
 end_ifdef
 
-begin_if
-if|if
-condition|(
-operator|(
+begin_expr_stmt
 name|Logf
 operator|=
 name|fopen
@@ -475,16 +472,8 @@ name|LogFile
 argument_list|,
 literal|"a"
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|fatal
-argument_list|(
-literal|"cannot open logfile"
-argument_list|)
 expr_stmt|;
-end_if
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -552,13 +541,19 @@ directive|ifdef
 name|LOGDELTA
 end_ifdef
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
+name|Logf
+operator|!=
+name|NULL
+condition|)
 name|fclose
 argument_list|(
 name|Logf
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+end_if
 
 begin_endif
 endif|#
@@ -1911,6 +1906,13 @@ directive|ifdef
 name|LOGDELTA
 if|if
 condition|(
+name|Logf
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 name|pkt
 operator|->
 name|p_file
@@ -1963,6 +1965,7 @@ argument_list|,
 name|Comments
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 if|if
