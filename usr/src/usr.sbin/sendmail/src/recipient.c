@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.44 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -728,8 +728,15 @@ name|findusercount
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|char
+modifier|*
 name|buf
+decl_stmt|;
+name|char
+name|buf0
 index|[
 name|MAXNAME
 index|]
@@ -855,6 +862,36 @@ operator|.
 name|to_q_return
 expr_stmt|;
 comment|/* get unquoted user for file, program or user.name check */
+name|i
+operator|=
+name|strlen
+argument_list|(
+name|a
+operator|->
+name|q_user
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>=
+sizeof|sizeof
+name|buf
+condition|)
+name|buf
+operator|=
+name|xalloc
+argument_list|(
+name|i
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|buf
+operator|=
+name|buf0
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1906,11 +1943,9 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|a
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* see if it aliases */
 operator|(
@@ -2186,6 +2221,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|done
+label|:
+if|if
+condition|(
+name|buf
+operator|!=
+name|buf0
+condition|)
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|a
