@@ -1272,13 +1272,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"vlan%d: M_PREPEND failed"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"M_PREPEND failed"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -1307,13 +1305,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"vlan%d: m_pullup failed"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"m_pullup failed"
 argument_list|)
 expr_stmt|;
 name|ifp
