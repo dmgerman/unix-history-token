@@ -2105,6 +2105,18 @@ name|SY
 argument_list|(
 name|_net_link_ether
 argument_list|,
+name|bdg_dropped
+argument_list|,
+literal|"Packets dropped in bdg_forward"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SY
+argument_list|(
+name|_net_link_ether
+argument_list|,
 name|bdg_copy
 argument_list|,
 literal|"Force copy in bdg_forward"
@@ -2941,7 +2953,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Forward a packet to dst -- which can be a single interface or  * an entire cluster. The src port and muted interfaces are excluded.  *  * If src == NULL, the pkt comes from ether_output, and dst is the real  * interface the packet is originally sent to. In this case, we must forward  * it to the whole cluster.  * We never call bdg_forward from ether_output on interfaces which are  * not part of a cluster.  *  * If possible (i.e. we can determine that the caller does not need  * a copy), the packet is consumed here, and bdg_forward returns NULL.  * Otherwise, a pointer to a copy of the packet is returned.  *  * XXX be careful with eh, it can be a pointer into *m  */
+comment|/*  * Forward a packet to dst -- which can be a single interface or  * an entire cluster. The src port and muted interfaces are excluded.  *  * If src == NULL, the pkt comes from ether_output, and dst is the real  * interface the packet is originally sent to. In this case, we must forward  * it to the whole cluster.  * We never call bdg_forward from ether_output on interfaces which are  * not part of a cluster.  *  * If possible (i.e. we can determine that the caller does not need  * a copy), the packet is consumed here, and bdg_forward returns NULL.  * Otherwise, a pointer to a copy of the packet is returned.  */
 end_comment
 
 begin_function
@@ -2957,17 +2969,23 @@ modifier|*
 name|m0
 parameter_list|,
 name|struct
-name|ether_header
-modifier|*
-specifier|const
-name|eh
-parameter_list|,
-name|struct
 name|ifnet
 modifier|*
 name|dst
 parameter_list|)
 block|{
+define|#
+directive|define
+name|EH_RESTORE
+parameter_list|(
+name|_m
+parameter_list|)
+value|do {						   \     M_PREPEND((_m), ETHER_HDR_LEN, M_NOWAIT);			   	   \     if ((_m) == NULL) {							   \ 	bdg_dropped++;							   \ 	return NULL;							   \     }									   \     if (eh != mtod((_m), struct ether_header *))			   \ 	bcopy(&save_eh, mtod((_m), struct ether_header *), ETHER_HDR_LEN); \     else								   \ 	bdg_predict++;							   \ } while (0);
+name|struct
+name|ether_header
+modifier|*
+name|eh
+decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -3019,13 +3037,9 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* PFIL_HOOKS */
-comment|/*      * XXX eh is usually a pointer within the mbuf (some ethernet drivers      * do that), so we better copy it before doing anything with the mbuf,      * or we might corrupt the header.      */
 name|struct
 name|ether_header
 name|save_eh
-init|=
-operator|*
-name|eh
 decl_stmt|;
 name|DEB
 argument_list|(
@@ -3096,6 +3110,18 @@ name|bdg_thru
 operator|++
 expr_stmt|;
 comment|/* first time through bdg_forward, count packet */
+comment|/*      * The packet arrives with the Ethernet header at the front.      */
+name|eh
+operator|=
+name|mtod
+argument_list|(
+name|m0
+argument_list|,
+expr|struct
+name|ether_header
+operator|*
+argument_list|)
+expr_stmt|;
 name|src
 operator|=
 name|m0
@@ -3144,6 +3170,9 @@ name|m_freem
 argument_list|(
 name|m0
 argument_list|)
+expr_stmt|;
+name|bdg_dropped
+operator|++
 expr_stmt|;
 return|return
 name|NULL
@@ -3350,11 +3379,45 @@ argument_list|(
 literal|"-- bdg: pullup failed.\n"
 argument_list|)
 expr_stmt|;
+name|bdg_dropped
+operator|++
+expr_stmt|;
 return|return
 name|NULL
 return|;
 block|}
+name|eh
+operator|=
+name|mtod
+argument_list|(
+name|m0
+argument_list|,
+expr|struct
+name|ether_header
+operator|*
+argument_list|)
+expr_stmt|;
 block|}
+comment|/* 	 * Processing below expects the Ethernet header is stripped. 	 * Furthermore, the mbuf chain might be replaced at various 	 * places.  To deal with this we copy the header to a temporary 	 * location, strip the header, and restore it as needed. 	 */
+name|bcopy
+argument_list|(
+name|eh
+argument_list|,
+operator|&
+name|save_eh
+argument_list|,
+name|ETHER_HDR_LEN
+argument_list|)
+expr_stmt|;
+comment|/* local copy for restore */
+name|m_adj
+argument_list|(
+name|m0
+argument_list|,
+name|ETHER_HDR_LEN
+argument_list|)
+expr_stmt|;
+comment|/* temporarily strip header */
 ifdef|#
 directive|ifdef
 name|PFIL_HOOKS
@@ -3465,17 +3528,35 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rv
-operator|!=
-literal|0
-operator|||
 name|m0
 operator|==
 name|NULL
 condition|)
+block|{
+name|bdg_dropped
+operator|++
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
+name|rv
+operator|!=
+literal|0
+condition|)
+block|{
+name|EH_RESTORE
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
+comment|/* restore Ethernet header */
 return|return
 name|m0
 return|;
+block|}
 name|ip
 operator|=
 name|mtod
@@ -3536,10 +3617,18 @@ name|bdg_ipfw
 operator|==
 literal|0
 condition|)
+block|{
+name|EH_RESTORE
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
+comment|/* restore Ethernet header */
 goto|goto
 name|forward
 goto|;
 comment|/* not using ipfw, accept the packet */
+block|}
 comment|/* 	 * XXX The following code is very similar to the one in 	 * if_ethersubr.c:ether_ipfw_chk() 	 */
 name|args
 operator|.
@@ -3592,6 +3681,12 @@ operator|.
 name|m
 expr_stmt|;
 comment|/* in case the firewall used the mbuf	*/
+name|EH_RESTORE
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
+comment|/* restore Ethernet header */
 if|if
 condition|(
 operator|(
@@ -3655,10 +3750,15 @@ name|m
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* copy failed, give up */
+name|bdg_dropped
+operator|++
+expr_stmt|;
 return|return
-name|m0
+name|NULL
 return|;
+block|}
 block|}
 else|else
 block|{
@@ -3672,91 +3772,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* and nothing back to the caller */
-block|}
-comment|/* 	     * Prepend the header, optimize for the common case of 	     * eh pointing into the mbuf. 	     */
-if|if
-condition|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|eh
-operator|+
-literal|1
-operator|)
-operator|==
-operator|(
-name|void
-operator|*
-operator|)
-name|m
-operator|->
-name|m_data
-condition|)
-block|{
-name|m
-operator|->
-name|m_data
-operator|-=
-name|ETHER_HDR_LEN
-expr_stmt|;
-name|m
-operator|->
-name|m_len
-operator|+=
-name|ETHER_HDR_LEN
-expr_stmt|;
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|+=
-name|ETHER_HDR_LEN
-expr_stmt|;
-name|bdg_predict
-operator|++
-expr_stmt|;
-block|}
-else|else
-block|{
-name|M_PREPEND
-argument_list|(
-name|m
-argument_list|,
-name|ETHER_HDR_LEN
-argument_list|,
-name|M_DONTWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-comment|/* nope... */
-return|return
-name|m0
-return|;
-name|bcopy
-argument_list|(
-operator|&
-name|save_eh
-argument_list|,
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
-argument_list|)
-argument_list|,
-name|ETHER_HDR_LEN
-argument_list|)
-expr_stmt|;
 block|}
 name|args
 operator|.
@@ -3829,9 +3844,15 @@ name|m0
 operator|==
 name|NULL
 condition|)
+block|{
+name|bdg_dropped
+operator|++
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
+comment|/* NB: eh is not used below; no need to recalculate it */
 block|}
 comment|/*      * now real_dst is used to determine the cluster where to forward.      * For packets coming from ether_input, this is the one of the 'src'      * interface, whereas for locally generated packets (src==NULL) it      * is the cluster of the original destination interface, which      * was already saved into real_dst.      */
 if|if
@@ -3908,107 +3929,14 @@ argument_list|(
 literal|"bdg_forward: sorry, m_copypacket failed!\n"
 argument_list|)
 expr_stmt|;
+name|bdg_dropped
+operator|++
+expr_stmt|;
 return|return
 name|m0
 return|;
 comment|/* the original is still there... */
 block|}
-block|}
-comment|/* 	     * Add header (optimized for the common case of eh pointing 	     * already into the mbuf) and execute last part of ether_output: 	     * queue pkt and start output if interface not yet active. 	     */
-if|if
-condition|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|eh
-operator|+
-literal|1
-operator|)
-operator|==
-operator|(
-name|void
-operator|*
-operator|)
-name|m
-operator|->
-name|m_data
-condition|)
-block|{
-name|m
-operator|->
-name|m_data
-operator|-=
-name|ETHER_HDR_LEN
-expr_stmt|;
-name|m
-operator|->
-name|m_len
-operator|+=
-name|ETHER_HDR_LEN
-expr_stmt|;
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|+=
-name|ETHER_HDR_LEN
-expr_stmt|;
-name|bdg_predict
-operator|++
-expr_stmt|;
-block|}
-else|else
-block|{
-name|M_PREPEND
-argument_list|(
-name|m
-argument_list|,
-name|ETHER_HDR_LEN
-argument_list|,
-name|M_DONTWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|m
-operator|&&
-name|verbose
-condition|)
-name|printf
-argument_list|(
-literal|"M_PREPEND failed\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-return|return
-name|m0
-return|;
-name|bcopy
-argument_list|(
-operator|&
-name|save_eh
-argument_list|,
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
-argument_list|)
-argument_list|,
-name|ETHER_HDR_LEN
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4143,6 +4071,9 @@ argument_list|)
 return|return
 name|m0
 return|;
+undef|#
+directive|undef
+name|EH_RESTORE
 block|}
 end_function
 
