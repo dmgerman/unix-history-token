@@ -73,7 +73,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* Ignore "/*" after match */
+comment|/* Ignore "/*" after match. */
 end_comment
 
 begin_define
@@ -84,7 +84,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* Case insensitive search */
+comment|/* Case insensitive search. */
 end_comment
 
 begin_endif
