@@ -10,37 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_atalk.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_atm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_inet6.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_ipx.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_natm.h"
 end_include
 
 begin_include
@@ -154,12 +124,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/netisr.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/route.h>
 end_include
 
@@ -179,12 +143,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
 end_include
 
 begin_endif
