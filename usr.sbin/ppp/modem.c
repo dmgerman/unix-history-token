@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.34 1997/04/21 01:01:53 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.35 1997/05/10 01:22:17 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -152,16 +152,6 @@ specifier|static
 name|struct
 name|pppTimer
 name|ModemTimer
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|uucplock
-index|[
-literal|10
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1699,47 +1689,14 @@ name|strncmp
 argument_list|(
 name|VarDevice
 argument_list|,
-literal|"/dev"
+literal|"/dev/"
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 operator|==
 literal|0
 condition|)
 block|{
-name|strncpy
-argument_list|(
-name|uucplock
-argument_list|,
-name|rindex
-argument_list|(
-name|VarDevice
-argument_list|,
-literal|'/'
-argument_list|)
-operator|+
-literal|1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|uucplock
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|uucplock
-index|[
-sizeof|sizeof
-argument_list|(
-name|uucplock
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1747,7 +1704,7 @@ name|res
 operator|=
 name|uu_lock
 argument_list|(
-name|uucplock
+name|VarBaseDevice
 argument_list|)
 operator|)
 operator|!=
@@ -1823,7 +1780,7 @@ name|void
 operator|)
 name|uu_unlock
 argument_list|(
-name|uucplock
+name|VarBaseDevice
 argument_list|)
 expr_stmt|;
 return|return
@@ -2779,7 +2736,7 @@ name|void
 operator|)
 name|uu_unlock
 argument_list|(
-name|uucplock
+name|VarBaseDevice
 argument_list|)
 expr_stmt|;
 block|}
@@ -2873,7 +2830,7 @@ name|void
 operator|)
 name|uu_unlock
 argument_list|(
-name|uucplock
+name|VarBaseDevice
 argument_list|)
 expr_stmt|;
 block|}
