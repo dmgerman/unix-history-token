@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_resource.c	7.13 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_resource.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -961,6 +961,18 @@ operator|->
 name|p_limit
 argument_list|)
 expr_stmt|;
+name|alimp
+operator|=
+operator|&
+name|p
+operator|->
+name|p_rlimit
+index|[
+name|uap
+operator|->
+name|which
+index|]
+expr_stmt|;
 block|}
 switch|switch
 condition|(
@@ -1152,14 +1164,8 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-name|p
-operator|->
-name|p_rlimit
-index|[
-name|uap
-operator|->
-name|which
-index|]
+operator|*
+name|alimp
 operator|=
 name|alim
 expr_stmt|;
