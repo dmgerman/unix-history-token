@@ -1004,6 +1004,12 @@ block|}
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1023,6 +1029,34 @@ name|_sc
 parameter_list|)
 value|mtx_unlock(&(_sc)->aue_mtx)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|AUE_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
