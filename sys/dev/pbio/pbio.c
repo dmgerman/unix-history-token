@@ -442,10 +442,6 @@ begin_struct
 struct|struct
 name|pbio_softc
 block|{
-name|int
-name|iobase
-decl_stmt|;
-comment|/* I/O base */
 name|struct
 name|portdata
 name|pd
@@ -758,7 +754,12 @@ name|printf
 argument_list|(
 literal|"pbio val(CFG: 0x%03x)=0x%02x (should be 0x80)\n"
 argument_list|,
-name|iobase
+name|rman_get_start
+argument_list|(
+name|scp
+operator|->
+name|res
+argument_list|)
 argument_list|,
 name|pbinb
 argument_list|(
@@ -928,17 +929,6 @@ name|struct
 name|pbio_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|,
-name|i
-decl_stmt|,
-name|iobase
-decl_stmt|,
-name|rid
-decl_stmt|,
-name|unit
 decl_stmt|;
 name|sc
 operator|=
@@ -2012,8 +2002,6 @@ name|scp
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|iobase
 decl_stmt|,
 name|port
 decl_stmt|,
