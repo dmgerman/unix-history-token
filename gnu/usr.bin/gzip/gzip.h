@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gzip.h -- common declarations for all gzip modules  * Copyright (C) 1992-1993 Jean-loup Gailly.  * This is free software; you can redistribute it and/or modify it under the  * terms of the GNU General Public License, see the file COPYING.  */
+comment|/* gzip.h -- common declarations for all gzip modules  * Copyright (C) 1992-1993 Jean-loup Gailly.  * This is free software; you can redistribute it and/or modify it under the  * terms of the GNU General Public License, see the file COPYING.  *  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -250,26 +250,29 @@ name|local
 value|static
 end_define
 
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
 begin_typedef
 typedef|typedef
-name|unsigned
-name|char
+name|uint8_t
 name|uch
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|short
+name|uint16_t
 name|ush
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|uint32_t
 name|ulg
 typedef|;
 end_typedef
