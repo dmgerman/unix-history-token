@@ -166,6 +166,12 @@ index|[
 name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
+name|sc
+operator|->
+name|pccard_enaddr
+operator|=
+literal|0
+expr_stmt|;
 name|pccard_get_ether
 argument_list|(
 name|dev
@@ -201,6 +207,13 @@ if|if
 condition|(
 name|sum
 condition|)
+block|{
+name|sc
+operator|->
+name|pccard_enaddr
+operator|=
+literal|1
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|ether_addr
@@ -214,6 +227,7 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|sn_attach

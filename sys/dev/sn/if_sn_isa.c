@@ -157,6 +157,20 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+comment|/* currently not tested */
+block|struct sn_softc *sc = device_get_softc(dev);
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
+comment|/* currently not tested */
+block|sc->pccard_enaddr = 0;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0

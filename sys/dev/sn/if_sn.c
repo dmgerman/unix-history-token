@@ -589,6 +589,12 @@ else|:
 literal|"UTP"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|pccard_enaddr
+condition|)
 for|for
 control|(
 name|j

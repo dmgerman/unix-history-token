@@ -69,6 +69,10 @@ decl_stmt|;
 name|int
 name|port_rid
 decl_stmt|;
+name|int
+name|pccard_enaddr
+decl_stmt|;
+comment|/* MAC address in pccard CIS tupple */
 block|}
 struct|;
 end_struct
