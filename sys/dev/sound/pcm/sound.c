@@ -2839,7 +2839,33 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unregister: operation in progress"
+literal|"unregister: operation in progress\n"
+argument_list|)
+expr_stmt|;
+name|snd_mtxunlock
+argument_list|(
+name|d
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+return|return
+name|EBUSY
+return|;
+block|}
+if|if
+condition|(
+name|sndstat_busy
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"unregister: sndstat busy\n"
 argument_list|)
 expr_stmt|;
 name|snd_mtxunlock
@@ -2877,7 +2903,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unregister: channel busy"
+literal|"unregister: channel busy\n"
 argument_list|)
 expr_stmt|;
 name|snd_mtxunlock
@@ -2904,7 +2930,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unregister: mixer busy"
+literal|"unregister: mixer busy\n"
 argument_list|)
 expr_stmt|;
 name|snd_mtxunlock

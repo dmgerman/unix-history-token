@@ -1659,6 +1659,21 @@ block|}
 end_function
 
 begin_function
+name|int
+name|sndstat_busy
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|sndstat_isopen
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|sndstat_sysinit

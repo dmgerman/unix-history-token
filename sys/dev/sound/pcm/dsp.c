@@ -1141,7 +1141,6 @@ name|CHN_F_NBIO
 expr_stmt|;
 block|}
 else|else
-block|{
 name|CHN_LOCK
 argument_list|(
 name|rdch
@@ -1154,7 +1153,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 name|CHN_UNLOCK
 argument_list|(
 name|rdch
@@ -1194,7 +1192,6 @@ name|CHN_F_NBIO
 expr_stmt|;
 block|}
 else|else
-block|{
 name|CHN_LOCK
 argument_list|(
 name|wrch
@@ -1207,7 +1204,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 name|CHN_UNLOCK
 argument_list|(
 name|wrch
