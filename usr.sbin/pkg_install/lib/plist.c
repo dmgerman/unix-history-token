@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: plist.c,v 1.9 1994/09/29 13:19:43 jkh Exp $"
+literal|"$Id: plist.c,v 1.10 1994/12/06 00:51:50 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1691,7 +1691,7 @@ name|file
 parameter_list|,
 name|ie
 parameter_list|)
-value|remove(file)
+value|(remove(file)&& !(ie))
 end_define
 
 begin_endif
@@ -1731,6 +1731,38 @@ name|cp2
 operator|=
 name|dir
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|fexists
+argument_list|(
+name|dir
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|ign_err
+condition|)
+name|whinge
+argument_list|(
+literal|"%s '%s' doesn't really exist."
+argument_list|,
+name|isdir
+argument_list|(
+name|dir
+argument_list|)
+condition|?
+literal|"Directory"
+else|:
+literal|"File"
+argument_list|,
+name|dir
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|nukedirs
@@ -1774,6 +1806,9 @@ name|RMDIR
 argument_list|(
 name|dir
 argument_list|)
+operator|&&
+operator|!
+name|ign_err
 condition|)
 return|return
 literal|1
@@ -1845,8 +1880,25 @@ argument_list|(
 name|dir
 argument_list|)
 operator|&&
+operator|!
 name|ign_err
 condition|)
+if|if
+condition|(
+operator|!
+name|fexists
+argument_list|(
+name|dir
+argument_list|)
+condition|)
+name|whinge
+argument_list|(
+literal|"Directory '%s' doesn't really exist."
+argument_list|,
+name|dir
+argument_list|)
+expr_stmt|;
+else|else
 return|return
 literal|1
 return|;
