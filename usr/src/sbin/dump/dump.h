@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * "@(#)dump.h	1.9 (Berkeley) %G%"  */
+comment|/*  * "@(#)dump.h	1.10 (Berkeley) %G%"  */
 end_comment
 
 begin_define
@@ -216,6 +216,27 @@ end_decl_stmt
 
 begin_comment
 comment|/* name of the file containing incremental information*/
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|temp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of the file for doing rewrite of increm */
+end_comment
+
+begin_decl_stmt
+name|char
+name|lastincno
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* increment number of previous dump */
 end_comment
 
 begin_decl_stmt
@@ -598,51 +619,6 @@ begin_comment
 comment|/* abort all of dump; don't attempt checkpointing*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|OINCREM
-value|"./ddate"
-end_define
-
-begin_comment
-comment|/*old format incremental info*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NINCREM
-value|"./dumpdates"
-end_define
-
-begin_comment
-comment|/*new format incremental info*/
-end_comment
-
-begin_else
-else|#
-directive|else
-else|not DEBUG
-end_else
-
-begin_define
-define|#
-directive|define
-name|OINCREM
-value|"/etc/ddate"
-end_define
-
-begin_comment
-comment|/*old format incremental info*/
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -654,10 +630,16 @@ begin_comment
 comment|/*new format incremental info*/
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|TEMP
+value|"/etc/dtmp"
+end_define
+
+begin_comment
+comment|/*output temp file*/
+end_comment
 
 begin_define
 define|#
