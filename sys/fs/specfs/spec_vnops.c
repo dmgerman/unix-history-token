@@ -1250,24 +1250,10 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|dev
 operator|->
 name|si_tty
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Warning:%s: no si_tty\n"
-argument_list|,
-name|devtoname
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|struct
 name|tty
