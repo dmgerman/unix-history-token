@@ -5210,7 +5210,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Claim another referernce to a ucred structure  */
+comment|/*  * Claim another reference to a ucred structure  */
 end_comment
 
 begin_function
