@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pr_comment.c	5.8 (Berkeley) %G%"
+literal|"@(#)pr_comment.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,18 +60,11 @@ name|int
 name|adj_max_col
 decl_stmt|;
 comment|/* Adjusted max_col for when we decide to 				 * spill comments over the right margin */
-name|int
-name|col_1_com
-decl_stmt|;
-comment|/* this comment should not be touched */
 name|char
 modifier|*
 name|last_bl
 decl_stmt|;
 comment|/* points to the last blank in the output 				 * buffer */
-name|char
-name|achar
-decl_stmt|;
 name|char
 modifier|*
 name|t_ptr
@@ -119,8 +112,6 @@ name|ps
 operator|.
 name|box_com
 operator|=
-name|col_1_com
-operator|=
 name|false
 expr_stmt|;
 comment|/* at first, assume that we are not in 					 * a boxed comment or some other 					 * comment that should not be touched */
@@ -147,8 +138,6 @@ name|format_col1_comments
 condition|)
 block|{
 comment|/* if comment starts in column 						 * 1 it should not be touched */
-name|col_1_com
-operator|=
 name|ps
 operator|.
 name|box_com
@@ -184,10 +173,6 @@ operator|=
 name|true
 expr_stmt|;
 comment|/* a comment with a '-' or '*' immediately 				 * after the /* is assumed to be a boxed 				 * comment */
-name|col_1_com
-operator|=
-name|true
-expr_stmt|;
 name|break_delim
 operator|=
 literal|0
