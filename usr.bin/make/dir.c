@@ -619,7 +619,7 @@ argument_list|,
 operator|(
 name|isDot
 condition|?
-name|strdup
+name|estrdup
 argument_list|(
 name|entry
 operator|->
@@ -1745,7 +1745,7 @@ literal|1
 expr_stmt|;
 return|return
 operator|(
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -2212,7 +2212,7 @@ block|{
 comment|/* 		 * Checking in dot -- DON'T put a leading ./ on the thing. 		 */
 name|file
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -2508,7 +2508,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -2587,7 +2587,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -2661,7 +2661,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -2794,7 +2794,7 @@ condition|)
 block|{
 name|fullName
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|gn
 operator|->
@@ -3142,7 +3142,7 @@ name|p
 operator|->
 name|name
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -3206,9 +3206,18 @@ operator|)
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|sun
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|d_ino
+argument_list|)
+comment|/* d_ino is a sunos4 #define for d_fileno */
 comment|/* 		 * The sun directory library doesn't check for a 0 inode 		 * (0-inode slots just take up space), so we have to do 		 * it ourselves. 		 */
 if|if
 condition|(
@@ -3223,7 +3232,7 @@ continue|continue;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* sun&& d_ino */
 operator|(
 name|void
 operator|)
@@ -3380,7 +3389,7 @@ decl_stmt|;
 comment|/* the structure describing the current directory */
 name|str
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 literal|""
 argument_list|)

@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: str.c,v 1.4 1995/05/30 06:32:05 rgrimes Exp $"
+literal|"$Id: str.c,v 1.5 1995/06/18 12:34:12 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,9 +82,13 @@ operator|)
 name|emalloc
 argument_list|(
 operator|(
+operator|(
 name|argmax
 operator|=
 literal|50
+operator|)
+operator|+
+literal|1
 operator|)
 operator|*
 sizeof|sizeof
@@ -600,10 +604,6 @@ operator|*=
 literal|2
 expr_stmt|;
 comment|/* ramp up fast */
-if|if
-condition|(
-operator|!
-operator|(
 name|argv
 operator|=
 operator|(
@@ -611,11 +611,15 @@ name|char
 operator|*
 operator|*
 operator|)
-name|realloc
+name|erealloc
 argument_list|(
 name|argv
 argument_list|,
+operator|(
 name|argmax
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -623,10 +627,6 @@ name|char
 operator|*
 argument_list|)
 argument_list|)
-operator|)
-condition|)
-name|enomem
-argument_list|()
 expr_stmt|;
 block|}
 name|argv

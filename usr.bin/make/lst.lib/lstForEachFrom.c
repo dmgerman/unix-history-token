@@ -69,16 +69,22 @@ name|ln
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_expr_stmt
 specifier|register
 name|int
-function_decl|(
-modifier|*
-name|proc
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|(
+argument|*proc
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|ClientData
+operator|,
+name|ClientData
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|register

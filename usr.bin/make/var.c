@@ -398,6 +398,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSVVARSUB
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|Boolean
@@ -417,6 +423,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -891,7 +902,7 @@ name|v
 operator|->
 name|name
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -1112,7 +1123,7 @@ name|v
 operator|->
 name|name
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -2593,6 +2604,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSVVARSUB
+end_ifdef
+
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * VarSYSVMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the System V %  *	modifiers.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -2720,6 +2737,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * VarNoMatch --  *	Place the word in the buffer if it doesn't match the given pattern.  *	Callback function for VarModify to implement the :N modifier.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
@@ -3735,6 +3757,8 @@ comment|/* Ending character when variable in parens 				 * or braces */
 specifier|register
 name|char
 name|startc
+init|=
+literal|0
 decl_stmt|;
 comment|/* Starting character when variable in parens 				 * or braces */
 name|int
@@ -5917,8 +5941,84 @@ expr_stmt|;
 break|break;
 block|}
 comment|/*FALLTHRU*/
+ifdef|#
+directive|ifdef
+name|SUNSHCMD
+case|case
+literal|'s'
+case|:
+if|if
+condition|(
+name|tstr
+index|[
+literal|1
+index|]
+operator|==
+literal|'h'
+operator|&&
+operator|(
+name|tstr
+index|[
+literal|2
+index|]
+operator|==
+name|endc
+operator|||
+name|tstr
+index|[
+literal|2
+index|]
+operator|==
+literal|':'
+operator|)
+condition|)
+block|{
+name|char
+modifier|*
+name|err
+decl_stmt|;
+name|newStr
+operator|=
+name|Cmd_Exec
+argument_list|(
+name|str
+argument_list|,
+operator|&
+name|err
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+name|Error
+argument_list|(
+name|err
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|tstr
+operator|+
+literal|2
+expr_stmt|;
+name|termc
+operator|=
+operator|*
+name|cp
+expr_stmt|;
+break|break;
+block|}
+comment|/*FALLTHRU*/
+endif|#
+directive|endif
 default|default:
 block|{
+ifdef|#
+directive|ifdef
+name|SYSVVARSUB
 comment|/* 		     * This can either be a bogus modifier or a System-V 		     * substitution command. 		     */
 name|VarPattern
 name|pattern
@@ -6149,6 +6249,8 @@ name|endc
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 name|Error
 argument_list|(

@@ -267,7 +267,7 @@ name|gn
 operator|->
 name|name
 operator|=
-name|strdup
+name|estrdup
 argument_list|(
 name|name
 argument_list|)
@@ -338,6 +338,12 @@ operator|->
 name|childMade
 operator|=
 name|FALSE
+expr_stmt|;
+name|gn
+operator|->
+name|order
+operator|=
+literal|0
 expr_stmt|;
 name|gn
 operator|->
@@ -1274,7 +1280,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%d:%02d:%02d %s %d, 19%d"
+literal|"%d:%02d:%02d %s %d, %d"
 argument_list|,
 name|parts
 operator|->
@@ -1299,6 +1305,8 @@ name|parts
 operator|->
 name|tm_mday
 argument_list|,
+literal|1900
+operator|+
 name|parts
 operator|->
 name|tm_year

@@ -47,7 +47,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -59,19 +59,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -232,35 +232,12 @@ operator|&
 name|p1
 argument_list|)
 decl_stmt|;
-name|struct
-name|stat
-name|st
-decl_stmt|;
 if|if
 condition|(
 operator|!
 name|noExecute
 operator|&&
-name|lstat
-argument_list|(
-name|file
-argument_list|,
-operator|&
-name|st
-argument_list|)
-operator|!=
-operator|-
-literal|1
-operator|&&
-operator|!
-name|S_ISDIR
-argument_list|(
-name|st
-operator|.
-name|st_mode
-argument_list|)
-operator|&&
-name|unlink
+name|eunlink
 argument_list|(
 name|file
 argument_list|)
@@ -377,8 +354,7 @@ comment|/* Don't print command */
 name|errCheck
 decl_stmt|;
 comment|/* Check errors */
-name|union
-name|wait
+name|int
 name|reason
 decl_stmt|;
 comment|/* Reason for child's death */
@@ -930,10 +906,6 @@ name|stat
 operator|=
 name|wait
 argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|reason
 argument_list|)
@@ -975,9 +947,10 @@ condition|)
 block|{
 name|status
 operator|=
+name|WSTOPSIG
+argument_list|(
 name|reason
-operator|.
-name|w_stopval
+argument_list|)
 expr_stmt|;
 comment|/* stopped */
 block|}
@@ -992,9 +965,10 @@ condition|)
 block|{
 name|status
 operator|=
+name|WEXITSTATUS
+argument_list|(
 name|reason
-operator|.
-name|w_retcode
+argument_list|)
 expr_stmt|;
 comment|/* exited */
 if|if
@@ -1017,9 +991,10 @@ else|else
 block|{
 name|status
 operator|=
+name|WTERMSIG
+argument_list|(
 name|reason
-operator|.
-name|w_termsig
+argument_list|)
 expr_stmt|;
 comment|/* signaled */
 name|printf

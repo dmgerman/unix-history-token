@@ -87,7 +87,7 @@ parameter_list|,
 name|nb
 parameter_list|)
 define|\
-value|if (bp->left< (nb)+1) {\ 	    int newSize = (bp)->size + max((nb)+1,BUF_ADD_INC); \ 	    Byte  *newBuf = (Byte *) realloc((bp)->buffer, newSize); \ 	    \ 	    (bp)->inPtr = newBuf + ((bp)->inPtr - (bp)->buffer); \ 	    (bp)->outPtr = newBuf + ((bp)->outPtr - (bp)->buffer);\ 	    (bp)->buffer = newBuf;\ 	    (bp)->size = newSize;\ 	    (bp)->left = newSize - ((bp)->inPtr - (bp)->buffer);\ 	}
+value|if (bp->left< (nb)+1) {\ 	    int newSize = (bp)->size + max((nb)+1,BUF_ADD_INC); \ 	    Byte  *newBuf = (Byte *) erealloc((bp)->buffer, newSize); \ 	    \ 	    (bp)->inPtr = newBuf + ((bp)->inPtr - (bp)->buffer); \ 	    (bp)->outPtr = newBuf + ((bp)->outPtr - (bp)->buffer);\ 	    (bp)->buffer = newBuf;\ 	    (bp)->size = newSize;\ 	    (bp)->left = newSize - ((bp)->inPtr - (bp)->buffer);\ 	}
 end_define
 
 begin_define
