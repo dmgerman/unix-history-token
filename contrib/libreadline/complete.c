@@ -172,107 +172,6 @@ directive|include
 file|<pwd.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAVE_GETPW_DECLS
-argument_list|)
-end_if
-
-begin_function_decl
-specifier|extern
-name|struct
-name|passwd
-modifier|*
-name|getpwent
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* USG&& !HAVE_GETPW_DECLS */
-end_comment
-
-begin_comment
-comment|/* ISC systems don't define getpwent() if _POSIX_SOURCE is defined. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|isc386
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-end_if
-
-begin_function_decl
-specifier|extern
-name|struct
-name|passwd
-modifier|*
-name|getpwent
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|extern
-name|struct
-name|passwd
-modifier|*
-name|getpwent
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !__STDC__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* isc386&& _POSIX_SOURCE */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -358,57 +257,62 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Most systems don't declare getpwent in<pwd.h> if _POSIX_SOURCE is    defined. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_GETPW_DECLS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_POSIX_SOURCE
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|passwd
+modifier|*
+name|getpwent
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_GETPW_DECLS || _POSIX_SOURCE */
+end_comment
+
+begin_comment
 comment|/* If non-zero, then this is the address of a function to call when    completing a word would normally display the list of possible matches.    This function is called instead of actually doing the display.    It takes three arguments: (char **matches, int num_matches, int max_length)    where MATCHES is the array of strings that matched, NUM_MATCHES is the    number of strings in that array, and MAX_LENGTH is the length of the    longest string in that array. */
 end_comment
 
 begin_decl_stmt
-name|VFunction
+name|rl_compdisp_func_t
 modifier|*
 name|rl_completion_display_matches_hook
 init|=
 operator|(
-name|VFunction
+name|rl_compdisp_func_t
 operator|*
 operator|)
 name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Forward declarations for functions defined and used in this file. */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|filename_completion_function
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|completion_matches
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|CPFunction
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -474,24 +378,6 @@ name|char
 operator|*
 operator|,
 name|int
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|rl_strpbrk
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
 operator|,
 name|char
 operator|*
@@ -604,6 +490,7 @@ operator|*
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -751,12 +638,25 @@ comment|/* If non-zero, then this is the address of a function to call when    c
 end_comment
 
 begin_decl_stmt
-name|Function
+name|rl_icppfunc_t
 modifier|*
 name|rl_directory_completion_hook
 init|=
 operator|(
-name|Function
+name|rl_icppfunc_t
+operator|*
+operator|)
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|rl_icppfunc_t
+modifier|*
+name|rl_directory_rewrite_hook
+init|=
+operator|(
+name|rl_icppfunc_t
 operator|*
 operator|)
 name|NULL
@@ -776,16 +676,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Pointer to the generator function for completion_matches ().    NULL means to use filename_completion_function (), the default filename    completer. */
+comment|/* Pointer to the generator function for completion_matches ().    NULL means to use rl_filename_completion_function (), the default filename    completer. */
 end_comment
 
 begin_decl_stmt
-name|Function
+name|rl_compentry_func_t
 modifier|*
 name|rl_completion_entry_function
 init|=
 operator|(
-name|Function
+name|rl_compentry_func_t
 operator|*
 operator|)
 name|NULL
@@ -797,12 +697,12 @@ comment|/* Pointer to alternative function to create matches.    Function is cal
 end_comment
 
 begin_decl_stmt
-name|CPPFunction
+name|rl_completion_func_t
 modifier|*
 name|rl_attempted_completion_function
 init|=
 operator|(
-name|CPPFunction
+name|rl_completion_func_t
 operator|*
 operator|)
 name|NULL
@@ -850,6 +750,7 @@ comment|/* The basic list of characters that signal a break between words for th
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|rl_basic_word_break_characters
@@ -863,6 +764,7 @@ comment|/* List of basic quoting characters. */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|rl_basic_quote_characters
@@ -876,11 +778,13 @@ comment|/* The list of characters that signal a break between words for    rl_co
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|rl_completer_word_break_characters
 init|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -893,11 +797,13 @@ comment|/* List of characters which can be used to quote a substring of the line
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|rl_completer_quote_characters
 init|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -910,11 +816,13 @@ comment|/* List of characters that should be quoted in filenames by the complete
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|rl_filename_quote_characters
 init|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -927,11 +835,13 @@ comment|/* List of characters that are word break characters, but should be left
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|rl_special_prefixes
 init|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -980,12 +890,12 @@ comment|/* This function, if defined, is called by the completer when real    fi
 end_comment
 
 begin_decl_stmt
-name|Function
+name|rl_compignore_func_t
 modifier|*
 name|rl_ignore_some_completions_function
 init|=
 operator|(
-name|Function
+name|rl_compignore_func_t
 operator|*
 operator|)
 name|NULL
@@ -997,7 +907,7 @@ comment|/* Set to a function to quote a filename in an application-specific fash
 end_comment
 
 begin_decl_stmt
-name|CPFunction
+name|rl_quote_func_t
 modifier|*
 name|rl_filename_quoting_function
 init|=
@@ -1010,12 +920,12 @@ comment|/* Function to call to remove quoting characters from a filename.  Calle
 end_comment
 
 begin_decl_stmt
-name|CPFunction
+name|rl_dequote_func_t
 modifier|*
 name|rl_filename_dequoting_function
 init|=
 operator|(
-name|CPFunction
+name|rl_dequote_func_t
 operator|*
 operator|)
 name|NULL
@@ -1027,12 +937,12 @@ comment|/* Function to call to decide whether or not a word break character is  
 end_comment
 
 begin_decl_stmt
-name|Function
+name|rl_linebuf_func_t
 modifier|*
 name|rl_char_is_quoted_p
 init|=
 operator|(
-name|Function
+name|rl_linebuf_func_t
 operator|*
 operator|)
 name|NULL
@@ -1097,7 +1007,7 @@ comment|/*************************************/
 end_comment
 
 begin_comment
-comment|/* Complete the word at or before point.  You have supplied the function    that does the initial simple matching selection algorithm (see    completion_matches ()).  The default is to do filename completion. */
+comment|/* Complete the word at or before point.  You have supplied the function    that does the initial simple matching selection algorithm (see    rl_completion_matches ()).  The default is to do filename completion. */
 end_comment
 
 begin_function
@@ -1246,88 +1156,6 @@ comment|/************************************/
 end_comment
 
 begin_comment
-comment|/* Find the first occurrence in STRING1 of any character from STRING2.    Return a pointer to the character in STRING1. */
-end_comment
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|rl_strpbrk
-parameter_list|(
-name|string1
-parameter_list|,
-name|string2
-parameter_list|)
-name|char
-modifier|*
-name|string1
-decl_stmt|,
-decl|*
-name|string2
-decl_stmt|;
-end_function
-
-begin_block
-block|{
-specifier|register
-name|char
-modifier|*
-name|scan
-decl_stmt|;
-for|for
-control|(
-init|;
-operator|*
-name|string1
-condition|;
-name|string1
-operator|++
-control|)
-block|{
-for|for
-control|(
-name|scan
-operator|=
-name|string2
-init|;
-operator|*
-name|scan
-condition|;
-name|scan
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|*
-name|string1
-operator|==
-operator|*
-name|scan
-condition|)
-block|{
-return|return
-operator|(
-name|string1
-operator|)
-return|;
-block|}
-block|}
-block|}
-return|return
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
 comment|/* The user must press "y" or "n". Non-zero return means "y" pressed. */
 end_comment
 
@@ -1346,10 +1174,20 @@ init|;
 condition|;
 control|)
 block|{
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
+expr_stmt|;
 name|c
 operator|=
 name|rl_read_key
 argument_list|()
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_MOREINPUT
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1398,7 +1236,7 @@ condition|)
 name|_rl_abort_internal
 argument_list|()
 expr_stmt|;
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 block|}
@@ -2196,8 +2034,13 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* Shell-like semantics for single quotes -- don't allow backslash 	     to quote anything in single quotes, especially not the closing 	     quote.  If you don't like this, take out the check on the value 	     of quote_char. */
 if|if
 condition|(
+name|quote_char
+operator|!=
+literal|'\''
+operator|&&
 name|rl_line_buffer
 index|[
 name|scan
@@ -2520,7 +2363,7 @@ name|start
 decl_stmt|,
 name|end
 decl_stmt|;
-name|Function
+name|rl_compentry_func_t
 modifier|*
 name|our_func
 decl_stmt|;
@@ -2591,11 +2434,7 @@ name|found_quote
 operator|&&
 name|our_func
 operator|==
-operator|(
-name|Function
-operator|*
-operator|)
-name|filename_completion_function
+name|rl_filename_completion_function
 operator|&&
 name|rl_filename_dequoting_function
 condition|)
@@ -2621,14 +2460,10 @@ comment|/* not freeing text is not a memory leak */
 block|}
 name|matches
 operator|=
-name|completion_matches
+name|rl_completion_matches
 argument_list|(
 name|text
 argument_list|,
-operator|(
-name|CPFunction
-operator|*
-operator|)
 name|our_func
 argument_list|)
 expr_stmt|;
@@ -2982,6 +2817,7 @@ decl_stmt|;
 name|int
 name|matches
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|text
@@ -3498,7 +3334,7 @@ literal|2
 expr_stmt|;
 name|limit
 operator|=
-name|screenwidth
+name|_rl_screenwidth
 operator|/
 name|max
 expr_stmt|;
@@ -3513,13 +3349,13 @@ name|limit
 operator|*
 name|max
 operator|==
-name|screenwidth
+name|_rl_screenwidth
 operator|)
 condition|)
 name|limit
 operator|--
 expr_stmt|;
-comment|/* Avoid a possible floating exception.  If max> screenwidth,      limit will be 0 and a divide-by-zero fault will result. */
+comment|/* Avoid a possible floating exception.  If max> _rl_screenwidth,      limit will be 0 and a divide-by-zero fault will result. */
 if|if
 condition|(
 name|limit
@@ -3574,7 +3410,7 @@ operator|)
 name|_rl_qsort_string_compare
 argument_list|)
 expr_stmt|;
-name|crlf
+name|rl_crlf
 argument_list|()
 expr_stmt|;
 if|if
@@ -3691,7 +3527,7 @@ operator|+=
 name|count
 expr_stmt|;
 block|}
-name|crlf
+name|rl_crlf
 argument_list|()
 expr_stmt|;
 block|}
@@ -3765,7 +3601,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|crlf
+name|rl_crlf
 argument_list|()
 expr_stmt|;
 else|else
@@ -3793,7 +3629,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|crlf
+name|rl_crlf
 argument_list|()
 expr_stmt|;
 block|}
@@ -3855,7 +3691,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|crlf
+name|rl_crlf
 argument_list|()
 expr_stmt|;
 name|print_filename
@@ -3868,7 +3704,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|crlf
+name|rl_crlf
 argument_list|()
 expr_stmt|;
 name|rl_forced_update_display
@@ -3962,7 +3798,7 @@ operator|>=
 name|rl_completion_query_items
 condition|)
 block|{
-name|crlf
+name|rl_crlf
 argument_list|()
 expr_stmt|;
 name|fprintf
@@ -3987,7 +3823,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|crlf
+name|rl_crlf
 argument_list|()
 expr_stmt|;
 name|rl_forced_update_display
@@ -4108,7 +3944,7 @@ operator|=
 name|rl_filename_quote_characters
 condition|?
 operator|(
-name|rl_strpbrk
+name|_rl_strpbrk
 argument_list|(
 name|match
 argument_list|,
@@ -4747,7 +4583,7 @@ modifier|*
 modifier|*
 name|matches
 decl_stmt|;
-name|Function
+name|rl_compentry_func_t
 modifier|*
 name|our_func
 decl_stmt|;
@@ -4772,6 +4608,11 @@ decl_stmt|;
 name|char
 name|quote_char
 decl_stmt|;
+name|RL_SETSTATE
+argument_list|(
+name|RL_STATE_COMPLETING
+argument_list|)
+expr_stmt|;
 comment|/* Only the completion entry function can change these. */
 name|rl_filename_completion_desired
 operator|=
@@ -4806,11 +4647,7 @@ name|rl_completion_entry_function
 condition|?
 name|rl_completion_entry_function
 else|:
-operator|(
-name|Function
-operator|*
-operator|)
-name|filename_completion_function
+name|rl_filename_completion_function
 expr_stmt|;
 comment|/* We now look backwards for the start of a filename/variable word. */
 name|end
@@ -4889,12 +4726,17 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 name|FREE
 argument_list|(
 name|saved_line_buffer
+argument_list|)
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_COMPLETING
 argument_list|)
 expr_stmt|;
 return|return
@@ -4903,20 +4745,11 @@ literal|0
 operator|)
 return|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* If we are matching filenames, our_func will have been set to      filename_completion_function */
-block|i = our_func == (Function *)filename_completion_function;
-else|#
-directive|else
-comment|/* If we are matching filenames, the attempted completion function will      have set rl_filename_completion_desired to a non-zero value.  The basic      filename_completion_function does this. */
+comment|/* If we are matching filenames, the attempted completion function will      have set rl_filename_completion_desired to a non-zero value.  The basic      rl_filename_completion_function does this. */
 name|i
 operator|=
 name|rl_filename_completion_desired
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|postprocess_matches
@@ -4930,7 +4763,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 name|FREE
@@ -4941,6 +4774,11 @@ expr_stmt|;
 name|completion_changed_buffer
 operator|=
 literal|0
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_COMPLETING
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -5020,7 +4858,7 @@ name|rl_editing_mode
 operator|!=
 name|vi_mode
 condition|)
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 comment|/* There are other matches remaining. */
@@ -5072,12 +4910,17 @@ argument_list|,
 name|what_to_do
 argument_list|)
 expr_stmt|;
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 name|FREE
 argument_list|(
 name|saved_line_buffer
+argument_list|)
+expr_stmt|;
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_COMPLETING
 argument_list|)
 expr_stmt|;
 return|return
@@ -5112,6 +4955,11 @@ name|saved_line_buffer
 argument_list|)
 expr_stmt|;
 block|}
+name|RL_UNSETSTATE
+argument_list|(
+name|RL_STATE_COMPLETING
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -5146,17 +4994,18 @@ begin_function
 name|char
 modifier|*
 modifier|*
-name|completion_matches
+name|rl_completion_matches
 parameter_list|(
 name|text
 parameter_list|,
 name|entry_function
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|text
 decl_stmt|;
-name|CPFunction
+name|rl_compentry_func_t
 modifier|*
 name|entry_function
 decl_stmt|;
@@ -5341,12 +5190,13 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|username_completion_function
+name|rl_username_completion_function
 parameter_list|(
 name|text
 parameter_list|,
 name|state
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|text
@@ -5562,12 +5412,13 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|filename_completion_function
+name|rl_filename_completion_function
 parameter_list|(
 name|text
 parameter_list|,
 name|state
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|text
@@ -5879,6 +5730,19 @@ operator|=
 name|temp
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|rl_directory_rewrite_hook
+condition|)
+call|(
+modifier|*
+name|rl_directory_rewrite_hook
+call|)
+argument_list|(
+operator|&
+name|dirname
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rl_directory_completion_hook
@@ -6305,7 +6169,7 @@ name|temp
 operator|=
 name|xmalloc
 argument_list|(
-literal|1
+literal|2
 operator|+
 name|dirlen
 operator|+
@@ -6321,6 +6185,26 @@ name|temp
 argument_list|,
 name|users_dirname
 argument_list|)
+expr_stmt|;
+comment|/* Make sure that temp has a trailing slash here. */
+if|if
+condition|(
+name|users_dirname
+index|[
+name|dirlen
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'/'
+condition|)
+name|temp
+index|[
+name|dirlen
+operator|++
+index|]
+operator|=
+literal|'/'
 expr_stmt|;
 block|}
 name|strcpy
@@ -6372,7 +6256,7 @@ decl_stmt|,
 name|ignore
 decl_stmt|;
 block|{
-name|Function
+name|rl_compentry_func_t
 modifier|*
 name|our_func
 decl_stmt|;
@@ -6482,11 +6366,7 @@ name|rl_completion_entry_function
 condition|?
 name|rl_completion_entry_function
 else|:
-operator|(
-name|Function
-operator|*
-operator|)
-name|filename_completion_function
+name|rl_filename_completion_function
 expr_stmt|;
 comment|/* We now look backwards for the start of a filename/variable word. */
 name|orig_end
@@ -6553,20 +6433,11 @@ argument_list|,
 name|quote_char
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* If we are matching filenames, our_func will have been set to 	 filename_completion_function */
-block|matching_filenames = our_func == (Function *)filename_completion_function;
-else|#
-directive|else
-comment|/* If we are matching filenames, the attempted completion function will 	 have set rl_filename_completion_desired to a non-zero value.  The basic 	 filename_completion_function does this. */
+comment|/* If we are matching filenames, the attempted completion function will 	 have set rl_filename_completion_desired to a non-zero value.  The basic 	 rl_filename_completion_function does this. */
 name|matching_filenames
 operator|=
 name|rl_filename_completion_desired
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|matches
@@ -6584,7 +6455,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 name|FREE
@@ -6653,7 +6524,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 name|FREE
@@ -6711,7 +6582,7 @@ operator|>
 literal|1
 condition|)
 block|{
-name|ding
+name|rl_ding
 argument_list|()
 expr_stmt|;
 name|insert_match
