@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 4.13 %G%"
+literal|"@(#)cc.c 4.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1266,12 +1266,14 @@ expr_stmt|;
 name|eflag
 operator|++
 expr_stmt|;
+name|cflag
+operator|++
+expr_stmt|;
+continue|continue;
 block|}
 if|if
 condition|(
 name|pflag
-operator|||
-name|exfail
 condition|)
 block|{
 name|cflag
