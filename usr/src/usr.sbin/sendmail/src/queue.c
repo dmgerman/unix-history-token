@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.24 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.25 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.24 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.25 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4208,12 +4208,31 @@ name|PRIV_RESTRMAILQ
 argument_list|,
 name|PrivacyFlags
 argument_list|)
+operator|&&
+name|getuid
+argument_list|()
+operator|!=
+literal|0
 condition|)
 block|{
 name|struct
 name|stat
 name|st
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NGROUPS
+name|int
+name|n
+decl_stmt|;
+name|int
+name|gidset
+index|[
+name|NGROUPS
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|stat
@@ -4236,6 +4255,47 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|NGROUPS
+name|n
+operator|=
+name|getgroups
+argument_list|(
+name|NGROUPS
+argument_list|,
+name|gidset
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|--
+name|n
+operator|>=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|gidset
+index|[
+name|n
+index|]
+operator|==
+name|st
+operator|.
+name|st_gid
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|getgid
@@ -4245,6 +4305,8 @@ name|st
 operator|.
 name|st_gid
 condition|)
+endif|#
+directive|endif
 block|{
 name|usrerr
 argument_list|(
