@@ -1584,6 +1584,14 @@ name|pdev
 operator|->
 name|si_disk
 expr_stmt|;
+name|bp
+operator|->
+name|bio_resid
+operator|=
+name|bp
+operator|->
+name|bio_bcount
+expr_stmt|;
 if|if
 condition|(
 name|dp
@@ -1650,12 +1658,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|bp
-operator|->
-name|bio_resid
-operator|=
-literal|0
-expr_stmt|;
 name|biodone
 argument_list|(
 name|bp
