@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -598,6 +598,66 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Virtual console configuration tables.  */
+end_comment
+
+begin_extern
+extern|extern qv_init(
+end_extern
+
+begin_operator
+unit|)
+operator|,
+end_operator
+
+begin_expr_stmt
+name|qd_init
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|vcons_init
+index|[]
+function_decl|)
+parameter_list|()
+init|=
+block|{
+name|qd_init
+operator|,
+function_decl|qv_init
+operator|,
+function_decl|0
+end_function_decl
+
+begin_function_decl
+unit|};
+name|int
+function_decl|(
+modifier|*
+name|v_getc
+function_decl|)
+parameter_list|()
+init|=
+literal|0
+operator|,
+parameter_list|(
+function_decl|*v_putc
+end_function_decl
+
+begin_expr_stmt
+unit|)
+operator|(
+operator|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -1132,6 +1192,37 @@ argument_list|(
 literal|2000000
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|VAX630
+comment|/* 	 * configure the console 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|vcons_init
+index|[
+name|i
+index|]
+operator|&&
+operator|!
+call|(
+modifier|*
+name|vcons_init
+index|[
+name|i
+index|]
+call|)
+argument_list|()
+condition|;
+name|i
+operator|++
+control|)
+empty_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 

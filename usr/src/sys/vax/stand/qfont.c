@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qfont.c	1.2  Berkeley  %G%  */
+end_comment
+
+begin_comment
 comment|/*  *	@(#)qfont.c	1.1 (ULTRIX) 8/21/85  *  * The following tables are used to translate LK201 key strokes  * into ascii characters. The tables also support the special  * function keys.  */
 end_comment
 
