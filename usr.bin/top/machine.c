@@ -599,6 +599,7 @@ name|memorynames
 index|[]
 init|=
 block|{
+comment|/* 0             1            2            3            4          5 */
 literal|"K Active, "
 block|,
 literal|"K Inact, "
@@ -632,7 +633,7 @@ name|swapnames
 index|[]
 init|=
 block|{
-comment|/*   0           1            2           3            4       5 */
+comment|/* 0            1           2           3            4         5 */
 literal|"K Total, "
 block|,
 literal|"K Used, "
@@ -1190,7 +1191,9 @@ operator|-
 literal|7
 expr_stmt|;
 return|return
+operator|(
 name|Header
+operator|)
 return|;
 block|}
 end_function
@@ -1731,7 +1734,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-comment|/*      * Print how long system has been up.      * (Found by looking getting "boottime" from the kernel)      */
+comment|/* 	 * Print how long system has been up. 	 * (Found by looking getting "boottime" from the kernel) 	 */
 name|mib
 index|[
 literal|0
@@ -2203,7 +2206,7 @@ decl_stmt|;
 name|int
 name|show_command
 decl_stmt|;
-comment|/*      * Save the previous process info.      */
+comment|/* 	 * Save the previous process info. 	 */
 if|if
 condition|(
 name|previous_proc_count_max
@@ -2523,7 +2526,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 	 *  Place pointers to each valid proc structure in pref[]. 	 */
+comment|/* 		 *  Place pointers to each valid proc structure in pref[]. 		 */
 if|if
 condition|(
 name|pp
@@ -2674,7 +2677,7 @@ name|uid
 condition|)
 comment|/* skip processes which don't belong to the selected UID */
 continue|continue;
-comment|/* 	 * When not showing threads, take the first thread 	 * for output and add the fields that we can from 	 * the rest of the process's threads rather than 	 * using the system's mostly-broken KERN_PROC_PROC. 	 */
+comment|/* 		 * When not showing threads, take the first thread 		 * for output and add the fields that we can from 		 * the rest of the process's threads rather than 		 * using the system's mostly-broken KERN_PROC_PROC. 		 */
 if|if
 condition|(
 name|sel
@@ -2807,26 +2810,17 @@ name|char
 modifier|*
 name|format_next_process
 parameter_list|(
-name|handle
-parameter_list|,
-name|get_userid
-parameter_list|)
 name|caddr_t
 name|handle
-decl_stmt|;
-function|char *
-parameter_list|(
-function|*get_userid
-end_function
-
-begin_expr_stmt
-unit|)
-operator|(
-operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|,
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|get_userid
+function_decl|)
+parameter_list|()
+parameter_list|)
 block|{
 name|struct
 name|kinfo_proc
@@ -2910,7 +2904,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	 * Print swapped processes as<pname> 	 */
+comment|/* 		 * Print swapped processes as<pname> 		 */
 name|char
 modifier|*
 name|comm
@@ -2999,7 +2993,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-comment|/*      * Convert the process's runtime from microseconds to seconds.  This      * time includes the interrupt time although that is not wanted here.      * ps(1) is similarly sloppy.      */
+comment|/* 	 * Convert the process's runtime from microseconds to seconds.  This 	 * time includes the interrupt time although that is not wanted here. 	 * ps(1) is similarly sloppy. 	 */
 name|cputime
 operator|=
 operator|(
@@ -3540,7 +3534,7 @@ name|fmt
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
