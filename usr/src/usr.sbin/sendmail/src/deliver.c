@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.43 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1327,6 +1327,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NAMED_BIND
+if|if
+condition|(
+name|ConfigLevel
+operator|<
+literal|2
+condition|)
 name|_res
 operator|.
 name|options
@@ -1653,6 +1659,12 @@ block|}
 ifdef|#
 directive|ifdef
 name|NAMED_BIND
+if|if
+condition|(
+name|ConfigLevel
+operator|<
+literal|2
+condition|)
 name|_res
 operator|.
 name|options
