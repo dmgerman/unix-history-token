@@ -303,17 +303,15 @@ return|;
 block|}
 name|saved_uid
 operator|=
-name|getuid
+name|geteuid
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Try to decrypt the private key with the passphrase provided. 	 * If success, the user is authenticated. 	 */
-name|setreuid
+name|seteuid
 argument_list|(
 name|user
 operator|->
 name|pw_uid
-argument_list|,
-name|saved_uid
 argument_list|)
 expr_stmt|;
 name|key
@@ -335,7 +333,7 @@ argument_list|(
 name|path
 argument_list|)
 expr_stmt|;
-name|setuid
+name|seteuid
 argument_list|(
 name|saved_uid
 argument_list|)
