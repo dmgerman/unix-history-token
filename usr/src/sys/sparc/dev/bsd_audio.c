@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)bsd_audio.c	7.4 (Berkeley) %G%  *  * from: $Header: bsd_audio.c,v 1.17 93/04/20 05:31:28 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)bsd_audio.c	7.5 (Berkeley) %G%  *  * from: $Header: bsd_audio.c,v 1.18 93/04/24 16:20:35 leres Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -1602,6 +1602,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|int
 name|AUDIOOPEN
@@ -1635,10 +1639,6 @@ name|minor
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|,
-name|error
-decl_stmt|,
-name|s
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2160,6 +2160,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|int
 name|AUDIOREAD
@@ -2457,6 +2461,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|int
 name|AUDIOWRITE
@@ -2505,8 +2513,6 @@ decl_stmt|,
 name|first
 decl_stmt|,
 name|watermark
-decl_stmt|,
-name|drops
 decl_stmt|;
 name|error
 operator|=
@@ -3039,6 +3045,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|int
 name|AUDIOIOCTL
@@ -3069,8 +3079,6 @@ name|int
 name|error
 init|=
 literal|0
-decl_stmt|,
-name|i
 decl_stmt|,
 name|s
 decl_stmt|;
@@ -3364,6 +3372,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_function
 name|int
@@ -3831,6 +3843,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_function
 name|int
