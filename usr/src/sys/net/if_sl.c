@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_sl.c	5.5 (Berkeley) %G% */
+comment|/*	@(#)if_sl.c	5.6 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -1742,13 +1742,7 @@ name|sc
 operator|->
 name|sc_buf
 operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|char
-operator|*
-argument_list|)
+name|cp
 expr_stmt|;
 if|if
 condition|(
@@ -2197,10 +2191,10 @@ block|}
 block|}
 if|if
 condition|(
-operator|++
 name|sc
 operator|->
 name|sc_ilen
+operator|++
 operator|>=
 name|SLMTU
 condition|)
