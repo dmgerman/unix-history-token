@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.6 (Berkeley) %G%"
+literal|"@(#)move.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1710,12 +1710,9 @@ name|b_next
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
-name|new
-operator|)
-return|;
 block|}
+else|else
+block|{
 name|new
 operator|=
 name|freeq
@@ -1726,6 +1723,12 @@ name|freeq
 operator|->
 name|b_next
 expr_stmt|;
+block|}
+return|return
+operator|(
+name|new
+operator|)
+return|;
 block|}
 end_function
 
