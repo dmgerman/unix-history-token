@@ -2229,7 +2229,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|ifv
+name|ifp
 operator|->
 name|if_flags
 operator|&=
