@@ -111,6 +111,17 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
+name|xCR
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* P  Carriage return */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
 name|DC
 decl_stmt|;
 end_decl_stmt
@@ -353,6 +364,17 @@ end_decl_stmt
 
 begin_comment
 comment|/*    Non-destructive space */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|xNL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*    Line feed (new line) */
 end_comment
 
 begin_decl_stmt
@@ -608,6 +630,16 @@ end_comment
 
 begin_decl_stmt
 name|bool
+name|NS
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* No scroll - linefeed at bottom won't scroll */
+end_comment
+
+begin_decl_stmt
+name|bool
 name|OS
 decl_stmt|;
 end_decl_stmt
@@ -628,6 +660,16 @@ end_comment
 
 begin_decl_stmt
 name|bool
+name|XB
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Beehive (no escape key, simulate with f1) */
+end_comment
+
+begin_decl_stmt
+name|bool
 name|XN
 decl_stmt|;
 end_decl_stmt
@@ -644,6 +686,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* Tabs are destructive */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|XX
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Tektronix 4025 insert line */
 end_comment
 
 begin_comment
@@ -736,11 +788,83 @@ name|destline
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * There are several kinds of tty drivers to contend with.  These include:  * (1)	V6:		no CBREAK, no ioctl.  (Include PWB V1 here).  * (2)	V7 research:	has CBREAK, has ioctl, and has the tchars (TIOCSETC)  *			business to change start, stop, etc. chars.  * (3)	USG V2:		Basically like V6 but RAW mode is like V7 RAW.  *			(We treat it as V6.)  * (4)	USG V3:		equivalent to V7 but totally incompatible.  * (5)  Berkeley:	has ltchars in addition to all of V7.  *  * The following attempts to decide what we are on, and declare  * some variables in the appropriate format.  The wierd looking one (ttymode)  * is the thing we pass to sTTY and family to turn "RAW" mode on or off  * when we go into or out of visual mode.  In V7/V6 it's just the flags word  * to stty.  In USG V3 it's the whole tty structure.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USG3TTY
+end_ifdef
+
+begin_comment
+comment|/* USG V3 */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|termio
+name|tty
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Use this one structure to change modes */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|termio
+name|ttymode
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Mode to contain tty flags */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* All others */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|sgttyb
+name|tty
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Always stty/gtty using this one structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|ttymode
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Mode to contain tty flags */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|TIOCSETC
 end_ifdef
+
+begin_comment
+comment|/* V7 */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -760,15 +884,47 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TIOCLGET
+end_ifdef
+
+begin_comment
+comment|/* Berkeley */
+end_comment
+
 begin_decl_stmt
 name|struct
-name|sgttyb
-name|tty
+name|ltchars
+name|olttyc
+decl_stmt|,
+name|nlttyc
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Always stty/gtty using this one structure */
+comment|/* More of tchars style stuff */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|ttymode
+name|normf
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Restore tty flags to this (someday) */
 end_comment
 
 begin_decl_stmt
@@ -778,18 +934,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Have to restor normal mode from normf */
+comment|/* Have to restore normal mode from normf */
 end_comment
 
 begin_decl_stmt
-name|int
-name|normf
+name|ttymode
+name|ostart
+argument_list|()
+decl_stmt|,
+name|setty
+argument_list|()
+decl_stmt|,
+name|unixex
+argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Restore tty flags to this (someday) */
-end_comment
 
 begin_decl_stmt
 name|short
@@ -921,6 +1080,30 @@ comment|/* for while in insert mode */
 end_comment
 
 begin_decl_stmt
+name|struct
+name|maps
+name|abbrevs
+index|[
+name|MAXNOMACS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for word abbreviations */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ldisc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* line discipline for ucb tty driver */
+end_comment
+
+begin_decl_stmt
 name|char
 name|mapspace
 index|[
@@ -938,6 +1121,49 @@ end_decl_stmt
 
 begin_comment
 comment|/* next free location in mapspace */
+end_comment
+
+begin_decl_stmt
+name|int
+name|maphopcnt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* check for infinite mapping loops */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|anyabbrs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if abbr or unabbr has been done */
+end_comment
+
+begin_decl_stmt
+name|char
+name|ttynbuf
+index|[
+literal|20
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* result of ttyname() */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ttymesg
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* original mode of users tty */
 end_comment
 
 end_unit

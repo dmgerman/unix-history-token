@@ -56,7 +56,7 @@ name|LBSIZE
 index|]
 decl_stmt|;
 specifier|register
-name|int
+name|ttymode
 name|f
 decl_stmt|;
 name|ovbeg
@@ -337,7 +337,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|int
+name|ttymode
 name|f
 decl_stmt|;
 end_decl_stmt
@@ -426,7 +426,7 @@ name|LBSIZE
 index|]
 decl_stmt|;
 specifier|register
-name|int
+name|ttymode
 name|f
 decl_stmt|;
 if|if
@@ -502,6 +502,27 @@ goto|;
 name|error
 argument_list|(
 literal|"Visual requires clear screen capability"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|NS
+operator|&&
+operator|!
+name|SF
+condition|)
+block|{
+if|if
+condition|(
+name|initev
+condition|)
+goto|goto
+name|toopen
+goto|;
+name|error
+argument_list|(
+literal|"Visual requires scrolling"
 argument_list|)
 expr_stmt|;
 block|}
@@ -768,6 +789,22 @@ expr_stmt|;
 name|undkind
 operator|=
 name|UNDALL
+expr_stmt|;
+if|if
+condition|(
+name|undadot
+operator|<=
+name|zero
+operator|||
+name|undadot
+operator|>
+name|dol
+condition|)
+name|undadot
+operator|=
+name|zero
+operator|+
+literal|1
 expr_stmt|;
 block|}
 end_block

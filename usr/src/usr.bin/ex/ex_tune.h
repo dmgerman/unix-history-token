@@ -21,14 +21,14 @@ begin_define
 define|#
 directive|define
 name|EXRECOVER
-value|libpath(ex3.3recover)
+value|libpath(ex3.4recover)
 end_define
 
 begin_define
 define|#
 directive|define
 name|EXPRESERVE
-value|libpath(ex3.3preserve)
+value|libpath(ex3.4preserve)
 end_define
 
 begin_ifndef
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|EXSTRINGS
-value|libpath(ex3.3strings)
+value|libpath(ex3.4strings)
 end_define
 
 begin_endif
@@ -110,6 +110,13 @@ name|ESIZE
 value|512
 end_define
 
+begin_define
+define|#
+directive|define
+name|CRSIZE
+value|1024
+end_define
+
 begin_else
 else|#
 directive|else
@@ -136,6 +143,13 @@ end_define
 begin_comment
 comment|/* Size of compiled re */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CRSIZE
+value|512
+end_define
 
 begin_endif
 endif|#
@@ -454,7 +468,7 @@ begin_define
 define|#
 directive|define
 name|ATTN
-value|0177
+value|(-2)
 end_define
 
 begin_define

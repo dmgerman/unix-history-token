@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*  * Ex version 2  * Mark Horton, UCB  * Bill Joy UCB  *  * Open and visual mode definitions.  *   * There are actually 4 major states in open/visual modes.  These  * are visual, crt open (where the cursor can move about the screen and  * the screen can scroll and be erased), one line open (on dumb glass-crt's  * like the adm3), and hardcopy open (for everything else).  *  * The basic state is given by bastate, and the current state by state,  * since we can be in pseudo-hardcopy mode if we are on an adm3 and the  * line is longer than 80.  */
+comment|/*  * Ex version 3  * Mark Horton, UCB  * Bill Joy UCB  *  * Open and visual mode definitions.  *   * There are actually 4 major states in open/visual modes.  These  * are visual, crt open (where the cursor can move about the screen and  * the screen can scroll and be erased), one line open (on dumb glass-crt's  * like the adm3), and hardcopy open (for everything else).  *  * The basic state is given by bastate, and the current state by state,  * since we can be in pseudo-hardcopy mode if we are on an adm3 and the  * line is longer than 80.  */
 end_comment
 
 begin_decl_stmt
@@ -355,6 +355,64 @@ end_decl_stmt
 
 begin_comment
 comment|/* Prev line image when "VCHNG" */
+end_comment
+
+begin_comment
+comment|/*  * State information for undoing of macros.  The basic idea is that  * if the macro does only 1 change or even none, we don't treat it  * specially.  If it does 2 or more changes we want to be able to  * undo it as a unit.  We remember how many changes have been made  * within the current macro.  (Remember macros can be nested.)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VC_NOTINMAC
+value|0
+end_define
+
+begin_comment
+comment|/* Not in a macro */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VC_NOCHANGE
+value|1
+end_define
+
+begin_comment
+comment|/* In a macro, no changes so far */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VC_ONECHANCE
+value|2
+end_define
+
+begin_comment
+comment|/* In a macro, one change so far */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VC_MANYCHANGE
+value|3
+end_define
+
+begin_comment
+comment|/* In a macro, at least 2 changes so far */
+end_comment
+
+begin_decl_stmt
+name|short
+name|vch_mac
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Change state - one of the above */
 end_comment
 
 begin_comment

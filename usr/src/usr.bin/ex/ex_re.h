@@ -209,7 +209,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CEOF
+name|CEOFC
 value|17
 end_define
 

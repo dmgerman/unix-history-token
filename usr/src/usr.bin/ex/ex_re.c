@@ -402,7 +402,7 @@ end_block
 
 begin_decl_stmt
 name|bool
-name|xflag
+name|cflag
 decl_stmt|;
 end_decl_stmt
 
@@ -585,7 +585,7 @@ operator|!
 name|inglobal
 operator|&&
 operator|!
-name|xflag
+name|cflag
 condition|)
 name|error
 argument_list|(
@@ -638,7 +638,7 @@ argument_list|)
 condition|)
 name|gsubf
 operator|=
-name|xflag
+name|cflag
 operator|=
 literal|0
 expr_stmt|;
@@ -728,7 +728,7 @@ name|gsubf
 operator|=
 literal|0
 expr_stmt|;
-name|xflag
+name|cflag
 operator|=
 literal|0
 expr_stmt|;
@@ -762,6 +762,22 @@ argument_list|(
 literal|"No previous re|No previous regular expression"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|subre
+operator|.
+name|Expbuf
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"No previous substitute re|No previous substitute to repeat"
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 for|for
@@ -792,10 +808,10 @@ continue|continue;
 case|case
 literal|'c'
 case|:
-name|xflag
+name|cflag
 operator|=
 operator|!
-name|xflag
+name|cflag
 expr_stmt|;
 continue|continue;
 case|case
@@ -1218,7 +1234,7 @@ name|ch
 decl_stmt|;
 if|if
 condition|(
-name|xflag
+name|cflag
 operator|==
 literal|0
 condition|)
@@ -2254,7 +2270,7 @@ operator|*
 name|ep
 operator|++
 operator|=
-name|CEOF
+name|CEOFC
 expr_stmt|;
 if|if
 condition|(
@@ -2785,7 +2801,7 @@ operator|*
 name|ep
 operator|++
 operator|=
-name|CEOF
+name|CEOFC
 expr_stmt|;
 return|return
 operator|(
@@ -3016,20 +3032,6 @@ operator|(
 literal|0
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|notdef
-if|if
-condition|(
-name|loc1
-operator|==
-name|loc2
-condition|)
-name|loc2
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
 name|locs
 operator|=
 name|p1
@@ -3346,7 +3348,7 @@ literal|0
 operator|)
 return|;
 case|case
-name|CEOF
+name|CEOFC
 case|:
 name|loc2
 operator|=

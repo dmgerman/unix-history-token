@@ -94,6 +94,10 @@ name|OPutchar
 argument_list|)
 argument_list|()
 decl_stmt|;
+name|vch_mac
+operator|=
+name|VC_NOTINMAC
+expr_stmt|;
 comment|/* 	 * If we started as a vi command (on the command line) 	 * then go process initial commands (recover, next or tag). 	 */
 if|if
 condition|(
@@ -365,6 +369,10 @@ operator|=
 name|getkey
 argument_list|()
 expr_stmt|;
+name|maphopcnt
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 comment|/* 			 * Keep mapping the char as long as it changes. 			 * This allows for double mappings, e.g., q to #, 			 * #1 to something else. 			 */
@@ -436,6 +444,18 @@ name|REMAP
 argument_list|)
 condition|)
 break|break;
+if|if
+condition|(
+operator|++
+name|maphopcnt
+operator|>
+literal|256
+condition|)
+name|error
+argument_list|(
+literal|"Infinite macro loop"
+argument_list|)
+expr_stmt|;
 block|}
 do|while
 condition|(
@@ -1042,7 +1062,7 @@ operator|=
 literal|1
 expr_stmt|;
 continue|continue;
-comment|/* 		 * ^F		Window forwards, with 2 lines of continuity. 		 *		Count gives new screen size. 		 */
+comment|/* 		 * ^F		Window forwards, with 2 lines of continuity. 		 *		Count repeats. 		 */
 case|case
 name|CTRL
 argument_list|(
@@ -1051,15 +1071,6 @@ argument_list|)
 case|:
 name|vsave
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|hadcnt
-condition|)
-name|vsetsiz
-argument_list|(
-name|cnt
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1077,6 +1088,14 @@ name|vcline
 operator|)
 operator|-
 literal|2
+operator|+
+operator|(
+name|cnt
+operator|-
+literal|1
+operator|)
+operator|*
+name|basWLINES
 expr_stmt|;
 name|vcnt
 operator|=
@@ -1107,15 +1126,6 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|hadcnt
-condition|)
-name|vsetsiz
-argument_list|(
-name|cnt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|one
 operator|+
 name|vcline
@@ -1132,6 +1142,14 @@ operator|-=
 name|vcline
 operator|-
 literal|2
+operator|+
+operator|(
+name|cnt
+operator|-
+literal|1
+operator|)
+operator|*
+name|basWLINES
 expr_stmt|;
 name|vcnt
 operator|=
@@ -1259,6 +1277,11 @@ expr_stmt|;
 name|vsave
 argument_list|()
 expr_stmt|;
+name|vmacchng
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|setLAST
 argument_list|()
 expr_stmt|;
@@ -1355,6 +1378,11 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
+name|vmacchng
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 continue|continue;
 comment|/* 		 * C		Change text to end of line, short for c$. 		 */
 case|case
@@ -1391,6 +1419,9 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+name|setLAST
+argument_list|()
+expr_stmt|;
 name|mbuf
 index|[
 literal|0
@@ -1531,6 +1562,11 @@ case|:
 name|insrt
 label|:
 comment|/* 			 * Common code for all the insertion commands. 			 * Save for redo, position cursor, prepare for append 			 * at command and in visual undo.  Note that nothing 			 * is doomed, unless R when all is, and save the 			 * current line in a the undo temporary buffer. 			 */
+name|vmacchng
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|setLAST
 argument_list|()
 expr_stmt|;
@@ -1671,6 +1707,34 @@ case|:
 name|vsave
 argument_list|()
 expr_stmt|;
+comment|/* 			 * If we are in the middle of a macro, throw away 			 * the rest and fix up undo. 			 * This code copied from getbr(). 			 */
+if|if
+condition|(
+name|vmacp
+condition|)
+block|{
+name|vmacp
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|inopen
+operator|==
+operator|-
+literal|1
+condition|)
+comment|/* don't screw up undo for esc esc */
+name|vundkind
+operator|=
+name|VMANY
+expr_stmt|;
+name|inopen
+operator|=
+literal|1
+expr_stmt|;
+comment|/* restore old setting now that macro done */
+block|}
 return|return;
 comment|/* 		 * ZZ		Like :x 		 */
 case|case
@@ -1711,6 +1775,9 @@ name|vmoving
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|forbid
 argument_list|(
 operator|!
@@ -1726,6 +1793,8 @@ operator|<
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 			 * If previous delete was partial line, use an 			 * append or insert to put it back so as to 			 * use insert mode on intelligent terminals. 			 */
 if|if
 condition|(
@@ -1786,8 +1855,25 @@ operator|==
 name|dol
 argument_list|)
 expr_stmt|;
+comment|/* 			 * If we just did a macro the whole buffer is in 			 * the undo save area.  We don't want to put THAT. 			 */
+name|forbid
+argument_list|(
+name|vundkind
+operator|==
+name|VMANY
+operator|&&
+name|undkind
+operator|==
+name|UNDALL
+argument_list|)
+expr_stmt|;
 name|vsave
 argument_list|()
+expr_stmt|;
+name|vmacchng
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|setLAST
 argument_list|()
@@ -2165,6 +2251,42 @@ expr_stmt|;
 goto|goto
 name|doinit
 goto|;
+ifdef|#
+directive|ifdef
+name|TIOCLGET
+comment|/* 		 * ^Z:	suspend editor session and temporarily return 		 * 	to shell.  Only works on Berkeley tty driver. 		 */
+case|case
+name|CTRL
+argument_list|(
+name|z
+argument_list|)
+case|:
+name|forbid
+argument_list|(
+name|dosusp
+operator|==
+literal|0
+operator|||
+operator|!
+name|ldisc
+argument_list|)
+expr_stmt|;
+name|vsave
+argument_list|()
+expr_stmt|;
+name|oglobp
+operator|=
+name|globp
+expr_stmt|;
+name|globp
+operator|=
+literal|"stop"
+expr_stmt|;
+goto|goto
+name|gogo
+goto|;
+endif|#
+directive|endif
 comment|/* 		 * :		Read a command from the echo area and 		 *		execute it in command mode. 		 */
 case|case
 literal|':'
@@ -2208,6 +2330,9 @@ goto|goto
 name|fixup
 goto|;
 block|}
+name|getDOT
+argument_list|()
+expr_stmt|;
 comment|/* 			 * Use the visual undo buffer to store the global 			 * string for command mode, since it is idle right now. 			 */
 name|oglobp
 operator|=
@@ -2764,7 +2889,9 @@ case|case
 literal|'u'
 case|:
 name|vundo
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 continue|continue;
 comment|/* 		 * U		restore current line to initial state. 		 */

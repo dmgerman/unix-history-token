@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Ex version 3.1  *  * Mark Horton, UC Berkeley  * Bill Joy, UC Berkeley  * November 1979  *  * This file contains most of the declarations common to a large number  * of routines.  The file ex_vis.h contains declarations  * which are used only inside the screen editor.  * The file ex_tune.h contains parameters which can be diddled per installation.  *  * The declarations relating to the argument list, regular expressions,  * the temporary file data structure used by the editor  * and the data describing terminals are each fairly substantial and  * are kept in the files ex_{argv,re,temp,tty}.h which  * we #include separately.  *  * If you are going to dig into ex, you should look at the outline of the  * distribution of the code into files at the beginning of ex.c and ex_v.c.  * Code which is similar to that of ed is lightly or undocumented in spots  * (e.g. the regular expression code).  Newer code (e.g. open and visual)  * is much more carefully documented, and still rough in spots.  *  * Please forward bug reports to  *  *	Bill Joy  *	Computer Science Division, EECS  *	EVANS HALL  *	U.C. Berkeley 94704  *	(415) 642-4948  *	(415) 642-1024 (dept. office)  *  * or to wnj@mit-mc on the ARPA-net.  I would particularly like to hear  * of additional terminal descriptions you add to the termcap data base.  */
+comment|/*  * Ex version 3 (see exact version in ex_cmds.c, search for /Version/)  *  * Mark Horton, UC Berkeley  * Bill Joy, UC Berkeley  * November 1979  *  * This file contains most of the declarations common to a large number  * of routines.  The file ex_vis.h contains declarations  * which are used only inside the screen editor.  * The file ex_tune.h contains parameters which can be diddled per installation.  *  * The declarations relating to the argument list, regular expressions,  * the temporary file data structure used by the editor  * and the data describing terminals are each fairly substantial and  * are kept in the files ex_{argv,re,temp,tty}.h which  * we #include separately.  *  * If you are going to dig into ex, you should look at the outline of the  * distribution of the code into files at the beginning of ex.c and ex_v.c.  * Code which is similar to that of ed is lightly or undocumented in spots  * (e.g. the regular expression code).  Newer code (e.g. open and visual)  * is much more carefully documented, and still rough in spots.  *  * Please forward bug reports to  *  *	Mark Horton  *	Computer Science Division, EECS  *	EVANS HALL  *	U.C. Berkeley 94704  *	(415) 642-4948  *	(415) 642-1024 (dept. office)  *  * or to csvax.mark@berkeley on the ARPA-net.  I would particularly like to hear  * of additional terminal descriptions you add to the termcap data base.  */
 end_comment
 
 begin_include
@@ -45,12 +45,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
 end_include
 
@@ -65,6 +59,45 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_comment
+comment|/*  *	The following little dance copes with the new USG tty handling.  *	This stuff has the advantage of considerable flexibility, and  *	the disadvantage of being incompatible with anything else.  *	The presence of the symbol USG3TTY will indicate the new code:  *	in this case, we define CBREAK (because we can simulate it exactly),  *	but we won't actually use it, so we set it to a value that will  *	probably blow the compilation if we goof up.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USG3TTY
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<termio.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|CBREAK
+value|xxxxx
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sgtty.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -453,6 +486,27 @@ begin_comment
 comment|/* When>= MAXDIRT, should sync temporary */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TIOCLGET
+end_ifdef
+
+begin_decl_stmt
+name|bool
+name|dosusp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Do SIGTSTP in visual when ^Z typed */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|bool
 name|edited
@@ -571,6 +625,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* Don't cursor address */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|inappend
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* in ex command append mode */
 end_comment
 
 begin_decl_stmt
@@ -782,6 +846,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* Buffer for tty output */
+end_comment
+
+begin_decl_stmt
+name|short
+name|oprompt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Saved during source */
 end_comment
 
 begin_decl_stmt
@@ -1385,6 +1459,100 @@ value|4
 end_define
 
 begin_comment
+comment|/*  * Various miscellaneous flags and buffers needed by the encryption routines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KSIZE
+value|9
+end_define
+
+begin_comment
+comment|/* key size for encryption */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYPROMPT
+value|"Key: "
+end_define
+
+begin_decl_stmt
+name|int
+name|xflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* True if we are in encryption mode */
+end_comment
+
+begin_decl_stmt
+name|int
+name|xtflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* True if the temp file is being encrypted */
+end_comment
+
+begin_decl_stmt
+name|int
+name|kflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* True if the key has been accepted */
+end_comment
+
+begin_decl_stmt
+name|char
+name|perm
+index|[
+literal|768
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|tperm
+index|[
+literal|768
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|key
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|crbuf
+index|[
+name|CRSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|char
+modifier|*
+name|getpass
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Function type definitions  */
 end_comment
 
@@ -1811,6 +1979,13 @@ end_function_decl
 begin_function_decl
 name|int
 name|onintr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|onsusp
 parameter_list|()
 function_decl|;
 end_function_decl

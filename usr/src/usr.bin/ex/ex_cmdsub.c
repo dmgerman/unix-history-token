@@ -27,6 +27,12 @@ directive|include
 file|"ex_tty.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ex_vis.h"
+end_include
+
 begin_comment
 comment|/*  * Command mode subroutines implementing  *	append, args, copy, delete, join, move, put,  *	shift, tag, yank, z and undo  */
 end_comment
@@ -45,6 +51,13 @@ modifier|*
 name|tad1
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+specifier|static
+name|jnoop
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Append after line a lines returned by function f.  * Be careful about intermediate states to avoid scramble  * if an interrupt comes in.  */
@@ -963,6 +976,16 @@ name|jcount
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|FIXUNDO
+condition|)
+name|undap1
+operator|=
+name|undap2
+operator|=
+name|addr1
+expr_stmt|;
 name|ignore
 argument_list|(
 name|append
@@ -973,6 +996,14 @@ operator|--
 name|addr1
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|FIXUNDO
+condition|)
+name|vundkind
+operator|=
+name|VMANY
 expr_stmt|;
 block|}
 end_block
@@ -2310,6 +2341,9 @@ operator|<
 literal|0
 condition|)
 continue|continue;
+name|tfcount
+operator|++
+expr_stmt|;
 while|while
 condition|(
 name|getfile
@@ -2424,6 +2458,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
 operator|*
 name|lp
 operator|||
@@ -2433,6 +2468,25 @@ argument_list|(
 operator|*
 name|cp
 argument_list|)
+operator|)
+operator|&&
+operator|(
+name|value
+argument_list|(
+name|TAGLENGTH
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|lp
+operator|-
+name|lasttag
+operator|<
+name|value
+argument_list|(
+name|TAGLENGTH
+argument_list|)
+operator|)
 condition|)
 block|{
 ifdef|#
@@ -2482,6 +2536,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Rest of tag if abbreviated */
+while|while
+condition|(
+operator|!
+name|iswhite
+argument_list|(
+operator|*
+name|cp
+argument_list|)
+condition|)
+name|cp
+operator|++
+expr_stmt|;
 comment|/* name of file */
 while|while
 condition|(
@@ -2607,7 +2674,7 @@ literal|'z'
 operator|-
 literal|'a'
 operator|+
-literal|1
+literal|2
 index|]
 decl_stmt|;
 specifier|extern
@@ -4051,11 +4118,18 @@ operator|=
 name|UNDCHANGE
 expr_stmt|;
 block|}
+comment|/* 	 * Defensive programming - after a munged undadot. 	 * Also handle empty buffer case. 	 */
 if|if
 condition|(
+operator|(
 name|dot
-operator|==
+operator|<=
 name|zero
+operator|||
+name|dot
+operator|>
+name|dol
+operator|)
 operator|&&
 name|dot
 operator|!=
@@ -4216,6 +4290,8 @@ begin_macro
 name|mapcmd
 argument_list|(
 argument|un
+argument_list|,
+argument|ab
 argument_list|)
 end_macro
 
@@ -4229,12 +4305,22 @@ begin_comment
 comment|/* true if this is unmap command */
 end_comment
 
+begin_decl_stmt
+name|int
+name|ab
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if this is abbr command */
+end_comment
+
 begin_block
 block|{
 name|char
 name|lhs
 index|[
-literal|10
+literal|100
 index|]
 decl_stmt|,
 name|rhs
@@ -4264,6 +4350,10 @@ decl_stmt|;
 comment|/* the map structure we are working on */
 name|mp
 operator|=
+name|ab
+condition|?
+name|abbrevs
+else|:
 name|exclam
 argument_list|()
 condition|?
@@ -4290,6 +4380,15 @@ name|EOF
 condition|)
 name|ignchar
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|un
+condition|)
+name|error
+argument_list|(
+literal|"Missing lhs"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4415,6 +4514,9 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
+name|un
+operator|&&
 name|any
 argument_list|(
 name|c
@@ -4423,15 +4525,7 @@ literal|" \t"
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|un
-condition|)
-name|eol
-argument_list|()
-expr_stmt|;
-comment|/* will usually cause an error */
-else|else
+comment|/* End of lhs */
 break|break;
 block|}
 elseif|else
@@ -4441,6 +4535,10 @@ name|endcmd
 argument_list|(
 name|c
 argument_list|)
+operator|&&
+name|c
+operator|!=
+literal|'"'
 condition|)
 block|{
 name|ungetchar
@@ -4455,6 +4553,11 @@ condition|)
 block|{
 name|newline
 argument_list|()
+expr_stmt|;
+operator|*
+name|p
+operator|=
+literal|0
 expr_stmt|;
 name|addmac
 argument_list|(
@@ -4535,6 +4638,10 @@ name|endcmd
 argument_list|(
 name|c
 argument_list|)
+operator|&&
+name|c
+operator|!=
+literal|'"'
 condition|)
 block|{
 name|ungetchar
@@ -4703,6 +4810,30 @@ name|slot
 decl_stmt|,
 name|zer
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TRACE
+if|if
+condition|(
+name|trace
+condition|)
+name|fprintf
+argument_list|(
+name|trace
+argument_list|,
+literal|"addmac(src='%s', dest='%s', dname='%s', mp=%x\n"
+argument_list|,
+name|src
+argument_list|,
+name|dest
+argument_list|,
+name|dname
+argument_list|,
+name|mp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dest
@@ -4871,6 +5002,18 @@ name|slot
 index|]
 operator|.
 name|cap
+argument_list|)
+operator|||
+name|eq
+argument_list|(
+name|src
+argument_list|,
+name|mp
+index|[
+name|slot
+index|]
+operator|.
+name|mapto
 argument_list|)
 condition|)
 break|break;

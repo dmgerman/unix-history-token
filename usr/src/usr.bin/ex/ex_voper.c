@@ -291,12 +291,22 @@ argument_list|(
 name|cnt
 argument_list|)
 expr_stmt|;
+name|vmacchng
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 return|return;
 default|default:
 goto|goto
 name|nocount
 goto|;
 block|}
+name|vmacchng
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Had an operator, so accept another count. 	 * Multiply counts together. 	 */
 if|if
 condition|(
@@ -1111,6 +1121,11 @@ condition|)
 goto|goto
 name|errlab
 goto|;
+name|vmacchng
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|cnt
