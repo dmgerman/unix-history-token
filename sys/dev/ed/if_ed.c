@@ -2395,8 +2395,11 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"failed to clear shared memory at %x - check configuration\n"
+literal|"failed to clear shared memory at %jx - check configuration\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|kvtop
 argument_list|(
 name|sc
@@ -3509,8 +3512,11 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"failed to clear shared memory at %x - check configuration\n"
+literal|"failed to clear shared memory at %jx - check configuration\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|kvtop
 argument_list|(
 name|sc
