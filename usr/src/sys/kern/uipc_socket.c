@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.68	83/01/13	*/
+comment|/*	uipc_socket.c	4.69	83/01/13	*/
 end_comment
 
 begin_include
@@ -3134,9 +3134,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|optval
-decl_stmt|;
 if|if
 condition|(
 name|level
@@ -3149,33 +3146,6 @@ name|EINVAL
 operator|)
 return|;
 comment|/* XXX */
-if|if
-condition|(
-name|m
-operator|->
-name|m_len
-operator|!=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-name|optval
-operator|=
-operator|*
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|int
-operator|*
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|optname
@@ -3192,8 +3162,38 @@ name|SO_DEBUG
 expr_stmt|;
 break|break;
 case|case
+name|SO_KEEPALIVE
+case|:
+name|so
+operator|->
+name|so_options
+operator||=
+name|SO_KEEPALIVE
+expr_stmt|;
+break|break;
+case|case
 name|SO_LINGER
 case|:
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+operator|||
+name|m
+operator|->
+name|m_len
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|so
 operator|->
 name|so_options
@@ -3204,7 +3204,14 @@ name|so
 operator|->
 name|so_linger
 operator|=
-name|optval
+operator|*
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|int
+operator|*
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -3298,10 +3305,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-modifier|*
-name|optval
-decl_stmt|;
 if|if
 condition|(
 name|level
@@ -3356,6 +3359,10 @@ condition|(
 name|optname
 operator|==
 name|SO_LINGER
+operator|&&
+name|m
+operator|!=
+name|NULL
 condition|)
 block|{
 operator|*
