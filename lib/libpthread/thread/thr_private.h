@@ -1208,6 +1208,11 @@ directive|define
 name|THR_STACK_USER
 value|0x100
 comment|/* 0xFF reserved for<pthread.h> */
+define|#
+directive|define
+name|THR_SIGNAL_THREAD
+value|0x200
+comment|/* This is a signal thread */
 name|int
 name|flags
 decl_stmt|;
@@ -1605,6 +1610,35 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|pthread_key
+block|{
+specifier|volatile
+name|int
+name|allocated
+decl_stmt|;
+specifier|volatile
+name|int
+name|count
+decl_stmt|;
+name|int
+name|seqno
+decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|destructor
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -1620,7 +1654,7 @@ begin_struct
 struct|struct
 name|pthread
 block|{
-comment|/* 	 * Thread mailbox is first so it cal be aligned properly. 	 */
+comment|/* Thread control block */
 name|struct
 name|tcb
 modifier|*
@@ -1988,7 +2022,7 @@ parameter_list|(
 name|thrd
 parameter_list|)
 define|\
-value|do {								\ 	if (((thrd)->critical_yield != 0)&&			\ 	    !(THR_IN_CRITICAL(thrd)))				\ 		_thr_sched_switch(thrd);			\ 	else if (((thrd)->check_pending != 0)&&		\ 	    !(THR_IN_CRITICAL(thrd)))				\ 		_thr_sig_check_pending(thrd);			\ } while (0)
+value|do {								\ 	if (!THR_IN_CRITICAL(thrd)) {				\ 		if (__predict_false(_libkse_debug))		\ 			_thr_debug_check_yield(thrd);		\ 		if ((thrd)->critical_yield != 0)		\ 			_thr_sched_switch(thrd);		\ 		if ((thrd)->check_pending != 0) 		\ 			_thr_sig_check_pending(thrd);		\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -2122,17 +2156,6 @@ name|thrd
 parameter_list|)
 define|\
 value|_pq_remove(&(thrd)->kseg->kg_schedq.sq_runq, thrd)
-end_define
-
-begin_define
-define|#
-directive|define
-name|THR_RUNQ_FIRST
-parameter_list|(
-name|thrd
-parameter_list|)
-define|\
-value|_pq_first(&(thrd)->kseg->kg_schedq.sq_runq)
 end_define
 
 begin_comment
@@ -2301,6 +2324,16 @@ parameter_list|)
 value|(((thrd)->flags& THR_FLAGS_EXITING) != 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DBG_CAN_RUN
+parameter_list|(
+name|thrd
+parameter_list|)
+value|(((thrd)->tcb->tcb_tmbx.tm_dflags& \ 	TMDF_DONOTRUNUSER) == 0)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -2370,6 +2403,32 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* For debugger */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|int
+name|_libkse_debug
+name|SCLASS_PRESET
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SCLASS
+name|int
+name|_thread_activated
+name|SCLASS_PRESET
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* List of all threads: */
 end_comment
 
@@ -2414,7 +2473,7 @@ end_decl_stmt
 begin_decl_stmt
 name|SCLASS
 name|int
-name|_thr_active_threads
+name|_thread_active_threads
 name|SCLASS_PRESET
 argument_list|(
 literal|1
@@ -3059,6 +3118,20 @@ name|struct
 name|pthread
 modifier|*
 name|_pq_first
+parameter_list|(
+name|struct
+name|pq_queue
+modifier|*
+name|pq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|pthread
+modifier|*
+name|_pq_first_debug
 parameter_list|(
 name|struct
 name|pq_queue
@@ -3934,6 +4007,17 @@ parameter_list|(
 name|void
 modifier|*
 name|sp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thr_debug_check_yield
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

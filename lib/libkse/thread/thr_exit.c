@@ -320,7 +320,7 @@ name|_thread_list_lock
 argument_list|)
 expr_stmt|;
 comment|/* Use thread_list_lock */
-name|_thr_active_threads
+name|_thread_active_threads
 operator|--
 expr_stmt|;
 ifdef|#
@@ -328,7 +328,7 @@ directive|ifdef
 name|SYSTEM_SCOPE_ONLY
 if|if
 condition|(
-name|_thr_active_threads
+name|_thread_active_threads
 operator|==
 literal|0
 condition|)
@@ -337,7 +337,7 @@ else|#
 directive|else
 if|if
 condition|(
-name|_thr_active_threads
+name|_thread_active_threads
 operator|==
 literal|1
 condition|)

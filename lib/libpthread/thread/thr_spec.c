@@ -39,41 +39,14 @@ directive|include
 file|"thr_private.h"
 end_include
 
-begin_struct
-struct|struct
-name|pthread_key
-block|{
-specifier|volatile
-name|int
-name|allocated
-decl_stmt|;
-specifier|volatile
-name|int
-name|count
-decl_stmt|;
-name|int
-name|seqno
-decl_stmt|;
-name|void
-function_decl|(
-modifier|*
-name|destructor
-function_decl|)
-parameter_list|()
-function_decl|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/* Static variables: */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|pthread_key
-name|key_table
+name|_thread_keytable
 index|[
 name|PTHREAD_KEYS_MAX
 index|]
@@ -175,7 +148,7 @@ control|)
 block|{
 if|if
 condition|(
-name|key_table
+name|_thread_keytable
 index|[
 name|i
 index|]
@@ -185,7 +158,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|key_table
+name|_thread_keytable
 index|[
 name|i
 index|]
@@ -194,7 +167,7 @@ name|allocated
 operator|=
 literal|1
 expr_stmt|;
-name|key_table
+name|_thread_keytable
 index|[
 name|i
 index|]
@@ -203,7 +176,7 @@ name|destructor
 operator|=
 name|destructor
 expr_stmt|;
-name|key_table
+name|_thread_keytable
 index|[
 name|i
 index|]
@@ -292,14 +265,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|key_table
+name|_thread_keytable
 index|[
 name|key
 index|]
 operator|.
 name|allocated
 condition|)
-name|key_table
+name|_thread_keytable
 index|[
 name|key
 index|]
@@ -445,7 +418,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|key_table
+name|_thread_keytable
 index|[
 name|key
 index|]
@@ -477,7 +450,7 @@ index|]
 operator|.
 name|seqno
 operator|==
-name|key_table
+name|_thread_keytable
 index|[
 name|key
 index|]
@@ -502,7 +475,7 @@ name|data
 expr_stmt|;
 name|destructor
 operator|=
-name|key_table
+name|_thread_keytable
 index|[
 name|key
 index|]
@@ -731,7 +704,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|key_table
+name|_thread_keytable
 index|[
 name|key
 index|]
@@ -797,7 +770,7 @@ index|]
 operator|.
 name|seqno
 operator|=
-name|key_table
+name|_thread_keytable
 index|[
 name|key
 index|]
@@ -879,7 +852,7 @@ block|{
 comment|/* Check if this key has been used before: */
 if|if
 condition|(
-name|key_table
+name|_thread_keytable
 index|[
 name|key
 index|]
@@ -896,7 +869,7 @@ index|]
 operator|.
 name|seqno
 operator|==
-name|key_table
+name|_thread_keytable
 index|[
 name|key
 index|]
