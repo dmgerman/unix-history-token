@@ -830,7 +830,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEBUG
+name|CTAU_DEBUG
 parameter_list|(
 name|x
 parameter_list|)
@@ -942,7 +942,7 @@ name|port
 argument_list|)
 condition|)
 block|{
-name|DEBUG
+name|CTAU_DEBUG
 argument_list|(
 operator|(
 literal|"Bad nstatus, downloading aborted (bsr3=0x%x).\n"
@@ -1033,7 +1033,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|CTAU_DEBUG
 argument_list|(
 operator|(
 literal|"Bad nstatus, %d bytes remaining.\n"
@@ -1083,7 +1083,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|CTAU_DEBUG
 argument_list|(
 operator|(
 literal|"Bad nstatus after confdone, %d bytes remaining (%d).\n"
@@ -1103,7 +1103,7 @@ name|failed
 goto|;
 block|}
 comment|/* Succeeded. */
-comment|/*DEBUG (("Download succeeded.\n"));*/
+comment|/*CTAU_DEBUG (("Download succeeded.\n"));*/
 return|return
 literal|1
 return|;
@@ -1182,7 +1182,7 @@ argument_list|)
 expr_stmt|;
 comment|/* if ((bytes& 1023) == 0) putch ('.'); */
 block|}
-name|DEBUG
+name|CTAU_DEBUG
 argument_list|(
 operator|(
 literal|"Bad confdone.\n"
@@ -1191,7 +1191,7 @@ argument_list|)
 expr_stmt|;
 name|failed
 label|:
-name|DEBUG
+name|CTAU_DEBUG
 argument_list|(
 operator|(
 literal|"Downloading aborted.\n"
