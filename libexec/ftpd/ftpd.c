@@ -434,6 +434,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|paranoid
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|guest
 decl_stmt|;
 end_decl_stmt
@@ -1371,7 +1379,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dlSt:T:u:v"
+literal|"RdlSt:T:u:v"
 argument_list|)
 operator|)
 operator|!=
@@ -1391,7 +1399,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dlUt:T:u:v"
+literal|"RdlUt:RT:u:v"
 argument_list|)
 operator|)
 operator|!=
@@ -1420,6 +1428,14 @@ name|logging
 operator|++
 expr_stmt|;
 comment|/*> 1 == extra logging */
+break|break;
+case|case
+literal|'R'
+case|:
+name|paranoid
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|'U'
@@ -7218,11 +7234,6 @@ name|int
 name|status
 decl_stmt|;
 block|{
-comment|/* 	 * Prevent reception of SIGURG from resulting in a resumption 	 * back to the main program loop. 	 */
-name|transflag
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|logged_in
