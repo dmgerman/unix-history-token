@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.16 (Berkeley) %G%"
+literal|"@(#)table.c	1.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1544,6 +1544,62 @@ name|SAREG
 operator||
 name|AWD
 block|,
+name|TDOUBLE
+block|,
+name|STARNM
+block|,
+name|TDOUBLE
+block|,
+literal|0
+block|,
+name|RLEFT
+operator||
+name|RRIGHT
+operator||
+name|RESCC
+block|,
+literal|"	ldd	AR\n	std	AL\n"
+block|,
+name|ASSIGN
+block|,
+name|INAREG
+operator||
+name|FOREFF
+operator||
+name|FORCC
+block|,
+name|STARNM
+block|,
+name|TDOUBLE
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TDOUBLE
+block|,
+literal|0
+block|,
+name|RLEFT
+operator||
+name|RRIGHT
+operator||
+name|RESCC
+block|,
+literal|"	ldd	AR\n	std	AL\n"
+block|,
+name|ASSIGN
+block|,
+name|INAREG
+operator||
+name|FOREFF
+operator||
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
 name|TFLOAT
 block|,
 name|SZERO
@@ -2160,6 +2216,28 @@ name|SANY
 block|,
 name|TANY
 block|,
+name|STARNM
+block|,
+name|TDOUBLE
+block|,
+name|NAREG
+operator||
+name|NASR
+block|,
+name|RESC1
+block|,
+literal|"	ldd	AR\n	std	A1\n"
+block|,
+name|OPLTYPE
+block|,
+name|INAREG
+operator||
+name|INTAREG
+block|,
+name|SANY
+block|,
+name|TANY
+block|,
 name|SZERO
 block|,
 name|TANY
@@ -2393,6 +2471,24 @@ block|,
 name|RNULL
 block|,
 literal|"	pushl	UR\n	pushl	AR\n"
+block|,
+name|OPLTYPE
+block|,
+name|FORARG
+block|,
+name|SANY
+block|,
+name|TANY
+block|,
+name|STARNM
+block|,
+name|TDOUBLE
+block|,
+literal|0
+block|,
+name|RNULL
+block|,
+literal|"	ldd	AR\n	pushd\n"
 block|,
 name|OPLTYPE
 block|,
