@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sprint.c	5.7 (Berkeley) %G%"
+literal|"@(#)sprint.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,7 +143,7 @@ name|MAXREALNAME
 argument_list|,
 literal|"Name"
 argument_list|,
-literal|"Tty  Idle  Login        Office     Office Phone"
+literal|"Tty  Idle  Login Time   Office     Office Phone"
 argument_list|)
 expr_stmt|;
 for|for
