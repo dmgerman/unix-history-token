@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.10 1996/01/22 00:01:44 julian Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.11 1996/07/03 05:03:07 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -3707,6 +3707,8 @@ name|pf
 decl_stmt|,
 modifier|*
 name|pt
+init|=
+literal|0
 decl_stmt|;
 name|u_long
 name|l
@@ -4047,11 +4049,6 @@ name|prev
 operator|=
 name|pf
 expr_stmt|;
-name|free
-argument_list|(
-name|pt
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 elseif|else
@@ -4222,6 +4219,15 @@ name|MALLOC_NOT_MINE
 expr_stmt|;
 comment|/* XXX: We could realloc/shrink the pagedir here I guess. */
 block|}
+if|if
+condition|(
+name|pt
+condition|)
+name|free
+argument_list|(
+name|pt
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
