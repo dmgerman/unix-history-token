@@ -515,9 +515,9 @@ name|LstNode
 modifier|*
 name|var
 decl_stmt|;
-name|Var
+name|char
 modifier|*
-name|v
+name|env
 decl_stmt|;
 comment|/* 	 * If the variable name begins with a '.', it could very well be one of 	 * the local ones.  We check the name against all the local variables 	 * and substitute the short version in for 'name' if it matches one of 	 * them. 	 */
 if|if
@@ -662,7 +662,7 @@ default|default:
 break|break;
 block|}
 block|}
-comment|/*      * Note whether this is one of the specific variables we were told through      * the -E flag to use environment-variable-override for.      */
+comment|/* 	 * Note whether this is one of the specific variables we were told 	 * through the -E flag to use environment-variable-override for. 	 */
 if|if
 condition|(
 name|Lst_Find
@@ -694,7 +694,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-comment|/*      * First look for the variable in the given context. If it's not there,      * look for it in VAR_CMD, VAR_GLOBAL and the environment, in that order,      * depending on the FIND_* flags in 'flags'      */
+comment|/* 	 * First look for the variable in the given context. If it's not there, 	 * look for it in VAR_CMD, VAR_GLOBAL and the environment, 	 * in that order, depending on the FIND_* flags in 'flags' 	 */
 name|var
 operator|=
 name|Lst_Find
@@ -711,12 +711,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|var
-operator|==
+operator|!=
 name|NULL
+condition|)
+block|{
+comment|/* got it */
+return|return
+operator|(
+name|Lst_Datum
+argument_list|(
+name|var
+argument_list|)
 operator|)
-operator|&&
+return|;
+block|}
+comment|/* not there - try command line context */
+if|if
+condition|(
 operator|(
 name|flags
 operator|&
@@ -744,15 +756,24 @@ argument_list|,
 name|VarCmp
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
-operator|(
 name|var
-operator|==
+operator|!=
 name|NULL
+condition|)
+return|return
+operator|(
+name|Lst_Datum
+argument_list|(
+name|var
+argument_list|)
 operator|)
-operator|&&
+return|;
+block|}
+comment|/* not there - try global context, but only if not -e/-E */
+if|if
+condition|(
 operator|(
 name|flags
 operator|&
@@ -786,26 +807,37 @@ argument_list|,
 name|VarCmp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|var
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|Lst_Datum
+argument_list|(
+name|var
+argument_list|)
+operator|)
+return|;
 block|}
 if|if
 condition|(
-operator|(
-name|var
-operator|==
-name|NULL
-operator|)
-operator|&&
+operator|!
 operator|(
 name|flags
 operator|&
 name|FIND_ENV
 operator|)
 condition|)
-block|{
-name|char
-modifier|*
-name|env
-decl_stmt|;
+comment|/* we were not told to look into the environment */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+comment|/* look in the environment */
 if|if
 condition|(
 operator|(
@@ -820,8 +852,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|v
-operator|=
+comment|/* craft this variable from the environment value */
+return|return
+operator|(
 name|VarCreate
 argument_list|(
 name|name
@@ -830,14 +863,10 @@ name|env
 argument_list|,
 name|VAR_FROM_ENV
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|v
 operator|)
 return|;
 block|}
-elseif|else
+comment|/* deferred check for the environment (in case of -e/-E) */
 if|if
 condition|(
 operator|(
@@ -876,18 +905,9 @@ expr_stmt|;
 if|if
 condition|(
 name|var
-operator|==
+operator|!=
 name|NULL
 condition|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-else|else
-block|{
 return|return
 operator|(
 name|Lst_Datum
@@ -897,41 +917,11 @@ argument_list|)
 operator|)
 return|;
 block|}
-block|}
-else|else
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|var
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-else|else
-block|{
-return|return
-operator|(
-name|Lst_Datum
-argument_list|(
-name|var
-argument_list|)
-operator|)
-return|;
-block|}
 block|}
 end_function
 
