@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.22 (Berkeley) %G%"
+literal|"@(#)mount.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,24 +104,6 @@ begin_include
 include|#
 directive|include
 file|<strings.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/namei.h>
 end_include
 
 begin_include
