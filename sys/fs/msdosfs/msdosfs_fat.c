@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_fat.c,v 1.18 1998/02/20 13:11:49 bde Exp $ */
+comment|/*	$Id: msdosfs_fat.c,v 1.19 1998/03/28 07:22:03 ache Exp $ */
 end_comment
 
 begin_comment
@@ -3108,47 +3108,15 @@ operator|)
 return|;
 block|}
 else|else
-block|{
-comment|/* 		 * This is a new file, initialize start 		 */
-name|struct
-name|timeval
-name|tv
-decl_stmt|;
-name|microtime
-argument_list|(
-operator|&
-name|tv
-argument_list|)
-expr_stmt|;
-name|start
-operator|=
-operator|(
-name|tv
-operator|.
-name|tv_usec
-operator|>>
-literal|10
-operator|)
-operator||
-name|tv
-operator|.
-name|tv_usec
-expr_stmt|;
 name|len
 operator|=
 literal|0
 expr_stmt|;
-block|}
 comment|/* 	 * Start at a (pseudo) random place to maximize cluster runs 	 * under multiple writers. 	 */
 name|newst
 operator|=
-operator|(
-name|start
-operator|*
-literal|1103515245
-operator|+
-literal|12345
-operator|)
+name|random
+argument_list|()
 operator|%
 operator|(
 name|pmp
