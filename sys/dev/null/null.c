@@ -281,7 +281,7 @@ modifier|*
 name|uio
 parameter_list|,
 name|int
-name|flag
+name|flags
 parameter_list|)
 block|{
 name|uio
@@ -311,7 +311,7 @@ name|caddr_t
 name|data
 parameter_list|,
 name|int
-name|fflag
+name|flags
 parameter_list|,
 name|struct
 name|thread
@@ -338,7 +338,7 @@ name|cmd
 argument_list|,
 name|data
 argument_list|,
-name|fflag
+name|flags
 argument_list|,
 name|td
 argument_list|)
@@ -385,7 +385,7 @@ modifier|*
 name|uio
 parameter_list|,
 name|int
-name|flag
+name|flags
 parameter_list|)
 block|{
 name|u_int
