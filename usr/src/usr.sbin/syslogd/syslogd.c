@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	4.11 (Berkeley) %G%"
+literal|"@(#)syslogd.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,7 +68,7 @@ begin_define
 define|#
 directive|define
 name|DEFSPRI
-value|LOG_EMERG
+value|KERN_ERR
 end_define
 
 begin_include
