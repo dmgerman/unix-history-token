@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.30	82/01/19	*/
+comment|/*	if_en.c	4.31	82/01/30	*/
 end_comment
 
 begin_include
@@ -1394,6 +1394,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|enprintierrors
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Ethernet interface receiver interrupt.  * If input error just drop packet.  * Otherwise purge input buffered data path and examine   * packet to determine type.  If can't determine length  * from type, then have to drop packet.  Othewise decapsulate  * packet based on type and pass to type specific higher-level  * input routine.  */
 end_comment
@@ -1511,6 +1517,10 @@ operator|.
 name|if_ierrors
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|enprintierrors
+condition|)
 name|printf
 argument_list|(
 literal|"en%d: input error\n"
