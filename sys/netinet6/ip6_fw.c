@@ -1488,6 +1488,9 @@ operator|&=
 operator|~
 name|IPV6_FW_IP6OPT_ESP
 expr_stmt|;
+goto|goto
+name|opts_check
+goto|;
 break|break;
 case|case
 name|IPPROTO_NONE
