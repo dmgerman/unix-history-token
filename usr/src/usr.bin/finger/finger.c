@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	5.9 (Berkeley) %G%"
+literal|"@(#)finger.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5761,7 +5761,7 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"[%s]"
+literal|"[%s]\n"
 argument_list|,
 name|hp
 operator|->
@@ -5811,11 +5811,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|large
