@@ -69,11 +69,17 @@ begin_comment
 comment|/* max value for an unsigned char */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__CHAR_UNSIGNED__
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|CHAR_MAX
-value|__CHAR_MAX
+value|UCHAR_MAX
 end_define
 
 begin_comment
@@ -84,12 +90,44 @@ begin_define
 define|#
 directive|define
 name|CHAR_MIN
-value|__CHAR_MIN
+value|0
 end_define
 
 begin_comment
 comment|/* min value for a char */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CHAR_MAX
+value|SCHAR_MAX
+end_define
+
+begin_comment
+comment|/* max value for a char */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHAR_MIN
+value|SCHAR_MIN
+end_define
+
+begin_comment
+comment|/* min value for a char */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
