@@ -3712,19 +3712,6 @@ decl_stmt|;
 comment|/* 	 * allocate object for the kstack 	 */
 name|ksobj
 operator|=
-name|td
-operator|->
-name|td_kstack_obj
-expr_stmt|;
-if|if
-condition|(
-name|ksobj
-operator|==
-name|NULL
-condition|)
-block|{
-name|ksobj
-operator|=
 name|vm_object_allocate
 argument_list|(
 name|OBJT_DEFAULT
@@ -3738,24 +3725,10 @@ name|td_kstack_obj
 operator|=
 name|ksobj
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|KSTACK_GUARD
 comment|/* get a kernel virtual address for the kstack for this thread */
-name|ks
-operator|=
-name|td
-operator|->
-name|td_kstack
-expr_stmt|;
-if|if
-condition|(
-name|ks
-operator|==
-literal|0
-condition|)
-block|{
 name|ks
 operator|=
 name|kmem_alloc_nofault
@@ -3792,7 +3765,6 @@ name|td_kstack
 operator|=
 name|ks
 expr_stmt|;
-block|}
 name|ptek
 operator|=
 name|vtopte
@@ -3844,19 +3816,6 @@ directive|else
 comment|/* get a kernel virtual address for the kstack for this thread */
 name|ks
 operator|=
-name|td
-operator|->
-name|td_kstack
-expr_stmt|;
-if|if
-condition|(
-name|ks
-operator|==
-literal|0
-condition|)
-block|{
-name|ks
-operator|=
 name|kmem_alloc_nofault
 argument_list|(
 name|kernel_map
@@ -3883,7 +3842,6 @@ name|td_kstack
 operator|=
 name|ks
 expr_stmt|;
-block|}
 name|ptek
 operator|=
 name|vtopte
