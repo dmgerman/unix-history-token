@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	6.2	84/03/15	*/
+comment|/*	dz.c	6.3	84/04/16	*/
 end_comment
 
 begin_include
@@ -3831,6 +3831,8 @@ block|{
 name|dzpdma
 index|[
 name|i
+operator|<<
+literal|3
 index|]
 operator|.
 name|p_addr
@@ -3880,6 +3882,8 @@ block|{
 name|dzpdma
 index|[
 name|i
+operator|<<
+literal|3
 index|]
 operator|.
 name|p_addr
