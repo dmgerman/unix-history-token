@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -61,7 +61,7 @@ name|di_ogid
 decl_stmt|;
 comment|/*   6: old owner's group id */
 name|u_quad_t
-name|di_qsize
+name|di_size
 decl_stmt|;
 comment|/*   8: number of bytes in file */
 name|struct
@@ -123,67 +123,6 @@ comment|/* 120: reserved, currently unused */
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_NOQUAD
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|di_size
-value|di_qsize.val[_QUAD_LOWWORD]
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|di_size
-value|di_qsize
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-end_if
-
-begin_comment
-comment|/* ugh! -- must be fixed */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|di_size
-end_undef
-
-begin_define
-define|#
-directive|define
-name|di_size
-value|di_qsize.val[0]
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

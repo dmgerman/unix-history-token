@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -184,66 +184,12 @@ name|i_gid
 value|i_din.di_gid
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_NOQUAD
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|i_size
-value|i_din.di_qsize.val[_QUAD_LOWWORD]
+value|i_din.di_size
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|i_size
-value|i_din.di_qsize
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-end_if
-
-begin_comment
-comment|/* ugh! -- must be fixed */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|i_size
-end_undef
-
-begin_define
-define|#
-directive|define
-name|i_size
-value|i_din.di_qsize.val[0]
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -537,7 +483,7 @@ name|t1
 parameter_list|,
 name|t2
 parameter_list|)
-value|{ \ 	if ((ip)->i_flag&(IUPD|IACC|ICHG)) { \ 		(ip)->i_flag |= IMOD; \ 		if ((ip)->i_flag&IACC) \ 			(ip)->i_atime.ts_sec = (t1)->tv_sec; \ 		if ((ip)->i_flag&IUPD) { \ 			(ip)->i_mtime.ts_sec = (t2)->tv_sec; \ 			INCRQUAD((ip)->i_modrev); \ 		} \ 		if ((ip)->i_flag&ICHG) \ 			(ip)->i_ctime.ts_sec = time.tv_sec; \ 		(ip)->i_flag&= ~(IACC|IUPD|ICHG); \ 	} \ }
+value|{ \ 	if ((ip)->i_flag&(IUPD|IACC|ICHG)) { \ 		(ip)->i_flag |= IMOD; \ 		if ((ip)->i_flag&IACC) \ 			(ip)->i_atime.ts_sec = (t1)->tv_sec; \ 		if ((ip)->i_flag&IUPD) { \ 			(ip)->i_mtime.ts_sec = (t2)->tv_sec; \ 			(ip)->i_modrev++; \ 		} \ 		if ((ip)->i_flag&ICHG) \ 			(ip)->i_ctime.ts_sec = time.tv_sec; \ 		(ip)->i_flag&= ~(IACC|IUPD|ICHG); \ 	} \ }
 end_define
 
 begin_comment
