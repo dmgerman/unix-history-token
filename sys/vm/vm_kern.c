@@ -595,7 +595,6 @@ name|max
 parameter_list|,
 name|size
 parameter_list|)
-specifier|register
 name|vm_map_t
 name|parent
 decl_stmt|;
@@ -609,7 +608,6 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-specifier|register
 name|vm_size_t
 name|size
 decl_stmt|;
@@ -617,7 +615,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|ret
 decl_stmt|;
@@ -733,9 +730,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|ret
-operator|=
 name|vm_map_submap
 argument_list|(
 name|parent
@@ -748,7 +742,6 @@ name|max
 argument_list|,
 name|result
 argument_list|)
-operator|)
 operator|!=
 name|KERN_SUCCESS
 condition|)
