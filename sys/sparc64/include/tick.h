@@ -29,11 +29,18 @@ end_typedef
 
 begin_function_decl
 name|void
-name|tick_start
+name|tick_init
 parameter_list|(
 name|u_long
 name|clock
-parameter_list|,
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tick_start
+parameter_list|(
 name|tick_func_t
 modifier|*
 name|func
