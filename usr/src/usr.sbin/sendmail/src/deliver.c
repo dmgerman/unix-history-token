@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.70
+literal|3.71
 operator|%
 name|G
 operator|%
@@ -3240,7 +3240,7 @@ name|char
 name|SentDate
 index|[]
 decl_stmt|;
-comment|/* 	**  Output "From" line unless supressed 	** 	**>>>>>>>>>>	One of the ugliest hacks seen by human eyes is 	**>>>>>>>>>>	contained herein: UUCP wants those stupid 	**>>>>>>>>>>	"remote from<host>" lines.  Why oh why does a 	**>> NOTE>>	well-meaning programmer such as myself have to 	**>>>>>>>>>>	deal with this kind of antique garbage???? 	**>>>>>>>>>>  This even depends on the local UUCP host name 	**>>>>>>>>>>  being in the $U macro!!!! 	*/
+comment|/* 	**  Output "From" line unless supressed 	** 	**>>>>>>>>>>	One of the ugliest hacks seen by human eyes is 	**>>>>>>>>>>	contained herein: UUCP wants those stupid 	**>> NOTE>>	"remote from<host>" lines.  Why oh why does a 	**>>>>>>>>>>	well-meaning programmer such as myself have to 	**>>>>>>>>>>	deal with this kind of antique garbage???? 	*/
 if|if
 condition|(
 operator|!
@@ -3268,12 +3268,58 @@ operator|->
 name|m_flags
 argument_list|)
 condition|)
+block|{
+specifier|extern
+name|char
+modifier|*
+name|macvalue
+parameter_list|()
+function_decl|;
+name|char
+modifier|*
+name|sys
+init|=
+name|macvalue
+argument_list|(
+literal|'g'
+argument_list|)
+decl_stmt|;
+name|char
+modifier|*
+name|bang
+init|=
+name|index
+argument_list|(
+name|sys
+argument_list|,
+literal|'!'
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|bang
+operator|==
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"No ! in UUCP! (%s)"
+argument_list|,
+name|sys
+argument_list|)
+expr_stmt|;
+else|else
+operator|*
+name|bang
+operator|=
+literal|'\0'
+expr_stmt|;
 operator|(
 name|void
 operator|)
 name|expand
 argument_list|(
-literal|"From $f  $d remote from $U"
+literal|"From $f  $d remote from $g"
 argument_list|,
 name|buf
 argument_list|,
@@ -3287,6 +3333,12 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+operator|*
+name|bang
+operator|=
+literal|'!'
+expr_stmt|;
+block|}
 else|else
 endif|#
 directive|endif
