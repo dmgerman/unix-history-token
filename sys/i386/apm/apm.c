@@ -4627,6 +4627,19 @@ argument_list|)
 expr_stmt|;
 comment|/* adjust time to RTC */
 break|break;
+name|OPMEV_DEBUGMESSAGE
+argument_list|(
+name|PMEV_CAPABILITIESCHANGE
+argument_list|)
+expr_stmt|;
+name|apm_record_event
+argument_list|(
+name|sc
+argument_list|,
+name|apm_event
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|PMEV_NOEVENT
 case|:
