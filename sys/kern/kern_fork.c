@@ -1400,12 +1400,6 @@ name|newproc
 expr_stmt|;
 name|p2
 operator|->
-name|p_intr_nesting_level
-operator|=
-literal|0
-expr_stmt|;
-name|p2
-operator|->
 name|p_stat
 operator|=
 name|SIDL
@@ -1536,12 +1530,6 @@ name|PROC_LOCK
 argument_list|(
 name|p2
 argument_list|)
-expr_stmt|;
-name|p2
-operator|->
-name|p_aioinfo
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 * The p_stats and p_sigacts substructs are set in vm_fork. 	 */
 name|p2
