@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)glob.h	5.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)glob.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -45,27 +45,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Set after first command */
-end_comment
-
-begin_decl_stmt
-name|int
-name|hflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Sequence number for network -h */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|rflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -r address for network */
 end_comment
 
 begin_decl_stmt
@@ -519,16 +498,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Debug flag set */
-end_comment
-
-begin_decl_stmt
-name|int
-name|rmail
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Being called as rmail */
 end_comment
 
 begin_decl_stmt
