@@ -96,7 +96,7 @@ file|"lex.h"
 end_include
 
 begin_comment
-comment|/*  * PASTE isn't defined in 4.x, but we need it to bridge to 5.0-current  * so define it here as a stop gap transition measure.  */
+comment|/*  * PASTE and CONS_CLRHIST are't defined in 4.x, but we need them to  * bridge to 5.0-current so define them here as a stop gap transition  * measure.  */
 end_comment
 
 begin_ifndef
@@ -115,6 +115,24 @@ end_define
 begin_comment
 comment|/* paste from cut-paste buffer */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CONS_CLRHIST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CONS_CLRHIST
+value|_IO('c', 10)
+end_define
 
 begin_endif
 endif|#
