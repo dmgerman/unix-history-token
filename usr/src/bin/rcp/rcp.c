@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	8.1 (Berkeley) %G%"
+literal|"@(#)rcp.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1383,7 +1383,7 @@ name|bp
 argument_list|,
 name|len
 argument_list|,
-literal|"%s %s -n %s %s '%s%s%s:%s'"
+literal|"exec %s %s -n %s %s '%s%s%s:%s'"
 argument_list|,
 name|_PATH_RSH
 argument_list|,
@@ -1760,7 +1760,7 @@ name|bp
 argument_list|,
 name|len
 argument_list|,
-literal|"%s%s%s %s %s"
+literal|"exec %s%s%s %s %s"
 argument_list|,
 name|_PATH_CP
 argument_list|,
@@ -2981,11 +2981,6 @@ specifier|static
 name|BUF
 name|buffer
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|struct
 name|stat
 name|stb
@@ -3044,6 +3039,9 @@ name|wrerrno
 decl_stmt|;
 name|char
 name|ch
+decl_stmt|,
+modifier|*
+name|cp
 decl_stmt|,
 modifier|*
 name|np
@@ -4587,13 +4585,11 @@ name|int
 name|response
 parameter_list|()
 block|{
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|char
 name|ch
+decl_stmt|,
+modifier|*
+name|cp
 decl_stmt|,
 name|resp
 decl_stmt|,
