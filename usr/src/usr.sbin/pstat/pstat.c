@@ -77,12 +77,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/text.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
 end_include
 
@@ -215,6 +209,12 @@ begin_include
 include|#
 directive|include
 file|<machine/pte.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/text.h>
 end_include
 
 begin_endif
@@ -2002,7 +2002,7 @@ name|ip
 operator|->
 name|i_rdev
 argument_list|,
-name|type
+name|S_IFBLK
 argument_list|)
 operator|)
 operator|==
@@ -2236,7 +2236,7 @@ name|VT
 operator|.
 name|va_rdev
 argument_list|,
-name|type
+name|S_IFBLK
 argument_list|)
 operator|)
 operator|==
@@ -4635,9 +4635,7 @@ argument|]; 	register i
 argument_list|,
 argument|j; 	char *name; 	extern char *devname(); 	pid_t pgid;  	tp = atp; 	if (nflg || tp->t_dev ==
 literal|0
-argument|||
-comment|/* XXX */
-argument|(name = devname(tp->t_dev, S_IFCHR)) == NULL) 		printf(
+argument||| 	   (name = devname(tp->t_dev, S_IFCHR)) == NULL) 		printf(
 literal|"%7d "
 argument|, line);  	else 		printf(
 literal|"%7s "
