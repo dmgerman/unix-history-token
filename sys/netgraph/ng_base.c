@@ -2066,7 +2066,6 @@ block|{
 if|if
 condition|(
 operator|(
-operator|(
 name|node
 operator|->
 name|name
@@ -2086,8 +2085,8 @@ argument_list|)
 operator|==
 literal|0
 operator|)
-operator|)
 operator|&&
+operator|(
 operator|(
 name|node
 operator|->
@@ -2097,6 +2096,7 @@ name|NG_INVALID
 operator|)
 operator|==
 literal|0
+operator|)
 condition|)
 break|break;
 block|}
