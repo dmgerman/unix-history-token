@@ -6626,6 +6626,15 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|acpi_intr
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|sc
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|acpi_powerres_init
