@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.19 (Berkeley) %G%"
+literal|"@(#)input.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,8 @@ name|rip_input
 argument_list|(
 argument|from
 argument_list|,
+argument|rip
+argument_list|,
 argument|size
 argument_list|)
 end_macro
@@ -62,6 +64,15 @@ name|struct
 name|sockaddr
 modifier|*
 name|from
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|rip
+modifier|*
+name|rip
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +138,12 @@ name|ifp
 argument_list|,
 name|from
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|rip
+argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
@@ -172,7 +189,7 @@ name|from
 operator|->
 name|sa_family
 argument_list|,
-name|msg
+name|rip
 operator|->
 name|rip_cmd
 argument_list|)
@@ -181,7 +198,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|msg
+name|rip
 operator|->
 name|rip_vers
 operator|==
@@ -209,7 +226,7 @@ operator|(
 name|from
 operator|)
 argument_list|,
-name|msg
+name|rip
 operator|->
 name|rip_cmd
 argument_list|)
@@ -218,7 +235,7 @@ return|return;
 block|}
 switch|switch
 condition|(
-name|msg
+name|rip
 operator|->
 name|rip_cmd
 condition|)
@@ -228,7 +245,7 @@ name|RIPCMD_REQUEST
 case|:
 name|n
 operator|=
-name|msg
+name|rip
 operator|->
 name|rip_nets
 expr_stmt|;
@@ -247,7 +264,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|msg
+name|rip
 operator|)
 expr_stmt|;
 if|if
@@ -494,11 +511,24 @@ name|rip_metric
 argument_list|)
 expr_stmt|;
 block|}
-name|msg
+name|rip
 operator|->
 name|rip_cmd
 operator|=
 name|RIPCMD_RESPONSE
+expr_stmt|;
+name|bcopy
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|rip
+argument_list|,
+name|packet
+argument_list|,
+name|size
+argument_list|)
 expr_stmt|;
 call|(
 modifier|*
@@ -599,7 +629,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|packet
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|rip
+operator|)
 index|[
 name|size
 index|]
@@ -608,7 +644,7 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-name|msg
+name|rip
 operator|->
 name|rip_cmd
 operator|==
@@ -616,7 +652,7 @@ name|RIPCMD_TRACEON
 condition|)
 name|traceon
 argument_list|(
-name|msg
+name|rip
 operator|->
 name|rip_tracefile
 argument_list|)
@@ -913,7 +949,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|msg
+name|rip
 operator|->
 name|rip_nets
 expr_stmt|;
