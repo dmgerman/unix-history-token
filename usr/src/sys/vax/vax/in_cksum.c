@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_cksum.c	1.15	82/10/30	*/
+comment|/*	in_cksum.c	1.16	82/10/31	*/
 end_comment
 
 begin_include
@@ -28,14 +28,8 @@ file|"../netinet/in_systm.h"
 end_include
 
 begin_comment
-comment|/*  * Checksum routine for Internet Protocol family headers.  * This routine is very heavily used in the network  * code and should be rewritten for each CPU to be as fast as possible.  */
+comment|/*  * Checksum routine for Internet Protocol family headers.  * This routine is very heavily used in the network  * code and should be modified for each CPU to be as fast as possible.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|vax
-end_if
 
 begin_expr_stmt
 name|in_cksum
@@ -66,14 +60,14 @@ name|u_short
 modifier|*
 name|w
 decl_stmt|;
-comment|/* known to be r9 */
+comment|/* on vax, known to be r9 */
 specifier|register
 name|int
 name|sum
 init|=
 literal|0
 decl_stmt|;
-comment|/* known to be r8 */
+comment|/* on vax, known to be r8 */
 specifier|register
 name|int
 name|mlen
@@ -106,6 +100,23 @@ literal|1
 condition|)
 block|{
 comment|/* 			 * There is a byte left from the last segment; 			 * add it into the checksum.  Don't have to worry 			 * about a carry-out here because we make sure 			 * that high part of (32 bit) sum is small below. 			 */
+ifdef|#
+directive|ifdef
+name|sun
+name|sum
+operator|+=
+operator|*
+operator|(
+name|u_char
+operator|*
+operator|)
+name|w
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|vax
 name|sum
 operator|+=
 operator|*
@@ -117,6 +128,8 @@ name|w
 operator|<<
 literal|8
 expr_stmt|;
+endif|#
+directive|endif
 name|w
 operator|=
 operator|(
@@ -172,6 +185,31 @@ name|len
 operator|-=
 name|mlen
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sun
+name|sum
+operator|+=
+name|ocsum
+argument_list|(
+name|w
+argument_list|,
+name|mlen
+operator|>>
+literal|1
+argument_list|)
+expr_stmt|;
+name|w
+operator|+=
+name|mlen
+operator|>>
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|vax
 comment|/* 		 * Force to long boundary so we do longword aligned 		 * memory operations.  It is too hard to do byte 		 * adjustment, do only word adjustment. 		 */
 if|if
 condition|(
@@ -212,11 +250,11 @@ operator|>=
 literal|0
 condition|)
 block|{
-asm|asm("clrl r0");
-comment|/* clears carry */
 undef|#
 directive|undef
 name|ADD
+asm|asm("clrl r0");
+comment|/* clears carry */
 define|#
 directive|define
 name|ADD
@@ -290,6 +328,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|sum
 operator|+=
 operator|*
@@ -299,6 +338,39 @@ operator|*
 operator|)
 name|w
 expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|vax
+ifdef|#
+directive|ifdef
+name|sun
+if|if
+condition|(
+name|mlen
+operator|&
+literal|1
+condition|)
+block|{
+name|sum
+operator|+=
+operator|*
+operator|(
+name|u_char
+operator|*
+operator|)
+name|w
+operator|<<
+literal|8
+expr_stmt|;
+name|mlen
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|len
@@ -347,10 +419,57 @@ block|}
 name|done
 label|:
 comment|/* 	 * Add together high and low parts of sum 	 * and carry to get cksum. 	 * Have to be careful to not drop the last 	 * carry here. 	 */
+ifdef|#
+directive|ifdef
+name|sun
+name|sum
+operator|=
+operator|(
+name|sum
+operator|&
+literal|0xFFFF
+operator|)
+operator|+
+operator|(
+name|sum
+operator|>>
+literal|16
+operator|)
+expr_stmt|;
+name|sum
+operator|=
+operator|(
+name|sum
+operator|&
+literal|0xFFFF
+operator|)
+operator|+
+operator|(
+name|sum
+operator|>>
+literal|16
+operator|)
+expr_stmt|;
+name|sum
+operator|=
+operator|(
+operator|~
+name|sum
+operator|)
+operator|&
+literal|0xFFFF
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|vax
 block|{
 asm|asm("ashl $-16,r8,r0; addw2 r0,r8; adwc $0,r8");
 asm|asm("mcoml r8,r8; movzwl r8,r8");
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|sum
@@ -358,11 +477,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
