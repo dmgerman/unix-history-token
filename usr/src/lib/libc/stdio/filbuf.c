@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)filbuf.c	4.2 (Berkeley) %G% */
+comment|/* @(#)filbuf.c	4.3 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -152,14 +152,6 @@ operator||=
 name|_IOMYBUF
 expr_stmt|;
 block|}
-name|iop
-operator|->
-name|_ptr
-operator|=
-name|iop
-operator|->
-name|_base
-expr_stmt|;
 if|if
 condition|(
 name|iop
@@ -192,7 +184,7 @@ argument_list|)
 argument_list|,
 name|iop
 operator|->
-name|_ptr
+name|_base
 argument_list|,
 name|iop
 operator|->
@@ -204,6 +196,14 @@ literal|1
 else|:
 name|BUFSIZ
 argument_list|)
+expr_stmt|;
+name|iop
+operator|->
+name|_ptr
+operator|=
+name|iop
+operator|->
+name|_base
 expr_stmt|;
 if|if
 condition|(
