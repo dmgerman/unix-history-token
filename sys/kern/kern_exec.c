@@ -1492,9 +1492,6 @@ name|P_PPWAIT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|p
 operator|->
 name|p_pptr

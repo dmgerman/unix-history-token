@@ -148,7 +148,8 @@ parameter_list|,
 name|u_long
 name|com
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 name|data
 parameter_list|,
 name|struct
@@ -3120,7 +3121,8 @@ decl_stmt|;
 name|u_long
 name|com
 decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
 name|data
 decl_stmt|;
 name|struct

@@ -1108,7 +1108,8 @@ parameter_list|,
 name|u_long
 name|cmd
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 name|data
 parameter_list|,
 name|struct

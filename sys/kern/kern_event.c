@@ -260,7 +260,8 @@ parameter_list|,
 name|u_long
 name|com
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 name|data
 parameter_list|,
 name|struct
@@ -4116,7 +4117,8 @@ parameter_list|,
 name|u_long
 name|com
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 name|data
 parameter_list|,
 name|struct

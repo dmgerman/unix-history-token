@@ -342,8 +342,8 @@ decl_stmt|;
 name|u_long
 name|cmd
 decl_stmt|;
-specifier|register
-name|caddr_t
+name|void
+modifier|*
 name|data
 decl_stmt|;
 name|struct

@@ -70,9 +70,6 @@ parameter_list|)
 block|{
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|bp
 argument_list|)
 expr_stmt|;
@@ -442,9 +439,6 @@ literal|0
 condition|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|bp
 argument_list|,
 name|PRIBIO

@@ -2809,8 +2809,8 @@ name|ktr_request
 modifier|*
 name|req
 decl_stmt|;
-specifier|register
-name|caddr_t
+name|void
+modifier|*
 name|cp
 decl_stmt|;
 if|if
@@ -2844,12 +2844,10 @@ operator|(
 literal|0
 operator|)
 return|;
-name|MALLOC
-argument_list|(
 name|cp
-argument_list|,
-name|caddr_t
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|uap
 operator|->
 name|len
