@@ -883,6 +883,10 @@ literal|0
 condition|)
 block|{
 comment|/* Ctrl-D */
+name|char
+modifier|*
+name|input
+decl_stmt|;
 name|D
 argument_list|(
 operator|(
@@ -890,14 +894,17 @@ literal|"user did not want to type anything"
 operator|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|input
+operator|=
+name|x_strdup
 argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
+literal|""
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|input
+return|;
+comment|/* return malloc()ed string */
 block|}
 block|}
 block|}
