@@ -85,8 +85,6 @@ name|winsize
 operator|*
 operator|,
 name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -99,7 +97,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|info
+name|termios
 operator|*
 operator|,
 name|char
@@ -172,8 +170,6 @@ operator|,
 expr|struct
 name|winsize
 operator|*
-operator|,
-name|int
 operator|,
 name|int
 operator|,
