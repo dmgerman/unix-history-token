@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.12 1995/03/17 04:27:20 davidg Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.13 1995/03/21 23:01:05 se Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -171,6 +171,9 @@ block|{
 name|u_long
 name|data
 decl_stmt|;
+name|unsigned
+name|rev
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -179,6 +182,31 @@ block|{
 case|case
 literal|0x04848086
 case|:
+name|rev
+operator|=
+operator|(
+name|unsigned
+operator|)
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+name|PCI_CLASS_REG
+argument_list|)
+operator|&
+literal|0xff
+expr_stmt|;
+if|if
+condition|(
+name|rev
+operator|==
+literal|3
+condition|)
+return|return
+operator|(
+literal|"Intel 82378ZB PCI-ISA bridge"
+operator|)
+return|;
 return|return
 operator|(
 literal|"Intel 82378IB PCI-ISA bridge"
@@ -203,6 +231,35 @@ return|;
 case|case
 literal|0x04a38086
 case|:
+name|rev
+operator|=
+operator|(
+name|unsigned
+operator|)
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+name|PCI_CLASS_REG
+argument_list|)
+operator|&
+literal|0xff
+expr_stmt|;
+if|if
+condition|(
+name|rev
+operator|==
+literal|16
+operator|||
+name|rev
+operator|==
+literal|17
+condition|)
+return|return
+operator|(
+literal|"Intel 82434NX PCI cache memory controller"
+operator|)
+return|;
 return|return
 operator|(
 literal|"Intel 82434LX PCI cache memory controller"
@@ -1033,7 +1090,7 @@ block|,
 block|{
 literal|0x53
 block|,
-literal|0x04
+literal|0x08
 block|,
 literal|0x00
 block|,
@@ -1043,15 +1100,15 @@ literal|", read around write"
 block|}
 block|,
 block|{
-literal|0x71
+literal|0x70
 block|,
-literal|0xc0
+literal|0x04
 block|,
 literal|0x00
 block|,
-name|M_NE
+name|M_EQ
 block|,
-literal|"\n\tWarning: NO cache parity!"
+literal|"\n\tWarning: Cache parity disabled!"
 block|}
 block|,
 block|{
@@ -1063,15 +1120,15 @@ literal|0x00
 block|,
 name|M_NE
 block|,
-literal|"\n\tWarning: NO DRAM parity!"
+literal|"\n\tWarning: DRAM parity mask!"
 block|}
 block|,
 block|{
-literal|0x55
+literal|0x57
 block|,
 literal|0x01
 block|,
-literal|0x01
+literal|0x00
 block|,
 name|M_EQ
 block|,
@@ -1177,9 +1234,9 @@ block|,
 block|{
 literal|0x52
 block|,
-literal|0x20
+literal|0x21
 block|,
-literal|0x00
+literal|0x01
 block|,
 name|M_EQ
 block|,
@@ -1189,13 +1246,61 @@ block|,
 block|{
 literal|0x52
 block|,
-literal|0x20
+literal|0x21
 block|,
-literal|0x00
+literal|0x21
 block|,
-name|M_NE
+name|M_EQ
 block|,
 literal|"3-1-1-1"
+block|}
+block|,
+block|{
+literal|0x52
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+name|M_EQ
+block|,
+literal|"\n\tCache flags: "
+block|}
+block|,
+block|{
+literal|0x52
+block|,
+literal|0x11
+block|,
+literal|0x11
+block|,
+name|M_EQ
+block|,
+literal|" cache-all"
+block|}
+block|,
+block|{
+literal|0x52
+block|,
+literal|0x09
+block|,
+literal|0x09
+block|,
+name|M_EQ
+block|,
+literal|" byte-control"
+block|}
+block|,
+block|{
+literal|0x52
+block|,
+literal|0x05
+block|,
+literal|0x05
+block|,
+name|M_EQ
+block|,
+literal|" powersaver"
 block|}
 block|,
 block|{
@@ -1280,6 +1385,30 @@ block|,
 name|M_EQ
 block|,
 literal|"X-3-3-3 (50ns)"
+block|}
+block|,
+block|{
+literal|0x58
+block|,
+literal|0x02
+block|,
+literal|0x02
+block|,
+name|M_EQ
+block|,
+literal|", RAS-wait"
+block|}
+block|,
+block|{
+literal|0x58
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+name|M_EQ
+block|,
+literal|", CAS-wait"
 block|}
 block|,
 block|{
