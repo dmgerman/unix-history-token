@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)touch.c	8.1 (Berkeley) %G%"
+literal|"@(#)touch.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -854,7 +854,7 @@ name|t
 operator|->
 name|tm_year
 operator|*=
-literal|1000
+literal|100
 expr_stmt|;
 name|yearset
 operator|=
