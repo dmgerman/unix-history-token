@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1572,9 +1572,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Unknown System type '%s'\n"
+literal|"Unknown System type '%s' 0x%x\n"
 argument_list|,
 name|cp
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 name|boot
@@ -6663,7 +6665,7 @@ name|tc_verbose
 condition|)
 name|printf
 argument_list|(
-literal|"%s %s '%s' at x%x\n %s %s %s '%s'\n %s %d %s %d %s\n"
+literal|"%s %s '%s' at 0x%x\n %s %s %s '%s'\n %s %d %s %d %s\n"
 argument_list|,
 literal|"Found a"
 argument_list|,
