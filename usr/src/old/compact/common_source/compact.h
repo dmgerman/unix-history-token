@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	compact.h	4.1	83/02/11	*/
+comment|/*	compact.h	4.2	83/02/23	*/
 end_comment
 
 begin_define
@@ -10,11 +10,19 @@ name|VAX
 value|11/780
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VAX
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
 
 begin_typedef
 typedef|typedef
@@ -34,12 +42,6 @@ name|long
 name|longint
 typedef|;
 end_typedef
-
-begin_include
-include|#
-directive|include
-file|<retrofit.h>
-end_include
 
 begin_endif
 endif|#
@@ -138,12 +140,31 @@ begin_struct
 struct|struct
 name|charac
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|pdp11
+argument_list|)
 name|char
 name|lob
-decl_stmt|;
-name|char
+decl_stmt|,
 name|hib
 decl_stmt|;
+else|#
+directive|else
+name|char
+name|hib
+decl_stmt|,
+name|lob
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -156,7 +177,7 @@ name|struct
 name|charac
 name|chars
 decl_stmt|;
-name|int
+name|short
 name|integ
 decl_stmt|;
 block|}
