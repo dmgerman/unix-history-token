@@ -5332,24 +5332,28 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-argument|_kern_ipc
+name|_kern_ipc
 argument_list|,
-argument|OID_AUTO
+name|OID_AUTO
 argument_list|,
-argument|msgseg
+name|msgseg
 argument_list|,
-argument|CTLFLAG_RD
+name|CTLFLAG_RD
 argument_list|,
-argument|&msginfo.msgseg
+operator|&
+name|msginfo
+operator|.
+name|msgseg
 argument_list|,
 literal|0
 argument_list|,
 literal|""
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_PROC
