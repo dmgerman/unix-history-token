@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.2 (Berkeley) %G%"
+literal|"@(#)print.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2096,21 +2096,18 @@ operator|)
 operator|/
 literal|10000
 expr_stmt|;
-if|if
-condition|(
-name|psecs
-operator|>=
-literal|100
-condition|)
-block|{
-name|psecs
-operator|-=
-literal|100
-expr_stmt|;
 name|secs
-operator|++
+operator|+=
+name|psecs
+operator|/
+literal|100
 expr_stmt|;
-block|}
+name|psecs
+operator|=
+name|psecs
+operator|%
+literal|100
+expr_stmt|;
 block|}
 operator|(
 name|void
