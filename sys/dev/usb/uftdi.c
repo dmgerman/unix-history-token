@@ -581,6 +581,12 @@ name|uaa
 operator|->
 name|product
 operator|==
+name|USB_PRODUCT_FTDI_SEMC_DSS20
+operator|||
+name|uaa
+operator|->
+name|product
+operator|==
 name|USB_PRODUCT_FTDI_CFA_631
 operator|||
 name|uaa
@@ -870,6 +876,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+name|USB_PRODUCT_FTDI_SEMC_DSS20
+case|:
 case|case
 name|USB_PRODUCT_FTDI_SERIAL_8U232AM
 case|:
