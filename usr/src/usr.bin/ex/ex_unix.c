@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_unix.c	7.5 (Berkeley) %G%"
+literal|"@(#)ex_unix.c	7.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1478,21 +1478,34 @@ end_macro
 
 begin_block
 block|{
+name|int
+name|stat
+init|=
+literal|0
+decl_stmt|;
 do|do
+block|{
 name|rpid
 operator|=
 name|wait
 argument_list|(
 operator|&
-name|status
+name|stat
 argument_list|)
 expr_stmt|;
-do|while
+if|if
 condition|(
 name|rpid
-operator|!=
+operator|==
 name|pid
-operator|&&
+condition|)
+name|status
+operator|=
+name|stat
+expr_stmt|;
+block|}
+do|while
+condition|(
 name|rpid
 operator|!=
 operator|-
