@@ -348,14 +348,14 @@ value|512
 end_define
 
 begin_comment
-comment|/*  * TCP_MINMSS is defined to be 256 which is fine for the smallest  * link MTU (296 bytes, SLIP interface) in the Internet.  * However it is very unlikely to come across such low MTU interfaces  * these days (anno dato 2003).  * Probably it can be set to 512 without ill effects. But we play safe.  * See tcp_subr.c tcp_minmss SYSCTL declaration for more comments.  * Setting this to "0" disables the minmss check.  */
+comment|/*  * TCP_MINMSS is defined to be 216 which is fine for the smallest  * link MTU (256 bytes, AX.25 packet radio) in the Internet.  * However it is very unlikely to come across such low MTU interfaces  * these days (anno dato 2003).  * See tcp_subr.c tcp_minmss SYSCTL declaration for more comments.  * Setting this to "0" disables the minmss check.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TCP_MINMSS
-value|256
+value|216
 end_define
 
 begin_comment
