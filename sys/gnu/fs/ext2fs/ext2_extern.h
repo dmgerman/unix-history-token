@@ -732,39 +732,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_function_decl
-name|int
-name|bwrite
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* FFS needs a bwrite routine.  XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|gettime
-value|get_time
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * This macro allows the ufs code to distinguish between an EXT2 and a  * non-ext2(FFS/LFS) vnode.  */
 end_comment

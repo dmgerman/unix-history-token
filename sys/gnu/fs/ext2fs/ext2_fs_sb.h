@@ -34,20 +34,6 @@ name|EXT2_MAX_GROUP_LOADED
 value|8
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LITES
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -61,11 +47,6 @@ directive|define
 name|MAXMNTLEN
 value|512
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * second extended-fs super-block data in memory  */
@@ -184,26 +165,6 @@ decl_stmt|;
 name|int
 name|s_rename_lock
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|LITES
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|struct
-name|wait_queue
-modifier|*
-name|s_rename_wait
-decl_stmt|;
-endif|#
-directive|endif
 name|unsigned
 name|long
 name|s_mount_opt
@@ -220,17 +181,6 @@ name|unsigned
 name|short
 name|s_mount_state
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LITES
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 comment|/*  	   stuff that FFS keeps in its super block or that linux 	   has in its non-ext2 specific super block and which is 	   generally considered useful  	*/
 name|unsigned
 name|long
@@ -269,8 +219,6 @@ name|MAXMNTLEN
 index|]
 decl_stmt|;
 comment|/* name mounted on */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct

@@ -238,12 +238,6 @@ operator|->
 name|v_numoutput
 operator|++
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 name|vfs_busy_pages
 argument_list|(
 name|bp
@@ -251,8 +245,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|VOP_STRATEGY
 argument_list|(
 name|bp

@@ -229,24 +229,6 @@ operator|->
 name|di_ctime
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|print_time
-argument_list|(
-literal|" -- %s\n"
-argument_list|,
-name|di
-operator|->
-name|di_ctime
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"atime: 0x%x"
@@ -256,24 +238,6 @@ operator|->
 name|di_atime
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|print_time
-argument_list|(
-literal|" -- %s\n"
-argument_list|,
-name|di
-operator|->
-name|di_atime
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"mtime: 0x%x"
@@ -283,24 +247,6 @@ operator|->
 name|di_mtime
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|print_time
-argument_list|(
-literal|" -- %s\n"
-argument_list|,
-name|di
-operator|->
-name|di_mtime
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"BLOCKS: "
