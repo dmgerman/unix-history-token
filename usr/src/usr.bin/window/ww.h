@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.9 83/08/19	  */
+comment|/*  *	@(#)ww.h	3.10 83/08/19	  */
 end_comment
 
 begin_include
@@ -162,6 +162,12 @@ modifier|*
 name|ww_cov
 decl_stmt|;
 comment|/* the covered-by array */
+name|char
+modifier|*
+modifier|*
+name|ww_fmap
+decl_stmt|;
+comment|/* map for frame and box windows */
 name|short
 modifier|*
 name|ww_nvis
@@ -413,44 +419,7 @@ comment|/* child died */
 end_comment
 
 begin_comment
-comment|/* flags to wwopen() */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WWO_PTY
-value|0x01
-end_define
-
-begin_comment
-comment|/* want pty */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WWO_REVERSE
-value|0x02
-end_define
-
-begin_comment
-comment|/* make it all reverse video */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WWO_GLASS
-value|0x04
-end_define
-
-begin_comment
-comment|/* make it all glass */
-end_comment
-
-begin_comment
-comment|/* flags for wwfmap */
+comment|/* flags for ww_fmap */
 end_comment
 
 begin_define
@@ -501,6 +470,54 @@ directive|define
 name|WWF_TOP
 value|0x80
 end_define
+
+begin_comment
+comment|/* flags to wwopen() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWO_PTY
+value|0x01
+end_define
+
+begin_comment
+comment|/* want pty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWO_REVERSE
+value|0x02
+end_define
+
+begin_comment
+comment|/* make it all reverse video */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWO_GLASS
+value|0x04
+end_define
+
+begin_comment
+comment|/* make it all glass */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WWO_FRAME
+value|0x08
+end_define
+
+begin_comment
+comment|/* this is a frame window */
+end_comment
 
 begin_comment
 comment|/* special ww_index value */
@@ -679,18 +696,6 @@ comment|/* the screen map */
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|wwfmap
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the frame map */
-end_comment
-
-begin_decl_stmt
 name|union
 name|ww_char
 modifier|*
@@ -834,6 +839,16 @@ directive|define
 name|wwbell
 parameter_list|()
 value|putchar(CTRL(g))
+end_define
+
+begin_define
+define|#
+directive|define
+name|wwunbox
+parameter_list|(
+name|w
+parameter_list|)
+value|wwunframe(w)
 end_define
 
 begin_comment

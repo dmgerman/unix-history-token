@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.4 83/08/19"
+literal|"@(#)main.c	3.5 83/08/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -363,6 +363,8 @@ operator|=
 name|wwopen
 argument_list|(
 name|WWO_GLASS
+operator||
+name|WWO_FRAME
 argument_list|,
 name|wwnrow
 argument_list|,

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwbox.c	3.1 83/08/18"
+literal|"@(#)wwbox.c	3.2 83/08/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,8 +106,6 @@ argument_list|,
 name|WWF_D
 operator||
 name|WWF_R
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -136,8 +134,6 @@ argument_list|,
 name|WWF_L
 operator||
 name|WWF_R
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|wwframec
@@ -151,8 +147,6 @@ argument_list|,
 name|WWF_L
 operator||
 name|WWF_D
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -181,8 +175,6 @@ argument_list|,
 name|WWF_U
 operator||
 name|WWF_D
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|wwframec
@@ -196,8 +188,6 @@ argument_list|,
 name|WWF_U
 operator||
 name|WWF_L
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -226,8 +216,6 @@ argument_list|,
 name|WWF_R
 operator||
 name|WWF_L
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|wwframec
@@ -241,8 +229,6 @@ argument_list|,
 name|WWF_R
 operator||
 name|WWF_U
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -271,35 +257,6 @@ argument_list|,
 name|WWF_D
 operator||
 name|WWF_U
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|wwunbox
-argument_list|(
-argument|w
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|ww
-modifier|*
-name|w
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|wwunframe1
-argument_list|(
-name|w
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
