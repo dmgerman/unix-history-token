@@ -1087,13 +1087,6 @@ begin_comment
 comment|/* just copied from old PCI code for now ... */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|pci_mechanism
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|pci_device

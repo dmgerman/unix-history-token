@@ -45,49 +45,12 @@ directive|include
 file|<i386/isa/pcibus.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCI_COMPAT
-end_ifdef
-
-begin_comment
-comment|/* XXX this is a terrible hack, which keeps the Tekram AMD SCSI driver happy */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|cfgmech
-value|pci_mechanism
-end_define
-
-begin_decl_stmt
-name|int
-name|cfgmech
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
 name|int
 name|cfgmech
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PCI_COMPAT */
-end_comment
 
 begin_decl_stmt
 specifier|static
