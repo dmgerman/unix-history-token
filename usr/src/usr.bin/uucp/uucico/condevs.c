@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)condevs.c	5.3 (Berkeley) %G%"
+literal|"@(#)condevs.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5949,6 +5949,8 @@ decl_stmt|,
 name|er
 init|=
 literal|0
+decl_stmt|,
+name|delay
 decl_stmt|;
 extern|extern errno;
 name|char
@@ -6089,6 +6091,10 @@ literal|"calling %s -> "
 argument_list|,
 name|telno
 argument_list|)
+expr_stmt|;
+name|delay
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
