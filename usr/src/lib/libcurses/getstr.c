@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine gets a string starting at (_cury,_curx)  *  * %G% (Berkeley) @(#)getstr.c	1.2  */
+comment|/*  *	This routine gets a string starting at (_cury,_curx)  *  * %G% (Berkeley) @(#)getstr.c	1.3  */
 end_comment
 
 begin_macro
@@ -67,14 +67,14 @@ operator|==
 name|ERR
 condition|)
 block|{
-return|return
-name|ERR
-return|;
 operator|*
 name|str
 operator|=
 literal|'\0'
 expr_stmt|;
+return|return
+name|ERR
+return|;
 block|}
 operator|*
 name|str
