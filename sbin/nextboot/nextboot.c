@@ -173,19 +173,20 @@ name|NAMEBLOCK
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|char
-modifier|*
-name|myname
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
 name|BOOT_MAGIC
 value|0xAA55
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -195,23 +196,29 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|" usage: %s [-b] device bootstring [bootstring] ...\n"
 argument_list|,
-name|myname
+name|__progname
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
-literal|"  or:   %s {-e,-d} device \n"
+name|stderr
 argument_list|,
-name|myname
+literal|"    or: %s {-e,-d} device \n"
+argument_list|,
+name|__progname
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
-literal|" flags are mutually exclusive\n"
+name|stderr
+argument_list|,
+literal|"The -e and -d flags are mutually exclusive\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -265,13 +272,6 @@ decl_stmt|;
 name|bflag
 operator|=
 literal|0
-expr_stmt|;
-name|myname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
 expr_stmt|;
 while|while
 condition|(
