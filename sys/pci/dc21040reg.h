@@ -4,7 +4,7 @@ comment|/*	$NetBSD: dc21040reg.h,v 1.13 1997/10/17 09:26:58 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: dc21040reg.h,v 1.1.1.2.2.2 1997/10/18 18:23:55 peter Exp $ */
 end_comment
 
 begin_comment
@@ -1568,7 +1568,7 @@ begin_define
 define|#
 directive|define
 name|TULIP_21040_SIACONN_10BASET
-value|0x00008F01L
+value|0x0000EF01L
 end_define
 
 begin_define
@@ -1589,7 +1589,7 @@ begin_define
 define|#
 directive|define
 name|TULIP_21040_SIACONN_10BASET_FD
-value|0x00008F01L
+value|0x0000EF01L
 end_define
 
 begin_define
@@ -1610,7 +1610,7 @@ begin_define
 define|#
 directive|define
 name|TULIP_21040_SIACONN_AUIBNC
-value|0x00008F09L
+value|0x0000EF09L
 end_define
 
 begin_define
