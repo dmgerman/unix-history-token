@@ -8,7 +8,7 @@ comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.145 2002/09/26 00:38:48 tim Exp $ */
+comment|/* $Id: acconfig.h,v 1.149 2003/03/10 00:38:10 djm Exp $ */
 end_comment
 
 begin_comment
@@ -805,12 +805,9 @@ begin_comment
 comment|/* Set this to your mail directory if you don't have maillock.h */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MAIL_DIRECTORY
-value|"/var/mail"
-end_define
+begin_comment
+comment|/* #undef MAIL_DIRECTORY */
+end_comment
 
 begin_comment
 comment|/* Data types */
@@ -1187,6 +1184,45 @@ comment|/* #undef DISABLE_FD_PASSING */
 end_comment
 
 begin_comment
+comment|/* Silly mkstemp() */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRICT_MKSTEMP */
+end_comment
+
+begin_comment
+comment|/* Setproctitle emulation */
+end_comment
+
+begin_comment
+comment|/* #undef SETPROCTITLE_STRATEGY */
+end_comment
+
+begin_comment
+comment|/* #undef SETPROCTITLE_PS_PADDING */
+end_comment
+
+begin_comment
+comment|/* Some systems put this outside of libc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NANOSLEEP
+value|1
+end_define
+
+begin_comment
+comment|/* Pushing STREAMS modules incorrectly acquires a controlling TTY */
+end_comment
+
+begin_comment
+comment|/* #undef STREAMS_PUSH_ACQUIRES_CTTY */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if the `getpgrp' function requires zero arguments. */
 end_comment
 
@@ -1215,6 +1251,25 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_B64_NTOP */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `b64_pton' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_B64_PTON */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `basename' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_BASENAME
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `bcopy' function. */
@@ -1946,6 +2001,14 @@ comment|/* #undef HAVE_NGETADDRINFO */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `nsleep' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NSLEEP */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `ogetaddrinfo' function. */
 end_comment
 
@@ -1985,6 +2048,14 @@ directive|define
 name|HAVE_PATHS_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `pstat' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PSTAT */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<pty.h> header file. */
@@ -2441,6 +2512,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `strnvis' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRNVIS */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `strsep' function. */
 end_comment
 
@@ -2459,6 +2538,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRUCT_STAT_ST_BLKSIZE
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `struct timespec'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_TIMESPEC
 value|1
 end_define
 
@@ -2512,6 +2602,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/pstat.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_PSTAT_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/select.h> header file. */
 end_comment
 
@@ -2548,6 +2646,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_SYS_SYSMACROS_H */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/timers.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_TIMERS_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/time.h> header file. */
@@ -2783,6 +2892,17 @@ begin_define
 define|#
 directive|define
 name|HAVE___B64_NTOP
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `__b64_pton' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE___B64_PTON
 value|1
 end_define
 
