@@ -2077,7 +2077,7 @@ name|mask
 operator|=
 name|umask
 argument_list|(
-literal|0644
+literal|022
 argument_list|)
 expr_stmt|;
 if|if
@@ -2101,6 +2101,15 @@ argument_list|(
 name|mask
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ipcp
+operator|->
+name|ns
+operator|.
+name|resolv_nons
+condition|)
+empty_stmt|;
 name|fputs
 argument_list|(
 name|ipcp
