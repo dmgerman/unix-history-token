@@ -1357,7 +1357,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|bdwrite
+name|bawrite
 argument_list|(
 name|ibp
 argument_list|)
@@ -1539,7 +1539,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|bdwrite
+name|bawrite
 argument_list|(
 name|nbp
 argument_list|)
@@ -1692,7 +1692,7 @@ name|IN_CHANGE
 operator||
 name|IN_UPDATE
 expr_stmt|;
-comment|/* 	 * Ensure that the snapshot is completely on disk. 	 */
+comment|/* 	 * Ensure that the snapshot is completely on disk. 	 * Since we have marked it as a snapshot it is safe to 	 * unlock it as no process will be allowed to write to it. 	 */
 if|if
 condition|(
 operator|(
@@ -1715,6 +1715,15 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* 	 * All allocations are done, so we can now snapshot the system. 	 * 	 * Recind nice scheduling while running with the filesystem suspended. 	 */
 if|if
 condition|(
@@ -1782,6 +1791,17 @@ argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
+name|vn_lock
+argument_list|(
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -1806,6 +1826,17 @@ name|V_WAIT
 argument_list|)
 expr_stmt|;
 block|}
+name|vn_lock
+argument_list|(
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|collectsnapstats
