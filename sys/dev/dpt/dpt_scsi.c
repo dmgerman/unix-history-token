@@ -8,7 +8,7 @@ comment|/*  * dpt_scsi.c: SCSI dependant code for the DPT driver  *  * credits:	
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.14 1998/09/15 22:05:40 gibbs Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.15 1998/09/20 07:19:53 gibbs Exp $"
 end_empty
 
 begin_define
@@ -1760,7 +1760,6 @@ name|dpt
 operator|->
 name|sgsize
 expr_stmt|;
-empty_stmt|;
 name|physaddr
 operator|+=
 operator|(
@@ -3543,7 +3542,7 @@ name|ccb_dpt_ptr
 operator|=
 name|dpt
 expr_stmt|;
-comment|/* 		 * Explicitly set all flags so that the compiler can 		 * be smart about setting our bit flags. 		 */
+comment|/* 		 * Explicitly set all flags so that the compiler can 		 * be smart about setting them. 		 */
 name|eccb
 operator|->
 name|SCSI_Reset
@@ -6089,62 +6088,45 @@ name|conf
 operator|.
 name|SG_64K
 condition|)
-block|{
 name|dpt
 operator|->
 name|sgsize
 operator|=
-name|SG_SIZE_BIG
+literal|8192
 expr_stmt|;
-block|}
-elseif|else
+else|else
+name|dpt
+operator|->
+name|sgsize
+operator|=
+name|ntohs
+argument_list|(
+name|conf
+operator|.
+name|SGsiz
+argument_list|)
+expr_stmt|;
+comment|/* We can only get 64k buffers, so don't bother to waste space. */
 if|if
 condition|(
-operator|(
-name|ntohs
-argument_list|(
-name|conf
-operator|.
-name|SGsiz
-argument_list|)
+name|dpt
+operator|->
+name|sgsize
 operator|<
-literal|1
-operator|)
+literal|17
 operator|||
-operator|(
-name|ntohs
-argument_list|(
-name|conf
-operator|.
-name|SGsiz
-argument_list|)
+name|dpt
+operator|->
+name|sgsize
 operator|>
-name|SG_SIZE
-operator|)
+literal|32
 condition|)
-block|{
-comment|/* Just a sanity check */
 name|dpt
 operator|->
 name|sgsize
 operator|=
-name|SG_SIZE
+literal|32
 expr_stmt|;
-block|}
-else|else
-block|{
-name|dpt
-operator|->
-name|sgsize
-operator|=
-name|ntohs
-argument_list|(
-name|conf
-operator|.
-name|SGsiz
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|dpt
@@ -6369,6 +6351,31 @@ name|dpt_ccb_busbase
 argument_list|,
 comment|/*flags*/
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Clear them out. */
+name|bzero
+argument_list|(
+name|dpt
+operator|->
+name|dpt_dccbs
+argument_list|,
+operator|(
+name|dpt
+operator|->
+name|max_dccbs
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|dpt_ccb
+argument_list|)
+operator|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|dpt_sp_t
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dpt

@@ -8,7 +8,7 @@ comment|/*  *  *  dpt.h:	Definitions and constants used by the SCSI side of the 
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt.h,v 1.2 1998/09/15 08:33:31 gibbs Exp $"
+empty|#ident "$Id: dpt.h,v 1.3 1998/09/20 07:19:52 gibbs Exp $"
 end_empty
 
 begin_ifndef
@@ -765,24 +765,6 @@ end_define
 
 begin_comment
 comment|/* Maximum # Of Busses Allowed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SG_SIZE
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|SG_SIZE_BIG
-value|252
-end_define
-
-begin_comment
-comment|/* max. 8096 elements, 64k */
 end_comment
 
 begin_define
@@ -2550,10 +2532,7 @@ comment|/* SCSI Channel # of HBA */
 name|u_int8_t
 name|cp_LUN
 range|:
-literal|3
-decl_stmt|,
-range|:
-literal|2
+literal|5
 decl_stmt|,
 name|cp_luntar
 range|:
