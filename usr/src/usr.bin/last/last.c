@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)last.c	5.17 (Berkeley) %G%"
+literal|"@(#)last.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -564,73 +564,76 @@ begin_comment
 comment|/*  * wtmp --  *	read through the wtmp file  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|wtmp
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
-expr|struct
+name|struct
 name|utmp
-operator|*
+modifier|*
 name|bp
-block|;
+decl_stmt|;
 comment|/* current structure */
 specifier|register
 name|TTY
-operator|*
+modifier|*
 name|T
-block|;
+decl_stmt|;
 comment|/* tty list entry */
-block|struct
+name|struct
 name|stat
 name|stb
-block|;
+decl_stmt|;
 comment|/* stat of file for size */
 name|long
 name|bl
-block|,
+decl_stmt|,
 name|delta
-block|,
+decl_stmt|,
 comment|/* time difference */
 name|lseek
 argument_list|()
-block|,
+decl_stmt|,
 name|time
 argument_list|()
-block|;
+decl_stmt|;
 name|int
 name|bytes
-block|,
+decl_stmt|,
 name|wfd
-block|,
-name|onintr
-argument_list|()
-block|;
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|ct
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|crmsg
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|asctime
 argument_list|()
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|ctime
 argument_list|()
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|strcpy
 argument_list|()
-block|;
+decl_stmt|;
 name|TTY
-operator|*
+modifier|*
 name|addtty
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+name|void
+name|onintr
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 operator|(
@@ -691,9 +694,6 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -708,9 +708,6 @@ operator|.
 name|ut_time
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -721,9 +718,6 @@ argument_list|,
 name|onintr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -734,9 +728,6 @@ argument_list|,
 name|onintr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 operator|--
@@ -1329,9 +1320,6 @@ name|ut_time
 expr_stmt|;
 block|}
 block|}
-end_while
-
-begin_expr_stmt
 name|ct
 operator|=
 name|ctime
@@ -1345,9 +1333,6 @@ operator|.
 name|ut_time
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"\nwtmp begins %10.10s %5.5s \n"
@@ -1359,15 +1344,14 @@ operator|+
 literal|11
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  * want --  *	see if want this entry  */
 end_comment
 
 begin_expr_stmt
-unit|static
 name|want
 argument_list|(
 name|bp
@@ -1576,18 +1560,20 @@ begin_comment
 comment|/*  * addarg --  *	add an entry to a linked list of arguments  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|addarg
 argument_list|(
 argument|type
 argument_list|,
 argument|arg
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|type
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -1674,7 +1660,6 @@ comment|/*  * addtty --  *	add an entry to a linked list of ttys  */
 end_comment
 
 begin_function
-specifier|static
 name|TTY
 modifier|*
 name|addtty
@@ -1769,17 +1754,19 @@ begin_comment
 comment|/*  * hostconv --  *	convert the hostname to search pattern; if the supplied host name  *	has a domain attached that is the same as the current domain, rip  *	off the domain suffix since that's what login(1) does.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|hostconv
 argument_list|(
 argument|arg
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|arg
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1890,7 +1877,6 @@ comment|/*  * ttyconv --  *	convert tty to correct name.  */
 end_comment
 
 begin_function
-specifier|static
 name|char
 modifier|*
 name|ttyconv
@@ -2042,18 +2028,15 @@ begin_comment
 comment|/*  * onintr --  *	on interrupt, we inform the user how far we've gotten  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_function
+name|void
 name|onintr
-argument_list|(
-argument|signo
-argument_list|)
+parameter_list|(
+name|signo
+parameter_list|)
 name|int
 name|signo
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -2108,7 +2091,7 @@ argument_list|)
 expr_stmt|;
 comment|/* fix required for rsh */
 block|}
-end_block
+end_function
 
 end_unit
 

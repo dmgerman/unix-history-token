@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruserpass.c	5.2 (Berkeley) %G%"
+literal|"@(#)ruserpass.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -304,10 +304,11 @@ name|struct
 name|stat
 name|stb
 decl_stmt|;
-specifier|extern
+specifier|static
 name|int
-name|errno
-decl_stmt|;
+name|token
+parameter_list|()
+function_decl|;
 name|hdir
 operator|=
 name|getenv

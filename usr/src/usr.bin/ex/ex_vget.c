@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_vget.c	6.13 (Berkeley) %G%"
+literal|"@(#)ex_vget.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2551,17 +2551,13 @@ end_macro
 
 begin_block
 block|{
-name|int
+name|void
 name|trapalarm
 parameter_list|()
 function_decl|;
-name|void
-function_decl|(
-modifier|*
+name|sig_t
 name|Oint
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 specifier|register
 name|int
 name|c
@@ -2722,12 +2718,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|trapalarm
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|alarm
 argument_list|(
@@ -2746,7 +2740,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1541,6 +1541,10 @@ name|wpid
 operator|=
 name|wait
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|stat
 argument_list|)

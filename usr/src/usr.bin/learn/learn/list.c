@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)list.c	4.2	(Berkeley)	%G%"
+literal|"@(#)list.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
+name|void
 name|stop
 argument_list|()
 decl_stmt|,
@@ -148,19 +148,17 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|stop
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|istop
 operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

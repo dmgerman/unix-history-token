@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.36 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1559,7 +1559,9 @@ call|(
 modifier|*
 name|oldintr
 call|)
-argument_list|()
+argument_list|(
+name|SIGINT
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -2172,7 +2174,9 @@ call|(
 modifier|*
 name|oldintr
 call|)
-argument_list|()
+argument_list|(
+name|SIGINT
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -6860,7 +6864,9 @@ call|(
 modifier|*
 name|oldintr
 call|)
-argument_list|()
+argument_list|(
+name|SIGINT
+argument_list|)
 expr_stmt|;
 block|}
 block|}

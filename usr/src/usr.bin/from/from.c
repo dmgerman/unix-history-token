@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)from.c	5.6 (Berkeley) %G%"
+literal|"@(#)from.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,10 +111,6 @@ name|struct
 name|passwd
 modifier|*
 name|pwd
-decl_stmt|,
-modifier|*
-name|getpwuid
-argument_list|()
 decl_stmt|;
 name|int
 name|ch

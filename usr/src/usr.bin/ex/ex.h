@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ex.h	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ex.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -1790,16 +1790,11 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|var
-name|void
-function_decl|(
-modifier|*
+begin_decl_stmt
+name|sig_t
 name|oldhup
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|int
@@ -2181,21 +2176,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|onhup
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|onintr
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|onsusp
 parameter_list|()
 function_decl|;
@@ -2236,7 +2231,7 @@ name|CBREAK
 end_ifdef
 
 begin_function_decl
-name|int
+name|void
 name|vintr
 parameter_list|()
 function_decl|;

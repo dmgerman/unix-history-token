@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_v.c	7.9 (Berkeley) %G%"
+literal|"@(#)ex_v.c	7.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
+name|void
 name|winch
 parameter_list|()
 function_decl|;
@@ -1366,12 +1366,10 @@ directive|ifdef
 name|CBREAK
 end_ifdef
 
-begin_macro
+begin_function
+name|void
 name|vintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|jmp_buf
@@ -1421,7 +1419,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -1511,12 +1509,10 @@ directive|ifdef
 name|SIGWINCH
 end_ifdef
 
-begin_macro
+begin_function
+name|void
 name|winch
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|vsave
 argument_list|()
@@ -1537,7 +1533,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

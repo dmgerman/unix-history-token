@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)leave.c	5.5 (Berkeley) %G%"
+literal|"@(#)leave.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -393,16 +393,18 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|doalarm
 argument_list|(
 argument|secs
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|u_int
 name|secs
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -661,10 +663,12 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|usage
 argument_list|()
+end_macro
+
+begin_block
 block|{
 name|fprintf
 argument_list|(
@@ -672,13 +676,14 @@ name|stderr
 argument_list|,
 literal|"usage: leave [[+]hhmm]\n"
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 

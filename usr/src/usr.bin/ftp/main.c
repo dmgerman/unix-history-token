@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.17 (Berkeley) %G%"
+literal|"@(#)main.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,19 +129,15 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|sig_t
+begin_decl_stmt
+name|void
 name|intr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|sig_t
+argument_list|()
+decl_stmt|,
 name|lostpeer
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -550,7 +546,7 @@ block|}
 end_function
 
 begin_function
-name|sig_t
+name|void
 name|intr
 parameter_list|()
 block|{
@@ -565,7 +561,7 @@ block|}
 end_function
 
 begin_function
-name|sig_t
+name|void
 name|lostpeer
 parameter_list|()
 block|{

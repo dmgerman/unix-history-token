@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)copy.c	4.4	(Berkeley)	%G%"
+literal|"@(#)copy.c	4.5	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,19 +167,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-specifier|extern
 name|int
-name|intrpt
-argument_list|()
-decl_stmt|,
 modifier|*
 name|action
-argument_list|()
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|wordb
 parameter_list|()
 function_decl|;
 name|int
@@ -190,6 +180,17 @@ decl_stmt|;
 name|long
 name|mark
 decl_stmt|;
+specifier|extern
+name|void
+name|intrpt
+parameter_list|()
+function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|wordb
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|subdir

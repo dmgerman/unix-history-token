@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_subr.c	7.13 (Berkeley) %G%"
+literal|"@(#)ex_subr.c	7.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3189,12 +3189,10 @@ name|_ovno
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|onemt
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -3224,18 +3222,16 @@ literal|"emt trap, _ovno is %d @ - try again"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * When a hangup occurs our actions are similar to a preserve  * command.  If the buffer has not been [Modified], then we do  * nothing but remove the temporary files and exit.  * Otherwise, we sync the temp file and then attempt a preserve.  * If the preserve succeeds, we unlink our temp files.  * If the preserve fails, we leave the temp files as they are  * as they are a backup even without preservation if they  * are not removed.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|onhup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* 	 * USG tty driver can send multiple HUP's!! 	 */
 name|signal
@@ -3302,18 +3298,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * An interrupt occurred.  Drain any output which  * is still in the output buffering pipeline.  * Catch interrupts again.  Unless we are in visual  * reset the output state (out of -nl mode, e.g).  * Then like a normal error (with the \n before Interrupt  * suppressed in visual mode).  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|onintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 ifndef|#
 directive|ifndef
@@ -3370,7 +3364,7 @@ block|}
 else|#
 directive|else
 block|}
-end_block
+end_function
 
 begin_else
 else|else
@@ -3614,12 +3608,10 @@ begin_comment
 comment|/*  * We have just gotten a susp.  Suspend and prepare to resume.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|onsusp
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|ttymode
 name|f
@@ -3792,7 +3784,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

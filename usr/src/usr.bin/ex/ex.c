@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex.c	7.7.1.1 (Berkeley) %G%"
+literal|"@(#)ex.c	7.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,7 +226,7 @@ init|=
 literal|0
 decl_stmt|;
 specifier|extern
-name|int
+name|void
 name|onemt
 parameter_list|()
 function_decl|;

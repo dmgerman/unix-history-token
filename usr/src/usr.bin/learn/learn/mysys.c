@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mysys.c	4.7	(Berkeley)	%G%"
+literal|"@(#)mysys.c	4.8	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,7 +131,7 @@ name|sprintf
 argument_list|(
 name|path
 argument_list|,
-name|_PATH_DEFPATH
+literal|"%s/bin:"
 argument_list|,
 name|direct
 argument_list|)
