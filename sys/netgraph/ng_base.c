@@ -10952,7 +10952,7 @@ name|netgraph
 argument_list|,
 name|netgraph_mod
 argument_list|,
-name|SI_SUB_DRIVERS
+name|SI_SUB_NETGRAPH
 argument_list|,
 name|SI_ORDER_MIDDLE
 argument_list|)

@@ -367,6 +367,11 @@ init|=
 literal|0x3000000
 block|,
 comment|/* prep for net interfaces */
+name|SI_SUB_NETGRAPH
+init|=
+literal|0x3010000
+block|,
+comment|/* Let Netgraph initialize */
 name|SI_SUB_DRIVERS
 init|=
 literal|0x3100000
