@@ -102,7 +102,7 @@ name|sflags
 index|[]
 init|=
 block|{
-comment|/*       am   bs   da   eo   hc   in   mi   ms  */
+comment|/*       am   bs   da   db   eo   hc   in   mi   ms  */
 operator|&
 name|AM
 block|,
@@ -111,6 +111,9 @@ name|BS
 block|,
 operator|&
 name|DA
+block|,
+operator|&
+name|DB
 block|,
 operator|&
 name|EO

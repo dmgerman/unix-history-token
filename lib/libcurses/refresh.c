@@ -4374,12 +4374,29 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* Scroll up the block. */
+comment|/* Scroll up the screen. */
 if|if
 condition|(
+operator|(
+operator|!
+name|DB
+operator|&&
 name|SF
 operator|!=
 name|NULL
+operator|||
+name|n
+operator|==
+literal|1
+operator|)
+operator|&&
+name|bot
+operator|==
+name|curscr
+operator|->
+name|maxy
+operator|-
+literal|1
 operator|&&
 name|top
 operator|==
@@ -4773,9 +4790,12 @@ block|}
 else|else
 block|{
 comment|/* 		 * !!! 		 * n< 0 		 */
-comment|/* Preserve the bottom lines. */
+comment|/* Scroll down the screen. */
 if|if
 condition|(
+operator|!
+name|DA
+operator|&&
 name|SR
 operator|!=
 name|NULL
@@ -4787,6 +4807,10 @@ operator|->
 name|maxy
 operator|-
 literal|1
+operator|&&
+name|top
+operator|==
+literal|0
 condition|)
 block|{
 name|__mvcur

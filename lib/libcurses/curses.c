@@ -102,6 +102,8 @@ name|CA
 decl_stmt|,
 name|DA
 decl_stmt|,
+name|DB
+decl_stmt|,
 name|EO
 decl_stmt|,
 name|HC
