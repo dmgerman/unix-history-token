@@ -140,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|11
+value|12
 end_define
 
 begin_comment
@@ -1807,19 +1807,14 @@ comment|/* Abort Command */
 name|ISPCTL_UPDATE_PARAMS
 block|,
 comment|/* Update Operating Parameters */
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-name|ISPCTL_ENABLE_LUN
-block|,
-comment|/* enable a LUN */
-name|ISPCTL_MODIFY_LUN
-block|,
-comment|/* enable a LUN */
-endif|#
-directive|endif
 name|ISPCTL_FCLINK_TEST
+block|,
 comment|/* Test FC Link Status */
+name|ISPCTL_PDB_SYNC
+block|,
+comment|/* Synchronize Port Database */
+name|ISPCTL_TOGGLE_TMODE
+comment|/* toggle target mode */
 block|}
 name|ispctl_t
 typedef|;
@@ -1872,11 +1867,14 @@ comment|/* FC SNS Change Notification */
 name|ISPASYNC_FABRIC_DEV
 block|,
 comment|/* FC New Fabric Device */
-name|ISPASYNC_TARGET_CMD
+name|ISPASYNC_TARGET_MESSAGE
 block|,
-comment|/* New target command */
+comment|/* target message */
 name|ISPASYNC_TARGET_EVENT
-comment|/* New target event */
+block|,
+comment|/* target asynchronous event */
+name|ISPASYNC_TARGET_ACTION
+comment|/* other target command action */
 block|}
 name|ispasync_t
 typedef|;
