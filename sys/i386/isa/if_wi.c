@@ -7296,6 +7296,19 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
+comment|/* 	 * If the card is gone and the memory port isn't mapped, we will 	 * (hopefully) get 0xffff back from the status read, which is not 	 * a valid status value. 	 */
+if|if
+condition|(
+name|CSR_READ_2
+argument_list|(
+name|sc
+argument_list|,
+name|WI_STATUS
+argument_list|)
+operator|!=
+literal|0xffff
+condition|)
+block|{
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -7318,6 +7331,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|untimeout
 argument_list|(
 name|wi_inquire
