@@ -2171,7 +2171,7 @@ name|fattr
 operator|.
 name|entryName
 argument_list|,
-name|NWFS_ROOTVOL
+literal|"#.ROOT"
 argument_list|)
 argument_list|)
 expr_stmt|;
