@@ -808,10 +808,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|flags
-operator||=
-name|EV_TESTED
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -1011,11 +1007,6 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The 'for' command does not set exitstatus, so the value 		 * now in exitstatus is from the last command executed in 		 * the 'for' loop.  That exit value had been tested (wrt 		 * 'sh -e' checking) while processing that command, and 		 * it should not be re-tested here. 		 */
-name|flags
-operator||=
-name|EV_TESTED
-expr_stmt|;
 break|break;
 case|case
 name|NCASE
@@ -1026,11 +1017,6 @@ name|n
 argument_list|,
 name|flags
 argument_list|)
-expr_stmt|;
-comment|/* 		 * The 'case' command does not set exitstatus, so the value 		 * now in exitstatus is from the last command executed in 		 * the 'case' block.  That exit value had been tested (wrt 		 * 'sh -e' checking) while processing that command, and 		 * it should not be re-tested here. 		 */
-name|flags
-operator||=
-name|EV_TESTED
 expr_stmt|;
 break|break;
 case|case
@@ -1130,7 +1116,6 @@ condition|)
 name|dotrap
 argument_list|()
 expr_stmt|;
-comment|/* 	 * XXX - Like "!(n->type == NSEMI)", more types will probably 	 * need to be excluded from this test. It's probably better 	 * to set or unset EV_TESTED in the loop above than to bloat 	 * the conditional here. 	 */
 if|if
 condition|(
 operator|(
@@ -1151,13 +1136,12 @@ operator|&
 name|EV_TESTED
 operator|)
 operator|&&
-operator|!
 operator|(
 name|n
 operator|->
 name|type
 operator|==
-name|NSEMI
+name|NCMD
 operator|)
 operator|)
 condition|)
