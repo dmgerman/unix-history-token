@@ -2688,7 +2688,7 @@ name|vp
 operator|->
 name|v_iflag
 operator|&
-name|VI_XLOCK
+name|VI_DOOMED
 condition|)
 block|{
 name|VI_UNLOCK
@@ -2703,28 +2703,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Step 4: invalidate all inactive vnodes. 		 */
-if|if
-condition|(
-name|vp
-operator|->
-name|v_usecount
-operator|==
-literal|0
-condition|)
-block|{
-name|vgonel
-argument_list|(
-name|vp
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-goto|goto
-name|loop
-goto|;
-block|}
-comment|/* 		 * Step 5: invalidate all cached file data. 		 */
+comment|/* 		 * Step 4: invalidate all cached file data. 		 */
 if|if
 condition|(
 name|vget
@@ -2763,7 +2742,7 @@ argument_list|(
 literal|"ext2_reload: dirty2"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Step 6: re-read inode data for all active vnodes. 		 */
+comment|/* 		 * Step 5: re-read inode data for all active vnodes. 		 */
 name|ip
 operator|=
 name|VTOI
@@ -4340,7 +4319,7 @@ name|vp
 operator|->
 name|v_iflag
 operator|&
-name|VI_XLOCK
+name|VI_DOOMED
 operator|)
 condition|)
 block|{
