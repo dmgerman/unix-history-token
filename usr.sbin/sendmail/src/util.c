@@ -6988,7 +6988,7 @@ decl_stmt|;
 name|char
 name|delimbuf
 index|[
-literal|3
+literal|4
 index|]
 decl_stmt|;
 if|if
