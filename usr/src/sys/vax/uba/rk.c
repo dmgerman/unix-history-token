@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.28	81/03/09	*/
+comment|/*	rk.c	4.29	81/03/11	*/
 end_comment
 
 begin_include
@@ -38,7 +38,7 @@ comment|/* DEBUG */
 end_comment
 
 begin_comment
-comment|/*  * RK11/RK07 disk driver  *  * This driver mimics up.c; see it for an explanation of common code.  *  * TODO:  *	Add reading of bad sector information and disk layout from sector 1  *	Add bad sector forwarding code  *	Why do we lose an interrupt sometime when spinning drives down?  */
+comment|/*  * RK11/RK07 disk driver  *  * This driver mimics up.c; see it for an explanation of common code.  *  * TODO:  *	Learn why we lose an interrupt sometime when spinning drives down  */
 end_comment
 
 begin_include
