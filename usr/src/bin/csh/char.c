@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)char.c	5.2 (Berkeley) %G%"
+literal|"@(#)char.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,8 @@ file|"sh.char.h"
 end_include
 
 begin_decl_stmt
-name|char
+name|unsigned
+name|short
 name|_cmap
 index|[
 literal|256
@@ -153,27 +154,27 @@ block|,
 literal|0
 block|,
 comment|/*	0		1		2		3	*/
-literal|0
+name|_DIG
 block|,
-literal|0
+name|_DIG
 block|,
-literal|0
+name|_DIG
 block|,
-literal|0
+name|_DIG
 block|,
 comment|/*	4		5		6		7	*/
-literal|0
+name|_DIG
 block|,
-literal|0
+name|_DIG
 block|,
-literal|0
+name|_DIG
 block|,
-literal|0
+name|_DIG
 block|,
 comment|/*	8		9		:		;	*/
-literal|0
+name|_DIG
 block|,
-literal|0
+name|_DIG
 block|,
 literal|0
 block|,
@@ -191,63 +192,63 @@ block|,
 comment|/*	@		A		B		C	*/
 literal|0
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
 comment|/*	D		E		F		G	*/
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
 comment|/*	H		I		J		K	*/
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
 comment|/*	L		M		N		O	*/
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
 comment|/*	P		Q		R		S	*/
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
 comment|/*	T		U		V		W	*/
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
 comment|/*	X		Y		Z		[	*/
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
 name|_GLOB
 block|,
@@ -258,70 +259,70 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|_LET
 block|,
 comment|/*	`		a		b		c	*/
 name|_Q1
 operator||
 name|_GLOB
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
 comment|/*	d		e		f		g	*/
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
 comment|/*	h		i		j		k	*/
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
 comment|/*	l		m		n		o	*/
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
 comment|/*	p		q		r		s	*/
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
 comment|/*	t		u		v		w	*/
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
 comment|/*	x		y		z		{	*/
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
-literal|0
+name|_LET
 block|,
 name|_GLOB
 block|,

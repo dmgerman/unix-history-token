@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dol.c	5.2 (Berkeley) %G%"
+literal|"@(#)dol.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,12 +28,6 @@ begin_include
 include|#
 directive|include
 file|"sh.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sh.char.h"
 end_include
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley Software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)csh.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley Software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)csh.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"sh.local.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sh.char.h"
 end_include
 
 begin_comment
@@ -724,12 +730,31 @@ name|fbuf
 value|B.Bfbuf
 end_define
 
+begin_define
+define|#
+directive|define
+name|btell
+parameter_list|()
+value|fseekp
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|btell
+end_ifndef
+
 begin_function_decl
 name|off_t
 name|btell
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The shell finds commands in loops by reseeking the input  * For whiles, in particular, it reseeks to the beginning of the  * line the while was on; hence the while placement restrictions.  */

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lex.c	5.3 (Berkeley) %G%"
+literal|"@(#)lex.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,12 +28,6 @@ begin_include
 include|#
 directive|include
 file|"sh.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sh.char.h"
 end_include
 
 begin_include
@@ -6091,6 +6085,9 @@ endif|#
 directive|endif
 block|}
 comment|/* any similarity to bell telephone is purely accidental */
+ifndef|#
+directive|ifndef
+name|btell
 name|off_t
 name|btell
 parameter_list|()
@@ -6101,6 +6098,8 @@ name|fseekp
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 name|btoeof
 argument_list|()
 block|{

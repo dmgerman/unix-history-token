@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley Software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)char.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley Software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)char.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -9,7 +9,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|unsigned
+name|short
 name|_cmap
 index|[]
 decl_stmt|;
@@ -106,6 +107,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_DIG
+value|0x100
+end_define
+
+begin_comment
+comment|/* 0-9 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_LET
+value|0x200
+end_define
+
+begin_comment
+comment|/* a-z, A-Z, _ */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|cmap
 parameter_list|(
 name|c
@@ -153,6 +176,36 @@ parameter_list|(
 name|c
 parameter_list|)
 value|cmap(c, _META)
+end_define
+
+begin_define
+define|#
+directive|define
+name|digit
+parameter_list|(
+name|c
+parameter_list|)
+value|cmap(c, _DIG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|letter
+parameter_list|(
+name|c
+parameter_list|)
+value|cmap(c, _LET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|alnum
+parameter_list|(
+name|c
+parameter_list|)
+value|(digit(c) || letter(c))
 end_define
 
 end_unit
