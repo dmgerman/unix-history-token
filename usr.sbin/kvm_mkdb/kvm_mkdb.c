@@ -252,7 +252,12 @@ index|[
 literal|0
 index|]
 else|:
-name|_PATH_UNIX
+operator|(
+name|char
+operator|*
+operator|)
+name|getbootfile
+argument_list|()
 expr_stmt|;
 name|nlistname
 operator|=

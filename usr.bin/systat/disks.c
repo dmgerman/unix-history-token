@@ -379,7 +379,8 @@ literal|"dk_ndrive=%d according to %s"
 argument_list|,
 name|dk_ndrive
 argument_list|,
-name|_PATH_UNIX
+name|getbootfile
+argument_list|()
 argument_list|)
 expr_stmt|;
 return|return

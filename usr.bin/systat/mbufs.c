@@ -552,7 +552,8 @@ name|error
 argument_list|(
 literal|"namelist on %s failed"
 argument_list|,
-name|_PATH_UNIX
+name|getbootfile
+argument_list|()
 argument_list|)
 expr_stmt|;
 return|return

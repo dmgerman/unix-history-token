@@ -782,7 +782,8 @@ literal|0
 condition|)
 name|uf
 operator|=
-name|_PATH_UNIX
+name|getbootfile
+argument_list|()
 expr_stmt|;
 elseif|else
 if|if

@@ -334,7 +334,12 @@ name|core
 decl_stmt|;
 name|system
 operator|=
-name|_PATH_UNIX
+operator|(
+name|char
+operator|*
+operator|)
+name|getbootfile
+argument_list|()
 expr_stmt|;
 name|core
 operator|=

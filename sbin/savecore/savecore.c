@@ -597,6 +597,7 @@ name|Open
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -943,6 +944,7 @@ name|kmem
 decl_stmt|,
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|dump_sys
@@ -953,7 +955,8 @@ condition|(
 operator|(
 name|nlist
 argument_list|(
-name|_PATH_UNIX
+name|getbootfile
+argument_list|()
 argument_list|,
 name|current_nl
 argument_list|)
@@ -968,7 +971,8 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: nlist: %s"
 argument_list|,
-name|_PATH_UNIX
+name|getbootfile
+argument_list|()
 argument_list|,
 name|strerror
 argument_list|(
@@ -1014,7 +1018,8 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %s not in namelist"
 argument_list|,
-name|_PATH_UNIX
+name|getbootfile
+argument_list|()
 argument_list|,
 name|current_nl
 index|[
@@ -1039,7 +1044,8 @@ name|kernel
 condition|?
 name|kernel
 else|:
-name|_PATH_UNIX
+name|getbootfile
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1477,7 +1483,8 @@ name|LOG_WARNING
 argument_list|,
 literal|"warning: %s version mismatch:\n\t%s\nand\t%s\n"
 argument_list|,
-name|_PATH_UNIX
+name|getbootfile
+argument_list|()
 argument_list|,
 name|vers
 argument_list|,
@@ -2342,7 +2349,8 @@ name|kernel
 condition|?
 name|kernel
 else|:
-name|_PATH_UNIX
+name|getbootfile
+argument_list|()
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -2555,7 +2563,8 @@ name|kernel
 condition|?
 name|kernel
 else|:
-name|_PATH_UNIX
+name|getbootfile
+argument_list|()
 argument_list|,
 name|strerror
 argument_list|(
@@ -3103,6 +3112,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|tkernel
@@ -3141,7 +3151,8 @@ name|kernel
 condition|?
 name|kernel
 else|:
-name|_PATH_UNIX
+name|getbootfile
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3363,6 +3374,7 @@ name|name
 parameter_list|,
 name|rw
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name

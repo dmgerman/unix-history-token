@@ -15,6 +15,12 @@ directive|define
 name|_PATHS_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_comment
 comment|/* Default search path. */
 end_comment
@@ -140,7 +146,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_UNIX
-value|"/kernel"
+value|"don't use _PATH_UNIX"
 end_define
 
 begin_define
@@ -188,6 +194,29 @@ directive|define
 name|_PATH_VARTMP
 value|"/var/tmp/"
 end_define
+
+begin_comment
+comment|/* How to get the correct name of the kernel. */
+end_comment
+
+begin_decl_stmt
+name|__BEGIN_DECLS
+specifier|const
+name|char
+modifier|*
+name|getbootfile
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
