@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.131 1998/12/16 15:21:50 bde Exp $  */
+comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.132 1998/12/28 23:02:56 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -2164,6 +2164,9 @@ operator|->
 name|p_lock
 expr_stmt|;
 comment|/* 		 * Grow the stack if necessary 		 */
+ifndef|#
+directive|ifndef
+name|VM_STACK
 if|if
 condition|(
 operator|(
@@ -2205,6 +2208,35 @@ name|nogo
 goto|;
 block|}
 block|}
+else|#
+directive|else
+comment|/* grow_stack returns false only if va falls into 		 * a growable stack region and the stack growth 		 * fails.  It returns true if va was not within 		 * a growable stack region, or if the stack  		 * growth succeeded. 		 */
+if|if
+condition|(
+operator|!
+name|grow_stack
+argument_list|(
+name|p
+argument_list|,
+name|va
+argument_list|)
+condition|)
+block|{
+name|rv
+operator|=
+name|KERN_FAILURE
+expr_stmt|;
+operator|--
+name|p
+operator|->
+name|p_lock
+expr_stmt|;
+goto|goto
+name|nogo
+goto|;
+block|}
+endif|#
+directive|endif
 comment|/* Fault in the user page: */
 name|rv
 operator|=
@@ -2537,6 +2569,9 @@ operator|->
 name|p_lock
 expr_stmt|;
 comment|/* 		 * Grow the stack if necessary 		 */
+ifndef|#
+directive|ifndef
+name|VM_STACK
 if|if
 condition|(
 operator|(
@@ -2578,6 +2613,35 @@ name|nogo
 goto|;
 block|}
 block|}
+else|#
+directive|else
+comment|/* grow_stack returns false only if va falls into 		 * a growable stack region and the stack growth 		 * fails.  It returns true if va was not within 		 * a growable stack region, or if the stack  		 * growth succeeded. 		 */
+if|if
+condition|(
+operator|!
+name|grow_stack
+argument_list|(
+name|p
+argument_list|,
+name|va
+argument_list|)
+condition|)
+block|{
+name|rv
+operator|=
+name|KERN_FAILURE
+expr_stmt|;
+operator|--
+name|p
+operator|->
+name|p_lock
+expr_stmt|;
+goto|goto
+name|nogo
+goto|;
+block|}
+endif|#
+directive|endif
 comment|/* Fault in the user page: */
 name|rv
 operator|=
@@ -3447,6 +3511,9 @@ name|p
 operator|->
 name|p_lock
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|VM_STACK
 if|if
 condition|(
 operator|(
@@ -3486,6 +3553,32 @@ operator|)
 return|;
 block|}
 block|}
+else|#
+directive|else
+if|if
+condition|(
+operator|!
+name|grow_stack
+argument_list|(
+name|p
+argument_list|,
+name|va
+argument_list|)
+condition|)
+block|{
+operator|--
+name|p
+operator|->
+name|p_lock
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 comment|/* 	 * fault the data page 	 */
 name|rv
 operator|=
