@@ -302,7 +302,7 @@ specifier|volatile
 name|int
 name|s
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|len
 decl_stmt|;
 name|char
