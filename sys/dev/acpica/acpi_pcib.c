@@ -171,7 +171,15 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not get PCI interrupt routing table - %s\n"
+literal|"could not get PCI interrupt routing table for %s - %s\n"
+argument_list|,
+name|acpi_name
+argument_list|(
+name|acpi_get_handle
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
 argument_list|,
 name|AcpiFormatException
 argument_list|(
