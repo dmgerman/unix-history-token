@@ -1274,7 +1274,6 @@ while|while
 condition|(
 name|_buildkey
 argument_list|(
-operator|&
 name|_key
 argument_list|,
 name|user
