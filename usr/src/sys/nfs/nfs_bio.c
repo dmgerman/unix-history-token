@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2113,6 +2113,15 @@ name|nm_rsize
 expr_stmt|;
 do|do
 block|{
+comment|/* 		 * XXX make sure we aren't cached in the VM page cache 		 */
+operator|(
+name|void
+operator|)
+name|vnode_pager_uncache
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Check for a valid write lease. 		 * If non-cachable, just do the rpc 		 */
 if|if
 condition|(
