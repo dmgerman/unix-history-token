@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989  Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989  Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3408,6 +3408,11 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|struct
+name|radix_node
+modifier|*
+name|orn
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -3429,8 +3434,33 @@ operator|->
 name|rn_l
 expr_stmt|;
 comment|/* First time through node, go left */
+for|for
+control|(
+name|orn
+operator|=
+name|rn
+init|;
+name|rn
+condition|;
+name|rn
+operator|=
+name|rn
+operator|->
+name|rn_dupedkey
+control|)
+comment|/* Process Leaves */
 if|if
 condition|(
+operator|!
+operator|(
+name|rn
+operator|->
+name|rn_flags
+operator|&
+name|RNF_ROOT
+operator|)
+operator|&&
+operator|(
 name|error
 operator|=
 call|(
@@ -3442,15 +3472,19 @@ name|rn
 argument_list|,
 name|w
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
-comment|/* Process Leaf */
-while|while
-condition|(
+for|for
+control|(
+name|rn
+operator|=
+name|orn
+init|;
 name|rn
 operator|->
 name|rn_p
@@ -3458,9 +3492,10 @@ operator|->
 name|rn_r
 operator|==
 name|rn
-condition|)
+condition|;
+control|)
 block|{
-comment|/* if coming back from right */
+comment|/* If at right child */
 name|rn
 operator|=
 name|rn
@@ -3488,7 +3523,7 @@ name|rn_p
 operator|->
 name|rn_r
 expr_stmt|;
-comment|/* otherwise, go right*/
+comment|/* otherwhise, go right*/
 block|}
 block|}
 end_block

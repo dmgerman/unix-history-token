@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3033,23 +3033,6 @@ name|int
 name|n
 decl_stmt|,
 name|error
-decl_stmt|;
-for|for
-control|(
-init|;
-name|rn
-condition|;
-name|rn
-operator|=
-name|rn
-operator|->
-name|rn_dupedkey
-control|)
-block|{
-name|int
-name|count
-init|=
-literal|0
 decl_stmt|,
 name|size
 init|=
@@ -3075,15 +3058,6 @@ name|rn
 decl_stmt|;
 if|if
 condition|(
-name|rn
-operator|->
-name|rn_flags
-operator|&
-name|RNF_ROOT
-condition|)
-continue|continue;
-if|if
-condition|(
 name|w
 operator|->
 name|w_op
@@ -3101,7 +3075,9 @@ operator|->
 name|w_arg
 operator|)
 condition|)
-continue|continue;
+return|return
+literal|0
+return|;
 define|#
 directive|define
 name|next
@@ -3221,7 +3197,9 @@ name|w_needed
 operator|>
 literal|0
 condition|)
-continue|continue;
+return|return
+literal|0
+return|;
 name|w
 operator|->
 name|w_rtm
@@ -3406,7 +3384,9 @@ name|size
 argument_list|)
 expr_stmt|;
 comment|/* Copy rtmsg and sockaddrs back */
-continue|continue;
+return|return
+literal|0
+return|;
 block|}
 name|next
 argument_list|(
@@ -3505,7 +3485,6 @@ name|sa_len
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
