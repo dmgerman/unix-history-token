@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.28 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.29 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.28 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.29 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,14 +191,15 @@ decl_stmt|;
 block|{
 name|char
 modifier|*
-name|tf
-decl_stmt|;
-name|char
-modifier|*
 name|qf
 decl_stmt|;
 name|char
 name|buf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|,
+name|tf
 index|[
 name|MAXLINE
 index|]
@@ -223,12 +224,16 @@ name|nullmailer
 decl_stmt|;
 name|int
 name|fd
+decl_stmt|,
+name|ret
 decl_stmt|;
 comment|/* 	**  Create control file. 	*/
-name|tf
-operator|=
-name|newstr
+do|do
+block|{
+name|strcpy
 argument_list|(
+name|tf
+argument_list|,
 name|queuename
 argument_list|(
 name|e
@@ -246,6 +251,8 @@ argument_list|,
 name|O_CREAT
 operator||
 name|O_WRONLY
+operator||
+name|O_EXCL
 argument_list|,
 name|FileMode
 argument_list|)
@@ -255,6 +262,13 @@ condition|(
 name|fd
 operator|<
 literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EEXIST
 condition|)
 block|{
 name|syserr
@@ -268,6 +282,56 @@ return|return
 name|NULL
 return|;
 block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|flock
+argument_list|(
+name|fd
+argument_list|,
+name|LOCK_EX
+operator||
+name|LOCK_NB
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EWOULDBLOCK
+condition|)
+name|syserr
+argument_list|(
+literal|"cannot flock(%s)"
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+block|}
+block|}
+do|while
+condition|(
+name|fd
+operator|<
+literal|0
+condition|)
+do|;
 name|tfp
 operator|=
 name|fdopen
@@ -1071,34 +1135,6 @@ begin_comment
 comment|/* 	**  Clean up. 	*/
 end_comment
 
-begin_if
-if|if
-condition|(
-name|flock
-argument_list|(
-name|fileno
-argument_list|(
-name|tfp
-argument_list|)
-argument_list|,
-name|LOCK_EX
-operator||
-name|LOCK_NB
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|syserr
-argument_list|(
-literal|"cannot flock(%s)"
-argument_list|,
-name|tf
-argument_list|)
-expr_stmt|;
-block|}
-end_if
-
 begin_expr_stmt
 name|qf
 operator|=
@@ -1112,21 +1148,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_if
-if|if
-condition|(
-name|tf
-operator|!=
-name|NULL
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|unlink
-argument_list|(
-name|qf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rename
@@ -1151,12 +1172,14 @@ operator|->
 name|e_df
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|errno
 operator|=
 literal|0
 expr_stmt|;
-block|}
-end_if
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -2590,11 +2613,6 @@ argument_list|,
 name|SM_DELIVER
 argument_list|)
 expr_stmt|;
-name|fclose
-argument_list|(
-name|qflock
-argument_list|)
-expr_stmt|;
 comment|/* finish up and exit */
 if|if
 condition|(
@@ -2607,6 +2625,11 @@ else|else
 name|dropenvelope
 argument_list|(
 name|CurEnv
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|qflock
 argument_list|)
 expr_stmt|;
 block|}
@@ -2764,7 +2787,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"%s: locked"
+literal|"%s: locked\n"
 argument_list|,
 name|CurEnv
 operator|->
