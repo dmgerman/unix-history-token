@@ -625,7 +625,9 @@ name|AFMT_S16_LE
 operator||
 name|AFMT_U16_LE
 block|,
-name|AFMT_U16_LE
+name|AFMT_STEREO
+operator||
+name|AFMT_S16_LE
 block|}
 decl_stmt|;
 end_decl_stmt
