@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)options.c	5.4 (Berkeley) %G%"
+literal|"@(#)options.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1254,11 +1254,10 @@ name|shellparam
 operator|.
 name|nparam
 condition|)
-name|n
-operator|=
-name|shellparam
-operator|.
-name|nparam
+name|error
+argument_list|(
+literal|"can't shift that many"
+argument_list|)
 expr_stmt|;
 name|INTOFF
 expr_stmt|;
