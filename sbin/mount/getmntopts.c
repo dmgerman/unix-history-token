@@ -608,6 +608,7 @@ name|i
 decl_stmt|;
 if|if
 condition|(
+operator|*
 name|iovlen
 operator|<
 literal|0
