@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	1.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	1.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Null Layer  * (See union_vnops.c for a description of what this does.)  */
+comment|/*  * Union Layer  */
 end_comment
 
 begin_include
@@ -156,11 +156,14 @@ name|mnt_flag
 operator|&
 name|MNT_UPDATE
 condition|)
+block|{
+comment|/* 		 * Need to provide. 		 * 1. a way to convert between rdonly and rdwr mounts. 		 * 2. support for nfs exports. 		 */
 return|return
 operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
+block|}
 comment|/* 	 * Get argument 	 */
 if|if
 condition|(
@@ -348,7 +351,7 @@ name|mnt_flag
 operator|&
 name|MNT_LOCAL
 operator|)
-operator|||
+operator|&&
 operator|(
 name|upperrootvp
 operator|->
@@ -364,6 +367,21 @@ operator|->
 name|mnt_flag
 operator||=
 name|MNT_LOCAL
+expr_stmt|;
+comment|/* 	 * Copy in the upper layer's RDONLY flag.  This is for the benefit 	 * of lookup() which explicitly checks the flag, rather than asking 	 * the filesystem for it's own opinion.  This means, that an update 	 * mount of the underlying filesystem to go from rdonly to rdwr 	 * will leave the unioned view as read-only. 	 */
+name|mp
+operator|->
+name|mnt_flag
+operator||=
+operator|(
+name|upperrootvp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_RDONLY
+operator|)
 expr_stmt|;
 name|mp
 operator|->
@@ -417,6 +435,19 @@ operator|-
 name|size
 argument_list|)
 expr_stmt|;
+name|bcopy
+argument_list|(
+literal|"union:"
+argument_list|,
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_mntfromname
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -431,10 +462,14 @@ operator|->
 name|mnt_stat
 operator|.
 name|f_mntfromname
+operator|+
+literal|6
 argument_list|,
 name|MNAMELEN
 operator|-
 literal|1
+operator|-
+literal|6
 argument_list|,
 operator|&
 name|size
@@ -448,9 +483,13 @@ name|mnt_stat
 operator|.
 name|f_mntfromname
 operator|+
+literal|6
+operator|+
 name|size
 argument_list|,
 name|MNAMELEN
+operator|-
+literal|6
 operator|-
 name|size
 argument_list|)
