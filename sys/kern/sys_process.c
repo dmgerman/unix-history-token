@@ -80,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/signalvar.h>
 end_include
 
 begin_include

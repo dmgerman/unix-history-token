@@ -44,13 +44,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
+file|<machine/fpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/fpu.h>
+file|<machine/pcb.h>
 end_include
 
 begin_include

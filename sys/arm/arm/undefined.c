@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/syslog.h>
 end_include
 

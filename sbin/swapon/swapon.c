@@ -75,13 +75,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<vm/vm_param.h>
 end_include
 
 begin_include

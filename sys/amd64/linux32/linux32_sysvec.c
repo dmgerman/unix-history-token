@@ -137,6 +137,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -162,12 +168,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysproto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
 end_include
 
 begin_include
@@ -228,6 +228,12 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
 end_include
 
 begin_include

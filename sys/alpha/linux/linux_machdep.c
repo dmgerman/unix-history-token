@@ -62,6 +62,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syscallsubr.h>
 end_include
 
@@ -80,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
+file|<machine/pcb.h>
 end_include
 
 begin_include

@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -173,12 +179,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
 end_include
 
 begin_comment

@@ -288,12 +288,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/exec.h>
 end_include
 
@@ -406,12 +400,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pcb_ext.h>
+file|<machine/pcb.h>
 end_include
 
-begin_comment
-comment|/* pcb.h included via sys/user.h */
-end_comment
+begin_include
+include|#
+directive|include
+file|<machine/pcb_ext.h>
+end_include
 
 begin_include
 include|#

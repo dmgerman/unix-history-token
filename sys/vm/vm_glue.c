@@ -185,12 +185,6 @@ directive|include
 file|<vm/swap_pager.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
-end_include
-
 begin_decl_stmt
 specifier|extern
 name|int

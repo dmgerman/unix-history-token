@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kdb.h>
 end_include
 
@@ -73,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<machine/db_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
 end_include
 
 begin_include
