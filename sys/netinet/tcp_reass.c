@@ -2860,6 +2860,8 @@ name|INET6
 comment|/* save packet options if user wanted */
 if|if
 condition|(
+name|isipv6
+operator|&&
 name|inp
 operator|->
 name|in6p_flags
