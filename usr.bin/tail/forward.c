@@ -55,7 +55,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<event.h>
+file|<sys/event.h>
 end_include
 
 begin_include
