@@ -2726,9 +2726,10 @@ condition|(
 operator|!
 name|Dists
 condition|)
-if|if
-condition|(
-operator|!
+block|{
+operator|(
+name|void
+operator|)
 name|dmenuOpenSimple
 argument_list|(
 operator|&
@@ -2736,13 +2737,18 @@ name|MenuDistributions
 argument_list|,
 name|FALSE
 argument_list|)
-operator|&&
+expr_stmt|;
+comment|/* select reasonable defaults if necessary */
+if|if
+condition|(
 operator|!
 name|Dists
 condition|)
-return|return
-name|DITEM_FAILURE
-return|;
+name|Dists
+operator|=
+name|_DIST_USER
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
