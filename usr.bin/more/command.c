@@ -723,12 +723,8 @@ expr_stmt|;
 comment|/* if no -e flag and we've hit EOF on the last file, quit. */
 if|if
 condition|(
-operator|(
 operator|!
 name|quit_at_eof
-operator|||
-name|short_file
-operator|)
 operator|&&
 name|hit_eof
 operator|&&
