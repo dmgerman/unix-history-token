@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.51 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.52 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.51 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.52 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1131,6 +1131,10 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
+name|nrcpts
+operator|=
+literal|0
+expr_stmt|;
 name|setproctitle
 argument_list|(
 literal|"%s %s: %s"
@@ -1730,11 +1734,16 @@ operator|->
 name|q_flags
 argument_list|)
 condition|)
+block|{
 name|message
 argument_list|(
 literal|"250 Recipient ok"
 argument_list|)
 expr_stmt|;
+name|nrcpts
+operator|++
+expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* punt -- should keep message in ADDRESS.... */
@@ -1851,7 +1860,9 @@ name|Errors
 operator|!=
 literal|0
 condition|)
-break|break;
+goto|goto
+name|abortmessage
+goto|;
 comment|/* 			**  Arrange to send to everyone. 			**	If sending to multiple people, mail back 			**		errors rather than reporting directly. 			**	In any case, don't mail back errors for 			**		anything that has happened up to 			**		now (the other end will do this). 			**	Truncate our transcript -- the mail has gotten 			**		to us successfully, and if we have 			**		to mail this back, it will be easier 			**		on the reader. 			**	Then send to everyone. 			**	Finally give a reply code.  If an error has 			**		already been given, don't mail a 			**		message back. 			**	We goose error returns by clearing error bit. 			*/
 name|SmtpPhase
 operator|=
@@ -1859,11 +1870,13 @@ literal|"delivery"
 expr_stmt|;
 if|if
 condition|(
-name|e
-operator|->
-name|e_nrcpts
+name|nrcpts
 operator|!=
 literal|1
+operator|&&
+name|a
+operator|==
+name|NULL
 condition|)
 block|{
 name|HoldErrs
@@ -1964,6 +1977,9 @@ name|e
 operator|->
 name|e_flags
 argument_list|)
+operator|&&
+operator|!
+name|HoldErrs
 condition|)
 block|{
 comment|/* avoid sending back an extra message */
@@ -1974,9 +1990,26 @@ operator|&=
 operator|~
 name|EF_FATALERRS
 expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_CLRQUEUE
+expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* from now on, we have to operate silently */
+name|HoldErrs
+operator|=
+name|TRUE
+expr_stmt|;
+name|e
+operator|->
+name|e_errormode
+operator|=
+name|EM_MAIL
+expr_stmt|;
 comment|/* if we just queued, poke it */
 if|if
 condition|(
@@ -2036,6 +2069,8 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+name|abortmessage
+label|:
 comment|/* if in a child, pop back to our parent */
 if|if
 condition|(

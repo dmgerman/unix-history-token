@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.49 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -774,6 +774,12 @@ init|=
 operator|*
 name|delimptr
 decl_stmt|;
+if|if
+condition|(
+name|savec
+operator|!=
+literal|'\0'
+condition|)
 operator|*
 name|delimptr
 operator|=
@@ -788,6 +794,12 @@ argument_list|(
 name|paddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|savec
+operator|!=
+literal|'\0'
+condition|)
 operator|*
 name|delimptr
 operator|=
@@ -1271,6 +1283,14 @@ decl_stmt|;
 name|int
 name|newstate
 decl_stmt|;
+name|char
+modifier|*
+name|saveto
+init|=
+name|CurEnv
+operator|->
+name|e_to
+decl_stmt|;
 specifier|static
 name|char
 modifier|*
@@ -1317,6 +1337,12 @@ expr_stmt|;
 name|p
 operator|=
 name|addr
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_to
+operator|=
+name|p
 expr_stmt|;
 if|if
 condition|(
@@ -1400,6 +1426,12 @@ operator|*
 name|delimptr
 operator|=
 name|p
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_to
+operator|=
+name|saveto
 expr_stmt|;
 return|return
 operator|(
@@ -1645,6 +1677,12 @@ name|delimptr
 operator|=
 name|p
 expr_stmt|;
+name|CurEnv
+operator|->
+name|e_to
+operator|=
+name|saveto
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -1707,6 +1745,12 @@ operator|*
 name|delimptr
 operator|=
 name|p
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_to
+operator|=
+name|saveto
 expr_stmt|;
 return|return
 operator|(
@@ -1953,6 +1997,12 @@ name|delimptr
 operator|=
 name|p
 expr_stmt|;
+name|CurEnv
+operator|->
+name|e_to
+operator|=
+name|saveto
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -2024,6 +2074,12 @@ name|av
 argument_list|)
 expr_stmt|;
 block|}
+name|CurEnv
+operator|->
+name|e_to
+operator|=
+name|saveto
+expr_stmt|;
 if|if
 condition|(
 name|av
