@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.32 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	5.33 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.32 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	5.33 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -735,6 +735,11 @@ argument_list|)
 condition|)
 break|break;
 block|}
+comment|/* reset errors */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 comment|/* process command */
 switch|switch
 condition|(
