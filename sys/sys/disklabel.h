@@ -57,11 +57,19 @@ begin_comment
 comment|/* XXX these should be defined per controller (or drive) elsewhere, not here! */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
 
 begin_define
 define|#
