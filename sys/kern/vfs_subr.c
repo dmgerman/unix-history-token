@@ -3560,6 +3560,12 @@ name|vp
 expr_stmt|;
 name|bo
 operator|->
+name|__bo_vnode
+operator|=
+name|vp
+expr_stmt|;
+name|bo
+operator|->
 name|bo_mtx
 operator|=
 operator|&
@@ -6972,7 +6978,7 @@ name|vp
 operator|=
 name|bo
 operator|->
-name|bo_private
+name|__bo_vnode
 expr_stmt|;
 comment|/* XXX */
 if|if

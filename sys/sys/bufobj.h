@@ -200,6 +200,12 @@ modifier|*
 name|bo_private
 decl_stmt|;
 comment|/* private pointer */
+name|struct
+name|vnode
+modifier|*
+name|__bo_vnode
+decl_stmt|;
+comment|/* 					 * XXX: This vnode pointer is here 					 * XXX: only to keep the syncer working 					 * XXX: for now. 					 */
 block|}
 struct|;
 end_struct
