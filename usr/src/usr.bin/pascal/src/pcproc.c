@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcproc.c 1.15 %G%"
+literal|"@(#)pcproc.c 1.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1557,6 +1557,21 @@ case|:
 name|postcheck
 argument_list|(
 name|filetype
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|sconv
+argument_list|(
+name|p2type
+argument_list|(
+name|ap
+argument_list|)
+argument_list|,
+name|p2type
+argument_list|(
+name|filetype
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* and fall through */
@@ -3391,9 +3406,12 @@ literal|"d"
 argument_list|)
 condition|)
 block|{
-name|putop
+name|sconv
 argument_list|(
-name|P2SCONV
+name|p2type
+argument_list|(
+name|ap
+argument_list|)
 argument_list|,
 name|P2DOUBLE
 argument_list|)
@@ -4624,6 +4642,21 @@ case|:
 name|postcheck
 argument_list|(
 name|ap
+argument_list|,
+name|filetype
+argument_list|)
+expr_stmt|;
+name|sconv
+argument_list|(
+name|p2type
+argument_list|(
+name|filetype
+argument_list|)
+argument_list|,
+name|p2type
+argument_list|(
+name|ap
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* and fall through */
@@ -4976,9 +5009,31 @@ block|{
 name|postcheck
 argument_list|(
 name|ap
+argument_list|,
+name|readtype
+operator|==
+name|P2INT
+condition|?
+name|nl
+operator|+
+name|T4INT
+else|:
+name|nl
+operator|+
+name|TDOUBLE
 argument_list|)
 expr_stmt|;
 block|}
+name|sconv
+argument_list|(
+name|readtype
+argument_list|,
+name|p2type
+argument_list|(
+name|ap
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|putop
 argument_list|(
 name|P2ASSIGN

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pccaseop.c 1.8 %G%"
+literal|"@(#)pccaseop.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -381,6 +381,13 @@ argument_list|,
 name|NIL
 argument_list|,
 name|RREQ
+argument_list|)
+expr_stmt|;
+name|sconv
+argument_list|(
+name|exprctype
+argument_list|,
+name|P2INT
 argument_list|)
 expr_stmt|;
 name|putop

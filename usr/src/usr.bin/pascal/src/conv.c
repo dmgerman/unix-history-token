@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conv.c 1.2 %G%"
+literal|"@(#)conv.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1168,7 +1168,9 @@ end_comment
 begin_macro
 name|postcheck
 argument_list|(
-argument|p
+argument|need
+argument_list|,
+argument|have
 argument_list|)
 end_macro
 
@@ -1176,7 +1178,15 @@ begin_decl_stmt
 name|struct
 name|nl
 modifier|*
-name|p
+name|need
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|nl
+modifier|*
+name|have
 decl_stmt|;
 end_decl_stmt
 
@@ -1196,7 +1206,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|p
+name|need
 operator|==
 name|NIL
 condition|)
@@ -1205,23 +1215,23 @@ return|return;
 block|}
 if|if
 condition|(
-name|p
+name|need
 operator|->
 name|class
 operator|==
 name|TYPE
 condition|)
 block|{
-name|p
+name|need
 operator|=
-name|p
+name|need
 operator|->
 name|type
 expr_stmt|;
 block|}
 switch|switch
 condition|(
-name|p
+name|need
 operator|->
 name|class
 condition|)
@@ -1231,16 +1241,26 @@ name|RANGE
 case|:
 if|if
 condition|(
-name|p
+name|need
 operator|!=
 name|nl
 operator|+
 name|T4INT
 condition|)
 block|{
+name|sconv
+argument_list|(
+name|p2type
+argument_list|(
+name|have
+argument_list|)
+argument_list|,
+name|P2INT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|p
+name|need
 operator|->
 name|range
 index|[
@@ -1254,7 +1274,7 @@ name|putleaf
 argument_list|(
 name|P2ICON
 argument_list|,
-name|p
+name|need
 operator|->
 name|range
 index|[
@@ -1280,7 +1300,7 @@ name|putleaf
 argument_list|(
 name|P2ICON
 argument_list|,
-name|p
+name|need
 operator|->
 name|range
 index|[
@@ -1306,6 +1326,16 @@ argument_list|(
 name|P2CALL
 argument_list|,
 name|P2INT
+argument_list|)
+expr_stmt|;
+name|sconv
+argument_list|(
+name|P2INT
+argument_list|,
+name|p2type
+argument_list|(
+name|have
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
