@@ -2822,11 +2822,21 @@ operator|=
 name|virtual_cpu
 expr_stmt|;
 comment|/* Easier to just set it than to test and set */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_flag
 operator||=
 name|P_THREADED
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 name|kg
 operator|=
