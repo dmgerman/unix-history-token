@@ -175,7 +175,7 @@ value|(PCPU_GET(astpending)& AST_RESCHED)
 end_define
 
 begin_comment
-comment|/*  * Arrange to handle pending profiling ticks before returning to user mode.  *  * XXX this is now poorly named and implemented.  It used to handle only a  * single tick and the P_OWEUPC flag served as a counter.  Now there is a  * counter in the proc table and flag isn't really necessary.  */
+comment|/*  * Arrange to handle pending profiling ticks before returning to user mode.  *  * XXX this is now poorly named and implemented.  It used to handle only a  * single tick and the PS_OWEUPC flag served as a counter.  Now there is a  * counter in the proc table and flag isn't really necessary.  */
 end_comment
 
 begin_define
@@ -185,8 +185,7 @@ name|need_proftick
 parameter_list|(
 name|p
 parameter_list|)
-define|\
-value|do { (p)->p_flag |= P_OWEUPC; aston(); } while (0)
+value|do {						\ 	mtx_enter(&sched_lock, MTX_SPIN);				\ 	(p)->p_sflag |= PS_OWEUPC;					\ 	mtx_exit(&sched_lock, MTX_SPIN);				\ 	aston();							\ } while (0)
 end_define
 
 begin_comment
@@ -324,23 +323,6 @@ name|__P
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|fork_return
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|,
-expr|struct
-name|trapframe
 operator|)
 argument_list|)
 decl_stmt|;
