@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001 Intel Corporation    All rights reserved.       Redistribution and use in source and binary forms of the Software, with or    without modification, are permitted provided that the following conditions    are met:        1. Redistributions of source code of the Software may retain the above        copyright notice, this list of conditions and the following disclaimer.        2. Redistributions in binary form of the Software may reproduce the above        copyright notice, this list of conditions and the following disclaimer        in the documentation and/or other materials provided with the        distribution.        3. Neither the name of the Intel Corporation nor the names of its        contributors shall be used to endorse or promote products derived from        this Software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE INTEL OR ITS CONTRIBUTORS BE LIABLE    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY    OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF    SUCH DAMAGE.  *******************************************************************************/
+comment|/*******************************************************************************    Copyright (c) 2001-2002 Intel Corporation    All rights reserved.       Redistribution and use in source and binary forms of the Software, with or    without modification, are permitted provided that the following conditions    are met:        1. Redistributions of source code of the Software may retain the above        copyright notice, this list of conditions and the following disclaimer.        2. Redistributions in binary form of the Software may reproduce the above        copyright notice, this list of conditions and the following disclaimer        in the documentation and/or other materials provided with the        distribution.        3. Neither the name of the Intel Corporation nor the names of its        contributors shall be used to endorse or promote products derived from        this Software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE INTEL OR ITS CONTRIBUTORS BE LIABLE    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY    OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF    SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
 begin_comment
@@ -66,6 +66,8 @@ block|,
 name|em_82543
 block|,
 name|em_82544
+block|,
+name|em_82540
 block|,
 name|em_num_macs
 block|}
@@ -614,6 +616,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* PCI Device IDs */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -661,6 +667,20 @@ define|#
 directive|define
 name|E1000_DEV_ID_82544GC_LOM
 value|0x100D
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82540EM
+value|0x100E
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUM_DEV_IDS
+value|8
 end_define
 
 begin_define
@@ -1887,7 +1907,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_CTRLEXT
+name|E1000_EERD
+value|0x00014
+end_define
+
+begin_comment
+comment|/* EEPROM Read - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT
 value|0x00018
 end_define
 
@@ -1959,6 +1990,17 @@ end_define
 
 begin_comment
 comment|/* Interrupt Cause Read - R/clr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ITR
+value|0x000C4
+end_define
+
+begin_comment
+comment|/* Interrupt Throttling Rate - RW */
 end_comment
 
 begin_define
@@ -2074,6 +2116,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_LEDCTL
+value|0x00E00
+end_define
+
+begin_comment
+comment|/* LED Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_PBA
 value|0x01000
 end_define
@@ -2184,6 +2237,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_RADV
+value|0x0282C
+end_define
+
+begin_comment
+comment|/* RX Interrupt Absolute Delay Timer - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RSRPD
+value|0x02C00
+end_define
+
+begin_comment
+comment|/* RX Small Packet Detect - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_TXDMAC
 value|0x03000
 end_define
@@ -2267,6 +2342,17 @@ end_define
 
 begin_comment
 comment|/* TX Descriptor Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TADV
+value|0x0382C
+end_define
+
+begin_comment
+comment|/* TX Interrupt Absolute Delay Val - RW */
 end_comment
 
 begin_define
@@ -2712,6 +2798,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_MGTPRC
+value|0x040B4
+end_define
+
+begin_comment
+comment|/* Management Packets RX Count - R/clr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MGTPDC
+value|0x040B8
+end_define
+
+begin_comment
+comment|/* Management Packets Dropped Count - R/clr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MGTPTC
+value|0x040BC
+end_define
+
+begin_comment
+comment|/* Management Packets TX Count - R/clr */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_TORL
 value|0x040C0
 end_define
@@ -2965,6 +3084,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_MANC
+value|0x05820
+end_define
+
+begin_comment
+comment|/* Management Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_IPAV
 value|0x05838
 end_define
@@ -2982,6 +3112,17 @@ end_define
 
 begin_comment
 comment|/* IPv4 Address Table - RW Array */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IP6AT
+value|0x05880
+end_define
+
+begin_comment
+comment|/* IPv6 Address Table - RW Array */
 end_comment
 
 begin_define
@@ -3067,8 +3208,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_82542_CTRLEXT
-value|E1000_CTRLEXT
+name|E1000_82542_EERD
+value|E1000_EERD
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_CTRL_EXT
+value|E1000_CTRL_EXT
 end_define
 
 begin_define
@@ -3118,6 +3266,13 @@ define|#
 directive|define
 name|E1000_82542_ICR
 value|E1000_ICR
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_ITR
+value|E1000_ITR
 end_define
 
 begin_define
@@ -3305,6 +3460,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_82542_LEDCTL
+value|E1000_LEDCTL
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_82542_PBA
 value|E1000_PBA
 end_define
@@ -3319,6 +3481,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_82542_RADV
+value|E1000_RADV
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_RSRPD
+value|E1000_RSRPD
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_82542_TXDMAC
 value|E1000_TXDMAC
 end_define
@@ -3328,6 +3504,13 @@ define|#
 directive|define
 name|E1000_82542_TXDCTL
 value|E1000_TXDCTL
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_TADV
+value|E1000_TADV
 end_define
 
 begin_define
@@ -3613,6 +3796,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_82542_MGTPRC
+value|E1000_MGTPRC
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_MGTPDC
+value|E1000_MGTPDC
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_MGTPTC
+value|E1000_MGTPTC
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_82542_TORL
 value|E1000_TORL
 end_define
@@ -3753,6 +3957,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_82542_MANC
+value|E1000_MANC
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_82542_IPAV
 value|E1000_IPAV
 end_define
@@ -3762,6 +3973,13 @@ define|#
 directive|define
 name|E1000_82542_IP4AT
 value|E1000_IP4AT
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_IP6AT
+value|E1000_IP6AT
 end_define
 
 begin_define
@@ -4038,6 +4256,9 @@ name|uint32_t
 name|max_frame_size
 decl_stmt|;
 name|uint32_t
+name|min_frame_size
+decl_stmt|;
+name|uint32_t
 name|mc_filter_type
 decl_stmt|;
 name|uint32_t
@@ -4057,6 +4278,21 @@ name|fc_low_water
 decl_stmt|;
 name|uint16_t
 name|fc_pause_time
+decl_stmt|;
+name|uint16_t
+name|device_id
+decl_stmt|;
+name|uint16_t
+name|vendor_id
+decl_stmt|;
+name|uint16_t
+name|subsystem_id
+decl_stmt|;
+name|uint16_t
+name|subsystem_vendor_id
+decl_stmt|;
+name|uint8_t
+name|revision_id
 decl_stmt|;
 name|boolean_t
 name|disable_polarity_correction
@@ -4081,9 +4317,6 @@ name|report_tx_early
 decl_stmt|;
 name|boolean_t
 name|low_profile
-decl_stmt|;
-name|boolean_t
-name|large_eeprom
 decl_stmt|;
 name|uint8_t
 name|autoneg
@@ -4114,7 +4347,7 @@ begin_define
 define|#
 directive|define
 name|E1000_EEPROM_SWDPIN0
-value|0x00000001
+value|0x0001
 end_define
 
 begin_comment
@@ -4499,6 +4732,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_STATUS_FUNC_MASK
+value|0x0000000C
+end_define
+
+begin_comment
+comment|/* PCI Function Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_STATUS_FUNC_0
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* Function 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_STATUS_FUNC_1
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Function 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_STATUS_TXOFF
 value|0x00000010
 end_define
@@ -4756,6 +5022,101 @@ begin_comment
 comment|/* EEPROM Size (0=64 word 1=256 word) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_EECD_REQ
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* EEPROM Access Request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EECD_GNT
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* EEPROM Access Grant */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EECD_PRES
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* EEPROM Present */
+end_comment
+
+begin_comment
+comment|/* EEPROM Read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EERD_START
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Start Read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EERD_DONE
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Read Done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EERD_ADDR_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_EERD_ADDR_MASK
+value|0x0000FF00
+end_define
+
+begin_comment
+comment|/* Read Address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EERD_DATA_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_EERD_DATA_MASK
+value|0xFFFF0000
+end_define
+
+begin_comment
+comment|/* Read Data */
+end_comment
+
 begin_comment
 comment|/* Extended Device Control */
 end_comment
@@ -4950,6 +5311,62 @@ begin_comment
 comment|/* Speed Select Bypass */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_LINK_MODE_MASK
+value|0x00C00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_LINK_MODE_GMII
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_LINK_MODE_TBI
+value|0x00C00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_WR_WMARK_MASK
+value|0x03000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_WR_WMARK_256
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_WR_WMARK_320
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_WR_WMARK_384
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_WR_WMARK_448
+value|0x03000000
+end_define
+
 begin_comment
 comment|/* MDI Control */
 end_comment
@@ -5022,6 +5439,234 @@ define|#
 directive|define
 name|E1000_MDIC_ERROR
 value|0x40000000
+end_define
+
+begin_comment
+comment|/* LED Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED0_MODE_MASK
+value|0x0000000F
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED0_MODE_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED0_IVRT
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED0_BLINK
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED1_MODE_MASK
+value|0x00000F00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED1_MODE_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED1_IVRT
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED1_BLINK
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED2_MODE_MASK
+value|0x000F0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED2_MODE_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED2_IVRT
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED2_BLINK
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED3_MODE_MASK
+value|0x0F000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED3_MODE_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED3_IVRT
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_LED3_BLINK
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_LINK_10_1000
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_LINK_100_1000
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_LINK_UP
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_ACTIVITY
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_LINK_ACTIVITY
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_LINK_10
+value|0x5
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_LINK_100
+value|0x6
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_LINK_1000
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_PCIX_MODE
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_FULL_DUPLEX
+value|0x9
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_COLLISION
+value|0xA
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_BUS_SPEED
+value|0xB
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_BUS_SIZE
+value|0xC
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_PAUSED
+value|0xD
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_LED_ON
+value|0xE
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LEDCTL_MODE_LED_OFF
+value|0xF
 end_define
 
 begin_comment
@@ -5186,6 +5831,20 @@ begin_comment
 comment|/* GP Int 3 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_ICR_TXD_LOW
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_ICR_SRPD
+value|0x00010000
+end_define
+
 begin_comment
 comment|/* Interrupt Cause Set */
 end_comment
@@ -5332,6 +5991,20 @@ end_define
 begin_comment
 comment|/* GP Int 3 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ICS_TXD_LOW
+value|E1000_ICR_TXD_LOW
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_ICS_SRPD
+value|E1000_ICR_SRPD
+end_define
 
 begin_comment
 comment|/* Interrupt Mask Set */
@@ -5480,6 +6153,20 @@ begin_comment
 comment|/* GP Int 3 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_IMS_TXD_LOW
+value|E1000_ICR_TXD_LOW
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_IMS_SRPD
+value|E1000_ICR_SRPD
+end_define
+
 begin_comment
 comment|/* Interrupt Mask Clear */
 end_comment
@@ -5626,6 +6313,20 @@ end_define
 begin_comment
 comment|/* GP Int 3 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IMC_TXD_LOW
+value|E1000_ICR_TXD_LOW
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_IMC_SRPD
+value|E1000_ICR_SRPD
+end_define
 
 begin_comment
 comment|/* Receive Control */
@@ -6205,6 +6906,17 @@ begin_comment
 comment|/* TXDCTL Granularity */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_TXDCTL_LWTHRESH
+value|0xFE000000
+end_define
+
+begin_comment
+comment|/* TXDCTL Low Threshold */
+end_comment
+
 begin_comment
 comment|/* Transmit Configuration Word */
 end_comment
@@ -6551,6 +7263,17 @@ begin_comment
 comment|/* TCP / UDP checksum offload */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_RXCSUM_IPV6OFL
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* IPv6 checksum offload */
+end_comment
+
 begin_comment
 comment|/* Definitions for power management and wakeup registers */
 end_comment
@@ -6682,6 +7405,17 @@ end_define
 
 begin_comment
 comment|/* Directed IPv4 Packet Wakeup Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_WUFC_IPV6
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Directed IPv6 Packet Wakeup Enable */
 end_comment
 
 begin_define
@@ -6845,6 +7579,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_WUS_IPV6
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Directed IPv6 Packet Wakeup Received */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_WUS_FLX0
 value|0x00010000
 end_define
@@ -6895,6 +7640,241 @@ end_define
 
 begin_comment
 comment|/* Mask for the 4 flexible filters */
+end_comment
+
+begin_comment
+comment|/* Management Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_SMBUS_EN
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* SMBus Enabled - RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_ASF_EN
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* ASF Enabled - RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_R_ON_FORCE
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Reset on Force TCO - RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_RMCP_EN
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Enable RCMP 026Fh Filtering */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_0298_EN
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Enable RCMP 0298h Filtering */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_IPV4_EN
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Enable IPv4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_IPV6_EN
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* Enable IPv6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_SNAP_EN
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Accept LLC/SNAP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_ARP_EN
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Enable ARP Request Filtering */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_NEIGHBOR_EN
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* Enable Neighbor Discovery                                               * Filtering */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_TCO_RESET
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* TCO Reset Occurred */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_RCV_TCO_EN
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* Receive TCO Packets Enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_REPORT_STATUS
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* Status Reporting Enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_SMB_REQ
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* SMBus Request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_SMB_GNT
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* SMBus Grant */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_SMB_CLK_IN
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* SMBus Clock In */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_SMB_DATA_IN
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* SMBus Data In */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_SMB_DATA_OUT
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* SMBus Data Out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_SMB_CLK_OUT
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* SMBus Clock Out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_SMB_DATA_OUT_SHIFT
+value|28
+end_define
+
+begin_comment
+comment|/* SMBus Data Out Shift */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC_SMB_CLK_OUT_SHIFT
+value|29
+end_define
+
+begin_comment
+comment|/* SMBus Clock Out Shift */
 end_comment
 
 begin_comment
@@ -7207,7 +8187,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_82543_TIPG_IPGT_FIBER
-value|6
+value|9
 end_define
 
 begin_define
@@ -7470,7 +8450,7 @@ value|0x0F
 end_define
 
 begin_comment
-comment|/* TBI_ACCEPT macro definition:  *  * If Tbi Compatibility mode is turned-on, then we should accept frames with  * receive errors if and only if:  *      1) errors is equal to the CRC error bit.  *      2) The last byte is a Carrier extension (0x0F).  *      3) The frame length (as reported by Hardware) is greater than 64 (60  *         if a VLAN tag was stripped from the frame.  *      4) "    "     "      "   "       "   "<= max_frame_size+1.  *  * This macro requires:  *      adapter = a pointer to struct em_shared_adapter   *      special = the 16 bit special field of the RX descriptor with EOP set  *      error = the 8 bit error field of the RX descriptor with EOP set  *      length = the sum of all the length fields of the RX descriptors that  *               make up the current frame  *      last_byte = the last byte of the frame DMAed by the hardware  *      max_frame_length = the maximum frame length we want to accept.  *                         THIS INCLUDES THE 4 BYTE ETHERNET CRC!  *  * This macro is a conditional that should be used in the interrupt   * handler's Rx processing routine when RxErrors have been detected.  *  * Typical use:  *  ...  *  if (TBI_ACCEPT) {  *      accept_frame = TRUE;  *      em_tbi_adjust_stats(adapter, MacAddress);  *      frame_length--;  *  } else {  *      accept_frame = FALSE;  *  }  *  ...  */
+comment|/* TBI_ACCEPT macro definition:  *  * This macro requires:  *      adapter = a pointer to struct em_shared_adapter   *      status = the 8 bit status field of the RX descriptor with EOP set  *      error = the 8 bit error field of the RX descriptor with EOP set  *      length = the sum of all the length fields of the RX descriptors that  *               make up the current frame  *      last_byte = the last byte of the frame DMAed by the hardware  *      max_frame_length = the maximum frame length we want to accept.  *      min_frame_length = the minimum frame length we want to accept.  *  * This macro is a conditional that should be used in the interrupt   * handler's Rx processing routine when RxErrors have been detected.  *  * Typical use:  *  ...  *  if (TBI_ACCEPT) {  *      accept_frame = TRUE;  *      em_tbi_adjust_stats(adapter, MacAddress);  *      frame_length--;  *  } else {  *      accept_frame = FALSE;  *  }  *  ...  */
 end_comment
 
 begin_define
@@ -7480,7 +8460,7 @@ name|TBI_ACCEPT
 parameter_list|(
 name|adapter
 parameter_list|,
-name|special
+name|status
 parameter_list|,
 name|errors
 parameter_list|,
@@ -7489,7 +8469,7 @@ parameter_list|,
 name|last_byte
 parameter_list|)
 define|\
-value|((adapter)->tbi_compatibility_on&& \      (((errors)& E1000_RXD_ERR_FRAME_ERR_MASK) == E1000_RXD_ERR_CE)&& \      ((last_byte) == CARRIER_EXTENSION)&& \      ((special == 0x0000) ? \          ((length<= ((adapter)->max_frame_size + 1))&& \           (length> 64)) : \          ((length<= ((adapter)->max_frame_size - 3))&& \           (length> 60))))
+value|((adapter)->tbi_compatibility_on&& \      (((errors)& E1000_RXD_ERR_FRAME_ERR_MASK) == E1000_RXD_ERR_CE)&& \      ((last_byte) == CARRIER_EXTENSION)&& \      (((status)& E1000_RXD_STAT_VP) ? \           (((length)> ((adapter)->min_frame_size - VLAN_TAG_SIZE))&& \            ((length)<= ((adapter)->max_frame_size + 1))) : \           (((length)> (adapter)->min_frame_size)&& \            ((length)<= ((adapter)->max_frame_size + VLAN_TAG_SIZE + 1)))))
 end_define
 
 begin_endif

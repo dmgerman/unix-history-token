@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001 Intel Corporation    All rights reserved.       Redistribution and use in source and binary forms of the Software, with or    without modification, are permitted provided that the following conditions    are met:        1. Redistributions of source code of the Software may retain the above        copyright notice, this list of conditions and the following disclaimer.        2. Redistributions in binary form of the Software may reproduce the above        copyright notice, this list of conditions and the following disclaimer        in the documentation and/or other materials provided with the        distribution.        3. Neither the name of the Intel Corporation nor the names of its        contributors shall be used to endorse or promote products derived from        this Software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE INTEL OR ITS CONTRIBUTORS BE LIABLE    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY    OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF    SUCH DAMAGE.  *******************************************************************************/
+comment|/*******************************************************************************    Copyright (c) 2001-2002 Intel Corporation    All rights reserved.       Redistribution and use in source and binary forms of the Software, with or    without modification, are permitted provided that the following conditions    are met:        1. Redistributions of source code of the Software may retain the above        copyright notice, this list of conditions and the following disclaimer.        2. Redistributions in binary form of the Software may reproduce the above        copyright notice, this list of conditions and the following disclaimer        in the documentation and/or other materials provided with the        distribution.        3. Neither the name of the Intel Corporation nor the names of its        contributors shall be used to endorse or promote products derived from        this Software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE INTEL OR ITS CONTRIBUTORS BE LIABLE    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY    OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF    SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
 begin_comment
@@ -507,7 +507,7 @@ argument_list|,
 name|PHY_CTRL
 argument_list|)
 expr_stmt|;
-comment|/* We need to disable Autoneg in order to force link and duplex. */
+comment|/* We need to disable autoneg in order to force link and duplex. */
 name|mii_ctrl_reg
 operator|&=
 operator|~
@@ -777,7 +777,7 @@ operator|->
 name|wait_autoneg_complete
 condition|)
 block|{
-comment|/* We will wait for AutoNeg to complete. */
+comment|/* We will wait for autoneg to complete. */
 name|DEBUGOUT
 argument_list|(
 literal|"Waiting for forced speed/duplex link.\n"
@@ -787,7 +787,7 @@ name|mii_status_reg
 operator|=
 literal|0
 expr_stmt|;
-comment|/* We will wait for AutoNeg to complete or 4.5 seconds to expire. */
+comment|/* We will wait for autoneg to complete or 4.5 seconds to expire. */
 for|for
 control|(
 name|i
@@ -987,11 +987,6 @@ name|command
 init|=
 literal|0
 decl_stmt|;
-name|DEBUGFUNC
-argument_list|(
-literal|"em_read_phy_reg"
-argument_list|)
-expr_stmt|;
 name|ASSERT
 argument_list|(
 name|reg_addr
@@ -1031,13 +1026,6 @@ name|E1000_MDIC_OP_READ
 operator|)
 operator|)
 expr_stmt|;
-name|DEBUGOUT1
-argument_list|(
-literal|"Writing 0x%X to MDIC\n"
-argument_list|,
-name|command
-argument_list|)
-expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
 name|shared
@@ -1074,13 +1062,6 @@ argument_list|(
 name|shared
 argument_list|,
 name|MDIC
-argument_list|)
-expr_stmt|;
-name|DEBUGOUT1
-argument_list|(
-literal|"Read 0x%X from MDIC\n"
-argument_list|,
-name|data
 argument_list|)
 expr_stmt|;
 if|if
@@ -1469,7 +1450,7 @@ name|E1000_READ_REG
 argument_list|(
 name|shared
 argument_list|,
-name|CTRLEXT
+name|CTRL_EXT
 argument_list|)
 expr_stmt|;
 name|ctrl_ext_reg
@@ -1480,7 +1461,7 @@ name|E1000_WRITE_REG
 argument_list|(
 name|shared
 argument_list|,
-name|CTRLEXT
+name|CTRL_EXT
 argument_list|,
 name|ctrl_ext_reg
 argument_list|)
@@ -1497,7 +1478,7 @@ name|E1000_READ_REG
 argument_list|(
 name|shared
 argument_list|,
-name|CTRLEXT
+name|CTRL_EXT
 argument_list|)
 expr_stmt|;
 name|ctrl_ext_reg
@@ -1509,7 +1490,7 @@ name|E1000_WRITE_REG
 argument_list|(
 name|shared
 argument_list|,
-name|CTRLEXT
+name|CTRL_EXT
 argument_list|,
 name|ctrl_ext_reg
 argument_list|)
@@ -1525,7 +1506,7 @@ name|E1000_READ_REG
 argument_list|(
 name|shared
 argument_list|,
-name|CTRLEXT
+name|CTRL_EXT
 argument_list|)
 expr_stmt|;
 name|ctrl_ext_reg
@@ -1536,7 +1517,7 @@ name|E1000_WRITE_REG
 argument_list|(
 name|shared
 argument_list|,
-name|CTRLEXT
+name|CTRL_EXT
 argument_list|,
 name|ctrl_ext_reg
 argument_list|)
@@ -1737,11 +1718,7 @@ condition|)
 block|{
 name|ctrl_reg
 operator||=
-operator|(
-name|E1000_CTRL_ASDE
-operator||
 name|E1000_CTRL_SLU
-operator|)
 expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
@@ -1930,7 +1907,7 @@ argument_list|,
 name|PHY_AUTONEG_ADV
 argument_list|)
 expr_stmt|;
-comment|/* Shift left to put 10T-Half bit in bit 0      * Isolate the four bits for 100/10 Full/Half.      */
+comment|/* Shift right to put 10T-Half bit in bit 0      * Isolate the four bits for 100/10 Full/Half.      */
 name|autoneg_hw_setting
 operator|=
 operator|(
@@ -2217,7 +2194,7 @@ name|phy_specific_ctrl_reg
 argument_list|)
 expr_stmt|;
 comment|/* Options:      *   autoneg = 1 (default)      *      PHY will advertise value(s) parsed from      *      autoneg_advertised and fc      *   autoneg = 0      *      PHY will be set to 10H, 10F, 100H, or 100F      *      depending on value parsed from forced_speed_duplex.      */
-comment|/* Is AutoNeg enabled?  This is enabled by default or by software      * override.  If so,      * call PhySetupAutoNegAdvertisement routine to parse the      * autoneg_advertised and fc options.      * If AutoNeg is NOT enabled, then the user should have provided      * a Speed/Duplex override.  If so, then call the      * PhyForceSpeedAndDuplex to parse and set this up.  Otherwise,      * we are in an error situation and need to bail.      */
+comment|/* Is autoneg enabled?  This is enabled by default or by software override.      * If so, call em_phy_setup_autoneg routine to parse the      * autoneg_advertised and fc options. If autoneg is NOT enabled, then the      * user should have provided a speed/duplex override.  If so, then call      * em_phy_force_speed_duplex to parse and set this up.  Otherwise,      * we are in an error situation and need to bail.      */
 if|if
 condition|(
 name|shared
@@ -2636,7 +2613,7 @@ operator||=
 name|CR_1000T_FD_CAPS
 expr_stmt|;
 block|}
-comment|/* Check for a software override of the flow control settings, and      * setup the PHY advertisement registers accordingly.  If      * auto-negotiation is enabled, then software will have to set the      * "PAUSE" bits to the correct value in the Auto-Negotiation      * Advertisement Register (PHY_AUTONEG_ADVERTISEMENT) and re-start      * auto-negotiation.      *      * The possible values of the "fc" parameter are:      *      0:  Flow control is completely disabled      *      1:  Rx flow control is enabled (we can receive pause frames      *          but not send pause frames).      *      2:  Tx flow control is enabled (we can send pause frames      *          but we do not support receiving pause frames).      *      3:  Both Rx and TX flow control (symmetric) are enabled.      *  other:  No software override.  The flow control configuration      *          in the EEPROM is used.      */
+comment|/* Check for a software override of the flow control settings, and      * setup the PHY advertisement registers accordingly.  If      * auto-negotiation is enabled, then software will have to set the      * "PAUSE" bits to the correct value in the Auto-Negotiation      * Advertisement Register (PHY_AUTONEG_ADV) and re-start auto-negotiation.      *      * The possible values of the "fc" parameter are:      *      0:  Flow control is completely disabled      *      1:  Rx flow control is enabled (we can receive pause frames      *          but not send pause frames).      *      2:  Tx flow control is enabled (we can send pause frames      *          but we do not support receiving pause frames).      *      3:  Both Rx and TX flow control (symmetric) are enabled.      *  other:  No software override.  The flow control configuration      *          in the EEPROM is used.      */
 switch|switch
 condition|(
 name|shared
@@ -3184,7 +3161,7 @@ argument_list|)
 expr_stmt|;
 name|DEBUGOUT1
 argument_list|(
-literal|"adapter Base Address = %p\n"
+literal|"adapter Base Address = %x\n"
 argument_list|,
 name|shared
 operator|->
@@ -3575,6 +3552,12 @@ operator|->
 name|phy_id
 operator|==
 name|M88E1000_I_PHY_ID
+operator|||
+name|shared
+operator|->
+name|phy_id
+operator|==
+name|M88E1011_I_PHY_ID
 condition|)
 block|{
 name|DEBUGOUT2
@@ -3687,7 +3670,7 @@ argument_list|(
 literal|"em_wait_autoneg"
 argument_list|)
 expr_stmt|;
-comment|/* We will wait for AutoNeg to complete. */
+comment|/* We will wait for autoneg to complete. */
 name|DEBUGOUT
 argument_list|(
 literal|"Waiting for Auto-Neg to complete.\n"
@@ -3697,7 +3680,7 @@ name|mii_status_reg
 operator|=
 literal|0
 expr_stmt|;
-comment|/* We will wait for AutoNeg to complete or 4.5 seconds to expire. */
+comment|/* We will wait for autoneg to complete or 4.5 seconds to expire. */
 for|for
 control|(
 name|i
@@ -3778,7 +3761,7 @@ name|phy_status_info
 parameter_list|)
 block|{
 name|uint16_t
-name|phy_mii_shatus_reg
+name|phy_mii_status_reg
 decl_stmt|;
 name|uint16_t
 name|phy_specific_ctrl_reg
@@ -3857,7 +3840,7 @@ return|return
 name|FALSE
 return|;
 comment|/* PHY info only valid for LINK UP.  Read MII status reg       * back-to-back to get link status.      */
-name|phy_mii_shatus_reg
+name|phy_mii_status_reg
 operator|=
 name|em_read_phy_reg
 argument_list|(
@@ -3866,7 +3849,7 @@ argument_list|,
 name|PHY_STATUS
 argument_list|)
 expr_stmt|;
-name|phy_mii_shatus_reg
+name|phy_mii_status_reg
 operator|=
 name|em_read_phy_reg
 argument_list|(
@@ -3878,7 +3861,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|phy_mii_shatus_reg
+name|phy_mii_status_reg
 operator|&
 name|MII_SR_LINK_STATUS
 operator|)
