@@ -461,15 +461,6 @@ literal|0
 comment|/* granularity */
 block|}
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
 if|if
 condition|(
 name|td
@@ -715,14 +706,16 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|==
 name|curthread
 operator|->
 name|td_proc
 argument_list|,
 operator|(
-literal|"giving a TSS to non-curproc"
+literal|"giving TSS to !curproc"
 operator|)
 argument_list|)
 expr_stmt|;
