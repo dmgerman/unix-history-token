@@ -652,7 +652,7 @@ name|_hw_cbb
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|start_mem
+name|start_memory
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
