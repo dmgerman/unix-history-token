@@ -57,6 +57,24 @@ directive|include
 file|"pcib_if.h"
 end_include
 
+begin_comment
+comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_COMPONENT
+value|BUS_MANAGER
+end_define
+
+begin_macro
+name|MODULE_NAME
+argument_list|(
+literal|"PCIB"
+argument_list|)
+end_macro
+
 begin_struct
 struct|struct
 name|acpi_pcib_softc
@@ -433,6 +451,12 @@ operator|==
 name|ACPI_TYPE_DEVICE
 operator|)
 operator|&&
+operator|!
+name|acpi_disabled
+argument_list|(
+literal|"pci"
+argument_list|)
+operator|&&
 name|acpi_MatchHid
 argument_list|(
 name|dev
@@ -483,6 +507,14 @@ decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
+name|int
+name|result
+decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -514,11 +546,11 @@ argument_list|(
 name|dev
 argument_list|)
 condition|)
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|ENXIO
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 comment|/*      * Get our segment number by evaluating _SEG      * It's OK for this to not exist.      */
 if|if
 condition|(
@@ -562,11 +594,11 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|ENXIO
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* if it's not found, assume 0 */
 name|sc
@@ -619,11 +651,11 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|ENXIO
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* if it's not found, assume 0 */
 name|sc
@@ -650,11 +682,11 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 literal|0
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 comment|/*      * Attach the PCI bus proper.      */
 if|if
 condition|(
@@ -686,21 +718,25 @@ argument_list|,
 literal|"couldn't attach pci bus"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|ENXIO
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * Now go scan the bus.      *      * XXX It would be nice to defer this and count on the nexus getting it      * after the first pass, but this does not seem to be reliable.      */
-return|return
-operator|(
+name|result
+operator|=
 name|bus_generic_attach
 argument_list|(
 name|dev
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+name|return_VALUE
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

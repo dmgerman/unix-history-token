@@ -47,6 +47,24 @@ directive|include
 file|<dev/acpica/acpivar.h>
 end_include
 
+begin_comment
+comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_COMPONENT
+value|PROCESSOR_CONTROL
+end_define
+
+begin_macro
+name|MODULE_NAME
+argument_list|(
+literal|"PROCESSOR"
+argument_list|)
+end_macro
+
 begin_define
 define|#
 directive|define
@@ -582,8 +600,20 @@ block|{
 name|ACPI_HANDLE
 name|handle
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+operator|!
+name|acpi_disabled
+argument_list|(
+literal|"processor"
+argument_list|)
+operator|&&
+operator|(
 name|AcpiGetHandle
 argument_list|(
 name|ACPI_ROOT_OBJECT
@@ -595,6 +625,7 @@ name|handle
 argument_list|)
 operator|==
 name|AE_OK
+operator|)
 condition|)
 name|AcpiWalkNamespace
 argument_list|(
@@ -610,6 +641,8 @@ name|bus
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|return_VOID
 expr_stmt|;
 block|}
 end_function
@@ -653,6 +686,11 @@ decl_stmt|;
 name|PROCESSOR_APIC
 name|lapic
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 name|acpi_pr_FindLapic
 argument_list|(
 name|bus
@@ -698,11 +736,11 @@ argument_list|,
 literal|"could not create CPU device\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|acpi_set_handle
 argument_list|(
@@ -726,11 +764,11 @@ literal|"processor device"
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -779,6 +817,11 @@ name|acpi_pr_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -870,11 +913,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* XXX call MD cpu-identification here? */
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 literal|0
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1025,6 +1068,11 @@ name|i
 init|=
 literal|0
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 comment|/*      * Set Latency Defaults:      * ---------------------      * Default state latency to ACPI_UINT32_MAX -- meaning that this state      * should not be used by policy.  This value is overriden by states      * that are present and have usable latencies (e.g.<= 1000us for C3).      */
 for|for
 control|(
@@ -1088,11 +1136,11 @@ name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|State
 operator|=
@@ -1241,11 +1289,11 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1265,12 +1313,17 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 comment|/* TODO... */
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1309,6 +1362,11 @@ name|i
 init|=
 literal|0
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 comment|/*      * Get Throttling States:      * ----------------------      */
 name|Status
 operator|=
@@ -1345,11 +1403,11 @@ name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|State
 operator|=
@@ -1472,11 +1530,11 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1492,12 +1550,17 @@ name|sc
 parameter_list|)
 block|{
 name|ACPI_STATUS
-name|status
+name|Status
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
-name|status
+name|Status
 operator|=
 name|AcpiSetProcessorSleepState
 argument_list|(
@@ -1526,23 +1589,23 @@ literal|"could not set Active sleep state - %s\n"
 argument_list|,
 name|acpi_strerror
 argument_list|(
-name|status
+name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|status
-operator|)
-return|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* XXX need to hook ourselves to be called when things go idle */
 comment|/*    sc->pr_idleevent = EVENTHANDLER_FAST_REGISTER(idle_event, acpi_pr_IdleHandler, sc, IDLE_PRI_FIRST); */
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

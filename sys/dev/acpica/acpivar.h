@@ -1154,5 +1154,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|acpi_disabled
+parameter_list|(
+name|char
+modifier|*
+name|subsys
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

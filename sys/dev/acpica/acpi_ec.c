@@ -67,6 +67,24 @@ directive|include
 file|<dev/acpica/acpi_ecreg.h>
 end_include
 
+begin_comment
+comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_COMPONENT
+value|EMBEDDED_CONTROLLER
+end_define
+
+begin_macro
+name|MODULE_NAME
+argument_list|(
+literal|"EC"
+argument_list|)
+end_macro
+
 begin_struct
 struct|struct
 name|acpi_ec_softc
@@ -552,10 +570,14 @@ name|device_t
 name|bus
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 comment|/* XXX implement - need an ACPI 2.0 system to test this */
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 
@@ -582,6 +604,12 @@ argument_list|)
 operator|==
 name|ACPI_TYPE_DEVICE
 operator|)
+operator|&&
+operator|!
+name|acpi_disabled
+argument_list|(
+literal|"ec"
+argument_list|)
 operator|&&
 name|acpi_MatchHid
 argument_list|(
@@ -643,6 +671,11 @@ name|acpi_object_list
 modifier|*
 name|args
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 comment|/*      * Fetch/initialise softc      */
 name|sc
 operator|=
@@ -729,11 +762,11 @@ argument_list|,
 literal|"can't allocate data port\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|ENXIO
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|sc
 operator|->
@@ -804,11 +837,11 @@ argument_list|,
 literal|"can't allocate command/status port\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|ENXIO
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|sc
 operator|->
@@ -866,11 +899,11 @@ name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|ENXIO
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * Install GPE handler      *      * Evaluate the _GPE method to find the GPE bit used by the EC to signal      * status (SCI).      */
 if|if
@@ -886,11 +919,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|ENOMEM
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -925,11 +958,11 @@ name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|ENXIO
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|param
 operator|=
@@ -958,11 +991,11 @@ argument_list|,
 literal|"_GPE method returned bad result\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|ENXIO
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|sc
 operator|->
@@ -1015,11 +1048,11 @@ name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|ENXIO
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*       * Install address space handler      */
 if|if
@@ -1060,11 +1093,11 @@ name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|ENXIO
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * Evaluate _REG to indicate that the region is now available.      */
 if|if
@@ -1080,11 +1113,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|ENOMEM
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|args
 operator|->
 name|object
@@ -1185,17 +1218,17 @@ name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|ENXIO
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 literal|0
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1233,6 +1266,11 @@ index|[
 literal|5
 index|]
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1343,6 +1381,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 
@@ -1428,6 +1468,13 @@ decl_stmt|;
 name|EC_REQUEST
 name|EcRequest
 decl_stmt|;
+name|FUNCTION_TRACE_U32
+argument_list|(
+name|__FUNCTION__
+argument_list|,
+name|Address
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1454,11 +1501,11 @@ operator|==
 name|NULL
 operator|)
 condition|)
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_BAD_PARAMETER
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|Function
@@ -1526,11 +1573,11 @@ argument_list|,
 name|Function
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_BAD_PARAMETER
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * Perform the transaction.      */
 if|if
@@ -1561,11 +1608,11 @@ name|EcRequest
 operator|.
 name|Data
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -39,6 +39,24 @@ directive|include
 file|<dev/acpica/acpivar.h>
 end_include
 
+begin_comment
+comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_COMPONENT
+value|SYSTEM_CONTROL
+end_define
+
+begin_macro
+name|MODULE_NAME
+argument_list|(
+literal|"TIMER"
+argument_list|)
+end_macro
+
 begin_define
 define|#
 directive|define
@@ -211,6 +229,20 @@ index|[
 literal|40
 index|]
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|acpi_disabled
+argument_list|(
+literal|"timer"
+argument_list|)
+condition|)
+name|return_VOID
+expr_stmt|;
 name|buf
 operator|.
 name|Pointer
@@ -258,7 +290,8 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -279,7 +312,8 @@ argument_list|,
 literal|"invalid FADT\n"
 argument_list|)
 expr_stmt|;
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -308,7 +342,8 @@ argument_list|,
 literal|"could not add acpi_timer0\n"
 argument_list|)
 expr_stmt|;
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -327,7 +362,8 @@ argument_list|,
 literal|"could not set magic\n"
 argument_list|)
 expr_stmt|;
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 name|sprintf
 argument_list|(
@@ -350,6 +386,8 @@ name|dev
 argument_list|,
 name|desc
 argument_list|)
+expr_stmt|;
+name|return_VOID
 expr_stmt|;
 block|}
 end_function
@@ -399,6 +437,11 @@ name|acpi_timer_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -412,11 +455,11 @@ name|tm_dev
 operator|=
 name|dev
 expr_stmt|;
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 literal|0
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

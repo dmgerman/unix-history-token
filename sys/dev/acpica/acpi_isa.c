@@ -55,6 +55,24 @@ directive|include
 file|<dev/acpica/acpivar.h>
 end_include
 
+begin_comment
+comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_COMPONENT
+value|BUS_MANAGER
+end_define
+
+begin_macro
+name|MODULE_NAME
+argument_list|(
+literal|"ISA"
+argument_list|)
+end_macro
+
 begin_define
 define|#
 directive|define
@@ -508,15 +526,28 @@ decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
-comment|/*If this driver is loaded from userland ,just ignore*/
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|acpi_disabled
+argument_list|(
+literal|"isa"
+argument_list|)
+condition|)
+name|return_VOID
+expr_stmt|;
+comment|/*      * If this driver is loaded from userland, we can assume that      * the ISA bus has already been detected, and we should not      * interfere.      */
 if|if
 condition|(
 operator|!
 name|cold
 condition|)
-block|{
-return|return;
-block|}
+name|return_VOID
+expr_stmt|;
 comment|/*      * Look for the _SB_ scope, which will contain all the devices      * we are likely to support.      */
 if|if
 condition|(
@@ -549,7 +580,8 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -574,7 +606,6 @@ operator|)
 operator|!=
 name|AE_OK
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|bus
@@ -587,8 +618,8 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 
@@ -636,7 +667,25 @@ decl_stmt|;
 name|u_int32_t
 name|devid
 decl_stmt|;
-comment|/*      * Try to get information about the device      */
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+comment|/*      * Skip this node if it's on the 'avoid' list.      */
+if|if
+condition|(
+name|acpi_avoid
+argument_list|(
+name|handle
+argument_list|)
+condition|)
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+comment|/*      * Try to get information about the device.      */
 if|if
 condition|(
 name|AcpiGetObjectInfo
@@ -649,11 +698,11 @@ argument_list|)
 operator|!=
 name|AE_OK
 condition|)
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 comment|/*      * Reformat the _HID value into 32 bits.      */
 if|if
 condition|(
@@ -666,11 +715,11 @@ operator|&
 name|ACPI_VALID_HID
 operator|)
 condition|)
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 comment|/*      * XXX Try to avoid passing stuff to ISA that it just isn't interested      *     in.  This is the *wrong* solution, and what needs to be done      *     involves just sending ISA the PnP ID and a handle, and then      *     lazy-parsing the resources if and only if a driver attaches.      *     With the way that ISA currently works (using bus_probe_and_attach)      *     this is very difficult.  Maybe we need a device_configure method?      */
 if|if
 condition|(
@@ -688,11 +737,11 @@ literal|5
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|devid
 operator|=
 name|PNP_EISAID
@@ -727,11 +776,11 @@ argument_list|)
 operator|!=
 name|AE_OK
 condition|)
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 comment|/*      * Add the device and parse our resources      */
 name|child
 operator|=
@@ -806,12 +855,26 @@ operator|.
 name|HardwareId
 argument_list|)
 expr_stmt|;
-comment|/*      * XXX Parse configuration data and _CID list to find compatible IDs      */
-return|return
+name|DEBUG_PRINT
+argument_list|(
+name|TRACE_OBJECTS
+argument_list|,
 operator|(
-name|AE_OK
+literal|"added ISA PnP info for %s\n"
+operator|,
+name|acpi_name
+argument_list|(
+name|handle
+argument_list|)
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
+comment|/*      * XXX Parse configuration data and _CID list to find compatible IDs      */
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -834,6 +897,11 @@ name|acpi_isa_context
 modifier|*
 name|cp
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 name|malloc
@@ -870,6 +938,8 @@ operator|*
 name|context
 operator|=
 name|cp
+expr_stmt|;
+name|return_VOID
 expr_stmt|;
 block|}
 end_function
@@ -915,13 +985,19 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cp
 operator|==
 name|NULL
 condition|)
-return|return;
+name|return_VOID
+expr_stmt|;
 name|parent
 operator|=
 name|device_get_parent
@@ -1042,7 +1118,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 name|config
 operator|->
@@ -1111,7 +1188,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 name|config
 operator|->
@@ -1180,7 +1258,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 name|config
 operator|->
@@ -1249,7 +1328,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 name|config
 operator|->
@@ -1308,6 +1388,8 @@ name|cp
 argument_list|,
 name|M_DEVBUF
 argument_list|)
+expr_stmt|;
+name|return_VOID
 expr_stmt|;
 block|}
 end_function

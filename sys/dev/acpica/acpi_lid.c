@@ -39,6 +39,24 @@ directive|include
 file|<dev/acpica/acpivar.h>
 end_include
 
+begin_comment
+comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_COMPONENT
+value|SYSTEM_CONTROL
+end_define
+
+begin_macro
+name|MODULE_NAME
+argument_list|(
+literal|"LID"
+argument_list|)
+end_macro
+
 begin_struct
 struct|struct
 name|acpi_lid_softc
@@ -203,6 +221,12 @@ operator|==
 name|ACPI_TYPE_DEVICE
 operator|)
 operator|&&
+operator|!
+name|acpi_disabled
+argument_list|(
+literal|"lid"
+argument_list|)
+operator|&&
 name|acpi_MatchHid
 argument_list|(
 name|dev
@@ -246,6 +270,11 @@ name|acpi_lid_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -282,11 +311,11 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 literal|0
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -316,6 +345,11 @@ decl_stmt|;
 name|ACPI_OBJECT
 name|Object
 decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 operator|(
@@ -360,7 +394,8 @@ argument_list|)
 operator|!=
 name|AE_OK
 condition|)
-return|return;
+name|return_VOID
+expr_stmt|;
 if|if
 condition|(
 name|Object
@@ -369,7 +404,8 @@ name|Type
 operator|!=
 name|ACPI_TYPE_NUMBER
 condition|)
-return|return;
+name|return_VOID
+expr_stmt|;
 comment|/*      * Update lid status     */
 name|sc
 operator|->
@@ -414,7 +450,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -447,6 +484,8 @@ name|acpi_lid_switch_sx
 argument_list|)
 expr_stmt|;
 block|}
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 
@@ -489,6 +528,13 @@ operator|*
 operator|)
 name|context
 decl_stmt|;
+name|FUNCTION_TRACE_U32
+argument_list|(
+name|__FUNCTION__
+argument_list|,
+name|notify
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|notify
@@ -508,9 +554,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-return|return;
+break|break;
 comment|/* unknown notification value */
 block|}
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 
