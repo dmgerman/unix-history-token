@@ -1401,7 +1401,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"nrvFf:a:t:"
+literal|"nrvFf:a:"
 argument_list|)
 operator|)
 operator|!=
