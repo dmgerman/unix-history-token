@@ -65,23 +65,33 @@ begin_comment
 comment|/* size of buffer to read inodes in pass1 */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BUFSIZ
-end_ifndef
+begin_comment
+comment|/*  * Each inode on the filesystem is described by the following structure.  * The linkcnt is initially set to the value in the inode. Each time it  * is found during the descent in passes 2, 3, and 4 the count is  * decremented. Any inodes whose count is non-zero after pass 4 needs to  * have its link count adjusted by the value remaining in ino_linkcnt.  */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|BUFSIZ
-value|1024
-end_define
+begin_struct
+struct|struct
+name|inostat
+block|{
+name|char
+name|ino_state
+decl_stmt|;
+comment|/* state of inode, see below */
+name|char
+name|ino_type
+decl_stmt|;
+comment|/* type of inode */
+name|short
+name|ino_linkcnt
+decl_stmt|;
+comment|/* number of links not found */
+block|}
+struct|;
+end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/*  * Inode states.  */
+end_comment
 
 begin_define
 define|#
@@ -148,6 +158,30 @@ end_define
 begin_comment
 comment|/* file is to be cleared */
 end_comment
+
+begin_comment
+comment|/*  * Inode state information is contained on per cylinder group lists  * which are described by the following structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|inostatlist
+block|{
+name|long
+name|il_numalloced
+decl_stmt|;
+comment|/* number of inodes allocated in this cg */
+name|struct
+name|inostat
+modifier|*
+name|il_stat
+decl_stmt|;
+comment|/* inostat info for this cylinder group */
+block|}
+modifier|*
+name|inostathead
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * buffer cache structure.  */
@@ -445,7 +479,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Linked list of duplicate blocks.  *   * The list is composed of two parts. The first part of the  * list (from duplist through the node pointed to by muldup)  * contains a single copy of each duplicate block that has been   * found. The second part of the list (from muldup to the end)  * contains duplicate blocks that have been found more than once.  * To check if a block has been found as a duplicate it is only  * necessary to search from duplist through muldup. To find the   * total number of times that a block has been found as a duplicate  * the entire list must be searched for occurences of the block  * in question. The following diagram shows a sample list where  * w (found twice), x (found once), y (found three times), and z  * (found once) are duplicate block numbers:  *  *    w -> y -> x -> z -> y -> w -> y  *    ^		     ^  *    |		     |  * duplist	  muldup  */
+comment|/*  * Linked list of duplicate blocks.  *  * The list is composed of two parts. The first part of the  * list (from duplist through the node pointed to by muldup)  * contains a single copy of each duplicate block that has been  * found. The second part of the list (from muldup to the end)  * contains duplicate blocks that have been found more than once.  * To check if a block has been found as a duplicate it is only  * necessary to search from duplist through muldup. To find the  * total number of times that a block has been found as a duplicate  * the entire list must be searched for occurences of the block  * in question. The following diagram shows a sample list where  * w (found twice), x (found once), y (found three times), and z  * (found once) are duplicate block numbers:  *  *    w -> y -> x -> z -> y -> w -> y  *    ^		     ^  *    |		     |  * duplist	  muldup  */
 end_comment
 
 begin_struct
@@ -583,6 +617,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|long
+name|countdirs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of directories we actually found */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|cdevname
@@ -611,6 +655,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* actual disk sector size */
+end_comment
+
+begin_decl_stmt
+name|char
+name|fflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* force check, ignore clean flag */
 end_comment
 
 begin_decl_stmt
@@ -695,12 +749,52 @@ end_comment
 
 begin_decl_stmt
 name|char
+name|usedsoftdep
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* just fix soft dependency inconsistencies */
+end_comment
+
+begin_decl_stmt
+name|char
 name|preen
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* just fix normal inconsistencies */
+end_comment
+
+begin_decl_stmt
+name|char
+name|rerun
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* rerun fsck. Only used in non-preen mode */
+end_comment
+
+begin_decl_stmt
+name|int
+name|returntosingle
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 => return to single user mode on exit */
+end_comment
+
+begin_decl_stmt
+name|char
+name|resolved
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* cleared if unresolved changes => not clean */
 end_comment
 
 begin_decl_stmt
@@ -782,49 +876,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* number of inodes in file system */
-end_comment
-
-begin_decl_stmt
-name|ino_t
-name|lastino
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* last inode in use */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|statemap
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ptr to inode state table */
-end_comment
-
-begin_decl_stmt
-name|u_char
-modifier|*
-name|typemap
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ptr to inode type table */
-end_comment
-
-begin_decl_stmt
-name|short
-modifier|*
-name|lncntp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ptr to link count table */
 end_comment
 
 begin_decl_stmt
@@ -1311,6 +1362,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|clearentry
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inodesc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|direrror
 name|__P
@@ -1688,6 +1753,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|inostat
+modifier|*
+name|inoinfo
+name|__P
+argument_list|(
+operator|(
+name|ino_t
+name|inum
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|linkup
 name|__P
@@ -1698,6 +1778,10 @@ name|orphan
 operator|,
 name|ino_t
 name|parentdir
+operator|,
+name|char
+operator|*
+name|name
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1915,11 +1999,11 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|resetinodebuf
+name|setinodebuf
 name|__P
 argument_list|(
 operator|(
-name|void
+name|ino_t
 operator|)
 argument_list|)
 decl_stmt|;

@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -36,6 +37,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -74,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/dinode.h>
 end_include
 
@@ -87,12 +95,6 @@ begin_include
 include|#
 directive|include
 file|<ufs/ffs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -118,12 +120,6 @@ include|#
 directive|include
 file|"fsck.h"
 end_include
-
-begin_decl_stmt
-name|int
-name|returntosingle
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -192,7 +188,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 decl|main
 name|__P
 argument_list|(
@@ -210,7 +206,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -236,14 +232,9 @@ name|maxrun
 init|=
 literal|0
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
+name|struct
+name|rlimit
+name|rlimit
 decl_stmt|;
 name|sync
 argument_list|()
@@ -259,11 +250,12 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dpnNyYb:c:l:m:"
+literal|"dfpnNyYb:c:l:m:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -323,6 +315,13 @@ case|case
 literal|'d'
 case|:
 name|debug
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|fflag
 operator|++
 expr_stmt|;
 break|break;
@@ -466,6 +465,40 @@ argument_list|,
 name|catchquit
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Push up our allowed memory limit so we can cope 	 * with huge filesystems. 	 */
+if|if
+condition|(
+name|getrlimit
+argument_list|(
+name|RLIMIT_DATA
+argument_list|,
+operator|&
+name|rlimit
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|rlimit
+operator|.
+name|rlim_cur
+operator|=
+name|rlimit
+operator|.
+name|rlim_max
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setrlimit
+argument_list|(
+name|RLIMIT_DATA
+argument_list|,
+operator|&
+name|rlimit
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|argc
@@ -478,17 +511,38 @@ operator|--
 operator|>
 literal|0
 condition|)
+block|{
+name|char
+modifier|*
+name|path
+init|=
+name|blockcheck
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|path
+operator|==
+name|NULL
+condition|)
+name|pfatal
+argument_list|(
+literal|"Can't check %s\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+else|else
 operator|(
 name|void
 operator|)
 name|checkfilesys
 argument_list|(
-name|blockcheck
-argument_list|(
-operator|*
-name|argv
-operator|++
-argument_list|)
+name|path
 argument_list|,
 literal|0
 argument_list|,
@@ -497,6 +551,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|++
+name|argv
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
@@ -810,6 +868,11 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * Cleared if any questions answered no. Used to decide if 	 * the superblock should be marked clean. 	 */
+name|resolved
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * 1: scan inodes tallying blocks used 	 */
 if|if
 condition|(
@@ -854,6 +917,8 @@ block|{
 if|if
 condition|(
 name|preen
+operator|||
+name|usedsoftdep
 condition|)
 name|pfatal
 argument_list|(
@@ -965,41 +1030,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(%ld frags, %ld blocks, %d.%d%% fragmentation)\n"
+literal|"(%d frags, %d blocks, %.1f%% fragmentation)\n"
 argument_list|,
 name|n_ffree
 argument_list|,
 name|n_bfree
 argument_list|,
-operator|(
 name|n_ffree
 operator|*
-literal|100
-operator|)
+literal|100.0
 operator|/
 name|sblock
 operator|.
 name|fs_dsize
-argument_list|,
-operator|(
-operator|(
-name|n_ffree
-operator|*
-literal|1000
-operator|+
-name|sblock
-operator|.
-name|fs_dsize
-operator|/
-literal|2
-operator|)
-operator|/
-name|sblock
-operator|.
-name|fs_dsize
-operator|)
-operator|%
-literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -1022,7 +1065,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"%ld files missing\n"
+literal|"%d files missing\n"
 argument_list|,
 name|n_files
 argument_list|)
@@ -1105,7 +1148,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"%ld blocks missing\n"
+literal|"%d blocks missing\n"
 argument_list|,
 name|n_blks
 argument_list|)
@@ -1138,7 +1181,7 @@ name|next
 control|)
 name|printf
 argument_list|(
-literal|" %ld,"
+literal|" %d,"
 argument_list|,
 name|dp
 operator|->
@@ -1179,7 +1222,7 @@ name|next
 control|)
 name|printf
 argument_list|(
-literal|" %lu,"
+literal|" %u,"
 argument_list|,
 name|zlnp
 operator|->
@@ -1228,15 +1271,13 @@ condition|(
 name|fsmodified
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|time
-argument_list|(
-operator|&
 name|sblock
 operator|.
 name|fs_time
+operator|=
+name|time
+argument_list|(
+name|NULL
 argument_list|)
 expr_stmt|;
 name|sbdirty
@@ -1252,7 +1293,7 @@ operator|.
 name|b_dirty
 condition|)
 block|{
-comment|/*  		 * Write out the duplicate super blocks 		 */
+comment|/* 		 * Write out the duplicate super blocks 		 */
 for|for
 control|(
 name|cylno
@@ -1299,17 +1340,20 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
+name|rerun
+condition|)
+name|resolved
+operator|=
+literal|0
+expr_stmt|;
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|hotroot
 condition|)
-block|{
-name|ckfini
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|struct
 name|statfs
@@ -1334,27 +1378,64 @@ name|stfs_buf
 operator|.
 name|f_flags
 expr_stmt|;
-else|else
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|ckfini
-argument_list|(
+if|if
+condition|(
+operator|(
 name|flags
 operator|&
 name|MNT_RDONLY
-argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|resolved
+operator|=
+literal|0
 expr_stmt|;
 block|}
-name|free
+name|ckfini
 argument_list|(
-name|blockmap
+name|resolved
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|cylno
+operator|=
+literal|0
+init|;
+name|cylno
+operator|<
+name|sblock
+operator|.
+name|fs_ncg
+condition|;
+name|cylno
+operator|++
+control|)
+if|if
+condition|(
+name|inostathead
+index|[
+name|cylno
+index|]
+operator|.
+name|il_stat
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
-name|statemap
+operator|(
+name|char
+operator|*
+operator|)
+name|inostathead
+index|[
+name|cylno
+index|]
+operator|.
+name|il_stat
 argument_list|)
 expr_stmt|;
 name|free
@@ -1363,27 +1444,32 @@ operator|(
 name|char
 operator|*
 operator|)
-name|lncntp
+name|inostathead
 argument_list|)
+expr_stmt|;
+name|inostathead
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|fsmodified
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
+operator|&&
 operator|!
 name|preen
 condition|)
 name|printf
 argument_list|(
 literal|"\n***** FILE SYSTEM WAS MODIFIED *****\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rerun
+condition|)
+name|printf
+argument_list|(
+literal|"\n***** PLEASE RERUN FSCK *****\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1460,6 +1546,16 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|!
+name|fsmodified
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 operator|!

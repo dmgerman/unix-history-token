@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -210,10 +211,12 @@ name|inumber
 expr_stmt|;
 if|if
 condition|(
-name|statemap
-index|[
+name|inoinfo
+argument_list|(
 name|inumber
-index|]
+argument_list|)
+operator|->
+name|ino_state
 operator|!=
 name|USTATE
 operator|&&
