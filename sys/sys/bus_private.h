@@ -132,10 +132,10 @@ begin_struct
 struct|struct
 name|device
 block|{
-comment|/*      * A device is a kernel object. The first field must be the      * current ops table for the object.      */
+comment|/* 	 * A device is a kernel object. The first field must be the 	 * current ops table for the object. 	 */
 name|KOBJ_FIELDS
 expr_stmt|;
-comment|/*      * Device hierarchy.      */
+comment|/* 	 * Device hierarchy. 	 */
 name|TAILQ_ENTRY
 argument_list|(
 argument|device
@@ -157,7 +157,7 @@ name|device_list_t
 name|children
 decl_stmt|;
 comment|/* list of subordinate devices */
-comment|/*      * Details of this device.      */
+comment|/* 	 * Details of this device. 	 */
 name|driver_t
 modifier|*
 name|driver
