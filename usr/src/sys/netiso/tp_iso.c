@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  * $Header: /var/src/sys/netiso/RCS/tp_iso.c,v 5.1 89/02/09 16:20:51 hagens Exp $  * $Source: /var/src/sys/netiso/RCS/tp_iso.c,v $  *	@(#)tp_iso.c	7.3 (Berkeley) %G% *  *  * Here is where you find the iso-dependent code.  We've tried  * keep all net-level and (primarily) address-family-dependent stuff  * out of the tp source, and everthing here is reached indirectly  * through a switch table (struct nl_protosw *) tpcb->tp_nlproto   * (see tp_pcb.c).   * The routines here are:  * 		iso_getsufx: gets transport suffix out of an isopcb structure.  * 		iso_putsufx: put transport suffix into an isopcb structure.  *		iso_putnetaddr: put a whole net addr into an isopcb.  *		iso_getnetaddr: get a whole net addr from an isopcb.  *		iso_recycle_suffix: clear suffix for reuse in isopcb  * 		tpclnp_ctlinput: handle ER CNLPdu : icmp-like stuff  * 		tpclnp_mtu: figure out what size tpdu to use  *		tpclnp_input: take a pkt from clnp, strip off its clnp header,   *				give to tp  *		tpclnp_output_dg: package a pkt for clnp given 2 addresses& some data  *		tpclnp_output: package a pkt for clnp given an isopcb& some data  */
+comment|/*   * ARGO TP  * $Header: /var/src/sys/netiso/RCS/tp_iso.c,v 5.1 89/02/09 16:20:51 hagens Exp $  * $Source: /var/src/sys/netiso/RCS/tp_iso.c,v $  *	@(#)tp_iso.c	7.4 (Berkeley) %G%  *  * Here is where you find the iso-dependent code.  We've tried  * keep all net-level and (primarily) address-family-dependent stuff  * out of the tp source, and everthing here is reached indirectly  * through a switch table (struct nl_protosw *) tpcb->tp_nlproto   * (see tp_pcb.c).   * The routines here are:  * 		iso_getsufx: gets transport suffix out of an isopcb structure.  * 		iso_putsufx: put transport suffix into an isopcb structure.  *		iso_putnetaddr: put a whole net addr into an isopcb.  *		iso_getnetaddr: get a whole net addr from an isopcb.  *		iso_recycle_suffix: clear suffix for reuse in isopcb  * 		tpclnp_ctlinput: handle ER CNLPdu : icmp-like stuff  * 		tpclnp_mtu: figure out what size tpdu to use  *		tpclnp_input: take a pkt from clnp, strip off its clnp header,   *				give to tp  *		tpclnp_output_dg: package a pkt for clnp given 2 addresses& some data  *		tpclnp_output: package a pkt for clnp given an isopcb& some data  */
 end_comment
 
 begin_ifndef
@@ -804,11 +804,15 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|iso_ifaddr
 modifier|*
 name|ia
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|int
@@ -831,12 +835,18 @@ name|sizeismtu
 init|=
 literal|0
 decl_stmt|;
+specifier|register
 name|struct
-name|iso_ifaddr
+name|rtentry
 modifier|*
-name|iso_routeifa
-parameter_list|()
-function_decl|;
+name|rt
+init|=
+name|isop
+operator|->
+name|isop_route
+operator|.
+name|ro_rt
+decl_stmt|;
 name|IFDEBUG
 argument_list|(
 argument|D_CONN
@@ -901,20 +911,34 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|rt
+operator|==
+literal|0
+operator|||
 operator|(
-operator|(
-name|ia
-operator|=
-name|iso_routeifa
-argument_list|(
-name|isop
+name|rt
 operator|->
-name|isop_faddr
-argument_list|)
-operator|)
+name|rt_flags
+operator|&
+name|RTF_UP
 operator|==
 literal|0
 operator|)
+operator|||
+operator|(
+name|ia
+operator|=
+operator|(
+expr|struct
+name|iso_ifaddr
+operator|*
+operator|)
+name|rt
+operator|->
+name|rt_ifa
+operator|)
+operator|==
+literal|0
 operator|||
 operator|(
 name|ifp
@@ -926,7 +950,24 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|IFDEBUG
+argument_list|(
+argument|D_CONN
+argument_list|)
+name|printf
+argument_list|(
+literal|"tpclnp_mtu routing abort rt=0x%x ia=0x%x ifp=0x%x\n"
+argument_list|,
+argument|rt
+argument_list|,
+argument|ia
+argument_list|,
+argument|ifp
+argument_list|)
+name|ENDDEBUG
 return|return;
+block|}
 comment|/* TODO - make this indirect off the socket structure to the 	 * network layer to get headersize 	 */
 if|if
 condition|(
