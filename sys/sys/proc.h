@@ -297,7 +297,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(PROC ONLY)" below,  * which might be addressable only on a processor on which the process  * is running.  */
+comment|/*  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(PROC ONLY)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never chagnes   *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proc tree lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - either by curproc or a lock which prevents the lock from  *              going way, such a (d,e).  *      l - the attaching proc or attaching proc parent.  *      m - Giant  *      n - not locked, lazy  */
 end_comment
 
 begin_struct
@@ -310,58 +310,58 @@ argument|proc
 argument_list|)
 name|p_procq
 expr_stmt|;
-comment|/* Run/mutex queue. */
+comment|/* (j) Run/mutex queue. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|proc
 argument_list|)
 name|p_slpq
 expr_stmt|;
-comment|/* Sleep queue. */
+comment|/* (j) Sleep queue. */
 name|LIST_ENTRY
 argument_list|(
 argument|proc
 argument_list|)
 name|p_list
 expr_stmt|;
-comment|/* List of all processes. */
+comment|/* (d) List of all processes. */
 comment|/* substructures: */
 name|struct
 name|pcred
 modifier|*
 name|p_cred
 decl_stmt|;
-comment|/* Process owner's identity. */
+comment|/* (b) Process owner's identity. */
 name|struct
 name|filedesc
 modifier|*
 name|p_fd
 decl_stmt|;
-comment|/* Ptr to open files structure. */
+comment|/* (b) Ptr to open files structure. */
 name|struct
 name|pstats
 modifier|*
 name|p_stats
 decl_stmt|;
-comment|/* Accounting/statistics (PROC ONLY). */
+comment|/* (b) Accounting/statistics (PROC ONLY). */
 name|struct
 name|plimit
 modifier|*
 name|p_limit
 decl_stmt|;
-comment|/* Process limits. */
+comment|/* (m) Process limits. */
 name|struct
 name|vm_object
 modifier|*
 name|p_upages_obj
 decl_stmt|;
-comment|/* Upages object. */
+comment|/* (c) Upages object. */
 name|struct
 name|procsig
 modifier|*
 name|p_procsig
 decl_stmt|;
-comment|/* Signal actions, state (PROC ONLY). */
+comment|/* (c) Signal actions, state (PROC ONLY). */
 define|#
 directive|define
 name|p_sigacts
@@ -385,11 +385,11 @@ value|p_limit->pl_rlimit
 name|int
 name|p_flag
 decl_stmt|;
-comment|/* P_* flags. */
+comment|/* (c/j) P_* flags. */
 name|char
 name|p_stat
 decl_stmt|;
-comment|/* S* process status. */
+comment|/* (j) S* process status. */
 name|char
 name|p_pad1
 index|[
@@ -399,34 +399,34 @@ decl_stmt|;
 name|pid_t
 name|p_pid
 decl_stmt|;
-comment|/* Process identifier. */
+comment|/* (b) Process identifier. */
 name|LIST_ENTRY
 argument_list|(
 argument|proc
 argument_list|)
 name|p_hash
 expr_stmt|;
-comment|/* Hash chain. */
+comment|/* (d) Hash chain. */
 name|LIST_ENTRY
 argument_list|(
 argument|proc
 argument_list|)
 name|p_pglist
 expr_stmt|;
-comment|/* List of processes in pgrp. */
+comment|/* (c) List of processes in pgrp. */
 name|struct
 name|proc
 modifier|*
 name|p_pptr
 decl_stmt|;
-comment|/* Pointer to parent process. */
+comment|/* (e) Pointer to parent process. */
 name|LIST_ENTRY
 argument_list|(
 argument|proc
 argument_list|)
 name|p_sibling
 expr_stmt|;
-comment|/* List of sibling processes. */
+comment|/* (e) List of sibling processes. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -434,7 +434,7 @@ argument|proc
 argument_list|)
 name|p_children
 expr_stmt|;
-comment|/* Pointer to list of children. */
+comment|/* (e) Pointer to list of children. */
 comment|/* The following fields are all zeroed upon creation in fork. */
 define|#
 directive|define
@@ -443,157 +443,157 @@ value|p_oppid
 name|pid_t
 name|p_oppid
 decl_stmt|;
-comment|/* Save parent pid during ptrace. XXX */
+comment|/* (c) Save parent pid during ptrace. XXX */
 name|int
 name|p_dupfd
 decl_stmt|;
-comment|/* Sideways return value from fdopen. XXX */
+comment|/* (c) Sideways return value from fdopen. XXX */
 name|struct
 name|vmspace
 modifier|*
 name|p_vmspace
 decl_stmt|;
-comment|/* Address space. */
+comment|/* (b) Address space. */
 comment|/* scheduling */
 name|u_int
 name|p_estcpu
 decl_stmt|;
-comment|/* Time averaged value of p_cpticks. */
+comment|/* (j) Time averaged value of p_cpticks. */
 name|int
 name|p_cpticks
 decl_stmt|;
-comment|/* Ticks of cpu time. */
+comment|/* (j) Ticks of cpu time. */
 name|fixpt_t
 name|p_pctcpu
 decl_stmt|;
-comment|/* %cpu for this process during p_swtime */
+comment|/* (j) %cpu for this process during p_swtime */
 name|struct
 name|callout
 name|p_slpcallout
 decl_stmt|;
-comment|/* Callout for sleep. */
+comment|/* (h) Callout for sleep. */
 name|void
 modifier|*
 name|p_wchan
 decl_stmt|;
-comment|/* Sleep address. */
+comment|/* (j) Sleep address. */
 specifier|const
 name|char
 modifier|*
 name|p_wmesg
 decl_stmt|;
-comment|/* Reason for sleep. */
+comment|/* (j) Reason for sleep. */
 name|u_int
 name|p_swtime
 decl_stmt|;
-comment|/* Time swapped in or out. */
+comment|/* (j) Time swapped in or out. */
 name|u_int
 name|p_slptime
 decl_stmt|;
-comment|/* Time since last blocked. */
+comment|/* (j) Time since last blocked. */
 name|struct
 name|callout
 name|p_itcallout
 decl_stmt|;
-comment|/* Interval timer callout. */
+comment|/* (h) Interval timer callout. */
 name|struct
 name|itimerval
 name|p_realtimer
 decl_stmt|;
-comment|/* Alarm timer. */
+comment|/* (h?/k?) Alarm timer. */
 name|u_int64_t
 name|p_runtime
 decl_stmt|;
-comment|/* Real time in microsec. */
+comment|/* (c) Real time in microsec. */
 name|u_int64_t
 name|p_uu
 decl_stmt|;
-comment|/* Previous user time in microsec. */
+comment|/* (c) Previous user time in microsec. */
 name|u_int64_t
 name|p_su
 decl_stmt|;
-comment|/* Previous system time in microsec. */
+comment|/* (c) Previous system time in microsec. */
 name|u_int64_t
 name|p_iu
 decl_stmt|;
-comment|/* Previous interrupt time in usec. */
+comment|/* (c) Previous interrupt time in usec. */
 name|u_int64_t
 name|p_uticks
 decl_stmt|;
-comment|/* Statclock hits in user mode. */
+comment|/* (j) Statclock hits in user mode. */
 name|u_int64_t
 name|p_sticks
 decl_stmt|;
-comment|/* Statclock hits in system mode. */
+comment|/* (j) Statclock hits in system mode. */
 name|u_int64_t
 name|p_iticks
 decl_stmt|;
-comment|/* Statclock hits processing intr. */
+comment|/* (j) Statclock hits processing intr. */
 name|int
 name|p_traceflag
 decl_stmt|;
-comment|/* Kernel trace points. */
+comment|/* (j?) Kernel trace points. */
 name|struct
 name|vnode
 modifier|*
 name|p_tracep
 decl_stmt|;
-comment|/* Trace to vnode. */
+comment|/* (j?) Trace to vnode. */
 name|sigset_t
 name|p_siglist
 decl_stmt|;
-comment|/* Signals arrived but not delivered. */
+comment|/* (c) Signals arrived but not delivered. */
 name|struct
 name|vnode
 modifier|*
 name|p_textvp
 decl_stmt|;
-comment|/* Vnode of executable. */
+comment|/* (b) Vnode of executable. */
 name|char
 name|p_lock
 decl_stmt|;
-comment|/* Process lock (prevent swap) count. */
+comment|/* (c) Process lock (prevent swap) count. */
 name|struct
 name|mtx
 name|p_mtx
 decl_stmt|;
-comment|/* Process stucture lock.  */
+comment|/* (k) Process structure lock. */
 name|u_char
 name|p_oncpu
 decl_stmt|;
-comment|/* Which cpu we are on. */
+comment|/* (j) Which cpu we are on. */
 name|u_char
 name|p_lastcpu
 decl_stmt|;
-comment|/* Last cpu we were on. */
+comment|/* (j) Last cpu we were on. */
 name|char
 name|p_rqindex
 decl_stmt|;
-comment|/* Run queue index. */
+comment|/* (j) Run queue index. */
 name|short
 name|p_locks
 decl_stmt|;
-comment|/* DEBUG: lockmgr count of held locks */
+comment|/* (*) DEBUG: lockmgr count of held locks */
 name|short
 name|p_simple_locks
 decl_stmt|;
-comment|/* DEBUG: count of held simple locks */
+comment|/* (*) DEBUG: count of held simple locks */
 name|u_int
 name|p_stops
 decl_stmt|;
-comment|/* Procfs event bitmask. */
+comment|/* (c) Procfs event bitmask. */
 name|u_int
 name|p_stype
 decl_stmt|;
-comment|/* Procfs stop event type. */
+comment|/* (c) Procfs stop event type. */
 name|char
 name|p_step
 decl_stmt|;
-comment|/* Procfs stop *once* flag. */
+comment|/* (c) Procfs stop *once* flag. */
 name|u_char
 name|p_pfsflags
 decl_stmt|;
-comment|/* Procfs flags. */
+comment|/* (c) Procfs flags. */
 name|char
 name|p_pad3
 index|[
@@ -607,33 +607,33 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Syscall aux returns. */
+comment|/* (k) Syscall aux returns. */
 name|struct
 name|sigiolst
 name|p_sigiolst
 decl_stmt|;
-comment|/* List of sigio sources. */
+comment|/* (c) List of sigio sources. */
 name|int
 name|p_sigparent
 decl_stmt|;
-comment|/* Signal to parent on exit. */
+comment|/* (c) Signal to parent on exit. */
 name|sigset_t
 name|p_oldsigmask
 decl_stmt|;
-comment|/* Saved mask from before sigpause. */
+comment|/* (c) Saved mask from before sigpause. */
 name|int
 name|p_sig
 decl_stmt|;
-comment|/* For core dump/debugger XXX. */
+comment|/* (n) For core dump/debugger XXX. */
 name|u_long
 name|p_code
 decl_stmt|;
-comment|/* For core dump/debugger XXX. */
+comment|/* (n) For core dump/debugger XXX. */
 name|struct
 name|klist
 name|p_klist
 decl_stmt|;
-comment|/* Knotes attached to this process. */
+comment|/* (c?) Knotes attached to this process. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -641,19 +641,19 @@ argument|mtx
 argument_list|)
 name|p_heldmtx
 expr_stmt|;
-comment|/* For debugging code. */
+comment|/* (j) For debugging code. */
 name|struct
 name|mtx
 modifier|*
 name|p_blocked
 decl_stmt|;
-comment|/* Mutex process is blocked on. */
+comment|/* (j) Mutex process is blocked on. */
 specifier|const
 name|char
 modifier|*
 name|p_mtxname
 decl_stmt|;
-comment|/* Name of mutex blocked on. */
+comment|/* (j) Name of mutex blocked on. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -661,7 +661,7 @@ argument|mtx
 argument_list|)
 name|p_contested
 expr_stmt|;
-comment|/* Contested locks. */
+comment|/* (j) Contested locks. */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -675,31 +675,31 @@ value|p_sigmask
 name|sigset_t
 name|p_sigmask
 decl_stmt|;
-comment|/* Current signal mask. */
+comment|/* (c) Current signal mask. */
 name|stack_t
 name|p_sigstk
 decl_stmt|;
-comment|/* Stack pointer and on-stack state variable. */
+comment|/* (c) Stack pointer and on-stack state variable. */
 name|int
 name|p_magic
 decl_stmt|;
-comment|/* Magic number. */
+comment|/* (b) Magic number. */
 name|u_char
 name|p_priority
 decl_stmt|;
-comment|/* Process priority. */
+comment|/* (j) Process priority. */
 name|u_char
 name|p_usrpri
 decl_stmt|;
-comment|/* User-priority based on p_cpu and p_nice. */
+comment|/* (j) User-priority based on p_cpu and p_nice. */
 name|u_char
 name|p_nativepri
 decl_stmt|;
-comment|/* Priority before propagation. */
+comment|/* (j) Priority before propagation. */
 name|char
 name|p_nice
 decl_stmt|;
-comment|/* Process "nice" value. */
+comment|/* (j/k?) Process "nice" value. */
 name|char
 name|p_comm
 index|[
@@ -708,33 +708,36 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+comment|/* (b) Process name */
 name|struct
 name|pgrp
 modifier|*
 name|p_pgrp
 decl_stmt|;
-comment|/* Pointer to process group. */
+comment|/* (e?/c?) Pointer to process group. */
 name|struct
 name|sysentvec
 modifier|*
 name|p_sysent
 decl_stmt|;
-comment|/* System call dispatch information. */
+comment|/* (b) System call dispatch information. */
 name|struct
 name|rtprio
 name|p_rtprio
 decl_stmt|;
-comment|/* Realtime priority. */
+comment|/* (j) Realtime priority. */
 name|struct
 name|prison
 modifier|*
 name|p_prison
 decl_stmt|;
+comment|/* (b?) jail(4). */
 name|struct
 name|pargs
 modifier|*
 name|p_args
 decl_stmt|;
+comment|/* (b?) Process arguments. */
 comment|/* End area that is copied on creation. */
 define|#
 directive|define
@@ -745,57 +748,59 @@ name|user
 modifier|*
 name|p_addr
 decl_stmt|;
-comment|/* Kernel virtual addr of u-area (PROC ONLY). */
+comment|/* (k) Kernel virtual addr of u-area (PROC ONLY). */
 name|struct
 name|mdproc
 name|p_md
 decl_stmt|;
-comment|/* Any machine-dependent fields. */
+comment|/* (k) Any machine-dependent fields. */
 name|u_short
 name|p_xstat
 decl_stmt|;
-comment|/* Exit status for wait; also stop signal. */
+comment|/* (c) Exit status for wait; also stop signal. */
 name|u_short
 name|p_acflag
 decl_stmt|;
-comment|/* Accounting flags. */
+comment|/* (c) Accounting flags. */
 name|struct
 name|rusage
 modifier|*
 name|p_ru
 decl_stmt|;
-comment|/* Exit information. XXX */
+comment|/* (a) Exit information. XXX */
 name|void
 modifier|*
 name|p_aioinfo
 decl_stmt|;
-comment|/* ASYNC I/O info. */
+comment|/* (c) ASYNC I/O info. */
 name|struct
 name|proc
 modifier|*
 name|p_peers
 decl_stmt|;
+comment|/* (c) */
 name|struct
 name|proc
 modifier|*
 name|p_leader
 decl_stmt|;
+comment|/* (c) */
 name|struct
 name|pasleep
 name|p_asleep
 decl_stmt|;
-comment|/* Used by asleep()/await(). */
+comment|/* (k) Used by asleep()/await(). */
 name|void
 modifier|*
 name|p_emuldata
 decl_stmt|;
-comment|/* Emulator state data. */
+comment|/* (c) Emulator state data. */
 name|struct
 name|ithd
 modifier|*
 name|p_ithd
 decl_stmt|;
-comment|/* For interrupt threads only. */
+comment|/* (b) For interrupt threads only. */
 block|}
 struct|;
 end_struct
