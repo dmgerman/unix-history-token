@@ -576,7 +576,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<=
+operator|<
 name|devclass_get_maxunit
 argument_list|(
 name|pcm_devclass

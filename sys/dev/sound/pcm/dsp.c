@@ -161,7 +161,7 @@ expr_stmt|;
 if|if
 condition|(
 name|unit
-operator|>
+operator|>=
 name|devclass_get_maxunit
 argument_list|(
 name|pcm_devclass
@@ -4928,7 +4928,7 @@ operator|-
 literal|1
 operator|||
 name|unit
-operator|>
+operator|>=
 name|devclass_get_maxunit
 argument_list|(
 name|pcm_devclass
