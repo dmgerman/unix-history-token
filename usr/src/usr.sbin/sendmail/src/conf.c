@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.29 (Berkeley) %G%"
+literal|"@(#)conf.c	6.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3673,12 +3673,6 @@ argument_list|(
 name|HASUSTAT
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	6.2 (Berkeley) %G%"
+literal|"@(#)clock.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -711,21 +711,17 @@ name|SleepDone
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|unsigned
+name|int
 name|sleep
-argument_list|(
-argument|intvl
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|intvl
+parameter_list|)
 name|unsigned
 name|int
 name|intvl
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|int
@@ -767,7 +763,7 @@ name|pause
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 specifier|static

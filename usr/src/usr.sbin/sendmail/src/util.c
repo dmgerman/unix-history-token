@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	6.9 (Berkeley) %G%"
+literal|"@(#)util.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,19 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
+file|"sendmail.h"
 end_include
 
 begin_include
@@ -56,18 +44,6 @@ begin_include
 include|#
 directive|include
 file|<sysexits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sendmail.h"
 end_include
 
 begin_include
