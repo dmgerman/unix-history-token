@@ -12721,7 +12721,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 		 * NB: don't print a message, this happens  		 * ormally on parts with too few tx queues 		 */
+comment|/* 		 * NB: don't print a message, this happens  		 * normally on parts with too few tx queues 		 */
 return|return
 name|NULL
 return|;
@@ -13506,7 +13506,7 @@ argument_list|(
 name|wh
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Packet length must not include by any 	 * pad bytes; deduct it here. 	 */
+comment|/* 	 * Packet length must not include any 	 * pad bytes; deduct them here. 	 */
 name|pktlen
 operator|=
 name|m0
@@ -20073,7 +20073,7 @@ name|error
 return|;
 undef|#
 directive|undef
-name|IS_UP
+name|IS_RUNNING
 block|}
 end_function
 
