@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)type.c	1.3 (Berkeley) %G%"
+literal|"@(#)type.c	2.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
