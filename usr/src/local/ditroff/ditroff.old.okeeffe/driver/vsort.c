@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vsort.c	1.5	83/09/23  *  *	Sorts and shuffles ditroff output for versatec wide printer.  It  *	puts pages side-by-side on the output, and fits as many as it can  *	on one horizontal span.  The versatec driver sees only pages of  *	full width, not the individual pages.  Output is sorted vertically  *	and bands are created NLINES pixels high.  Any object that has  *	ANY part of it in a band is put on that band.  */
+comment|/* vsort.c	1.6	83/10/22  *  *	Sorts and shuffles ditroff output for versatec wide printer.  It  *	puts pages side-by-side on the output, and fits as many as it can  *	on one horizontal span.  The versatec driver sees only pages of  *	full width, not the individual pages.  Output is sorted vertically  *	and bands are created NLINES pixels high.  Any object that has  *	ANY part of it in a band is put on that band.  */
 end_comment
 
 begin_include
@@ -21,14 +21,8 @@ directive|include
 file|<math.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEBUGABLE
-end_define
-
 begin_comment
-comment|/* compile-time flag for debugging */
+comment|/* #define DEBUGABLE	/* compile-time flag for debugging */
 end_comment
 
 begin_define
@@ -128,7 +122,7 @@ begin_define
 define|#
 directive|define
 name|BAND
-value|3
+value|2
 end_define
 
 begin_comment
@@ -203,7 +197,7 @@ begin_decl_stmt
 name|float
 name|BAND
 init|=
-literal|3.0
+literal|2.0
 decl_stmt|;
 end_decl_stmt
 
@@ -348,18 +342,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|pageno
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of pages on this horizontal span */
-end_comment
-
-begin_decl_stmt
-name|int
 name|spanno
 init|=
 literal|0
@@ -368,6 +350,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* current span number for driver in 'p#' commands */
+end_comment
+
+begin_decl_stmt
+name|int
+name|pageno
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of pages spread across a physical page */
 end_comment
 
 begin_struct
@@ -967,9 +961,27 @@ name|obuf
 operator|+
 name|obufsiz
 condition|)
+block|{
+name|error
+argument_list|(
+operator|!
+name|FATAL
+argument_list|,
+literal|"buffer overflow %d."
+argument_list|,
+name|op
+operator|-
+operator|(
+name|obuf
+operator|+
+name|obufsiz
+operator|)
+argument_list|)
+expr_stmt|;
 name|oflush
 argument_list|()
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|c
@@ -1295,8 +1307,10 @@ operator|->
 name|d
 operator|=
 name|vpos
-operator|-
-name|m
+operator|+
+name|thick
+operator|/
+literal|2
 expr_stmt|;
 block|}
 else|else
@@ -1313,6 +1327,10 @@ operator|=
 name|vpos
 operator|+
 name|m
+operator|+
+name|thick
+operator|/
+literal|2
 expr_stmt|;
 block|}
 name|sprintf
@@ -1365,7 +1383,11 @@ name|startspan
 argument_list|(
 name|vpos
 operator|-
+operator|(
 name|n
+operator|+
+name|thick
+operator|)
 operator|/
 literal|2
 argument_list|)
@@ -1377,7 +1399,11 @@ name|d
 operator|=
 name|vpos
 operator|+
+operator|(
 name|n
+operator|+
+name|thick
+operator|)
 operator|/
 literal|2
 expr_stmt|;
@@ -1435,7 +1461,11 @@ name|startspan
 argument_list|(
 name|vpos
 operator|-
+operator|(
 name|n
+operator|+
+name|thick
+operator|)
 operator|/
 literal|2
 argument_list|)
@@ -1446,7 +1476,11 @@ name|d
 operator|=
 name|vpos
 operator|+
+operator|(
 name|n
+operator|+
+name|thick
+operator|)
 operator|/
 literal|2
 expr_stmt|;
@@ -1821,12 +1855,14 @@ operator|)
 operator|/
 name|POINT
 expr_stmt|;
+comment|/* rough estimate */
 name|down
 operator|=
 name|up
 operator|/
 literal|3
 expr_stmt|;
+comment|/* of max up/down */
 break|break;
 case|case
 literal|'f'
@@ -2008,17 +2044,13 @@ block|}
 end_block
 
 begin_comment
-comment|/* set the "u" and "d" parts of the vlist given the current */
+comment|/*----------------------------------------------------------------------------*  | Routine:	setlimit  |  | Results:	using "up" and "down" set by point size changes, set the  |		maximum rise and/or fall of a vertical extent  |  | Side Efct:	may set vlp's u and/or d  |  | Bugs:	assumes all text of a particular point size is of the same  |		maximum rise fall above and below the text base line  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
 name|setlimit
 argument_list|()
 end_macro
-
-begin_comment
-comment|/* up and down limits set by the point size */
-end_comment
 
 begin_block
 block|{
@@ -2069,6 +2101,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*----------------------------------------------------------------------------*  | Routine:	arcbounds (h, v, h1, v1)  |  | Results:	using the horizontal positions of the starting and ending  |		points relative to the center and vertically relative to  |		each other, arcbounds calculates the upper and lower extent  |		of the arc which is one of:  starting point, ending point  |		or center + rad for bottom, and center - rad for top.  |  | Side Efct:	sets vlp's v, u and d  *----------------------------------------------------------------------------*/
+end_comment
+
 begin_macro
 name|arcbounds
 argument_list|(
@@ -2082,10 +2118,6 @@ argument|v1
 argument_list|)
 end_macro
 
-begin_comment
-comment|/* make a circle out of the arc to estimate */
-end_comment
-
 begin_decl_stmt
 name|int
 name|h
@@ -2098,28 +2130,17 @@ name|v1
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* how far up/down the arc will span */
-end_comment
-
 begin_block
 block|{
-specifier|register
-name|int
-name|center
-init|=
-name|vpos
-operator|+
-name|v
-decl_stmt|;
 specifier|register
 name|int
 name|rad
 init|=
 operator|(
-operator|(
+call|(
 name|int
-operator|)
+call|)
+argument_list|(
 name|sqrt
 argument_list|(
 call|(
@@ -2135,40 +2156,147 @@ operator|*
 name|v
 argument_list|)
 argument_list|)
+operator|+
+literal|0.5
+argument_list|)
 operator|)
 operator|>>
 literal|1
 decl_stmt|;
-comment|/* set the vertical extents */
+specifier|register
+name|int
+name|i
+init|=
+operator|(
+operator|(
+name|h
+operator|>=
+literal|0
+operator|)
+operator|<<
+literal|2
+operator|)
+operator||
+operator|(
+operator|(
+name|h1
+operator|<
+literal|0
+operator|)
+operator|<<
+literal|1
+operator|)
+operator||
+operator|(
+operator|(
+name|v
+operator|+
+name|v1
+operator|)
+operator|<
+literal|0
+operator|)
+decl_stmt|;
+comment|/* i is a set of flags for the points being on the */
+comment|/* left of the center point, and which is higher */
+name|v1
+operator|+=
+name|vpos
+operator|+
+name|v
+expr_stmt|;
+comment|/* v1 is vertical position of ending point */
 name|vlp
 operator|->
 name|v
 operator|=
+name|vpos
+expr_stmt|;
+comment|/* set vertical starting position of arc */
+comment|/* test relative positions for maximums */
 name|vlp
 operator|->
 name|u
 operator|=
 operator|(
-name|center
+operator|(
+operator|(
+name|i
+operator|&
+literal|3
+operator|)
+operator|==
+literal|1
+operator|)
+condition|?
+name|v1
+else|:
+operator|(
+operator|(
+operator|(
+name|i
+operator|&
+literal|5
+operator|)
+operator|==
+literal|4
+operator|)
+condition|?
+name|vpos
+else|:
+name|vpos
+operator|+
+name|v
 operator|-
 name|rad
 operator|)
-operator|<
-literal|0
-condition|?
-literal|0
-else|:
-name|center
+operator|)
 operator|-
-name|rad
+name|thick
+operator|/
+literal|2
 expr_stmt|;
 name|vlp
 operator|->
 name|d
 operator|=
-name|center
+operator|(
+operator|(
+operator|(
+name|i
+operator|&
+literal|3
+operator|)
+operator|==
+literal|2
+operator|)
+condition|?
+name|v1
+else|:
+operator|(
+operator|(
+operator|(
+name|i
+operator|&
+literal|5
+operator|)
+operator|==
+literal|1
+operator|)
+condition|?
+name|vpos
+else|:
+name|vpos
 operator|+
+name|v
+operator|-
 name|rad
+operator|)
+operator|)
+operator|-
+name|thick
+operator|/
+literal|2
 expr_stmt|;
 block|}
 end_block
@@ -2891,56 +3019,54 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
+specifier|static
 name|int
-name|x
+name|first
+init|=
+literal|1
 decl_stmt|;
-name|pageno
-operator|++
-expr_stmt|;
+comment|/* flag to catch the 1st time through */
+comment|/* if we're near the edge, we'll go over on */
 if|if
 condition|(
-name|maxh
-operator|>
-operator|(
-name|WIDTH
-operator|-
-name|INCH
-operator|)
-comment|/* if we're close to the edge */
-operator|||
-name|n
-operator|==
-literal|1
-comment|/* or if i think we'll go over with this page */
-operator|||
 name|leftmarg
 operator|+
+literal|2
+operator|*
+operator|(
+name|pageno
+condition|?
 name|leftmarg
 operator|/
 name|pageno
+else|:
+literal|0
+operator|)
 operator|>
-operator|(
+name|WIDTH
+comment|/* this page, */
+operator|||
+name|maxh
+operator|>
 name|WIDTH
 operator|-
 name|INCH
-operator|)
+operator|||
+name|first
 condition|)
 block|{
-name|oflush
-argument_list|()
-expr_stmt|;
-comment|/* make it a REAL page-break */
+comment|/* or this is the first page */
 name|sprintf
 argument_list|(
 name|op
 argument_list|,
 literal|"p%d\n"
 argument_list|,
-operator|++
 name|spanno
+operator|++
 argument_list|)
 expr_stmt|;
+comment|/* make it a REAL page-break */
 name|op
 operator|+=
 name|strlen
@@ -2948,6 +3074,11 @@ argument_list|(
 name|op
 argument_list|)
 expr_stmt|;
+name|oflush
+argument_list|()
+expr_stmt|;
+name|first
+operator|=
 name|pageno
 operator|=
 name|leftmarg
@@ -2959,9 +3090,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* x = last page's width */
+comment|/* x = last page's width (in half-inches) */
+specifier|register
+name|int
 name|x
-operator|=
+init|=
 operator|(
 name|maxh
 operator|-
@@ -2975,13 +3108,12 @@ operator|)
 operator|)
 operator|/
 name|HALF
-expr_stmt|;
-comment|/*  (in half-inches) */
+decl_stmt|;
 if|if
 condition|(
 name|x
 operator|>
-literal|12
+literal|11
 operator|&&
 name|x
 operator|<=
@@ -3015,8 +3147,11 @@ operator|*
 name|HALF
 expr_stmt|;
 comment|/* else set it to the */
-block|}
+name|pageno
+operator|++
+expr_stmt|;
 comment|/* nearest half-inch */
+block|}
 block|}
 end_block
 
