@@ -174,7 +174,7 @@ block|{
 name|u_int
 name|md_uac
 decl_stmt|;
-comment|/* Unaligned Access Check flags. */
+comment|/* (c) Unaligned Access Check flags. */
 block|}
 struct|;
 end_struct

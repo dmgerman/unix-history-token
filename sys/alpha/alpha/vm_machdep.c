@@ -263,6 +263,11 @@ name|md_flags
 operator|&
 name|MDTD_FPUSED
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p2
+argument_list|)
+expr_stmt|;
 name|p2
 operator|->
 name|p_md
@@ -274,6 +279,11 @@ operator|->
 name|p_md
 operator|.
 name|md_uac
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p2
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Cache the physical address of the pcb, so we can 	 * swap to it easily. 	 */
 name|td2
