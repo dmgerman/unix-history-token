@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)startup.c	3.2 83/08/17"
+literal|"@(#)startup.c	3.3 83/08/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,6 +158,9 @@ condition|)
 goto|goto
 name|bad
 goto|;
+operator|(
+name|void
+operator|)
 name|wwprintf
 argument_list|(
 name|w
