@@ -722,7 +722,7 @@ parameter_list|,
 name|ke
 parameter_list|)
 define|\
-value|(ke->ke_thread->td_priority< PRI_MIN_TIMESHARE || SCHED_INTERACTIVE(kg))
+value|(ke->ke_thread->td_priority< PRI_MIN_TIMESHARE ||			\     SCHED_INTERACTIVE(kg) ||						\     mtx_ownedby(&Giant, (ke)->ke_thread))
 end_define
 
 begin_comment
@@ -3924,26 +3924,30 @@ name|ke_runq
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Claim that we've been running for one second for statistical 	 * purposes. 	 */
+comment|/* Grab our parents cpu estimation information. */
 name|child
 operator|->
 name|ke_ticks
 operator|=
-literal|0
+name|ke
+operator|->
+name|ke_ticks
 expr_stmt|;
 name|child
 operator|->
 name|ke_ltick
 operator|=
-name|ticks
+name|ke
+operator|->
+name|ke_ltick
 expr_stmt|;
 name|child
 operator|->
 name|ke_ftick
 operator|=
-name|ticks
-operator|-
-name|hz
+name|ke
+operator|->
+name|ke_ftick
 expr_stmt|;
 block|}
 name|void
