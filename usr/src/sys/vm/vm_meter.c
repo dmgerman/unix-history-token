@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -390,7 +390,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|size_t
 modifier|*
 name|oldlenp
 decl_stmt|;
@@ -404,7 +404,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|size_t
 name|newlen
 decl_stmt|;
 end_decl_stmt
