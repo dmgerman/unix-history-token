@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -635,10 +635,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-specifier|extern
-name|int
-name|mem_no
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -699,29 +695,6 @@ block|{
 case|case
 name|VCHR
 case|:
-comment|/* 		 * Negative offsets allowed only for /dev/kmem 		 */
-if|if
-condition|(
-name|uio
-operator|->
-name|uio_offset
-operator|<
-literal|0
-operator|&&
-name|major
-argument_list|(
-name|vp
-operator|->
-name|v_rdev
-argument_list|)
-operator|!=
-name|mem_no
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -1164,10 +1137,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-specifier|extern
-name|int
-name|mem_no
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -1215,29 +1184,6 @@ block|{
 case|case
 name|VCHR
 case|:
-comment|/* 		 * Negative offsets allowed only for /dev/kmem 		 */
-if|if
-condition|(
-name|uio
-operator|->
-name|uio_offset
-operator|<
-literal|0
-operator|&&
-name|major
-argument_list|(
-name|vp
-operator|->
-name|v_rdev
-argument_list|)
-operator|!=
-name|mem_no
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
