@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	5.2 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,6 +212,9 @@ literal|'$'
 condition|)
 block|{
 comment|/* actual dollar sign.... */
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|p
