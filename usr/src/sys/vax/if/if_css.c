@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)if_css.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)if_css.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1102,19 +1102,19 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|acc_softc
+name|css_softc
 modifier|*
 name|sc
 init|=
 operator|&
-name|acc_softc
+name|css_softc
 index|[
 name|unit
 index|]
 decl_stmt|;
 name|sc
 operator|->
-name|acc_imp
+name|css_imp
 operator|->
 name|imp_cb
 operator|.
@@ -1126,7 +1126,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|acc_ifuba
+name|css_ifuba
 operator|.
 name|ifu_xtofree
 condition|)
@@ -1135,14 +1135,14 @@ name|m_freem
 argument_list|(
 name|sc
 operator|->
-name|acc_ifuba
+name|css_ifuba
 operator|.
 name|ifu_xtofree
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|acc_ifuba
+name|css_ifuba
 operator|.
 name|ifu_xtofree
 operator|=
