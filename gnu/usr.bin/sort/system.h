@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* system-dependent definitions for textutils programs.    Copyright (C) 1989, 1990, 1991 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* system-dependent definitions for textutils programs.    Copyright (C) 1989, 1990, 1991 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -13,27 +13,80 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STAT_MACROS_BROKEN
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISBLK
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISCHR
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISDIR
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISFIFO
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISLNK
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISMPB
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISMPC
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISNWK
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|S_ISREG
-end_ifndef
+end_undef
 
-begin_comment
-comment|/* Doesn't have POSIX.1 stat stuff. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|mode_t
-value|unsigned short
-end_define
+begin_undef
+undef|#
+directive|undef
+name|S_ISSOCK
+end_undef
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* STAT_MACROS_BROKEN.  */
+end_comment
 
 begin_if
 if|#
@@ -385,33 +438,77 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STDIN_FILENO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STDIN_FILENO
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STDOUT_FILENO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STDOUT_FILENO
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STDERR_FILENO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STDERR_FILENO
+value|2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Don't use bcopy!  Use memmove if source and destination may overlap,    memcpy otherwise.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_STRING_H
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|STDC_HEADERS
-argument_list|)
-end_if
+end_ifdef
 
 begin_if
 if|#
 directive|if
 operator|!
-name|defined
-argument_list|(
 name|STDC_HEADERS
-argument_list|)
 operator|&&
-name|defined
-argument_list|(
 name|HAVE_MEMORY_H
-argument_list|)
 end_if
 
 begin_include
@@ -430,94 +527,6 @@ include|#
 directive|include
 file|<string.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|index
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|index
-value|strchr
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|rindex
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|rindex
-value|strrchr
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Don't define bcopy; we need one that can handle overlaps.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|bzero
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|bzero
-parameter_list|(
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|memset ((s), 0, (n))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|bcmp
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|bcmp
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|,
-name|n
-parameter_list|)
-value|memcmp ((s1), (s2), (n))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
@@ -549,6 +558,24 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|errno
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -574,31 +601,52 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXIT_FAILURE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EXIT_FAILURE
+value|1
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXIT_SUCCESS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EXIT_SUCCESS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_FCNTL_H
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_POSIX_VERSION
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -849,20 +897,52 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|STDC_HEADERS
+argument_list|)
+operator|||
+operator|(
+operator|!
+name|defined
+argument_list|(
 name|isascii
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_ISASCII
+argument_list|)
+operator|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|isascii
+name|ISASCII
 parameter_list|(
 name|c
 parameter_list|)
 value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISASCII
+parameter_list|(
+name|c
+parameter_list|)
+value|isascii(c)
 end_define
 
 begin_endif
@@ -883,7 +963,7 @@ name|ISBLANK
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isblank (c))
+value|(ISASCII (c)&& isblank (c))
 end_define
 
 begin_else
@@ -919,7 +999,7 @@ name|ISGRAPH
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isgraph (c))
+value|(ISASCII (c)&& isgraph (c))
 end_define
 
 begin_else
@@ -934,7 +1014,7 @@ name|ISGRAPH
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isprint (c)&& !isspace (c))
+value|(ISASCII (c)&& isprint (c)&& !isspace (c))
 end_define
 
 begin_endif
@@ -949,7 +1029,7 @@ name|ISPRINT
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isprint (c))
+value|(ISASCII (c)&& isprint (c))
 end_define
 
 begin_define
@@ -959,7 +1039,7 @@ name|ISDIGIT
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isdigit (c))
+value|(ISASCII (c)&& isdigit (c))
 end_define
 
 begin_define
@@ -969,7 +1049,7 @@ name|ISALNUM
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isalnum (c))
+value|(ISASCII (c)&& isalnum (c))
 end_define
 
 begin_define
@@ -979,7 +1059,7 @@ name|ISALPHA
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isalpha (c))
+value|(ISASCII (c)&& isalpha (c))
 end_define
 
 begin_define
@@ -989,7 +1069,7 @@ name|ISCNTRL
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& iscntrl (c))
+value|(ISASCII (c)&& iscntrl (c))
 end_define
 
 begin_define
@@ -999,7 +1079,7 @@ name|ISLOWER
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& islower (c))
+value|(ISASCII (c)&& islower (c))
 end_define
 
 begin_define
@@ -1009,7 +1089,7 @@ name|ISPUNCT
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& ispunct (c))
+value|(ISASCII (c)&& ispunct (c))
 end_define
 
 begin_define
@@ -1019,7 +1099,7 @@ name|ISSPACE
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isspace (c))
+value|(ISASCII (c)&& isspace (c))
 end_define
 
 begin_define
@@ -1029,7 +1109,7 @@ name|ISUPPER
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isupper (c))
+value|(ISASCII (c)&& isupper (c))
 end_define
 
 begin_define
@@ -1039,8 +1119,75 @@ name|ISXDIGIT
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isxdigit (c))
+value|(ISASCII (c)&& isxdigit (c))
 end_define
+
+begin_comment
+comment|/* Disable string localization for the time being.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_
+end_undef
+
+begin_define
+define|#
+directive|define
+name|_
+parameter_list|(
+name|String
+parameter_list|)
+value|String
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__P
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|PROTOTYPES
+end_if
+
+begin_define
+define|#
+directive|define
+name|__P
+parameter_list|(
+name|Args
+parameter_list|)
+value|Args
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__P
+parameter_list|(
+name|Args
+parameter_list|)
+value|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
