@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)ww.h	1.7 83/07/28		*/
+comment|/*	@(#)ww.h	1.8 83/07/28		*/
 end_comment
 
 begin_include
@@ -72,6 +72,12 @@ comment|/* force refresh after \n and others */
 name|char
 name|ww_ident
 decl_stmt|;
+comment|/* the window id */
+name|char
+modifier|*
+name|ww_label
+decl_stmt|;
+comment|/* the user supplied label */
 name|Win
 modifier|*
 name|ww_win
