@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.36 (Berkeley) %G%"
+literal|"@(#)util.c	8.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5094,12 +5094,12 @@ condition|)
 name|fmtstr
 operator|=
 literal|"dev=%d/%d, ino=%d, nlink=%d, u/gid=%d/%d, size=%qd"
-operator|,
+expr_stmt|;
 else|else
 name|fmtstr
 operator|=
 literal|"dev=%d/%d, ino=%d, nlink=%d, u/gid=%d/%d, size=%ld"
-operator|,
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|p
