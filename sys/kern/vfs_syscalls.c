@@ -797,15 +797,6 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
 comment|/* 	 * Be ultra-paranoid about making sure the type and fspath 	 * variables will fit in our mp buffers, including the 	 * terminating NUL. 	 */
 if|if
 condition|(
@@ -890,7 +881,9 @@ if|if
 condition|(
 name|suser_xxx
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
@@ -1049,7 +1042,9 @@ name|mnt_stat
 operator|.
 name|f_owner
 operator|!=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 operator|->
@@ -1211,7 +1206,9 @@ argument_list|,
 operator|&
 name|va
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
@@ -1240,7 +1237,9 @@ name|va
 operator|.
 name|va_uid
 operator|!=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 operator|->
@@ -1282,7 +1281,9 @@ name|vp
 argument_list|,
 name|V_SAVE
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
@@ -1680,7 +1681,9 @@ name|mnt_stat
 operator|.
 name|f_owner
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 operator|->
