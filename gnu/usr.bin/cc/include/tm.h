@@ -323,6 +323,12 @@ begin_comment
 comment|/*  * Some imports from svr4.h in support of shared libraries.  * Currently, we need the DECLARE_OBJECT_SIZE stuff.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HANDLE_SYSV_PRAGMA
+end_define
+
 begin_comment
 comment|/* Define the strings used for the special svr4 .type and .size directives.    These strings generally do not vary from one system running svr4 to    another, but if a given system (e.g. m88k running svr) needs to use    different pseudo-op names for these, they may be overridden in the    file which includes this one.  */
 end_comment
@@ -346,6 +352,13 @@ define|#
 directive|define
 name|WEAK_ASM_OP
 value|".weak"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_ASM_OP
+value|".set"
 end_define
 
 begin_comment
