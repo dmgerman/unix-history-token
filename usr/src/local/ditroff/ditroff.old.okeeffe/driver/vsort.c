@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vsort.c	1.2	83/07/29  *  *	sort troff output into troff output that only goes one  *	direction down the page.  */
-end_comment
-
-begin_comment
-comment|/*******************************************************************************  output language from troff: all numbers are character strings  sn	size in points fn	font as number from 1-n cx	ascii character x Cxyz	funny char xyz. terminated by white space Hn	go to absolute horizontal position n Vn	go to absolute vertical position n (down is positive) hn	go n units horizontally (relative) vn	ditto vertically nnc	move right nn, then print c (exactly 2 digits!) 		(this wart is an optimization that shrinks output file size 		 about 35% and run-time about 15% while preserving ascii-ness) Dt ...\n	draw operation 't': 	Dt x		line thickness setting 	Ds x		line style (bit mask) setting 	Dl x y		line from here by x,y 	Dc d		circle of diameter d with left side here 	De x y		ellipse of axes x,y with left side here 	Da x y r	arc counter-clockwise by x,y of radius r 	D~ (or Dg) x y x y ...	wiggly line by x,y then x,y ... nb a	end of line (information only -- no action needed) 	b = space before line, a = after p	new page begins -- set v to 0 #...\n	comment x ...\n	device control functions: 	x i	init 	x T s	name of device is s 	x r n h v	resolution is n/inch 		h = min horizontal motion, v = min vert 	x p	pause (can restart) 	x s	stop -- done for ever 	x t	generate trailer 	x f n s	font position n contains font s 	x H n	set character height to n 	x S n	set slant to N  	Subcommands like "i" are often spelled out like "init".  *******************************************************************************/
+comment|/* vsort.c	1.3	83/07/30  *  *	sort troff output into troff output that only goes one  *	direction down the page.  */
 end_comment
 
 begin_include
@@ -22,6 +18,16 @@ end_include
 begin_define
 define|#
 directive|define
+name|DEBUGABLE
+end_define
+
+begin_comment
+comment|/* compile-time flag for debugging */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FATAL
 value|1
 end_define
@@ -33,6 +39,10 @@ name|NVLIST
 value|1500
 end_define
 
+begin_comment
+comment|/* size of list of vertical spans */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -40,12 +50,20 @@ name|OBUFSIZ
 value|40000
 end_define
 
+begin_comment
+comment|/* size of character buffer before sorting */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SLOP
 value|1000
 end_define
+
+begin_comment
+comment|/* extra bit of buffer to allow for passing OBUFSIZ */
+end_comment
 
 begin_define
 define|#
@@ -77,6 +95,12 @@ parameter_list|)
 value|vgoto(vpos + (n))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|dbg
@@ -88,6 +112,11 @@ end_decl_stmt
 begin_comment
 comment|/* debug flag != 0 means do debug output */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -301,6 +330,9 @@ literal|1
 index|]
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 case|case
 literal|'d'
 case|:
@@ -340,6 +372,8 @@ operator|=
 name|dbg
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 block|}
 name|argc
 operator|--
@@ -630,6 +664,9 @@ operator|!=
 name|EOF
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -649,6 +686,8 @@ argument_list|,
 name|vpos
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|op
@@ -1154,11 +1193,71 @@ operator|&
 name|m1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|m
+operator|+=
+name|m1
+operator|)
+operator|<
+literal|0
+condition|)
+comment|/* set m1 to highest */
+name|m1
+operator|=
+name|vpos
+operator|+
+name|m
+expr_stmt|;
+comment|/* of the endpoints */
+else|else
+name|m1
+operator|=
+name|vpos
+expr_stmt|;
+comment|/* can't be any more */
+name|m1
+operator|-=
+operator|(
+operator|(
+operator|(
+name|n
+operator|+=
+name|n1
+operator|)
+operator|<
+literal|0
+operator|)
+condition|?
+comment|/* than 1/2 */
+operator|-
+name|n
+else|:
+name|n
+operator|)
+operator|>>
+literal|1
+expr_stmt|;
+comment|/* horiz diff higher */
+name|startspan
+argument_list|(
+name|m1
+operator|<
+literal|0
+condition|?
+literal|0
+else|:
+name|m1
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|op
 argument_list|,
-literal|"D%s"
+literal|"V%d D%s"
+argument_list|,
+name|vpos
 argument_list|,
 name|buf
 argument_list|)
@@ -1173,15 +1272,11 @@ expr_stmt|;
 name|hmot
 argument_list|(
 name|n
-operator|+
-name|n1
 argument_list|)
 expr_stmt|;
 name|vmot
 argument_list|(
 name|m
-operator|+
-name|m1
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1661,6 +1756,9 @@ name|int
 name|compar
 parameter_list|()
 function_decl|;
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
 if|if
 condition|(
 name|dbg
@@ -1674,6 +1772,8 @@ argument_list|,
 name|vpos
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|op
