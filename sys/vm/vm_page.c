@@ -576,6 +576,11 @@ name|end
 operator|=
 name|new_end
 expr_stmt|;
+comment|/* 	 * Reserve an unmapped guard page to trap access to vm_page_array[-1]. 	 */
+name|vaddr
+operator|+=
+name|PAGE_SIZE
+expr_stmt|;
 comment|/* 	 * Initialize the mem entry structures now, and put them in the free 	 * queue. 	 */
 name|new_end
 operator|=
