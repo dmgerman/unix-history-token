@@ -5,6 +5,16 @@ directive|include
 file|"sendmail.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)srvrsmtp.c	3.2	%G%"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* **  SMTP -- run the SMTP protocol. ** **	Parameters: **		none. ** **	Returns: **		never. ** **	Side Effects: **		Reads commands from the input channel and processes **			them. */
 end_comment
