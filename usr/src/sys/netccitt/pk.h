@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -77,6 +77,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|X25_REJECT
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
 name|X25_RESET
 value|27
 end_define
@@ -86,6 +93,13 @@ define|#
 directive|define
 name|X25_RESET_CONFIRM
 value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|X25_DIAGNOSTIC
+value|241
 end_define
 
 begin_define
@@ -724,8 +738,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|INVALID_PACKET
+name|REJECT
 value|13 * MAXSTATES
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIAGNOSTIC
+value|14 * MAXSTATES
+end_define
+
+begin_define
+define|#
+directive|define
+name|INVALID_PACKET
+value|15 * MAXSTATES
 end_define
 
 begin_define
