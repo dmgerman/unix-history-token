@@ -1436,6 +1436,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|read_file
 parameter_list|(
@@ -2629,10 +2630,6 @@ name|fname
 index|[
 name|MAXPATHLEN
 index|]
-decl_stmt|;
-name|FILE
-modifier|*
-name|fp
 decl_stmt|;
 name|struct
 name|files_name
