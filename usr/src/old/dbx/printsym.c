@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printsym.c 1.3 %G%"
+literal|"@(#)printsym.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1470,6 +1470,16 @@ name|offset
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"size\t%d\n"
+argument_list|,
+name|size
+argument_list|(
+name|s
+argument_list|)
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|RECORD
