@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vpf.c	4.5	83/04/29	*/
+comment|/*	vpf.c	4.6	83/05/16	*/
 end_comment
 
 begin_comment
@@ -39,10 +39,6 @@ index|[]
 init|=
 block|{
 name|VPLOT
-block|,
-literal|0
-block|,
-literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -54,10 +50,6 @@ index|[]
 init|=
 block|{
 name|VPRINT
-block|,
-literal|0
-block|,
-literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
