@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.11 (Berkeley) %G%"
+literal|"@(#)print.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -880,9 +880,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-*.*u "
-argument_list|,
-name|UT_NAMESIZE
+literal|"%-*u "
 argument_list|,
 name|UT_NAMESIZE
 argument_list|,
@@ -1022,9 +1020,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-*.*u "
-argument_list|,
-name|UT_NAMESIZE
+literal|"%-*u "
 argument_list|,
 name|UT_NAMESIZE
 argument_list|,
