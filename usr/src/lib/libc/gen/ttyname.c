@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)ttyname.c	4.1 (Berkeley) %G% */
+comment|/* @(#)ttyname.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -17,13 +17,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<sys/ndir.h>
 end_include
 
 begin_include
@@ -74,9 +74,16 @@ name|struct
 name|stat
 name|tsb
 decl_stmt|;
+specifier|register
 name|struct
 name|direct
+modifier|*
 name|db
+decl_stmt|;
+specifier|register
+name|DIR
+modifier|*
+name|df
 decl_stmt|;
 specifier|static
 name|char
@@ -85,9 +92,6 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-specifier|register
-name|df
-expr_stmt|;
 if|if
 condition|(
 name|isatty
@@ -141,15 +145,13 @@ condition|(
 operator|(
 name|df
 operator|=
-name|open
+name|opendir
 argument_list|(
 name|dev
-argument_list|,
-literal|0
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -158,42 +160,22 @@ operator|)
 return|;
 while|while
 condition|(
-name|read
+operator|(
+name|db
+operator|=
+name|readdir
 argument_list|(
 name|df
-argument_list|,
-operator|(
-name|char
-operator|*
+argument_list|)
 operator|)
-operator|&
-name|db
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|db
-argument_list|)
-argument_list|)
-operator|==
-sizeof|sizeof
-argument_list|(
-name|db
-argument_list|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
 condition|(
 name|db
-operator|.
-name|d_ino
-operator|==
-literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
-name|db
-operator|.
+operator|->
 name|d_ino
 operator|!=
 name|fsb
@@ -213,7 +195,7 @@ argument_list|(
 name|rbuf
 argument_list|,
 name|db
-operator|.
+operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
@@ -249,7 +231,7 @@ operator|.
 name|st_ino
 condition|)
 block|{
-name|close
+name|closedir
 argument_list|(
 name|df
 argument_list|)
@@ -261,7 +243,7 @@ operator|)
 return|;
 block|}
 block|}
-name|close
+name|closedir
 argument_list|(
 name|df
 argument_list|)
