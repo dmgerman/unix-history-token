@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rsh.c,v 1.5 1995/10/05 21:30:13 gibbs Exp $"
+literal|"$Id: rsh.c,v 1.6 1996/02/03 11:49:29 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,7 +174,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<kerberosIV/des.h>
+file|<des.h>
 end_include
 
 begin_include
