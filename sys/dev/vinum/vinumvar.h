@@ -234,6 +234,20 @@ name|VINUM_SUPERDEV_TYPE
 argument_list|)
 block|,
 comment|/* superdevice number */
+name|VINUM_DAEMON_DEV
+init|=
+name|VINUMBDEV
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|VINUM_SUPERDEV_TYPE
+argument_list|)
+block|,
+comment|/* daemon superdevice number */
 comment|/*  * the number of object entries to cater for initially, and also the  * value by which they are incremented.  It doesn't take long  * to extend them, so theoretically we could start with 1 of each, but  * it's untidy to allocate such small areas.  These values are  * probably too small.  */
 name|INITIAL_DRIVES
 init|=
@@ -372,6 +386,21 @@ value|VINUM_DIR"/control"
 end_define
 
 begin_comment
+comment|/* normal super device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VINUM_DAEMON_DEV_NAME
+value|VINUM_DIR"/controld"
+end_define
+
+begin_comment
+comment|/* super device for daemon only */
+end_comment
+
+begin_comment
 comment|/*  * Flags for all objects.  Most of them only apply to  * specific objects, but we have space for all in any  * 32 bit flags word.   */
 end_comment
 
@@ -389,6 +418,11 @@ init|=
 literal|2
 block|,
 comment|/* we want access to this object */
+name|VF_OPEN
+init|=
+literal|4
+block|,
+comment|/* object has openers */
 name|VF_WRITETHROUGH
 init|=
 literal|8
@@ -449,11 +483,11 @@ init|=
 literal|0x4000
 block|,
 comment|/* we're reading config database from disk */
-name|VF_KERNELOP
+name|VF_DISKCONFIG
 init|=
 literal|0x8000
 block|,
-comment|/* we're performing ops from kernel space */
+comment|/* we're reading the config from disk */
 name|VF_NEWBORN
 init|=
 literal|0x10000
@@ -464,6 +498,16 @@ init|=
 literal|0x20000
 block|,
 comment|/* for drives: we read the config */
+name|VF_STOPPING
+init|=
+literal|0x40000
+block|,
+comment|/* for vinum_conf: stop on last close */
+name|VF_DAEMONOPEN
+init|=
+literal|0x80000
+block|,
+comment|/* the daemon has us open */
 block|}
 enum|;
 end_enum
@@ -598,7 +642,7 @@ value|vinum_conf.flags
 end_define
 
 begin_comment
-comment|/*  * Slice header  *  * Vinum drives start with this structure:  *  *\                                            Sector  * |--------------------------------------|  * |   PDP-11 memorial boot block         |      0  * |--------------------------------------|  * |   Disk label, maybe                  |      1  * |--------------------------------------|  * |   Slice definition  (vinum_hdr)      |      2  * |--------------------------------------|  * |                                      |  * |   Configuration info, first copy     |      3  * |                                      |  * |--------------------------------------|  * |                                      |  * |   Configuration info, second copy    |      3 + size of config  * |                                      |  * |--------------------------------------|  */
+comment|/*  * Slice header  *  * Vinum drives start with this structure:  *  *\                                            Sector  * |--------------------------------------|  * |   PDP-11 memorial boot block         |      0  * |--------------------------------------|  * |   Disk label, maybe                  |      1  * |--------------------------------------|  * |   Slice definition  (vinum_hdr)      |      8  * |--------------------------------------|  * |                                      |  * |   Configuration info, first copy     |      9  * |                                      |  * |--------------------------------------|  * |                                      |  * |   Configuration info, second copy    |      9 + size of config  * |                                      |  * |--------------------------------------|  */
 end_comment
 
 begin_comment
@@ -923,10 +967,6 @@ name|int
 name|plexsdno
 decl_stmt|;
 comment|/* and our number in our plex 							    * (undefined if no plex) */
-name|int
-name|pid
-decl_stmt|;
-comment|/* pid of process which opened us */
 name|u_int64_t
 name|reads
 decl_stmt|;
@@ -1050,10 +1090,6 @@ name|int
 name|volplexno
 decl_stmt|;
 comment|/* number of plex in volume */
-name|int
-name|pid
-decl_stmt|;
-comment|/* pid of process which opened us */
 comment|/* Lock information */
 name|int
 name|locks
@@ -1170,10 +1206,6 @@ name|int
 name|subops
 decl_stmt|;
 comment|/* and the number of suboperations */
-name|pid_t
-name|pid
-decl_stmt|;
-comment|/* pid of locker */
 comment|/* Statistics */
 name|u_int64_t
 name|bytes_read
