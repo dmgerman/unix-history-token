@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mixer.c,v 1.7 1997/09/29 06:38:49 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -619,7 +619,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"SOUND_MIXER_READ_DEVMASK"
@@ -642,7 +641,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"SOUND_MIXER_READ_RECMASK"
@@ -665,7 +663,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"SOUND_MIXER_READ_RECSRC"
@@ -1213,7 +1210,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"SOUND_MIXER_WRITE_RECSRC"
@@ -1241,7 +1237,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"SOUND_MIXER_READ_RECSRC"
