@@ -104,12 +104,6 @@ name|u_int
 name|bio_flags
 decl_stmt|;
 comment|/* BIO_ flags. */
-name|struct
-name|buf
-modifier|*
-name|_bio_buf
-decl_stmt|;
-comment|/* Parent buffer. */
 name|int
 name|bio_error
 decl_stmt|;
