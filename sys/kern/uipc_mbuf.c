@@ -342,7 +342,7 @@ name|KIPC_MBSTAT
 argument_list|,
 name|mbstat
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|mbstat
