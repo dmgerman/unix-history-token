@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)termios.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)termios.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -18,34 +18,6 @@ define|#
 directive|define
 name|_TERMIOS_
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"ioctl.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*   * Special Control Characters   *  * Index into c_cc[] character array.  *  *	Name	     Subscript	Enabled by   */
@@ -98,17 +70,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VERASE2
-value|18
-end_define
-
-begin_comment
-comment|/* ICANON */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VWERASE
 value|4
 end_define
@@ -137,6 +98,10 @@ end_define
 
 begin_comment
 comment|/* ICANON */
+end_comment
+
+begin_comment
+comment|/*			7	   spare 1 */
 end_comment
 
 begin_define
@@ -263,13 +228,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NCC
-value|20
+name|VINFO
+value|18
 end_define
 
 begin_comment
-comment|/* two spares */
+comment|/* ISIG */
 end_comment
+
+begin_comment
+comment|/*			19	   spare 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCC
+value|20
+end_define
 
 begin_define
 define|#
@@ -277,6 +253,29 @@ directive|define
 name|_POSIX_VDISABLE
 value|((unsigned char)'\377')
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CCEQ
+parameter_list|(
+name|val
+parameter_list|,
+name|c
+parameter_list|)
+value|(c == val ? val != _POSIX_VDISABLE : 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Input flags - software input processing  */
@@ -509,6 +508,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CIGNORE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* ignore control flags */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CSIZE
 value|0x00000300
 end_define
@@ -678,6 +688,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ECHO
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* enable echoing */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ECHONL
 value|0x00000010
 end_define
@@ -752,27 +773,6 @@ begin_comment
 comment|/* enable FLUSHO and LNEXT */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_comment
-comment|/* XXX already defined in ioctl.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ECHO
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* enable echoing */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -839,41 +839,43 @@ begin_comment
 comment|/* don't flush after interrupt */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|tcflag_t
+typedef|;
+end_typedef
 
-begin_comment
-comment|/*notdef*/
-end_comment
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|cc_t
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
 name|termios
 block|{
-name|unsigned
-name|long
+name|tcflag_t
 name|c_iflag
 decl_stmt|;
 comment|/* input flags */
-name|unsigned
-name|long
+name|tcflag_t
 name|c_oflag
 decl_stmt|;
 comment|/* output flags */
-name|unsigned
-name|long
+name|tcflag_t
 name|c_cflag
 decl_stmt|;
 comment|/* control flags */
-name|unsigned
-name|long
+name|tcflag_t
 name|c_lflag
 decl_stmt|;
 comment|/* local flags */
-name|unsigned
-name|char
+name|cc_t
 name|c_cc
 index|[
 name|NCC
@@ -930,40 +932,185 @@ comment|/* drain output, flush input */
 end_comment
 
 begin_comment
-comment|/*  * TCSASOFT is a flag which can be or'ed in with a command.  * If set, only the software processing flags in the termios   * structure are altered.  That is, the settings of the cflag and   * speeds are ignored.  */
+comment|/*  * Standard speeds  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TCSASOFT
-value|0x80000000
+name|B0
+value|0
 end_define
-
-begin_comment
-comment|/* but ignore hardware settings */
-end_comment
-
-begin_comment
-comment|/*  * Is c equal to control character val?  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|CCEQ
-parameter_list|(
-name|val
-parameter_list|,
-name|c
-parameter_list|)
-value|((c) == (val) ? (val) != _POSIX_VDISABLE : 0)
+name|B50
+value|50
 end_define
+
+begin_define
+define|#
+directive|define
+name|B75
+value|75
+end_define
+
+begin_define
+define|#
+directive|define
+name|B110
+value|110
+end_define
+
+begin_define
+define|#
+directive|define
+name|B134
+value|134
+end_define
+
+begin_define
+define|#
+directive|define
+name|B150
+value|150
+end_define
+
+begin_define
+define|#
+directive|define
+name|B200
+value|200
+end_define
+
+begin_define
+define|#
+directive|define
+name|B300
+value|300
+end_define
+
+begin_define
+define|#
+directive|define
+name|B600
+value|600
+end_define
+
+begin_define
+define|#
+directive|define
+name|B1200
+value|1200
+end_define
+
+begin_define
+define|#
+directive|define
+name|B1800
+value|1800
+end_define
+
+begin_define
+define|#
+directive|define
+name|B2400
+value|2400
+end_define
+
+begin_define
+define|#
+directive|define
+name|B4800
+value|4800
+end_define
+
+begin_define
+define|#
+directive|define
+name|B9600
+value|9600
+end_define
+
+begin_define
+define|#
+directive|define
+name|B19200
+value|19200
+end_define
+
+begin_define
+define|#
+directive|define
+name|B38400
+value|38400
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXTA
+value|19200
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXTB
+value|38400
+end_define
+
+begin_comment
+comment|/*  * END OF PROTECTED INCLUDE.  */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
-endif|_TERMIOS_
+end_endif
+
+begin_comment
+comment|/* _TERMIOS_ */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"ttydefaults.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/ttydefaults.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
 end_endif
 
 end_unit

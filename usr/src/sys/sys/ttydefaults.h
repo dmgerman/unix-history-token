@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ttydefaults.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ttydefaults.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * System wide defaults of terminal state.  */
+comment|/*  * System wide defaults for terminal state.  */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,49 @@ directive|define
 name|_TTYDEFAULTS_
 end_define
 
+begin_comment
+comment|/*  * Defaults on "first" open.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTYDEF_IFLAG
+value|(BRKINT | ISTRIP | ICRNL | IMAXBEL | IXON)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTYDEF_OFLAG
+value|(OPOST | ONLCR | OXTABS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTYDEF_LFLAG
+value|(ECHO | ICANON | ISIG | IEXTEN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTYDEF_CFLAG
+value|(CREAD | CS7 | PARENB | HUPCL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTYDEF_SPEED
+value|(B9600)
+end_define
+
+begin_comment
+comment|/*  * Control Character Defaults  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -28,10 +71,6 @@ name|x
 parameter_list|)
 value|(x&037)
 end_define
-
-begin_comment
-comment|/*  * Control Character Defaults  */
-end_comment
 
 begin_define
 define|#
@@ -44,8 +83,12 @@ begin_define
 define|#
 directive|define
 name|CEOL
-value|_POSIX_VDISABLE
+value|((unsigned)'\377')
 end_define
+
+begin_comment
+comment|/* XXX avoid _POSIX_VDISABLE */
+end_comment
 
 begin_define
 define|#
@@ -64,9 +107,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|CERASE2
-value|_POSIX_VDISABLE
+name|CINFO
+value|((unsigned)'\377')
 end_define
+
+begin_comment
+comment|/* XXX avoid _POSIX_VDISABLE */
+end_comment
 
 begin_define
 define|#
@@ -159,19 +206,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|CQUOTE
-value|'\\'
-end_define
-
-begin_define
-define|#
-directive|define
 name|CEOT
 value|CEOF
 end_define
 
 begin_comment
-comment|/* aliases */
+comment|/* compat */
 end_comment
 
 begin_define
@@ -196,43 +236,8 @@ value|CFLUSHO
 end_define
 
 begin_comment
-comment|/*  * Settings on first open of a tty.  */
+comment|/* PROTECTED INCLUSION ENDS HERE */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TTYDEF_IFLAG
-value|(BRKINT | ISTRIP | IMAXBEL | IXON)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TTYDEF_OFLAG
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TTYDEF_LFLAG
-value|(ECHO | ICANON | ISIG | IEXTEN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TTYDEF_CFLAG
-value|(CREAD | CS7 | PARENB | HUPCL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TTYDEF_SPEED
-value|(B9600)
-end_define
 
 begin_endif
 endif|#
@@ -240,11 +245,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*_TTYDEFAULTS_*/
+comment|/* _TTYDEFAULTS_ */
 end_comment
 
 begin_comment
-comment|/*  * define TTYDEFCHARS to include an array of default control characters.  */
+comment|/*  * #define TTYDEFCHARS to include an array of default control characters.  */
 end_comment
 
 begin_ifdef
@@ -254,7 +259,7 @@ name|TTYDEFCHARS
 end_ifdef
 
 begin_decl_stmt
-name|u_char
+name|cc_t
 name|ttydefchars
 index|[
 name|NCC
@@ -275,7 +280,7 @@ name|CKILL
 block|,
 name|CREPRINT
 block|,
-name|CQUOTE
+name|_POSIX_VDISABLE
 block|,
 name|CINTR
 block|,
@@ -297,12 +302,18 @@ name|CMIN
 block|,
 name|CTIME
 block|,
-name|CERASE2
+name|CINFO
 block|,
 name|_POSIX_VDISABLE
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|TTYDEFCHARS
+end_undef
 
 begin_endif
 endif|#
@@ -310,7 +321,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*TTYDEFCHARS*/
+comment|/* TTYDEFCHARS */
 end_comment
 
 end_unit
