@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -377,6 +377,75 @@ define|#
 directive|define
 name|M_LAST
 value|50
+end_define
+
+begin_define
+define|#
+directive|define
+name|INITKMEMNAMES
+value|{ \ 	"free",
+comment|/* 0 M_FREE */
+value|\ 	"mbuf",
+comment|/* 1 M_MBUF */
+value|\ 	"devbuf",
+comment|/* 2 M_DEVBUF */
+value|\ 	"socket",
+comment|/* 3 M_SOCKET */
+value|\ 	"pcb",
+comment|/* 4 M_PCB */
+value|\ 	"routetbl",
+comment|/* 5 M_RTABLE */
+value|\ 	"hosttbl",
+comment|/* 6 M_HTABLE */
+value|\ 	"fragtbl",
+comment|/* 7 M_FTABLE */
+value|\ 	"zombie",
+comment|/* 8 M_ZOMBIE */
+value|\ 	"ifaddr",
+comment|/* 9 M_IFADDR */
+value|\ 	"soopts",
+comment|/* 10 M_SOOPTS */
+value|\ 	"soname",
+comment|/* 11 M_SONAME */
+value|\ 	"namei",
+comment|/* 12 M_NAMEI */
+value|\ 	"gprof",
+comment|/* 13 M_GPROF */
+value|\ 	"ioctlops",
+comment|/* 14 M_IOCTLOPS */
+value|\ 	"superblk",
+comment|/* 15 M_SUPERBLK */
+value|\ 	"cred",
+comment|/* 16 M_CRED */
+value|\ 	"pgrp",
+comment|/* 17 M_PGRP */
+value|\ 	"session",
+comment|/* 18 M_SESSION */
+value|\ 	"iov",
+comment|/* 19 M_IOV */
+value|\ 	"mount",
+comment|/* 20 M_MOUNT */
+value|\ 	"fhandle",
+comment|/* 21 M_FHANDLE */
+value|\ 	"NFS req",
+comment|/* 22 M_NFSREQ */
+value|\ 	"NFS mount",
+comment|/* 23 M_NFSMNT */
+value|\ 	"vnodes",
+comment|/* 24 M_VNODE */
+value|\ 	"namecache",
+comment|/* 25 M_CACHE */
+value|\ 	"UFS quota",
+comment|/* 26 M_DQUOT */
+value|\ 	"UFS mount",
+comment|/* 27 M_UFSMNT */
+value|\ 	"mapmem",
+comment|/* 28 M_MAPMEM */
+value|\ 	"shm",
+comment|/* 29 M_SHM */
+value|\ 	0, 0, 0, 0, \ 	0, 0, 0, 0, 0, \ 	0, 0, 0, 0, 0, \ 	0, 0, 0, 0, 0, \ 	"temp",
+comment|/* 49 M_TEMP */
+value|\ }
 end_define
 
 begin_struct
