@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.26	81/03/09	*/
+comment|/*	tm.c	4.27	81/03/09	*/
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"../h/param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/systm.h"
 end_include
 
 begin_include
@@ -694,6 +700,8 @@ name|ENXIO
 expr_stmt|;
 return|return;
 block|}
+name|get
+label|:
 name|tmcommand
 argument_list|(
 name|dev
@@ -703,6 +711,32 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_erreg
+operator|&
+name|TMER_SDWN
+condition|)
+block|{
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|lbolt
+argument_list|,
+name|PZERO
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+goto|goto
+name|get
+goto|;
+block|}
 name|dens
 operator|=
 name|TM_IE
@@ -795,6 +829,23 @@ operator|&
 name|TMER_WRL
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"er %o dens %o sc->sc_dens %o flag %o\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_erreg
+argument_list|,
+name|dens
+argument_list|,
+name|sc
+operator|->
+name|sc_dens
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Not online or density switch in mid-tape or write locked. 		 */
 name|u
 operator|.
@@ -1023,12 +1074,6 @@ block|{
 comment|/* 		 * This special check is because B_BUSY never 		 * gets cleared in the non-waiting rewind case. 		 */
 if|if
 condition|(
-name|bp
-operator|->
-name|b_command
-operator|==
-name|TM_REW
-operator|&&
 name|bp
 operator|->
 name|b_repcnt

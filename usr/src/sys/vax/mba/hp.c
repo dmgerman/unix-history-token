@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.27	81/03/09	*/
+comment|/*	hp.c	4.28	81/03/09	*/
 end_comment
 
 begin_include
@@ -968,6 +968,32 @@ name|HP_DCLR
 operator||
 name|HP_GO
 expr_stmt|;
+if|if
+condition|(
+name|mi
+operator|->
+name|mi_mba
+operator|->
+name|mba_drv
+index|[
+literal|0
+index|]
+operator|.
+name|mbd_as
+operator|&
+operator|(
+literal|1
+operator|<<
+name|mi
+operator|->
+name|mi_drive
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"DCLR attn\n"
+argument_list|)
+expr_stmt|;
 name|hpaddr
 operator|->
 name|hpcs1
@@ -981,6 +1007,11 @@ operator|->
 name|hpof
 operator|=
 name|HPOF_FMT22
+expr_stmt|;
+name|mbclrattn
+argument_list|(
+name|mi
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1745,6 +1776,37 @@ operator|=
 name|HP_RELEASE
 operator||
 name|HP_GO
+expr_stmt|;
+if|if
+condition|(
+name|mi
+operator|->
+name|mi_mba
+operator|->
+name|mba_drv
+index|[
+literal|0
+index|]
+operator|.
+name|mbd_as
+operator|&
+operator|(
+literal|1
+operator|<<
+name|mi
+operator|->
+name|mi_drive
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"REL attn\n"
+argument_list|)
+expr_stmt|;
+name|mbclrattn
+argument_list|(
+name|mi
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
