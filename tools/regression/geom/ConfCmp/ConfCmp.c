@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xmlparse.h"
+file|"expat.h"
 end_include
 
 begin_struct
