@@ -9074,7 +9074,7 @@ argument_list|(
 literal|240000
 argument_list|)
 expr_stmt|;
-comment|/*      * The PnP COM device spec. dictates that the mouse must set DSR       * in response to DTR (by hardware or by software) and that if DSR is       * not asserted, the host computer should think that there is no device      * at this serial port.  But there are some mice just don't do that...      */
+comment|/*      * The PnP COM device spec. dictates that the mouse must set DSR       * in response to DTR (by hardware or by software) and that if DSR is       * not asserted, the host computer should think that there is no device      * at this serial port.  But some mice just don't do that...      */
 name|ioctl
 argument_list|(
 name|rodent
@@ -9263,8 +9263,6 @@ return|return
 name|TRUE
 return|;
 block|}
-else|else
-block|{
 comment|/* port setup, 2nd phase (2.1.5) */
 name|i
 operator|=
@@ -9384,7 +9382,6 @@ return|return
 name|TRUE
 return|;
 block|}
-block|}
 return|return
 name|FALSE
 return|;
@@ -9412,7 +9409,7 @@ decl_stmt|;
 comment|/*      * This is a simplified procedure; it simply toggles RTS.      */
 name|debug
 argument_list|(
-literal|"PnP COM device rev 0.9 probe..."
+literal|"alternate probe..."
 argument_list|)
 expr_stmt|;
 name|ioctl
