@@ -392,6 +392,10 @@ operator|,
 name|char
 operator|*
 operator|,
+name|int
+operator|,
+name|char
+operator|,
 specifier|const
 name|char
 operator|*
@@ -419,6 +423,10 @@ name|int
 operator|,
 name|char
 operator|*
+operator|,
+name|int
+operator|,
+name|char
 operator|,
 specifier|const
 name|char
@@ -761,10 +769,16 @@ name|char
 modifier|*
 name|xdigs
 parameter_list|,
+name|int
+name|needgrp
+parameter_list|,
+name|char
+name|thousep
+parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|thousep
+name|grp
 parameter_list|)
 block|{
 specifier|register
@@ -864,31 +878,49 @@ operator|%
 literal|10
 argument_list|)
 expr_stmt|;
+name|ndig
+operator|++
+expr_stmt|;
+comment|/* 			 * If (*grp == CHAR_MAX) then no more grouping 			 * should be performed. 			 */
 if|if
 condition|(
-operator|++
+name|needgrp
+operator|&&
 name|ndig
 operator|==
-literal|3
-operator|&&
-name|thousep
+operator|*
+name|grp
 operator|&&
 operator|*
-name|thousep
+name|grp
 operator|!=
-literal|'\0'
+name|CHAR_MAX
 condition|)
 block|{
 operator|*
 operator|--
 name|cp
 operator|=
-operator|*
 name|thousep
 expr_stmt|;
 name|ndig
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 				 * If (*(grp+1) == '\0') then we have to 				 * use *grp character (last grouping rule) 				 * for all next cases 				 */
+if|if
+condition|(
+operator|*
+operator|(
+name|grp
+operator|+
+literal|1
+operator|)
+operator|!=
+literal|'\0'
+condition|)
+name|grp
+operator|++
 expr_stmt|;
 block|}
 name|sval
@@ -1014,10 +1046,16 @@ name|char
 modifier|*
 name|xdigs
 parameter_list|,
+name|int
+name|needgrp
+parameter_list|,
+name|char
+name|thousep
+parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|thousep
+name|grp
 parameter_list|)
 block|{
 name|char
@@ -1057,7 +1095,11 @@ name|octzero
 argument_list|,
 name|xdigs
 argument_list|,
+name|needgrp
+argument_list|,
 name|thousep
+argument_list|,
+name|grp
 argument_list|)
 operator|)
 return|;
@@ -1143,31 +1185,49 @@ operator|%
 literal|10
 argument_list|)
 expr_stmt|;
+name|ndig
+operator|++
+expr_stmt|;
+comment|/* 			 * If (*grp == CHAR_MAX) then no more grouping 			 * should be performed. 			 */
 if|if
 condition|(
-operator|++
-name|ndig
-operator|==
-literal|3
-operator|&&
-name|thousep
+name|needgrp
 operator|&&
 operator|*
-name|thousep
+name|grp
 operator|!=
-literal|'\0'
+name|CHAR_MAX
+operator|&&
+name|ndig
+operator|==
+operator|*
+name|grp
 condition|)
 block|{
 operator|*
 operator|--
 name|cp
 operator|=
-operator|*
 name|thousep
 expr_stmt|;
 name|ndig
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 				 * If (*(grp+1) == '\0') then we have to 				 * use *grp character (last grouping rule) 				 * for all next cases 				 */
+if|if
+condition|(
+operator|*
+operator|(
+name|grp
+operator|+
+literal|1
+operator|)
+operator|!=
+literal|'\0'
+condition|)
+name|grp
+operator|++
 expr_stmt|;
 block|}
 name|sval
@@ -1340,7 +1400,7 @@ begin_define
 define|#
 directive|define
 name|BUF
-value|((MAXEXP*4/3)+MAXFRACT+1)
+value|((MAXEXP*2)+MAXFRACT+1)
 end_define
 
 begin_comment
@@ -1418,7 +1478,7 @@ begin_define
 define|#
 directive|define
 name|BUF
-value|90
+value|136
 end_define
 
 begin_endif
@@ -1544,6 +1604,17 @@ begin_comment
 comment|/* Floating point number */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|GROUPING
+value|0x200
+end_define
+
+begin_comment
+comment|/* use grouping ("'" flag) */
+end_comment
+
 begin_comment
 comment|/* C99 additional size modifiers: */
 end_comment
@@ -1552,7 +1623,7 @@ begin_define
 define|#
 directive|define
 name|SIZET
-value|0x200
+value|0x400
 end_define
 
 begin_comment
@@ -1563,7 +1634,7 @@ begin_define
 define|#
 directive|define
 name|PTRDIFFT
-value|0x400
+value|0x800
 end_define
 
 begin_comment
@@ -1574,7 +1645,7 @@ begin_define
 define|#
 directive|define
 name|INTMAXT
-value|0x800
+value|0x1000
 end_define
 
 begin_comment
@@ -1585,7 +1656,7 @@ begin_define
 define|#
 directive|define
 name|CHARINT
-value|0x1000
+value|0x2000
 end_define
 
 begin_comment
@@ -1659,12 +1730,16 @@ name|char
 name|sign
 decl_stmt|;
 comment|/* sign prefix (' ', '+', '-', or \0) */
-specifier|const
 name|char
-modifier|*
 name|thousands_sep
 decl_stmt|;
 comment|/* locale specific thousands separator */
+specifier|const
+name|char
+modifier|*
+name|grouping
+decl_stmt|;
+comment|/* locale specific numeric grouping rules */
 ifdef|#
 directive|ifdef
 name|FLOATING_POINT
@@ -1952,6 +2027,10 @@ parameter_list|)
 define|\
 value|n2 = 0; \         cp = fmt; \         while (is_digit(*cp)) { \                 n2 = 10 * n2 + to_digit(*cp); \                 cp++; \         } \         if (*cp == '$') { \             	int hold = nextarg; \                 if (argtable == NULL) { \                         argtable = statargtable; \                         __find_arguments (fmt0, orgap,&argtable); \                 } \                 nextarg = n2; \                 val = GETARG (int); \                 nextarg = hold; \                 fmt = ++cp; \         } else { \ 		val = GETARG (int); \         }
 name|thousands_sep
+operator|=
+literal|'\0'
+expr_stmt|;
+name|grouping
 operator|=
 name|NULL
 expr_stmt|;
@@ -2267,12 +2346,26 @@ goto|;
 case|case
 literal|'\''
 case|:
+name|flags
+operator||=
+name|GROUPING
+expr_stmt|;
 name|thousands_sep
 operator|=
+operator|*
+operator|(
 name|localeconv
 argument_list|()
 operator|->
 name|thousands_sep
+operator|)
+expr_stmt|;
+name|grouping
+operator|=
+name|localeconv
+argument_list|()
+operator|->
+name|grouping
 expr_stmt|;
 goto|goto
 name|rflag
@@ -2709,6 +2802,13 @@ case|:
 case|case
 literal|'E'
 case|:
+comment|/* 			 * Grouping apply to %i, %d, %u, %f, %F, %g, %G 			 * conversion specifiers only. For other conversions 			 * behavior is undefined. 			 *	-- POSIX 			 */
+name|flags
+operator|&=
+operator|~
+name|GROUPING
+expr_stmt|;
+comment|/*FALLTHROUGH*/
 case|case
 literal|'f'
 case|:
@@ -3465,6 +3565,11 @@ name|flags
 operator||=
 name|HEXPREFIX
 expr_stmt|;
+name|flags
+operator|&=
+operator|~
+name|GROUPING
+expr_stmt|;
 comment|/* unsigned conversions */
 name|nosign
 label|:
@@ -3530,7 +3635,13 @@ name|ALT
 argument_list|,
 name|xdigs
 argument_list|,
+name|flags
+operator|&
+name|GROUPING
+argument_list|,
 name|thousands_sep
+argument_list|,
+name|grouping
 argument_list|)
 expr_stmt|;
 block|}
@@ -3562,7 +3673,13 @@ name|ALT
 argument_list|,
 name|xdigs
 argument_list|,
+name|flags
+operator|&
+name|GROUPING
+argument_list|,
 name|thousands_sep
+argument_list|,
+name|grouping
 argument_list|)
 expr_stmt|;
 block|}
