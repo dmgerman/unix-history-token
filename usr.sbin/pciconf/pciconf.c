@@ -136,6 +136,11 @@ argument_list|,
 name|argv0
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -508,7 +513,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"pci%d:%d:%d:\tclass=0x%06x card=0x%08lx chip=0x%08lx rev=0x%02x\n"
+literal|"pci%d:%d:%d:\tclass=0x%06x card=0x%08lx chip=0x%08lx rev=0x%02x hdr=0x%02x\n"
 argument_list|,
 name|p
 operator|->
@@ -547,6 +552,10 @@ operator|->
 name|pc_class
 operator|&
 literal|0xff
+argument_list|,
+name|p
+operator|->
+name|pc_hdr
 argument_list|)
 expr_stmt|;
 block|}

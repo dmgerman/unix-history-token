@@ -47,6 +47,10 @@ name|pcisel
 name|pc_sel
 decl_stmt|;
 comment|/* bus+slot+function */
+name|u_char
+name|pc_hdr
+decl_stmt|;
+comment|/* PCI header type */
 name|pcidi_t
 name|pc_devid
 decl_stmt|;
