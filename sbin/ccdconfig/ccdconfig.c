@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ccdconfig.c,v 1.9 1998/06/04 06:41:26 charnier Exp $"
+literal|"$Id: ccdconfig.c,v 1.10 1998/09/15 08:15:22 gibbs Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -678,6 +684,39 @@ name|setgid
 argument_list|(
 name|getgid
 argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|modfind
+argument_list|(
+literal|"ccd"
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* Not present in kernel, try loading it */
+if|if
+condition|(
+name|kldload
+argument_list|(
+literal|"ccd"
+argument_list|)
+operator|<
+literal|0
+operator|||
+name|modfind
+argument_list|(
+literal|"ccd"
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|warn
+argument_list|(
+literal|"ccd module not available!"
 argument_list|)
 expr_stmt|;
 block|}
