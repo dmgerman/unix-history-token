@@ -1465,14 +1465,16 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|mac_biba_high_single
-argument_list|(
-argument|struct mac_biba *mac_biba
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|mac_biba
+modifier|*
+name|mac_biba
+parameter_list|)
 block|{
 name|KASSERT
 argument_list|(
@@ -1503,7 +1505,7 @@ name|MAC_BIBA_TYPE_HIGH
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
