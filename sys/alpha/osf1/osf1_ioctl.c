@@ -489,6 +489,20 @@ argument_list|,
 name|len
 argument_list|)
 return|;
+case|case
+literal|'S'
+case|:
+comment|/* 		 * XXX SVR4 Streams IOCTLs are all unimpl. 		 */
+ifndef|#
+directive|ifndef
+name|IOCTL_DEBUG
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 default|default:
 name|printf
 argument_list|(
