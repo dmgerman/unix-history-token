@@ -276,6 +276,9 @@ name|chunks
 operator|->
 name|size
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__ia64__
 name|dl
 operator|->
 name|d_ncylinders
@@ -300,6 +303,8 @@ name|new
 operator|->
 name|bios_sect
 expr_stmt|;
+endif|#
+directive|endif
 name|dl
 operator|->
 name|d_secpercyl
