@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)wait.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)wait.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * This file holds definitions relevent to the wait4 system call  * and the alternate interfaces that use it (wait, wait3, waitpid).  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_ifndef
 ifndef|#
@@ -221,6 +227,15 @@ begin_comment
 comment|/* value of s.stopval if process is stopped */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _POSIX_SOURCE */
+end_comment
+
 begin_comment
 comment|/*  * Option bits for the second argument of wait4.  WNOHANG causes the  * wait to not hang if there are no stopped or terminated processes, rather  * returning an error indication in this case (pid==0).  WUNTRACED  * indicates that the caller should receive status about untraced children  * which stop due to signals.  If children are stopped and a wait without  * this option is done, it is as though they were still running... nothing  * about them is returned.   By default, a blocking wait call will be  * aborted by receipt of a signal that is caught (POSIX); the option  * WSIGRESTART causes the call to restart instead of failing with error EINTR.  */
 end_comment
@@ -247,6 +262,12 @@ begin_comment
 comment|/* tell about stopped, untraced children */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -258,9 +279,24 @@ begin_comment
 comment|/* restart wait if signal is received */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _POSIX_SOURCE */
+end_comment
+
 begin_comment
 comment|/*  * Macros to test the exit status returned by wait  * and extract the relevant values.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
@@ -319,7 +355,7 @@ name|WIFEXITED
 parameter_list|(
 name|x
 parameter_list|)
-value|((x).w_stopval != WSTOPPED&& (x).w_termsig == 0)
+value|((x).w_termsig == 0)
 end_define
 
 begin_define
@@ -331,6 +367,84 @@ name|x
 parameter_list|)
 value|((x).w_retcode)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _POSIX_SOURCE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WIFSTOPPED
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0377) == 0177)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WSTOPSIG
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WIFSIGNALED
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0377 != 0177&& ((x)& 0377) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WTERMSIG
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0177)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WIFEXITED
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0377) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WEXITSTATUS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> 8)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _POSIX_SOURCE */
+end_comment
 
 end_unit
 
