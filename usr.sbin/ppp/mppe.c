@@ -2383,9 +2383,14 @@ literal|"MPPE: MasterKey is invalid,"
 literal|" MPPE is available only with CHAP81 authentication\n"
 argument_list|)
 expr_stmt|;
+name|mval
+operator|=
+literal|0
+expr_stmt|;
 name|ua_htonl
 argument_list|(
-literal|0x0
+operator|&
+name|mval
 argument_list|,
 name|o
 operator|->
