@@ -84,13 +84,22 @@ directive|ifndef
 name|_THREAD_SAFE
 end_ifndef
 
+begin_decl_stmt
+specifier|static
+name|int
+name|alarm_termination
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
 name|sleephandler
 parameter_list|()
 block|{
-return|return;
+name|alarm_termination
+operator|++
+expr_stmt|;
 block|}
 end_function
 
@@ -173,7 +182,7 @@ operator|.
 name|tv_sec
 operator|!=
 literal|0
-operator|&&
+operator|||
 name|time_to_sleep
 operator|.
 name|tv_nsec
@@ -298,6 +307,10 @@ argument_list|,
 name|SIGALRM
 argument_list|)
 expr_stmt|;
+name|alarm_termination
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 		 * signanosleep() uses the given mask for the lifetime of 		 * the syscall only - it resets on return.  Note that the 		 * old sleep explicitly unblocks SIGALRM during the sleep. 		 */
 do|do
 block|{
@@ -320,17 +333,22 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+operator|!
+name|alarm_termination
+operator|&&
+operator|(
 name|time_to_sleep
 operator|.
 name|tv_sec
 operator|!=
 literal|0
-operator|&&
+operator|||
 name|time_to_sleep
 operator|.
 name|tv_nsec
 operator|!=
 literal|0
+operator|)
 condition|)
 do|;
 comment|/* Unwind */
