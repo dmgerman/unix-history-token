@@ -322,7 +322,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"mailwrapper:"
+literal|"mailwrapper"
 argument_list|)
 expr_stmt|;
 block|}
@@ -722,6 +722,17 @@ argument_list|(
 name|config
 argument_list|)
 expr_stmt|;
+name|al
+operator|.
+name|argv
+index|[
+name|al
+operator|.
+name|argc
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 name|execve
 argument_list|(
 name|to
@@ -731,6 +742,13 @@ operator|.
 name|argv
 argument_list|,
 name|envp
+argument_list|)
+expr_stmt|;
+name|warn
+argument_list|(
+literal|"mailwrapper: execing %s"
+argument_list|,
+name|to
 argument_list|)
 expr_stmt|;
 name|freearg
@@ -746,13 +764,9 @@ argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
-name|err
+name|exit
 argument_list|(
 literal|1
-argument_list|,
-literal|"mailwrapper: execing %s"
-argument_list|,
-name|to
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
