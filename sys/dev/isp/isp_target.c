@@ -3818,7 +3818,7 @@ condition|)
 block|{
 name|xs
 operator|=
-name|isp_find_xs
+name|isp_find_xs_tgt
 argument_list|(
 name|isp
 argument_list|,
@@ -4297,7 +4297,7 @@ condition|)
 block|{
 name|xs
 operator|=
-name|isp_find_xs
+name|isp_find_xs_tgt
 argument_list|(
 name|isp
 argument_list|,

@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|7
+value|8
 end_define
 
 begin_comment
@@ -1707,6 +1707,17 @@ modifier|*
 modifier|*
 name|isp_xflist
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+comment|/* 	 * Active target commands are stored here, indexed by handle function. 	 */
+name|void
+modifier|*
+modifier|*
+name|isp_tgtlist
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * request/result queue pointers and DMA handles for them. 	 */
 name|caddr_t
 name|isp_rquest
