@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1252,6 +1252,16 @@ operator|>=
 name|TTYHOG
 operator|/
 literal|2
+operator|&&
+operator|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_TBLOCK
+operator|)
+operator|==
+literal|0
 operator|&&
 operator|(
 operator|!
@@ -8680,7 +8690,7 @@ name|pgtok
 parameter_list|(
 name|a
 parameter_list|)
-value|((a)/(1024/NBPG))
+value|(((a)*NBPG)/1024)
 if|if
 condition|(
 name|ttycheckoutq
