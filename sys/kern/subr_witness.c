@@ -5772,11 +5772,18 @@ name|witness
 modifier|*
 name|w
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+name|witness_cold
+argument_list|,
+operator|(
+literal|"enroll called too early"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|!
-name|witness_watch
-operator|||
 name|witness_watch
 operator|==
 literal|0
