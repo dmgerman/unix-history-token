@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	srt0.c	4.11	83/05/06	*/
+comment|/*	srt0.c	4.11	83/05/11	*/
 end_comment
 
 begin_include
@@ -110,7 +110,7 @@ ifdef|#
 directive|ifdef
 name|REL
 name|movc3
-name|aend
+name|aedata
 decl_stmt|,
 modifier|*
 name|$0
@@ -118,6 +118,34 @@ decl_stmt|,
 argument_list|(
 name|sp
 argument_list|)
+comment|/*  * Reclear bss segment separately from text and data  * since movc3 can't move more than 64K bytes  */
+name|dclr
+range|:
+name|clrl
+argument_list|(
+name|r3
+argument_list|)
+operator|+
+name|cmpl
+name|r3
+decl_stmt|,
+name|$_end
+name|jlss
+name|dclr
+comment|/* this loop shouldn't be necessary, but is when booting from an ra81 */
+name|xclr
+range|:
+name|clrl
+argument_list|(
+name|r3
+argument_list|)
+operator|+
+name|cmpl
+name|r3
+decl_stmt|,
+name|$0x100000
+name|jlss
+name|xclr
 name|jmp
 modifier|*
 name|abegin
@@ -161,13 +189,6 @@ range|:
 operator|.
 name|long
 name|begin
-name|aend
-operator|:
-operator|.
-name|long
-name|_end
-operator|-
-name|RELOC
 name|aedata
 operator|:
 operator|.
