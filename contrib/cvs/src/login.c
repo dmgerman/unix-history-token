@@ -25,6 +25,36 @@ begin_comment
 comment|/* This covers the rest of the file. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GETPASSPHRASE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|GETPASS
+value|getpassphrase
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GETPASS
+value|getpass
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* There seems to be very little agreement on which system header    getpass is declared in.  With a lot of fancy autoconfiscation,    we could perhaps detect this, but for now we'll just rely on    _CRAY, since Cray is perhaps the only system on which our own    declaration won't work (some Crays declare the 2#$@% thing as    varadic, believe it or not).  On Cray, getpass will be declared    in either stdlib.h or unistd.h.  */
 end_comment
@@ -39,7 +69,7 @@ begin_function_decl
 specifier|extern
 name|char
 modifier|*
-name|getpass
+name|GETPASS
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -400,7 +430,7 @@ argument_list|()
 expr_stmt|;
 name|typed_password
 operator|=
-name|getpass
+name|GETPASS
 argument_list|(
 literal|"CVS password: "
 argument_list|)
@@ -1013,7 +1043,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns the _scrambled_ password.  The server must descramble    before hashing and comparing. */
+comment|/* Returns the _scrambled_ password.  The server must descramble    before hashing and comparing.  If password file not found, or    password not found in the file, just return NULL. */
 end_comment
 
 begin_function
@@ -1033,15 +1063,13 @@ decl_stmt|;
 name|char
 modifier|*
 name|password
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
 name|linebuf
 init|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 decl_stmt|;
 name|size_t
@@ -1058,22 +1086,6 @@ decl_stmt|;
 name|int
 name|line_length
 decl_stmt|;
-name|int
-name|anoncvs
-decl_stmt|;
-name|anoncvs
-operator|=
-operator|(
-name|strcmp
-argument_list|(
-name|CVSroot_username
-argument_list|,
-literal|"anoncvs"
-argument_list|)
-operator|==
-literal|0
-operator|)
-expr_stmt|;
 comment|/* If someone (i.e., login()) is calling connect_to_pserver() out of        context, then assume they have supplied the correct, scrambled        password. */
 if|if
 condition|(
@@ -1180,49 +1192,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|anoncvs
-condition|)
-block|{
 name|free
 argument_list|(
 name|passfile
 argument_list|)
 expr_stmt|;
 return|return
-name|strdup
-argument_list|(
-literal|"Ay=0=h<Z"
-argument_list|)
+name|NULL
 return|;
-comment|/* scrambled "anoncvs" */
-block|}
-name|error
-argument_list|(
-literal|0
-argument_list|,
-name|errno
-argument_list|,
-literal|"could not open %s"
-argument_list|,
-name|passfile
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|passfile
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"use \"cvs login\" to log in first"
-argument_list|)
-expr_stmt|;
 block|}
 name|root_len
 operator|=
@@ -1317,11 +1294,6 @@ argument_list|,
 name|passfile
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|passfile
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|found_it
@@ -1339,7 +1311,7 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
-name|password
+name|tmp
 operator|=
 name|strtok
 argument_list|(
@@ -1348,17 +1320,36 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* Give it permanent storage. */
+if|if
+condition|(
 name|tmp
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"bad entry in %s for %s"
+argument_list|,
+name|passfile
+argument_list|,
+name|CVSroot_original
+argument_list|)
+expr_stmt|;
+comment|/* Give it permanent storage. */
+name|password
 operator|=
 name|xstrdup
 argument_list|(
-name|password
+name|tmp
 argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
-name|password
+name|tmp
 argument_list|,
 literal|0
 argument_list|,
@@ -1368,17 +1359,7 @@ name|password
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|linebuf
-argument_list|)
-expr_stmt|;
-return|return
-name|tmp
-return|;
 block|}
-else|else
-block|{
 if|if
 condition|(
 name|linebuf
@@ -1388,39 +1369,13 @@ argument_list|(
 name|linebuf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|anoncvs
-condition|)
-return|return
-name|strdup
+name|free
 argument_list|(
-literal|"Ay=0=h<Z"
-argument_list|)
-return|;
-comment|/* scrambled "anoncvs" */
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"cannot find password"
+name|passfile
 argument_list|)
 expr_stmt|;
-name|error
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"use \"cvs login\" to log in first"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* NOTREACHED */
 return|return
-name|NULL
+name|password
 return|;
 block|}
 end_function
@@ -1445,7 +1400,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Remove any entry for the CVSRoot repository found in "CVS/.cvspass". */
+comment|/* Remove any entry for the CVSRoot repository found in .cvspass. */
 end_comment
 
 begin_function
@@ -1476,6 +1431,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|tmp_name
+init|=
+name|NULL
 decl_stmt|;
 name|FILE
 modifier|*
@@ -1877,6 +1834,15 @@ literal|0600
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|tmp_name
+condition|)
+name|free
+argument_list|(
+name|tmp_name
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
