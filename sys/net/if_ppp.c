@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.18 1995/07/31 21:01:34 bde Exp $ */
+comment|/* $Id: if_ppp.c,v 1.19 1995/07/31 21:54:46 bde Exp $ */
 end_comment
 
 begin_comment
@@ -257,6 +257,29 @@ directive|include
 file|<machine/cpu.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|void
+name|pppattach
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|PSEUDO_SET
+argument_list|(
+name|pppattach
+argument_list|,
+name|if_ppp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* This is a FreeBSD-2.x kernel. */
 end_comment
@@ -300,18 +323,6 @@ name|ppp_softc
 index|[
 name|NPPP
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|pppattach
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -742,9 +753,15 @@ comment|/*  * Called from boot code to establish ppp interfaces.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pppattach
-parameter_list|()
+parameter_list|(
+name|udata
+parameter_list|)
+name|caddr_t
+name|udata
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -8036,16 +8053,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_expr_stmt
-name|PSEUDO_SET
-argument_list|(
-name|pppattach
-argument_list|,
-name|if_ppp
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_endif
 endif|#

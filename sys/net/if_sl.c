@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_sl.c	8.6 (Berkeley) 2/1/94  * $Id: if_sl.c,v 1.27 1995/07/29 13:39:46 bde Exp $  */
+comment|/*  * Copyright (c) 1987, 1989, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_sl.c	8.6 (Berkeley) 2/1/94  * $Id: if_sl.c,v 1.28 1995/07/31 21:01:36 bde Exp $  */
 end_comment
 
 begin_comment
@@ -207,85 +207,186 @@ directive|include
 file|<net/bpf.h>
 endif|#
 directive|endif
+specifier|static
+name|void
+name|slattach
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|PSEUDO_SET
+argument_list|(
+name|slattach
+argument_list|,
+name|if_sl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * SLRMAX is a hard limit on input packet size.  To simplify the code  * and improve performance, we require that packets fit in an mbuf  * cluster, and if we get a compressed packet, there's enough extra  * room to expand the header into a max length tcp/ip header (128  * bytes).  So, SLRMAX can be at most  *	MCLBYTES - 128  *  * SLMTU is the default transmit MTU. The transmit MTU should be kept  * small enough so that interactive use doesn't suffer, but large  * enough to provide good performance. 552 is a good choice for SLMTU  * because it is high enough to not fragment TCP packets being routed  * through this host. Packet fragmentation is bad with SLIP because  * fragment headers aren't compressed. The previous assumptions about  * the best MTU value don't really hold when using modern modems with  * BTLZ data compression because the modem buffers play a much larger  * role in interactive performance than the MTU. The MTU can be changed  * at any time to suit the specific environment with ifconfig(8), and  * its maximum value is defined as SLTMAX. SLTMAX must not be so large  * that it would overflow the stack if BPF is configured (XXX; if_ppp.c  * handles this better).  *  * SLIP_HIWAT is the amount of data that will be queued 'downstream'  * of us (i.e., in clists waiting to be picked up by the tty output  * interrupt).  If we queue a lot of data downstream, it's immune to  * our t.o.s. queuing.  * E.g., if SLIP_HIWAT is 1024, the interactive traffic in mixed  * telnet/ftp will see a 1 sec wait, independent of the mtu (the  * wait is dependent on the ftp window size but that's typically  * 1k - 4k).  So, we want SLIP_HIWAT just big enough to amortize  * the cost (in idle time on the wire) of the tty driver running  * off the end of its clists& having to call back slstart for a  * new packet.  For a tty interface with any buffering at all, this  * cost will be zero.  Even with a totally brain dead interface (like  * the one on a typical workstation), the cost will be<= 1 character  * time.  So, setting SLIP_HIWAT to ~100 guarantees that we'll lose  * at most 1% while maintaining good interactive response.  */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|NBPFILTER
 operator|>
 literal|0
+end_if
+
+begin_define
 define|#
 directive|define
 name|BUFOFFSET
 value|(128+sizeof(struct ifnet **)+SLIP_HDRLEN)
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_define
 define|#
 directive|define
 name|BUFOFFSET
 value|(128+sizeof(struct ifnet **))
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_define
 define|#
 directive|define
 name|SLRMAX
 value|(MCLBYTES - BUFOFFSET)
+end_define
+
+begin_define
 define|#
 directive|define
 name|SLBUFSIZE
 value|(SLRMAX + BUFOFFSET)
+end_define
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|SLMTU
+end_ifndef
+
+begin_define
 define|#
 directive|define
 name|SLMTU
 value|552
+end_define
+
+begin_comment
 comment|/* default MTU */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_define
 define|#
 directive|define
 name|SLTMAX
 value|1500
+end_define
+
+begin_comment
 comment|/* maximum MTU */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|SLIP_HIWAT
 value|roundup(50,CBSIZE)
+end_define
+
+begin_define
 define|#
 directive|define
 name|CLISTRESERVE
 value|1024
+end_define
+
+begin_comment
 comment|/* Can't let clists get too low */
+end_comment
+
+begin_comment
 comment|/*  * SLIP ABORT ESCAPE MECHANISM:  *	(inspired by HAYES modem escape arrangement)  *	1sec escape 1sec escape 1sec escape { 1sec escape 1sec escape }  *	within window time signals a "soft" exit from slip mode by remote end  *	if the IFF_DEBUG flag is on.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|ABT_ESC
 value|'\033'
+end_define
+
+begin_comment
 comment|/* can't be t_intr - distant host must know it*/
+end_comment
+
+begin_define
 define|#
 directive|define
 name|ABT_IDLE
 value|1
+end_define
+
+begin_comment
 comment|/* in seconds - idle before an escape */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|ABT_COUNT
 value|3
+end_define
+
+begin_comment
 comment|/* count of escapes for abort */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|ABT_WINDOW
 value|(ABT_COUNT*2+2)
+end_define
+
+begin_comment
 comment|/* in seconds - time to count */
-then|struct
+end_comment
+
+begin_decl_stmt
+name|struct
 name|sl_softc
 name|sl_softc
 index|[
 name|NSL
 index|]
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -417,9 +518,15 @@ comment|/*  * Called from boot code to establish sl interfaces.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|slattach
-parameter_list|()
+parameter_list|(
+name|udata
+parameter_list|)
+name|caddr_t
+name|udata
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -576,16 +683,6 @@ directive|endif
 block|}
 block|}
 end_function
-
-begin_expr_stmt
-name|PSEUDO_SET
-argument_list|(
-name|slattach
-argument_list|,
-name|if_sl
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 specifier|static
