@@ -290,17 +290,6 @@ value|"/tmp/.X11-unix/X%u"
 end_define
 
 begin_comment
-comment|/* for scp */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PATH_CP
-value|"cp"
-end_define
-
-begin_comment
 comment|/* for sftp */
 end_comment
 
