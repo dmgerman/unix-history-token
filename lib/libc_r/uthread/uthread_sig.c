@@ -1788,6 +1788,11 @@ name|suppress_handler
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|thread_is_active
+init|=
+literal|0
+decl_stmt|;
 name|restart
 operator|=
 name|_thread_sigact
@@ -1849,6 +1854,12 @@ name|PTHREAD_PRIOQ_REMOVE
 argument_list|(
 name|pthread
 argument_list|)
+expr_stmt|;
+else|else
+comment|/* 			 * This thread is running; avoid placing it in 			 * the run queue: 			 */
+name|thread_is_active
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2198,9 +2209,9 @@ name|PTHREAD_SIGNAL_PRIORITY
 expr_stmt|;
 if|if
 condition|(
-name|pthread
-operator|!=
-name|_thread_run
+name|thread_is_active
+operator|==
+literal|0
 condition|)
 name|PTHREAD_PRIOQ_INSERT_TAIL
 argument_list|(
