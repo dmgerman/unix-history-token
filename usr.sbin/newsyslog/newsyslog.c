@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newsyslog.c,v 1.16 1998/03/14 22:28:25 pst Exp $"
+literal|"$Id: newsyslog.c,v 1.17 1998/05/10 18:47:50 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1239,7 +1239,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: newsyslog [-nrvF] [-f config-file]\n"
+literal|"usage: newsyslog [-Fnrv] [-f config-file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
