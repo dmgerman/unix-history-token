@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3246,7 +3246,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Search vnodes associated with this mount point, 	 * synchronizing any modified dquot structures. 	 */
+comment|/* 	 * Check if the mount point has any quotas. 	 * If not, simply return. 	 */
 if|if
 condition|(
 operator|(
@@ -3264,6 +3264,43 @@ argument_list|(
 literal|"qsync: not busy"
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAXQUOTAS
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|ump
+operator|->
+name|um_quotas
+index|[
+name|i
+index|]
+operator|!=
+name|NULLVP
+condition|)
+break|break;
+if|if
+condition|(
+name|i
+operator|==
+name|MAXQUOTAS
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* 	 * Search vnodes associated with this mount point, 	 * synchronizing any modified dquot structures. 	 */
 name|again
 label|:
 for|for
@@ -3287,6 +3324,14 @@ name|vp
 operator|->
 name|v_mountf
 expr_stmt|;
+if|if
+condition|(
+name|VOP_ISLOCKED
+argument_list|(
+name|vp
+argument_list|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|vget
