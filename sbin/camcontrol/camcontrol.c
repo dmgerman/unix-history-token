@@ -416,6 +416,18 @@ name|NULL
 block|}
 block|,
 block|{
+literal|"load"
+block|,
+name|CAM_ARG_STARTSTOP
+operator||
+name|CAM_ARG_START_UNIT
+operator||
+name|CAM_ARG_EJECT
+block|,
+name|NULL
+block|}
+block|,
+block|{
 literal|"eject"
 block|,
 name|CAM_ARG_STARTSTOP
@@ -14095,6 +14107,7 @@ literal|"        camcontrol tur        [dev_id][generic args]\n"
 literal|"        camcontrol inquiry    [dev_id][generic args] [-D] [-S] [-R]\n"
 literal|"        camcontrol start      [dev_id][generic args]\n"
 literal|"        camcontrol stop       [dev_id][generic args]\n"
+literal|"        camcontrol load       [dev_id][generic args]\n"
 literal|"        camcontrol eject      [dev_id][generic args]\n"
 endif|#
 directive|endif
@@ -14142,6 +14155,7 @@ literal|"tur         send a test unit ready to the named device\n"
 literal|"inquiry     send a SCSI inquiry command to the named device\n"
 literal|"start       send a Start Unit command to the device\n"
 literal|"stop        send a Stop Unit command to the device\n"
+literal|"load        send a Start Unit command to the device with the load bit set\n"
 literal|"eject       send a Stop Unit command to the device with the eject bit set\n"
 literal|"rescan      rescan all busses, the given bus, or bus:target:lun\n"
 literal|"reset       reset all busses, the given bus, or bus:target:lun\n"
