@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_alloc.c	6.11	85/01/14	*/
+comment|/*	lfs_alloc.c	6.12	85/03/12	*/
 end_comment
 
 begin_include
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"syslog.h"
 end_include
 
 begin_function_decl
@@ -5468,8 +5474,10 @@ end_decl_stmt
 
 begin_block
 block|{
-name|printf
+name|log
 argument_list|(
+name|KERN_FAIL
+argument_list|,
 literal|"%s: %s\n"
 argument_list|,
 name|fs
