@@ -322,8 +322,10 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|PDU_Types
 index|[]
 init|=
@@ -2020,14 +2022,14 @@ name|void
 parameter_list|)
 block|{
 name|time_t
-name|clock
+name|clk
 decl_stmt|;
 name|struct
 name|tm
 modifier|*
 name|tm
 decl_stmt|;
-name|clock
+name|clk
 operator|=
 name|time
 argument_list|(
@@ -2042,7 +2044,7 @@ operator|=
 name|localtime
 argument_list|(
 operator|&
-name|clock
+name|clk
 argument_list|)
 expr_stmt|;
 if|if
@@ -5611,10 +5613,12 @@ modifier|*
 name|buf
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|pdu_dir
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pdu_type
@@ -7559,6 +7563,7 @@ parameter_list|,
 name|Snmp_Header
 modifier|*
 name|hdr
+name|__unused
 parameter_list|,
 name|int
 name|intf
@@ -7823,6 +7828,7 @@ parameter_list|(
 name|Snmp_Header
 modifier|*
 name|hdr
+name|__unused
 parameter_list|,
 name|int
 name|intf
@@ -8113,6 +8119,7 @@ name|Increment_DL
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{
 name|Debug_Level
@@ -8211,6 +8218,7 @@ name|Decrement_DL
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{
 name|Debug_Level
@@ -9138,6 +9146,7 @@ parameter_list|(
 name|Snmp_Header
 modifier|*
 name|header
+name|__unused
 parameter_list|,
 name|int
 name|intf
@@ -10409,9 +10418,7 @@ literal|"Can't fork"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-empty_stmt|;
-comment|/* setbuf ( stdout, NULL ); */
+comment|/* else 		setbuf ( stdout, NULL ); */
 name|signal
 argument_list|(
 name|SIGUSR1
