@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.22 (Berkeley) %G%"
+literal|"@(#)conf.c	6.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2750,6 +2750,17 @@ operator|(
 name|FALSE
 operator|)
 return|;
+if|if
+condition|(
+name|CurrentLA
+operator|>=
+name|RefuseLA
+condition|)
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
 return|return
 operator|(
 name|pri
@@ -2786,7 +2797,7 @@ comment|/* this is probably too simplistic */
 return|return
 operator|(
 name|CurrentLA
-operator|>
+operator|>=
 name|RefuseLA
 operator|)
 return|;
