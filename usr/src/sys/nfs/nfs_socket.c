@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.44 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -7130,6 +7130,16 @@ argument_list|,
 name|caddr_t
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|fcp
+operator|&
+literal|0x3
+condition|)
+block|{
 name|m
 operator|->
 name|m_flags
@@ -7154,6 +7164,21 @@ operator|->
 name|m_ext
 operator|.
 name|ext_buf
+operator|+
+operator|(
+operator|(
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_size
+operator|-
+name|olen
+operator|)
+operator|&
+operator|~
+literal|0x3
+operator|)
 expr_stmt|;
 else|else
 name|m
@@ -7164,6 +7189,7 @@ name|m
 operator|->
 name|m_dat
 expr_stmt|;
+block|}
 name|m
 operator|->
 name|m_len
@@ -7190,23 +7216,26 @@ operator|->
 name|m_next
 expr_stmt|;
 comment|/* 		 * If possible, only put the first invariant part 		 * of the RPC header in the first mbuf. 		 */
-if|if
-condition|(
-name|olen
-operator|<=
-name|hsiz
-condition|)
-name|mlen
-operator|=
-name|hsiz
-expr_stmt|;
-else|else
 name|mlen
 operator|=
 name|M_TRAILINGSPACE
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|olen
+operator|<=
+name|hsiz
+operator|&&
+name|mlen
+operator|>
+name|hsiz
+condition|)
+name|mlen
+operator|=
+name|hsiz
 expr_stmt|;
 comment|/* 		 * Loop through the mbuf list consolidating data. 		 */
 while|while

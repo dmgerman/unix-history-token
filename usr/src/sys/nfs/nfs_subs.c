@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.71 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2178,7 +2178,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Help break down an mbuf chain by setting the first siz bytes contiguous  * pointed to by returned val.  * If Updateflg == True we can overwrite the first part of the mbuf data  * (in this case it can never sleep, so it can be called from interrupt level)  * it may however block when Updateflg == False  * This is used by the macros nfsm_dissect and nfsm_dissecton for tough  * cases. (The macros use the vars. dpos and dpos2)  */
+comment|/*  * Help break down an mbuf chain by setting the first siz bytes contiguous  * pointed to by returned val.  * This is used by the macros nfsm_dissect and nfsm_dissecton for tough  * cases. (The macros use the vars. dpos and dpos2)  */
 end_comment
 
 begin_macro
@@ -2191,8 +2191,6 @@ argument_list|,
 argument|siz
 argument_list|,
 argument|left
-argument_list|,
-argument|updateflg
 argument_list|,
 argument|cp2
 argument_list|)
@@ -2223,12 +2221,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|left
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|updateflg
 decl_stmt|;
 end_decl_stmt
 
@@ -2360,20 +2352,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Iff update, you can overwrite, else must alloc new mbuf */
-if|if
-condition|(
-name|updateflg
-condition|)
-block|{
-name|NFSMINOFF
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|MGET
 argument_list|(
 name|mp2
@@ -2407,7 +2385,6 @@ name|mp
 operator|=
 name|mp2
 expr_stmt|;
-block|}
 operator|*
 name|cp2
 operator|=
@@ -3556,8 +3533,6 @@ name|isnq
 argument_list|)
 argument_list|,
 name|t1
-argument_list|,
-name|TRUE
 argument_list|,
 operator|&
 name|cp2

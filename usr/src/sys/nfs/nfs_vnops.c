@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.109 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -9172,7 +9172,7 @@ name|savdp
 operator|=
 name|dp
 expr_stmt|;
-name|nfsm_dissecton
+name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
@@ -9294,7 +9294,7 @@ operator|=
 name|tlen
 expr_stmt|;
 block|}
-name|nfsm_dissecton
+name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,
@@ -9357,7 +9357,7 @@ operator|!
 name|more_dirs
 condition|)
 block|{
-name|nfsm_dissecton
+name|nfsm_dissect
 argument_list|(
 name|tl
 argument_list|,

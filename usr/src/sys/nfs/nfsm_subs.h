@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsm_subs.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsm_subs.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -95,22 +95,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|{ t1 = mtod(md, caddr_t)+md->m_len-dpos; \ 		if (t1>= (s)) { \ 			(a) = (c)(dpos); \ 			dpos += (s); \ 		} else if (error = nfsm_disct(&md,&dpos, (s), t1, TRUE,&cp2)) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} else { \ 			(a) = (c)cp2; \ 		} }
-end_define
-
-begin_define
-define|#
-directive|define
-name|nfsm_dissecton
-parameter_list|(
-name|a
-parameter_list|,
-name|c
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|{ t1 = mtod(md, caddr_t)+md->m_len-dpos; \ 		if (t1>= (s)) { \ 			(a) = (c)(dpos); \ 			dpos += (s); \ 		} else if (error = nfsm_disct(&md,&dpos, (s), t1, FALSE,&cp2)) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} else { \ 			(a) = (c)cp2; \ 		} }
+value|{ t1 = mtod(md, caddr_t)+md->m_len-dpos; \ 		if (t1>= (s)) { \ 			(a) = (c)(dpos); \ 			dpos += (s); \ 		} else if (error = nfsm_disct(&md,&dpos, (s), t1,&cp2)) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} else { \ 			(a) = (c)cp2; \ 		} }
 end_define
 
 begin_define
