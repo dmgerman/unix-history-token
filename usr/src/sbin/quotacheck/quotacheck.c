@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotacheck.c	5.18 (Berkeley) %G%"
+literal|"@(#)quotacheck.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3371,7 +3371,7 @@ name|bno
 operator|*
 name|dev_bsize
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 operator|<
 literal|0
