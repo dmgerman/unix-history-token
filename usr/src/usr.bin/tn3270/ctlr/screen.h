@@ -220,7 +220,7 @@ name|FieldDec
 parameter_list|(
 name|p
 parameter_list|)
-value|(HighestScreen() - \ 				FieldFind(FieldReverse, \ 					HighestScreen()-p, HighestScreen()))
+value|(HighestScreen() - \ 				FieldFind(FieldReverse, \ 					HighestScreen()-(p), HighestScreen()))
 end_define
 
 begin_define
@@ -260,7 +260,17 @@ name|FieldAttributes
 parameter_list|(
 name|x
 parameter_list|)
-value|(IsStartField(x)? Host[x].field&0xff : \ 				    Host[WhereAttrByte(x)].field&0xff)
+value|(IsStartField(x)? Host[x].data : \ 				    Host[WhereAttrByte(x)].data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FieldAttributesPointer
+parameter_list|(
+name|p
+parameter_list|)
+value|(IsStartFieldPointer(p)? (p)->data : \ 				    Host[WhereAttrByte((p)-&Host[0])].data)
 end_define
 
 begin_define
@@ -270,7 +280,7 @@ name|TurnOffMdt
 parameter_list|(
 name|x
 parameter_list|)
-value|(Host[WhereAttrByte(x)].field&= ~ATTR_MDT)
+value|(Host[WhereAttrByte(x)].data&= ~ATTR_MDT)
 end_define
 
 begin_define
@@ -280,7 +290,7 @@ name|TurnOnMdt
 parameter_list|(
 name|x
 parameter_list|)
-value|(Host[WhereAttrByte(x)].field |= ATTR_MDT)
+value|(Host[WhereAttrByte(x)].data |= ATTR_MDT)
 end_define
 
 begin_define
@@ -290,7 +300,7 @@ name|HasMdt
 parameter_list|(
 name|x
 parameter_list|)
-value|(Host[x].field&ATTR_MDT)
+value|(Host[x].data&ATTR_MDT)
 end_define
 
 begin_comment
@@ -307,8 +317,12 @@ directive|define
 name|FormattedScreen
 parameter_list|()
 define|\
-value|((WhereAttrByte(0) != 0) || ((Host[0].field&ATTR_MASK) != 0))
+value|((WhereAttrByte(0) != 0) || ((Host[0].data&ATTR_MASK) == ATTR_MASK))
 end_define
+
+begin_comment
+comment|/* field starts here */
+end_comment
 
 begin_define
 define|#
@@ -317,12 +331,18 @@ name|IsStartField
 parameter_list|(
 name|x
 parameter_list|)
-value|(Host[x].field&ATTR_MASK)
+value|((Host[x].data&ATTR_MASK) == ATTR_MASK)
 end_define
 
-begin_comment
-comment|/* field starts here */
-end_comment
+begin_define
+define|#
+directive|define
+name|IsStartFieldPointer
+parameter_list|(
+name|p
+parameter_list|)
+value|(((p)->data&ATTR_MASK) == ATTR_MASK)
+end_define
 
 begin_define
 define|#
@@ -333,7 +353,7 @@ name|p
 parameter_list|,
 name|a
 parameter_list|)
-value|(Host[p].field = (a)|ATTR_MASK, \ 			    FieldForward[p] = FieldReverse[ScreenSize-p-1] = 1)
+value|(Host[p].data = (a)|ATTR_MASK, \ 			    FieldForward[p] = FieldReverse[ScreenSize-p-1] = 1)
 end_define
 
 begin_define
@@ -343,7 +363,7 @@ name|DeleteField
 parameter_list|(
 name|p
 parameter_list|)
-value|(Host[p].field = 0, \ 			    FieldForward[p] = FieldReverse[ScreenSize-p-1] = 0)
+value|(Host[p].data = 0, \ 			    FieldForward[p] = FieldReverse[ScreenSize-p-1] = 0)
 end_define
 
 begin_define
@@ -476,11 +496,8 @@ block|{
 name|unsigned
 name|char
 name|data
-decl_stmt|,
-comment|/* data at this position */
-name|field
 decl_stmt|;
-comment|/* field attributes if ATTR_MASK */
+comment|/* data at this position */
 block|}
 name|ScreenImage
 typedef|;

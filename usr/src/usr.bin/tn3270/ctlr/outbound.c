@@ -1304,13 +1304,6 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
-name|SetHost
-argument_list|(
-name|BufferAddress
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|BufferAddress
 operator|=
 name|ScreenInc
