@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ring.c	5.2 (Berkeley) %G%"
+literal|"@(#)ring.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,7 +301,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 name|ring
 operator|->
@@ -525,7 +525,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 if|if
 condition|(
@@ -1167,7 +1167,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 end_if
 

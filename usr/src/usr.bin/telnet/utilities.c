@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.4 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2057,7 +2057,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 case|case
 name|TELOPT_AUTHENTICATION
@@ -2440,7 +2440,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 case|case
 name|TELOPT_ENCRYPT
@@ -4056,6 +4056,35 @@ argument_list|(
 name|NetTrace
 argument_list|,
 literal|"\" ESC "
+operator|+
+name|noquote
+argument_list|)
+expr_stmt|;
+name|noquote
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+case|case
+name|ENV_USERVAR
+case|:
+if|if
+condition|(
+name|pointer
+index|[
+literal|1
+index|]
+operator|==
+name|TELQUAL_SEND
+condition|)
+goto|goto
+name|def_case
+goto|;
+name|fprintf
+argument_list|(
+name|NetTrace
+argument_list|,
+literal|"\" USERVAR "
 operator|+
 name|noquote
 argument_list|)

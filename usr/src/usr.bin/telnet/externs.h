@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)externs.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)externs.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -8,6 +8,36 @@ ifndef|#
 directive|ifndef
 name|BSD
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BSD
+value|43
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * ucb stdio.h defines BSD as something wierd  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__svr4__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -389,6 +419,9 @@ comment|/* Are we connected to the telnet port? */
 name|localflow
 decl_stmt|,
 comment|/* Flow control handled locally */
+name|restartany
+decl_stmt|,
+comment|/* If flow control, restart output on any character */
 name|localchars
 decl_stmt|,
 comment|/* we recognize interrupt/quit */
@@ -556,7 +589,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 end_if
 
@@ -1425,6 +1458,8 @@ name|env_default
 name|P
 argument_list|(
 operator|(
+name|int
+operator|,
 name|int
 operator|)
 argument_list|)

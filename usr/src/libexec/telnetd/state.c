@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)state.c	5.10 (Berkeley) %G%"
+literal|"@(#)state.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 end_if
 
@@ -386,7 +386,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 if|if
 condition|(
@@ -476,7 +476,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 if|if
 condition|(
@@ -549,7 +549,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 if|if
 condition|(
@@ -1379,7 +1379,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AUTHENTICATE
+name|AUTHENTICATION
 end_ifdef
 
 begin_function_decl
@@ -1417,7 +1417,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ENCRYPT
+name|ENCRYPTION
 end_ifdef
 
 begin_function_decl
@@ -1598,6 +1598,19 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|lmodetype
+operator|==
+name|NO_AUTOKLUDGE
+condition|)
+block|{
+name|lmodetype
+operator|=
+name|KLUDGE_OK
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* defined(LINEMODE)&& defined(KLUDGELINEMODE) */
@@ -1705,7 +1718,7 @@ directive|endif
 comment|/* LINEMODE */
 ifdef|#
 directive|ifdef
-name|AUTHENTICATE
+name|AUTHENTICATION
 case|case
 name|TELOPT_AUTHENTICATION
 case|:
@@ -1721,7 +1734,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|ENCRYPT
+name|ENCRYPTION
 case|case
 name|TELOPT_ENCRYPT
 case|:
@@ -1826,7 +1839,7 @@ directive|endif
 comment|/* LINEMODE */
 ifdef|#
 directive|ifdef
-name|AUTHENTICATE
+name|AUTHENTICATION
 case|case
 name|TELOPT_AUTHENTICATION
 case|:
@@ -1839,7 +1852,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|ENCRYPT
+name|ENCRYPTION
 case|case
 name|TELOPT_ENCRYPT
 case|:
@@ -2170,7 +2183,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 case|case
 name|TELOPT_AUTHENTICATION
@@ -2270,7 +2283,7 @@ if|if
 condition|(
 name|lmodetype
 operator|<
-name|REAL_LINEMODE
+name|NO_AUTOKLUDGE
 condition|)
 block|{
 name|lmodetype
@@ -2309,7 +2322,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 case|case
 name|TELOPT_AUTHENTICATION
@@ -2730,7 +2743,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 case|case
 name|TELOPT_ENCRYPT
@@ -3008,9 +3021,17 @@ directive|ifdef
 name|KLUDGELINEMODE
 if|if
 condition|(
+operator|(
 name|lmodetype
-operator|==
-name|NO_LINEMODE
+operator|!=
+name|REAL_LINEMODE
+operator|)
+operator|&&
+operator|(
+name|lmodetype
+operator|!=
+name|KLUDGE_LINEMODE
+operator|)
 condition|)
 else|#
 directive|else
@@ -3056,12 +3077,24 @@ argument_list|)
 comment|/* 			 * If kludge linemode is in use, then we 			 * must process an incoming do SGA for 			 * linemode purposes. 			 */
 if|if
 condition|(
+operator|(
 name|lmodetype
 operator|==
 name|KLUDGE_LINEMODE
+operator|)
+operator|||
+operator|(
+name|lmodetype
+operator|==
+name|KLUDGE_OK
+operator|)
 condition|)
 block|{
 comment|/* 				 * The client is asking us to turn 				 * linemode on. 				 */
+name|lmodetype
+operator|=
+name|KLUDGE_LINEMODE
+expr_stmt|;
 name|clientstat
 argument_list|(
 name|TELOPT_LINEMODE
@@ -3109,6 +3142,8 @@ condition|)
 name|send_will
 argument_list|(
 name|option
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3737,13 +3772,29 @@ condition|(
 operator|!
 name|SB_EOF
 argument_list|()
-operator|&&
+condition|)
+block|{
+name|c
+operator|=
 name|SB_GET
 argument_list|()
-operator|!=
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|c
+operator|==
 name|ENV_VAR
+operator|)
+operator|||
+operator|(
+name|c
+operator|==
+name|ENV_USERVAR
+operator|)
 condition|)
-empty_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|SB_EOF
@@ -3800,6 +3851,9 @@ expr_stmt|;
 break|break;
 case|case
 name|ENV_VAR
+case|:
+case|case
+name|ENV_USERVAR
 case|:
 operator|*
 name|cp
@@ -3902,7 +3956,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 case|case
 name|TELOPT_AUTHENTICATION
@@ -3959,7 +4013,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 case|case
 name|TELOPT_ENCRYPT
@@ -4274,16 +4328,75 @@ argument_list|(
 name|TELOPT_LFLOW
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flowmode
+condition|)
+block|{
 name|ADD
 argument_list|(
-name|flowmode
+name|LFLOW_ON
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ADD
+argument_list|(
+name|LFLOW_OFF
+argument_list|)
+expr_stmt|;
+block|}
 name|ADD
 argument_list|(
 name|SE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|restartany
+operator|>=
+literal|0
+condition|)
+block|{
+name|ADD
+argument_list|(
+argument|SB
+argument_list|)
+name|ADD
+argument_list|(
+name|TELOPT_LFLOW
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|restartany
+condition|)
+block|{
+name|ADD
+argument_list|(
+name|LFLOW_RESTART_ANY
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ADD
+argument_list|(
+name|LFLOW_RESTART_XON
+argument_list|)
+expr_stmt|;
+block|}
+name|ADD
+argument_list|(
+argument|SE
+argument_list|)
+name|ADD
+argument_list|(
+name|SB
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 ifdef|#
 directive|ifdef

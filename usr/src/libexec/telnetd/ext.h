@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ext.h	5.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ext.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -144,6 +144,17 @@ begin_comment
 comment|/* current flow control state */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|restartany
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* restart output on any character state */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -222,7 +233,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 end_if
 
@@ -854,7 +865,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 name|start_slave
 name|P
@@ -1003,6 +1014,14 @@ operator|)
 argument_list|)
 decl_stmt|,
 name|tty_flowmode
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|,
+name|tty_restartany
 name|P
 argument_list|(
 operator|(
@@ -1202,7 +1221,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 end_if
 
@@ -1326,14 +1345,56 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CRAY
+name|DEFAULT_IM
 end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRAY
+end_ifdef
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_IM
-value|"\r\n\r\n4.3 BSD UNIX (%h) (%t)\r\n\r\r\n\r"
+value|"\r\n\r\nCray UNICOS (%h) (%t)\r\n\r\r\n\r"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_IM
+value|"\r\n\r\nSunOS UNIX (%h) (%t)\r\n\r\r\n\r"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ultrix
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_IM
+value|"\r\n\r\nULTRIX (%h) (%t)\r\n\r\r\n\r"
 end_define
 
 begin_else
@@ -1345,8 +1406,23 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_IM
-value|"\r\n\r\nCray UNICOS (%h) (%t)\r\n\r\r\n\r"
+value|"\r\n\r\n4.4 BSD UNIX (%h) (%t)\r\n\r\r\n\r"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

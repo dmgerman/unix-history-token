@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termstat.c	5.10 (Berkeley) %G%"
+literal|"@(#)termstat.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,7 @@ name|LINEMODE
 end_ifdef
 
 begin_comment
-comment|/*  * localstat  *  * This function handles all management of linemode.  *  * Linemode allows the client to do the local editing of data  * and send only complete lines to the server.  Linemode state is  * based on the state of the pty driver.  If the pty is set for  * external processing, then we can use linemode.  Further, if we  * can use real linemode, then we can look at the edit control bits  * in the pty to determine what editing the client should do.  *  * Linemode support uses the following state flags to keep track of  * current and desired linemode state.  *	alwayslinemode : true if -l was specified on the telnetd  * 	command line.  It means to have linemode on as much as  *	possible.  *  * 	lmodetype: signifies whether the client can  *	handle real linemode, or if use of kludgeomatic linemode  *	is preferred.  It will be set to one of the following:  *		REAL_LINEMODE : use linemode option  *		KLUDGE_LINEMODE : use kludge linemode  *		NO_LINEMODE : client is ignorant of linemode  *  *	linemode, uselinemode : linemode is true if linemode  *	is currently on, uselinemode is the state that we wish  *	to be in.  If another function wishes to turn linemode  *	on or off, it sets or clears uselinemode.  *  *	editmode, useeditmode : like linemode/uselinemode, but  *	these contain the edit mode states (edit and trapsig).  *  * The state variables correspond to some of the state information  * in the pty.  *	linemode:  *		In real linemode, this corresponds to whether the pty  *		expects external processing of incoming data.  *		In kludge linemode, this more closely corresponds to the  *		whether normal processing is on or not.  (ICANON in  *		system V, or COOKED mode in BSD.)  *		If the -l option was specified (alwayslinemode), then  *		an attempt is made to force external processing on at  *		all times.  *  * The following heuristics are applied to determine linemode  * handling within the server.  *	1) Early on in starting up the server, an attempt is made  *	   to negotiate the linemode option.  If this succeeds  *	   then lmodetype is set to REAL_LINEMODE and all linemode  *	   processing occurs in the context of the linemode option.  *	2) If the attempt to negotiate the linemode option failed,  *	   then we try to use kludge linemode.  We test for this  *	   capability by sending "do Timing Mark".  If a positive  *	   response comes back, then we assume that the client  *	   understands kludge linemode (ech!) and the  *	   lmodetype flag is set to KLUDGE_LINEMODE.  *	3) Otherwise, linemode is not supported at all and  *	   lmodetype remains set to NO_LINEMODE (which happens  *	   to be 0 for convenience).  *	4) At any time a command arrives that implies a higher  *	   state of linemode support in the client, we move to that  *	   linemode support.  *  * A short explanation of kludge linemode is in order here.  *	1) The heuristic to determine support for kludge linemode  *	   is to send a do timing mark.  We assume that a client  *	   that supports timing marks also supports kludge linemode.  *	   A risky proposition at best.  *	2) Further negotiation of linemode is done by changing the  *	   the server's state regarding SGA.  If server will SGA,  *	   then linemode is off, if server won't SGA, then linemode  *	   is on.  */
+comment|/*  * localstat  *  * This function handles all management of linemode.  *  * Linemode allows the client to do the local editing of data  * and send only complete lines to the server.  Linemode state is  * based on the state of the pty driver.  If the pty is set for  * external processing, then we can use linemode.  Further, if we  * can use real linemode, then we can look at the edit control bits  * in the pty to determine what editing the client should do.  *  * Linemode support uses the following state flags to keep track of  * current and desired linemode state.  *	alwayslinemode : true if -l was specified on the telnetd  * 	command line.  It means to have linemode on as much as  *	possible.  *  * 	lmodetype: signifies whether the client can  *	handle real linemode, or if use of kludgeomatic linemode  *	is preferred.  It will be set to one of the following:  *		REAL_LINEMODE : use linemode option  *		NO_KLUDGE : don't initiate kludge linemode.  *		KLUDGE_LINEMODE : use kludge linemode  *		NO_LINEMODE : client is ignorant of linemode  *  *	linemode, uselinemode : linemode is true if linemode  *	is currently on, uselinemode is the state that we wish  *	to be in.  If another function wishes to turn linemode  *	on or off, it sets or clears uselinemode.  *  *	editmode, useeditmode : like linemode/uselinemode, but  *	these contain the edit mode states (edit and trapsig).  *  * The state variables correspond to some of the state information  * in the pty.  *	linemode:  *		In real linemode, this corresponds to whether the pty  *		expects external processing of incoming data.  *		In kludge linemode, this more closely corresponds to the  *		whether normal processing is on or not.  (ICANON in  *		system V, or COOKED mode in BSD.)  *		If the -l option was specified (alwayslinemode), then  *		an attempt is made to force external processing on at  *		all times.  *  * The following heuristics are applied to determine linemode  * handling within the server.  *	1) Early on in starting up the server, an attempt is made  *	   to negotiate the linemode option.  If this succeeds  *	   then lmodetype is set to REAL_LINEMODE and all linemode  *	   processing occurs in the context of the linemode option.  *	2) If the attempt to negotiate the linemode option failed,  *	   and the "-k" (don't initiate kludge linemode) isn't set,  *	   then we try to use kludge linemode.  We test for this  *	   capability by sending "do Timing Mark".  If a positive  *	   response comes back, then we assume that the client  *	   understands kludge linemode (ech!) and the  *	   lmodetype flag is set to KLUDGE_LINEMODE.  *	3) Otherwise, linemode is not supported at all and  *	   lmodetype remains set to NO_LINEMODE (which happens  *	   to be 0 for convenience).  *	4) At any time a command arrives that implies a higher  *	   state of linemode support in the client, we move to that  *	   linemode support.  *  * A short explanation of kludge linemode is in order here.  *	1) The heuristic to determine support for kludge linemode  *	   is to send a do timing mark.  We assume that a client  *	   that supports timing marks also supports kludge linemode.  *	   A risky proposition at best.  *	2) Further negotiation of linemode is done by changing the  *	   the server's state regarding SGA.  If server will SGA,  *	   then linemode is off, if server won't SGA, then linemode  *	   is on.  */
 end_comment
 
 begin_function
@@ -289,12 +289,59 @@ argument_list|,
 name|TELOPT_LFLOW
 argument_list|,
 name|flowmode
+condition|?
+name|LFLOW_ON
+else|:
+name|LFLOW_OFF
 argument_list|,
 name|IAC
 argument_list|,
 name|SE
 argument_list|)
 expr_stmt|;
+name|nfrontp
+operator|+=
+literal|6
+expr_stmt|;
+name|restartany
+operator|=
+name|tty_restartany
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|restartany
+operator|>=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|nfrontp
+argument_list|,
+literal|"%c%c%c%c%c%c"
+argument_list|,
+name|IAC
+argument_list|,
+name|SB
+argument_list|,
+name|TELOPT_LFLOW
+argument_list|,
+name|restartany
+condition|?
+name|LFLOW_RESTART_ANY
+else|:
+name|LFLOW_RESTART_XON
+argument_list|,
+name|IAC
+argument_list|,
+name|SE
+argument_list|)
+expr_stmt|;
+block|}
 name|nfrontp
 operator|+=
 literal|6
@@ -332,7 +379,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 comment|/* 	 * If the terminal is not echoing, but editing is enabled, 	 * something like password input is going to happen, so 	 * if we the other side is not currently sending encrypted 	 * data, ask the other side to start encrypting. 	 */
 if|if
@@ -418,6 +465,21 @@ name|need_will_echo
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KLUDGELINEMODE
+if|if
+condition|(
+name|lmodetype
+operator|==
+name|KLUDGE_OK
+condition|)
+name|lmodetype
+operator|=
+name|KLUDGE_LINEMODE
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * If linemode is being turned off, send appropriate 	 * command and then we're all done. 	 */
 if|if
@@ -1000,6 +1062,18 @@ name|linemode
 operator|=
 name|uselinemode
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|linemode
+condition|)
+name|send_will
+argument_list|(
+name|TELOPT_ECHO
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 case|case
@@ -1476,7 +1550,9 @@ name|terminit
 parameter_list|()
 block|{
 return|return
+operator|(
 name|_terminit
+operator|)
 return|;
 block|}
 end_function

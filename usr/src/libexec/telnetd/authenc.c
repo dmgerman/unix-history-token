@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)authenc.c	5.1 (Berkeley) %G%"
+literal|"@(#)authenc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,12 +33,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 end_if
 
@@ -126,7 +126,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 name|char
 modifier|*

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utility.c	5.8 (Berkeley) %G%"
+literal|"@(#)utility.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -561,7 +561,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 name|thisitem
 operator|=
@@ -605,7 +605,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 name|good
 operator|=
@@ -773,7 +773,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 if|if
 condition|(
@@ -937,7 +937,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 if|if
 condition|(
@@ -980,7 +980,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 name|nclearto
 operator|=
@@ -1103,7 +1103,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 if|if
 condition|(
@@ -1519,6 +1519,23 @@ block|{
 case|case
 literal|'t'
 case|:
+ifdef|#
+directive|ifdef
+name|STREAMSPTY
+comment|/* names are like /dev/pts/2 -- we want pts/2 */
+name|slash
+operator|=
+name|index
+argument_list|(
+name|line
+operator|+
+literal|1
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|slash
 operator|=
 name|rindex
@@ -1528,6 +1545,8 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|slash
@@ -4148,6 +4167,42 @@ operator|=
 literal|2
 expr_stmt|;
 break|break;
+case|case
+name|ENV_USERVAR
+case|:
+if|if
+condition|(
+name|pointer
+index|[
+literal|1
+index|]
+operator|==
+name|TELQUAL_SEND
+condition|)
+goto|goto
+name|def_case
+goto|;
+name|sprintf
+argument_list|(
+name|nfrontp
+argument_list|,
+literal|"\" USERVAR "
+operator|+
+name|noquote
+argument_list|)
+expr_stmt|;
+name|nfrontp
+operator|+=
+name|strlen
+argument_list|(
+name|nfrontp
+argument_list|)
+expr_stmt|;
+name|noquote
+operator|=
+literal|2
+expr_stmt|;
+break|break;
 default|default:
 name|def_case
 label|:
@@ -4245,7 +4300,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 case|case
 name|TELOPT_AUTHENTICATION
@@ -4717,7 +4772,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 case|case
 name|TELOPT_ENCRYPT

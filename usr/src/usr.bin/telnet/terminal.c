@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)terminal.c	5.3 (Berkeley) %G%"
+literal|"@(#)terminal.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -702,7 +702,7 @@ decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
-name|ENCRYPT
+name|ENCRYPTION
 specifier|static
 name|int
 name|enc_passwd
@@ -735,7 +735,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ENCRYPT
+name|ENCRYPTION
 if|if
 condition|(
 operator|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_bsd.c	5.2 (Berkeley) %G%"
+literal|"@(#)sys_bsd.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -466,6 +466,24 @@ end_endif
 begin_comment
 comment|/* TCSANOW */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sysV88
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TIOCFLUSH
+value|TC_PX_DRAIN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1758,12 +1776,49 @@ name|c_iflag
 operator|&=
 operator|~
 operator|(
-name|IXANY
-operator||
 name|IXOFF
 operator||
 name|IXON
 operator|)
+expr_stmt|;
+comment|/* Leave the IXANY bit alone */
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|restartany
+operator|<
+literal|0
+condition|)
+block|{
+name|tmp_tc
+operator|.
+name|c_iflag
+operator||=
+name|IXOFF
+operator||
+name|IXON
+expr_stmt|;
+comment|/* Leave the IXANY bit alone */
+block|}
+elseif|else
+if|if
+condition|(
+name|restartany
+operator|>
+literal|0
+condition|)
+block|{
+name|tmp_tc
+operator|.
+name|c_iflag
+operator||=
+name|IXOFF
+operator||
+name|IXON
+operator||
+name|IXANY
 expr_stmt|;
 block|}
 else|else
@@ -1772,12 +1827,18 @@ name|tmp_tc
 operator|.
 name|c_iflag
 operator||=
-name|IXANY
-operator||
 name|IXOFF
 operator||
 name|IXON
 expr_stmt|;
+name|tmp_tc
+operator|.
+name|c_iflag
+operator|&=
+operator|~
+name|IXANY
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -2742,6 +2803,13 @@ argument_list|(
 name|PUTCHAR
 argument_list|)
 operator|)
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|sysV88
+argument_list|)
 name|ioctl
 argument_list|(
 name|tin
@@ -2770,6 +2838,8 @@ operator|&
 name|onoff
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* (!defined(TN3270)) || ((!defined(NOT43)) || defined(PUTCHAR)) */

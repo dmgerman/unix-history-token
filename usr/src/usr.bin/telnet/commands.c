@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	5.7 (Berkeley) %G%"
+literal|"@(#)commands.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,11 +43,19 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|sysV88
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -191,11 +199,21 @@ directive|include
 file|"types.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|CRAY
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|sysV88
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -251,7 +269,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CRAY */
+comment|/* !defined(CRAY)&& !defined(sysV88) */
 end_comment
 
 begin_include
@@ -2077,6 +2095,12 @@ modifier|*
 name|telopts
 index|[]
 decl_stmt|;
+specifier|register
+name|int
+name|val
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|isprefix
@@ -2102,9 +2126,14 @@ name|len
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Usage: send %s<option>\n"
+literal|"Usage: send %s<value|option>\n"
 argument_list|,
 name|cmd
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\"value\" must be from 0 to 255\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2137,7 +2166,7 @@ operator|*
 name|cpp
 argument_list|)
 operator|+
-literal|1
+literal|3
 expr_stmt|;
 if|if
 condition|(
@@ -2160,7 +2189,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|" %s"
+literal|" \"%s\""
 argument_list|,
 operator|*
 name|cpp
@@ -2226,7 +2255,57 @@ block|}
 if|if
 condition|(
 name|cpp
-operator|==
+condition|)
+block|{
+name|val
+operator|=
+name|cpp
+operator|-
+name|telopts
+expr_stmt|;
+block|}
+else|else
+block|{
+specifier|register
+name|char
+modifier|*
+name|cp
+init|=
+name|name
+decl_stmt|;
+while|while
+condition|(
+operator|*
+name|cp
+operator|>=
+literal|'0'
+operator|&&
+operator|*
+name|cp
+operator|<=
+literal|'9'
+condition|)
+block|{
+name|val
+operator|*=
+literal|10
+expr_stmt|;
+name|val
+operator|+=
+operator|*
+name|cp
+operator|-
+literal|'0'
+expr_stmt|;
+name|cp
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|*
+name|cp
+operator|!=
 literal|0
 condition|)
 block|{
@@ -2244,6 +2323,34 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|val
+operator|<
+literal|0
+operator|||
+name|val
+operator|>
+literal|255
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"'%s': bad value ('send %s ?' for help).\n"
+argument_list|,
+name|name
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 block|}
 if|if
 condition|(
@@ -2265,9 +2372,7 @@ modifier|*
 name|func
 call|)
 argument_list|(
-name|cpp
-operator|-
-name|telopts
+name|val
 argument_list|,
 literal|1
 argument_list|)
@@ -2861,7 +2966,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 end_if
 
@@ -2888,7 +2993,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 end_if
 
@@ -3021,7 +3126,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 block|{
 literal|"autologin"
@@ -3054,7 +3159,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 block|{
 literal|"autoencrypt"
@@ -6209,7 +6314,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 name|EncryptStatus
 argument_list|()
@@ -6457,6 +6562,7 @@ name|err
 decl_stmt|;
 name|err
 operator|=
+operator|(
 name|TerminalWindowSize
 argument_list|(
 operator|&
@@ -6465,6 +6571,13 @@ argument_list|,
 operator|&
 name|oldcols
 argument_list|)
+operator|==
+literal|0
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
 expr_stmt|;
 operator|(
 name|void
@@ -6476,8 +6589,9 @@ argument_list|,
 name|SIGTSTP
 argument_list|)
 expr_stmt|;
-name|err
-operator|+=
+comment|/* 	 * If we didn't get the window size before the SUSPEND, but we 	 * can get them now (???), then send the NAWS to make sure that 	 * we are set up for the right window size. 	 */
+if|if
+condition|(
 name|TerminalWindowSize
 argument_list|(
 operator|&
@@ -6486,14 +6600,12 @@ argument_list|,
 operator|&
 name|newcols
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 name|connected
 operator|&&
-operator|!
+operator|(
 name|err
-operator|&&
+operator|||
 operator|(
 operator|(
 name|oldrows
@@ -6505,6 +6617,7 @@ operator|(
 name|oldcols
 operator|!=
 name|newcols
+operator|)
 operator|)
 operator|)
 condition|)
@@ -6569,8 +6682,38 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
+name|long
+name|oldrows
+decl_stmt|,
+name|oldcols
+decl_stmt|,
+name|newrows
+decl_stmt|,
+name|newcols
+decl_stmt|,
+name|err
+decl_stmt|;
 name|setcommandmode
 argument_list|()
+expr_stmt|;
+name|err
+operator|=
+operator|(
+name|TerminalWindowSize
+argument_list|(
+operator|&
+name|oldrows
+argument_list|,
+operator|&
+name|oldcols
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
 expr_stmt|;
 switch|switch
 condition|(
@@ -6705,6 +6848,43 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Wait for the shell to complete */
+if|if
+condition|(
+name|TerminalWindowSize
+argument_list|(
+operator|&
+name|newrows
+argument_list|,
+operator|&
+name|newcols
+argument_list|)
+operator|&&
+name|connected
+operator|&&
+operator|(
+name|err
+operator|||
+operator|(
+operator|(
+name|oldrows
+operator|!=
+name|newrows
+operator|)
+operator|||
+operator|(
+name|oldcols
+operator|!=
+name|newcols
+operator|)
+operator|)
+operator|)
+condition|)
+block|{
+name|sendnaws
+argument_list|()
+expr_stmt|;
+block|}
+break|break;
 block|}
 return|return
 literal|1
@@ -6800,12 +6980,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 name|auth_encrypt_connect
 argument_list|(
@@ -7787,7 +7967,7 @@ name|env_lst
 modifier|*
 name|prev
 decl_stmt|;
-comment|/* pointer to next structure */
+comment|/* pointer to previous structure */
 name|unsigned
 name|char
 modifier|*
@@ -7799,11 +7979,15 @@ name|char
 modifier|*
 name|value
 decl_stmt|;
-comment|/* pointer to varialbe value */
+comment|/* pointer to variable value */
 name|int
 name|export
 decl_stmt|;
 comment|/* 1 -> export with default list of variables */
+name|int
+name|welldefined
+decl_stmt|;
+comment|/* A well defined variable */
 block|}
 struct|;
 end_struct
@@ -8313,6 +8497,15 @@ expr_stmt|;
 block|}
 name|ep
 operator|->
+name|welldefined
+operator|=
+name|opt_welldefined
+argument_list|(
+name|var
+argument_list|)
+expr_stmt|;
+name|ep
+operator|->
 name|export
 operator|=
 literal|1
@@ -8662,6 +8855,8 @@ modifier|*
 name|env_default
 parameter_list|(
 name|init
+parameter_list|,
+name|welldefined
 parameter_list|)
 name|int
 name|init
@@ -8706,6 +8901,14 @@ condition|(
 name|nep
 operator|->
 name|export
+operator|&&
+operator|(
+name|nep
+operator|->
+name|welldefined
+operator|==
+name|welldefined
+operator|)
 condition|)
 return|return
 operator|(
@@ -8773,7 +8976,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 end_if
 
@@ -9170,7 +9373,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 end_if
 
@@ -10209,7 +10412,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 name|encrypt_display
 argument_list|()
@@ -11246,6 +11449,20 @@ block|}
 block|}
 else|else
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|htons
+argument_list|)
+name|u_short
+name|htons
+parameter_list|()
+function_decl|;
+endif|#
+directive|endif
+comment|/* !defined(htons) */
 name|sin
 operator|.
 name|sin_port
@@ -11475,6 +11692,10 @@ name|IPPROTO_IP
 argument_list|,
 name|IP_TOS
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|tos
 argument_list|,
@@ -11656,12 +11877,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 name|auth_encrypt_connect
 argument_list|(
@@ -11925,7 +12146,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 name|authhelp
 index|[]
@@ -11938,7 +12159,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 name|encrypthelp
 index|[]
@@ -12141,7 +12362,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 block|{
 literal|"auth"
@@ -12159,7 +12380,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 block|{
 literal|"encrypt"
@@ -13564,6 +13785,15 @@ index|[
 literal|44
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|sysV88
+specifier|static
+name|IOPTN
+name|ipopt
+decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|cp
@@ -13681,6 +13911,9 @@ operator|=
 name|arg
 expr_stmt|;
 comment|/* 	 * Next, decide whether we have a loose source 	 * route or a strict source route, and fill in 	 * the begining of the option. 	 */
+ifndef|#
+directive|ifndef
+name|sysV88
 if|if
 condition|(
 operator|*
@@ -13706,6 +13939,35 @@ operator|++
 operator|=
 name|IPOPT_LSRR
 expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'!'
+condition|)
+block|{
+name|cp
+operator|++
+expr_stmt|;
+name|ipopt
+operator|.
+name|io_type
+operator|=
+name|IPOPT_SSRR
+expr_stmt|;
+block|}
+else|else
+name|ipopt
+operator|.
+name|io_type
+operator|=
+name|IPOPT_LSRR
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|*
@@ -13723,6 +13985,9 @@ operator|-
 literal|1
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|sysV88
 name|lsrp
 operator|++
 expr_stmt|;
@@ -13733,6 +13998,8 @@ operator|++
 operator|=
 literal|4
 expr_stmt|;
+endif|#
+directive|endif
 name|cp
 operator|++
 expr_stmt|;
@@ -13986,6 +14253,9 @@ literal|1
 operator|)
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|sysV88
 if|if
 condition|(
 operator|(
@@ -14042,6 +14312,68 @@ operator|-
 operator|*
 name|cpp
 expr_stmt|;
+else|#
+directive|else
+name|ipopt
+operator|.
+name|io_len
+operator|=
+name|lsrp
+operator|-
+operator|*
+name|cpp
+expr_stmt|;
+if|if
+condition|(
+name|ipopt
+operator|.
+name|io_len
+operator|<=
+literal|5
+condition|)
+block|{
+comment|/* Is 3 better ? */
+operator|*
+name|cpp
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|lenp
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|unsigned
+name|long
+operator|)
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+operator|*
+name|lenp
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ipopt
+argument_list|)
+expr_stmt|;
+operator|*
+name|cpp
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|ipopt
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|sin_addr

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slc.c	5.7 (Berkeley) %G%"
+literal|"@(#)slc.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -723,6 +723,19 @@ name|netflush
 argument_list|()
 expr_stmt|;
 comment|/* force it out immediately */
+name|DIAG
+argument_list|(
+argument|TD_OPTIONS
+argument_list|,
+argument|printsub(
+literal|'>'
+argument|, slcbuf+
+literal|2
+argument|, len-
+literal|2
+argument|);
+argument_list|)
+empty_stmt|;
 block|}
 block|}
 return|return

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.4 (Berkeley) %G%"
+literal|"@(#)main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,7 +126,7 @@ name|prompt
 argument_list|,
 ifdef|#
 directive|ifdef
-name|AUTHENTICATE
+name|AUTHENTICATION
 literal|" [-8] [-E] [-K] [-L] [-X atype] [-a] [-d] [-e char] [-k realm]"
 argument_list|,
 literal|"\n\t[-l user] [-n tracefile] "
@@ -152,7 +152,7 @@ name|unix
 argument_list|)
 ifdef|#
 directive|ifdef
-name|AUTHENTICATE
+name|AUTHENTICATION
 literal|"[-noasynch] [-noasynctty] [-noasyncnet]\n\t[-r] [-t transcom] "
 argument_list|,
 else|#
@@ -169,7 +169,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|ENCRYPT
+name|ENCRYPTION
 literal|"[-x] [host-name [port]]"
 else|#
 directive|else
@@ -315,7 +315,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"8EKLS:X:ade:k:l:n:rt:x"
+literal|"8EKLS:X:acde:k:l:n:rt:x"
 argument_list|)
 operator|)
 operator|!=
@@ -351,7 +351,7 @@ literal|'K'
 case|:
 ifdef|#
 directive|ifdef
-name|AUTHENTICATE
+name|AUTHENTICATION
 name|autologin
 operator|=
 literal|0
@@ -429,7 +429,7 @@ literal|'X'
 case|:
 ifdef|#
 directive|ifdef
-name|AUTHENTICATE
+name|AUTHENTICATION
 name|auth_disable_name
 argument_list|(
 name|optarg
@@ -478,7 +478,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 operator|&&
 name|defined
@@ -709,7 +709,7 @@ literal|'x'
 case|:
 ifdef|#
 directive|ifdef
-name|ENCRYPT
+name|ENCRYPTION
 name|encrypt_auto
 argument_list|(
 literal|1

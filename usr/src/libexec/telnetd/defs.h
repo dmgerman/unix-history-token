@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -828,6 +828,20 @@ begin_define
 define|#
 directive|define
 name|REAL_LINEMODE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|KLUDGE_OK
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_AUTOKLUDGE
 value|0x02
 end_define
 
