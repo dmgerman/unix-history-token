@@ -191,7 +191,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_DES_SEBONES
+name|DIST_DES_SCRYPTO
 value|0x0002
 end_define
 
