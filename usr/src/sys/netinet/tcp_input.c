@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.43	81/12/21	*/
+comment|/*	tcp_input.c	1.44	81/12/22	*/
 end_comment
 
 begin_include
@@ -122,6 +122,14 @@ include|#
 directive|include
 file|"../errno.h"
 end_include
+
+begin_decl_stmt
+name|int
+name|tcpprintfs
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -575,16 +583,9 @@ name|inp
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"cant find inp\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|dropwithreset
 goto|;
-block|}
 name|tp
 operator|=
 name|intotcpcb
@@ -598,16 +599,9 @@ name|tp
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"tp is 0\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|dropwithreset
 goto|;
-block|}
 name|so
 operator|=
 name|inp
@@ -704,16 +698,9 @@ name|tiflags
 operator|&
 name|TH_ACK
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"contains ACK\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|dropwithreset
 goto|;
-block|}
 if|if
 condition|(
 operator|(
@@ -724,16 +711,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"no syn\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|drop
 goto|;
-block|}
 name|tcp_in
 operator|.
 name|sin_addr
@@ -765,16 +745,9 @@ operator|&
 name|tcp_in
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"pcb cant connect\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|drop
 goto|;
-block|}
 name|tp
 operator|->
 name|t_template
@@ -793,11 +766,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"can't get template\n"
-argument_list|)
-expr_stmt|;
 name|in_pcbdisconnect
 argument_list|(
 name|inp
@@ -867,8 +835,9 @@ operator|&
 name|TH_ACK
 operator|)
 operator|&&
+comment|/* this should be SEQ_LT; is SEQ_LEQ for BBN vax TCP only */
 operator|(
-name|SEQ_LEQ
+name|SEQ_LT
 argument_list|(
 name|ti
 operator|->
@@ -1112,16 +1081,9 @@ name|ti
 operator|->
 name|ti_seq
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"wnd closed, not at edge\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|dropafterack
 goto|;
-block|}
 if|if
 condition|(
 name|ti
@@ -1184,6 +1146,11 @@ operator|&
 name|TH_SYN
 condition|)
 block|{
+name|tiflags
+operator|&=
+operator|~
+name|TH_SYN
+expr_stmt|;
 name|ti
 operator|->
 name|ti_seq
@@ -1220,16 +1187,9 @@ name|ti
 operator|->
 name|ti_len
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"window open but outside\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|dropafterack
 goto|;
-block|}
 name|m_adj
 argument_list|(
 name|m
@@ -1327,16 +1287,9 @@ name|ti
 operator|->
 name|ti_len
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"segment outside window\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|dropafterack
 goto|;
-block|}
 name|m_adj
 argument_list|(
 name|m
@@ -1673,16 +1626,9 @@ operator|->
 name|snd_max
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ack> snd_max\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|dropafterack
 goto|;
-block|}
 name|acked
 operator|=
 name|ti
@@ -1795,7 +1741,34 @@ argument_list|,
 name|TCPTV_MAX
 argument_list|)
 expr_stmt|;
+name|tp
+operator|->
+name|t_rtt
+operator|=
+literal|0
+expr_stmt|;
+name|tp
+operator|->
+name|t_rxtshift
+operator|=
+literal|0
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_flags
+operator|&
+name|SB_WAIT
+condition|)
+name|sowwakeup
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|snd_una
@@ -1990,6 +1963,7 @@ name|ti
 operator|->
 name|ti_seq
 operator|&&
+operator|(
 name|SEQ_LEQ
 argument_list|(
 name|tp
@@ -2000,6 +1974,23 @@ name|ti
 operator|->
 name|ti_ack
 argument_list|)
+operator|||
+name|tp
+operator|->
+name|snd_wl2
+operator|==
+name|ti
+operator|->
+name|ti_ack
+operator|&&
+name|ti
+operator|->
+name|ti_win
+operator|>
+name|tp
+operator|->
+name|snd_wnd
+operator|)
 condition|)
 block|{
 name|tp
@@ -2433,11 +2424,6 @@ block|}
 return|return;
 name|drop
 label|:
-name|printf
-argument_list|(
-literal|"drop\n"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Drop space held by incoming segment and return. 	 */
 name|m_freem
 argument_list|(
