@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-all.c,v 1.4 1999/03/07 21:49:14 sos Exp $  */
+comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-all.c,v 1.5 1999/03/28 18:57:19 sos Exp $  */
 end_comment
 
 begin_include
@@ -671,6 +671,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|atapi_wait
+argument_list|(
+name|atp
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
 operator|!
 operator|(
 name|atapi_parm
@@ -981,12 +994,12 @@ operator|->
 name|ccbsize
 argument_list|)
 expr_stmt|;
-comment|/* link onto controller queue */
 name|s
 operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+comment|/* link onto controller queue */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -999,6 +1012,24 @@ argument_list|,
 name|request
 argument_list|,
 name|chain
+argument_list|)
+expr_stmt|;
+comment|/* try to start controller */
+if|if
+condition|(
+name|atp
+operator|->
+name|controller
+operator|->
+name|active
+operator|==
+name|ATA_IDLE
+condition|)
+name|ata_start
+argument_list|(
+name|atp
+operator|->
+name|controller
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1024,24 +1055,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* try to start controller */
-if|if
-condition|(
-name|atp
-operator|->
-name|controller
-operator|->
-name|active
-operator|==
-name|ATA_IDLE
-condition|)
-name|ata_start
-argument_list|(
-name|atp
-operator|->
-name|controller
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2545,6 +2558,12 @@ operator|(
 name|status
 operator|&
 name|ATA_S_BSY
+operator|)
+operator|&&
+operator|(
+name|status
+operator|&
+name|ATA_S_DRDY
 operator|)
 condition|)
 break|break;
