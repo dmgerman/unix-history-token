@@ -585,16 +585,6 @@ parameter_list|)
 value|((fp_except_t)					\ 	__fpsetreg(0, FP_STKY_REG, (m), FP_STKY_OFF))
 end_define
 
-begin_define
-define|#
-directive|define
-name|fpsetsticky
-parameter_list|(
-name|m
-parameter_list|)
-value|fpresetsticky(m)
-end_define
-
 begin_comment
 comment|/* Suppress prototypes in the MI header. */
 end_comment
