@@ -491,11 +491,7 @@ name|list
 operator|->
 name|el_entries
 argument_list|,
-name|list
-operator|->
-name|el_entries
-operator|.
-name|tqh_first
+name|ep
 argument_list|,
 name|ee_link
 argument_list|)
