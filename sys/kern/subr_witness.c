@@ -1020,9 +1020,6 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|__i386__
 block|{
 literal|"clk"
 block|,
@@ -1030,8 +1027,6 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|"callout"
 block|,
@@ -2979,7 +2974,7 @@ name|go_into_ddb
 condition|)
 name|Debugger
 argument_list|(
-literal|"witness_enter"
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3604,7 +3599,7 @@ name|n
 condition|)
 name|Debugger
 argument_list|(
-literal|"witness_sleep"
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
