@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.7 1995/02/09 11:30:07 jkh Exp $ */
+comment|/* $Id: scd.c,v 1.1 1995/03/24 18:33:00 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -71,6 +71,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -119,6 +125,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -137,7 +149,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gnu/i386/scdreg.h>
+file|<i386/isa/scdreg.h>
 end_include
 
 begin_define
