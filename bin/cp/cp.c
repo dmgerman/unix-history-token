@@ -206,18 +206,6 @@ name|info
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-name|void
-name|siginfo
-parameter_list|(
-name|int
-name|notused
-name|__unused
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_enum
 enum|enum
 name|op
@@ -264,6 +252,17 @@ name|FTSENT
 modifier|*
 specifier|const
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|siginfo
+parameter_list|(
+name|int
+name|__unused
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2007,7 +2006,7 @@ name|void
 name|siginfo
 parameter_list|(
 name|int
-name|notused
+name|sig
 name|__unused
 parameter_list|)
 block|{
