@@ -235,30 +235,6 @@ name|p_stat
 condition|)
 block|{
 case|case
-name|SSLEEP
-case|:
-if|if
-condition|(
-name|kg
-operator|->
-name|kg_pri
-operator|.
-name|pri_level
-operator|>
-name|PZERO
-operator|||
-name|kg
-operator|->
-name|kg_slptime
-operator|!=
-literal|0
-condition|)
-comment|/* ke? */
-goto|goto
-name|nextproc
-goto|;
-comment|/* FALLTHROUGH */
-case|case
 name|SRUN
 case|:
 if|if
