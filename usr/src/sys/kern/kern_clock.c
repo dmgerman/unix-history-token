@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.51	83/01/17	*/
+comment|/*	kern_clock.c	4.52	83/03/03	*/
 end_comment
 
 begin_include
@@ -132,16 +132,30 @@ endif|#
 directive|endif
 end_endif
 
-begin_empty
-empty|#
-end_empty
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KGCLOCK
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|phz
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/*  * Clock handling routines.  *  * This code is written for a machine with only one interval timer,  * and does timing and resource utilization estimation statistically  * based on the state of the machine hz times a second.  A machine  * with proper clocks (running separately in user state, system state,  * interrupt state and idle state) as well as a time-of-day clock  * would allow a non-approximate implementation.  */
+comment|/*  * Clock handling routines.  *  * This code is written to operate with two timers which run  * independently of each other. The main clock, running at hz  * times per second, is used to do scheduling and timeout calculations.  * The second timer does resource utilization estimation statistically  * based on the state of the machine phz times a second. Both functions  * can be performed by a single clock (ie hz == phz), however the   * statistics will be much more prone to errors. Ideally a machine  * would have separate clocks measuring time spent in user state, system  * state, interrupt state, and idle state. These clocks would allow a non-  * approximate measure of resource utilization.  */
 end_comment
 
 begin_comment
-comment|/*  * TODO:  *	* Keep more accurate statistics by simulating good interval timers.  *	* Use the time-of-day clock on the VAX to keep more accurate time  *	  than is possible by repeated use of the interval timer.  *	* Allocate more timeout table slots when table overflows.  */
+comment|/*  * TODO:  *	* Keep more accurate statistics by simulating good interval timers.  *	* Use the time-of-day clock on the VAX to keep more accurate time  *	  than is possible by repeated use of the interval timer.  *	* Allocate more timeout table slots when table overflows.  *	* Get all resource allocation to use second timer.  */
 end_comment
 
 begin_comment
@@ -162,7 +176,7 @@ value|(tp)->tv_usec += usec; \ 	if ((tp)->tv_usec>= 1000000) { \ 		(tp)->tv_usec
 end_define
 
 begin_comment
-comment|/*  * The (single) hardware interval timer.  * We update the events relating to real time, and then  * make a gross assumption: that the system has been in the  * state it is in (user state, kernel state, interrupt state,  * or idle state) for the entire last time interval, and  * update statistics accordingly.  */
+comment|/*  * The hz hardware interval timer.  * We update the events relating to real time.  * If this timer is also being used to gather statistics,  * we run through the statistics gathering routine as well.  */
 end_comment
 
 begin_comment
@@ -392,44 +406,6 @@ block|}
 else|else
 block|{
 comment|/* 		 * CPU was in system state.  If profiling kernel 		 * increment a counter.  If no process is running 		 * then this is a system tick if we were running 		 * at a non-zero IPL (in a driver).  If a process is running, 		 * then we charge it with system time even if we were 		 * at a non-zero IPL, since the system often runs 		 * this way during processing of system calls. 		 * This is approximate, but the lack of true interval 		 * timers makes doing anything else difficult. 		 */
-ifdef|#
-directive|ifdef
-name|GPROF
-name|int
-name|k
-init|=
-name|pc
-operator|-
-name|s_lowpc
-decl_stmt|;
-if|if
-condition|(
-name|profiling
-operator|<
-literal|2
-operator|&&
-name|k
-operator|<
-name|s_textsize
-condition|)
-name|kcount
-index|[
-name|k
-operator|/
-operator|(
-name|HISTFRACTION
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|kcount
-argument_list|)
-operator|)
-index|]
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
 name|cpstate
 operator|=
 name|CP_SYS
@@ -669,42 +645,6 @@ operator|=
 name|s
 expr_stmt|;
 block|}
-comment|/* 	 * We maintain statistics shown by user-level statistics 	 * programs:  the amount of time in each cpu state, and 	 * the amount of time each of DK_NDRIVE ``drives'' is busy. 	 */
-name|cp_time
-index|[
-name|cpstate
-index|]
-operator|++
-expr_stmt|;
-for|for
-control|(
-name|s
-operator|=
-literal|0
-init|;
-name|s
-operator|<
-name|DK_NDRIVE
-condition|;
-name|s
-operator|++
-control|)
-if|if
-condition|(
-name|dk_busy
-operator|&
-operator|(
-literal|1
-operator|<<
-name|s
-operator|)
-condition|)
-name|dk_time
-index|[
-name|s
-index|]
-operator|++
-expr_stmt|;
 comment|/* 	 * We adjust the priority of the current process. 	 * The priority of a process gets worse as it accumulates 	 * CPU time.  The cpu usage estimator (p_cpu) is increased here 	 * and the formula for computing priorities (in kern_synch.c) 	 * will compute a different value each time the p_cpu increases 	 * by 4.  The cpu usage estimator ramps up quite quickly when 	 * the process is running (linearly), and decays away exponentially, 	 * at a rate which is proportionally slower when the system is 	 * busy.  The basic principal is that the system will 90% forget 	 * that a process used a lot of CPU time in 5*loadav seconds. 	 * This causes the system to favor processes which haven't run 	 * much recently, and to round-robin among other processes. 	 */
 if|if
 condition|(
@@ -835,6 +775,35 @@ name|p_usrpri
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * If this is the only timer then we have to use it to 	 * gather statistics. 	 */
+ifndef|#
+directive|ifndef
+name|KGCLOCK
+name|gatherstats
+argument_list|(
+name|pc
+argument_list|,
+name|ps
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* 	 * If the alternate clock has not made itself known then 	 * we must gather the statistics. 	 */
+if|if
+condition|(
+name|phz
+operator|==
+literal|0
+condition|)
+name|gatherstats
+argument_list|(
+name|pc
+argument_list|,
+name|ps
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Increment the time-of-day, and schedule 	 * processing of the callouts at a very low cpu priority, 	 * so we don't keep the relatively high clock interrupt 	 * priority any longer than necessary. 	 */
 name|bumptime
 argument_list|(
@@ -846,6 +815,150 @@ argument_list|)
 expr_stmt|;
 name|setsoftclock
 argument_list|()
+expr_stmt|;
+block|}
+comment|/*  * Gather statistics on resource utilization.  *  * We make a gross assumption: that the system has been in the  * state it is in (user state, kernel state, interrupt state,  * or idle state) for the entire last time interval, and  * update statistics accordingly.  */
+name|gatherstats
+argument_list|(
+argument|pc
+argument_list|,
+argument|ps
+argument_list|)
+name|caddr_t
+name|pc
+decl_stmt|;
+name|int
+name|ps
+decl_stmt|;
+block|{
+name|int
+name|cpstate
+decl_stmt|,
+name|s
+decl_stmt|;
+comment|/* 	 * Determine what state the cpu is in. 	 */
+if|if
+condition|(
+name|USERMODE
+argument_list|(
+name|ps
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * CPU was in user state. 		 */
+if|if
+condition|(
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_nice
+operator|>
+name|NZERO
+condition|)
+name|cpstate
+operator|=
+name|CP_NICE
+expr_stmt|;
+else|else
+name|cpstate
+operator|=
+name|CP_USER
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * CPU was in system state.  If profiling kernel 		 * increment a counter. 		 */
+name|cpstate
+operator|=
+name|CP_SYS
+expr_stmt|;
+if|if
+condition|(
+name|noproc
+operator|&&
+name|BASEPRI
+argument_list|(
+name|ps
+argument_list|)
+condition|)
+name|cpstate
+operator|=
+name|CP_IDLE
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GPROF
+name|s
+operator|=
+name|pc
+operator|-
+name|s_lowpc
+expr_stmt|;
+if|if
+condition|(
+name|profiling
+operator|<
+literal|2
+operator|&&
+name|s
+operator|<
+name|s_textsize
+condition|)
+name|kcount
+index|[
+name|s
+operator|/
+operator|(
+name|HISTFRACTION
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|kcount
+argument_list|)
+operator|)
+index|]
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+comment|/* 	 * We maintain statistics shown by user-level statistics 	 * programs:  the amount of time in each cpu state, and 	 * the amount of time each of DK_NDRIVE ``drives'' is busy. 	 */
+name|cp_time
+index|[
+name|cpstate
+index|]
+operator|++
+expr_stmt|;
+for|for
+control|(
+name|s
+operator|=
+literal|0
+init|;
+name|s
+operator|<
+name|DK_NDRIVE
+condition|;
+name|s
+operator|++
+control|)
+if|if
+condition|(
+name|dk_busy
+operator|&
+operator|(
+literal|1
+operator|<<
+name|s
+operator|)
+condition|)
+name|dk_time
+index|[
+name|s
+index|]
+operator|++
 expr_stmt|;
 block|}
 comment|/*  * Software priority level clock interrupt.  * Run periodic events from timeout queue.  */
