@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -3048,6 +3054,33 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If PF_FORK is set, the child process inherits the 	 * procfs ioctl flags from its parent. 	 */
+if|if
+condition|(
+name|p1
+operator|->
+name|p_pfsflags
+operator|&
+name|PF_FORK
+condition|)
+block|{
+name|p2
+operator|->
+name|p_stops
+operator|=
+name|p1
+operator|->
+name|p_stops
+expr_stmt|;
+name|p2
+operator|->
+name|p_pfsflags
+operator|=
+name|p1
+operator|->
+name|p_pfsflags
+expr_stmt|;
+block|}
 comment|/* 	 * Return child proc pointer to parent. 	 */
 operator|*
 name|procp

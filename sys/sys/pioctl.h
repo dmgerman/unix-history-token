@@ -235,6 +235,17 @@ begin_comment
 comment|/* Ignore UID/GID changes */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PF_FORK
+value|0x04
+end_define
+
+begin_comment
+comment|/* Retain settings on fork() */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
