@@ -7109,6 +7109,8 @@ if|if
 condition|(
 name|command
 argument_list|(
+literal|"%s"
+argument_list|,
 name|buf
 argument_list|)
 operator|==
