@@ -3366,6 +3366,14 @@ decl_stmt|,
 modifier|*
 name|tmpvm
 decl_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Local copies of curproc (cp) and vmspace (myvm) 	 */
 name|mycp
 operator|=
