@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.26 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,12 +223,13 @@ decl_stmt|;
 name|long
 name|oldmask
 decl_stmt|;
+name|pid_t
+name|pid
+decl_stmt|;
 name|int
 name|s
 decl_stmt|,
 name|lport
-decl_stmt|,
-name|pid
 decl_stmt|,
 name|timo
 decl_stmt|;
@@ -1047,7 +1048,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 operator|&
 name|c
