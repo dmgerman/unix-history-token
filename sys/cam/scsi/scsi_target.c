@@ -1049,7 +1049,7 @@ if|if
 condition|(
 name|error
 operator|==
-literal|0
+name|CAM_REQ_CMP
 condition|)
 block|{
 name|dev

@@ -2158,11 +2158,18 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|debug
+condition|)
+block|{
 name|warnx
 argument_list|(
-literal|"Queue frozen receiving CCB, releasing"
+literal|"Queue frozen receiving CCB, "
+literal|"releasing"
 argument_list|)
 expr_stmt|;
+block|}
 name|rel_simq
 argument_list|()
 expr_stmt|;
@@ -3860,7 +3867,7 @@ name|ccb_h
 operator|.
 name|timeout
 operator|=
-literal|5
+name|CAM_TIME_INFINITY
 expr_stmt|;
 name|ctio
 operator|->

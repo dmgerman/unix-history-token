@@ -560,6 +560,11 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+if|if
+condition|(
+name|debug
+condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"tcmd_handle atio %p ctio %p atioflags %#x"
@@ -575,6 +580,7 @@ operator|.
 name|flags
 argument_list|)
 expr_stmt|;
+block|}
 name|ret
 operator|=
 literal|0
