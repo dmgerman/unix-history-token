@@ -198,7 +198,7 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
-name|u_int
+name|uintptr_t
 name|rclk
 decl_stmt|;
 if|if
@@ -250,7 +250,7 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
-name|u_int
+name|uintptr_t
 name|rclk
 decl_stmt|;
 if|if
@@ -299,9 +299,6 @@ name|dev
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|rclk
 argument_list|,
 literal|1
