@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.10 (Berkeley) %G%"
+literal|"@(#)ftpd.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2069,33 +2069,14 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* 	 * If no PORT command was specified, 	 * use the default address. 	 */
 if|if
 condition|(
 name|usedefault
 condition|)
-block|{
 name|data_dest
 operator|=
 name|his_addr
 expr_stmt|;
-name|data_dest
-operator|.
-name|sin_port
-operator|=
-name|htons
-argument_list|(
-name|ntohs
-argument_list|(
-name|sp
-operator|->
-name|s_port
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|usedefault
 operator|=
 literal|1
