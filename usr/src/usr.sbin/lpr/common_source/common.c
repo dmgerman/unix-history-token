@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	common.c	4.6	83/06/17	*/
+comment|/*	common.c	4.7	83/06/22	*/
 end_comment
 
 begin_comment
@@ -173,6 +173,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* name of troff filter (per job) */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|NF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of ditroff filter (per job) */
 end_comment
 
 begin_decl_stmt

@@ -13,7 +13,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	lpr.c	4.21	83/06/17	*/
+comment|/*	lpr.c	4.22	83/06/22	*/
 end_comment
 
 begin_comment
@@ -630,6 +630,10 @@ literal|'t'
 case|:
 comment|/* print troff output (cat files) */
 case|case
+literal|'n'
+case|:
+comment|/* print ditroff output */
+case|case
 literal|'d'
 case|:
 comment|/* print tex output (dvi files) */
@@ -698,10 +702,6 @@ operator|=
 operator|*
 operator|++
 name|argv
-expr_stmt|;
-name|format
-operator|=
-literal|'t'
 expr_stmt|;
 block|}
 break|break;
@@ -1077,6 +1077,10 @@ condition|(
 name|format
 operator|==
 literal|'t'
+operator|||
+name|format
+operator|==
+literal|'n'
 operator|||
 name|format
 operator|==

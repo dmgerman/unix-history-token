@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	printjob.c	4.8	83/06/17	*/
+comment|/*	printjob.c	4.9	83/06/22	*/
 end_comment
 
 begin_comment
@@ -1194,7 +1194,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	 *      read the control file for work to do 	 * 	 *      file format -- first character in the line is a command 	 *      rest of the line is the argument. 	 *      valid commands are: 	 * 	 *		J -- "job name" on banner page 	 *		C -- "class name" on banner page 	 *              L -- "literal" user's name to print on banner 	 *		T -- "title" for pr 	 *		H -- "host name" of machine where lpr was done 	 *              P -- "person" user's login name 	 *              I -- "indent" amount to indent output 	 *              f -- "file name" name of text file to print 	 *		l -- "file name" text file with control chars 	 *		p -- "file name" text file to print with pr(1) 	 *		t -- "file name" troff(1) file to print 	 *		d -- "file name" dvi file to print 	 *		g -- "file name" plot(1G) file to print 	 *		v -- "file name" plain raster file to print 	 *		c -- "file name" cifplot file to print 	 *		1 -- "R font file" for troff 	 *		2 -- "I font file" for troff 	 *		3 -- "B font file" for troff 	 *		4 -- "S font file" for troff 	 *		N -- "name" of file (used by lpq) 	 *              U -- "unlink" name of file to remove 	 *                    (after we print it. (Pass 2 only)). 	 *		M -- "mail" to user when done printing 	 * 	 *      getline reads a line and expands tabs to blanks 	 */
+comment|/* 	 *      read the control file for work to do 	 * 	 *      file format -- first character in the line is a command 	 *      rest of the line is the argument. 	 *      valid commands are: 	 * 	 *		J -- "job name" on banner page 	 *		C -- "class name" on banner page 	 *              L -- "literal" user's name to print on banner 	 *		T -- "title" for pr 	 *		H -- "host name" of machine where lpr was done 	 *              P -- "person" user's login name 	 *              I -- "indent" amount to indent output 	 *              f -- "file name" name of text file to print 	 *		l -- "file name" text file with control chars 	 *		p -- "file name" text file to print with pr(1) 	 *		t -- "file name" troff(1) file to print 	 *		n -- "file name" ditroff(1) file to print 	 *		d -- "file name" dvi file to print 	 *		g -- "file name" plot(1G) file to print 	 *		v -- "file name" plain raster file to print 	 *		c -- "file name" cifplot file to print 	 *		1 -- "R font file" for troff 	 *		2 -- "I font file" for troff 	 *		3 -- "B font file" for troff 	 *		4 -- "S font file" for troff 	 *		N -- "name" of file (used by lpq) 	 *              U -- "unlink" name of file to remove 	 *                    (after we print it. (Pass 2 only)). 	 *		M -- "mail" to user when done printing 	 * 	 *      getline reads a line and expands tabs to blanks 	 */
 comment|/* pass 1 */
 while|while
 condition|(
@@ -1617,7 +1617,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Print a file.  * Set up the chain [ PR [ | {IF, OF} ] ] or {IF, TF, CF, VF}.  * Return -1 if a non-recoverable error occured, 1 if a recoverable error and  * 0 if all is well.  * Note: all filters take stdin as the file, stdout as the printer,  * stderr as the log file, and must not ignore SIGINT.  */
+comment|/*  * Print a file.  * Set up the chain [ PR [ | {IF, OF} ] ] or {IF, RF, TF, NF, DF, CF, VF}.  * Return -1 if a non-recoverable error occured, 1 if a recoverable error and  * 0 if all is well.  * Note: all filters take stdin as the file, stdout as the printer,  * stderr as the log file, and must not ignore SIGINT.  */
 end_comment
 
 begin_expr_stmt
@@ -2160,6 +2160,10 @@ literal|'t'
 case|:
 comment|/* print troff output */
 case|case
+literal|'n'
+case|:
+comment|/* print ditroff output */
+case|case
 literal|'d'
 case|:
 comment|/* print tex output */
@@ -2293,6 +2297,14 @@ literal|'t'
 operator|)
 condition|?
 name|TF
+else|:
+operator|(
+name|format
+operator|==
+literal|'n'
+operator|)
+condition|?
+name|NF
 else|:
 name|DF
 expr_stmt|;
@@ -5025,6 +5037,16 @@ operator|=
 name|pgetstr
 argument_list|(
 literal|"tf"
+argument_list|,
+operator|&
+name|bp
+argument_list|)
+expr_stmt|;
+name|NF
+operator|=
+name|pgetstr
+argument_list|(
+literal|"nf"
 argument_list|,
 operator|&
 name|bp
