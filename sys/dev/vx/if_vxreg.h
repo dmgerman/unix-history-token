@@ -1,187 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca) All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2. The name  * of the author may not be used to endorse or promote products derived from  * this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO  * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  *  October 2, 1994   Modified by: Andres Vega Garcia   INRIA - Sophia Antipolis, France  e-mail: avega@sophia.inria.fr  finger: avega@pax.inria.fr   */
+comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca) All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2. The name  * of the author may not be used to endorse or promote products derived from  * this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO  * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
 comment|/*  * Created from if_epreg.h by Fred Gray (fgray@rice.edu) to support the  * 3c590 family.  */
 end_comment
-
-begin_comment
-comment|/*  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
-end_comment
-
-begin_comment
-comment|/*  * Ethernet software status per interface.  */
-end_comment
-
-begin_struct
-struct|struct
-name|vx_softc
-block|{
-name|struct
-name|arpcom
-name|arpcom
-decl_stmt|;
-comment|/* Ethernet common part		*/
-name|int
-name|unit
-decl_stmt|;
-comment|/* unit number */
-name|bus_space_handle_t
-name|vx_bhandle
-decl_stmt|;
-name|bus_space_tag_t
-name|vx_btag
-decl_stmt|;
-name|void
-modifier|*
-name|vx_intrhand
-decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|vx_irq
-decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|vx_res
-decl_stmt|;
-define|#
-directive|define
-name|MAX_MBS
-value|8
-comment|/* # of mbufs we keep around	*/
-name|struct
-name|mbuf
-modifier|*
-name|mb
-index|[
-name|MAX_MBS
-index|]
-decl_stmt|;
-comment|/* spare mbuf storage.		*/
-name|int
-name|next_mb
-decl_stmt|;
-comment|/* Which mbuf to use next. 	*/
-name|int
-name|last_mb
-decl_stmt|;
-comment|/* Last mbuf.			*/
-name|char
-name|vx_connectors
-decl_stmt|;
-comment|/* Connectors on this card.	*/
-name|char
-name|vx_connector
-decl_stmt|;
-comment|/* Connector to use.		*/
-name|short
-name|tx_start_thresh
-decl_stmt|;
-comment|/* Current TX_start_thresh.	*/
-name|int
-name|tx_succ_ok
-decl_stmt|;
-comment|/* # packets sent in sequence	*/
-comment|/* w/o underrun			*/
-name|struct
-name|callout_handle
-name|ch
-decl_stmt|;
-comment|/* Callout handle for timeouts  */
-name|int
-name|buffill_pending
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|CSR_WRITE_4
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|bus_space_write_4(sc->vx_btag, sc->vx_bhandle, reg, val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_WRITE_2
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|bus_space_write_2(sc->vx_btag, sc->vx_bhandle, reg, val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_WRITE_1
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|bus_space_write_1(sc->vx_btag, sc->vx_bhandle, reg, val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_READ_4
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|bus_space_read_4(sc->vx_btag, sc->vx_bhandle, reg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_READ_2
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|bus_space_read_2(sc->vx_btag, sc->vx_bhandle, reg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSR_READ_1
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|bus_space_read_1(sc->vx_btag, sc->vx_bhandle, reg)
-end_define
 
 begin_comment
 comment|/*  * Some global constants  */
@@ -261,13 +85,6 @@ name|VX_MAX_BOARDS
 value|16
 end_define
 
-begin_define
-define|#
-directive|define
-name|VX_ID_PORT
-value|0x100
-end_define
-
 begin_comment
 comment|/*  * Commands to read/write EEPROM trough EEPROM command register (Window 0,  * Offset 0xa)  */
 end_comment
@@ -323,12 +140,29 @@ name|EEPROM_BUSY
 value|(1<<15)
 end_define
 
+begin_define
+define|#
+directive|define
+name|EEPROM_TST_MODE
+value|(1<<14)
+end_define
+
 begin_comment
 comment|/*  * Some short functions, worth to let them be a macro  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|GO_WINDOW
+parameter_list|(
+name|x
+parameter_list|)
+value|CSR_WRITE_2(sc, VX_COMMAND, WINDOW_SELECT|(x))
+end_define
+
 begin_comment
-comment|/**************************************************************************  *									  *  * These define the EEPROM data structure.  They are used in the probe  * function to verify the existence of the adapter after having sent  * the ID_Sequence.  *  * There are others but only the ones we use are defined here.  *  **************************************************************************/
+comment|/**************************************************************************  *									  *  * These define the EEPROM data structure.  They are used in the probe  * function to verify the existence of the adapter after having sent  * the ID_Sequence.  *  **************************************************************************/
 end_comment
 
 begin_define
@@ -378,6 +212,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EEPROM_MFG_DATE
+value|0x4
+end_define
+
+begin_comment
+comment|/* Manufacturing date */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_MFG_DIVSION
+value|0x5
+end_define
+
+begin_comment
+comment|/* Manufacturing division */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_MFG_PRODUCT
+value|0x6
+end_define
+
+begin_comment
+comment|/* Product code */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EEPROM_MFG_ID
 value|0x7
 end_define
@@ -400,6 +267,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ADDR_CFG_EISA
+value|0x1f
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADDR_CFG_MASK
+value|0x1f
+end_define
+
+begin_define
+define|#
+directive|define
 name|EEPROM_RESOURCE_CFG
 value|0x9
 end_define
@@ -411,46 +292,196 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EEPROM_OEM_ADDR_0
+name|EEPROM_OEM_ADDR0
 value|0xa
 end_define
 
-begin_comment
-comment|/* Word */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|EEPROM_OEM_ADDR_1
+name|EEPROM_OEM_ADDR1
 value|0xb
 end_define
 
-begin_comment
-comment|/* Word */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|EEPROM_OEM_ADDR_2
+name|EEPROM_OEM_ADDR2
 value|0xc
 end_define
 
+begin_define
+define|#
+directive|define
+name|EEPROM_SOFTINFO
+value|0xd
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_COMPAT
+value|0xe
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_SOFTINFO2
+value|0xf
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_CAP
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_ISA
+value|0x2083
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_PCMCIA
+value|0x2082
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_INT_CONFIG_0
+value|0x12
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_INT_CONFIG_1
+value|0x13
+end_define
+
 begin_comment
-comment|/* Word */
+comment|/* RAM Partition TX FIFO/RX FIFO */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EEPROM_SOFT_INFO_2
-value|0xf
+name|ICW1_RAM_PART_MASK
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICW1_RAM_PART_35
+value|0x00
 end_define
 
 begin_comment
-comment|/* Software information 2 */
+comment|/* 2:5 (only legal if RAM size == 000b 					 * default power-up/reset */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ICW1_RAM_PART_13
+value|0x01
+end_define
+
+begin_comment
+comment|/* 1:3 (only legal if RAM size == 					 * 000b) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICW1_RAM_PART_11
+value|0x10
+end_define
+
+begin_comment
+comment|/* 1:1		 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICW1_RAM_PART_RESV
+value|0x11
+end_define
+
+begin_comment
+comment|/* Reserved	 */
+end_comment
+
+begin_comment
+comment|/* ISA Adapter Selection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICW1_IAS_MASK
+value|0x0c
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICW1_IAS_DIS
+value|0x00
+end_define
+
+begin_comment
+comment|/* Both mechanisms disabled (default) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICW1_IAS_ISA
+value|0x04
+end_define
+
+begin_comment
+comment|/* ISA contention only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICW1_IAS_PNP
+value|0x08
+end_define
+
+begin_comment
+comment|/* ISA Plug and Play only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICW1_IAS_BOTH
+value|0x0c
+end_define
+
+begin_comment
+comment|/* Both mechanisms enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_CHECKSUM_EL3
+value|0x17
+end_define
 
 begin_define
 define|#
@@ -684,7 +715,7 @@ value|0x00
 end_define
 
 begin_comment
-comment|/*  * Window 3 registers. FIFO Management.  */
+comment|/*  * Window 3 registers.  FIFO Management.  */
 end_comment
 
 begin_comment
@@ -1526,16 +1557,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|GO_WINDOW
-parameter_list|(
-name|x
-parameter_list|)
-value|CSR_WRITE_2(sc, VX_COMMAND, WINDOW_SELECT|(x))
-end_define
-
-begin_define
-define|#
-directive|define
 name|JABBER_GUARD_ENABLE
 value|0x40
 end_define
@@ -1588,72 +1609,6 @@ directive|define
 name|VX_CONNECTORS
 value|8
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|vx_count
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|void
-name|vxfree
-parameter_list|(
-name|struct
-name|vx_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|vxattach
-parameter_list|(
-name|struct
-name|vx_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|vxstop
-parameter_list|(
-name|struct
-name|vx_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|vxintr
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|vxbusyeeprom
-parameter_list|(
-name|struct
-name|vx_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 end_unit
 

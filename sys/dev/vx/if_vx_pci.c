@@ -101,6 +101,12 @@ directive|include
 file|<dev/vx/if_vxreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/vx/if_vxvar.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|void
@@ -475,7 +481,7 @@ name|bad
 goto|;
 name|sc
 operator|->
-name|vx_btag
+name|bst
 operator|=
 name|rman_get_bustag
 argument_list|(
@@ -486,7 +492,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|vx_bhandle
+name|bsh
 operator|=
 name|rman_get_bushandle
 argument_list|(
@@ -616,7 +622,7 @@ name|VX_W0_EEPROM_COMMAND
 argument_list|,
 name|EEPROM_CMD_RD
 operator||
-name|EEPROM_SOFT_INFO_2
+name|EEPROM_SOFTINFO2
 argument_list|)
 expr_stmt|;
 if|if

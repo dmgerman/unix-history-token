@@ -95,6 +95,12 @@ directive|include
 file|<dev/vx/if_vxreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/vx/if_vxvar.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -459,18 +465,18 @@ name|io
 expr_stmt|;
 name|sc
 operator|->
-name|vx_bhandle
+name|bst
 operator|=
-name|rman_get_bushandle
+name|rman_get_bustag
 argument_list|(
 name|io
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|vx_btag
+name|bsh
 operator|=
-name|rman_get_bustag
+name|rman_get_bushandle
 argument_list|(
 name|io
 argument_list|)

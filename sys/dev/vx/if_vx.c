@@ -107,6 +107,12 @@ directive|include
 file|<dev/vx/if_vxreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/vx/if_vxvar.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -508,7 +514,7 @@ argument_list|,
 name|EEPROM_CMD_RD
 operator||
 operator|(
-name|EEPROM_OEM_ADDR_0
+name|EEPROM_OEM_ADDR0
 operator|+
 name|i
 operator|)
@@ -1953,11 +1959,11 @@ name|bus_space_write_multi_4
 argument_list|(
 name|sc
 operator|->
-name|vx_btag
+name|bst
 argument_list|,
 name|sc
 operator|->
-name|vx_bhandle
+name|bsh
 argument_list|,
 name|VX_W1_TX_PIO_WR_1
 argument_list|,
@@ -1991,11 +1997,11 @@ name|bus_space_write_multi_1
 argument_list|(
 name|sc
 operator|->
-name|vx_btag
+name|bst
 argument_list|,
 name|sc
 operator|->
-name|vx_bhandle
+name|bsh
 argument_list|,
 name|VX_W1_TX_PIO_WR_1
 argument_list|,
@@ -3522,11 +3528,11 @@ name|bus_space_read_multi_4
 argument_list|(
 name|sc
 operator|->
-name|vx_btag
+name|bst
 argument_list|,
 name|sc
 operator|->
-name|vx_bhandle
+name|bsh
 argument_list|,
 name|VX_W1_RX_PIO_RD_1
 argument_list|,
@@ -3554,11 +3560,11 @@ name|bus_space_read_multi_1
 argument_list|(
 name|sc
 operator|->
-name|vx_btag
+name|bst
 argument_list|,
 name|sc
 operator|->
-name|vx_bhandle
+name|bsh
 argument_list|,
 name|VX_W1_RX_PIO_RD_1
 argument_list|,
