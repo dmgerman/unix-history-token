@@ -1541,11 +1541,12 @@ modifier|*
 name|format
 decl_stmt|;
 specifier|static
+name|int
 name|d_first
-operator|=
+init|=
 operator|-
 literal|1
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|d_first
