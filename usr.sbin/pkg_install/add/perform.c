@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.37.2.1 1997/01/20 15:42:57 jkh Exp $"
+literal|"$Id: perform.c,v 1.37.2.2 1997/02/15 14:19:04 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2251,35 +2251,6 @@ argument_list|,
 name|signo
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Plist
-operator|.
-name|head
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|Fake
-condition|)
-name|delete_package
-argument_list|(
-name|FALSE
-argument_list|,
-name|FALSE
-argument_list|,
-operator|&
-name|Plist
-argument_list|)
-expr_stmt|;
-name|free_plist
-argument_list|(
-operator|&
-name|Plist
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
