@@ -969,6 +969,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|g
 condition|)
 block|{
