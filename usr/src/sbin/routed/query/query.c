@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)query.c	5.13 (Berkeley) %G%"
+literal|"@(#)query.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -230,6 +230,10 @@ name|struct
 name|sockaddr
 name|from
 decl_stmt|;
+name|struct
+name|sigaction
+name|sigact
+decl_stmt|;
 name|int
 name|fromlen
 init|=
@@ -267,9 +271,6 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -408,11 +409,47 @@ name|tv_usec
 operator|=
 name|STIME
 expr_stmt|;
-name|signal
+name|bzero
+argument_list|(
+operator|&
+name|sigact
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sigact
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sigact
+operator|.
+name|sa_handler
+operator|=
+name|timeout
+expr_stmt|;
+comment|/*sigact.sa_flags = 0;		/* no restart */
+if|if
+condition|(
+name|sigaction
 argument_list|(
 name|SIGALRM
 argument_list|,
-name|timeout
+operator|&
+name|sigact
+argument_list|,
+operator|(
+expr|struct
+name|sigaction
+operator|*
+operator|)
+name|NULL
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"sigaction"
 argument_list|)
 expr_stmt|;
 name|alarm
