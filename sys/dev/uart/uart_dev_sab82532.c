@@ -1168,7 +1168,12 @@ name|bas
 argument_list|,
 name|SAB_IMR0
 argument_list|,
-literal|0xff
+operator|(
+name|unsigned
+name|char
+operator|)
+operator|~
+name|SAB_IMR0_TCD
 argument_list|)
 expr_stmt|;
 name|uart_setreg
