@@ -30,6 +30,13 @@ name|WHITESPACE
 value|" \t\r\n\v\f"
 end_define
 
+begin_define
+define|#
+directive|define
+name|NG_SOCKET_KLD
+value|"ng_socket.ko"
+end_define
+
 begin_comment
 comment|/* Internal functions */
 end_comment
@@ -498,6 +505,51 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EPROTONOSUPPORT
+condition|)
+block|{
+if|if
+condition|(
+name|kldload
+argument_list|(
+name|NG_SOCKET_KLD
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"can't load %s"
+argument_list|,
+name|NG_SOCKET_KLD
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|NgMkSockNode
+argument_list|(
+name|name
+argument_list|,
+operator|&
+name|csock
+argument_list|,
+operator|&
+name|dsock
+argument_list|)
+operator|>=
+literal|0
+condition|)
+goto|goto
+name|gotNode
+goto|;
+block|}
 name|err
 argument_list|(
 name|EX_OSERR
@@ -505,6 +557,9 @@ argument_list|,
 literal|"can't create node"
 argument_list|)
 expr_stmt|;
+block|}
+name|gotNode
+label|:
 comment|/* Do commands as requested */
 if|if
 condition|(
