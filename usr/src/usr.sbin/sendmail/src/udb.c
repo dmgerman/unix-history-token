@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.2 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.3 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.2 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.3 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -553,13 +553,6 @@ block|{
 name|char
 modifier|*
 name|user
-decl_stmt|;
-name|struct
-name|timeval
-name|timeout
-decl_stmt|;
-name|fd_set
-name|fdset
 decl_stmt|;
 comment|/* 		**  Select action based on entry type. 		** 		**	On dropping out of this switch, "class" should 		**	explain the type of the data, and "user" should 		**	contain the user information. 		*/
 switch|switch

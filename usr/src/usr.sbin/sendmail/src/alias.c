@@ -102,14 +102,37 @@ name|lint
 ifdef|#
 directive|ifdef
 name|NEWDB
+ifdef|#
+directive|ifdef
+name|NDBM
 expr|static
 name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.4 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.5 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)alias.c	6.5 (Berkeley) %G% (with NEWDB)"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -128,7 +151,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.4 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.5 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,7 +166,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.4 (Berkeley) %G% (without NDBM)"
+literal|"@(#)alias.c	6.5 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2073,7 +2096,7 @@ name|skipping
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* 		**  Process the LHS 		** 		**	Find the final colon, and parse the address. 		**	It should resolve to a local name. 		** 		**	Alternatively, it can be "@hostname" for host 		**	aliases -- all we do here is map case.  Hostname 		**	need not be a single token. 		*/
+comment|/* 		**  Process the LHS 		** 		**	Find the colon separator, and parse the address. 		**	It should resolve to a local name. 		** 		**	Alternatively, it can be "@hostname" for host 		**	aliases -- all we do here is map case.  Hostname 		**	need not be a single token. 		*/
 for|for
 control|(
 name|p

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.11 (Berkeley) %G%"
+literal|"@(#)main.c	6.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -94,6 +100,12 @@ directive|include
 file|"sendmail.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -105,6 +117,11 @@ include|#
 directive|include
 file|<resolv.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -5112,12 +5129,25 @@ condition|(
 name|fulldrop
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SYSTEM5
+operator|(
+name|void
+operator|)
+name|setpgrp
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 operator|(
 name|void
 operator|)
 name|setsid
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|TIOCNOTTY

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.3 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.4 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.3 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.4 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -790,8 +790,12 @@ name|s_port
 expr_stmt|;
 block|}
 comment|/* 	**  Try to actually open the connection. 	*/
-name|again
-label|:
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 if|if
 condition|(
 name|tTd
@@ -815,25 +819,6 @@ name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NVMUNIX
-name|s
-operator|=
-name|socket
-argument_list|(
-name|AF_INET
-argument_list|,
-name|SOCK_STREAM
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-else|NVMUNIX
 if|if
 condition|(
 name|usesecureport
@@ -869,9 +854,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|NVMUNIX
 if|if
 condition|(
 name|s
@@ -971,42 +953,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* for debugging */
-ifdef|#
-directive|ifdef
-name|NVMUNIX
-name|bind
-argument_list|(
-name|s
-argument_list|,
-operator|&
-name|SendmailAddress
-argument_list|,
-sizeof|sizeof
-name|SendmailAddress
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|connect
-argument_list|(
-name|s
-argument_list|,
-operator|&
-name|SendmailAddress
-argument_list|,
-sizeof|sizeof
-name|SendmailAddress
-argument_list|,
-literal|0
-argument_list|)
-operator|<
-literal|0
-condition|)
-else|#
-directive|else
-else|NVMUNIX
 name|addr
 operator|.
 name|sin_family
@@ -1030,13 +976,11 @@ argument_list|,
 sizeof|sizeof
 name|addr
 argument_list|)
-operator|<
+operator|>=
 literal|0
 condition|)
-endif|#
-directive|endif
-endif|NVMUNIX
-block|{
+break|break;
+comment|/* couldn't connect.... figure out why */
 name|sav_errno
 operator|=
 name|errno
@@ -1061,6 +1005,20 @@ name|i
 index|]
 condition|)
 block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|16
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"Connect failed; trying new address....\n"
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|hp
@@ -1085,9 +1043,7 @@ operator|->
 name|h_length
 argument_list|)
 expr_stmt|;
-goto|goto
-name|again
-goto|;
+continue|continue;
 block|}
 comment|/* failure, decide if temporary or not */
 name|failure

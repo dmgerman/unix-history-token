@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.2 (Berkeley) %G%"
+literal|"@(#)err.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1314,6 +1314,9 @@ operator|(
 name|buf
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 case|case
 operator|(
 name|TRY_AGAIN
@@ -1336,6 +1339,8 @@ operator|(
 name|buf
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 endif|#
 directive|endif
