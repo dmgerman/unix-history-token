@@ -2780,6 +2780,7 @@ name|SR
 operator|&
 name|TXS
 condition|)
+block|{
 name|sc
 operator|->
 name|regs
@@ -2787,7 +2788,7 @@ operator|->
 name|SR
 operator|=
 name|TXS
-operator|,
+expr_stmt|;
 name|if_printf
 argument_list|(
 name|ifp
@@ -2795,6 +2796,7 @@ argument_list|,
 literal|"interrupt posted but not delivered\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|free_sent_buffers
 argument_list|(
 name|sc
