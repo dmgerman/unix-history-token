@@ -4,7 +4,7 @@ comment|/*  * Device driver for National Semiconductor DS8390 based ethernet  * 
 end_comment
 
 begin_comment
-comment|/*  * Modification history  *  * $Log$  *   */
+comment|/*  * Modification history  *  * $Log:	if_ed.c,v $  * Revision 1.7  93/06/22  04:45:01  davidg  * (no additional changes) Second beta release  *   * Revision 1.6  93/06/22  04:40:35  davidg  * minor definition fix to ed_reset()  *   * Revision 1.5  93/06/22  04:37:39  davidg  * fixed some comments  *   * Revision 1.4  93/06/22  04:34:34  davidg  * added support to use the LLC0 'link-level control' flag  * to disable the tranceiver for AUI operation on 3Com boards.  * The default for this flag can be set in the kernel config  * file - 'flags 0x01' sets the flag (disables the tranceiver).  *   * Revision 1.3  93/06/17  03:57:28  davidg  * fixed some printf's  *   * Revision 1.2  93/06/17  03:26:49  davidg  * fixed 3c503 code to determine 8/16bit board  * changed attach printf to work with Interim-0.1.5 and NetBSD  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   *   */
 end_comment
 
 begin_include
@@ -1663,29 +1663,6 @@ argument_list|,
 name|ED_3COM_CR_RST
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Verify that reset bit was set 	 */
-if|if
-condition|(
-operator|(
-name|inb
-argument_list|(
-name|sc
-operator|->
-name|asic_addr
-operator|+
-name|ED_3COM_CR
-argument_list|)
-operator|&
-name|ED_3COM_CR_RST
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 	 * Wait for a while, then un-reset it 	 */
 name|DELAY
 argument_list|(
@@ -1703,34 +1680,25 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Verify that the bit cleared 	 */
-if|if
-condition|(
-name|inb
-argument_list|(
-name|sc
-operator|->
-name|asic_addr
-operator|+
-name|ED_3COM_CR
-argument_list|)
-operator|&
-name|ED_3COM_CR_RST
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 	 * Wait a bit for the NIC to recover from the reset 	 */
 name|DELAY
 argument_list|(
 literal|5000
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The 3Com ASIC defaults to rather strange settings for the CR after 	 *	a reset - it's important to set it so that the NIC I/O 	 *	registers are mapped. The above setting of it to '0' only 	 *	resets the reset condition - the CR is *not* set to zeros. 	 */
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_3COM_CR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Determine if this is an 8bit or 16bit board 	 */
-comment|/* XXX - either this code is broken...or the hardware is... */
-comment|/*	it always comes up 8bit */
 comment|/* 	 * select page 0 registers 	 */
 name|outb
 argument_list|(
@@ -1796,12 +1764,6 @@ name|memwidth
 operator|=
 literal|8
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf(" (%dbit)",memwidth);
-endif|#
-directive|endif
 comment|/* 	 * select page 0 registers 	 */
 name|outb
 argument_list|(
@@ -1809,7 +1771,7 @@ name|sc
 operator|->
 name|nic_addr
 operator|+
-name|ED_P0_CR
+name|ED_P2_CR
 argument_list|,
 name|ED_CR_RD2
 operator||
@@ -1980,7 +1942,11 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"ed0: Invalid irq configuration\n"
+literal|"ed%d: Invalid irq configuration\n"
+argument_list|,
+name|isa_dev
+operator|->
+name|id_unit
 argument_list|)
 expr_stmt|;
 return|return
@@ -2081,7 +2047,7 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Unmap PROM - select NIC registers 	 */
+comment|/* 	 * Unmap PROM - select NIC registers. Tranceiver remains disabled at 	 *	this point. It's enabled in ed_init so that the attach code 	 *	is given a chance to set the default based on a compile-time 	 *	config option 	 */
 name|outb
 argument_list|(
 name|sc
@@ -2093,13 +2059,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Zero memory and verify that it is clear 	 */
+if|#
+directive|if
+literal|0
+block|printf("Starting write\n"); for (i = 0; i< 8192; ++i) 	bzero(sc->smem_start, 8192); printf("Done.\n");
+endif|#
+directive|endif
 if|#
 directive|if
 literal|0
 block|{ char	test_buf[1024]; printf("starting write\n"); 	for (i = 0; i< 8*8192; ++i) 	bcopy(test_buf, sc->smem_start, 1024); printf("starting read\n"); 	for (i = 0; i< 8*8192; ++i) 	bcopy(sc->smem_start, test_buf, 1024); printf("done.\n"); }
 endif|#
 directive|endif
+comment|/* 	 * Zero memory and verify that it is clear 	 */
 name|bzero
 argument_list|(
 name|sc
@@ -2249,16 +2221,6 @@ name|ETHERMTU
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
-operator|=
-name|IFF_BROADCAST
-operator||
-name|IFF_SIMPLEX
-operator||
-name|IFF_NOTRAILERS
-expr_stmt|;
-name|ifp
-operator|->
 name|if_init
 operator|=
 name|ed_init
@@ -2292,6 +2254,42 @@ operator|->
 name|if_watchdog
 operator|=
 name|ed_watchdog
+expr_stmt|;
+comment|/* 	 * Set default state for LLC0 flag (used to disable the tranceiver 	 *	for AUI operation), based on compile-time config option. 	 */
+if|if
+condition|(
+name|isa_dev
+operator|->
+name|id_flags
+operator|&
+name|ED_FLAGS_DISABLE_TRANCEIVER
+condition|)
+name|ifp
+operator|->
+name|if_flags
+operator|=
+operator|(
+name|IFF_BROADCAST
+operator||
+name|IFF_SIMPLEX
+operator||
+name|IFF_NOTRAILERS
+operator||
+name|IFF_LLC0
+operator|)
+expr_stmt|;
+else|else
+name|ifp
+operator|->
+name|if_flags
+operator|=
+operator|(
+name|IFF_BROADCAST
+operator||
+name|IFF_SIMPLEX
+operator||
+name|IFF_NOTRAILERS
+operator|)
 expr_stmt|;
 name|if_attach
 argument_list|(
@@ -2362,7 +2360,7 @@ name|ifa
 operator|->
 name|ifa_next
 expr_stmt|;
-comment|/* 	 * If we find an AF_LINK type entry, we well fill in the hardware addr 	 */
+comment|/* 	 * If we find an AF_LINK type entry we fill in the hardware address 	 */
 if|if
 condition|(
 operator|(
@@ -2380,7 +2378,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * Fill in the link level address for this interface 		 */
+comment|/* 		 * Fill in the link-level address for this interface 		 */
 name|sdl
 operator|=
 operator|(
@@ -2430,7 +2428,11 @@ block|}
 comment|/* 	 * Print additional info when attached 	 */
 name|printf
 argument_list|(
-literal|" enet %s type %s"
+literal|"ed%d: address %s, type %s (%dbit) %s\n"
+argument_list|,
+name|isa_dev
+operator|->
+name|id_unit
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -2444,6 +2446,32 @@ argument_list|,
 name|sc
 operator|->
 name|type_str
+argument_list|,
+name|sc
+operator|->
+name|memwidth
+argument_list|,
+operator|(
+operator|(
+name|sc
+operator|->
+name|vendor
+operator|==
+name|ED_VENDOR_3COM
+operator|)
+operator|&&
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_LLC0
+operator|)
+operator|)
+condition|?
+literal|"tranceiver disabled"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
@@ -2458,8 +2486,6 @@ name|int
 name|ed_reset
 parameter_list|(
 name|unit
-parameter_list|,
-name|uban
 parameter_list|)
 name|int
 name|unit
@@ -3017,6 +3043,52 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If this is a 3Com board, the tranceiver must be software enabled 	 *	(there is no settable hardware default). 	 */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|vendor
+operator|==
+name|ED_VENDOR_3COM
+operator|)
+operator|&&
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_LLC0
+operator|)
+condition|)
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_3COM_CR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_3COM_CR
+argument_list|,
+name|ED_3COM_CR_XSEL
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Set 'running' flag, and clear output active flag. 	 */
 name|ifp
 operator|->
@@ -4220,6 +4292,27 @@ name|ac_if
 operator|.
 name|if_ierrors
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ED_DEBUG
+name|printf
+argument_list|(
+literal|"ed%d: receive error %x\n"
+argument_list|,
+name|unit
+argument_list|,
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_RSR
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 		 * Overwrite warning. In order to make sure that a lockup 		 *	of the local DMA hasn't occurred, we reset and 		 *	re-init the NIC. The NSC manual suggests only a 		 *	partial reset/re-init is necessary - but some 		 *	chips seem to want more. The DMA lockup has been 		 *	seen only with early rev chips - Methinks this 		 *	bug was fixed in later revs. -DG 		 */
 if|if
@@ -4848,6 +4941,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 comment|/* 			 * XXX - for multicasts to work, we would need to 			 *	rewrite the multicast hashing array with the 			 *	proper hash (would have been destroyed above). 			 */
 name|outb
 argument_list|(
@@ -4860,8 +4954,55 @@ argument_list|,
 name|ED_RCR_AB
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
+comment|/* 		 * An unfortunate hack to provide the (required) software control 		 *	of the tranceiver for 3Com boards. The LLC0 flag disables 		 *	the tranceiver if set. 		 */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|vendor
+operator|==
+name|ED_VENDOR_3COM
+operator|)
+operator|&&
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_LLC0
+operator|)
+condition|)
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_3COM_CR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_3COM_CR
+argument_list|,
+name|ED_3COM_CR_XSEL
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 default|default:
 name|error
