@@ -276,7 +276,9 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
 literal|"\1%s\n"
 argument_list|,
@@ -284,7 +286,9 @@ name|printer
 argument_list|)
 operator|>
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|1
 condition|)

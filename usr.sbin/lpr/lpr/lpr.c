@@ -41,7 +41,7 @@ name|sccsid
 index|[]
 init|=
 literal|"From: @(#)lpr.c	8.4 (Berkeley) 4/28/95"
-literal|"\n$Id: lpr.c,v 1.17 1997/07/23 00:49:37 imp Exp $\n"
+literal|"\n$Id: lpr.c,v 1.18 1997/07/23 20:53:38 imp Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
