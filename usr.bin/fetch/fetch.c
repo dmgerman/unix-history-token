@@ -2442,13 +2442,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|warnx
-argument_list|(
-literal|"tmppath: %s"
-argument_list|,
-name|tmppath
-argument_list|)
-expr_stmt|;
 name|of
 operator|=
 name|fopen
