@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmp.c	5.5 (Berkeley) %G%"
+literal|"@(#)cmp.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -582,7 +582,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cmp [-ls] file1 file2 [skip1 [skip2]]\n"
+literal|"usage: cmp [-l | s] file1 file2 [skip1 [skip2]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
