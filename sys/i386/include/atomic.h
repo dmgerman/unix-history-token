@@ -116,7 +116,7 @@ begin_define
 define|#
 directive|define
 name|MPLOCKED
-value|"lock ; "
+value|lock ;
 end_define
 
 begin_else
@@ -155,7 +155,7 @@ parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 			 : "+m" (*p)			\ 			 : CONS (V));			\ }
+value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(__XSTRING(MPLOCKED) OP		\ 			 : "+m" (*p)			\ 			 : CONS (V));			\ }
 end_define
 
 begin_comment
@@ -275,8 +275,11 @@ name|exp
 decl_stmt|;
 asm|__asm __volatile (
 literal|"	"
+name|__XSTRING
+argument_list|(
 name|MPLOCKED
-literal|"		"
+argument_list|)
+literal|"	"
 literal|"	cmpxchgl %1,%2 ;	"
 literal|"       setz	%%al ;		"
 literal|"	movzbl	%%al,%0 ;	"
@@ -372,7 +375,7 @@ parameter_list|,
 name|SOP
 parameter_list|)
 define|\
-value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE res;					\ 							\ 	__asm __volatile(MPLOCKED LOP			\ 	: "=a" (res),
+value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE res;					\ 							\ 	__asm __volatile(__XSTRING(MPLOCKED) LOP	\ 	: "=a" (res),
 comment|/* 0 (result) */
 value|\ 	  "+m" (*p)
 comment|/* 1 */

@@ -82,7 +82,7 @@ name|tid
 parameter_list|,
 name|type
 parameter_list|)
-value|({				\ 	int	_res = MTX_UNOWNED;					\ 									\ 	__asm __volatile (						\ "	" MPLOCKED ""							\ "	cmpxchgl %3,%1;"
+value|({				\ 	int	_res = MTX_UNOWNED;					\ 									\ 	__asm __volatile (						\ "	" __XSTRING(MPLOCKED) ""					\ "	cmpxchgl %3,%1;"
 comment|/* Try */
 value|\ "	jz	1f;"
 comment|/* Got it */
@@ -92,7 +92,7 @@ value|\ "	cmpl	%0,%3;"
 comment|/* already have it? */
 value|\ "	je	2f;"
 comment|/* yes, recurse */
-value|\ "	pushl	%4;"							\ "	pushl	%5;"							\ "	call	mtx_enter_hard;"					\ "	addl	$8,%%esp;"						\ "	jmp	1f;"							\ "2:"									\ "	" MPLOCKED ""							\ "	orl $" _V(MTX_RECURSE) ",%1;"					\ "	incl	%2;"							\ "1:"									\ "# getlock_sleep"							\ 	: "+a" (_res),
+value|\ "	pushl	%4;"							\ "	pushl	%5;"							\ "	call	mtx_enter_hard;"					\ "	addl	$8,%%esp;"						\ "	jmp	1f;"							\ "2:"									\ "	" __XSTRING(MPLOCKED) ""					\ "	orl $" _V(MTX_RECURSE) ",%1;"					\ "	incl	%2;"							\ "1:"									\ "# getlock_sleep"							\ 	: "+a" (_res),
 comment|/* 0 */
 value|\ 	  "+m" (mtxp->mtx_lock),
 comment|/* 1 */
@@ -124,7 +124,7 @@ name|tid
 parameter_list|,
 name|type
 parameter_list|)
-value|({				\ 	int	_res = MTX_UNOWNED;					\ 									\ 	__asm __volatile (						\ "	pushfl;"							\ "	cli;"								\ "	" MPLOCKED ""							\ "	cmpxchgl %3,%1;"
+value|({				\ 	int	_res = MTX_UNOWNED;					\ 									\ 	__asm __volatile (						\ "	pushfl;"							\ "	cli;"								\ "	" __XSTRING(MPLOCKED) ""					\ "	cmpxchgl %3,%1;"
 comment|/* Try */
 value|\ "	jz	2f;"
 comment|/* got it */
@@ -164,7 +164,7 @@ name|tid
 parameter_list|,
 name|type
 parameter_list|)
-value|({				\ 	int	_res = MTX_UNOWNED;					\ 									\ 	__asm __volatile (						\ "	" MPLOCKED ""							\ "	cmpxchgl %2,%1;"
+value|({				\ 	int	_res = MTX_UNOWNED;					\ 									\ 	__asm __volatile (						\ "	" __XSTRING(MPLOCKED) ""					\ "	cmpxchgl %2,%1;"
 comment|/* Try */
 value|\ "	jz	1f;"
 comment|/* got it */
@@ -200,7 +200,7 @@ name|tid
 parameter_list|,
 name|type
 parameter_list|)
-value|({				\ 	int	_tid = (int)(tid);					\ 									\ 	__asm __volatile (						\ "	" MPLOCKED ""							\ "	cmpxchgl %4,%0;"
+value|({				\ 	int	_tid = (int)(tid);					\ 									\ 	__asm __volatile (						\ "	" __XSTRING(MPLOCKED) ""					\ "	cmpxchgl %4,%0;"
 comment|/* try easy rel */
 value|\ "	jz	1f;"
 comment|/* released! */
@@ -234,7 +234,7 @@ name|tid
 parameter_list|,
 name|type
 parameter_list|)
-value|({					\ 	int	_tid = (int)(tid);					\ 									\ 	__asm __volatile (						\ "	" MPLOCKED ""							\ "	cmpxchgl %5,%0;"
+value|({					\ 	int	_tid = (int)(tid);					\ 									\ 	__asm __volatile (						\ "	" __XSTRING(MPLOCKED) ""					\ "	cmpxchgl %5,%0;"
 comment|/* try easy rel */
 value|\ "	jz	1f;"
 comment|/* released! */
