@@ -2043,7 +2043,7 @@ directive|ifdef
 name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"%s: device disappeared on port %d\n"
+literal|"%s: port %d, device disappeared after reset\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -2399,12 +2399,16 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|usbd_device_handle
-name|dev
+name|struct
+name|usbd_hub
+modifier|*
+name|hub
 init|=
 name|sc
 operator|->
 name|sc_hub
+operator|->
+name|hub
 decl_stmt|;
 name|struct
 name|usbd_port
@@ -2457,8 +2461,6 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|dev
-operator|->
 name|hub
 operator|==
 name|NULL
@@ -2485,8 +2487,6 @@ argument_list|)
 expr_stmt|;
 name|nports
 operator|=
-name|dev
-operator|->
 name|hub
 operator|->
 name|hubdesc
@@ -2510,8 +2510,6 @@ block|{
 name|rup
 operator|=
 operator|&
-name|dev
-operator|->
 name|hub
 operator|->
 name|ports
@@ -2537,7 +2535,9 @@ name|usbd_add_drv_event
 argument_list|(
 name|USB_EVENT_DRIVER_DETACH
 argument_list|,
-name|dev
+name|sc
+operator|->
+name|sc_hub
 argument_list|,
 name|USBDEV
 argument_list|(
@@ -2549,14 +2549,14 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|dev
-operator|->
 name|hub
 argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
-name|dev
+name|sc
+operator|->
+name|sc_hub
 operator|->
 name|hub
 operator|=
