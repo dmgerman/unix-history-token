@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dump.h	5.15 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dump.h	5.16 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -907,25 +907,18 @@ name|_PATH_FSTAB
 value|"/etc/fstab"
 end_define
 
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-modifier|*
-name|sig_t
-function_decl|)
-parameter_list|()
-function_decl|;
-end_typedef
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
+name|index
+argument_list|()
+decl_stmt|,
+modifier|*
 name|strdup
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|extern
