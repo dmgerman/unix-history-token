@@ -1195,6 +1195,48 @@ comment|/* 393 = sendfile */
 literal|"mac_syscall"
 block|,
 comment|/* 394 = mac_syscall */
+literal|"#395"
+block|,
+comment|/* 395 = nosys */
+literal|"#396"
+block|,
+comment|/* 396 = nosys */
+literal|"#397"
+block|,
+comment|/* 397 = nosys */
+literal|"#398"
+block|,
+comment|/* 398 = nosys */
+literal|"#399"
+block|,
+comment|/* 399 = nosys */
+literal|"ksem_close"
+block|,
+comment|/* 400 = ksem_close */
+literal|"ksem_post"
+block|,
+comment|/* 401 = ksem_post */
+literal|"ksem_wait"
+block|,
+comment|/* 402 = ksem_wait */
+literal|"ksem_trywait"
+block|,
+comment|/* 403 = ksem_trywait */
+literal|"ksem_init"
+block|,
+comment|/* 404 = ksem_init */
+literal|"ksem_open"
+block|,
+comment|/* 405 = ksem_open */
+literal|"ksem_unlink"
+block|,
+comment|/* 406 = ksem_unlink */
+literal|"ksem_getvalue"
+block|,
+comment|/* 407 = ksem_getvalue */
+literal|"ksem_destroy"
+block|,
+comment|/* 408 = ksem_destroy */
 block|}
 decl_stmt|;
 end_decl_stmt
