@@ -540,6 +540,12 @@ return|return
 literal|"AMD 756 ATA66 controller"
 return|;
 case|case
+literal|0x74111022
+case|:
+return|return
+literal|"AMD 766 ATA100 controller"
+return|;
+case|case
 literal|0x02111166
 case|:
 return|return
@@ -1146,7 +1152,10 @@ case|:
 case|case
 literal|0x74091022
 case|:
-comment|/* VIA 82C586, 82C596, 82C686& AMD 756 default setup */
+case|case
+literal|0x74111022
+case|:
+comment|/* VIA 82C586, '596, '686& AMD 756, '766 default setup */
 comment|/* set prefetch, postwrite */
 name|pci_write_config
 argument_list|(
