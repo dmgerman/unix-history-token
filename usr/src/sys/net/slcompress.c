@@ -1,21 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)slcompress.c	7.4 (Berkeley) %G%  *  *			THIS CODE IS NOT FOR DISTRIBUTION!  *	KEEP YOUR GRUBBY HANDS OFF UNLESS AUTHORIZED BY VAN JACOBSON TO COPY!  *			ASK SAM, MIKE, OR BILL ABOUT IT.  *  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1988, 1989 by Van Jacobson, Lawrence Berkeley Laboratory  * All rights reserved.  */
+comment|/*	slcompress.c	7.5	90/01/20	*/
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"sl.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NSL
-operator|>
-literal|0
-end_if
+begin_comment
+comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -29,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: slcompress.c,v 1.10 89/06/05 08:28:52 van Exp $"
+literal|"$Header: slcompress.c,v 1.19 89/12/31 08:52:59 van Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,7 +79,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_SL_STATS
+name|SL_NO_STATS
 end_ifndef
 
 begin_define
@@ -148,6 +138,24 @@ name|n
 parameter_list|)
 value|bcopy((char *)(p1), (char *)(p2), (int)(n))
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ovbcopy
+value|bcopy
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -324,6 +332,16 @@ parameter_list|)
 value|{ \ 	if (*cp == 0) {\ 		(f) = htons(ntohs(f) + ((cp[1]<< 8) | cp[2])); \ 		cp += 3; \ 	} else { \ 		(f) = htons(ntohs(f) + (u_long)*cp++); \ 	} \ }
 end_define
 
+begin_define
+define|#
+directive|define
+name|DECODEU
+parameter_list|(
+name|f
+parameter_list|)
+value|{ \ 	if (*cp == 0) {\ 		(f) = htons((cp[1]<< 8) | cp[2]); \ 		cp += 3; \ 	} else { \ 		(f) = htons((u_long)*cp++); \ 	} \ }
+end_define
+
 begin_function
 name|u_char
 name|sl_compress_tcp
@@ -333,6 +351,8 @@ parameter_list|,
 name|ip
 parameter_list|,
 name|comp
+parameter_list|,
+name|compress_cid
 parameter_list|)
 name|struct
 name|mbuf
@@ -349,6 +369,9 @@ name|struct
 name|slcompress
 modifier|*
 name|comp
+decl_stmt|;
+name|int
+name|compress_cid
 decl_stmt|;
 block|{
 specifier|register
@@ -408,7 +431,7 @@ name|cp
 init|=
 name|new_seq
 decl_stmt|;
-comment|/* 	 * Bail if this is an ip fragment or if we don't have 	 * a complete ip& tcp header in the first mbuf.  Otherwise, 	 * check flags to see if this is a packet we might compress  	 * and, if so, try to locate the connection state. 	 * special case the most recently used connection since 	 * it's most likely to be used again& we don't have to 	 * do any reordering if it's used. 	 */
+comment|/* 	 * Bail if this is an IP fragment or if the TCP packet isn't 	 * `compressible' (i.e., ACK isn't set or some other control bit is 	 * set).  (We assume that the caller has already made sure the 	 * packet is IP proto TCP). 	 */
 if|if
 condition|(
 operator|(
@@ -416,7 +439,10 @@ name|ip
 operator|->
 name|ip_off
 operator|&
+name|htons
+argument_list|(
 literal|0x3fff
+argument_list|)
 operator|)
 operator|||
 name|m
@@ -474,6 +500,7 @@ operator|(
 name|TYPE_IP
 operator|)
 return|;
+comment|/* 	 * Packet is compressible -- we're going to send either a 	 * COMPRESSED_TCP or UNCOMPRESSED_TCP packet.  Either way we need 	 * to locate (or create) the connection state.  Special case the 	 * most recently used connection since it's most likely to be used 	 * again& we don't have to do any reordering if it's used. 	 */
 name|INCR
 argument_list|(
 argument|sls_packets
@@ -534,12 +561,22 @@ name|ip_hl
 index|]
 condition|)
 block|{
-comment|/* 		 * Wasn't the first -- search for it. 		 * 		 * States are kept in a circularly linked list with 		 * first_cs pointing to the head of the list.  The 		 * list is kept in lru order by moving a state to the 		 * head of the list whenever it is referenced.  Since 		 * the list is short and, empirically, the connection 		 * we want is almost always near the front, we locate 		 * states via linear search.  If we don't find a state 		 * for the datagram, the oldest state is used. 		 */
+comment|/* 		 * Wasn't the first -- search for it. 		 * 		 * States are kept in a circularly linked list with 		 * last_cs pointing to the end of the list.  The 		 * list is kept in lru order by moving a state to the 		 * head of the list whenever it is referenced.  Since 		 * the list is short and, empirically, the connection 		 * we want is almost always near the front, we locate 		 * states via linear search.  If we don't find a state 		 * for the datagram, the oldest state is (re-)used. 		 */
 specifier|register
 name|struct
 name|cstate
 modifier|*
 name|lcs
+decl_stmt|;
+specifier|register
+name|struct
+name|cstate
+modifier|*
+name|lastcs
+init|=
+name|comp
+operator|->
+name|last_cs
 decl_stmt|;
 do|do
 block|{
@@ -559,6 +596,34 @@ argument|sls_searches
 argument_list|)
 if|if
 condition|(
+name|ip
+operator|->
+name|ip_src
+operator|.
+name|s_addr
+operator|==
+name|cs
+operator|->
+name|cs_ip
+operator|.
+name|ip_src
+operator|.
+name|s_addr
+operator|&&
+name|ip
+operator|->
+name|ip_dst
+operator|.
+name|s_addr
+operator|==
+name|cs
+operator|->
+name|cs_ip
+operator|.
+name|ip_dst
+operator|.
+name|s_addr
+operator|&&
 operator|*
 operator|(
 name|int
@@ -583,34 +648,6 @@ name|cs_ip
 operator|.
 name|ip_hl
 index|]
-operator|&&
-name|ip
-operator|->
-name|ip_src
-operator|.
-name|s_addr
-operator|==
-name|cs
-operator|->
-name|cs_ip
-operator|.
-name|ip_src
-operator|.
-name|s_addr
-operator|&&
-name|ip
-operator|->
-name|ip_dst
-operator|.
-name|s_addr
-operator|==
-name|cs
-operator|->
-name|cs_ip
-operator|.
-name|ip_dst
-operator|.
-name|s_addr
 condition|)
 goto|goto
 name|found
@@ -620,16 +657,14 @@ do|while
 condition|(
 name|cs
 operator|!=
-name|comp
-operator|->
-name|last_cs
+name|lastcs
 condition|)
 do|;
+comment|/* 		 * Didn't find it -- re-use oldest cstate.  Send an 		 * uncompressed packet that tells the other side what 		 * connection number we're using for this conversation. 		 * Note that since the state list is circular, the oldest 		 * state points to the newest and we only need to set 		 * last_cs to update the lru linkage. 		 */
 name|INCR
 argument_list|(
 argument|sls_misses
 argument_list|)
-comment|/* 		 * Didn't find it -- re-use oldest cstate. 		 * Send an uncompressed packet that tells 		 * the other side what connection number 		 * we're using for this conversation.  Note 		 * that since the state list is circular, the 		 * oldest state points to the newest and we only 		 * need to set last_cs to update the lru linkage. 		 */
 name|comp
 operator|->
 name|last_cs
@@ -654,11 +689,9 @@ label|:
 comment|/* 		 * Found it -- move to the front on the connection list. 		 */
 if|if
 condition|(
-name|comp
-operator|->
-name|last_cs
-operator|==
 name|cs
+operator|==
+name|lastcs
 condition|)
 name|comp
 operator|->
@@ -680,15 +713,11 @@ name|cs
 operator|->
 name|cs_next
 operator|=
-name|comp
-operator|->
-name|last_cs
+name|lastcs
 operator|->
 name|cs_next
 expr_stmt|;
-name|comp
-operator|->
-name|last_cs
+name|lastcs
 operator|->
 name|cs_next
 operator|=
@@ -696,7 +725,7 @@ name|cs
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Make sure that only what we expect to change changed. 	 */
+comment|/* 	 * Make sure that only what we expect to change changed. The first 	 * line of the `if' checks the IP protocol version, header length& 	 * type of service.  The 2nd line checks the "Don't fragment" bit. 	 * The 3rd line checks the time-to-live and protocol (the protocol 	 * check is unnecessary but costless).  The 4th line checks the TCP 	 * header length.  The 5th line checks IP options, if any.  The 6th 	 * line checks TCP options, if any.  If any of these things are 	 * different between the previous& current datagram, we send the 	 * current datagram `uncompressed'. 	 */
 name|oth
 operator|=
 operator|(
@@ -758,6 +787,31 @@ name|cs_ip
 operator|)
 index|[
 literal|0
+index|]
+operator|||
+operator|(
+operator|(
+name|u_short
+operator|*
+operator|)
+name|ip
+operator|)
+index|[
+literal|3
+index|]
+operator|!=
+operator|(
+operator|(
+name|u_short
+operator|*
+operator|)
+operator|&
+name|cs
+operator|->
+name|cs_ip
+operator|)
+index|[
+literal|3
 index|]
 operator|||
 operator|(
@@ -893,7 +947,7 @@ name|oth
 operator|->
 name|th_urp
 condition|)
-comment|/* argh! URG not set but urp changed -- a sensible 		 * implementation should never do this but RFC793 		 * doesn't prohibit the change so we have to deal 		 * with it.  */
+comment|/* argh! URG not set but urp changed -- a sensible 		 * implementation should never do this but RFC793 		 * doesn't prohibit the change so we have to deal 		 * with it. */
 goto|goto
 name|uncompressed
 goto|;
@@ -1015,6 +1069,7 @@ block|{
 case|case
 literal|0
 case|:
+comment|/* 		 * Nothing changed. If this packet contains data and the 		 * last one didn't, this is probably a data packet following 		 * an ack (normal on an interactive connection) and we send 		 * it compressed.  Otherwise it's probably a retransmit, 		 * retransmitted ack or window probe.  Send it uncompressed 		 * in case the other side missed the compressed version. 		 */
 if|if
 condition|(
 name|ip
@@ -1029,15 +1084,17 @@ name|ip_len
 operator|&&
 name|ntohs
 argument_list|(
-name|ip
+name|cs
 operator|->
+name|cs_ip
+operator|.
 name|ip_len
 argument_list|)
-operator|!=
+operator|==
 name|hlen
 condition|)
 break|break;
-comment|/* 		 * Nothing changed and this packet looks like a duplicate 		 * of the last or contains no data -- this is probably a 		 * retransmitted ack or window probe.  Send it 		 * uncompressed in case the other side missed the 		 * compressed version. 		 * 		 * (fall through) 		 */
+comment|/* (fall through) */
 case|case
 name|SPECIAL_I
 case|:
@@ -1201,6 +1258,10 @@ name|ip
 expr_stmt|;
 if|if
 condition|(
+name|compress_cid
+operator|==
+literal|0
+operator|||
 name|comp
 operator|->
 name|last_xmit
@@ -1225,18 +1286,6 @@ operator|+
 literal|4
 expr_stmt|;
 name|cp
-operator|+=
-name|hlen
-expr_stmt|;
-name|m
-operator|->
-name|m_len
-operator|-=
-name|hlen
-expr_stmt|;
-name|m
-operator|->
-name|m_data
 operator|+=
 name|hlen
 expr_stmt|;
@@ -1269,6 +1318,13 @@ name|cp
 operator|+=
 name|hlen
 expr_stmt|;
+operator|*
+name|cp
+operator|++
+operator|=
+name|changes
+expr_stmt|;
+block|}
 name|m
 operator|->
 name|m_len
@@ -1281,13 +1337,6 @@ name|m_data
 operator|+=
 name|hlen
 expr_stmt|;
-operator|*
-name|cp
-operator|++
-operator|=
-name|changes
-expr_stmt|;
-block|}
 operator|*
 name|cp
 operator|++
@@ -1443,17 +1492,9 @@ name|ip_p
 operator|>=
 name|MAX_STATES
 condition|)
-block|{
-name|INCR
-argument_list|(
-argument|sls_errorin
-argument_list|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
+goto|goto
+name|bad
+goto|;
 name|cs
 operator|=
 operator|&
@@ -1551,25 +1592,10 @@ operator|(
 name|len
 operator|)
 return|;
-case|case
-name|TYPE_ERROR
-case|:
-name|comp
-operator|->
-name|flags
-operator||=
-name|SLF_TOSS
-expr_stmt|;
 default|default:
-name|INCR
-argument_list|(
-argument|sls_errorin
-argument_list|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|bad
+goto|;
 case|case
 name|TYPE_COMPRESSED_TCP
 case|:
@@ -1606,17 +1632,9 @@ name|cp
 operator|>=
 name|MAX_STATES
 condition|)
-block|{
-name|INCR
-argument_list|(
-argument|sls_errorin
-argument_list|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
+goto|goto
+name|bad
+goto|;
 name|comp
 operator|->
 name|flags
@@ -1850,7 +1868,7 @@ name|th_flags
 operator||=
 name|TH_URG
 expr_stmt|;
-name|DECODES
+name|DECODEU
 argument_list|(
 argument|th->th_urp
 argument_list|)
@@ -1928,7 +1946,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * At this point, cp points to the first byte of data in the 	 * packet.  If we're not aligned on a 4-byte boundary, copy the 	 * data down so the ip& tcp headers will be aligned.  Then back up 	 * cp by the tcp/ip header length to make room for the reconstructed 	 * header (we assume the packet we were handed has enough space to 	 * prepend 128 bytes of header).  Adjust the lenth to account for 	 * the new header& fill in the IP total length. 	 */
+comment|/* 	 * At this point, cp points to the first byte of data in the 	 * packet.  If we're not aligned on a 4-byte boundary, copy the 	 * data down so the ip& tcp headers will be aligned.  Then back up 	 * cp by the tcp/ip header length to make room for the reconstructed 	 * header (we assume the packet we were handed has enough space to 	 * prepend 128 bytes of header).  Adjust the length to account for 	 * the new header& fill in the IP total length. 	 */
 name|len
 operator|-=
 operator|(
@@ -1944,18 +1962,10 @@ name|len
 operator|<
 literal|0
 condition|)
-block|{
 comment|/* we must have dropped some characters (crc should detect 		 * this but the old slip framing won't) */
-name|INCR
-argument_list|(
-argument|sls_errorin
-argument_list|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
+goto|goto
+name|bad
+goto|;
 if|if
 condition|(
 operator|(
@@ -1972,10 +1982,17 @@ name|len
 operator|>
 literal|0
 condition|)
-name|BCOPY
+operator|(
+name|void
+operator|)
+name|ovbcopy
 argument_list|(
 name|cp
 argument_list|,
+call|(
+name|caddr_t
+call|)
+argument_list|(
 operator|(
 name|int
 operator|)
@@ -1983,6 +2000,7 @@ name|cp
 operator|&
 operator|~
 literal|3
+argument_list|)
 argument_list|,
 name|len
 argument_list|)
@@ -2127,13 +2145,25 @@ operator|(
 name|len
 operator|)
 return|;
+name|bad
+label|:
+name|comp
+operator|->
+name|flags
+operator||=
+name|SLF_TOSS
+expr_stmt|;
+name|INCR
+argument_list|(
+argument|sls_errorin
+argument_list|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

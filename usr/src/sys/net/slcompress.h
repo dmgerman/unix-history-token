@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Definitions for tcp compression routines.  *  * Copyright (c) 1988, 1989 by Van Jacobson, Lawrence Berkeley Laboratory  * All rights reserved.  *  * $Header: slcompress.h,v 1.6 89/06/05 08:29:13 van Exp $  */
+comment|/*	slcompress.h	7.3	90/01/20	*/
+end_comment
+
+begin_comment
+comment|/*  * Definitions for tcp compression routines.  *  * $Header: slcompress.h,v 1.10 89/12/31 08:53:02 van Exp $  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
 end_comment
 
 begin_define
@@ -183,7 +187,7 @@ decl_stmt|;
 union|union
 block|{
 name|char
-name|hdr
+name|csu_hdr
 index|[
 name|MAX_HDR
 index|]
@@ -194,7 +198,7 @@ name|csu_ip
 decl_stmt|;
 comment|/* ip/tcp hdr from most recent packet */
 block|}
-name|u
+name|slcs_u
 union|;
 block|}
 struct|;
@@ -204,7 +208,14 @@ begin_define
 define|#
 directive|define
 name|cs_ip
-value|u.csu_ip
+value|slcs_u.csu_ip
+end_define
+
+begin_define
+define|#
+directive|define
+name|cs_hdr
+value|slcs_u.csu_hdr
 end_define
 
 begin_comment
@@ -234,7 +245,7 @@ name|flags
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|NO_SL_STATS
+name|SL_NO_STATS
 name|int
 name|sls_packets
 decl_stmt|;
@@ -319,7 +330,7 @@ specifier|extern
 name|u_char
 name|sl_compress_tcp
 parameter_list|(
-comment|/* struct mbuf *, struct ip *, struct slcompress * */
+comment|/* struct mbuf *, struct ip *, 				struct slcompress *, int compress_cid_flag */
 parameter_list|)
 function_decl|;
 end_function_decl
