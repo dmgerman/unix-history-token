@@ -2832,7 +2832,7 @@ condition|(
 operator|!
 name|msgNoYes
 argument_list|(
-literal|"Does this system have a non-USB mouse attached to it?"
+literal|"Does this system have a PS/2, serial, or bus mouse?"
 argument_list|)
 condition|)
 name|dmenuOpenSimple
