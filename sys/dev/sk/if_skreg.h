@@ -81,6 +81,28 @@ value|0x1700
 end_define
 
 begin_comment
+comment|/*  * Linksys PCI vendor ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VENDORID_LINKSYS
+value|0x1737
+end_define
+
+begin_comment
+comment|/*  * Linksys gigabit ethernet device ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_LINKSYS_EG1032
+value|0x1032
+end_define
+
+begin_comment
 comment|/*  * GEnesis registers. The GEnesis chip has a 256-byte I/O window  * but internally it has a 16K register space. This 16K space is  * divided into 128-byte blocks. The first 128 bytes of the I/O  * window represent the first block, which is permanently mapped  * at the start of the window. The other 127 blocks can be mapped  * to the second 128 bytes of the I/O window by setting the desired  * block value in the RAP register in block 0. Not all of the 127  * blocks are actually used. Most registers are 32 bits wide, but  * there are a few 16-bit and 8-bit ones as well.  */
 end_comment
 

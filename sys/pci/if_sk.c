@@ -351,6 +351,14 @@ literal|"3Com 3C940 Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|VENDORID_LINKSYS
+block|,
+name|DEVICEID_LINKSYS_EG1032
+block|,
+literal|"Linksys EG1032 Gigabit Ethernet"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -6986,6 +6994,9 @@ name|DEVICEID_SK_V2
 case|:
 case|case
 name|DEVICEID_3COM_3C940
+case|:
+case|case
+name|DEVICEID_LINKSYS_EG1032
 case|:
 name|sc
 operator|->
