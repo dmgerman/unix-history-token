@@ -47,14 +47,11 @@ directive|include
 file|<net/radix.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -78,14 +75,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -529,6 +523,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_struct
 struct|struct
 name|pf_addr_dyn
@@ -552,17 +552,9 @@ decl_stmt|;
 name|sa_family_t
 name|af
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HOOK_HACK
-argument_list|)
 name|eventhandler_tag
 name|hook_cookie
 decl_stmt|;
@@ -588,17 +580,8 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -720,14 +703,11 @@ name|pf_task_mtx
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ALTQ
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -4765,14 +4745,11 @@ name|DIOCOSFPGET
 value|_IOWR('D', 80, struct pf_osfp_ioctl)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_struct
 struct|struct
@@ -5089,14 +5066,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -6341,14 +6315,11 @@ name|pf_status
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -6405,14 +6376,11 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_struct
 struct|struct
@@ -6647,14 +6615,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_function_decl
 name|int

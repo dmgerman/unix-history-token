@@ -11,14 +11,11 @@ begin_comment
 comment|/*  * The authors of this code are John Ioannidis (ji@tla.org),  * Angelos D. Keromytis (kermit@csd.uch.gr) and   * Niels Provos (provos@physnet.uni-hamburg.de).  *  * This code was written by John Ioannidis for BSD/OS in Athens, Greece,   * in November 1995.  *  * Ported to OpenBSD and NetBSD, with additional transforms, in December 1996,  * by Angelos D. Keromytis.  *  * Additional transforms and features in 1997 and 1998 by Angelos D. Keromytis  * and Niels Provos.  *  * Copyright (C) 1995, 1996, 1997, 1998 by John Ioannidis, Angelos D. Keromytis  * and Niels Provos.  * Copyright (c) 2001, Angelos D. Keromytis, Niels Provos.  *  * Permission to use, copy, and modify this software with or without fee  * is hereby granted, provided that this entire notice is included in  * all copies of any software which is or includes a copy or  * modification of this software.   * You may use this code under the GNU public license if you so wish. Please  * contribute changes back to the authors under this freer than GPL license  * so that we may further the use of strong encryption without limitations to  * all.  *  * THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTY. IN PARTICULAR, NONE OF THE AUTHORS MAKES ANY  * REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE  * MERCHANTABILITY OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR  * PURPOSE.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -37,15 +34,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifndef
 
 begin_include
 include|#
@@ -73,18 +66,18 @@ directive|include
 file|"opt_bpf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_pf.h"
+end_include
+
 begin_define
 define|#
 directive|define
 name|NBPFILTER
 value|DEV_BPF
 end_define
-
-begin_include
-include|#
-directive|include
-file|"opt_pf.h"
-end_include
 
 begin_define
 define|#
@@ -122,14 +115,11 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -224,14 +214,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -294,14 +281,11 @@ directive|include
 file|<net/if_pflog.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -357,15 +341,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifndef
 
 begin_decl_stmt
 name|struct
@@ -382,14 +362,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_function_decl
 name|void
@@ -500,15 +477,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifndef
 
 begin_decl_stmt
 specifier|extern
@@ -522,14 +495,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_expr_stmt
 specifier|static
@@ -632,24 +602,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
 
 begin_function
 name|int
@@ -1068,12 +1020,9 @@ directive|endif
 name|int
 name|s
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|ifq
 operator|=
 operator|&
@@ -1094,12 +1043,9 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|IF_LOCK
 argument_list|(
 name|ifq
@@ -1660,12 +1606,9 @@ operator|)
 operator|&
 name|hdr
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(
@@ -1735,14 +1678,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_function
 specifier|static

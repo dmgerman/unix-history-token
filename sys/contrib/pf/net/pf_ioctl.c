@@ -11,14 +11,11 @@ begin_comment
 comment|/*  * Copyright (c) 2001 Daniel Hartmeier  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  *    - Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *    - Redistributions in binary form must reproduce the above  *      copyright notice, this list of conditions and the following  *      disclaimer in the documentation and/or other materials provided  *      with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * Effort sponsored in part by the Defense Advanced Research Projects  * Agency (DARPA) and Air Force Research Laboratory, Air Force  * Materiel Command, USAF, under agreement number F30602-01-2-0537.  *  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -97,14 +94,11 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -264,14 +258,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_if
 if|#
@@ -351,14 +342,11 @@ begin_comment
 comment|/* __FreeBSD__ */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_function_decl
 name|void
@@ -513,14 +501,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_function_decl
 name|int
@@ -570,14 +555,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -672,14 +654,11 @@ parameter_list|)
 value|if (pf_status.debug>= (n)) printf x
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -716,14 +695,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ALTQ
-argument_list|)
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -858,14 +834,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -991,14 +964,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -1268,24 +1238,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
 begin_decl_stmt
 specifier|static
 specifier|volatile
@@ -1463,24 +1415,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
 
 begin_function
 name|int
@@ -2454,25 +2388,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
 begin_function
 name|int
 name|pfopen
@@ -2513,21 +2428,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
 
 begin_function
 name|int
@@ -2574,6 +2474,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
 
 begin_function
 name|struct
@@ -4497,14 +4401,11 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -4685,12 +4586,9 @@ case|:
 case|case
 name|DIOCOSFPGET
 case|:
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 case|case
 name|DIOCGIFSPEED
 case|:
@@ -4784,12 +4682,9 @@ case|:
 case|case
 name|DIOCOSFPGET
 case|:
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 case|case
 name|DIOCGIFSPEED
 case|:
@@ -4803,12 +4698,9 @@ name|EACCES
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_LOCK
 argument_list|()
 expr_stmt|;
@@ -4841,12 +4733,9 @@ name|pf_status
 operator|.
 name|states
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -4900,12 +4789,9 @@ name|states
 operator|=
 name|states
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|pf_status
 operator|.
 name|since
@@ -5011,12 +4897,9 @@ name|running
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -8091,12 +7974,9 @@ name|rt_ifp
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|state
 operator|->
 name|creation
@@ -8368,12 +8248,9 @@ operator|->
 name|state
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 if|if
 condition|(
 name|ps
@@ -8509,12 +8386,9 @@ argument_list|)
 operator|*
 name|nr
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -8546,12 +8420,9 @@ argument_list|,
 argument|&tree_ext_gwy
 argument_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|int
 name|secs
 init|=
@@ -8725,12 +8596,9 @@ name|expire
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_COPYOUT
 argument_list|(
 operator|&
@@ -9609,12 +9477,9 @@ goto|goto
 name|fail
 goto|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|uma_zone_set_max
 argument_list|(
 name|pf_pool_limits
@@ -9774,12 +9639,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 case|case
 name|DIOCGIFSPEED
 case|:
@@ -10004,12 +9866,9 @@ condition|)
 break|break;
 block|}
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 if|if
 condition|(
 name|error
@@ -10206,12 +10065,9 @@ name|err
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 if|if
 condition|(
 name|error
@@ -10322,12 +10178,9 @@ literal|0
 condition|)
 block|{
 comment|/* detach and destroy the discipline */
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -10340,12 +10193,9 @@ argument_list|(
 name|altq
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_LOCK
 argument_list|()
 expr_stmt|;
@@ -10508,12 +10358,9 @@ break|break;
 block|}
 block|}
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -10526,12 +10373,9 @@ argument_list|(
 name|altq
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_LOCK
 argument_list|()
 expr_stmt|;
@@ -10675,12 +10519,9 @@ literal|0
 condition|)
 block|{
 comment|/* attach the discipline */
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -10693,12 +10534,9 @@ argument_list|(
 name|altq
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_LOCK
 argument_list|()
 expr_stmt|;
@@ -10757,12 +10595,9 @@ literal|0
 condition|)
 block|{
 comment|/* detach and destroy the discipline */
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -10810,12 +10645,9 @@ name|error
 operator|=
 name|err
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_LOCK
 argument_list|()
 expr_stmt|;
@@ -11192,12 +11024,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -11217,12 +11046,9 @@ operator|&
 name|nbytes
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_LOCK
 argument_list|()
 expr_stmt|;
@@ -13972,12 +13798,9 @@ break|break;
 block|}
 name|fail
 label|:
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -13991,14 +13814,11 @@ return|;
 block|}
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_comment
 comment|/*  * XXX - Check for version missmatch!!!  */
@@ -14451,14 +14271,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ALTQ
-argument_list|)
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -14526,12 +14343,9 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -14545,12 +14359,9 @@ argument_list|(
 name|altq
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_LOCK
 argument_list|()
 expr_stmt|;
@@ -14691,12 +14502,9 @@ literal|0
 condition|)
 block|{
 comment|/* attach the discipline */
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -14709,12 +14517,9 @@ argument_list|(
 name|altq
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_LOCK
 argument_list|()
 expr_stmt|;
@@ -14773,12 +14578,9 @@ literal|0
 condition|)
 block|{
 comment|/* detach and destroy the discipline */
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -14826,12 +14628,9 @@ name|error
 operator|=
 name|err
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|PF_LOCK
 argument_list|()
 expr_stmt|;
@@ -15072,12 +14871,9 @@ name|err
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 if|if
 condition|(
 name|error
@@ -15258,12 +15054,9 @@ name|struct
 name|pfioc_rule
 name|pr
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ALTQ
-argument_list|)
 name|struct
 name|pfioc_altq
 name|pa
@@ -15296,12 +15089,9 @@ literal|0
 expr_stmt|;
 do|do
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ALTQ
-argument_list|)
 if|if
 condition|(
 operator|(
@@ -15650,12 +15440,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ALTQ
-argument_list|)
 name|bzero
 argument_list|(
 operator|&
@@ -16464,12 +16251,9 @@ name|pfil_head
 modifier|*
 name|pfh_inet
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
 name|struct
 name|pfil_head
 modifier|*
@@ -16537,12 +16321,9 @@ operator|.
 name|pr_pfh
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
 name|pfil_add_hook
 argument_list|(
 name|pf_check6_in
@@ -16631,12 +16412,9 @@ argument_list|,
 name|pfh_inet
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
 name|pfh_inet6
 operator|=
 name|pfil_head_get
@@ -16749,12 +16527,9 @@ name|pfil_head
 modifier|*
 name|pfh_inet
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
 name|struct
 name|pfil_head
 modifier|*
@@ -16823,12 +16598,9 @@ operator|.
 name|pr_pfh
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
 name|pfil_remove_hook
 argument_list|(
 name|pf_check6_in
@@ -16917,12 +16689,9 @@ argument_list|,
 name|pfh_inet
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|INET6
-argument_list|)
 name|pfh_inet6
 operator|=
 name|pfil_head_get
@@ -17041,12 +16810,9 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ALTQ
-argument_list|)
 name|mtx_lock
 argument_list|(
 operator|&
@@ -17133,12 +16899,9 @@ argument_list|(
 name|pf_dev
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ALTQ
-argument_list|)
 name|mtx_lock
 argument_list|(
 operator|&
@@ -17283,14 +17046,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ALTQ
-argument_list|)
-end_if
+end_ifdef
 
 begin_expr_stmt
 name|MODULE_DEPEND

@@ -32,12 +32,9 @@ name|ifnet
 name|sc_if
 decl_stmt|;
 comment|/* the interface */
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|LIST_ENTRY
 argument_list|(
 argument|pflog_softc

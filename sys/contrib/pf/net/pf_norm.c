@@ -11,14 +11,11 @@ begin_comment
 comment|/*  * Copyright 2001 Niels Provos<provos@citi.umich.edu>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -119,36 +116,17 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifndef
 
 begin_include
 include|#
 directive|include
 file|<sys/pool.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
 
 begin_include
 include|#
@@ -417,15 +395,11 @@ begin_comment
 comment|/* __FreeBSD__&& INET6 */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifndef
 
 begin_struct
 struct|struct
@@ -519,15 +493,11 @@ parameter_list|)
 value|(!((fr)->fr_flags& PFFRAG_NOBUFFER))
 end_define
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifndef
 
 begin_struct
 struct|struct
@@ -892,14 +862,11 @@ begin_comment
 comment|/* Globals */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|uma_zone_t
@@ -964,12 +931,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 comment|/* 	 * XXX 	 * No high water mark support(It's hint not hard limit). 	 * uma_zone_set_max(pf_frag_pl, PFFRAG_FRAG_HIWAT); 	 */
 name|uma_zone_set_max
 argument_list|(
@@ -1165,14 +1129,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -1341,12 +1302,9 @@ name|pf_fragment
 modifier|*
 name|frag
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|u_int32_t
 name|expire
 init|=
@@ -1394,12 +1352,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(
@@ -1473,12 +1428,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(
@@ -1536,12 +1488,9 @@ argument_list|(
 name|frag
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(
@@ -1835,12 +1784,9 @@ argument_list|,
 name|fr_next
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(
@@ -2037,12 +1983,9 @@ name|NULL
 condition|)
 block|{
 comment|/* XXX Are we sure we want to update the timeout? */
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|frag
 operator|->
 name|fr_timeout
@@ -2327,12 +2270,9 @@ name|ip_len
 operator|+
 name|off
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(
@@ -2509,12 +2449,9 @@ name|fr_ip
 operator|->
 name|ip_id
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 operator|(
 operator|*
 name|frag
@@ -2606,12 +2543,9 @@ operator|=
 name|frea
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(
@@ -3191,12 +3125,9 @@ operator|->
 name|fr_queue
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(
@@ -3622,12 +3553,9 @@ name|hosed
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(
@@ -3824,12 +3752,9 @@ name|h
 operator|->
 name|ip_id
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 operator|(
 operator|*
 name|frag
@@ -3961,12 +3886,9 @@ operator|=
 name|fra
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(
@@ -4148,12 +4070,9 @@ name|drop
 condition|)
 block|{
 comment|/* XXX Optimization opportunity 				 * This is a very heavy way to trim the payload. 				 * we could do it much faster by diddling mbuf 				 * internals but that would be even less legible 				 * than this mbuf magic.  For my next trick, 				 * I'll pull a rabbit out of my laptop. 				 */
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 operator|*
 name|m0
 operator|=
@@ -4220,12 +4139,9 @@ condition|)
 goto|goto
 name|no_mem
 goto|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(
@@ -4349,12 +4265,9 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(
@@ -4709,12 +4622,9 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(
@@ -4960,12 +4870,9 @@ name|fr_end
 condition|)
 block|{
 comment|/* Need to merge in a modified 'frp' */
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(
@@ -8309,12 +8216,9 @@ name|u_int8_t
 modifier|*
 name|opt
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(
@@ -8749,12 +8653,9 @@ name|copyback
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 operator|(

@@ -37,12 +37,9 @@ name|struct
 name|ifnet
 name|sc_if
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|struct
 name|callout
 name|sc_tmo
@@ -71,12 +68,9 @@ name|int
 name|sc_count
 decl_stmt|;
 comment|/* number of states in one mtu */
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|LIST_ENTRY
 argument_list|(
 argument|pfsync_softc

@@ -11,18 +11,11 @@ begin_comment
 comment|/*  * Copyright (c) 2002 Michael Shalayeff  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR OR HIS RELATIVES BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF MIND, USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|5
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -41,15 +34,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifndef
 
 begin_include
 include|#
@@ -77,18 +66,18 @@ directive|include
 file|"opt_bpf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_pf.h"
+end_include
+
 begin_define
 define|#
 directive|define
 name|NBPFILTER
 value|DEV_BPF
 end_define
-
-begin_include
-include|#
-directive|include
-file|"opt_pf.h"
-end_include
 
 begin_define
 define|#
@@ -132,14 +121,11 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -278,14 +264,11 @@ directive|include
 file|<net/if_pfsync.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -348,15 +331,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifndef
 
 begin_decl_stmt
 name|struct
@@ -370,14 +349,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_function_decl
 name|void
@@ -525,15 +501,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifndef
 
 begin_decl_stmt
 specifier|extern
@@ -547,14 +519,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_expr_stmt
 specifier|static
@@ -672,24 +641,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
 
 begin_function
 name|int
@@ -1133,12 +1084,9 @@ directive|endif
 name|int
 name|s
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|ifq
 operator|=
 operator|&
@@ -1159,12 +1107,9 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|IF_LOCK
 argument_list|(
 name|ifq
@@ -1514,13 +1459,9 @@ name|u_int8_t
 name|action
 decl_stmt|;
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-argument_list|)
 specifier|extern
 name|int
 name|hz
@@ -1703,12 +1644,9 @@ operator|+
 name|PFSYNC_HDRLEN
 operator|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|callout_reset
 argument_list|(
 operator|&
@@ -1770,12 +1708,9 @@ modifier|*
 name|st
 decl_stmt|;
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|struct
 name|pfsync_softc
 modifier|*
@@ -1860,13 +1795,10 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-comment|/* 	 * XXX 	 *  If we need to check mutex owned, PF_LOCK should be 	 * declared in pflog.ko. :-( 	 * 	 * PF_LOCK_ASSERT(); 	 */
+comment|/* 	 * XXX 	 *  If we need to check mutex owned, PF_LOCK should be 	 * declared in pflog.ko. 	 * 	 * PF_LOCK_ASSERT(); 	 */
 name|KASSERT
 argument_list|(
 operator|(
@@ -2138,12 +2070,9 @@ name|rt_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|secs
 operator|=
 name|time_second
@@ -2388,12 +2317,9 @@ modifier|*
 name|st
 decl_stmt|;
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|struct
 name|pfsync_softc
 modifier|*
@@ -2569,12 +2495,9 @@ name|sc
 operator|->
 name|sc_mbuf
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|callout_stop
 argument_list|(
 operator|&
@@ -2607,12 +2530,9 @@ name|sc_ptr
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|KASSERT
 argument_list|(
 name|m
@@ -2661,14 +2581,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_function
 specifier|static
