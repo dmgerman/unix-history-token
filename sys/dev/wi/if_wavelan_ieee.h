@@ -560,59 +560,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * These are all the LTV record types that we can read or write  * from the WaveLAN. Not all of them are temendously useful, but I  * list as many as I know about here for completeness.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_DNLD_BUF
-value|0xFD01
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_RID_MEMSZ
-value|0xFD02
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_RID_DOMAINS
-value|0xFD11
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_RID_CIS
-value|0xFD13
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_RID_COMMQUAL
-value|0xFD43
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_RID_SCALETHRESH
-value|0xFD46
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_RID_PCF
-value|0xFD87
-end_define
-
-begin_comment
 comment|/*  * Network parameters, static configuration entities.  */
 end_comment
 
@@ -1185,12 +1132,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WI_RID_FIRM_ID
+name|WI_RID_DNLD_BUF
+value|0xFD01
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_RID_MEMSZ
 value|0xFD02
 end_define
 
 begin_comment
-comment|/* Primary func firmware ID. */
+comment|/* memory size info (XXX Lucent) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_RID_PRI_IDENTITY
+value|0xFD02
+end_define
+
+begin_comment
+comment|/* primary funcs firmware ident (PRISM2) */
 end_comment
 
 begin_define
@@ -1335,8 +1300,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|WI_RID_SYMBOL_IDENTITY
+value|0xFD24
+end_define
+
+begin_define
+define|#
+directive|define
 name|WI_RID_CFI_ACT_RANGE
 value|0xFD33
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_RID_COMMQUAL
+value|0xFD43
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_RID_SCALETHRESH
+value|0xFD46
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_RID_PCF
+value|0xFD87
 end_define
 
 begin_comment

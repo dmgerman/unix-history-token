@@ -1989,22 +1989,8 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Actual system scale thresholds (0xFD46).  */
+comment|/*  * Actual system scale thresholds (0xFC06, 0xFD46).  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_SYSTEM_SCALE
-value|0xFC06
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_RID_SCALETHRESH
-value|0xFD46
-end_define
 
 begin_struct
 struct|struct
@@ -2042,13 +2028,6 @@ begin_comment
 comment|/*  * PCF info struct (0xFD87).  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|WI_RID_PCF
-value|0xFD87
-end_define
-
 begin_struct
 struct|struct
 name|wi_ltv_pcf
@@ -2079,15 +2058,8 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Connection control characteristics.  * 1 == Basic Service Set (BSS)  * 2 == Wireless Distribudion System (WDS)  * 3 == Pseudo IBSS  */
+comment|/*  * Connection control characteristics. (0xFC00)  * 0 == IBSS (802.11 compliant mode) (Only PRISM2)  * 1 == Basic Service Set (BSS)  * 2 == Wireless Distribudion System (WDS)  * 3 == Pseudo IBSS   *	(Only PRISM2; not 802.11 compliant mode, testing use only)  * 6 == HOST AP (Only PRISM2)  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_PORTTYPE
-value|0xFC00
-end_define
 
 begin_define
 define|#
@@ -2111,22 +2083,8 @@ value|0x3
 end_define
 
 begin_comment
-comment|/*  * Mac addresses.  */
+comment|/*  * Mac addresses. (0xFC01, 0xFC08)  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_MAC_NODE
-value|0xFC01
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_RID_MAC_WDS
-value|0xFC08
-end_define
 
 begin_struct
 struct|struct
