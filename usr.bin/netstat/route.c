@@ -3488,6 +3488,7 @@ expr|struct
 name|ether_addr
 operator|*
 operator|)
+operator|(
 name|sdl
 operator|->
 name|sdl_data
@@ -3495,6 +3496,7 @@ operator|+
 name|sdl
 operator|->
 name|sdl_nlen
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
