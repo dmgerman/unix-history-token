@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)hexsyntax.c	8.2 (Berkeley) 5/4/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)hexsyntax.c	8.2 (Berkeley) 5/4/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -285,8 +304,10 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s: bad length value"
 argument_list|,
 name|optarg
@@ -328,8 +349,10 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s: bad skip value"
 argument_list|,
 name|optarg
@@ -433,7 +456,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"hexdump: [-bcCdovx] [-e fmt] [-f fmt_file] [-n length] [-s skip] [file ...]\n"
+literal|"%s\n%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: hexdump [-bcCdovx] [-e fmt] [-f fmt_file] [-n length]"
+argument_list|,
+literal|"               [-s skip] [file ...]"
+argument_list|,
+literal|"       hd      [-bcdovx]  [-e fmt] [-f fmt_file] [-n length]"
+argument_list|,
+literal|"               [-s skip] [file ...]"
 argument_list|)
 expr_stmt|;
 name|exit
