@@ -3646,14 +3646,21 @@ name|sc
 operator|->
 name|amr_dev
 argument_list|,
-literal|"I/O beyond end of unit (%llu,%d> %u)\n"
+literal|"I/O beyond end of unit (%lld,%d> %lu)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bio
 operator|->
 name|bio_pblkno
 argument_list|,
 name|blkcount
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sc
 operator|->
 name|amr_drive
