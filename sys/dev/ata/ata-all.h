@@ -1192,6 +1192,11 @@ name|int
 name|result
 decl_stmt|;
 comment|/* result error code */
+name|struct
+name|task
+name|task
+decl_stmt|;
+comment|/* task management */
 name|TAILQ_ENTRY
 argument_list|(
 argument|ata_request
@@ -1206,12 +1211,6 @@ argument_list|)
 name|chain
 expr_stmt|;
 comment|/* list management */
-name|TAILQ_ENTRY
-argument_list|(
-argument|ata_request
-argument_list|)
-name|request_link
-expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -1810,23 +1809,6 @@ modifier|*
 name|running
 decl_stmt|;
 comment|/* currently running request */
-name|struct
-name|task
-name|task
-decl_stmt|;
-comment|/* task management */
-name|struct
-name|mtx
-name|request_lock
-decl_stmt|;
-comment|/* queue lock */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ata_request
-argument_list|)
-name|complete_tqh
-expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -2357,20 +2339,6 @@ name|struct
 name|ata_request
 modifier|*
 name|request
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ata_completed
-parameter_list|(
-name|void
-modifier|*
-name|context
-parameter_list|,
-name|int
-name|pending
 parameter_list|)
 function_decl|;
 end_function_decl
