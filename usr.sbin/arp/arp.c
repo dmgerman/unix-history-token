@@ -53,7 +53,7 @@ specifier|const
 name|freebsdid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: arp.c,v 1.4 1996/02/08 21:05:52 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -336,13 +342,6 @@ name|hwaddr
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static

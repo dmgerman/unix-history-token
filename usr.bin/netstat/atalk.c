@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: atalk.c,v 1.6 1996/10/28 18:56:31 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,18 +67,6 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp_fsm.h>
 end_include
 
 begin_include

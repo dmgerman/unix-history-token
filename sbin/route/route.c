@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.16 1996/10/27 17:42:14 fenner Exp $"
+literal|"$Id: route.c,v 1.17 1996/11/01 20:30:37 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -185,25 +191,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<paths.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -221,19 +233,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_struct

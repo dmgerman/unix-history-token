@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1984, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  * from arp.c	8.2 (Berkeley) 1/2/94  * $Id: rtmsg.c,v 1.3 1995/01/30 11:11:43 dfr Exp $  */
+comment|/*  * from arp.c	8.2 (Berkeley) 1/2/94  * $Id: rtmsg.c,v 1.4 1995/05/30 05:45:49 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<sys/filio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include

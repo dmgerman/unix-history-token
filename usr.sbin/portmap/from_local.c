@@ -54,7 +54,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -66,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
+file|<syslog.h>
 end_include
 
 begin_include
@@ -78,13 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
+file|<netinet/in.h>
 end_include
 
 begin_ifndef

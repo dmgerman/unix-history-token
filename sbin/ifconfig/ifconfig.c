@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ifconfig.c,v 1.20 1996/11/21 19:36:09 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include

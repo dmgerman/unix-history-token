@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slstat.c,v 1.6 1996/10/11 18:47:10 wollman Exp $"
+literal|"$Id: slstat.c,v 1.7 1996/11/04 17:14:43 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pppstats.c,v 1.11 1995/07/11 06:41:45 paulus Exp $"
+literal|"$Id: pppstats.c,v 1.6 1995/10/31 21:41:59 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +23,30 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
 
 begin_include
 include|#
@@ -58,24 +82,6 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
 end_include
 
 begin_include

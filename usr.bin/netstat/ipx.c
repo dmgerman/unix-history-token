@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ipx.c,v 1.4 1996/10/28 18:56:39 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
 end_include
 
 begin_include

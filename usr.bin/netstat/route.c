@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.20 1996/10/09 18:19:07 wollman Exp $"
+literal|"$Id: route.c,v 1.21 1996/10/28 18:56:44 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
