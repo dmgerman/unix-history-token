@@ -10264,6 +10264,12 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|dev
+condition|)
 name|destroy_dev
 argument_list|(
 name|sc
