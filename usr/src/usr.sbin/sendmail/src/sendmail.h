@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.30.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.31 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.30.1.1		%G%"
+literal|"@(#)sendmail.h	5.31		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1586,6 +1586,32 @@ comment|/* hostname lookup end */
 end_comment
 
 begin_comment
+comment|/* bracket characters for generalized lookup */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOKUPBEGIN
+value|'\005'
+end_define
+
+begin_comment
+comment|/* generalized lookup begin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOKUPEND
+value|'\006'
+end_define
+
+begin_comment
+comment|/* generalized lookup end */
+end_comment
+
+begin_comment
 comment|/* \001 is also reserved as the macro expansion character */
 end_comment
 
@@ -1685,6 +1711,107 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* **  Mapping functions ** **	These allow arbitrary mappings in the config file.  The idea **	(albeit not the implementation) comes from IDA sendmail. */
+end_comment
+
+begin_comment
+comment|/* **  The class of a map -- essentially the functions to call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAPCLASS
+value|struct _mapclass
+end_define
+
+begin_macro
+name|MAPCLASS
+end_macro
+
+begin_block
+block|{
+name|bool
+function_decl|(
+modifier|*
+name|map_init
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* initialization function */
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|map_lookup
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* lookup function */
+block|}
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* **  An actual map. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP
+value|struct _map
+end_define
+
+begin_macro
+name|MAP
+end_macro
+
+begin_block
+block|{
+name|MAPCLASS
+modifier|*
+name|map_class
+decl_stmt|;
+comment|/* the class of this map */
+name|int
+name|map_flags
+decl_stmt|;
+comment|/* flags, see below */
+name|char
+modifier|*
+name|map_file
+decl_stmt|;
+comment|/* the (nominal) filename */
+block|}
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* bit values for map_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_VALID
+value|00001
+end_define
+
+begin_comment
+comment|/* this entry is valid */
+end_comment
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  Symbol table definitions */
 end_comment
 
@@ -1728,6 +1855,14 @@ modifier|*
 name|sv_alias
 decl_stmt|;
 comment|/* alias */
+name|MAPCLASS
+name|sv_mapclass
+decl_stmt|;
+comment|/* mapping function class */
+name|MAP
+name|sv_map
+decl_stmt|;
+comment|/* mapping function */
 name|MCONINFO
 name|sv_mci
 decl_stmt|;

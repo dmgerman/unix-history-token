@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.43 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.44 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.43 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.44 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1355,16 +1355,19 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *  MAPHOSTNAME -- turn a hostname into canonical form  *  *	Parameters:  *		hbuf -- a buffer containing a hostname.  *		hbsize -- the size of hbuf.  *  *	Returns:  *		TRUE if the host name was mapped.  *		FALSE otherwise.  *  *	Side Effects:  *		Looks up the host specified in hbuf.  If it is not  *		the canonical name for that host, replace it with  *		the canonical name.  If the name is unknown, or it  *		is already the canonical name, leave it unchanged.  */
+comment|/* **  MAPHOSTNAME -- turn a hostname into canonical form ** **	Parameters: **		hbuf -- a buffer containing a hostname. **		hbsize -- the size of hbuf. ** **	Returns: **		The mapping, if found. **		NULL if no mapping found. ** **	Side Effects: **		Looks up the host specified in hbuf.  If it is not **		the canonical name for that host, return the canonical **		name. */
 end_comment
 
 begin_function
-name|bool
+name|char
+modifier|*
 name|maphostname
 parameter_list|(
 name|hbuf
 parameter_list|,
 name|hbsize
+parameter_list|,
+name|avp
 parameter_list|)
 name|char
 modifier|*
@@ -1372,6 +1375,11 @@ name|hbuf
 decl_stmt|;
 name|int
 name|hbsize
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|avp
 decl_stmt|;
 block|{
 specifier|register
@@ -1398,6 +1406,16 @@ modifier|*
 name|gethostbyaddr
 parameter_list|()
 function_decl|;
+comment|/* allow room for trailing dot on correct match */
+if|if
+condition|(
+name|ConfigLevel
+operator|>=
+literal|2
+condition|)
+name|hbsize
+operator|--
+expr_stmt|;
 comment|/* 	 * If first character is a bracket, then it is an address 	 * lookup.  Address is copied into a temporary buffer to 	 * strip the brackets and to preserve hbuf if address is 	 * unknown. 	 */
 if|if
 condition|(
@@ -1406,16 +1424,43 @@ name|hbuf
 operator|!=
 literal|'['
 condition|)
-return|return
-operator|(
+block|{
+if|if
+condition|(
 name|getcanonname
 argument_list|(
 name|hbuf
 argument_list|,
 name|hbsize
 argument_list|)
+condition|)
+block|{
+comment|/* found a match -- add the trailing dot */
+if|if
+condition|(
+name|ConfigLevel
+operator|>=
+literal|2
+condition|)
+operator|(
+name|void
 operator|)
+name|strcat
+argument_list|(
+name|hbuf
+argument_list|,
+literal|"."
+argument_list|)
+expr_stmt|;
+return|return
+name|hbuf
 return|;
+block|}
+else|else
+return|return
+name|NULL
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1438,7 +1483,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|FALSE
+name|NULL
 operator|)
 return|;
 operator|*
@@ -1485,9 +1530,10 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|FALSE
+name|NULL
 operator|)
 return|;
+comment|/* found a match -- copy and dot terminate */
 if|if
 condition|(
 name|strlen
@@ -1522,10 +1568,24 @@ operator|->
 name|h_name
 argument_list|)
 expr_stmt|;
-return|return
+if|if
+condition|(
+name|ConfigLevel
+operator|>=
+literal|2
+condition|)
 operator|(
-name|TRUE
+name|void
 operator|)
+name|strcat
+argument_list|(
+name|hbuf
+argument_list|,
+literal|"."
+argument_list|)
+expr_stmt|;
+return|return
+name|hbuf
 return|;
 block|}
 end_function
@@ -1630,7 +1690,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAPHOSTNAME -- turn a hostname into canonical form ** **	Parameters: **		hbuf -- a buffer containing a hostname. **		hbsize -- the size of hbuf. ** **	Returns: **		TRUE if the hostname was mapped. **		FALSE otherwise. ** **	Side Effects: **		Looks up the host specified in hbuf.  If it is not **		the canonical name for that host, replace it with **		the canonical name.  If the name is unknown, or it **		is already the canonical name, leave it unchanged. */
+comment|/* **  MAPHOSTNAME -- turn a hostname into canonical form ** **	Parameters: **		hbuf -- a buffer containing a hostname. **		hbsize -- the size of hbuf. **		avp -- a pointer to a (cf file defined) argument vector. ** **	Returns: **		mapped host name **		FALSE otherwise. ** **	Side Effects: **		Looks up the host specified in hbuf.  If it is not **		the canonical name for that host, replace it with **		the canonical name.  If the name is unknown, or it **		is already the canonical name, leave it unchanged. */
 end_comment
 
 begin_comment
@@ -1638,12 +1698,15 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
-name|bool
+name|char
+modifier|*
 name|maphostname
 parameter_list|(
 name|hbuf
 parameter_list|,
 name|hbsize
+parameter_list|,
+name|avp
 parameter_list|)
 name|char
 modifier|*
@@ -1652,11 +1715,14 @@ decl_stmt|;
 name|int
 name|hbsize
 decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|avp
+decl_stmt|;
 block|{
 return|return
-operator|(
-name|FALSE
-operator|)
+name|NULL
 return|;
 block|}
 end_function

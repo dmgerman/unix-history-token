@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.48 (Berkeley) %G%"
+literal|"@(#)main.c	5.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3624,6 +3624,14 @@ block|,
 literal|']'
 block|,
 name|HOSTEND
+block|,
+literal|'('
+block|,
+name|LOOKUPBEGIN
+block|,
+literal|')'
+block|,
+name|LOOKUPEND
 block|,
 literal|'\0'
 block|}

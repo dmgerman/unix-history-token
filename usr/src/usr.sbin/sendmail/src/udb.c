@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.17 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	5.18 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.17 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	5.18 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,7 +99,7 @@ file|<db.h>
 end_include
 
 begin_comment
-comment|/* **  UDBEXPAND.C -- interface between sendmail and Berkeley User Data Base. ** **	This depends on the 4.4BSD db package. */
+comment|/* **  UDB.C -- interface between sendmail and Berkeley User Data Base. ** **	This depends on the 4.4BSD db package. */
 end_comment
 
 begin_struct
