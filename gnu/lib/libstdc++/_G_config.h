@@ -243,13 +243,18 @@ name|_G_wint_t
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
+begin_define
+define|#
+directive|define
+name|_G_NEED_STDARG_H
+end_define
+
+begin_define
+define|#
+directive|define
 name|_G_va_list
-typedef|;
-end_typedef
+value|va_list
+end_define
 
 begin_define
 define|#
