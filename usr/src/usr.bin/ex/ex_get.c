@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_get.c	7.3	%G%"
+literal|"@(#)ex_get.c	7.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -346,7 +346,6 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|intty
 condition|)
 block|{
@@ -460,44 +459,6 @@ goto|goto
 name|top
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* mjm:	if (read(0, (char *)&lastc, 1) != 1)	CHANGED and added else */
-if|if
-condition|(
-name|read
-argument_list|(
-literal|0
-argument_list|,
-specifier|inline
-argument_list|,
-literal|1
-argument_list|)
-operator|!=
-literal|1
-condition|)
-name|lastc
-operator|=
-name|EOF
-expr_stmt|;
-else|else
-comment|/* mjm: lastc is a short! */
-name|lastc
-operator|=
-specifier|inline
-index|[
-literal|0
-index|]
-expr_stmt|;
-comment|/* mjm: in rightmost 8 bits ! */
-return|return
-operator|(
-name|lastc
-operator|)
-return|;
-else|#
-directive|else
 name|c
 operator|=
 name|read
@@ -508,6 +469,8 @@ specifier|inline
 argument_list|,
 sizeof|sizeof
 expr|inline
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -523,6 +486,13 @@ operator|=
 name|EOF
 operator|)
 return|;
+specifier|inline
+index|[
+name|c
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|input
 operator|=
 specifier|inline
@@ -530,8 +500,6 @@ expr_stmt|;
 goto|goto
 name|top
 goto|;
-endif|#
-directive|endif
 block|}
 end_block
 
