@@ -369,23 +369,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-operator|!
-name|bootfile
-operator|||
-operator|(
-operator|!
-operator|(
-operator|*
-name|bootfile
-operator|)
-operator|)
-condition|)
-name|bootfile
-operator|=
-name|DEFAULT_BOOTFILE
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"station IP %I, server IP %I\r\n"
@@ -2424,13 +2407,14 @@ expr_stmt|;
 comment|/* Kill arp */
 if|if
 condition|(
-operator|*
-operator|(
 name|reply
 operator|->
 name|bp_file
-operator|)
+index|[
+literal|0
+index|]
 condition|)
+block|{
 name|bcopy
 argument_list|(
 name|reply
@@ -2446,6 +2430,7 @@ name|bootfile
 operator|=
 name|bootname
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1
