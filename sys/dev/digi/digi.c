@@ -1619,7 +1619,7 @@ if|if
 condition|(
 name|i
 operator|>
-literal|100
+name|hz
 condition|)
 block|{
 name|log
@@ -1983,7 +1983,7 @@ if|if
 condition|(
 name|i
 operator|>
-literal|100
+name|hz
 condition|)
 block|{
 name|log
@@ -2056,7 +2056,9 @@ if|if
 condition|(
 name|i
 operator|>
-literal|200
+literal|2
+operator|*
+name|hz
 condition|)
 block|{
 name|log
@@ -2335,7 +2337,7 @@ if|if
 condition|(
 name|i
 operator|>
-literal|100
+name|hz
 condition|)
 block|{
 name|log
@@ -2844,7 +2846,9 @@ if|if
 condition|(
 name|i
 operator|>
-literal|200
+literal|2
+operator|*
+name|hz
 condition|)
 block|{
 name|log
