@@ -2726,12 +2726,9 @@ begin_comment
 comment|/* Define if you have the krb4 package. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|KRB4
-value|1
-end_define
+begin_comment
+comment|/* #define KRB4 1 */
+end_comment
 
 begin_comment
 comment|/* define if krb_put_int takes four arguments. */
