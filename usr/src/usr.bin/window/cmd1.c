@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	1.1 83/07/18"
+literal|"@(#)cmd1.c	1.2 83/07/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,14 +196,9 @@ argument_list|()
 operator|<
 literal|0
 condition|)
-block|{
-name|wwflush
-argument_list|()
-expr_stmt|;
 name|bread
 argument_list|()
 expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|getpos
@@ -228,9 +223,14 @@ name|WBoxActive
 operator|=
 literal|0
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+name|wwputs
+argument_list|(
+literal|"\r\nCancelled.  "
+argument_list|,
+name|cmdwin
+argument_list|)
+expr_stmt|;
+return|return;
 case|case
 literal|1
 case|:
@@ -242,15 +242,11 @@ continue|continue;
 block|}
 break|break;
 block|}
-name|wwprintf
+name|wwputs
 argument_list|(
+literal|"\r\nLower right corner: "
+argument_list|,
 name|cmdwin
-argument_list|,
-literal|"%d %d.  Upper left corner: "
-argument_list|,
-name|col
-argument_list|,
-name|row
 argument_list|)
 expr_stmt|;
 name|xcol
@@ -307,14 +303,9 @@ argument_list|()
 operator|<
 literal|0
 condition|)
-block|{
-name|wwflush
-argument_list|()
-expr_stmt|;
 name|bread
 argument_list|()
 expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|getpos
@@ -343,9 +334,14 @@ name|WBoxActive
 operator|=
 literal|0
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+name|wwputs
+argument_list|(
+literal|"\r\nCancelled.  "
+argument_list|,
+name|cmdwin
+argument_list|)
+expr_stmt|;
+return|return;
 case|case
 literal|1
 case|:
@@ -361,15 +357,11 @@ name|WBoxActive
 operator|=
 literal|0
 expr_stmt|;
-name|wwprintf
+name|wwputs
 argument_list|(
+literal|"\r\n"
+argument_list|,
 name|cmdwin
-argument_list|,
-literal|"%d %d.  "
-argument_list|,
-name|xcol
-argument_list|,
-name|xrow
 argument_list|)
 expr_stmt|;
 if|if
@@ -404,11 +396,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|wwprintf
+name|wwputs
 argument_list|(
-name|cmdwin
-argument_list|,
 literal|"Can't open window.  "
+argument_list|,
+name|cmdwin
 argument_list|)
 expr_stmt|;
 return|return;
@@ -508,15 +500,6 @@ expr_stmt|;
 else|else
 name|wwsetcurrent
 argument_list|(
-name|cmdwin
-argument_list|)
-expr_stmt|;
-name|out
-label|:
-name|wwputs
-argument_list|(
-literal|"\r\n"
-argument_list|,
 name|cmdwin
 argument_list|)
 expr_stmt|;
@@ -779,6 +762,13 @@ return|return
 literal|1
 return|;
 default|default:
+name|wwputs
+argument_list|(
+literal|"\r\nType [hjklHJKL] to move, return to enter position, escape to cancel."
+argument_list|,
+name|cmdwin
+argument_list|)
+expr_stmt|;
 name|Ding
 argument_list|()
 expr_stmt|;

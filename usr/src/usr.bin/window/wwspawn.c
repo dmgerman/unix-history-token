@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwspawn.c	1.3 83/07/18"
+literal|"@(#)wwspawn.c	1.4 83/07/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,13 @@ include|#
 directive|include
 file|"ww.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|_wwdtablesize
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|wwfork
@@ -219,8 +226,7 @@ for|for
 control|(
 name|i
 operator|=
-name|getdtablesize
-argument_list|()
+name|_wwdtablesize
 operator|-
 literal|1
 init|;

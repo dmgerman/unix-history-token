@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwiomux.c	1.3 83/07/18"
+literal|"@(#)wwiomux.c	1.4 83/07/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,13 @@ include|#
 directive|include
 file|"ww.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|_wwdtablesize
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|wwforce
@@ -91,8 +98,7 @@ name|n
 operator|=
 name|select
 argument_list|(
-name|getdtablesize
-argument_list|()
+name|_wwdtablesize
 argument_list|,
 name|imask
 argument_list|,

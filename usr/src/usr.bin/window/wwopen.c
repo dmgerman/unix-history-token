@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwopen.c	1.3 83/07/18"
+literal|"@(#)wwopen.c	1.4 83/07/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,7 @@ name|ww
 modifier|*
 name|wwopen
 parameter_list|(
-name|flag
+name|mode
 parameter_list|,
 name|id
 parameter_list|,
@@ -105,7 +105,7 @@ literal|1
 expr_stmt|;
 switch|switch
 condition|(
-name|flag
+name|mode
 condition|)
 block|{
 case|case
@@ -194,6 +194,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* don't show cursor */
+name|w
+operator|->
+name|ww_mode
+operator|=
+name|mode
+expr_stmt|;
 name|w
 operator|->
 name|ww_ident

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	1.3 83/07/18"
+literal|"@(#)wwinit.c	1.4 83/07/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|_wwdtablesize
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|wwinit
 argument_list|()
@@ -124,6 +130,11 @@ literal|0
 return|;
 name|done
 operator|++
+expr_stmt|;
+name|_wwdtablesize
+operator|=
+name|getdtablesize
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

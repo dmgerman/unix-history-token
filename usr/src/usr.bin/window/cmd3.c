@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd3.c	1.1 83/07/18"
+literal|"@(#)cmd3.c	1.2 83/07/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,6 +165,34 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|w
+operator|->
+name|ww_state
+operator|==
+name|WW_HASPROC
+operator|&&
+name|w
+operator|->
+name|ww_pid
+operator|==
+literal|0
+condition|)
+block|{
+name|wwprintf
+argument_list|(
+name|cmdwin
+argument_list|,
+literal|"%d: pid == 0.  "
+argument_list|,
+name|w
+operator|->
+name|ww_ident
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|wwclose
 argument_list|(
 name|w1

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	1.1 83/07/18"
+literal|"@(#)cmd.c	1.2 83/07/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -242,6 +242,13 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
+literal|'Q'
+case|:
+name|doquery
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
 literal|'r'
 case|:
 name|selwin
@@ -348,11 +355,13 @@ default|default:
 name|Ding
 argument_list|()
 expr_stmt|;
-name|wwputs
+name|wwprintf
 argument_list|(
-literal|"Type ? for help.  "
-argument_list|,
 name|cmdwin
+argument_list|,
+literal|"(%x) Type ? for help.  "
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 break|break;
@@ -389,14 +398,9 @@ argument_list|()
 operator|<
 literal|0
 condition|)
-block|{
-name|wwflush
-argument_list|()
-expr_stmt|;
 name|bread
 argument_list|()
 expr_stmt|;
-block|}
 goto|goto
 name|top
 goto|;
@@ -449,14 +453,9 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|wwflush
-argument_list|()
-expr_stmt|;
 name|bread
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|c

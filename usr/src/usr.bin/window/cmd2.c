@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	1.1 83/07/18"
+literal|"@(#)cmd2.c	1.2 83/07/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,7 +72,7 @@ name|w
 operator|=
 name|openwin
 argument_list|(
-literal|20
+literal|22
 argument_list|,
 literal|"Help"
 argument_list|)
@@ -99,14 +99,14 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%%[1-9]  select window [1-9]\r\n"
+literal|"[1-9]   select window [1-9] and exit command mode\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"[1-9]   select window [1-9] and exit command mode\r\n"
+literal|"%%[1-9]  select window [1-9]\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
@@ -121,6 +121,20 @@ argument_list|(
 name|w
 argument_list|,
 literal|"C       close all empty windows\r\n"
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"Z       close all windows\r\n"
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"Q       show all windows in sequence\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
@@ -193,6 +207,11 @@ argument_list|,
 literal|".       quit\r\n"
 argument_list|)
 expr_stmt|;
+name|waitnl
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 name|closewin
 argument_list|(
 name|w
@@ -231,7 +250,7 @@ name|w
 operator|=
 name|openwin
 argument_list|(
-literal|9
+literal|8
 argument_list|,
 literal|"Time"
 argument_list|)
@@ -417,6 +436,11 @@ argument_list|,
 name|rusage
 operator|.
 name|ru_nivcsw
+argument_list|)
+expr_stmt|;
+name|waitnl
+argument_list|(
+name|w
 argument_list|)
 expr_stmt|;
 name|closewin
@@ -665,7 +689,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|closewin
+name|waitnl
 argument_list|(
 name|w
 argument_list|)
@@ -710,14 +734,27 @@ argument_list|()
 operator|<
 literal|0
 condition|)
-block|{
-name|wwflush
-argument_list|()
-expr_stmt|;
 name|bread
 argument_list|()
 expr_stmt|;
 block|}
+end_block
+
+begin_expr_stmt
+name|closewin
+argument_list|(
+name|w
+argument_list|)
+specifier|register
+expr|struct
+name|ww
+operator|*
+name|w
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
 name|wwclose
 argument_list|(
 name|w
