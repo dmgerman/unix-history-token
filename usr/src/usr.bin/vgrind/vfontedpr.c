@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfontedpr.c	5.1 (Berkeley) %G%"
+literal|"@(#)vfontedpr.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1488,6 +1488,43 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+name|ps
+argument_list|(
+literal|"'wh 0 vH\n"
+argument_list|)
+expr_stmt|;
+name|ps
+argument_list|(
+literal|"'wh -1i vF\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|needbp
+condition|)
+block|{
+name|needbp
+operator|=
+literal|0
+expr_stmt|;
+name|printf
+argument_list|(
+literal|".()\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|".bp\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|filter
+condition|)
+block|{
 name|fstat
 argument_list|(
 name|fileno
@@ -1534,36 +1571,6 @@ argument_list|,
 name|cp
 operator|+
 literal|20
-argument_list|)
-expr_stmt|;
-name|ps
-argument_list|(
-literal|"'wh 0 vH\n"
-argument_list|)
-expr_stmt|;
-name|ps
-argument_list|(
-literal|"'wh -1i vF\n"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|needbp
-condition|)
-block|{
-name|needbp
-operator|=
-literal|0
-expr_stmt|;
-name|printf
-argument_list|(
-literal|".()\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|".bp\n"
 argument_list|)
 expr_stmt|;
 block|}
