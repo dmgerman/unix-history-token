@@ -23,12 +23,28 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/elf32.h>
+end_include
+
+begin_comment
+comment|/* Definitions common to all 32 bit architectures. */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/elf64.h>
 end_include
 
 begin_comment
 comment|/* Definitions common to all 64 bit architectures. */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ELF_WORD_SIZE
+end_ifndef
 
 begin_define
 define|#
@@ -40,6 +56,11 @@ end_define
 begin_comment
 comment|/* Used by<sys/elf_generic.h> */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -67,6 +88,29 @@ end_define
 begin_comment
 comment|/*  * Auxiliary vector entries for passing information to the interpreter.  */
 end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+comment|/* Auxiliary vector entry on initial stack */
+name|int
+name|a_type
+decl_stmt|;
+comment|/* Entry type. */
+union|union
+block|{
+name|int
+name|a_val
+decl_stmt|;
+comment|/* Integer value. */
+block|}
+name|a_un
+union|;
+block|}
+name|Elf32_Auxinfo
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
