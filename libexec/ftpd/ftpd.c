@@ -55,7 +55,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftpd.c,v 1.43 1997/11/21 07:38:42 charnier Exp $"
+literal|"$Id: ftpd.c,v 1.44 1997/12/24 19:13:22 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -9536,9 +9536,16 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"connection from %s"
+literal|"connection from %s (%s)"
 argument_list|,
 name|remotehost
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|sin
+operator|->
+name|sin_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
