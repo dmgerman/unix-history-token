@@ -525,8 +525,10 @@ begin_decl_stmt
 specifier|extern
 name|pd_entry_t
 name|PTDpde
+index|[]
 decl_stmt|,
 name|APTDpde
+index|[]
 decl_stmt|;
 end_decl_stmt
 
