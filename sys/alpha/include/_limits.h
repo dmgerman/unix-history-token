@@ -6,19 +6,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_LIMITS_H_
+name|_MACHINE__LIMITS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_LIMITS_H_
+name|_MACHINE__LIMITS_H_
 end_define
 
 begin_define
 define|#
 directive|define
-name|CHAR_BIT
+name|__CHAR_BIT
 value|8
 end_define
 
@@ -26,14 +26,10 @@ begin_comment
 comment|/* number of bits in a char */
 end_comment
 
-begin_comment
-comment|/*  * According to ANSI (section 2.2.4.2), the values below must be usable by  * #if preprocessing directives.  Additionally, the expression must have the  * same type as would an expression that is an object of the corresponding  * type converted according to the integral promotions.  The subtraction for  * INT_MIN, etc., is so the value is not unsigned; e.g., 0x80000000 is an  * unsigned int for 32-bit two's complement ANSI compilers (section 3.1.3.2).  * These numbers are for the default configuration of gcc.  They work for  * some other compilers as well, but this should not be depended on.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|SCHAR_MAX
+name|__SCHAR_MAX
 value|0x7f
 end_define
 
@@ -44,7 +40,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCHAR_MIN
+name|__SCHAR_MIN
 value|(-0x7f-1)
 end_define
 
@@ -55,7 +51,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UCHAR_MAX
+name|__UCHAR_MAX
 value|0xffU
 end_define
 
@@ -66,7 +62,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHAR_MAX
+name|__CHAR_MAX
 value|0x7f
 end_define
 
@@ -77,7 +73,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHAR_MIN
+name|__CHAR_MIN
 value|(-0x7f-1)
 end_define
 
@@ -88,7 +84,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USHRT_MAX
+name|__USHRT_MAX
 value|0xffffU
 end_define
 
@@ -99,7 +95,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SHRT_MAX
+name|__SHRT_MAX
 value|0x7fff
 end_define
 
@@ -110,7 +106,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SHRT_MIN
+name|__SHRT_MIN
 value|(-0x7fff-1)
 end_define
 
@@ -121,7 +117,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UINT_MAX
+name|__UINT_MAX
 value|0xffffffffU
 end_define
 
@@ -132,7 +128,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INT_MAX
+name|__INT_MAX
 value|0x7fffffff
 end_define
 
@@ -143,7 +139,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INT_MIN
+name|__INT_MIN
 value|(-0x7fffffff-1)
 end_define
 
@@ -154,7 +150,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ULONG_MAX
+name|__ULONG_MAX
 value|0xffffffffffffffffUL
 end_define
 
@@ -165,7 +161,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LONG_MAX
+name|__LONG_MAX
 value|0x7fffffffffffffffL
 end_define
 
@@ -176,7 +172,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LONG_MIN
+name|__LONG_MIN
 value|(-0x7fffffffffffffffL-1)
 end_define
 
@@ -195,14 +191,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ULLONG_MAX
+name|__ULLONG_MAX
 value|0xffffffffffffffffULL
 end_define
 
 begin_define
 define|#
 directive|define
-name|LLONG_MAX
+name|__LLONG_MAX
 value|0x7fffffffffffffffLL
 end_define
 
@@ -213,7 +209,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LLONG_MIN
+name|__LLONG_MIN
 value|(-0x7fffffffffffffffLL-1)
 end_define
 
@@ -221,48 +217,22 @@ begin_comment
 comment|/* min for a long long */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
-name|SSIZE_MAX
-value|LONG_MAX
+name|__SSIZE_MAX
+value|__LONG_MAX
 end_define
 
 begin_comment
 comment|/* max value for a ssize_t */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_XOPEN_SOURCE
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
-name|SIZE_T_MAX
-value|ULONG_MAX
+name|__SIZE_T_MAX
+value|__ULONG_MAX
 end_define
 
 begin_comment
@@ -272,8 +242,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OFF_MAX
-value|LONG_MAX
+name|__OFF_MAX
+value|__LONG_MAX
 end_define
 
 begin_comment
@@ -283,8 +253,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OFF_MIN
-value|LONG_MIN
+name|__OFF_MIN
+value|__LONG_MIN
 end_define
 
 begin_comment
@@ -298,8 +268,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UQUAD_MAX
-value|(ULONG_MAX)
+name|__UQUAD_MAX
+value|(__ULONG_MAX)
 end_define
 
 begin_comment
@@ -309,8 +279,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|QUAD_MAX
-value|(LONG_MAX)
+name|__QUAD_MAX
+value|(__LONG_MAX)
 end_define
 
 begin_comment
@@ -320,108 +290,67 @@ end_comment
 begin_define
 define|#
 directive|define
-name|QUAD_MIN
-value|(LONG_MIN)
+name|__QUAD_MIN
+value|(__LONG_MIN)
 end_define
 
 begin_comment
 comment|/* min value for a quad_t */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_POSIX_SOURCE&& !_XOPEN_SOURCE */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_ANSI_SOURCE */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|_XOPEN_SOURCE
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
-name|LONG_BIT
+name|__LONG_BIT
 value|64
 end_define
 
 begin_define
 define|#
 directive|define
-name|WORD_BIT
+name|__WORD_BIT
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|DBL_DIG
+name|__DBL_DIG
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|DBL_MAX
+name|__DBL_MAX
 value|1.7976931348623157E+308
 end_define
 
 begin_define
 define|#
 directive|define
-name|DBL_MIN
+name|__DBL_MIN
 value|2.2250738585072014E-308
 end_define
 
 begin_define
 define|#
 directive|define
-name|FLT_DIG
+name|__FLT_DIG
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|FLT_MAX
+name|__FLT_MAX
 value|3.40282347E+38F
 end_define
 
 begin_define
 define|#
 directive|define
-name|FLT_MIN
+name|__FLT_MIN
 value|1.17549435E-38F
 end_define
 
@@ -436,7 +365,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_LIMITS_H_ */
+comment|/* !_MACHINE__LIMITS_H_ */
 end_comment
 
 end_unit
