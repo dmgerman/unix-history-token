@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.25	81/03/21	*/
+comment|/*	uba.c	4.26	81/03/22	*/
 end_comment
 
 begin_include
@@ -1725,22 +1725,6 @@ name|VAX750
 case|case
 name|VAX_750
 case|:
-name|mtpr
-argument_list|(
-name|IUR
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* give devices time to recover from power fail */
-comment|/* THIS IS PROBABLY UNNECESSARY */
-name|DELAY
-argument_list|(
-literal|5000000
-argument_list|)
-expr_stmt|;
-comment|/* END PROBABLY UNNECESSARY */
-break|break;
 endif|#
 directive|endif
 if|#
@@ -1749,6 +1733,34 @@ name|VAX730
 case|case
 name|VAX_730
 case|:
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX750
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX730
+argument_list|)
+name|mtpr
+argument_list|(
+name|IUR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* give devices time to recover from power fail */
+comment|/* THIS IS PROBABLY UNNECESSARY */
+name|DELAY
+argument_list|(
+literal|500000
+argument_list|)
+expr_stmt|;
+comment|/* END PROBABLY UNNECESSARY */
 break|break;
 endif|#
 directive|endif
