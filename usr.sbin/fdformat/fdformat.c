@@ -538,7 +538,7 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-comment|/* big enough for "/dev/rfd0a"... */
+comment|/* big enough for "/dev/fd0a"... */
 name|memset
 argument_list|(
 name|namebuff
@@ -574,7 +574,7 @@ name|strcpy
 argument_list|(
 name|namebuff
 argument_list|,
-literal|"/dev/r"
+literal|"/dev/"
 argument_list|)
 expr_stmt|;
 name|strncat
