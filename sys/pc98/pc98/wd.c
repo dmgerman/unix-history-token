@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* TODO:  *	o Bump error count after timeout.  *	o Satisfy ATA timing in all cases.  *	o Finish merging berry/sos timeout code (bump error count...).  *	o Don't use polling except for initialization.  Need to  *	  reorganize the state machine.  Then "extra" interrupts  *	  shouldn't happen (except maybe one for initialization).  *	o Support extended DOS partitions.  *	o Support swapping to DOS partitions.  *	o Handle bad sectors, clustering, disklabelling, DOS  *	  partitions and swapping driver-independently.  Use  *	  i386/dkbad.c for bad sectors.  Swapping will need new  *	  driver entries for polled reinit and polled write).  */
+comment|/* TODO:  *	o Bump error count after timeout.  *	o Satisfy ATA timing in all cases.  *	o Finish merging berry/sos timeout code (bump error count...).  *	o Don't use polling except for initialization.  Need to  *	  reorganize the state machine.  Then "extra" interrupts  *	  shouldn't happen (except maybe one for initialization).  *	o Support extended DOS partitions.  *	o Support swapping to DOS partitions.  *	o Handle clustering, disklabelling, DOS  *	  partitions and swapping driver-independently.   *	  Swapping will need new  *	  driver entries for polled reinit and polled write).  */
 end_comment
 
 begin_include
@@ -601,11 +601,6 @@ directive|define
 name|DKFL_MULTI
 value|0x00200
 comment|/* use multi-i/o mode */
-define|#
-directive|define
-name|DKFL_BADSCAN
-value|0x00400
-comment|/* report all errors */
 define|#
 directive|define
 name|DKFL_USEDMA
@@ -3889,7 +3884,7 @@ argument|if (wdtab[du->dk_ctrlr_cmd640].b_active ==
 literal|2
 argument|) 		wdtab[du->dk_ctrlr_cmd640].b_active =
 literal|0
-argument|;  	du->dk_flags&= ~DKFL_BADSCAN;
+argument|;
 comment|/* spin waiting for anybody else reading the disk label */
 argument|while (du->dk_flags& DKFL_LABELLING) 		tsleep((caddr_t)&du->dk_flags, PZERO -
 literal|1
@@ -3926,7 +3921,7 @@ argument|); 		}
 comment|/* 		 * Read label using RAW_PART partition. 		 * 		 * If the drive has an MBR, then the current geometry (from 		 * wdgetctlr()) is used to read it; then the BIOS/DOS 		 * geometry is inferred and used to read the label off the 		 * 'c' partition.  Otherwise the label is read using the 		 * current geometry.  The label gives the final geometry. 		 * If bad sector handling is enabled, then this geometry 		 * is used to read the bad sector table.  The geometry 		 * changes occur inside readdisklabel() and are propagated 		 * to the driver by resetting the state machine. 		 * 		 * XXX can now handle changes directly since dsinit() doesn't 		 * do too much. 		 */
 argument|msg = correct_readdisklabel(dkmodpart(dev, RAW_PART),&du->dk_dd);
 comment|/* XXX check value returned by wdwsetctlr(). */
-argument|wdwsetctlr(du); 		du->dk_flags&= ~DKFL_LABELLING; 		if (msg != NULL) { 			log(LOG_WARNING,
+argument|wdwsetctlr(du); 		if (msg == NULL&& du->dk_dd.d_flags& D_BADSECT) 			msg = readbad144(dkmodpart(dev, RAW_PART),&du->dk_dd,&du->dk_bad); 		du->dk_flags&= ~DKFL_LABELLING; 		if (msg != NULL) { 			log(LOG_WARNING,
 literal|"wd%d: cannot find label (%s)\n"
 argument|, 			    lunit, msg); 			if (part != RAW_PART) 				return (EINVAL);
 comment|/* XXX needs translation */
@@ -4324,7 +4319,7 @@ directive|endif
 argument|bootinfo.bi_n_bios_used ++; 			return
 literal|0
 argument|; 		}
-comment|/* 		 * Fake minimal drive geometry for reading the MBR. 		 * readdisklabel() may enlarge it to read the label and the 		 * bad sector table. 		 */
+comment|/* 		 * Fake minimal drive geometry for reading the MBR. 		 * readdisklabel() may enlarge it to read the label. 		 */
 argument|du->dk_dd.d_secsize = DEV_BSIZE; 		du->dk_dd.d_nsectors =
 literal|17
 argument|; 		du->dk_dd.d_ntracks =
@@ -4513,7 +4508,9 @@ literal|2
 argument|);
 endif|#
 directive|endif
-argument|return (ENOTTY); }  int wdsize(dev_t dev) { 	struct disk *du; 	int	lunit;  	lunit = dkunit(dev); 	if (lunit>= NWD || dktype(dev) !=
+argument|switch (cmd) { 	case DIOCSBADSCAN: 		if (*(int *)addr) 			du->dk_flags |= DKFL_BADSCAN; 		else 			du->dk_flags&= ~DKFL_BADSCAN; 		return (
+literal|0
+argument|);  	default: 		return (ENOTTY); 	} }  int wdsize(dev_t dev) { 	struct disk *du; 	int	lunit;  	lunit = dkunit(dev); 	if (lunit>= NWD || dktype(dev) !=
 literal|0
 argument|) 		return (-
 literal|1
@@ -4544,7 +4541,7 @@ else|#
 directive|else
 argument|register struct disk *du; 	struct disklabel *lp; 	long	num;
 comment|/* number of sectors to write */
-argument|int	lunit, part; 	long	blkoff, blknum; 	long	blkchk, blkcnt, blknext; 	u_long	ds_offset; 	u_long	nblocks; 	static int wddoingadump =
+argument|int	lunit, part; 	long	blkoff, blknum; 	long	blkcnt, blknext; 	u_long	ds_offset; 	u_long	nblocks; 	static int wddoingadump =
 literal|0
 argument|; 	long	cylin, head, sector; 	long	secpertrk, secpercyl; 	char   *addr;
 comment|/* Toss any characters present prior to dump. */
@@ -4623,7 +4620,6 @@ argument|if ((blknum + blkcnt -
 literal|1
 argument|) / secpercyl != blknum / secpercyl) 			blkcnt = secpercyl - (blknum % secpercyl); 		blknext = blknum + blkcnt;
 comment|/* 		 * See if one of the sectors is in the bad sector list 		 * (if we have one).  If the first sector is bad, then 		 * reduce the transfer to this one bad sector; if another 		 * sector is bad, then reduce reduce the transfer to 		 * avoid any bad sectors. 		 */
-argument|out:
 comment|/* Compute disk address. */
 argument|cylin = blknum / secpercyl; 		head = (blknum % secpercyl) / secpertrk; 		sector = blknum % secpertrk;
 if|#
