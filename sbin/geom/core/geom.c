@@ -2242,13 +2242,11 @@ argument_list|(
 name|path
 argument_list|)
 argument_list|,
-literal|"%s/geom_%s.so.%u"
+literal|"%s/geom_%s.so"
 argument_list|,
 name|CLASS_DIR
 argument_list|,
 name|class_name
-argument_list|,
-name|CLASS_MAJOR
 argument_list|)
 expr_stmt|;
 name|dlh
