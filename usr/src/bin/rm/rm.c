@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rm.c	8.2 (Berkeley) %G%"
+literal|"@(#)rm.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -463,6 +463,31 @@ block|{
 case|case
 name|FTS_DNR
 case|:
+if|if
+condition|(
+operator|!
+name|fflag
+operator|||
+name|errno
+operator|!=
+name|ENOENT
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"%s"
+argument_list|,
+name|p
+operator|->
+name|fts_path
+argument_list|)
+expr_stmt|;
+name|eval
+operator|=
+literal|1
+expr_stmt|;
+block|}
+continue|continue;
 case|case
 name|FTS_ERR
 case|:
