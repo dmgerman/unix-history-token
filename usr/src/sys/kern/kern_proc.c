@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.38	82/09/08	*/
+comment|/*	kern_proc.c	4.39	82/09/12	*/
 end_comment
 
 begin_include
@@ -2976,7 +2976,7 @@ name|SIG_IGN
 expr_stmt|;
 name|untimeout
 argument_list|(
-name|unrto
+name|realitexpire
 argument_list|,
 name|p
 argument_list|)
@@ -3598,6 +3598,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_include
+include|#
+directive|include
+file|<vtimes.h>
+end_include
+
 begin_macro
 name|owait
 argument_list|()
@@ -3608,9 +3614,13 @@ block|{
 name|struct
 name|rusage
 name|ru
-decl_stmt|,
+decl_stmt|;
+name|struct
+name|vtimes
 modifier|*
-name|rup
+name|vtp
+decl_stmt|,
+name|avt
 decl_stmt|;
 if|if
 condition|(
@@ -3642,11 +3652,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|rup
+name|vtp
 operator|=
 operator|(
 expr|struct
-name|rusage
+name|vtimes
 operator|*
 operator|)
 name|u
@@ -3676,6 +3686,15 @@ operator|.
 name|u_error
 condition|)
 return|return;
+name|getvtimes
+argument_list|(
+operator|&
+name|ru
+argument_list|,
+operator|&
+name|avt
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3685,17 +3704,17 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|ru
+name|avt
 argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|rup
+name|vtp
 argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|rusage
+name|vtimes
 argument_list|)
 argument_list|)
 expr_stmt|;
