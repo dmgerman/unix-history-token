@@ -1328,7 +1328,7 @@ operator|<
 literal|0
 operator|||
 name|iflag
-operator|>=
+operator|>
 name|SMB_MAXBLOCKSIZE
 condition|)
 name|errx
@@ -1374,7 +1374,7 @@ operator|<
 literal|0
 operator|||
 name|oflag
-operator|>=
+operator|>
 name|SMB_MAXBLOCKSIZE
 condition|)
 name|errx
