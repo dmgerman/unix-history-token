@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.16 (Berkeley) %G%"
+literal|"@(#)lex.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -677,8 +677,14 @@ begin_function
 name|void
 name|prlex
 parameter_list|(
+name|fp
+parameter_list|,
 name|sp0
 parameter_list|)
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 name|struct
 name|wordent
 modifier|*
@@ -701,8 +707,13 @@ init|;
 condition|;
 control|)
 block|{
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"%s"
 argument_list|,
 name|short2str
@@ -737,9 +748,14 @@ index|]
 operator|!=
 literal|'\n'
 condition|)
-name|xputchar
+operator|(
+name|void
+operator|)
+name|fputc
 argument_list|(
 literal|' '
+argument_list|,
+name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -6060,8 +6076,13 @@ argument_list|,
 name|SIGHUP
 argument_list|)
 expr_stmt|;
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|csherr
+argument_list|,
 literal|"Reset tty pgrp from %d to %d\n"
 argument_list|,
 name|ctpgrp
@@ -6085,14 +6106,24 @@ if|if
 condition|(
 name|loginsh
 condition|)
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|csherr
+argument_list|,
 literal|"\nUse \"logout\" to logout.\n"
 argument_list|)
 expr_stmt|;
 else|else
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|csherr
+argument_list|,
 literal|"\nUse \"exit\" to leave csh.\n"
 argument_list|)
 expr_stmt|;

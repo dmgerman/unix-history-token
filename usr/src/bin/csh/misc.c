@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.13 (Berkeley) %G%"
+literal|"@(#)misc.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -319,8 +319,14 @@ begin_function
 name|void
 name|blkpr
 parameter_list|(
+name|fp
+parameter_list|,
 name|av
 parameter_list|)
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 specifier|register
 name|Char
 modifier|*
@@ -338,8 +344,13 @@ name|av
 operator|++
 control|)
 block|{
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"%s"
 argument_list|,
 name|short2str
@@ -356,8 +367,13 @@ index|[
 literal|1
 index|]
 condition|)
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
@@ -1064,7 +1080,7 @@ name|SHOUT
 operator|&&
 name|f
 operator|!=
-name|SHDIAG
+name|SHERR
 operator|&&
 name|f
 operator|!=

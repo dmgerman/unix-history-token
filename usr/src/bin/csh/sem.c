@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sem.c	5.18 (Berkeley) %G%"
+literal|"@(#)sem.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -738,7 +738,11 @@ name|t
 operator|->
 name|t_dflg
 operator|&
+operator|(
 name|F_PIPEIN
+operator||
+name|F_PIPEOUT
+operator|)
 operator|)
 operator|!=
 literal|0
@@ -848,7 +852,7 @@ name|oSHIN
 decl_stmt|,
 name|oSHOUT
 decl_stmt|,
-name|oSHDIAG
+name|oSHERR
 decl_stmt|,
 name|oOLDSTD
 decl_stmt|,
@@ -925,9 +929,9 @@ name|oSHOUT
 operator|=
 name|SHOUT
 expr_stmt|;
-name|oSHDIAG
+name|oSHERR
 operator|=
-name|SHDIAG
+name|SHERR
 expr_stmt|;
 name|oOLDSTD
 operator|=
@@ -1018,9 +1022,9 @@ name|SHOUT
 operator|=
 name|oSHOUT
 expr_stmt|;
-name|SHDIAG
+name|SHERR
 operator|=
-name|oSHDIAG
+name|oSHERR
 expr_stmt|;
 name|OLDSTD
 operator|=
@@ -1540,6 +1544,8 @@ condition|)
 block|{
 name|doexec
 argument_list|(
+name|NULL
+argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
@@ -1564,13 +1570,13 @@ argument_list|,
 name|FSHOUT
 argument_list|)
 expr_stmt|;
-name|SHDIAG
+name|SHERR
 operator|=
 name|dcopy
 argument_list|(
 literal|2
 argument_list|,
-name|FSHDIAG
+name|FSHERR
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2120,7 +2126,7 @@ name|void
 operator|)
 name|dcopy
 argument_list|(
-name|SHDIAG
+name|SHERR
 argument_list|,
 literal|2
 argument_list|)
@@ -2416,7 +2422,7 @@ name|void
 operator|)
 name|dcopy
 argument_list|(
-name|SHDIAG
+name|SHERR
 argument_list|,
 literal|2
 argument_list|)
@@ -2662,7 +2668,7 @@ name|void
 operator|)
 name|dup
 argument_list|(
-name|SHDIAG
+name|SHERR
 argument_list|)
 expr_stmt|;
 operator|(

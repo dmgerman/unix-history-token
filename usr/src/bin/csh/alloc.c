@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alloc.c	5.8 (Berkeley) %G%"
+literal|"@(#)alloc.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -366,7 +366,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|if (a) { \ 	xprintf(str, p);	\ 	xprintf("memtop = %lx membot = %lx.\n", memtop, membot);	\ 	abort(); \     }	\     else
+value|if (a) { \ 	(void) fprintfcsherr, (str, p);	\ 	(void) fprintf(csherr, "memtop = %lx membot = %lx.\n", memtop, membot);\ 	abort(); \     }	\     else
 end_define
 
 begin_else
@@ -386,7 +386,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|if (a) { \ 	xprintf(str, p);	\ 	xprintf("memtop = %lx membot = %lx.\n", memtop, membot);	\ 	return; \     }	\     else
+value|if (a) { \ 	(void) fprintf(csherr, str, p);	\ 	(void) fprintf(csherr, "memtop = %lx membot = %lx.\n", memtop, membot);\ 	return; \     }	\     else
 end_define
 
 begin_endif
@@ -513,8 +513,13 @@ directive|else
 name|showall
 argument_list|()
 expr_stmt|;
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|csherr
+argument_list|,
 literal|"nbytes=%d: Out of memory\n"
 argument_list|,
 name|nbytes
@@ -2003,8 +2008,23 @@ end_comment
 
 begin_function
 name|void
+comment|/*ARGSUSED*/
 name|showall
-parameter_list|()
+parameter_list|(
+name|v
+parameter_list|,
+name|t
+parameter_list|)
+name|Char
+modifier|*
+modifier|*
+name|v
+decl_stmt|;
+name|struct
+name|command
+modifier|*
+name|t
+decl_stmt|;
 block|{
 ifndef|#
 directive|ifndef
@@ -2030,8 +2050,13 @@ name|totused
 init|=
 literal|0
 decl_stmt|;
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|cshout
+argument_list|,
 literal|"csh current memory allocation:\nfree:\t"
 argument_list|)
 expr_stmt|;
@@ -2074,8 +2099,13 @@ name|j
 operator|++
 control|)
 empty_stmt|;
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|cshout
+argument_list|,
 literal|" %4d"
 argument_list|,
 name|j
@@ -2096,8 +2126,13 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|cshout
+argument_list|,
 literal|"\nused:\t"
 argument_list|)
 expr_stmt|;
@@ -2115,9 +2150,14 @@ name|i
 operator|++
 control|)
 block|{
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|" %4d"
+name|cshout
+argument_list|,
+literal|"%4d"
 argument_list|,
 name|nmalloc
 index|[
@@ -2143,8 +2183,13 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|cshout
+argument_list|,
 literal|"\n\tTotal in use: %d, total free: %d\n"
 argument_list|,
 name|totused
@@ -2152,8 +2197,13 @@ argument_list|,
 name|totfree
 argument_list|)
 expr_stmt|;
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|cshout
+argument_list|,
 literal|"\tAllocated memory from 0x%lx to 0x%lx.  Real top at 0x%lx\n"
 argument_list|,
 name|membot
@@ -2172,8 +2222,13 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|cshout
+argument_list|,
 literal|"Allocated memory from 0x%lx to 0x%lx (%ld).\n"
 argument_list|,
 name|membot

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.15 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -95,7 +95,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FSHDIAG
+name|FSHERR
 value|18
 end_define
 
@@ -330,6 +330,25 @@ end_endif
 begin_comment
 comment|/* SYSMALLOC */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|cshin
+decl_stmt|,
+modifier|*
+name|cshout
+decl_stmt|,
+modifier|*
+name|csherr
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -761,74 +780,11 @@ comment|/* Initial pgrp and tty pgrp */
 end_comment
 
 begin_comment
-comment|/*  * These are declared here because they want to be  * initialized in sh.init.c (to allow them to be made readonly)  */
-end_comment
-
-begin_struct
-specifier|extern
-struct|struct
-name|biltins
-block|{
-name|char
-modifier|*
-name|bname
-decl_stmt|;
-name|void
-function_decl|(
-modifier|*
-name|bfunct
-function_decl|)
-parameter_list|()
-function_decl|;
-name|short
-name|minargs
-decl_stmt|,
-name|maxargs
-decl_stmt|;
-block|}
-name|bfunc
-index|[]
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nbfunc
-decl_stmt|;
-end_decl_stmt
-
-begin_struct
-specifier|extern
-struct|struct
-name|srch
-block|{
-name|char
-modifier|*
-name|s_name
-decl_stmt|;
-name|short
-name|s_value
-decl_stmt|;
-block|}
-name|srchn
-index|[]
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nsrchn
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * To be able to redirect i/o for builtins easily, the shell moves the i/o  * descriptors it uses away from 0,1,2.  * Ideally these should be in units which are closed across exec's  * (this saves work) but for version 6, this is not usually possible.  * The desired initial values for these descriptors are defined in  * local.h.  */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|SHIN
 decl_stmt|;
 end_decl_stmt
@@ -838,7 +794,7 @@ comment|/* Current shell input (script) */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|SHOUT
 decl_stmt|;
 end_decl_stmt
@@ -848,8 +804,8 @@ comment|/* Shell output */
 end_comment
 
 begin_decl_stmt
-name|short
-name|SHDIAG
+name|int
+name|SHERR
 decl_stmt|;
 end_decl_stmt
 
@@ -858,7 +814,7 @@ comment|/* Diagnostic output... shell errs go here */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|OLDSTD
 decl_stmt|;
 end_decl_stmt
@@ -1082,7 +1038,7 @@ name|off_t
 name|Bfeobp
 decl_stmt|;
 comment|/* Seekp of end of buffers */
-name|short
+name|int
 name|Bfblocks
 decl_stmt|;
 comment|/* Number of buffer blocks */
@@ -1391,12 +1347,85 @@ modifier|*
 name|t_dspr
 decl_stmt|;
 comment|/* Pointer to ()'d subtree 	 */
-name|short
+name|int
 name|t_nice
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * These are declared here because they want to be  * initialized in sh.init.c (to allow them to be made readonly)  */
+end_comment
+
+begin_struct
+specifier|extern
+struct|struct
+name|biltins
+block|{
+name|char
+modifier|*
+name|bname
+decl_stmt|;
+name|void
+argument_list|(
+argument|*bfunct
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|Char
+operator|*
+operator|*
+operator|,
+expr|struct
+name|command
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|short
+name|minargs
+decl_stmt|,
+name|maxargs
+decl_stmt|;
+block|}
+name|bfunc
+index|[]
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nbfunc
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
+specifier|extern
+struct|struct
+name|srch
+block|{
+name|char
+modifier|*
+name|s_name
+decl_stmt|;
+name|short
+name|s_value
+decl_stmt|;
+block|}
+name|srchn
+index|[]
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nsrchn
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * The keywords for the parser  */
@@ -1712,7 +1741,7 @@ comment|/*  * Filename/command name expansion variables  */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|gflag
 decl_stmt|;
 end_decl_stmt
@@ -1837,9 +1866,6 @@ name|Hnum
 decl_stmt|;
 name|int
 name|Href
-decl_stmt|;
-name|long
-name|Htime
 decl_stmt|;
 name|struct
 name|Hist
@@ -2105,17 +2131,7 @@ name|short2str
 parameter_list|(
 name|a
 parameter_list|)
-value|(a)
-end_define
-
-begin_define
-define|#
-directive|define
-name|short2qstr
-parameter_list|(
-name|a
-parameter_list|)
-value|(a)
+value|trim(a)
 end_define
 
 begin_else

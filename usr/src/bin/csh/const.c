@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)const.c	5.2 (Berkeley) %G%"
+literal|"@(#)const.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,25 +338,6 @@ block|,
 literal|'a'
 block|,
 literal|'s'
-block|,
-literal|'\0'
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Char
-name|STRampm
-index|[]
-init|=
-block|{
-literal|'a'
-block|,
-literal|'m'
-block|,
-literal|'p'
-block|,
-literal|'m'
 block|,
 literal|'\0'
 block|}

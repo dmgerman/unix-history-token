@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dol.c	5.13 (Berkeley) %G%"
+literal|"@(#)dol.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2986,6 +2986,7 @@ end_comment
 
 begin_function
 name|void
+comment|/*ARGSUSED*/
 name|heredoc
 parameter_list|(
 name|term

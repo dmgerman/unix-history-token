@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	5.10 (Berkeley) %G%"
+literal|"@(#)err.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -607,7 +607,7 @@ define|#
 directive|define
 name|ERR_HISTUS
 value|78
-literal|"Usage: history [-rht] [# number of events]"
+literal|"Usage: history [-rh] [# number of events]"
 block|,
 define|#
 directive|define
@@ -895,7 +895,7 @@ name|id
 operator|=
 name|ERR_INVALID
 expr_stmt|;
-name|xvsprintf
+name|vsprintf
 argument_list|(
 name|berr
 argument_list|,
@@ -1013,9 +1013,21 @@ name|id
 operator|=
 name|ERR_INVALID
 expr_stmt|;
-comment|/*      * Must flush before we print as we wish output before the error to go on      * (some form of) standard output, while output after goes on (some form      * of) diagnostic output. If didfds then output will go to 1/2 else to      * FSHOUT/FSHDIAG. See flush in sh.print.c.      */
-name|flush
-argument_list|()
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|cshout
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|csherr
+argument_list|)
 expr_stmt|;
 name|haderr
 operator|=
@@ -1043,8 +1055,13 @@ name|flags
 operator|&
 name|ERR_NAME
 condition|)
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|csherr
+argument_list|,
 literal|"%s: "
 argument_list|,
 name|bname
@@ -1059,8 +1076,13 @@ name|ERR_OLD
 operator|)
 condition|)
 comment|/* Old error. */
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|csherr
+argument_list|,
 literal|"%s.\n"
 argument_list|,
 name|seterr
@@ -1087,8 +1109,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|xvprintf
+operator|(
+name|void
+operator|)
+name|vfprintf
 argument_list|(
+name|csherr
+argument_list|,
 name|errorlist
 index|[
 name|id
@@ -1102,8 +1129,13 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|csherr
+argument_list|,
 literal|".\n"
 argument_list|)
 expr_stmt|;
@@ -1155,6 +1187,22 @@ operator|,
 name|blkfree
 argument_list|(
 name|v
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|cshout
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|csherr
 argument_list|)
 expr_stmt|;
 name|didfds

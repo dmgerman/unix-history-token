@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exp.c	5.11 (Berkeley) %G%"
+literal|"@(#)exp.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3702,8 +3702,13 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|csherr
+argument_list|,
 literal|"%s=%d\t"
 argument_list|,
 name|str
@@ -3713,12 +3718,19 @@ argument_list|)
 expr_stmt|;
 name|blkpr
 argument_list|(
+name|csherr
+argument_list|,
 operator|*
 name|vp
 argument_list|)
 expr_stmt|;
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|csherr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -3751,8 +3763,13 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|csherr
+argument_list|,
 literal|"%s=%s\t"
 argument_list|,
 name|str
@@ -3762,12 +3779,19 @@ argument_list|)
 expr_stmt|;
 name|blkpr
 argument_list|(
+name|csherr
+argument_list|,
 operator|*
 name|vp
 argument_list|)
 expr_stmt|;
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|csherr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;

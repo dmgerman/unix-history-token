@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.11 (Berkeley) %G%"
+literal|"@(#)parse.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1088,7 +1088,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PDIAG
+name|PERR
 value|8
 end_define
 
@@ -2267,7 +2267,7 @@ condition|)
 block|{
 name|f
 operator||=
-name|PDIAG
+name|PERR
 expr_stmt|;
 name|t
 operator|->
@@ -2894,7 +2894,7 @@ operator|&
 operator|(
 name|POUT
 operator||
-name|PDIAG
+name|PERR
 operator|)
 condition|)
 block|{
@@ -2992,7 +2992,7 @@ operator|&&
 operator|(
 name|flags
 operator|&
-name|PDIAG
+name|PERR
 operator|)
 operator|==
 literal|0

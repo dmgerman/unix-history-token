@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.12 (Berkeley) %G%"
+literal|"@(#)dir.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -300,8 +300,10 @@ block|{
 operator|(
 name|void
 operator|)
-name|xprintf
+name|fprintf
 argument_list|(
+name|csherr
+argument_list|,
 literal|"csh: %s\n"
 argument_list|,
 name|path
@@ -325,8 +327,10 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|xprintf
+name|fprintf
 argument_list|(
+name|csherr
+argument_list|,
 name|emsg
 argument_list|,
 name|tcp
@@ -367,8 +371,10 @@ block|{
 operator|(
 name|void
 operator|)
-name|xprintf
+name|fprintf
 argument_list|(
+name|csherr
+argument_list|,
 name|emsg
 argument_list|,
 literal|"/"
@@ -830,14 +836,22 @@ end_comment
 
 begin_function
 name|void
+comment|/*ARGSUSED*/
 name|dodirs
 parameter_list|(
 name|v
+parameter_list|,
+name|t
 parameter_list|)
 name|Char
 modifier|*
 modifier|*
 name|v
+decl_stmt|;
+name|struct
+name|command
+modifier|*
+name|t
 decl_stmt|;
 block|{
 name|skipargs
@@ -941,8 +955,13 @@ operator|&
 name|DIR_VERT
 condition|)
 block|{
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|cshout
+argument_list|,
 literal|"%d\t"
 argument_list|,
 name|idx
@@ -1041,8 +1060,13 @@ operator|<
 literal|80
 condition|)
 block|{
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|cshout
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -1051,8 +1075,13 @@ operator|=
 name|len
 expr_stmt|;
 block|}
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|cshout
+argument_list|,
 name|s
 operator|!=
 name|dp
@@ -1102,8 +1131,13 @@ operator|&
 name|DIR_VERT
 operator|)
 condition|)
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|cshout
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -1147,8 +1181,13 @@ argument_list|,
 name|dir
 argument_list|)
 condition|)
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|cshout
+argument_list|,
 literal|"~%s"
 argument_list|,
 name|short2str
@@ -1163,8 +1202,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|xprintf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|cshout
+argument_list|,
 literal|"%s"
 argument_list|,
 name|short2str
@@ -1528,14 +1572,22 @@ end_comment
 
 begin_function
 name|void
+comment|/*ARGSUSED*/
 name|dochngd
 parameter_list|(
 name|v
+parameter_list|,
+name|t
 parameter_list|)
 name|Char
 modifier|*
 modifier|*
 name|v
+decl_stmt|;
+name|struct
+name|command
+modifier|*
+name|t
 decl_stmt|;
 block|{
 specifier|register
@@ -2392,14 +2444,22 @@ end_comment
 
 begin_function
 name|void
+comment|/*ARGSUSED*/
 name|dopushd
 parameter_list|(
 name|v
+parameter_list|,
+name|t
 parameter_list|)
 name|Char
 modifier|*
 modifier|*
 name|v
+decl_stmt|;
+name|struct
+name|command
+modifier|*
+name|t
 decl_stmt|;
 block|{
 specifier|register
@@ -2841,14 +2901,22 @@ end_comment
 
 begin_function
 name|void
+comment|/*ARGSUSED*/
 name|dopopd
 parameter_list|(
 name|v
+parameter_list|,
+name|t
 parameter_list|)
 name|Char
 modifier|*
 modifier|*
 name|v
+decl_stmt|;
+name|struct
+name|command
+modifier|*
+name|t
 decl_stmt|;
 block|{
 specifier|register
