@@ -242,6 +242,92 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Greatest Common Divisor.  */
+end_comment
+
+begin_function
+specifier|static
+name|u_int
+name|gcd
+parameter_list|(
+name|u_int
+name|a
+parameter_list|,
+name|u_int
+name|b
+parameter_list|)
+block|{
+name|u_int
+name|c
+decl_stmt|;
+while|while
+condition|(
+name|b
+operator|!=
+literal|0
+condition|)
+block|{
+name|c
+operator|=
+name|a
+expr_stmt|;
+name|a
+operator|=
+name|b
+expr_stmt|;
+name|b
+operator|=
+operator|(
+name|c
+operator|%
+name|b
+operator|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|a
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Least Common Multiple.  */
+end_comment
+
+begin_function
+specifier|static
+name|u_int
+name|lcm
+parameter_list|(
+name|u_int
+name|a
+parameter_list|,
+name|u_int
+name|b
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|a
+operator|*
+name|b
+operator|)
+operator|/
+name|gcd
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Return the number of valid disks.  */
 end_comment
 
@@ -1196,11 +1282,15 @@ name|g_concat_disk
 modifier|*
 name|disk
 decl_stmt|;
-name|off_t
-name|start
-decl_stmt|;
 name|u_int
 name|no
+decl_stmt|,
+name|sectorsize
+init|=
+literal|0
+decl_stmt|;
+name|off_t
+name|start
 decl_stmt|;
 if|if
 condition|(
@@ -1292,7 +1382,49 @@ name|disk
 operator|->
 name|d_end
 expr_stmt|;
+if|if
+condition|(
+name|no
+operator|==
+literal|0
+condition|)
+name|sectorsize
+operator|=
+name|disk
+operator|->
+name|d_consumer
+operator|->
+name|provider
+operator|->
+name|sectorsize
+expr_stmt|;
+else|else
+block|{
+name|sectorsize
+operator|=
+name|lcm
+argument_list|(
+name|sectorsize
+argument_list|,
+name|disk
+operator|->
+name|d_consumer
+operator|->
+name|provider
+operator|->
+name|sectorsize
+argument_list|)
+expr_stmt|;
 block|}
+block|}
+name|sc
+operator|->
+name|sc_provider
+operator|->
+name|sectorsize
+operator|=
+name|sectorsize
+expr_stmt|;
 comment|/* We have sc->sc_disks[sc->sc_ndisks - 1].d_end in 'start'. */
 name|sc
 operator|->
@@ -1667,6 +1799,7 @@ name|struct
 name|g_concat_metadata
 name|md
 decl_stmt|;
+comment|/* Re-read metadata. */
 name|error
 operator|=
 name|g_concat_read_metadata
@@ -1874,9 +2007,6 @@ name|md
 parameter_list|,
 name|u_int
 name|type
-parameter_list|,
-name|size_t
-name|sectorsize
 parameter_list|)
 block|{
 name|struct
@@ -2190,13 +2320,7 @@ name|sc_provider
 operator|=
 name|pp
 expr_stmt|;
-name|pp
-operator|->
-name|sectorsize
-operator|=
-name|sectorsize
-expr_stmt|;
-comment|/* 	 * Don't run provider yet (by setting its error to 0), because we're 	 * not aware of its mediasize. 	 */
+comment|/* 	 * Don't run provider yet (by setting its error to 0), because we're 	 * not aware of its media and sector size. 	 */
 name|G_CONCAT_DEBUG
 argument_list|(
 literal|0
@@ -2475,11 +2599,13 @@ name|struct
 name|gctl_req
 modifier|*
 name|req
+name|__unused
 parameter_list|,
 name|struct
 name|g_class
 modifier|*
 name|mp
+name|__unused
 parameter_list|,
 name|struct
 name|g_geom
@@ -2845,10 +2971,6 @@ operator|&
 name|md
 argument_list|,
 name|G_CONCAT_TYPE_AUTOMATIC
-argument_list|,
-name|pp
-operator|->
-name|sectorsize
 argument_list|)
 expr_stmt|;
 if|if
@@ -2999,11 +3121,6 @@ name|sbuf
 modifier|*
 name|sb
 decl_stmt|;
-name|uint32_t
-name|sectorsize
-init|=
-literal|0
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -3039,7 +3156,9 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"No 'metadata' argument"
+literal|"No '%s' argument."
+argument_list|,
+literal|"metadata"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3131,31 +3250,23 @@ argument_list|,
 literal|"Disk %u is invalid."
 argument_list|,
 name|no
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Disk %u is invalid"
+literal|"Disk %u is invalid."
 argument_list|,
 name|no
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|no
-operator|==
-literal|0
-condition|)
-name|sectorsize
-operator|=
-name|pp
-operator|->
-name|sectorsize
-expr_stmt|;
 block|}
 name|gp
 operator|=
@@ -3166,8 +3277,6 @@ argument_list|,
 name|md
 argument_list|,
 name|G_CONCAT_TYPE_MANUAL
-argument_list|,
-name|sectorsize
 argument_list|)
 expr_stmt|;
 if|if
@@ -3181,7 +3290,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Can't configure %s.concat"
+literal|"Can't configure %s.concat."
 argument_list|,
 name|md
 operator|->
@@ -3411,7 +3520,9 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"No 'force' argument"
+literal|"No '%s' argument."
+argument_list|,
+literal|"force"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3585,7 +3696,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"unknown verb"
+literal|"Unknown verb."
 argument_list|)
 expr_stmt|;
 block|}
