@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slattach.c	4.1 (Berkeley) %G%"
+literal|"@(#)slattach.c	4.1 (Berkeley) 2/17/86"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,12 +98,6 @@ end_define
 
 begin_decl_stmt
 name|int
-name|speed
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|slipdisc
 init|=
 name|SLIPDISC
@@ -128,13 +122,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|main
 parameter_list|(
@@ -151,11 +138,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
 specifier|register
 name|int
 name|fd
@@ -175,7 +157,7 @@ name|sgttyb
 name|sgtty
 decl_stmt|;
 name|int
-name|n
+name|speed
 decl_stmt|;
 if|if
 condition|(
@@ -265,6 +247,9 @@ literal|5
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|devname
@@ -397,7 +382,7 @@ condition|;
 control|)
 name|sigpause
 argument_list|(
-literal|0
+literal|0L
 argument_list|)
 expr_stmt|;
 block|}
