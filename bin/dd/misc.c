@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: misc.c,v 1.13 1998/05/06 06:51:40 charnier Exp $"
+literal|"$Id: misc.c,v 1.14 1998/05/13 07:33:50 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,7 +156,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%u+%u records in\n%u+%u records out\n"
+literal|"%lu+%lu records in\n%lu+%lu records out\n"
 argument_list|,
 name|st
 operator|.
@@ -209,7 +209,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%u odd length swab %s\n"
+literal|"%lu odd length swab %s\n"
 argument_list|,
 name|st
 operator|.
@@ -263,7 +263,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%u truncated %s\n"
+literal|"%lu truncated %s\n"
 argument_list|,
 name|st
 operator|.
