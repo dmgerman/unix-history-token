@@ -7498,7 +7498,14 @@ name|sc
 argument_list|,
 name|RL_TXADDR0
 operator|+
+operator|(
 name|i
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
+operator|)
 argument_list|,
 literal|0x0000000
 argument_list|)
