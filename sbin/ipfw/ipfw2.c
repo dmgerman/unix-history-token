@@ -9124,6 +9124,10 @@ init|=
 literal|1024
 decl_stmt|;
 comment|/* start somewhere... */
+name|last
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|test_only
