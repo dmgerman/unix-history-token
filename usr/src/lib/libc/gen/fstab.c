@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstab.c	5.9 (Berkeley) %G%"
+literal|"@(#)fstab.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,6 +151,21 @@ argument_list|,
 literal|" \t\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|_fs_fstab
+operator|.
+name|fs_spec
+operator|||
+operator|*
+name|_fs_fstab
+operator|.
+name|fs_spec
+operator|==
+literal|'#'
+condition|)
+continue|continue;
 name|_fs_fstab
 operator|.
 name|fs_file
