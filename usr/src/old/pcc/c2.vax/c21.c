@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.21 %G%"
+literal|"@(#)c21.c 4.22 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4501,7 +4501,7 @@ name|subop
 operator|&
 literal|0xf
 operator|&&
-name|compat
+name|equtype
 argument_list|(
 name|p
 operator|->
