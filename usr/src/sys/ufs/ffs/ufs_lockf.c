@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Scooter Morris at Genentech Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lockf.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Scooter Morris at Genentech Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lockf.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -584,6 +584,26 @@ operator|&=
 operator|~
 name|HASBLOCK
 expr_stmt|;
+break|break;
+block|}
+comment|/* 			 * If we did not find ourselves on the list, but 			 * are still linked onto a lock list, then something 			 * is very wrong. 			 */
+if|if
+condition|(
+name|block
+operator|==
+name|NOLOCKF
+operator|&&
+name|lock
+operator|->
+name|lf_next
+operator|!=
+name|NOLOCKF
+condition|)
+name|panic
+argument_list|(
+literal|"lf_setlock: lost lock"
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|lock
@@ -596,12 +616,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
-name|panic
-argument_list|(
-literal|"lf_setlock: lost lock"
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 comment|/* 	 * No blocks!!  Add the lock.  Note that we will 	 * downgrade or upgrade any overlapping locks this 	 * process already owns. 	 * 	 * Skip over locks owned by other processes. 	 * Handle any locks that overlap and are owned by ourselves. 	 */
