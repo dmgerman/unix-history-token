@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.34 1995/05/25 18:48:31 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.35 1995/05/26 08:41:49 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -262,7 +262,7 @@ name|setenv
 argument_list|(
 literal|"PATH"
 argument_list|,
-literal|"/stand:/bin:/sbin:/usr/sbin:/mnt/bin:/mnt/sbin:/mnt/usr/sbin:/mnt/usr/bin"
+literal|"/stand:/bin:/sbin:/usr/sbin:/usr/bin:/mnt/bin:/mnt/sbin:/mnt/usr/sbin:/mnt/usr/bin"
 argument_list|,
 literal|1
 argument_list|)
@@ -1128,8 +1128,7 @@ block|{
 name|va_list
 name|args
 decl_stmt|;
-name|union
-name|wait
+name|int
 name|pstat
 decl_stmt|;
 name|pid_t
@@ -1547,10 +1546,6 @@ name|waitpid
 argument_list|(
 name|pid
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|pstat
 argument_list|,
@@ -1597,9 +1592,10 @@ condition|?
 operator|-
 literal|1
 else|:
+name|WEXITSTATUS
+argument_list|(
 name|pstat
-operator|.
-name|w_status
+argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(

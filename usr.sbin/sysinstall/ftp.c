@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.8 1995/05/24 19:31:26 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.9 1995/05/25 06:15:38 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -1214,26 +1214,12 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-name|fail
-label|:
-name|close
-argument_list|(
-name|ftp
-operator|->
-name|fd_ctrl
-argument_list|)
-expr_stmt|;
-name|ftp
-operator|->
-name|fd_ctrl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+if|#
+directive|if
+literal|0
+block|fail:     close(ftp->fd_ctrl);     ftp->fd_ctrl = -1;     return -1;
+endif|#
+directive|endif
 block|}
 end_function
 
