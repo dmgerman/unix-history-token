@@ -124,6 +124,13 @@ name|jail_set_hostname_allowed
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|jail_socket_unixiproute_only
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
