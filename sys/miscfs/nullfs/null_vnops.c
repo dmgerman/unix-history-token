@@ -1685,10 +1685,26 @@ name|v_vnlock
 operator|!=
 name|NULL
 condition|)
+block|{
+comment|/* lock is shared across layers */
+if|if
+condition|(
+name|flags
+operator|&
+name|LK_INTERLOCK
+condition|)
+name|simple_unlock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
-comment|/* lock is shared across layers */
+block|}
 name|error
 operator|=
 name|lockmgr
