@@ -8933,7 +8933,7 @@ comment|/* maxsize, nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 comment|/* flags */
 name|NULL
@@ -8984,7 +8984,7 @@ name|nseg
 argument_list|,
 name|MCLBYTES
 argument_list|,
-literal|0
+name|BUS_DMA_ALLOCNOW
 argument_list|,
 name|NULL
 argument_list|,
