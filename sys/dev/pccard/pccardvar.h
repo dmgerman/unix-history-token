@@ -768,30 +768,53 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_function_decl
+begin_include
+include|#
+directive|include
+file|"card_if.h"
+end_include
+
+begin_comment
+comment|/*  * make this inline so that we don't have to worry about dangling references  * to it in the modules or the code.  */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|__inline
 specifier|const
-name|struct
+expr|struct
 name|pccard_product
-modifier|*
+operator|*
 name|pccard_product_lookup
-parameter_list|(
-name|device_t
+argument_list|(
+argument|device_t dev
+argument_list|,
+argument|const struct pccard_product *tab
+argument_list|,
+argument|size_t ent_size
+argument_list|,
+argument|pccard_product_match_fn matchfn
+argument_list|)
+block|{
+return|return
+name|CARD_DO_PRODUCT_LOOKUP
+argument_list|(
+name|device_get_parent
+argument_list|(
 name|dev
-parameter_list|,
-specifier|const
-name|struct
-name|pccard_product
-modifier|*
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
 name|tab
-parameter_list|,
-name|size_t
+argument_list|,
 name|ent_size
-parameter_list|,
-name|pccard_product_match_fn
+argument_list|,
 name|matchfn
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_function_decl
 name|void
@@ -846,12 +869,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_include
-include|#
-directive|include
-file|"card_if.h"
-end_include
 
 begin_define
 define|#
