@@ -886,17 +886,6 @@ name|CONS_RELKBD
 value|_IO('c', 111)
 end_define
 
-begin_comment
-comment|/* Snapshot the current video buffer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONS_SCRSHOT
-value|_IOWR('c', 105, scrshot_t)
-end_define
-
 begin_struct
 struct|struct
 name|scrshot
@@ -922,6 +911,17 @@ name|scrshot
 name|scrshot_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Snapshot the current video buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONS_SCRSHOT
+value|_IOWR('c', 105, scrshot_t)
+end_define
 
 begin_comment
 comment|/* get/set the current terminal emulator info. */
