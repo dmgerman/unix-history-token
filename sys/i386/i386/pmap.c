@@ -4593,17 +4593,6 @@ operator||
 name|PG_M
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_wakeup
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 return|return
 name|m
 return|;

@@ -2646,6 +2646,17 @@ operator||
 name|PG_BUSY
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|req
+operator|&
+name|VM_ALLOC_NOOBJ
+condition|)
+name|flags
+operator|&=
+operator|~
+name|PG_BUSY
+expr_stmt|;
 name|m
 operator|->
 name|flags
