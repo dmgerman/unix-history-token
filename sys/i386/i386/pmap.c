@@ -8601,7 +8601,7 @@ expr_stmt|;
 block|}
 name|pmap_invalidate_all
 argument_list|(
-name|kernel_pmap
+name|pmap
 argument_list|)
 expr_stmt|;
 block|}
