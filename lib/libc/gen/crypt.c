@@ -22,16 +22,6 @@ begin_comment
 comment|/* from static char sccsid[] = "@(#)crypt.c	5.11 (Berkeley) 6/25/91"; */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -40,6 +30,20 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -79,7 +83,6 @@ name|des_setkey
 parameter_list|(
 name|key
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -179,7 +182,6 @@ name|setkey
 parameter_list|(
 name|key
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -219,7 +221,6 @@ name|block
 parameter_list|,
 name|flag
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|block

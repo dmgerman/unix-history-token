@@ -37,6 +37,20 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Backwards compatible alarm.  */
 end_comment
@@ -71,7 +85,6 @@ name|it
 decl_stmt|,
 name|oitv
 decl_stmt|;
-specifier|register
 name|struct
 name|itimerval
 modifier|*

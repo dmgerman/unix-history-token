@@ -88,7 +88,6 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
