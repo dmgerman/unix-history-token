@@ -22,8 +22,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/*not lint*/
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -31,21 +34,29 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "From: @(#)mountd.c	8.8 (Berkeley) 2/20/94";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mountd.c	8.8 (Berkeley) 2/20/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/*not lint*/
+end_comment
 
 begin_include
 include|#
@@ -1360,6 +1371,69 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+name|struct
+name|vfsconf
+modifier|*
+name|vfc
+decl_stmt|;
+name|vfc
+operator|=
+name|getvfsbyname
+argument_list|(
+literal|"nfs"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|vfc
+operator|&&
+name|vfsisloadable
+argument_list|(
+literal|"nfs"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|vfsload
+argument_list|(
+literal|"nfs"
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"vfsload(nfs)"
+argument_list|)
+expr_stmt|;
+name|endvfsent
+argument_list|()
+expr_stmt|;
+comment|/* flush cache */
+name|vfc
+operator|=
+name|getvfsbyname
+argument_list|(
+literal|"nfs"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|vfc
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"NFS support is not available in the running kernel"
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|(
