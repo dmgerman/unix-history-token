@@ -5018,6 +5018,8 @@ argument_list|(
 operator|*
 name|bp
 argument_list|)
+operator|+
+name|BP_MSG_OVERHEAD
 condition|)
 block|{
 if|if
@@ -5038,6 +5040,8 @@ expr_stmt|;
 name|pktlen
 operator|=
 name|msgsz
+operator|-
+name|BP_MSG_OVERHEAD
 expr_stmt|;
 block|}
 block|}

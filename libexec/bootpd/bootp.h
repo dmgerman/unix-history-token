@@ -56,6 +56,21 @@ begin_comment
 comment|/* to check sizeof(struct bootp) */
 end_comment
 
+begin_comment
+comment|/* Overhead to fit a bootp message into an Ethernet packet. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BP_MSG_OVERHEAD
+value|(14 + 20 + 8)
+end_define
+
+begin_comment
+comment|/* Ethernet + IP + UDP headers */
+end_comment
+
 begin_struct
 struct|struct
 name|bootp
