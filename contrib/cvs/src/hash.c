@@ -746,10 +746,6 @@ name|p
 operator|->
 name|data
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|p
@@ -1687,6 +1683,13 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
+if|if
+condition|(
+name|list
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* save the old first element of the list */
 name|head
 operator|=
@@ -2126,8 +2129,12 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Node at 0x%p: type = %s, key = 0x%p = \"%s\", data = 0x%p, next = 0x%p, prev = 0x%p\n"
+literal|"Node at %p: type = %s, key = %p = \"%s\", data = %p, next = %p, prev = %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|node
 argument_list|,
 name|nodetypestring
@@ -2137,6 +2144,10 @@ operator|->
 name|type
 argument_list|)
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|node
 operator|->
 name|key
@@ -2149,10 +2160,18 @@ name|node
 operator|->
 name|data
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|node
 operator|->
 name|next
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|node
 operator|->
 name|prev
@@ -2216,16 +2235,28 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"List at 0x%p: list = 0x%p, HASHSIZE = %d, next = 0x%p\n"
+literal|"List at %p: list = %p, HASHSIZE = %d, next = %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|list
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|list
 operator|->
 name|list
 argument_list|,
 name|HASHSIZE
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|list
 operator|->
 name|next

@@ -36,7 +36,7 @@ name|watch_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [on|off|add|remove] [-lR] [-a action] [files...]\n"
+literal|"Usage: %s %s {on|off|add|remove} [-lR] [-a<action>]... [<path>]...\n"
 block|,
 literal|"on/off: turn on/off read-only checkouts of files\n"
 block|,
@@ -44,11 +44,13 @@ literal|"add/remove: add or remove notification on actions\n"
 block|,
 literal|"-l (on/off/add/remove): Local directory only, not recursive\n"
 block|,
-literal|"-R (on/off/add/remove): Process directories recursively\n"
+literal|"-R (on/off/add/remove): Process directories recursively (default)\n"
 block|,
 literal|"-a (add/remove): Specify what actions, one of\n"
 block|,
-literal|"    edit,unedit,commit,all,none\n"
+literal|"    edit,unedit,commit,all,none (defaults to all, multiple -a\n"
+block|,
+literal|"    options are permitted)\n"
 block|,
 literal|"(Specify the --help global option for a list of other help options)\n"
 block|,
@@ -73,6 +75,7 @@ name|file
 parameter_list|,
 name|what
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
@@ -978,9 +981,11 @@ operator|*
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1013,10 +1018,12 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|repository
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|update_dir
@@ -1537,6 +1544,12 @@ operator|)
 name|NULL
 argument_list|,
 literal|1
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|Lock_Cleanup
@@ -2246,6 +2259,12 @@ operator|)
 name|NULL
 argument_list|,
 literal|1
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 return|;
 block|}

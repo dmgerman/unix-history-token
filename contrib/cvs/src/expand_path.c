@@ -23,10 +23,12 @@ name|expand_variable
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|env
 operator|,
+specifier|const
 name|char
 operator|*
 name|file
@@ -37,9 +39,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* User variables.  */
@@ -331,9 +330,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* This routine will expand the pathname to account for ~ and $    characters as described above.  Returns a pointer to a newly    malloc'd string.  If an error occurs, an error message is printed    via error() and NULL is returned.  FILE and LINE are the filename    and linenumber to include in the error message.  FILE must point    to something; LINE can be zero to indicate the line number is not    known.  */
 end_comment
@@ -349,10 +345,12 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|file
@@ -361,6 +359,7 @@ name|int
 name|line
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|s
@@ -770,18 +769,28 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
-init|=
-name|s
+decl_stmt|,
+modifier|*
+name|pstart
 decl_stmt|;
+name|pstart
+operator|=
+name|p
+operator|=
+name|xstrdup
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*
-name|s
+name|pstart
 operator|==
 literal|'/'
 operator|||
 operator|*
-name|s
+name|pstart
 operator|==
 literal|0
 condition|)
@@ -880,7 +889,7 @@ name|ps
 operator|=
 name|getpwnam
 argument_list|(
-name|s
+name|pstart
 argument_list|)
 expr_stmt|;
 if|if
@@ -908,7 +917,7 @@ name|file
 argument_list|,
 name|line
 argument_list|,
-name|s
+name|pstart
 argument_list|)
 expr_stmt|;
 else|else
@@ -922,7 +931,7 @@ literal|"%s: no such user %s"
 argument_list|,
 name|file
 argument_list|,
-name|s
+name|pstart
 argument_list|)
 expr_stmt|;
 return|return
@@ -1020,22 +1029,16 @@ block|}
 operator|--
 name|d
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|0
-condition|)
-operator|*
-name|p
-operator|=
-literal|'/'
-expr_stmt|;
-comment|/* always add / */
 name|s
-operator|=
+operator|+=
 name|p
+operator|-
+name|pstart
+expr_stmt|;
+name|free
+argument_list|(
+name|pstart
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1201,10 +1204,12 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|file
@@ -1227,7 +1232,7 @@ condition|)
 return|return
 name|current_parsed_root
 operator|->
-name|original
+name|directory
 return|;
 elseif|else
 if|if

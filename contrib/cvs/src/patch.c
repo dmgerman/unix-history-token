@@ -45,14 +45,17 @@ name|void
 operator|*
 name|callerdat
 operator|,
+specifier|const
 name|char
 operator|*
 name|dir
 operator|,
+specifier|const
 name|char
 operator|*
 name|repos
 operator|,
+specifier|const
 name|char
 operator|*
 name|update_dir
@@ -408,7 +411,7 @@ literal|0
 argument_list|,
 literal|"-q or -Q must be specified before \"%s\""
 argument_list|,
-name|command_name
+name|cvs_cmd_name
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1047,7 +1050,7 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|local
 argument_list|,
 literal|0
 argument_list|,
@@ -1074,9 +1077,7 @@ name|patch_cleanup
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|err
-operator|)
 return|;
 block|}
 end_function
@@ -1488,16 +1489,9 @@ name|repository
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
-name|free
-argument_list|(
-name|repository
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|force_tag_match
@@ -1539,7 +1533,7 @@ name|local_specified
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+name|repository
 argument_list|)
 expr_stmt|;
 name|rev1_validated
@@ -1573,7 +1567,7 @@ name|local_specified
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+name|repository
 argument_list|)
 expr_stmt|;
 name|rev2_validated
@@ -1621,6 +1615,13 @@ argument_list|,
 name|where
 argument_list|,
 literal|1
+argument_list|,
+name|repository
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|repository
 argument_list|)
 expr_stmt|;
 name|free
@@ -1629,9 +1630,7 @@ name|where
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|err
-operator|)
 return|;
 block|}
 end_function
@@ -1763,6 +1762,12 @@ expr_stmt|;
 name|line2_chars_allocated
 operator|=
 literal|0
+expr_stmt|;
+name|vers_tag
+operator|=
+name|vers_head
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* find the parsed rcs file */
 if|if
@@ -2035,6 +2040,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|vers_tag
 operator|==
 name|NULL
@@ -2042,22 +2048,16 @@ operator|&&
 name|vers_head
 operator|==
 name|NULL
-condition|)
-block|{
-comment|/* Nothing known about specified revs.  */
-name|ret
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|out2
-goto|;
-block|}
-if|if
-condition|(
+operator|)
+operator|||
+operator|(
 name|vers_tag
+operator|!=
+name|NULL
 operator|&&
 name|vers_head
+operator|!=
+name|NULL
 operator|&&
 name|strcmp
 argument_list|(
@@ -2067,9 +2067,10 @@ name|vers_tag
 argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
-comment|/* Not changed between releases.  */
+comment|/* Nothing known about specified revs or 	 * not changed between releases. 	 */
 name|ret
 operator|=
 literal|0
@@ -2081,8 +2082,19 @@ block|}
 if|if
 condition|(
 name|patch_short
+operator|&&
+operator|(
+name|vers_tag
+operator|==
+name|NULL
+operator|||
+name|vers_head
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
+comment|/* For adds& removes with a short patch requested, we can print our 	 * error message now and get out. 	 */
 name|cvs_output
 argument_list|(
 literal|"File "
@@ -2108,7 +2120,29 @@ condition|)
 block|{
 name|cvs_output
 argument_list|(
-literal|" is new; current revision "
+literal|" is new; "
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cvs_output
+argument_list|(
+name|rev2
+condition|?
+name|rev2
+else|:
+name|date2
+condition|?
+name|date2
+else|:
+literal|"current"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cvs_output
+argument_list|(
+literal|" revision "
 argument_list|,
 literal|0
 argument_list|)
@@ -2128,87 +2162,29 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|vers_head
-operator|==
-name|NULL
-condition|)
-block|{
-name|cvs_output
-argument_list|(
-literal|" is removed; not included in "
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rev2
-operator|!=
-name|NULL
-condition|)
-block|{
-name|cvs_output
-argument_list|(
-literal|"release tag "
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|cvs_output
-argument_list|(
-name|rev2
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|date2
-operator|!=
-name|NULL
-condition|)
-block|{
-name|cvs_output
-argument_list|(
-literal|"release date "
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|cvs_output
-argument_list|(
-name|date2
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|cvs_output
-argument_list|(
-literal|"current release"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|cvs_output
-argument_list|(
-literal|"\n"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 block|{
 name|cvs_output
 argument_list|(
-literal|" changed from revision "
+literal|" is removed; "
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cvs_output
+argument_list|(
+name|rev1
+condition|?
+name|rev1
+else|:
+name|date1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cvs_output
+argument_list|(
+literal|" revision "
 argument_list|,
 literal|0
 argument_list|)
@@ -2216,20 +2192,6 @@ expr_stmt|;
 name|cvs_output
 argument_list|(
 name|vers_tag
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|cvs_output
-argument_list|(
-literal|" to "
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|cvs_output
-argument_list|(
-name|vers_head
 argument_list|,
 literal|0
 argument_list|)
@@ -2714,7 +2676,71 @@ break|break;
 case|case
 literal|1
 case|:
-comment|/* 	     * The two revisions are really different, so read the first two 	     * lines of the diff output file, and munge them to include more 	     * reasonable file names that "patch" will understand. 	     */
+comment|/* 	     * The two revisions are really different, so read the first two 	     * lines of the diff output file, and munge them to include more 	     * reasonable file names that "patch" will understand, unless the 	     * user wanted a short patch.  In that case, just output the short 	     * message. 	     */
+if|if
+condition|(
+name|patch_short
+condition|)
+block|{
+name|cvs_output
+argument_list|(
+literal|"File "
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cvs_output
+argument_list|(
+name|finfo
+operator|->
+name|fullname
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cvs_output
+argument_list|(
+literal|" changed from revision "
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cvs_output
+argument_list|(
+name|vers_tag
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cvs_output
+argument_list|(
+literal|" to "
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cvs_output
+argument_list|(
+name|vers_head
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cvs_output
+argument_list|(
+literal|"\n"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* Output an "Index:" line for patch to use */
 name|cvs_output
 argument_list|(
@@ -2739,6 +2765,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Now the munging. */
 name|fp
 operator|=
 name|open_file
@@ -3591,9 +3618,7 @@ name|rcs
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 block|}
 end_function
@@ -3625,14 +3650,17 @@ name|void
 modifier|*
 name|callerdat
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|dir
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|repos
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|update_dir

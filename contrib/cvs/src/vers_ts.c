@@ -22,6 +22,7 @@ name|time_stamp_server
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -185,11 +186,6 @@ argument_list|)
 expr_stmt|;
 name|sdtp
 operator|=
-operator|(
-expr|struct
-name|stickydirtag
-operator|*
-operator|)
 name|finfo
 operator|->
 name|entries
@@ -213,10 +209,6 @@ condition|)
 block|{
 name|entdata
 operator|=
-operator|(
-name|Entnode
-operator|*
-operator|)
 name|p
 operator|->
 name|data
@@ -850,13 +842,16 @@ operator|-
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|time
+argument_list|(
+operator|&
 name|t
 operator|.
 name|actime
-operator|=
-name|t
-operator|.
-name|modtime
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -909,8 +904,6 @@ name|UTIME_EXPECTS_WRITABLE
 if|if
 condition|(
 name|change_it_back
-operator|==
-literal|1
 condition|)
 block|{
 name|xchmod
@@ -1034,6 +1027,7 @@ name|vers_ts
 parameter_list|,
 name|entdata
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
@@ -1124,8 +1118,6 @@ condition|(
 name|entdata
 operator|->
 name|timestamp
-operator|!=
-name|NULL
 operator|&&
 operator|(
 name|entdata
@@ -1291,6 +1283,7 @@ name|time_stamp
 parameter_list|(
 name|file
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file

@@ -86,6 +86,7 @@ modifier|*
 modifier|*
 name|argv
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cmdname

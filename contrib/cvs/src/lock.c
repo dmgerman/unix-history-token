@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 
 end_comment
 
 begin_comment
-comment|/* The node Concurrency in doc/cvs.texinfo has a brief introduction to    how CVS locks function, and some of the user-visible consequences of    their existence.  Here is a summary of why they exist (and therefore,    the consequences of hacking CVS to read a repository without creating    locks):     There are two uses.  One is the ability to prevent there from being    two writers at the same time.  This is necessary for any number of    reasons (fileattr code, probably others).  Commit needs to lock the    whole tree so that nothing happens between the up-to-date check and    the actual checkin.     The second use is the ability to ensure that there is not a writer    and a reader at the same time (several readers are allowed).  Reasons    for this are:     * Readlocks ensure that once CVS has found a collection of rcs    files using Find_Names, the files will still exist when it reads    them (they may have moved in or out of the attic).     * Readlocks provide some modicum of consistency, although this is    kind of limited--see the node Concurrency in cvs.texinfo.     * Readlocks ensure that the RCS file does not change between    RCS_parse and RCS_reparsercsfile time.  This one strikes me as    important, although I haven't thought up what bad scenarios might    be.     * Readlocks ensure that we won't find the file in the state in    which it is in between the calls to add_rcs_file and RCS_checkin in    commit.c (when a file is being added).  This state is a state in    which the RCS file parsing routines in rcs.c cannot parse the file.     * Readlocks ensure that a reader won't try to look at a    half-written fileattr file (fileattr is not updated atomically).     (see also the description of anonymous read-only access in    "Password authentication security" node in doc/cvs.texinfo).     While I'm here, I'll try to summarize a few random suggestions    which periodically get made about how locks might be different:     1.  Check for EROFS.  Maybe useful, although in the presence of NFS    EROFS does *not* mean that the file system is unchanging.     2.  Provide a means to put the cvs locks in some directory apart from    the repository (CVSROOT/locks; a -l option in modules; etc.).     3.  Provide an option to disable locks for operations which only    read (see above for some of the consequences).     4.  Have a server internally do the locking.  Probably a good    long-term solution, and many people have been working hard on code    changes which would eventually make it possible to have a server    which can handle various connections in one process, but there is    much, much work still to be done before this is feasible.     5.  Like #4 but use shared memory or something so that the servers    merely need to all be on the same machine.  This is a much smaller    change to CVS (it functions much like #2; shared memory might be an    unneeded complication although it presumably would be faster).  */
+comment|/* The node Concurrency in doc/cvs.texinfo has a brief introduction to    how CVS locks function, and some of the user-visible consequences of    their existence.  Here is a summary of why they exist (and therefore,    the consequences of hacking CVS to read a repository without creating    locks):     There are two uses.  One is the ability to prevent there from being    two writers at the same time.  This is necessary for any number of    reasons (fileattr code, probably others).  Commit needs to lock the    whole tree so that nothing happens between the up-to-date check and    the actual checkin.     The second use is the ability to ensure that there is not a writer    and a reader at the same time (several readers are allowed).  Reasons    for this are:     * Readlocks ensure that once CVS has found a collection of rcs    files using Find_Names, the files will still exist when it reads    them (they may have moved in or out of the attic).     * Readlocks provide some modicum of consistency, although this is    kind of limited--see the node Concurrency in cvs.texinfo.     * Readlocks ensure that the RCS file does not change between    RCS_parse and RCS_reparsercsfile time.  This one strikes me as    important, although I haven't thought up what bad scenarios might    be.     * Readlocks ensure that we won't find the file in the state in    which it is in between the calls to add_rcs_file and RCS_checkin in    commit.c (when a file is being added).  This state is a state in    which the RCS file parsing routines in rcs.c cannot parse the file.     * Readlocks ensure that a reader won't try to look at a    half-written fileattr file (fileattr is not updated atomically).     (see also the description of anonymous read-only access in    "Password authentication security" node in doc/cvs.texinfo).     While I'm here, I'll try to summarize a few random suggestions    which periodically get made about how locks might be different:     1.  Check for EROFS.  Maybe useful, although in the presence of NFS    EROFS does *not* mean that the file system is unchanging.     2.  Provide an option to disable locks for operations which only    read (see above for some of the consequences).     3.  Have a server internally do the locking.  Probably a good    long-term solution, and many people have been working hard on code    changes which would eventually make it possible to have a server    which can handle various connections in one process, but there is    much, much work still to be done before this is feasible.  */
 end_comment
 
 begin_include
@@ -18,6 +18,66 @@ include|#
 directive|include
 file|<assert.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NANOSLEEP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"xtime.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* HAVE_NANOSLEEP */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+name|HAVE_USLEEP
+operator|&&
+name|defined
+name|HAVE_SELECT
+end_if
+
+begin_comment
+comment|/* use select as a workaround */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"xselect.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined HAVE_USLEEP&& defined HAVE_SELECT */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_NANOSLEEP */
+end_comment
 
 begin_struct
 struct|struct
@@ -1113,11 +1173,6 @@ decl_stmt|;
 block|{
 name|lock_simple_remove
 argument_list|(
-operator|(
-expr|struct
-name|lock
-operator|*
-operator|)
 name|p
 operator|->
 name|data
@@ -1366,9 +1421,7 @@ operator|||
 name|readonlyfs
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 comment|/* we only do one directory at a time for read locks! */
 if|if
@@ -1390,9 +1443,7 @@ literal|"Reader_Lock called while read locks set - Help!"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -1500,9 +1551,7 @@ name|NULL
 expr_stmt|;
 comment|/* We don't set global_readlock.repository to NULL.  I think this 	   only works because recurse.c will give a fatal error if we return 	   a nonzero value.  */
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 comment|/* write a read-lock */
@@ -1582,9 +1631,7 @@ name|global_readlock
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|err
-operator|)
 return|;
 block|}
 end_function
@@ -1644,9 +1691,7 @@ condition|(
 name|noexec
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 if|if
 condition|(
@@ -1690,9 +1735,7 @@ literal|"Writer_Lock called while write locks set - Help!"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 name|wait_repos
@@ -1789,9 +1832,7 @@ literal|"lock failed - giving up"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 case|case
 name|L_LOCKED
@@ -1838,9 +1879,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 default|default:
 if|if
@@ -1866,9 +1905,7 @@ name|lock_error
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 block|}
@@ -1905,9 +1942,7 @@ operator|!=
 name|L_OK
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 comment|/* apply the write lock */
 name|lock_error_repos
@@ -1920,20 +1955,13 @@ name|lock_error
 operator|=
 name|write_lock
 argument_list|(
-operator|(
-expr|struct
-name|lock
-operator|*
-operator|)
 name|p
 operator|->
 name|data
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -2086,9 +2114,7 @@ expr_stmt|;
 block|}
 comment|/* indicate we failed due to read locks instead of error */
 return|return
-operator|(
 name|L_LOCKED
-operator|)
 return|;
 block|}
 comment|/* write the write-lock file */
@@ -2191,9 +2217,7 @@ name|tmp
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|L_ERROR
-operator|)
 return|;
 block|}
 name|free
@@ -2202,16 +2226,12 @@ name|tmp
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|L_OK
-operator|)
 return|;
 block|}
 else|else
 return|return
-operator|(
 name|status
-operator|)
 return|;
 block|}
 end_function
@@ -2232,6 +2252,10 @@ modifier|*
 name|repository
 decl_stmt|;
 block|{
+name|char
+modifier|*
+name|lockdir
+decl_stmt|;
 name|char
 modifier|*
 name|line
@@ -2269,6 +2293,28 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|lockdir
+operator|=
+name|lock_name
+argument_list|(
+name|repository
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|lockdir
+index|[
+name|strlen
+argument_list|(
+name|lockdir
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* remove trailing slash */
 do|do
 block|{
 if|if
@@ -2278,7 +2324,7 @@ name|dirp
 operator|=
 name|CVS_OPENDIR
 argument_list|(
-name|repository
+name|lockdir
 argument_list|)
 operator|)
 operator|==
@@ -2292,7 +2338,7 @@ literal|0
 argument_list|,
 literal|"cannot open directory %s"
 argument_list|,
-name|repository
+name|lockdir
 argument_list|)
 expr_stmt|;
 name|ret
@@ -2333,31 +2379,16 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* ignore our own readlock, if any */
-if|if
-condition|(
-name|readlock
-operator|&&
-name|strcmp
-argument_list|(
-name|readlock
-argument_list|,
-name|dp
-operator|->
-name|d_name
-argument_list|)
-operator|==
-literal|0
-condition|)
-continue|continue;
 name|line
 operator|=
 name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
-name|repository
+name|lockdir
 argument_list|)
+operator|+
+literal|1
 operator|+
 name|strlen
 argument_list|(
@@ -2366,7 +2397,7 @@ operator|->
 name|d_name
 argument_list|)
 operator|+
-literal|5
+literal|1
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2378,7 +2409,7 @@ name|line
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|repository
+name|lockdir
 argument_list|,
 name|dp
 operator|->
@@ -2447,7 +2478,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* If the file doesn't exist, it just means that it disappeared 		       between the time we did the readdir and the time we did 		       the stat.  */
+comment|/* If the file doesn't exist, it just means that it                      * disappeared between the time we did the readdir and the                      * time we did the stat.                      */
 if|if
 condition|(
 operator|!
@@ -2518,10 +2549,19 @@ operator|<
 literal|0
 condition|)
 do|;
+if|if
+condition|(
+name|lockdir
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|lockdir
+argument_list|)
+expr_stmt|;
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 block|}
 end_function
@@ -2627,7 +2667,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Persistently tries to make the directory "lckdir",, which serves as a  * lock. If the create time on the directory is greater than CVSLCKAGE  * seconds old, just try to remove the directory.  */
+comment|/*  * Persistently tries to make the directory "lckdir", which serves as a  * lock.  *  * #ifdef CVS_FUDGELOCKS  * If the create time on the directory is greater than CVSLCKAGE  * seconds old, just try to remove the directory.  * #endif  *  */
 end_comment
 
 begin_function
@@ -2650,6 +2690,9 @@ decl_stmt|;
 block|{
 name|int
 name|waited
+decl_stmt|;
+name|long
+name|us
 decl_stmt|;
 name|struct
 name|stat
@@ -2692,6 +2735,10 @@ comment|/*      * Note that it is up to the callers of set_lock() to arrange for
 name|waited
 operator|=
 literal|0
+expr_stmt|;
+name|us
+operator|=
+literal|1
 expr_stmt|;
 name|lock
 operator|->
@@ -2908,6 +2955,125 @@ operator|(
 name|L_LOCKED
 operator|)
 return|;
+comment|/* if possible, try a very short sleep without a message */
+if|if
+condition|(
+operator|!
+name|waited
+operator|&&
+name|us
+operator|<
+literal|1000
+condition|)
+block|{
+name|us
+operator|+=
+name|us
+expr_stmt|;
+if|#
+directive|if
+name|defined
+name|HAVE_NANOSLEEP
+block|{
+name|struct
+name|timespec
+name|ts
+decl_stmt|;
+name|ts
+operator|.
+name|tv_sec
+operator|=
+literal|0
+expr_stmt|;
+name|ts
+operator|.
+name|tv_nsec
+operator|=
+name|us
+operator|*
+literal|1000
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|nanosleep
+argument_list|(
+operator|&
+name|ts
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+elif|#
+directive|elif
+name|defined
+name|HAVE_USLEEP
+operator|(
+name|void
+operator|)
+name|usleep
+argument_list|(
+name|us
+argument_list|)
+expr_stmt|;
+continue|continue;
+elif|#
+directive|elif
+name|defined
+name|HAVE_SELECT
+block|{
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
+name|tv
+operator|.
+name|tv_sec
+operator|=
+literal|0
+expr_stmt|;
+name|tv
+operator|.
+name|tv_usec
+operator|=
+name|us
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|select
+argument_list|(
+literal|0
+argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|&
+name|tv
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+endif|#
+directive|endif
+block|}
 name|lock_wait
 argument_list|(
 name|lock
@@ -3202,9 +3368,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -3219,10 +3382,12 @@ operator|,
 name|int
 name|err
 operator|,
+specifier|const
 name|char
 operator|*
 name|repository
 operator|,
+specifier|const
 name|char
 operator|*
 name|update_dir
@@ -3265,10 +3430,12 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|repository
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|update_dir
@@ -3410,17 +3577,12 @@ name|int
 name|aflag
 decl_stmt|;
 block|{
-name|int
-name|err
-decl_stmt|;
 comment|/*      * Run the recursion processor to find all the dirs to lock and lock all      * the dirs      */
 name|lock_tree_list
 operator|=
 name|getlist
 argument_list|()
 expr_stmt|;
-name|err
-operator|=
 name|start_recursion
 argument_list|(
 operator|(
@@ -3461,6 +3623,12 @@ operator|)
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|sortlist

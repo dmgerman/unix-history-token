@@ -25,59 +25,9 @@ begin_comment
 comment|/* This covers the rest of the file. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_GETPASSPHRASE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|GETPASS
-value|getpassphrase
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|GETPASS
-value|getpass
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* There seems to be very little agreement on which system header    getpass is declared in.  With a lot of fancy autoconfiscation,    we could perhaps detect this, but for now we'll just rely on    _CRAY, since Cray is perhaps the only system on which our own    declaration won't work (some Crays declare the 2#$@% thing as    varadic, believe it or not).  On Cray, getpass will be declared    in either stdlib.h or unistd.h.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_CRAY
-end_ifndef
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|GETPASS
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -639,7 +589,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * static char *  * password_entry_operation (  * 			     password_entry_operation_t operation,  * 			     cvsroot_t *root,  * 			     char *newpassword  * 			    );  *  * Search the password file and depending on the value of operation:  *  *	Mode				Action  *	password_entry_lookup		Return the password  *	password_entry_delete		Delete the entry from the file, if it exists  *	password_entry_add		Replace the line with the new one, else append it  *  * Because the user might be accessing multiple repositories, with  * different passwords for each one, the format of ~/.cvspass is:  *  * [user@]host:[port]/path Aencoded_password  * [user@]host:[port]/path Aencoded_password  * ...  *  * New entries are always of the form:  *  * /1 user@host:port/path Aencoded_password  *  * but the old format is supported for backwards compatibility.  * The entry version string wasn't strictly necessary, but it avoids the  * overhead of parsing some entries since we know it is already in canonical  * form and allows room for expansion later, say, if we want to allow spaces  * and/or other characters to be escaped in the string.  Also, the new entries  * would have been ignored by old versions of CVS anyhow since those versions  * didn't know how to parse a port number.  *  * The "A" before "encoded_password" is a literal capital A.  It's a  * version number indicating which form of scrambling we're doing on  * the password -- someday we might provide something more secure than  * the trivial encoding we do now, and when that day comes, it would  * be nice to remain backward-compatible.  *  * Like .netrc, the file's permissions are the only thing preventing  * it from being read by others.  Unlike .netrc, we will not be  * fascist about it, at most issuing a warning, and never refusing to  * work.  *  * INPUTS  * 	operation	operation to perform  * 	root		cvsroot_t to look up  * 	newpassword	prescrambled new password, for password_entry_add_mode  *  * RETURNS  * 	-1	if password_entry_lookup_mode not specified  * 	NULL	on failed lookup  * 	pointer to a copy of the password string otherwise, which the caller is  * 		responsible for disposing of  */
+comment|/*  * static char *  * password_entry_operation (  * 			     password_entry_operation_t operation,  * 			     cvsroot_t *root,  * 			     char *newpassword  * 			    );  *  * Search the password file and depending on the value of operation:  *  *	Mode				Action  *	password_entry_lookup		Return the password  *	password_entry_delete		Delete the entry from the file, if it  *                                      exists.  *	password_entry_add		Replace the line with the new one, else  *                                      append it.  *  * Because the user might be accessing multiple repositories, with  * different passwords for each one, the format of ~/.cvspass is:  *  * [user@]host:[port]/path Aencoded_password  * [user@]host:[port]/path Aencoded_password  * ...  *  * New entries are always of the form:  *  * /1 user@host:port/path Aencoded_password  *  * but the old format is supported for backwards compatibility.  * The entry version string wasn't strictly necessary, but it avoids the  * overhead of parsing some entries since we know it is already in canonical  * form and allows room for expansion later, say, if we want to allow spaces  * and/or other characters to be escaped in the string.  Also, the new entries  * would have been ignored by old versions of CVS anyhow since those versions  * didn't know how to parse a port number.  *  * The "A" before "encoded_password" is a literal capital A.  It's a  * version number indicating which form of scrambling we're doing on  * the password -- someday we might provide something more secure than  * the trivial encoding we do now, and when that day comes, it would  * be nice to remain backward-compatible.  *  * Like .netrc, the file's permissions are the only thing preventing  * it from being read by others.  Unlike .netrc, we will not be  * fascist about it, at most issuing a warning, and never refusing to  * work.  *  * INPUTS  * 	operation	operation to perform  * 	root		cvsroot_t to look up  * 	newpassword	prescrambled new password, for password_entry_add_mode  *  * RETURNS  * 	-1	if password_entry_lookup_mode not specified  * 	NULL	on failed lookup  * 	pointer to a copy of the password string otherwise, which the caller is  * 		responsible for disposing of  */
 end_comment
 
 begin_typedef
@@ -706,6 +656,9 @@ name|line_length
 decl_stmt|;
 name|long
 name|line
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|char
 modifier|*
@@ -740,7 +693,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"internal error: can only call password_entry_operation with pserver method"
+literal|"\ internal error: can only call password_entry_operation with pserver method"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1691,7 +1644,7 @@ name|tmp
 decl_stmt|;
 name|tmp
 operator|=
-name|GETPASS
+name|getpass
 argument_list|(
 literal|"CVS password: "
 argument_list|)
@@ -1815,14 +1768,12 @@ operator|->
 name|password
 condition|)
 return|return
-operator|(
 name|scramble
 argument_list|(
 name|current_parsed_root
 operator|->
 name|password
 argument_list|)
-operator|)
 return|;
 comment|/* If someone (i.e., login()) is calling connect_to_pserver() out of        context, then assume they have supplied the correct, scrambled        password. */
 if|if

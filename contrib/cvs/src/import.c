@@ -29,6 +29,7 @@ name|get_comment
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|user
@@ -463,7 +464,7 @@ literal|0
 argument_list|,
 literal|"-q or -Q must be specified before \"%s\""
 argument_list|,
-name|command_name
+name|cvs_cmd_name
 argument_list|)
 expr_stmt|;
 break|break;
@@ -631,6 +632,90 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Don't allow "CVS" as any directory in module path.      *      * Could abstract this to valid_module_path, but I don't think we'll need      * to call it from anywhere else.      */
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|strstr
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"CVS"
+argument_list|)
+operator|)
+operator|&&
+comment|/* path contains "CVS" AND ... */
+operator|(
+operator|(
+name|cp
+operator|==
+name|argv
+index|[
+literal|0
+index|]
+operator|)
+operator|||
+name|ISDIRSEP
+argument_list|(
+operator|*
+operator|(
+name|cp
+operator|-
+literal|1
+operator|)
+argument_list|)
+operator|)
+operator|&&
+comment|/* /^CVS/ OR m#/CVS# AND ... */
+operator|(
+operator|(
+operator|*
+operator|(
+name|cp
+operator|+
+literal|3
+operator|)
+operator|==
+literal|'\0'
+operator|)
+operator|||
+name|ISDIRSEP
+argument_list|(
+operator|*
+operator|(
+name|cp
+operator|+
+literal|3
+operator|)
+argument_list|)
+operator|)
+comment|/* /CVS$/ OR m#CVS/# */
+condition|)
+block|{
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"The word `CVS' is reserved by CVS and may not be used"
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"as a directory in a path or as a file name."
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -1742,10 +1827,6 @@ name|p
 operator|->
 name|data
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|li
 expr_stmt|;
 operator|(
@@ -2589,10 +2670,6 @@ name|Entnode
 modifier|*
 name|entdata
 init|=
-operator|(
-name|Entnode
-operator|*
-operator|)
 name|node
 operator|->
 name|data
@@ -2947,6 +3024,19 @@ argument_list|,
 name|vers
 operator|->
 name|vn_rcs
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|,
 name|expand
 argument_list|,
@@ -4303,6 +4393,7 @@ name|get_comment
 parameter_list|(
 name|user
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|user
@@ -4520,35 +4611,42 @@ parameter_list|,
 name|add_logfp
 parameter_list|)
 comment|/* Log message for the addition.  Not used if add_vhead == NULL.  */
+specifier|const
 name|char
 modifier|*
 name|message
 decl_stmt|;
 comment|/* Filename of the RCS file to create.  */
+specifier|const
 name|char
 modifier|*
 name|rcs
 decl_stmt|;
 comment|/* Filename of the file to serve as the contents of the initial        revision.  Even if add_vhead is NULL, we use this to determine        the modes to give the new RCS file.  */
+specifier|const
 name|char
 modifier|*
 name|user
 decl_stmt|;
 comment|/* Revision number of head that we are adding.  Normally 1.1 but        could be another revision as long as ADD_VBRANCH is a branch        from it.  If NULL, then just add an empty file without any        revisions (similar to the one created by "rcs -i").  */
+specifier|const
 name|char
 modifier|*
 name|add_vhead
 decl_stmt|;
 comment|/* Keyword expansion mode, e.g., "b" for binary.  NULL means the        default behavior.  */
+specifier|const
 name|char
 modifier|*
 name|key_opt
 decl_stmt|;
 comment|/* Vendor branch to import to, or NULL if none.  If non-NULL, then        vtag should also be non-NULL.  */
+specifier|const
 name|char
 modifier|*
 name|add_vbranch
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|vtag
@@ -4562,6 +4660,7 @@ name|targv
 index|[]
 decl_stmt|;
 comment|/* If non-NULL, description for the file.  If NULL, the description        will be empty.  */
+specifier|const
 name|char
 modifier|*
 name|desctext
@@ -4620,15 +4719,10 @@ name|char
 modifier|*
 name|tocvsPath
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|userfile
-decl_stmt|;
-name|char
-modifier|*
-name|local_opt
-init|=
-name|key_opt
 decl_stmt|;
 name|char
 modifier|*
@@ -4651,7 +4745,7 @@ return|;
 comment|/* Note that as the code stands now, the -k option overrides any        settings in wrappers (whether CVSROOT/cvswrappers, -W, or        whatever).  Some have suggested this should be the other way        around.  As far as I know the documentation doesn't say one way        or the other.  Before making a change of this sort, should think        about what is best, document it (in cvs.texinfo and NEWS),&c.  */
 if|if
 condition|(
-name|local_opt
+name|key_opt
 operator|==
 name|NULL
 condition|)
@@ -4666,7 +4760,7 @@ name|WRAP_RCSOPTION
 argument_list|)
 condition|)
 block|{
-name|local_opt
+name|key_opt
 operator|=
 name|free_opt
 operator|=
@@ -4778,13 +4872,13 @@ name|userfile
 argument_list|,
 operator|(
 operator|(
-name|local_opt
+name|key_opt
 operator|!=
 name|NULL
 operator|&&
 name|strcmp
 argument_list|(
-name|local_opt
+name|key_opt
 argument_list|,
 literal|"b"
 argument_list|)
@@ -5075,13 +5169,13 @@ goto|;
 block|}
 if|if
 condition|(
-name|local_opt
+name|key_opt
 operator|!=
 name|NULL
 operator|&&
 name|strcmp
 argument_list|(
-name|local_opt
+name|key_opt
 argument_list|,
 literal|"kv"
 argument_list|)
@@ -5097,7 +5191,7 @@ name|fprcs
 argument_list|,
 literal|"expand   @%s@;\012"
 argument_list|,
-name|local_opt
+name|key_opt
 argument_list|)
 operator|<
 literal|0
@@ -6495,6 +6589,7 @@ name|size
 parameter_list|,
 name|fp
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|buf
@@ -6508,6 +6603,7 @@ name|fp
 decl_stmt|;
 block|{
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -6537,18 +6633,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|int
+name|size_t
 name|len
-decl_stmt|;
+init|=
 operator|++
-name|next
-expr_stmt|;
-name|len
-operator|=
 name|next
 operator|-
 name|cp
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|fwrite

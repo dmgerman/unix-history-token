@@ -449,10 +449,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|command_name
+name|cvs_cmd_name
 operator|&&
 operator|*
-name|command_name
+name|cvs_cmd_name
 condition|)
 block|{
 name|cvs_outerr
@@ -477,7 +477,7 @@ argument_list|)
 expr_stmt|;
 name|cvs_outerr
 argument_list|(
-name|command_name
+name|cvs_cmd_name
 argument_list|,
 literal|0
 argument_list|)

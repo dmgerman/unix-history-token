@@ -885,7 +885,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* This case is not efficient.  Fortunately, I don't think it            ever actually happens.  */
+comment|/* This case is not efficient.  Fortunately, I don't think it 	   ever actually happens.  */
 name|nbytes
 operator|=
 name|read
@@ -934,7 +934,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* End of file.  This assumes that we are using POSIX or BSD            style nonblocking I/O.  On System V we will get a zero            return if there is no data, even when not at EOF.  */
+comment|/* End of file.  This assumes that we are using POSIX or BSD 	   style nonblocking I/O.  On System V we will get a zero 	   return if there is no data, even when not at EOF.  */
 return|return
 operator|-
 literal|1
@@ -1060,7 +1060,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* A nonblocking write failed to write any data.  Just                    return.  */
+comment|/* A nonblocking write failed to write any data.  Just 		   return.  */
 return|return
 literal|0
 return|;
@@ -1251,6 +1251,12 @@ name|buf
 operator|->
 name|closure
 argument_list|)
+expr_stmt|;
+name|buf
+operator|->
+name|closure
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 literal|0
@@ -3150,7 +3156,7 @@ operator|->
 name|directory
 argument_list|)
 decl_stmt|;
-comment|/* I think isabsolute (repos) should always be true, and that        any RELATIVE_REPOS stuff should only be in CVS/Repository        files, not the protocol (for compatibility), but I'm putting        in the isabsolute check just in case.              This is a good security precaution regardless. -DRP      */
+comment|/* isabsolute (repos) should always be true, but        this is a good security precaution regardless. -DRP      */
 if|if
 condition|(
 operator|!
@@ -3391,6 +3397,10 @@ condition|(
 name|lim
 operator|<
 literal|0
+operator|||
+name|lim
+operator|>
+literal|10000
 condition|)
 return|return;
 name|p
@@ -6123,6 +6133,10 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
 name|timefield
 operator|=
 name|strchr
@@ -6133,9 +6147,32 @@ literal|1
 argument_list|,
 literal|'/'
 argument_list|)
-operator|+
-literal|1
+operator|)
+operator|||
+operator|*
+operator|++
+name|timefield
+operator|==
+literal|'\0'
+condition|)
+block|{
+comment|/* We didn't find the record separator or it is followed by 		 * the end of the string, so just exit. 		 */
+if|if
+condition|(
+name|alloc_pending
+argument_list|(
+literal|80
+argument_list|)
+condition|)
+name|sprintf
+argument_list|(
+name|pending_error_text
+argument_list|,
+literal|"E Malformed Entry encountered."
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 comment|/* If the time field is not currently empty, then one of 	     * serve_modified, serve_is_modified,& serve_unchanged were 	     * already called for this file.  We would like to ignore the 	     * reinvocation silently or, better yet, exit with an error 	     * message, but we just avoid the copy-forward and overwrite the 	     * value from the last invocation instead.  See the comment below 	     * for more. 	     */
 if|if
 condition|(
@@ -6310,6 +6347,10 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
 name|timefield
 operator|=
 name|strchr
@@ -6320,9 +6361,32 @@ literal|1
 argument_list|,
 literal|'/'
 argument_list|)
-operator|+
-literal|1
+operator|)
+operator|||
+operator|*
+operator|++
+name|timefield
+operator|==
+literal|'\0'
+condition|)
+block|{
+comment|/* We didn't find the record separator or it is followed by 		 * the end of the string, so just exit. 		 */
+if|if
+condition|(
+name|alloc_pending
+argument_list|(
+literal|80
+argument_list|)
+condition|)
+name|sprintf
+argument_list|(
+name|pending_error_text
+argument_list|,
+literal|"E Malformed Entry encountered."
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 comment|/* If the time field is not currently empty, then one of 	     * serve_modified, serve_is_modified,& serve_unchanged were 	     * already called for this file.  We would like to ignore the 	     * reinvocation silently or, better yet, exit with an error 	     * message, but we just avoid the copy-forward and overwrite the 	     * value from the last invocation instead.  See the comment below 	     * for more. 	     */
 if|if
 condition|(
@@ -6603,19 +6667,81 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|error_pending
 argument_list|()
 condition|)
 return|return;
+comment|/* Verify that the entry is well-formed.  This can avoid problems later.      * At the moment we only check that the Entry contains five slashes in      * approximately the correct locations since some of the code makes      * assumptions about this.      */
+name|cp
+operator|=
+name|arg
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'D'
+condition|)
+name|cp
+operator|++
+expr_stmt|;
+while|while
+condition|(
+name|i
+operator|++
+operator|<
+literal|5
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|cp
+operator|||
+operator|*
+name|cp
+operator|!=
+literal|'/'
+condition|)
+block|{
+if|if
+condition|(
+name|alloc_pending
+argument_list|(
+literal|80
+argument_list|)
+condition|)
+name|sprintf
+argument_list|(
+name|pending_error_text
+argument_list|,
+literal|"E protocol error: Malformed Entry"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|cp
+operator|=
+name|strchr
+argument_list|(
+name|cp
+operator|+
+literal|1
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+block|}
 name|p
 operator|=
-operator|(
-expr|struct
-name|an_entry
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -6970,7 +7096,7 @@ name|error_pending
 argument_list|()
 condition|)
 block|{
-comment|/* We open in append mode because we don't want to clobber an            existing Entries file.  If we are checking out a module            which explicitly lists more than one file in a particular            directory, then we will wind up calling            server_write_entries for each such file.  */
+comment|/* We open in append mode because we don't want to clobber an 	   existing Entries file.  If we are checking out a module 	   which explicitly lists more than one file in a particular 	   directory, then we will wind up calling 	   server_write_entries for each such file.  */
 name|f
 operator|=
 name|CVS_FOPEN
@@ -7531,6 +7657,17 @@ name|cp
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|data
+index|[
+literal|0
+index|]
+condition|)
+goto|goto
+name|error
+goto|;
+if|if
+condition|(
 name|strchr
 argument_list|(
 name|data
@@ -8076,6 +8213,29 @@ condition|)
 return|return;
 if|if
 condition|(
+name|argument_count
+operator|>=
+literal|10000
+condition|)
+block|{
+if|if
+condition|(
+name|alloc_pending
+argument_list|(
+literal|80
+argument_list|)
+condition|)
+name|sprintf
+argument_list|(
+name|pending_error_text
+argument_list|,
+literal|"E Protocol error: too many arguments"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|argument_vector_size
 operator|<=
 name|argument_count
@@ -8188,6 +8348,29 @@ name|error_pending
 argument_list|()
 condition|)
 return|return;
+if|if
+condition|(
+name|argument_count
+operator|<=
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|alloc_pending
+argument_list|(
+literal|80
+argument_list|)
+condition|)
+name|sprintf
+argument_list|(
+name|pending_error_text
+argument_list|,
+literal|"E Protocol error: called argumentx without prior call to argument"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|p
 operator|=
 name|argument_vector
@@ -8327,9 +8510,26 @@ index|]
 condition|)
 block|{
 case|case
+literal|'l'
+case|:
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"WARNING: global `-l' option ignored."
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 name|noexec
+operator|=
+literal|1
+expr_stmt|;
+name|logoff
 operator|=
 literal|1
 expr_stmt|;
@@ -8354,14 +8554,6 @@ case|case
 literal|'Q'
 case|:
 name|really_quiet
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'l'
-case|:
-name|logoff
 operator|=
 literal|1
 expr_stmt|;
@@ -8497,7 +8689,7 @@ condition|(
 name|cvs_gssapi_wrapping
 condition|)
 block|{
-comment|/* We're already using a gssapi_wrap buffer for stream            authentication.  Flush everything we've output so far, and            turn on encryption for future data.  On the input side, we            should only have unwrapped as far as the Gssapi-encrypt            command, so future unwrapping will become encrypted.  */
+comment|/* We're already using a gssapi_wrap buffer for stream 	   authentication.  Flush everything we've output so far, and 	   turn on encryption for future data.  On the input side, we 	   should only have unwrapped as far as the Gssapi-encrypt 	   command, so future unwrapping will become encrypted.  */
 name|buf_flush
 argument_list|(
 name|buf_to_net
@@ -8594,7 +8786,7 @@ condition|(
 name|cvs_gssapi_wrapping
 condition|)
 block|{
-comment|/* We're already using a gssapi_wrap buffer for encryption.            That includes authentication, so we don't have to do            anything further.  */
+comment|/* We're already using a gssapi_wrap buffer for encryption. 	   That includes authentication, so we don't have to do 	   anything further.  */
 return|return;
 block|}
 name|buf_to_net
@@ -8642,9 +8834,6 @@ end_endif
 begin_comment
 comment|/* HAVE_GSSAPI */
 end_comment
-
-begin_escape
-end_escape
 
 begin_ifdef
 ifdef|#
@@ -8704,81 +8893,6 @@ begin_comment
 comment|/* SERVER_LO_WATER */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|set_nonblock_fd
-name|PROTO
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Set buffer BUF to non-blocking I/O.  Returns 0 for success or errno  * code.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|set_nonblock_fd
-parameter_list|(
-name|fd
-parameter_list|)
-name|int
-name|fd
-decl_stmt|;
-block|{
-name|int
-name|flags
-decl_stmt|;
-name|flags
-operator|=
-name|fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_GETFL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|<
-literal|0
-condition|)
-return|return
-name|errno
-return|;
-if|if
-condition|(
-name|fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_SETFL
-argument_list|,
-name|flags
-operator||
-name|O_NONBLOCK
-argument_list|)
-operator|<
-literal|0
-condition|)
-return|return
-name|errno
-return|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
 begin_endif
 endif|#
 directive|endif
@@ -8787,9 +8901,6 @@ end_endif
 begin_comment
 comment|/* SERVER_FLOWCONTROL */
 end_comment
-
-begin_escape
-end_escape
 
 begin_decl_stmt
 specifier|static
@@ -8949,42 +9060,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|void
-name|serve_case
-name|PROTO
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|serve_case
-parameter_list|(
-name|arg
-parameter_list|)
-name|char
-modifier|*
-name|arg
-decl_stmt|;
-block|{
-name|ign_case
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_escape
-end_escape
 
 begin_decl_stmt
 specifier|static
@@ -9193,7 +9268,7 @@ operator|&
 name|CVS_CMD_MODIFIES_REPOSITORY
 condition|)
 block|{
-comment|/* This command has the potential to modify the repository, so          * we check if the user have permission to do that.          *          * (Only relevant for remote users -- local users can do          * whatever normal Unix file permissions allow them to do.)          *          * The decision method:          *          *    If $CVSROOT/CVSADMROOT_READERS exists and user is listed          *    in it, then read-only access for user.          *          *    Or if $CVSROOT/CVSADMROOT_WRITERS exists and user NOT          *    listed in it, then also read-only access for user.          *          *    Else read-write access for user.          */
+comment|/* This command has the potential to modify the repository, so 	 * we check if the user have permission to do that. 	 * 	 * (Only relevant for remote users -- local users can do 	 * whatever normal Unix file permissions allow them to do.) 	 * 	 * The decision method: 	 * 	 *    If $CVSROOT/CVSADMROOT_READERS exists and user is listed 	 *    in it, then read-only access for user. 	 * 	 *    Or if $CVSROOT/CVSADMROOT_WRITERS exists and user NOT 	 *    listed in it, then also read-only access for user. 	 * 	 *    Else read-write access for user. 	 */
 name|char
 modifier|*
 name|linebuf
@@ -9343,10 +9418,14 @@ operator|>=
 literal|0
 condition|)
 block|{
-comment|/* Hmmm, is it worth importing my own readline                     library into CVS?  It takes care of chopping                     leading and trailing whitespace, "#" comments, and                     newlines automatically when so requested.  Would                     save some code here...  -kff */
+comment|/* Hmmm, is it worth importing my own readline 		    library into CVS?  It takes care of chopping 		    leading and trailing whitespace, "#" comments, and 		    newlines automatically when so requested.  Would 		    save some code here...  -kff */
 comment|/* Chop newline by hand, for strcmp()'s sake. */
 if|if
 condition|(
+name|num_red
+operator|>
+literal|0
+operator|&&
 name|linebuf
 index|[
 name|num_red
@@ -9403,7 +9482,7 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-comment|/* If not listed specifically as a reader, then this user                 has write access by default unless writers are also                 specified in a file . */
+comment|/* If not listed specifically as a reader, then this user 		has write access by default unless writers are also 		specified in a file . */
 if|if
 condition|(
 name|fclose
@@ -9571,6 +9650,10 @@ block|{
 comment|/* Chop newline by hand, for strcmp()'s sake. */
 if|if
 condition|(
+name|num_red
+operator|>
+literal|0
+operator|&&
 name|linebuf
 index|[
 name|num_red
@@ -9728,9 +9811,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* Execute COMMAND in a subprocess with the approriate funky things done.  */
 end_comment
@@ -9748,12 +9828,23 @@ name|command_fds_to_drain
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SUNOS_KLUDGE
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
 name|max_command_fd
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -9779,6 +9870,67 @@ end_endif
 begin_comment
 comment|/* SERVER_FLOWCONTROL */
 end_comment
+
+begin_comment
+comment|/*  * Set buffer FD to non-blocking I/O.  Returns 0 for success or errno  * code.  */
+end_comment
+
+begin_function
+name|int
+name|set_nonblock_fd
+parameter_list|(
+name|fd
+parameter_list|)
+name|int
+name|fd
+decl_stmt|;
+block|{
+name|int
+name|flags
+decl_stmt|;
+name|flags
+operator|=
+name|fcntl
+argument_list|(
+name|fd
+argument_list|,
+name|F_GETFL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|<
+literal|0
+condition|)
+return|return
+name|errno
+return|;
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|fd
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|flags
+operator||
+name|O_NONBLOCK
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+name|errno
+return|;
+return|return
+literal|0
+return|;
+block|}
+end_function
 
 begin_function_decl
 specifier|static
@@ -9911,7 +10063,7 @@ condition|)
 goto|goto
 name|free_args_and_return
 goto|;
-comment|/* Global `command_name' is probably "server" right now -- only        serve_export() sets it to anything else.  So we will use local        parameter `cmd_name' to determine if this command is legal for        this user.  */
+comment|/* Global `cvs_cmd_name' is probably "server" right now -- only        serve_export() sets it to anything else.  So we will use local        parameter `cmd_name' to determine if this command is legal for        this user.  */
 if|if
 condition|(
 operator|!
@@ -9960,6 +10112,10 @@ goto|goto
 name|free_args_and_return
 goto|;
 block|}
+name|cvs_cmd_name
+operator|=
+name|cmd_name
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -10245,16 +10401,42 @@ argument_list|,
 name|protocol_memory_error
 argument_list|)
 expr_stmt|;
-comment|/* At this point we should no longer be using buf_to_net and            buf_from_net.  Instead, everything should go through            protocol.  */
+comment|/* At this point we should no longer be using buf_to_net and 	   buf_from_net.  Instead, everything should go through 	   protocol.  */
+if|if
+condition|(
+name|buf_to_net
+operator|!=
+name|NULL
+condition|)
+block|{
+name|buf_free
+argument_list|(
+name|buf_to_net
+argument_list|)
+expr_stmt|;
 name|buf_to_net
 operator|=
 name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|buf_from_net
+operator|!=
+name|NULL
+condition|)
+block|{
+name|buf_free
+argument_list|(
+name|buf_from_net
+argument_list|)
 expr_stmt|;
 name|buf_from_net
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* These were originally set up to use outbuf_memory_error.            Since we're now in the child, we should use the simpler            protocol_memory_error function.  */
+block|}
+comment|/* These were originally set up to use outbuf_memory_error. 	   Since we're now in the child, we should use the simpler 	   protocol_memory_error function.  */
 name|saved_output
 operator|->
 name|memory_error
@@ -10493,12 +10675,78 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* For now we just discard partial lines on stderr.  I suspect 	   that CVS can't write such lines unless there is a bug.  */
-comment|/* 	 * When we exit, that will close the pipes, giving an EOF to 	 * the parent. 	 */
 name|buf_free
 argument_list|(
 name|protocol
 argument_list|)
 expr_stmt|;
+comment|/* Close the pipes explicitly in order to send an EOF to the parent, 	 * then wait for the parent to close the flow control pipe.  This 	 * avoids a race condition where a child which dumped more than the 	 * high water mark into the pipes could complete its job and exit, 	 * leaving the parent process to attempt to write a stop byte to the 	 * closed flow control pipe, which earned the parent a SIGPIPE, which 	 * it normally only expects on the network pipe and that causes it to 	 * exit with an error message, rather than the SIGCHILD that it knows 	 * how to handle correctly. 	 */
+comment|/* Let exit() close STDIN - it's from /dev/null anyhow.  */
+name|fclose
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|protocol_pipe
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SERVER_FLOWCONTROL
+block|{
+name|char
+name|junk
+decl_stmt|;
+name|ssize_t
+name|status
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|status
+operator|=
+name|read
+argument_list|(
+name|flowcontrol_pipe
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|junk
+argument_list|,
+literal|1
+argument_list|)
+operator|)
+operator|>
+literal|0
+operator|||
+operator|(
+name|status
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EAGAIN
+operator|)
+condition|)
+empty_stmt|;
+block|}
+comment|/* FIXME: No point in printing an error message with error(), 	 * as STDERR is already closed, but perhaps this could be syslogged? 	 */
+endif|#
+directive|endif
 name|exit
 argument_list|(
 name|exitstatus
@@ -10638,10 +10886,15 @@ name|num_to_check
 operator|=
 name|STDOUT_FILENO
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SUNOS_KLUDGE
 name|max_command_fd
 operator|=
 name|num_to_check
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * File descriptors are numbered from 0, so num_to_check needs to 	 * be one larger than the largest descriptor. 	 */
 operator|++
 name|num_to_check
@@ -11171,7 +11424,7 @@ block|}
 comment|/* This process of selecting on the three pipes means that 	     we might not get output in the same order in which it 	     was written, thus producing the well-known 	     "out-of-order" bug.  If the child process uses 	     cvs_output and cvs_outerr, it will send everything on 	     the protocol_pipe and avoid this problem, so the 	     solution is to use cvs_output and cvs_outerr in the 	     child process.  */
 do|do
 block|{
-comment|/* This used to select on exceptions too, but as far                    as I know there was never any reason to do that and                    SCO doesn't let you select on exceptions on pipes.  */
+comment|/* This used to select on exceptions too, but as far 		   as I know there was never any reason to do that and 		   SCO doesn't let you select on exceptions on pipes.  */
 name|numfds
 operator|=
 name|select
@@ -11835,12 +12088,13 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-comment|/* Test for a core dump.  Is this portable?  */
+comment|/* Test for a core dump.  */
 if|if
 condition|(
+name|WCOREDUMP
+argument_list|(
 name|status
-operator|&
-literal|0x80
+argument_list|)
 condition|)
 block|{
 name|buf_output0
@@ -12402,7 +12656,7 @@ else|else
 return|return;
 comment|/* ??? */
 block|}
-comment|/* This assumes that we are using BSD or POSIX nonblocking                I/O.  System V nonblocking I/O returns zero if there is                nothing to read.  */
+comment|/* This assumes that we are using BSD or POSIX nonblocking 	       I/O.  System V nonblocking I/O returns zero if there is 	       nothing to read.  */
 if|if
 condition|(
 name|got
@@ -12455,9 +12709,6 @@ begin_comment
 comment|/* SERVER_FLOWCONTROL */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* This variable commented in server.h.  */
 end_comment
@@ -12478,9 +12729,11 @@ name|output_dir
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -12497,10 +12750,12 @@ name|update_dir
 parameter_list|,
 name|repository
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|update_dir
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|repository
@@ -12576,9 +12831,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*  * Entries line that we are squirreling away to send to the client when  * we are ready.  */
 end_comment
@@ -12632,30 +12884,37 @@ name|date
 parameter_list|,
 name|conflict
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|version
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|timestamp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|options
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|tag
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|date
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|conflict
@@ -12905,6 +13164,7 @@ name|server_scratch
 parameter_list|(
 name|fname
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -13212,14 +13472,17 @@ name|update_dir
 parameter_list|,
 name|repository
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|update_dir
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|repository
@@ -13314,14 +13577,17 @@ name|repository
 parameter_list|,
 name|updated
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|update_dir
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|repository
@@ -13485,11 +13751,6 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
-comment|/* Tell cvslog() to behave like rlog not log.  */
-name|command_name
-operator|=
-literal|"rlog"
-expr_stmt|;
 name|do_cvs_command
 argument_list|(
 literal|"rlog"
@@ -13622,11 +13883,6 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
-comment|/* Tell cvstag() to behave like rtag not tag.  */
-name|command_name
-operator|=
-literal|"rtag"
-expr_stmt|;
 name|do_cvs_command
 argument_list|(
 literal|"rtag"
@@ -14252,11 +14508,6 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
-comment|/* Tell annotate() to behave like rannotate not annotate.  */
-name|command_name
-operator|=
-literal|"rannotate"
-expr_stmt|;
 name|do_cvs_command
 argument_list|(
 literal|"rannotate"
@@ -14447,13 +14698,13 @@ name|tempdir
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Compensate for server_export()'s setting of command_name.      *      * [It probably doesn't matter if do_cvs_command() gets "export"      *  or "checkout", but we ought to be accurate where possible.]      */
+comment|/* Compensate for server_export()'s setting of cvs_cmd_name.      *      * [It probably doesn't matter if do_cvs_command() gets "export"      *  or "checkout", but we ought to be accurate where possible.]      */
 name|do_cvs_command
 argument_list|(
 operator|(
 name|strcmp
 argument_list|(
-name|command_name
+name|cvs_cmd_name
 argument_list|,
 literal|"export"
 argument_list|)
@@ -14484,7 +14735,7 @@ name|arg
 decl_stmt|;
 block|{
 comment|/* Tell checkout() to behave like export not checkout.  */
-name|command_name
+name|cvs_cmd_name
 operator|=
 literal|"export"
 expr_stmt|;
@@ -14495,9 +14746,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_function
 name|void
@@ -14511,18 +14759,22 @@ name|repository
 parameter_list|,
 name|newfile
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|update_dir
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|repository
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|newfile
@@ -15181,10 +15433,6 @@ argument_list|)
 expr_stmt|;
 name|entnode
 operator|=
-operator|(
-name|Entnode
-operator|*
-operator|)
 name|node
 operator|->
 name|data
@@ -15356,7 +15604,7 @@ comment|/* Basing this routine on read_and_gzip is not a 		   high-performance a
 name|int
 name|fd
 decl_stmt|;
-comment|/* Callers must avoid passing us a buffer if                    file_gzip_level is set.  We could handle this case,                    but it's not worth it since this case never arises                    with a current client and server.  */
+comment|/* Callers must avoid passing us a buffer if 		   file_gzip_level is set.  We could handle this case, 		   but it's not worth it since this case never arises 		   with a current client and server.  */
 if|if
 condition|(
 name|filebuf
@@ -15667,11 +15915,6 @@ argument_list|,
 name|filebuf
 argument_list|)
 expr_stmt|;
-name|buf_free
-argument_list|(
-name|filebuf
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* Note we only send a newline here if the file ended with one.  */
 comment|/* 	 * Avoid using up too much disk space for temporary files. 	 * A file which does not exist indicates that the file is up-to-date, 	 * which is now the case.  If this is SERVER_MERGED, the file is 	 * not up-to-date, and we indicate that by leaving the file there. 	 * I'm thinking of cases like "cvs update foo/foo.c foo". 	 */
@@ -15937,10 +16180,12 @@ name|update_dir
 parameter_list|,
 name|repository
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|update_dir
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|repository
@@ -16010,10 +16255,12 @@ name|update_dir
 parameter_list|,
 name|repository
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|update_dir
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|repository
@@ -16080,9 +16327,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_function
 name|void
 name|server_set_sticky
@@ -16097,18 +16341,22 @@ name|date
 parameter_list|,
 name|nonbranch
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|update_dir
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|repository
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|tag
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|date
@@ -16286,10 +16534,12 @@ begin_struct
 struct|struct
 name|template_proc_data
 block|{
+specifier|const
 name|char
 modifier|*
 name|update_dir
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|repository
@@ -16537,6 +16787,11 @@ literal|1
 return|;
 block|}
 block|}
+name|buf_send_counted
+argument_list|(
+name|protocol
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fclose
@@ -16571,10 +16826,12 @@ name|update_dir
 parameter_list|,
 name|repository
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|update_dir
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|repository
@@ -16617,9 +16874,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_function
 specifier|static
@@ -16990,7 +17244,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* We may not need to do this anymore -- check the definition            of aliases before removing */
+comment|/* We may not need to do this anymore -- check the definition 	   of aliases before removing */
 if|if
 condition|(
 name|argc
@@ -17276,451 +17530,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|server_prog
-parameter_list|(
-name|dir
-parameter_list|,
-name|name
-parameter_list|,
-name|which
-parameter_list|)
-name|char
-modifier|*
-name|dir
-decl_stmt|;
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|enum
-name|progs
-name|which
-decl_stmt|;
-block|{
-if|if
-condition|(
-operator|!
-name|supported_response
-argument_list|(
-literal|"Set-checkin-prog"
-argument_list|)
-condition|)
-block|{
-name|buf_output0
-argument_list|(
-name|protocol
-argument_list|,
-literal|"E \ warning: this client does not support -i or -u flags in the modules file.\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-switch|switch
-condition|(
-name|which
-condition|)
-block|{
-case|case
-name|PROG_CHECKIN
-case|:
-name|buf_output0
-argument_list|(
-name|protocol
-argument_list|,
-literal|"Set-checkin-prog "
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|PROG_UPDATE
-case|:
-name|buf_output0
-argument_list|(
-name|protocol
-argument_list|,
-literal|"Set-update-prog "
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-name|buf_output0
-argument_list|(
-name|protocol
-argument_list|,
-name|dir
-argument_list|)
-expr_stmt|;
-name|buf_append_char
-argument_list|(
-name|protocol
-argument_list|,
-literal|'\n'
-argument_list|)
-expr_stmt|;
-name|buf_output0
-argument_list|(
-name|protocol
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|buf_append_char
-argument_list|(
-name|protocol
-argument_list|,
-literal|'\n'
-argument_list|)
-expr_stmt|;
-name|buf_send_counted
-argument_list|(
-name|protocol
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|serve_checkin_prog
-parameter_list|(
-name|arg
-parameter_list|)
-name|char
-modifier|*
-name|arg
-decl_stmt|;
-block|{
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
-name|f
-operator|=
-name|CVS_FOPEN
-argument_list|(
-name|CVSADM_CIPROG
-argument_list|,
-literal|"w+"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|f
-operator|==
-name|NULL
-condition|)
-block|{
-name|int
-name|save_errno
-init|=
-name|errno
-decl_stmt|;
-if|if
-condition|(
-name|alloc_pending
-argument_list|(
-literal|80
-operator|+
-name|strlen
-argument_list|(
-name|CVSADM_CIPROG
-argument_list|)
-argument_list|)
-condition|)
-name|sprintf
-argument_list|(
-name|pending_error_text
-argument_list|,
-literal|"E cannot open %s"
-argument_list|,
-name|CVSADM_CIPROG
-argument_list|)
-expr_stmt|;
-name|pending_error
-operator|=
-name|save_errno
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|arg
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|int
-name|save_errno
-init|=
-name|errno
-decl_stmt|;
-if|if
-condition|(
-name|alloc_pending
-argument_list|(
-literal|80
-operator|+
-name|strlen
-argument_list|(
-name|CVSADM_CIPROG
-argument_list|)
-argument_list|)
-condition|)
-name|sprintf
-argument_list|(
-name|pending_error_text
-argument_list|,
-literal|"E cannot write to %s"
-argument_list|,
-name|CVSADM_CIPROG
-argument_list|)
-expr_stmt|;
-name|pending_error
-operator|=
-name|save_errno
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|fclose
-argument_list|(
-name|f
-argument_list|)
-operator|==
-name|EOF
-condition|)
-block|{
-name|int
-name|save_errno
-init|=
-name|errno
-decl_stmt|;
-if|if
-condition|(
-name|alloc_pending
-argument_list|(
-literal|80
-operator|+
-name|strlen
-argument_list|(
-name|CVSADM_CIPROG
-argument_list|)
-argument_list|)
-condition|)
-name|sprintf
-argument_list|(
-name|pending_error_text
-argument_list|,
-literal|"E cannot close %s"
-argument_list|,
-name|CVSADM_CIPROG
-argument_list|)
-expr_stmt|;
-name|pending_error
-operator|=
-name|save_errno
-expr_stmt|;
-return|return;
-block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|serve_update_prog
-parameter_list|(
-name|arg
-parameter_list|)
-name|char
-modifier|*
-name|arg
-decl_stmt|;
-block|{
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
-comment|/* Before we do anything we need to make sure we are not in readonly        mode.  */
-if|if
-condition|(
-operator|!
-name|check_command_legal_p
-argument_list|(
-literal|"commit"
-argument_list|)
-condition|)
-block|{
-comment|/* I might be willing to make this a warning, except we lack the 	   machinery to do so.  */
-if|if
-condition|(
-name|alloc_pending
-argument_list|(
-literal|80
-argument_list|)
-condition|)
-name|sprintf
-argument_list|(
-name|pending_error_text
-argument_list|,
-literal|"\ E Flag -u in modules not allowed in readonly mode"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|f
-operator|=
-name|CVS_FOPEN
-argument_list|(
-name|CVSADM_UPROG
-argument_list|,
-literal|"w+"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|f
-operator|==
-name|NULL
-condition|)
-block|{
-name|int
-name|save_errno
-init|=
-name|errno
-decl_stmt|;
-if|if
-condition|(
-name|alloc_pending
-argument_list|(
-literal|80
-operator|+
-name|strlen
-argument_list|(
-name|CVSADM_UPROG
-argument_list|)
-argument_list|)
-condition|)
-name|sprintf
-argument_list|(
-name|pending_error_text
-argument_list|,
-literal|"E cannot open %s"
-argument_list|,
-name|CVSADM_UPROG
-argument_list|)
-expr_stmt|;
-name|pending_error
-operator|=
-name|save_errno
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|arg
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|int
-name|save_errno
-init|=
-name|errno
-decl_stmt|;
-if|if
-condition|(
-name|alloc_pending
-argument_list|(
-literal|80
-operator|+
-name|strlen
-argument_list|(
-name|CVSADM_UPROG
-argument_list|)
-argument_list|)
-condition|)
-name|sprintf
-argument_list|(
-name|pending_error_text
-argument_list|,
-literal|"E cannot write to %s"
-argument_list|,
-name|CVSADM_UPROG
-argument_list|)
-expr_stmt|;
-name|pending_error
-operator|=
-name|save_errno
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|fclose
-argument_list|(
-name|f
-argument_list|)
-operator|==
-name|EOF
-condition|)
-block|{
-name|int
-name|save_errno
-init|=
-name|errno
-decl_stmt|;
-if|if
-condition|(
-name|alloc_pending
-argument_list|(
-literal|80
-operator|+
-name|strlen
-argument_list|(
-name|CVSADM_UPROG
-argument_list|)
-argument_list|)
-condition|)
-name|sprintf
-argument_list|(
-name|pending_error_text
-argument_list|,
-literal|"E cannot close %s"
-argument_list|,
-name|CVSADM_UPROG
-argument_list|)
-expr_stmt|;
-name|pending_error
-operator|=
-name|save_errno
-expr_stmt|;
-return|return;
-block|}
-block|}
-end_function
-
-begin_escape
-end_escape
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -17879,24 +17688,6 @@ argument_list|)
 block|,
 name|REQ_LINE
 argument_list|(
-literal|"Checkin-prog"
-argument_list|,
-name|serve_noop
-argument_list|,
-literal|0
-argument_list|)
-block|,
-name|REQ_LINE
-argument_list|(
-literal|"Update-prog"
-argument_list|,
-name|serve_noop
-argument_list|,
-literal|0
-argument_list|)
-block|,
-name|REQ_LINE
-argument_list|(
 literal|"Entry"
 argument_list|,
 name|serve_entry
@@ -17975,15 +17766,6 @@ argument_list|(
 literal|"Questionable"
 argument_list|,
 name|serve_questionable
-argument_list|,
-literal|0
-argument_list|)
-block|,
-name|REQ_LINE
-argument_list|(
-literal|"Case"
-argument_list|,
-name|serve_case
 argument_list|,
 literal|0
 argument_list|)
@@ -18588,6 +18370,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Next we shut down BUF_FROM_NET.  That will pick up the checksum 	 * generated when the client shuts down its buffer.  Then, after we 	 * have generated any final output, we shut down BUF_TO_NET. 	 */
+if|if
+condition|(
+name|buf_from_net
+operator|!=
+name|NULL
+condition|)
+block|{
 name|status
 operator|=
 name|buf_shutdown
@@ -18625,13 +18414,6 @@ condition|(
 name|dont_delete_temp
 condition|)
 block|{
-if|if
-condition|(
-name|buf_to_net
-operator|!=
-name|NULL
-condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -18663,9 +18445,15 @@ name|error_use_protocol
 operator|=
 literal|0
 expr_stmt|;
-block|}
 return|return;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|dont_delete_temp
+condition|)
+return|return;
 comment|/* What a bogus kludge.  This disgusting code makes all kinds of        assumptions about SunOS, and is only for a bug in that system.        So only enable it on Suns.  */
 ifdef|#
 directive|ifdef
@@ -19229,7 +19017,7 @@ name|orig_server_temp_dir
 operator|=
 name|server_temp_dir
 expr_stmt|;
-comment|/* Create the temporary directory, and set the mode to                700, to discourage random people from tampering with                it.  */
+comment|/* Create the temporary directory, and set the mode to 	       700, to discourage random people from tampering with 	       it.  */
 while|while
 condition|(
 operator|(
@@ -19430,11 +19218,6 @@ literal|1
 expr_stmt|;
 name|argument_vector
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 name|argument_vector_size
@@ -19508,10 +19291,6 @@ argument_list|,
 operator|&
 name|cmd
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -19723,6 +19502,43 @@ argument_list|(
 name|error_prog_name
 argument_list|)
 expr_stmt|;
+comment|/* We expect the client is done talking to us at this point.  If there is      * any data in the buffer or on the network pipe, then something we didn't      * prepare for is happening.      */
+if|if
+condition|(
+operator|!
+name|buf_empty
+argument_list|(
+name|buf_from_net
+argument_list|)
+condition|)
+block|{
+comment|/* Try to send the error message to the client, but also syslog it, in 	 * case the client isn't listening anymore. 	 */
+ifdef|#
+directive|ifdef
+name|HAVE_SYSLOG_H
+comment|/* FIXME: Can the IP address of the connecting client be retrieved 	 * and printed here? 	 */
+name|syslog
+argument_list|(
+name|LOG_DAEMON
+operator||
+name|LOG_ERR
+argument_list|,
+literal|"Dying gasps received from client."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"Dying gasps received from client."
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* This command will actually close the network buffers.  */
 name|server_cleanup
 argument_list|(
 literal|0
@@ -19733,9 +19549,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_if
 if|#
@@ -19766,6 +19579,10 @@ operator|(
 specifier|const
 name|char
 operator|*
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -19776,8 +19593,16 @@ specifier|static
 name|void
 name|switch_to_user
 parameter_list|(
+name|cvs_username
+parameter_list|,
 name|username
 parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|cvs_username
+decl_stmt|;
+comment|/* Only used for error messages. */
 specifier|const
 name|char
 modifier|*
@@ -19803,15 +19628,50 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* Normally this won't be reached; check_password contains 	   a similar check.  */
+comment|/* check_password contains a similar check, so this usually won't be 	   reached unless the CVS user is mapped to an invalid system user.  */
 name|printf
 argument_list|(
-literal|"E Fatal error, aborting.\n\ error 0 %s: no such user\n"
+literal|"E Fatal error, aborting.\n\ error 0 %s: no such system user\n"
 argument_list|,
 name|username
 argument_list|)
 expr_stmt|;
 comment|/* Don't worry about server_cleanup; server_active isn't set yet.  */
+name|error_exit
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pw
+operator|->
+name|pw_uid
+operator|==
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|HAVE_SYSLOG_H
+comment|/* FIXME: Can the IP address of the connecting client be retrieved 	     * and printed here? 	     */
+name|syslog
+argument_list|(
+name|LOG_DAEMON
+operator||
+name|LOG_ALERT
+argument_list|,
+literal|"attempt to root from account: %s"
+argument_list|,
+name|cvs_username
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|printf
+argument_list|(
+literal|"error 0: root not allowed\n"
+argument_list|)
+expr_stmt|;
 name|error_exit
 argument_list|()
 expr_stmt|;
@@ -19932,6 +19792,36 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SYSLOG_H
+name|syslog
+argument_list|(
+name|LOG_DAEMON
+operator||
+name|LOG_ERR
+argument_list|,
+literal|"setgid to %d failed (%m): real %d/%d, effective %d/%d "
+argument_list|,
+name|pw
+operator|->
+name|pw_gid
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|getgid
+argument_list|()
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|,
+name|getegid
+argument_list|()
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Don't worry about server_cleanup; 	       server_active isn't set yet.  */
 name|error_exit
 argument_list|()
@@ -19961,6 +19851,36 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SYSLOG_H
+name|syslog
+argument_list|(
+name|LOG_DAEMON
+operator||
+name|LOG_ERR
+argument_list|,
+literal|"setuid to %d failed (%m): real %d/%d, effective %d/%d "
+argument_list|,
+name|pw
+operator|->
+name|pw_uid
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|getgid
+argument_list|()
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|,
+name|getegid
+argument_list|()
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Don't worry about server_cleanup; server_active isn't set yet.  */
 name|error_exit
 argument_list|()
@@ -20403,8 +20323,8 @@ name|char
 modifier|*
 name|non_cvsuser_portion
 decl_stmt|;
-comment|/* We need to make sure lines such as          *          *    "username::sysuser\n"          *    "username:\n"          *    "username:  \n"          *          * all result in a found_password of NULL, but we also need to          * make sure that          *          *    "username:   :sysuser\n"          *    "username:<whatever>:sysuser\n"          *          * continues to result in an impossible password.  That way,          * an admin would be on safe ground by going in and tacking a          * space onto the front of a password to disable the account          * (a technique some people use to close accounts          * temporarily).          */
-comment|/* Make `non_cvsuser_portion' contain everything after the CVS            username, but null out any final newline. */
+comment|/* We need to make sure lines such as 	 * 	 *    "username::sysuser\n" 	 *    "username:\n" 	 *    "username:  \n" 	 * 	 * all result in a found_password of NULL, but we also need to 	 * make sure that 	 * 	 *    "username:   :sysuser\n" 	 *    "username:<whatever>:sysuser\n" 	 * 	 * continues to result in an impossible password.  That way, 	 * an admin would be on safe ground by going in and tacking a 	 * space onto the front of a password to disable the account 	 * (a technique some people use to close accounts 	 * temporarily). 	 */
+comment|/* Make `non_cvsuser_portion' contain everything after the CVS 	   username, but null out any final newline. */
 name|non_cvsuser_portion
 operator|=
 name|linebuf
@@ -20433,7 +20353,7 @@ condition|)
 name|non_cvsuser_portion
 operator|++
 expr_stmt|;
-comment|/* Okay, after this conditional chain, found_password and            host_user_tmp will have useful values: */
+comment|/* Okay, after this conditional chain, found_password and 	   host_user_tmp will have useful values: */
 if|if
 condition|(
 operator|(
@@ -20592,6 +20512,33 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|LOG_AUTHPRIV
+name|syslog
+argument_list|(
+name|LOG_AUTHPRIV
+operator||
+name|LOG_NOTICE
+argument_list|,
+literal|"password mismatch for %s in %s: %s vs. %s"
+argument_list|,
+name|username
+argument_list|,
+name|repository
+argument_list|,
+name|crypt
+argument_list|(
+name|password
+argument_list|,
+name|found_password
+argument_list|)
+argument_list|,
+name|found_password
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|*
 name|host_user_ptr
 operator|=
@@ -20675,6 +20622,17 @@ name|host_user
 init|=
 name|NULL
 decl_stmt|;
+name|char
+modifier|*
+name|found_passwd
+init|=
+name|NULL
+decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
 comment|/* First we see if this user has a password in the CVS-specific        password file.  If so, that's enough to authenticate with.  If        not, we'll check /etc/passwd. */
 if|if
 condition|(
@@ -20709,7 +20667,6 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/* else */
 if|if
 condition|(
 name|rc
@@ -20722,31 +20679,36 @@ goto|goto
 name|handle_return
 goto|;
 block|}
-elseif|else
-if|if
-condition|(
+name|assert
+argument_list|(
 name|rc
 operator|==
 literal|0
-operator|&&
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
 name|system_auth
 condition|)
 block|{
+comment|/* Note that the message _does_ distinguish between the case in 	   which we check for a system password and the case in which 	   we do not.  It is a real pain to track down why it isn't 	   letting you in if it won't say why, and I am not convinced 	   that the potential information disclosure to an attacker 	   outweighs this.  */
+name|printf
+argument_list|(
+literal|"error 0 no such user %s in CVSROOT/passwd\n"
+argument_list|,
+name|username
+argument_list|)
+expr_stmt|;
+name|error_exit
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* No cvs password found, so try /etc/passwd. */
-name|char
-modifier|*
-name|found_passwd
-init|=
-name|NULL
-decl_stmt|;
-name|struct
-name|passwd
-modifier|*
-name|pw
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_GETSPNAM
+block|{
 name|struct
 name|spwd
 modifier|*
@@ -20772,6 +20734,7 @@ name|spw
 operator|->
 name|sp_pwdp
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -20818,7 +20781,7 @@ name|error_exit
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* Allow for dain bramaged HPUX passwd aging 	 *  - Basically, HPUX adds a comma and some data 	 *    about whether the passwd has expired or not 	 *    on the end of the passwd field. 	 *  - This code replaces the ',' with '\0'. 	 * 	 * FIXME - our workaround is brain damaged too.  I'm 	 * guessing that HPUX WANTED other systems to think the 	 * password was wrong so logins would fail if the 	 * system didn't handle expired passwds and the passwd 	 * might be expired.  I think the way to go here 	 * is with PAM. 	 */
+comment|/* Allow for dain bramaged HPUX passwd aging      *  - Basically, HPUX adds a comma and some data      *    about whether the passwd has expired or not      *    on the end of the passwd field.      *  - This code replaces the ',' with '\0'.      *      * FIXME - our workaround is brain damaged too.  I'm      * guessing that HPUX WANTED other systems to think the      * password was wrong so logins would fail if the      * system didn't handle expired passwds and the passwd      * might be expired.  I think the way to go here      * is with PAM.      */
 name|strtok
 argument_list|(
 name|found_passwd
@@ -20833,11 +20796,8 @@ name|found_passwd
 condition|)
 block|{
 comment|/* user exists and has a password */
-name|host_user
-operator|=
-operator|(
-operator|(
-operator|!
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|found_passwd
@@ -20849,21 +20809,54 @@ argument_list|,
 name|found_passwd
 argument_list|)
 argument_list|)
-operator|)
-condition|?
+operator|==
+literal|0
+condition|)
+block|{
+name|host_user
+operator|=
 name|xstrdup
 argument_list|(
 name|username
 argument_list|)
-else|:
-name|NULL
-operator|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|host_user
+operator|=
+name|NULL
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG_AUTHPRIV
+name|syslog
+argument_list|(
+name|LOG_AUTHPRIV
+operator||
+name|LOG_NOTICE
+argument_list|,
+literal|"password mismatch for %s: %s vs. %s"
+argument_list|,
+name|username
+argument_list|,
+name|crypt
+argument_list|(
+name|password
+argument_list|,
+name|found_passwd
+argument_list|)
+argument_list|,
+name|found_passwd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 goto|goto
 name|handle_return
 goto|;
 block|}
-elseif|else
 if|if
 condition|(
 name|password
@@ -20872,7 +20865,7 @@ operator|*
 name|password
 condition|)
 block|{
-comment|/* user exists and has no system password, but we got 	       one as parameter */
+comment|/* user exists and has no system password, but we got 	   one as parameter */
 name|host_user
 operator|=
 name|xstrdup
@@ -20884,49 +20877,27 @@ goto|goto
 name|handle_return
 goto|;
 block|}
-else|else
-block|{
 comment|/* user exists but has no password at all */
 name|host_user
 operator|=
 name|NULL
 expr_stmt|;
-goto|goto
-name|handle_return
-goto|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|rc
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* Note that the message _does_ distinguish between the case in 	   which we check for a system password and the case in which 	   we do not.  It is a real pain to track down why it isn't 	   letting you in if it won't say why, and I am not convinced 	   that the potential information disclosure to an attacker 	   outweighs this.  */
-name|printf
+ifdef|#
+directive|ifdef
+name|LOG_AUTHPRIV
+name|syslog
 argument_list|(
-literal|"error 0 no such user %s in CVSROOT/passwd\n"
+name|LOG_AUTHPRIV
+operator||
+name|LOG_NOTICE
+argument_list|,
+literal|"login refused for %s: user has no password"
 argument_list|,
 name|username
 argument_list|)
 expr_stmt|;
-name|error_exit
-argument_list|()
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Something strange happened.  We don't know what it was, but 	   we certainly won't grant authorization. */
-name|host_user
-operator|=
-name|NULL
-expr_stmt|;
-goto|goto
-name|handle_return
-goto|;
-block|}
+endif|#
+directive|endif
 name|handle_return
 label|:
 if|if
@@ -20934,7 +20905,7 @@ condition|(
 name|host_user
 condition|)
 block|{
-comment|/* Set CVS_Username here, in allocated space.            It might or might not be the same as host_user. */
+comment|/* Set CVS_Username here, in allocated space. 	   It might or might not be the same as host_user. */
 name|CVS_Username
 operator|=
 name|xmalloc
@@ -21056,7 +21027,7 @@ name|verify_and_exit
 init|=
 literal|0
 decl_stmt|;
-comment|/* The Authentication Protocol.  Client sends:      *      *   BEGIN AUTH REQUEST\n      *<REPOSITORY>\n      *<USERNAME>\n      *<PASSWORD>\n      *   END AUTH REQUEST\n      *      * Server uses above information to authenticate, then sends      *      *   I LOVE YOU\n      *      * if it grants access, else      *      *   I HATE YOU\n      *      * if it denies access (and it exits if denying).      *      * When the client is "cvs login", the user does not desire actual      * repository access, but would like to confirm the password with      * the server.  In this case, the start and stop strings are      *      *   BEGIN VERIFICATION REQUEST\n      *      *            and      *      *   END VERIFICATION REQUEST\n      *      * On a verification request, the server's responses are the same      * (with the obvious semantics), but it exits immediately after      * sending the response in both cases.      *      * Why is the repository sent?  Well, note that the actual      * client/server protocol can't start up until authentication is      * successful.  But in order to perform authentication, the server      * needs to look up the password in the special CVS passwd file,      * before trying /etc/passwd.  So the client transmits the      * repository as part of the "authentication protocol".  The      * repository will be redundantly retransmitted later, but that's no      * big deal.      */
+comment|/* The Authentication Protocol.  Client sends:      *      *   BEGIN AUTH REQUEST\n      *<REPOSITORY>\n      *<USERNAME>\n      *<PASSWORD>\n      *   END AUTH REQUEST\n      *      * Server uses above information to authenticate, then sends      *      *   I LOVE YOU\n      *      * if it grants access, else      *      *   I HATE YOU\n      *      * if it denies access (and it exits if denying).      *      * When the client is "cvs login", the user does not desire actual      * repository access, but would like to confirm the password with      * the server.  In this case, the start and stop strings are      *      *   BEGIN VERIFICATION REQUEST\n      *      *	    and      *      *   END VERIFICATION REQUEST\n      *      * On a verification request, the server's responses are the same      * (with the obvious semantics), but it exits immediately after      * sending the response in both cases.      *      * Why is the repository sent?  Well, note that the actual      * client/server protocol can't start up until authentication is      * successful.  But in order to perform authentication, the server      * needs to look up the password in the special CVS passwd file,      * before trying /etc/passwd.  So the client transmits the      * repository as part of the "authentication protocol".  The      * repository will be redundantly retransmitted later, but that's no      * big deal.      */
 ifdef|#
 directive|ifdef
 name|SO_KEEPALIVE
@@ -21287,20 +21258,34 @@ argument_list|,
 name|PATH_MAX
 argument_list|)
 expr_stmt|;
-comment|/* Make them pure. */
+comment|/* Make them pure.      *      * We check that none of the lines were truncated by getnline in order      * to be sure that we don't accidentally allow a blind DOS attack to      * authenticate, however slim the odds of that might be.      */
+if|if
+condition|(
+operator|!
 name|strip_trailing_newlines
 argument_list|(
 name|repository
 argument_list|)
-expr_stmt|;
+operator|||
+operator|!
 name|strip_trailing_newlines
 argument_list|(
 name|username
 argument_list|)
-expr_stmt|;
+operator|||
+operator|!
 name|strip_trailing_newlines
 argument_list|(
 name|password
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum line length exceeded during authentication."
 argument_list|)
 expr_stmt|;
 comment|/* ... and make sure the protocol ends on the right foot. */
@@ -21428,26 +21413,6 @@ argument_list|,
 name|repository
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG_AUTHPRIV
-name|syslog
-argument_list|(
-name|LOG_AUTHPRIV
-operator||
-name|LOG_NOTICE
-argument_list|,
-literal|"login failure by %s / %s (for %s)"
-argument_list|,
-name|username
-argument_list|,
-name|descrambled_password
-argument_list|,
-name|repository
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|memset
@@ -21555,6 +21520,8 @@ expr_stmt|;
 comment|/* Switch to run as this user. */
 name|switch_to_user
 argument_list|(
+name|username
+argument_list|,
 name|host_user
 argument_list|)
 expr_stmt|;
@@ -21875,6 +21842,8 @@ block|}
 comment|/* Switch to run as this user. */
 name|switch_to_user
 argument_list|(
+literal|"Kerberos 4"
+argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
@@ -21945,6 +21914,13 @@ name|buf
 index|[
 literal|1024
 index|]
+decl_stmt|;
+name|char
+modifier|*
+name|credbuf
+decl_stmt|;
+name|size_t
+name|credbuflen
 decl_stmt|;
 name|OM_uint32
 name|stat_min
@@ -22143,19 +22119,43 @@ operator|&
 literal|0xff
 operator|)
 expr_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 name|nbytes
 operator|<=
 sizeof|sizeof
 name|buf
+condition|)
+block|{
+name|credbuf
+operator|=
+name|buf
+expr_stmt|;
+name|credbuflen
+operator|=
+sizeof|sizeof
+name|buf
+expr_stmt|;
+block|}
+else|else
+block|{
+name|credbuflen
+operator|=
+name|nbytes
+expr_stmt|;
+name|credbuf
+operator|=
+name|xmalloc
+argument_list|(
+name|credbuflen
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|fread
 argument_list|(
-name|buf
+name|credbuf
 argument_list|,
 literal|1
 argument_list|,
@@ -22189,7 +22189,7 @@ name|tok_in
 operator|.
 name|value
 operator|=
-name|buf
+name|credbuf
 expr_stmt|;
 if|if
 condition|(
@@ -22440,7 +22440,20 @@ expr_stmt|;
 block|}
 name|switch_to_user
 argument_list|(
+literal|"GSSAPI"
+argument_list|,
 name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|credbuf
+operator|!=
+name|buf
+condition|)
+name|free
+argument_list|(
+name|credbuf
 argument_list|)
 expr_stmt|;
 name|printf
@@ -24200,10 +24213,12 @@ name|tag
 parameter_list|,
 name|text
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|tag
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|text

@@ -824,12 +824,12 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * There is no user file, so note that it was lost and 		 * extract a new version 		 */
-comment|/* Comparing the command_name against "update", in 		   addition to being an ugly way to operate, means 		   that this message does not get printed by the 		   server.  That might be considered just a straight 		   bug, although there is one subtlety: that case also 		   gets hit when a patch fails and the client fetches 		   a file.  I'm not sure there is currently any way 		   for the server to distinguish those two cases.  */
+comment|/* Comparing the cvs_cmd_name against "update", in 		   addition to being an ugly way to operate, means 		   that this message does not get printed by the 		   server.  That might be considered just a straight 		   bug, although there is one subtlety: that case also 		   gets hit when a patch fails and the client fetches 		   a file.  I'm not sure there is currently any way 		   for the server to distinguish those two cases.  */
 if|if
 condition|(
 name|strcmp
 argument_list|(
-name|command_name
+name|cvs_cmd_name
 argument_list|,
 literal|"update"
 argument_list|)
@@ -1049,7 +1049,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|command_name
+name|cvs_cmd_name
 argument_list|,
 literal|"update"
 argument_list|)

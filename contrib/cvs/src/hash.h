@@ -94,7 +94,7 @@ name|char
 modifier|*
 name|key
 decl_stmt|;
-name|char
+name|void
 modifier|*
 name|data
 decl_stmt|;

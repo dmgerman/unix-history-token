@@ -71,6 +71,7 @@ name|watch_modify_watchers
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|file

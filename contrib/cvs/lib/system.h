@@ -444,29 +444,26 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|S_ISSOCK
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|S_IFSOCK
-argument_list|)
-end_if
+end_ifndef
 
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|S_IFMT
+name|S_IFSOCK
 argument_list|)
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|S_IFMT
+end_ifdef
 
 begin_define
 define|#
@@ -498,10 +495,47 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* S_IFMT */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|S_ISNAM
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* SCO OpenServer 5.0.6a */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_ISSOCK
+value|S_ISNAM
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !S_IFSOCK&& S_ISNAM */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !S_ISSOCK */
+end_comment
 
 begin_if
 if|#
@@ -2159,6 +2193,64 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIN32
+end_ifdef
+
+begin_comment
+comment|/*  * According to GNU conventions, we should avoid referencing any macro  * containing "WIN" as a reference to Microsoft Windows, as we would like to  * avoid any implication that we consider Microsoft Windows any sort of "win".  *  * FIXME: As of 2003-06-09, folks on the GNULIB project were discussing  * defining a configure macro to define WOE32 appropriately.  If they ever do  * write such a beast, we should use it, though in most cases it would be  * preferable to avoid referencing any OS or compiler anyhow, per Autoconf  * convention, and reference only tested features of the system.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WOE32
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WIN32 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WOE32
+end_ifdef
+
+begin_comment
+comment|/* Under Windows NT, filenames are case-insensitive.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FILENAMES_CASE_INSENSITIVE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WOE32 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FILENAMES_CASE_INSENSITIVE
+end_ifdef
+
 begin_if
 if|#
 directive|if
@@ -2169,12 +2261,12 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|WIN32
+name|WOE32
 argument_list|)
 end_if
 
 begin_comment
-comment|/* Under Windows NT, filenames are case-insensitive, and both / and \    are path component separators.  */
+comment|/* Under Windows, filenames are case-insensitive, and both / and \        are path component separators.  */
 end_comment
 
 begin_define
@@ -2196,15 +2288,8 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|FILENAMES_CASE_INSENSITIVE
-value|1
-end_define
-
 begin_comment
-comment|/* Is the character C a path name separator?  Under    Windows NT, you can use either / or \.  */
+comment|/* Is the character C a path name separator?  Under        Windows NT, you can use either / or \.  */
 end_comment
 
 begin_define
@@ -2217,8 +2302,63 @@ parameter_list|)
 value|(FOLD_FN_CHAR(c) == '/')
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISABSOLUTE
+parameter_list|(
+name|s
+parameter_list|)
+value|(ISDIRSEP(s[0]) || FOLD_FN_CHAR(s[0])>= 'a'&& FOLD_FN_CHAR(s[0])<= 'z'&& s[1] == ':'&& ISDIRSEP(s[2]))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
-comment|/* Like strcmp, but with the appropriate tweaks for file names.    Under Windows NT, filenames are case-insensitive but case-preserving,    and both \ and / are path element separators.  */
+comment|/* ! WOE32 */
+end_comment
+
+begin_comment
+comment|/* As far as I know, just Macintosh OS X can make it here,    * but since the OS X fold just folds a-z into A-Z or visa-versa, I'm just    * allowing it to be used for any case insensitive system which we aren't    * yet making other specific folds or exceptions for (basically, anything    * case insensitive other than Windows, where \ and C:\ style absolute paths    * also need to be accounted for).    *    * Under Mac OS X, filenames are case-insensitive.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOLD_FN_CHAR
+parameter_list|(
+name|c
+parameter_list|)
+value|(OSX_filename_classes[(unsigned char) (c)])
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|OSX_filename_classes
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __CYGWIN32__ || WOE32 */
+end_comment
+
+begin_comment
+comment|/* The following need to be declared for all case insensitive filesystems.  * When not FOLD_FN_CHAR is not #defined, a default definition for these  * functions is provided later in this header file.  */
+end_comment
+
+begin_comment
+comment|/* Like strcmp, but with the appropriate tweaks for file names.  */
 end_comment
 
 begin_function_decl
@@ -2240,7 +2380,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Fold characters in FILENAME to their canonical forms.      If FOLD_FN_CHAR is not #defined, the system provides a default    definition for this.  */
+comment|/* Fold characters in FILENAME to their canonical forms.  */
 end_comment
 
 begin_function_decl
@@ -2261,7 +2401,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined (__CYGWIN32__) || defined (WIN32) */
+comment|/* FILENAMES_CASE_INSENSITIVE */
 end_comment
 
 begin_comment
@@ -2324,6 +2464,31 @@ parameter_list|(
 name|c
 parameter_list|)
 value|((c) == '/')
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Different file systems can have different naming patterns which designate  * a path as absolute  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISABSOLUTE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ISABSOLUTE
+parameter_list|(
+name|s
+parameter_list|)
+value|ISDIRSEP(s[0])
 end_define
 
 begin_endif
