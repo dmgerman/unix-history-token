@@ -236,7 +236,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|fwohci_shutdown
+name|fwohci_stop
 name|__P
 argument_list|(
 operator|(
