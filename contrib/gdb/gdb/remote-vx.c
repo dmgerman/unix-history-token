@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Memory-access and commands for remote VxWorks processes, for GDB.    Copyright (C) 1990-95, 1997-98, 1999 Free Software Foundation, Inc.    Contributed by Wind River Systems and Cygnus Support.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Memory-access and commands for remote VxWorks processes, for GDB.     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1997, 1998, 1999,    2000, 2001, 2002 Free Software Foundation, Inc.     Contributed by Wind River Systems and Cygnus Support.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -19,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|"inferior.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"wait.h"
 end_include
 
 begin_include
@@ -79,10 +73,6 @@ directive|include
 file|"symfile.h"
 end_include
 
-begin_comment
-comment|/* Required by objfiles.h.  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -93,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|"gdb-stabs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
 end_include
 
 begin_include
@@ -469,30 +465,22 @@ specifier|static
 name|int
 name|net_load
 parameter_list|(
-name|filename
-parameter_list|,
-name|pTextAddr
-parameter_list|,
-name|pDataAddr
-parameter_list|,
-name|pBssAddr
-parameter_list|)
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 modifier|*
 name|pTextAddr
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 modifier|*
 name|pDataAddr
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 modifier|*
 name|pBssAddr
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|clnt_stat
@@ -621,16 +609,12 @@ specifier|static
 name|int
 name|net_break
 parameter_list|(
-name|addr
-parameter_list|,
-name|procnum
-parameter_list|)
 name|int
 name|addr
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|procnum
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|clnt_stat
@@ -642,7 +626,7 @@ decl_stmt|;
 name|Rptrace
 name|ptrace_in
 decl_stmt|;
-comment|/* XXX This is stupid.  It doesn't need to be a ptrace 			 structure.  How about something smaller? */
+comment|/* XXX This is stupid.  It doesn't need to be a ptrace 				   structure.  How about something smaller? */
 name|memset
 argument_list|(
 operator|(
@@ -674,7 +658,10 @@ name|ptrace_in
 operator|.
 name|pid
 operator|=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 expr_stmt|;
 name|status
 operator|=
@@ -728,11 +715,9 @@ specifier|static
 name|int
 name|vx_insert_breakpoint
 parameter_list|(
-name|addr
-parameter_list|)
 name|int
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|net_break
@@ -754,11 +739,9 @@ specifier|static
 name|int
 name|vx_remove_breakpoint
 parameter_list|(
-name|addr
-parameter_list|)
 name|int
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|net_break
@@ -772,7 +755,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Start an inferior process and sets inferior_pid to its pid.    EXEC_FILE is the file to run.    ALLARGS is a string containing the arguments to the program.    ENV is the environment vector to pass.    Returns process id.  Errors reported with error().    On VxWorks, we ignore exec_file.  */
+comment|/* Start an inferior process and sets inferior_ptid to its pid.    EXEC_FILE is the file to run.    ALLARGS is a string containing the arguments to the program.    ENV is the environment vector to pass.    Returns process id.  Errors reported with error().    On VxWorks, we ignore exec_file.  */
 end_comment
 
 begin_function
@@ -780,25 +763,19 @@ specifier|static
 name|void
 name|vx_create_inferior
 parameter_list|(
-name|exec_file
-parameter_list|,
-name|args
-parameter_list|,
-name|env
-parameter_list|)
 name|char
 modifier|*
 name|exec_file
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|env
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|clnt_stat
@@ -934,11 +911,14 @@ operator|&
 name|vx_run_ops
 argument_list|)
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
+name|pid_to_ptid
+argument_list|(
 name|taskStart
 operator|.
 name|pid
+argument_list|)
 expr_stmt|;
 comment|/* We will get a trace trap after one instruction.      Insert breakpoints and continue.  */
 name|init_wait_for_inferior
@@ -987,19 +967,15 @@ specifier|static
 name|void
 name|parse_args
 parameter_list|(
-name|arg_string
-parameter_list|,
-name|arg_struct
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 name|arg_string
-decl_stmt|;
+parameter_list|,
 name|arg_array
 modifier|*
 name|arg_struct
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1169,13 +1145,11 @@ name|char
 modifier|*
 name|skip_white_space
 parameter_list|(
-name|p
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 while|while
 condition|(
@@ -1208,13 +1182,11 @@ name|char
 modifier|*
 name|find_white_space
 parameter_list|(
-name|p
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1299,12 +1271,10 @@ specifier|static
 name|int
 name|net_wait
 parameter_list|(
-name|pEvent
-parameter_list|)
 name|RDB_EVENT
 modifier|*
 name|pEvent
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|pid
@@ -1331,7 +1301,10 @@ argument_list|)
 expr_stmt|;
 name|pid
 operator|=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 expr_stmt|;
 name|status
 operator|=
@@ -1399,7 +1372,9 @@ begin_function
 specifier|static
 name|int
 name|net_quit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|pid
@@ -1421,7 +1396,10 @@ condition|(
 operator|(
 name|pid
 operator|=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 operator|)
 operator|==
 literal|0
@@ -1470,22 +1448,16 @@ begin_function
 name|void
 name|net_read_registers
 parameter_list|(
-name|reg_buf
-parameter_list|,
-name|len
-parameter_list|,
-name|procnum
-parameter_list|)
 name|char
 modifier|*
 name|reg_buf
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|procnum
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|status
@@ -1544,7 +1516,10 @@ name|ptrace_in
 operator|.
 name|pid
 operator|=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 expr_stmt|;
 name|ptrace_in
 operator|.
@@ -1652,22 +1627,16 @@ begin_function
 name|void
 name|net_write_registers
 parameter_list|(
-name|reg_buf
-parameter_list|,
-name|len
-parameter_list|,
-name|procnum
-parameter_list|)
 name|char
 modifier|*
 name|reg_buf
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|procnum
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|status
@@ -1738,7 +1707,10 @@ name|ptrace_in
 operator|.
 name|pid
 operator|=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 expr_stmt|;
 name|ptrace_in
 operator|.
@@ -1833,7 +1805,9 @@ begin_function
 specifier|static
 name|void
 name|vx_prepare_to_store
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Fetch all registers, if any of them are not yet fetched.  */
 name|read_register_bytes
@@ -1849,7 +1823,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copy LEN bytes to or from remote inferior's memory starting at MEMADDR    to debugger memory starting at MYADDR.  WRITE is true if writing to the    inferior.    Result is the number of bytes written or read (zero if error).  The    protocol allows us to return a negative count, indicating that we can't    handle the current address but can handle one N bytes further, but    vxworks doesn't give us that information.  */
+comment|/* Copy LEN bytes to or from remote inferior's memory starting at MEMADDR    to debugger memory starting at MYADDR.  WRITE is true if writing to the    inferior.  TARGET is unused.    Result is the number of bytes written or read (zero if error).  The    protocol allows us to return a negative count, indicating that we can't    handle the current address but can handle one N bytes further, but    vxworks doesn't give us that information.  */
 end_comment
 
 begin_function
@@ -1857,35 +1831,29 @@ specifier|static
 name|int
 name|vx_xfer_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|,
-name|target
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|write
-decl_stmt|;
+parameter_list|,
+name|struct
+name|mem_attrib
+modifier|*
+name|attrib
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
-comment|/* ignored */
+parameter_list|)
 block|{
 name|int
 name|status
@@ -1946,7 +1914,10 @@ name|ptrace_in
 operator|.
 name|pid
 operator|=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 expr_stmt|;
 comment|/* XXX pid unnecessary for READDATA */
 name|ptrace_in
@@ -2138,7 +2109,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* A target-side error has ocurred.  Set errno to the error              code chosen by the target so that a later perror () will              say something meaningful.  */
+comment|/* A target-side error has ocurred.  Set errno to the error 	     code chosen by the target so that a later perror () will 	     say something meaningful.  */
 name|errno
 operator|=
 name|ptrace_out
@@ -2162,7 +2133,9 @@ begin_function
 specifier|static
 name|void
 name|vx_files_info
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf_unfiltered
 argument_list|(
@@ -2194,7 +2167,9 @@ begin_function
 specifier|static
 name|void
 name|vx_run_files_info
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf_unfiltered
 argument_list|(
@@ -2208,7 +2183,10 @@ literal|"attached"
 argument_list|,
 name|local_hex_string
 argument_list|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2236,22 +2214,16 @@ specifier|static
 name|void
 name|vx_resume
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|step
-parameter_list|,
-name|siggnal
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|int
 name|step
-decl_stmt|;
+parameter_list|,
 name|enum
 name|target_signal
 name|siggnal
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|status
@@ -2267,14 +2239,16 @@ name|cont_addr
 decl_stmt|;
 if|if
 condition|(
-name|pid
-operator|==
-operator|-
-literal|1
+name|ptid_equal
+argument_list|(
+name|ptid
+argument_list|,
+name|minus_one_ptid
+argument_list|)
 condition|)
-name|pid
+name|ptid
 operator|=
-name|inferior_pid
+name|inferior_ptid
 expr_stmt|;
 if|if
 condition|(
@@ -2347,7 +2321,10 @@ name|ptrace_in
 operator|.
 name|pid
 operator|=
-name|pid
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
 expr_stmt|;
 name|ptrace_in
 operator|.
@@ -2417,7 +2394,9 @@ begin_function
 specifier|static
 name|void
 name|vx_mourn_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|pop_target
 argument_list|()
@@ -2432,27 +2411,24 @@ end_function
 begin_escape
 end_escape
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vx_add_symbols
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct
 struct|struct
@@ -2471,48 +2447,39 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|find_sect
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|asection
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
 name|void
 name|find_sect
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sect
-parameter_list|,
-name|obj
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sect
-decl_stmt|;
+parameter_list|,
 name|PTR
 name|obj
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|find_sect_args
@@ -2622,32 +2589,22 @@ specifier|static
 name|void
 name|vx_add_symbols
 parameter_list|(
-name|name
-parameter_list|,
-name|from_tty
-parameter_list|,
-name|text_addr
-parameter_list|,
-name|data_addr
-parameter_list|,
-name|bss_addr
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|text_addr
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|data_addr
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|bss_addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|section_offsets
@@ -2672,13 +2629,7 @@ name|name
 argument_list|,
 name|from_tty
 argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -2700,22 +2651,7 @@ operator|*
 operator|)
 name|alloca
 argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|section_offsets
-argument_list|)
-operator|+
-name|objfile
-operator|->
-name|num_sections
-operator|*
-sizeof|sizeof
-argument_list|(
-name|offs
-operator|->
-name|offsets
-argument_list|)
+name|SIZEOF_SECTION_OFFSETS
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -2726,22 +2662,7 @@ name|objfile
 operator|->
 name|section_offsets
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|section_offsets
-argument_list|)
-operator|+
-name|objfile
-operator|->
-name|num_sections
-operator|*
-sizeof|sizeof
-argument_list|(
-name|offs
-operator|->
-name|offsets
-argument_list|)
+name|SIZEOF_SECTION_OFFSETS
 argument_list|)
 expr_stmt|;
 name|ss
@@ -2775,12 +2696,15 @@ name|ss
 argument_list|)
 expr_stmt|;
 comment|/* Both COFF and b.out frontends use these SECT_OFF_* values.  */
-name|ANOFFSET
-argument_list|(
 name|offs
-argument_list|,
+operator|->
+name|offsets
+index|[
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
 argument_list|)
+index|]
 operator|=
 name|text_addr
 operator|-
@@ -2788,12 +2712,15 @@ name|ss
 operator|.
 name|text_start
 expr_stmt|;
-name|ANOFFSET
-argument_list|(
 name|offs
-argument_list|,
+operator|->
+name|offsets
+index|[
 name|SECT_OFF_DATA
+argument_list|(
+name|objfile
 argument_list|)
+index|]
 operator|=
 name|data_addr
 operator|-
@@ -2801,12 +2728,15 @@ name|ss
 operator|.
 name|data_start
 expr_stmt|;
-name|ANOFFSET
-argument_list|(
 name|offs
-argument_list|,
+operator|->
+name|offsets
+index|[
 name|SECT_OFF_BSS
+argument_list|(
+name|objfile
 argument_list|)
+index|]
 operator|=
 name|bss_addr
 operator|-
@@ -2833,17 +2763,13 @@ specifier|static
 name|void
 name|vx_load_command
 parameter_list|(
-name|arg_string
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|arg_string
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|text_addr
@@ -2874,7 +2800,7 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|arg_string
 argument_list|)
@@ -2885,7 +2811,10 @@ expr_stmt|;
 comment|/* Refuse to load the module if a debugged task is running.  Doing so      can have a number of unpleasant consequences to the running task.  */
 if|if
 condition|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 operator|!=
 literal|0
 operator|&&
@@ -2905,7 +2834,7 @@ expr_stmt|;
 else|else
 name|error
 argument_list|(
-literal|"Load cancelled."
+literal|"Load canceled."
 argument_list|)
 expr_stmt|;
 block|}
@@ -2969,7 +2898,9 @@ begin_function
 specifier|static
 name|int
 name|net_step
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|enum
 name|clnt_stat
@@ -2985,7 +2916,10 @@ name|source_step
 operator|.
 name|taskId
 operator|=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3064,24 +2998,18 @@ specifier|static
 name|int
 name|net_ptrace_clnt_call
 parameter_list|(
-name|request
-parameter_list|,
-name|pPtraceIn
-parameter_list|,
-name|pPtraceOut
-parameter_list|)
 name|enum
 name|ptracereq
 name|request
-decl_stmt|;
+parameter_list|,
 name|Rptrace
 modifier|*
 name|pPtraceIn
-decl_stmt|;
+parameter_list|,
 name|Ptrace_return
 modifier|*
 name|pPtraceOut
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|clnt_stat
@@ -3127,13 +3055,11 @@ specifier|static
 name|int
 name|net_get_boot_file
 parameter_list|(
-name|pBootFile
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|pBootFile
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|clnt_stat
@@ -3174,7 +3100,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Fetch a list of loaded object modules from the VxWorks target.    Returns -1 if rpc failed, 0 otherwise    There's no way to check if the returned loadTable is correct.    VxWorks doesn't check it.  */
+comment|/* Fetch a list of loaded object modules from the VxWorks target    and store in PLOADTABLE.    Returns -1 if rpc failed, 0 otherwise    There's no way to check if the returned loadTable is correct.    VxWorks doesn't check it.  */
 end_comment
 
 begin_function
@@ -3182,13 +3108,10 @@ specifier|static
 name|int
 name|net_get_symbols
 parameter_list|(
-name|pLoadTable
-parameter_list|)
 name|ldtabl
 modifier|*
 name|pLoadTable
-decl_stmt|;
-comment|/* return pointer to ldtabl here */
+parameter_list|)
 block|{
 name|enum
 name|clnt_stat
@@ -3265,19 +3188,15 @@ specifier|static
 name|int
 name|vx_lookup_symbol
 parameter_list|(
-name|name
-parameter_list|,
-name|pAddr
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 comment|/* symbol name */
 name|CORE_ADDR
 modifier|*
 name|pAddr
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|clnt_stat
@@ -3366,7 +3285,9 @@ begin_function
 specifier|static
 name|int
 name|net_check_for_fp
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|enum
 name|clnt_stat
@@ -3423,12 +3344,10 @@ specifier|static
 name|void
 name|net_connect
 parameter_list|(
-name|host
-parameter_list|)
 name|char
 modifier|*
 name|host
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sockaddr_in
@@ -3529,7 +3448,7 @@ name|sin_port
 operator|=
 literal|0
 expr_stmt|;
-comment|/* set to actual port that remote 			           ptrace is listening on.  */
+comment|/* set to actual port that remote 				   ptrace is listening on.  */
 comment|/* Create a tcp client transport on which to issue      calls to the remote ptrace server.  */
 name|ptraceSock
 operator|=
@@ -3588,11 +3507,9 @@ specifier|static
 name|void
 name|sleep_ms
 parameter_list|(
-name|ms
-parameter_list|)
 name|long
 name|ms
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|timeval
@@ -3663,21 +3580,17 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|ptid_t
 name|vx_wait
 parameter_list|(
-name|pid_to_wait_for
+name|ptid_t
+name|ptid_to_wait_for
 parameter_list|,
-name|status
-parameter_list|)
-name|int
-name|pid_to_wait_for
-decl_stmt|;
 name|struct
 name|target_waitstatus
 modifier|*
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -3691,7 +3604,7 @@ name|quit_failed
 decl_stmt|;
 do|do
 block|{
-comment|/* If CTRL-C is hit during this loop, 	 suspend the inferior process.  */
+comment|/* If CTRL-C is hit during this loop,          suspend the inferior process.  */
 name|quit_failed
 operator|=
 literal|0
@@ -3716,7 +3629,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* If a net_quit () or net_wait () call has failed, 	 allow the user to break the connection with the target. 	 We can't simply error () out of this loop, since the  	 data structures representing the state of the inferior 	 are in an inconsistent state.  */
+comment|/* If a net_quit () or net_wait () call has failed,          allow the user to break the connection with the target.          We can't simply error () out of this loop, since the           data structures representing the state of the inferior          are in an inconsistent state.  */
 if|if
 condition|(
 name|quit_failed
@@ -3792,10 +3705,17 @@ if|if
 condition|(
 name|pid
 operator|!=
-name|inferior_pid
-condition|)
-name|fatal
+name|PIDGET
 argument_list|(
+name|inferior_ptid
+argument_list|)
+condition|)
+name|internal_error
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
 literal|"Bad pid for debugged task: %s\n"
 argument_list|,
 name|local_hex_string
@@ -3839,7 +3759,7 @@ name|kind
 operator|=
 name|TARGET_WAITKIND_EXITED
 expr_stmt|;
-comment|/* FIXME is it possible to distinguish between a 	 normal vs abnormal exit in VxWorks? */
+comment|/* FIXME is it possible to distinguish between a          normal vs abnormal exit in VxWorks? */
 name|status
 operator|->
 name|value
@@ -3948,7 +3868,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* Back in the old days, before enum target_signal, this code used 	 to add NSIG to the signal number and claim that PRINT_RANDOM_SIGNAL 	 would take care of it.  But PRINT_RANDOM_SIGNAL has never been 	 defined except on the i960, so I don't really know what we are 	 supposed to do on other architectures.  */
+comment|/* Back in the old days, before enum target_signal, this code used          to add NSIG to the signal number and claim that PRINT_RANDOM_SIGNAL          would take care of it.  But PRINT_RANDOM_SIGNAL has never been          defined except on the i960, so I don't really know what we are          supposed to do on other architectures.  */
 name|status
 operator|->
 name|value
@@ -3963,7 +3883,10 @@ break|break;
 block|}
 comment|/* switch */
 return|return
+name|pid_to_ptid
+argument_list|(
 name|pid
+argument_list|)
 return|;
 block|}
 end_function
@@ -3976,14 +3899,12 @@ specifier|static
 name|int
 name|symbol_stub
 parameter_list|(
-name|arg
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
-name|symbol_file_command
+name|symbol_file_add_main
 argument_list|(
 name|arg
 argument_list|,
@@ -4001,12 +3922,10 @@ specifier|static
 name|int
 name|add_symbol_stub
 parameter_list|(
-name|arg
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ldfile
@@ -4070,17 +3989,13 @@ specifier|static
 name|void
 name|vx_open
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|extern
 name|int
@@ -4404,7 +4319,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* FIXME: Is there something better to search than the PATH? (probably 	 not the source path, since source might be in different directories 	 than objects.  */
+comment|/* FIXME: Is there something better to search than the PATH? (probably          not the source path, since source might be in different directories          than objects.  */
 if|if
 condition|(
 name|catch_errors
@@ -4471,17 +4386,13 @@ specifier|static
 name|void
 name|vx_attach
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -4650,9 +4561,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* It worked... */
-name|inferior_pid
+name|inferior_ptid
 operator|=
+name|pid_to_ptid
+argument_list|(
 name|pid
+argument_list|)
 expr_stmt|;
 name|push_target
 argument_list|(
@@ -4664,7 +4578,7 @@ if|if
 condition|(
 name|vx_running
 condition|)
-name|free
+name|xfree
 argument_list|(
 name|vx_running
 argument_list|)
@@ -4685,17 +4599,13 @@ specifier|static
 name|void
 name|vx_detach
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|Rptrace
 name|ptrace_in
@@ -4734,7 +4644,10 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4788,7 +4701,10 @@ name|ptrace_in
 operator|.
 name|pid
 operator|=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 expr_stmt|;
 name|status
 operator|=
@@ -4837,9 +4753,9 @@ literal|"Detaching VxWorks process"
 argument_list|)
 expr_stmt|;
 block|}
-name|inferior_pid
+name|inferior_ptid
 operator|=
-literal|0
+name|null_ptid
 expr_stmt|;
 name|pop_target
 argument_list|()
@@ -4856,7 +4772,9 @@ begin_function
 specifier|static
 name|void
 name|vx_kill
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|Rptrace
 name|ptrace_in
@@ -4877,7 +4795,10 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4919,7 +4840,10 @@ name|ptrace_in
 operator|.
 name|pid
 operator|=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 expr_stmt|;
 name|status
 operator|=
@@ -4970,9 +4894,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* If it gives good status, the process is *gone*, no events remain.      If the kill failed, assume the process is gone anyhow.  */
-name|inferior_pid
+name|inferior_ptid
 operator|=
-literal|0
+name|null_ptid
 expr_stmt|;
 name|pop_target
 argument_list|()
@@ -4990,22 +4914,20 @@ specifier|static
 name|void
 name|vx_proc_close
 parameter_list|(
-name|quitting
-parameter_list|)
 name|int
 name|quitting
-decl_stmt|;
+parameter_list|)
 block|{
-name|inferior_pid
+name|inferior_ptid
 operator|=
-literal|0
+name|null_ptid
 expr_stmt|;
 comment|/* No longer have a process.  */
 if|if
 condition|(
 name|vx_running
 condition|)
-name|free
+name|xfree
 argument_list|(
 name|vx_running
 argument_list|)
@@ -5030,34 +4952,24 @@ name|enum
 name|clnt_stat
 name|net_clnt_call
 parameter_list|(
-name|procNum
-parameter_list|,
-name|inProc
-parameter_list|,
-name|in
-parameter_list|,
-name|outProc
-parameter_list|,
-name|out
-parameter_list|)
 name|enum
 name|ptracereq
 name|procNum
-decl_stmt|;
+parameter_list|,
 name|xdrproc_t
 name|inProc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|in
-decl_stmt|;
+parameter_list|,
 name|xdrproc_t
 name|outProc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|out
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|clnt_stat
@@ -5108,11 +5020,9 @@ specifier|static
 name|void
 name|vx_close
 parameter_list|(
-name|quitting
-parameter_list|)
 name|int
 name|quitting
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5132,7 +5042,7 @@ if|if
 condition|(
 name|vx_host
 condition|)
-name|free
+name|xfree
 argument_list|(
 name|vx_host
 argument_list|)
@@ -5150,7 +5060,7 @@ comment|/* A vxprocess target should be started via "run" not "target".  */
 end_comment
 
 begin_comment
-comment|/*ARGSUSED*/
+comment|/*ARGSUSED */
 end_comment
 
 begin_function
@@ -5158,17 +5068,13 @@ specifier|static
 name|void
 name|vx_proc_open
 parameter_list|(
-name|name
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|error
 argument_list|(
@@ -5182,7 +5088,9 @@ begin_function
 specifier|static
 name|void
 name|init_vx_ops
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|vx_ops
 operator|.
@@ -5286,7 +5194,9 @@ begin_function
 specifier|static
 name|void
 name|init_vx_run_ops
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|vx_run_ops
 operator|.
@@ -5447,7 +5357,9 @@ end_escape
 begin_function
 name|void
 name|_initialize_vx
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|init_vx_ops
 argument_list|()

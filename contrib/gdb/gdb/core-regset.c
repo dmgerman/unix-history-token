@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Machine independent GDB support for core files on systems using "regsets".    Copyright 1993-1998 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Machine independent GDB support for core files on systems using "regsets".    Copyright 1993, 1994, 1995, 1996, 1998, 1999, 2000    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*			N  O  T  E  S  This file is used by most systems that implement /proc.  For these systems, the general registers are laid out the same way in both the core file and the gregset_p structure.  The current exception to this is Irix-4.*, where the gregset_p structure is split up into two pieces in the core file.  The general register and floating point register sets are manipulated by separate ioctl's.  This file makes the assumption that if FP0_REGNUM is defined, then support for the floating point register set is desired, regardless of whether or not the actual target has floating point hardware.   */
+comment|/*                      N  O  T  E  S     This file is used by most systems that implement /proc.  For these systems,    the general registers are laid out the same way in both the core file and    the gregset_p structure.  The current exception to this is Irix-4.*, where    the gregset_p structure is split up into two pieces in the core file.     The general register and floating point register sets are manipulated by    separate ioctl's.  This file makes the assumption that if FP0_REGNUM is    defined, then support for the floating point register set is desired,    regardless of whether or not the actual target has floating point hardware.   */
 end_comment
 
 begin_include
@@ -78,40 +78,44 @@ directive|include
 file|"gdbcore.h"
 end_include
 
-begin_decl_stmt
+begin_comment
+comment|/* Prototypes for supply_gregset etc. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"gregset.h"
+end_include
+
+begin_function_decl
 specifier|static
 name|void
 name|fetch_core_registers
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|_initialize_core_regset
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  GLOBAL FUNCTION  	fetch_core_registers -- fetch current registers from core file  SYNOPSIS  	void fetch_core_registers (char *core_reg_sect, 					  unsigned core_reg_size, 					  int which, CORE_ADDR reg_addr)  DESCRIPTION  	Read the values of either the general register set (WHICH equals 0) 	or the floating point register set (WHICH equals 2) from the core 	file data (pointed to by CORE_REG_SECT), and update gdb's idea of 	their current values.  The CORE_REG_SIZE parameter is ignored.  NOTES  	Use the indicated sizes to validate the gregset and fpregset 	structures. */
+comment|/*     GLOBAL FUNCTION     fetch_core_registers -- fetch current registers from core file     SYNOPSIS     void fetch_core_registers (char *core_reg_sect,    unsigned core_reg_size,    int which, CORE_ADDR reg_addr)     DESCRIPTION     Read the values of either the general register set (WHICH equals 0)    or the floating point register set (WHICH equals 2) from the core    file data (pointed to by CORE_REG_SECT), and update gdb's idea of    their current values.  The CORE_REG_SIZE parameter is compared to    the size of the gregset or fpgregset structures (as appropriate) to    validate the size of the structure from the core file.  The    REG_ADDR parameter is ignored.   */
 end_comment
 
 begin_function
@@ -119,44 +123,24 @@ specifier|static
 name|void
 name|fetch_core_registers
 parameter_list|(
-name|core_reg_sect
-parameter_list|,
-name|core_reg_size
-parameter_list|,
-name|which
-parameter_list|,
-name|reg_addr
-parameter_list|)
 name|char
 modifier|*
 name|core_reg_sect
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|core_reg_size
-decl_stmt|;
+parameter_list|,
 name|int
 name|which
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|reg_addr
-decl_stmt|;
-comment|/* Unused in this version */
+parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_GREGSET_T
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_FPREGSET_T
-argument_list|)
-name|gregset_t
+name|gdb_gregset_t
 name|gregset
 decl_stmt|;
-name|fpregset_t
+name|gdb_fpregset_t
 name|fpregset
 decl_stmt|;
 if|if
@@ -252,25 +236,20 @@ name|fpregset
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+if|if
+condition|(
 name|FP0_REGNUM
-argument_list|)
+operator|>=
+literal|0
+condition|)
 name|supply_fpregset
 argument_list|(
 operator|&
 name|fpregset
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* defined(HAVE_GREGSET_T)&& defined (HAVE_FPREGSET_T) */
 block|}
 end_function
 
@@ -290,9 +269,18 @@ init|=
 block|{
 name|bfd_target_elf_flavour
 block|,
+comment|/* core_flavour */
+name|default_check_format
+block|,
+comment|/* check_format */
+name|default_core_sniffer
+block|,
+comment|/* core_sniffer */
 name|fetch_core_registers
 block|,
+comment|/* core_read_registers */
 name|NULL
+comment|/* next */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -300,7 +288,9 @@ end_decl_stmt
 begin_function
 name|void
 name|_initialize_core_regset
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|add_core_fns
 argument_list|(

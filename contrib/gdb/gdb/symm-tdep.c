@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Sequent Symmetry target interface, for GDB.    Copyright (C) 1986, 1987, 1989, 1991, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Sequent Symmetry target interface, for GDB.    Copyright 1986, 1987, 1989, 1991, 1992, 1993, 1994, 1995, 2000    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -83,25 +83,19 @@ begin_function
 name|void
 name|symmetry_extract_return_value
 parameter_list|(
-name|type
-parameter_list|,
-name|regbuf
-parameter_list|,
-name|valbuf
-parameter_list|)
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|regbuf
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|valbuf
-decl_stmt|;
+parameter_list|)
 block|{
 union|union
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native support for Motorola 88k running Harris CX/UX.    Copyright 1988, 1990, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Native support for Motorola 88k running Harris CX/UX.    Copyright 1988, 1990, 1991, 1992, 1993, 1994, 1995, 1998, 1999, 2000,    2001 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"symtab.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
 end_include
 
 begin_ifndef
@@ -229,26 +235,13 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-name|registers
-index|[
-name|REGISTER_BYTES
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|fetch_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
-comment|/* Original value discarded */
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -295,8 +288,8 @@ name|regaddr
 operator|=
 name|offset
 expr_stmt|;
-comment|/* byte offset to r0;*/
-comment|/*  offset = ptrace (3, inferior_pid, (PTRACE_ARG3_TYPE) offset, 0) - KERNEL_U_ADDR; */
+comment|/* byte offset to r0; */
+comment|/*  offset = ptrace (3, PIDGET (inferior_ptid), (PTRACE_ARG3_TYPE) offset, 0) - KERNEL_U_ADDR; */
 for|for
 control|(
 name|regno
@@ -311,7 +304,7 @@ name|regno
 operator|++
 control|)
 block|{
-comment|/*regaddr = register_addr (regno, offset);*/
+comment|/*regaddr = register_addr (regno, offset); */
 comment|/* 88k enhancement  */
 for|for
 control|(
@@ -349,7 +342,10 @@ name|ptrace
 argument_list|(
 literal|3
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -391,7 +387,10 @@ name|ptrace
 argument_list|(
 literal|3
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -423,7 +422,10 @@ name|ptrace
 argument_list|(
 literal|3
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -455,7 +457,10 @@ name|ptrace
 argument_list|(
 literal|3
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -487,7 +492,10 @@ name|ptrace
 argument_list|(
 literal|3
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -519,7 +527,10 @@ name|ptrace
 argument_list|(
 literal|3
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -551,7 +562,10 @@ name|ptrace
 argument_list|(
 literal|3
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -615,7 +629,10 @@ name|ptrace
 argument_list|(
 literal|3
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -639,7 +656,10 @@ name|ptrace
 argument_list|(
 literal|3
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 call|(
 name|PTRACE_ARG3_TYPE
@@ -667,7 +687,10 @@ name|ptrace
 argument_list|(
 literal|3
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 call|(
 name|PTRACE_ARG3_TYPE
@@ -695,7 +718,10 @@ name|ptrace
 argument_list|(
 literal|3
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 call|(
 name|PTRACE_ARG3_TYPE
@@ -734,11 +760,9 @@ begin_function
 name|void
 name|store_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -814,7 +838,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -861,7 +888,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -885,7 +915,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -909,7 +942,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -933,7 +969,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -957,7 +996,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -981,7 +1023,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1038,7 +1083,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1054,7 +1102,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1072,7 +1123,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1090,7 +1144,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1148,7 +1205,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1188,7 +1248,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1205,7 +1268,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1222,7 +1288,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1239,7 +1308,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1256,7 +1328,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1273,7 +1348,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1339,7 +1417,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1355,7 +1436,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 call|(
 name|PTRACE_ARG3_TYPE
@@ -1375,7 +1459,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 call|(
 name|PTRACE_ARG3_TYPE
@@ -1395,7 +1482,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 call|(
 name|PTRACE_ARG3_TYPE
@@ -1424,19 +1514,11 @@ end_comment
 begin_macro
 name|m88k_register_u_addr
 argument_list|(
-argument|blockend
+argument|int blockend
 argument_list|,
-argument|regnum
+argument|int regnum
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|blockend
-decl_stmt|,
-name|regnum
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -1678,19 +1760,27 @@ file|<sys/procfs.h>
 end_include
 
 begin_comment
-comment|/*  Given a pointer to a general register set in /proc format (gregset_t *),     unpack the register contents and supply them as gdb's idea of the current     register values. */
+comment|/* Prototypes for supply_gregset etc. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"gregset.h"
+end_include
+
+begin_comment
+comment|/*  Given a pointer to a general register set in /proc format (gregset_t *),    unpack the register contents and supply them as gdb's idea of the current    register values. */
 end_comment
 
 begin_function
 name|void
 name|supply_gregset
 parameter_list|(
-name|gregsetp
-parameter_list|)
 name|gregset_t
 modifier|*
 name|gregsetp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1832,17 +1922,13 @@ begin_function
 name|void
 name|fill_gregset
 parameter_list|(
-name|gregsetp
-parameter_list|,
-name|regno
-parameter_list|)
 name|gregset_t
 modifier|*
 name|gregsetp
-decl_stmt|;
+parameter_list|,
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regi
@@ -1857,11 +1943,6 @@ name|greg_t
 operator|*
 operator|)
 name|gregsetp
-decl_stmt|;
-specifier|extern
-name|char
-name|registers
-index|[]
 decl_stmt|;
 for|for
 control|(
@@ -2225,7 +2306,9 @@ end_endif
 begin_function
 name|void
 name|add_shared_symbol_files
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|void
 modifier|*
@@ -2257,8 +2340,12 @@ name|path_name
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|inferior_pid
+name|ptid_equal
+argument_list|(
+name|inferior_ptid
+argument_list|,
+name|null_ptid
+argument_list|)
 condition|)
 block|{
 name|warning
@@ -2276,17 +2363,11 @@ name|LIBC_FILE
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
-literal|0
-argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|0
+name|OBJF_READNOW
 argument_list|)
 expr_stmt|;
 name|minsym
@@ -2385,35 +2466,69 @@ name|local_errno
 argument_list|)
 condition|)
 block|{
+name|struct
+name|section_addr_info
+name|section_addrs
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|section_addrs
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|section_addrs
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|section_addrs
+operator|.
+name|other
+index|[
+literal|0
+index|]
+operator|.
+name|addr
+operator|=
+name|lms
+operator|.
+name|l_addr
+expr_stmt|;
+name|section_addrs
+operator|.
+name|other
+index|[
+literal|0
+index|]
+operator|.
+name|name
+operator|=
+literal|".text"
+expr_stmt|;
 name|symbol_file_add
 argument_list|(
 name|path_name
 argument_list|,
 literal|1
 argument_list|,
-name|lms
-operator|.
-name|l_addr
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
+operator|&
+name|section_addrs
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|path_name
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* traverse links in reverse order so that we get the 	 the symbols the user actually gets. */
+comment|/* traverse links in reverse order so that we get the          the symbols the user actually gets. */
 name|lm
 operator|=
 name|lms
@@ -2448,15 +2563,12 @@ name|unsigned
 name|int
 name|m88k_harris_core_register_addr
 parameter_list|(
-name|regno
-parameter_list|,
-name|reg_ptr
-parameter_list|)
 name|int
 name|regno
-decl_stmt|,
+parameter_list|,
+name|int
 name|reg_ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -2562,7 +2674,9 @@ end_comment
 begin_function
 name|void
 name|_initialize_m88k_nat
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -2612,12 +2726,10 @@ begin_function
 name|void
 name|supply_gregset
 parameter_list|(
-name|gregsetp
-parameter_list|)
 name|gregset_t
 modifier|*
 name|gregsetp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -2765,12 +2877,10 @@ begin_function
 name|void
 name|supply_fpregset
 parameter_list|(
-name|fpregsetp
-parameter_list|)
 name|fpregset_t
 modifier|*
 name|fpregsetp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -2914,7 +3024,7 @@ operator|=
 name|R_FIP
 expr_stmt|;
 break|break;
-default|default :
+default|default:
 if|if
 condition|(
 name|regno

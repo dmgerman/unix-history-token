@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent Motorola 88xxx support for GDB, the GNU Debugger.    Copyright 1988, 1990, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Native-dependent Motorola 88xxx support for GDB, the GNU Debugger.    Copyright 1988, 1990, 1991, 1992, 1993, 1995, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"inferior.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
 end_include
 
 begin_include
@@ -215,26 +221,13 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-name|registers
-index|[
-name|REGISTER_BYTES
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|fetch_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
-comment|/* Original value discarded */
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -281,8 +274,8 @@ name|regaddr
 operator|=
 name|offset
 expr_stmt|;
-comment|/* byte offset to r0;*/
-comment|/*  offset = ptrace (3, inferior_pid, (PTRACE_ARG3_TYPE) offset, 0) - KERNEL_U_ADDR; */
+comment|/* byte offset to r0; */
+comment|/*  offset = ptrace (3, PIDGET (inferior_ptid), (PTRACE_ARG3_TYPE) offset, 0) - KERNEL_U_ADDR; */
 for|for
 control|(
 name|regno
@@ -297,7 +290,7 @@ name|regno
 operator|++
 control|)
 block|{
-comment|/*regaddr = register_addr (regno, offset);*/
+comment|/*regaddr = register_addr (regno, offset); */
 comment|/* 88k enhancement  */
 for|for
 control|(
@@ -335,7 +328,10 @@ name|ptrace
 argument_list|(
 literal|3
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -377,7 +373,10 @@ name|ptrace
 argument_list|(
 literal|3
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -409,7 +408,10 @@ name|ptrace
 argument_list|(
 literal|3
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -441,7 +443,10 @@ name|ptrace
 argument_list|(
 literal|3
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -469,11 +474,9 @@ begin_function
 name|void
 name|store_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -549,7 +552,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -596,7 +602,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -620,7 +629,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -644,7 +656,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -700,7 +715,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -740,7 +758,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -757,7 +778,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -774,7 +798,10 @@ name|ptrace
 argument_list|(
 literal|6
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -798,9 +825,9 @@ end_comment
 begin_macro
 name|m88k_register_u_addr
 argument_list|(
-argument|blockend
+argument|int blockend
 argument_list|,
-argument|regnum
+argument|int regnum
 argument_list|)
 end_macro
 
@@ -1056,7 +1083,7 @@ name|regnum
 operator|<
 name|NUM_REGS
 condition|)
-comment|/* The register is one of those which is not defined... 	       give it zero */
+comment|/* The register is one of those which is not defined... 	   give it zero */
 return|return
 operator|(
 name|ustart
@@ -1105,19 +1132,27 @@ file|<sys/procfs.h>
 end_include
 
 begin_comment
-comment|/*  Given a pointer to a general register set in /proc format (gregset_t *),     unpack the register contents and supply them as gdb's idea of the current     register values. */
+comment|/* Prototypes for supply_gregset etc. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"gregset.h"
+end_include
+
+begin_comment
+comment|/*  Given a pointer to a general register set in /proc format (gregset_t *),    unpack the register contents and supply them as gdb's idea of the current    register values. */
 end_comment
 
 begin_function
 name|void
 name|supply_gregset
 parameter_list|(
-name|gregsetp
-parameter_list|)
 name|gregset_t
 modifier|*
 name|gregsetp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1259,17 +1294,13 @@ begin_function
 name|void
 name|fill_gregset
 parameter_list|(
-name|gregsetp
-parameter_list|,
-name|regno
-parameter_list|)
 name|gregset_t
 modifier|*
 name|gregsetp
-decl_stmt|;
+parameter_list|,
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regi
@@ -1284,11 +1315,6 @@ name|greg_t
 operator|*
 operator|)
 name|gregsetp
-decl_stmt|;
-specifier|extern
-name|char
-name|registers
-index|[]
 decl_stmt|;
 for|for
 control|(

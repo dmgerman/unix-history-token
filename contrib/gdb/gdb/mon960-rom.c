@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote target glue for the Intel 960 MON960 ROM monitor.    Copyright 1995, 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Remote target glue for the Intel 960 MON960 ROM monitor.    Copyright 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -61,6 +61,16 @@ begin_comment
 comment|/* for generic_load */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"inferior.h"
+end_include
+
+begin_comment
+comment|/* for write_pc() */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -75,23 +85,20 @@ name|mon960_ops
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|mon960_open
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|args
-operator|,
+parameter_list|,
 name|int
 name|from_tty
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -104,22 +111,14 @@ specifier|static
 name|void
 name|mon960_load_gen
 parameter_list|(
-name|filename
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|extern
-name|int
-name|inferior_pid
-decl_stmt|;
 name|generic_load
 argument_list|(
 name|filename
@@ -140,9 +139,9 @@ name|exec_bfd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
-literal|0
+name|null_ptid
 expr_stmt|;
 comment|/* No process now */
 block|}
@@ -158,22 +157,18 @@ specifier|static
 name|void
 name|mon960_load
 parameter_list|(
+name|struct
+name|serial
+modifier|*
 name|desc
 parameter_list|,
-name|file
-parameter_list|,
-name|hashmark
-parameter_list|)
-name|serial_t
-name|desc
-decl_stmt|;
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 name|int
 name|hashmark
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd
 modifier|*
@@ -563,7 +558,7 @@ block|,
 literal|"fp2"
 block|,
 literal|"fp3"
-block|,   }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1041,17 +1036,13 @@ specifier|static
 name|void
 name|mon960_open
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -1144,7 +1135,9 @@ end_function
 begin_function
 name|void
 name|_initialize_mon960
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|memcpy
 argument_list|(

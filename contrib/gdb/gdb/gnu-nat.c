@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Interface GDB to the GNU Hurd    Copyright (C) 1992, 1995, 1996, 1997 Free Software Foundation, Inc.     This file is part of GDB.     Written by Miles Bader<miles@gnu.ai.mit.edu>     Some code and ideas from m3-nat.c by Jukka Virtanen<jtv@hut.fi>     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Interface GDB to the GNU Hurd.    Copyright 1992, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     Written by Miles Bader<miles@gnu.ai.mit.edu>     Some code and ideas from m3-nat.c by Jukka Virtanen<jtv@hut.fi>     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -18,13 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
+file|<limits.h>
 end_include
 
 begin_include
@@ -36,7 +30,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<limits.h>
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb_string.h"
 end_include
 
 begin_include
@@ -45,32 +51,10 @@ directive|include
 file|<sys/ptrace.h>
 end_include
 
-begin_comment
-comment|/* We include this because we don't need the access macros and they conflict    with gdb's definitions (ick).  This is very non standard!  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<waitflags.h>
-end_include
-
 begin_include
 include|#
 directive|include
 file|<mach.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<mach/message.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<mach/notify.h>
 end_include
 
 begin_include
@@ -88,19 +72,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mach/message.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mach/notify.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mach/vm_attributes.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<hurd/process.h>
+file|<hurd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<hurd/process_request.h>
+file|<hurd/interrupt.h>
 end_include
 
 begin_include
@@ -118,13 +114,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<hurd/signal.h>
+file|<hurd/process.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<hurd/interrupt.h>
+file|<hurd/process_request.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<hurd/signal.h>
 end_include
 
 begin_include
@@ -178,7 +180,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
+file|"gdb_wait.h"
 end_include
 
 begin_include
@@ -191,6 +193,18 @@ begin_include
 include|#
 directive|include
 file|"gdbcore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdbthread.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb_assert.h"
 end_include
 
 begin_include
@@ -287,27 +301,6 @@ name|target_ops
 name|gnu_ops
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strerror
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|inf_update_procs
-parameter_list|(
-name|struct
-name|inf
-modifier|*
-name|inf
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|struct
@@ -557,6 +550,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|inf_continue
+parameter_list|(
+name|struct
+name|inf
+modifier|*
+name|inf
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -576,21 +581,6 @@ end_define
 begin_function_decl
 name|void
 name|proc_abort
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|proc
-parameter_list|,
-name|int
-name|force
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|thread_state_t
-name|proc_get_state
 parameter_list|(
 name|struct
 name|proc
@@ -735,19 +725,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|char
-modifier|*
-name|proc_string
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|proc
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Evaluate RPC_EXPR in a scope with the variables MSGPORT and REFPORT bound    to INF's msg port and task port respectively.  If it has no msg port,    EIEIO is returned.  INF must refer to a running process!  */
 end_comment
@@ -781,17 +758,6 @@ parameter_list|)
 define|\
 value|(inf_set_threads_resume_sc_for_signal_thread (inf) \    ? ({ error_t __e; \ 	inf_resume (inf); \ 	__e = INF_MSGPORT_RPC (inf, rpc_expr); \ 	inf_suspend (inf); \ 	__e; }) \    : EIEIO)
 end_define
-
-begin_define
-define|#
-directive|define
-name|MIG_SERVER_DIED
-value|EMIG_SERVER_DIED
-end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_escape
 end_escape
@@ -878,7 +844,7 @@ modifier|*
 name|threads
 decl_stmt|;
 comment|/* A linked list of all threads in TASK.  */
-comment|/* True if THREADS needn't be validated by querying the task.  We assume that      we and the task in question are the only ones frobbing the thread list,      so as long as we don't let any code run, we don't have to worry about      THREADS changing.  */
+comment|/* True if THREADS needn't be validated by querying the task.  We assume that        we and the task in question are the only ones frobbing the thread list,        so as long as we don't let any code run, we don't have to worry about        THREADS changing.  */
 name|int
 name|threads_up_to_date
 decl_stmt|;
@@ -907,36 +873,47 @@ name|mach_port_t
 name|event_port
 decl_stmt|;
 comment|/* Where we receive various msgs.  */
-comment|/* True if we think at least one thread in the inferior could currently be      running.  */
+comment|/* True if we think at least one thread in the inferior could currently be        running.  */
+name|unsigned
 name|int
 name|running
 range|:
 literal|1
 decl_stmt|;
-comment|/* True if the process has stopped (in the proc server sense).  Note that      since a proc server `stop' leaves the signal thread running, the inf can      be RUNNING&& STOPPED...  */
+comment|/* True if the process has stopped (in the proc server sense).  Note that        since a proc server `stop' leaves the signal thread running, the inf can        be RUNNING&& STOPPED...  */
+name|unsigned
 name|int
 name|stopped
 range|:
 literal|1
 decl_stmt|;
+comment|/* True if the inferior has no message port.  */
+name|unsigned
+name|int
+name|nomsg
+range|:
+literal|1
+decl_stmt|;
 comment|/* True if the inferior is traced.  */
+name|unsigned
 name|int
 name|traced
 range|:
 literal|1
 decl_stmt|;
-comment|/* True if we shouldn't try waiting for the inferior, usually because we      can't for some reason.  */
+comment|/* True if we shouldn't try waiting for the inferior, usually because we        can't for some reason.  */
+name|unsigned
 name|int
 name|no_wait
 range|:
 literal|1
 decl_stmt|;
-comment|/* When starting a new inferior, we don't try to validate threads until all      the proper execs have been done.  This is a count of how many execs we      expect to happen.  */
+comment|/* When starting a new inferior, we don't try to validate threads until all        the proper execs have been done.  This is a count of how many execs we        expect to happen.  */
 name|unsigned
 name|pending_execs
 decl_stmt|;
 comment|/* Fields describing global state */
-comment|/* The task suspend count used when gdb has control.  This is normally 1 to      make things easier for us, but sometimes (like when attaching to vital      system servers) it may be desirable to let the task continue to run      (pausing individual threads as necessary).  */
+comment|/* The task suspend count used when gdb has control.  This is normally 1 to        make things easier for us, but sometimes (like when attaching to vital        system servers) it may be desirable to let the task continue to run        (pausing individual threads as necessary).  */
 name|int
 name|pause_sc
 decl_stmt|;
@@ -944,7 +921,7 @@ comment|/* The task suspend count left when detaching from a task.  */
 name|int
 name|detach_sc
 decl_stmt|;
-comment|/* The initial values used for the run_sc and pause_sc of newly discovered      threads -- see the definition of those fields in struct proc.  */
+comment|/* The initial values used for the run_sc and pause_sc of newly discovered        threads -- see the definition of those fields in struct proc.  */
 name|int
 name|default_thread_run_sc
 decl_stmt|;
@@ -954,11 +931,11 @@ decl_stmt|;
 name|int
 name|default_thread_detach_sc
 decl_stmt|;
-comment|/* True if the process should be traced when started/attached.  Newly      started processes *must* be traced at first to exec them properly, but      if this is false, tracing is turned off as soon it has done so.  */
+comment|/* True if the process should be traced when started/attached.  Newly        started processes *must* be traced at first to exec them properly, but        if this is false, tracing is turned off as soon it has done so.  */
 name|int
 name|want_signals
 decl_stmt|;
-comment|/* True if exceptions from the inferior process should be trapped.  This      must be on to use breakpoints.  */
+comment|/* True if exceptions from the inferior process should be trapped.  This        must be on to use breakpoints.  */
 name|int
 name|want_exceptions
 decl_stmt|;
@@ -1055,7 +1032,7 @@ name|state_changed
 condition|)
 comment|/* Since PROC may start running, we must write back any state changes. */
 block|{
-name|assert
+name|gdb_assert
 argument_list|(
 name|proc_is_thread
 argument_list|(
@@ -1109,6 +1086,7 @@ name|delta
 operator|>
 literal|0
 condition|)
+block|{
 while|while
 condition|(
 name|delta
@@ -1119,6 +1097,7 @@ operator|&&
 operator|!
 name|err
 condition|)
+block|{
 if|if
 condition|(
 name|proc_is_task
@@ -1145,7 +1124,10 @@ operator|->
 name|port
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 else|else
+block|{
 while|while
 condition|(
 name|delta
@@ -1156,6 +1138,7 @@ operator|&&
 operator|!
 name|err
 condition|)
+block|{
 if|if
 condition|(
 name|proc_is_task
@@ -1182,6 +1165,8 @@ operator|->
 name|port
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 operator|!
@@ -1294,7 +1279,7 @@ name|int
 name|force
 parameter_list|)
 block|{
-name|assert
+name|gdb_assert
 argument_list|(
 name|proc_is_thread
 argument_list|(
@@ -1812,6 +1797,8 @@ condition|)
 block|{
 name|error_t
 name|err
+init|=
+literal|0
 decl_stmt|;
 name|proc_debug
 argument_list|(
@@ -2100,7 +2087,7 @@ condition|(
 name|set
 condition|)
 block|{
-comment|/* XXX We don't get the exception unless the thread has its own 	 exception port???? */
+comment|/* XXX We don't get the exception unless the thread has its own          exception port???? */
 if|if
 condition|(
 name|proc
@@ -2189,7 +2176,7 @@ name|proc
 modifier|*
 name|proc
 init|=
-name|malloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2384,6 +2371,7 @@ name|inf
 operator|->
 name|want_exceptions
 condition|)
+block|{
 if|if
 condition|(
 name|proc_is_task
@@ -2402,7 +2390,7 @@ name|event_port
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* Just clear thread exception ports -- they default to the task one.  */
+comment|/* Just clear thread exception ports -- they default to the            task one.  */
 name|proc_steal_exc_port
 argument_list|(
 name|proc
@@ -2410,6 +2398,7 @@ argument_list|,
 name|MACH_PORT_NULL
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|proc
 return|;
@@ -2558,7 +2547,7 @@ name|port
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|xfree
 argument_list|(
 name|proc
 argument_list|)
@@ -2577,14 +2566,16 @@ name|struct
 name|inf
 modifier|*
 name|make_inf
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|inf
 modifier|*
 name|inf
 init|=
-name|malloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2593,14 +2584,6 @@ name|inf
 argument_list|)
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|inf
-condition|)
-return|return
-literal|0
-return|;
 name|inf
 operator|->
 name|task
@@ -2683,15 +2666,21 @@ name|MACH_PORT_NULL
 expr_stmt|;
 name|inf
 operator|->
+name|running
+operator|=
+literal|0
+expr_stmt|;
+name|inf
+operator|->
 name|stopped
 operator|=
 literal|0
 expr_stmt|;
 name|inf
 operator|->
-name|running
+name|nomsg
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|inf
 operator|->
@@ -2762,7 +2751,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* clear INF's target wait status.  */
+comment|/* Clear INF's target wait status.  */
 end_comment
 
 begin_function
@@ -2928,13 +2917,7 @@ literal|0
 expr_stmt|;
 name|inf
 operator|->
-name|traced
-operator|=
-literal|0
-expr_stmt|;
-name|inf
-operator|->
-name|no_wait
+name|running
 operator|=
 literal|0
 expr_stmt|;
@@ -2946,7 +2929,19 @@ literal|0
 expr_stmt|;
 name|inf
 operator|->
-name|running
+name|nomsg
+operator|=
+literal|1
+expr_stmt|;
+name|inf
+operator|->
+name|traced
+operator|=
+literal|0
+expr_stmt|;
+name|inf
+operator|->
+name|no_wait
 operator|=
 literal|0
 expr_stmt|;
@@ -3074,7 +3069,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* close current process, if any, and attach INF to process PORT */
+comment|/* Close current process, if any, and attach INF to process PORT.  */
 end_comment
 
 begin_function
@@ -3249,6 +3244,7 @@ name|inf
 operator|->
 name|pause_sc
 condition|)
+comment|/* Reflect task_suspend above.  */
 name|inf
 operator|->
 name|task
@@ -3263,7 +3259,6 @@ name|cur_sc
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Reflect task_suspend above */
 block|}
 else|else
 name|inf
@@ -3280,13 +3275,13 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Validates INF's stopped field from the actual proc server state.  */
+comment|/* Validates INF's stopped, nomsg and traced field from the actual    proc server state.  Note that the traced field is only updated from    the proc server state if we do not have a message port.  If we do    have a message port we'd better look at the tracemask itself.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|inf_validate_stopped
+name|inf_validate_procinfo
 parameter_list|(
 name|struct
 name|inf
@@ -3369,6 +3364,40 @@ operator|&
 name|PI_STOPPED
 operator|)
 expr_stmt|;
+name|inf
+operator|->
+name|nomsg
+operator|=
+operator|!
+operator|!
+operator|(
+name|pi
+operator|->
+name|state
+operator|&
+name|PI_NOMSG
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|inf
+operator|->
+name|nomsg
+condition|)
+name|inf
+operator|->
+name|traced
+operator|=
+operator|!
+operator|!
+operator|(
+name|pi
+operator|->
+name|state
+operator|&
+name|PI_TRACED
+operator|)
+expr_stmt|;
 name|vm_deallocate
 argument_list|(
 name|mach_task_self
@@ -3406,7 +3435,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Validates INF's task suspend count.  If it's higher than we expect, verify    with the user before `stealing' the extra count.  */
+comment|/* Validates INF's task suspend count.  If it's higher than we expect,    verify with the user before `stealing' the extra count.  */
 end_comment
 
 begin_function
@@ -3420,42 +3449,76 @@ modifier|*
 name|inf
 parameter_list|)
 block|{
-name|struct
-name|task_basic_info
-name|info
+name|char
+modifier|*
+name|noise
 decl_stmt|;
 name|mach_msg_type_number_t
-name|info_len
+name|noise_len
 init|=
-name|TASK_BASIC_INFO_COUNT
+literal|0
+decl_stmt|;
+name|struct
+name|procinfo
+modifier|*
+name|pi
+decl_stmt|;
+name|mach_msg_type_number_t
+name|pi_len
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|info_flags
+init|=
+name|PI_FETCH_TASKINFO
+decl_stmt|;
+name|int
+name|suspend_count
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|error_t
 name|err
-init|=
-name|task_info
+decl_stmt|;
+name|retry
+label|:
+name|err
+operator|=
+name|proc_getprocinfo
 argument_list|(
+name|proc_server
+argument_list|,
 name|inf
 operator|->
-name|task
-operator|->
-name|port
+name|pid
 argument_list|,
-name|TASK_BASIC_INFO
+operator|&
+name|info_flags
 argument_list|,
 operator|(
-name|task_info_t
+name|procinfo_t
+operator|*
 operator|)
 operator|&
-name|info
+name|pi
 argument_list|,
 operator|&
-name|info_len
+name|pi_len
+argument_list|,
+operator|&
+name|noise
+argument_list|,
+operator|&
+name|noise_len
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|err
 condition|)
+block|{
 name|inf
 operator|->
 name|task
@@ -3465,7 +3528,8 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* oh well */
-elseif|else
+return|return;
+block|}
 if|if
 condition|(
 name|inf
@@ -3474,8 +3538,79 @@ name|task
 operator|->
 name|cur_sc
 operator|<
-name|info
+name|pi
+operator|->
+name|taskinfo
 operator|.
+name|suspend_count
+operator|&&
+name|suspend_count
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* The proc server might have suspended the task while stopping          it.  This happens when the task is handling a traced signal.          Refetch the suspend count.  The proc server should be          finished stopping the task by now.  */
+name|suspend_count
+operator|=
+name|pi
+operator|->
+name|taskinfo
+operator|.
+name|suspend_count
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
+name|suspend_count
+operator|=
+name|pi
+operator|->
+name|taskinfo
+operator|.
+name|suspend_count
+expr_stmt|;
+name|vm_deallocate
+argument_list|(
+name|mach_task_self
+argument_list|()
+argument_list|,
+operator|(
+name|vm_address_t
+operator|)
+name|pi
+argument_list|,
+name|pi_len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|noise_len
+operator|>
+literal|0
+condition|)
+name|vm_deallocate
+argument_list|(
+name|mach_task_self
+argument_list|()
+argument_list|,
+operator|(
+name|vm_address_t
+operator|)
+name|pi
+argument_list|,
+name|pi_len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|inf
+operator|->
+name|task
+operator|->
+name|cur_sc
+operator|<
 name|suspend_count
 condition|)
 block|{
@@ -3491,14 +3626,13 @@ operator|=
 operator|!
 name|query
 argument_list|(
-literal|"Pid %d has an additional task suspend count of %d; clear it? "
+literal|"Pid %d has an additional task suspend count of %d;"
+literal|" clear it? "
 argument_list|,
 name|inf
 operator|->
 name|pid
 argument_list|,
-name|info
-operator|.
 name|suspend_count
 operator|-
 name|inf
@@ -3527,8 +3661,6 @@ name|task
 operator|->
 name|cur_sc
 operator|=
-name|info
-operator|.
 name|suspend_count
 expr_stmt|;
 block|}
@@ -3536,7 +3668,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Turns tracing for INF on or off, depending on ON, unless it already is.    If INF is running, the resume_sc count of INF's threads will be modified,    and the signal thread will briefly be run to change the trace state.  */
+comment|/* Turns tracing for INF on or off, depending on ON, unless it already    is.  If INF is running, the resume_sc count of INF's threads will    be modified, and the signal thread will briefly be run to change    the trace state.  */
 end_comment
 
 begin_function
@@ -3555,11 +3687,12 @@ block|{
 if|if
 condition|(
 name|on
-operator|!=
+operator|==
 name|inf
 operator|->
 name|traced
 condition|)
+return|return;
 if|if
 condition|(
 name|inf
@@ -3620,11 +3753,13 @@ name|on
 condition|)
 name|warning
 argument_list|(
-literal|"Can't modify tracing state for pid %d: No signal thread"
+literal|"Can't modify tracing state for pid %d: %s"
 argument_list|,
 name|inf
 operator|->
 name|pid
+argument_list|,
+literal|"No signal thread"
 argument_list|)
 expr_stmt|;
 name|inf
@@ -3675,7 +3810,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Makes all the real suspend count deltas of all the procs in INF match the    desired values.  Careful to always do thread/task suspend counts in the    safe order.  Returns true if at least one thread is thought to be running.*/
+comment|/* Makes all the real suspend count deltas of all the procs in INF    match the desired values.  Careful to always do thread/task suspend    counts in the safe order.  Returns true if at least one thread is    thought to be running. */
 end_comment
 
 begin_function
@@ -3826,7 +3961,7 @@ name|thread_running
 operator|&&
 name|task_running
 expr_stmt|;
-comment|/* Once any thread has executed some code, we can't depend on the 	 threads list any more.  */
+comment|/* Once any thread has executed some code, we can't depend on the          threads list any more.  */
 if|if
 condition|(
 name|inf
@@ -3983,14 +4118,13 @@ modifier|*
 name|inf
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|thread_array_t
 name|threads
 decl_stmt|;
-name|unsigned
+name|mach_msg_type_number_t
 name|num_threads
+decl_stmt|,
+name|i
 decl_stmt|;
 name|struct
 name|proc
@@ -4082,12 +4216,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|{
-name|unsigned
+comment|/* Make things normally linear.  */
+name|mach_msg_type_number_t
 name|search_start
 init|=
 literal|0
 decl_stmt|;
-comment|/* Make things normally linear.  */
 comment|/* Which thread in PROCS corresponds to each task thread,& the task.  */
 name|struct
 name|proc
@@ -4132,7 +4266,7 @@ condition|(
 name|thread
 condition|)
 block|{
-name|unsigned
+name|mach_msg_type_number_t
 name|left
 decl_stmt|;
 for|for
@@ -4257,6 +4391,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|matched
@@ -4326,12 +4461,16 @@ argument_list|)
 expr_stmt|;
 name|add_thread
 argument_list|(
+name|pid_to_ptid
+argument_list|(
 name|thread
 operator|->
 name|tid
 argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* Tell GDB's generic thread code.  */
+block|}
 block|}
 name|vm_deallocate
 argument_list|(
@@ -4659,7 +4798,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* INF has one thread PROC that is in single-stepping mode.  This function    changes it to be PROC, changing any old step_thread to be a normal one.  A    PROC of 0 clears any existing value.  */
+comment|/* INF has one thread PROC that is in single-stepping mode.  This    function changes it to be PROC, changing any old step_thread to be    a normal one.  A PROC of 0 clears any existing value.  */
 end_comment
 
 begin_function
@@ -4677,7 +4816,7 @@ modifier|*
 name|thread
 parameter_list|)
 block|{
-name|assert
+name|gdb_assert
 argument_list|(
 operator|!
 name|thread
@@ -4912,6 +5051,11 @@ name|proc
 modifier|*
 name|thread
 decl_stmt|;
+name|inf_validate_procinfo
+argument_list|(
+name|inf
+argument_list|)
+expr_stmt|;
 name|inf_set_traced
 argument_list|(
 name|inf
@@ -4925,6 +5069,19 @@ name|inf
 operator|->
 name|stopped
 condition|)
+block|{
+if|if
+condition|(
+name|inf
+operator|->
+name|nomsg
+condition|)
+name|inf_continue
+argument_list|(
+name|inf
+argument_list|)
+expr_stmt|;
+else|else
 name|inf_signal
 argument_list|(
 name|inf
@@ -4932,6 +5089,7 @@ argument_list|,
 name|TARGET_SIGNAL_0
 argument_list|)
 expr_stmt|;
+block|}
 name|proc_restore_exc_port
 argument_list|(
 name|task
@@ -4991,7 +5149,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Attaches INF to the process with process id PID, returning it in a suspended    state suitable for debugging.  */
+comment|/* Attaches INF to the process with process id PID, returning it in a    suspended state suitable for debugging.  */
 end_comment
 
 begin_function
@@ -5365,7 +5523,7 @@ name|inf
 operator|->
 name|stopped
 condition|)
-comment|/* The process is stopped and expecting a signal.  Just send off a 	 request and let it get handled when we resume everything.  */
+comment|/* The process is stopped and expecting a signal.  Just send off a        request and let it get handled when we resume everything.  */
 block|{
 name|inf_debug
 argument_list|(
@@ -5405,7 +5563,7 @@ condition|(
 operator|!
 name|err
 condition|)
-comment|/* Posting an untraced signal automatically continues it. 	     We clear this here rather than when we get the reply 	     because we'd rather assume it's not stopped when it 	     actually is, than the reverse.  */
+comment|/* Posting an untraced signal automatically continues it. 	   We clear this here rather than when we get the reply 	   because we'd rather assume it's not stopped when it 	   actually is, than the reverse.  */
 name|inf
 operator|->
 name|stopped
@@ -5414,13 +5572,14 @@ literal|0
 expr_stmt|;
 block|}
 else|else
-comment|/* It's not expecting it.  We have to let just the signal thread 	 run, and wait for it to get into a reasonable state before we 	 can continue the rest of the process.  When we finally resume the 	 process the signal we request will be the very first thing that 	 happens. */
+comment|/* It's not expecting it.  We have to let just the signal thread        run, and wait for it to get into a reasonable state before we        can continue the rest of the process.  When we finally resume the        process the signal we request will be the very first thing that        happens. */
 block|{
 name|inf_debug
 argument_list|(
 name|inf
 argument_list|,
-literal|"sending %s to unstopped process (so resuming signal thread)"
+literal|"sending %s to unstopped process"
+literal|" (so resuming signal thread)"
 argument_list|,
 name|NAME
 argument_list|)
@@ -5485,6 +5644,120 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* Continue INF without delivering a signal.  This is meant to be used    when INF does not have a message port.  */
+end_comment
+
+begin_function
+name|void
+name|inf_continue
+parameter_list|(
+name|struct
+name|inf
+modifier|*
+name|inf
+parameter_list|)
+block|{
+name|process_t
+name|proc
+decl_stmt|;
+name|error_t
+name|err
+init|=
+name|proc_pid2proc
+argument_list|(
+name|proc_server
+argument_list|,
+name|inf
+operator|->
+name|pid
+argument_list|,
+operator|&
+name|proc
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|err
+condition|)
+block|{
+name|inf_debug
+argument_list|(
+name|inf
+argument_list|,
+literal|"continuing process"
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|proc_mark_cont
+argument_list|(
+name|proc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|err
+condition|)
+block|{
+name|struct
+name|proc
+modifier|*
+name|thread
+decl_stmt|;
+for|for
+control|(
+name|thread
+operator|=
+name|inf
+operator|->
+name|threads
+init|;
+name|thread
+condition|;
+name|thread
+operator|=
+name|thread
+operator|->
+name|next
+control|)
+name|thread_resume
+argument_list|(
+name|thread
+operator|->
+name|port
+argument_list|)
+expr_stmt|;
+name|inf
+operator|->
+name|stopped
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|err
+condition|)
+name|warning
+argument_list|(
+literal|"Can't continue process: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* The inferior used for all gdb target ops.  */
 end_comment
 
@@ -5516,10 +5789,10 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ptid_t
 name|gnu_wait
 parameter_list|(
-name|int
+name|ptid_t
 name|tid
 parameter_list|,
 name|struct
@@ -5561,7 +5834,51 @@ name|inf
 init|=
 name|current_inferior
 decl_stmt|;
-name|assert
+specifier|extern
+name|int
+name|exc_server
+argument_list|(
+name|mach_msg_header_t
+operator|*
+argument_list|,
+name|mach_msg_header_t
+operator|*
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|msg_reply_server
+argument_list|(
+name|mach_msg_header_t
+operator|*
+argument_list|,
+name|mach_msg_header_t
+operator|*
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|notify_server
+argument_list|(
+name|mach_msg_header_t
+operator|*
+argument_list|,
+name|mach_msg_header_t
+operator|*
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|process_reply_server
+argument_list|(
+name|mach_msg_header_t
+operator|*
+argument_list|,
+name|mach_msg_header_t
+operator|*
+argument_list|)
+decl_stmt|;
+name|gdb_assert
 argument_list|(
 name|inf
 operator|->
@@ -5617,7 +5934,10 @@ name|inf
 argument_list|,
 literal|"waiting for: %d"
 argument_list|,
+name|PIDGET
+argument_list|(
 name|tid
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|rewait
@@ -5719,7 +6039,7 @@ name|inf
 operator|->
 name|pid
 expr_stmt|;
-comment|/* Even if proc_waits_pending was> 0 before, we still won't get 	     any other replies, because it was either from a different INF, 	     or a different process attached to INF -- and the event port, 	     which is the wait reply port, changes when you switch processes.*/
+comment|/* Even if proc_waits_pending was> 0 before, we still won't 	     get any other replies, because it was either from a 	     different INF, or a different process attached to INF -- 	     and the event port, which is the wait reply port, changes 	     when you switch processes. */
 name|proc_waits_pending
 operator|=
 literal|1
@@ -6135,9 +6455,12 @@ name|thread
 condition|)
 name|tid
 operator|=
+name|pid_to_ptid
+argument_list|(
 name|thread
 operator|->
 name|tid
+argument_list|)
 expr_stmt|;
 else|else
 name|thread
@@ -6146,7 +6469,10 @@ name|inf_tid_to_thread
 argument_list|(
 name|inf
 argument_list|,
+name|PIDGET
+argument_list|(
 name|tid
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6160,6 +6486,7 @@ name|port
 operator|==
 name|MACH_PORT_NULL
 condition|)
+block|{
 comment|/* TID is dead; try and find a new thread.  */
 if|if
 condition|(
@@ -6174,24 +6501,31 @@ name|threads
 condition|)
 name|tid
 operator|=
+name|pid_to_ptid
+argument_list|(
 name|inf
 operator|->
 name|threads
 operator|->
 name|tid
+argument_list|)
 expr_stmt|;
 comment|/* The first available thread.  */
 else|else
 name|tid
 operator|=
-name|inferior_pid
+name|inferior_ptid
 expr_stmt|;
 comment|/* let wait_for_inferior handle exit case */
+block|}
 if|if
 condition|(
 name|thread
 operator|&&
+name|PIDGET
+argument_list|(
 name|tid
+argument_list|)
 operator|>=
 literal|0
 operator|&&
@@ -6213,7 +6547,7 @@ name|pause_sc
 operator|==
 literal|0
 condition|)
-comment|/* If something actually happened to THREAD, make sure we suspend it.  */
+comment|/* If something actually happened to THREAD, make sure we        suspend it.  */
 block|{
 name|thread
 operator|->
@@ -6233,7 +6567,10 @@ name|inf
 argument_list|,
 literal|"returning tid = %d, status = %s (%d)"
 argument_list|,
+name|PIDGET
+argument_list|(
 name|tid
+argument_list|)
 argument_list|,
 name|status
 operator|->
@@ -6355,6 +6692,8 @@ argument_list|,
 name|exception
 argument_list|,
 name|code
+argument_list|,
+name|subcode
 argument_list|)
 expr_stmt|;
 if|if
@@ -6477,7 +6816,7 @@ name|inf_debug
 argument_list|(
 name|waiting_inf
 argument_list|,
-literal|"Handler is thread exeption port<%d>"
+literal|"Handler is thread exception port<%d>"
 argument_list|,
 name|thread
 operator|->
@@ -6503,7 +6842,7 @@ name|inf_debug
 argument_list|(
 name|waiting_inf
 argument_list|,
-literal|"Handler is task exeption port<%d>"
+literal|"Handler is task exception port<%d>"
 argument_list|,
 name|inf
 operator|->
@@ -6526,7 +6865,7 @@ name|task
 operator|->
 name|saved_exc_port
 expr_stmt|;
-name|assert
+name|gdb_assert
 argument_list|(
 name|inf
 operator|->
@@ -6827,6 +7166,23 @@ operator|=
 name|MACH_PORT_NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|inf
+operator|->
+name|task
+operator|->
+name|dead
+condition|)
+comment|/* Since the task is dead, its threads are dying with it.  */
+name|inf
+operator|->
+name|wait
+operator|.
+name|suppress
+operator|=
+literal|1
+expr_stmt|;
 block|}
 name|mach_port_deallocate
 argument_list|(
@@ -7404,7 +7760,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Resume execution of the inferior process.     If STEP is nonzero, single-step it.    If SIGNAL is nonzero, give it that signal.     TID  STEP:    -1   true   Single step the current thread allowing other threads to run.    -1   false  Continue the current thread allowing other threads to run.    X    true   Single step the given thread, don't allow any others to run.    X    false  Continue the given thread, do not allow any others to run.    (Where X, of course, is anything except -1)     Note that a resume may not `take' if there are pending exceptions/&c    still unprocessed from the last resume we did (any given resume may result    in multiple events returned by wait). */
+comment|/* Resume execution of the inferior process.     If STEP is nonzero, single-step it.    If SIGNAL is nonzero, give it that signal.     TID  STEP:    -1   true   Single step the current thread allowing other threads to run.    -1   false  Continue the current thread allowing other threads to run.    X    true   Single step the given thread, don't allow any others to run.    X    false  Continue the given thread, do not allow any others to run.    (Where X, of course, is anything except -1)     Note that a resume may not `take' if there are pending exceptions/&c    still unprocessed from the last resume we did (any given resume may result    in multiple events returned by wait).  */
 end_comment
 
 begin_function
@@ -7412,7 +7768,7 @@ specifier|static
 name|void
 name|gnu_resume
 parameter_list|(
-name|int
+name|ptid_t
 name|tid
 parameter_list|,
 name|int
@@ -7443,11 +7799,19 @@ name|inf
 argument_list|,
 literal|"tid = %d, step = %d, sig = %d"
 argument_list|,
+name|PIDGET
+argument_list|(
 name|tid
+argument_list|)
 argument_list|,
 name|step
 argument_list|,
 name|sig
+argument_list|)
+expr_stmt|;
+name|inf_validate_procinfo
+argument_list|(
+name|inf
 argument_list|)
 expr_stmt|;
 if|if
@@ -7460,6 +7824,23 @@ name|inf
 operator|->
 name|stopped
 condition|)
+block|{
+if|if
+condition|(
+name|sig
+operator|==
+name|TARGET_SIGNAL_0
+operator|&&
+name|inf
+operator|->
+name|nomsg
+condition|)
+name|inf_continue
+argument_list|(
+name|inf
+argument_list|)
+expr_stmt|;
+else|else
 name|inf_signal
 argument_list|(
 name|inf
@@ -7467,6 +7848,7 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -7539,7 +7921,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|PIDGET
+argument_list|(
 name|tid
+argument_list|)
 operator|<
 literal|0
 condition|)
@@ -7551,12 +7936,15 @@ name|inf
 argument_list|,
 literal|"running all threads; tid = %d"
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|tid
 operator|=
-name|inferior_pid
+name|inferior_ptid
 expr_stmt|;
 comment|/* What to step. */
 name|inf_set_threads_resume_sc
@@ -7581,7 +7969,10 @@ name|inf_tid_to_thread
 argument_list|(
 name|inf
 argument_list|,
+name|PIDGET
+argument_list|(
 name|tid
+argument_list|)
 argument_list|)
 decl_stmt|;
 if|if
@@ -7630,7 +8021,10 @@ name|inf_tid_to_thread
 argument_list|(
 name|inf
 argument_list|,
+name|PIDGET
+argument_list|(
 name|tid
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -7642,7 +8036,10 @@ name|warning
 argument_list|(
 literal|"Can't step thread id %d: no such thread."
 argument_list|,
+name|PIDGET
+argument_list|(
 name|tid
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -7699,7 +8096,9 @@ begin_function
 specifier|static
 name|void
 name|gnu_kill_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|proc
@@ -7752,7 +8151,9 @@ begin_function
 specifier|static
 name|void
 name|gnu_mourn_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|inf_debug
 argument_list|(
@@ -7793,7 +8194,9 @@ begin_function
 specifier|static
 name|int
 name|inf_pick_first_thread
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7827,7 +8230,9 @@ name|struct
 name|inf
 modifier|*
 name|cur_inf
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7850,25 +8255,19 @@ specifier|static
 name|void
 name|gnu_create_inferior
 parameter_list|(
-name|exec_file
-parameter_list|,
-name|allargs
-parameter_list|,
-name|env
-parameter_list|)
 name|char
 modifier|*
 name|exec_file
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|allargs
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|env
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|inf
@@ -7905,7 +8304,7 @@ literal|"ptrace (PTRACE_TRACEME) failed!"
 argument_list|)
 expr_stmt|;
 block|}
-name|int
+name|void
 name|attach_to_child
 parameter_list|(
 name|int
@@ -7947,20 +8346,29 @@ literal|2
 expr_stmt|;
 name|inf
 operator|->
+name|nomsg
+operator|=
+literal|1
+expr_stmt|;
+name|inf
+operator|->
 name|traced
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Now let the child run again, knowing that it will stop immediately 	 because of the ptrace. */
+comment|/* Now let the child run again, knowing that it will stop immediately        because of the ptrace. */
 name|inf_resume
 argument_list|(
 name|inf
 argument_list|)
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
+name|pid_to_ptid
+argument_list|(
 name|inf_pick_first_thread
 argument_list|()
+argument_list|)
 expr_stmt|;
 name|startup_inferior
 argument_list|(
@@ -7969,9 +8377,6 @@ operator|->
 name|pending_execs
 argument_list|)
 expr_stmt|;
-return|return
-name|inferior_pid
-return|;
 block|}
 name|inf_debug
 argument_list|(
@@ -7995,6 +8400,11 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|inf_validate_procinfo
+argument_list|(
+name|inf
 argument_list|)
 expr_stmt|;
 name|inf_update_signal_thread
@@ -8054,7 +8464,9 @@ begin_function
 specifier|static
 name|int
 name|gnu_can_run
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 literal|1
@@ -8080,17 +8492,13 @@ specifier|static
 name|void
 name|gnu_attach
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|pid
@@ -8114,7 +8522,7 @@ name|args
 condition|)
 name|error_no_arg
 argument_list|(
-literal|"PID to attach"
+literal|"process-id to attach"
 argument_list|)
 expr_stmt|;
 name|pid
@@ -8201,10 +8609,13 @@ argument_list|(
 name|inf
 argument_list|)
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
+name|pid_to_ptid
+argument_list|(
 name|inf_pick_first_thread
 argument_list|()
+argument_list|)
 expr_stmt|;
 name|attach_flag
 operator|=
@@ -8214,6 +8625,16 @@ name|push_target
 argument_list|(
 operator|&
 name|gnu_ops
+argument_list|)
+expr_stmt|;
+comment|/* We have to initialize the terminal settings now, since the code      below might try to restore them.  */
+name|target_terminal_init
+argument_list|()
+expr_stmt|;
+comment|/* If the process was stopped before we attached, make it continue the next      time the user does a continue.  */
+name|inf_validate_procinfo
+argument_list|(
+name|inf
 argument_list|)
 expr_stmt|;
 name|inf_update_signal_thread
@@ -8228,12 +8649,6 @@ argument_list|,
 name|inf
 operator|->
 name|want_signals
-argument_list|)
-expr_stmt|;
-comment|/* If the process was stopped before we attached, make it continue the next      time the user does a continue.  */
-name|inf_validate_stopped
-argument_list|(
-name|inf
 argument_list|)
 expr_stmt|;
 if|#
@@ -8259,17 +8674,13 @@ specifier|static
 name|void
 name|gnu_detach
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -8321,9 +8732,9 @@ argument_list|(
 name|current_inferior
 argument_list|)
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
-literal|0
+name|null_ptid
 expr_stmt|;
 name|unpush_target
 argument_list|(
@@ -8344,13 +8755,18 @@ begin_comment
 comment|/* ATTACH_DETACH */
 end_comment
 
+begin_escape
+end_escape
+
 begin_function
 specifier|static
 name|void
 name|gnu_terminal_init_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-name|assert
+name|gdb_assert
 argument_list|(
 name|current_inferior
 argument_list|)
@@ -8373,7 +8789,9 @@ begin_function
 specifier|static
 name|void
 name|gnu_prepare_to_store
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -8391,17 +8809,13 @@ specifier|static
 name|void
 name|gnu_open
 parameter_list|(
-name|arg
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|error
 argument_list|(
@@ -8415,7 +8829,9 @@ begin_function
 specifier|static
 name|void
 name|gnu_stop
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|error
 argument_list|(
@@ -8427,15 +8843,22 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|char
+modifier|*
 name|gnu_pid_to_exec_file
-parameter_list|()
+parameter_list|(
+name|int
+name|pid
+parameter_list|)
 block|{
 name|error
 argument_list|(
 literal|"to_pid_to_exec_file target function not implemented"
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 end_function
 
@@ -8444,7 +8867,7 @@ specifier|static
 name|int
 name|gnu_thread_alive
 parameter_list|(
-name|int
+name|ptid_t
 name|tid
 parameter_list|)
 block|{
@@ -8460,7 +8883,10 @@ name|inf_tid_to_thread
 argument_list|(
 name|current_inferior
 argument_list|,
+name|PIDGET
+argument_list|(
 name|tid
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -8470,34 +8896,26 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * Read inferior task's LEN bytes from ADDR and copy it to MYADDR  * in gdb's address space.  *  * Return 0 on failure; number of bytes read otherwise.  */
+comment|/* Read inferior task's LEN bytes from ADDR and copy it to MYADDR in    gdb's address space.  Return 0 on failure; number of bytes read    otherwise.  */
 end_comment
 
 begin_function
 name|int
 name|gnu_read_inferior
 parameter_list|(
-name|task
-parameter_list|,
-name|addr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|length
-parameter_list|)
 name|task_t
 name|task
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 name|error_t
 name|err
@@ -8673,34 +9091,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Write gdb's LEN bytes from MYADDR and copy it to ADDR  * in inferior task's address space.  */
+comment|/* Write gdb's LEN bytes from MYADDR and copy it to ADDR in inferior    task's address space.  */
 end_comment
 
 begin_function
 name|int
 name|gnu_write_inferior
 parameter_list|(
-name|task
-parameter_list|,
-name|addr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|length
-parameter_list|)
 name|task_t
 name|task
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 name|error_t
 name|err
@@ -8827,7 +9237,7 @@ operator|&
 name|region_obstack
 argument_list|)
 expr_stmt|;
-comment|/* Do writes atomically.    * First check for holes and unwritable memory.    */
+comment|/* Do writes atomically.      First check for holes and unwritable memory.  */
 block|{
 name|vm_size_t
 name|remaining_length
@@ -9035,7 +9445,7 @@ operator|-
 name|region_length
 expr_stmt|;
 block|}
-comment|/* If things fail after this, we give up.      * Somebody is messing up inferior_task's mappings.      */
+comment|/* If things fail after this, we give up.        Somebody is messing up inferior_task's mappings.  */
 comment|/* Enable writes to the chained vm regions */
 for|for
 control|(
@@ -9052,11 +9462,6 @@ operator|->
 name|next
 control|)
 block|{
-name|boolean_t
-name|protection_changed
-init|=
-name|FALSE
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -9137,11 +9542,6 @@ operator|->
 name|next
 control|)
 block|{
-name|boolean_t
-name|protection_changed
-init|=
-name|FALSE
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -9247,7 +9647,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Return 0 on failure, number of bytes handled otherwise.  */
+comment|/* Return 0 on failure, number of bytes handled otherwise.  TARGET    is ignored. */
 end_comment
 
 begin_function
@@ -9255,42 +9655,34 @@ specifier|static
 name|int
 name|gnu_xfer_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|,
-name|target
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|write
-decl_stmt|;
+parameter_list|,
+name|struct
+name|mem_attrib
+modifier|*
+name|attrib
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
-comment|/* IGNORED */
+parameter_list|)
 block|{
-name|int
-name|result
-decl_stmt|;
 name|task_t
 name|task
 init|=
+operator|(
 name|current_inferior
 condition|?
 operator|(
@@ -9308,6 +9700,7 @@ literal|0
 operator|)
 else|:
 literal|0
+operator|)
 decl_stmt|;
 if|if
 condition|(
@@ -9373,6 +9766,155 @@ name|myaddr
 argument_list|,
 name|len
 argument_list|)
+return|;
+block|}
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Return printable description of proc.  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|proc_string
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|proc
+parameter_list|)
+block|{
+specifier|static
+name|char
+name|tid_str
+index|[
+literal|80
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|proc_is_task
+argument_list|(
+name|proc
+argument_list|)
+condition|)
+name|sprintf
+argument_list|(
+name|tid_str
+argument_list|,
+literal|"process %d"
+argument_list|,
+name|proc
+operator|->
+name|inf
+operator|->
+name|pid
+argument_list|)
+expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|tid_str
+argument_list|,
+literal|"thread %d.%d"
+argument_list|,
+name|proc
+operator|->
+name|inf
+operator|->
+name|pid
+argument_list|,
+name|pid_to_thread_id
+argument_list|(
+name|MERGEPID
+argument_list|(
+name|proc
+operator|->
+name|tid
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|tid_str
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|gnu_pid_to_str
+parameter_list|(
+name|ptid_t
+name|ptid
+parameter_list|)
+block|{
+name|struct
+name|inf
+modifier|*
+name|inf
+init|=
+name|current_inferior
+decl_stmt|;
+name|int
+name|tid
+init|=
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|thread
+init|=
+name|inf_tid_to_thread
+argument_list|(
+name|inf
+argument_list|,
+name|tid
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|thread
+condition|)
+return|return
+name|proc_string
+argument_list|(
+name|thread
+argument_list|)
+return|;
+else|else
+block|{
+specifier|static
+name|char
+name|tid_str
+index|[
+literal|80
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|tid_str
+argument_list|,
+literal|"bogus thread id %d"
+argument_list|,
+name|tid
+argument_list|)
+expr_stmt|;
+return|return
+name|tid_str
 return|;
 block|}
 block|}
@@ -9620,27 +10162,27 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* to_post_startup_inferior */
+comment|/* to_acknowledge_created_inferior */
 name|gnu_ops
 operator|.
 name|to_acknowledge_created_inferior
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* to_acknowledge_created_inferior */
+comment|/* to_clone_and_follow_inferior */
 name|gnu_ops
 operator|.
 name|to_clone_and_follow_inferior
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* to_clone_and_follow_inferior */
+comment|/* to_post_follow_inferior_by_clone */
 name|gnu_ops
 operator|.
 name|to_post_follow_inferior_by_clone
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* to_post_follow_inferior_by_clone */
 name|gnu_ops
 operator|.
 name|to_insert_fork_catchpoint
@@ -9752,6 +10294,13 @@ expr_stmt|;
 comment|/* to_thread_alive */
 name|gnu_ops
 operator|.
+name|to_pid_to_str
+operator|=
+name|gnu_pid_to_str
+expr_stmt|;
+comment|/* to_pid_to_str */
+name|gnu_ops
+operator|.
 name|to_stop
 operator|=
 name|gnu_stop
@@ -9764,12 +10313,6 @@ operator|=
 name|gnu_pid_to_exec_file
 expr_stmt|;
 comment|/* to_pid_to_exec_file */
-name|gnu_ops
-operator|.
-name|to_core_file_to_sym_file
-operator|=
-name|NULL
-expr_stmt|;
 name|gnu_ops
 operator|.
 name|to_stratum
@@ -9846,141 +10389,6 @@ end_function
 begin_comment
 comment|/* init_gnu_ops */
 end_comment
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* Return printable description of proc.  */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|proc_string
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|proc
-parameter_list|)
-block|{
-specifier|static
-name|char
-name|tid_str
-index|[
-literal|80
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|proc_is_task
-argument_list|(
-name|proc
-argument_list|)
-condition|)
-name|sprintf
-argument_list|(
-name|tid_str
-argument_list|,
-literal|"process %d"
-argument_list|,
-name|proc
-operator|->
-name|inf
-operator|->
-name|pid
-argument_list|)
-expr_stmt|;
-else|else
-name|sprintf
-argument_list|(
-name|tid_str
-argument_list|,
-literal|"thread %d.%d"
-argument_list|,
-name|proc
-operator|->
-name|inf
-operator|->
-name|pid
-argument_list|,
-name|pid_to_thread_id
-argument_list|(
-name|proc
-operator|->
-name|tid
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|tid_str
-return|;
-block|}
-end_function
-
-begin_function
-name|char
-modifier|*
-name|gnu_target_pid_to_str
-parameter_list|(
-name|int
-name|tid
-parameter_list|)
-block|{
-name|struct
-name|inf
-modifier|*
-name|inf
-init|=
-name|current_inferior
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|thread
-init|=
-name|inf_tid_to_thread
-argument_list|(
-name|inf
-argument_list|,
-name|tid
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|thread
-condition|)
-return|return
-name|proc_string
-argument_list|(
-name|thread
-argument_list|)
-return|;
-else|else
-block|{
-specifier|static
-name|char
-name|tid_str
-index|[
-literal|80
-index|]
-decl_stmt|;
-name|sprintf
-argument_list|(
-name|tid_str
-argument_list|,
-literal|"bogus thread id %d"
-argument_list|,
-name|tid
-argument_list|)
-expr_stmt|;
-return|return
-name|tid_str
-return|;
-block|}
-block|}
-end_function
 
 begin_escape
 end_escape
@@ -10336,7 +10744,9 @@ name|struct
 name|proc
 modifier|*
 name|cur_thread
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|inf
@@ -10355,7 +10765,10 @@ name|inf_tid_to_thread
 argument_list|(
 name|inf
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|)
 decl_stmt|;
 if|if
@@ -10384,7 +10797,9 @@ name|struct
 name|inf
 modifier|*
 name|active_inf
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|inf
@@ -11006,9 +11421,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_function
 specifier|static
 name|void
@@ -11144,9 +11556,6 @@ name|int
 name|from_tty
 parameter_list|)
 block|{
-name|int
-name|tid
-decl_stmt|;
 name|struct
 name|inf
 modifier|*
@@ -11206,11 +11615,14 @@ block|{
 name|int
 name|tid
 init|=
+name|PIDGET
+argument_list|(
 name|thread_id_to_pid
 argument_list|(
 name|atoi
 argument_list|(
 name|args
+argument_list|)
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -11314,9 +11726,6 @@ name|int
 name|from_tty
 parameter_list|)
 block|{
-name|int
-name|trace
-decl_stmt|;
 name|struct
 name|inf
 modifier|*
@@ -11556,7 +11965,8 @@ parameter_list|)
 block|{
 name|printf_unfiltered
 argument_list|(
-literal|"\"set task\" must be followed by the name of a task property.\n"
+literal|"\"set task\" must be followed by the name"
+literal|" of a task property.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -11768,7 +12178,9 @@ init|=
 name|active_inf
 argument_list|()
 decl_stmt|;
-name|value_ptr
+name|struct
+name|value
+modifier|*
 name|vmark
 init|=
 name|value_mark
@@ -11786,7 +12198,9 @@ operator|*
 name|args
 condition|)
 block|{
-name|value_ptr
+name|struct
+name|value
+modifier|*
 name|val
 init|=
 name|parse_to_comma_and_eval
@@ -12008,7 +12422,9 @@ begin_function
 specifier|static
 name|void
 name|add_task_commands
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|add_cmd
 argument_list|(
@@ -12018,10 +12434,7 @@ name|class_run
 argument_list|,
 name|set_thread_default_pause_cmd
 argument_list|,
-literal|"Set whether the new threads are suspended while gdb has control.\n"
-literal|"This property normally has no effect because the whole task is\n"
-literal|"suspended, however, that may be disabled with \"set task pause off\".\n"
-literal|"The default value is \"off\"."
+literal|"Set whether the new threads are suspended while gdb has control.\n\ This property normally has no effect because the whole task is\n\ suspended, however, that may be disabled with \"set task pause off\".\n\ The default value is \"off\"."
 argument_list|,
 operator|&
 name|set_thread_default_cmd_list
@@ -12049,7 +12462,7 @@ name|class_run
 argument_list|,
 name|set_thread_default_run_cmd
 argument_list|,
-literal|"Set whether new threads are allowed to run (once gdb has noticed them)."
+literal|"Set whether new threads are allowed to run \ (once gdb has noticed them)."
 argument_list|,
 operator|&
 name|set_thread_default_cmd_list
@@ -12063,7 +12476,7 @@ name|no_class
 argument_list|,
 name|show_thread_default_run_cmd
 argument_list|,
-literal|"Show whether new threads are allowed to run (once gdb has noticed them)."
+literal|"Show whether new threads are allowed to run \ (once gdb has noticed them)."
 argument_list|,
 operator|&
 name|show_thread_default_cmd_list
@@ -12105,8 +12518,7 @@ name|class_run
 argument_list|,
 name|set_signals_cmd
 argument_list|,
-literal|"Set whether the inferior process's signals will be intercepted.\n"
-literal|"Mach exceptions (such as breakpoint traps) are not affected."
+literal|"Set whether the inferior process's signals will be intercepted.\n\ Mach exceptions (such as breakpoint traps) are not affected."
 argument_list|,
 operator|&
 name|setlist
@@ -12162,8 +12574,7 @@ name|class_run
 argument_list|,
 name|set_sig_thread_cmd
 argument_list|,
-literal|"Set the thread that gdb thinks is the libc signal thread.\n"
-literal|"This thread is run when delivering a signal to a non-stopped process."
+literal|"Set the thread that gdb thinks is the libc signal thread.\n\ This thread is run when delivering a signal to a non-stopped process."
 argument_list|,
 operator|&
 name|setlist
@@ -12219,8 +12630,7 @@ name|class_run
 argument_list|,
 name|set_stopped_cmd
 argument_list|,
-literal|"Set whether gdb thinks the inferior process is stopped as with SIGSTOP.\n"
-literal|"Stopped process will be continued by sending them a signal."
+literal|"Set whether gdb thinks the inferior process is stopped \ as with SIGSTOP.\n\ Stopped process will be continued by sending them a signal."
 argument_list|,
 operator|&
 name|setlist
@@ -12234,7 +12644,7 @@ name|no_class
 argument_list|,
 name|show_signals_cmd
 argument_list|,
-literal|"Show whether gdb thinks the inferior process is stopped as with SIGSTOP."
+literal|"Show whether gdb thinks the inferior process is stopped \ as with SIGSTOP."
 argument_list|,
 operator|&
 name|showlist
@@ -12248,9 +12658,7 @@ name|class_run
 argument_list|,
 name|set_exceptions_cmd
 argument_list|,
-literal|"Set whether exceptions in the inferior process will be trapped.\n"
-literal|"When exceptions are turned off, neither breakpoints nor single-stepping\n"
-literal|"will work."
+literal|"Set whether exceptions in the inferior process will be trapped.\n\ When exceptions are turned off, neither breakpoints nor single-stepping\n\ will work."
 argument_list|,
 operator|&
 name|setlist
@@ -12335,11 +12743,7 @@ name|class_run
 argument_list|,
 name|set_task_pause_cmd
 argument_list|,
-literal|"Set whether the task is suspended while gdb has control.\n"
-literal|"A value of \"on\" takes effect immediately, otherwise nothing\n"
-literal|"happens until the next time the program is continued.\n"
-literal|"When setting this to \"off\", \"set thread default pause on\"\n"
-literal|"can be used to pause individual threads by default instead."
+literal|"Set whether the task is suspended while gdb has control.\n\ A value of \"on\" takes effect immediately, otherwise nothing happens\n\ until the next time the program is continued.\n\ When setting this to \"off\", \"set thread default pause on\" can be\n\ used to pause individual threads by default instead."
 argument_list|,
 operator|&
 name|set_task_cmd_list
@@ -12395,8 +12799,7 @@ name|no_class
 argument_list|,
 name|set_task_exc_port_cmd
 argument_list|,
-literal|"Set the task exception port to which we forward exceptions.\n"
-literal|"The argument should be the value of the send right in the task."
+literal|"Set the task exception port to which we forward exceptions.\n\ The argument should be the value of the send right in the task."
 argument_list|,
 operator|&
 name|set_task_cmd_list
@@ -12439,9 +12842,7 @@ name|no_class
 argument_list|,
 name|set_noninvasive_cmd
 argument_list|,
-literal|"Set task options so that we interfere as little as possible.\n"
-literal|"This is the same as setting `task pause', `exceptions', and"
-literal|"`signals' to the opposite value."
+literal|"Set task options so that we interfere as little as possible.\n\ This is the same as setting `task pause', `exceptions', and\n\ `signals' to the opposite value."
 argument_list|,
 operator|&
 name|setlist
@@ -12482,7 +12883,7 @@ literal|"port-rights"
 argument_list|,
 name|class_info
 argument_list|,
-name|info_send_rights_cmd
+name|info_port_rights_cmd
 argument_list|,
 literal|"Show information about the task's port rights"
 argument_list|,
@@ -12836,7 +13237,8 @@ argument_list|)
 expr_stmt|;
 name|printf_unfiltered
 argument_list|(
-literal|"Thread %s will be left with a suspend count of %d when detaching.\n"
+literal|"Thread %s will be left with a suspend count"
+literal|" of %d when detaching.\n"
 argument_list|,
 name|proc_string
 argument_list|(
@@ -13027,12 +13429,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
-name|add_thread_commands
-argument_list|()
-end_macro
+begin_escape
+end_escape
 
-begin_block
+begin_function
+specifier|static
+name|void
+name|add_thread_commands
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|add_prefix_cmd
 argument_list|(
@@ -13126,12 +13532,7 @@ name|class_run
 argument_list|,
 name|set_thread_pause_cmd
 argument_list|,
-literal|"Set whether the current thread is suspended while gdb has control.\n"
-literal|"A value of \"on\" takes effect immediately, otherwise nothing\n"
-literal|"happens until the next time the program is continued.  This\n"
-literal|"property normally has no effect because the whole task is suspended,\n"
-literal|"however, that may be disabled with \"set task pause off\".\n"
-literal|"The default value is \"off\"."
+literal|"Set whether the current thread is suspended \ while gdb has control.\n\ A value of \"on\" takes effect immediately, otherwise nothing happens\n\ until the next time the program is continued.  This property normally\n\ has no effect because the whole task is suspended, however, that may\n\ be disabled with \"set task pause off\".\n\ The default value is \"off\"."
 argument_list|,
 operator|&
 name|set_thread_cmd_list
@@ -13145,7 +13546,7 @@ name|no_class
 argument_list|,
 name|show_thread_pause_cmd
 argument_list|,
-literal|"Show whether the current thread is suspended while gdb has control."
+literal|"Show whether the current thread is suspended \ while gdb has control."
 argument_list|,
 operator|&
 name|show_thread_cmd_list
@@ -13187,9 +13588,7 @@ name|class_run
 argument_list|,
 name|set_thread_detach_sc_cmd
 argument_list|,
-literal|"Set the suspend count will leave on the thread when detaching.\n"
-literal|"Note that this is relative to suspend count when gdb noticed the thread;\n"
-literal|"use the `thread takeover-suspend-count' to force it to an absolute value."
+literal|"Set the suspend count will leave on the thread when detaching.\n\ Note that this is relative to suspend count when gdb noticed the thread;\n\ use the `thread takeover-suspend-count' to force it to an absolute value."
 argument_list|,
 operator|&
 name|set_thread_cmd_list
@@ -13203,9 +13602,7 @@ name|no_class
 argument_list|,
 name|show_thread_detach_sc_cmd
 argument_list|,
-literal|"Show the suspend count will leave on the thread when detaching."
-literal|"Note that this is relative to suspend count when gdb noticed the thread;\n"
-literal|"use the `thread takeover-suspend-count' to force it to an absolute value."
+literal|"Show the suspend count will leave on the thread when detaching.\n\ Note that this is relative to suspend count when gdb noticed the thread;\n\ use the `thread takeover-suspend-count' to force it to an absolute value."
 argument_list|,
 operator|&
 name|show_thread_cmd_list
@@ -13219,9 +13616,7 @@ name|no_class
 argument_list|,
 name|set_thread_exc_port_cmd
 argument_list|,
-literal|"Set the exception port to which we forward exceptions for the\n"
-literal|"current thread, overriding the task exception port.\n"
-literal|"The argument should be the value of the send right in the task."
+literal|"Set the thread exception port to which we forward exceptions.\n\ This overrides the task exception port.\n\ The argument should be the value of the send right in the task."
 argument_list|,
 operator|&
 name|set_thread_cmd_list
@@ -13263,16 +13658,14 @@ name|no_class
 argument_list|,
 name|thread_takeover_sc_cmd
 argument_list|,
-literal|"Force the threads absolute suspend-count to be gdb's.\n"
-literal|"Prior to giving this command, gdb's thread suspend-counts are relative to\n"
-literal|"the thread's initial suspend-count when gdb notices the threads."
+literal|"Force the threads absolute suspend-count to be gdb's.\n\ Prior to giving this command, gdb's thread suspend-counts are relative\n\ to the thread's initial suspend-count when gdb notices the threads."
 argument_list|,
 operator|&
 name|thread_cmd_list
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -13280,7 +13673,9 @@ end_escape
 begin_function
 name|void
 name|_initialize_gnu_nat
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|proc_server
 operator|=
@@ -13302,9 +13697,6 @@ expr_stmt|;
 name|add_thread_commands
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|MAINTENANCE_CMDS
 name|add_set_cmd
 argument_list|(
 literal|"gnu-debug"
@@ -13326,8 +13718,6 @@ operator|&
 name|maintenancelist
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -13348,13 +13738,12 @@ begin_function
 name|void
 name|flush_inferior_icache
 parameter_list|(
-name|pc
-parameter_list|,
-name|amount
-parameter_list|)
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|,
+name|int
+name|amount
+parameter_list|)
 block|{
 name|vm_machine_attribute_val_t
 name|flush
@@ -13406,8 +13795,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|FLUSH_INFERIOR_CACHE
 end_endif
+
+begin_comment
+comment|/* FLUSH_INFERIOR_CACHE */
+end_comment
 
 end_unit
 

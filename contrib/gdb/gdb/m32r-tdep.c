@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target-dependent code for the Mitsubishi m32r for GDB, the GNU debugger.    Copyright 1996, Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target-dependent code for the Mitsubishi m32r for GDB, the GNU debugger.    Copyright 1996, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -63,6 +63,12 @@ directive|include
 file|"symfile.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"regcache.h"
+end_include
+
 begin_comment
 comment|/* Function: m32r_use_struct_convention    Return nonzero if call_function should allocate stack space for a    struct return? */
 end_comment
@@ -71,18 +77,14 @@ begin_function
 name|int
 name|m32r_use_struct_convention
 parameter_list|(
-name|gcc_p
-parameter_list|,
-name|type
-parameter_list|)
 name|int
 name|gcc_p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -105,20 +107,16 @@ begin_function
 name|void
 name|m32r_frame_find_saved_regs
 parameter_list|(
-name|fi
-parameter_list|,
-name|regaddr
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|,
 name|struct
 name|frame_saved_regs
 modifier|*
 name|regaddr
-decl_stmt|;
+parameter_list|)
 block|{
 name|memcpy
 argument_list|(
@@ -140,7 +138,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Turn this on if you want to see just how much instruction decoding    if being done, its quite a lot    */
+comment|/* Turn this on if you want to see just how much instruction decoding    if being done, its quite a lot  */
 end_comment
 
 begin_if
@@ -150,7 +148,7 @@ literal|0
 end_if
 
 begin_define
-unit|static void dump_insn(char * commnt,CORE_ADDR pc, int insn) {   printf_filtered("  %s %08x %08x ", 		  commnt,(unsigned int)pc,(unsigned int) insn);   (*tm_print_insn)(pc,&tm_print_insn_info);   printf_filtered("\n"); }
+unit|static void dump_insn (char *commnt, CORE_ADDR pc, int insn) {   printf_filtered ("  %s %08x %08x ", 		   commnt, (unsigned int) pc, (unsigned int) insn);   TARGET_PRINT_INSN (pc,&tm_print_insn_info);   printf_filtered ("\n"); }
 define|#
 directive|define
 name|insn_debug
@@ -206,11 +204,11 @@ comment|/* Function: scan_prologue    This function decodes the target function 
 end_comment
 
 begin_comment
-comment|/*   The sequence it currently generates is:    	if (varargs function) { ddi sp,#n } 	push registers 	if (additional stack<= 256) {	addi sp,#-stack	} 	else if (additional stack< 65k) { add3 sp,sp,#-stack  	} else if (additional stack) { 	seth sp,#(stack& 0xffff0000) 	or3 sp,sp,#(stack& 0x0000ffff) 	sub sp,r4 	} 	if (frame pointer) { 		mv sp,fp 	}  These instructions are scheduled like everything else, so you should stop at the first branch instruction.   */
+comment|/*    The sequence it currently generates is:     if (varargs function) { ddi sp,#n }    push registers    if (additional stack<= 256) {       addi sp,#-stack }    else if (additional stack< 65k) { add3 sp,sp,#-stack     } else if (additional stack) {    seth sp,#(stack& 0xffff0000)    or3 sp,sp,#(stack& 0x0000ffff)    sub sp,r4    }    if (frame pointer) {    mv sp,fp    }     These instructions are scheduled like everything else, so you should stop at    the first branch instruction.   */
 end_comment
 
 begin_comment
-comment|/* This is required by skip prologue and by m32r_init_extra_frame_info.     The results of decoding a prologue should be cached because this    thrashing is getting nuts.    I am thinking of making a container class with two indexes, name and    address. It may be better to extend the symbol table.    */
+comment|/* This is required by skip prologue and by m32r_init_extra_frame_info.     The results of decoding a prologue should be cached because this    thrashing is getting nuts.    I am thinking of making a container class with two indexes, name and    address. It may be better to extend the symbol table.  */
 end_comment
 
 begin_function
@@ -218,44 +216,32 @@ specifier|static
 name|void
 name|decode_prologue
 parameter_list|(
-name|start_pc
-parameter_list|,
-name|scan_limit
-parameter_list|,
-name|pl_endptr
-parameter_list|,
-name|framelength
-parameter_list|,
-name|fi
-parameter_list|,
-name|fsr
-parameter_list|)
 name|CORE_ADDR
 name|start_pc
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|scan_limit
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 modifier|*
 name|pl_endptr
-decl_stmt|;
+parameter_list|,
 comment|/* var parameter */
 name|unsigned
 name|long
 modifier|*
 name|framelength
-decl_stmt|;
+parameter_list|,
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|,
 name|struct
 name|frame_saved_regs
 modifier|*
 name|fsr
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -338,7 +324,7 @@ name|insn
 argument_list|)
 expr_stmt|;
 comment|/* MTZ */
-comment|/* If this is a 32 bit instruction, we dont want to examine its 	 immediate data as though it were an instruction */
+comment|/* If this is a 32 bit instruction, we dont want to examine its          immediate data as though it were an instruction */
 if|if
 condition|(
 name|current_pc
@@ -352,7 +338,7 @@ condition|(
 name|maybe_one_more
 condition|)
 block|{
-comment|/* The last instruction was a branch, usually terminates 		 the series, but if this is a parallel instruction, 		 it may be a stack framing instruction */
+comment|/* The last instruction was a branch, usually terminates 				   the series, but if this is a parallel instruction, 				   it may be a stack framing instruction */
 if|if
 condition|(
 operator|!
@@ -575,7 +561,7 @@ if|#
 directive|if
 literal|0
 comment|/* No, PUSH FP is not an indication that we will use a frame pointer. */
-block|if (((insn& 0xffff) == 0x2d7f)&& fi)  	    fi->using_frame_pointer = 1;
+block|if (((insn& 0xffff) == 0x2d7f)&& fi) 	    fi->using_frame_pointer = 1;
 endif|#
 directive|endif
 name|framesize
@@ -662,7 +648,7 @@ name|after_prologue
 operator|=
 literal|0
 expr_stmt|;
-comment|/* A frameless function may have no "mv fp, sp". 		 In that case, this is the end of the prologue.  */
+comment|/* A frameless function may have no "mv fp, sp". 	         In that case, this is the end of the prologue.  */
 name|after_stack_adjust
 operator|=
 name|current_pc
@@ -749,7 +735,7 @@ operator|||
 operator|(
 name|op1
 operator|==
-literal|0x7000
+literal|0xf000
 operator|)
 condition|)
 block|{
@@ -831,6 +817,7 @@ if|if
 condition|(
 name|pl_endptr
 condition|)
+block|{
 if|#
 directive|if
 literal|1
@@ -840,7 +827,7 @@ name|after_stack_adjust
 operator|!=
 literal|0
 condition|)
-comment|/* We did not find a "mv fp,sp", but we DID find 	     a stack_adjust.  Is it safe to use that as the 	     end of the prologue?  I just don't know. */
+comment|/* We did not find a "mv fp,sp", but we DID find 	       a stack_adjust.  Is it safe to use that as the 	       end of the prologue?  I just don't know. */
 block|{
 operator|*
 name|pl_endptr
@@ -860,12 +847,13 @@ block|}
 else|else
 endif|#
 directive|endif
-comment|/* We reached the end of the loop without finding the end 	 of the prologue.  No way to win -- we should report failure.   	 The way we do that is to return the original start_pc. 	 GDB will set a breakpoint at the start of the function (etc.) */
+comment|/* We reached the end of the loop without finding the end 	       of the prologue.  No way to win -- we should report failure.   	       The way we do that is to return the original start_pc. 	       GDB will set a breakpoint at the start of the function (etc.) */
 operator|*
 name|pl_endptr
 operator|=
 name|start_pc
 expr_stmt|;
+block|}
 return|return;
 block|}
 if|if
@@ -922,11 +910,9 @@ begin_function
 name|CORE_ADDR
 name|m32r_skip_prologue
 parameter_list|(
-name|pc
-parameter_list|)
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|func_addr
@@ -1068,20 +1054,16 @@ name|unsigned
 name|long
 name|m32r_scan_prologue
 parameter_list|(
-name|fi
-parameter_list|,
-name|fsr
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|,
 name|struct
 name|frame_saved_regs
 modifier|*
 name|fsr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|symtab_and_line
@@ -1097,6 +1079,8 @@ decl_stmt|;
 name|unsigned
 name|long
 name|framesize
+init|=
+literal|0
 decl_stmt|;
 comment|/* this code essentially duplicates skip_prologue,       but we need the start address below.  */
 if|if
@@ -1160,7 +1144,7 @@ name|prologue_start
 operator|+
 literal|48
 expr_stmt|;
-comment|/* We're in the boondocks:  					      allow for 16 pushes, an add,  					      and "mv fp,sp" */
+comment|/* We're in the boondocks:  						   allow for 16 pushes, an add,  						   and "mv fp,sp" */
 block|}
 if|#
 directive|if
@@ -1225,13 +1209,11 @@ begin_function
 name|void
 name|m32r_init_extra_frame_info
 parameter_list|(
-name|fi
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|reg
@@ -1289,7 +1271,7 @@ name|frame
 argument_list|)
 condition|)
 block|{
-comment|/* We need to setup fi->frame here because run_stack_dummy gets it wrong 	 by assuming it's always FP.  */
+comment|/* We need to setup fi->frame here because run_stack_dummy gets it wrong          by assuming it's always FP.  */
 name|fi
 operator|->
 name|frame
@@ -1473,30 +1455,24 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function: mn10300_virtual_frame_pointer    Return the register that the function uses for a frame pointer,     plus any necessary offset to be applied to the register before    any frame pointer offsets.  */
+comment|/* Function: m32r_virtual_frame_pointer    Return the register that the function uses for a frame pointer,     plus any necessary offset to be applied to the register before    any frame pointer offsets.  */
 end_comment
 
 begin_function
 name|void
 name|m32r_virtual_frame_pointer
 parameter_list|(
-name|pc
-parameter_list|,
-name|reg
-parameter_list|,
-name|offset
-parameter_list|)
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|,
 name|long
 modifier|*
 name|reg
-decl_stmt|;
+parameter_list|,
 name|long
 modifier|*
 name|offset
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|frame_info
@@ -1577,18 +1553,14 @@ begin_function
 name|CORE_ADDR
 name|m32r_find_callers_reg
 parameter_list|(
-name|fi
-parameter_list|,
-name|regnum
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|,
 name|int
 name|regnum
-decl_stmt|;
+parameter_list|)
 block|{
 for|for
 control|(
@@ -1681,13 +1653,11 @@ begin_function
 name|CORE_ADDR
 name|m32r_frame_chain
 parameter_list|(
-name|fi
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|fn_start
@@ -1791,23 +1761,21 @@ condition|)
 block|{
 name|printf_filtered
 argument_list|(
-literal|"cannot determine frame size @ %08x , pc(%08x)\n"
+literal|"cannot determine frame size @ %s , pc(%s)\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
+name|paddr
+argument_list|(
 name|fi
 operator|->
 name|frame
+argument_list|)
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
+name|paddr
+argument_list|(
 name|fi
 operator|->
 name|pc
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1849,16 +1817,12 @@ begin_function
 name|CORE_ADDR
 name|m32r_push_return_address
 parameter_list|(
+name|CORE_ADDR
 name|pc
 parameter_list|,
+name|CORE_ADDR
 name|sp
 parameter_list|)
-name|CORE_ADDR
-name|pc
-decl_stmt|;
-name|CORE_ADDR
-name|sp
-decl_stmt|;
 block|{
 name|write_register
 argument_list|(
@@ -1884,13 +1848,11 @@ name|frame_info
 modifier|*
 name|m32r_pop_frame
 parameter_list|(
-name|frame
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regnum
@@ -2030,13 +1992,11 @@ begin_function
 name|CORE_ADDR
 name|m32r_frame_saved_pc
 parameter_list|(
-name|fi
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2082,40 +2042,32 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function: push_arguments    Setup the function arguments for calling a function in the inferior.     On the Mitsubishi M32R architecture, there are four registers (R0 to R3)    which are dedicated for passing function arguments.  Up to the first     four arguments (depending on size) may go into these registers.    The rest go on the stack.     Arguments that are smaller than 4 bytes will still take up a whole    register or a whole 32-bit word on the stack, and will be    right-justified in the register or the stack word.  This includes    chars, shorts, and small aggregate types.      Arguments of 8 bytes size are split between two registers, if     available.  If only one register is available, the argument will     be split between the register and the stack.  Otherwise it is    passed entirely on the stack.  Aggregate types with sizes between    4 and 8 bytes are passed entirely on the stack, and are left-justified    within the double-word (as opposed to aggregates smaller than 4 bytes    which are right-justified).     Aggregates of greater than 8 bytes are first copied onto the stack,     and then a pointer to the copy is passed in the place of the normal    argument (either in a register if available, or on the stack).     Functions that must return an aggregate type can return it in the     normal return value registers (R0 and R1) if its size is 8 bytes or    less.  For larger return values, the caller must allocate space for     the callee to copy the return value to.  A pointer to this space is    passed as an implicit first argument, always in R0. */
+comment|/* Function: push_arguments    Setup the function arguments for calling a function in the inferior.     On the Mitsubishi M32R architecture, there are four registers (R0 to R3)    which are dedicated for passing function arguments.  Up to the first     four arguments (depending on size) may go into these registers.    The rest go on the stack.     Arguments that are smaller than 4 bytes will still take up a whole    register or a whole 32-bit word on the stack, and will be    right-justified in the register or the stack word.  This includes    chars, shorts, and small aggregate types.     Arguments of 8 bytes size are split between two registers, if     available.  If only one register is available, the argument will     be split between the register and the stack.  Otherwise it is    passed entirely on the stack.  Aggregate types with sizes between    4 and 8 bytes are passed entirely on the stack, and are left-justified    within the double-word (as opposed to aggregates smaller than 4 bytes    which are right-justified).     Aggregates of greater than 8 bytes are first copied onto the stack,     and then a pointer to the copy is passed in the place of the normal    argument (either in a register if available, or on the stack).     Functions that must return an aggregate type can return it in the     normal return value registers (R0 and R1) if its size is 8 bytes or    less.  For larger return values, the caller must allocate space for     the callee to copy the return value to.  A pointer to this space is    passed as an implicit first argument, always in R0. */
 end_comment
 
 begin_function
 name|CORE_ADDR
 name|m32r_push_arguments
 parameter_list|(
-name|nargs
-parameter_list|,
-name|args
-parameter_list|,
-name|sp
-parameter_list|,
-name|struct_return
-parameter_list|,
-name|struct_addr
-parameter_list|)
 name|int
 name|nargs
-decl_stmt|;
-name|value_ptr
+parameter_list|,
+name|struct
+name|value
+modifier|*
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|sp
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 name|struct_return
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|struct_addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|stack_offset
@@ -2384,7 +2336,7 @@ operator|+=
 literal|4
 expr_stmt|;
 block|}
-comment|/* NOTE WELL!!!!!  This is not an "else if" clause!!!              That's because some *&^%$ things get passed on the stack              AND in the registers!   */
+comment|/* NOTE WELL!!!!!  This is not an "else if" clause!!! 	     That's because some *&^%$ things get passed on the stack 	     AND in the registers!   */
 if|if
 condition|(
 name|argreg
@@ -2414,7 +2366,7 @@ name|regval
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Store the value 4 bytes at a time.  This means that things              larger than 4 bytes may go partly in registers and partly              on the stack.  */
+comment|/* Store the value 4 bytes at a time.  This means that things 	     larger than 4 bytes may go partly in registers and partly 	     on the stack.  */
 name|len
 operator|-=
 name|REGISTER_RAW_SIZE
@@ -2445,45 +2397,33 @@ begin_function
 name|void
 name|m32r_fix_call_dummy
 parameter_list|(
-name|dummy
-parameter_list|,
-name|pc
-parameter_list|,
-name|fun
-parameter_list|,
-name|nargs
-parameter_list|,
-name|args
-parameter_list|,
-name|type
-parameter_list|,
-name|gcc_p
-parameter_list|)
 name|char
 modifier|*
 name|dummy
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|fun
-decl_stmt|;
+parameter_list|,
 name|int
 name|nargs
-decl_stmt|;
-name|value_ptr
+parameter_list|,
+name|struct
+name|value
+modifier|*
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|int
 name|gcc_p
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* ld24 r8,<(imm24) fun> */
 operator|*
@@ -2508,70 +2448,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function: get_saved_register    Just call the generic_get_saved_register function.  */
-end_comment
-
-begin_function
-name|void
-name|get_saved_register
-parameter_list|(
-name|raw_buffer
-parameter_list|,
-name|optimized
-parameter_list|,
-name|addrp
-parameter_list|,
-name|frame
-parameter_list|,
-name|regnum
-parameter_list|,
-name|lval
-parameter_list|)
-name|char
-modifier|*
-name|raw_buffer
-decl_stmt|;
-name|int
-modifier|*
-name|optimized
-decl_stmt|;
-name|CORE_ADDR
-modifier|*
-name|addrp
-decl_stmt|;
-name|struct
-name|frame_info
-modifier|*
-name|frame
-decl_stmt|;
-name|int
-name|regnum
-decl_stmt|;
-name|enum
-name|lval_type
-modifier|*
-name|lval
-decl_stmt|;
-block|{
-name|generic_get_saved_register
-argument_list|(
-name|raw_buffer
-argument_list|,
-name|optimized
-argument_list|,
-name|addrp
-argument_list|,
-name|frame
-argument_list|,
-name|regnum
-argument_list|,
-name|lval
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/* Function: m32r_write_sp    Because SP is really a read-only register that mirrors either SPU or SPI,    we must actually write one of those two as well, depending on PSW. */
 end_comment
 
@@ -2579,11 +2455,9 @@ begin_function
 name|void
 name|m32r_write_sp
 parameter_list|(
-name|val
-parameter_list|)
 name|CORE_ADDR
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -2629,7 +2503,9 @@ end_function
 begin_function
 name|void
 name|_initialize_m32r_tdep
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tm_print_insn
 operator|=

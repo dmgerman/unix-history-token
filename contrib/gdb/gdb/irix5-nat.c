@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native support for the SGI Iris running IRIX version 5, for GDB.    Copyright 1988, 89, 90, 91, 92, 93, 94, 95, 96, 98, 1999    Free Software Foundation, Inc.    Contributed by Alessandro Forin(af@cs.cmu.edu) at CMU    and by Per Bothner(bothner@cs.wisc.edu) at U.Wisconsin.    Implemented for Irix 4.x by Garrett A. Wollman.    Modified for Irix 5.x by Ian Lance Taylor.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Native support for the SGI Iris running IRIX version 5, for GDB.    Copyright 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998,    1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by Alessandro Forin(af@cs.cmu.edu) at CMU    and by Per Bothner(bothner@cs.wisc.edu) at U.Wisconsin.    Implemented for Irix 4.x by Garrett A. Wollman.    Modified for Irix 5.x by Ian Lance Taylor.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"target.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
 end_include
 
 begin_include
@@ -55,26 +61,33 @@ begin_comment
 comment|/* For JB_XXX.  */
 end_comment
 
-begin_decl_stmt
+begin_comment
+comment|/* Prototypes for supply_gregset etc. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"gregset.h"
+end_include
+
+begin_function_decl
 specifier|static
 name|void
 name|fetch_core_registers
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Size of elements in jmpbuf */
@@ -95,12 +108,10 @@ begin_function
 name|void
 name|supply_gregset
 parameter_list|(
-name|gregsetp
-parameter_list|)
 name|gregset_t
 modifier|*
 name|gregsetp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -254,17 +265,13 @@ begin_function
 name|void
 name|fill_gregset
 parameter_list|(
-name|gregsetp
-parameter_list|,
-name|regno
-parameter_list|)
 name|gregset_t
 modifier|*
 name|gregsetp
-decl_stmt|;
+parameter_list|,
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regi
@@ -503,12 +510,10 @@ begin_function
 name|void
 name|supply_fpregset
 parameter_list|(
-name|fpregsetp
-parameter_list|)
 name|fpregset_t
 modifier|*
 name|fpregsetp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -589,17 +594,13 @@ begin_function
 name|void
 name|fill_fpregset
 parameter_list|(
-name|fpregsetp
-parameter_list|,
-name|regno
-parameter_list|)
 name|fpregset_t
 modifier|*
 name|fpregsetp
-decl_stmt|;
+parameter_list|,
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regi
@@ -737,24 +738,27 @@ begin_function
 name|int
 name|get_longjmp_target
 parameter_list|(
-name|pc
-parameter_list|)
 name|CORE_ADDR
 modifier|*
 name|pc
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
+modifier|*
 name|buf
-index|[
-name|TARGET_PTR_BIT
-operator|/
-name|TARGET_CHAR_BIT
-index|]
 decl_stmt|;
 name|CORE_ADDR
 name|jb_addr
 decl_stmt|;
+name|buf
+operator|=
+name|alloca
+argument_list|(
+name|TARGET_PTR_BIT
+operator|/
+name|TARGET_CHAR_BIT
+argument_list|)
+expr_stmt|;
 name|jb_addr
 operator|=
 name|read_register
@@ -800,34 +804,28 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Provide registers to GDB from a core file.     CORE_REG_SECT points to an array of bytes, which were obtained from    a core file which BFD thinks might contain register contents.     CORE_REG_SIZE is its size.     Normally, WHICH says which register set corelow suspects this is:      0 --- the general-purpose register set      2 --- the floating-point register set    However, for Irix 5, WHICH isn't used.     REG_ADDR is also unused.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
 name|fetch_core_registers
 parameter_list|(
-name|core_reg_sect
-parameter_list|,
-name|core_reg_size
-parameter_list|,
-name|which
-parameter_list|,
-name|reg_addr
-parameter_list|)
 name|char
 modifier|*
 name|core_reg_sect
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|core_reg_size
-decl_stmt|;
+parameter_list|,
 name|int
 name|which
-decl_stmt|;
-comment|/* Unused */
+parameter_list|,
 name|CORE_ADDR
 name|reg_addr
-decl_stmt|;
-comment|/* Unused */
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -868,7 +866,7 @@ operator|*
 name|NUM_REGS
 condition|)
 block|{
-comment|/* This is a core file from a N32 executable, 64 bits are saved 	 for all registers.  */
+comment|/* This is a core file from a N32 executable, 64 bits are saved          for all registers.  */
 name|char
 modifier|*
 name|srcp
@@ -913,7 +911,7 @@ literal|32
 operator|)
 condition|)
 block|{
-comment|/* FIXME, this is wrong, N32 has 64 bit FP regs, but GDB 		 currently assumes that they are 32 bit.  */
+comment|/* FIXME, this is wrong, N32 has 64 bit FP regs, but GDB 	         currently assumes that they are 32 bit.  */
 operator|*
 name|dstp
 operator|++
@@ -1185,7 +1183,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"gnu-regex.h"
+file|"gdb_regex.h"
 end_include
 
 begin_include
@@ -1410,175 +1408,142 @@ begin_comment
 comment|/* Local function prototypes */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sharedlibrary_command
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|enable_break
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|disable_break
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|info_sharedlibrary_command
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|symbol_add_stub
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|so_list
 modifier|*
 name|find_solib
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|so_list
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|link_map
 modifier|*
 name|first_link_map_member
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|link_map
 modifier|*
 name|next_link_map_member
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|so_list
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|xfer_link_map_member
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|so_list
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|link_map
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|CORE_ADDR
 name|locate_base
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|solib_map_sections
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	solib_map_sections -- open bfd and build sections for shared lib  SYNOPSIS  	static int solib_map_sections (struct so_list *so)  DESCRIPTION  	Given a pointer to one of the shared objects in our list 	of mapped objects, use the recorded name to open a bfd 	descriptor for the object, build a section table, and then 	relocate all the section addresses by the base address at 	which the shared object was mapped.  FIXMES  	In most (all?) cases the shared object file name recorded in the 	dynamic linkage tables will be a fully qualified pathname.  For 	cases where it isn't, do we really mimic the systems search 	mechanism correctly in the below code (particularly the tilde 	expansion stuff?).  */
+comment|/*     LOCAL FUNCTION     solib_map_sections -- open bfd and build sections for shared lib     SYNOPSIS     static int solib_map_sections (struct so_list *so)     DESCRIPTION     Given a pointer to one of the shared objects in our list    of mapped objects, use the recorded name to open a bfd    descriptor for the object, build a section table, and then    relocate all the section addresses by the base address at    which the shared object was mapped.     FIXMES     In most (all?) cases the shared object file name recorded in the    dynamic linkage tables will be a fully qualified pathname.  For    cases where it isn't, do we really mimic the systems search    mechanism correctly in the below code (particularly the tilde    expansion stuff?).  */
 end_comment
 
 begin_function
@@ -1586,12 +1551,10 @@ specifier|static
 name|int
 name|solib_map_sections
 parameter_list|(
-name|arg
-parameter_list|)
-name|char
+name|void
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|so_list
@@ -1644,7 +1607,7 @@ name|old_chain
 operator|=
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|filename
 argument_list|)
@@ -1760,7 +1723,7 @@ name|abfd
 operator|->
 name|cacheable
 operator|=
-name|true
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1840,7 +1803,7 @@ name|p
 operator|++
 control|)
 block|{
-comment|/* Relocate the section binding addresses as recorded in the shared 	 object's file by the offset to get the address to which the 	 object was actually mapped.  */
+comment|/* Relocate the section binding addresses as recorded in the shared          object's file by the offset to get the address to which the          object was actually mapped.  */
 name|p
 operator|->
 name|addr
@@ -1905,6 +1868,7 @@ argument_list|(
 name|old_chain
 argument_list|)
 expr_stmt|;
+comment|/* must be non-zero */
 return|return
 operator|(
 literal|1
@@ -1914,14 +1878,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	locate_base -- locate the base address of dynamic linker structs  SYNOPSIS  	CORE_ADDR locate_base (void)  DESCRIPTION  	For both the SunOS and SVR4 shared library implementations, if the 	inferior executable has been linked dynamically, there is a single 	address somewhere in the inferior's data space which is the key to 	locating all of the dynamic linker's runtime structures.  This 	address is the value of the symbol defined by the macro DEBUG_BASE. 	The job of this function is to find and return that address, or to 	return 0 if there is no such address (the executable is statically 	linked for example).  	For SunOS, the job is almost trivial, since the dynamic linker and 	all of it's structures are statically linked to the executable at 	link time.  Thus the symbol for the address we are looking for has 	already been added to the minimal symbol table for the executable's 	objfile at the time the symbol file's symbols were read, and all we 	have to do is look it up there.  Note that we explicitly do NOT want 	to find the copies in the shared library.  	The SVR4 version is much more complicated because the dynamic linker 	and it's structures are located in the shared C library, which gets 	run as the executable's "interpreter" by the kernel.  We have to go 	to a lot more work to discover the address of DEBUG_BASE.  Because 	of this complexity, we cache the value we find and return that value 	on subsequent invocations.  Note there is no copy in the executable 	symbol tables.  	Irix 5 is basically like SunOS.  	Note that we can assume nothing about the process state at the time 	we need to find this address.  We may be stopped on the first instruc- 	tion of the interpreter (C shared library), the first instruction of 	the executable itself, or somewhere else entirely (if we attached 	to the process for example).   */
+comment|/*     LOCAL FUNCTION     locate_base -- locate the base address of dynamic linker structs     SYNOPSIS     CORE_ADDR locate_base (void)     DESCRIPTION     For both the SunOS and SVR4 shared library implementations, if the    inferior executable has been linked dynamically, there is a single    address somewhere in the inferior's data space which is the key to    locating all of the dynamic linker's runtime structures.  This    address is the value of the symbol defined by the macro DEBUG_BASE.    The job of this function is to find and return that address, or to    return 0 if there is no such address (the executable is statically    linked for example).     For SunOS, the job is almost trivial, since the dynamic linker and    all of it's structures are statically linked to the executable at    link time.  Thus the symbol for the address we are looking for has    already been added to the minimal symbol table for the executable's    objfile at the time the symbol file's symbols were read, and all we    have to do is look it up there.  Note that we explicitly do NOT want    to find the copies in the shared library.     The SVR4 version is much more complicated because the dynamic linker    and it's structures are located in the shared C library, which gets    run as the executable's "interpreter" by the kernel.  We have to go    to a lot more work to discover the address of DEBUG_BASE.  Because    of this complexity, we cache the value we find and return that value    on subsequent invocations.  Note there is no copy in the executable    symbol tables.     Irix 5 is basically like SunOS.     Note that we can assume nothing about the process state at the time    we need to find this address.  We may be stopped on the first instruc-    tion of the interpreter (C shared library), the first instruction of    the executable itself, or somewhere else entirely (if we attached    to the process for example).   */
 end_comment
 
 begin_function
 specifier|static
 name|CORE_ADDR
 name|locate_base
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|minimal_symbol
@@ -1979,7 +1945,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	first_link_map_member -- locate first member in dynamic linker's map  SYNOPSIS  	static struct link_map *first_link_map_member (void)  DESCRIPTION  	Read in a copy of the first member in the inferior's dynamic 	link map from the inferior's dynamic linker structures, and return 	a pointer to the link map descriptor. */
+comment|/*     LOCAL FUNCTION     first_link_map_member -- locate first member in dynamic linker's map     SYNOPSIS     static struct link_map *first_link_map_member (void)     DESCRIPTION     Read in a copy of the first member in the inferior's dynamic    link map from the inferior's dynamic linker structures, and return    a pointer to the link map descriptor.  */
 end_comment
 
 begin_function
@@ -1988,7 +1954,9 @@ name|struct
 name|link_map
 modifier|*
 name|first_link_map_member
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|obj_list
@@ -2060,12 +2028,13 @@ return|return
 name|NULL
 return|;
 comment|/* Get first list entry.  */
+comment|/* The MIPS Sign extends addresses. */
 name|lladdr
 operator|=
-operator|(
-name|CORE_ADDR
-operator|)
+name|host_pointer_to_address
+argument_list|(
 name|listp
+argument_list|)
 expr_stmt|;
 name|read_memory
 argument_list|(
@@ -2088,12 +2057,12 @@ expr_stmt|;
 comment|/* The first entry in the list is the object file we are debugging,      so skip it.  */
 name|next_lladdr
 operator|=
-operator|(
-name|CORE_ADDR
-operator|)
+name|host_pointer_to_address
+argument_list|(
 name|list_old
 operator|.
 name|next
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2180,7 +2149,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	next_link_map_member -- locate next member in dynamic linker's map  SYNOPSIS  	static struct link_map *next_link_map_member (so_list_ptr)  DESCRIPTION  	Read in a copy of the next member in the inferior's dynamic 	link map from the inferior's dynamic linker structures, and return 	a pointer to the link map descriptor. */
+comment|/*     LOCAL FUNCTION     next_link_map_member -- locate next member in dynamic linker's map     SYNOPSIS     static struct link_map *next_link_map_member (so_list_ptr)     DESCRIPTION     Read in a copy of the next member in the inferior's dynamic    link map from the inferior's dynamic linker structures, and return    a pointer to the link map descriptor.  */
 end_comment
 
 begin_function
@@ -2190,13 +2159,11 @@ name|link_map
 modifier|*
 name|next_link_map_member
 parameter_list|(
-name|so_list_ptr
-parameter_list|)
 name|struct
 name|so_list
 modifier|*
 name|so_list_ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|link_map
@@ -2227,7 +2194,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* We have hit the end of the list, so check to see if any were 	 added, but be quiet if we can't read from the target any more. */
+comment|/* We have hit the end of the list, so check to see if any were          added, but be quiet if we can't read from the target any more. */
 name|int
 name|status
 init|=
@@ -2270,12 +2237,12 @@ argument_list|)
 expr_stmt|;
 name|next_lladdr
 operator|=
-operator|(
-name|CORE_ADDR
-operator|)
+name|host_pointer_to_address
+argument_list|(
 name|list_old
 operator|.
 name|next
+argument_list|)
 expr_stmt|;
 block|}
 ifdef|#
@@ -2359,7 +2326,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	xfer_link_map_member -- set local variables from dynamic linker's map  SYNOPSIS  	static void xfer_link_map_member (so_list_ptr, lm)  DESCRIPTION  	Read in a copy of the requested member in the inferior's dynamic 	link map from the inferior's dynamic linker structures, and fill 	in the necessary so_list_ptr elements. */
+comment|/*     LOCAL FUNCTION     xfer_link_map_member -- set local variables from dynamic linker's map     SYNOPSIS     static void xfer_link_map_member (so_list_ptr, lm)     DESCRIPTION     Read in a copy of the requested member in the inferior's dynamic    link map from the inferior's dynamic linker structures, and fill    in the necessary so_list_ptr elements.  */
 end_comment
 
 begin_function
@@ -2367,20 +2334,16 @@ specifier|static
 name|void
 name|xfer_link_map_member
 parameter_list|(
-name|so_list_ptr
-parameter_list|,
-name|lm
-parameter_list|)
 name|struct
 name|so_list
 modifier|*
 name|so_list_ptr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|link_map
 modifier|*
 name|lm
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|obj_list
@@ -2440,12 +2403,12 @@ name|new_lm
 operator|->
 name|l_next
 operator|=
-operator|(
-name|CORE_ADDR
-operator|)
+name|host_pointer_to_address
+argument_list|(
 name|list_old
 operator|.
 name|next
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2596,7 +2559,7 @@ operator|&&
 name|_MIPS_SIM
 operator|==
 name|_MIPS_SIM_NABI32
-comment|/* If we are compiling GDB under N32 ABI, the alignments in 	 the obj struct are different from the O32 ABI and we will get 	 wrong values when accessing the struct. 	 As a workaround we use fixed values which are good for 	 Irix 6.2.  */
+comment|/* If we are compiling GDB under N32 ABI, the alignments in          the obj struct are different from the O32 ABI and we will get          wrong values when accessing the struct.          As a workaround we use fixed values which are good for          Irix 6.2.  */
 name|char
 name|buf
 index|[
@@ -2826,7 +2789,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	find_solib -- step through list of shared objects  SYNOPSIS  	struct so_list *find_solib (struct so_list *so_list_ptr)  DESCRIPTION  	This module contains the routine which finds the names of any 	loaded "images" in the current process. The argument in must be 	NULL on the first call, and then the returned value must be passed 	in on subsequent calls. This provides the capability to "step" down 	the list of loaded objects. On the last object, a NULL value is 	returned.  */
+comment|/*     LOCAL FUNCTION     find_solib -- step through list of shared objects     SYNOPSIS     struct so_list *find_solib (struct so_list *so_list_ptr)     DESCRIPTION     This module contains the routine which finds the names of any    loaded "images" in the current process. The argument in must be    NULL on the first call, and then the returned value must be passed    in on subsequent calls. This provides the capability to "step" down    the list of loaded objects. On the last object, a NULL value is    returned.  */
 end_comment
 
 begin_function
@@ -2836,14 +2799,11 @@ name|so_list
 modifier|*
 name|find_solib
 parameter_list|(
-name|so_list_ptr
-parameter_list|)
 name|struct
 name|so_list
 modifier|*
 name|so_list_ptr
-decl_stmt|;
-comment|/* Last lm or NULL for first one */
+parameter_list|)
 block|{
 name|struct
 name|so_list
@@ -2893,7 +2853,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* We have been called before, and are in the process of walking 	 the shared library list.  Advance to the next shared object. */
+comment|/* We have been called before, and are in the process of walking          the shared library list.  Advance to the next shared object. */
 name|lm
 operator|=
 name|next_link_map_member
@@ -2956,7 +2916,7 @@ name|so_list
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Add the new node as the next node in the list, or as the root 	 node if this is the first one. */
+comment|/* Add the new node as the next node in the list, or as the root          node if this is the first one. */
 if|if
 condition|(
 name|so_list_ptr
@@ -3007,12 +2967,10 @@ specifier|static
 name|int
 name|symbol_add_stub
 parameter_list|(
-name|arg
-parameter_list|)
-name|char
+name|void
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -3033,6 +2991,23 @@ name|text_addr
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|section_addr_info
+name|section_addrs
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|section_addrs
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|section_addrs
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
@@ -3061,7 +3036,7 @@ name|asection
 modifier|*
 name|lowest_sect
 decl_stmt|;
-comment|/* If we didn't find a mapped non zero sized .text section, set up 	 text_addr so that the relocation in symbol_file_add does no harm.  */
+comment|/* If we didn't find a mapped non zero sized .text section, set up          text_addr so that the relocation in symbol_file_add does no harm.  */
 name|lowest_sect
 operator|=
 name|bfd_get_section_by_name
@@ -3115,6 +3090,28 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
+name|section_addrs
+operator|.
+name|other
+index|[
+literal|0
+index|]
+operator|.
+name|name
+operator|=
+literal|".text"
+expr_stmt|;
+name|section_addrs
+operator|.
+name|other
+index|[
+literal|0
+index|]
+operator|.
+name|addr
+operator|=
+name|text_addr
+expr_stmt|;
 name|so
 operator|->
 name|objfile
@@ -3129,19 +3126,15 @@ name|so
 operator|->
 name|from_tty
 argument_list|,
-name|text_addr
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
+operator|&
+name|section_addrs
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* must be non-zero */
 return|return
 operator|(
 literal|1
@@ -3151,31 +3144,28 @@ block|}
 end_function
 
 begin_comment
-comment|/*  GLOBAL FUNCTION  	solib_add -- add a shared library file to the symtab and section list  SYNOPSIS  	void solib_add (char *arg_string, int from_tty, 			struct target_ops *target)  DESCRIPTION  */
+comment|/*     GLOBAL FUNCTION     solib_add -- add a shared library file to the symtab and section list     SYNOPSIS     void solib_add (char *arg_string, int from_tty,    struct target_ops *target, int readsyms)     DESCRIPTION   */
 end_comment
 
 begin_function
 name|void
 name|solib_add
 parameter_list|(
-name|arg_string
-parameter_list|,
-name|from_tty
-parameter_list|,
-name|target
-parameter_list|)
 name|char
 modifier|*
 name|arg_string
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
+parameter_list|,
+name|int
+name|readsyms
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -3204,6 +3194,12 @@ decl_stmt|;
 name|int
 name|old
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|readsyms
+condition|)
+return|return;
 if|if
 condition|(
 operator|(
@@ -3286,139 +3282,15 @@ condition|(
 name|count
 condition|)
 block|{
-name|int
-name|update_coreops
-decl_stmt|;
-comment|/* We must update the to_sections field in the core_ops structure 	     here, otherwise we dereference a potential dangling pointer 	     for each call to target_read/write_memory within this routine.  */
-name|update_coreops
-operator|=
-name|core_ops
-operator|.
-name|to_sections
-operator|==
-name|target
-operator|->
-name|to_sections
-expr_stmt|;
-comment|/* Reallocate the target's section table including the new size.  */
-if|if
-condition|(
-name|target
-operator|->
-name|to_sections
-condition|)
-block|{
 name|old
 operator|=
-name|target
-operator|->
-name|to_sections_end
-operator|-
-name|target
-operator|->
-name|to_sections
-expr_stmt|;
-name|target
-operator|->
-name|to_sections
-operator|=
-operator|(
-expr|struct
-name|section_table
-operator|*
-operator|)
-name|xrealloc
+name|target_resize_to_sections
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|target
-operator|->
-name|to_sections
 argument_list|,
-operator|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|section_table
-argument_list|)
-operator|)
-operator|*
-operator|(
-name|count
-operator|+
-name|old
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|old
-operator|=
-literal|0
-expr_stmt|;
-name|target
-operator|->
-name|to_sections
-operator|=
-operator|(
-expr|struct
-name|section_table
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
-operator|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|section_table
-argument_list|)
-operator|)
-operator|*
 name|count
 argument_list|)
 expr_stmt|;
-block|}
-name|target
-operator|->
-name|to_sections_end
-operator|=
-name|target
-operator|->
-name|to_sections
-operator|+
-operator|(
-name|count
-operator|+
-name|old
-operator|)
-expr_stmt|;
-comment|/* Update the to_sections field in the core_ops structure 	     if needed.  */
-if|if
-condition|(
-name|update_coreops
-condition|)
-block|{
-name|core_ops
-operator|.
-name|to_sections
-operator|=
-name|target
-operator|->
-name|to_sections
-expr_stmt|;
-name|core_ops
-operator|.
-name|to_sections_end
-operator|=
-name|target
-operator|->
-name|to_sections_end
-expr_stmt|;
-block|}
 comment|/* Add these section table entries to the target's table.  */
 while|while
 condition|(
@@ -3596,7 +3468,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	info_sharedlibrary_command -- code for "info sharedlibrary"  SYNOPSIS  	static void info_sharedlibrary_command ()  DESCRIPTION  	Walk through the shared library list and print information 	about each attached library. */
+comment|/*     LOCAL FUNCTION     info_sharedlibrary_command -- code for "info sharedlibrary"     SYNOPSIS     static void info_sharedlibrary_command ()     DESCRIPTION     Walk through the shared library list and print information    about each attached library.  */
 end_comment
 
 begin_function
@@ -3604,17 +3476,13 @@ specifier|static
 name|void
 name|info_sharedlibrary_command
 parameter_list|(
-name|ignore
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|ignore
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -3639,7 +3507,7 @@ condition|)
 block|{
 name|printf_unfiltered
 argument_list|(
-literal|"No exec file.\n"
+literal|"No executable file.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3769,7 +3637,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  GLOBAL FUNCTION  	solib_address -- check to see if an address is in a shared lib  SYNOPSIS  	char *solib_address (CORE_ADDR address)  DESCRIPTION  	Provides a hook for other gdb routines to discover whether or 	not a particular address is within the mapped address space of 	a shared library.  Any address between the base mapping address 	and the first address beyond the end of the last mapping, is 	considered to be within the shared library address space, for 	our purposes.  	For example, this routine is called at one point to disable 	breakpoints which are in shared libraries that are not currently 	mapped in.  */
+comment|/*     GLOBAL FUNCTION     solib_address -- check to see if an address is in a shared lib     SYNOPSIS     char *solib_address (CORE_ADDR address)     DESCRIPTION     Provides a hook for other gdb routines to discover whether or    not a particular address is within the mapped address space of    a shared library.  Any address between the base mapping address    and the first address beyond the end of the last mapping, is    considered to be within the shared library address space, for    our purposes.     For example, this routine is called at one point to disable    breakpoints which are in shared libraries that are not currently    mapped in.  */
 end_comment
 
 begin_function
@@ -3777,11 +3645,9 @@ name|char
 modifier|*
 name|solib_address
 parameter_list|(
-name|address
-parameter_list|)
 name|CORE_ADDR
 name|address
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -3865,7 +3731,9 @@ end_comment
 begin_function
 name|void
 name|clear_solib
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|so_list
@@ -3893,11 +3761,8 @@ operator|->
 name|sections
 condition|)
 block|{
-name|free
+name|xfree
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|so_list_head
 operator|->
 name|sections
@@ -3911,6 +3776,13 @@ operator|->
 name|abfd
 condition|)
 block|{
+name|remove_target_sections
+argument_list|(
+name|so_list_head
+operator|->
+name|abfd
+argument_list|)
+expr_stmt|;
 name|bfd_filename
 operator|=
 name|bfd_get_filename
@@ -3960,26 +3832,20 @@ if|if
 condition|(
 name|bfd_filename
 condition|)
-name|free
+name|xfree
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|bfd_filename
 argument_list|)
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|so_list_head
 operator|->
 name|so_name
 argument_list|)
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|so_list_head
 argument_list|)
 expr_stmt|;
@@ -3996,14 +3862,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	disable_break -- remove the "mapping changed" breakpoint  SYNOPSIS  	static int disable_break ()  DESCRIPTION  	Removes the breakpoint that gets hit when the dynamic linker 	completes a mapping change.  */
+comment|/*     LOCAL FUNCTION     disable_break -- remove the "mapping changed" breakpoint     SYNOPSIS     static int disable_break ()     DESCRIPTION     Removes the breakpoint that gets hit when the dynamic linker    completes a mapping change.   */
 end_comment
 
 begin_function
 specifier|static
 name|int
 name|disable_break
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|status
@@ -4051,14 +3919,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	enable_break -- arrange for dynamic linker to hit breakpoint  SYNOPSIS  	int enable_break (void)  DESCRIPTION  	This functions inserts a breakpoint at the entry point of the 	main executable, where all shared libraries are mapped in. */
+comment|/*     LOCAL FUNCTION     enable_break -- arrange for dynamic linker to hit breakpoint     SYNOPSIS     int enable_break (void)     DESCRIPTION     This functions inserts a breakpoint at the entry point of the    main executable, where all shared libraries are mapped in.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
 name|enable_break
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4099,13 +3969,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*    GLOBAL FUNCTION    	solib_create_inferior_hook -- shared library startup support    SYNOPSIS    	void solib_create_inferior_hook()    DESCRIPTION    	When gdb starts up the inferior, it nurses it along (through the 	shell) until it is ready to execute it's first instruction.  At this 	point, this function gets called via expansion of the macro 	SOLIB_CREATE_INFERIOR_HOOK.  	For SunOS executables, this first instruction is typically the 	one at "_start", or a similar text label, regardless of whether 	the executable is statically or dynamically linked.  The runtime 	startup code takes care of dynamically linking in any shared 	libraries, once gdb allows the inferior to continue.  	For SVR4 executables, this first instruction is either the first 	instruction in the dynamic linker (for dynamically linked 	executables) or the instruction at "start" for statically linked 	executables.  For dynamically linked executables, the system 	first exec's /lib/libc.so.N, which contains the dynamic linker, 	and starts it running.  The dynamic linker maps in any needed 	shared libraries, maps in the actual user executable, and then 	jumps to "start" in the user executable.  	For both SunOS shared libraries, and SVR4 shared libraries, we 	can arrange to cooperate with the dynamic linker to discover the 	names of shared libraries that are dynamically linked, and the 	base addresses to which they are linked.  	This function is responsible for discovering those names and 	addresses, and saving sufficient information about them to allow 	their symbols to be read at a later time.  FIXME  	Between enable_break() and disable_break(), this code does not 	properly handle hitting breakpoints which the user might have 	set in the startup code or in the dynamic linker itself.  Proper 	handling will probably have to wait until the implementation is 	changed to use the "breakpoint handler function" method.  	Also, what if child has exit()ed?  Must exit loop somehow.   */
+comment|/*     GLOBAL FUNCTION     solib_create_inferior_hook -- shared library startup support     SYNOPSIS     void solib_create_inferior_hook()     DESCRIPTION     When gdb starts up the inferior, it nurses it along (through the    shell) until it is ready to execute it's first instruction.  At this    point, this function gets called via expansion of the macro    SOLIB_CREATE_INFERIOR_HOOK.     For SunOS executables, this first instruction is typically the    one at "_start", or a similar text label, regardless of whether    the executable is statically or dynamically linked.  The runtime    startup code takes care of dynamically linking in any shared    libraries, once gdb allows the inferior to continue.     For SVR4 executables, this first instruction is either the first    instruction in the dynamic linker (for dynamically linked    executables) or the instruction at "start" for statically linked    executables.  For dynamically linked executables, the system    first exec's /lib/libc.so.N, which contains the dynamic linker,    and starts it running.  The dynamic linker maps in any needed    shared libraries, maps in the actual user executable, and then    jumps to "start" in the user executable.     For both SunOS shared libraries, and SVR4 shared libraries, we    can arrange to cooperate with the dynamic linker to discover the    names of shared libraries that are dynamically linked, and the    base addresses to which they are linked.     This function is responsible for discovering those names and    addresses, and saving sufficient information about them to allow    their symbols to be read at a later time.     FIXME     Between enable_break() and disable_break(), this code does not    properly handle hitting breakpoints which the user might have    set in the startup code or in the dynamic linker itself.  Proper    handling will probably have to wait until the implementation is    changed to use the "breakpoint handler function" method.     Also, what if child has exit()ed?  Must exit loop somehow.  */
 end_comment
 
 begin_function
 name|void
 name|solib_create_inferior_hook
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4137,8 +4009,11 @@ do|do
 block|{
 name|target_resume
 argument_list|(
+name|pid_to_ptid
+argument_list|(
 operator|-
 literal|1
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -4187,11 +4062,7 @@ literal|"shared library handler failed to disable breakpoint"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  solib_add will call reinit_frame_cache.       But we are stopped in the startup code and we might not have symbols       for the startup code, so heuristic_proc_start could be called       and will put out an annoying warning.       Delaying the resetting of stop_soon_quietly until after symbol loading       suppresses the warning.  */
-if|if
-condition|(
-name|auto_solib_add
-condition|)
+comment|/*  solib_add will call reinit_frame_cache.      But we are stopped in the startup code and we might not have symbols      for the startup code, so heuristic_proc_start could be called      and will put out an annoying warning.      Delaying the resetting of stop_soon_quietly until after symbol loading      suppresses the warning.  */
 name|solib_add
 argument_list|(
 operator|(
@@ -4208,6 +4079,8 @@ name|target_ops
 operator|*
 operator|)
 literal|0
+argument_list|,
+name|auto_solib_add
 argument_list|)
 expr_stmt|;
 name|stop_soon_quietly
@@ -4218,7 +4091,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	sharedlibrary_command -- handle command to explicitly add library  SYNOPSIS  	static void sharedlibrary_command (char *args, int from_tty)  DESCRIPTION  */
+comment|/*     LOCAL FUNCTION     sharedlibrary_command -- handle command to explicitly add library     SYNOPSIS     static void sharedlibrary_command (char *args, int from_tty)     DESCRIPTION   */
 end_comment
 
 begin_function
@@ -4226,17 +4099,13 @@ specifier|static
 name|void
 name|sharedlibrary_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|dont_repeat
 argument_list|()
@@ -4253,6 +4122,8 @@ name|target_ops
 operator|*
 operator|)
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4261,7 +4132,9 @@ end_function
 begin_function
 name|void
 name|_initialize_solib
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|add_com
 argument_list|(
@@ -4291,7 +4164,7 @@ literal|"auto-solib-add"
 argument_list|,
 name|class_support
 argument_list|,
-name|var_zinteger
+name|var_boolean
 argument_list|,
 operator|(
 name|char
@@ -4300,7 +4173,7 @@ operator|)
 operator|&
 name|auto_solib_add
 argument_list|,
-literal|"Set autoloading of shared library symbols.\n\ If nonzero, symbols from all shared object libraries will be loaded\n\ automatically when the inferior begins execution or when the dynamic linker\n\ informs gdb that a new library has been loaded.  Otherwise, symbols\n\ must be loaded manually, using `sharedlibrary'."
+literal|"Set autoloading of shared library symbols.\n\ If \"on\", symbols from all shared object libraries will be loaded\n\ automatically when the inferior begins execution, when the dynamic linker\n\ informs gdb that a new library has been loaded, or when attaching to the\n\ inferior.  Otherwise, symbols must be loaded manually, using `sharedlibrary'."
 argument_list|,
 operator|&
 name|setlist
@@ -4329,9 +4202,18 @@ init|=
 block|{
 name|bfd_target_unknown_flavour
 block|,
+comment|/* core_flavour */
+name|default_check_format
+block|,
+comment|/* check_format */
+name|default_core_sniffer
+block|,
+comment|/* core_sniffer */
 name|fetch_core_registers
 block|,
+comment|/* core_read_registers */
 name|NULL
+comment|/* next */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4339,7 +4221,9 @@ end_decl_stmt
 begin_function
 name|void
 name|_initialize_core_irix5
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|add_core_fns
 argument_list|(

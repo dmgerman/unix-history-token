@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote debugging interface for Array Tech RAID controller..    Copyright 90, 91, 92, 93, 94, 1995, 1998  Free Software Foundation, Inc.    Contributed by Cygnus Support. Written by Rob Savoye for Cygnus.     This module talks to a debug monitor called 'MONITOR', which    We communicate with MONITOR via either a direct serial line, or a TCP    (or possibly TELNET) stream to a terminal multiplexor,    which in turn talks to the target board.    This file is part of GDB.    This program is free software; you can redistribute it and/or modify   it under the terms of the GNU General Public License as published by   the Free Software Foundation; either version 2 of the License, or   (at your option) any later version.    This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.    You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Remote debugging interface for Array Tech RAID controller..     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002 Free Software Foundation, Inc.     Contributed by Cygnus Support. Written by Rob Savoye for Cygnus.     This module talks to a debug monitor called 'MONITOR', which    We communicate with MONITOR via either a direct serial line, or a TCP    (or possibly TELNET) stream to a terminal multiplexor,    which in turn talks to the target board.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -24,47 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -103,6 +63,24 @@ directive|include
 file|"remote-utils.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"inferior.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"version.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -117,36 +95,20 @@ name|ARRAY_PROMPT
 value|">> "
 end_define
 
-begin_define
-define|#
-directive|define
-name|SWAP_TARGET_AND_HOST
-parameter_list|(
-name|buffer
-parameter_list|,
-name|len
-parameter_list|)
-define|\
-value|do									\     {									\       if (TARGET_BYTE_ORDER != HOST_BYTE_ORDER)				\ 	{								\ 	  char tmp;							\ 	  char *p = (char *)(buffer);					\ 	  char *q = ((char *)(buffer)) + len - 1;		   	\ 	  for (; p< q; p++, q--)				 	\ 	    {								\ 	      tmp = *q;							\ 	      *q = *p;							\ 	      *p = tmp;							\ 	    }								\ 	}								\     }									\   while (0)
-end_define
-
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|debuglogs
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -184,7 +146,17 @@ begin_function_decl
 specifier|static
 name|void
 name|array_resume
-parameter_list|()
+parameter_list|(
+name|ptid_t
+name|ptid
+parameter_list|,
+name|int
+name|step
+parameter_list|,
+name|enum
+name|target_signal
+name|sig
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -278,9 +250,17 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|ptid_t
 name|array_wait
-parameter_list|()
+parameter_list|(
+name|ptid_t
+name|ptid
+parameter_list|,
+name|struct
+name|target_waitstatus
+modifier|*
+name|status
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -357,14 +337,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|version
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -418,7 +390,9 @@ comment|/*   * Descriptor for I/O to remote machine.  Initialize it to NULL so t
 end_comment
 
 begin_decl_stmt
-name|serial_t
+name|struct
+name|serial
+modifier|*
 name|array_desc
 init|=
 name|NULL
@@ -775,12 +749,6 @@ name|NULL
 expr_stmt|;
 name|array_ops
 operator|.
-name|to_core_file_to_sym_file
-operator|=
-name|NULL
-expr_stmt|;
-name|array_ops
-operator|.
 name|to_stratum
 operator|=
 name|process_stratum
@@ -853,9 +821,6 @@ end_comment
 begin_function
 specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|printf_monitor
 parameter_list|(
 name|char
@@ -864,15 +829,6 @@ name|pattern
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|printf_monitor
-parameter_list|(
-name|va_alist
-parameter_list|)
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|args
@@ -886,9 +842,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|va_start
 argument_list|(
 name|args
@@ -896,29 +849,6 @@ argument_list|,
 name|pattern
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|char
-modifier|*
-name|pattern
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|pattern
-operator|=
-name|va_arg
-argument_list|(
-name|args
-argument_list|,
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|vsprintf
 argument_list|(
 name|buf
@@ -953,7 +883,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|array_desc
 argument_list|,
@@ -969,7 +899,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"SERIAL_WRITE failed: %s\n"
+literal|"serial_write failed: %s\n"
 argument_list|,
 name|safe_strerror
 argument_list|(
@@ -989,21 +919,17 @@ specifier|static
 name|void
 name|write_monitor
 parameter_list|(
-name|data
-parameter_list|,
-name|len
-parameter_list|)
 name|char
 name|data
 index|[]
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|array_desc
 argument_list|,
@@ -1016,7 +942,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"SERIAL_WRITE failed: %s\n"
+literal|"serial_write failed: %s\n"
 argument_list|,
 name|safe_strerror
 argument_list|(
@@ -1048,15 +974,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * debuglogs -- deal with debugging info to multiple sources. This takes  *	two real args, the first one is the level to be compared against   *	the sr_get_debug() value, the second arg is a printf buffer and args  *	to be formatted and printed. A CR is added after each string is printed.  */
+comment|/*  * debuglogs -- deal with debugging info to multiple sources. This takes  *      two real args, the first one is the level to be compared against   *      the sr_get_debug() value, the second arg is a printf buffer and args  *      to be formatted and printed. A CR is added after each string is printed.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|debuglogs
 parameter_list|(
 name|int
@@ -1068,15 +991,6 @@ name|pattern
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|debuglogs
-parameter_list|(
-name|va_alist
-parameter_list|)
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|args
@@ -1101,9 +1015,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|va_start
 argument_list|(
 name|args
@@ -1111,43 +1022,6 @@ argument_list|,
 name|pattern
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|char
-modifier|*
-name|pattern
-decl_stmt|;
-name|int
-name|level
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|level
-operator|=
-name|va_arg
-argument_list|(
-name|args
-argument_list|,
-name|int
-argument_list|)
-expr_stmt|;
-comment|/* get the debug level */
-name|pattern
-operator|=
-name|va_arg
-argument_list|(
-name|args
-argument_list|,
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-comment|/* get the printf style pattern */
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -1436,7 +1310,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* readchar -- read a character from the remote system, doing all the fancy  *	timeout stuff.  */
+comment|/* readchar -- read a character from the remote system, doing all the fancy  *    timeout stuff.  */
 end_comment
 
 begin_function
@@ -1444,18 +1318,16 @@ specifier|static
 name|int
 name|readchar
 parameter_list|(
-name|timeout
-parameter_list|)
 name|int
 name|timeout
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
 decl_stmt|;
 name|c
 operator|=
-name|SERIAL_READCHAR
+name|serial_readchar
 argument_list|(
 name|array_desc
 argument_list|,
@@ -1566,7 +1438,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * expect --  scan input from the remote system, until STRING is found.  *	If DISCARD is non-zero, then discard non-matching input, else print  *	it out. Let the user break out immediately.  */
+comment|/*   * expect --  scan input from the remote system, until STRING is found.  *      If DISCARD is non-zero, then discard non-matching input, else print  *      it out. Let the user break out immediately.  */
 end_comment
 
 begin_function
@@ -1574,17 +1446,13 @@ specifier|static
 name|void
 name|expect
 parameter_list|(
-name|string
-parameter_list|,
-name|discard
-parameter_list|)
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|,
 name|int
 name|discard
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1605,8 +1473,7 @@ name|string
 argument_list|)
 expr_stmt|;
 name|immediate_quit
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 while|while
 condition|(
@@ -1647,8 +1514,7 @@ literal|'\0'
 condition|)
 block|{
 name|immediate_quit
-operator|=
-literal|0
+operator|--
 expr_stmt|;
 name|debuglogs
 argument_list|(
@@ -1694,11 +1560,9 @@ specifier|static
 name|void
 name|expect_prompt
 parameter_list|(
-name|discard
-parameter_list|)
 name|int
 name|discard
-decl_stmt|;
+parameter_list|)
 block|{
 name|expect
 argument_list|(
@@ -1719,11 +1583,9 @@ specifier|static
 name|int
 name|junk
 parameter_list|(
-name|ch
-parameter_list|)
 name|char
 name|ch
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -1792,7 +1654,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   *  get_hex_digit -- Get a hex digit from the remote system& return its value.  *		If ignore is nonzero, ignore spaces, newline& tabs.  */
+comment|/*   *  get_hex_digit -- Get a hex digit from the remote system& return its value.  *              If ignore is nonzero, ignore spaces, newline& tabs.  */
 end_comment
 
 begin_function
@@ -1800,11 +1662,9 @@ specifier|static
 name|int
 name|get_hex_digit
 parameter_list|(
-name|ignore
-parameter_list|)
 name|int
 name|ignore
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -1983,7 +1843,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* get_hex_byte -- Get a byte from monitor and put it in *BYT.   *	Accept any number leading spaces.  */
+comment|/* get_hex_byte -- Get a byte from monitor and put it in *BYT.   *    Accept any number leading spaces.  */
 end_comment
 
 begin_function
@@ -1991,12 +1851,10 @@ specifier|static
 name|void
 name|get_hex_byte
 parameter_list|(
-name|byt
-parameter_list|)
 name|char
 modifier|*
 name|byt
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|val
@@ -2053,14 +1911,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * get_hex_word --  Get N 32-bit words from remote, each preceded by a space,  *	and put them in registers starting at REGNO.  */
+comment|/*   * get_hex_word --  Get N 32-bit words from remote, each preceded by a space,  *      and put them in registers starting at REGNO.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
 name|get_hex_word
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|long
 name|val
@@ -2074,12 +1934,6 @@ name|val
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (HOST_BYTE_ORDER == BIG_ENDIAN) {
-endif|#
-directive|endif
 for|for
 control|(
 name|i
@@ -2108,29 +1962,13 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|} else {     for (i = 7; i>= 0; i--)       val = (val<< 4) + get_hex_digit (i == 0);   }
-endif|#
-directive|endif
 name|debuglogs
 argument_list|(
 literal|4
 argument_list|,
-literal|"get_hex_word() got a 0x%x for a %s host."
+literal|"get_hex_word() got a 0x%x."
 argument_list|,
 name|val
-argument_list|,
-operator|(
-name|HOST_BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-operator|)
-condition|?
-literal|"big endian"
-else|:
-literal|"little endian"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2148,25 +1986,19 @@ specifier|static
 name|void
 name|array_create_inferior
 parameter_list|(
-name|execfile
-parameter_list|,
-name|args
-parameter_list|,
-name|env
-parameter_list|)
 name|char
 modifier|*
 name|execfile
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|env
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|entry_pt
@@ -2242,7 +2074,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * array_open -- open a connection to a remote debugger.  *	NAME is the filename used for communication.  */
+comment|/*  * array_open -- open a connection to a remote debugger.  *      NAME is the filename used for communication.  */
 end_comment
 
 begin_decl_stmt
@@ -2269,23 +2101,17 @@ specifier|static
 name|void
 name|array_open
 parameter_list|(
-name|args
-parameter_list|,
-name|name
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|packet
@@ -2346,7 +2172,7 @@ argument_list|)
 expr_stmt|;
 name|array_desc
 operator|=
-name|SERIAL_OPEN
+name|serial_open
 argument_list|(
 name|dev_name
 argument_list|)
@@ -2372,7 +2198,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|SERIAL_SETBAUDRATE
+name|serial_setbaudrate
 argument_list|(
 name|array_desc
 argument_list|,
@@ -2380,7 +2206,7 @@ name|baud_rate
 argument_list|)
 condition|)
 block|{
-name|SERIAL_CLOSE
+name|serial_close
 argument_list|(
 name|array_desc
 argument_list|)
@@ -2392,7 +2218,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|SERIAL_RAW
+name|serial_raw
 argument_list|(
 name|array_desc
 argument_list|)
@@ -2430,6 +2256,8 @@ argument_list|,
 literal|"GDB %s (%s"
 argument_list|,
 name|version
+argument_list|,
+name|host_name
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2458,7 +2286,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* see if the target is alive. For a ROM monitor, we can just try to force the      expect_prompt to print a few times. For the GDB remote protocol, the application      being debugged is sitting at a breakpoint and waiting for GDB to initialize      the connection. We force it to give us an empty packet to see if it's alive.      */
+comment|/* see if the target is alive. For a ROM monitor, we can just try to force the      expect_prompt to print a few times. For the GDB remote protocol, the application      being debugged is sitting at a breakpoint and waiting for GDB to initialize      the connection. We force it to give us an empty packet to see if it's alive.    */
 name|debuglogs
 argument_list|(
 literal|3
@@ -2466,7 +2294,7 @@ argument_list|,
 literal|"Trying to ACK the target's debug stub"
 argument_list|)
 expr_stmt|;
-comment|/* unless your are on the new hardware, the old board won't initialize        because the '@' doesn't flush output like it does on the new ROMS.      */
+comment|/* unless your are on the new hardware, the old board won't initialize      because the '@' doesn't flush output like it does on the new ROMS.    */
 name|printf_monitor
 argument_list|(
 literal|"@"
@@ -2544,7 +2372,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * array_close -- Close out all files and local state before this  *	target loses control.  */
+comment|/*  * array_close -- Close out all files and local state before this  *      target loses control.  */
 end_comment
 
 begin_function
@@ -2552,13 +2380,11 @@ specifier|static
 name|void
 name|array_close
 parameter_list|(
-name|quitting
-parameter_list|)
 name|int
 name|quitting
-decl_stmt|;
+parameter_list|)
 block|{
-name|SERIAL_CLOSE
+name|serial_close
 argument_list|(
 name|array_desc
 argument_list|)
@@ -2620,7 +2446,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * array_detach -- terminate the open connection to the remote  *	debugger. Use this when you want to detach and do something  *	else with your gdb.  */
+comment|/*   * array_detach -- terminate the open connection to the remote  *      debugger. Use this when you want to detach and do something  *      else with your gdb.  */
 end_comment
 
 begin_function
@@ -2628,11 +2454,9 @@ specifier|static
 name|void
 name|array_detach
 parameter_list|(
-name|from_tty
-parameter_list|)
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|debuglogs
 argument_list|(
@@ -2668,17 +2492,13 @@ specifier|static
 name|void
 name|array_attach
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2725,21 +2545,16 @@ specifier|static
 name|void
 name|array_resume
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|step
-parameter_list|,
-name|sig
-parameter_list|)
 name|int
-name|pid
-decl_stmt|,
 name|step
-decl_stmt|;
+parameter_list|,
 name|enum
 name|target_signal
 name|sig
-decl_stmt|;
+parameter_list|)
 block|{
 name|debuglogs
 argument_list|(
@@ -2787,21 +2602,17 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ptid_t
 name|array_wait
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|status
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|struct
 name|target_waitstatus
 modifier|*
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|old_timeout
@@ -2816,7 +2627,9 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-name|serial_t
+name|struct
+name|serial
+modifier|*
 name|tty_desc
 decl_stmt|;
 name|serial_ttystate
@@ -2869,19 +2682,19 @@ name|_WIN32
 argument_list|)
 name|tty_desc
 operator|=
-name|SERIAL_FDOPEN
+name|serial_fdopen
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
 name|ttystate
 operator|=
-name|SERIAL_GET_TTY_STATE
+name|serial_get_tty_state
 argument_list|(
 name|tty_desc
 argument_list|)
 expr_stmt|;
-name|SERIAL_RAW
+name|serial_raw
 argument_list|(
 name|tty_desc
 argument_list|)
@@ -2967,7 +2780,7 @@ expr_stmt|;
 block|}
 name|c
 operator|=
-name|SERIAL_READCHAR
+name|serial_readchar
 argument_list|(
 name|tty_desc
 argument_list|,
@@ -2981,7 +2794,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|array_desc
 argument_list|,
@@ -3003,12 +2816,12 @@ break|break;
 if|#
 directive|if
 literal|0
-block|fputc_unfiltered (c, gdb_stdout);       gdb_flush (gdb_stdout);
+block|fputc_unfiltered (c, gdb_stdout); 	  gdb_flush (gdb_stdout);
 endif|#
 directive|endif
 block|}
 block|}
-name|SERIAL_SET_TTY_STATE
+name|serial_set_tty_state
 argument_list|(
 name|tty_desc
 argument_list|,
@@ -3050,13 +2863,13 @@ operator|=
 name|old_timeout
 expr_stmt|;
 return|return
-literal|0
+name|inferior_ptid
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * array_fetch_registers -- read the remote registers into the  *	block regs.  */
+comment|/*  * array_fetch_registers -- read the remote registers into the  *      block regs.  */
 end_comment
 
 begin_function
@@ -3064,33 +2877,34 @@ specifier|static
 name|void
 name|array_fetch_registers
 parameter_list|(
+name|int
 name|ignored
 parameter_list|)
-name|int
-name|ignored
-decl_stmt|;
 block|{
+name|char
+modifier|*
+name|reg
+init|=
+name|alloca
+argument_list|(
+name|MAX_REGISTER_RAW_SIZE
+argument_list|)
+decl_stmt|;
 name|int
 name|regno
-decl_stmt|,
-name|i
 decl_stmt|;
 name|char
 modifier|*
 name|p
 decl_stmt|;
-name|unsigned
 name|char
+modifier|*
 name|packet
-index|[
+init|=
+name|alloca
+argument_list|(
 name|PBUFSIZ
-index|]
-decl_stmt|;
-name|char
-name|regs
-index|[
-name|REGISTER_BYTES
-index|]
+argument_list|)
 decl_stmt|;
 name|debuglogs
 argument_list|(
@@ -3108,16 +2922,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|PBUFSIZ
-argument_list|)
-expr_stmt|;
-comment|/* Unimplemented registers read as all bits zero.  */
-name|memset
-argument_list|(
-name|regs
-argument_list|,
-literal|0
-argument_list|,
-name|REGISTER_BYTES
 argument_list|)
 expr_stmt|;
 name|make_gdb_packet
@@ -3183,8 +2987,9 @@ control|)
 block|{
 comment|/* supply register stores in target byte order, so swap here */
 comment|/* FIXME: convert from ASCII hex to raw bytes */
+name|LONGEST
 name|i
-operator|=
+init|=
 name|ascii2hexword
 argument_list|(
 name|packet
@@ -3195,7 +3000,7 @@ operator|*
 literal|8
 operator|)
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|debuglogs
 argument_list|(
 literal|5
@@ -3207,12 +3012,17 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|SWAP_TARGET_AND_HOST
+name|store_unsigned_integer
 argument_list|(
 operator|&
-name|i
+name|reg
 argument_list|,
-literal|4
+name|REGISTER_RAW_SIZE
+argument_list|(
+name|regno
+argument_list|)
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 name|supply_register
@@ -3224,7 +3034,7 @@ name|char
 operator|*
 operator|)
 operator|&
-name|i
+name|reg
 argument_list|)
 expr_stmt|;
 block|}
@@ -3240,14 +3050,15 @@ specifier|static
 name|void
 name|array_fetch_register
 parameter_list|(
-name|ignored
-parameter_list|)
 name|int
 name|ignored
-decl_stmt|;
+parameter_list|)
 block|{
 name|array_fetch_registers
-argument_list|()
+argument_list|(
+literal|0
+comment|/* ignored */
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -3261,11 +3072,9 @@ specifier|static
 name|void
 name|array_store_registers
 parameter_list|(
-name|ignored
-parameter_list|)
 name|int
 name|ignored
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -3442,14 +3251,15 @@ specifier|static
 name|void
 name|array_store_register
 parameter_list|(
-name|ignored
-parameter_list|)
 name|int
 name|ignored
-decl_stmt|;
+parameter_list|)
 block|{
 name|array_store_registers
-argument_list|()
+argument_list|(
+literal|0
+comment|/* ignored */
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -3462,7 +3272,9 @@ begin_function
 specifier|static
 name|void
 name|array_prepare_to_store
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Do nothing, since we can store individual regs */
 block|}
@@ -3472,7 +3284,9 @@ begin_function
 specifier|static
 name|void
 name|array_files_info
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -3487,7 +3301,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * array_write_inferior_memory -- Copy LEN bytes of data from debugger  *	memory at MYADDR to inferior's memory at MEMADDR.  Returns length moved.  */
+comment|/*  * array_write_inferior_memory -- Copy LEN bytes of data from debugger  *      memory at MYADDR to inferior's memory at MEMADDR.  Returns length moved.  */
 end_comment
 
 begin_function
@@ -3495,23 +3309,17 @@ specifier|static
 name|int
 name|array_write_inferior_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -3744,7 +3552,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * array_read_inferior_memory -- read LEN bytes from inferior memory  *	at MEMADDR.  Put the result at debugger address MYADDR.  Returns  *	length moved.  */
+comment|/*  * array_read_inferior_memory -- read LEN bytes from inferior memory  *      at MEMADDR.  Put the result at debugger address MYADDR.  Returns  *      length moved.  */
 end_comment
 
 begin_function
@@ -3752,22 +3560,16 @@ specifier|static
 name|int
 name|array_read_inferior_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|j
@@ -3914,7 +3716,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"m%08x,%04x"
+literal|"m%08lx,%04x"
 argument_list|,
 name|startaddr
 argument_list|,
@@ -4066,7 +3868,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FIXME-someday!  merge these two.  */
+comment|/* Transfer LEN bytes between GDB address MYADDR and target address    MEMADDR.  If WRITE is non-zero, transfer them to the target,    otherwise transfer them from the target.  TARGET is unused.     Returns the number of bytes transferred. */
 end_comment
 
 begin_function
@@ -4074,35 +3876,29 @@ specifier|static
 name|int
 name|array_xfer_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|,
-name|target
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|write
-decl_stmt|;
+parameter_list|,
+name|struct
+name|mem_attrib
+modifier|*
+name|attrib
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
-comment|/* ignored */
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4137,17 +3933,13 @@ specifier|static
 name|void
 name|array_kill
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 return|return;
 comment|/* ignore attempts to kill target system */
@@ -4162,7 +3954,9 @@ begin_function
 specifier|static
 name|void
 name|array_mourn_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|remove_breakpoints
 argument_list|()
@@ -4204,17 +3998,13 @@ specifier|static
 name|int
 name|array_insert_breakpoint
 parameter_list|(
-name|addr
-parameter_list|,
-name|shadow
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|shadow
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -4287,9 +4077,12 @@ literal|4
 condition|)
 name|printf
 argument_list|(
-literal|"Breakpoint at %x\n"
+literal|"Breakpoint at %s\n"
 argument_list|,
+name|paddr_nz
+argument_list|(
 name|addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|array_read_inferior_memory
@@ -4340,17 +4133,13 @@ specifier|static
 name|int
 name|array_remove_breakpoint
 parameter_list|(
-name|addr
-parameter_list|,
-name|shadow
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|shadow
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -4417,9 +4206,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't find breakpoint associated with 0x%x\n"
+literal|"Can't find breakpoint associated with 0x%s\n"
 argument_list|,
+name|paddr_nz
+argument_list|(
 name|addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4432,7 +4224,9 @@ begin_function
 specifier|static
 name|void
 name|array_stop
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|debuglogs
 argument_list|(
@@ -4455,7 +4249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * array_command -- put a command string, in args, out to MONITOR.  *	Output from MONITOR is placed on the users terminal until the  *	expect_prompt is seen. FIXME  */
+comment|/*   * array_command -- put a command string, in args, out to MONITOR.  *      Output from MONITOR is placed on the users terminal until the  *      expect_prompt is seen. FIXME  */
 end_comment
 
 begin_function
@@ -4463,17 +4257,13 @@ specifier|static
 name|void
 name|monitor_command
 parameter_list|(
-name|args
-parameter_list|,
-name|fromtty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|fromtty
-decl_stmt|;
+parameter_list|)
 block|{
 name|debuglogs
 argument_list|(
@@ -4521,7 +4311,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * make_gdb_packet -- make a GDB packet. The data is always ASCII.  *	 A debug packet whose contents are<data>  *	 is encapsulated for transmission in the form:  *  *		$<data> # CSUM1 CSUM2  *  *<data> must be ASCII alphanumeric and cannot include characters  *       '$' or '#'.  If<data> starts with two characters followed by  *       ':', then the existing stubs interpret this as a sequence number.  *  *       CSUM1 and CSUM2 are ascii hex representation of an 8-bit   *       checksum of<data>, the most significant nibble is sent first.  *       the hex digits 0-9,a-f are used.  *  */
+comment|/*  * make_gdb_packet -- make a GDB packet. The data is always ASCII.  *       A debug packet whose contents are<data>  *       is encapsulated for transmission in the form:  *  *              $<data> # CSUM1 CSUM2  *  *<data> must be ASCII alphanumeric and cannot include characters  *       '$' or '#'.  If<data> starts with two characters followed by  *       ':', then the existing stubs interpret this as a sequence number.  *  *       CSUM1 and CSUM2 are ascii hex representation of an 8-bit   *       checksum of<data>, the most significant nibble is sent first.  *       the hex digits 0-9,a-f are used.  *  */
 end_comment
 
 begin_function
@@ -4529,20 +4319,14 @@ specifier|static
 name|void
 name|make_gdb_packet
 parameter_list|(
-name|buf
-parameter_list|,
-name|data
-parameter_list|)
 name|char
 modifier|*
 name|buf
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|data
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|i
@@ -4671,10 +4455,10 @@ literal|0x0
 expr_stmt|;
 comment|/* Null terminator on string */
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * array_send_packet -- send a GDB packet to the target with error handling. We  *		get a '+' (ACK) back if the packet is received and the checksum  *		matches. Otherwise a '-' (NAK) is returned. It returns a 1 for a  *		successful transmition, or a 0 for a failure.  */
+comment|/*  * array_send_packet -- send a GDB packet to the target with error handling. We  *              get a '+' (ACK) back if the packet is received and the checksum  *              matches. Otherwise a '-' (NAK) is returned. It returns a 1 for a  *              successful transmition, or a 0 for a failure.  */
 end_comment
 
 begin_function
@@ -4682,12 +4466,10 @@ specifier|static
 name|int
 name|array_send_packet
 parameter_list|(
-name|packet
-parameter_list|)
 name|char
 modifier|*
 name|packet
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -4709,10 +4491,10 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* scan the packet to make sure it only contains valid characters.      this may sound silly, but sometimes a garbled packet will hang      the target board. We scan the whole thing, then print the error      message.      */
-block|for (i = 0; i< strlen(packet); i++) {     debuglogs (5, "array_send_packet(): Scanning \'%c\'\n", packet[i]);
+comment|/* scan the packet to make sure it only contains valid characters.      this may sound silly, but sometimes a garbled packet will hang      the target board. We scan the whole thing, then print the error      message.    */
+block|for (i = 0; i< strlen (packet); i++)     {       debuglogs (5, "array_send_packet(): Scanning \'%c\'\n", packet[i]);
 comment|/* legit hex numbers or command */
-block|if ((isxdigit(packet[i])) || (isalpha(packet[i])))       continue;     switch (packet[i]) {     case '+':
+block|if ((isxdigit (packet[i])) || (isalpha (packet[i]))) 	continue;       switch (packet[i]) 	{ 	case '+':
 comment|/* ACK */
 block|case '-':
 comment|/* NAK */
@@ -4720,9 +4502,9 @@ block|case '#':
 comment|/* end of packet */
 block|case '$':
 comment|/* start of packet */
-block|continue;     default:
+block|continue; 	default:
 comment|/* bogus character */
-block|retries++;       debuglogs (4, "array_send_packet(): Found a non-ascii digit \'%c\' in the packet.\n", packet[i]);     }   }
+block|retries++; 	  debuglogs (4, "array_send_packet(): Found a non-ascii digit \'%c\' in the packet.\n", packet[i]); 	}     }
 endif|#
 directive|endif
 if|if
@@ -4851,7 +4633,7 @@ break|break;
 case|case
 literal|'$'
 case|:
-comment|/* it's probably an old response, or the echo of our command. 	 * just gobble up the packet and ignore it. 	 */
+comment|/* it's probably an old response, or the echo of our command. 	       * just gobble up the packet and ignore it. 	       */
 name|debuglogs
 argument_list|(
 literal|3
@@ -4964,7 +4746,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * array_get_packet -- get a GDB packet from the target. Basically we read till we  *		see a '#', then check the checksum. It returns a 1 if it's gotten a  *		packet, or a 0 it the packet wasn't transmitted correctly.  */
+comment|/*  * array_get_packet -- get a GDB packet from the target. Basically we read till we  *              see a '#', then check the checksum. It returns a 1 if it's gotten a  *              packet, or a 0 it the packet wasn't transmitted correctly.  */
 end_comment
 
 begin_function
@@ -4972,12 +4754,10 @@ specifier|static
 name|int
 name|array_get_packet
 parameter_list|(
-name|packet
-parameter_list|)
 name|char
 modifier|*
 name|packet
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -5389,13 +5169,11 @@ name|unsigned
 name|long
 name|ascii2hexword
 parameter_list|(
-name|mem
-parameter_list|)
 name|unsigned
 name|char
 modifier|*
 name|mem
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -5555,7 +5333,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ascii2hexword -- convert a hex value to an ascii number represented by 8  *	digits.  */
+comment|/*  * ascii2hexword -- convert a hex value to an ascii number represented by 8  *      digits.  */
 end_comment
 
 begin_function
@@ -5563,19 +5341,15 @@ specifier|static
 name|void
 name|hexword2ascii
 parameter_list|(
-name|mem
-parameter_list|,
-name|num
-parameter_list|)
 name|unsigned
 name|char
 modifier|*
 name|mem
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|num
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -5670,11 +5444,9 @@ specifier|static
 name|int
 name|from_hex
 parameter_list|(
-name|a
-parameter_list|)
 name|int
 name|a
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5767,11 +5539,9 @@ specifier|static
 name|int
 name|tohex
 parameter_list|(
-name|nib
-parameter_list|)
 name|int
 name|nib
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5796,13 +5566,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * _initialize_remote_monitors -- setup a few addtitional commands that  *		are usually only used by monitors.  */
+comment|/*  * _initialize_remote_monitors -- setup a few addtitional commands that  *              are usually only used by monitors.  */
 end_comment
 
 begin_function
 name|void
 name|_initialize_remote_monitors
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* generic monitor command */
 name|add_com
@@ -5826,7 +5598,9 @@ end_comment
 begin_function
 name|void
 name|_initialize_array
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|init_array_ops
 argument_list|()

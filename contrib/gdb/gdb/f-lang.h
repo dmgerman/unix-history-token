@@ -1,97 +1,87 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Fortran language support definitions for GDB, the GNU debugger.    Copyright 1992, 1993, 1994 Free Software Foundation, Inc.    Contributed by Motorola.  Adapted from the C definitions by Farooq Butt    (fmbutt@engage.sps.mot.com).  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Fortran language support definitions for GDB, the GNU debugger.    Copyright 1992, 1993, 1994, 1995, 1998, 2000    Free Software Foundation, Inc.    Contributed by Motorola.  Adapted from the C definitions by Farooq Butt    (fmbutt@engage.sps.mot.com).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|f_parse
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|f_error
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Defined in f-exp.y */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|f_print_type
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
-name|GDB_FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
+name|struct
+name|ui_file
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|f_val_print
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|,
-name|GDB_FILE
-operator|*
-operator|,
+parameter_list|,
+name|struct
+name|ui_file
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|val_prettyprint
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Language-specific data structures */
@@ -106,7 +96,7 @@ name|symbol
 modifier|*
 name|symbol
 decl_stmt|;
-comment|/* The symbol node corresponding 					       to this component */
+comment|/* The symbol node corresponding 				   to this component */
 name|struct
 name|common_entry
 modifier|*
@@ -138,7 +128,7 @@ comment|/* Section # of .bss */
 name|CORE_ADDR
 name|offset
 decl_stmt|;
-comment|/* Offset from .bss for  						this block */
+comment|/* Offset from .bss for  				   this block */
 name|struct
 name|common_entry
 modifier|*
@@ -216,22 +206,19 @@ begin_comment
 comment|/* Ptr to current COMMON */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|SAVED_F77_COMMON_PTR
 name|find_common_for_function
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -298,7 +285,7 @@ value|-999
 end_define
 
 begin_comment
-comment|/* When reasonable array bounds cannot be fetched, such as when  you ask to 'mt print symbols' and there is no stack frame and  therefore no way of knowing the bounds of stack-based arrays,  we have to assign default bounds, these are as good as any... */
+comment|/* When reasonable array bounds cannot be fetched, such as when     you ask to 'mt print symbols' and there is no stack frame and     therefore no way of knowing the bounds of stack-based arrays,     we have to assign default bounds, these are as good as any... */
 end_comment
 
 begin_define
@@ -338,71 +325,59 @@ begin_comment
 comment|/* C_value field of main function */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|f77_get_dynamic_upperbound
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|f77_get_dynamic_lowerbound
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|f77_get_dynamic_array_length
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|calc_f77_array_dims
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#

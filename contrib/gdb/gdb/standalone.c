@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Interface to bare machine for GDB running as kernel debugger.    Copyright (C) 1986, 1989, 1991 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Interface to bare machine for GDB running as kernel debugger.    Copyright 1986, 1989, 1991, 1992, 1993, 1995, 1996, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -77,7 +77,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"signals.h"
+file|<signal.h>
 end_include
 
 begin_include
@@ -114,11 +114,11 @@ end_comment
 begin_macro
 name|ioctl
 argument_list|(
-argument|desc
+argument|int desc
 argument_list|,
-argument|code
+argument|int code
 argument_list|,
-argument|arg
+argument|int arg
 argument_list|)
 end_macro
 
@@ -138,10 +138,14 @@ operator|(
 operator|)
 block|{ }
 name|kill
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 block|{ }
 name|getpid
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 block|{
 return|return
 literal|0
@@ -151,7 +155,9 @@ end_expr_stmt
 
 begin_macro
 name|sigsetmask
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -160,7 +166,9 @@ end_block
 
 begin_macro
 name|chdir
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -172,18 +180,14 @@ name|char
 modifier|*
 name|getcwd
 parameter_list|(
-name|buf
-parameter_list|,
-name|len
-parameter_list|)
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|buf
 index|[
@@ -211,7 +215,9 @@ end_comment
 
 begin_macro
 name|access
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -225,7 +231,9 @@ end_block
 
 begin_macro
 name|exit
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -315,24 +323,11 @@ end_decl_stmt
 begin_macro
 name|open
 argument_list|(
-argument|filename
+argument|char *filename
 argument_list|,
-argument|modes
+argument|int modes
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|modes
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -395,7 +390,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|STRCMP
+name|strcmp
 argument_list|(
 name|next
 operator|+
@@ -477,15 +472,9 @@ end_block
 begin_macro
 name|close
 argument_list|(
-argument|desc
+argument|int desc
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|desc
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -515,18 +504,14 @@ name|FILE
 modifier|*
 name|fopen
 parameter_list|(
+name|char
+modifier|*
 name|filename
 parameter_list|,
+name|char
+modifier|*
 name|modes
 parameter_list|)
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-name|char
-modifier|*
-name|modes
-decl_stmt|;
 block|{
 return|return
 operator|(
@@ -551,11 +536,9 @@ name|FILE
 modifier|*
 name|fdopen
 parameter_list|(
-name|desc
-parameter_list|)
 name|int
 name|desc
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -570,15 +553,9 @@ end_function
 begin_macro
 name|fclose
 argument_list|(
-argument|desc
+argument|int desc
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|desc
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -593,19 +570,11 @@ end_block
 begin_macro
 name|fstat
 argument_list|(
-argument|desc
+argument|int desc
 argument_list|,
-argument|statbuf
+argument|struct stat *statbuf
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|struct
-name|stat
-modifier|*
-name|statbuf
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -637,41 +606,15 @@ end_block
 begin_macro
 name|myread
 argument_list|(
-argument|desc
+argument|int desc
 argument_list|,
-argument|destptr
+argument|char *destptr
 argument_list|,
-argument|size
+argument|int size
 argument_list|,
-argument|filename
+argument|char *filename
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|desc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|destptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|size
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -724,12 +667,16 @@ begin_function
 name|int
 name|fread
 parameter_list|(
+name|int
 name|bufp
 parameter_list|,
+name|int
 name|numelts
 parameter_list|,
+name|int
 name|eltsize
 parameter_list|,
+name|int
 name|stream
 parameter_list|)
 block|{
@@ -793,11 +740,9 @@ begin_function
 name|int
 name|fgetc
 parameter_list|(
-name|desc
-parameter_list|)
 name|int
 name|desc
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -849,23 +794,11 @@ end_function
 begin_macro
 name|lseek
 argument_list|(
-argument|desc
+argument|int desc
 argument_list|,
-argument|pos
+argument|int pos
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|desc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|pos
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -930,23 +863,23 @@ end_comment
 begin_macro
 name|printf
 argument_list|(
-argument|a1
+argument|int a1
 argument_list|,
-argument|a2
+argument|int a2
 argument_list|,
-argument|a3
+argument|int a3
 argument_list|,
-argument|a4
+argument|int a4
 argument_list|,
-argument|a5
+argument|int a5
 argument_list|,
-argument|a6
+argument|int a6
 argument_list|,
-argument|a7
+argument|int a7
 argument_list|,
-argument|a8
+argument|int a8
 argument_list|,
-argument|a9
+argument|int a9
 argument_list|)
 end_macro
 
@@ -992,25 +925,25 @@ end_block
 begin_macro
 name|fprintf
 argument_list|(
-argument|ign
+argument|int ign
 argument_list|,
-argument|a1
+argument|int a1
 argument_list|,
-argument|a2
+argument|int a2
 argument_list|,
-argument|a3
+argument|int a3
 argument_list|,
-argument|a4
+argument|int a4
 argument_list|,
-argument|a5
+argument|int a5
 argument_list|,
-argument|a6
+argument|int a6
 argument_list|,
-argument|a7
+argument|int a7
 argument_list|,
-argument|a8
+argument|int a8
 argument_list|,
-argument|a9
+argument|int a9
 argument_list|)
 end_macro
 
@@ -1053,31 +986,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|fwrite
 argument_list|(
-name|buf
+argument|register char *buf
 argument_list|,
-name|numelts
+argument|int numelts
 argument_list|,
-name|size
+argument|int size
 argument_list|,
-name|stream
+argument|int stream
 argument_list|)
-specifier|register
-name|char
-operator|*
-name|buf
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|numelts
-decl_stmt|,
-name|size
-decl_stmt|;
-end_decl_stmt
+end_macro
 
 begin_block
 block|{
@@ -1111,9 +1031,9 @@ end_block
 begin_macro
 name|fputc
 argument_list|(
-argument|c
+argument|int c
 argument_list|,
-argument|ign
+argument|int ign
 argument_list|)
 end_macro
 
@@ -1153,7 +1073,9 @@ end_comment
 
 begin_macro
 name|_flsbuf
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1169,7 +1091,7 @@ end_block
 begin_macro
 name|fflush
 argument_list|(
-argument|ign
+argument|int ign
 argument_list|)
 end_macro
 
@@ -1186,7 +1108,9 @@ end_comment
 
 begin_macro
 name|exec_file_command
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1195,7 +1119,9 @@ end_block
 
 begin_macro
 name|core_file_command
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1207,11 +1133,9 @@ name|char
 modifier|*
 name|get_exec_file
 parameter_list|(
-name|err
-parameter_list|)
 name|int
 name|err
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Makes one printout look reasonable; value does not matter otherwise.  */
 return|return
@@ -1226,7 +1150,9 @@ end_comment
 
 begin_macro
 name|have_core_file_p
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1239,21 +1165,25 @@ end_block
 
 begin_macro
 name|kill_command
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
 block|{
-name|inferior_pid
+name|inferior_ptid
 operator|=
-literal|0
+name|null_ptid
 expr_stmt|;
 block|}
 end_block
 
 begin_macro
 name|terminal_inferior
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1262,7 +1192,9 @@ end_block
 
 begin_macro
 name|terminal_ours
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1271,7 +1203,9 @@ end_block
 
 begin_macro
 name|terminal_init_inferior
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1280,7 +1214,9 @@ end_block
 
 begin_macro
 name|write_inferior_register
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1289,7 +1225,9 @@ end_block
 
 begin_macro
 name|read_inferior_register
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1299,32 +1237,13 @@ end_block
 begin_macro
 name|read_memory
 argument_list|(
-argument|memaddr
+argument|CORE_ADDR memaddr
 argument_list|,
-argument|myaddr
+argument|char *myaddr
 argument_list|,
-argument|len
+argument|int len
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|CORE_ADDR
-name|memaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|myaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|len
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -1347,32 +1266,13 @@ end_comment
 begin_macro
 name|write_memory
 argument_list|(
-argument|memaddr
+argument|CORE_ADDR memaddr
 argument_list|,
-argument|myaddr
+argument|char *myaddr
 argument_list|,
-argument|len
+argument|int len
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|CORE_ADDR
-name|memaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|myaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|len
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -1405,11 +1305,9 @@ begin_function
 name|REGISTER_TYPE
 name|read_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1441,16 +1339,12 @@ begin_function
 name|void
 name|write_register
 parameter_list|(
-name|regno
-parameter_list|,
-name|value
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|,
 name|REGISTER_TYPE
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1488,7 +1382,9 @@ end_comment
 
 begin_macro
 name|vfork
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1506,7 +1402,9 @@ end_comment
 
 begin_macro
 name|ptrace
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1515,7 +1413,9 @@ end_block
 
 begin_macro
 name|setpgrp
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1524,7 +1424,9 @@ end_block
 
 begin_macro
 name|execle
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1533,7 +1435,9 @@ end_block
 
 begin_macro
 name|_exit
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1550,16 +1454,9 @@ end_comment
 begin_macro
 name|malloc_warning
 argument_list|(
-argument|str
+argument|char *str
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|str
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -1592,11 +1489,9 @@ name|char
 modifier|*
 name|sbrk
 parameter_list|(
-name|amount
-parameter_list|)
 name|int
 name|amount
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1634,7 +1529,9 @@ begin_function
 name|char
 modifier|*
 name|ulimit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|memory_limit
@@ -1645,7 +1542,9 @@ end_function
 begin_function
 name|int
 name|vlimit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|memory_limit
@@ -1658,17 +1557,9 @@ end_function
 begin_macro
 name|getrlimit
 argument_list|(
-argument|addr
+argument|struct rlimit *addr
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|struct
-name|rlimit
-modifier|*
-name|addr
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -1710,7 +1601,9 @@ end_decl_stmt
 
 begin_macro
 name|resume
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1745,15 +1638,9 @@ end_block
 begin_macro
 name|save_frame_pointer
 argument_list|(
-argument|val
+argument|CORE_ADDR val
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|CORE_ADDR
-name|val
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -1770,7 +1657,9 @@ end_comment
 
 begin_macro
 name|fault
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1791,7 +1680,9 @@ end_block
 
 begin_macro
 name|restore_gdb
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1815,15 +1706,9 @@ end_comment
 begin_macro
 name|save_registers
 argument_list|(
-argument|firstreg
+argument|int firstreg
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|firstreg
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -1869,12 +1754,10 @@ begin_function
 name|int
 name|wait
 parameter_list|(
-name|w
-parameter_list|)
 name|WAITTYPE
 modifier|*
 name|w
-decl_stmt|;
+parameter_list|)
 block|{
 name|WSETSTOP
 argument_list|(
@@ -1890,7 +1773,10 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 return|;
 block|}
 end_function
@@ -1977,7 +1863,9 @@ end_decl_stmt
 
 begin_macro
 name|_initialize_standalone
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block

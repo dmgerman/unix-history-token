@@ -1,4073 +1,1387 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote debugging interface for AMD 29000 EBMON on IBM PC, for GDB.    Copyright 1990, 1991, 1992 Free Software Foundation, Inc.    Contributed by Cygnus Support.  Written by Jim Kingdon for Cygnus.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* OBSOLETE /* Remote debugging interface for AMD 29000 EBMON on IBM PC, for GDB. */
 end_comment
 
 begin_comment
-comment|/* This is like remote.c but is for an esoteric situation--    having a a29k board in a PC hooked up to a unix machine with    a serial line, and running ctty com1 on the PC, through which    the unix machine can run ebmon.  Not to mention that the PC    has PC/NFS, so it can access the same executables that gdb can,    over the net in real time.  */
+comment|/* OBSOLETE    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1998, 1999, 2000, 2001 */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gdb_string.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"inferior.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bfd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"symfile.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"wait.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"value.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"terminal.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"target.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gdbcore.h"
-end_include
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|target_ops
-name|eb_ops
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
-comment|/* Forward declaration */
+comment|/* OBSOLETE    Free Software Foundation, Inc. */
 end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|eb_close
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|LOG_FILE
-value|"eb.log"
-end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LOG_FILE
-argument_list|)
-end_if
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|log_file
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-name|int
-name|timeout
-init|=
-literal|24
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
-comment|/* Descriptor for I/O to remote machine.  Initialize it to -1 so that    eb_open knows that we don't have a file open when the program    starts.  */
+comment|/* OBSOLETE    Contributed by Cygnus Support.  Written by Jim Kingdon for Cygnus. */
 end_comment
-
-begin_decl_stmt
-name|int
-name|eb_desc
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
-comment|/* stream which is fdopen'd from eb_desc.  Only valid when    eb_desc != -1.  */
+comment|/* OBSOLETE  */
 end_comment
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|eb_stream
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
-comment|/* Read a character from the remote system, doing all the fancy    timeout stuff.  */
+comment|/* OBSOLETE    This file is part of GDB. */
 end_comment
-
-begin_function
-specifier|static
-name|int
-name|readchar
-parameter_list|()
-block|{
-name|char
-name|buf
-decl_stmt|;
-name|buf
-operator|=
-literal|'\0'
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_TERMIO
-comment|/* termio does the timeout for us.  */
-name|read
-argument_list|(
-name|eb_desc
-argument_list|,
-operator|&
-name|buf
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|alarm
-argument_list|(
-name|timeout
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|read
-argument_list|(
-name|eb_desc
-argument_list|,
-operator|&
-name|buf
-argument_list|,
-literal|1
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|errno
-operator|==
-name|EINTR
-condition|)
-name|error
-argument_list|(
-literal|"Timeout reading from remote system."
-argument_list|)
-expr_stmt|;
-else|else
-name|perror_with_name
-argument_list|(
-literal|"remote"
-argument_list|)
-expr_stmt|;
-block|}
-name|alarm
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|buf
-operator|==
-literal|'\0'
-condition|)
-name|error
-argument_list|(
-literal|"Timeout reading from remote system."
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LOG_FILE
-argument_list|)
-name|putc
-argument_list|(
-name|buf
-operator|&
-literal|0x7f
-argument_list|,
-name|log_file
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return
-name|buf
-operator|&
-literal|0x7f
-return|;
-block|}
-end_function
 
 begin_comment
-comment|/* Keep discarding input from the remote system, until STRING is found.     Let the user break out immediately.  */
+comment|/* OBSOLETE  */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|expect
-parameter_list|(
-name|string
-parameter_list|)
-name|char
-modifier|*
-name|string
-decl_stmt|;
-block|{
-name|char
-modifier|*
-name|p
-init|=
-name|string
-decl_stmt|;
-name|immediate_quit
-operator|=
-literal|1
-expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
-block|{
-if|if
-condition|(
-name|readchar
-argument_list|()
-operator|==
+begin_comment
+comment|/* OBSOLETE    This program is free software; you can redistribute it and/or modify */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    it under the terms of the GNU General Public License as published by */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    the Free Software Foundation; either version 2 of the License, or */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    (at your option) any later version. */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE  */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    This program is distributed in the hope that it will be useful, */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    but WITHOUT ANY WARRANTY; without even the implied warranty of */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    GNU General Public License for more details. */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE  */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    You should have received a copy of the GNU General Public License */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    along with this program; if not, write to the Free Software */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    Foundation, Inc., 59 Temple Place - Suite 330, */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    Boston, MA 02111-1307, USA.  */
+end_comment
+
+begin_expr_stmt
 operator|*
-name|p
-condition|)
-block|{
-name|p
-operator|++
-expr_stmt|;
-if|if
-condition|(
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* This is like remote.c but is for an esoteric situation-- */
+comment|/* OBSOLETE    having a a29k board in a PC hooked up to a unix machine with */
+comment|/* OBSOLETE    a serial line, and running ctty com1 on the PC, through which */
+comment|/* OBSOLETE    the unix machine can run ebmon.  Not to mention that the PC */
+comment|/* OBSOLETE    has PC/NFS, so it can access the same executables that gdb can, */
+comment|/* OBSOLETE    over the net in real time.  */
 operator|*
-name|p
-operator|==
-literal|'\0'
-condition|)
-block|{
-name|immediate_quit
-operator|=
-literal|0
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #include "defs.h" */
+comment|/* OBSOLETE #include "gdb_string.h" */
+comment|/* OBSOLETE #include "regcache.h" */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #include "inferior.h" */
+comment|/* OBSOLETE #include "bfd.h" */
+comment|/* OBSOLETE #include "symfile.h" */
+comment|/* OBSOLETE #include "value.h" */
+comment|/* OBSOLETE #include<ctype.h> */
+comment|/* OBSOLETE #include<fcntl.h> */
+comment|/* OBSOLETE #include<signal.h> */
+comment|/* OBSOLETE #include<errno.h> */
+comment|/* OBSOLETE #include "terminal.h" */
+comment|/* OBSOLETE #include "target.h" */
+comment|/* OBSOLETE #include "gdbcore.h" */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE extern struct target_ops eb_ops;	/* Forward declaration */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void eb_close (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #define LOG_FILE "eb.log" */
+comment|/* OBSOLETE #if defined (LOG_FILE) */
+comment|/* OBSOLETE FILE *log_file; */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static int timeout = 24; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Descriptor for I/O to remote machine.  Initialize it to -1 so that */
+comment|/* OBSOLETE    eb_open knows that we don't have a file open when the program */
+comment|/* OBSOLETE    starts.  */
+operator|*
+operator|/
+comment|/* OBSOLETE int eb_desc = -1; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* stream which is fdopen'd from eb_desc.  Only valid when */
+comment|/* OBSOLETE    eb_desc != -1.  */
+operator|*
+operator|/
+comment|/* OBSOLETE FILE *eb_stream; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Read a character from the remote system, doing all the fancy */
+comment|/* OBSOLETE    timeout stuff.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE readchar (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   char buf; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   buf = '\0'; */
+comment|/* OBSOLETE #ifdef HAVE_TERMIO */
+comment|/* OBSOLETE   /* termio does the timeout for us.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   read (eb_desc,&buf, 1); */
+comment|/* OBSOLETE #else */
+comment|/* OBSOLETE   alarm (timeout); */
+comment|/* OBSOLETE   if (read (eb_desc,&buf, 1)< 0) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       if (errno == EINTR) */
+comment|/* OBSOLETE 	error ("Timeout reading from remote system."); */
+comment|/* OBSOLETE       else */
+comment|/* OBSOLETE 	perror_with_name ("remote"); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   alarm (0); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (buf == '\0') */
+comment|/* OBSOLETE     error ("Timeout reading from remote system."); */
+comment|/* OBSOLETE #if defined (LOG_FILE) */
+comment|/* OBSOLETE   putc (buf& 0x7f, log_file); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE   return buf& 0x7f; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Keep discarding input from the remote system, until STRING is found.  */
+comment|/* OBSOLETE    Let the user break out immediately.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE expect (char *string) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   char *p = string; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   immediate_quit++; */
+comment|/* OBSOLETE   while (1) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       if (readchar () == *p) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  p++; */
+comment|/* OBSOLETE 	  if (*p == '\0') */
+comment|/* OBSOLETE 	    { */
+comment|/* OBSOLETE 	      immediate_quit--; */
+comment|/* OBSOLETE 	      return; */
+comment|/* OBSOLETE 	    } */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE       else */
+comment|/* OBSOLETE 	p = string; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Keep discarding input until we see the ebmon prompt. */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE    The convention for dealing with the prompt is that you */
+comment|/* OBSOLETE    o give your command */
+comment|/* OBSOLETE    o *then* wait for the prompt. */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE    Thus the last thing that a procedure does with the serial line */
+comment|/* OBSOLETE    will be an expect_prompt().  Exception:  eb_resume does not */
+comment|/* OBSOLETE    wait for the prompt, because the terminal is being handed over */
+comment|/* OBSOLETE    to the inferior.  However, the next thing which happens after that */
+comment|/* OBSOLETE    is a eb_wait which does wait for the prompt. */
+comment|/* OBSOLETE    Note that this includes abnormal exit, e.g. error().  This is */
+comment|/* OBSOLETE    necessary to prevent getting into states from which we can't */
+comment|/* OBSOLETE    recover.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE expect_prompt (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE #if defined (LOG_FILE) */
+comment|/* OBSOLETE   /* This is a convenient place to do this.  The idea is to do it often */
+comment|/* OBSOLETE      enough that we never lose much data if we terminate abnormally.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   fflush (log_file); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE   expect ("\n# "); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Get a hex digit from the remote system& return its value. */
+comment|/* OBSOLETE    If ignore_space is nonzero, ignore spaces (not newline, tab, etc).  */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE get_hex_digit (int ignore_space) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int ch; */
+comment|/* OBSOLETE   while (1) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       ch = readchar (); */
+comment|/* OBSOLETE       if (ch>= '0'&& ch<= '9') */
+comment|/* OBSOLETE 	return ch - '0'; */
+comment|/* OBSOLETE       else if (ch>= 'A'&& ch<= 'F') */
+comment|/* OBSOLETE 	return ch - 'A' + 10; */
+comment|/* OBSOLETE       else if (ch>= 'a'&& ch<= 'f') */
+comment|/* OBSOLETE 	return ch - 'a' + 10; */
+comment|/* OBSOLETE       else if (ch == ' '&& ignore_space) */
+comment|/* OBSOLETE 	; */
+comment|/* OBSOLETE       else */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  expect_prompt (); */
+comment|/* OBSOLETE 	  error ("Invalid hex digit from remote system."); */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Get a byte from eb_desc and put it in *BYT.  Accept any number */
+comment|/* OBSOLETE    leading spaces.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE get_hex_byte (char *byt) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int val; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   val = get_hex_digit (1)<< 4; */
+comment|/* OBSOLETE   val |= get_hex_digit (0); */
+comment|/* OBSOLETE   *byt = val; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Get N 32-bit words from remote, each preceded by a space, */
+comment|/* OBSOLETE    and put them in registers starting at REGNO.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE get_hex_regs (int n, int regno) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   long val; */
+comment|/* OBSOLETE   int i; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (i = 0; i< n; i++) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       int j; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       val = 0; */
+comment|/* OBSOLETE       for (j = 0; j< 8; j++) */
+comment|/* OBSOLETE 	val = (val<< 4) + get_hex_digit (j == 0); */
+comment|/* OBSOLETE       supply_register (regno++, (char *)&val); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Called when SIGALRM signal sent due to alarm() timeout.  */
+operator|*
+operator|/
+comment|/* OBSOLETE #ifndef HAVE_TERMIO */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE volatile int n_alarms; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE void */
+comment|/* OBSOLETE eb_timer (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE #if 0 */
+comment|/* OBSOLETE   if (kiodebug) */
+comment|/* OBSOLETE     printf ("eb_timer called\n"); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE   n_alarms++; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* malloc'd name of the program on the remote system.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static char *prog_name = NULL; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Nonzero if we have loaded the file ("yc") and not yet issued a "gi" */
+comment|/* OBSOLETE    command.  "gi" is supposed to happen exactly once for each "yc".  */
+operator|*
+operator|/
+comment|/* OBSOLETE static int need_gi = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Number of SIGTRAPs we need to simulate.  That is, the next */
+comment|/* OBSOLETE    NEED_ARTIFICIAL_TRAP calls to eb_wait should just return */
+comment|/* OBSOLETE    SIGTRAP without actually waiting for anything.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static int need_artificial_trap = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* This is called not only when we first attach, but also when the */
+comment|/* OBSOLETE    user types "run" after having attached.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE eb_create_inferior (char *execfile, char *args, char **env) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int entry_pt; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (args&& *args) */
+comment|/* OBSOLETE     error ("Can't pass arguments to remote EBMON process"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (execfile == 0 || exec_bfd == 0) */
+comment|/* OBSOLETE     error ("No executable file specified"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   entry_pt = (int) bfd_get_start_address (exec_bfd); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     /* OK, now read in the file.  Y=read, C=COFF, D=no symbols */
+comment|/* OBSOLETE        0=start address, %s=filename.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE     fprintf (eb_stream, "YC D,0:%s", prog_name); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE     if (args != NULL) */
+comment|/* OBSOLETE       fprintf (eb_stream, " %s", args); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE     fprintf (eb_stream, "\n"); */
+comment|/* OBSOLETE     fflush (eb_stream); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE     expect_prompt (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE     need_gi = 1; */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* The "process" (board) is already stopped awaiting our commands, and */
+comment|/* OBSOLETE    the program is already downloaded.  We just set its PC and go.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   clear_proceed_status (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Tell wait_for_inferior that we've started a new process.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   init_wait_for_inferior (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Set up the "saved terminal modes" of the inferior */
+comment|/* OBSOLETE      based on what modes we are starting it with.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   target_terminal_init (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Install inferior's terminal modes.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   target_terminal_inferior (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* insert_step_breakpoint ();  FIXME, do we need this?  */
+operator|*
+operator|/
+comment|/* OBSOLETE   proceed ((CORE_ADDR) entry_pt, TARGET_SIGNAL_DEFAULT, 0);	/* Let 'er rip... */
+operator|*
+operator|/
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Translate baud rates from integers to damn B_codes.  Unix should */
+comment|/* OBSOLETE    have outgrown this crap years ago, but even POSIX wouldn't buck it.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #ifndef B19200 */
+comment|/* OBSOLETE #define B19200 EXTA */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE #ifndef B38400 */
+comment|/* OBSOLETE #define B38400 EXTB */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE struct */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int rate, damn_b; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE baudtab[] = */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     0, B0 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     50, B50 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     75, B75 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     110, B110 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     134, B134 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     150, B150 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     200, B200 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     300, B300 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     600, B600 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     1200, B1200 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     1800, B1800 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     2400, B2400 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     4800, B4800 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     9600, B9600 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     19200, B19200 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     38400, B38400 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     -1, -1 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE }; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE int */
+comment|/* OBSOLETE damn_b (int rate) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int i; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (i = 0; baudtab[i].rate != -1; i++) */
+comment|/* OBSOLETE     if (rate == baudtab[i].rate) */
+comment|/* OBSOLETE       return baudtab[i].damn_b; */
+comment|/* OBSOLETE   return B38400;		/* Random */
+operator|*
+operator|/
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Open a connection to a remote debugger. */
+comment|/* OBSOLETE    NAME is the filename used for communication, then a space, */
+comment|/* OBSOLETE    then the name of the program as we should name it to EBMON.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static int baudrate = 9600; */
+comment|/* OBSOLETE static char *dev_name; */
+comment|/* OBSOLETE void */
+comment|/* OBSOLETE eb_open (char *name, int from_tty) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   TERMINAL sg; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   char *p; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   target_preopen (from_tty); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Find the first whitespace character, it separates dev_name from */
+comment|/* OBSOLETE      prog_name.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   if (name == 0) */
+comment|/* OBSOLETE     goto erroid; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (p = name; */
+comment|/* OBSOLETE        *p != '\0'&& !isspace (*p); p++) */
+comment|/* OBSOLETE     ; */
+comment|/* OBSOLETE   if (*p == '\0') */
+comment|/* OBSOLETE   erroid: */
+comment|/* OBSOLETE     error ("\ */
+comment|/* OBSOLETE Please include the name of the device for the serial port,\n\ */
+comment|/* OBSOLETE the baud rate, and the name of the program to run on the remote system."); */
+comment|/* OBSOLETE   dev_name = alloca (p - name + 1); */
+comment|/* OBSOLETE   strncpy (dev_name, name, p - name); */
+comment|/* OBSOLETE   dev_name[p - name] = '\0'; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Skip over the whitespace after dev_name */
+operator|*
+operator|/
+comment|/* OBSOLETE   for (; isspace (*p); p++) */
+comment|/* OBSOLETE     /*EMPTY */
 expr_stmt|;
-return|return;
-block|}
-block|}
-else|else
-name|p
-operator|=
-name|string
+end_expr_stmt
+
+begin_expr_stmt
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (1 != sscanf (p, "%d ",&baudrate)) */
+comment|/* OBSOLETE     goto erroid; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Skip the number and then the spaces */
+operator|*
+operator|/
+comment|/* OBSOLETE   for (; isdigit (*p); p++) */
+comment|/* OBSOLETE     /*EMPTY */
 expr_stmt|;
-block|}
-block|}
-end_function
+end_expr_stmt
+
+begin_expr_stmt
+operator|*
+operator|/
+comment|/* OBSOLETE   for (; isspace (*p); p++) */
+comment|/* OBSOLETE     /*EMPTY */
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (prog_name != NULL) */
+comment|/* OBSOLETE     xfree (prog_name); */
+comment|/* OBSOLETE   prog_name = savestring (p, strlen (p)); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   eb_close (0); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   eb_desc = open (dev_name, O_RDWR); */
+comment|/* OBSOLETE   if (eb_desc< 0) */
+comment|/* OBSOLETE     perror_with_name (dev_name); */
+comment|/* OBSOLETE   ioctl (eb_desc, TIOCGETP,&sg); */
+comment|/* OBSOLETE #ifdef HAVE_TERMIO */
+comment|/* OBSOLETE   sg.c_cc[VMIN] = 0;		/* read with timeout.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   sg.c_cc[VTIME] = timeout * 10; */
+comment|/* OBSOLETE   sg.c_lflag&= ~(ICANON | ECHO); */
+comment|/* OBSOLETE   sg.c_cflag = (sg.c_cflag& ~CBAUD) | damn_b (baudrate); */
+comment|/* OBSOLETE #else */
+comment|/* OBSOLETE   sg.sg_ispeed = damn_b (baudrate); */
+comment|/* OBSOLETE   sg.sg_ospeed = damn_b (baudrate); */
+comment|/* OBSOLETE   sg.sg_flags |= RAW | ANYP; */
+comment|/* OBSOLETE   sg.sg_flags&= ~ECHO; */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   ioctl (eb_desc, TIOCSETP,&sg); */
+comment|/* OBSOLETE   eb_stream = fdopen (eb_desc, "r+"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   push_target (&eb_ops); */
+comment|/* OBSOLETE   if (from_tty) */
+comment|/* OBSOLETE     printf ("Remote %s debugging %s using %s\n", target_shortname, */
+comment|/* OBSOLETE 	    prog_name, dev_name); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #ifndef HAVE_TERMIO */
+comment|/* OBSOLETE #ifndef NO_SIGINTERRUPT */
+comment|/* OBSOLETE   /* Cause SIGALRM's to make reads fail with EINTR instead of resuming */
+comment|/* OBSOLETE      the read.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   if (siginterrupt (SIGALRM, 1) != 0) */
+comment|/* OBSOLETE     perror ("eb_open: error in siginterrupt"); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Set up read timeout timer.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   if ((void (*)) signal (SIGALRM, eb_timer) == (void (*)) -1) */
+comment|/* OBSOLETE     perror ("eb_open: error in signal"); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #if defined (LOG_FILE) */
+comment|/* OBSOLETE   log_file = fopen (LOG_FILE, "w"); */
+comment|/* OBSOLETE   if (log_file == NULL) */
+comment|/* OBSOLETE     perror_with_name (LOG_FILE); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Hello?  Are you there?  */
+operator|*
+operator|/
+comment|/* OBSOLETE   write (eb_desc, "\n", 1); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   expect_prompt (); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Close out all files and local state before this target loses control. */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE eb_close (int quitting) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Due to a bug in Unix, fclose closes not only the stdio stream, */
+comment|/* OBSOLETE      but also the file descriptor.  So we don't actually close */
+comment|/* OBSOLETE      eb_desc.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   if (eb_stream) */
+comment|/* OBSOLETE     fclose (eb_stream);		/* This also closes eb_desc */
+operator|*
+operator|/
+comment|/* OBSOLETE   if (eb_desc>= 0) */
+comment|/* OBSOLETE     /* close (eb_desc); */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE     /* Do not try to close eb_desc again, later in the program.  */
+operator|*
+operator|/
+comment|/* OBSOLETE     eb_stream = NULL; */
+comment|/* OBSOLETE   eb_desc = -1; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #if defined (LOG_FILE) */
+comment|/* OBSOLETE   if (log_file) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       if (ferror (log_file)) */
+comment|/* OBSOLETE 	printf ("Error writing log file.\n"); */
+comment|/* OBSOLETE       if (fclose (log_file) != 0) */
+comment|/* OBSOLETE 	printf ("Error closing log file.\n"); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Terminate the open connection to the remote debugger. */
+comment|/* OBSOLETE    Use this when you want to detach and do something else */
+comment|/* OBSOLETE    with your gdb.  */
+operator|*
+operator|/
+comment|/* OBSOLETE void */
+comment|/* OBSOLETE eb_detach (int from_tty) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   pop_target ();		/* calls eb_close to do the real work */
+operator|*
+operator|/
+comment|/* OBSOLETE   if (from_tty) */
+comment|/* OBSOLETE     printf ("Ending remote %s debugging\n", target_shortname); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Tell the remote machine to resume.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE void */
+comment|/* OBSOLETE eb_resume (ptid_t ptid, int step, enum target_signal sig) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   if (step) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       write (eb_desc, "t 1,s\n", 6); */
+comment|/* OBSOLETE       /* Wait for the echo.  */
+operator|*
+operator|/
+comment|/* OBSOLETE       expect ("t 1,s\r"); */
+comment|/* OBSOLETE       /* Then comes a line containing the instruction we stepped to.  */
+operator|*
+operator|/
+comment|/* OBSOLETE       expect ("\n@"); */
+comment|/* OBSOLETE       /* Then we get the prompt.  */
+operator|*
+operator|/
+comment|/* OBSOLETE       expect_prompt (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       /* Force the next eb_wait to return a trap.  Not doing anything */
+comment|/* OBSOLETE          about I/O from the target means that the user has to type */
+comment|/* OBSOLETE          "continue" to see any.  This should be fixed.  */
+operator|*
+operator|/
+comment|/* OBSOLETE       need_artificial_trap = 1; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       if (need_gi) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  need_gi = 0; */
+comment|/* OBSOLETE 	  write (eb_desc, "gi\n", 3); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	  /* Swallow the echo of "gi".  */
+operator|*
+operator|/
+comment|/* OBSOLETE 	  expect ("gi\r"); */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE       else */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  write (eb_desc, "GR\n", 3); */
+comment|/* OBSOLETE 	  /* Swallow the echo.  */
+operator|*
+operator|/
+comment|/* OBSOLETE 	  expect ("GR\r"); */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Wait until the remote machine stops, then return, */
+comment|/* OBSOLETE    storing status in STATUS just as `wait' would.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE ptid_t */
+comment|/* OBSOLETE eb_wait (ptid_t ptid, struct target_waitstatus *status) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   /* Strings to look for.  '?' means match any single character.   */
+comment|/* OBSOLETE      Note that with the algorithm we use, the initial character */
+comment|/* OBSOLETE      of the string cannot recur in the string, or we will not */
+comment|/* OBSOLETE      find some cases of the string in the input.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   static char bpt[] = "Invalid interrupt taken - #0x50 - "; */
+comment|/* OBSOLETE   /* It would be tempting to look for "\n[__exit + 0x8]\n" */
+comment|/* OBSOLETE      but that requires loading symbols with "yc i" and even if */
+comment|/* OBSOLETE      we did do that we don't know that the file has symbols.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   static char exitmsg[] = "\n@????????I    JMPTI     GR121,LR0"; */
+comment|/* OBSOLETE   char *bp = bpt; */
+comment|/* OBSOLETE   char *ep = exitmsg; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Large enough for either sizeof (bpt) or sizeof (exitmsg) chars.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   char swallowed[50]; */
+comment|/* OBSOLETE   /* Current position in swallowed.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   char *swallowed_p = swallowed; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   int ch; */
+comment|/* OBSOLETE   int ch_handled; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   int old_timeout = timeout; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   status->kind = TARGET_WAITKIND_EXITED; */
+comment|/* OBSOLETE   status->value.integer = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (need_artificial_trap != 0) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_TRAP; */
+comment|/* OBSOLETE       need_artificial_trap--; */
+comment|/* OBSOLETE       return 0; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   timeout = 0;			/* Don't time out -- user program is running. */
+operator|*
+operator|/
+comment|/* OBSOLETE   while (1) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       ch_handled = 0; */
+comment|/* OBSOLETE       ch = readchar (); */
+comment|/* OBSOLETE       if (ch == *bp) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  bp++; */
+comment|/* OBSOLETE 	  if (*bp == '\0') */
+comment|/* OBSOLETE 	    break; */
+comment|/* OBSOLETE 	  ch_handled = 1; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	  *swallowed_p++ = ch; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE       else */
+comment|/* OBSOLETE 	bp = bpt; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       if (ch == *ep || *ep == '?') */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  ep++; */
+comment|/* OBSOLETE 	  if (*ep == '\0') */
+comment|/* OBSOLETE 	    break; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	  if (!ch_handled) */
+comment|/* OBSOLETE 	    *swallowed_p++ = ch; */
+comment|/* OBSOLETE 	  ch_handled = 1; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE       else */
+comment|/* OBSOLETE 	ep = exitmsg; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       if (!ch_handled) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  char *p; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	  /* Print out any characters which have been swallowed.  */
+operator|*
+operator|/
+comment|/* OBSOLETE 	  for (p = swallowed; p< swallowed_p; ++p) */
+comment|/* OBSOLETE 	    putc (*p, stdout); */
+comment|/* OBSOLETE 	  swallowed_p = swallowed; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	  putc (ch, stdout); */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   expect_prompt (); */
+comment|/* OBSOLETE   if (*bp == '\0') */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_TRAP; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_EXITED; */
+comment|/* OBSOLETE       status->value.integer = 0; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   timeout = old_timeout; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   return 0; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Return the name of register number REGNO */
+comment|/* OBSOLETE    in the form input and output by EBMON. */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE    Returns a pointer to a static buffer containing the answer.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static char * */
+comment|/* OBSOLETE get_reg_name (int regno) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   static char buf[80]; */
+comment|/* OBSOLETE   if (regno>= GR96_REGNUM&& regno< GR96_REGNUM + 32) */
+comment|/* OBSOLETE     sprintf (buf, "GR%03d", regno - GR96_REGNUM + 96); */
+comment|/* OBSOLETE   else if (regno>= LR0_REGNUM&& regno< LR0_REGNUM + 128) */
+comment|/* OBSOLETE     sprintf (buf, "LR%03d", regno - LR0_REGNUM); */
+comment|/* OBSOLETE   else if (regno == Q_REGNUM) */
+comment|/* OBSOLETE     strcpy (buf, "SR131"); */
+comment|/* OBSOLETE   else if (regno>= BP_REGNUM&& regno<= CR_REGNUM) */
+comment|/* OBSOLETE     sprintf (buf, "SR%03d", regno - BP_REGNUM + 133); */
+comment|/* OBSOLETE   else if (regno == ALU_REGNUM) */
+comment|/* OBSOLETE     strcpy (buf, "SR132"); */
+comment|/* OBSOLETE   else if (regno>= IPC_REGNUM&& regno<= IPB_REGNUM) */
+comment|/* OBSOLETE     sprintf (buf, "SR%03d", regno - IPC_REGNUM + 128); */
+comment|/* OBSOLETE   else if (regno>= VAB_REGNUM&& regno<= LRU_REGNUM) */
+comment|/* OBSOLETE     sprintf (buf, "SR%03d", regno - VAB_REGNUM); */
+comment|/* OBSOLETE   else if (regno == GR1_REGNUM) */
+comment|/* OBSOLETE     strcpy (buf, "GR001"); */
+comment|/* OBSOLETE   return buf; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Read the remote registers into the block REGS.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE eb_fetch_registers (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int reg_index; */
+comment|/* OBSOLETE   int regnum_index; */
+comment|/* OBSOLETE   char tempbuf[10]; */
+comment|/* OBSOLETE   int i; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #if 0 */
+comment|/* OBSOLETE   /* This should not be necessary, because one is supposed to read the */
+comment|/* OBSOLETE      registers only when the inferior is stopped (at least with */
+comment|/* OBSOLETE      ptrace() and why not make it the same for remote?).  */
+operator|*
+operator|/
+comment|/* OBSOLETE   /* ^A is the "normal character" used to make sure we are talking to EBMON */
+comment|/* OBSOLETE      and not to the program being debugged.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   write (eb_desc, "\001\n"); */
+comment|/* OBSOLETE   expect_prompt (); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   write (eb_desc, "dw gr96,gr127\n", 14); */
+comment|/* OBSOLETE   for (reg_index = 96, regnum_index = GR96_REGNUM; */
+comment|/* OBSOLETE        reg_index< 128; */
+comment|/* OBSOLETE        reg_index += 4, regnum_index += 4) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       sprintf (tempbuf, "GR%03d ", reg_index); */
+comment|/* OBSOLETE       expect (tempbuf); */
+comment|/* OBSOLETE       get_hex_regs (4, regnum_index); */
+comment|/* OBSOLETE       expect ("\n"); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (i = 0; i< 128; i += 32) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       /* The PC has a tendency to hang if we get these */
+comment|/* OBSOLETE          all in one fell swoop ("dw lr0,lr127").  */
+operator|*
+operator|/
+comment|/* OBSOLETE       sprintf (tempbuf, "dw lr%d\n", i); */
+comment|/* OBSOLETE       write (eb_desc, tempbuf, strlen (tempbuf)); */
+comment|/* OBSOLETE       for (reg_index = i, regnum_index = LR0_REGNUM + i; */
+comment|/* OBSOLETE 	   reg_index< i + 32; */
+comment|/* OBSOLETE 	   reg_index += 4, regnum_index += 4) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  sprintf (tempbuf, "LR%03d ", reg_index); */
+comment|/* OBSOLETE 	  expect (tempbuf); */
+comment|/* OBSOLETE 	  get_hex_regs (4, regnum_index); */
+comment|/* OBSOLETE 	  expect ("\n"); */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   write (eb_desc, "dw sr133,sr133\n", 15); */
+comment|/* OBSOLETE   expect ("SR133          "); */
+comment|/* OBSOLETE   get_hex_regs (1, BP_REGNUM); */
+comment|/* OBSOLETE   expect ("\n"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   write (eb_desc, "dw sr134,sr134\n", 15); */
+comment|/* OBSOLETE   expect ("SR134                   "); */
+comment|/* OBSOLETE   get_hex_regs (1, FC_REGNUM); */
+comment|/* OBSOLETE   expect ("\n"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   write (eb_desc, "dw sr135,sr135\n", 15); */
+comment|/* OBSOLETE   expect ("SR135                            "); */
+comment|/* OBSOLETE   get_hex_regs (1, CR_REGNUM); */
+comment|/* OBSOLETE   expect ("\n"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   write (eb_desc, "dw sr131,sr131\n", 15); */
+comment|/* OBSOLETE   expect ("SR131                            "); */
+comment|/* OBSOLETE   get_hex_regs (1, Q_REGNUM); */
+comment|/* OBSOLETE   expect ("\n"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   write (eb_desc, "dw sr0,sr14\n", 12); */
+comment|/* OBSOLETE   for (reg_index = 0, regnum_index = VAB_REGNUM; */
+comment|/* OBSOLETE        regnum_index<= LRU_REGNUM; */
+comment|/* OBSOLETE        regnum_index += 4, reg_index += 4) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       sprintf (tempbuf, "SR%03d ", reg_index); */
+comment|/* OBSOLETE       expect (tempbuf); */
+comment|/* OBSOLETE       get_hex_regs (reg_index == 12 ? 3 : 4, regnum_index); */
+comment|/* OBSOLETE       expect ("\n"); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* There doesn't seem to be any way to get these.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     int val = -1; */
+comment|/* OBSOLETE     supply_register (FPE_REGNUM, (char *)&val); */
+comment|/* OBSOLETE     supply_register (INTE_REGNUM, (char *)&val); */
+comment|/* OBSOLETE     supply_register (FPS_REGNUM, (char *)&val); */
+comment|/* OBSOLETE     supply_register (EXO_REGNUM, (char *)&val); */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   write (eb_desc, "dw gr1,gr1\n", 11); */
+comment|/* OBSOLETE   expect ("GR001 "); */
+comment|/* OBSOLETE   get_hex_regs (1, GR1_REGNUM); */
+comment|/* OBSOLETE   expect_prompt (); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Fetch register REGNO, or all registers if REGNO is -1. */
+comment|/* OBSOLETE    Returns errno value.  */
+operator|*
+operator|/
+comment|/* OBSOLETE void */
+comment|/* OBSOLETE eb_fetch_register (int regno) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   if (regno == -1) */
+comment|/* OBSOLETE     eb_fetch_registers (); */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       char *name = get_reg_name (regno); */
+comment|/* OBSOLETE       fprintf (eb_stream, "dw %s,%s\n", name, name); */
+comment|/* OBSOLETE       expect (name); */
+comment|/* OBSOLETE       expect (" "); */
+comment|/* OBSOLETE       get_hex_regs (1, regno); */
+comment|/* OBSOLETE       expect_prompt (); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   return; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Store the remote registers from the contents of the block REGS.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE eb_store_registers (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int i, j; */
+comment|/* OBSOLETE   fprintf (eb_stream, "s gr1,%x\n", read_register (GR1_REGNUM)); */
+comment|/* OBSOLETE   expect_prompt (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (j = 0; j< 32; j += 16) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       fprintf (eb_stream, "s gr%d,", j + 96); */
+comment|/* OBSOLETE       for (i = 0; i< 15; ++i) */
+comment|/* OBSOLETE 	fprintf (eb_stream, "%x,", read_register (GR96_REGNUM + j + i)); */
+comment|/* OBSOLETE       fprintf (eb_stream, "%x\n", read_register (GR96_REGNUM + j + 15)); */
+comment|/* OBSOLETE       expect_prompt (); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (j = 0; j< 128; j += 16) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       fprintf (eb_stream, "s lr%d,", j); */
+comment|/* OBSOLETE       for (i = 0; i< 15; ++i) */
+comment|/* OBSOLETE 	fprintf (eb_stream, "%x,", read_register (LR0_REGNUM + j + i)); */
+comment|/* OBSOLETE       fprintf (eb_stream, "%x\n", read_register (LR0_REGNUM + j + 15)); */
+comment|/* OBSOLETE       expect_prompt (); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   fprintf (eb_stream, "s sr133,%x,%x,%x\n", read_register (BP_REGNUM), */
+comment|/* OBSOLETE 	   read_register (FC_REGNUM), read_register (CR_REGNUM)); */
+comment|/* OBSOLETE   expect_prompt (); */
+comment|/* OBSOLETE   fprintf (eb_stream, "s sr131,%x\n", read_register (Q_REGNUM)); */
+comment|/* OBSOLETE   expect_prompt (); */
+comment|/* OBSOLETE   fprintf (eb_stream, "s sr0,"); */
+comment|/* OBSOLETE   for (i = 0; i< 11; ++i) */
+comment|/* OBSOLETE     fprintf (eb_stream, "%x,", read_register (VAB_REGNUM + i)); */
+comment|/* OBSOLETE   fprintf (eb_stream, "%x\n", read_register (VAB_REGNUM + 11)); */
+comment|/* OBSOLETE   expect_prompt (); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Store register REGNO, or all if REGNO == 0. */
+comment|/* OBSOLETE    Return errno value.  */
+operator|*
+operator|/
+comment|/* OBSOLETE void */
+comment|/* OBSOLETE eb_store_register (int regno) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   if (regno == -1) */
+comment|/* OBSOLETE     eb_store_registers (); */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       char *name = get_reg_name (regno); */
+comment|/* OBSOLETE       fprintf (eb_stream, "s %s,%x\n", name, read_register (regno)); */
+comment|/* OBSOLETE       /* Setting GR1 changes the numbers of all the locals, so */
+comment|/* OBSOLETE          invalidate the register cache.  Do this *after* calling */
+comment|/* OBSOLETE          read_register, because we want read_register to return the */
+comment|/* OBSOLETE          value that write_register has just stuffed into the registers */
+comment|/* OBSOLETE          array, not the value of the register fetched from the */
+comment|/* OBSOLETE          inferior.  */
+operator|*
+operator|/
+comment|/* OBSOLETE       if (regno == GR1_REGNUM) */
+comment|/* OBSOLETE 	registers_changed (); */
+comment|/* OBSOLETE       expect_prompt (); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Get ready to modify the registers array.  On machines which store */
+comment|/* OBSOLETE    individual registers, this doesn't need to do anything.  On machines */
+comment|/* OBSOLETE    which store all the registers in one fell swoop, this makes sure */
+comment|/* OBSOLETE    that registers contains all the registers from the program being */
+comment|/* OBSOLETE    debugged.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE void */
+comment|/* OBSOLETE eb_prepare_to_store (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   /* Do nothing, since we can store individual regs */
+operator|*
+operator|/
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Transfer LEN bytes between GDB address MYADDR and target address */
+comment|/* OBSOLETE    MEMADDR.  If WRITE is non-zero, transfer them to the target, */
+comment|/* OBSOLETE    otherwise transfer them from the target.  TARGET is unused. */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE    Returns the number of bytes transferred. */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE int */
+comment|/* OBSOLETE eb_xfer_inferior_memory (CORE_ADDR memaddr, char *myaddr, int len, int write, */
+comment|/* OBSOLETE 			 struct mem_attrib *attrib ATTRIBUTE_UNUSED, */
+comment|/* OBSOLETE 			 struct target_ops *target ATTRIBUTE_UNUSED) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   if (write) */
+comment|/* OBSOLETE     return eb_write_inferior_memory (memaddr, myaddr, len); */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     return eb_read_inferior_memory (memaddr, myaddr, len); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE void */
+comment|/* OBSOLETE eb_files_info (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   printf ("\tAttached to %s at %d baud and running program %s.\n", */
+comment|/* OBSOLETE 	  dev_name, baudrate, prog_name); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Copy LEN bytes of data from debugger memory at MYADDR */
+comment|/* OBSOLETE    to inferior's memory at MEMADDR.  Returns length moved.  */
+operator|*
+operator|/
+comment|/* OBSOLETE int */
+comment|/* OBSOLETE eb_write_inferior_memory (CORE_ADDR memaddr, char *myaddr, int len) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int i; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (i = 0; i< len; i++) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       if ((i % 16) == 0) */
+comment|/* OBSOLETE 	fprintf (eb_stream, "sb %x,", memaddr + i); */
+comment|/* OBSOLETE       if ((i % 16) == 15 || i == len - 1) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  fprintf (eb_stream, "%x\n", ((unsigned char *) myaddr)[i]); */
+comment|/* OBSOLETE 	  expect_prompt (); */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE       else */
+comment|/* OBSOLETE 	fprintf (eb_stream, "%x,", ((unsigned char *) myaddr)[i]); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   return len; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Read LEN bytes from inferior memory at MEMADDR.  Put the result */
+comment|/* OBSOLETE    at debugger address MYADDR.  Returns length moved.  */
+operator|*
+operator|/
+comment|/* OBSOLETE int */
+comment|/* OBSOLETE eb_read_inferior_memory (CORE_ADDR memaddr, char *myaddr, int len) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int i; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Number of bytes read so far.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   int count; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Starting address of this pass.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   unsigned long startaddr; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Number of bytes to read in this pass.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   int len_this_pass; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Note that this code works correctly if startaddr is just less */
+comment|/* OBSOLETE      than UINT_MAX (well, really CORE_ADDR_MAX if there was such a */
+comment|/* OBSOLETE      thing).  That is, something like */
+comment|/* OBSOLETE      eb_read_bytes (CORE_ADDR_MAX - 4, foo, 4) */
+comment|/* OBSOLETE      works--it never adds len to memaddr and gets 0.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   /* However, something like */
+comment|/* OBSOLETE      eb_read_bytes (CORE_ADDR_MAX - 3, foo, 4) */
+comment|/* OBSOLETE      doesn't need to work.  Detect it and give up if there's an attempt */
+comment|/* OBSOLETE      to do that.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   if (((memaddr - 1) + len)< memaddr) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       errno = EIO; */
+comment|/* OBSOLETE       return 0; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   startaddr = memaddr; */
+comment|/* OBSOLETE   count = 0; */
+comment|/* OBSOLETE   while (count< len) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       len_this_pass = 16; */
+comment|/* OBSOLETE       if ((startaddr % 16) != 0) */
+comment|/* OBSOLETE 	len_this_pass -= startaddr % 16; */
+comment|/* OBSOLETE       if (len_this_pass> (len - count)) */
+comment|/* OBSOLETE 	len_this_pass = (len - count); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       fprintf (eb_stream, "db %x,%x\n", startaddr, */
+comment|/* OBSOLETE 	       (startaddr - 1) + len_this_pass); */
+comment|/* OBSOLETE       expect ("\n"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       /* Look for 8 hex digits.  */
+operator|*
+operator|/
+comment|/* OBSOLETE       i = 0; */
+comment|/* OBSOLETE       while (1) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  if (isxdigit (readchar ())) */
+comment|/* OBSOLETE 	    ++i; */
+comment|/* OBSOLETE 	  else */
+comment|/* OBSOLETE 	    { */
+comment|/* OBSOLETE 	      expect_prompt (); */
+comment|/* OBSOLETE 	      error ("Hex digit expected from remote system."); */
+comment|/* OBSOLETE 	    } */
+comment|/* OBSOLETE 	  if (i>= 8) */
+comment|/* OBSOLETE 	    break; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       expect ("  "); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       for (i = 0; i< len_this_pass; i++) */
+comment|/* OBSOLETE 	get_hex_byte (&myaddr[count++]); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       expect_prompt (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       startaddr += len_this_pass; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   return len; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE eb_kill (char *args, int from_tty) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   return;			/* Ignore attempts to kill target system */
+operator|*
+operator|/
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Clean up when a program exits. */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE    The program actually lives on in the remote processor's RAM, and may be */
+comment|/* OBSOLETE    run again without a download.  Don't leave it full of breakpoint */
+comment|/* OBSOLETE    instructions.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE void */
+comment|/* OBSOLETE eb_mourn_inferior (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   remove_breakpoints (); */
+comment|/* OBSOLETE   unpush_target (&eb_ops); */
+comment|/* OBSOLETE   generic_mourn_inferior ();	/* Do all the proper things now */
+operator|*
+operator|/
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /* Define the target subroutine names */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE struct target_ops eb_ops; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE init_eb_ops (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   eb_ops.to_shortname = "amd-eb"; */
+comment|/* OBSOLETE   eb_ops.to_longname = "Remote serial AMD EBMON target"; */
+comment|/* OBSOLETE   eb_ops.to_doc = "Use a remote computer running EBMON connected by a serial line.\n\ */
+comment|/* OBSOLETE Arguments are the name of the device for the serial line,\n\ */
+comment|/* OBSOLETE the speed to connect at in bits per second, and the filename of the\n\ */
+comment|/* OBSOLETE executable as it exists on the remote computer.  For example,\n\ */
+comment|/* OBSOLETE target amd-eb /dev/ttya 9600 demo", */
+comment|/* OBSOLETE     eb_ops.to_open = eb_open; */
+comment|/* OBSOLETE   eb_ops.to_close = eb_close; */
+comment|/* OBSOLETE   eb_ops.to_attach = 0; */
+comment|/* OBSOLETE   eb_ops.to_post_attach = NULL; */
+comment|/* OBSOLETE   eb_ops.to_require_attach = NULL; */
+comment|/* OBSOLETE   eb_ops.to_detach = eb_detach; */
+comment|/* OBSOLETE   eb_ops.to_require_detach = NULL; */
+comment|/* OBSOLETE   eb_ops.to_resume = eb_resume; */
+comment|/* OBSOLETE   eb_ops.to_wait = eb_wait; */
+comment|/* OBSOLETE   eb_ops.to_post_wait = NULL; */
+comment|/* OBSOLETE   eb_ops.to_fetch_registers = eb_fetch_register; */
+comment|/* OBSOLETE   eb_ops.to_store_registers = eb_store_register; */
+comment|/* OBSOLETE   eb_ops.to_prepare_to_store = eb_prepare_to_store; */
+comment|/* OBSOLETE   eb_ops.to_xfer_memory = eb_xfer_inferior_memory; */
+comment|/* OBSOLETE   eb_ops.to_files_info = eb_files_info; */
+comment|/* OBSOLETE   eb_ops.to_insert_breakpoint = 0; */
+comment|/* OBSOLETE   eb_ops.to_remove_breakpoint = 0;	/* Breakpoints */
+operator|*
+operator|/
+comment|/* OBSOLETE   eb_ops.to_terminal_init = 0; */
+comment|/* OBSOLETE   eb_ops.to_terminal_inferior = 0; */
+comment|/* OBSOLETE   eb_ops.to_terminal_ours_for_output = 0; */
+comment|/* OBSOLETE   eb_ops.to_terminal_ours = 0; */
+comment|/* OBSOLETE   eb_ops.to_terminal_info = 0;	/* Terminal handling */
+operator|*
+operator|/
+comment|/* OBSOLETE   eb_ops.to_kill = eb_kill; */
+comment|/* OBSOLETE   eb_ops.to_load = generic_load;	/* load */
+operator|*
+operator|/
+comment|/* OBSOLETE   eb_ops.to_lookup_symbol = 0;	/* lookup_symbol */
+operator|*
+operator|/
+comment|/* OBSOLETE   eb_ops.to_create_inferior = eb_create_inferior; */
+comment|/* OBSOLETE   eb_ops.to_post_startup_inferior = NULL; */
+comment|/* OBSOLETE   eb_ops.to_acknowledge_created_inferior = NULL; */
+comment|/* OBSOLETE   eb_ops.to_clone_and_follow_inferior = NULL; */
+comment|/* OBSOLETE   eb_ops.to_post_follow_inferior_by_clone = NULL; */
+comment|/* OBSOLETE   eb_ops.to_insert_fork_catchpoint = NULL; */
+comment|/* OBSOLETE   eb_ops.to_remove_fork_catchpoint = NULL; */
+comment|/* OBSOLETE   eb_ops.to_insert_vfork_catchpoint = NULL; */
+comment|/* OBSOLETE   eb_ops.to_remove_vfork_catchpoint = NULL; */
+comment|/* OBSOLETE   eb_ops.to_has_forked = NULL; */
+comment|/* OBSOLETE   eb_ops.to_has_vforked = NULL; */
+comment|/* OBSOLETE   eb_ops.to_can_follow_vfork_prior_to_exec = NULL; */
+comment|/* OBSOLETE   eb_ops.to_post_follow_vfork = NULL; */
+comment|/* OBSOLETE   eb_ops.to_insert_exec_catchpoint = NULL; */
+comment|/* OBSOLETE   eb_ops.to_remove_exec_catchpoint = NULL; */
+comment|/* OBSOLETE   eb_ops.to_has_execd = NULL; */
+comment|/* OBSOLETE   eb_ops.to_reported_exec_events_per_exec_call = NULL; */
+comment|/* OBSOLETE   eb_ops.to_has_exited = NULL; */
+comment|/* OBSOLETE   eb_ops.to_mourn_inferior = eb_mourn_inferior; */
+comment|/* OBSOLETE   eb_ops.to_can_run = 0;	/* can_run */
+operator|*
+operator|/
+comment|/* OBSOLETE   eb_ops.to_notice_signals = 0;	/* notice_signals */
+operator|*
+operator|/
+comment|/* OBSOLETE   eb_ops.to_thread_alive = 0;	/* thread-alive */
+operator|*
+operator|/
+comment|/* OBSOLETE   eb_ops.to_stop = 0;		/* to_stop */
+operator|*
+operator|/
+comment|/* OBSOLETE   eb_ops.to_pid_to_exec_file = NULL; */
+comment|/* OBSOLETE   eb_ops.to_stratum = process_stratum; */
+comment|/* OBSOLETE   eb_ops.DONT_USE = 0;		/* next */
+operator|*
+operator|/
+comment|/* OBSOLETE   eb_ops.to_has_all_memory = 1; */
+comment|/* OBSOLETE   eb_ops.to_has_memory = 1; */
+comment|/* OBSOLETE   eb_ops.to_has_stack = 1; */
+comment|/* OBSOLETE   eb_ops.to_has_registers = 1; */
+comment|/* OBSOLETE   eb_ops.to_has_execution = 1;	/* all mem, mem, stack, regs, exec */
+operator|*
+operator|/
+comment|/* OBSOLETE   eb_ops.to_sections = 0;	/* sections */
+operator|*
+operator|/
+comment|/* OBSOLETE   eb_ops.to_sections_end = 0;	/* sections end */
+operator|*
+operator|/
+comment|/* OBSOLETE   eb_ops.to_magic = OPS_MAGIC;	/* Always the last thing */
+operator|*
+operator|/
+end_expr_stmt
 
 begin_comment
-comment|/* Keep discarding input until we see the ebmon prompt.     The convention for dealing with the prompt is that you    o give your command    o *then* wait for the prompt.     Thus the last thing that a procedure does with the serial line    will be an expect_prompt().  Exception:  eb_resume does not    wait for the prompt, because the terminal is being handed over    to the inferior.  However, the next thing which happens after that    is a eb_wait which does wait for the prompt.    Note that this includes abnormal exit, e.g. error().  This is    necessary to prevent getting into states from which we can't    recover.  */
+comment|/* OBSOLETE }; */
 end_comment
-
-begin_function
-specifier|static
-name|void
-name|expect_prompt
-parameter_list|()
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LOG_FILE
-argument_list|)
-comment|/* This is a convenient place to do this.  The idea is to do it often      enough that we never lose much data if we terminate abnormally.  */
-name|fflush
-argument_list|(
-name|log_file
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|expect
-argument_list|(
-literal|"\n# "
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
-comment|/* Get a hex digit from the remote system& return its value.    If ignore_space is nonzero, ignore spaces (not newline, tab, etc).  */
+comment|/* OBSOLETE  */
 end_comment
-
-begin_function
-specifier|static
-name|int
-name|get_hex_digit
-parameter_list|(
-name|ignore_space
-parameter_list|)
-name|int
-name|ignore_space
-decl_stmt|;
-block|{
-name|int
-name|ch
-decl_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
-block|{
-name|ch
-operator|=
-name|readchar
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ch
-operator|>=
-literal|'0'
-operator|&&
-name|ch
-operator|<=
-literal|'9'
-condition|)
-return|return
-name|ch
-operator|-
-literal|'0'
-return|;
-elseif|else
-if|if
-condition|(
-name|ch
-operator|>=
-literal|'A'
-operator|&&
-name|ch
-operator|<=
-literal|'F'
-condition|)
-return|return
-name|ch
-operator|-
-literal|'A'
-operator|+
-literal|10
-return|;
-elseif|else
-if|if
-condition|(
-name|ch
-operator|>=
-literal|'a'
-operator|&&
-name|ch
-operator|<=
-literal|'f'
-condition|)
-return|return
-name|ch
-operator|-
-literal|'a'
-operator|+
-literal|10
-return|;
-elseif|else
-if|if
-condition|(
-name|ch
-operator|==
-literal|' '
-operator|&&
-name|ignore_space
-condition|)
-empty_stmt|;
-else|else
-block|{
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-name|error
-argument_list|(
-literal|"Invalid hex digit from remote system."
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-end_function
 
 begin_comment
-comment|/* Get a byte from eb_desc and put it in *BYT.  Accept any number    leading spaces.  */
+comment|/* OBSOLETE void */
 end_comment
-
-begin_function
-specifier|static
-name|void
-name|get_hex_byte
-parameter_list|(
-name|byt
-parameter_list|)
-name|char
-modifier|*
-name|byt
-decl_stmt|;
-block|{
-name|int
-name|val
-decl_stmt|;
-name|val
-operator|=
-name|get_hex_digit
-argument_list|(
-literal|1
-argument_list|)
-operator|<<
-literal|4
-expr_stmt|;
-name|val
-operator||=
-name|get_hex_digit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-operator|*
-name|byt
-operator|=
-name|val
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
-comment|/* Get N 32-bit words from remote, each preceded by a space,    and put them in registers starting at REGNO.  */
+comment|/* OBSOLETE _initialize_remote_eb (void) */
 end_comment
-
-begin_function
-specifier|static
-name|void
-name|get_hex_regs
-parameter_list|(
-name|n
-parameter_list|,
-name|regno
-parameter_list|)
-name|int
-name|n
-decl_stmt|;
-name|int
-name|regno
-decl_stmt|;
-block|{
-name|long
-name|val
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|int
-name|j
-decl_stmt|;
-name|val
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-literal|8
-condition|;
-name|j
-operator|++
-control|)
-name|val
-operator|=
-operator|(
-name|val
-operator|<<
-literal|4
-operator|)
-operator|+
-name|get_hex_digit
-argument_list|(
-name|j
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
-name|supply_register
-argument_list|(
-name|regno
-operator|++
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|val
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
 
 begin_comment
-comment|/* Called when SIGALRM signal sent due to alarm() timeout.  */
+comment|/* OBSOLETE { */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_TERMIO
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|volatile
-end_define
 
 begin_comment
-comment|/**/
+comment|/* OBSOLETE   init_eb_ops (); */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|volatile
-name|int
-name|n_alarms
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|void
-name|eb_timer
-parameter_list|()
-block|{
-if|#
-directive|if
-literal|0
-block|if (kiodebug)     printf ("eb_timer called\n");
-endif|#
-directive|endif
-name|n_alarms
-operator|++
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
-comment|/* malloc'd name of the program on the remote system.  */
+comment|/* OBSOLETE   add_target (&eb_ops); */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|prog_name
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
-comment|/* Nonzero if we have loaded the file ("yc") and not yet issued a "gi"    command.  "gi" is supposed to happen exactly once for each "yc".  */
+comment|/* OBSOLETE } */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|need_gi
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number of SIGTRAPs we need to simulate.  That is, the next    NEED_ARTIFICIAL_TRAP calls to eb_wait should just return    SIGTRAP without actually waiting for anything.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|need_artificial_trap
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* This is called not only when we first attach, but also when the    user types "run" after having attached.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|eb_create_inferior
-parameter_list|(
-name|execfile
-parameter_list|,
-name|args
-parameter_list|,
-name|env
-parameter_list|)
-name|char
-modifier|*
-name|execfile
-decl_stmt|;
-name|char
-modifier|*
-name|args
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|env
-decl_stmt|;
-block|{
-name|int
-name|entry_pt
-decl_stmt|;
-if|if
-condition|(
-name|args
-operator|&&
-operator|*
-name|args
-condition|)
-name|error
-argument_list|(
-literal|"Can't pass arguments to remote EBMON process"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|execfile
-operator|==
-literal|0
-operator|||
-name|exec_bfd
-operator|==
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"No executable file specified"
-argument_list|)
-expr_stmt|;
-name|entry_pt
-operator|=
-operator|(
-name|int
-operator|)
-name|bfd_get_start_address
-argument_list|(
-name|exec_bfd
-argument_list|)
-expr_stmt|;
-block|{
-comment|/* OK, now read in the file.  Y=read, C=COFF, D=no symbols        0=start address, %s=filename.  */
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"YC D,0:%s"
-argument_list|,
-name|prog_name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|args
-operator|!=
-name|NULL
-condition|)
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|" %s"
-argument_list|,
-name|args
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|eb_stream
-argument_list|)
-expr_stmt|;
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-name|need_gi
-operator|=
-literal|1
-expr_stmt|;
-block|}
-comment|/* The "process" (board) is already stopped awaiting our commands, and    the program is already downloaded.  We just set its PC and go.  */
-name|clear_proceed_status
-argument_list|()
-expr_stmt|;
-comment|/* Tell wait_for_inferior that we've started a new process.  */
-name|init_wait_for_inferior
-argument_list|()
-expr_stmt|;
-comment|/* Set up the "saved terminal modes" of the inferior      based on what modes we are starting it with.  */
-name|target_terminal_init
-argument_list|()
-expr_stmt|;
-comment|/* Install inferior's terminal modes.  */
-name|target_terminal_inferior
-argument_list|()
-expr_stmt|;
-comment|/* insert_step_breakpoint ();  FIXME, do we need this?  */
-name|proceed
-argument_list|(
-operator|(
-name|CORE_ADDR
-operator|)
-name|entry_pt
-argument_list|,
-name|TARGET_SIGNAL_DEFAULT
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Let 'er rip... */
-block|}
-end_function
-
-begin_comment
-comment|/* Translate baud rates from integers to damn B_codes.  Unix should    have outgrown this crap years ago, but even POSIX wouldn't buck it.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|B19200
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|B19200
-value|EXTA
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|B38400
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|B38400
-value|EXTB
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_struct
-struct|struct
-block|{
-name|int
-name|rate
-decl_stmt|,
-name|damn_b
-decl_stmt|;
-block|}
-name|baudtab
-index|[]
-init|=
-block|{
-block|{
-literal|0
-block|,
-name|B0
-block|}
-block|,
-block|{
-literal|50
-block|,
-name|B50
-block|}
-block|,
-block|{
-literal|75
-block|,
-name|B75
-block|}
-block|,
-block|{
-literal|110
-block|,
-name|B110
-block|}
-block|,
-block|{
-literal|134
-block|,
-name|B134
-block|}
-block|,
-block|{
-literal|150
-block|,
-name|B150
-block|}
-block|,
-block|{
-literal|200
-block|,
-name|B200
-block|}
-block|,
-block|{
-literal|300
-block|,
-name|B300
-block|}
-block|,
-block|{
-literal|600
-block|,
-name|B600
-block|}
-block|,
-block|{
-literal|1200
-block|,
-name|B1200
-block|}
-block|,
-block|{
-literal|1800
-block|,
-name|B1800
-block|}
-block|,
-block|{
-literal|2400
-block|,
-name|B2400
-block|}
-block|,
-block|{
-literal|4800
-block|,
-name|B4800
-block|}
-block|,
-block|{
-literal|9600
-block|,
-name|B9600
-block|}
-block|,
-block|{
-literal|19200
-block|,
-name|B19200
-block|}
-block|,
-block|{
-literal|38400
-block|,
-name|B38400
-block|}
-block|,
-block|{
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|}
-block|, }
-struct|;
-end_struct
-
-begin_function
-name|int
-name|damn_b
-parameter_list|(
-name|rate
-parameter_list|)
-name|int
-name|rate
-decl_stmt|;
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|baudtab
-index|[
-name|i
-index|]
-operator|.
-name|rate
-operator|!=
-operator|-
-literal|1
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|rate
-operator|==
-name|baudtab
-index|[
-name|i
-index|]
-operator|.
-name|rate
-condition|)
-return|return
-name|baudtab
-index|[
-name|i
-index|]
-operator|.
-name|damn_b
-return|;
-return|return
-name|B38400
-return|;
-comment|/* Random */
-block|}
-end_function
-
-begin_comment
-comment|/* Open a connection to a remote debugger.    NAME is the filename used for communication, then a space,    then the name of the program as we should name it to EBMON.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|baudrate
-init|=
-literal|9600
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|dev_name
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|void
-name|eb_open
-parameter_list|(
-name|name
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
-block|{
-name|TERMINAL
-name|sg
-decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|target_preopen
-argument_list|(
-name|from_tty
-argument_list|)
-expr_stmt|;
-comment|/* Find the first whitespace character, it separates dev_name from      prog_name.  */
-if|if
-condition|(
-name|name
-operator|==
-literal|0
-condition|)
-goto|goto
-name|erroid
-goto|;
-for|for
-control|(
-name|p
-operator|=
-name|name
-init|;
-operator|*
-name|p
-operator|!=
-literal|'\0'
-operator|&&
-operator|!
-name|isspace
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|;
-name|p
-operator|++
-control|)
-empty_stmt|;
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'\0'
-condition|)
-name|erroid
-label|:
-name|error
-argument_list|(
-literal|"\ Please include the name of the device for the serial port,\n\ the baud rate, and the name of the program to run on the remote system."
-argument_list|)
-expr_stmt|;
-name|dev_name
-operator|=
-name|alloca
-argument_list|(
-name|p
-operator|-
-name|name
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|strncpy
-argument_list|(
-name|dev_name
-argument_list|,
-name|name
-argument_list|,
-name|p
-operator|-
-name|name
-argument_list|)
-expr_stmt|;
-name|dev_name
-index|[
-name|p
-operator|-
-name|name
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-comment|/* Skip over the whitespace after dev_name */
-for|for
-control|(
-init|;
-name|isspace
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|;
-name|p
-operator|++
-control|)
-comment|/*EMPTY*/
-empty_stmt|;
-if|if
-condition|(
-literal|1
-operator|!=
-name|sscanf
-argument_list|(
-name|p
-argument_list|,
-literal|"%d "
-argument_list|,
-operator|&
-name|baudrate
-argument_list|)
-condition|)
-goto|goto
-name|erroid
-goto|;
-comment|/* Skip the number and then the spaces */
-for|for
-control|(
-init|;
-name|isdigit
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|;
-name|p
-operator|++
-control|)
-comment|/*EMPTY*/
-empty_stmt|;
-for|for
-control|(
-init|;
-name|isspace
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|;
-name|p
-operator|++
-control|)
-comment|/*EMPTY*/
-empty_stmt|;
-if|if
-condition|(
-name|prog_name
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|prog_name
-argument_list|)
-expr_stmt|;
-name|prog_name
-operator|=
-name|savestring
-argument_list|(
-name|p
-argument_list|,
-name|strlen
-argument_list|(
-name|p
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|eb_close
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|eb_desc
-operator|=
-name|open
-argument_list|(
-name|dev_name
-argument_list|,
-name|O_RDWR
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|eb_desc
-operator|<
-literal|0
-condition|)
-name|perror_with_name
-argument_list|(
-name|dev_name
-argument_list|)
-expr_stmt|;
-name|ioctl
-argument_list|(
-name|eb_desc
-argument_list|,
-name|TIOCGETP
-argument_list|,
-operator|&
-name|sg
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_TERMIO
-name|sg
-operator|.
-name|c_cc
-index|[
-name|VMIN
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* read with timeout.  */
-name|sg
-operator|.
-name|c_cc
-index|[
-name|VTIME
-index|]
-operator|=
-name|timeout
-operator|*
-literal|10
-expr_stmt|;
-name|sg
-operator|.
-name|c_lflag
-operator|&=
-operator|~
-operator|(
-name|ICANON
-operator||
-name|ECHO
-operator|)
-expr_stmt|;
-name|sg
-operator|.
-name|c_cflag
-operator|=
-operator|(
-name|sg
-operator|.
-name|c_cflag
-operator|&
-operator|~
-name|CBAUD
-operator|)
-operator||
-name|damn_b
-argument_list|(
-name|baudrate
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|sg
-operator|.
-name|sg_ispeed
-operator|=
-name|damn_b
-argument_list|(
-name|baudrate
-argument_list|)
-expr_stmt|;
-name|sg
-operator|.
-name|sg_ospeed
-operator|=
-name|damn_b
-argument_list|(
-name|baudrate
-argument_list|)
-expr_stmt|;
-name|sg
-operator|.
-name|sg_flags
-operator||=
-name|RAW
-operator||
-name|ANYP
-expr_stmt|;
-name|sg
-operator|.
-name|sg_flags
-operator|&=
-operator|~
-name|ECHO
-expr_stmt|;
-endif|#
-directive|endif
-name|ioctl
-argument_list|(
-name|eb_desc
-argument_list|,
-name|TIOCSETP
-argument_list|,
-operator|&
-name|sg
-argument_list|)
-expr_stmt|;
-name|eb_stream
-operator|=
-name|fdopen
-argument_list|(
-name|eb_desc
-argument_list|,
-literal|"r+"
-argument_list|)
-expr_stmt|;
-name|push_target
-argument_list|(
-operator|&
-name|eb_ops
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|from_tty
-condition|)
-name|printf
-argument_list|(
-literal|"Remote %s debugging %s using %s\n"
-argument_list|,
-name|target_shortname
-argument_list|,
-name|prog_name
-argument_list|,
-name|dev_name
-argument_list|)
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|HAVE_TERMIO
-ifndef|#
-directive|ifndef
-name|NO_SIGINTERRUPT
-comment|/* Cause SIGALRM's to make reads fail with EINTR instead of resuming      the read.  */
-if|if
-condition|(
-name|siginterrupt
-argument_list|(
-name|SIGALRM
-argument_list|,
-literal|1
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|perror
-argument_list|(
-literal|"eb_open: error in siginterrupt"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* Set up read timeout timer.  */
-if|if
-condition|(
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-operator|)
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|eb_timer
-argument_list|)
-operator|==
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-operator|)
-operator|-
-literal|1
-condition|)
-name|perror
-argument_list|(
-literal|"eb_open: error in signal"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LOG_FILE
-argument_list|)
-name|log_file
-operator|=
-name|fopen
-argument_list|(
-name|LOG_FILE
-argument_list|,
-literal|"w"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|log_file
-operator|==
-name|NULL
-condition|)
-name|perror_with_name
-argument_list|(
-name|LOG_FILE
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* Hello?  Are you there?  */
-name|write
-argument_list|(
-name|eb_desc
-argument_list|,
-literal|"\n"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Close out all files and local state before this target loses control. */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|eb_close
-parameter_list|(
-name|quitting
-parameter_list|)
-name|int
-name|quitting
-decl_stmt|;
-block|{
-comment|/* Due to a bug in Unix, fclose closes not only the stdio stream,      but also the file descriptor.  So we don't actually close      eb_desc.  */
-if|if
-condition|(
-name|eb_stream
-condition|)
-name|fclose
-argument_list|(
-name|eb_stream
-argument_list|)
-expr_stmt|;
-comment|/* This also closes eb_desc */
-if|if
-condition|(
-name|eb_desc
-operator|>=
-literal|0
-condition|)
-comment|/* close (eb_desc); */
-comment|/* Do not try to close eb_desc again, later in the program.  */
-name|eb_stream
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_desc
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LOG_FILE
-argument_list|)
-if|if
-condition|(
-name|log_file
-condition|)
-block|{
-if|if
-condition|(
-name|ferror
-argument_list|(
-name|log_file
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"Error writing log file.\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fclose
-argument_list|(
-name|log_file
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"Error closing log file.\n"
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_comment
-comment|/* Terminate the open connection to the remote debugger.    Use this when you want to detach and do something else    with your gdb.  */
-end_comment
-
-begin_function
-name|void
-name|eb_detach
-parameter_list|(
-name|from_tty
-parameter_list|)
-name|int
-name|from_tty
-decl_stmt|;
-block|{
-name|pop_target
-argument_list|()
-expr_stmt|;
-comment|/* calls eb_close to do the real work */
-if|if
-condition|(
-name|from_tty
-condition|)
-name|printf
-argument_list|(
-literal|"Ending remote %s debugging\n"
-argument_list|,
-name|target_shortname
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Tell the remote machine to resume.  */
-end_comment
-
-begin_function
-name|void
-name|eb_resume
-parameter_list|(
-name|pid
-parameter_list|,
-name|step
-parameter_list|,
-name|sig
-parameter_list|)
-name|int
-name|pid
-decl_stmt|,
-name|step
-decl_stmt|;
-name|enum
-name|target_signal
-name|sig
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|step
-condition|)
-block|{
-name|write
-argument_list|(
-name|eb_desc
-argument_list|,
-literal|"t 1,s\n"
-argument_list|,
-literal|6
-argument_list|)
-expr_stmt|;
-comment|/* Wait for the echo.  */
-name|expect
-argument_list|(
-literal|"t 1,s\r"
-argument_list|)
-expr_stmt|;
-comment|/* Then comes a line containing the instruction we stepped to.  */
-name|expect
-argument_list|(
-literal|"\n@"
-argument_list|)
-expr_stmt|;
-comment|/* Then we get the prompt.  */
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-comment|/* Force the next eb_wait to return a trap.  Not doing anything          about I/O from the target means that the user has to type          "continue" to see any.  This should be fixed.  */
-name|need_artificial_trap
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|need_gi
-condition|)
-block|{
-name|need_gi
-operator|=
-literal|0
-expr_stmt|;
-name|write
-argument_list|(
-name|eb_desc
-argument_list|,
-literal|"gi\n"
-argument_list|,
-literal|3
-argument_list|)
-expr_stmt|;
-comment|/* Swallow the echo of "gi".  */
-name|expect
-argument_list|(
-literal|"gi\r"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|write
-argument_list|(
-name|eb_desc
-argument_list|,
-literal|"GR\n"
-argument_list|,
-literal|3
-argument_list|)
-expr_stmt|;
-comment|/* Swallow the echo.  */
-name|expect
-argument_list|(
-literal|"GR\r"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/* Wait until the remote machine stops, then return,    storing status in STATUS just as `wait' would.  */
-end_comment
-
-begin_function
-name|int
-name|eb_wait
-parameter_list|(
-name|status
-parameter_list|)
-name|struct
-name|target_waitstatus
-modifier|*
-name|status
-decl_stmt|;
-block|{
-comment|/* Strings to look for.  '?' means match any single character.        Note that with the algorithm we use, the initial character      of the string cannot recur in the string, or we will not      find some cases of the string in the input.  */
-specifier|static
-name|char
-name|bpt
-index|[]
-init|=
-literal|"Invalid interrupt taken - #0x50 - "
-decl_stmt|;
-comment|/* It would be tempting to look for "\n[__exit + 0x8]\n"      but that requires loading symbols with "yc i" and even if      we did do that we don't know that the file has symbols.  */
-specifier|static
-name|char
-name|exitmsg
-index|[]
-init|=
-literal|"\n@????????I    JMPTI     GR121,LR0"
-decl_stmt|;
-name|char
-modifier|*
-name|bp
-init|=
-name|bpt
-decl_stmt|;
-name|char
-modifier|*
-name|ep
-init|=
-name|exitmsg
-decl_stmt|;
-comment|/* Large enough for either sizeof (bpt) or sizeof (exitmsg) chars.  */
-name|char
-name|swallowed
-index|[
-literal|50
-index|]
-decl_stmt|;
-comment|/* Current position in swallowed.  */
-name|char
-modifier|*
-name|swallowed_p
-init|=
-name|swallowed
-decl_stmt|;
-name|int
-name|ch
-decl_stmt|;
-name|int
-name|ch_handled
-decl_stmt|;
-name|int
-name|old_timeout
-init|=
-name|timeout
-decl_stmt|;
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_EXITED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|integer
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|need_artificial_trap
-operator|!=
-literal|0
-condition|)
-block|{
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_TRAP
-expr_stmt|;
-name|need_artificial_trap
-operator|--
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-name|timeout
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Don't time out -- user program is running. */
-while|while
-condition|(
-literal|1
-condition|)
-block|{
-name|ch_handled
-operator|=
-literal|0
-expr_stmt|;
-name|ch
-operator|=
-name|readchar
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ch
-operator|==
-operator|*
-name|bp
-condition|)
-block|{
-name|bp
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|bp
-operator|==
-literal|'\0'
-condition|)
-break|break;
-name|ch_handled
-operator|=
-literal|1
-expr_stmt|;
-operator|*
-name|swallowed_p
-operator|++
-operator|=
-name|ch
-expr_stmt|;
-block|}
-else|else
-name|bp
-operator|=
-name|bpt
-expr_stmt|;
-if|if
-condition|(
-name|ch
-operator|==
-operator|*
-name|ep
-operator|||
-operator|*
-name|ep
-operator|==
-literal|'?'
-condition|)
-block|{
-name|ep
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|ep
-operator|==
-literal|'\0'
-condition|)
-break|break;
-if|if
-condition|(
-operator|!
-name|ch_handled
-condition|)
-operator|*
-name|swallowed_p
-operator|++
-operator|=
-name|ch
-expr_stmt|;
-name|ch_handled
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-name|ep
-operator|=
-name|exitmsg
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ch_handled
-condition|)
-block|{
-name|char
-modifier|*
-name|p
-decl_stmt|;
-comment|/* Print out any characters which have been swallowed.  */
-for|for
-control|(
-name|p
-operator|=
-name|swallowed
-init|;
-name|p
-operator|<
-name|swallowed_p
-condition|;
-operator|++
-name|p
-control|)
-name|putc
-argument_list|(
-operator|*
-name|p
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-name|swallowed_p
-operator|=
-name|swallowed
-expr_stmt|;
-name|putc
-argument_list|(
-name|ch
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|bp
-operator|==
-literal|'\0'
-condition|)
-block|{
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_TRAP
-expr_stmt|;
-block|}
-else|else
-block|{
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_EXITED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|integer
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|timeout
-operator|=
-name|old_timeout
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Return the name of register number REGNO    in the form input and output by EBMON.     Returns a pointer to a static buffer containing the answer.  */
-end_comment
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|get_reg_name
-parameter_list|(
-name|regno
-parameter_list|)
-name|int
-name|regno
-decl_stmt|;
-block|{
-specifier|static
-name|char
-name|buf
-index|[
-literal|80
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|regno
-operator|>=
-name|GR96_REGNUM
-operator|&&
-name|regno
-operator|<
-name|GR96_REGNUM
-operator|+
-literal|32
-condition|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"GR%03d"
-argument_list|,
-name|regno
-operator|-
-name|GR96_REGNUM
-operator|+
-literal|96
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|LR0_REGNUM
-operator|&&
-name|regno
-operator|<
-name|LR0_REGNUM
-operator|+
-literal|128
-condition|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"LR%03d"
-argument_list|,
-name|regno
-operator|-
-name|LR0_REGNUM
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|regno
-operator|==
-name|Q_REGNUM
-condition|)
-name|strcpy
-argument_list|(
-name|buf
-argument_list|,
-literal|"SR131"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|BP_REGNUM
-operator|&&
-name|regno
-operator|<=
-name|CR_REGNUM
-condition|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"SR%03d"
-argument_list|,
-name|regno
-operator|-
-name|BP_REGNUM
-operator|+
-literal|133
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|regno
-operator|==
-name|ALU_REGNUM
-condition|)
-name|strcpy
-argument_list|(
-name|buf
-argument_list|,
-literal|"SR132"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|IPC_REGNUM
-operator|&&
-name|regno
-operator|<=
-name|IPB_REGNUM
-condition|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"SR%03d"
-argument_list|,
-name|regno
-operator|-
-name|IPC_REGNUM
-operator|+
-literal|128
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|VAB_REGNUM
-operator|&&
-name|regno
-operator|<=
-name|LRU_REGNUM
-condition|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"SR%03d"
-argument_list|,
-name|regno
-operator|-
-name|VAB_REGNUM
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|regno
-operator|==
-name|GR1_REGNUM
-condition|)
-name|strcpy
-argument_list|(
-name|buf
-argument_list|,
-literal|"GR001"
-argument_list|)
-expr_stmt|;
-return|return
-name|buf
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Read the remote registers into the block REGS.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|eb_fetch_registers
-parameter_list|()
-block|{
-name|int
-name|reg_index
-decl_stmt|;
-name|int
-name|regnum_index
-decl_stmt|;
-name|char
-name|tempbuf
-index|[
-literal|10
-index|]
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* This should not be necessary, because one is supposed to read the      registers only when the inferior is stopped (at least with      ptrace() and why not make it the same for remote?).  */
-comment|/* ^A is the "normal character" used to make sure we are talking to EBMON      and not to the program being debugged.  */
-block|write (eb_desc, "\001\n");   expect_prompt ();
-endif|#
-directive|endif
-name|write
-argument_list|(
-name|eb_desc
-argument_list|,
-literal|"dw gr96,gr127\n"
-argument_list|,
-literal|14
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|reg_index
-operator|=
-literal|96
-operator|,
-name|regnum_index
-operator|=
-name|GR96_REGNUM
-init|;
-name|reg_index
-operator|<
-literal|128
-condition|;
-name|reg_index
-operator|+=
-literal|4
-operator|,
-name|regnum_index
-operator|+=
-literal|4
-control|)
-block|{
-name|sprintf
-argument_list|(
-name|tempbuf
-argument_list|,
-literal|"GR%03d "
-argument_list|,
-name|reg_index
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-name|tempbuf
-argument_list|)
-expr_stmt|;
-name|get_hex_regs
-argument_list|(
-literal|4
-argument_list|,
-name|regnum_index
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|128
-condition|;
-name|i
-operator|+=
-literal|32
-control|)
-block|{
-comment|/* The PC has a tendency to hang if we get these 	 all in one fell swoop ("dw lr0,lr127").  */
-name|sprintf
-argument_list|(
-name|tempbuf
-argument_list|,
-literal|"dw lr%d\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-name|write
-argument_list|(
-name|eb_desc
-argument_list|,
-name|tempbuf
-argument_list|,
-name|strlen
-argument_list|(
-name|tempbuf
-argument_list|)
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|reg_index
-operator|=
-name|i
-operator|,
-name|regnum_index
-operator|=
-name|LR0_REGNUM
-operator|+
-name|i
-init|;
-name|reg_index
-operator|<
-name|i
-operator|+
-literal|32
-condition|;
-name|reg_index
-operator|+=
-literal|4
-operator|,
-name|regnum_index
-operator|+=
-literal|4
-control|)
-block|{
-name|sprintf
-argument_list|(
-name|tempbuf
-argument_list|,
-literal|"LR%03d "
-argument_list|,
-name|reg_index
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-name|tempbuf
-argument_list|)
-expr_stmt|;
-name|get_hex_regs
-argument_list|(
-literal|4
-argument_list|,
-name|regnum_index
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|write
-argument_list|(
-name|eb_desc
-argument_list|,
-literal|"dw sr133,sr133\n"
-argument_list|,
-literal|15
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-literal|"SR133          "
-argument_list|)
-expr_stmt|;
-name|get_hex_regs
-argument_list|(
-literal|1
-argument_list|,
-name|BP_REGNUM
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|write
-argument_list|(
-name|eb_desc
-argument_list|,
-literal|"dw sr134,sr134\n"
-argument_list|,
-literal|15
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-literal|"SR134                   "
-argument_list|)
-expr_stmt|;
-name|get_hex_regs
-argument_list|(
-literal|1
-argument_list|,
-name|FC_REGNUM
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|write
-argument_list|(
-name|eb_desc
-argument_list|,
-literal|"dw sr135,sr135\n"
-argument_list|,
-literal|15
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-literal|"SR135                            "
-argument_list|)
-expr_stmt|;
-name|get_hex_regs
-argument_list|(
-literal|1
-argument_list|,
-name|CR_REGNUM
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|write
-argument_list|(
-name|eb_desc
-argument_list|,
-literal|"dw sr131,sr131\n"
-argument_list|,
-literal|15
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-literal|"SR131                            "
-argument_list|)
-expr_stmt|;
-name|get_hex_regs
-argument_list|(
-literal|1
-argument_list|,
-name|Q_REGNUM
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|write
-argument_list|(
-name|eb_desc
-argument_list|,
-literal|"dw sr0,sr14\n"
-argument_list|,
-literal|12
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|reg_index
-operator|=
-literal|0
-operator|,
-name|regnum_index
-operator|=
-name|VAB_REGNUM
-init|;
-name|regnum_index
-operator|<=
-name|LRU_REGNUM
-condition|;
-name|regnum_index
-operator|+=
-literal|4
-operator|,
-name|reg_index
-operator|+=
-literal|4
-control|)
-block|{
-name|sprintf
-argument_list|(
-name|tempbuf
-argument_list|,
-literal|"SR%03d "
-argument_list|,
-name|reg_index
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-name|tempbuf
-argument_list|)
-expr_stmt|;
-name|get_hex_regs
-argument_list|(
-name|reg_index
-operator|==
-literal|12
-condition|?
-literal|3
-else|:
-literal|4
-argument_list|,
-name|regnum_index
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* There doesn't seem to be any way to get these.  */
-block|{
-name|int
-name|val
-init|=
-operator|-
-literal|1
-decl_stmt|;
-name|supply_register
-argument_list|(
-name|FPE_REGNUM
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|val
-argument_list|)
-expr_stmt|;
-name|supply_register
-argument_list|(
-name|INTE_REGNUM
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|val
-argument_list|)
-expr_stmt|;
-name|supply_register
-argument_list|(
-name|FPS_REGNUM
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|val
-argument_list|)
-expr_stmt|;
-name|supply_register
-argument_list|(
-name|EXO_REGNUM
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|val
-argument_list|)
-expr_stmt|;
-block|}
-name|write
-argument_list|(
-name|eb_desc
-argument_list|,
-literal|"dw gr1,gr1\n"
-argument_list|,
-literal|11
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-literal|"GR001 "
-argument_list|)
-expr_stmt|;
-name|get_hex_regs
-argument_list|(
-literal|1
-argument_list|,
-name|GR1_REGNUM
-argument_list|)
-expr_stmt|;
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Fetch register REGNO, or all registers if REGNO is -1.    Returns errno value.  */
-end_comment
-
-begin_function
-name|void
-name|eb_fetch_register
-parameter_list|(
-name|regno
-parameter_list|)
-name|int
-name|regno
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|regno
-operator|==
-operator|-
-literal|1
-condition|)
-name|eb_fetch_registers
-argument_list|()
-expr_stmt|;
-else|else
-block|{
-name|char
-modifier|*
-name|name
-init|=
-name|get_reg_name
-argument_list|(
-name|regno
-argument_list|)
-decl_stmt|;
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"dw %s,%s\n"
-argument_list|,
-name|name
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
-name|get_hex_regs
-argument_list|(
-literal|1
-argument_list|,
-name|regno
-argument_list|)
-expr_stmt|;
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-block|}
-return|return;
-block|}
-end_function
-
-begin_comment
-comment|/* Store the remote registers from the contents of the block REGS.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|eb_store_registers
-parameter_list|()
-block|{
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"s gr1,%x\n"
-argument_list|,
-name|read_register
-argument_list|(
-name|GR1_REGNUM
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-literal|32
-condition|;
-name|j
-operator|+=
-literal|16
-control|)
-block|{
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"s gr%d,"
-argument_list|,
-name|j
-operator|+
-literal|96
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|15
-condition|;
-operator|++
-name|i
-control|)
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"%x,"
-argument_list|,
-name|read_register
-argument_list|(
-name|GR96_REGNUM
-operator|+
-name|j
-operator|+
-name|i
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"%x\n"
-argument_list|,
-name|read_register
-argument_list|(
-name|GR96_REGNUM
-operator|+
-name|j
-operator|+
-literal|15
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-block|}
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-literal|128
-condition|;
-name|j
-operator|+=
-literal|16
-control|)
-block|{
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"s lr%d,"
-argument_list|,
-name|j
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|15
-condition|;
-operator|++
-name|i
-control|)
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"%x,"
-argument_list|,
-name|read_register
-argument_list|(
-name|LR0_REGNUM
-operator|+
-name|j
-operator|+
-name|i
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"%x\n"
-argument_list|,
-name|read_register
-argument_list|(
-name|LR0_REGNUM
-operator|+
-name|j
-operator|+
-literal|15
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-block|}
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"s sr133,%x,%x,%x\n"
-argument_list|,
-name|read_register
-argument_list|(
-name|BP_REGNUM
-argument_list|)
-argument_list|,
-name|read_register
-argument_list|(
-name|FC_REGNUM
-argument_list|)
-argument_list|,
-name|read_register
-argument_list|(
-name|CR_REGNUM
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"s sr131,%x\n"
-argument_list|,
-name|read_register
-argument_list|(
-name|Q_REGNUM
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"s sr0,"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|11
-condition|;
-operator|++
-name|i
-control|)
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"%x,"
-argument_list|,
-name|read_register
-argument_list|(
-name|VAB_REGNUM
-operator|+
-name|i
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"%x\n"
-argument_list|,
-name|read_register
-argument_list|(
-name|VAB_REGNUM
-operator|+
-literal|11
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Store register REGNO, or all if REGNO == 0.    Return errno value.  */
-end_comment
-
-begin_function
-name|void
-name|eb_store_register
-parameter_list|(
-name|regno
-parameter_list|)
-name|int
-name|regno
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|regno
-operator|==
-operator|-
-literal|1
-condition|)
-name|eb_store_registers
-argument_list|()
-expr_stmt|;
-else|else
-block|{
-name|char
-modifier|*
-name|name
-init|=
-name|get_reg_name
-argument_list|(
-name|regno
-argument_list|)
-decl_stmt|;
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"s %s,%x\n"
-argument_list|,
-name|name
-argument_list|,
-name|read_register
-argument_list|(
-name|regno
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Setting GR1 changes the numbers of all the locals, so 	 invalidate the register cache.  Do this *after* calling 	 read_register, because we want read_register to return the 	 value that write_register has just stuffed into the registers 	 array, not the value of the register fetched from the 	 inferior.  */
-if|if
-condition|(
-name|regno
-operator|==
-name|GR1_REGNUM
-condition|)
-name|registers_changed
-argument_list|()
-expr_stmt|;
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/* Get ready to modify the registers array.  On machines which store    individual registers, this doesn't need to do anything.  On machines    which store all the registers in one fell swoop, this makes sure    that registers contains all the registers from the program being    debugged.  */
-end_comment
-
-begin_function
-name|void
-name|eb_prepare_to_store
-parameter_list|()
-block|{
-comment|/* Do nothing, since we can store individual regs */
-block|}
-end_function
-
-begin_comment
-comment|/* FIXME-someday!  Merge these two.  */
-end_comment
-
-begin_function
-name|int
-name|eb_xfer_inferior_memory
-parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|,
-name|target
-parameter_list|)
-name|CORE_ADDR
-name|memaddr
-decl_stmt|;
-name|char
-modifier|*
-name|myaddr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-name|int
-name|write
-decl_stmt|;
-name|struct
-name|target_ops
-modifier|*
-name|target
-decl_stmt|;
-comment|/* ignored */
-block|{
-if|if
-condition|(
-name|write
-condition|)
-return|return
-name|eb_write_inferior_memory
-argument_list|(
-name|memaddr
-argument_list|,
-name|myaddr
-argument_list|,
-name|len
-argument_list|)
-return|;
-else|else
-return|return
-name|eb_read_inferior_memory
-argument_list|(
-name|memaddr
-argument_list|,
-name|myaddr
-argument_list|,
-name|len
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|eb_files_info
-parameter_list|()
-block|{
-name|printf
-argument_list|(
-literal|"\tAttached to %s at %d baud and running program %s.\n"
-argument_list|,
-name|dev_name
-argument_list|,
-name|baudrate
-argument_list|,
-name|prog_name
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Copy LEN bytes of data from debugger memory at MYADDR    to inferior's memory at MEMADDR.  Returns length moved.  */
-end_comment
-
-begin_function
-name|int
-name|eb_write_inferior_memory
-parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
-name|CORE_ADDR
-name|memaddr
-decl_stmt|;
-name|char
-modifier|*
-name|myaddr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|len
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|(
-name|i
-operator|%
-literal|16
-operator|)
-operator|==
-literal|0
-condition|)
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"sb %x,"
-argument_list|,
-name|memaddr
-operator|+
-name|i
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|i
-operator|%
-literal|16
-operator|)
-operator|==
-literal|15
-operator|||
-name|i
-operator|==
-name|len
-operator|-
-literal|1
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"%x\n"
-argument_list|,
-operator|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|myaddr
-operator|)
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-block|}
-else|else
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"%x,"
-argument_list|,
-operator|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|myaddr
-operator|)
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|len
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Read LEN bytes from inferior memory at MEMADDR.  Put the result    at debugger address MYADDR.  Returns length moved.  */
-end_comment
-
-begin_function
-name|int
-name|eb_read_inferior_memory
-parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
-name|CORE_ADDR
-name|memaddr
-decl_stmt|;
-name|char
-modifier|*
-name|myaddr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-block|{
-name|int
-name|i
-decl_stmt|;
-comment|/* Number of bytes read so far.  */
-name|int
-name|count
-decl_stmt|;
-comment|/* Starting address of this pass.  */
-name|unsigned
-name|long
-name|startaddr
-decl_stmt|;
-comment|/* Number of bytes to read in this pass.  */
-name|int
-name|len_this_pass
-decl_stmt|;
-comment|/* Note that this code works correctly if startaddr is just less      than UINT_MAX (well, really CORE_ADDR_MAX if there was such a      thing).  That is, something like      eb_read_bytes (CORE_ADDR_MAX - 4, foo, 4)      works--it never adds len to memaddr and gets 0.  */
-comment|/* However, something like      eb_read_bytes (CORE_ADDR_MAX - 3, foo, 4)      doesn't need to work.  Detect it and give up if there's an attempt      to do that.  */
-if|if
-condition|(
-operator|(
-operator|(
-name|memaddr
-operator|-
-literal|1
-operator|)
-operator|+
-name|len
-operator|)
-operator|<
-name|memaddr
-condition|)
-block|{
-name|errno
-operator|=
-name|EIO
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-name|startaddr
-operator|=
-name|memaddr
-expr_stmt|;
-name|count
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-name|count
-operator|<
-name|len
-condition|)
-block|{
-name|len_this_pass
-operator|=
-literal|16
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|startaddr
-operator|%
-literal|16
-operator|)
-operator|!=
-literal|0
-condition|)
-name|len_this_pass
-operator|-=
-name|startaddr
-operator|%
-literal|16
-expr_stmt|;
-if|if
-condition|(
-name|len_this_pass
-operator|>
-operator|(
-name|len
-operator|-
-name|count
-operator|)
-condition|)
-name|len_this_pass
-operator|=
-operator|(
-name|len
-operator|-
-name|count
-operator|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|eb_stream
-argument_list|,
-literal|"db %x,%x\n"
-argument_list|,
-name|startaddr
-argument_list|,
-operator|(
-name|startaddr
-operator|-
-literal|1
-operator|)
-operator|+
-name|len_this_pass
-argument_list|)
-expr_stmt|;
-name|expect
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-comment|/* Look for 8 hex digits.  */
-name|i
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
-block|{
-if|if
-condition|(
-name|isxdigit
-argument_list|(
-name|readchar
-argument_list|()
-argument_list|)
-condition|)
-operator|++
-name|i
-expr_stmt|;
-else|else
-block|{
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-name|error
-argument_list|(
-literal|"Hex digit expected from remote system."
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|i
-operator|>=
-literal|8
-condition|)
-break|break;
-block|}
-name|expect
-argument_list|(
-literal|"  "
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|len_this_pass
-condition|;
-name|i
-operator|++
-control|)
-name|get_hex_byte
-argument_list|(
-operator|&
-name|myaddr
-index|[
-name|count
-operator|++
-index|]
-argument_list|)
-expr_stmt|;
-name|expect_prompt
-argument_list|()
-expr_stmt|;
-name|startaddr
-operator|+=
-name|len_this_pass
-expr_stmt|;
-block|}
-return|return
-name|len
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|eb_kill
-parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|char
-modifier|*
-name|args
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
-block|{
-return|return;
-comment|/* Ignore attempts to kill target system */
-block|}
-end_function
-
-begin_comment
-comment|/* Clean up when a program exits.     The program actually lives on in the remote processor's RAM, and may be    run again without a download.  Don't leave it full of breakpoint    instructions.  */
-end_comment
-
-begin_function
-name|void
-name|eb_mourn_inferior
-parameter_list|()
-block|{
-name|remove_breakpoints
-argument_list|()
-expr_stmt|;
-name|unpush_target
-argument_list|(
-operator|&
-name|eb_ops
-argument_list|)
-expr_stmt|;
-name|generic_mourn_inferior
-argument_list|()
-expr_stmt|;
-comment|/* Do all the proper things now */
-block|}
-end_function
-
-begin_comment
-comment|/* Define the target subroutine names */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|target_ops
-name|eb_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|init_eb_ops
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|eb_ops
-operator|.
-name|to_shortname
-operator|=
-literal|"amd-eb"
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_longname
-operator|=
-literal|"Remote serial AMD EBMON target"
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_doc
-operator|=
-literal|"Use a remote computer running EBMON connected by a serial line.\n\ Arguments are the name of the device for the serial line,\n\ the speed to connect at in bits per second, and the filename of the\n\ executable as it exists on the remote computer.  For example,\n\ target amd-eb /dev/ttya 9600 demo"
-operator|,
-name|eb_ops
-operator|.
-name|to_open
-operator|=
-name|eb_open
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_close
-operator|=
-name|eb_close
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_attach
-operator|=
-literal|0
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_post_attach
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_require_attach
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_detach
-operator|=
-name|eb_detach
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_require_detach
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_resume
-operator|=
-name|eb_resume
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_wait
-operator|=
-name|eb_wait
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_post_wait
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_fetch_registers
-operator|=
-name|eb_fetch_register
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_store_registers
-operator|=
-name|eb_store_register
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_prepare_to_store
-operator|=
-name|eb_prepare_to_store
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_xfer_memory
-operator|=
-name|eb_xfer_inferior_memory
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_files_info
-operator|=
-name|eb_files_info
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_insert_breakpoint
-operator|=
-literal|0
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_remove_breakpoint
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Breakpoints */
-name|eb_ops
-operator|.
-name|to_terminal_init
-operator|=
-literal|0
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_terminal_inferior
-operator|=
-literal|0
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_terminal_ours_for_output
-operator|=
-literal|0
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_terminal_ours
-operator|=
-literal|0
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_terminal_info
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Terminal handling */
-name|eb_ops
-operator|.
-name|to_kill
-operator|=
-name|eb_kill
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_load
-operator|=
-name|generic_load
-expr_stmt|;
-comment|/* load */
-name|eb_ops
-operator|.
-name|to_lookup_symbol
-operator|=
-literal|0
-expr_stmt|;
-comment|/* lookup_symbol */
-name|eb_ops
-operator|.
-name|to_create_inferior
-operator|=
-name|eb_create_inferior
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_post_startup_inferior
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_acknowledge_created_inferior
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_clone_and_follow_inferior
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_post_follow_inferior_by_clone
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_insert_fork_catchpoint
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_remove_fork_catchpoint
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_insert_vfork_catchpoint
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_remove_vfork_catchpoint
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_has_forked
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_has_vforked
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_can_follow_vfork_prior_to_exec
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_post_follow_vfork
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_insert_exec_catchpoint
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_remove_exec_catchpoint
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_has_execd
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_reported_exec_events_per_exec_call
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_has_exited
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_mourn_inferior
-operator|=
-name|eb_mourn_inferior
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_can_run
-operator|=
-literal|0
-expr_stmt|;
-comment|/* can_run */
-name|eb_ops
-operator|.
-name|to_notice_signals
-operator|=
-literal|0
-expr_stmt|;
-comment|/* notice_signals */
-name|eb_ops
-operator|.
-name|to_thread_alive
-operator|=
-literal|0
-expr_stmt|;
-comment|/* thread-alive */
-name|eb_ops
-operator|.
-name|to_stop
-operator|=
-literal|0
-expr_stmt|;
-comment|/* to_stop */
-name|eb_ops
-operator|.
-name|to_pid_to_exec_file
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_core_file_to_sym_file
-operator|=
-name|NULL
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_stratum
-operator|=
-name|process_stratum
-expr_stmt|;
-name|eb_ops
-operator|.
-name|DONT_USE
-operator|=
-literal|0
-expr_stmt|;
-comment|/* next */
-name|eb_ops
-operator|.
-name|to_has_all_memory
-operator|=
-literal|1
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_has_memory
-operator|=
-literal|1
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_has_stack
-operator|=
-literal|1
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_has_registers
-operator|=
-literal|1
-expr_stmt|;
-name|eb_ops
-operator|.
-name|to_has_execution
-operator|=
-literal|1
-expr_stmt|;
-comment|/* all mem, mem, stack, regs, exec */
-name|eb_ops
-operator|.
-name|to_sections
-operator|=
-literal|0
-expr_stmt|;
-comment|/* sections */
-name|eb_ops
-operator|.
-name|to_sections_end
-operator|=
-literal|0
-expr_stmt|;
-comment|/* sections end */
-name|eb_ops
-operator|.
-name|to_magic
-operator|=
-name|OPS_MAGIC
-expr_stmt|;
-comment|/* Always the last thing */
-block|}
-end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_function
-name|void
-name|_initialize_remote_eb
-parameter_list|()
-block|{
-name|init_eb_ops
-argument_list|()
-expr_stmt|;
-name|add_target
-argument_list|(
-operator|&
-name|eb_ops
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 end_unit
 

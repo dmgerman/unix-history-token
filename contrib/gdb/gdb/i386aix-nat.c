@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Intel 386 native support.    Copyright (C) 1988, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Intel 386 native support.    Copyright 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999,    2000, 2001 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"gdbcore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
 end_include
 
 begin_ifdef
@@ -150,25 +156,22 @@ directive|include
 file|"target.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|fetch_core_registers
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_escape
 end_escape
@@ -231,23 +234,19 @@ begin_function
 name|int
 name|i386_register_u_addr
 parameter_list|(
+name|int
 name|blockend
 parameter_list|,
+name|int
 name|regnum
 parameter_list|)
-name|int
-name|blockend
-decl_stmt|;
-name|int
-name|regnum
-decl_stmt|;
 block|{
 if|#
 directive|if
 literal|0
 comment|/* this will be needed if fp registers are reinstated */
 comment|/* for now, you can look at them with 'info float'    * sys5 wont let you change them with ptrace anyway    */
-block|if (regnum>= FP0_REGNUM&& regnum<= FP7_REGNUM)      {       int ubase, fpstate;       struct user u;       ubase = blockend + 4 * (SS + 1) - KSTKSZ;       fpstate = ubase + ((char *)&u.u_fpstate - (char *)&u);       return (fpstate + 0x1c + 10 * (regnum - FP0_REGNUM));     }    else
+block|if (regnum>= FP0_REGNUM&& regnum<= FP7_REGNUM)     {       int ubase, fpstate;       struct user u;       ubase = blockend + 4 * (SS + 1) - KSTKSZ;       fpstate = ubase + ((char *)&u.u_fpstate - (char *)&u);       return (fpstate + 0x1c + 10 * (regnum - FP0_REGNUM));     }   else
 endif|#
 directive|endif
 return|return
@@ -339,43 +338,28 @@ begin_expr_stmt
 specifier|static
 name|print_387_status
 argument_list|(
-argument|status
+argument|unsigned short status
 argument_list|,
-argument|ep
+argument|struct env387 *ep
 argument_list|)
-name|unsigned
-name|short
-name|status
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|struct
-name|env387
-modifier|*
-name|ep
-decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
-decl_stmt|;
+block|;
 name|int
 name|bothstatus
-decl_stmt|;
+block|;
 name|int
 name|top
-decl_stmt|;
+block|;
 name|int
 name|fpreg
-decl_stmt|;
+block|;
 name|unsigned
 name|char
-modifier|*
+operator|*
 name|p
-decl_stmt|;
+block|;
 name|bothstatus
 operator|=
 operator|(
@@ -393,7 +377,7 @@ operator|!=
 literal|0
 operator|)
 operator|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|status
@@ -416,6 +400,9 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|ep
@@ -442,6 +429,9 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_expr_stmt
 name|print_387_control_word
 argument_list|(
 name|ep
@@ -449,11 +439,17 @@ operator|->
 name|control
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"last exception: "
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"opcode %s; "
@@ -466,6 +462,9 @@ name|opcode
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"pc %s:"
@@ -478,6 +477,9 @@ name|code_seg
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"%s; "
@@ -490,6 +492,9 @@ name|eip
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"operand %s"
@@ -502,6 +507,9 @@ name|operand_seg
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|":%s\n"
@@ -514,6 +522,9 @@ name|operand
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|top
 operator|=
 operator|(
@@ -528,11 +539,17 @@ operator|&
 literal|7
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"regno  tag  msb              lsb  value\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|fpreg
@@ -680,11 +697,10 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_block
+end_for
 
 begin_decl_stmt
-specifier|static
+unit|}  static
 name|struct
 name|env387
 name|core_env387
@@ -694,7 +710,9 @@ end_decl_stmt
 begin_function
 name|void
 name|i386_float_info
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|env387
@@ -715,7 +733,13 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|inferior_pid
+operator|!
+name|ptid_equal
+argument_list|(
+name|inferior_ptid
+argument_list|,
+name|null_ptid
+argument_list|)
 condition|)
 block|{
 name|char
@@ -732,7 +756,10 @@ name|ptrace
 argument_list|(
 name|PT_READ_FPR
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 name|buf
 argument_list|,
@@ -808,7 +835,13 @@ return|return;
 block|}
 if|if
 condition|(
-name|inferior_pid
+operator|!
+name|ptid_equal
+argument_list|(
+name|inferior_ptid
+argument_list|,
+name|null_ptid
+argument_list|)
 condition|)
 block|{
 name|int
@@ -842,7 +875,10 @@ name|ptrace
 argument_list|(
 name|PT_READ_FPR
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 name|buf
 argument_list|,
@@ -937,11 +973,9 @@ specifier|static
 name|void
 name|fetch_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -966,7 +1000,10 @@ name|ptrace
 argument_list|(
 name|PT_READ_GPR
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 name|PT_REG
 argument_list|(
@@ -986,7 +1023,10 @@ name|ptrace
 argument_list|(
 name|PT_READ_FPR
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 name|buf
 argument_list|,
@@ -1021,11 +1061,9 @@ begin_function
 name|void
 name|fetch_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1069,22 +1107,15 @@ specifier|static
 name|void
 name|store_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
 index|[
 literal|80
 index|]
-decl_stmt|;
-specifier|extern
-name|char
-name|registers
-index|[]
 decl_stmt|;
 name|errno
 operator|=
@@ -1100,7 +1131,10 @@ name|ptrace
 argument_list|(
 name|PT_WRITE_GPR
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 name|PT_REG
 argument_list|(
@@ -1132,7 +1166,10 @@ name|ptrace
 argument_list|(
 name|PT_WRITE_FPR
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|&
 name|registers
@@ -1193,11 +1230,9 @@ begin_function
 name|void
 name|store_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1405,33 +1440,28 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Provide registers to GDB from a core file.     CORE_REG_SECT points to an array of bytes, which were obtained from    a core file which BFD thinks might contain register contents.     CORE_REG_SIZE is its size.     WHICH says which register set corelow suspects this is:      0 --- the general-purpose register set      2 --- the floating-point register set     REG_ADDR isn't used.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
 name|fetch_core_registers
 parameter_list|(
-name|core_reg_sect
-parameter_list|,
-name|core_reg_size
-parameter_list|,
-name|which
-parameter_list|,
-name|reg_addr
-parameter_list|)
 name|char
 modifier|*
 name|core_reg_sect
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|core_reg_size
-decl_stmt|;
+parameter_list|,
 name|int
 name|which
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|reg_addr
-decl_stmt|;
-comment|/* ignored */
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1541,9 +1571,18 @@ init|=
 block|{
 name|bfd_target_unknown_flavour
 block|,
+comment|/* core_flavour */
+name|default_check_format
+block|,
+comment|/* check_format */
+name|default_core_sniffer
+block|,
+comment|/* core_sniffer */
 name|fetch_core_registers
 block|,
+comment|/* core_read_registers */
 name|NULL
+comment|/* next */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1551,7 +1590,9 @@ end_decl_stmt
 begin_function
 name|void
 name|_initialize_core_i386aix
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|add_core_fns
 argument_list|(

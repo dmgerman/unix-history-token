@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Interface GDB to Mach 3.0 operating systems.    (Most) Mach 3.0 related routines live in this file.     Copyright (C) 1992, 1996, 1999 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Interface GDB to Mach 3.0 operating systems.    (Most) Mach 3.0 related routines live in this file.     Copyright 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001,    2002 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*  * Author: Jukka Virtanen<jtv@hut.fi>  *	   Computing Centre  *         Helsinki University of Technology  *         Finland  *  * Thanks to my friends who helped with ideas and testing:  *  *	Johannes Helander, Antti Louko, Tero Mononen,  *	jvh@cs.hut.fi	   alo@hut.fi   tmo@cs.hut.fi  *  *      Tero Kivinen       and          Eamonn McManus  *	kivinen@cs.hut.fi               emcmanus@gr.osf.org  *	  */
+comment|/*  * Author: Jukka Virtanen<jtv@hut.fi>  *         Computing Centre  *         Helsinki University of Technology  *         Finland  *  * Thanks to my friends who helped with ideas and testing:  *  *      Johannes Helander, Antti Louko, Tero Mononen,  *      jvh@cs.hut.fi      alo@hut.fi   tmo@cs.hut.fi  *  *      Tero Kivinen       and          Eamonn McManus  *      kivinen@cs.hut.fi               emcmanus@gr.osf.org  *        */
 end_comment
 
 begin_include
@@ -100,7 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
+file|"gdb_wait.h"
 end_include
 
 begin_include
@@ -113,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|"gdbcore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
 end_include
 
 begin_if
@@ -152,7 +158,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Included only for signal names and NSIG  *  * note: There are many problems in signal handling with  *       gdb in Mach 3.0 in general.  */
+comment|/* Included only for signal names and NSIG   * note: There are many problems in signal handling with  *       gdb in Mach 3.0 in general.  */
 end_comment
 
 begin_include
@@ -430,20 +436,20 @@ decl_stmt|;
 name|int
 name|slotid
 decl_stmt|;
-comment|/* This is for the mthreads list.  It points to the cproc list.      Perhaps the two lists should be merged (or perhaps it was a mistake      to make them both use a struct gdb_thread).  */
+comment|/* This is for the mthreads list.  It points to the cproc list.        Perhaps the two lists should be merged (or perhaps it was a mistake        to make them both use a struct gdb_thread).  */
 name|struct
 name|gdb_thread
 modifier|*
 name|cproc
 decl_stmt|;
-comment|/* These are for the cproc list, which is linked through the next field      of the struct gdb_thread.  */
+comment|/* These are for the cproc list, which is linked through the next field        of the struct gdb_thread.  */
 name|char
 name|raw_cproc
 index|[
 name|CPROC_SIZE
 index|]
 decl_stmt|;
-comment|/* The cthread which is pointed to by the incarnation field from the      cproc.  This points to the copy we've read into GDB.  */
+comment|/* The cthread which is pointed to by the incarnation field from the        cproc.  This points to the copy we've read into GDB.  */
 name|cthread_t
 name|cthread
 decl_stmt|;
@@ -603,7 +609,7 @@ comment|/* If you define this, intercepted bsd server calls will be  * dumped wh
 end_comment
 
 begin_comment
-comment|/* #define DUMP_SYSCALL		/* debugging interceptor */
+comment|/* #define DUMP_SYSCALL         /* debugging interceptor */
 end_comment
 
 begin_comment
@@ -626,25 +632,19 @@ begin_function
 name|void
 name|xx_debug
 parameter_list|(
-name|fmt
-parameter_list|,
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
 name|char
 modifier|*
 name|fmt
-decl_stmt|;
+parameter_list|,
 name|int
 name|a
-decl_stmt|,
+parameter_list|,
+name|int
 name|b
-decl_stmt|,
+parameter_list|,
+name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1025,21 +1025,15 @@ begin_function
 name|port_chain_t
 name|port_chain_insert
 parameter_list|(
-name|list
-parameter_list|,
-name|name
-parameter_list|,
-name|type
-parameter_list|)
 name|port_chain_t
 name|list
-decl_stmt|;
+parameter_list|,
 name|mach_port_t
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -1133,8 +1127,14 @@ block|}
 block|}
 block|}
 else|else
-name|abort
-argument_list|()
+name|internal_error
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"failed internal consistency check"
+argument_list|)
 expr_stmt|;
 name|new
 operator|=
@@ -1186,16 +1186,12 @@ begin_function
 name|port_chain_t
 name|port_chain_delete
 parameter_list|(
-name|list
-parameter_list|,
-name|elem
-parameter_list|)
 name|port_chain_t
 name|list
-decl_stmt|;
+parameter_list|,
 name|mach_port_t
 name|elem
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1262,13 +1258,11 @@ begin_function
 name|void
 name|port_chain_destroy
 parameter_list|(
-name|ostack
-parameter_list|)
 name|struct
 name|obstack
 modifier|*
 name|ostack
-decl_stmt|;
+parameter_list|)
 block|{
 name|obstack_free
 argument_list|(
@@ -1289,16 +1283,12 @@ begin_function
 name|port_chain_t
 name|port_chain_member
 parameter_list|(
-name|list
-parameter_list|,
-name|elem
-parameter_list|)
 name|port_chain_t
 name|list
-decl_stmt|;
+parameter_list|,
 name|mach_port_t
 name|elem
-decl_stmt|;
+parameter_list|)
 block|{
 while|while
 condition|(
@@ -1339,16 +1329,12 @@ begin_function
 name|int
 name|map_port_name_to_mid
 parameter_list|(
-name|name
-parameter_list|,
-name|type
-parameter_list|)
 name|mach_port_t
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|port_chain_t
 name|elem
@@ -1482,11 +1468,9 @@ specifier|static
 name|void
 name|discard_single_step
 parameter_list|(
-name|thread
-parameter_list|)
 name|thread_t
 name|thread
-decl_stmt|;
+parameter_list|)
 block|{
 name|currently_waiting_for
 operator|=
@@ -1521,23 +1505,11 @@ end_function
 begin_macro
 name|setup_single_step
 argument_list|(
-argument|thread
+argument|thread_t thread
 argument_list|,
-argument|start_step
+argument|boolean_t start_step
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|thread_t
-name|thread
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|boolean_t
-name|start_step
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -1658,7 +1630,7 @@ if|#
 directive|if
 literal|0
 comment|/* Insert thread exception port to wait port set */
-block|ret = mach_port_move_member (mach_task_self(),  					   thread_exception_port, 					   inferior_wait_port_set); 	      CHK ("Moving thread exception port to inferior_wait_port_set", 		   ret);
+block|ret = mach_port_move_member (mach_task_self (), 					   thread_exception_port, 					   inferior_wait_port_set); 	      CHK ("Moving thread exception port to inferior_wait_port_set", 		   ret);
 endif|#
 directive|endif
 name|thread_saved_exception_port
@@ -1738,7 +1710,7 @@ if|#
 directive|if
 literal|0
 comment|/* Remove thread exception port from wait port set */
-block|ret = mach_port_move_member (mach_task_self(),  				       thread_exception_port, 				       MACH_PORT_NULL); 	  CHK ("Removing thread exception port from inferior_wait_port_set", 	       ret);
+block|ret = mach_port_move_member (mach_task_self (), 				       thread_exception_port, 				       MACH_PORT_NULL); 	  CHK ("Removing thread exception port from inferior_wait_port_set", 	       ret);
 endif|#
 directive|endif
 comment|/* Restore thread's old exception port */
@@ -1812,39 +1784,21 @@ begin_expr_stmt
 specifier|static
 name|request_notify
 argument_list|(
-argument|name
+argument|mach_port_t name
 argument_list|,
-argument|variant
+argument|mach_msg_id_t variant
 argument_list|,
-argument|type
+argument|int type
 argument_list|)
-name|mach_port_t
-name|name
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|mach_msg_id_t
-name|variant
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|type
-decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|kern_return_t
 name|ret
-decl_stmt|;
+block|;
 name|mach_port_t
 name|previous_port_dummy
-init|=
+operator|=
 name|MACH_PORT_NULL
-decl_stmt|;
+block|;
 if|if
 condition|(
 operator|!
@@ -1854,6 +1808,9 @@ name|name
 argument_list|)
 condition|)
 return|return;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|port_chain_member
@@ -1864,6 +1821,9 @@ name|name
 argument_list|)
 condition|)
 return|return;
+end_if
+
+begin_expr_stmt
 name|ret
 operator|=
 name|mach_port_request_notification
@@ -1885,6 +1845,9 @@ operator|&
 name|previous_port_dummy
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|CHK
 argument_list|(
 literal|"Serious: request_notify failed"
@@ -1892,6 +1855,9 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -1903,6 +1869,9 @@ argument_list|,
 name|previous_port_dummy
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|notify_chain
 operator|=
 name|port_chain_insert
@@ -1914,38 +1883,24 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-block|}
-end_block
+end_expr_stmt
 
-begin_macro
-name|reverse_msg_bits
-argument_list|(
-argument|msgp
-argument_list|,
-argument|type
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_expr_stmt
+unit|}  reverse_msg_bits
+operator|(
 name|mach_msg_header_t
-modifier|*
+operator|*
 name|msgp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+operator|,
 name|int
 name|type
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+operator|)
 block|{
 name|int
 name|rbits
-decl_stmt|,
+block|,
 name|lbits
-decl_stmt|;
+block|;
 name|rbits
 operator|=
 name|MACH_MSGH_BITS_REMOTE
@@ -1954,11 +1909,11 @@ name|msgp
 operator|->
 name|msgh_bits
 argument_list|)
-expr_stmt|;
+block|;
 name|lbits
 operator|=
 name|type
-expr_stmt|;
+block|;
 name|msgp
 operator|->
 name|msgh_bits
@@ -1978,24 +1933,14 @@ name|lbits
 argument_list|,
 name|rbits
 argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* On the third day He said:     	Let this be global 	and then it was global.     When creating the inferior fork, the    child code in inflow.c sets the name of the    bootstrap_port in its address space to this    variable.     The name is transferred to our address space    with mach3_read_inferior().     Thou shalt not do this with    task_get_bootstrap_port() in this task, since    the name in the inferior task is different than    the one we get.     For blessed are the meek, as they shall inherit    the address space.  */
-end_comment
-
-begin_decl_stmt
+block|; }
+comment|/* On the third day He said:     Let this be global    and then it was global.     When creating the inferior fork, the    child code in inflow.c sets the name of the    bootstrap_port in its address space to this    variable.     The name is transferred to our address space    with mach3_read_inferior().     Thou shalt not do this with    task_get_bootstrap_port() in this task, since    the name in the inferior task is different than    the one we get.     For blessed are the meek, as they shall inherit    the address space.  */
 name|mach_port_t
 name|original_server_port_name
-init|=
+operator|=
 name|MACH_PORT_NULL
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Called from inferior after FORK but before EXEC */
@@ -2005,7 +1950,9 @@ begin_function
 specifier|static
 name|void
 name|m3_trace_me
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -2028,8 +1975,14 @@ name|ret
 operator|!=
 name|KERN_SUCCESS
 condition|)
-name|abort
-argument_list|()
+name|internal_error
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"failed internal consistency check"
+argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -2047,8 +2000,14 @@ name|ret
 operator|!=
 name|KERN_SUCCESS
 condition|)
-name|abort
-argument_list|()
+name|internal_error
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"failed internal consistency check"
+argument_list|)
 expr_stmt|;
 comment|/* Suspend this task to let the parent change my ports.      Resumed by the debugger */
 name|ret
@@ -2065,8 +2024,14 @@ name|ret
 operator|!=
 name|KERN_SUCCESS
 condition|)
-name|abort
-argument_list|()
+name|internal_error
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"failed internal consistency check"
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2082,11 +2047,9 @@ begin_function
 name|void
 name|intercept_exec_calls
 parameter_list|(
-name|exec_counter
-parameter_list|)
 name|int
 name|exec_counter
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|terminal_initted
@@ -2290,7 +2253,7 @@ name|MACH_MSG_TYPE_PORT_SEND
 condition|)
 name|error
 argument_list|(
-literal|"Incorrect right extracted, send right to bsd server excpected"
+literal|"Incorrect right extracted, send right to bsd server expected"
 argument_list|)
 expr_stmt|;
 name|ret
@@ -2379,7 +2342,7 @@ name|MACH_MSG_TYPE_PORT_SEND_ONCE
 condition|)
 name|error
 argument_list|(
-literal|"Incorrect right extracted, send once excpected for exec reply"
+literal|"Incorrect right extracted, send once expected for exec reply"
 argument_list|)
 expr_stmt|;
 name|ret
@@ -2548,8 +2511,8 @@ operator|!
 name|terminal_initted
 condition|)
 block|{
-comment|/* Now that the child has exec'd we know it has already set its 		 process group.  On POSIX systems, tcsetpgrp will fail with 		 EPERM if we try it before the child's setpgid.  */
-comment|/* Set up the "saved terminal modes" of the inferior 		 based on what modes we are starting it with.  */
+comment|/* Now that the child has exec'd we know it has already set its 	         process group.  On POSIX systems, tcsetpgrp will fail with 	         EPERM if we try it before the child's setpgid.  */
+comment|/* Set up the "saved terminal modes" of the inferior 	         based on what modes we are starting it with.  */
 name|target_terminal_init
 argument_list|()
 expr_stmt|;
@@ -2862,16 +2825,12 @@ begin_function
 name|void
 name|consume_send_rights
 parameter_list|(
-name|thread_list
-parameter_list|,
-name|thread_count
-parameter_list|)
 name|thread_array_t
 name|thread_list
-decl_stmt|;
+parameter_list|,
 name|int
 name|thread_count
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|index
@@ -2922,23 +2881,11 @@ end_comment
 begin_macro
 name|setup_thread
 argument_list|(
-argument|thread
+argument|mach_port_t thread
 argument_list|,
-argument|what
+argument|int what
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|mach_port_t
-name|thread
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|what
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -3003,21 +2950,15 @@ begin_function
 name|int
 name|map_slot_to_mid
 parameter_list|(
-name|slot
-parameter_list|,
-name|threads
-parameter_list|,
-name|thread_count
-parameter_list|)
 name|int
 name|slot
-decl_stmt|;
+parameter_list|,
 name|thread_array_t
 name|threads
-decl_stmt|;
+parameter_list|,
 name|int
 name|thread_count
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -3190,22 +3131,16 @@ specifier|static
 name|int
 name|parse_thread_id
 parameter_list|(
-name|arg
-parameter_list|,
-name|thread_count
-parameter_list|,
-name|slots
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|,
 name|int
 name|thread_count
-decl_stmt|;
+parameter_list|,
 name|int
 name|slots
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -3309,7 +3244,7 @@ argument_list|(
 literal|"invalid slot number"
 argument_list|)
 expr_stmt|;
-comment|/* If you want slot numbers to remain slot numbers, set slots.    *    * Well, since 0 is reserved, return the ordinal number    * of the thread rather than the slot number. Awk, this    * counts as a kludge.    */
+comment|/* If you want slot numbers to remain slot numbers, set slots.     * Well, since 0 is reserved, return the ordinal number    * of the thread rather than the slot number. Awk, this    * counts as a kludge.    */
 if|if
 condition|(
 name|slots
@@ -3359,21 +3294,15 @@ begin_function
 name|kern_return_t
 name|select_thread
 parameter_list|(
-name|task
-parameter_list|,
-name|thread_id
-parameter_list|,
-name|flag
-parameter_list|)
 name|mach_port_t
 name|task
-decl_stmt|;
+parameter_list|,
 name|int
 name|thread_id
-decl_stmt|;
+parameter_list|,
 name|int
 name|flag
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_array_t
 name|thread_list
@@ -3675,7 +3604,7 @@ if|#
 directive|if
 literal|0
 block|if (MACH_PORT_VALID (current_thread)) 	{
-comment|/* Store the gdb's view of the thread we are deselecting 	   * 	   * @@ I think gdb updates registers immediately when they are 	   * changed, so don't do this. 	   */
+comment|/* Store the gdb's view of the thread we are deselecting  	   * @@ I think gdb updates registers immediately when they are 	   * changed, so don't do this. 	   */
 block|ret = thread_abort (current_thread); 	  CHK ("Could not abort system calls when saving state of old thread", 	       ret); 	  target_prepare_to_store (); 	  target_store_registers (-1); 	}
 endif|#
 directive|endif
@@ -3731,11 +3660,9 @@ begin_function
 name|int
 name|switch_to_thread
 parameter_list|(
-name|new_thread
-parameter_list|)
 name|thread_t
 name|new_thread
-decl_stmt|;
+parameter_list|)
 block|{
 name|thread_t
 name|saved_thread
@@ -3814,11 +3741,9 @@ specifier|static
 name|int
 name|m3_trace_him
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -3910,7 +3835,9 @@ end_function
 
 begin_macro
 name|setup_exception_port
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -4054,25 +3981,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Wait for the inferior to stop for some reason.    - Loop on notifications until inferior_task dies.    - Loop on exceptions until stopped_in_exception comes true.      (e.g. we receive a single step trace trap)    - a message arrives to gdb's message port     There is no other way to exit this loop.     Returns the inferior_pid for rest of gdb.    Side effects: Set *OURSTATUS.  */
+comment|/* Wait for the inferior to stop for some reason.    - Loop on notifications until inferior_task dies.    - Loop on exceptions until stopped_in_exception comes true.    (e.g. we receive a single step trace trap)    - a message arrives to gdb's message port     There is no other way to exit this loop.     Returns the inferior_ptid for rest of gdb.    Side effects: Set *OURSTATUS.  */
 end_comment
 
 begin_function
-name|int
+name|ptid_t
 name|mach_really_wait
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|ourstatus
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|struct
 name|target_waitstatus
 modifier|*
 name|ourstatus
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -4314,11 +4237,11 @@ name|w
 argument_list|)
 expr_stmt|;
 return|return
-name|inferior_pid
+name|inferior_ptid
 return|;
 block|}
 block|}
-comment|/* Hmm. Check for exception, as it was not a notification. 	 exc_server() does an upcall to catch_exception_raise() 	 if this rpc is an exception. Further actions are decided 	 there.        */
+comment|/* Hmm. Check for exception, as it was not a notification.          exc_server() does an upcall to catch_exception_raise()          if this rpc is an exception. Further actions are decided          there.        */
 if|if
 condition|(
 operator|!
@@ -4336,7 +4259,7 @@ name|header
 argument_list|)
 condition|)
 block|{
-comment|/* Not an exception, check for message. 	   * 	   * Messages don't come from the inferior, or if they 	   * do they better be asynchronous or it will hang. 	   */
+comment|/* Not an exception, check for message.  	   * Messages don't come from the inferior, or if they 	   * do they better be asynchronous or it will hang. 	   */
 if|if
 condition|(
 name|gdb_message_server
@@ -4406,7 +4329,7 @@ name|w
 argument_list|)
 expr_stmt|;
 return|return
-name|inferior_pid
+name|inferior_ptid
 return|;
 block|}
 block|}
@@ -4420,7 +4343,9 @@ end_comment
 begin_function
 name|void
 name|mach3_quit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|mid
@@ -4532,7 +4457,7 @@ comment|/* If ^C is typed when we are waiting for a message  * and your Unix ser
 end_comment
 
 begin_endif
-unit|void mach3_request_quit () {   if (mach_really_waiting)     immediate_quit = 1; }
+unit|void mach3_request_quit (void) {   if (mach_really_waiting)     immediate_quit = 1; }
 endif|#
 directive|endif
 end_endif
@@ -4545,12 +4470,10 @@ begin_function
 name|int
 name|gdb_message_server
 parameter_list|(
-name|InP
-parameter_list|)
 name|mach_msg_header_t
 modifier|*
 name|InP
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -4632,18 +4555,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* NOTE: This is not an RPC call. It is a simpleroutine.  *  * This is not called from this gdb code.  *  * It may be called by another debugger to cause this  * debugger to enter command level:  *  *            (gdb) set stop_inferior_gdb ()  *            (gdb) continue  *  * External program "stop-gdb" implements this also.  */
+comment|/* NOTE: This is not an RPC call. It is a simpleroutine.   * This is not called from this gdb code.  *  * It may be called by another debugger to cause this  * debugger to enter command level:  *  *            (gdb) set stop_inferior_gdb ()  *            (gdb) continue  *  * External program "stop-gdb" implements this also.  */
 end_comment
 
 begin_function
 name|void
 name|stop_inferior_gdb
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
 decl_stmt|;
-comment|/* Code generated by mig, with minor cleanups :-)    *    * simpleroutine stop_inferior_gdb (our_message_port : mach_port_t);    */
+comment|/* Code generated by mig, with minor cleanups :-)     * simpleroutine stop_inferior_gdb (our_message_port : mach_port_t);    */
 typedef|typedef
 struct|struct
 block|{
@@ -4754,11 +4679,9 @@ begin_function
 name|int
 name|mach_thread_for_breakpoint
 parameter_list|(
-name|mid
-parameter_list|)
 name|int
 name|mid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|cmid
@@ -4853,12 +4776,10 @@ begin_function
 name|int
 name|mach_thread_parse_id
 parameter_list|(
-name|arg
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|mid
@@ -4871,7 +4792,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"thread id excpected"
+literal|"thread id expected"
 argument_list|)
 expr_stmt|;
 name|mid
@@ -4911,11 +4832,9 @@ name|char
 modifier|*
 name|mach_thread_output_id
 parameter_list|(
-name|mid
-parameter_list|)
 name|int
 name|mid
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -4984,21 +4903,15 @@ comment|/* THREAD_OUTPUT_ID */
 end_comment
 
 begin_comment
-comment|/* Called with hook PREPARE_TO_PROCEED() from infrun.c.  *  * If we have switched threads and stopped at breakpoint return 1 otherwise 0.  *  *  if SELECT_IT is nonzero, reselect the thread that was active when  *  we stopped at a breakpoint.  *  */
+comment|/* Called with hook PREPARE_TO_PROCEED() from infrun.c.   * If we have switched threads and stopped at breakpoint return 1 otherwise 0.  *  *  if SELECT_IT is nonzero, reselect the thread that was active when  *  we stopped at a breakpoint.  *  * Note that this implementation is potentially redundant now that  * default_prepare_to_proceed() has been added.    *  * FIXME This may not support switching threads after Ctrl-C  * correctly. The default implementation does support this.  */
 end_comment
 
 begin_macro
 name|mach3_prepare_to_proceed
 argument_list|(
-argument|select_it
+argument|int select_it
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|select_it
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -5044,41 +4957,31 @@ block|}
 end_block
 
 begin_comment
-comment|/* this stuff here is an upcall via libmach/excServer.c     and mach_really_wait which does the actual upcall.     The code will pass the exception to the inferior if:       - The task that signaled is not the inferior task        (e.g. when debugging another debugger)       - The user has explicitely requested to pass on the exceptions.        (e.g to the default unix exception handler, which maps 	exceptions to signals, or the user has her own exception handler)       - If the thread that signaled is being single-stepped and it        has set it's own exception port and the exception is not        EXC_BREAKPOINT. (Maybe this is not desirable?)  */
+comment|/* this stuff here is an upcall via libmach/excServer.c     and mach_really_wait which does the actual upcall.     The code will pass the exception to the inferior if:     - The task that signaled is not the inferior task    (e.g. when debugging another debugger)     - The user has explicitely requested to pass on the exceptions.    (e.g to the default unix exception handler, which maps    exceptions to signals, or the user has her own exception handler)     - If the thread that signaled is being single-stepped and it    has set it's own exception port and the exception is not    EXC_BREAKPOINT. (Maybe this is not desirable?)  */
 end_comment
 
 begin_function
 name|kern_return_t
 name|catch_exception_raise
 parameter_list|(
-name|port
-parameter_list|,
-name|thread
-parameter_list|,
-name|task
-parameter_list|,
-name|exception
-parameter_list|,
-name|code
-parameter_list|,
-name|subcode
-parameter_list|)
 name|mach_port_t
 name|port
-decl_stmt|;
+parameter_list|,
 name|thread_t
 name|thread
-decl_stmt|;
+parameter_list|,
 name|task_t
 name|task
-decl_stmt|;
+parameter_list|,
 name|int
 name|exception
-decl_stmt|,
+parameter_list|,
+name|int
 name|code
-decl_stmt|,
+parameter_list|,
+name|int
 name|subcode
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -5105,7 +5008,7 @@ name|thread
 argument_list|)
 condition|)
 block|{
-comment|/* If the exception was sent and thread dies before we 	 receive it, THREAD will be MACH_PORT_DEAD        */
+comment|/* If the exception was sent and thread dies before we          receive it, THREAD will be MACH_PORT_DEAD        */
 name|current_thread
 operator|=
 name|thread
@@ -5150,8 +5053,12 @@ name|exception
 operator|>
 name|MAX_EXCEPTION
 condition|)
-name|fatal
+name|internal_error
 argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
 literal|"catch_exception_raise: unknown exception code %d thread %d"
 argument_list|,
 name|exception
@@ -5230,7 +5137,7 @@ condition|(
 name|signal_thread
 condition|)
 block|{
-comment|/* 	    GDB now forwards the exeption to thread's original handler, 	    since the user propably knows what he is doing. 	    Give a message, though. 	   */
+comment|/* 	     GDB now forwards the exeption to thread's original handler, 	     since the user propably knows what he is doing. 	     Give a message, though. 	   */
 name|mach3_exception_actions
 argument_list|(
 operator|(
@@ -5478,16 +5385,12 @@ begin_function
 name|int
 name|port_valid
 parameter_list|(
-name|port
-parameter_list|,
-name|mask
-parameter_list|)
 name|mach_port_t
 name|port
-decl_stmt|;
+parameter_list|,
 name|int
 name|mask
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -5554,22 +5457,16 @@ begin_function
 name|int
 name|mach3_read_inferior
 parameter_list|(
-name|addr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|length
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -5727,12 +5624,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -5745,29 +5636,6 @@ parameter_list|)
 define|\
 value|do if (ret != KERN_SUCCESS) { errstr = #str; goto out; } while(0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CHK_GOTO_OUT
-parameter_list|(
-name|str
-parameter_list|,
-name|ret
-parameter_list|)
-define|\
-value|do if (ret != KERN_SUCCESS) { errstr = str; goto out; } while(0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -5806,22 +5674,16 @@ begin_function
 name|int
 name|mach3_write_inferior
 parameter_list|(
-name|addr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|length
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -6354,7 +6216,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return 0 on failure, number of bytes handled otherwise.  */
+comment|/* Return 0 on failure, number of bytes handled otherwise.  TARGET is    ignored. */
 end_comment
 
 begin_function
@@ -6362,35 +6224,24 @@ specifier|static
 name|int
 name|m3_xfer_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|,
-name|target
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|write
-decl_stmt|;
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
-comment|/* IGNORED */
+parameter_list|)
 block|{
 name|int
 name|result
@@ -6437,11 +6288,9 @@ name|char
 modifier|*
 name|translate_state
 parameter_list|(
-name|state
-parameter_list|)
 name|int
 name|state
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -6504,11 +6353,9 @@ name|char
 modifier|*
 name|translate_cstate
 parameter_list|(
-name|state
-parameter_list|)
 name|int
 name|state
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -6564,16 +6411,12 @@ name|mach_port_t
 comment|/* no mach_port_name_t found in include files. */
 name|map_inferior_port_name
 parameter_list|(
-name|inferior_name
-parameter_list|,
-name|type
-parameter_list|)
 name|mach_port_t
 name|inferior_name
-decl_stmt|;
+parameter_list|,
 name|mach_msg_type_name_t
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -6662,16 +6505,12 @@ name|char
 modifier|*
 name|get_thread_name
 parameter_list|(
-name|one_cproc
-parameter_list|,
-name|id
-parameter_list|)
 name|gdb_thread_t
 name|one_cproc
-decl_stmt|;
+parameter_list|,
 name|int
 name|id
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -6769,18 +6608,13 @@ begin_function
 name|int
 name|fetch_thread_info
 parameter_list|(
-name|task
-parameter_list|,
-name|mthreads_out
-parameter_list|)
 name|mach_port_t
 name|task
-decl_stmt|;
+parameter_list|,
 name|gdb_thread_t
 modifier|*
 name|mthreads_out
-decl_stmt|;
-comment|/* out */
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -7085,11 +6919,9 @@ begin_function
 name|CORE_ADDR
 name|fetch_usp_from_emulator_stack
 parameter_list|(
-name|sp
-parameter_list|)
 name|CORE_ADDR
 name|sp
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|stack_pointer
@@ -7191,11 +7023,9 @@ begin_function
 name|boolean_t
 name|have_emulator_p
 parameter_list|(
-name|task
-parameter_list|)
 name|task_t
 name|task
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -7355,21 +7185,15 @@ begin_function
 name|void
 name|map_cprocs_to_kernel_threads
 parameter_list|(
-name|cprocs
-parameter_list|,
-name|mthreads
-parameter_list|,
-name|thread_count
-parameter_list|)
 name|gdb_thread_t
 name|cprocs
-decl_stmt|;
+parameter_list|,
 name|gdb_thread_t
 name|mthreads
-decl_stmt|;
+parameter_list|,
 name|int
 name|thread_count
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|index
@@ -7691,7 +7515,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * Format of the thread_list command  *  * 	             slot mid sel   name  emul ks susp  cstate wired   address  */
+comment|/*  * Format of the thread_list command  *  *                   slot mid sel   name  emul ks susp  cstate wired   address  */
 end_comment
 
 begin_define
@@ -7712,17 +7536,14 @@ begin_function
 name|void
 name|print_tl_address
 parameter_list|(
-name|stream
-parameter_list|,
-name|pc
-parameter_list|)
-name|GDB_FILE
+name|struct
+name|ui_file
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7802,12 +7623,10 @@ begin_function
 name|CORE_ADDR
 name|lookup_address_of_variable
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|symbol
@@ -7910,7 +7729,9 @@ begin_function
 specifier|static
 name|gdb_thread_t
 name|get_cprocs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|gdb_thread_t
 name|cproc_head
@@ -7924,11 +7745,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|buf
-index|[
-name|TARGET_PTR_BIT
-operator|/
-name|HOST_CHAR_BIT
-index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -7940,6 +7756,15 @@ decl_stmt|;
 name|CORE_ADDR
 name|symaddr
 decl_stmt|;
+name|buf
+operator|=
+name|alloca
+argument_list|(
+name|TARGET_PTR_BIT
+operator|/
+name|HOST_CHAR_BIT
+argument_list|)
+expr_stmt|;
 name|symaddr
 operator|=
 name|lookup_address_of_variable
@@ -7953,7 +7778,7 @@ operator|!
 name|symaddr
 condition|)
 block|{
-comment|/* cproc_list is not in a file compiled with debugging 	 symbols, but don't give up yet */
+comment|/* cproc_list is not in a file compiled with debugging          symbols, but don't give up yet */
 name|symaddr
 operator|=
 name|lookup_address_of_variable
@@ -8282,11 +8107,9 @@ begin_function
 name|int
 name|mach3_cproc_state
 parameter_list|(
-name|mthread
-parameter_list|)
 name|gdb_thread_t
 name|mthread
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|context
@@ -8429,7 +8252,9 @@ end_escape
 begin_function
 name|void
 name|thread_list_command
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|thread_basic_info_data_t
 name|ths
@@ -9183,17 +9008,13 @@ begin_function
 name|void
 name|thread_select_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|mid
@@ -9330,23 +9151,11 @@ end_escape
 begin_macro
 name|thread_trace
 argument_list|(
-argument|thread
+argument|mach_port_t thread
 argument_list|,
-argument|set
+argument|boolean_t set
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|mach_port_t
-name|thread
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|boolean_t
-name|set
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -9502,17 +9311,11 @@ end_comment
 begin_macro
 name|flush_inferior_icache
 argument_list|(
-argument|pc
+argument|CORE_ADDR pc
 argument_list|,
-argument|amount
+argument|int amount
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|CORE_ADDR
-name|pc
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -9562,8 +9365,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|FLUSH_INFERIOR_CACHE
 end_endif
+
+begin_comment
+comment|/* FLUSH_INFERIOR_CACHE */
+end_comment
 
 begin_escape
 end_escape
@@ -9572,32 +9378,26 @@ begin_expr_stmt
 specifier|static
 name|suspend_all_threads
 argument_list|(
-argument|from_tty
+argument|int from_tty
 argument_list|)
-name|int
-name|from_tty
-expr_stmt|;
-end_expr_stmt
-
-begin_block
 block|{
 name|kern_return_t
 name|ret
-decl_stmt|;
+block|;
 name|thread_array_t
 name|thread_list
-decl_stmt|;
+block|;
 name|int
 name|thread_count
-decl_stmt|,
+block|,
 name|index
-decl_stmt|;
+block|;
 name|int
 name|infoCnt
-decl_stmt|;
+block|;
 name|thread_basic_info_data_t
 name|th_info
-decl_stmt|;
+block|;
 name|ret
 operator|=
 name|task_threads
@@ -9610,7 +9410,7 @@ argument_list|,
 operator|&
 name|thread_count
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|ret
@@ -9626,12 +9426,15 @@ expr_stmt|;
 name|m3_kill_inferior
 argument_list|()
 expr_stmt|;
-name|return_to_top_level
+name|throw_exception
 argument_list|(
 name|RETURN_ERROR
 argument_list|)
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|index
@@ -9739,6 +9542,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_for
+
+begin_expr_stmt
 name|consume_send_rights
 argument_list|(
 name|thread_list
@@ -9746,6 +9552,9 @@ argument_list|,
 name|thread_count
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ret
 operator|=
 name|vm_deallocate
@@ -9768,6 +9577,9 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|CHK
 argument_list|(
 literal|"Error trying to deallocate thread list"
@@ -9775,24 +9587,19 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
-block|}
-end_block
+end_expr_stmt
 
-begin_function
-name|void
+begin_macro
+unit|}  void
 name|thread_suspend_command
-parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|char
-modifier|*
-name|args
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
+argument_list|(
+argument|char *args
+argument_list|,
+argument|int from_tty
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|kern_return_t
 name|ret
@@ -9969,20 +9776,14 @@ operator|=
 name|saved_thread
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_macro
 name|resume_all_threads
 argument_list|(
-argument|from_tty
+argument|int from_tty
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|from_tty
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -10218,17 +10019,13 @@ begin_function
 name|void
 name|thread_resume_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|mid
@@ -10331,7 +10128,7 @@ name|current_thread
 operator|=
 name|saved_thread
 expr_stmt|;
-name|return_to_top_level
+name|throw_exception
 argument_list|(
 name|RETURN_ERROR
 argument_list|)
@@ -10436,17 +10233,13 @@ begin_function
 name|void
 name|thread_kill_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|mid
@@ -10702,17 +10495,13 @@ begin_function
 name|void
 name|task_resume_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -10843,7 +10632,7 @@ name|must_suspend_thread
 operator|=
 literal|1
 expr_stmt|;
-comment|/* @@ This is not complete: Registers change all the time when not 	 suspended! */
+comment|/* @@ This is not complete: Registers change all the time when not          suspended! */
 name|registers_changed
 argument_list|()
 expr_stmt|;
@@ -10869,17 +10658,13 @@ begin_function
 name|void
 name|task_suspend_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -10977,11 +10762,9 @@ name|char
 modifier|*
 name|get_size
 parameter_list|(
-name|bytes
-parameter_list|)
 name|int
 name|bytes
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -11047,17 +10830,13 @@ begin_function
 name|void
 name|task_info_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|mid
@@ -11375,17 +11154,13 @@ specifier|static
 name|void
 name|exception_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -11602,11 +11377,9 @@ specifier|static
 name|void
 name|print_exception_info
 parameter_list|(
-name|exception
-parameter_list|)
 name|int
 name|exception
-decl_stmt|;
+parameter_list|)
 block|{
 name|boolean_t
 name|forward
@@ -11686,17 +11459,13 @@ begin_function
 name|void
 name|exception_info
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|exception
@@ -11769,33 +11538,13 @@ end_comment
 begin_macro
 name|mach3_exception_actions
 argument_list|(
-argument|w
+argument|WAITTYPE *w
 argument_list|,
-argument|force_print_only
+argument|boolean_t force_print_only
 argument_list|,
-argument|who
+argument|char *who
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|WAITTYPE
-modifier|*
-name|w
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|boolean_t
-name|force_print_only
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|who
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -11958,8 +11707,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|fatal
+name|internal_error
 argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
 literal|"Unknown exception"
 argument_list|)
 expr_stmt|;
@@ -11974,15 +11727,9 @@ end_escape
 begin_macro
 name|setup_notify_port
 argument_list|(
-argument|create_new
+argument|int create_new
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|create_new
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -12055,8 +11802,12 @@ name|ret
 operator|!=
 name|KERN_SUCCESS
 condition|)
-name|fatal
+name|internal_error
 argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
 literal|"Creating notify port %s"
 argument_list|,
 name|mach_error_string
@@ -12083,8 +11834,12 @@ name|ret
 operator|!=
 name|KERN_SUCCESS
 condition|)
-name|fatal
+name|internal_error
 argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
 literal|"initial move member %s"
 argument_list|,
 name|mach_error_string
@@ -12114,17 +11869,13 @@ begin_function
 name|void
 name|message_port_info
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -12153,17 +11904,13 @@ begin_function
 name|void
 name|gdb_register_port
 parameter_list|(
-name|name
-parameter_list|,
-name|port
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|mach_port_t
 name|port
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -12359,7 +12106,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*ARGSUSED*/
+comment|/*ARGSUSED */
 end_comment
 
 begin_function
@@ -12367,17 +12114,13 @@ specifier|static
 name|void
 name|thread_command
 parameter_list|(
-name|arg
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|printf_unfiltered
 argument_list|(
@@ -12400,7 +12143,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*ARGSUSED*/
+comment|/*ARGSUSED */
 end_comment
 
 begin_function
@@ -12408,17 +12151,13 @@ specifier|static
 name|void
 name|task_command
 parameter_list|(
-name|arg
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|printf_unfiltered
 argument_list|(
@@ -12442,7 +12181,9 @@ end_function
 
 begin_macro
 name|add_mach_specific_commands
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -12700,16 +12441,12 @@ begin_function
 name|kern_return_t
 name|do_mach_notify_dead_name
 parameter_list|(
+name|mach_port_t
 name|notify
 parameter_list|,
+name|mach_port_t
 name|name
 parameter_list|)
-name|mach_port_t
-name|notify
-decl_stmt|;
-name|mach_port_t
-name|name
-decl_stmt|;
 block|{
 name|kern_return_t
 name|kr
@@ -12883,16 +12620,12 @@ begin_function
 name|kern_return_t
 name|do_mach_notify_msg_accepted
 parameter_list|(
+name|mach_port_t
 name|notify
 parameter_list|,
+name|mach_port_t
 name|name
 parameter_list|)
-name|mach_port_t
-name|notify
-decl_stmt|;
-name|mach_port_t
-name|name
-decl_stmt|;
 block|{
 name|warning
 argument_list|(
@@ -12913,16 +12646,12 @@ begin_function
 name|kern_return_t
 name|do_mach_notify_no_senders
 parameter_list|(
-name|notify
-parameter_list|,
-name|mscount
-parameter_list|)
 name|mach_port_t
 name|notify
-decl_stmt|;
+parameter_list|,
 name|mach_port_mscount_t
 name|mscount
-decl_stmt|;
+parameter_list|)
 block|{
 name|warning
 argument_list|(
@@ -12943,16 +12672,12 @@ begin_function
 name|kern_return_t
 name|do_mach_notify_port_deleted
 parameter_list|(
+name|mach_port_t
 name|notify
 parameter_list|,
+name|mach_port_t
 name|name
 parameter_list|)
-name|mach_port_t
-name|notify
-decl_stmt|;
-name|mach_port_t
-name|name
-decl_stmt|;
 block|{
 name|warning
 argument_list|(
@@ -12973,16 +12698,12 @@ begin_function
 name|kern_return_t
 name|do_mach_notify_port_destroyed
 parameter_list|(
+name|mach_port_t
 name|notify
 parameter_list|,
+name|mach_port_t
 name|rights
 parameter_list|)
-name|mach_port_t
-name|notify
-decl_stmt|;
-name|mach_port_t
-name|rights
-decl_stmt|;
 block|{
 name|warning
 argument_list|(
@@ -13003,11 +12724,9 @@ begin_function
 name|kern_return_t
 name|do_mach_notify_send_once
 parameter_list|(
-name|notify
-parameter_list|)
 name|mach_port_t
 name|notify
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -13036,18 +12755,26 @@ begin_function
 specifier|static
 name|void
 name|kill_inferior_fast
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|WAITTYPE
 name|w
 decl_stmt|;
 if|if
 condition|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 operator|==
 literal|0
 operator|||
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 operator|==
 literal|1
 condition|)
@@ -13055,13 +12782,19 @@ return|return;
 comment|/* kill() it, since the Unix server does not otherwise notice when    * killed with task_terminate().    */
 if|if
 condition|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 operator|>
 literal|0
 condition|)
 name|kill
 argument_list|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 name|SIGKILL
 argument_list|)
@@ -13105,7 +12838,9 @@ begin_function
 specifier|static
 name|void
 name|m3_kill_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|kill_inferior_fast
 argument_list|()
@@ -13124,7 +12859,9 @@ begin_function
 specifier|static
 name|void
 name|m3_mourn_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|unpush_target
 argument_list|(
@@ -13150,25 +12887,19 @@ specifier|static
 name|void
 name|m3_create_inferior
 parameter_list|(
-name|exec_file
-parameter_list|,
-name|allargs
-parameter_list|,
-name|env
-parameter_list|)
 name|char
 modifier|*
 name|exec_file
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|allargs
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|env
-decl_stmt|;
+parameter_list|)
 block|{
 name|fork_inferior
 argument_list|(
@@ -13213,7 +12944,9 @@ begin_function
 specifier|static
 name|int
 name|m3_can_run
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 literal|1
@@ -13231,27 +12964,15 @@ end_comment
 begin_macro
 name|ptrace
 argument_list|(
-argument|a
+argument|int a
 argument_list|,
-argument|b
+argument|int b
 argument_list|,
-argument|c
+argument|int c
 argument_list|,
-argument|d
+argument|int d
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|a
-decl_stmt|,
-name|b
-decl_stmt|,
-name|c
-decl_stmt|,
-name|d
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -13271,22 +12992,16 @@ begin_function
 name|void
 name|m3_resume
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|step
-parameter_list|,
-name|signal
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|int
 name|step
-decl_stmt|;
+parameter_list|,
 name|enum
 name|target_signal
 name|signal
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -13365,14 +13080,20 @@ if|if
 condition|(
 name|signal
 operator|&&
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 operator|>
 literal|0
 condition|)
 comment|/* Do not signal, if attached by MID */
 name|kill
 argument_list|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 name|target_signal_to_host
 argument_list|(
@@ -13475,11 +13196,9 @@ begin_function
 name|void
 name|task_attach
 parameter_list|(
-name|tid
-parameter_list|)
 name|task_t
 name|tid
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -13544,7 +13263,9 @@ end_comment
 begin_function
 name|void
 name|attach_to_thread
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -13570,15 +13291,9 @@ end_function
 begin_macro
 name|mid_attach
 argument_list|(
-argument|mid
+argument|int mid
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|mid
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -13626,11 +13341,9 @@ specifier|static
 name|int
 name|m3_do_attach
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -13674,13 +13387,19 @@ name|pid
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* inferior_pid will be NEGATIVE! */
-name|inferior_pid
+comment|/* inferior_ptid will be NEGATIVE! */
+name|inferior_ptid
 operator|=
+name|pid_to_ptid
+argument_list|(
 name|pid
+argument_list|)
 expr_stmt|;
 return|return
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 return|;
 block|}
 name|inferior_task
@@ -13710,12 +13429,18 @@ argument_list|(
 name|inferior_task
 argument_list|)
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
+name|pid_to_ptid
+argument_list|(
 name|pid
+argument_list|)
 expr_stmt|;
 return|return
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 return|;
 block|}
 end_function
@@ -13729,17 +13454,13 @@ specifier|static
 name|void
 name|m3_attach
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -13806,7 +13527,10 @@ name|exec_file
 argument_list|,
 name|target_pid_to_str
 argument_list|(
+name|pid_to_ptid
+argument_list|(
 name|pid
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13817,7 +13541,10 @@ literal|"Attaching to %s\n"
 argument_list|,
 name|target_pid_to_str
 argument_list|(
+name|pid_to_ptid
+argument_list|(
 name|pid
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13829,12 +13556,18 @@ expr_stmt|;
 block|}
 name|m3_do_attach
 argument_list|(
+name|pid_to_ptid
+argument_list|(
 name|pid
 argument_list|)
+argument_list|)
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
+name|pid_to_ptid
+argument_list|(
 name|pid
+argument_list|)
 expr_stmt|;
 name|push_target
 argument_list|(
@@ -13851,7 +13584,9 @@ end_escape
 begin_function
 name|void
 name|deallocate_inferior_ports
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -14041,11 +13776,9 @@ specifier|static
 name|void
 name|m3_do_detach
 parameter_list|(
-name|signal
-parameter_list|)
 name|int
 name|signal
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -14108,13 +13841,19 @@ if|if
 condition|(
 name|signal
 operator|&&
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 operator|>
 literal|0
 condition|)
 name|kill
 argument_list|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 name|signal
 argument_list|)
@@ -14147,17 +13886,13 @@ specifier|static
 name|void
 name|m3_detach
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|siggnal
@@ -14196,7 +13931,7 @@ name|exec_file
 argument_list|,
 name|target_pid_to_str
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -14222,9 +13957,9 @@ argument_list|(
 name|siggnal
 argument_list|)
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
-literal|0
+name|null_ptid
 expr_stmt|;
 name|unpush_target
 argument_list|(
@@ -14253,7 +13988,9 @@ begin_function
 specifier|static
 name|void
 name|m3_prepare_to_store
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -14275,13 +14012,11 @@ specifier|static
 name|void
 name|m3_files_info
 parameter_list|(
-name|ignore
-parameter_list|)
 name|struct
 name|target_ops
 modifier|*
 name|ignore
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* FIXME: should print MID and all that crap.  */
 name|printf_unfiltered
@@ -14296,7 +14031,7 @@ literal|"child"
 argument_list|,
 name|target_pid_to_str
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -14308,17 +14043,13 @@ specifier|static
 name|void
 name|m3_open
 parameter_list|(
-name|arg
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|error
 argument_list|(
@@ -14334,12 +14065,6 @@ directive|ifdef
 name|DUMP_SYSCALL
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -14349,26 +14074,6 @@ name|x
 parameter_list|)
 value|#x
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|STR
-parameter_list|(
-name|x
-parameter_list|)
-value|"x"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|char
@@ -14534,17 +14239,13 @@ name|char
 modifier|*
 name|name_str
 parameter_list|(
-name|name
-parameter_list|,
-name|buf
-parameter_list|)
 name|int
 name|name
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -14615,17 +14316,13 @@ name|char
 modifier|*
 name|id_str
 parameter_list|(
-name|id
-parameter_list|,
-name|buf
-parameter_list|)
 name|int
 name|id
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -14695,16 +14392,9 @@ end_function
 begin_macro
 name|print_msg
 argument_list|(
-argument|mp
+argument|mach_msg_header_t *mp
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|mach_msg_header_t
-modifier|*
-name|mp
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -15094,20 +14784,13 @@ end_block
 begin_macro
 name|print_data
 argument_list|(
-argument|p
+argument|char *p
 argument_list|,
-argument|size
+argument|int size
 argument_list|,
-argument|number
+argument|int number
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -15242,14 +14925,19 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|DUMP_SYSCALL
 end_endif
+
+begin_comment
+comment|/* DUMP_SYSCALL */
+end_comment
 
 begin_function
 specifier|static
 name|void
 name|m3_stop
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|error
 argument_list|(
@@ -15265,11 +14953,9 @@ name|char
 modifier|*
 name|m3_pid_to_exec_file
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|error
 argument_list|(
@@ -15287,7 +14973,9 @@ begin_function
 specifier|static
 name|void
 name|init_m3_ops
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|m3_ops
 operator|.
@@ -15335,7 +15023,7 @@ name|m3_ops
 operator|.
 name|to_wait
 operator|=
-name|mach_really__wait
+name|mach_really_wait
 expr_stmt|;
 name|m3_ops
 operator|.
@@ -15493,7 +15181,9 @@ end_function
 begin_function
 name|void
 name|_initialize_m3_nat
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -15526,8 +15216,12 @@ name|ret
 operator|!=
 name|KERN_SUCCESS
 condition|)
-name|fatal
+name|internal_error
 argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
 literal|"initial port set %s"
 argument_list|,
 name|mach_error_string

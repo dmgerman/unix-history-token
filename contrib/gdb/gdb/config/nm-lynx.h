@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent definitions for LynxOS.    Copyright 1993 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Native-dependent definitions for LynxOS.    Copyright 1993, 1994, 1995, 1996, 1999, 2000    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -93,7 +93,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"thread.h"
+file|"gdbthread.h"
 end_include
 
 begin_comment
@@ -188,59 +188,47 @@ directive|include
 file|"target.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|int
+name|ptid_t
 name|child_wait
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-name|pid
-operator|,
-expr|struct
+parameter_list|(
+name|ptid_t
+name|ptid
+parameter_list|,
+name|struct
 name|target_waitstatus
-operator|*
+modifier|*
 name|status
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* Lynx needs a special definition of this so that we can    print out the pid and thread number seperatly.  */
+comment|/* Lynx needs a special definition of this so that we can    print out the pid and thread number seperately.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|target_pid_to_str
-end_undef
+begin_comment
+comment|/* override child_pid_to_str in inftarg.c */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|target_pid_to_str
-parameter_list|(
-name|PID
-parameter_list|)
-value|lynx_pid_to_str (PID)
+name|CHILD_PID_TO_STR
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|lynx_pid_to_str
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-name|pid
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|ptid_t
+name|ptid
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

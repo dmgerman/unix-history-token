@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent code for Motorola m68k's running NetBSD, for GDB.    Copyright 1988, 1989, 1991, 1992, 1994, 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Native-dependent code for Motorola m68k's running NetBSD, for GDB.    Copyright 1988, 1989, 1991, 1992, 1994, 1996, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"defs.h"
+end_include
 
 begin_include
 include|#
@@ -30,24 +36,28 @@ end_include
 begin_include
 include|#
 directive|include
-file|"defs.h"
+file|"inferior.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"inferior.h"
+file|"gdbcore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
 end_include
 
 begin_function
 name|void
 name|fetch_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|reg
@@ -61,7 +71,10 @@ name|ptrace
 argument_list|(
 name|PT_GETREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -96,7 +109,10 @@ name|ptrace
 argument_list|(
 name|PT_GETFPREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -137,11 +153,9 @@ begin_function
 name|void
 name|store_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|reg
@@ -175,7 +189,10 @@ name|ptrace
 argument_list|(
 name|PT_SETREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -210,7 +227,10 @@ name|ptrace
 argument_list|(
 name|PT_SETFPREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -241,30 +261,23 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|void
 name|fetch_core_registers
 parameter_list|(
-name|core_reg_sect
-parameter_list|,
-name|core_reg_size
-parameter_list|,
-name|which
-parameter_list|,
-name|ignore
-parameter_list|)
 name|char
 modifier|*
 name|core_reg_sect
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|core_reg_size
-decl_stmt|;
+parameter_list|,
 name|int
 name|which
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|ignore
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|md_core
@@ -324,6 +337,51 @@ argument_list|(
 expr|struct
 name|fpreg
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Register that we are able to handle m68knbsd core file formats.    FIXME: is this really bfd_target_unknown_flavour? */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|core_fns
+name|m68knbsd_core_fns
+init|=
+block|{
+name|bfd_target_unknown_flavour
+block|,
+comment|/* core_flavour */
+name|default_check_format
+block|,
+comment|/* check_format */
+name|default_core_sniffer
+block|,
+comment|/* core_sniffer */
+name|fetch_core_registers
+block|,
+comment|/* core_read_registers */
+name|NULL
+comment|/* next */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|_initialize_m68knbsd_nat
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|add_core_fns
+argument_list|(
+operator|&
+name|m68knbsd_core_fns
 argument_list|)
 expr_stmt|;
 block|}

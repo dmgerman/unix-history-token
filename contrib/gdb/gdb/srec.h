@@ -1,46 +1,45 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* S-record download support for GDB, the GNU debugger.    Copyright 1995, 1996 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* S-record download support for GDB, the GNU debugger.    Copyright 1995, 1996, 2000 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|load_srec
-name|PARAMS
-argument_list|(
-operator|(
-name|serial_t
+parameter_list|(
+name|struct
+name|serial
+modifier|*
 name|desc
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
+modifier|*
 name|file
-operator|,
+parameter_list|,
 name|bfd_vma
 name|load_offset
-operator|,
+parameter_list|,
 name|int
 name|maxrecsize
-operator|,
+parameter_list|,
 name|int
 name|flags
-operator|,
+parameter_list|,
 name|int
 name|hashmark
-operator|,
+parameter_list|,
 name|int
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|waitack
-argument_list|)
-argument_list|(
+function_decl|)
+parameter_list|(
 name|void
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* S-record capability flags */

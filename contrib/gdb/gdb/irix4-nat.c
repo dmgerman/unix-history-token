@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native support for the SGI Iris running IRIX version 4, for GDB.    Copyright 1988, 1989, 1990, 1991, 1992, 1993, 1995    Free Software Foundation, Inc.    Contributed by Alessandro Forin(af@cs.cmu.edu) at CMU    and by Per Bothner(bothner@cs.wisc.edu) at U.Wisconsin.    Implemented for Irix 4.x by Garrett A. Wollman.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Native support for the SGI Iris running IRIX version 4, for GDB.    Copyright 1988, 1989, 1990, 1991, 1992, 1993, 1995, 1996, 1999, 2000,    2001 Free Software Foundation, Inc.    Contributed by Alessandro Forin(af@cs.cmu.edu) at CMU    and by Per Bothner(bothner@cs.wisc.edu) at U.Wisconsin.    Implemented for Irix 4.x by Garrett A. Wollman.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"gdbcore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
 end_include
 
 begin_include
@@ -44,6 +50,16 @@ comment|/* For JB_XXX.  */
 end_comment
 
 begin_comment
+comment|/* Prototypes for supply_gregset etc. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"gregset.h"
+end_include
+
+begin_comment
 comment|/* Size of elements in jmpbuf */
 end_comment
 
@@ -66,26 +82,23 @@ begin_comment
 comment|/* why isn't this defined? */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|fetch_core_registers
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * See the comment in m68k-tdep.c regarding the utility of these functions.  */
@@ -95,12 +108,10 @@ begin_function
 name|void
 name|supply_gregset
 parameter_list|(
-name|gregsetp
-parameter_list|)
 name|gregset_t
 modifier|*
 name|gregsetp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -240,17 +251,13 @@ begin_function
 name|void
 name|fill_gregset
 parameter_list|(
-name|gregsetp
-parameter_list|,
-name|regno
-parameter_list|)
 name|gregset_t
 modifier|*
 name|gregsetp
-decl_stmt|;
+parameter_list|,
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regi
@@ -270,7 +277,7 @@ operator|->
 name|gp_regs
 operator|)
 decl_stmt|;
-comment|/* same FIXME as above wrt 32*/
+comment|/* same FIXME as above wrt 32 */
 for|for
 control|(
 name|regi
@@ -463,12 +470,10 @@ begin_function
 name|void
 name|supply_fpregset
 parameter_list|(
-name|fpregsetp
-parameter_list|)
 name|fpregset_t
 modifier|*
 name|fpregsetp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -548,17 +553,13 @@ begin_function
 name|void
 name|fill_fpregset
 parameter_list|(
-name|fpregsetp
-parameter_list|,
-name|regno
-parameter_list|)
 name|fpregset_t
 modifier|*
 name|fpregsetp
-decl_stmt|;
+parameter_list|,
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regi
@@ -695,24 +696,27 @@ begin_function
 name|int
 name|get_longjmp_target
 parameter_list|(
-name|pc
-parameter_list|)
 name|CORE_ADDR
 modifier|*
 name|pc
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
+modifier|*
 name|buf
-index|[
-name|TARGET_PTR_BIT
-operator|/
-name|TARGET_CHAR_BIT
-index|]
 decl_stmt|;
 name|CORE_ADDR
 name|jb_addr
 decl_stmt|;
+name|buf
+operator|=
+name|alloca
+argument_list|(
+name|TARGET_PTR_BIT
+operator|/
+name|TARGET_CHAR_BIT
+argument_list|)
+expr_stmt|;
 name|jb_addr
 operator|=
 name|read_register
@@ -758,34 +762,28 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Provide registers to GDB from a core file.     CORE_REG_SECT points to an array of bytes, which were obtained from    a core file which BFD thinks might contain register contents.     CORE_REG_SIZE is its size.     Normally, WHICH says which register set corelow suspects this is:      0 --- the general-purpose register set      2 --- the floating-point register set    However, for Irix 4, WHICH isn't used.     REG_ADDR is also unused.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
 name|fetch_core_registers
 parameter_list|(
-name|core_reg_sect
-parameter_list|,
-name|core_reg_size
-parameter_list|,
-name|which
-parameter_list|,
-name|reg_addr
-parameter_list|)
 name|char
 modifier|*
 name|core_reg_sect
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|core_reg_size
-decl_stmt|;
+parameter_list|,
 name|int
 name|which
-decl_stmt|;
-comment|/* Unused */
+parameter_list|,
 name|CORE_ADDR
 name|reg_addr
-decl_stmt|;
-comment|/* Unused */
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -833,9 +831,18 @@ init|=
 block|{
 name|bfd_target_unknown_flavour
 block|,
+comment|/* core_flavour */
+name|default_check_format
+block|,
+comment|/* check_format */
+name|default_core_sniffer
+block|,
+comment|/* core_sniffer */
 name|fetch_core_registers
 block|,
+comment|/* core_read_registers */
 name|NULL
+comment|/* next */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -843,7 +850,9 @@ end_decl_stmt
 begin_function
 name|void
 name|_initialize_core_irix4
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|add_core_fns
 argument_list|(

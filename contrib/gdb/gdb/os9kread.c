@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Read os9/os9k symbol tables and convert to internal format, for GDB.    Copyright 1986, 87, 88, 89, 90, 91, 92, 93, 94, 96, 1998    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Read os9/os9k symbol tables and convert to internal format, for GDB.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995,    1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"gdb_string.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb_assert.h"
 end_include
 
 begin_include
@@ -66,12 +72,6 @@ begin_include
 include|#
 directive|include
 file|"gdb_stat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -176,6 +176,16 @@ directive|include
 file|"stabsread.h"
 end_include
 
+begin_function_decl
+specifier|extern
+name|void
+name|_initialize_os9kread
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Each partial symbol table entry contains a pointer to private data for the    read_symtab() function to use when expanding a partial symbol table entry    to a full symbol table entry.     For dbxread this structure contains the offset within the file symbol table    of first local symbol for this file, and count of the section    of the symbol table devoted to this file's symbols (actually, the section    bracketed may contain more than just this file's symbols).  It also contains    further information needed to locate the symbols if they are in an ELF file.     If ldsymcnt is 0, the only reason for this thing's existence is the    dependency list.  Nothing else will happen when it is read in.  */
 end_comment
@@ -251,17 +261,6 @@ name|int
 name|symfile_depth
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means give verbose info on gdb action.  From main.c.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|info_verbose
 decl_stmt|;
 end_decl_stmt
 
@@ -343,7 +342,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static struct complaint lbrac_unmatched_complaint =   {"unmatched Increment Block Entry before symtab pos %d", 0, 0};  static struct complaint lbrac_mismatch_complaint =   {"IBE/IDE symbol mismatch at symtab pos %d", 0, 0};
+unit|static struct complaint lbrac_unmatched_complaint = {"unmatched Increment Block Entry before symtab pos %d", 0, 0};  static struct complaint lbrac_mismatch_complaint = {"IBE/IDE symbol mismatch at symtab pos %d", 0, 0};
 endif|#
 directive|endif
 end_endif
@@ -355,303 +354,241 @@ begin_comment
 comment|/* Local function prototypes */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|read_minimal_symbols
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|,
-expr|struct
-name|section_offsets
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|os9k_read_ofile_symtab
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|partial_symtab
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|os9k_psymtab_to_symtab
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|partial_symtab
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|os9k_psymtab_to_symtab_1
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|partial_symtab
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|read_os9k_psymtab
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|section_offsets
-operator|*
-operator|,
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|fill_sym
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|os9k_symfile_init
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|os9k_new_init
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|os9k_symfile_read
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|,
-expr|struct
-name|section_offsets
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|os9k_symfile_finish
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|os9k_process_one_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|section_offsets
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|partial_symtab
 modifier|*
 name|os9k_start_psymtab
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|,
-expr|struct
-name|section_offsets
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|partial_symbol
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|partial_symbol
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|partial_symtab
 modifier|*
 name|os9k_end_psymtab
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|partial_symtab
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|partial_symtab
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|record_minimal_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|,
-expr|struct
-name|section_offsets
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_escape
 end_escape
@@ -740,36 +677,21 @@ specifier|static
 name|void
 name|record_minimal_symbol
 parameter_list|(
-name|name
-parameter_list|,
-name|address
-parameter_list|,
-name|type
-parameter_list|,
-name|objfile
-parameter_list|,
-name|section_offsets
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|address
-decl_stmt|;
+parameter_list|,
 name|int
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
-name|struct
-name|section_offsets
-modifier|*
-name|section_offsets
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|minimal_symbol_type
@@ -791,9 +713,14 @@ name|address
 operator|+=
 name|ANOFFSET
 argument_list|(
+name|objfile
+operator|->
 name|section_offsets
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -932,20 +859,11 @@ specifier|static
 name|void
 name|read_minimal_symbols
 parameter_list|(
+name|struct
 name|objfile
-parameter_list|,
-name|section_offsets
+modifier|*
+name|objfile
 parameter_list|)
-name|struct
-name|objfile
-modifier|*
-name|objfile
-decl_stmt|;
-name|struct
-name|section_offsets
-modifier|*
-name|section_offsets
-decl_stmt|;
 block|{
 name|FILE
 modifier|*
@@ -1357,8 +1275,6 @@ operator|&
 literal|7
 argument_list|,
 name|objfile
-argument_list|,
-name|section_offsets
 argument_list|)
 expr_stmt|;
 name|off
@@ -1380,7 +1296,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Scan and build partial symbols for a symbol file.    We have been initialized by a call to os9k_symfile_init, which     put all the relevant info into a "struct os9k_symfile_info",    hung off the objfile structure.     SECTION_OFFSETS contains offsets relative to which the symbols in the    various sections are (depending where the sections were actually loaded).    MAINLINE is true if we are reading the main symbol    table (as opposed to a shared lib or dynamically loaded file).  */
+comment|/* Scan and build partial symbols for a symbol file.    We have been initialized by a call to os9k_symfile_init, which     put all the relevant info into a "struct os9k_symfile_info",    hung off the objfile structure.     MAINLINE is true if we are reading the main symbol    table (as opposed to a shared lib or dynamically loaded file).  */
 end_comment
 
 begin_function
@@ -1388,26 +1304,14 @@ specifier|static
 name|void
 name|os9k_symfile_read
 parameter_list|(
-name|objfile
-parameter_list|,
-name|section_offsets
-parameter_list|,
-name|mainline
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
-name|struct
-name|section_offsets
-modifier|*
-name|section_offsets
-decl_stmt|;
+parameter_list|,
 name|int
 name|mainline
-decl_stmt|;
-comment|/* FIXME comments above */
+parameter_list|)
 block|{
 name|bfd
 modifier|*
@@ -1429,6 +1333,7 @@ if|if
 condition|(
 name|mainline
 operator|||
+operator|(
 name|objfile
 operator|->
 name|global_psymbols
@@ -1436,7 +1341,7 @@ operator|.
 name|size
 operator|==
 literal|0
-operator|||
+operator|&&
 name|objfile
 operator|->
 name|static_psymbols
@@ -1444,6 +1349,7 @@ operator|.
 name|size
 operator|==
 literal|0
+operator|)
 condition|)
 name|init_psymbol_list
 argument_list|(
@@ -1462,36 +1368,22 @@ name|back_to
 operator|=
 name|make_cleanup
 argument_list|(
-operator|(
-name|make_cleanup_func
-operator|)
 name|really_free_pendings
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|make_cleanup
-argument_list|(
-operator|(
-name|make_cleanup_func
-operator|)
-name|discard_minimal_symbols
-argument_list|,
-literal|0
-argument_list|)
+name|make_cleanup_discard_minimal_symbols
+argument_list|()
 expr_stmt|;
 name|read_minimal_symbols
 argument_list|(
 name|objfile
-argument_list|,
-name|section_offsets
 argument_list|)
 expr_stmt|;
 comment|/* Now that the symbol table data of the executable file are all in core,      process them and define symbols accordingly.  */
 name|read_os9k_psymtab
 argument_list|(
-name|section_offsets
-argument_list|,
 name|objfile
 argument_list|,
 name|DBX_TEXT_ADDR
@@ -1522,13 +1414,11 @@ specifier|static
 name|void
 name|os9k_new_init
 parameter_list|(
-name|ignore
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|ignore
-decl_stmt|;
+parameter_list|)
 block|{
 name|stabsread_new_init
 argument_list|()
@@ -1540,7 +1430,7 @@ name|psymfile_depth
 operator|=
 literal|0
 expr_stmt|;
-comment|/*   init_header_files (); */
+comment|/*    init_header_files ();  */
 block|}
 end_function
 
@@ -1553,13 +1443,11 @@ specifier|static
 name|void
 name|os9k_symfile_init
 parameter_list|(
-name|objfile
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd
 modifier|*
@@ -1804,13 +1692,11 @@ specifier|static
 name|void
 name|os9k_symfile_finish
 parameter_list|(
-name|objfile
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1821,7 +1707,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|mfree
+name|xmfree
 argument_list|(
 name|objfile
 operator|->
@@ -1833,7 +1719,7 @@ name|sym_stab_info
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*   free_header_files (); */
+comment|/*    free_header_files ();  */
 block|}
 end_function
 
@@ -2010,18 +1896,14 @@ specifier|static
 name|int
 name|fill_sym
 parameter_list|(
-name|dbg_file
-parameter_list|,
-name|abfd
-parameter_list|)
 name|FILE
 modifier|*
 name|dbg_file
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|short
 name|si
@@ -2528,7 +2410,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Given pointers to an a.out symbol table in core containing dbx    style data, setup partial_symtab's describing each source file for    which debugging information is available.    SYMFILE_NAME is the name of the file we are reading from    and SECTION_OFFSETS is the set of offsets for the various sections    of the file (a set of zeros if the mainline program).  */
+comment|/* Given pointers to an a.out symbol table in core containing dbx    style data, setup partial_symtab's describing each source file for    which debugging information is available.    SYMFILE_NAME is the name of the file we are reading from. */
 end_comment
 
 begin_function
@@ -2536,30 +2418,17 @@ specifier|static
 name|void
 name|read_os9k_psymtab
 parameter_list|(
-name|section_offsets
-parameter_list|,
-name|objfile
-parameter_list|,
-name|text_addr
-parameter_list|,
-name|text_size
-parameter_list|)
-name|struct
-name|section_offsets
-modifier|*
-name|section_offsets
-decl_stmt|;
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|text_addr
-decl_stmt|;
+parameter_list|,
 name|int
 name|text_size
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -2569,7 +2438,7 @@ name|bufp
 init|=
 literal|0
 decl_stmt|;
-comment|/* =0 avoids gcc -Wall glitch*/
+comment|/* =0 avoids gcc -Wall glitch */
 specifier|register
 name|char
 modifier|*
@@ -2708,12 +2577,17 @@ name|end_of_text_addr
 operator|=
 name|text_addr
 operator|+
-name|section_offsets
+name|ANOFFSET
+argument_list|(
+name|objfile
 operator|->
-name|offsets
-index|[
+name|section_offsets
+argument_list|,
 name|SECT_OFF_TEXT
-index|]
+argument_list|(
+name|objfile
+argument_list|)
+argument_list|)
 operator|+
 name|text_size
 expr_stmt|;
@@ -2935,9 +2809,14 @@ name|CUR_SYMBOL_VALUE
 operator|+=
 name|ANOFFSET
 argument_list|(
+name|objfile
+operator|->
 name|section_offsets
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3061,9 +2940,14 @@ name|valu
 operator|+=
 name|ANOFFSET
 argument_list|(
+name|objfile
+operator|->
 name|section_offsets
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|past_first_source_file
@@ -3140,8 +3024,6 @@ name|os9k_start_psymtab
 argument_list|(
 name|objfile
 argument_list|,
-name|section_offsets
-argument_list|,
 name|str
 argument_list|,
 name|valu
@@ -3196,7 +3078,7 @@ name|psymtab_language
 operator|=
 name|tmp_language
 expr_stmt|;
-comment|/* 		  if (pst&& STREQ (str, pst->filename)) 		    continue; 		  { 		    register int i; 		    for (i = 0; i< includes_used; i++) 		      if (STREQ (str, psymtab_include_list[i])) 			{ 			  i = -1;  			  break; 			} 		    if (i == -1) 		      continue; 		  } */
+comment|/*    if (pst&& STREQ (str, pst->filename))    continue;    {    register int i;    for (i = 0; i< includes_used; i++)    if (STREQ (str, psymtab_include_list[i]))    {    i = -1;     break;    }    if (i == -1)    continue;    }  */
 name|psymtab_include_list
 index|[
 name|includes_used
@@ -3489,14 +3371,14 @@ expr_stmt|;
 block|}
 name|check_enum
 label|:
-comment|/* If this is an enumerated type, we need to 		 add all the enum constants to the partial symbol 		 table.  This does not cover enums without names, e.g. 		 "enum {a, b} c;" in C, but fortunately those are 		 rare.  There is no way for GDB to find those from the 		 enum type without spending too much time on it.  Thus 		 to solve this problem, the compiler needs to put out the 		 enum in a nameless type.  GCC2 does this.  */
-comment|/* We are looking for something of the form<name> ":" ("t" | "T") [<number> "="] "e"<size> 		 {<constant> ":"<value> ","} ";".  */
+comment|/* If this is an enumerated type, we need to 	         add all the enum constants to the partial symbol 	         table.  This does not cover enums without names, e.g. 	         "enum {a, b} c;" in C, but fortunately those are 	         rare.  There is no way for GDB to find those from the 	         enum type without spending too much time on it.  Thus 	         to solve this problem, the compiler needs to put out the 	         enum in a nameless type.  GCC2 does this.  */
+comment|/* We are looking for something of the form<name> ":" ("t" | "T") [<number> "="] "e"<size> 	         {<constant> ":"<value> ","} ";".  */
 comment|/* Skip over the colon and the 't' or 'T'.  */
 name|p
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* This type may be given a number.  Also, numbers can come 		 in pairs like (0,26).  Skip over it.  */
+comment|/* This type may be given a number.  Also, numbers can come 	         in pairs like (0,26).  Skip over it.  */
 while|while
 condition|(
 operator|(
@@ -3580,8 +3462,8 @@ name|char
 modifier|*
 name|q
 decl_stmt|;
-comment|/* Check for and handle cretinous dbx symbol name 			 continuation!  		      if (*p == '\\') 			p = next_symbol_text (objfile); 		      */
-comment|/* Point to the character after the name 			 of the enum constant.  */
+comment|/* Check for and handle cretinous dbx symbol name 		         continuation!  		         if (*p == '\\') 		         p = next_symbol_text (objfile); 		       */
+comment|/* Point to the character after the name 		         of the enum constant.  */
 for|for
 control|(
 name|q
@@ -3600,7 +3482,7 @@ name|q
 operator|++
 control|)
 empty_stmt|;
-comment|/* Note that the value doesn't matter for 			 enum constants in psymtabs, just in symtabs.  */
+comment|/* Note that the value doesn't matter for 		         enum constants in psymtabs, just in symtabs.  */
 name|add_psymbol_to_list
 argument_list|(
 name|p
@@ -3696,9 +3578,14 @@ name|CUR_SYMBOL_VALUE
 operator|+=
 name|ANOFFSET
 argument_list|(
+name|objfile
+operator|->
 name|section_offsets
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3751,9 +3638,14 @@ name|CUR_SYMBOL_VALUE
 operator|+=
 name|ANOFFSET
 argument_list|(
+name|objfile
+operator|->
 name|section_offsets
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3812,11 +3704,11 @@ continue|continue;
 case|case
 literal|':'
 case|:
-comment|/* It is a C++ nested symbol.  We don't need to record it 		 (I don't think); if we try to look up foo::bar::baz, 		 then symbols for the symtab containing foo should get 		 read in, I think.  */
-comment|/* Someone says sun cc puts out symbols like 		 /foo/baz/maclib::/usr/local/bin/maclib, 		 which would get here with a symbol type of ':'.  */
+comment|/* It is a C++ nested symbol.  We don't need to record it 	         (I don't think); if we try to look up foo::bar::baz, 	         then symbols for the symtab containing foo should get 	         read in, I think.  */
+comment|/* Someone says sun cc puts out symbols like 	         /foo/baz/maclib::/usr/local/bin/maclib, 	         which would get here with a symbol type of ':'.  */
 continue|continue;
 default|default:
-comment|/* Unexpected symbol descriptor.  The second and subsequent stabs 		 of a continued stab can show up here.  The question is 		 whether they ever can mimic a normal stab--it would be 		 nice if not, since we certainly don't want to spend the 		 time searching to the end of every string looking for 		 a backslash.  */
+comment|/* Unexpected symbol descriptor.  The second and subsequent stabs 	         of a continued stab can show up here.  The question is 	         whether they ever can mimic a normal stab--it would be 	         nice if not, since we certainly don't want to spend the 	         time searching to the end of every string looking for 	         a backslash.  */
 name|complain
 argument_list|(
 operator|&
@@ -3837,9 +3729,14 @@ name|CUR_SYMBOL_VALUE
 operator|+=
 name|ANOFFSET
 argument_list|(
+name|objfile
+operator|->
 name|section_offsets
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3960,7 +3857,7 @@ name|dependencies_used
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*   do_cleanups (back_to); */
+comment|/*    do_cleanups (back_to);  */
 block|}
 end_function
 
@@ -3975,57 +3872,36 @@ name|partial_symtab
 modifier|*
 name|os9k_start_psymtab
 parameter_list|(
-name|objfile
-parameter_list|,
-name|section_offsets
-parameter_list|,
-name|filename
-parameter_list|,
-name|textlow
-parameter_list|,
-name|ldsymoff
-parameter_list|,
-name|ldsymcnt
-parameter_list|,
-name|global_syms
-parameter_list|,
-name|static_syms
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
-name|struct
-name|section_offsets
-modifier|*
-name|section_offsets
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|textlow
-decl_stmt|;
+parameter_list|,
 name|int
 name|ldsymoff
-decl_stmt|;
+parameter_list|,
 name|int
 name|ldsymcnt
-decl_stmt|;
+parameter_list|,
 name|struct
 name|partial_symbol
 modifier|*
 modifier|*
 name|global_syms
-decl_stmt|;
+parameter_list|,
 name|struct
 name|partial_symbol
 modifier|*
 modifier|*
 name|static_syms
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|partial_symtab
@@ -4036,6 +3912,8 @@ name|start_psymtab_common
 argument_list|(
 name|objfile
 argument_list|,
+name|objfile
+operator|->
 name|section_offsets
 argument_list|,
 name|filename
@@ -4114,49 +3992,34 @@ name|partial_symtab
 modifier|*
 name|os9k_end_psymtab
 parameter_list|(
-name|pst
-parameter_list|,
-name|include_list
-parameter_list|,
-name|num_includes
-parameter_list|,
-name|capping_symbol_cnt
-parameter_list|,
-name|capping_text
-parameter_list|,
-name|dependency_list
-parameter_list|,
-name|number_dependencies
-parameter_list|)
 name|struct
 name|partial_symtab
 modifier|*
 name|pst
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|include_list
-decl_stmt|;
+parameter_list|,
 name|int
 name|num_includes
-decl_stmt|;
+parameter_list|,
 name|int
 name|capping_symbol_cnt
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|capping_text
-decl_stmt|;
+parameter_list|,
 name|struct
 name|partial_symtab
 modifier|*
 modifier|*
 name|dependency_list
-decl_stmt|;
+parameter_list|,
 name|int
 name|number_dependencies
-decl_stmt|;
-comment|/* struct partial_symbol *capping_global, *capping_static; */
+parameter_list|)
 block|{
 name|int
 name|i
@@ -4304,7 +4167,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* This file ends with a static function, and it's 	 difficult to imagine how hard it would be to track down 	 the elf symbol.  Luckily, most of the time no one will notice, 	 since the next file will likely be compiled with -g, so 	 the code below will copy the first fuction's start address  	 back to our texthigh variable.  (Also, if this file is the 	 last one in a dynamically linked program, texthigh already 	 has the right value.)  If the next file isn't compiled 	 with -g, then the last function in this file winds up owning 	 all of the text space up to the next -g file, or the end (minus 	 shared libraries).  This only matters for single stepping, 	 and even then it will still work, except that it will single 	 step through all of the covered functions, instead of setting 	 breakpoints around them as it usualy does.  This makes it 	 pretty slow, but at least it doesn't fail.  	 We can fix this with a fairly big change to bfd, but we need 	 to coordinate better with Cygnus if we want to do that.  FIXME.  */
+comment|/* This file ends with a static function, and it's 	     difficult to imagine how hard it would be to track down 	     the elf symbol.  Luckily, most of the time no one will notice, 	     since the next file will likely be compiled with -g, so 	     the code below will copy the first fuction's start address  	     back to our texthigh variable.  (Also, if this file is the 	     last one in a dynamically linked program, texthigh already 	     has the right value.)  If the next file isn't compiled 	     with -g, then the last function in this file winds up owning 	     all of the text space up to the next -g file, or the end (minus 	     shared libraries).  This only matters for single stepping, 	     and even then it will still work, except that it will single 	     step through all of the covered functions, instead of setting 	     breakpoints around them as it usualy does.  This makes it 	     pretty slow, but at least it doesn't fail.  	     We can fix this with a fairly big change to bfd, but we need 	     to coordinate better with Cygnus if we want to do that.  FIXME.  */
 block|}
 name|last_function_name
 operator|=
@@ -4578,7 +4441,7 @@ name|texthigh
 operator|=
 literal|0
 expr_stmt|;
-comment|/* We could save slight bits of space by only making one of these, 	 shared by the entire set of include files.  FIXME-someday.  */
+comment|/* We could save slight bits of space by only making one of these,          shared by the entire set of include files.  FIXME-someday.  */
 name|subpst
 operator|->
 name|dependencies
@@ -4694,7 +4557,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Throw away this psymtab, it's empty.  We can't deallocate it, since        it is on the obstack, but we can forget to chain it on the list.  */
+comment|/* Throw away this psymtab, it's empty.  We can't deallocate it, since          it is on the obstack, but we can forget to chain it on the list.  */
 comment|/* Indicate that psymtab was thrown away.  */
 name|discard_psymtab
 argument_list|(
@@ -4725,13 +4588,11 @@ specifier|static
 name|void
 name|os9k_psymtab_to_symtab_1
 parameter_list|(
-name|pst
-parameter_list|)
 name|struct
 name|partial_symtab
 modifier|*
 name|pst
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|cleanup
@@ -4883,9 +4744,6 @@ name|old_chain
 operator|=
 name|make_cleanup
 argument_list|(
-operator|(
-name|make_cleanup_func
-operator|)
 name|really_free_pendings
 argument_list|,
 literal|0
@@ -4928,13 +4786,11 @@ specifier|static
 name|void
 name|os9k_psymtab_to_symtab
 parameter_list|(
-name|pst
-parameter_list|)
 name|struct
 name|partial_symtab
 modifier|*
 name|pst
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd
 modifier|*
@@ -4978,7 +4834,7 @@ operator|->
 name|number_of_dependencies
 condition|)
 block|{
-comment|/* Print the message now, before reading the string table, 	 to avoid disconcerting pauses.  */
+comment|/* Print the message now, before reading the string table,          to avoid disconcerting pauses.  */
 if|if
 condition|(
 name|info_verbose
@@ -5043,13 +4899,11 @@ specifier|static
 name|void
 name|os9k_read_ofile_symtab
 parameter_list|(
-name|pst
-parameter_list|)
 name|struct
 name|partial_symtab
 modifier|*
 name|pst
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -5086,11 +4940,6 @@ name|int
 name|text_size
 decl_stmt|;
 comment|/* Size of text segment for symbols */
-name|struct
-name|section_offsets
-modifier|*
-name|section_offsets
-decl_stmt|;
 name|FILE
 modifier|*
 name|dbg_file
@@ -5131,12 +4980,6 @@ name|pst
 operator|->
 name|textlow
 expr_stmt|;
-name|section_offsets
-operator|=
-name|pst
-operator|->
-name|section_offsets
-expr_stmt|;
 name|current_objfile
 operator|=
 name|objfile
@@ -5165,10 +5008,10 @@ if|#
 directive|if
 literal|0
 comment|/* It is necessary to actually read one symbol *before* the start      of this symtab's symbols, because the GCC_COMPILED_FLAG_SYMBOL      occurs before the N_SO symbol.      Detecting this in read_dbx_symtab      would slow down initial readin, so we look for it here instead. */
-block|if (!processing_acc_compilation&& sym_offset>= (int)symbol_size)     {       fseek (objefile->auxf2, sym_offset, SEEK_CUR);       fill_sym(objfile->auxf2, abfd);       bufp = symbuf;        processing_gcc_compilation = 0;       if (bufp->n_type == N_TEXT) 	{ 	  if (STREQ (namestring, GCC_COMPILED_FLAG_SYMBOL)) 	    processing_gcc_compilation = 1; 	  else if (STREQ (namestring, GCC2_COMPILED_FLAG_SYMBOL)) 	    processing_gcc_compilation = 2; 	}
-comment|/* Try to select a C++ demangling based on the compilation unit 	 producer. */
+block|if (!processing_acc_compilation&& sym_offset>= (int) symbol_size)     {       fseek (objefile->auxf2, sym_offset, SEEK_CUR);       fill_sym (objfile->auxf2, abfd);       bufp = symbuf;        processing_gcc_compilation = 0;       if (bufp->n_type == N_TEXT) 	{ 	  if (STREQ (namestring, GCC_COMPILED_FLAG_SYMBOL)) 	    processing_gcc_compilation = 1; 	  else if (STREQ (namestring, GCC2_COMPILED_FLAG_SYMBOL)) 	    processing_gcc_compilation = 2; 	}
+comment|/* Try to select a C++ demangling based on the compilation unit          producer. */
 block|if (processing_gcc_compilation) 	{ 	  if (AUTO_DEMANGLING) 	    { 	      set_demangling_style (GNU_DEMANGLING_STYLE_STRING); 	    } 	}     }   else     {
-comment|/* The N_SO starting this symtab is the first symbol, so we 	 better not check the symbol before it.  I'm not this can 	 happen, but it doesn't hurt to check for it.  */
+comment|/* The N_SO starting this symtab is the first symbol, so we          better not check the symbol before it.  I'm not this can          happen, but it doesn't hurt to check for it.  */
 block|bfd_seek (symfile_bfd, sym_offset, SEEK_CUR);       processing_gcc_compilation = 0;     }
 endif|#
 directive|endif
@@ -5185,7 +5028,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*   if (bufp->n_type != (unsigned char)N_SYM_SYM)     error("First symbol in segment of executable not a source symbol"); */
+comment|/*    if (bufp->n_type != (unsigned char)N_SYM_SYM)    error("First symbol in segment of executable not a source symbol");  */
 for|for
 control|(
 name|symnum
@@ -5245,6 +5088,8 @@ name|bufp
 operator|->
 name|n_strx
 argument_list|,
+name|pst
+operator|->
 name|section_offsets
 argument_list|,
 name|objfile
@@ -5254,12 +5099,12 @@ comment|/* We skip checking for a new .o or -l file; that should never          
 if|#
 directive|if
 literal|0
-block|else if (type == N_TEXT) 	{
+block|else       if (type == N_TEXT) 	{
 comment|/* I don't think this code will ever be executed, because 	     the GCC_COMPILED_FLAG_SYMBOL usually is right before 	     the N_SO symbol which starts this source file. 	     However, there is no reason not to accept 	     the GCC_COMPILED_FLAG_SYMBOL anywhere.  */
-block|if (STREQ (namestring, GCC_COMPILED_FLAG_SYMBOL)) 	    processing_gcc_compilation = 1; 	  else if (STREQ (namestring, GCC2_COMPILED_FLAG_SYMBOL)) 	    processing_gcc_compilation = 2;  	  if (AUTO_DEMANGLING) 	    { 	      set_demangling_style (GNU_DEMANGLING_STYLE_STRING); 	    } 	}       else if (type& N_EXT || type == (unsigned char)N_TEXT 	       || type == (unsigned char)N_NBTEXT 	       ) {
+block|if (STREQ (namestring, GCC_COMPILED_FLAG_SYMBOL)) 	    processing_gcc_compilation = 1; 	  else if (STREQ (namestring, GCC2_COMPILED_FLAG_SYMBOL)) 	    processing_gcc_compilation = 2;  	  if (AUTO_DEMANGLING) 	    { 	      set_demangling_style (GNU_DEMANGLING_STYLE_STRING); 	    } 	}       else if (type& N_EXT || type == (unsigned char) N_TEXT 	       || type == (unsigned char) N_NBTEXT 	) 	{
 comment|/* Global symbol: see if we came across a dbx defintion for 	     a corresponding symbol.  If so, store the value.  Remove 	     syms from the chain when their values are stored, but 	     search the whole chain, as there may be several syms from 	     different files with the same name. */
 comment|/* This is probably not true.  Since the files will be read 	     in one at a time, each reference to a global symbol will 	     be satisfied in each file as it appears. So we skip this 	     section. */
-block|;         }
+block|; 	}
 endif|#
 directive|endif
 comment|/* 0 */
@@ -5292,6 +5137,9 @@ argument_list|,
 name|objfile
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|end_stabs
@@ -5304,7 +5152,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This handles a single symbol from the symbol-file, building symbols    into a GDB symtab.  It takes these arguments and an implicit argument.     TYPE is the type field of the ".stab" symbol entry.    DESC is the desc field of the ".stab" entry.    VALU is the value field of the ".stab" entry.    NAME is the symbol name, in our address space.    SECTION_OFFSETS is a set of amounts by which the sections of this object           file were relocated when it was loaded into memory.           All symbols that refer 	  to memory locations need to be offset by these amounts.    OBJFILE is the object file from which we are reading symbols.  	       It is used in end_symtab.  */
+comment|/* This handles a single symbol from the symbol-file, building symbols    into a GDB symtab.  It takes these arguments and an implicit argument.     TYPE is the type field of the ".stab" symbol entry.    DESC is the desc field of the ".stab" entry.    VALU is the value field of the ".stab" entry.    NAME is the symbol name, in our address space.    SECTION_OFFSETS is a set of amounts by which the sections of this object    file were relocated when it was loaded into memory.    All symbols that refer    to memory locations need to be offset by these amounts.    OBJFILE is the object file from which we are reading symbols.    It is used in end_symtab.  */
 end_comment
 
 begin_function
@@ -5312,40 +5160,29 @@ specifier|static
 name|void
 name|os9k_process_one_symbol
 parameter_list|(
-name|type
-parameter_list|,
-name|desc
-parameter_list|,
-name|valu
-parameter_list|,
-name|name
-parameter_list|,
-name|section_offsets
-parameter_list|,
-name|objfile
-parameter_list|)
 name|int
 name|type
-decl_stmt|,
+parameter_list|,
+name|int
 name|desc
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|valu
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|struct
 name|section_offsets
 modifier|*
 name|section_offsets
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -5364,8 +5201,8 @@ if|#
 directive|if
 literal|0
 comment|/* Something is wrong if we see real data before      seeing a source file name.  */
-block|if (last_source_file == NULL&& type != (unsigned char)N_SO)     {
-comment|/* Ignore any symbols which appear before an N_SO symbol. 	 Currently no one puts symbols there, but we should deal 	 gracefully with the case.  A complain()t might be in order, 	 but this should not be an error ().  */
+block|if (last_source_file == NULL&& type != (unsigned char) N_SO)     {
+comment|/* Ignore any symbols which appear before an N_SO symbol.          Currently no one puts symbols there, but we should deal          gracefully with the case.  A complain()t might be in order,          but this should not be an error ().  */
 block|return;     }
 endif|#
 directive|endif
@@ -5378,7 +5215,7 @@ block|{
 case|case
 name|N_SYM_LBRAC
 case|:
-comment|/* On most machines, the block addresses are relative to the 	 N_SO, the linker did not relocate them (sigh).  */
+comment|/* On most machines, the block addresses are relative to the          N_SO, the linker did not relocate them (sigh).  */
 name|valu
 operator|+=
 name|ANOFFSET
@@ -5386,6 +5223,9 @@ argument_list|(
 name|section_offsets
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|new
@@ -5408,6 +5248,9 @@ argument_list|(
 name|section_offsets
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|new
@@ -5464,7 +5307,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Muzzle a compiler bug that makes end< start.  (which 		 compilers?  Is this ever harmful?).  */
+comment|/* Muzzle a compiler bug that makes end< start.  (which 	         compilers?  Is this ever harmful?).  */
 if|if
 condition|(
 name|new
@@ -5617,7 +5460,7 @@ break|break;
 case|case
 name|N_SYM_SLINE
 case|:
-comment|/* This type of "symbol" really just records 	 one line-number -- core-address correspondence. 	 Enter it in the line list for this symbol table. */
+comment|/* This type of "symbol" really just records          one line-number -- core-address correspondence.          Enter it in the line list for this symbol table. */
 comment|/* Relocate for dynamic loading and for ELF acc fn-relative syms.  */
 name|valu
 operator|+=
@@ -5626,9 +5469,25 @@ argument_list|(
 name|section_offsets
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* FIXME: loses if sizeof (char *)> sizeof (int) */
+name|gdb_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
+operator|<=
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|record_line
 argument_list|(
 name|current_subfile
@@ -5642,7 +5501,7 @@ name|valu
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* The following symbol types need to have the appropriate offset added        to their value; then we process symbol definitions in the name.  */
+comment|/* The following symbol types need to have the appropriate offset added          to their value; then we process symbol definitions in the name.  */
 case|case
 name|N_SYM_SYM
 case|:
@@ -5705,6 +5564,9 @@ argument_list|(
 name|section_offsets
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|n
@@ -5772,6 +5634,9 @@ argument_list|,
 name|objfile
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|end_stabs
@@ -5835,6 +5700,9 @@ argument_list|(
 name|section_offsets
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|function_stab_type
@@ -5885,6 +5753,9 @@ argument_list|(
 name|section_offsets
 argument_list|,
 name|SECT_OFF_DATA
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|define_symbol
@@ -5993,7 +5864,7 @@ block|,
 comment|/* sym_finish: finished with file, cleanup */
 name|default_symfile_offsets
 block|,
-comment|/* sym_offsets: parse user's offsets to internal form*/
+comment|/* sym_offsets: parse user's offsets to internal form */
 name|NULL
 comment|/* next: pointer to next struct sym_fns */
 block|}
@@ -6003,7 +5874,9 @@ end_decl_stmt
 begin_function
 name|void
 name|_initialize_os9kread
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|add_symtab_fns
 argument_list|(

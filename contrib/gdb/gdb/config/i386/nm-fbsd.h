@@ -1,29 +1,210 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent definitions for Intel 386 running BSD Unix, for GDB.    Copyright 1986, 1987, 1989, 1992, 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Native-dependent definitions for FreeBSD/i386.    Copyright 1986, 1987, 1989, 1992, 1994, 1996, 1997, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NM_FREEBSD_H
+name|NM_FBSD_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NM_FREEBSD_H
+name|NM_FBSD_H
 end_define
 
-begin_comment
-comment|/* Be shared lib aware */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PT_GETDBREGS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|I386_USE_GENERIC_WATCHPOINTS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
 directive|include
-file|"solib.h"
+file|"i386/nm-i386.h"
 end_include
+
+begin_comment
+comment|/* Provide access to the i386 hardware debugging registers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I386_DR_LOW_SET_CONTROL
+parameter_list|(
+name|control
+parameter_list|)
+define|\
+value|i386bsd_dr_set_control (control)
+end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|i386bsd_dr_set_control
+parameter_list|(
+name|unsigned
+name|long
+name|control
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|I386_DR_LOW_SET_ADDR
+parameter_list|(
+name|regnum
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|i386bsd_dr_set_addr (regnum, addr)
+end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|i386bsd_dr_set_addr
+parameter_list|(
+name|int
+name|regnum
+parameter_list|,
+name|CORE_ADDR
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|I386_DR_LOW_RESET_ADDR
+parameter_list|(
+name|regnum
+parameter_list|)
+define|\
+value|i386bsd_dr_reset_addr (regnum)
+end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|i386bsd_dr_reset_addr
+parameter_list|(
+name|int
+name|regnum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|I386_DR_LOW_GET_STATUS
+parameter_list|()
+define|\
+value|i386bsd_dr_get_status ()
+end_define
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|long
+name|i386bsd_dr_get_status
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Type of the third argument to the `ptrace' system call.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTRACE_ARG3_TYPE
+value|caddr_t
+end_define
+
+begin_comment
+comment|/* Override copies of {fetch,store}_inferior_registers in `infptrace.c'.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FETCH_INFERIOR_REGISTERS
+end_define
+
+begin_comment
+comment|/* Override child_resume in `infptrace.c' to work around a kernel bug.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHILD_RESUME
+end_define
+
+begin_comment
+comment|/* We can attach and detach.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATTACH_DETACH
+end_define
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Support for the user struct.  */
+end_comment
+
+begin_comment
+comment|/* Return the size of the user struct.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERNEL_U_SIZE
+value|kernel_u_size ()
+end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|kernel_u_size
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* This is the amount to subtract from u.u_ar0    to get the offset in the core file of the register values.  */
@@ -54,33 +235,106 @@ parameter_list|,
 name|regno
 parameter_list|)
 define|\
-value|(addr) = i386_register_u_addr ((blockend),(regno));
+value|(addr) = register_u_addr ((blockend), (regno))
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
+name|CORE_ADDR
+name|register_u_addr
+parameter_list|(
+name|CORE_ADDR
+name|blockend
+parameter_list|,
 name|int
-name|i386_register_u_addr
-name|PARAMS
-argument_list|(
+name|regno
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Shared library support.  */
+end_comment
+
+begin_comment
+comment|/* The FreeBSD<link.h> uses the same condition to distinguish ELF    from a.out.  ELF implies SVR4 shared libraries.  */
+end_comment
+
+begin_if
+if|#
+directive|if
 operator|(
-name|int
-operator|,
-name|int
-operator|)
+name|defined
+argument_list|(
+name|FREEBSD_ELF
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+operator|||
+name|defined
+argument_list|(
+name|__ELF__
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|FREEBSD_AOUT
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|PTRACE_ARG3_TYPE
-value|char*
+name|SVR4_SHARED_LIBS
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"solib.h"
+end_include
+
 begin_comment
-comment|/* make structure definitions match up with those expected in solib.c */
+comment|/* Support for shared libraries. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SVR4_SHARED_LIBS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"elf/common.h"
+end_include
+
+begin_comment
+comment|/* Additional ELF shared library info. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SVR4_SHARED_LIBS
+end_ifndef
+
+begin_comment
+comment|/* Make structure definitions match up with those expected in `solib.c'.  */
 end_comment
 
 begin_define
@@ -405,29 +659,14 @@ name|ld_2
 value|d_sdt
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* Return sizeof user struct to callers in less machine dependent routines */
+comment|/* !SVR4_SHARED_LIBS */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|KERNEL_U_SIZE
-value|kernel_u_size()
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|kernel_u_size
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -435,7 +674,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NM_FREEBSD_H */
+comment|/* NM_FBSD_H */
 end_comment
 
 end_unit

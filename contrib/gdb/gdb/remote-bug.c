@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote debugging interface for Motorola's MVME187BUG monitor, an embedded    monitor for the m88k.     Copyright 1992, 1993 Free Software Foundation, Inc.    Contributed by Cygnus Support.  Written by K. Richard Pixley.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Remote debugging interface for Motorola's MVME187BUG monitor, an embedded    monitor for the m88k.     Copyright 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001,    2002 Free Software Foundation, Inc.     Contributed by Cygnus Support.  Written by K. Richard Pixley.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
+file|"gdb_string.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"gdb_string.h"
+file|"regcache.h"
 end_include
 
 begin_include
@@ -37,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -78,16 +72,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"remote-utils.h"
+file|"serial.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|int
-name|sleep
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"remote-utils.h"
+end_include
 
 begin_comment
 comment|/* External data declarations */
@@ -124,62 +116,53 @@ begin_comment
 comment|/* Forward function declarations */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|bug_clear_breakpoints
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|bug_read_memory
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
 name|memaddr
-operator|,
+parameter_list|,
 name|unsigned
 name|char
-operator|*
+modifier|*
 name|myaddr
-operator|,
+parameter_list|,
 name|int
 name|len
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|bug_write_memory
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
 name|memaddr
-operator|,
+parameter_list|,
 name|unsigned
 name|char
-operator|*
+modifier|*
 name|myaddr
-operator|,
+parameter_list|,
 name|int
 name|len
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* This variable is somewhat arbitrary.  It's here so that it can be    set from within a running gdb.  */
@@ -292,17 +275,13 @@ specifier|static
 name|void
 name|bug_load
 parameter_list|(
-name|args
-parameter_list|,
-name|fromtty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|fromtty
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd
 modifier|*
@@ -321,15 +300,9 @@ decl_stmt|;
 name|sr_check_open
 argument_list|()
 expr_stmt|;
-name|dcache_flush
-argument_list|(
-name|gr_get_dcache
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
-literal|0
+name|null_ptid
 expr_stmt|;
 name|abfd
 operator|=
@@ -418,7 +391,7 @@ argument_list|)
 decl_stmt|;
 name|printf_filtered
 argument_list|(
-literal|"%s\t: 0x%4x .. 0x%4x  "
+literal|"%s\t: 0x%4lx .. 0x%4lx  "
 argument_list|,
 name|s
 operator|->
@@ -519,7 +492,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|buffer
 argument_list|)
@@ -565,7 +538,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char * get_word (p)      char **p; {   char *s = *p;   char *word;   char *copy;   size_t len;    while (isspace (*s))     s++;    word = s;    len = 0;    while (*s&& !isspace (*s))     {       s++;       len++;      }   copy = xmalloc (len + 1);   memcpy (copy, word, len);   copy[len] = 0;   *p = s;   return copy; }
+unit|static char * get_word (char **p) {   char *s = *p;   char *word;   char *copy;   size_t len;    while (isspace (*s))     s++;    word = s;    len = 0;    while (*s&& !isspace (*s))     {       s++;       len++;      }   copy = xmalloc (len + 1);   memcpy (copy, word, len);   copy[len] = 0;   *p = s;   return copy; }
 endif|#
 directive|endif
 end_endif
@@ -577,9 +550,6 @@ name|gr_settings
 name|bug_settings
 init|=
 block|{
-name|NULL
-block|,
-comment|/* dcache */
 literal|"Bug>"
 block|,
 comment|/* prompt */
@@ -590,12 +560,6 @@ comment|/* ops */
 name|bug_clear_breakpoints
 block|,
 comment|/* clear_all_breakpoints */
-name|bug_read_memory
-block|,
-comment|/* readfunc */
-name|bug_write_memory
-block|,
-comment|/* writefunc */
 name|gr_generic_checkin
 block|,
 comment|/* checkin */
@@ -623,17 +587,13 @@ specifier|static
 name|void
 name|bug_open
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -695,8 +655,14 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-name|abort
-argument_list|()
+name|internal_error
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"failed internal consistency check"
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -710,28 +676,17 @@ begin_function
 name|void
 name|bug_resume
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|step
-parameter_list|,
-name|sig
-parameter_list|)
 name|int
-name|pid
-decl_stmt|,
 name|step
-decl_stmt|;
+parameter_list|,
 name|enum
 name|target_signal
 name|sig
-decl_stmt|;
+parameter_list|)
 block|{
-name|dcache_flush
-argument_list|(
-name|gr_get_dcache
-argument_list|()
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|step
@@ -742,7 +697,7 @@ argument_list|(
 literal|"t"
 argument_list|)
 expr_stmt|;
-comment|/* Force the next bug_wait to return a trap.  Not doing anything        about I/O from the target means that the user has to type        "continue" to see any.  FIXME, this should be fixed.  */
+comment|/* Force the next bug_wait to return a trap.  Not doing anything          about I/O from the target means that the user has to type          "continue" to see any.  FIXME, this should be fixed.  */
 name|need_artificial_trap
 operator|=
 literal|1
@@ -785,21 +740,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|ptid_t
 name|bug_wait
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|status
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|struct
 name|target_waitstatus
 modifier|*
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|old_timeout
@@ -999,7 +950,7 @@ operator|=
 name|old_immediate_quit
 expr_stmt|;
 return|return
-literal|0
+name|inferior_ptid
 return|;
 block|}
 end_function
@@ -1014,11 +965,9 @@ name|char
 modifier|*
 name|get_reg_name
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -1097,7 +1046,7 @@ block|,
 comment|/* 32 = psr */
 literal|"fcr62"
 block|,
-comment|/* 33 = fpsr*/
+comment|/* 33 = fpsr */
 literal|"fcr63"
 block|,
 comment|/* 34 = fpcr */
@@ -1200,7 +1149,7 @@ comment|/* Read from remote while the input matches STRING.  Return zero on    s
 end_comment
 
 begin_endif
-unit|static int bug_scan (s)      char *s; {   int c;    while (*s)     {       c = sr_readchar();       if (c != *s++) 	{ 	  fflush(stdout); 	  printf("\nNext character is '%c' - %d and s is \"%s\".\n", c, c, --s); 	  return(-1); 	}     }    return(0); }
+unit|static int bug_scan (char *s) {   int c;    while (*s)     {       c = sr_readchar ();       if (c != *s++) 	{ 	  fflush (stdout); 	  printf ("\nNext character is '%c' - %d and s is \"%s\".\n", c, c, --s); 	  return (-1); 	}     }    return (0); }
 endif|#
 directive|endif
 end_endif
@@ -1214,12 +1163,10 @@ specifier|static
 name|int
 name|bug_srec_write_cr
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1260,7 +1207,7 @@ name|p
 argument_list|)
 expr_stmt|;
 do|do
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|sr_get_desc
 argument_list|()
@@ -1306,11 +1253,9 @@ specifier|static
 name|void
 name|bug_fetch_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|sr_check_open
 argument_list|()
@@ -1727,11 +1672,9 @@ specifier|static
 name|void
 name|bug_store_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buffer
@@ -1805,10 +1748,13 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"rs %s %08x"
+literal|"rs %s %08lx"
 argument_list|,
 name|regname
 argument_list|,
+operator|(
+name|long
+operator|)
 name|read_register
 argument_list|(
 name|regno
@@ -1928,333 +1874,79 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/* Transfer LEN bytes between GDB address MYADDR and target address    MEMADDR.  If WRITE is non-zero, transfer them to the target,    otherwise transfer them from the target.  TARGET is unused.     Returns the number of bytes transferred. */
+end_comment
+
 begin_function
 name|int
 name|bug_xfer_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|,
-name|target
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|write
-decl_stmt|;
+parameter_list|,
+name|struct
+name|mem_attrib
+modifier|*
+name|attrib
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
-comment|/* ignored */
+parameter_list|)
 block|{
-specifier|register
 name|int
-name|i
+name|res
 decl_stmt|;
-comment|/* Round starting address down to longword boundary.  */
-specifier|register
-name|CORE_ADDR
-name|addr
-decl_stmt|;
-comment|/* Round ending address up; get number of longwords that makes.  */
-specifier|register
-name|int
-name|count
-decl_stmt|;
-comment|/* Allocate buffer of that many longwords.  */
-specifier|register
-name|int
-modifier|*
-name|buffer
-decl_stmt|;
-name|addr
-operator|=
-name|memaddr
-operator|&
-operator|-
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-expr_stmt|;
-name|count
-operator|=
-operator|(
-operator|(
-operator|(
-name|memaddr
-operator|+
+if|if
+condition|(
 name|len
-operator|)
-operator|-
-name|addr
-operator|)
-operator|+
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-operator|-
-literal|1
-operator|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-expr_stmt|;
-name|buffer
-operator|=
-operator|(
-name|int
-operator|*
-operator|)
-name|alloca
-argument_list|(
-name|count
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|write
 condition|)
-block|{
-comment|/* Fill start and end extra bytes of buffer with existing memory data.  */
-if|if
-condition|(
-name|addr
-operator|!=
-name|memaddr
-operator|||
-name|len
-operator|<
-operator|(
-name|int
-operator|)
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-condition|)
-block|{
-comment|/* Need part of initial word -- fetch it.  */
-name|buffer
-index|[
-literal|0
-index|]
+name|res
 operator|=
-name|gr_fetch_word
+name|bug_write_memory
 argument_list|(
-name|addr
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|count
-operator|>
-literal|1
-condition|)
-comment|/* FIXME, avoid if even boundary */
-block|{
-name|buffer
-index|[
-name|count
-operator|-
-literal|1
-index|]
-operator|=
-name|gr_fetch_word
-argument_list|(
-name|addr
-operator|+
-operator|(
-name|count
-operator|-
-literal|1
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Copy data to be written over corresponding part of buffer */
-name|memcpy
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|buffer
-operator|+
-operator|(
 name|memaddr
-operator|&
-operator|(
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-operator|-
-literal|1
-operator|)
-operator|)
 argument_list|,
 name|myaddr
 argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Write the entire buffer.  */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|count
-condition|;
-name|i
-operator|++
-operator|,
-name|addr
-operator|+=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-control|)
-block|{
-name|errno
-operator|=
-literal|0
-expr_stmt|;
-name|gr_store_word
-argument_list|(
-name|addr
-argument_list|,
-name|buffer
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errno
-condition|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-block|}
-block|}
 else|else
-block|{
-comment|/* Read all the longwords */
-for|for
-control|(
-name|i
+name|res
 operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|count
-condition|;
-name|i
-operator|++
-operator|,
-name|addr
-operator|+=
-sizeof|sizeof
+name|bug_read_memory
 argument_list|(
-name|int
-argument_list|)
-control|)
-block|{
-name|errno
-operator|=
-literal|0
-expr_stmt|;
-name|buffer
-index|[
-name|i
-index|]
-operator|=
-name|gr_fetch_word
-argument_list|(
-name|addr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errno
-condition|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|QUIT
-expr_stmt|;
-block|}
-comment|/* Copy appropriate bytes out of the buffer.  */
-name|memcpy
-argument_list|(
+name|memaddr
+argument_list|,
 name|myaddr
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|buffer
-operator|+
-operator|(
-name|memaddr
-operator|&
-operator|(
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-operator|-
-literal|1
-operator|)
-operator|)
-argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-block|}
 return|return
-name|len
+name|res
 return|;
 block|}
 end_function
@@ -2263,7 +1955,9 @@ begin_function
 specifier|static
 name|void
 name|start_load
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2329,23 +2023,17 @@ specifier|static
 name|int
 name|bug_write_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|done
@@ -2475,7 +2163,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"S3%02X%08X"
+literal|"S3%02X%08lX"
 argument_list|,
 name|thisgo
 operator|+
@@ -2483,6 +2171,9 @@ literal|4
 operator|+
 literal|1
 argument_list|,
+operator|(
+name|long
+operator|)
 name|address
 argument_list|)
 expr_stmt|;
@@ -2585,7 +2276,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* FIXME-NOW: insert a deliberate error every now and then. 		 This is intended for testing/debugging the error handling 		 stuff.  */
+comment|/* FIXME-NOW: insert a deliberate error every now and then. 	         This is intended for testing/debugging the error handling 	         stuff.  */
 specifier|static
 name|int
 name|counter
@@ -2665,7 +2356,7 @@ expr_stmt|;
 operator|++
 name|retries
 expr_stmt|;
-comment|/* flush any remaining input and verify that we are back 		 at the prompt level. */
+comment|/* flush any remaining input and verify that we are back 	         at the prompt level. */
 name|gr_expect_prompt
 argument_list|()
 expr_stmt|;
@@ -2692,7 +2383,7 @@ expr_stmt|;
 operator|++
 name|retries
 expr_stmt|;
-comment|/* Having finished the load, we need to figure out whether we 	 had any errors.  */
+comment|/* Having finished the load, we need to figure out whether we          had any errors.  */
 block|}
 do|while
 condition|(
@@ -2716,7 +2407,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copy LEN bytes of data from debugger memory at MYADDR    to inferior's memory at MEMADDR.  Returns errno value.  * sb/sh instructions don't work on unaligned addresses, when TU=1.  */
+comment|/* Copy LEN bytes of data from debugger memory at MYADDR    to inferior's memory at MEMADDR.  Returns errno value.    * sb/sh instructions don't work on unaligned addresses, when TU=1.  */
 end_comment
 
 begin_comment
@@ -2728,23 +2419,17 @@ specifier|static
 name|int
 name|bug_read_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|request
@@ -2782,8 +2467,11 @@ name|sprintf
 argument_list|(
 name|request
 argument_list|,
-literal|"du 0 %x:&%d"
+literal|"du 0 %lx:&%d"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|memaddr
 argument_list|,
 name|len
@@ -3116,23 +2804,22 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Insert a breakpoint at ADDR.  SAVE is normally the address of the    pattern buffer where the instruction that the breakpoint overwrites    is saved.  It is unused here since the bug is responsible for    saving/restoring the original instruction. */
+end_comment
+
 begin_function
 specifier|static
 name|int
 name|bug_insert_breakpoint
 parameter_list|(
-name|addr
-parameter_list|,
-name|save
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|save
-decl_stmt|;
-comment|/* Throw away, let bug save instructions */
+parameter_list|)
 block|{
 name|sr_check_open
 argument_list|()
@@ -3157,8 +2844,11 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"br %x"
+literal|"br %lx"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|addr
 argument_list|)
 expr_stmt|;
@@ -3194,23 +2884,22 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* Remove a breakpoint at ADDR.  SAVE is normally the previously    saved pattern, but is unused here since the bug is responsible    for saving/restoring instructions. */
+end_comment
+
 begin_function
 specifier|static
 name|int
 name|bug_remove_breakpoint
 parameter_list|(
-name|addr
-parameter_list|,
-name|save
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|save
-decl_stmt|;
-comment|/* Throw away, let bug save instructions */
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3232,8 +2921,11 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"nobr %x"
+literal|"nobr %lx"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|addr
 argument_list|)
 expr_stmt|;
@@ -3262,7 +2954,9 @@ begin_function
 specifier|static
 name|int
 name|bug_clear_breakpoints
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3627,12 +3321,6 @@ name|NULL
 expr_stmt|;
 name|bug_ops
 operator|.
-name|to_core_file_to_sym_file
-operator|=
-name|NULL
-expr_stmt|;
-name|bug_ops
-operator|.
 name|to_stratum
 operator|=
 name|process_stratum
@@ -3702,7 +3390,9 @@ end_comment
 begin_function
 name|void
 name|_initialize_remote_bug
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|init_bug_ops
 argument_list|()

@@ -1,7045 +1,2380 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote debugging interface for AMD 29k interfaced via UDI, for GDB.    Copyright 1990, 1992, 1995 Free Software Foundation, Inc.    Written by Daniel Mann.  Contributed by AMD.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* OBSOLETE /* Remote debugging interface for AMD 29k interfaced via UDI, for GDB. */
 end_comment
 
 begin_comment
-comment|/* This is like remote.c but uses the Universal Debug Interface (UDI) to     talk to the target hardware (or simulator).  UDI is a TCP/IP based    protocol; for hardware that doesn't run TCP, an interface adapter     daemon talks UDI on one side, and talks to the hardware (typically    over a serial port) on the other side.   - Originally written by Daniel Mann at AMD for MiniMON and gdb 3.91.6.  - David Wood (wood@lab.ultra.nyu.edu) at New York University adapted this 	file to gdb 3.95.  I was unable to get this working on sun3os4 	with termio, only with sgtty.  - Daniel Mann at AMD took the 3.95 adaptions above and replaced    	MiniMON interface with UDI-p interface.	  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"frame.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"inferior.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"wait.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"value.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gdb_string.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"terminal.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"target.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"29k-share/udi/udiproc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gdbcmd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bfd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gdbcore.h"
-end_include
-
-begin_comment
-comment|/* For download function */
+comment|/* OBSOLETE    Copyright 1990, 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001 */
 end_comment
 
 begin_comment
-comment|/* access the register store directly, without going through    the normal handler functions. This avoids an extra data copy.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|stop_soon_quietly
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* for wait_for_inferior */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|struct
-name|value
-modifier|*
-name|call_function_by_hand
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|void
-name|udi_resume
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-name|pid
-operator|,
-name|int
-name|step
-operator|,
-expr|enum
-name|target_signal
-name|sig
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|udi_fetch_registers
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-name|regno
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|udi_load
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-name|args
-operator|,
-name|int
-name|from_tty
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|fetch_register
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-name|regno
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|udi_store_registers
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-name|regno
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|store_register
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-name|regno
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|regnum_to_srnum
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-name|regno
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|udi_close
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-name|quitting
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|CPUSpace
-name|udi_memory_space
-name|PARAMS
-argument_list|(
-operator|(
-name|CORE_ADDR
-name|addr
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|udi_write_inferior_memory
-name|PARAMS
-argument_list|(
-operator|(
-name|CORE_ADDR
-name|memaddr
-operator|,
-name|char
-operator|*
-name|myaddr
-operator|,
-name|int
-name|len
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|udi_read_inferior_memory
-name|PARAMS
-argument_list|(
-operator|(
-name|CORE_ADDR
-name|memaddr
-operator|,
-name|char
-operator|*
-name|myaddr
-operator|,
-name|int
-name|len
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|download
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-name|load_arg_string
-operator|,
-name|int
-name|from_tty
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|CoffFileName
-index|[
-literal|100
-index|]
-init|=
-literal|""
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|FREEZE_MODE
-value|(read_register(CPS_REGNUM)& 0x400)
-end_define
-
-begin_define
-define|#
-directive|define
-name|USE_SHADOW_PC
-value|((processor_type == a29k_freeze_mode)&& FREEZE_MODE)
-end_define
-
-begin_decl_stmt
-specifier|static
-name|int
-name|timeout
-init|=
-literal|5
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|target_ops
-name|udi_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Forward declaration */
+comment|/* OBSOLETE    Free Software Foundation, Inc. */
 end_comment
 
 begin_comment
-comment|/* Special register enumeration. */
+comment|/* OBSOLETE    Written by Daniel Mann.  Contributed by AMD. */
 end_comment
 
 begin_comment
-comment|/******************************************************************* UDI DATA*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXDATA
-value|2*1024
-end_define
-
-begin_comment
-comment|/* max UDI[read/write] byte size */
+comment|/* OBSOLETE  */
 end_comment
 
 begin_comment
-comment|/* Descriptor for I/O to remote machine.  Initialize it to -1 so that    udi_open knows that we don't have a file open when the program    starts.  */
-end_comment
-
-begin_decl_stmt
-name|UDISessionId
-name|udi_session_id
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|udi_config_id
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|CPUOffset
-name|IMemStart
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|CPUSizeT
-name|IMemSize
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|CPUOffset
-name|DMemStart
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|CPUSizeT
-name|DMemSize
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|CPUOffset
-name|RMemStart
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|CPUSizeT
-name|RMemSize
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|UDIUInt32
-name|CPUPRL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|UDIUInt32
-name|CoProcPRL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|UDIMemoryRange
-name|address_ranges
-index|[
-literal|2
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Text and data */
-end_comment
-
-begin_decl_stmt
-name|UDIResource
-name|entry
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Entry point */
-end_comment
-
-begin_decl_stmt
-name|CPUSizeT
-name|stack_sizes
-index|[
-literal|2
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Regular and memory stacks */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SBUF_MAX
-value|1024
-end_define
-
-begin_comment
-comment|/* maximum size of string handling buffer */
-end_comment
-
-begin_decl_stmt
-name|char
-name|sbuf
-index|[
-name|SBUF_MAX
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|bkpt_entry_str
-block|{
-name|UDIResource
-name|Addr
-decl_stmt|;
-name|UDIUInt32
-name|PassCount
-decl_stmt|;
-name|UDIBreakType
-name|Type
-decl_stmt|;
-name|unsigned
-name|int
-name|BreakId
-decl_stmt|;
-block|}
-name|bkpt_entry_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|BKPT_TABLE_SIZE
-value|40
-end_define
-
-begin_decl_stmt
-specifier|static
-name|bkpt_entry_t
-name|bkpt_table
-index|[
-name|BKPT_TABLE_SIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|dfe_errmsg
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* error string */
+comment|/* OBSOLETE    This file is part of GDB. */
 end_comment
 
 begin_comment
-comment|/* malloc'd name of the program on the remote system.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|prog_name
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* This is called not only when we first attach, but also when the    user types "run" after having attached.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|udi_create_inferior
-parameter_list|(
-name|execfile
-parameter_list|,
-name|args
-parameter_list|,
-name|env
-parameter_list|)
-name|char
-modifier|*
-name|execfile
-decl_stmt|;
-name|char
-modifier|*
-name|args
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|env
-decl_stmt|;
-block|{
-name|char
-modifier|*
-name|args1
-decl_stmt|;
-if|if
-condition|(
-name|execfile
-condition|)
-block|{
-if|if
-condition|(
-name|prog_name
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|prog_name
-argument_list|)
-expr_stmt|;
-name|prog_name
-operator|=
-name|savestring
-argument_list|(
-name|execfile
-argument_list|,
-name|strlen
-argument_list|(
-name|execfile
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|entry
-operator|.
-name|Offset
-condition|)
-name|execfile
-operator|=
-literal|""
-expr_stmt|;
-else|else
-name|error
-argument_list|(
-literal|"No image loaded into target."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|udi_session_id
-operator|<
-literal|0
-condition|)
-block|{
-comment|/* If the TIP is not open, open it.  */
-if|if
-condition|(
-name|UDIConnect
-argument_list|(
-name|udi_config_id
-argument_list|,
-operator|&
-name|udi_session_id
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIConnect() failed: %s\n"
-argument_list|,
-name|dfe_errmsg
-argument_list|)
-expr_stmt|;
-comment|/* We will need to download the program.  */
-name|entry
-operator|.
-name|Offset
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|inferior_pid
-operator|=
-literal|40000
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|entry
-operator|.
-name|Offset
-condition|)
-name|download
-argument_list|(
-name|execfile
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|args1
-operator|=
-name|alloca
-argument_list|(
-name|strlen
-argument_list|(
-name|execfile
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|args
-argument_list|)
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|execfile
-index|[
-literal|0
-index|]
-operator|==
-literal|'\0'
-condition|)
-comment|/* It is empty.  We need to quote it somehow, or else the target        will think there is no argument being passed here.  According        to the UDI spec it is quoted "according to TIP OS rules" which        I guess means quoting it like the Unix shell should work        (sounds pretty bogus to me...).  In fact it doesn't work (with        isstip anyway), but passing in two quotes as the argument seems        like a reasonable enough behavior anyway (I guess).  */
-name|strcpy
-argument_list|(
-name|args1
-argument_list|,
-literal|"''"
-argument_list|)
-expr_stmt|;
-else|else
-name|strcpy
-argument_list|(
-name|args1
-argument_list|,
-name|execfile
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|args1
-argument_list|,
-literal|" "
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|args1
-argument_list|,
-name|args
-argument_list|)
-expr_stmt|;
-name|UDIInitializeProcess
-argument_list|(
-name|address_ranges
-argument_list|,
-comment|/* ProcessMemory[] */
-operator|(
-name|UDIInt
-operator|)
-literal|2
-argument_list|,
-comment|/* NumberOfRanges */
-name|entry
-argument_list|,
-comment|/* EntryPoint */
-name|stack_sizes
-argument_list|,
-comment|/* *StackSizes */
-operator|(
-name|UDIInt
-operator|)
-literal|2
-argument_list|,
-comment|/* NumberOfStacks */
-name|args1
-argument_list|)
-expr_stmt|;
-comment|/* ArgString */
-name|init_wait_for_inferior
-argument_list|()
-expr_stmt|;
-name|clear_proceed_status
-argument_list|()
-expr_stmt|;
-name|proceed
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-name|TARGET_SIGNAL_DEFAULT
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|udi_mourn
-parameter_list|()
-block|{
-if|#
-directive|if
-literal|0
-comment|/* Requiring "target udi" each time you run is a major pain.  I suspect      this was just blindy copied from remote.c, in which "target" and      "run" are combined.  Having a udi target without an inferior seems      to work between "target udi" and "run", so why not now?  */
-block|pop_target ();
-comment|/* Pop back to no-child state */
-endif|#
-directive|endif
-comment|/* But if we're going to want to run it again, we better remove the      breakpoints...  */
-name|remove_breakpoints
-argument_list|()
-expr_stmt|;
-name|generic_mourn_inferior
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/******************************************************************** UDI_OPEN ** Open a connection to remote TIP.    NAME is the socket domain used for communication with the TIP,    then a space and the socket name or TIP-host name.    '<udi_udi_config_id>' for example.  */
+comment|/* OBSOLETE  */
 end_comment
 
 begin_comment
-comment|/* XXX - need cleanups for udiconnect for various failures!!! */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|udi_open
-parameter_list|(
-name|name
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
-block|{
-name|unsigned
-name|int
-name|prl
-decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|int
-name|cnt
-decl_stmt|;
-name|UDIMemoryRange
-name|KnownMemory
-index|[
-literal|10
-index|]
-decl_stmt|;
-name|UDIUInt32
-name|ChipVersions
-index|[
-literal|10
-index|]
-decl_stmt|;
-name|UDIInt
-name|NumberOfRanges
-init|=
-literal|10
-decl_stmt|;
-name|UDIInt
-name|NumberOfChips
-init|=
-literal|10
-decl_stmt|;
-name|UDIPId
-name|PId
-decl_stmt|;
-name|UDIUInt32
-name|TIPId
-decl_stmt|,
-name|TargetId
-decl_stmt|,
-name|DFEId
-decl_stmt|,
-name|DFE
-decl_stmt|,
-name|TIP
-decl_stmt|,
-name|DFEIPCId
-decl_stmt|,
-name|TIPIPCId
-decl_stmt|;
-name|target_preopen
-argument_list|(
-name|from_tty
-argument_list|)
-expr_stmt|;
-name|entry
-operator|.
-name|Offset
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-name|cnt
-operator|=
-literal|0
-init|;
-name|cnt
-operator|<
-name|BKPT_TABLE_SIZE
-condition|;
-name|cnt
-operator|++
-control|)
-name|bkpt_table
-index|[
-name|cnt
-index|]
-operator|.
-name|Type
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|udi_config_id
-condition|)
-name|free
-argument_list|(
-name|udi_config_id
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|name
-condition|)
-name|error
-argument_list|(
-literal|"Usage: target udi config_id, where config_id appears in udi_soc file"
-argument_list|)
-expr_stmt|;
-name|udi_config_id
-operator|=
-name|strdup
-argument_list|(
-name|strtok
-argument_list|(
-name|name
-argument_list|,
-literal|" \t"
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|UDIConnect
-argument_list|(
-name|udi_config_id
-argument_list|,
-operator|&
-name|udi_session_id
-argument_list|)
-condition|)
-comment|/* FIXME: Should set udi_session_id to -1 here.  */
-name|error
-argument_list|(
-literal|"UDIConnect() failed: %s\n"
-argument_list|,
-name|dfe_errmsg
-argument_list|)
-expr_stmt|;
-name|push_target
-argument_list|(
-operator|&
-name|udi_ops
-argument_list|)
-expr_stmt|;
-comment|/*   ** Initialize target configuration structure (global)   */
-if|if
-condition|(
-name|UDIGetTargetConfig
-argument_list|(
-name|KnownMemory
-argument_list|,
-operator|&
-name|NumberOfRanges
-argument_list|,
-name|ChipVersions
-argument_list|,
-operator|&
-name|NumberOfChips
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIGetTargetConfig() failed"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|NumberOfChips
-operator|>
-literal|2
-condition|)
-name|fprintf_unfiltered
-argument_list|(
-name|gdb_stderr
-argument_list|,
-literal|"Target has more than one processor\n"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|cnt
-operator|=
-literal|0
-init|;
-name|cnt
-operator|<
-name|NumberOfRanges
-condition|;
-name|cnt
-operator|++
-control|)
-block|{
-switch|switch
-condition|(
-name|KnownMemory
-index|[
-name|cnt
-index|]
-operator|.
-name|Space
-condition|)
-block|{
-default|default:
-name|fprintf_unfiltered
-argument_list|(
-name|gdb_stderr
-argument_list|,
-literal|"UDIGetTargetConfig() unknown memory space\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|UDI29KCP_S
-case|:
-break|break;
-case|case
-name|UDI29KIROMSpace
-case|:
-name|RMemStart
-operator|=
-name|KnownMemory
-index|[
-name|cnt
-index|]
-operator|.
-name|Offset
-expr_stmt|;
-name|RMemSize
-operator|=
-name|KnownMemory
-index|[
-name|cnt
-index|]
-operator|.
-name|Size
-expr_stmt|;
-break|break;
-case|case
-name|UDI29KIRAMSpace
-case|:
-name|IMemStart
-operator|=
-name|KnownMemory
-index|[
-name|cnt
-index|]
-operator|.
-name|Offset
-expr_stmt|;
-name|IMemSize
-operator|=
-name|KnownMemory
-index|[
-name|cnt
-index|]
-operator|.
-name|Size
-expr_stmt|;
-break|break;
-case|case
-name|UDI29KDRAMSpace
-case|:
-name|DMemStart
-operator|=
-name|KnownMemory
-index|[
-name|cnt
-index|]
-operator|.
-name|Offset
-expr_stmt|;
-name|DMemSize
-operator|=
-name|KnownMemory
-index|[
-name|cnt
-index|]
-operator|.
-name|Size
-expr_stmt|;
-break|break;
-block|}
-block|}
-name|a29k_get_processor_type
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|UDICreateProcess
-argument_list|(
-operator|&
-name|PId
-argument_list|)
-condition|)
-name|fprintf_unfiltered
-argument_list|(
-name|gdb_stderr
-argument_list|,
-literal|"UDICreateProcess() failed\n"
-argument_list|)
-expr_stmt|;
-comment|/* Print out some stuff, letting the user now what's going on */
-if|if
-condition|(
-name|UDICapabilities
-argument_list|(
-operator|&
-name|TIPId
-argument_list|,
-operator|&
-name|TargetId
-argument_list|,
-name|DFEId
-argument_list|,
-name|DFE
-argument_list|,
-operator|&
-name|TIP
-argument_list|,
-operator|&
-name|DFEIPCId
-argument_list|,
-operator|&
-name|TIPIPCId
-argument_list|,
-name|sbuf
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDICapabilities() failed"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|from_tty
-condition|)
-block|{
-name|printf_filtered
-argument_list|(
-literal|"Connected via UDI socket,\n\  DFE-IPC version %x.%x.%x  TIP-IPC version %x.%x.%x  TIP version %x.%x.%x\n %s\n"
-argument_list|,
-operator|(
-name|DFEIPCId
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0xf
-argument_list|,
-operator|(
-name|DFEIPCId
-operator|>>
-literal|4
-operator|)
-operator|&
-literal|0xf
-argument_list|,
-name|DFEIPCId
-operator|&
-literal|0xf
-argument_list|,
-operator|(
-name|TIPIPCId
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0xf
-argument_list|,
-operator|(
-name|TIPIPCId
-operator|>>
-literal|4
-operator|)
-operator|&
-literal|0xf
-argument_list|,
-name|TIPIPCId
-operator|&
-literal|0xf
-argument_list|,
-operator|(
-name|TargetId
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0xf
-argument_list|,
-operator|(
-name|TargetId
-operator|>>
-literal|4
-operator|)
-operator|&
-literal|0xf
-argument_list|,
-name|TargetId
-operator|&
-literal|0xf
-argument_list|,
-name|sbuf
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/******************************************************************* UDI_CLOSE    Close the open connection to the TIP process.    Use this when you want to detach and do something else    with your gdb.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|udi_close
-parameter_list|(
-name|quitting
-parameter_list|)
-comment|/*FIXME: how is quitting used */
-name|int
-name|quitting
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|udi_session_id
-operator|<
-literal|0
-condition|)
-return|return;
-comment|/* We should never get here if there isn't something valid in      udi_session_id.  */
-if|if
-condition|(
-name|UDIDisconnect
-argument_list|(
-name|udi_session_id
-argument_list|,
-name|UDITerminateSession
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|quitting
-condition|)
-name|warning
-argument_list|(
-literal|"UDIDisconnect() failed in udi_close"
-argument_list|)
-expr_stmt|;
-else|else
-name|error
-argument_list|(
-literal|"UDIDisconnect() failed in udi_close"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Do not try to close udi_session_id again, later in the program.  */
-name|udi_session_id
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|inferior_pid
-operator|=
-literal|0
-expr_stmt|;
-name|printf_filtered
-argument_list|(
-literal|"  Ending remote debugging\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/**************************************************************** UDI_ATACH */
+comment|/* OBSOLETE    This program is free software; you can redistribute it and/or modify */
 end_comment
 
 begin_comment
-comment|/* Attach to a program that is already loaded and running   * Upon exiting the process's execution is stopped.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|udi_attach
-parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|char
-modifier|*
-name|args
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
-block|{
-name|UDIResource
-name|From
-decl_stmt|;
-name|UDIInt32
-name|PC_adds
-decl_stmt|;
-name|UDICount
-name|Count
-init|=
-literal|1
-decl_stmt|;
-name|UDISizeT
-name|Size
-init|=
-literal|4
-decl_stmt|;
-name|UDICount
-name|CountDone
-decl_stmt|;
-name|UDIBool
-name|HostEndian
-init|=
-literal|0
-decl_stmt|;
-name|UDIError
-name|err
-decl_stmt|;
-if|if
-condition|(
-name|args
-operator|==
-name|NULL
-condition|)
-name|error_no_arg
-argument_list|(
-literal|"program to attach"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|udi_session_id
-operator|<
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"UDI connection not opened yet, use the 'target udi' command.\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|from_tty
-condition|)
-name|printf_unfiltered
-argument_list|(
-literal|"Attaching to remote program %s...\n"
-argument_list|,
-name|prog_name
-argument_list|)
-expr_stmt|;
-name|UDIStop
-argument_list|()
-expr_stmt|;
-name|From
-operator|.
-name|Space
-operator|=
-name|UDI29KSpecialRegs
-expr_stmt|;
-name|From
-operator|.
-name|Offset
-operator|=
-literal|11
-expr_stmt|;
-if|if
-condition|(
-name|err
-operator|=
-name|UDIRead
-argument_list|(
-name|From
-argument_list|,
-operator|&
-name|PC_adds
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIRead failed in udi_attach"
-argument_list|)
-expr_stmt|;
-name|printf_unfiltered
-argument_list|(
-literal|"Remote process is now halted, pc1 = 0x%x.\n"
-argument_list|,
-name|PC_adds
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/************************************************************* UDI_DETACH */
+comment|/* OBSOLETE    it under the terms of the GNU General Public License as published by */
 end_comment
 
 begin_comment
-comment|/* Terminate the open connection to the TIP process.    Use this when you want to detach and do something else    with your gdb.  Leave remote process running (with no breakpoints set). */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|udi_detach
-parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|char
-modifier|*
-name|args
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
-block|{
-name|remove_breakpoints
-argument_list|()
-expr_stmt|;
-comment|/* Just in case there were any left in */
-if|if
-condition|(
-name|UDIDisconnect
-argument_list|(
-name|udi_session_id
-argument_list|,
-name|UDIContinueSession
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIDisconnect() failed in udi_detach"
-argument_list|)
-expr_stmt|;
-comment|/* Don't try to UDIDisconnect it again in udi_close, which is called from      pop_target.  */
-name|udi_session_id
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|inferior_pid
-operator|=
-literal|0
-expr_stmt|;
-name|pop_target
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|from_tty
-condition|)
-name|printf_unfiltered
-argument_list|(
-literal|"Detaching from TIP\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/****************************************************************** UDI_RESUME ** Tell the remote machine to resume.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|udi_resume
-parameter_list|(
-name|pid
-parameter_list|,
-name|step
-parameter_list|,
-name|sig
-parameter_list|)
-name|int
-name|pid
-decl_stmt|,
-name|step
-decl_stmt|;
-name|enum
-name|target_signal
-name|sig
-decl_stmt|;
-block|{
-name|UDIError
-name|tip_error
-decl_stmt|;
-name|UDIUInt32
-name|Steps
-init|=
-literal|1
-decl_stmt|;
-name|UDIStepType
-name|StepType
-init|=
-name|UDIStepNatural
-decl_stmt|;
-name|UDIRange
-name|Range
-decl_stmt|;
-if|if
-condition|(
-name|step
-condition|)
-comment|/* step 1 instruction */
-block|{
-name|tip_error
-operator|=
-name|UDIStep
-argument_list|(
-name|Steps
-argument_list|,
-name|StepType
-argument_list|,
-name|Range
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|tip_error
-condition|)
-return|return;
-name|fprintf_unfiltered
-argument_list|(
-name|gdb_stderr
-argument_list|,
-literal|"UDIStep() error = %d\n"
-argument_list|,
-name|tip_error
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"failed in udi_resume"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|UDIExecute
-argument_list|()
-condition|)
-name|error
-argument_list|(
-literal|"UDIExecute() failed in udi_resume"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/******************************************************************** UDI_WAIT ** Wait until the remote machine stops, then return,    storing status in STATUS just as `wait' would.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|udi_wait
-parameter_list|(
-name|pid
-parameter_list|,
-name|status
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
-name|struct
-name|target_waitstatus
-modifier|*
-name|status
-decl_stmt|;
-block|{
-name|UDIInt32
-name|MaxTime
-decl_stmt|;
-name|UDIPId
-name|PId
-decl_stmt|;
-name|UDIInt32
-name|StopReason
-decl_stmt|;
-name|UDISizeT
-name|CountDone
-decl_stmt|;
-name|int
-name|old_timeout
-init|=
-name|timeout
-decl_stmt|;
-name|int
-name|old_immediate_quit
-init|=
-name|immediate_quit
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_EXITED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|integer
-operator|=
-literal|0
-expr_stmt|;
-comment|/* wait for message to arrive. It should be:   If the target stops executing, udi_wait() should return. */
-name|timeout
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Wait indefinetly for a message */
-name|immediate_quit
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Helps ability to QUIT */
-while|while
-condition|(
-literal|1
-condition|)
-block|{
-name|i
-operator|=
-literal|0
-expr_stmt|;
-name|MaxTime
-operator|=
-name|UDIWaitForever
-expr_stmt|;
-name|UDIWait
-argument_list|(
-name|MaxTime
-argument_list|,
-operator|&
-name|PId
-argument_list|,
-operator|&
-name|StopReason
-argument_list|)
-expr_stmt|;
-name|QUIT
-expr_stmt|;
-comment|/* Let user quit if they want */
-switch|switch
-condition|(
-name|StopReason
-operator|&
-name|UDIGrossState
-condition|)
-block|{
-case|case
-name|UDIStdoutReady
-case|:
-if|if
-condition|(
-name|UDIGetStdout
-argument_list|(
-name|sbuf
-argument_list|,
-operator|(
-name|UDISizeT
-operator|)
-name|SBUF_MAX
-argument_list|,
-operator|&
-name|CountDone
-argument_list|)
-condition|)
-comment|/* This is said to happen if the program tries to output 	       a whole bunch of output (more than SBUF_MAX, I would 	       guess).  It doesn't seem to happen with the simulator.  */
-name|warning
-argument_list|(
-literal|"UDIGetStdout() failed in udi_wait"
-argument_list|)
-expr_stmt|;
-name|fwrite
-argument_list|(
-name|sbuf
-argument_list|,
-literal|1
-argument_list|,
-name|CountDone
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-name|gdb_flush
-argument_list|(
-name|gdb_stdout
-argument_list|)
-expr_stmt|;
-continue|continue;
-case|case
-name|UDIStderrReady
-case|:
-name|UDIGetStderr
-argument_list|(
-name|sbuf
-argument_list|,
-operator|(
-name|UDISizeT
-operator|)
-name|SBUF_MAX
-argument_list|,
-operator|&
-name|CountDone
-argument_list|)
-expr_stmt|;
-name|fwrite
-argument_list|(
-name|sbuf
-argument_list|,
-literal|1
-argument_list|,
-name|CountDone
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|gdb_flush
-argument_list|(
-name|gdb_stderr
-argument_list|)
-expr_stmt|;
-continue|continue;
-case|case
-name|UDIStdinNeeded
-case|:
-block|{
-name|int
-name|ch
-decl_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
-do|do
-block|{
-name|ch
-operator|=
-name|getchar
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ch
-operator|==
-name|EOF
-condition|)
-break|break;
-name|sbuf
-index|[
-name|i
-operator|++
-index|]
-operator|=
-name|ch
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|i
-operator|<
-name|SBUF_MAX
-operator|&&
-name|ch
-operator|!=
-literal|'\n'
-condition|)
-do|;
-name|UDIPutStdin
-argument_list|(
-name|sbuf
-argument_list|,
-operator|(
-name|UDISizeT
-operator|)
-name|i
-argument_list|,
-operator|&
-name|CountDone
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-case|case
-name|UDIRunning
-case|:
-comment|/* In spite of the fact that we told UDIWait to wait forever, it will 	     return spuriously sometimes.  */
-case|case
-name|UDIStdinModeX
-case|:
-continue|continue;
-default|default:
-break|break;
-block|}
-break|break;
-block|}
-switch|switch
-condition|(
-name|StopReason
-operator|&
-name|UDIGrossState
-condition|)
-block|{
-case|case
-name|UDITrapped
-case|:
-name|printf_unfiltered
-argument_list|(
-literal|"Am290*0 received vector number %d\n"
-argument_list|,
-name|StopReason
-operator|>>
-literal|24
-argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-operator|(
-name|StopReason
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0xff
-condition|)
-block|{
-case|case
-literal|0
-case|:
-comment|/* Illegal opcode */
-name|printf_unfiltered
-argument_list|(
-literal|"	(break point)\n"
-argument_list|)
-expr_stmt|;
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_TRAP
-expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-comment|/* Unaligned Access */
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_BUS
-expr_stmt|;
-break|break;
-case|case
-literal|3
-case|:
-case|case
-literal|4
-case|:
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_FPE
-expr_stmt|;
-break|break;
-case|case
-literal|5
-case|:
-comment|/* Protection Violation */
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-comment|/* Why not SEGV?  What is a Protection Violation?  */
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_ILL
-expr_stmt|;
-break|break;
-case|case
-literal|6
-case|:
-case|case
-literal|7
-case|:
-case|case
-literal|8
-case|:
-comment|/* User Instruction Mapping Miss */
-case|case
-literal|9
-case|:
-comment|/* User Data Mapping Miss */
-case|case
-literal|10
-case|:
-comment|/* Supervisor Instruction Mapping Miss */
-case|case
-literal|11
-case|:
-comment|/* Supervisor Data Mapping Miss */
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_SEGV
-expr_stmt|;
-break|break;
-case|case
-literal|12
-case|:
-case|case
-literal|13
-case|:
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_ILL
-expr_stmt|;
-break|break;
-case|case
-literal|14
-case|:
-comment|/* Timer */
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_ALRM
-expr_stmt|;
-break|break;
-case|case
-literal|15
-case|:
-comment|/* Trace */
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_TRAP
-expr_stmt|;
-break|break;
-case|case
-literal|16
-case|:
-comment|/* INTR0 */
-case|case
-literal|17
-case|:
-comment|/* INTR1 */
-case|case
-literal|18
-case|:
-comment|/* INTR2 */
-case|case
-literal|19
-case|:
-comment|/* INTR3/Internal */
-case|case
-literal|20
-case|:
-comment|/* TRAP0 */
-case|case
-literal|21
-case|:
-comment|/* TRAP1 */
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_INT
-expr_stmt|;
-break|break;
-case|case
-literal|22
-case|:
-comment|/* Floating-Point Exception */
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-comment|/* Why not FPE?  */
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_ILL
-expr_stmt|;
-break|break;
-case|case
-literal|77
-case|:
-comment|/* assert 77 */
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_TRAP
-expr_stmt|;
-break|break;
-default|default:
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_EXITED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|integer
-operator|=
-literal|0
-expr_stmt|;
-block|}
-break|break;
-case|case
-name|UDINotExecuting
-case|:
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_TERM
-expr_stmt|;
-break|break;
-case|case
-name|UDIStopped
-case|:
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_TSTP
-expr_stmt|;
-break|break;
-case|case
-name|UDIWarned
-case|:
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_URG
-expr_stmt|;
-break|break;
-case|case
-name|UDIStepped
-case|:
-case|case
-name|UDIBreak
-case|:
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_TRAP
-expr_stmt|;
-break|break;
-case|case
-name|UDIWaiting
-case|:
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_STOP
-expr_stmt|;
-break|break;
-case|case
-name|UDIHalted
-case|:
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_KILL
-expr_stmt|;
-break|break;
-case|case
-name|UDIExited
-case|:
-default|default:
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_EXITED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|integer
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|timeout
-operator|=
-name|old_timeout
-expr_stmt|;
-comment|/* Restore original timeout value */
-name|immediate_quit
-operator|=
-name|old_immediate_quit
-expr_stmt|;
-return|return
-name|inferior_pid
-return|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Handy for debugging */
+comment|/* OBSOLETE    the Free Software Foundation; either version 2 of the License, or */
 end_comment
 
 begin_comment
-unit|udi_pc() {   UDIResource	From;   UDIUInt32	*To;   UDICount	Count;   UDISizeT	Size = 4;   UDICount	CountDone;   UDIBool	HostEndian = 0;   UDIError	err;   int pc[2];   unsigned long myregs[256];   int i;    From.Space = UDI29KPC;   From.Offset = 0;   To = (UDIUInt32 *)pc;   Count = 2;    err = UDIRead(From, To, Count, Size,&CountDone, HostEndian);    printf_unfiltered ("err = %d, CountDone = %d, pc[0] = 0x%x, pc[1] = 0x%x\n", 	  err, CountDone, pc[0], pc[1]);    udi_fetch_registers(-1);    printf_unfiltered("other pc1 = 0x%x, pc0 = 0x%x\n", *(int *)&registers[4 * PC_REGNUM], 	  *(int *)&registers[4 * NPC_REGNUM]);
-comment|/* Now, read all the registers globally */
-end_comment
-
-begin_endif
-unit|From.Space = UDI29KGlobalRegs;   From.Offset = 0;   err = UDIRead(From, myregs, 256, 4,&CountDone, HostEndian);    printf ("err = %d, CountDone = %d\n", err, CountDone);    printf("\n");    for (i = 0; i< 256; i += 2)     printf("%d:\t%#10x\t%11d\t%#10x\t%11d\n", i, myregs[i], myregs[i], 	   myregs[i+1], myregs[i+1]);   printf("\n");    return pc[0]; }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/********************************************************** UDI_FETCH_REGISTERS  * Read a remote register 'regno'.   * If regno==-1 then read all the registers.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|udi_fetch_registers
-parameter_list|(
-name|regno
-parameter_list|)
-name|int
-name|regno
-decl_stmt|;
-block|{
-name|UDIResource
-name|From
-decl_stmt|;
-name|UDIUInt32
-modifier|*
-name|To
-decl_stmt|;
-name|UDICount
-name|Count
-decl_stmt|;
-name|UDISizeT
-name|Size
-init|=
-literal|4
-decl_stmt|;
-name|UDICount
-name|CountDone
-decl_stmt|;
-name|UDIBool
-name|HostEndian
-init|=
-literal|0
-decl_stmt|;
-name|UDIError
-name|err
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-if|if
-condition|(
-name|regno
-operator|>=
-literal|0
-condition|)
-block|{
-name|fetch_register
-argument_list|(
-name|regno
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* Gr1/rsp */
-name|From
-operator|.
-name|Space
-operator|=
-name|UDI29KGlobalRegs
-expr_stmt|;
-name|From
-operator|.
-name|Offset
-operator|=
-literal|1
-expr_stmt|;
-name|To
-operator|=
-operator|(
-name|UDIUInt32
-operator|*
-operator|)
-operator|&
-name|registers
-index|[
-literal|4
-operator|*
-name|GR1_REGNUM
-index|]
-expr_stmt|;
-name|Count
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|err
-operator|=
-name|UDIRead
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIRead() failed in udi_fetch_registers"
-argument_list|)
-expr_stmt|;
-name|register_valid
-index|[
-name|GR1_REGNUM
-index|]
-operator|=
-literal|1
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|GR64_REGNUM
-argument_list|)
-comment|/* Read gr64-127 */
-comment|/* Global Registers gr64-gr95 */
-name|From
-operator|.
-name|Space
-operator|=
-name|UDI29KGlobalRegs
-expr_stmt|;
-name|From
-operator|.
-name|Offset
-operator|=
-literal|64
-expr_stmt|;
-name|To
-operator|=
-operator|(
-name|UDIUInt32
-operator|*
-operator|)
-operator|&
-name|registers
-index|[
-literal|4
-operator|*
-name|GR64_REGNUM
-index|]
-expr_stmt|;
-name|Count
-operator|=
-literal|32
-expr_stmt|;
-if|if
-condition|(
-name|err
-operator|=
-name|UDIRead
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIRead() failed in udi_fetch_registers"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|GR64_REGNUM
-init|;
-name|i
-operator|<
-name|GR64_REGNUM
-operator|+
-literal|32
-condition|;
-name|i
-operator|++
-control|)
-name|register_valid
-index|[
-name|i
-index|]
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*  GR64_REGNUM */
-comment|/* Global Registers gr96-gr127 */
-name|From
-operator|.
-name|Space
-operator|=
-name|UDI29KGlobalRegs
-expr_stmt|;
-name|From
-operator|.
-name|Offset
-operator|=
-literal|96
-expr_stmt|;
-name|To
-operator|=
-operator|(
-name|UDIUInt32
-operator|*
-operator|)
-operator|&
-name|registers
-index|[
-literal|4
-operator|*
-name|GR96_REGNUM
-index|]
-expr_stmt|;
-name|Count
-operator|=
-literal|32
-expr_stmt|;
-if|if
-condition|(
-name|err
-operator|=
-name|UDIRead
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIRead() failed in udi_fetch_registers"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|GR96_REGNUM
-init|;
-name|i
-operator|<
-name|GR96_REGNUM
-operator|+
-literal|32
-condition|;
-name|i
-operator|++
-control|)
-name|register_valid
-index|[
-name|i
-index|]
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Local Registers */
-name|From
-operator|.
-name|Space
-operator|=
-name|UDI29KLocalRegs
-expr_stmt|;
-name|From
-operator|.
-name|Offset
-operator|=
-literal|0
-expr_stmt|;
-name|To
-operator|=
-operator|(
-name|UDIUInt32
-operator|*
-operator|)
-operator|&
-name|registers
-index|[
-literal|4
-operator|*
-name|LR0_REGNUM
-index|]
-expr_stmt|;
-name|Count
-operator|=
-literal|128
-expr_stmt|;
-if|if
-condition|(
-name|err
-operator|=
-name|UDIRead
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIRead() failed in udi_fetch_registers"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|LR0_REGNUM
-init|;
-name|i
-operator|<
-name|LR0_REGNUM
-operator|+
-literal|128
-condition|;
-name|i
-operator|++
-control|)
-name|register_valid
-index|[
-name|i
-index|]
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Protected Special Registers */
-name|From
-operator|.
-name|Space
-operator|=
-name|UDI29KSpecialRegs
-expr_stmt|;
-name|From
-operator|.
-name|Offset
-operator|=
-literal|0
-expr_stmt|;
-name|To
-operator|=
-operator|(
-name|UDIUInt32
-operator|*
-operator|)
-operator|&
-name|registers
-index|[
-literal|4
-operator|*
-name|SR_REGNUM
-argument_list|(
-literal|0
-argument_list|)
-index|]
-expr_stmt|;
-name|Count
-operator|=
-literal|15
-expr_stmt|;
-if|if
-condition|(
-name|err
-operator|=
-name|UDIRead
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIRead() failed in udi_fetch_registers"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|SR_REGNUM
-argument_list|(
-literal|0
-argument_list|)
-init|;
-name|i
-operator|<
-name|SR_REGNUM
-argument_list|(
-literal|0
-argument_list|)
-operator|+
-literal|15
-condition|;
-name|i
-operator|++
-control|)
-name|register_valid
-index|[
-name|i
-index|]
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|USE_SHADOW_PC
-condition|)
-block|{
-comment|/* Let regno_to_srnum() handle the register number */
-name|fetch_register
-argument_list|(
-name|NPC_REGNUM
-argument_list|)
-expr_stmt|;
-name|fetch_register
-argument_list|(
-name|PC_REGNUM
-argument_list|)
-expr_stmt|;
-name|fetch_register
-argument_list|(
-name|PC2_REGNUM
-argument_list|)
-expr_stmt|;
-comment|/* Unprotected Special Registers sr128-sr135 */
-name|From
-operator|.
-name|Space
-operator|=
-name|UDI29KSpecialRegs
-expr_stmt|;
-name|From
-operator|.
-name|Offset
-operator|=
-literal|128
-expr_stmt|;
-name|To
-operator|=
-operator|(
-name|UDIUInt32
-operator|*
-operator|)
-operator|&
-name|registers
-index|[
-literal|4
-operator|*
-name|SR_REGNUM
-argument_list|(
-literal|128
-argument_list|)
-index|]
-expr_stmt|;
-name|Count
-operator|=
-literal|135
-operator|-
-literal|128
-operator|+
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|err
-operator|=
-name|UDIRead
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIRead() failed in udi_fetch_registers"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|SR_REGNUM
-argument_list|(
-literal|128
-argument_list|)
-init|;
-name|i
-operator|<
-name|SR_REGNUM
-argument_list|(
-literal|128
-argument_list|)
-operator|+
-literal|135
-operator|-
-literal|128
-operator|+
-literal|1
-condition|;
-name|i
-operator|++
-control|)
-name|register_valid
-index|[
-name|i
-index|]
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|remote_debug
-condition|)
-block|{
-name|printf_unfiltered
-argument_list|(
-literal|"Fetching all registers\n"
-argument_list|)
-expr_stmt|;
-name|printf_unfiltered
-argument_list|(
-literal|"Fetching PC0 = 0x%x, PC1 = 0x%x, PC2 = 0x%x\n"
-argument_list|,
-name|read_register
-argument_list|(
-name|NPC_REGNUM
-argument_list|)
-argument_list|,
-name|read_register
-argument_list|(
-name|PC_REGNUM
-argument_list|)
-argument_list|,
-name|read_register
-argument_list|(
-name|PC2_REGNUM
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* There doesn't seem to be any way to get these.  */
-block|{
-name|int
-name|val
-init|=
-operator|-
-literal|1
-decl_stmt|;
-name|supply_register
-argument_list|(
-name|FPE_REGNUM
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|val
-argument_list|)
-expr_stmt|;
-name|supply_register
-argument_list|(
-name|INTE_REGNUM
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|val
-argument_list|)
-expr_stmt|;
-name|supply_register
-argument_list|(
-name|FPS_REGNUM
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|val
-argument_list|)
-expr_stmt|;
-name|supply_register
-argument_list|(
-name|EXO_REGNUM
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|val
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/********************************************************* UDI_STORE_REGISTERS ** Store register regno into the target.    * If regno==-1 then store all the registers.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|udi_store_registers
-parameter_list|(
-name|regno
-parameter_list|)
-name|int
-name|regno
-decl_stmt|;
-block|{
-name|UDIUInt32
-modifier|*
-name|From
-decl_stmt|;
-name|UDIResource
-name|To
-decl_stmt|;
-name|UDICount
-name|Count
-decl_stmt|;
-name|UDISizeT
-name|Size
-init|=
-literal|4
-decl_stmt|;
-name|UDICount
-name|CountDone
-decl_stmt|;
-name|UDIBool
-name|HostEndian
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-name|regno
-operator|>=
-literal|0
-condition|)
-block|{
-name|store_register
-argument_list|(
-name|regno
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|remote_debug
-condition|)
-block|{
-name|printf_unfiltered
-argument_list|(
-literal|"Storing all registers\n"
-argument_list|)
-expr_stmt|;
-name|printf_unfiltered
-argument_list|(
-literal|"PC0 = 0x%x, PC1 = 0x%x, PC2 = 0x%x\n"
-argument_list|,
-name|read_register
-argument_list|(
-name|NPC_REGNUM
-argument_list|)
-argument_list|,
-name|read_register
-argument_list|(
-name|PC_REGNUM
-argument_list|)
-argument_list|,
-name|read_register
-argument_list|(
-name|PC2_REGNUM
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Gr1/rsp */
-name|From
-operator|=
-operator|(
-name|UDIUInt32
-operator|*
-operator|)
-operator|&
-name|registers
-index|[
-literal|4
-operator|*
-name|GR1_REGNUM
-index|]
-expr_stmt|;
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KGlobalRegs
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|=
-literal|1
-expr_stmt|;
-name|Count
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|UDIWrite
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIWrite() failed in udi_store_regisetrs"
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|GR64_REGNUM
-argument_list|)
-comment|/* Global registers gr64-gr95 */
-name|From
-operator|=
-operator|(
-name|UDIUInt32
-operator|*
-operator|)
-operator|&
-name|registers
-index|[
-literal|4
-operator|*
-name|GR64_REGNUM
-index|]
-expr_stmt|;
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KGlobalRegs
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|=
-literal|64
-expr_stmt|;
-name|Count
-operator|=
-literal|32
-expr_stmt|;
-if|if
-condition|(
-name|UDIWrite
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIWrite() failed in udi_store_regisetrs"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* GR64_REGNUM */
-comment|/* Global registers gr96-gr127 */
-name|From
-operator|=
-operator|(
-name|UDIUInt32
-operator|*
-operator|)
-operator|&
-name|registers
-index|[
-literal|4
-operator|*
-name|GR96_REGNUM
-index|]
-expr_stmt|;
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KGlobalRegs
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|=
-literal|96
-expr_stmt|;
-name|Count
-operator|=
-literal|32
-expr_stmt|;
-if|if
-condition|(
-name|UDIWrite
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIWrite() failed in udi_store_regisetrs"
-argument_list|)
-expr_stmt|;
-comment|/* Local Registers */
-name|From
-operator|=
-operator|(
-name|UDIUInt32
-operator|*
-operator|)
-operator|&
-name|registers
-index|[
-literal|4
-operator|*
-name|LR0_REGNUM
-index|]
-expr_stmt|;
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KLocalRegs
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|=
-literal|0
-expr_stmt|;
-name|Count
-operator|=
-literal|128
-expr_stmt|;
-if|if
-condition|(
-name|UDIWrite
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIWrite() failed in udi_store_regisetrs"
-argument_list|)
-expr_stmt|;
-comment|/* Protected Special Registers */
-comment|/* VAB through TMR */
-name|From
-operator|=
-operator|(
-name|UDIUInt32
-operator|*
-operator|)
-operator|&
-name|registers
-index|[
-literal|4
-operator|*
-name|SR_REGNUM
-argument_list|(
-literal|0
-argument_list|)
-index|]
-expr_stmt|;
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KSpecialRegs
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|=
-literal|0
-expr_stmt|;
-name|Count
-operator|=
-literal|10
-expr_stmt|;
-if|if
-condition|(
-name|UDIWrite
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIWrite() failed in udi_store_regisetrs"
-argument_list|)
-expr_stmt|;
-comment|/* PC0, PC1, PC2 possibly as shadow registers */
-name|From
-operator|=
-operator|(
-name|UDIUInt32
-operator|*
-operator|)
-operator|&
-name|registers
-index|[
-literal|4
-operator|*
-name|SR_REGNUM
-argument_list|(
-literal|10
-argument_list|)
-index|]
-expr_stmt|;
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KSpecialRegs
-expr_stmt|;
-name|Count
-operator|=
-literal|3
-expr_stmt|;
-if|if
-condition|(
-name|USE_SHADOW_PC
-condition|)
-name|To
-operator|.
-name|Offset
-operator|=
-literal|20
-expr_stmt|;
-comment|/* SPC0 */
-else|else
-name|To
-operator|.
-name|Offset
-operator|=
-literal|10
-expr_stmt|;
-comment|/* PC0 */
-if|if
-condition|(
-name|UDIWrite
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIWrite() failed in udi_store_regisetrs"
-argument_list|)
-expr_stmt|;
-comment|/* PC1 via UDI29KPC */
-name|From
-operator|=
-operator|(
-name|UDIUInt32
-operator|*
-operator|)
-operator|&
-name|registers
-index|[
-literal|4
-operator|*
-name|PC_REGNUM
-index|]
-expr_stmt|;
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KPC
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|=
-literal|0
-expr_stmt|;
-comment|/* PC1 */
-name|Count
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|UDIWrite
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIWrite() failed in udi_store_regisetrs"
-argument_list|)
-expr_stmt|;
-comment|/* LRU and MMU */
-name|From
-operator|=
-operator|(
-name|UDIUInt32
-operator|*
-operator|)
-operator|&
-name|registers
-index|[
-literal|4
-operator|*
-name|SR_REGNUM
-argument_list|(
-literal|13
-argument_list|)
-index|]
-expr_stmt|;
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KSpecialRegs
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|=
-literal|13
-expr_stmt|;
-name|Count
-operator|=
-literal|2
-expr_stmt|;
-if|if
-condition|(
-name|UDIWrite
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIWrite() failed in udi_store_regisetrs"
-argument_list|)
-expr_stmt|;
-comment|/* Unprotected Special Registers */
-name|From
-operator|=
-operator|(
-name|UDIUInt32
-operator|*
-operator|)
-operator|&
-name|registers
-index|[
-literal|4
-operator|*
-name|SR_REGNUM
-argument_list|(
-literal|128
-argument_list|)
-index|]
-expr_stmt|;
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KSpecialRegs
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|=
-literal|128
-expr_stmt|;
-name|Count
-operator|=
-literal|135
-operator|-
-literal|128
-operator|+
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|UDIWrite
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIWrite() failed in udi_store_regisetrs"
-argument_list|)
-expr_stmt|;
-name|registers_changed
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/****************************************************** UDI_PREPARE_TO_STORE */
+comment|/* OBSOLETE    (at your option) any later version. */
 end_comment
 
 begin_comment
-comment|/* Get ready to modify the registers array.  On machines which store    individual registers, this doesn't need to do anything.  On machines    which store all the registers in one fell swoop, this makes sure    that registers contains all the registers from the program being    debugged.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|udi_prepare_to_store
-parameter_list|()
-block|{
-comment|/* Do nothing, since we can store individual regs */
-block|}
-end_function
-
-begin_comment
-comment|/********************************************************** TRANSLATE_ADDR */
-end_comment
-
-begin_function
-specifier|static
-name|CORE_ADDR
-name|translate_addr
-parameter_list|(
-name|addr
-parameter_list|)
-name|CORE_ADDR
-name|addr
-decl_stmt|;
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ULTRA3
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|KERNEL_DEBUGGING
-argument_list|)
-comment|/* Check for a virtual address in the kernel */
-comment|/* Assume physical address of ublock is in  paddr_u register */
-comment|/* FIXME: doesn't work for user virtual addresses */
-if|if
-condition|(
-name|addr
-operator|>=
-name|UVADDR
-condition|)
-block|{
-comment|/* PADDR_U register holds the physical address of the ublock */
-name|CORE_ADDR
-name|i
-init|=
-operator|(
-name|CORE_ADDR
-operator|)
-name|read_register
-argument_list|(
-name|PADDR_U_REGNUM
-argument_list|)
-decl_stmt|;
-return|return
-operator|(
-name|i
-operator|+
-name|addr
-operator|-
-operator|(
-name|CORE_ADDR
-operator|)
-name|UVADDR
-operator|)
-return|;
-block|}
-else|else
-block|{
-return|return
-operator|(
-name|addr
-operator|)
-return|;
-block|}
-else|#
-directive|else
-return|return
-operator|(
-name|addr
-operator|)
-return|;
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_comment
-comment|/************************************************* UDI_XFER_INFERIOR_MEMORY */
+comment|/* OBSOLETE  */
 end_comment
 
 begin_comment
-comment|/* FIXME!  Merge these two.  */
+comment|/* OBSOLETE    This program is distributed in the hope that it will be useful, */
 end_comment
-
-begin_function
-specifier|static
-name|int
-name|udi_xfer_inferior_memory
-parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|)
-name|CORE_ADDR
-name|memaddr
-decl_stmt|;
-name|char
-modifier|*
-name|myaddr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-name|int
-name|write
-decl_stmt|;
-block|{
-name|memaddr
-operator|=
-name|translate_addr
-argument_list|(
-name|memaddr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|write
-condition|)
-return|return
-name|udi_write_inferior_memory
-argument_list|(
-name|memaddr
-argument_list|,
-name|myaddr
-argument_list|,
-name|len
-argument_list|)
-return|;
-else|else
-return|return
-name|udi_read_inferior_memory
-argument_list|(
-name|memaddr
-argument_list|,
-name|myaddr
-argument_list|,
-name|len
-argument_list|)
-return|;
-block|}
-end_function
 
 begin_comment
-comment|/********************************************************** UDI_FILES_INFO */
+comment|/* OBSOLETE    but WITHOUT ANY WARRANTY; without even the implied warranty of */
 end_comment
-
-begin_function
-specifier|static
-name|void
-name|udi_files_info
-parameter_list|()
-block|{
-name|printf_unfiltered
-argument_list|(
-literal|"\tAttached to UDI socket to %s"
-argument_list|,
-name|udi_config_id
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|prog_name
-operator|!=
-name|NULL
-condition|)
-name|printf_unfiltered
-argument_list|(
-literal|"and running program %s"
-argument_list|,
-name|prog_name
-argument_list|)
-expr_stmt|;
-name|printf_unfiltered
-argument_list|(
-literal|".\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
-comment|/**************************************************** UDI_INSERT_BREAKPOINT */
+comment|/* OBSOLETE    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the */
 end_comment
-
-begin_function
-specifier|static
-name|int
-name|udi_insert_breakpoint
-parameter_list|(
-name|addr
-parameter_list|,
-name|contents_cache
-parameter_list|)
-name|CORE_ADDR
-name|addr
-decl_stmt|;
-name|char
-modifier|*
-name|contents_cache
-decl_stmt|;
-block|{
-name|int
-name|cnt
-decl_stmt|;
-name|UDIError
-name|err
-decl_stmt|;
-for|for
-control|(
-name|cnt
-operator|=
-literal|0
-init|;
-name|cnt
-operator|<
-name|BKPT_TABLE_SIZE
-condition|;
-name|cnt
-operator|++
-control|)
-if|if
-condition|(
-name|bkpt_table
-index|[
-name|cnt
-index|]
-operator|.
-name|Type
-operator|==
-literal|0
-condition|)
-comment|/* Find first free slot */
-break|break;
-if|if
-condition|(
-name|cnt
-operator|>=
-name|BKPT_TABLE_SIZE
-condition|)
-name|error
-argument_list|(
-literal|"Too many breakpoints set"
-argument_list|)
-expr_stmt|;
-name|bkpt_table
-index|[
-name|cnt
-index|]
-operator|.
-name|Addr
-operator|.
-name|Offset
-operator|=
-name|addr
-expr_stmt|;
-name|bkpt_table
-index|[
-name|cnt
-index|]
-operator|.
-name|Addr
-operator|.
-name|Space
-operator|=
-name|UDI29KIRAMSpace
-expr_stmt|;
-name|bkpt_table
-index|[
-name|cnt
-index|]
-operator|.
-name|PassCount
-operator|=
-literal|1
-expr_stmt|;
-name|bkpt_table
-index|[
-name|cnt
-index|]
-operator|.
-name|Type
-operator|=
-name|UDIBreakFlagExecute
-expr_stmt|;
-name|err
-operator|=
-name|UDISetBreakpoint
-argument_list|(
-name|bkpt_table
-index|[
-name|cnt
-index|]
-operator|.
-name|Addr
-argument_list|,
-name|bkpt_table
-index|[
-name|cnt
-index|]
-operator|.
-name|PassCount
-argument_list|,
-name|bkpt_table
-index|[
-name|cnt
-index|]
-operator|.
-name|Type
-argument_list|,
-operator|&
-name|bkpt_table
-index|[
-name|cnt
-index|]
-operator|.
-name|BreakId
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-operator|==
-literal|0
-condition|)
-return|return
-literal|0
-return|;
-comment|/* Success */
-name|bkpt_table
-index|[
-name|cnt
-index|]
-operator|.
-name|Type
-operator|=
-literal|0
-expr_stmt|;
-name|error
-argument_list|(
-literal|"UDISetBreakpoint returned error code %d\n"
-argument_list|,
-name|err
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
-comment|/**************************************************** UDI_REMOVE_BREAKPOINT */
+comment|/* OBSOLETE    GNU General Public License for more details. */
 end_comment
-
-begin_function
-specifier|static
-name|int
-name|udi_remove_breakpoint
-parameter_list|(
-name|addr
-parameter_list|,
-name|contents_cache
-parameter_list|)
-name|CORE_ADDR
-name|addr
-decl_stmt|;
-name|char
-modifier|*
-name|contents_cache
-decl_stmt|;
-block|{
-name|int
-name|cnt
-decl_stmt|;
-name|UDIError
-name|err
-decl_stmt|;
-for|for
-control|(
-name|cnt
-operator|=
-literal|0
-init|;
-name|cnt
-operator|<
-name|BKPT_TABLE_SIZE
-condition|;
-name|cnt
-operator|++
-control|)
-if|if
-condition|(
-name|bkpt_table
-index|[
-name|cnt
-index|]
-operator|.
-name|Addr
-operator|.
-name|Offset
-operator|==
-name|addr
-condition|)
-comment|/* Find matching breakpoint */
-break|break;
-if|if
-condition|(
-name|cnt
-operator|>=
-name|BKPT_TABLE_SIZE
-condition|)
-name|error
-argument_list|(
-literal|"Can't find breakpoint in table"
-argument_list|)
-expr_stmt|;
-name|bkpt_table
-index|[
-name|cnt
-index|]
-operator|.
-name|Type
-operator|=
-literal|0
-expr_stmt|;
-name|err
-operator|=
-name|UDIClearBreakpoint
-argument_list|(
-name|bkpt_table
-index|[
-name|cnt
-index|]
-operator|.
-name|BreakId
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-operator|==
-literal|0
-condition|)
-return|return
-literal|0
-return|;
-comment|/* Success */
-name|error
-argument_list|(
-literal|"UDIClearBreakpoint returned error code %d\n"
-argument_list|,
-name|err
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|udi_kill
-parameter_list|(
-name|arg
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|char
-modifier|*
-name|arg
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
-block|{
-if|#
-directive|if
-literal|0
-comment|/* UDIStop does not really work as advertised.  It causes the TIP to close it's connection, which usually results in GDB dying with a SIGPIPE.  For now, we just invoke udi_close, which seems to get things right. */
-block|UDIStop();    udi_session_id = -1;   inferior_pid = 0;    if (from_tty)     printf_unfiltered("Target has been stopped.");
-endif|#
-directive|endif
-comment|/* 0 */
-if|#
-directive|if
-literal|0
-block|udi_close(0);   pop_target();
-endif|#
-directive|endif
-comment|/* 0 */
-comment|/* Keep the target around, e.g. so "run" can do the right thing when      we are already debugging something.  */
-if|if
-condition|(
-name|UDIDisconnect
-argument_list|(
-name|udi_session_id
-argument_list|,
-name|UDITerminateSession
-argument_list|)
-condition|)
-block|{
-name|warning
-argument_list|(
-literal|"UDIDisconnect() failed"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Do not try to close udi_session_id again, later in the program.  */
-name|udi_session_id
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|inferior_pid
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
-comment|/*     Load a program into the target.  Args are: `program {options}'.  The options    are used to control loading of the program, and are NOT passed onto the    loaded code as arguments.  (You need to use the `run' command to do that.)     The options are:  		-ms %d	Set mem stack size to %d 		-rs %d	Set regular stack size to %d 		-i	send init info (default) 		-noi	don't send init info 		-[tT]  	Load Text section 		-[dD]	Load Data section 		-[bB]	Load BSS section 		-[lL]	Load Lit section   */
+comment|/* OBSOLETE  */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|download
-parameter_list|(
-name|load_arg_string
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|char
-modifier|*
-name|load_arg_string
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
-block|{
-define|#
-directive|define
-name|DEFAULT_MEM_STACK_SIZE
-value|0x6000
-define|#
-directive|define
-name|DEFAULT_REG_STACK_SIZE
-value|0x2000
-name|char
-modifier|*
-name|token
-decl_stmt|;
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-name|asection
-modifier|*
-name|section
-decl_stmt|;
-name|bfd
-modifier|*
-name|pbfd
-decl_stmt|;
-name|UDIError
-name|err
-decl_stmt|;
-name|int
-name|load_text
-init|=
-literal|1
-decl_stmt|,
-name|load_data
-init|=
-literal|1
-decl_stmt|,
-name|load_bss
-init|=
-literal|1
-decl_stmt|,
-name|load_lit
-init|=
-literal|1
-decl_stmt|;
-name|address_ranges
-index|[
-literal|0
-index|]
-operator|.
-name|Space
-operator|=
-name|UDI29KIRAMSpace
-expr_stmt|;
-name|address_ranges
-index|[
-literal|0
-index|]
-operator|.
-name|Offset
-operator|=
-literal|0xffffffff
-expr_stmt|;
-name|address_ranges
-index|[
-literal|0
-index|]
-operator|.
-name|Size
-operator|=
-literal|0
-expr_stmt|;
-name|address_ranges
-index|[
-literal|1
-index|]
-operator|.
-name|Space
-operator|=
-name|UDI29KDRAMSpace
-expr_stmt|;
-name|address_ranges
-index|[
-literal|1
-index|]
-operator|.
-name|Offset
-operator|=
-literal|0xffffffff
-expr_stmt|;
-name|address_ranges
-index|[
-literal|1
-index|]
-operator|.
-name|Size
-operator|=
-literal|0
-expr_stmt|;
-name|stack_sizes
-index|[
-literal|0
-index|]
-operator|=
-name|DEFAULT_REG_STACK_SIZE
-expr_stmt|;
-name|stack_sizes
-index|[
-literal|1
-index|]
-operator|=
-name|DEFAULT_MEM_STACK_SIZE
-expr_stmt|;
-name|dont_repeat
-argument_list|()
-expr_stmt|;
-name|filename
-operator|=
-name|strtok
-argument_list|(
-name|load_arg_string
-argument_list|,
-literal|" \t"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|filename
-condition|)
-name|error
-argument_list|(
-literal|"Must specify at least a file name with the load command"
-argument_list|)
-expr_stmt|;
-name|filename
-operator|=
-name|tilde_expand
-argument_list|(
-name|filename
-argument_list|)
-expr_stmt|;
-name|make_cleanup
-argument_list|(
-operator|(
-name|make_cleanup_func
-operator|)
-name|free
-argument_list|,
-name|filename
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|token
-operator|=
-name|strtok
-argument_list|(
-name|NULL
-argument_list|,
-literal|" \t"
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|token
-index|[
-literal|0
-index|]
-operator|==
-literal|'-'
-condition|)
-block|{
-name|token
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|STREQ
-argument_list|(
-name|token
-argument_list|,
-literal|"ms"
-argument_list|)
-condition|)
-name|stack_sizes
-index|[
-literal|1
-index|]
-operator|=
-name|atol
-argument_list|(
-name|strtok
-argument_list|(
-name|NULL
-argument_list|,
-literal|" \t"
-argument_list|)
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|STREQ
-argument_list|(
-name|token
-argument_list|,
-literal|"rs"
-argument_list|)
-condition|)
-name|stack_sizes
-index|[
-literal|0
-index|]
-operator|=
-name|atol
-argument_list|(
-name|strtok
-argument_list|(
-name|NULL
-argument_list|,
-literal|" \t"
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|load_text
-operator|=
-name|load_data
-operator|=
-name|load_bss
-operator|=
-name|load_lit
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
+begin_comment
+comment|/* OBSOLETE    You should have received a copy of the GNU General Public License */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    along with this program; if not, write to the Free Software */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    Foundation, Inc., 59 Temple Place - Suite 330, */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    Boston, MA 02111-1307, USA.  */
+end_comment
+
+begin_expr_stmt
 operator|*
-name|token
-condition|)
-block|{
-switch|switch
-condition|(
-operator|*
-name|token
-operator|++
-condition|)
-block|{
-case|case
-literal|'t'
-case|:
-case|case
-literal|'T'
-case|:
-name|load_text
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'d'
-case|:
-case|case
-literal|'D'
-case|:
-name|load_data
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'b'
-case|:
-case|case
-literal|'B'
-case|:
-name|load_bss
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'l'
-case|:
-case|case
-literal|'L'
-case|:
-name|load_lit
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-default|default:
-name|error
-argument_list|(
-literal|"Unknown UDI load option -%s"
-argument_list|,
-name|token
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-block|}
-block|}
-name|pbfd
-operator|=
-name|bfd_openr
-argument_list|(
-name|filename
-argument_list|,
-name|gnutarget
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|pbfd
-condition|)
-comment|/* FIXME: should be using bfd_errmsg, not assuming it was        bfd_error_system_call.  */
-name|perror_with_name
-argument_list|(
-name|filename
-argument_list|)
-expr_stmt|;
-comment|/* FIXME: should be checking for errors from bfd_close (for one thing,      on error it does not free all the storage associated with the      bfd).  */
-name|make_cleanup
-argument_list|(
-operator|(
-name|make_cleanup_func
-operator|)
-name|bfd_close
-argument_list|,
-name|pbfd
-argument_list|)
-expr_stmt|;
-name|QUIT
-expr_stmt|;
-name|immediate_quit
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bfd_check_format
-argument_list|(
-name|pbfd
-argument_list|,
-name|bfd_object
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"It doesn't seem to be an object file"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|section
-operator|=
-name|pbfd
-operator|->
-name|sections
-init|;
-name|section
-condition|;
-name|section
-operator|=
-name|section
-operator|->
-name|next
-control|)
-block|{
-if|if
-condition|(
-name|bfd_get_section_flags
-argument_list|(
-name|pbfd
-argument_list|,
-name|section
-argument_list|)
-operator|&
-name|SEC_ALLOC
-condition|)
-block|{
-name|UDIResource
-name|To
-decl_stmt|;
-name|UDICount
-name|Count
-decl_stmt|;
-name|unsigned
-name|long
-name|section_size
-decl_stmt|,
-name|section_end
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|section_name
-decl_stmt|;
-name|section_name
-operator|=
-name|bfd_get_section_name
-argument_list|(
-name|pbfd
-argument_list|,
-name|section
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|STREQ
-argument_list|(
-name|section_name
-argument_list|,
-literal|".text"
-argument_list|)
-operator|&&
-operator|!
-name|load_text
-condition|)
-continue|continue;
-elseif|else
-if|if
-condition|(
-name|STREQ
-argument_list|(
-name|section_name
-argument_list|,
-literal|".data"
-argument_list|)
-operator|&&
-operator|!
-name|load_data
-condition|)
-continue|continue;
-elseif|else
-if|if
-condition|(
-name|STREQ
-argument_list|(
-name|section_name
-argument_list|,
-literal|".bss"
-argument_list|)
-operator|&&
-operator|!
-name|load_bss
-condition|)
-continue|continue;
-elseif|else
-if|if
-condition|(
-name|STREQ
-argument_list|(
-name|section_name
-argument_list|,
-literal|".lit"
-argument_list|)
-operator|&&
-operator|!
-name|load_lit
-condition|)
-continue|continue;
-name|To
-operator|.
-name|Offset
-operator|=
-name|bfd_get_section_vma
-argument_list|(
-name|pbfd
-argument_list|,
-name|section
-argument_list|)
-expr_stmt|;
-name|section_size
-operator|=
-name|bfd_section_size
-argument_list|(
-name|pbfd
-argument_list|,
-name|section
-argument_list|)
-expr_stmt|;
-name|section_end
-operator|=
-name|To
-operator|.
-name|Offset
-operator|+
-name|section_size
-expr_stmt|;
-if|if
-condition|(
-name|section_size
-operator|==
-literal|0
-condition|)
-comment|/* This is needed at least in the BSS case, where the code 	       below starts writing before it even checks the size.  */
-continue|continue;
-name|printf_unfiltered
-argument_list|(
-literal|"[Loading section %s at %x (%d bytes)]\n"
-argument_list|,
-name|section_name
-argument_list|,
-name|To
-operator|.
-name|Offset
-argument_list|,
-name|section_size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bfd_get_section_flags
-argument_list|(
-name|pbfd
-argument_list|,
-name|section
-argument_list|)
-operator|&
-name|SEC_CODE
-condition|)
-block|{
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KIRAMSpace
-expr_stmt|;
-name|address_ranges
-index|[
-literal|0
-index|]
-operator|.
-name|Offset
-operator|=
-name|min
-argument_list|(
-name|address_ranges
-index|[
-literal|0
-index|]
-operator|.
-name|Offset
-argument_list|,
-name|To
-operator|.
-name|Offset
-argument_list|)
-expr_stmt|;
-name|address_ranges
-index|[
-literal|0
-index|]
-operator|.
-name|Size
-operator|=
-name|max
-argument_list|(
-name|address_ranges
-index|[
-literal|0
-index|]
-operator|.
-name|Size
-argument_list|,
-name|section_end
-operator|-
-name|address_ranges
-index|[
-literal|0
-index|]
-operator|.
-name|Offset
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KDRAMSpace
-expr_stmt|;
-name|address_ranges
-index|[
-literal|1
-index|]
-operator|.
-name|Offset
-operator|=
-name|min
-argument_list|(
-name|address_ranges
-index|[
-literal|1
-index|]
-operator|.
-name|Offset
-argument_list|,
-name|To
-operator|.
-name|Offset
-argument_list|)
-expr_stmt|;
-name|address_ranges
-index|[
-literal|1
-index|]
-operator|.
-name|Size
-operator|=
-name|max
-argument_list|(
-name|address_ranges
-index|[
-literal|1
-index|]
-operator|.
-name|Size
-argument_list|,
-name|section_end
-operator|-
-name|address_ranges
-index|[
-literal|1
-index|]
-operator|.
-name|Offset
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|bfd_get_section_flags
-argument_list|(
-name|pbfd
-argument_list|,
-name|section
-argument_list|)
-operator|&
-name|SEC_LOAD
-condition|)
-comment|/* Text, data or lit */
-block|{
-name|file_ptr
-name|fptr
-decl_stmt|;
-name|fptr
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-name|section_size
-operator|>
-literal|0
-condition|)
-block|{
-name|char
-name|buffer
-index|[
-literal|1024
-index|]
-decl_stmt|;
-name|Count
-operator|=
-name|min
-argument_list|(
-name|section_size
-argument_list|,
-literal|1024
-argument_list|)
-expr_stmt|;
-name|bfd_get_section_contents
-argument_list|(
-name|pbfd
-argument_list|,
-name|section
-argument_list|,
-name|buffer
-argument_list|,
-name|fptr
-argument_list|,
-name|Count
-argument_list|)
-expr_stmt|;
-name|err
-operator|=
-name|UDIWrite
-argument_list|(
-operator|(
-name|UDIHostMemPtr
-operator|)
-name|buffer
-argument_list|,
-comment|/* From */
-name|To
-argument_list|,
-comment|/* To */
-name|Count
-argument_list|,
-comment|/* Count */
-operator|(
-name|UDISizeT
-operator|)
-literal|1
-argument_list|,
-comment|/* Size */
-operator|&
-name|Count
-argument_list|,
-comment|/* CountDone */
-operator|(
-name|UDIBool
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* HostEndian */
-if|if
-condition|(
-name|err
-condition|)
-name|error
-argument_list|(
-literal|"UDIWrite failed, error = %d"
-argument_list|,
-name|err
-argument_list|)
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|+=
-name|Count
-expr_stmt|;
-name|fptr
-operator|+=
-name|Count
-expr_stmt|;
-name|section_size
-operator|-=
-name|Count
-expr_stmt|;
-block|}
-block|}
-else|else
-comment|/* BSS */
-block|{
-name|UDIResource
-name|From
-decl_stmt|;
-name|unsigned
-name|long
-name|zero
-init|=
-literal|0
-decl_stmt|;
-comment|/* Write a zero byte at the vma */
-comment|/* FIXME: Broken for sections of 1-3 bytes (we test for 		 zero above).  */
-name|err
-operator|=
-name|UDIWrite
-argument_list|(
-operator|(
-name|UDIHostMemPtr
-operator|)
-operator|&
-name|zero
-argument_list|,
-comment|/* From */
-name|To
-argument_list|,
-comment|/* To */
-operator|(
-name|UDICount
-operator|)
-literal|1
-argument_list|,
-comment|/* Count */
-operator|(
-name|UDISizeT
-operator|)
-literal|4
-argument_list|,
-comment|/* Size */
-operator|&
-name|Count
-argument_list|,
-comment|/* CountDone */
-operator|(
-name|UDIBool
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* HostEndian */
-if|if
-condition|(
-name|err
-condition|)
-name|error
-argument_list|(
-literal|"UDIWrite failed, error = %d"
-argument_list|,
-name|err
-argument_list|)
-expr_stmt|;
-name|From
-operator|=
-name|To
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|+=
-literal|4
-expr_stmt|;
-comment|/* Now, duplicate it for the length of the BSS */
-name|err
-operator|=
-name|UDICopy
-argument_list|(
-name|From
-argument_list|,
-comment|/* From */
-name|To
-argument_list|,
-comment|/* To */
-call|(
-name|UDICount
-call|)
-argument_list|(
-name|section_size
 operator|/
-literal|4
-operator|-
-literal|1
-argument_list|)
-argument_list|,
-comment|/* Count */
-operator|(
-name|UDISizeT
-operator|)
-literal|4
-argument_list|,
-comment|/* Size */
-operator|&
-name|Count
-argument_list|,
-comment|/* CountDone */
-operator|(
-name|UDIBool
-operator|)
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Direction */
-if|if
-condition|(
-name|err
-condition|)
-block|{
-name|char
-name|message
-index|[
-literal|100
-index|]
-decl_stmt|;
-name|int
-name|xerr
-decl_stmt|;
-name|xerr
-operator|=
-name|UDIGetErrorMsg
-argument_list|(
-name|err
-argument_list|,
-literal|100
-argument_list|,
-name|message
-argument_list|,
-operator|&
-name|Count
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|xerr
-condition|)
-name|fprintf_unfiltered
-argument_list|(
-name|gdb_stderr
-argument_list|,
-literal|"Error is %s\n"
-argument_list|,
-name|message
-argument_list|)
-expr_stmt|;
-else|else
-name|fprintf_unfiltered
-argument_list|(
-name|gdb_stderr
-argument_list|,
-literal|"xerr is %d\n"
-argument_list|,
-name|xerr
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"UDICopy failed, error = %d"
-argument_list|,
-name|err
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-block|}
-name|entry
-operator|.
-name|Space
-operator|=
-name|UDI29KIRAMSpace
-expr_stmt|;
-name|entry
-operator|.
-name|Offset
-operator|=
-name|bfd_get_start_address
-argument_list|(
-name|pbfd
-argument_list|)
-expr_stmt|;
-name|immediate_quit
-operator|--
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Function to download an image into the remote target.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|udi_load
-parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|char
-modifier|*
-name|args
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
-block|{
-name|download
-argument_list|(
-name|args
-argument_list|,
-name|from_tty
-argument_list|)
-expr_stmt|;
-comment|/* As a convenience, pick up any symbol info that is in the program      being loaded.  Note that we assume that the program is the``mainline'';      if this is not always true, then this code will need to be augmented.  */
-name|symbol_file_add
-argument_list|(
-name|strtok
-argument_list|(
-name|args
-argument_list|,
-literal|" \t"
-argument_list|)
-argument_list|,
-name|from_tty
-argument_list|,
-literal|0
-argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Getting new symbols may change our opinion about what is      frameless.  */
-name|reinit_frame_cache
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*************************************************** UDI_WRITE_INFERIOR_MEMORY ** Copy LEN bytes of data from debugger memory at MYADDR    to inferior's memory at MEMADDR.  Returns number of bytes written.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|udi_write_inferior_memory
-parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
-name|CORE_ADDR
-name|memaddr
-decl_stmt|;
-name|char
-modifier|*
-name|myaddr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-block|{
-name|int
-name|nwritten
-init|=
-literal|0
-decl_stmt|;
-name|UDIUInt32
-modifier|*
-name|From
-decl_stmt|;
-name|UDIResource
-name|To
-decl_stmt|;
-name|UDICount
-name|Count
-decl_stmt|;
-name|UDISizeT
-name|Size
-init|=
-literal|1
-decl_stmt|;
-name|UDICount
-name|CountDone
-init|=
-literal|0
-decl_stmt|;
-name|UDIBool
-name|HostEndian
-init|=
-literal|0
-decl_stmt|;
-name|To
-operator|.
-name|Space
-operator|=
-name|udi_memory_space
-argument_list|(
-name|memaddr
-argument_list|)
-expr_stmt|;
-name|From
-operator|=
-operator|(
-name|UDIUInt32
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* This is like remote.c but uses the Universal Debug Interface (UDI) to  */
+comment|/* OBSOLETE    talk to the target hardware (or simulator).  UDI is a TCP/IP based */
+comment|/* OBSOLETE    protocol; for hardware that doesn't run TCP, an interface adapter  */
+comment|/* OBSOLETE    daemon talks UDI on one side, and talks to the hardware (typically */
+comment|/* OBSOLETE    over a serial port) on the other side. */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE    - Originally written by Daniel Mann at AMD for MiniMON and gdb 3.91.6. */
+comment|/* OBSOLETE    - David Wood (wood@lab.ultra.nyu.edu) at New York University adapted this */
+comment|/* OBSOLETE    file to gdb 3.95.  I was unable to get this working on sun3os4 */
+comment|/* OBSOLETE    with termio, only with sgtty. */
+comment|/* OBSOLETE    - Daniel Mann at AMD took the 3.95 adaptions above and replaced */
+comment|/* OBSOLETE    MiniMON interface with UDI-p interface.        */
 operator|*
-operator|)
-name|myaddr
-expr_stmt|;
-while|while
-condition|(
-name|nwritten
-operator|<
-name|len
-condition|)
-block|{
-name|Count
-operator|=
-name|len
-operator|-
-name|nwritten
-expr_stmt|;
-if|if
-condition|(
-name|Count
-operator|>
-name|MAXDATA
-condition|)
-name|Count
-operator|=
-name|MAXDATA
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|=
-name|memaddr
-operator|+
-name|nwritten
-expr_stmt|;
-if|if
-condition|(
-name|UDIWrite
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"UDIWrite() failed in udi_write_inferior_memory"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-else|else
-block|{
-name|nwritten
-operator|+=
-name|CountDone
-expr_stmt|;
-name|From
-operator|+=
-name|CountDone
-expr_stmt|;
-block|}
-block|}
-return|return
-operator|(
-name|nwritten
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/**************************************************** UDI_READ_INFERIOR_MEMORY ** Read LEN bytes from inferior memory at MEMADDR.  Put the result    at debugger address MYADDR.  Returns number of bytes read.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|udi_read_inferior_memory
-parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
-name|CORE_ADDR
-name|memaddr
-decl_stmt|;
-name|char
-modifier|*
-name|myaddr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-block|{
-name|int
-name|nread
-init|=
-literal|0
-decl_stmt|;
-name|UDIResource
-name|From
-decl_stmt|;
-name|UDIUInt32
-modifier|*
-name|To
-decl_stmt|;
-name|UDICount
-name|Count
-decl_stmt|;
-name|UDISizeT
-name|Size
-init|=
-literal|1
-decl_stmt|;
-name|UDICount
-name|CountDone
-init|=
-literal|0
-decl_stmt|;
-name|UDIBool
-name|HostEndian
-init|=
-literal|0
-decl_stmt|;
-name|UDIError
-name|err
-decl_stmt|;
-name|From
-operator|.
-name|Space
-operator|=
-name|udi_memory_space
-argument_list|(
-name|memaddr
-argument_list|)
-expr_stmt|;
-name|To
-operator|=
-operator|(
-name|UDIUInt32
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #include "defs.h" */
+comment|/* OBSOLETE #include "frame.h" */
+comment|/* OBSOLETE #include "inferior.h" */
+comment|/* OBSOLETE #include "value.h" */
+comment|/* OBSOLETE #include<ctype.h> */
+comment|/* OBSOLETE #include<fcntl.h> */
+comment|/* OBSOLETE #include<errno.h> */
+comment|/* OBSOLETE #include "gdb_string.h" */
+comment|/* OBSOLETE #include "terminal.h" */
+comment|/* OBSOLETE #include "target.h" */
+comment|/* OBSOLETE #include "29k-share/udi/udiproc.h" */
+comment|/* OBSOLETE #include "gdbcmd.h" */
+comment|/* OBSOLETE #include "bfd.h" */
+comment|/* OBSOLETE #include "gdbcore.h"		/* For download function */
 operator|*
-operator|)
-name|myaddr
-expr_stmt|;
-while|while
-condition|(
-name|nread
-operator|<
-name|len
-condition|)
-block|{
-name|Count
-operator|=
-name|len
-operator|-
-name|nread
-expr_stmt|;
-if|if
-condition|(
-name|Count
-operator|>
-name|MAXDATA
-condition|)
-name|Count
-operator|=
-name|MAXDATA
-expr_stmt|;
-name|From
-operator|.
-name|Offset
-operator|=
-name|memaddr
-operator|+
-name|nread
-expr_stmt|;
-if|if
-condition|(
-name|err
-operator|=
-name|UDIRead
-argument_list|(
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"UDIRead() failed in udi_read_inferior_memory"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-else|else
-block|{
-name|nread
-operator|+=
-name|CountDone
-expr_stmt|;
-name|To
-operator|+=
-name|CountDone
-expr_stmt|;
-block|}
-block|}
-return|return
-operator|(
-name|nread
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/********************************************************************* WARNING */
-end_comment
-
-begin_macro
-name|udi_warning
-argument_list|(
-argument|num
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|num
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|error
-argument_list|(
-literal|"ERROR while loading program into remote TIP: $d\n"
-argument_list|,
-name|num
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*****************************************************************************/
-end_comment
-
-begin_comment
-comment|/* Fetch a single register indicatated by 'regno'.   * Returns 0/-1 on success/failure.    */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|fetch_register
-parameter_list|(
-name|regno
-parameter_list|)
-name|int
-name|regno
-decl_stmt|;
-block|{
-name|UDIResource
-name|From
-decl_stmt|;
-name|UDIUInt32
-name|To
-decl_stmt|;
-name|UDICount
-name|Count
-init|=
-literal|1
-decl_stmt|;
-name|UDISizeT
-name|Size
-init|=
-literal|4
-decl_stmt|;
-name|UDICount
-name|CountDone
-decl_stmt|;
-name|UDIBool
-name|HostEndian
-init|=
-literal|0
-decl_stmt|;
-name|UDIError
-name|err
-decl_stmt|;
-name|int
-name|result
-decl_stmt|;
-if|if
-condition|(
-name|regno
-operator|==
-name|GR1_REGNUM
-condition|)
-block|{
-name|From
-operator|.
-name|Space
-operator|=
-name|UDI29KGlobalRegs
-expr_stmt|;
-name|From
-operator|.
-name|Offset
-operator|=
-literal|1
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|GR96_REGNUM
-operator|&&
-name|regno
-operator|<
-name|GR96_REGNUM
-operator|+
-literal|32
-condition|)
-block|{
-name|From
-operator|.
-name|Space
-operator|=
-name|UDI29KGlobalRegs
-expr_stmt|;
-name|From
-operator|.
-name|Offset
-operator|=
-operator|(
-name|regno
-operator|-
-name|GR96_REGNUM
-operator|)
-operator|+
-literal|96
-expr_stmt|;
-empty_stmt|;
-block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|GR64_REGNUM
-argument_list|)
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|GR64_REGNUM
-operator|&&
-name|regno
-operator|<
-name|GR64_REGNUM
-operator|+
-literal|32
-condition|)
-block|{
-name|From
-operator|.
-name|Space
-operator|=
-name|UDI29KGlobalRegs
-expr_stmt|;
-name|From
-operator|.
-name|Offset
-operator|=
-operator|(
-name|regno
-operator|-
-name|GR64_REGNUM
-operator|)
-operator|+
-literal|64
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* GR64_REGNUM */
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|LR0_REGNUM
-operator|&&
-name|regno
-operator|<
-name|LR0_REGNUM
-operator|+
-literal|128
-condition|)
-block|{
-name|From
-operator|.
-name|Space
-operator|=
-name|UDI29KLocalRegs
-expr_stmt|;
-name|From
-operator|.
-name|Offset
-operator|=
-operator|(
-name|regno
-operator|-
-name|LR0_REGNUM
-operator|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|FPE_REGNUM
-operator|&&
-name|regno
-operator|<=
-name|EXO_REGNUM
-condition|)
-block|{
-name|int
-name|val
-init|=
-operator|-
-literal|1
-decl_stmt|;
-comment|/*supply_register(160 + (regno - FPE_REGNUM),(char *)&val);*/
-name|supply_register
-argument_list|(
-name|regno
-argument_list|,
-operator|(
-name|char
+operator|/
+comment|/* OBSOLETE #include "regcache.h" */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* access the register store directly, without going through */
+comment|/* OBSOLETE    the normal handler functions. This avoids an extra data copy.  */
 operator|*
-operator|)
-operator|&
-name|val
-argument_list|)
-expr_stmt|;
-return|return;
-comment|/* Pretend Success */
-block|}
-else|else
-block|{
-name|From
-operator|.
-name|Space
-operator|=
-name|UDI29KSpecialRegs
-expr_stmt|;
-name|From
-operator|.
-name|Offset
-operator|=
-name|regnum_to_srnum
-argument_list|(
-name|regno
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|err
-operator|=
-name|UDIRead
-argument_list|(
-name|From
-argument_list|,
-operator|&
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"UDIRead() failed in udi_fetch_registers"
-argument_list|)
-expr_stmt|;
-name|supply_register
-argument_list|(
-name|regno
-argument_list|,
-operator|(
-name|char
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE extern int stop_soon_quietly;	/* for wait_for_inferior */
 operator|*
-operator|)
-operator|&
-name|To
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|remote_debug
-condition|)
-name|printf_unfiltered
-argument_list|(
-literal|"Fetching register %s = 0x%x\n"
-argument_list|,
-name|REGISTER_NAME
-argument_list|(
-name|regno
-argument_list|)
-argument_list|,
-name|To
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+operator|/
+comment|/* OBSOLETE extern struct value *call_function_by_hand (); */
+comment|/* OBSOLETE static void udi_resume (ptid_t ptid, int step, enum target_signal sig); */
+comment|/* OBSOLETE static void udi_fetch_registers (int regno); */
+comment|/* OBSOLETE static void udi_load (char *args, int from_tty); */
+comment|/* OBSOLETE static void fetch_register (int regno); */
+comment|/* OBSOLETE static void udi_store_registers (int regno); */
+comment|/* OBSOLETE static int store_register (int regno); */
+comment|/* OBSOLETE static int regnum_to_srnum (int regno); */
+comment|/* OBSOLETE static void udi_close (int quitting); */
+comment|/* OBSOLETE static CPUSpace udi_memory_space (CORE_ADDR addr); */
+comment|/* OBSOLETE static int udi_write_inferior_memory (CORE_ADDR memaddr, char *myaddr, */
+comment|/* OBSOLETE 				      int len); */
+comment|/* OBSOLETE static int udi_read_inferior_memory (CORE_ADDR memaddr, char *myaddr, */
+comment|/* OBSOLETE 				     int len); */
+comment|/* OBSOLETE static void download (char *load_arg_string, int from_tty); */
+comment|/* OBSOLETE char CoffFileName[100] = ""; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #define FREEZE_MODE     (read_register(CPS_REGNUM)& 0x400) */
+comment|/* OBSOLETE #define USE_SHADOW_PC	((processor_type == a29k_freeze_mode)&& FREEZE_MODE) */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static int timeout = 5; */
+comment|/* OBSOLETE extern struct target_ops udi_ops;	/* Forward declaration */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Special register enumeration. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /******************************************************************* UDI DATA*/
+operator|*
+operator|/
+comment|/* OBSOLETE #define	MAXDATA		2*1024	/* max UDI[read/write] byte size */
+operator|*
+operator|/
+comment|/* OBSOLETE /* Descriptor for I/O to remote machine.  Initialize it to -1 so that */
+comment|/* OBSOLETE    udi_open knows that we don't have a file open when the program */
+comment|/* OBSOLETE    starts.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE UDISessionId udi_session_id = -1; */
+comment|/* OBSOLETE static char *udi_config_id; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE CPUOffset IMemStart = 0; */
+comment|/* OBSOLETE CPUSizeT IMemSize = 0; */
+comment|/* OBSOLETE CPUOffset DMemStart = 0; */
+comment|/* OBSOLETE CPUSizeT DMemSize = 0; */
+comment|/* OBSOLETE CPUOffset RMemStart = 0; */
+comment|/* OBSOLETE CPUSizeT RMemSize = 0; */
+comment|/* OBSOLETE UDIUInt32 CPUPRL; */
+comment|/* OBSOLETE UDIUInt32 CoProcPRL; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE UDIMemoryRange address_ranges[2];	/* Text and data */
+operator|*
+operator|/
+comment|/* OBSOLETE UDIResource entry = */
+comment|/* OBSOLETE {0, 0};				/* Entry point */
+operator|*
+operator|/
+comment|/* OBSOLETE CPUSizeT stack_sizes[2];	/* Regular and memory stacks */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #define	SBUF_MAX	1024	/* maximum size of string handling buffer */
+operator|*
+operator|/
+comment|/* OBSOLETE char sbuf[SBUF_MAX]; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE typedef struct bkpt_entry_str */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     UDIResource Addr; */
+comment|/* OBSOLETE     UDIUInt32 PassCount; */
+comment|/* OBSOLETE     UDIBreakType Type; */
+comment|/* OBSOLETE     unsigned int BreakId; */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE bkpt_entry_t; */
+comment|/* OBSOLETE #define		BKPT_TABLE_SIZE 40 */
+comment|/* OBSOLETE static bkpt_entry_t bkpt_table[BKPT_TABLE_SIZE]; */
+comment|/* OBSOLETE extern char dfe_errmsg[];	/* error string */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* malloc'd name of the program on the remote system.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static char *prog_name = NULL; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* This is called not only when we first attach, but also when the */
+comment|/* OBSOLETE    user types "run" after having attached.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE udi_create_inferior (char *execfile, char *args, char **env) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   char *args1; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (execfile) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       if (prog_name != NULL) */
+comment|/* OBSOLETE 	xfree (prog_name); */
+comment|/* OBSOLETE       prog_name = savestring (execfile, strlen (execfile)); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (entry.Offset) */
+comment|/* OBSOLETE     execfile = ""; */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     error ("No image loaded into target."); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (udi_session_id< 0) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       /* If the TIP is not open, open it.  */
+operator|*
+operator|/
+comment|/* OBSOLETE       if (UDIConnect (udi_config_id,&udi_session_id)) */
+comment|/* OBSOLETE 	error ("UDIConnect() failed: %s\n", dfe_errmsg); */
+comment|/* OBSOLETE       /* We will need to download the program.  */
+operator|*
+operator|/
+comment|/* OBSOLETE       entry.Offset = 0; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   inferior_ptid = pid_to_ptid (40000); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (!entry.Offset) */
+comment|/* OBSOLETE     download (execfile, 0); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   args1 = alloca (strlen (execfile) + strlen (args) + 2); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (execfile[0] == '\0') */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE     /* It is empty.  We need to quote it somehow, or else the target */
+comment|/* OBSOLETE        will think there is no argument being passed here.  According */
+comment|/* OBSOLETE        to the UDI spec it is quoted "according to TIP OS rules" which */
+comment|/* OBSOLETE        I guess means quoting it like the Unix shell should work */
+comment|/* OBSOLETE        (sounds pretty bogus to me...).  In fact it doesn't work (with */
+comment|/* OBSOLETE        isstip anyway), but passing in two quotes as the argument seems */
+comment|/* OBSOLETE        like a reasonable enough behavior anyway (I guess).  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE     strcpy (args1, "''"); */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     strcpy (args1, execfile); */
+comment|/* OBSOLETE   strcat (args1, " "); */
+comment|/* OBSOLETE   strcat (args1, args); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   UDIInitializeProcess (address_ranges,		/* ProcessMemory[] */
+operator|*
+operator|/
+comment|/* OBSOLETE 			(UDIInt) 2,	/* NumberOfRanges */
+operator|*
+operator|/
+comment|/* OBSOLETE 			entry,	/* EntryPoint */
+operator|*
+operator|/
+comment|/* OBSOLETE 			stack_sizes,	/* *StackSizes */
+operator|*
+operator|/
+comment|/* OBSOLETE 			(UDIInt) 2,	/* NumberOfStacks */
+operator|*
+operator|/
+comment|/* OBSOLETE 			args1);	/* ArgString */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   init_wait_for_inferior (); */
+comment|/* OBSOLETE   clear_proceed_status (); */
+comment|/* OBSOLETE   proceed (-1, TARGET_SIGNAL_DEFAULT, 0); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE udi_mourn (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE #if 0 */
+comment|/* OBSOLETE   /* Requiring "target udi" each time you run is a major pain.  I suspect */
+comment|/* OBSOLETE      this was just blindy copied from remote.c, in which "target" and */
+comment|/* OBSOLETE      "run" are combined.  Having a udi target without an inferior seems */
+comment|/* OBSOLETE      to work between "target udi" and "run", so why not now?  */
+operator|*
+operator|/
+comment|/* OBSOLETE   pop_target ();		/* Pop back to no-child state */
+operator|*
+operator|/
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE   /* But if we're going to want to run it again, we better remove the */
+comment|/* OBSOLETE      breakpoints...  */
+operator|*
+operator|/
+comment|/* OBSOLETE   remove_breakpoints (); */
+comment|/* OBSOLETE   generic_mourn_inferior (); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /******************************************************************** UDI_OPEN */
+comment|/* OBSOLETE ** Open a connection to remote TIP. */
+comment|/* OBSOLETE    NAME is the socket domain used for communication with the TIP, */
+comment|/* OBSOLETE    then a space and the socket name or TIP-host name. */
+comment|/* OBSOLETE    '<udi_udi_config_id>' for example. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* XXX - need cleanups for udiconnect for various failures!!! */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE udi_open (char *name, int from_tty) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   unsigned int prl; */
+comment|/* OBSOLETE   char *p; */
+comment|/* OBSOLETE   int cnt; */
+comment|/* OBSOLETE   UDIMemoryRange KnownMemory[10]; */
+comment|/* OBSOLETE   UDIUInt32 ChipVersions[10]; */
+comment|/* OBSOLETE   UDIInt NumberOfRanges = 10; */
+comment|/* OBSOLETE   UDIInt NumberOfChips = 10; */
+comment|/* OBSOLETE   UDIPId PId; */
+comment|/* OBSOLETE   UDIUInt32 TIPId, TargetId, DFEId, DFE, TIP, DFEIPCId, TIPIPCId; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   target_preopen (from_tty); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   entry.Offset = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (cnt = 0; cnt< BKPT_TABLE_SIZE; cnt++) */
+comment|/* OBSOLETE     bkpt_table[cnt].Type = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (udi_config_id) */
+comment|/* OBSOLETE     xfree (udi_config_id); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (!name) */
+comment|/* OBSOLETE     error ("Usage: target udi config_id, where config_id appears in udi_soc file"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   udi_config_id = xstrdup (strtok (name, " \t")); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (UDIConnect (udi_config_id,&udi_session_id)) */
+comment|/* OBSOLETE     /* FIXME: Should set udi_session_id to -1 here.  */
+operator|*
+operator|/
+comment|/* OBSOLETE     error ("UDIConnect() failed: %s\n", dfe_errmsg); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   push_target (&udi_ops); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* */
+comment|/* OBSOLETE      ** Initialize target configuration structure (global) */
+comment|/* OBSOLETE    */
+operator|*
+operator|/
+comment|/* OBSOLETE   if (UDIGetTargetConfig (KnownMemory,&NumberOfRanges, */
+comment|/* OBSOLETE 			  ChipVersions,&NumberOfChips)) */
+comment|/* OBSOLETE     error ("UDIGetTargetConfig() failed"); */
+comment|/* OBSOLETE   if (NumberOfChips> 2) */
+comment|/* OBSOLETE     fprintf_unfiltered (gdb_stderr, "Target has more than one processor\n"); */
+comment|/* OBSOLETE   for (cnt = 0; cnt< NumberOfRanges; cnt++) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       switch (KnownMemory[cnt].Space) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	default: */
+comment|/* OBSOLETE 	  fprintf_unfiltered (gdb_stderr, "UDIGetTargetConfig() unknown memory space\n"); */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case UDI29KCP_S: */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case UDI29KIROMSpace: */
+comment|/* OBSOLETE 	  RMemStart = KnownMemory[cnt].Offset; */
+comment|/* OBSOLETE 	  RMemSize = KnownMemory[cnt].Size; */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case UDI29KIRAMSpace: */
+comment|/* OBSOLETE 	  IMemStart = KnownMemory[cnt].Offset; */
+comment|/* OBSOLETE 	  IMemSize = KnownMemory[cnt].Size; */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case UDI29KDRAMSpace: */
+comment|/* OBSOLETE 	  DMemStart = KnownMemory[cnt].Offset; */
+comment|/* OBSOLETE 	  DMemSize = KnownMemory[cnt].Size; */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   a29k_get_processor_type (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (UDICreateProcess (&PId)) */
+comment|/* OBSOLETE     fprintf_unfiltered (gdb_stderr, "UDICreateProcess() failed\n"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Print out some stuff, letting the user now what's going on */
+operator|*
+operator|/
+comment|/* OBSOLETE   if (UDICapabilities (&TIPId,&TargetId, DFEId, DFE,&TIP,&DFEIPCId, */
+comment|/* OBSOLETE&TIPIPCId, sbuf)) */
+comment|/* OBSOLETE     error ("UDICapabilities() failed"); */
+comment|/* OBSOLETE   if (from_tty) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       printf_filtered ("Connected via UDI socket,\n\ */
+comment|/* OBSOLETE  DFE-IPC version %x.%x.%x  TIP-IPC version %x.%x.%x  TIP version %x.%x.%x\n %s\n", */
+comment|/* OBSOLETE 	       (DFEIPCId>> 8)& 0xf, (DFEIPCId>> 4)& 0xf, DFEIPCId& 0xf, */
+comment|/* OBSOLETE 	       (TIPIPCId>> 8)& 0xf, (TIPIPCId>> 4)& 0xf, TIPIPCId& 0xf, */
+comment|/* OBSOLETE 	       (TargetId>> 8)& 0xf, (TargetId>> 4)& 0xf, TargetId& 0xf, */
+comment|/* OBSOLETE 		       sbuf); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /******************************************************************* UDI_CLOSE */
+comment|/* OBSOLETE    Close the open connection to the TIP process. */
+comment|/* OBSOLETE    Use this when you want to detach and do something else */
+comment|/* OBSOLETE    with your gdb.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE udi_close (			/*FIXME: how is quitting used */
+operator|*
+operator|/
+comment|/* OBSOLETE 	    int quitting) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   if (udi_session_id< 0) */
+comment|/* OBSOLETE     return; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* We should never get here if there isn't something valid in */
+comment|/* OBSOLETE      udi_session_id.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (UDIDisconnect (udi_session_id, UDITerminateSession)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       if (quitting) */
+comment|/* OBSOLETE 	warning ("UDIDisconnect() failed in udi_close"); */
+comment|/* OBSOLETE       else */
+comment|/* OBSOLETE 	error ("UDIDisconnect() failed in udi_close"); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Do not try to close udi_session_id again, later in the program.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   udi_session_id = -1; */
+comment|/* OBSOLETE   inferior_ptid = null_ptid; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   printf_filtered ("  Ending remote debugging\n"); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /**************************************************************** UDI_ATACH */
+operator|*
+operator|/
+comment|/* OBSOLETE /* Attach to a program that is already loaded and running  */
+comment|/* OBSOLETE  * Upon exiting the process's execution is stopped. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE udi_attach (char *args, int from_tty) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   UDIResource From; */
+comment|/* OBSOLETE   UDIInt32 PC_adds; */
+comment|/* OBSOLETE   UDICount Count = 1; */
+comment|/* OBSOLETE   UDISizeT Size = 4; */
+comment|/* OBSOLETE   UDICount CountDone; */
+comment|/* OBSOLETE   UDIBool HostEndian = 0; */
+comment|/* OBSOLETE   UDIError err; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (args == NULL) */
+comment|/* OBSOLETE     error_no_arg ("program to attach"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (udi_session_id< 0) */
+comment|/* OBSOLETE     error ("UDI connection not opened yet, use the 'target udi' command.\n"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (from_tty) */
+comment|/* OBSOLETE     printf_unfiltered ("Attaching to remote program %s...\n", prog_name); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   UDIStop (); */
+comment|/* OBSOLETE   From.Space = UDI29KSpecialRegs; */
+comment|/* OBSOLETE   From.Offset = 11; */
+comment|/* OBSOLETE   if (err = UDIRead (From,&PC_adds, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIRead failed in udi_attach"); */
+comment|/* OBSOLETE   printf_unfiltered ("Remote process is now halted, pc1 = 0x%x.\n", PC_adds); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /************************************************************* UDI_DETACH */
+operator|*
+operator|/
+comment|/* OBSOLETE /* Terminate the open connection to the TIP process. */
+comment|/* OBSOLETE    Use this when you want to detach and do something else */
+comment|/* OBSOLETE    with your gdb.  Leave remote process running (with no breakpoints set). */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE udi_detach (char *args, int from_tty) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   remove_breakpoints ();	/* Just in case there were any left in */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (UDIDisconnect (udi_session_id, UDIContinueSession)) */
+comment|/* OBSOLETE     error ("UDIDisconnect() failed in udi_detach"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Don't try to UDIDisconnect it again in udi_close, which is called from */
+comment|/* OBSOLETE      pop_target.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   udi_session_id = -1; */
+comment|/* OBSOLETE   inferior_ptid = null_ptid; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   pop_target (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (from_tty) */
+comment|/* OBSOLETE     printf_unfiltered ("Detaching from TIP\n"); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /****************************************************************** UDI_RESUME */
+comment|/* OBSOLETE ** Tell the remote machine to resume.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE udi_resume (ptid_t ptid, int step, enum target_signal sig) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   UDIError tip_error; */
+comment|/* OBSOLETE   UDIUInt32 Steps = 1; */
+comment|/* OBSOLETE   UDIStepType StepType = UDIStepNatural; */
+comment|/* OBSOLETE   UDIRange Range; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (step)			/* step 1 instruction */
+operator|*
+operator|/
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       tip_error = UDIStep (Steps, StepType, Range); */
+comment|/* OBSOLETE       if (!tip_error) */
+comment|/* OBSOLETE 	return; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       fprintf_unfiltered (gdb_stderr, "UDIStep() error = %d\n", tip_error); */
+comment|/* OBSOLETE       error ("failed in udi_resume"); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (UDIExecute ()) */
+comment|/* OBSOLETE     error ("UDIExecute() failed in udi_resume"); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /******************************************************************** UDI_WAIT */
+comment|/* OBSOLETE ** Wait until the remote machine stops, then return, */
+comment|/* OBSOLETE    storing status in STATUS just as `wait' would.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static ptid_t */
+comment|/* OBSOLETE udi_wait (ptid_t ptid, struct target_waitstatus *status) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   UDIInt32 MaxTime; */
+comment|/* OBSOLETE   UDIPId PId; */
+comment|/* OBSOLETE   UDIInt32 StopReason; */
+comment|/* OBSOLETE   UDISizeT CountDone; */
+comment|/* OBSOLETE   int old_timeout = timeout; */
+comment|/* OBSOLETE   int old_immediate_quit = immediate_quit; */
+comment|/* OBSOLETE   int i; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   status->kind = TARGET_WAITKIND_EXITED; */
+comment|/* OBSOLETE   status->value.integer = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* wait for message to arrive. It should be: */
+comment|/* OBSOLETE    If the target stops executing, udi_wait() should return. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE   timeout = 0;			/* Wait indefinetly for a message */
+operator|*
+operator|/
+comment|/* OBSOLETE   immediate_quit = 1;		/* Helps ability to QUIT */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   while (1) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       i = 0; */
+comment|/* OBSOLETE       MaxTime = UDIWaitForever; */
+comment|/* OBSOLETE       UDIWait (MaxTime,&PId,&StopReason); */
+comment|/* OBSOLETE       QUIT;			/* Let user quit if they want */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       switch (StopReason& UDIGrossState) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	case UDIStdoutReady: */
+comment|/* OBSOLETE 	  if (UDIGetStdout (sbuf, (UDISizeT) SBUF_MAX,&CountDone)) */
+comment|/* OBSOLETE 	    /* This is said to happen if the program tries to output */
+comment|/* OBSOLETE 	       a whole bunch of output (more than SBUF_MAX, I would */
+comment|/* OBSOLETE 	       guess).  It doesn't seem to happen with the simulator.  */
+operator|*
+operator|/
+comment|/* OBSOLETE 	    warning ("UDIGetStdout() failed in udi_wait"); */
+comment|/* OBSOLETE 	  fwrite (sbuf, 1, CountDone, stdout); */
+comment|/* OBSOLETE 	  gdb_flush (gdb_stdout); */
+comment|/* OBSOLETE 	  continue; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	case UDIStderrReady: */
+comment|/* OBSOLETE 	  UDIGetStderr (sbuf, (UDISizeT) SBUF_MAX,&CountDone); */
+comment|/* OBSOLETE 	  fwrite (sbuf, 1, CountDone, stderr); */
+comment|/* OBSOLETE 	  gdb_flush (gdb_stderr); */
+comment|/* OBSOLETE 	  continue; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	case UDIStdinNeeded: */
+comment|/* OBSOLETE 	  { */
+comment|/* OBSOLETE 	    int ch; */
+comment|/* OBSOLETE 	    i = 0; */
+comment|/* OBSOLETE 	    do */
+comment|/* OBSOLETE 	      { */
+comment|/* OBSOLETE 		ch = getchar (); */
+comment|/* OBSOLETE 		if (ch == EOF) */
+comment|/* OBSOLETE 		  break; */
+comment|/* OBSOLETE 		sbuf[i++] = ch; */
+comment|/* OBSOLETE 	      } */
+comment|/* OBSOLETE 	    while (i< SBUF_MAX&& ch != '\n'); */
+comment|/* OBSOLETE 	    UDIPutStdin (sbuf, (UDISizeT) i,&CountDone); */
+comment|/* OBSOLETE 	    continue; */
+comment|/* OBSOLETE 	  } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	case UDIRunning: */
+comment|/* OBSOLETE 	  /* In spite of the fact that we told UDIWait to wait forever, it will */
+comment|/* OBSOLETE 	     return spuriously sometimes.  */
+operator|*
+operator|/
+comment|/* OBSOLETE 	case UDIStdinModeX: */
+comment|/* OBSOLETE 	  continue; */
+comment|/* OBSOLETE 	default: */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   switch (StopReason& UDIGrossState) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE     case UDITrapped: */
+comment|/* OBSOLETE       printf_unfiltered ("Am290*0 received vector number %d\n", StopReason>> 24); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       switch ((StopReason>> 8)& 0xff) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	case 0:		/* Illegal opcode */
+operator|*
+operator|/
+comment|/* OBSOLETE 	  printf_unfiltered ("	(break point)\n"); */
+comment|/* OBSOLETE 	  status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE 	  status->value.sig = TARGET_SIGNAL_TRAP; */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case 1:		/* Unaligned Access */
+operator|*
+operator|/
+comment|/* OBSOLETE 	  status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE 	  status->value.sig = TARGET_SIGNAL_BUS; */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case 3: */
+comment|/* OBSOLETE 	case 4: */
+comment|/* OBSOLETE 	  status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE 	  status->value.sig = TARGET_SIGNAL_FPE; */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case 5:		/* Protection Violation */
+operator|*
+operator|/
+comment|/* OBSOLETE 	  status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE 	  /* Why not SEGV?  What is a Protection Violation?  */
+operator|*
+operator|/
+comment|/* OBSOLETE 	  status->value.sig = TARGET_SIGNAL_ILL; */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case 6: */
+comment|/* OBSOLETE 	case 7: */
+comment|/* OBSOLETE 	case 8:		/* User Instruction Mapping Miss */
+operator|*
+operator|/
+comment|/* OBSOLETE 	case 9:		/* User Data Mapping Miss */
+operator|*
+operator|/
+comment|/* OBSOLETE 	case 10:		/* Supervisor Instruction Mapping Miss */
+operator|*
+operator|/
+comment|/* OBSOLETE 	case 11:		/* Supervisor Data Mapping Miss */
+operator|*
+operator|/
+comment|/* OBSOLETE 	  status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE 	  status->value.sig = TARGET_SIGNAL_SEGV; */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case 12: */
+comment|/* OBSOLETE 	case 13: */
+comment|/* OBSOLETE 	  status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE 	  status->value.sig = TARGET_SIGNAL_ILL; */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case 14:		/* Timer */
+operator|*
+operator|/
+comment|/* OBSOLETE 	  status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE 	  status->value.sig = TARGET_SIGNAL_ALRM; */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case 15:		/* Trace */
+operator|*
+operator|/
+comment|/* OBSOLETE 	  status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE 	  status->value.sig = TARGET_SIGNAL_TRAP; */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case 16:		/* INTR0 */
+operator|*
+operator|/
+comment|/* OBSOLETE 	case 17:		/* INTR1 */
+operator|*
+operator|/
+comment|/* OBSOLETE 	case 18:		/* INTR2 */
+operator|*
+operator|/
+comment|/* OBSOLETE 	case 19:		/* INTR3/Internal */
+operator|*
+operator|/
+comment|/* OBSOLETE 	case 20:		/* TRAP0 */
+operator|*
+operator|/
+comment|/* OBSOLETE 	case 21:		/* TRAP1 */
+operator|*
+operator|/
+comment|/* OBSOLETE 	  status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE 	  status->value.sig = TARGET_SIGNAL_INT; */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case 22:		/* Floating-Point Exception */
+operator|*
+operator|/
+comment|/* OBSOLETE 	  status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE 	  /* Why not FPE?  */
+operator|*
+operator|/
+comment|/* OBSOLETE 	  status->value.sig = TARGET_SIGNAL_ILL; */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case 77:		/* assert 77 */
+operator|*
+operator|/
+comment|/* OBSOLETE 	  status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE 	  status->value.sig = TARGET_SIGNAL_TRAP; */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	default: */
+comment|/* OBSOLETE 	  status->kind = TARGET_WAITKIND_EXITED; */
+comment|/* OBSOLETE 	  status->value.integer = 0; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     case UDINotExecuting: */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_TERM; */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     case UDIStopped: */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_TSTP; */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     case UDIWarned: */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_URG; */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     case UDIStepped: */
+comment|/* OBSOLETE     case UDIBreak: */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_TRAP; */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     case UDIWaiting: */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_STOP; */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     case UDIHalted: */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_KILL; */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     case UDIExited: */
+comment|/* OBSOLETE     default: */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_EXITED; */
+comment|/* OBSOLETE       status->value.integer = 0; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   timeout = old_timeout;	/* Restore original timeout value */
+operator|*
+operator|/
+comment|/* OBSOLETE   immediate_quit = old_immediate_quit; */
+comment|/* OBSOLETE   return inferior_ptid; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #if 0 */
+comment|/* OBSOLETE /* Handy for debugging */
+operator|*
+operator|/
+comment|/* OBSOLETE udi_pc (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   UDIResource From; */
+comment|/* OBSOLETE   UDIUInt32 *To; */
+comment|/* OBSOLETE   UDICount Count; */
+comment|/* OBSOLETE   UDISizeT Size = 4; */
+comment|/* OBSOLETE   UDICount CountDone; */
+comment|/* OBSOLETE   UDIBool HostEndian = 0; */
+comment|/* OBSOLETE   UDIError err; */
+comment|/* OBSOLETE   int pc[2]; */
+comment|/* OBSOLETE   unsigned long myregs[256]; */
+comment|/* OBSOLETE   int i; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From.Space = UDI29KPC; */
+comment|/* OBSOLETE   From.Offset = 0; */
+comment|/* OBSOLETE   To = (UDIUInt32 *) pc; */
+comment|/* OBSOLETE   Count = 2; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   err = UDIRead (From, To, Count, Size,&CountDone, HostEndian); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   printf_unfiltered ("err = %d, CountDone = %d, pc[0] = 0x%x, pc[1] = 0x%x\n", */
+comment|/* OBSOLETE 		     err, CountDone, pc[0], pc[1]); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   udi_fetch_registers (-1); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   printf_unfiltered ("other pc1 = 0x%x, pc0 = 0x%x\n", *(int *)&registers[4 * PC_REGNUM], */
+comment|/* OBSOLETE 		     *(int *)&registers[4 * NPC_REGNUM]); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Now, read all the registers globally */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From.Space = UDI29KGlobalRegs; */
+comment|/* OBSOLETE   From.Offset = 0; */
+comment|/* OBSOLETE   err = UDIRead (From, myregs, 256, 4,&CountDone, HostEndian); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   printf ("err = %d, CountDone = %d\n", err, CountDone); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   printf ("\n"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (i = 0; i< 256; i += 2) */
+comment|/* OBSOLETE     printf ("%d:\t%#10x\t%11d\t%#10x\t%11d\n", i, myregs[i], myregs[i], */
+comment|/* OBSOLETE 	    myregs[i + 1], myregs[i + 1]); */
+comment|/* OBSOLETE   printf ("\n"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   return pc[0]; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /********************************************************** UDI_FETCH_REGISTERS */
+comment|/* OBSOLETE  * Read a remote register 'regno'.  */
+comment|/* OBSOLETE  * If regno==-1 then read all the registers. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE udi_fetch_registers (int regno) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   UDIResource From; */
+comment|/* OBSOLETE   UDIUInt32 *To; */
+comment|/* OBSOLETE   UDICount Count; */
+comment|/* OBSOLETE   UDISizeT Size = 4; */
+comment|/* OBSOLETE   UDICount CountDone; */
+comment|/* OBSOLETE   UDIBool HostEndian = 0; */
+comment|/* OBSOLETE   UDIError err; */
+comment|/* OBSOLETE   int i; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (regno>= 0) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       fetch_register (regno); */
+comment|/* OBSOLETE       return; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Gr1/rsp */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From.Space = UDI29KGlobalRegs; */
+comment|/* OBSOLETE   From.Offset = 1; */
+comment|/* OBSOLETE   To = (UDIUInt32 *)& registers[4 * GR1_REGNUM]; */
+comment|/* OBSOLETE   Count = 1; */
+comment|/* OBSOLETE   if (err = UDIRead (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIRead() failed in udi_fetch_registers"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   register_valid[GR1_REGNUM] = 1; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #if defined(GR64_REGNUM)	/* Read gr64-127 */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Global Registers gr64-gr95 */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From.Space = UDI29KGlobalRegs; */
+comment|/* OBSOLETE   From.Offset = 64; */
+comment|/* OBSOLETE   To = (UDIUInt32 *)& registers[4 * GR64_REGNUM]; */
+comment|/* OBSOLETE   Count = 32; */
+comment|/* OBSOLETE   if (err = UDIRead (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIRead() failed in udi_fetch_registers"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (i = GR64_REGNUM; i< GR64_REGNUM + 32; i++) */
+comment|/* OBSOLETE     register_valid[i] = 1; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #endif /*  GR64_REGNUM */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Global Registers gr96-gr127 */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From.Space = UDI29KGlobalRegs; */
+comment|/* OBSOLETE   From.Offset = 96; */
+comment|/* OBSOLETE   To = (UDIUInt32 *)& registers[4 * GR96_REGNUM]; */
+comment|/* OBSOLETE   Count = 32; */
+comment|/* OBSOLETE   if (err = UDIRead (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIRead() failed in udi_fetch_registers"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (i = GR96_REGNUM; i< GR96_REGNUM + 32; i++) */
+comment|/* OBSOLETE     register_valid[i] = 1; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Local Registers */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From.Space = UDI29KLocalRegs; */
+comment|/* OBSOLETE   From.Offset = 0; */
+comment|/* OBSOLETE   To = (UDIUInt32 *)& registers[4 * LR0_REGNUM]; */
+comment|/* OBSOLETE   Count = 128; */
+comment|/* OBSOLETE   if (err = UDIRead (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIRead() failed in udi_fetch_registers"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (i = LR0_REGNUM; i< LR0_REGNUM + 128; i++) */
+comment|/* OBSOLETE     register_valid[i] = 1; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Protected Special Registers */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From.Space = UDI29KSpecialRegs; */
+comment|/* OBSOLETE   From.Offset = 0; */
+comment|/* OBSOLETE   To = (UDIUInt32 *)& registers[4 * SR_REGNUM (0)]; */
+comment|/* OBSOLETE   Count = 15; */
+comment|/* OBSOLETE   if (err = UDIRead (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIRead() failed in udi_fetch_registers"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (i = SR_REGNUM (0); i< SR_REGNUM (0) + 15; i++) */
+comment|/* OBSOLETE     register_valid[i] = 1; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (USE_SHADOW_PC) */
+comment|/* OBSOLETE     {				/* Let regno_to_srnum() handle the register number */
+operator|*
+operator|/
+comment|/* OBSOLETE       fetch_register (NPC_REGNUM); */
+comment|/* OBSOLETE       fetch_register (PC_REGNUM); */
+comment|/* OBSOLETE       fetch_register (PC2_REGNUM); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Unprotected Special Registers sr128-sr135 */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       From.Space = UDI29KSpecialRegs; */
+comment|/* OBSOLETE       From.Offset = 128; */
+comment|/* OBSOLETE       To = (UDIUInt32 *)& registers[4 * SR_REGNUM (128)]; */
+comment|/* OBSOLETE       Count = 135 - 128 + 1; */
+comment|/* OBSOLETE       if (err = UDIRead (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE 	error ("UDIRead() failed in udi_fetch_registers"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       for (i = SR_REGNUM (128); i< SR_REGNUM (128) + 135 - 128 + 1; i++) */
+comment|/* OBSOLETE 	register_valid[i] = 1; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (remote_debug) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       fprintf_unfiltered (gdb_stdlog, "Fetching all registers\n"); */
+comment|/* OBSOLETE       fprintf_unfiltered (gdb_stdlog, */
+comment|/* OBSOLETE 			  "Fetching PC0 = 0x%x, PC1 = 0x%x, PC2 = 0x%x\n", */
+comment|/* OBSOLETE 			  read_register (NPC_REGNUM), */
+comment|/* OBSOLETE 			  read_register (PC_REGNUM), */
+comment|/* OBSOLETE 			  read_register (PC2_REGNUM)); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* There doesn't seem to be any way to get these.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     int val = -1; */
+comment|/* OBSOLETE     supply_register (FPE_REGNUM, (char *)&val); */
+comment|/* OBSOLETE     supply_register (INTE_REGNUM, (char *)&val); */
+comment|/* OBSOLETE     supply_register (FPS_REGNUM, (char *)&val); */
+comment|/* OBSOLETE     supply_register (EXO_REGNUM, (char *)&val); */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /********************************************************* UDI_STORE_REGISTERS */
+comment|/* OBSOLETE ** Store register regno into the target.   */
+comment|/* OBSOLETE  * If regno==-1 then store all the registers. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE udi_store_registers (int regno) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   UDIUInt32 *From; */
+comment|/* OBSOLETE   UDIResource To; */
+comment|/* OBSOLETE   UDICount Count; */
+comment|/* OBSOLETE   UDISizeT Size = 4; */
+comment|/* OBSOLETE   UDICount CountDone; */
+comment|/* OBSOLETE   UDIBool HostEndian = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (regno>= 0) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       store_register (regno); */
+comment|/* OBSOLETE       return; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (remote_debug) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       fprintf_unfiltered (gdb_stdlog, "Storing all registers\n"); */
+comment|/* OBSOLETE       fprintf_unfiltered (gdb_stdlog, */
+comment|/* OBSOLETE 			  "PC0 = 0x%x, PC1 = 0x%x, PC2 = 0x%x\n", */
+comment|/* OBSOLETE 			  read_register (NPC_REGNUM), */
+comment|/* OBSOLETE 			  read_register (PC_REGNUM), */
+comment|/* OBSOLETE 			  read_register (PC2_REGNUM)); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Gr1/rsp */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From = (UDIUInt32 *)& registers[4 * GR1_REGNUM]; */
+comment|/* OBSOLETE   To.Space = UDI29KGlobalRegs; */
+comment|/* OBSOLETE   To.Offset = 1; */
+comment|/* OBSOLETE   Count = 1; */
+comment|/* OBSOLETE   if (UDIWrite (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIWrite() failed in udi_store_regisetrs"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #if defined(GR64_REGNUM) */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Global registers gr64-gr95 */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From = (UDIUInt32 *)& registers[4 * GR64_REGNUM]; */
+comment|/* OBSOLETE   To.Space = UDI29KGlobalRegs; */
+comment|/* OBSOLETE   To.Offset = 64; */
+comment|/* OBSOLETE   Count = 32; */
+comment|/* OBSOLETE   if (UDIWrite (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIWrite() failed in udi_store_regisetrs"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #endif /* GR64_REGNUM */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Global registers gr96-gr127 */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From = (UDIUInt32 *)& registers[4 * GR96_REGNUM]; */
+comment|/* OBSOLETE   To.Space = UDI29KGlobalRegs; */
+comment|/* OBSOLETE   To.Offset = 96; */
+comment|/* OBSOLETE   Count = 32; */
+comment|/* OBSOLETE   if (UDIWrite (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIWrite() failed in udi_store_regisetrs"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Local Registers */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From = (UDIUInt32 *)& registers[4 * LR0_REGNUM]; */
+comment|/* OBSOLETE   To.Space = UDI29KLocalRegs; */
+comment|/* OBSOLETE   To.Offset = 0; */
+comment|/* OBSOLETE   Count = 128; */
+comment|/* OBSOLETE   if (UDIWrite (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIWrite() failed in udi_store_regisetrs"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Protected Special Registers */
+comment|/* VAB through TMR */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From = (UDIUInt32 *)& registers[4 * SR_REGNUM (0)]; */
+comment|/* OBSOLETE   To.Space = UDI29KSpecialRegs; */
+comment|/* OBSOLETE   To.Offset = 0; */
+comment|/* OBSOLETE   Count = 10; */
+comment|/* OBSOLETE   if (UDIWrite (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIWrite() failed in udi_store_regisetrs"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* PC0, PC1, PC2 possibly as shadow registers */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From = (UDIUInt32 *)& registers[4 * SR_REGNUM (10)]; */
+comment|/* OBSOLETE   To.Space = UDI29KSpecialRegs; */
+comment|/* OBSOLETE   Count = 3; */
+comment|/* OBSOLETE   if (USE_SHADOW_PC) */
+comment|/* OBSOLETE     To.Offset = 20;		/* SPC0 */
+operator|*
+operator|/
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     To.Offset = 10;		/* PC0 */
+operator|*
+operator|/
+comment|/* OBSOLETE   if (UDIWrite (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIWrite() failed in udi_store_regisetrs"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* PC1 via UDI29KPC */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From = (UDIUInt32 *)& registers[4 * PC_REGNUM]; */
+comment|/* OBSOLETE   To.Space = UDI29KPC; */
+comment|/* OBSOLETE   To.Offset = 0;		/* PC1 */
+operator|*
+operator|/
+comment|/* OBSOLETE   Count = 1; */
+comment|/* OBSOLETE   if (UDIWrite (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIWrite() failed in udi_store_regisetrs"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* LRU and MMU */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From = (UDIUInt32 *)& registers[4 * SR_REGNUM (13)]; */
+comment|/* OBSOLETE   To.Space = UDI29KSpecialRegs; */
+comment|/* OBSOLETE   To.Offset = 13; */
+comment|/* OBSOLETE   Count = 2; */
+comment|/* OBSOLETE   if (UDIWrite (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIWrite() failed in udi_store_regisetrs"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Unprotected Special Registers */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From = (UDIUInt32 *)& registers[4 * SR_REGNUM (128)]; */
+comment|/* OBSOLETE   To.Space = UDI29KSpecialRegs; */
+comment|/* OBSOLETE   To.Offset = 128; */
+comment|/* OBSOLETE   Count = 135 - 128 + 1; */
+comment|/* OBSOLETE   if (UDIWrite (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIWrite() failed in udi_store_regisetrs"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   registers_changed (); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /****************************************************** UDI_PREPARE_TO_STORE */
+operator|*
+operator|/
+comment|/* OBSOLETE /* Get ready to modify the registers array.  On machines which store */
+comment|/* OBSOLETE    individual registers, this doesn't need to do anything.  On machines */
+comment|/* OBSOLETE    which store all the registers in one fell swoop, this makes sure */
+comment|/* OBSOLETE    that registers contains all the registers from the program being */
+comment|/* OBSOLETE    debugged.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE udi_prepare_to_store (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   /* Do nothing, since we can store individual regs */
+operator|*
+operator|/
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /********************************************************** TRANSLATE_ADDR */
+operator|*
+operator|/
+comment|/* OBSOLETE static CORE_ADDR */
+comment|/* OBSOLETE translate_addr (CORE_ADDR addr) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE #if defined(ULTRA3)&& defined(KERNEL_DEBUGGING) */
+comment|/* OBSOLETE   /* Check for a virtual address in the kernel */
+operator|*
+operator|/
+comment|/* OBSOLETE   /* Assume physical address of ublock is in  paddr_u register */
+operator|*
+operator|/
+comment|/* OBSOLETE   /* FIXME: doesn't work for user virtual addresses */
+operator|*
+operator|/
+comment|/* OBSOLETE   if (addr>= UVADDR) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       /* PADDR_U register holds the physical address of the ublock */
+operator|*
+operator|/
+comment|/* OBSOLETE       CORE_ADDR i = (CORE_ADDR) read_register (PADDR_U_REGNUM); */
+comment|/* OBSOLETE       return (i + addr - (CORE_ADDR) UVADDR); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       return (addr); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE #else */
+comment|/* OBSOLETE   return (addr); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /************************************************* UDI_XFER_INFERIOR_MEMORY */
+operator|*
+operator|/
+comment|/* OBSOLETE /* FIXME!  Merge these two.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE udi_xfer_inferior_memory (CORE_ADDR memaddr, char *myaddr, int len, int write, */
+comment|/* OBSOLETE 			  struct mem_attrib *attrib ATTRIBUTE_UNUSED, */
+comment|/* OBSOLETE 			  struct target_ops *target ATTRIBUTE_UNUSED) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   memaddr = translate_addr (memaddr); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (write) */
+comment|/* OBSOLETE     return udi_write_inferior_memory (memaddr, myaddr, len); */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     return udi_read_inferior_memory (memaddr, myaddr, len); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /********************************************************** UDI_FILES_INFO */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE udi_files_info (struct target_ops *target) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   printf_unfiltered ("\tAttached to UDI socket to %s", udi_config_id); */
+comment|/* OBSOLETE   if (prog_name != NULL) */
+comment|/* OBSOLETE     printf_unfiltered ("and running program %s", prog_name); */
+comment|/* OBSOLETE   printf_unfiltered (".\n"); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /**************************************************** UDI_INSERT_BREAKPOINT */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE udi_insert_breakpoint (CORE_ADDR addr, char *contents_cache) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int cnt; */
+comment|/* OBSOLETE   UDIError err; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (cnt = 0; cnt< BKPT_TABLE_SIZE; cnt++) */
+comment|/* OBSOLETE     if (bkpt_table[cnt].Type == 0)	/* Find first free slot */
+operator|*
+operator|/
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (cnt>= BKPT_TABLE_SIZE) */
+comment|/* OBSOLETE     error ("Too many breakpoints set"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   bkpt_table[cnt].Addr.Offset = addr; */
+comment|/* OBSOLETE   bkpt_table[cnt].Addr.Space = UDI29KIRAMSpace; */
+comment|/* OBSOLETE   bkpt_table[cnt].PassCount = 1; */
+comment|/* OBSOLETE   bkpt_table[cnt].Type = UDIBreakFlagExecute; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   err = UDISetBreakpoint (bkpt_table[cnt].Addr, */
+comment|/* OBSOLETE 			  bkpt_table[cnt].PassCount, */
+comment|/* OBSOLETE 			  bkpt_table[cnt].Type, */
+comment|/* OBSOLETE&bkpt_table[cnt].BreakId); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (err == 0) */
+comment|/* OBSOLETE     return 0;			/* Success */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   bkpt_table[cnt].Type = 0; */
+comment|/* OBSOLETE   error ("UDISetBreakpoint returned error code %d\n", err); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /**************************************************** UDI_REMOVE_BREAKPOINT */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE udi_remove_breakpoint (CORE_ADDR addr, char *contents_cache) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int cnt; */
+comment|/* OBSOLETE   UDIError err; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (cnt = 0; cnt< BKPT_TABLE_SIZE; cnt++) */
+comment|/* OBSOLETE     if (bkpt_table[cnt].Addr.Offset == addr)	/* Find matching breakpoint */
+operator|*
+operator|/
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (cnt>= BKPT_TABLE_SIZE) */
+comment|/* OBSOLETE     error ("Can't find breakpoint in table"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   bkpt_table[cnt].Type = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   err = UDIClearBreakpoint (bkpt_table[cnt].BreakId); */
+comment|/* OBSOLETE   if (err == 0) */
+comment|/* OBSOLETE     return 0;			/* Success */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   error ("UDIClearBreakpoint returned error code %d\n", err); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE udi_kill (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #if 0 */
+comment|/* OBSOLETE /* */
+comment|/* OBSOLETE    UDIStop does not really work as advertised.  It causes the TIP to close it's */
+comment|/* OBSOLETE    connection, which usually results in GDB dying with a SIGPIPE.  For now, we */
+comment|/* OBSOLETE    just invoke udi_close, which seems to get things right. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE   UDIStop (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   udi_session_id = -1; */
+comment|/* OBSOLETE   inferior_ptid = null_ptid; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (from_tty) */
+comment|/* OBSOLETE     printf_unfiltered ("Target has been stopped."); */
+comment|/* OBSOLETE #endif /* 0 */
+operator|*
+operator|/
+comment|/* OBSOLETE #if 0 */
+comment|/* OBSOLETE   udi_close (0); */
+comment|/* OBSOLETE   pop_target (); */
+comment|/* OBSOLETE #endif /* 0 */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Keep the target around, e.g. so "run" can do the right thing when */
+comment|/* OBSOLETE      we are already debugging something.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (UDIDisconnect (udi_session_id, UDITerminateSession)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       warning ("UDIDisconnect() failed"); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Do not try to close udi_session_id again, later in the program.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   udi_session_id = -1; */
+comment|/* OBSOLETE   inferior_ptid = null_ptid; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /*  */
+comment|/* OBSOLETE    Load a program into the target.  Args are: `program {options}'.  The options */
+comment|/* OBSOLETE    are used to control loading of the program, and are NOT passed onto the */
+comment|/* OBSOLETE    loaded code as arguments.  (You need to use the `run' command to do that.) */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE    The options are: */
+comment|/* OBSOLETE    -ms %d       Set mem stack size to %d */
+comment|/* OBSOLETE    -rs %d       Set regular stack size to %d */
+comment|/* OBSOLETE    -i   send init info (default) */
+comment|/* OBSOLETE    -noi don't send init info */
+comment|/* OBSOLETE    -[tT]        Load Text section */
+comment|/* OBSOLETE    -[dD]        Load Data section */
+comment|/* OBSOLETE    -[bB]        Load BSS section */
+comment|/* OBSOLETE    -[lL]        Load Lit section */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE download (char *load_arg_string, int from_tty) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE #define DEFAULT_MEM_STACK_SIZE 		0x6000 */
+comment|/* OBSOLETE #define DEFAULT_REG_STACK_SIZE 		0x2000 */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   char *token; */
+comment|/* OBSOLETE   char *filename; */
+comment|/* OBSOLETE   asection *section; */
+comment|/* OBSOLETE   bfd *pbfd; */
+comment|/* OBSOLETE   UDIError err; */
+comment|/* OBSOLETE   int load_text = 1, load_data = 1, load_bss = 1, load_lit = 1; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   address_ranges[0].Space = UDI29KIRAMSpace; */
+comment|/* OBSOLETE   address_ranges[0].Offset = 0xffffffff; */
+comment|/* OBSOLETE   address_ranges[0].Size = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   address_ranges[1].Space = UDI29KDRAMSpace; */
+comment|/* OBSOLETE   address_ranges[1].Offset = 0xffffffff; */
+comment|/* OBSOLETE   address_ranges[1].Size = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   stack_sizes[0] = DEFAULT_REG_STACK_SIZE; */
+comment|/* OBSOLETE   stack_sizes[1] = DEFAULT_MEM_STACK_SIZE; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   dont_repeat (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   filename = strtok (load_arg_string, " \t"); */
+comment|/* OBSOLETE   if (!filename) */
+comment|/* OBSOLETE     error ("Must specify at least a file name with the load command"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   filename = tilde_expand (filename); */
+comment|/* OBSOLETE   make_cleanup (xfree, filename); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   while (token = strtok (NULL, " \t")) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       if (token[0] == '-') */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  token++; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	  if (STREQ (token, "ms")) */
+comment|/* OBSOLETE 	    stack_sizes[1] = atol (strtok (NULL, " \t")); */
+comment|/* OBSOLETE 	  else if (STREQ (token, "rs")) */
+comment|/* OBSOLETE 	    stack_sizes[0] = atol (strtok (NULL, " \t")); */
+comment|/* OBSOLETE 	  else */
+comment|/* OBSOLETE 	    { */
+comment|/* OBSOLETE 	      load_text = load_data = load_bss = load_lit = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	      while (*token) */
+comment|/* OBSOLETE 		{ */
+comment|/* OBSOLETE 		  switch (*token++) */
+comment|/* OBSOLETE 		    { */
+comment|/* OBSOLETE 		    case 't': */
+comment|/* OBSOLETE 		    case 'T': */
+comment|/* OBSOLETE 		      load_text = 1; */
+comment|/* OBSOLETE 		      break; */
+comment|/* OBSOLETE 		    case 'd': */
+comment|/* OBSOLETE 		    case 'D': */
+comment|/* OBSOLETE 		      load_data = 1; */
+comment|/* OBSOLETE 		      break; */
+comment|/* OBSOLETE 		    case 'b': */
+comment|/* OBSOLETE 		    case 'B': */
+comment|/* OBSOLETE 		      load_bss = 1; */
+comment|/* OBSOLETE 		      break; */
+comment|/* OBSOLETE 		    case 'l': */
+comment|/* OBSOLETE 		    case 'L': */
+comment|/* OBSOLETE 		      load_lit = 1; */
+comment|/* OBSOLETE 		      break; */
+comment|/* OBSOLETE 		    default: */
+comment|/* OBSOLETE 		      error ("Unknown UDI load option -%s", token - 1); */
+comment|/* OBSOLETE 		    } */
+comment|/* OBSOLETE 		} */
+comment|/* OBSOLETE 	    } */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   pbfd = bfd_openr (filename, gnutarget); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (!pbfd) */
+comment|/* OBSOLETE     /* FIXME: should be using bfd_errmsg, not assuming it was */
+comment|/* OBSOLETE        bfd_error_system_call.  */
+operator|*
+operator|/
+comment|/* OBSOLETE     perror_with_name (filename); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* FIXME: should be checking for errors from bfd_close (for one thing, */
+comment|/* OBSOLETE      on error it does not free all the storage associated with the */
+comment|/* OBSOLETE      bfd).  */
+operator|*
+operator|/
+comment|/* OBSOLETE   make_cleanup_bfd_close (pbfd); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   QUIT; */
+comment|/* OBSOLETE   immediate_quit++; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (!bfd_check_format (pbfd, bfd_object)) */
+comment|/* OBSOLETE     error ("It doesn't seem to be an object file"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (section = pbfd->sections; section; section = section->next) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       if (bfd_get_section_flags (pbfd, section)& SEC_ALLOC) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  UDIResource To; */
+comment|/* OBSOLETE 	  UDICount Count; */
+comment|/* OBSOLETE 	  unsigned long section_size, section_end; */
+comment|/* OBSOLETE 	  const char *section_name; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	  section_name = bfd_get_section_name (pbfd, section); */
+comment|/* OBSOLETE 	  if (STREQ (section_name, ".text")&& !load_text) */
+comment|/* OBSOLETE 	    continue; */
+comment|/* OBSOLETE 	  else if (STREQ (section_name, ".data")&& !load_data) */
+comment|/* OBSOLETE 	    continue; */
+comment|/* OBSOLETE 	  else if (STREQ (section_name, ".bss")&& !load_bss) */
+comment|/* OBSOLETE 	    continue; */
+comment|/* OBSOLETE 	  else if (STREQ (section_name, ".lit")&& !load_lit) */
+comment|/* OBSOLETE 	    continue; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	  To.Offset = bfd_get_section_vma (pbfd, section); */
+comment|/* OBSOLETE 	  section_size = bfd_section_size (pbfd, section); */
+comment|/* OBSOLETE 	  section_end = To.Offset + section_size; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	  if (section_size == 0) */
+comment|/* OBSOLETE 	    /* This is needed at least in the BSS case, where the code */
+comment|/* OBSOLETE 	       below starts writing before it even checks the size.  */
+operator|*
+operator|/
+comment|/* OBSOLETE 	    continue; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	  printf_unfiltered ("[Loading section %s at %x (%d bytes)]\n", */
+comment|/* OBSOLETE 			     section_name, */
+comment|/* OBSOLETE 			     To.Offset, */
+comment|/* OBSOLETE 			     section_size); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	  if (bfd_get_section_flags (pbfd, section)& SEC_CODE) */
+comment|/* OBSOLETE 	    { */
+comment|/* OBSOLETE 	      To.Space = UDI29KIRAMSpace; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	      address_ranges[0].Offset = min (address_ranges[0].Offset, */
+comment|/* OBSOLETE 					      To.Offset); */
+comment|/* OBSOLETE 	      address_ranges[0].Size = max (address_ranges[0].Size, */
+comment|/* OBSOLETE 					    section_end */
+comment|/* OBSOLETE 					    - address_ranges[0].Offset); */
+comment|/* OBSOLETE 	    } */
+comment|/* OBSOLETE 	  else */
+comment|/* OBSOLETE 	    { */
+comment|/* OBSOLETE 	      To.Space = UDI29KDRAMSpace; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	      address_ranges[1].Offset = min (address_ranges[1].Offset, */
+comment|/* OBSOLETE 					      To.Offset); */
+comment|/* OBSOLETE 	      address_ranges[1].Size = max (address_ranges[1].Size, */
+comment|/* OBSOLETE 					    section_end */
+comment|/* OBSOLETE 					    - address_ranges[1].Offset); */
+comment|/* OBSOLETE 	    } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	  if (bfd_get_section_flags (pbfd, section)& SEC_LOAD)		/* Text, data or lit */
+operator|*
+operator|/
+comment|/* OBSOLETE 	    { */
+comment|/* OBSOLETE 	      file_ptr fptr; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	      fptr = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	      while (section_size> 0) */
+comment|/* OBSOLETE 		{ */
+comment|/* OBSOLETE 		  char buffer[1024]; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 		  Count = min (section_size, 1024); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 		  bfd_get_section_contents (pbfd, section, buffer, fptr, */
+comment|/* OBSOLETE 					    Count); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 		  err = UDIWrite ((UDIHostMemPtr) buffer,	/* From */
+operator|*
+operator|/
+comment|/* OBSOLETE 				  To,	/* To */
+operator|*
+operator|/
+comment|/* OBSOLETE 				  Count,	/* Count */
+operator|*
+operator|/
+comment|/* OBSOLETE 				  (UDISizeT) 1,		/* Size */
+operator|*
+operator|/
+comment|/* OBSOLETE&Count,	/* CountDone */
+operator|*
+operator|/
+comment|/* OBSOLETE 				  (UDIBool) 0);		/* HostEndian */
+operator|*
+operator|/
+comment|/* OBSOLETE 		  if (err) */
+comment|/* OBSOLETE 		    error ("UDIWrite failed, error = %d", err); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 		  To.Offset += Count; */
+comment|/* OBSOLETE 		  fptr += Count; */
+comment|/* OBSOLETE 		  section_size -= Count; */
+comment|/* OBSOLETE 		} */
+comment|/* OBSOLETE 	    } */
+comment|/* OBSOLETE 	  else */
+comment|/* OBSOLETE 	    /* BSS */
+operator|*
+operator|/
+comment|/* OBSOLETE 	    { */
+comment|/* OBSOLETE 	      UDIResource From; */
+comment|/* OBSOLETE 	      unsigned long zero = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	      /* Write a zero byte at the vma */
+operator|*
+operator|/
+comment|/* OBSOLETE 	      /* FIXME: Broken for sections of 1-3 bytes (we test for */
+comment|/* OBSOLETE 	         zero above).  */
+operator|*
+operator|/
+comment|/* OBSOLETE 	      err = UDIWrite ((UDIHostMemPtr)& zero,	/* From */
+operator|*
+operator|/
+comment|/* OBSOLETE 			      To,	/* To */
+operator|*
+operator|/
+comment|/* OBSOLETE 			      (UDICount) 1,	/* Count */
+operator|*
+operator|/
+comment|/* OBSOLETE 			      (UDISizeT) 4,	/* Size */
+operator|*
+operator|/
+comment|/* OBSOLETE&Count,	/* CountDone */
+operator|*
+operator|/
+comment|/* OBSOLETE 			      (UDIBool) 0);	/* HostEndian */
+operator|*
+operator|/
+comment|/* OBSOLETE 	      if (err) */
+comment|/* OBSOLETE 		error ("UDIWrite failed, error = %d", err); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	      From = To; */
+comment|/* OBSOLETE 	      To.Offset += 4; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	      /* Now, duplicate it for the length of the BSS */
+operator|*
+operator|/
+comment|/* OBSOLETE 	      err = UDICopy (From,	/* From */
+operator|*
+operator|/
+comment|/* OBSOLETE 			     To,	/* To */
+operator|*
+operator|/
+comment|/* OBSOLETE 			     (UDICount) (section_size / 4 - 1),		/* Count */
+operator|*
+operator|/
+comment|/* OBSOLETE 			     (UDISizeT) 4,	/* Size */
+operator|*
+operator|/
+comment|/* OBSOLETE&Count,	/* CountDone */
+operator|*
+operator|/
+comment|/* OBSOLETE 			     (UDIBool) 1);	/* Direction */
+operator|*
+operator|/
+comment|/* OBSOLETE 	      if (err) */
+comment|/* OBSOLETE 		{ */
+comment|/* OBSOLETE 		  char message[100]; */
+comment|/* OBSOLETE 		  int xerr; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 		  xerr = UDIGetErrorMsg (err, 100, message,&Count); */
+comment|/* OBSOLETE 		  if (!xerr) */
+comment|/* OBSOLETE 		    fprintf_unfiltered (gdb_stderr, "Error is %s\n", message); */
+comment|/* OBSOLETE 		  else */
+comment|/* OBSOLETE 		    fprintf_unfiltered (gdb_stderr, "xerr is %d\n", xerr); */
+comment|/* OBSOLETE 		  error ("UDICopy failed, error = %d", err); */
+comment|/* OBSOLETE 		} */
+comment|/* OBSOLETE 	    } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   entry.Space = UDI29KIRAMSpace; */
+comment|/* OBSOLETE   entry.Offset = bfd_get_start_address (pbfd); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   immediate_quit--; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Function to download an image into the remote target.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE udi_load (char *args, int from_tty) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   download (args, from_tty); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* As a convenience, pick up any symbol info that is in the program */
+comment|/* OBSOLETE      being loaded.  Note that we assume that the program is the``mainline''; */
+comment|/* OBSOLETE      if this is not always true, then this code will need to be augmented.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   symbol_file_add (strtok (args, " \t"), from_tty, NULL, 1, 0); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Getting new symbols may change our opinion about what is */
+comment|/* OBSOLETE      frameless.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   reinit_frame_cache (); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /*************************************************** UDI_WRITE_INFERIOR_MEMORY */
+comment|/* OBSOLETE ** Copy LEN bytes of data from debugger memory at MYADDR */
+comment|/* OBSOLETE    to inferior's memory at MEMADDR.  Returns number of bytes written.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE udi_write_inferior_memory (CORE_ADDR memaddr, char *myaddr, int len) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int nwritten = 0; */
+comment|/* OBSOLETE   UDIUInt32 *From; */
+comment|/* OBSOLETE   UDIResource To; */
+comment|/* OBSOLETE   UDICount Count; */
+comment|/* OBSOLETE   UDISizeT Size = 1; */
+comment|/* OBSOLETE   UDICount CountDone = 0; */
+comment|/* OBSOLETE   UDIBool HostEndian = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   To.Space = udi_memory_space (memaddr); */
+comment|/* OBSOLETE   From = (UDIUInt32 *) myaddr; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   while (nwritten< len) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       Count = len - nwritten; */
+comment|/* OBSOLETE       if (Count> MAXDATA) */
+comment|/* OBSOLETE 	Count = MAXDATA; */
+comment|/* OBSOLETE       To.Offset = memaddr + nwritten; */
+comment|/* OBSOLETE       if (UDIWrite (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  error ("UDIWrite() failed in udi_write_inferior_memory"); */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE       else */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  nwritten += CountDone; */
+comment|/* OBSOLETE 	  From += CountDone; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   return (nwritten); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /**************************************************** UDI_READ_INFERIOR_MEMORY */
+comment|/* OBSOLETE ** Read LEN bytes from inferior memory at MEMADDR.  Put the result */
+comment|/* OBSOLETE    at debugger address MYADDR.  Returns number of bytes read.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE udi_read_inferior_memory (CORE_ADDR memaddr, char *myaddr, int len) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int nread = 0; */
+comment|/* OBSOLETE   UDIResource From; */
+comment|/* OBSOLETE   UDIUInt32 *To; */
+comment|/* OBSOLETE   UDICount Count; */
+comment|/* OBSOLETE   UDISizeT Size = 1; */
+comment|/* OBSOLETE   UDICount CountDone = 0; */
+comment|/* OBSOLETE   UDIBool HostEndian = 0; */
+comment|/* OBSOLETE   UDIError err; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From.Space = udi_memory_space (memaddr); */
+comment|/* OBSOLETE   To = (UDIUInt32 *) myaddr; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   while (nread< len) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       Count = len - nread; */
+comment|/* OBSOLETE       if (Count> MAXDATA) */
+comment|/* OBSOLETE 	Count = MAXDATA; */
+comment|/* OBSOLETE       From.Offset = memaddr + nread; */
+comment|/* OBSOLETE       if (err = UDIRead (From, To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  error ("UDIRead() failed in udi_read_inferior_memory"); */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE       else */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  nread += CountDone; */
+comment|/* OBSOLETE 	  To += CountDone; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   return (nread); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /********************************************************************* WARNING */
+comment|/* OBSOLETE */
+operator|*
+operator|/
+comment|/* OBSOLETE udi_warning (int num) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   error ("ERROR while loading program into remote TIP: $d\n", num); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /*****************************************************************************/
+operator|*
+operator|/
+comment|/* OBSOLETE /* Fetch a single register indicatated by 'regno'.  */
+comment|/* OBSOLETE  * Returns 0/-1 on success/failure.   */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE fetch_register (int regno) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   UDIResource From; */
+comment|/* OBSOLETE   UDIUInt32 To; */
+comment|/* OBSOLETE   UDICount Count = 1; */
+comment|/* OBSOLETE   UDISizeT Size = 4; */
+comment|/* OBSOLETE   UDICount CountDone; */
+comment|/* OBSOLETE   UDIBool HostEndian = 0; */
+comment|/* OBSOLETE   UDIError err; */
+comment|/* OBSOLETE   int result; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (regno == GR1_REGNUM) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       From.Space = UDI29KGlobalRegs; */
+comment|/* OBSOLETE       From.Offset = 1; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (regno>= GR96_REGNUM&& regno< GR96_REGNUM + 32) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       From.Space = UDI29KGlobalRegs; */
+comment|/* OBSOLETE       From.Offset = (regno - GR96_REGNUM) + 96;; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #if defined(GR64_REGNUM) */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   else if (regno>= GR64_REGNUM&& regno< GR64_REGNUM + 32) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       From.Space = UDI29KGlobalRegs; */
+comment|/* OBSOLETE       From.Offset = (regno - GR64_REGNUM) + 64; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #endif /* GR64_REGNUM */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   else if (regno>= LR0_REGNUM&& regno< LR0_REGNUM + 128) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       From.Space = UDI29KLocalRegs; */
+comment|/* OBSOLETE       From.Offset = (regno - LR0_REGNUM); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (regno>= FPE_REGNUM&& regno<= EXO_REGNUM) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       int val = -1; */
+comment|/* OBSOLETE       /*supply_register(160 + (regno - FPE_REGNUM),(char *)&val); */
+operator|*
+operator|/
+comment|/* OBSOLETE       supply_register (regno, (char *)&val); */
+comment|/* OBSOLETE       return;			/* Pretend Success */
+operator|*
+operator|/
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       From.Space = UDI29KSpecialRegs; */
+comment|/* OBSOLETE       From.Offset = regnum_to_srnum (regno); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (err = UDIRead (From,&To, Count, Size,&CountDone, HostEndian)) */
+comment|/* OBSOLETE     error ("UDIRead() failed in udi_fetch_registers"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   supply_register (regno, (char *)&To); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (remote_debug) */
+comment|/* OBSOLETE     fprintf_unfiltered (gdb_stdlog, "Fetching register %s = 0x%x\n", */
+comment|/* OBSOLETE 			REGISTER_NAME (regno), To); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /*****************************************************************************/
+operator|*
+operator|/
+comment|/* OBSOLETE /* Store a single register indicated by 'regno'.  */
+comment|/* OBSOLETE  * Returns 0/-1 on success/failure.   */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE store_register (int regno) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int result; */
+comment|/* OBSOLETE   UDIUInt32 From; */
+comment|/* OBSOLETE   UDIResource To; */
+comment|/* OBSOLETE   UDICount Count = 1; */
+comment|/* OBSOLETE   UDISizeT Size = 4; */
+comment|/* OBSOLETE   UDICount CountDone; */
+comment|/* OBSOLETE   UDIBool HostEndian = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   From = read_register (regno);	/* get data value */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (remote_debug) */
+comment|/* OBSOLETE     fprintf_unfiltered (gdb_stdlog, "Storing register %s = 0x%x\n", */
+comment|/* OBSOLETE 			REGISTER_NAME (regno), From); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (regno == GR1_REGNUM) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       To.Space = UDI29KGlobalRegs; */
+comment|/* OBSOLETE       To.Offset = 1; */
+comment|/* OBSOLETE       result = UDIWrite (&From, To, Count, Size,&CountDone, HostEndian); */
+comment|/* OBSOLETE       /* Setting GR1 changes the numbers of all the locals, so invalidate the  */
+comment|/* OBSOLETE        * register cache.  Do this *after* calling read_register, because we want  */
+comment|/* OBSOLETE        * read_register to return the value that write_register has just stuffed  */
+comment|/* OBSOLETE        * into the registers array, not the value of the register fetched from  */
+comment|/* OBSOLETE        * the inferior.   */
+comment|/* OBSOLETE        */
+operator|*
+operator|/
+comment|/* OBSOLETE       registers_changed (); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE #if defined(GR64_REGNUM) */
+comment|/* OBSOLETE   else if (regno>= GR64_REGNUM&& regno< GR64_REGNUM + 32) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       To.Space = UDI29KGlobalRegs; */
+comment|/* OBSOLETE       To.Offset = (regno - GR64_REGNUM) + 64; */
+comment|/* OBSOLETE       result = UDIWrite (&From, To, Count, Size,&CountDone, HostEndian); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE #endif /* GR64_REGNUM */
+operator|*
+operator|/
+comment|/* OBSOLETE   else if (regno>= GR96_REGNUM&& regno< GR96_REGNUM + 32) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       To.Space = UDI29KGlobalRegs; */
+comment|/* OBSOLETE       To.Offset = (regno - GR96_REGNUM) + 96; */
+comment|/* OBSOLETE       result = UDIWrite (&From, To, Count, Size,&CountDone, HostEndian); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (regno>= LR0_REGNUM&& regno< LR0_REGNUM + 128) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       To.Space = UDI29KLocalRegs; */
+comment|/* OBSOLETE       To.Offset = (regno - LR0_REGNUM); */
+comment|/* OBSOLETE       result = UDIWrite (&From, To, Count, Size,&CountDone, HostEndian); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (regno>= FPE_REGNUM&& regno<= EXO_REGNUM) */
+comment|/* OBSOLETE     return 0;			/* Pretend Success */
+operator|*
+operator|/
+comment|/* OBSOLETE   else if (regno == PC_REGNUM) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       /* PC1 via UDI29KPC */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       To.Space = UDI29KPC; */
+comment|/* OBSOLETE       To.Offset = 0;		/* PC1 */
+operator|*
+operator|/
+comment|/* OBSOLETE       result = UDIWrite (&From, To, Count, Size,&CountDone, HostEndian); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       /* Writing to this loc actually changes the values of pc0& pc1 */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       register_valid[PC_REGNUM] = 0;	/* pc1 */
+operator|*
+operator|/
+comment|/* OBSOLETE       register_valid[NPC_REGNUM] = 0;	/* pc0 */
+operator|*
+operator|/
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     /* An unprotected or protected special register */
+operator|*
+operator|/
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       To.Space = UDI29KSpecialRegs; */
+comment|/* OBSOLETE       To.Offset = regnum_to_srnum (regno); */
+comment|/* OBSOLETE       result = UDIWrite (&From, To, Count, Size,&CountDone, HostEndian); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (result != 0) */
+comment|/* OBSOLETE     error ("UDIWrite() failed in store_registers"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   return 0; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /********************************************************** REGNUM_TO_SRNUM */
+operator|*
+operator|/
+comment|/* OBSOLETE /*  */
+comment|/* OBSOLETE  * Convert a gdb special register number to a 29000 special register number. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE regnum_to_srnum (int regno) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   switch (regno) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE     case VAB_REGNUM: */
+comment|/* OBSOLETE       return (0); */
+comment|/* OBSOLETE     case OPS_REGNUM: */
+comment|/* OBSOLETE       return (1); */
+comment|/* OBSOLETE     case CPS_REGNUM: */
+comment|/* OBSOLETE       return (2); */
+comment|/* OBSOLETE     case CFG_REGNUM: */
+comment|/* OBSOLETE       return (3); */
+comment|/* OBSOLETE     case CHA_REGNUM: */
+comment|/* OBSOLETE       return (4); */
+comment|/* OBSOLETE     case CHD_REGNUM: */
+comment|/* OBSOLETE       return (5); */
+comment|/* OBSOLETE     case CHC_REGNUM: */
+comment|/* OBSOLETE       return (6); */
+comment|/* OBSOLETE     case RBP_REGNUM: */
+comment|/* OBSOLETE       return (7); */
+comment|/* OBSOLETE     case TMC_REGNUM: */
+comment|/* OBSOLETE       return (8); */
+comment|/* OBSOLETE     case TMR_REGNUM: */
+comment|/* OBSOLETE       return (9); */
+comment|/* OBSOLETE     case NPC_REGNUM: */
+comment|/* OBSOLETE       return (USE_SHADOW_PC ? (20) : (10)); */
+comment|/* OBSOLETE     case PC_REGNUM: */
+comment|/* OBSOLETE       return (USE_SHADOW_PC ? (21) : (11)); */
+comment|/* OBSOLETE     case PC2_REGNUM: */
+comment|/* OBSOLETE       return (USE_SHADOW_PC ? (22) : (12)); */
+comment|/* OBSOLETE     case MMU_REGNUM: */
+comment|/* OBSOLETE       return (13); */
+comment|/* OBSOLETE     case LRU_REGNUM: */
+comment|/* OBSOLETE       return (14); */
+comment|/* OBSOLETE     case IPC_REGNUM: */
+comment|/* OBSOLETE       return (128); */
+comment|/* OBSOLETE     case IPA_REGNUM: */
+comment|/* OBSOLETE       return (129); */
+comment|/* OBSOLETE     case IPB_REGNUM: */
+comment|/* OBSOLETE       return (130); */
+comment|/* OBSOLETE     case Q_REGNUM: */
+comment|/* OBSOLETE       return (131); */
+comment|/* OBSOLETE     case ALU_REGNUM: */
+comment|/* OBSOLETE       return (132); */
+comment|/* OBSOLETE     case BP_REGNUM: */
+comment|/* OBSOLETE       return (133); */
+comment|/* OBSOLETE     case FC_REGNUM: */
+comment|/* OBSOLETE       return (134); */
+comment|/* OBSOLETE     case CR_REGNUM: */
+comment|/* OBSOLETE       return (135); */
+comment|/* OBSOLETE     case FPE_REGNUM: */
+comment|/* OBSOLETE       return (160); */
+comment|/* OBSOLETE     case INTE_REGNUM: */
+comment|/* OBSOLETE       return (161); */
+comment|/* OBSOLETE     case FPS_REGNUM: */
+comment|/* OBSOLETE       return (162); */
+comment|/* OBSOLETE     case EXO_REGNUM: */
+comment|/* OBSOLETE       return (164); */
+comment|/* OBSOLETE     default: */
+comment|/* OBSOLETE       return (255);		/* Failure ? */
+operator|*
+operator|/
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /****************************************************************************/
+operator|*
+operator|/
+comment|/* OBSOLETE /* */
+comment|/* OBSOLETE  * Determine the Target memory space qualifier based on the addr.  */
+comment|/* OBSOLETE  * FIXME: Can't distinguis I_ROM/D_ROM.   */
+comment|/* OBSOLETE  * FIXME: Doesn't know anything about I_CACHE/D_CACHE. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static CPUSpace */
+comment|/* OBSOLETE udi_memory_space (CORE_ADDR addr) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   UDIUInt32 tstart = IMemStart; */
+comment|/* OBSOLETE   UDIUInt32 tend = tstart + IMemSize; */
+comment|/* OBSOLETE   UDIUInt32 dstart = DMemStart; */
+comment|/* OBSOLETE   UDIUInt32 dend = tstart + DMemSize; */
+comment|/* OBSOLETE   UDIUInt32 rstart = RMemStart; */
+comment|/* OBSOLETE   UDIUInt32 rend = tstart + RMemSize; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (((UDIUInt32) addr>= tstart)&& ((UDIUInt32) addr< tend)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       return UDI29KIRAMSpace; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (((UDIUInt32) addr>= dstart)&& ((UDIUInt32) addr< dend)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       return UDI29KDRAMSpace; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (((UDIUInt32) addr>= rstart)&& ((UDIUInt32) addr< rend)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       /* FIXME: how do we determine between D_ROM and I_ROM */
+operator|*
+operator|/
+comment|/* OBSOLETE       return UDI29KIROMSpace; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else				/* FIXME: what do me do now? */
+operator|*
+operator|/
+comment|/* OBSOLETE     return UDI29KDRAMSpace;	/* Hmmm! */
+operator|*
+operator|/
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /*********************************************************************** STUBS */
+comment|/* OBSOLETE */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE void */
+comment|/* OBSOLETE convert16 (void) */
+comment|/* OBSOLETE {; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE void */
+comment|/* OBSOLETE convert32 (void) */
+comment|/* OBSOLETE {; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE struct ui_file *EchoFile = 0;	/* used for debugging */
+operator|*
+operator|/
+comment|/* OBSOLETE int QuietMode = 0;		/* used for debugging */
+operator|*
+operator|/
+comment|/* OBSOLETE
+comment|*/
+comment|/* OBSOLETE #ifdef NO_HIF_SUPPORT */
+comment|/* OBSOLETE service_HIF (union msg_t *msg) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   return (0);			/* Emulate a failure */
+operator|*
+operator|/
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE
+comment|*/
+comment|/* OBSOLETE /* Target_ops vector.  Not static because there does not seem to be */
+comment|/* OBSOLETE    any portable way to do a forward declaration of a static variable. */
+comment|/* OBSOLETE    The RS/6000 doesn't like "extern" followed by "static"; SunOS */
+comment|/* OBSOLETE    /bin/cc doesn't like "static" twice.  */
+operator|*
+operator|/
+end_expr_stmt
 
 begin_comment
-comment|/*****************************************************************************/
+comment|/* OBSOLETE  */
 end_comment
 
 begin_comment
-comment|/* Store a single register indicated by 'regno'.   * Returns 0/-1 on success/failure.    */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|store_register
-parameter_list|(
-name|regno
-parameter_list|)
-name|int
-name|regno
-decl_stmt|;
-block|{
-name|int
-name|result
-decl_stmt|;
-name|UDIUInt32
-name|From
-decl_stmt|;
-name|UDIResource
-name|To
-decl_stmt|;
-name|UDICount
-name|Count
-init|=
-literal|1
-decl_stmt|;
-name|UDISizeT
-name|Size
-init|=
-literal|4
-decl_stmt|;
-name|UDICount
-name|CountDone
-decl_stmt|;
-name|UDIBool
-name|HostEndian
-init|=
-literal|0
-decl_stmt|;
-name|From
-operator|=
-name|read_register
-argument_list|(
-name|regno
-argument_list|)
-expr_stmt|;
-comment|/* get data value */
-if|if
-condition|(
-name|remote_debug
-condition|)
-name|printf_unfiltered
-argument_list|(
-literal|"Storing register %s = 0x%x\n"
-argument_list|,
-name|REGISTER_NAME
-argument_list|(
-name|regno
-argument_list|)
-argument_list|,
-name|From
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|regno
-operator|==
-name|GR1_REGNUM
-condition|)
-block|{
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KGlobalRegs
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|=
-literal|1
-expr_stmt|;
-name|result
-operator|=
-name|UDIWrite
-argument_list|(
-operator|&
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-expr_stmt|;
-comment|/* Setting GR1 changes the numbers of all the locals, so invalidate the         * register cache.  Do this *after* calling read_register, because we want         * read_register to return the value that write_register has just stuffed         * into the registers array, not the value of the register fetched from         * the inferior.          */
-name|registers_changed
-argument_list|()
-expr_stmt|;
-block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|GR64_REGNUM
-argument_list|)
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|GR64_REGNUM
-operator|&&
-name|regno
-operator|<
-name|GR64_REGNUM
-operator|+
-literal|32
-condition|)
-block|{
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KGlobalRegs
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|=
-operator|(
-name|regno
-operator|-
-name|GR64_REGNUM
-operator|)
-operator|+
-literal|64
-expr_stmt|;
-name|result
-operator|=
-name|UDIWrite
-argument_list|(
-operator|&
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* GR64_REGNUM */
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|GR96_REGNUM
-operator|&&
-name|regno
-operator|<
-name|GR96_REGNUM
-operator|+
-literal|32
-condition|)
-block|{
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KGlobalRegs
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|=
-operator|(
-name|regno
-operator|-
-name|GR96_REGNUM
-operator|)
-operator|+
-literal|96
-expr_stmt|;
-name|result
-operator|=
-name|UDIWrite
-argument_list|(
-operator|&
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|LR0_REGNUM
-operator|&&
-name|regno
-operator|<
-name|LR0_REGNUM
-operator|+
-literal|128
-condition|)
-block|{
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KLocalRegs
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|=
-operator|(
-name|regno
-operator|-
-name|LR0_REGNUM
-operator|)
-expr_stmt|;
-name|result
-operator|=
-name|UDIWrite
-argument_list|(
-operator|&
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|FPE_REGNUM
-operator|&&
-name|regno
-operator|<=
-name|EXO_REGNUM
-condition|)
-return|return
-literal|0
-return|;
-comment|/* Pretend Success */
-elseif|else
-if|if
-condition|(
-name|regno
-operator|==
-name|PC_REGNUM
-condition|)
-block|{
-comment|/* PC1 via UDI29KPC */
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KPC
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|=
-literal|0
-expr_stmt|;
-comment|/* PC1 */
-name|result
-operator|=
-name|UDIWrite
-argument_list|(
-operator|&
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-expr_stmt|;
-comment|/* Writing to this loc actually changes the values of pc0& pc1 */
-name|register_valid
-index|[
-name|PC_REGNUM
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* pc1 */
-name|register_valid
-index|[
-name|NPC_REGNUM
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* pc0 */
-block|}
-else|else
-comment|/* An unprotected or protected special register */
-block|{
-name|To
-operator|.
-name|Space
-operator|=
-name|UDI29KSpecialRegs
-expr_stmt|;
-name|To
-operator|.
-name|Offset
-operator|=
-name|regnum_to_srnum
-argument_list|(
-name|regno
-argument_list|)
-expr_stmt|;
-name|result
-operator|=
-name|UDIWrite
-argument_list|(
-operator|&
-name|From
-argument_list|,
-name|To
-argument_list|,
-name|Count
-argument_list|,
-name|Size
-argument_list|,
-operator|&
-name|CountDone
-argument_list|,
-name|HostEndian
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|result
-operator|!=
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"UDIWrite() failed in store_registers"
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/********************************************************** REGNUM_TO_SRNUM */
+comment|/* OBSOLETE struct target_ops udi_ops; */
 end_comment
 
 begin_comment
-comment|/*   * Convert a gdb special register number to a 29000 special register number.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|regnum_to_srnum
-parameter_list|(
-name|regno
-parameter_list|)
-name|int
-name|regno
-decl_stmt|;
-block|{
-switch|switch
-condition|(
-name|regno
-condition|)
-block|{
-case|case
-name|VAB_REGNUM
-case|:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-case|case
-name|OPS_REGNUM
-case|:
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-case|case
-name|CPS_REGNUM
-case|:
-return|return
-operator|(
-literal|2
-operator|)
-return|;
-case|case
-name|CFG_REGNUM
-case|:
-return|return
-operator|(
-literal|3
-operator|)
-return|;
-case|case
-name|CHA_REGNUM
-case|:
-return|return
-operator|(
-literal|4
-operator|)
-return|;
-case|case
-name|CHD_REGNUM
-case|:
-return|return
-operator|(
-literal|5
-operator|)
-return|;
-case|case
-name|CHC_REGNUM
-case|:
-return|return
-operator|(
-literal|6
-operator|)
-return|;
-case|case
-name|RBP_REGNUM
-case|:
-return|return
-operator|(
-literal|7
-operator|)
-return|;
-case|case
-name|TMC_REGNUM
-case|:
-return|return
-operator|(
-literal|8
-operator|)
-return|;
-case|case
-name|TMR_REGNUM
-case|:
-return|return
-operator|(
-literal|9
-operator|)
-return|;
-case|case
-name|NPC_REGNUM
-case|:
-return|return
-operator|(
-name|USE_SHADOW_PC
-condition|?
-operator|(
-literal|20
-operator|)
-else|:
-operator|(
-literal|10
-operator|)
-operator|)
-return|;
-case|case
-name|PC_REGNUM
-case|:
-return|return
-operator|(
-name|USE_SHADOW_PC
-condition|?
-operator|(
-literal|21
-operator|)
-else|:
-operator|(
-literal|11
-operator|)
-operator|)
-return|;
-case|case
-name|PC2_REGNUM
-case|:
-return|return
-operator|(
-name|USE_SHADOW_PC
-condition|?
-operator|(
-literal|22
-operator|)
-else|:
-operator|(
-literal|12
-operator|)
-operator|)
-return|;
-case|case
-name|MMU_REGNUM
-case|:
-return|return
-operator|(
-literal|13
-operator|)
-return|;
-case|case
-name|LRU_REGNUM
-case|:
-return|return
-operator|(
-literal|14
-operator|)
-return|;
-case|case
-name|IPC_REGNUM
-case|:
-return|return
-operator|(
-literal|128
-operator|)
-return|;
-case|case
-name|IPA_REGNUM
-case|:
-return|return
-operator|(
-literal|129
-operator|)
-return|;
-case|case
-name|IPB_REGNUM
-case|:
-return|return
-operator|(
-literal|130
-operator|)
-return|;
-case|case
-name|Q_REGNUM
-case|:
-return|return
-operator|(
-literal|131
-operator|)
-return|;
-case|case
-name|ALU_REGNUM
-case|:
-return|return
-operator|(
-literal|132
-operator|)
-return|;
-case|case
-name|BP_REGNUM
-case|:
-return|return
-operator|(
-literal|133
-operator|)
-return|;
-case|case
-name|FC_REGNUM
-case|:
-return|return
-operator|(
-literal|134
-operator|)
-return|;
-case|case
-name|CR_REGNUM
-case|:
-return|return
-operator|(
-literal|135
-operator|)
-return|;
-case|case
-name|FPE_REGNUM
-case|:
-return|return
-operator|(
-literal|160
-operator|)
-return|;
-case|case
-name|INTE_REGNUM
-case|:
-return|return
-operator|(
-literal|161
-operator|)
-return|;
-case|case
-name|FPS_REGNUM
-case|:
-return|return
-operator|(
-literal|162
-operator|)
-return|;
-case|case
-name|EXO_REGNUM
-case|:
-return|return
-operator|(
-literal|164
-operator|)
-return|;
-default|default:
-return|return
-operator|(
-literal|255
-operator|)
-return|;
-comment|/* Failure ? */
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/****************************************************************************/
+comment|/* OBSOLETE  */
 end_comment
 
 begin_comment
-comment|/*  * Determine the Target memory space qualifier based on the addr.   * FIXME: Can't distinguis I_ROM/D_ROM.    * FIXME: Doesn't know anything about I_CACHE/D_CACHE.  */
+comment|/* OBSOLETE static void */
 end_comment
-
-begin_function
-specifier|static
-name|CPUSpace
-name|udi_memory_space
-parameter_list|(
-name|addr
-parameter_list|)
-name|CORE_ADDR
-name|addr
-decl_stmt|;
-block|{
-name|UDIUInt32
-name|tstart
-init|=
-name|IMemStart
-decl_stmt|;
-name|UDIUInt32
-name|tend
-init|=
-name|tstart
-operator|+
-name|IMemSize
-decl_stmt|;
-name|UDIUInt32
-name|dstart
-init|=
-name|DMemStart
-decl_stmt|;
-name|UDIUInt32
-name|dend
-init|=
-name|tstart
-operator|+
-name|DMemSize
-decl_stmt|;
-name|UDIUInt32
-name|rstart
-init|=
-name|RMemStart
-decl_stmt|;
-name|UDIUInt32
-name|rend
-init|=
-name|tstart
-operator|+
-name|RMemSize
-decl_stmt|;
-if|if
-condition|(
-operator|(
-operator|(
-name|UDIUInt32
-operator|)
-name|addr
-operator|>=
-name|tstart
-operator|)
-operator|&&
-operator|(
-operator|(
-name|UDIUInt32
-operator|)
-name|addr
-operator|<
-name|tend
-operator|)
-condition|)
-block|{
-return|return
-name|UDI29KIRAMSpace
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-operator|(
-name|UDIUInt32
-operator|)
-name|addr
-operator|>=
-name|dstart
-operator|)
-operator|&&
-operator|(
-operator|(
-name|UDIUInt32
-operator|)
-name|addr
-operator|<
-name|dend
-operator|)
-condition|)
-block|{
-return|return
-name|UDI29KDRAMSpace
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-operator|(
-name|UDIUInt32
-operator|)
-name|addr
-operator|>=
-name|rstart
-operator|)
-operator|&&
-operator|(
-operator|(
-name|UDIUInt32
-operator|)
-name|addr
-operator|<
-name|rend
-operator|)
-condition|)
-block|{
-comment|/* FIXME: how do we determine between D_ROM and I_ROM */
-return|return
-name|UDI29KIROMSpace
-return|;
-block|}
-else|else
-comment|/* FIXME: what do me do now? */
-return|return
-name|UDI29KDRAMSpace
-return|;
-comment|/* Hmmm! */
-block|}
-end_function
 
 begin_comment
-comment|/*********************************************************************** STUBS */
+comment|/* OBSOLETE init_udi_ops (void) */
 end_comment
-
-begin_function
-name|void
-name|convert16
-parameter_list|()
-block|{
-empty_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|convert32
-parameter_list|()
-block|{
-empty_stmt|;
-block|}
-end_function
-
-begin_decl_stmt
-name|GDB_FILE
-modifier|*
-name|EchoFile
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
-comment|/* used for debugging */
+comment|/* OBSOLETE { */
 end_comment
-
-begin_decl_stmt
-name|int
-name|QuietMode
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
-comment|/* used for debugging */
+comment|/* OBSOLETE   udi_ops.to_shortname = "udi"; */
 end_comment
-
-begin_escape
-end_escape
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NO_HIF_SUPPORT
-end_ifdef
-
-begin_macro
-name|service_HIF
-argument_list|(
-argument|msg
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|union
-name|msg_t
-modifier|*
-name|msg
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* Emulate a failure */
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_escape
-end_escape
 
 begin_comment
-comment|/* Target_ops vector.  Not static because there does not seem to be    any portable way to do a forward declaration of a static variable.    The RS/6000 doesn't like "extern" followed by "static"; SunOS    /bin/cc doesn't like "static" twice.  */
+comment|/* OBSOLETE   udi_ops.to_longname = "Remote UDI connected TIP"; */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|target_ops
-name|udi_ops
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_doc = "Remote debug an AMD 29k using UDI socket connection to TIP process.\n\ */
+end_comment
 
-begin_function
-specifier|static
-name|void
-name|init_udi_ops
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|udi_ops
-operator|.
-name|to_shortname
-operator|=
-literal|"udi"
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_longname
-operator|=
-literal|"Remote UDI connected TIP"
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_doc
-operator|=
-literal|"Remote debug an AMD 29k using UDI socket connection to TIP process.\n\ Arguments are\n\ `configuration-id AF_INET hostname port-number'\n\ To connect via the network, where hostname and port-number specify the\n\ host and port where you can connect via UDI.\n\ configuration-id is unused.\n\ \n\ `configuration-id AF_UNIX socket-name tip-program'\n\ To connect using a local connection to the \"tip.exe\" program which is\n\     supplied by AMD.  If socket-name specifies an AF_UNIX socket then the\n\     tip program must already be started; connect to it using that socket.\n\     If not, start up tip-program, which should be the name of the tip\n\     program.  If appropriate, the PATH environment variable is searched.\n\     configuration-id is unused.\n\ \n\ `configuration-id'\n\     Look up the configuration in ./udi_soc or /etc/udi_soc, which\n\     are files containing lines in the above formats.  configuration-id is\n\     used to pick which line of the file to use."
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_open
-operator|=
-name|udi_open
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_close
-operator|=
-name|udi_close
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_attach
-operator|=
-name|udi_attach
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_detach
-operator|=
-name|udi_detach
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_resume
-operator|=
-name|udi_resume
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_wait
-operator|=
-name|udi_wait
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_fetch_registers
-operator|=
-name|udi_fetch_registers
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_store_registers
-operator|=
-name|udi_store_registers
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_prepare_to_store
-operator|=
-name|udi_prepare_to_store
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_xfer_memory
-operator|=
-name|udi_xfer_inferior_memory
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_files_info
-operator|=
-name|udi_files_info
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_insert_breakpoint
-operator|=
-name|udi_insert_breakpoint
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_remove_breakpoint
-operator|=
-name|udi_remove_breakpoint
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_terminal_init
-operator|=
-literal|0
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_terminal_inferior
-operator|=
-literal|0
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_terminal_ours_for_output
-operator|=
-literal|0
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_terminal_ours
-operator|=
-literal|0
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_terminal_info
-operator|=
-literal|0
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_kill
-operator|=
-name|udi_kill
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_load
-operator|=
-name|udi_load
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_lookup_symbol
-operator|=
-literal|0
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_create_inferior
-operator|=
-name|udi_create_inferior
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_mourn_inferior
-operator|=
-name|udi_mourn
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_can_run
-operator|=
-literal|0
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_notice_signals
-operator|=
-literal|0
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_thread_alive
-operator|=
-literal|0
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_stop
-operator|=
-literal|0
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_stratum
-operator|=
-name|process_stratum
-expr_stmt|;
-name|udi_ops
-operator|.
-name|DONT_USE
-operator|=
-literal|0
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_has_all_memory
-operator|=
-literal|1
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_has_memory
-operator|=
-literal|1
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_has_stack
-operator|=
-literal|1
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_has_registers
-operator|=
-literal|1
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_has_execution
-operator|=
-literal|1
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_sections
-operator|=
-literal|0
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_sections_end
-operator|=
-literal|0
-expr_stmt|;
-name|udi_ops
-operator|.
-name|to_magic
-operator|=
-name|OPS_MAGIC
-expr_stmt|;
-block|}
-end_function
+begin_comment
+comment|/* OBSOLETE Arguments are\n\ */
+end_comment
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_comment
+comment|/* OBSOLETE `configuration-id AF_INET hostname port-number'\n\ */
+end_comment
 
-begin_function
-name|void
-name|_initialize_remote_udi
-parameter_list|()
-block|{
-name|init_udi_ops
-argument_list|()
-expr_stmt|;
-name|add_target
-argument_list|(
-operator|&
-name|udi_ops
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_comment
+comment|/* OBSOLETE To connect via the network, where hostname and port-number specify the\n\ */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE host and port where you can connect via UDI.\n\ */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE configuration-id is unused.\n\ */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE \n\ */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE `configuration-id AF_UNIX socket-name tip-program'\n\ */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE To connect using a local connection to the \"tip.exe\" program which is\n\ */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE     supplied by AMD.  If socket-name specifies an AF_UNIX socket then the\n\ */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE     tip program must already be started; connect to it using that socket.\n\ */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE     If not, start up tip-program, which should be the name of the tip\n\ */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE     program.  If appropriate, the PATH environment variable is searched.\n\ */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE     configuration-id is unused.\n\ */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE \n\ */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE `configuration-id'\n\ */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE     Look up the configuration in ./udi_soc or /etc/udi_soc, which\n\ */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE     are files containing lines in the above formats.  configuration-id is\n\ */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE     used to pick which line of the file to use."; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_open = udi_open; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_close = udi_close; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_attach = udi_attach; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_detach = udi_detach; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_resume = udi_resume; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_wait = udi_wait; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_fetch_registers = udi_fetch_registers; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_store_registers = udi_store_registers; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_prepare_to_store = udi_prepare_to_store; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_xfer_memory = udi_xfer_inferior_memory; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_files_info = udi_files_info; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_insert_breakpoint = udi_insert_breakpoint; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_remove_breakpoint = udi_remove_breakpoint; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_terminal_init = 0; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_terminal_inferior = 0; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_terminal_ours_for_output = 0; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_terminal_ours = 0; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_terminal_info = 0; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_kill = udi_kill; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_load = udi_load; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_lookup_symbol = 0; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_create_inferior = udi_create_inferior; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_mourn_inferior = udi_mourn; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_can_run = 0; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_notice_signals = 0; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_thread_alive = 0; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_stop = 0; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_stratum = process_stratum; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.DONT_USE = 0; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_has_all_memory = 1; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_has_memory = 1; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_has_stack = 1; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_has_registers = 1; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_has_execution = 1; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_sections = 0; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_sections_end = 0; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   udi_ops.to_magic = OPS_MAGIC; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE }; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE  */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE void */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE _initialize_remote_udi (void) */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE { */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   init_udi_ops (); */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   add_target (&udi_ops); */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE } */
+end_comment
 
 end_unit
 

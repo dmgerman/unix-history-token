@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Memory-access and commands for remote es1800 processes, for GDB.    Copyright (C) 1988, 1992 Free Software Foundation, Inc.     This file is added to GDB to make it possible to do debugging via an    ES-1800 emulator. The code was originally written by Johan Holmberg    TT/SJ Ericsson Telecom AB and later modified by Johan Henriksson    TT/SJ. It was modified for gdb 4.0 by TX/DK Jan Nordenand by TX/DKG    Harald Johansen.  This file is part of GDB.  GDB is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GDB is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Memory-access and commands for remote es1800 processes, for GDB.     Copyright 1988, 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000,    2001, 2002 Free Software Foundation, Inc.     This file is added to GDB to make it possible to do debugging via an    ES-1800 emulator. The code was originally written by Johan Holmberg    TT/SJ Ericsson Telecom AB and later modified by Johan Henriksson    TT/SJ. It was modified for gdb 4.0 by TX/DK Jan Nordenand by TX/DKG    Harald Johansen.     This file is part of GDB.     GDB is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     GDB is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* Emulator communication protocol.    All values are encoded in ascii hex digits.          Request Command Reply 	read registers: DR<cr>      - 0 -    - 1 -    - 2 -    - 3 -      - 4 -    - 5 -    -- 6 -   - 7 -  D = XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX   XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX A = XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX   XXXXXXXX XXXXXXXX XXXXXXXX      PC = XXXXXX       SSP = XXXXXX    USP = XXXXXX     SR = XXXXXXXX> Each byte of register data is described by two hex digits.  	write regs D0=XXXXXXXX<cr>>D1=XXXXXXXX<cr>>D2=XXXXXXXX<cr>>D3=XXXXXXXX<cr>>D4=XXXXXXXX<cr>>D5=XXXXXXXX<cr>>D6=XXXXXXXX<cr>>D7=XXXXXXXX<cr>>A0=XXXXXXXX<cr>>A1=XXXXXXXX<cr>>A2=XXXXXXXX<cr>>A3=XXXXXXXX<cr>>A4=XXXXXXXX<cr>>A5=XXXXXXXX<cr>>A6=XXXXXXXX<cr>>A7=XXXXXXXX<cr>>SR=XXXXXXXX<cr>>PC=XXXXXX<cr>> Each byte of register data is described by two hex digits.  	read mem @.BAA..AA $FFFFFFXX> AA..AA is address, XXXXXXX is the contents  	write mem 	@.BAA..AA=$XXXXXXXX> AA..AA is address, XXXXXXXX is data  	cont PC=$AA..AA>RBK R> AA..AA is address to resume. If AA..AA is omitted, resume at same address.  	step PC=$AA..AA>STP R> AA..AA is address to resume. If AA..AA is omitted, resume at same address.  	kill req STP> */
+comment|/* Emulator communication protocol.    All values are encoded in ascii hex digits.     Request    Command    Reply    read registers:    DR<cr>    - 0 -    - 1 -    - 2 -    - 3 -      - 4 -    - 5 -    -- 6 -   - 7 -     D = XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX   XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX    A = XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX   XXXXXXXX XXXXXXXX XXXXXXXX     PC = XXXXXX       SSP = XXXXXX    USP = XXXXXX     SR = XXXXXXXX>    Each byte of register data is described by two hex digits.     write regs    D0=XXXXXXXX<cr>>D1=XXXXXXXX<cr>>D2=XXXXXXXX<cr>>D3=XXXXXXXX<cr>>D4=XXXXXXXX<cr>>D5=XXXXXXXX<cr>>D6=XXXXXXXX<cr>>D7=XXXXXXXX<cr>>A0=XXXXXXXX<cr>>A1=XXXXXXXX<cr>>A2=XXXXXXXX<cr>>A3=XXXXXXXX<cr>>A4=XXXXXXXX<cr>>A5=XXXXXXXX<cr>>A6=XXXXXXXX<cr>>A7=XXXXXXXX<cr>>SR=XXXXXXXX<cr>>PC=XXXXXX<cr>>    Each byte of register data is described by two hex digits.     read mem    @.BAA..AA    $FFFFFFXX>    AA..AA is address, XXXXXXX is the contents     write mem    @.BAA..AA=$XXXXXXXX>    AA..AA is address, XXXXXXXX is data     cont    PC=$AA..AA>RBK    R>    AA..AA is address to resume. If AA..AA is omitted, resume at same address.     step    PC=$AA..AA>STP    R>    AA..AA is address to resume. If AA..AA is omitted, resume at same address.     kill req    STP>  */
 end_comment
 
 begin_include
@@ -88,13 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
+file|"command.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"command.h"
+file|"symfile.h"
 end_include
 
 begin_include
@@ -115,401 +115,342 @@ directive|include
 file|"serial.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"regcache.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"value.h"
+end_include
+
 begin_comment
 comment|/* Prototypes for local functions */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_child_detach
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_child_open
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_transparent
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_create_inferior
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_load
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_kill
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|verify_break
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|es1800_remove_breakpoint
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|es1800_insert_breakpoint
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_files_info
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|target_ops
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|es1800_xfer_inferior_memory
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
+name|mem_attrib
+modifier|*
+parameter_list|,
+name|struct
 name|target_ops
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_prepare_to_store
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
-name|int
+name|ptid_t
 name|es1800_wait
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-expr|struct
+parameter_list|(
+name|ptid_t
+parameter_list|,
+name|struct
 name|target_waitstatus
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_resume
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
+name|ptid_t
+parameter_list|,
 name|int
-operator|,
-name|int
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|target_signal
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_detach
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_attach
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|damn_b
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_open
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_timer
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_reset
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_request_quit
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|readchar
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|expect
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|expect_prompt
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|download
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#
@@ -518,248 +459,200 @@ literal|0
 end_if
 
 begin_endif
-unit|static void bfd_copy PARAMS ((bfd *, bfd *));
+unit|static void bfd_copy (bfd *, bfd *);
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|get_break_addr
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|fromhex
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|tohex
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_close
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_fetch_registers
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_fetch_register
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_store_register
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_read_bytes
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_write_bytes
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|send_with_reply
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|send_command
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|send
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|getmessage
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_mourn_inferior
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_create_break_insn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|es1800_init_break
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Local variables */
@@ -899,7 +792,9 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|serial_t
+name|struct
+name|serial
+modifier|*
 name|es1800_desc
 init|=
 name|NULL
@@ -987,7 +882,9 @@ begin_function
 specifier|static
 name|void
 name|es1800_request_quit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* restore original signalhandler */
 name|signal
@@ -1008,7 +905,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Reset emulator.    Sending reset character(octal 32) to emulator.    quit - return to '(esgdb)' prompt or continue	*/
+comment|/* Reset emulator.    Sending reset character(octal 32) to emulator.    quit - return to '(esgdb)' prompt or continue        */
 end_comment
 
 begin_function
@@ -1016,12 +913,10 @@ specifier|static
 name|void
 name|es1800_reset
 parameter_list|(
-name|quit
-parameter_list|)
 name|char
 modifier|*
 name|quit
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -1078,17 +973,13 @@ specifier|static
 name|void
 name|es1800_open
 parameter_list|(
-name|name
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -1138,7 +1029,7 @@ directive|ifndef
 name|DEBUG_STDIN
 name|es1800_desc
 operator|=
-name|SERIAL_OPEN
+name|serial_open
 argument_list|(
 name|name
 argument_list|)
@@ -1170,7 +1061,7 @@ argument_list|)
 expr_stmt|;
 name|es1800_saved_ttystate
 operator|=
-name|SERIAL_GET_TTY_STATE
+name|serial_get_tty_state
 argument_list|(
 name|es1800_desc
 argument_list|)
@@ -1182,9 +1073,10 @@ name|fcflag
 operator|=
 name|fcntl
 argument_list|(
+name|deprecated_serial_fd
+argument_list|(
 name|es1800_desc
-operator|->
-name|fd
+argument_list|)
 argument_list|,
 name|F_GETFL
 argument_list|,
@@ -1223,9 +1115,10 @@ if|if
 condition|(
 name|fcntl
 argument_list|(
+name|deprecated_serial_fd
+argument_list|(
 name|es1800_desc
-operator|->
-name|fd
+argument_list|)
 argument_list|,
 name|F_SETFL
 argument_list|,
@@ -1252,7 +1145,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|SERIAL_SETBAUDRATE
+name|serial_setbaudrate
 argument_list|(
 name|es1800_desc
 argument_list|,
@@ -1260,7 +1153,7 @@ name|baud_rate
 argument_list|)
 condition|)
 block|{
-name|SERIAL_CLOSE
+name|serial_close
 argument_list|(
 name|es1800_desc
 argument_list|)
@@ -1272,13 +1165,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|SERIAL_RAW
+name|serial_raw
 argument_list|(
 name|es1800_desc
 argument_list|)
 expr_stmt|;
 comment|/* If there is something sitting in the buffer we might take it as a      response to a command, which would be bad.  */
-name|SERIAL_FLUSH_INPUT
+name|serial_flush_input
 argument_list|(
 name|es1800_desc
 argument_list|)
@@ -1371,7 +1264,7 @@ expr_stmt|;
 block|}
 comment|/*  m68020 = (i==8); */
 comment|/* if eight zeros then we are in m68020 mode */
-comment|/* What kind of processor am i talking to ?*/
+comment|/* What kind of processor am i talking to ? */
 name|p
 operator|=
 name|buf
@@ -1489,7 +1382,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  Close out all files and local state before this target loses control.     quitting - are we quitting gdb now? */
+comment|/*  Close out all files and local state before this target loses control.    quitting - are we quitting gdb now? */
 end_comment
 
 begin_function
@@ -1497,11 +1390,9 @@ specifier|static
 name|void
 name|es1800_close
 parameter_list|(
-name|quitting
-parameter_list|)
 name|int
 name|quitting
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1517,7 +1408,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SERIAL_SET_TTY_STATE
+name|serial_set_tty_state
 argument_list|(
 name|es1800_desc
 argument_list|,
@@ -1535,16 +1426,17 @@ argument_list|)
 expr_stmt|;
 name|fcntl
 argument_list|(
+name|deprecated_serial_fd
+argument_list|(
 name|es1800_desc
-operator|->
-name|fd
+argument_list|)
 argument_list|,
 name|F_SETFL
 argument_list|,
 name|es1800_fc_save
 argument_list|)
 expr_stmt|;
-name|SERIAL_CLOSE
+name|serial_close
 argument_list|(
 name|es1800_desc
 argument_list|)
@@ -1561,7 +1453,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|xfree
 argument_list|(
 name|savename
 argument_list|)
@@ -1626,7 +1518,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  Attaches to a process on the target side     proc_id  - the id of the process to be attached.     from_tty - says whether to be verbose or not */
+comment|/*  Attaches to a process on the target side    proc_id  - the id of the process to be attached.    from_tty - says whether to be verbose or not */
 end_comment
 
 begin_function
@@ -1634,17 +1526,13 @@ specifier|static
 name|void
 name|es1800_attach
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|error
 argument_list|(
@@ -1657,7 +1545,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Takes a program previously attached to and detaches it.    We better not have left any breakpoints    in the program or it'll die when it hits one.    Close the open connection to the remote debugger.    Use this when you want to detach and do something else    with your gdb.      args     - arguments given to the 'detach' command    from_tty - says whether to be verbose or not */
+comment|/* Takes a program previously attached to and detaches it.    We better not have left any breakpoints    in the program or it'll die when it hits one.    Close the open connection to the remote debugger.    Use this when you want to detach and do something else    with your gdb.     args     - arguments given to the 'detach' command    from_tty - says whether to be verbose or not */
 end_comment
 
 begin_function
@@ -1665,17 +1553,13 @@ specifier|static
 name|void
 name|es1800_detach
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1714,22 +1598,16 @@ specifier|static
 name|void
 name|es1800_resume
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|step
-parameter_list|,
-name|siggnal
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|int
 name|step
-decl_stmt|;
+parameter_list|,
 name|enum
 name|target_signal
 name|siggnal
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -1783,21 +1661,17 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ptid_t
 name|es1800_wait
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|status
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|struct
 name|target_waitstatus
 modifier|*
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -2075,9 +1949,7 @@ operator|=
 name|old_timeout
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|inferior_ptid
 return|;
 block|}
 end_function
@@ -2091,11 +1963,9 @@ specifier|static
 name|void
 name|es1800_fetch_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -2311,7 +2181,9 @@ begin_function
 specifier|static
 name|void
 name|es1800_fetch_registers
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -3272,7 +3144,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Store register value, located in REGISTER, on the target processor.    regno - the register-number of the register to store            (-1 means store them all)    FIXME: Return errno value.  */
+comment|/* Store register value, located in REGISTER, on the target processor.    regno - the register-number of the register to store    (-1 means store them all)    FIXME: Return errno value.  */
 end_comment
 
 begin_function
@@ -3280,11 +3152,9 @@ specifier|static
 name|void
 name|es1800_store_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -3774,7 +3644,9 @@ begin_function
 specifier|static
 name|void
 name|es1800_prepare_to_store
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Do nothing, since we can store individual regs */
 block|}
@@ -3789,11 +3661,9 @@ specifier|static
 name|int
 name|fromhex
 parameter_list|(
-name|a
-parameter_list|)
 name|int
 name|a
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3878,11 +3748,9 @@ specifier|static
 name|int
 name|tohex
 parameter_list|(
-name|nib
-parameter_list|)
 name|int
 name|nib
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3915,7 +3783,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read or write LEN bytes from inferior memory at MEMADDR, transferring    to or from debugger address MYADDR.  Write to inferior if WRITE is    nonzero.  Returns length of data written or read; 0 for error.       memaddr - the target's address    myaddr  - gdb's address    len     - number of bytes     write   - write if != 0 otherwise read	*/
+comment|/* Read or write LEN bytes from inferior memory at MEMADDR, transferring    to or from debugger address MYADDR.  Write to inferior if WRITE is    nonzero.  Returns length of data written or read; 0 for error.      memaddr - the target's address    myaddr  - gdb's address    len     - number of bytes     write   - write if != 0 otherwise read    tops    - unused */
 end_comment
 
 begin_function
@@ -3923,35 +3791,29 @@ specifier|static
 name|int
 name|es1800_xfer_inferior_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|,
-name|tops
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|write
-decl_stmt|;
+parameter_list|,
+name|struct
+name|mem_attrib
+modifier|*
+name|attrib
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
-name|tops
-decl_stmt|;
-comment|/* Unused */
+name|target
+parameter_list|)
 block|{
 name|int
 name|origlen
@@ -4028,7 +3890,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Write memory data directly to the emulator.    This does not inform the data cache; the data cache uses this.    MEMADDR is the address in the remote memory space.    MYADDR is the address of the buffer in our space.    LEN is the number of bytes.      memaddr - the target's address    myaddr  - gdb's address    len     - number of bytes   */
+comment|/* Write memory data directly to the emulator.    This does not inform the data cache; the data cache uses this.    MEMADDR is the address in the remote memory space.    MYADDR is the address of the buffer in our space.    LEN is the number of bytes.     memaddr - the target's address    myaddr  - gdb's address    len     - number of bytes   */
 end_comment
 
 begin_function
@@ -4036,22 +3898,16 @@ specifier|static
 name|void
 name|es1800_write_bytes
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -4121,7 +3977,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read memory data directly from the emulator.    This does not use the data cache; the data cache uses this.      memaddr - the target's address    myaddr  - gdb's address    len     - number of bytes   */
+comment|/* Read memory data directly from the emulator.    This does not use the data cache; the data cache uses this.     memaddr - the target's address    myaddr  - gdb's address    len     - number of bytes   */
 end_comment
 
 begin_function
@@ -4129,22 +3985,16 @@ specifier|static
 name|void
 name|es1800_read_bytes
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -4218,8 +4068,14 @@ operator|-
 literal|1
 condition|)
 block|{
-name|abort
-argument_list|()
+name|internal_error
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"failed internal consistency check"
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -4395,7 +4251,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Information about the current target  */
+comment|/* Display information about the current target.  TOPS is unused.  */
 end_comment
 
 begin_function
@@ -4403,14 +4259,11 @@ specifier|static
 name|void
 name|es1800_files_info
 parameter_list|(
-name|tops
-parameter_list|)
 name|struct
 name|target_ops
 modifier|*
 name|tops
-decl_stmt|;
-comment|/* Unused */
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -4427,7 +4280,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* We read the contents of the target location and stash it,    then overwrite it with a breakpoint instruction.      addr           - is the target location in the target machine.    contents_cache - is a pointer to memory allocated for saving the target contents.                     It is guaranteed by the caller to be long enough to save sizeof                      BREAKPOINT bytes.      FIXME: This size is target_arch dependent and should be available in    the target_arch transfer vector, if we ever have one...  */
+comment|/* We read the contents of the target location and stash it,    then overwrite it with a breakpoint instruction.     addr           - is the target location in the target machine.    contents_cache - is a pointer to memory allocated for saving the target contents.    It is guaranteed by the caller to be long enough to save sizeof     BREAKPOINT bytes.     FIXME: This size is target_arch dependent and should be available in    the target_arch transfer vector, if we ever have one...  */
 end_comment
 
 begin_function
@@ -4435,17 +4288,13 @@ specifier|static
 name|int
 name|es1800_insert_breakpoint
 parameter_list|(
-name|addr
-parameter_list|,
-name|contents_cache
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|contents_cache
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|val
@@ -4495,7 +4344,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Write back the stashed instruction      addr           - is the target location in the target machine.    contents_cache - is a pointer to memory allocated for saving the target contents.                     It is guaranteed by the caller to be long enough to save sizeof                      BREAKPOINT bytes.	*/
+comment|/* Write back the stashed instruction     addr           - is the target location in the target machine.    contents_cache - is a pointer to memory allocated for saving the target contents.    It is guaranteed by the caller to be long enough to save sizeof     BREAKPOINT bytes.    */
 end_comment
 
 begin_function
@@ -4503,17 +4352,13 @@ specifier|static
 name|int
 name|es1800_remove_breakpoint
 parameter_list|(
-name|addr
-parameter_list|,
-name|contents_cache
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|contents_cache
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -4542,17 +4387,13 @@ specifier|static
 name|void
 name|es1800_create_break_insn
 parameter_list|(
-name|ins
-parameter_list|,
-name|vec
-parameter_list|)
 name|char
 modifier|*
 name|ins
-decl_stmt|;
+parameter_list|,
 name|int
 name|vec
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4588,11 +4429,9 @@ specifier|static
 name|int
 name|verify_break
 parameter_list|(
-name|vec
-parameter_list|)
 name|int
 name|vec
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|memaddress
@@ -4654,7 +4493,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|STRCMP
+name|strcmp
 argument_list|(
 name|instr
 argument_list|,
@@ -4673,7 +4512,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* get_break_addr ()    find address of breakpint routine    vec - trap vector used for breakpoints    addrp - store the address here	*/
+comment|/* get_break_addr ()    find address of breakpoint routine    vec - trap vector used for breakpoints    addrp - store the address here       */
 end_comment
 
 begin_function
@@ -4681,17 +4520,13 @@ specifier|static
 name|void
 name|get_break_addr
 parameter_list|(
-name|vec
-parameter_list|,
-name|addrp
-parameter_list|)
 name|int
 name|vec
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 modifier|*
 name|addrp
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|memaddress
@@ -4891,18 +4726,24 @@ begin_function
 specifier|static
 name|void
 name|es1800_kill
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
-name|inferior_pid
-operator|!=
-literal|0
+operator|!
+name|ptid_equal
+argument_list|(
+name|inferior_ptid
+argument_list|,
+name|null_ptid
+argument_list|)
 condition|)
 block|{
-name|inferior_pid
+name|inferior_ptid
 operator|=
-literal|0
+name|null_ptid
 expr_stmt|;
 name|es1800_mourn_inferior
 argument_list|()
@@ -4912,7 +4753,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Load a file to the ES1800 emulator.     Converts the file from a.out format into Extended Tekhex format    before the file is loaded.    Also loads the trap routine, and sets the ES1800 breakpoint on it    filename - the a.out to be loaded    from_tty - says whether to be verbose or not    FIXME Uses emulator overlay memory for trap routine	*/
+comment|/* Load a file to the ES1800 emulator.     Converts the file from a.out format into Extended Tekhex format    before the file is loaded.    Also loads the trap routine, and sets the ES1800 breakpoint on it    filename - the a.out to be loaded    from_tty - says whether to be verbose or not    FIXME Uses emulator overlay memory for trap routine  */
 end_comment
 
 begin_function
@@ -4920,17 +4761,13 @@ specifier|static
 name|void
 name|es1800_load
 parameter_list|(
-name|filename
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -4981,7 +4818,7 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|filename
 argument_list|)
@@ -5047,7 +4884,7 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* in the future the source code in copy (part of binutils-1.93) will 	   be included in this file */
+comment|/* in the future the source code in copy (part of binutils-1.93) will          be included in this file */
 name|sprintf
 argument_list|(
 name|buf
@@ -5080,9 +4917,9 @@ block|}
 name|breakpoint_init_inferior
 argument_list|()
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
-literal|0
+name|null_ptid
 expr_stmt|;
 if|if
 condition|(
@@ -5271,7 +5108,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-name|symbol_file_command
+name|symbol_file_add_main
 argument_list|(
 name|filename
 argument_list|,
@@ -5299,13 +5136,13 @@ value|20
 end_define
 
 begin_endif
-unit|static void bfd_copy (from_bfd, to_bfd)      bfd *from_bfd;      bfd *to_bfd; {   asection *p, *new;   int i;   char buf[NUMCPYBYTES];    for (p = from_bfd->sections; p != NULL; p = p->next)     {       printf ("  Copying section %s. Size = %x.\n", p->name, p->_cooked_size);       printf ("    vma = %x,  offset = %x,  output_sec = %x\n", 	      p->vma, p->output_offset, p->output_section);       new = bfd_make_section (to_bfd, p->name);       if (p->_cooked_size&& 	  !bfd_set_section_size (to_bfd, new, p->_cooked_size)) 	{ 	  error ("Wrong BFD size!\n"); 	}       if (!bfd_set_section_flags (to_bfd, new, p->flags)) 	{ 	  error ("bfd_set_section_flags"); 	}       new->vma = p->vma;              for (i = 0; (i + NUMCPYBYTES)< p->_cooked_size ; i += NUMCPYBYTES) 	{ 	  if (!bfd_get_section_contents (from_bfd, p, (PTR) buf, (file_ptr) i, 					(bfd_size_type) NUMCPYBYTES)) 	    { 	      error ("bfd_get_section_contents\n"); 	    } 	if (!bfd_set_section_contents (to_bfd, new, (PTR) buf, (file_ptr) i, 				      (bfd_size_type) NUMCPYBYTES)) 	  { 	    error ("bfd_set_section_contents\n"); 	  }       }       bfd_get_section_contents (from_bfd, p, (PTR) buf, (file_ptr) i, 				(bfd_size_type) (p->_cooked_size - i));       bfd_set_section_contents (to_bfd, new, (PTR) buf,(file_ptr) i, 				(bfd_size_type) (p->_cooked_size - i));     } }
+unit|static void bfd_copy (bfd *from_bfd, bfd *to_bfd) {   asection *p, *new;   int i;   char buf[NUMCPYBYTES];    for (p = from_bfd->sections; p != NULL; p = p->next)     {       printf ("  Copying section %s. Size = %x.\n", p->name, p->_cooked_size);       printf ("    vma = %x,  offset = %x,  output_sec = %x\n", 	      p->vma, p->output_offset, p->output_section);       new = bfd_make_section (to_bfd, p->name);       if (p->_cooked_size&& 	  !bfd_set_section_size (to_bfd, new, p->_cooked_size)) 	{ 	  error ("Wrong BFD size!\n"); 	}       if (!bfd_set_section_flags (to_bfd, new, p->flags)) 	{ 	  error ("bfd_set_section_flags"); 	}       new->vma = p->vma;        for (i = 0; (i + NUMCPYBYTES)< p->_cooked_size; i += NUMCPYBYTES) 	{ 	  if (!bfd_get_section_contents (from_bfd, p, (PTR) buf, (file_ptr) i, 					 (bfd_size_type) NUMCPYBYTES)) 	    { 	      error ("bfd_get_section_contents\n"); 	    } 	  if (!bfd_set_section_contents (to_bfd, new, (PTR) buf, (file_ptr) i, 					 (bfd_size_type) NUMCPYBYTES)) 	    { 	      error ("bfd_set_section_contents\n"); 	    } 	}       bfd_get_section_contents (from_bfd, p, (PTR) buf, (file_ptr) i, 				(bfd_size_type) (p->_cooked_size - i));       bfd_set_section_contents (to_bfd, new, (PTR) buf, (file_ptr) i, 				(bfd_size_type) (p->_cooked_size - i));     } }
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* Start an process on the es1800 and set inferior_pid to the new    process' pid.    execfile - the file to run    args     - arguments passed to the program    env      - the environment vector to pass	*/
+comment|/* Start an process on the es1800 and set inferior_ptid to the new    process' pid.    execfile - the file to run    args     - arguments passed to the program    env      - the environment vector to pass    */
 end_comment
 
 begin_function
@@ -5313,25 +5150,19 @@ specifier|static
 name|void
 name|es1800_create_inferior
 parameter_list|(
-name|execfile
-parameter_list|,
-name|args
-parameter_list|,
-name|env
-parameter_list|)
 name|char
 modifier|*
 name|execfile
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|env
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|entry_pt
@@ -5404,9 +5235,12 @@ name|es1800_child_ops
 argument_list|)
 expr_stmt|;
 comment|/* The "process" (board) is already stopped awaiting our commands, and      the program is already downloaded.  We just set its PC and go.  */
-name|inferior_pid
+name|inferior_ptid
 operator|=
+name|pid_to_ptid
+argument_list|(
 name|pid
+argument_list|)
 expr_stmt|;
 comment|/* Needed for wait_for_inferior below */
 name|clear_proceed_status
@@ -5451,7 +5285,9 @@ begin_function
 specifier|static
 name|void
 name|es1800_mourn_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|remove_breakpoints
 argument_list|()
@@ -5474,7 +5310,7 @@ comment|/* ES1800-protocol specific routines */
 end_comment
 
 begin_comment
-comment|/* Keep discarding input from the remote system, until STRING is found.     Let the user break out immediately.     string - the string to expect    nowait - break out if string not the emulator's first respond otherwise             read until string is found (== 0)   */
+comment|/* Keep discarding input from the remote system, until STRING is found.     Let the user break out immediately.     string - the string to expect    nowait - break out if string not the emulator's first respond otherwise    read until string is found (== 0)   */
 end_comment
 
 begin_function
@@ -5482,17 +5318,13 @@ specifier|static
 name|void
 name|expect
 parameter_list|(
-name|string
-parameter_list|,
-name|nowait
-parameter_list|)
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|,
 name|int
 name|nowait
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|c
@@ -5610,7 +5442,9 @@ begin_function
 specifier|static
 name|void
 name|expect_prompt
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|expect
 argument_list|(
@@ -5640,7 +5474,9 @@ begin_function
 specifier|static
 name|int
 name|readchar
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -5719,14 +5555,16 @@ begin_function
 specifier|static
 name|int
 name|readchar
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|ch
 decl_stmt|;
 name|ch
 operator|=
-name|SERIAL_READCHAR
+name|serial_readchar
 argument_list|(
 name|es1800_desc
 argument_list|,
@@ -5805,35 +5643,24 @@ specifier|static
 name|void
 name|send_with_reply
 parameter_list|(
-name|string
-parameter_list|,
-name|buf
-parameter_list|,
-name|len
-parameter_list|)
 name|char
 modifier|*
 name|string
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|buf
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|send
 argument_list|(
 name|string
 argument_list|)
 expr_stmt|;
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|es1800_desc
 argument_list|,
@@ -5869,7 +5696,7 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Send the command in STR to the emulator adding \r. check    the echo for consistency.     string - the es1800 command  */
@@ -5880,19 +5707,17 @@ specifier|static
 name|void
 name|send_command
 parameter_list|(
-name|string
-parameter_list|)
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|)
 block|{
 name|send
 argument_list|(
 name|string
 argument_list|)
 expr_stmt|;
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|es1800_desc
 argument_list|,
@@ -5928,12 +5753,10 @@ specifier|static
 name|void
 name|send
 parameter_list|(
-name|string
-parameter_list|)
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5950,7 +5773,7 @@ name|string
 argument_list|)
 expr_stmt|;
 block|}
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|es1800_desc
 argument_list|,
@@ -5974,17 +5797,13 @@ specifier|static
 name|void
 name|getmessage
 parameter_list|(
-name|buf
-parameter_list|,
-name|len
-parameter_list|)
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -6116,22 +5935,16 @@ specifier|static
 name|void
 name|download
 parameter_list|(
-name|instream
-parameter_list|,
-name|from_tty
-parameter_list|,
-name|format
-parameter_list|)
 name|FILE
 modifier|*
 name|instream
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|,
 name|int
 name|format
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|c
@@ -6333,7 +6146,7 @@ comment|/* Talk directly to the emulator    FIXME, uses busy wait, and is SUNOS 
 end_comment
 
 begin_comment
-comment|/*ARGSUSED*/
+comment|/*ARGSUSED */
 end_comment
 
 begin_function
@@ -6341,17 +6154,13 @@ specifier|static
 name|void
 name|es1800_transparent
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|console
@@ -6593,9 +6402,10 @@ name|fcflag
 operator|=
 name|fcntl
 argument_list|(
+name|deprecated_serial_fd
+argument_list|(
 name|es1800_desc
-operator|->
-name|fd
+argument_list|)
 argument_list|,
 name|F_GETFL
 argument_list|,
@@ -6627,9 +6437,10 @@ if|if
 condition|(
 name|fcntl
 argument_list|(
+name|deprecated_serial_fd
+argument_list|(
 name|es1800_desc
-operator|->
-name|fd
+argument_list|)
 argument_list|,
 name|F_SETFL
 argument_list|,
@@ -6714,7 +6525,7 @@ condition|(
 operator|(
 name|cc
 operator|=
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|es1800_desc
 argument_list|,
@@ -6792,9 +6603,10 @@ name|cc
 operator|=
 name|read
 argument_list|(
+name|deprecated_serial_fd
+argument_list|(
 name|es1800_desc
-operator|->
-name|fd
+argument_list|)
 argument_list|,
 name|inputbuf
 argument_list|,
@@ -6970,9 +6782,10 @@ if|if
 condition|(
 name|fcntl
 argument_list|(
+name|deprecated_serial_fd
+argument_list|(
 name|es1800_desc
-operator|->
-name|fd
+argument_list|)
 argument_list|,
 name|F_SETFL
 argument_list|,
@@ -7011,17 +6824,13 @@ specifier|static
 name|void
 name|es1800_init_break
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|memaddress
@@ -7348,17 +7157,13 @@ specifier|static
 name|void
 name|es1800_child_open
 parameter_list|(
-name|arg
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|error
 argument_list|(
@@ -7373,17 +7178,13 @@ specifier|static
 name|void
 name|es1800_child_detach
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7408,7 +7209,10 @@ name|printf
 argument_list|(
 literal|"Ending debugging the process %d.\n"
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7743,12 +7547,6 @@ expr_stmt|;
 name|es1800_ops
 operator|.
 name|to_pid_to_exec_file
-operator|=
-name|NULL
-expr_stmt|;
-name|es1800_ops
-operator|.
-name|to_core_file_to_sym_file
 operator|=
 name|NULL
 expr_stmt|;
@@ -8148,12 +7946,6 @@ name|NULL
 expr_stmt|;
 name|es1800_child_ops
 operator|.
-name|to_core_file_to_sym_file
-operator|=
-name|NULL
-expr_stmt|;
-name|es1800_child_ops
-operator|.
 name|to_stratum
 operator|=
 name|process_stratum
@@ -8218,7 +8010,9 @@ end_function
 begin_function
 name|void
 name|_initialize_es1800
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|init_es1800_ops
 argument_list|()

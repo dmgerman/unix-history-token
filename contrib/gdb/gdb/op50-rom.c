@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote target glue for the Oki op50n based eval board.     Copyright 1995 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Remote target glue for the Oki op50n based eval board.     Copyright 1995, 1998, 1999, 2000 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -33,23 +33,20 @@ directive|include
 file|"serial.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|op50n_open
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|args
-operator|,
+parameter_list|,
 name|int
 name|from_tty
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * this array of registers need to match the indexes used by GDB. The  * whole reason this exists is cause the various ROM monitors use  * different strings than GDB does, and doesn't support all the  * registers either. So, typing "info reg sp" becomes a "r30".  */
@@ -236,7 +233,7 @@ operator|.
 name|flags
 operator|=
 name|MO_CLR_BREAK_USES_ADDR
-comment|/*| MO_GETMEM_READ_SINGLE*/
+comment|/*| MO_GETMEM_READ_SINGLE */
 expr_stmt|;
 comment|/* flags */
 name|op50n_cmds
@@ -375,7 +372,7 @@ block|" ",
 comment|/* getmem.term */
 block|".\r",
 comment|/* getmem.term_cmd */
-block|} ;
+block|};
 else|#
 directive|else
 name|op50n_cmds
@@ -619,17 +616,13 @@ specifier|static
 name|void
 name|op50n_open
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|monitor_open
 argument_list|(
@@ -647,7 +640,9 @@ end_function
 begin_function
 name|void
 name|_initialize_op50n
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|init_op50n_cmds
 argument_list|()

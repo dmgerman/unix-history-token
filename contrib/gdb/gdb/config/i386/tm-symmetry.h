@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target machine definitions for GDB on a Sequent Symmetry under dynix 3.0,    with Weitek 1167 and i387 support.    Copyright 1986, 1987, 1989, 1991, 1992, 1993, 1994    Free Software Foundation, Inc.    Symmetry version by Jay Vosburgh (fubar@sequent.com).  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target machine definitions for GDB on a Sequent Symmetry under dynix 3.0,    with Weitek 1167 and i387 support.    Copyright 1986, 1987, 1989, 1991, 1992, 1993, 1994, 1995    Free Software Foundation, Inc.    Symmetry version by Jay Vosburgh (fubar@sequent.com).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -15,6 +15,18 @@ directive|define
 name|TM_SYMMETRY_H
 value|1
 end_define
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"doublest.h"
+end_include
 
 begin_comment
 comment|/* I don't know if this will work for cross-debugging, even if you do get    a copy of the right include file.  */
@@ -69,7 +81,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/* --- this code can't be used unless we know we are running native,        since it uses host specific ptrace calls. */
+comment|/* --- this code can't be used unless we know we are running native,    since it uses host specific ptrace calls. */
 end_comment
 
 begin_comment
@@ -116,7 +128,7 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|REGISTER_NAMES
+name|REGISTER_NAME
 end_undef
 
 begin_define
@@ -563,7 +575,7 @@ parameter_list|,
 name|TO
 parameter_list|)
 define|\
-value|{ \   double val; \   floatformat_to_double (&floatformat_i387_ext, (FROM),&val); \   store_floating ((TO), TYPE_LENGTH (TYPE), val); \ }
+value|{ \   DOUBLEST val; \   floatformat_to_doublest (&floatformat_i387_ext, (FROM),&val); \   store_floating ((TO), TYPE_LENGTH (TYPE), val); \ }
 end_define
 
 begin_comment
@@ -590,7 +602,7 @@ parameter_list|,
 name|TO
 parameter_list|)
 define|\
-value|{ \   double val = extract_floating ((FROM), TYPE_LENGTH (TYPE)); \   floatformat_from_double (&floatformat_i387_ext,&val, (TO)); \ }
+value|{ \   DOUBLEST val = extract_floating ((FROM), TYPE_LENGTH (TYPE)); \   floatformat_from_doublest (&floatformat_i387_ext,&val, (TO)); \ }
 end_define
 
 begin_comment
@@ -617,6 +629,12 @@ end_define
 begin_comment
 comment|/* Store the address of the place in which to copy the structure the    subroutine will return.  This is called from call_function.    Native cc passes the address in eax, gcc (up to version 2.5.8)    passes it on the stack.  gcc should be fixed in future versions to    adopt native cc conventions.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PUSH_ARGUMENTS
+end_undef
 
 begin_undef
 undef|#

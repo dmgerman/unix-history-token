@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions to make GDB run on an Alpha box under OSF1.  This is    also used by the Alpha/Netware and Alpha/Linux targets.    Copyright 1993, 1994, 1995, 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions to make GDB run on an Alpha box under OSF1.  This is    also used by the Alpha/Netware and Alpha GNU/Linux targets.     Copyright 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2002 Free    Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,12 @@ define|#
 directive|define
 name|TM_ALPHA_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
+end_include
 
 begin_include
 include|#
@@ -36,12 +42,6 @@ include|#
 directive|include
 file|"coff/symconst.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_struct_decl
 struct_decl|struct
@@ -67,33 +67,6 @@ name|symbol
 struct_decl|;
 end_struct_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TARGET_BYTE_ORDER
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|TARGET_BYTE_ORDER
-value|LITTLE_ENDIAN
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Redefine some target bit sizes from the default.  */
 end_comment
@@ -117,16 +90,6 @@ define|#
 directive|define
 name|TARGET_PTR_BIT
 value|64
-end_define
-
-begin_comment
-comment|/* Floating point is IEEE compliant */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IEEE_FLOAT
 end_define
 
 begin_comment
@@ -162,25 +125,19 @@ name|SKIP_PROLOGUE
 parameter_list|(
 name|pc
 parameter_list|)
-value|pc = alpha_skip_prologue(pc, 0)
+value|alpha_skip_prologue((pc))
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|CORE_ADDR
 name|alpha_skip_prologue
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
 name|addr
-operator|,
-name|int
-name|lenient
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Immediately after a function call, return the saved pc.    Can't always go through the frames for this because on some machines    the new frame is not set up until the new function executes    some instructions.  */
@@ -196,20 +153,17 @@ parameter_list|)
 value|alpha_saved_pc_after_call(frame)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|CORE_ADDR
 name|alpha_saved_pc_after_call
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|frame_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Are we currently handling a signal ?  */
@@ -224,8 +178,21 @@ name|pc
 parameter_list|,
 name|name
 parameter_list|)
-value|((name)&& STREQ ("__sigtramp", (name)))
+value|alpha_osf_in_sigtramp ((pc), (name))
 end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|alpha_osf_in_sigtramp
+parameter_list|(
+name|CORE_ADDR
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Stack grows downward.  */
@@ -240,7 +207,7 @@ name|lhs
 parameter_list|,
 name|rhs
 parameter_list|)
-value|((lhs)< (rhs))
+value|core_addr_lessthan ((lhs), (rhs))
 end_define
 
 begin_define
@@ -299,16 +266,29 @@ value|66
 end_define
 
 begin_comment
-comment|/* Initializer for an array of names of registers.    There should be NUM_REGS strings in this initializer.  */
+comment|/* Return the name of register REGNO.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|REGISTER_NAMES
-define|\
-value|{	"v0",	"t0",	"t1",	"t2",	"t3",	"t4",	"t5",	"t6", \ 	"t7",	"s0",	"s1",	"s2",	"s3",	"s4",	"s5",	"fp", \ 	"a0",	"a1",	"a2",	"a3",	"a4",	"a5",	"t8",	"t9", \ 	"t10",	"t11",	"ra",	"t12",	"at",	"gp",	"sp",	"zero", \ 	"f0",   "f1",   "f2",   "f3",   "f4",   "f5",   "f6",   "f7", \ 	"f8",   "f9",   "f10",  "f11",  "f12",  "f13",  "f14",  "f15", \ 	"f16",  "f17",  "f18",  "f19",  "f20",  "f21",  "f22",  "f23",\ 	"f24",  "f25",  "f26",  "f27",  "f28",  "f29",  "f30",  "f31",\ 	"pc",	"vfp",						\     }
+name|REGISTER_NAME
+parameter_list|(
+name|regno
+parameter_list|)
+value|alpha_register_name ((regno))
 end_define
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|alpha_register_name
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Register numbers of various important registers.    Note that most of these values are "real" register numbers,    and correspond to the general registers of the machine,    and FP_REGNUM is a "phony" register number which is too large    to be an actual register number as far as the user is concerned    but serves to get the desired value when passed to read_register.  */
@@ -438,6 +418,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FPCR_REGNUM
+value|63
+end_define
+
+begin_comment
+comment|/* Floating point control register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PC_REGNUM
 value|64
 end_define
@@ -465,8 +456,18 @@ parameter_list|(
 name|regno
 parameter_list|)
 define|\
-value|((regno) == FP_REGNUM || (regno) == ZERO_REGNUM)
+value|alpha_cannot_fetch_register ((regno))
 end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|alpha_cannot_fetch_register
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -476,8 +477,18 @@ parameter_list|(
 name|regno
 parameter_list|)
 define|\
-value|((regno) == FP_REGNUM || (regno) == ZERO_REGNUM)
+value|alpha_cannot_store_register ((regno))
 end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|alpha_cannot_store_register
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Total amount of space needed to store our copies of the machine's    register state, the array `registers'.  */
@@ -501,8 +512,18 @@ name|REGISTER_BYTE
 parameter_list|(
 name|N
 parameter_list|)
-value|((N) * 8)
+value|alpha_register_byte ((N))
 end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|alpha_register_byte
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Number of bytes of storage in the actual machine representation    for register N.  On Alphas, all regs are 8 bytes.  */
@@ -515,8 +536,18 @@ name|REGISTER_RAW_SIZE
 parameter_list|(
 name|N
 parameter_list|)
-value|8
+value|alpha_register_raw_size ((N))
 end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|alpha_register_raw_size
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Number of bytes of storage in the program's representation    for register N.  On Alphas, all regs are 8 bytes.  */
@@ -529,8 +560,18 @@ name|REGISTER_VIRTUAL_SIZE
 parameter_list|(
 name|N
 parameter_list|)
-value|8
+value|alpha_register_virtual_size ((N))
 end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|alpha_register_virtual_size
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Largest value REGISTER_RAW_SIZE can have.  */
@@ -555,7 +596,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* Nonzero if register N requires conversion    from raw format to virtual format.    The alpha needs a conversion between register and memory format if    the register is a floating point register and       memory format is float, as the register format must be double    or       memory format is an integer with 4 bytes or less, as the representation       of integers in floating point registers is different. */
+comment|/* Nonzero if register N requires conversion    from raw format to virtual format.    The alpha needs a conversion between register and memory format if    the register is a floating point register and    memory format is float, as the register format must be double    or    memory format is an integer with 4 bytes or less, as the representation    of integers in floating point registers is different. */
 end_comment
 
 begin_define
@@ -565,8 +606,18 @@ name|REGISTER_CONVERTIBLE
 parameter_list|(
 name|N
 parameter_list|)
-value|((N)>= FP0_REGNUM&& (N)< FP0_REGNUM + 32)
+value|alpha_register_convertible ((N))
 end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|alpha_register_convertible
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Convert data from raw format for register REGNUM in buffer FROM    to virtual format with type TYPE in buffer TO.  */
@@ -589,28 +640,25 @@ define|\
 value|alpha_register_convert_to_virtual (REGNUM, TYPE, FROM, TO)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|alpha_register_convert_to_virtual
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Convert data from virtual format with type TYPE in buffer FROM    to raw format for register REGNUM in buffer TO.  */
@@ -633,28 +681,25 @@ define|\
 value|alpha_register_convert_to_raw (TYPE, REGNUM, FROM, TO)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|alpha_register_convert_to_raw
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Return the GDB type object for the "standard" data type    of data in register N.  */
@@ -667,12 +712,22 @@ name|REGISTER_VIRTUAL_TYPE
 parameter_list|(
 name|N
 parameter_list|)
-define|\
-value|(((N)>= FP0_REGNUM&& (N)< FP0_REGNUM+32)  \ 	 ? builtin_type_double : builtin_type_long)
+value|alpha_register_virtual_type ((N))
 end_define
 
+begin_function_decl
+specifier|extern
+name|struct
+name|type
+modifier|*
+name|alpha_register_virtual_type
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-unit|\
 comment|/* Store the address of the place in which to copy the structure the    subroutine will return.  Handled by alpha_push_arguments.  */
 end_comment
 
@@ -685,7 +740,21 @@ name|addr
 parameter_list|,
 name|sp
 parameter_list|)
+define|\
+value|alpha_store_struct_return ((addr), (sp))
 end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|alpha_store_struct_return
+parameter_list|(
+name|CORE_ADDR
+parameter_list|,
+name|CORE_ADDR
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/**/
@@ -710,26 +779,23 @@ define|\
 value|alpha_extract_return_value(TYPE, REGBUF, VALBUF)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|alpha_extract_return_value
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Write into appropriate registers a function return value    of type TYPE, given in virtual format.  */
@@ -748,23 +814,20 @@ define|\
 value|alpha_store_return_value(TYPE, VALBUF)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|alpha_store_return_value
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Extract from an array REGBUF containing the (raw) register state    the address in which a function should return its structure value,    as a CORE_ADDR (or an expression that can be used as one).  */
@@ -782,8 +845,19 @@ parameter_list|(
 name|REGBUF
 parameter_list|)
 define|\
-value|(extract_address (REGBUF + REGISTER_BYTE (V0_REGNUM), \ 		    REGISTER_RAW_SIZE (V0_REGNUM)))
+value|alpha_extract_struct_value_address (REGBUF)
 end_define
+
+begin_function_decl
+specifier|extern
+name|CORE_ADDR
+name|alpha_extract_struct_value_address
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Structures are returned by ref in extra arg0 */
@@ -798,8 +872,23 @@ name|gcc_p
 parameter_list|,
 name|type
 parameter_list|)
-value|1
+define|\
+value|alpha_use_struct_convention ((gcc_p), (type))
 end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|alpha_use_struct_convention
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|type
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_escape
 end_escape
@@ -819,30 +908,27 @@ name|FRAME_CHAIN
 parameter_list|(
 name|thisframe
 parameter_list|)
-value|(CORE_ADDR) alpha_frame_chain (thisframe)
+value|alpha_frame_chain (thisframe)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|CORE_ADDR
 name|alpha_frame_chain
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|frame_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Define other aspects of the stack frame.  */
 end_comment
 
 begin_comment
-comment|/* A macro that tells us whether the function invocation represented    by FI does not have a frame on the stack associated with it.  If it    does not, FRAMELESS is set to 1, else 0.  */
+comment|/* An expression that tells us whether the function invocation represented    by FI does not have a frame on the stack associated with it. */
 end_comment
 
 begin_comment
@@ -855,10 +941,9 @@ directive|define
 name|FRAMELESS_FUNCTION_INVOCATION
 parameter_list|(
 name|FI
-parameter_list|,
-name|FRAMELESS
 parameter_list|)
-value|{(FRAMELESS) = 0;}
+define|\
+value|generic_frameless_function_invocation_not ((FI))
 end_define
 
 begin_comment
@@ -872,23 +957,20 @@ name|FRAME_SAVED_PC
 parameter_list|(
 name|FRAME
 parameter_list|)
-value|(alpha_frame_saved_pc(FRAME))
+value|alpha_frame_saved_pc(FRAME)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|CORE_ADDR
 name|alpha_frame_saved_pc
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|frame_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* The alpha has two different virtual pointers for arguments and locals.     The virtual argument pointer is pointing to the bottom of the argument    transfer area, which is located immediately below the virtual frame    pointer. Its size is fixed for the native compiler, it is either zero    (for the no arguments case) or large enough to hold all argument registers.    gcc uses a variable sized argument transfer area. As it has    to stay compatible with the native debugging tools it has to use the same    virtual argument pointer and adjust the argument offsets accordingly.     The virtual local pointer is localoff bytes below the virtual frame    pointer, the value of localoff is obtained from the PDR.  */
@@ -908,8 +990,20 @@ name|FRAME_ARGS_ADDRESS
 parameter_list|(
 name|fi
 parameter_list|)
-value|((fi)->frame - (ALPHA_NUM_ARG_REGS * 8))
+value|alpha_frame_args_address ((fi))
 end_define
+
+begin_function_decl
+specifier|extern
+name|CORE_ADDR
+name|alpha_frame_args_address
+parameter_list|(
+name|struct
+name|frame_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -918,8 +1012,20 @@ name|FRAME_LOCALS_ADDRESS
 parameter_list|(
 name|fi
 parameter_list|)
-value|((fi)->frame - (fi)->localoff)
+value|alpha_frame_locals_address ((fi))
 end_define
+
+begin_function_decl
+specifier|extern
+name|CORE_ADDR
+name|alpha_frame_locals_address
+parameter_list|(
+name|struct
+name|frame_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Return number of args passed to a frame.    Can return -1, meaning no way to tell.  */
@@ -930,11 +1036,9 @@ define|#
 directive|define
 name|FRAME_NUM_ARGS
 parameter_list|(
-name|num
-parameter_list|,
 name|fi
 parameter_list|)
-value|((num) = -1)
+value|frame_num_args_unknown ((fi))
 end_define
 
 begin_comment
@@ -952,21 +1056,6 @@ begin_comment
 comment|/* Put here the code to store, into a struct frame_saved_regs,    the addresses of the saved registers of frame described by FRAME_INFO.    This includes special registers such as pc and fp saved in special    ways in the stack frame.  sp is even more special:    the address we return for it IS the sp for the next frame.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|alpha_find_saved_regs
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|frame_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -975,8 +1064,20 @@ parameter_list|(
 name|frame_info
 parameter_list|)
 define|\
-value|do { \     if ((frame_info)->saved_regs == NULL) \       alpha_find_saved_regs (frame_info); \     (frame_info)->saved_regs[SP_REGNUM] = (frame_info)->frame; \   } while (0)
+value|alpha_frame_init_saved_regs (frame_info)
 end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|alpha_frame_init_saved_regs
+parameter_list|(
+name|struct
+name|frame_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_escape
 end_escape
@@ -1001,32 +1102,29 @@ parameter_list|,
 name|struct_addr
 parameter_list|)
 define|\
-value|sp = alpha_push_arguments((nargs), (args), (sp), (struct_return), (struct_addr))
+value|(alpha_push_arguments((nargs), (args), (sp), (struct_return), (struct_addr)))
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|CORE_ADDR
 name|alpha_push_arguments
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|value
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Push an empty stack frame, to record the current PC, etc.  */
@@ -1039,18 +1137,15 @@ name|PUSH_DUMMY_FRAME
 value|alpha_push_dummy_frame()
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|alpha_push_dummy_frame
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Discard from the stack the innermost frame, restoring all registers.  */
@@ -1063,18 +1158,15 @@ name|POP_FRAME
 value|alpha_pop_frame()
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|alpha_pop_frame
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Alpha OSF/1 inhibits execution of code on the stack.    But there is no need for a dummy on the alpha. PUSH_ARGUMENTS    takes care of all argument handling and bp_call_dummy takes care    of stopping the dummy.  */
@@ -1094,13 +1186,31 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CALL_DUMMY
-value|{ 0 }
+name|CALL_DUMMY_P
+value|(1)
 end_define
 
-begin_comment
-comment|/* Content doesn't matter. */
-end_comment
+begin_define
+define|#
+directive|define
+name|CALL_DUMMY_WORDS
+value|alpha_call_dummy_words
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|LONGEST
+name|alpha_call_dummy_words
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_CALL_DUMMY_WORDS
+value|0
+end_define
 
 begin_define
 define|#
@@ -1116,19 +1226,6 @@ name|CALL_DUMMY_BREAKPOINT_OFFSET
 value|(0)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|CORE_ADDR
-name|alpha_call_dummy_address
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -1136,6 +1233,16 @@ name|CALL_DUMMY_ADDRESS
 parameter_list|()
 value|alpha_call_dummy_address()
 end_define
+
+begin_function_decl
+specifier|extern
+name|CORE_ADDR
+name|alpha_call_dummy_address
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Insert the specified number of args and function address    into a call sequence of the above form stored at DUMMYNAME.    We only have to set RA_REGNUM to the dummy breakpoint address    and T12_REGNUM (the `procedure value register') to the function address.  */
@@ -1161,8 +1268,36 @@ parameter_list|,
 name|gcc_p
 parameter_list|)
 define|\
-value|{									\   CORE_ADDR bp_address = CALL_DUMMY_ADDRESS ();			\   if (bp_address == 0)							\     error ("no place to put call");					\   write_register (RA_REGNUM, bp_address);				\   write_register (T12_REGNUM, fun);					\ }
+value|alpha_fix_call_dummy ((dummyname), (pc), (fun), (nargs), (args), \ 			(type), (gcc_p))
 end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|alpha_fix_call_dummy
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|CORE_ADDR
+parameter_list|,
+name|CORE_ADDR
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|value
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|type
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* There's a mess in stack frame creation.  See comments in blockframe.c    near reference to INIT_FRAME_PC_FIRST.  */
@@ -1177,11 +1312,8 @@ name|fromleaf
 parameter_list|,
 name|prev
 parameter_list|)
+value|init_frame_pc_noop ((fromleaf), (prev))
 end_define
-
-begin_comment
-comment|/* nada */
-end_comment
 
 begin_define
 define|#
@@ -1193,8 +1325,22 @@ parameter_list|,
 name|prev
 parameter_list|)
 define|\
-value|(prev)->pc = ((fromleaf) ? SAVED_PC_AFTER_CALL ((prev)->next) : \ 	      (prev)->next ? FRAME_SAVED_PC ((prev)->next) : read_pc ());
+value|alpha_init_frame_pc_first ((fromleaf), (prev))
 end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|alpha_init_frame_pc_first
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|frame_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Special symbol found in blocks associated with routines.  We can hang    alpha_extra_func_info_t's off of this.  */
@@ -1207,22 +1353,19 @@ name|MIPS_EFI_SYMBOL_NAME
 value|"__GDB_EFI_INFO__"
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ecoff_relocate_efi
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|symbol
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Specific information about a procedure.    This overlays the ALPHA's PDR records,     alpharead.c (ab)uses this to save memory */
@@ -1268,37 +1411,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXTRA_FRAME_INFO
-define|\
-value|int localoff; \   int pc_reg; \   alpha_extra_func_info_t proc_desc;
-end_define
-
-begin_define
-define|#
-directive|define
 name|INIT_EXTRA_FRAME_INFO
 parameter_list|(
 name|fromleaf
 parameter_list|,
 name|fci
 parameter_list|)
-value|init_extra_frame_info(fci)
+define|\
+value|alpha_init_extra_frame_info(fromleaf, fci)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
-name|init_extra_frame_info
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+name|alpha_init_extra_frame_info
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
 name|frame_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -1307,9 +1442,20 @@ name|PRINT_EXTRA_FRAME_INFO
 parameter_list|(
 name|fi
 parameter_list|)
-define|\
-value|{ \     if (fi&& fi->proc_desc&& fi->proc_desc->pdr.framereg< NUM_REGS) \       printf_filtered (" frame pointer is at %s+%d\n", \                        REGISTER_NAME (fi->proc_desc->pdr.framereg), \                                  fi->proc_desc->pdr.frameoffset); \   }
+value|alpha_print_extra_frame_info ((fi))
 end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|alpha_print_extra_frame_info
+parameter_list|(
+name|struct
+name|frame_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* It takes two values to specify a frame on the ALPHA.  Sigh.     In fact, at the moment, the *PC* is the primary value that sets up    a frame.  The PC is looked up to see what function it's in; symbol    information from that function tells us which register is the frame    pointer base, and what offset from there is the "virtual frame pointer".    (This is usually an offset from SP.)  FIXME -- this should be cleaned    up so that the primary value is the SP, and the PC is used to disambiguate    multiple functions with the same SP that are at different stack levels. */
@@ -1327,23 +1473,20 @@ parameter_list|)
 value|setup_arbitrary_frame (argc, argv)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|frame_info
 modifier|*
 name|setup_arbitrary_frame
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* This is used by heuristic_proc_start.  It should be shot it the head.  */
@@ -1389,7 +1532,13 @@ begin_define
 define|#
 directive|define
 name|COERCE_FLOAT_TO_DOUBLE
-value|1
+parameter_list|(
+name|formal
+parameter_list|,
+name|actual
+parameter_list|)
+define|\
+value|standard_coerce_float_to_double ((formal), (actual))
 end_define
 
 begin_comment
@@ -1461,22 +1610,36 @@ define|\
 value|(alpha_osf_skip_sigtramp_frame (frame, pc))
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|CORE_ADDR
 name|alpha_osf_skip_sigtramp_frame
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|frame_info
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Single step based on where the current instruction will take us.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|alpha_software_single_step
+parameter_list|(
+name|enum
+name|target_signal
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

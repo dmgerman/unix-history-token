@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote debugging interface to m32r and mon2000 ROM monitors for GDB,     the GNU debugger.    Copyright 1996 Free Software Foundation, Inc.     Adapted by Michael Snyder of Cygnus Support.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Remote debugging interface to m32r and mon2000 ROM monitors for GDB,     the GNU debugger.    Copyright 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     Adapted by Michael Snyder of Cygnus Support.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -91,29 +91,42 @@ begin_comment
 comment|/* for ALL_OBJFILES etc. */
 end_comment
 
-begin_decl_stmt
+begin_include
+include|#
+directive|include
+file|"inferior.h"
+end_include
+
+begin_comment
+comment|/* for write_pc() */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
+end_include
+
+begin_function_decl
 specifier|extern
 name|void
 name|report_transfer_performance
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|long
-operator|,
+parameter_list|,
 name|time_t
-operator|,
+parameter_list|,
 name|time_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_MSC_VER
-end_ifndef
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * All this stuff just to get my host computer's IP address!  */
@@ -166,11 +179,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -216,26 +224,26 @@ specifier|static
 name|void
 name|m32r_load_section
 parameter_list|(
-name|abfd
-parameter_list|,
-name|s
-parameter_list|,
-name|data_count
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|,
+name|void
+modifier|*
+name|obj
+parameter_list|)
+block|{
 name|unsigned
 name|int
 modifier|*
 name|data_count
+init|=
+name|obj
 decl_stmt|;
-block|{
 if|if
 condition|(
 name|s
@@ -311,9 +319,12 @@ argument_list|)
 expr_stmt|;
 name|monitor_printf
 argument_list|(
-literal|"%x mw\r"
+literal|"%s mw\r"
 argument_list|,
+name|paddr_nz
+argument_list|(
 name|section_base
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -398,12 +409,10 @@ specifier|static
 name|int
 name|m32r_load_1
 parameter_list|(
-name|dummy
-parameter_list|)
 name|void
 modifier|*
 name|dummy
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|data_count
@@ -439,22 +448,14 @@ specifier|static
 name|void
 name|m32r_load
 parameter_list|(
-name|filename
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|extern
-name|int
-name|inferior_pid
-decl_stmt|;
 name|bfd
 modifier|*
 name|abfd
@@ -544,7 +545,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|for (s = abfd->sections; s; s = s->next)     if (s->flags& SEC_LOAD)       { 	bfd_size_type section_size = bfd_section_size (abfd, s); 	bfd_vma       section_base = bfd_section_vma  (abfd, s); 	unsigned int  buffer;  	data_count += section_size;  	printf_filtered ("Loading section %s, size 0x%lx vma ", 			 bfd_section_name (abfd, s), section_size); 	print_address_numeric (section_base, 1, gdb_stdout); 	printf_filtered ("\n");  	gdb_flush (gdb_stdout); 	monitor_printf ("%x mw\r" , section_base); 	for (i = 0; i< section_size; i += 4) 	  { 	    monitor_expect (" -> ", NULL, 0); 	    bfd_get_section_contents (abfd, s, (char *)&buffer, i, 4); 	    monitor_printf ("%x\n", buffer); 	  } 	monitor_expect (" -> ", NULL, 0); 	monitor_printf ("q\n"); 	monitor_expect_prompt (NULL, 0);       }
+block|for (s = abfd->sections; s; s = s->next)     if (s->flags& SEC_LOAD)       { 	bfd_size_type section_size = bfd_section_size (abfd, s); 	bfd_vma section_base = bfd_section_vma (abfd, s); 	unsigned int buffer;  	data_count += section_size;  	printf_filtered ("Loading section %s, size 0x%lx vma ", 			 bfd_section_name (abfd, s), section_size); 	print_address_numeric (section_base, 1, gdb_stdout); 	printf_filtered ("\n"); 	gdb_flush (gdb_stdout); 	monitor_printf ("%x mw\r", section_base); 	for (i = 0; i< section_size; i += 4) 	  { 	    monitor_expect (" -> ", NULL, 0); 	    bfd_get_section_contents (abfd, s, (char *)&buffer, i, 4); 	    monitor_printf ("%x\n", buffer); 	  } 	monitor_expect (" -> ", NULL, 0); 	monitor_printf ("q\n"); 	monitor_expect_prompt (NULL, 0);       }
 else|#
 directive|else
 if|if
@@ -612,9 +613,9 @@ name|exec_bfd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
-literal|0
+name|null_ptid
 expr_stmt|;
 comment|/* No process now */
 comment|/* This is necessary because many things were based on the PC at the      time that we attached to the monitor, which is no longer valid      now that we have loaded new code (and just changed the PC).      Another way to do this might be to call normal_stop, except that      the stack may not be valid, and things would get horribly      confused... */
@@ -629,17 +630,13 @@ specifier|static
 name|void
 name|m32r_load_gen
 parameter_list|(
-name|filename
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|generic_load
 argument_list|(
@@ -651,41 +648,35 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|m32r_open
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|args
-operator|,
+parameter_list|,
 name|int
 name|from_tty
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|mon2000_open
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|args
-operator|,
+parameter_list|,
 name|int
 name|from_tty
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* This array of registers needs to match the indexes used by GDB. The    whole reason this exists is because the various ROM monitors use    different names than GDB does, and don't support all the registers    either. So, typing "info reg sp" becomes an "A7". */
@@ -746,7 +737,7 @@ block|,
 literal|"accl"
 block|,
 literal|"acch"
-block|,  }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -755,28 +746,20 @@ specifier|static
 name|void
 name|m32r_supply_register
 parameter_list|(
+name|char
+modifier|*
 name|regname
 parameter_list|,
+name|int
 name|regnamelen
 parameter_list|,
+name|char
+modifier|*
 name|val
 parameter_list|,
+name|int
 name|vallen
 parameter_list|)
-name|char
-modifier|*
-name|regname
-decl_stmt|;
-name|int
-name|regnamelen
-decl_stmt|;
-name|char
-modifier|*
-name|val
-decl_stmt|;
-name|int
-name|vallen
-decl_stmt|;
 block|{
 name|int
 name|regno
@@ -850,22 +833,22 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|val
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|strchr
 argument_list|(
 name|val
 argument_list|,
 literal|':'
 argument_list|)
-condition|)
+expr_stmt|;
 comment|/* skip past ':' to get 2nd word */
+if|if
+condition|(
+name|val
+operator|!=
+name|NULL
+condition|)
 name|monitor_supply_register
 argument_list|(
 name|ACCL_REGNUM
@@ -1539,17 +1522,13 @@ specifier|static
 name|void
 name|m32r_open
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|monitor_open
 argument_list|(
@@ -1958,17 +1937,13 @@ specifier|static
 name|void
 name|mon2000_open
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|monitor_open
 argument_list|(
@@ -1983,12 +1958,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_MSC_VER
-end_ifndef
-
 begin_comment
 comment|/* Function: set_board_address    Tell the BootOne monitor what it's ethernet IP address is. */
 end_comment
@@ -1998,17 +1967,13 @@ specifier|static
 name|void
 name|m32r_set_board_address
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|resp_len
@@ -2066,17 +2031,13 @@ specifier|static
 name|void
 name|m32r_set_server_address
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|resp_len
@@ -2134,17 +2095,13 @@ specifier|static
 name|void
 name|m32r_set_download_path
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|resp_len
@@ -2198,17 +2155,13 @@ specifier|static
 name|void
 name|m32r_upload_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd
 modifier|*
@@ -2224,10 +2177,6 @@ decl_stmt|,
 name|end_time
 decl_stmt|;
 comment|/* for timing of download */
-specifier|extern
-name|int
-name|inferior_pid
-decl_stmt|;
 name|int
 name|resp_len
 decl_stmt|,
@@ -2364,7 +2313,7 @@ expr_stmt|;
 comment|/* delete trailing junk */
 name|board_addr
 operator|=
-name|strsave
+name|xstrdup
 argument_list|(
 name|myIPaddress
 argument_list|)
@@ -2515,13 +2464,14 @@ name|download_path
 operator|==
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|current_directory
 condition|)
 name|download_path
 operator|=
-name|strsave
+name|xstrdup
 argument_list|(
 name|current_directory
 argument_list|)
@@ -2532,6 +2482,7 @@ argument_list|(
 literal|"Need to know default download path (use 'set download-path')"
 argument_list|)
 expr_stmt|;
+block|}
 name|start_time
 operator|=
 name|time
@@ -2705,8 +2656,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|abfd
 operator|=
 name|bfd_openr
@@ -2715,6 +2664,12 @@ name|args
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|abfd
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* Download is done -- print section statistics */
@@ -2852,9 +2807,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|inferior_pid
+name|inferior_ptid
 operator|=
-literal|0
+name|null_ptid
 expr_stmt|;
 comment|/* No process now */
 comment|/* This is necessary because many things were based on the PC at the      time that we attached to the monitor, which is no longer valid      now that we have loaded new code (and just changed the PC).      Another way to do this might be to call normal_stop, except that      the stack may not be valid, and things would get horribly      confused... */
@@ -2864,19 +2819,12 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! _MSC_VER */
-end_comment
-
 begin_function
 name|void
 name|_initialize_m32r_rom
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Initialize m32r RevC monitor target */
 name|init_m32r_cmds
@@ -2972,9 +2920,6 @@ operator|&
 name|mon2000_ops
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|_MSC_VER
 name|add_show_from_set
 argument_list|(
 name|add_set_cmd
@@ -3078,8 +3023,6 @@ argument_list|,
 literal|"test upload command."
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

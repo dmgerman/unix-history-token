@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Common things used by the various *gnu-nat.c files    Copyright (C) 1995, 1996 Free Software Foundation, Inc.  Written by Miles Bader<miles@gnu.ai.mit.edu>  The GNU Hurd is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  The GNU Hurd is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Common things used by the various *gnu-nat.c files    Copyright 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.     Written by Miles Bader<miles@gnu.ai.mit.edu>     The GNU Hurd is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2, or (at    your option) any later version.     The GNU Hurd is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -59,6 +59,22 @@ name|inf
 parameter_list|,
 name|int
 name|tid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Makes sure that INF's thread list is synced with the actual process.  */
+end_comment
+
+begin_function_decl
+name|int
+name|inf_update_procs
+parameter_list|(
+name|struct
+name|inf
+modifier|*
+name|inf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -142,7 +158,7 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* We happen to know it's actually dead. */
-comment|/* Bit mask of registers fetched by gdb.  This is used when we re-fetch      STATE after aborting the thread, to detect that gdb may have out-of-date      information.  */
+comment|/* Bit mask of registers fetched by gdb.  This is used when we re-fetch        STATE after aborting the thread, to detect that gdb may have out-of-date        information.  */
 name|unsigned
 name|long
 name|fetched_regs
@@ -206,6 +222,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Make sure that the state field in PROC is up to date, and return a    pointer to it, or 0 if something is wrong.  If WILL_MODIFY is true,    makes sure that the thread is stopped and aborted first, and sets    the state_changed field in PROC to true.  */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|thread_state_t
@@ -218,6 +238,24 @@ name|proc
 parameter_list|,
 name|int
 name|will_modify
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return printable description of proc.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|proc_string
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|proc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -238,12 +276,6 @@ define|\
 value|do { struct proc *__proc = (_proc); \        debug ("{proc %d/%d %p}: " msg, \ 	      __proc_pid (__proc), __proc->tid, __proc , ##args); } while (0)
 end_define
 
-begin_if
-if|#
-directive|if
-name|MAINTENANCE_CMDS
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -262,31 +294,8 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do { if (gnu_debug_flag) \         fprintf (stderr, "%s: " msg "\r\n", __FUNCTION__ , ##args); } while (0)
+value|do { if (gnu_debug_flag) \         fprintf_unfiltered (gdb_stdlog, "%s: " msg "\r\n", __FUNCTION__ , ##args); } while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|debug
-parameter_list|(
-name|msg
-parameter_list|,
-name|args
-modifier|...
-parameter_list|)
-value|(void)0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

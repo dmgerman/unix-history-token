@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent code for BSD Unix running on i386's, for GDB.    Copyright 1988, 1989, 1991, 1992, 1994, 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Native-dependent code for BSD Unix running on i386's, for GDB.    Copyright 1988, 1989, 1991, 1992, 1994, 1995, 1996, 1998, 1999, 2000,    2001 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -45,15 +45,29 @@ directive|include
 file|"inferior.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"gdbcore.h"
+end_include
+
+begin_comment
+comment|/* for registers_fetched() */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
+end_include
+
 begin_function
 name|void
 name|fetch_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|reg
@@ -63,7 +77,10 @@ name|ptrace
 argument_list|(
 name|PT_GETREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -103,11 +120,9 @@ begin_function
 name|void
 name|store_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|reg
@@ -136,7 +151,10 @@ name|ptrace
 argument_list|(
 name|PT_SETREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -170,27 +188,19 @@ begin_function
 name|void
 name|fetch_core_registers
 parameter_list|(
-name|core_reg_sect
-parameter_list|,
-name|core_reg_size
-parameter_list|,
-name|which
-parameter_list|,
-name|ignore
-parameter_list|)
 name|char
 modifier|*
 name|core_reg_sect
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|core_reg_size
-decl_stmt|;
+parameter_list|,
 name|int
 name|which
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|ignore
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|md_core
@@ -390,16 +400,12 @@ begin_function
 name|int
 name|i386_register_u_addr
 parameter_list|(
+name|int
 name|blockend
 parameter_list|,
+name|int
 name|regnum
 parameter_list|)
-name|int
-name|blockend
-decl_stmt|;
-name|int
-name|regnum
-decl_stmt|;
 block|{
 comment|/* The following condition is a kludge to get at the proper register map      depending upon the state of pcb_flag.      The proper condition would be      if (u.u_pcb.pcb_flag& FM_TRAP)      but that would require a ptrace call here and wouldn't work      for corefiles.  */
 if|if
@@ -676,19 +682,15 @@ specifier|static
 name|void
 name|print_387_status
 parameter_list|(
-name|status
-parameter_list|,
-name|ep
-parameter_list|)
 name|unsigned
 name|short
 name|status
-decl_stmt|;
+parameter_list|,
 name|struct
 name|env387
 modifier|*
 name|ep
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1016,7 +1018,9 @@ end_function
 
 begin_macro
 name|i386_float_info
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -1067,13 +1071,9 @@ name|unsigned
 name|int
 name|rounded_size
 decl_stmt|;
-comment|/*extern int corechan;*/
+comment|/*extern int corechan; */
 name|int
 name|skip
-decl_stmt|;
-specifier|extern
-name|int
-name|inferior_pid
 decl_stmt|;
 name|uaddr
 operator|=
@@ -1096,7 +1096,13 @@ name|u
 expr_stmt|;
 if|if
 condition|(
-name|inferior_pid
+operator|!
+name|ptid_equal
+argument_list|(
+name|inferior_ptid
+argument_list|,
+name|null_ptid
+argument_list|)
 condition|)
 block|{
 name|int
@@ -1179,7 +1185,10 @@ name|ptrace
 argument_list|(
 name|PT_READ_U
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|caddr_t
@@ -1209,7 +1218,7 @@ return|return;
 if|#
 directive|if
 literal|0
-block|if (lseek (corechan, uaddr, 0)< 0) 	perror_with_name ("seek on core file");       if (myread (corechan, buf, sizeof (struct fpstate))< 0)  	perror_with_name ("read from core file");       skip = 0;
+block|if (lseek (corechan, uaddr, 0)< 0) 	perror_with_name ("seek on core file");       if (myread (corechan, buf, sizeof (struct fpstate))< 0) 	  perror_with_name ("read from core file");       skip = 0;
 endif|#
 directive|endif
 block|}
@@ -1231,7 +1240,9 @@ end_block
 begin_function
 name|int
 name|kernel_u_size
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent code for ptx 4.0    Copyright 1988, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Native-dependent code for ptx 4.0    Copyright 1988, 1989, 1991, 1992, 1994, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"gdbcore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
 end_include
 
 begin_include
@@ -46,19 +52,27 @@ file|<fcntl.h>
 end_include
 
 begin_comment
-comment|/*  Given a pointer to a general register set in /proc format (gregset_t *),     unpack the register contents and supply them as gdb's idea of the current     register values. */
+comment|/* Prototypes for supply_gregset etc. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"gregset.h"
+end_include
+
+begin_comment
+comment|/*  Given a pointer to a general register set in /proc format (gregset_t *),    unpack the register contents and supply them as gdb's idea of the current    register values. */
 end_comment
 
 begin_function
 name|void
 name|supply_gregset
 parameter_list|(
-name|gregsetp
-parameter_list|)
 name|gregset_t
 modifier|*
 name|gregsetp
-decl_stmt|;
+parameter_list|)
 block|{
 name|supply_register
 argument_list|(
@@ -247,25 +261,16 @@ begin_function
 name|void
 name|fill_gregset
 parameter_list|(
-name|gregsetp
-parameter_list|,
-name|regno
-parameter_list|)
 name|gregset_t
 modifier|*
 name|gregsetp
-decl_stmt|;
+parameter_list|,
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regi
-decl_stmt|;
-specifier|extern
-name|char
-name|registers
-index|[]
 decl_stmt|;
 for|for
 control|(
@@ -324,29 +329,18 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FP0_REGNUM
-argument_list|)
-end_if
-
 begin_comment
-comment|/*  Given a pointer to a floating point register set in /proc format     (fpregset_t *), unpack the register contents and supply them as gdb's     idea of the current floating point register values. */
+comment|/*  Given a pointer to a floating point register set in /proc format    (fpregset_t *), unpack the register contents and supply them as gdb's    idea of the current floating point register values. */
 end_comment
 
 begin_function
 name|void
 name|supply_fpregset
 parameter_list|(
-name|fpregsetp
-parameter_list|)
 name|fpregset_t
 modifier|*
 name|fpregsetp
-decl_stmt|;
+parameter_list|)
 block|{
 name|supply_fpu_registers
 argument_list|(
@@ -378,24 +372,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*  Given a pointer to a floating point register set in /proc format     (fpregset_t *), update the register specified by REGNO from gdb's idea     of the current floating point register set.  If REGNO is -1, update     them all. */
+comment|/*  Given a pointer to a floating point register set in /proc format    (fpregset_t *), update the register specified by REGNO from gdb's idea    of the current floating point register set.  If REGNO is -1, update    them all. */
 end_comment
 
 begin_function
 name|void
 name|fill_fpregset
 parameter_list|(
-name|fpregsetp
-parameter_list|,
-name|regno
-parameter_list|)
 name|fpregset_t
 modifier|*
 name|fpregsetp
-decl_stmt|;
+parameter_list|,
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regi
@@ -408,23 +398,9 @@ name|char
 modifier|*
 name|from
 decl_stmt|;
-specifier|extern
-name|char
-name|registers
-index|[]
-decl_stmt|;
 comment|/* FIXME: see m68k-tdep.c for an example, for the m68k. */
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined (FP0_REGNUM) */
-end_comment
 
 begin_comment
 comment|/*  * This doesn't quite do the same thing as the procfs.c version, but give  * it the same name so we don't have to put an ifdef in solib.c.  */
@@ -434,31 +410,21 @@ begin_comment
 comment|/* this could use elf_interpreter() from elfread.c */
 end_comment
 
-begin_function_decl
+begin_function
 name|int
 name|proc_iterate_over_mappings
 parameter_list|(
-name|func
-parameter_list|)
-function_decl|int
-parameter_list|(
-function_decl|*func
-end_function_decl
-
-begin_expr_stmt
-unit|)
-name|PARAMS
-argument_list|(
-operator|(
 name|int
-operator|,
+function_decl|(
+modifier|*
+name|func
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+parameter_list|)
 block|{
 name|vaddr_t
 name|curseg
@@ -500,8 +466,8 @@ index|[
 name|NBPG
 index|]
 decl_stmt|;
-comment|/* 	 * The following is really vile.  We can get the name of the 	 * shared library from the exec_bfd, and we can get a list of 	 * each virtual memory segment, but there is no simple way to 	 * find the mapped segment from the shared library (ala 	 * procfs's PIOCOPENMEM).  As a pretty nasty kludge, we 	 * compare the virtual memory segment to the contents of the 	 * .interp file.  If they match, we assume that we've got the 	 * right one. 	 */
-comment|/* 	 * TODO: for attach, use XPT_OPENT to get the executable, in 	 * case we're attached without knowning the executable's 	 * filename. 	 */
+comment|/*    * The following is really vile.  We can get the name of the    * shared library from the exec_bfd, and we can get a list of    * each virtual memory segment, but there is no simple way to    * find the mapped segment from the shared library (ala    * procfs's PIOCOPENMEM).  As a pretty nasty kludge, we    * compare the virtual memory segment to the contents of the    * .interp file.  If they match, we assume that we've got the    * right one.    */
+comment|/*    * TODO: for attach, use XPT_OPENT to get the executable, in    * case we're attached without knowning the executable's    * filename.    */
 ifdef|#
 directive|ifdef
 name|VERBOSE_DEBUG
@@ -622,7 +588,10 @@ name|ptrace
 argument_list|(
 name|PT_NEXT_VSEG
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|&
 name|pv
@@ -798,7 +767,10 @@ name|ptrace
 argument_list|(
 name|PT_RDATA_PAGE
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 name|buf2
 argument_list|,
@@ -878,7 +850,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

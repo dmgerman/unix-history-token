@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Sequent Symmetry host interface, for GDB when running under Unix.    Copyright 1986, 1987, 1989, 1991, 1992, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Sequent Symmetry host interface, for GDB when running under Unix.    Copyright 1986, 1987, 1989, 1991, 1992, 1993, 1994, 1995, 1999, 2000,    2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"target.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
 end_include
 
 begin_comment
@@ -173,11 +179,9 @@ begin_function
 name|void
 name|store_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|pt_regset
@@ -186,17 +190,15 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-specifier|extern
-name|char
-name|registers
-index|[]
-decl_stmt|;
 comment|/* FIXME: Fetching the registers is a kludge to initialize all elements      in the fpu and fpa status. This works for normal debugging, but      might cause problems when calling functions in the inferior.      At least fpu_control and fpa_pcr (probably more) should be added       to the registers array to solve this properly.  */
 name|mptrace
 argument_list|(
 name|XPT_RREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -615,7 +617,10 @@ name|mptrace
 argument_list|(
 name|XPT_WREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -633,11 +638,9 @@ begin_function
 name|void
 name|fetch_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -646,11 +649,6 @@ name|struct
 name|pt_regset
 name|regs
 decl_stmt|;
-specifier|extern
-name|char
-name|registers
-index|[]
-decl_stmt|;
 name|registers_fetched
 argument_list|()
 expr_stmt|;
@@ -658,7 +656,10 @@ name|mptrace
 argument_list|(
 name|XPT_RREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1087,38 +1088,31 @@ begin_expr_stmt
 specifier|static
 name|print_fpu_status
 argument_list|(
-argument|ep
+argument|struct pt_regset ep
 argument_list|)
-expr|struct
-name|pt_regset
-name|ep
-expr_stmt|;
-end_expr_stmt
-
-begin_block
 block|{
 name|int
 name|i
-decl_stmt|;
+block|;
 name|int
 name|bothstatus
-decl_stmt|;
+block|;
 name|int
 name|top
-decl_stmt|;
+block|;
 name|int
 name|fpreg
-decl_stmt|;
+block|;
 name|unsigned
 name|char
-modifier|*
+operator|*
 name|p
-decl_stmt|;
+block|;
 name|printf_unfiltered
 argument_list|(
 literal|"80387:"
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|ep
@@ -1137,6 +1131,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_expr_stmt
+
+begin_else
 else|else
 block|{
 name|printf_unfiltered
@@ -1145,6 +1142,9 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_else
+
+begin_if
 if|if
 condition|(
 name|ep
@@ -1166,6 +1166,9 @@ name|fpu_status
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_expr_stmt
 name|print_387_control_word
 argument_list|(
 name|ep
@@ -1175,11 +1178,17 @@ operator|.
 name|fpu_control
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"last exception: "
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"opcode 0x%x; "
@@ -1191,6 +1200,9 @@ operator|.
 name|fpu_rsvd4
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"pc 0x%x:0x%x; "
@@ -1208,6 +1220,9 @@ operator|.
 name|fpu_ip
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"operand 0x%x:0x%x\n"
@@ -1225,6 +1240,9 @@ operator|.
 name|fpu_op_sel
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|top
 operator|=
 operator|(
@@ -1239,11 +1257,17 @@ operator|)
 operator|&
 literal|7
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"regno  tag  msb              lsb  value\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|fpreg
@@ -1393,6 +1417,9 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
+end_for
+
+begin_if
 if|if
 condition|(
 name|ep
@@ -1412,6 +1439,9 @@ operator|.
 name|fpu_rsvd1
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|ep
@@ -1431,6 +1461,9 @@ operator|.
 name|fpu_rsvd2
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|ep
@@ -1450,6 +1483,9 @@ operator|.
 name|fpu_rsvd3
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|ep
@@ -1469,34 +1505,25 @@ operator|.
 name|fpu_rsvd5
 argument_list|)
 expr_stmt|;
-block|}
-end_block
+end_if
 
-begin_macro
-name|print_1167_control_word
-argument_list|(
-argument|pcr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_expr_stmt
+unit|}   print_1167_control_word
+operator|(
 name|unsigned
 name|int
 name|pcr
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+operator|)
 block|{
 name|int
 name|pcr_tmp
-decl_stmt|;
+block|;
 name|pcr_tmp
 operator|=
 name|pcr
 operator|&
 name|FPA_PCR_MODE
-expr_stmt|;
+block|;
 name|printf_unfiltered
 argument_list|(
 literal|"\tMODE= %#x; RND= %#x "
@@ -1507,7 +1534,7 @@ name|pcr_tmp
 operator|&
 literal|12
 argument_list|)
-expr_stmt|;
+block|;
 switch|switch
 condition|(
 name|pcr_tmp
@@ -1561,6 +1588,9 @@ operator|&
 literal|2
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 literal|0
@@ -1584,12 +1614,18 @@ literal|"(toward zero)\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_expr_stmt
 name|pcr_tmp
 operator|=
 name|pcr
 operator|&
 name|FPA_PCR_EM
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"\tEM= %#x"
@@ -1597,6 +1633,9 @@ argument_list|,
 name|pcr_tmp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1608,6 +1647,9 @@ argument_list|(
 literal|" DM"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1619,6 +1661,9 @@ argument_list|(
 literal|" UOM"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1630,6 +1675,9 @@ argument_list|(
 literal|" PM"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1641,6 +1689,9 @@ argument_list|(
 literal|" UM"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1652,6 +1703,9 @@ argument_list|(
 literal|" OM"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1663,6 +1717,9 @@ argument_list|(
 literal|" ZM"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1674,15 +1731,24 @@ argument_list|(
 literal|" IM"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|pcr_tmp
 operator|=
 name|FPA_PCR_CC
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"\tCC= %#x"
@@ -1690,6 +1756,9 @@ argument_list|,
 name|pcr_tmp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1701,6 +1770,9 @@ argument_list|(
 literal|" 20MHZ"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1712,6 +1784,9 @@ argument_list|(
 literal|" Z"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1723,10 +1798,19 @@ argument_list|(
 literal|" C2"
 argument_list|)
 expr_stmt|;
-comment|/* Dynix defines FPA_PCR_CC_C0 to 0x100 and ptx defines        FPA_PCR_CC_C1 to 0x100.  Use whichever is defined and assume        the OS knows what it is doing.  */
+end_if
+
+begin_comment
+comment|/* Dynix defines FPA_PCR_CC_C0 to 0x100 and ptx defines      FPA_PCR_CC_C1 to 0x100.  Use whichever is defined and assume      the OS knows what it is doing.  */
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|FPA_PCR_CC_C1
+end_ifdef
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1738,8 +1822,14 @@ argument_list|(
 literal|" C1"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1751,8 +1841,14 @@ argument_list|(
 literal|" C0"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_switch
 switch|switch
 condition|(
 name|pcr_tmp
@@ -1824,17 +1920,26 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+end_switch
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|pcr_tmp
 operator|=
 name|pcr
 operator|&
 name|FPA_PCR_AE
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"\tAE= %#x"
@@ -1842,6 +1947,9 @@ argument_list|,
 name|pcr_tmp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1853,6 +1961,9 @@ argument_list|(
 literal|" DE"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1864,6 +1975,9 @@ argument_list|(
 literal|" UOE"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1875,6 +1989,9 @@ argument_list|(
 literal|" PE"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1886,6 +2003,9 @@ argument_list|(
 literal|" UE"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1897,6 +2017,9 @@ argument_list|(
 literal|" OE"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1908,6 +2031,9 @@ argument_list|(
 literal|" ZE"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1919,6 +2045,9 @@ argument_list|(
 literal|" EE"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|pcr_tmp
@@ -1930,60 +2059,52 @@ argument_list|(
 literal|" IE"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|printf_unfiltered
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
-end_block
+end_expr_stmt
 
-begin_macro
-name|print_1167_regs
-argument_list|(
-argument|regs
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_expr_stmt
+unit|}  print_1167_regs
+operator|(
 name|long
 name|regs
 index|[
 name|FPA_NREGS
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+operator|)
 block|{
 name|int
 name|i
-decl_stmt|;
-union|union
+block|;
+expr|union
 block|{
 name|double
 name|d
-decl_stmt|;
+block|;
 name|long
 name|l
 index|[
 literal|2
 index|]
-decl_stmt|;
-block|}
+block|;     }
 name|xd
-union|;
-union|union
+block|;
+expr|union
 block|{
 name|float
 name|f
-decl_stmt|;
+block|;
 name|long
 name|l
-decl_stmt|;
-block|}
+block|;     }
 name|xf
-union|;
+block|;
 for|for
 control|(
 name|i
@@ -2041,6 +2162,9 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_else
 else|else
 block|{
 name|xd
@@ -2079,23 +2203,15 @@ name|d
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-block|}
-end_block
+end_else
 
 begin_macro
+unit|} }
 name|print_fpa_status
 argument_list|(
-argument|ep
+argument|struct pt_regset ep
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|struct
-name|pt_regset
-name|ep
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -2161,12 +2277,12 @@ comment|/* disabled because it doesn't go through the target vector.  */
 end_comment
 
 begin_comment
-unit|i386_float_info () {   char ubuf[UPAGES*NBPG];   struct pt_regset regset;    if (have_inferior_p())     {       PTRACE_READ_REGS (inferior_pid, (PTRACE_ARG3_TYPE)&regset);     }   else     {       int corechan = bfd_cache_lookup (core_bfd);       if (lseek (corechan, 0, 0)< 0) 	{ 	  perror ("seek on core file"); 	}       if (myread (corechan, ubuf, UPAGES*NBPG)< 0) 	{ 	  perror ("read on core file"); 	}
+unit|i386_float_info (void) {   char ubuf[UPAGES * NBPG];   struct pt_regset regset;    if (have_inferior_p ())     {       PTRACE_READ_REGS (PIDGET (inferior_ptid), (PTRACE_ARG3_TYPE)& regset);     }   else     {       int corechan = bfd_cache_lookup (core_bfd);       if (lseek (corechan, 0, 0)< 0) 	{ 	  perror ("seek on core file"); 	}       if (myread (corechan, ubuf, UPAGES * NBPG)< 0) 	{ 	  perror ("read on core file"); 	}
 comment|/* only interested in the floating point registers */
 end_comment
 
 begin_endif
-unit|regset.pr_fpu = ((struct user *) ubuf)->u_fpusave;       regset.pr_fpa = ((struct user *) ubuf)->u_fpasave;     }   print_fpu_status(regset);   print_fpa_status(regset); }
+unit|regset.pr_fpu = ((struct user *) ubuf)->u_fpusave;       regset.pr_fpa = ((struct user *) ubuf)->u_fpasave;     }   print_fpu_status (regset);   print_fpa_status (regset); }
 endif|#
 directive|endif
 end_endif
@@ -2180,7 +2296,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*ARGSUSED*/
+comment|/*ARGSUSED */
 end_comment
 
 begin_comment
@@ -2191,11 +2307,9 @@ begin_function
 name|void
 name|sigchld_handler
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 name|got_sigchld
 operator|++
@@ -2246,21 +2360,17 @@ comment|/*  * Thanks to XPT_MPDEBUGGER, we have to mange child_wait().  */
 end_comment
 
 begin_function
-name|int
+name|ptid_t
 name|child_wait
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|status
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|struct
 name|target_waitstatus
 modifier|*
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|save_errno
@@ -2300,12 +2410,20 @@ name|pstatus
 decl_stmt|;
 endif|#
 directive|endif
+name|int
+name|pid
+init|=
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
+decl_stmt|;
 do|do
 block|{
 name|set_sigint_trap
 argument_list|()
 expr_stmt|;
-comment|/* Causes SIGINT to be passed on to the 			   attached process. */
+comment|/* Causes SIGINT to be passed on to the 				   attached process. */
 name|save_errno
 operator|=
 name|errno
@@ -2383,10 +2501,13 @@ if|if
 condition|(
 name|pid
 operator|!=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 condition|)
 block|{
-comment|/* NOTE: the mystery fork in csh/tcsh needs to be ignored. 	     * We should not return new children for the initial run 	     * of a process until it has done the exec. 	     */
+comment|/* NOTE: the mystery fork in csh/tcsh needs to be ignored. 	   * We should not return new children for the initial run 	   * of a process until it has done the exec. 	   */
 comment|/* inferior probably forked; send it on its way */
 name|rv
 operator|=
@@ -2436,7 +2557,7 @@ case|case
 name|PTS_FORK
 case|:
 comment|/* multi proc: treat like PTS_EXEC */
-comment|/* 	     * Pretend this didn't happen, since gdb isn't set up 	     * to deal with stops on fork. 	     */
+comment|/* 	   * Pretend this didn't happen, since gdb isn't set up 	   * to deal with stops on fork. 	   */
 name|rv
 operator|=
 name|ptrace
@@ -2470,7 +2591,7 @@ continue|continue;
 case|case
 name|PTS_EXEC
 case|:
-comment|/* 	     * Pretend this is a SIGTRAP. 	     */
+comment|/* 	   * Pretend this is a SIGTRAP. 	   */
 name|status
 operator|->
 name|kind
@@ -2489,7 +2610,7 @@ break|break;
 case|case
 name|PTS_EXIT
 case|:
-comment|/* 	     * Note: we stop before the exit actually occurs.  Extract 	     * the exit code from the uarea.  If we're stopped in the 	     * exit() system call, the exit code will be in 	     * u.u_ap[0].  An exit due to an uncaught signal will have 	     * something else in here, see the comment in the default: 	     * case, below.  Finally,let the process exit. 	     */
+comment|/* 	   * Note: we stop before the exit actually occurs.  Extract 	   * the exit code from the uarea.  If we're stopped in the 	   * exit() system call, the exit code will be in 	   * u.u_ap[0].  An exit due to an uncaught signal will have 	   * something else in here, see the comment in the default: 	   * case, below.  Finally,let the process exit. 	   */
 if|if
 condition|(
 name|death_by_signal
@@ -2574,7 +2695,7 @@ name|integer
 operator|=
 name|rv
 expr_stmt|;
-comment|/* 	     * addr& data to mptrace() don't matter here, since 	     * the process is already dead. 	     */
+comment|/* 	   * addr& data to mptrace() don't matter here, since 	   * the process is already dead. 	   */
 name|rv
 operator|=
 name|mptrace
@@ -2610,8 +2731,12 @@ break|break;
 case|case
 name|PTS_WATCHPT_HIT
 case|:
-name|fatal
+name|internal_error
 argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
 literal|"PTS_WATCHPT_HIT\n"
 argument_list|)
 expr_stmt|;
@@ -2843,12 +2968,18 @@ do|while
 condition|(
 name|pid
 operator|!=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 condition|)
 do|;
 comment|/* Some other child died or stopped */
 return|return
+name|pid_to_ptid
+argument_list|(
 name|pid
+argument_list|)
 return|;
 block|}
 end_function
@@ -2866,36 +2997,32 @@ begin_comment
 comment|/*  * Simple child_wait() based on inftarg.c child_wait() for use until  * the MPDEBUGGER child_wait() works properly.  This will go away when  * that is fixed.  */
 end_comment
 
-begin_macro
+begin_function
+name|ptid_t
 name|child_wait
-argument_list|(
-argument|pid
-argument_list|,
-argument|ourstatus
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|pid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|(
+name|ptid_t
+name|ptid
+parameter_list|,
 name|struct
 name|target_waitstatus
 modifier|*
 name|ourstatus
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|save_errno
 decl_stmt|;
 name|int
 name|status
+decl_stmt|;
+name|int
+name|pid
+init|=
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
 decl_stmt|;
 do|do
 block|{
@@ -2953,8 +3080,11 @@ operator|=
 name|TARGET_SIGNAL_UNKNOWN
 expr_stmt|;
 return|return
+name|pid_to_ptid
+argument_list|(
 operator|-
 literal|1
+argument_list|)
 return|;
 block|}
 block|}
@@ -2962,7 +3092,10 @@ do|while
 condition|(
 name|pid
 operator|!=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 condition|)
 do|;
 comment|/* Some other child died or stopped */
@@ -2974,10 +3107,13 @@ name|status
 argument_list|)
 expr_stmt|;
 return|return
+name|pid_to_ptid
+argument_list|(
 name|pid
+argument_list|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -2999,25 +3135,18 @@ begin_function
 name|int
 name|call_ptrace
 parameter_list|(
-name|request
-parameter_list|,
-name|pid
-parameter_list|,
-name|addr
-parameter_list|,
-name|data
-parameter_list|)
 name|int
 name|request
-decl_stmt|,
+parameter_list|,
+name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|PTRACE_ARG3_TYPE
 name|addr
-decl_stmt|;
+parameter_list|,
 name|int
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|ptrace
@@ -3038,25 +3167,18 @@ begin_function
 name|int
 name|call_mptrace
 parameter_list|(
-name|request
-parameter_list|,
-name|pid
-parameter_list|,
-name|addr
-parameter_list|,
-name|data
-parameter_list|)
 name|int
 name|request
-decl_stmt|,
+parameter_list|,
+name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|PTRACE_ARG3_TYPE
 name|addr
-decl_stmt|;
+parameter_list|,
 name|int
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|mptrace
@@ -3112,19 +3234,27 @@ end_endif
 begin_function
 name|void
 name|kill_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
-name|inferior_pid
-operator|==
-literal|0
+name|ptid_equal
+argument_list|(
+name|inferior_ptid
+argument_list|,
+name|null_ptid
+argument_list|)
 condition|)
 return|return;
 comment|/* For MPDEBUGGER, don't use PT_KILL, since the child will stop      again with a PTS_EXIT.  Just hit him with SIGKILL (so he stops)      and detach. */
 name|kill
 argument_list|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 name|SIGKILL
 argument_list|)
@@ -3144,7 +3274,10 @@ name|ptrace
 argument_list|(
 name|PT_KILL
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -3177,23 +3310,25 @@ begin_function
 name|void
 name|child_resume
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|step
-parameter_list|,
-name|signal
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|int
 name|step
-decl_stmt|;
+parameter_list|,
 name|enum
 name|target_signal
 name|signal
-decl_stmt|;
+parameter_list|)
 block|{
+name|int
+name|pid
+init|=
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
+decl_stmt|;
 name|errno
 operator|=
 literal|0
@@ -3207,7 +3342,10 @@ literal|1
 condition|)
 name|pid
 operator|=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 expr_stmt|;
 comment|/* An address of (PTRACE_ARG3_TYPE)1 tells ptrace to continue from where      it was.  (If GDB wanted it to start some other way, we have already      written a new PC value to the child.)       If this system does not support PT_SSTEP, a higher level function will      have called single_step() to transmute the step request into a      continue request (by setting breakpoints on all possible successor      instructions), so we don't have to worry about that here.  */
 if|if
@@ -3272,11 +3410,9 @@ begin_function
 name|int
 name|attach
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|sigset_t
 name|set
@@ -3362,11 +3498,9 @@ begin_function
 name|void
 name|detach
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|rv
@@ -3377,7 +3511,10 @@ name|mptrace
 argument_list|(
 name|XPT_UNDEBUG
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -3452,42 +3589,36 @@ comment|/* NOTE! I tried using PTRACE_READDATA, etc., to read and write memory  
 end_comment
 
 begin_comment
-comment|/* Copy LEN bytes to or from inferior's memory starting at MEMADDR    to debugger memory starting at MYADDR.   Copy to inferior if    WRITE is nonzero.       Returns the length copied, which is either the LEN argument or zero.    This xfer function does not do partial moves, since child_ops    doesn't allow memory operations to cross below us in the target stack    anyway.  */
+comment|/* Copy LEN bytes to or from inferior's memory starting at MEMADDR    to debugger memory starting at MYADDR.   Copy to inferior if    WRITE is nonzero.  TARGET is ignored.     Returns the length copied, which is either the LEN argument or zero.    This xfer function does not do partial moves, since child_ops    doesn't allow memory operations to cross below us in the target stack    anyway.  */
 end_comment
 
 begin_function
 name|int
 name|child_xfer_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|,
-name|target
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|write
-decl_stmt|;
+parameter_list|,
+name|struct
+name|mem_attrib
+modifier|*
+name|attrib
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
-comment|/* ignored */
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -3501,6 +3632,9 @@ init|=
 name|memaddr
 operator|&
 operator|-
+operator|(
+name|CORE_ADDR
+operator|)
 sizeof|sizeof
 argument_list|(
 name|PTRACE_XFER_TYPE
@@ -3536,6 +3670,7 @@ name|PTRACE_XFER_TYPE
 argument_list|)
 decl_stmt|;
 comment|/* Allocate buffer of that many longwords.  */
+comment|/* FIXME (alloca): This code, cloned from infptrace.c, is unsafe      because it uses alloca to allocate a buffer of arbitrary size.      For very large xfers, this could crash GDB's stack.  */
 specifier|register
 name|PTRACE_XFER_TYPE
 modifier|*
@@ -3588,7 +3723,10 @@ name|ptrace
 argument_list|(
 name|PT_RTEXT
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -3618,7 +3756,10 @@ name|ptrace
 argument_list|(
 name|PT_RTEXT
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 call|(
@@ -3701,7 +3842,10 @@ name|ptrace
 argument_list|(
 name|PT_WDATA
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -3719,7 +3863,7 @@ condition|(
 name|errno
 condition|)
 block|{
-comment|/* Using the appropriate one (I or D) is necessary for 		 Gould NP1, at least.  */
+comment|/* Using the appropriate one (I or D) is necessary for 	         Gould NP1, at least.  */
 name|errno
 operator|=
 literal|0
@@ -3728,7 +3872,10 @@ name|ptrace
 argument_list|(
 name|PT_WTEXT
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -3788,7 +3935,10 @@ name|ptrace
 argument_list|(
 name|PT_RTEXT
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -3845,7 +3995,9 @@ end_function
 begin_function
 name|void
 name|_initialize_symm_nat
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -3882,8 +4034,12 @@ operator|==
 name|rv
 condition|)
 block|{
-name|fatal
+name|internal_error
 argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
 literal|"_initialize_symm_nat(): mptrace(XPT_MPDEBUGGER): %s"
 argument_list|,
 name|safe_strerror
@@ -3893,8 +4049,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Under MPDEBUGGER, we get SIGCLHD when a traced process does 	 * anything of interest. 	 */
-comment|/* 	 * Block SIGCHLD.  We leave it blocked all the time, and then 	 * call sigsuspend() in child_wait() to wait for the child 	 * to do something.  None of these ought to fail, but check anyway. 	 */
+comment|/*    * Under MPDEBUGGER, we get SIGCLHD when a traced process does    * anything of interest.    */
+comment|/*    * Block SIGCHLD.  We leave it blocked all the time, and then    * call sigsuspend() in child_wait() to wait for the child    * to do something.  None of these ought to fail, but check anyway.    */
 name|sigemptyset
 argument_list|(
 operator|&
@@ -3919,8 +4075,12 @@ operator|==
 name|rv
 condition|)
 block|{
-name|fatal
+name|internal_error
 argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
 literal|"_initialize_symm_nat(): sigaddset(SIGCHLD): %s"
 argument_list|,
 name|safe_strerror
@@ -3954,8 +4114,12 @@ operator|==
 name|rv
 condition|)
 block|{
-name|fatal
+name|internal_error
 argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
 literal|"_initialize_symm_nat(): sigprocmask(SIG_BLOCK): %s"
 argument_list|,
 name|safe_strerror
@@ -4011,8 +4175,12 @@ operator|==
 name|rv
 condition|)
 block|{
-name|fatal
+name|internal_error
 argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
 literal|"_initialize_symm_nat(): sigaction(SIGCHLD): %s"
 argument_list|,
 name|safe_strerror

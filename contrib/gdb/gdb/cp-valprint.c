@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for printing C++ values for GDB, the GNU debugger.    Copyright 1986, 1988, 1989, 1991, 1994, 1995, 1996    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Support for printing C++ values for GDB, the GNU debugger.    Copyright 1986, 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997,    2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -81,6 +81,12 @@ directive|include
 file|"target.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"cp-abi.h"
+end_include
+
 begin_comment
 comment|/* Indication of presence of HP-compiled object files */
 end_comment
@@ -142,127 +148,130 @@ name|dont_print_statmem_obstack
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
+specifier|extern
+name|void
+name|_initialize_cp_valprint
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|void
 name|cp_print_static_field
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|,
-name|value_ptr
-operator|,
-name|GDB_FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
+name|struct
+name|value
+modifier|*
+parameter_list|,
+name|struct
+name|ui_file
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|val_prettyprint
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|cp_print_value
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|,
-name|GDB_FILE
-operator|*
-operator|,
+parameter_list|,
+name|struct
+name|ui_file
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|val_prettyprint
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|cp_print_hpacc_virtual_table_entries
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|,
-name|value_ptr
-operator|,
-name|GDB_FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
+name|struct
+name|value
+modifier|*
+parameter_list|,
+name|struct
+name|ui_file
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|val_prettyprint
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
 name|cp_print_class_method
 parameter_list|(
-name|valaddr
-parameter_list|,
-name|type
-parameter_list|,
-name|stream
-parameter_list|)
 name|char
 modifier|*
 name|valaddr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
-name|GDB_FILE
+parameter_list|,
+name|struct
+name|ui_file
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -679,7 +688,7 @@ argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|demangled_name
 argument_list|)
@@ -780,39 +789,7 @@ name|char
 name|vtbl_ptr_name
 index|[]
 init|=
-block|{
-literal|'_'
-block|,
-literal|'_'
-block|,
-literal|'v'
-block|,
-literal|'t'
-block|,
-literal|'b'
-block|,
-literal|'l'
-block|,
-literal|'_'
-block|,
-literal|'p'
-block|,
-literal|'t'
-block|,
-literal|'r'
-block|,
-literal|'_'
-block|,
-literal|'t'
-block|,
-literal|'y'
-block|,
-literal|'p'
-block|,
-literal|'e'
-block|,
-literal|0
-block|}
+literal|"__vtbl_ptr_type"
 decl_stmt|;
 end_decl_stmt
 
@@ -826,19 +803,7 @@ name|char
 name|hpacc_vtbl_ptr_name
 index|[]
 init|=
-block|{
-literal|'_'
-block|,
-literal|'_'
-block|,
-literal|'v'
-block|,
-literal|'f'
-block|,
-literal|'p'
-block|,
-literal|0
-block|}
+literal|"__vfp"
 decl_stmt|;
 end_decl_stmt
 
@@ -848,23 +813,7 @@ name|char
 name|hpacc_vtbl_ptr_type_name
 index|[]
 init|=
-block|{
-literal|'_'
-block|,
-literal|'_'
-block|,
-literal|'v'
-block|,
-literal|'f'
-block|,
-literal|'t'
-block|,
-literal|'y'
-block|,
-literal|'p'
-block|,
-literal|0
-block|}
+literal|"__vftyp"
 decl_stmt|;
 end_decl_stmt
 
@@ -876,13 +825,11 @@ begin_function
 name|int
 name|cp_is_vtbl_ptr_type
 parameter_list|(
-name|type
-parameter_list|)
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -927,13 +874,11 @@ begin_function
 name|int
 name|cp_is_vtbl_member
 parameter_list|(
-name|type
-parameter_list|)
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -988,7 +933,7 @@ name|TYPE_CODE_PTR
 condition|)
 comment|/* if using thunks */
 block|{
-comment|/* Virtual functions tables are full of pointers 		 to virtual functions. */
+comment|/* Virtual functions tables are full of pointers 	         to virtual functions. */
 return|return
 name|cp_is_vtbl_ptr_type
 argument_list|(
@@ -1005,78 +950,57 @@ block|}
 end_function
 
 begin_comment
-comment|/* Mutually recursive subroutines of cp_print_value and c_val_print to    print out a structure's fields: cp_print_value_fields and cp_print_value.       TYPE, VALADDR, ADDRESS, STREAM, RECURSE, and PRETTY have the    same meanings as in cp_print_value and c_val_print.     2nd argument REAL_TYPE is used to carry over the type of the derived    class across the recursion to base classes.      DONT_PRINT is an array of baseclass types that we    should not print, or zero if called from top level.  */
+comment|/* Mutually recursive subroutines of cp_print_value and c_val_print to    print out a structure's fields: cp_print_value_fields and cp_print_value.     TYPE, VALADDR, ADDRESS, STREAM, RECURSE, and PRETTY have the    same meanings as in cp_print_value and c_val_print.     2nd argument REAL_TYPE is used to carry over the type of the derived    class across the recursion to base classes.      DONT_PRINT is an array of baseclass types that we    should not print, or zero if called from top level.  */
 end_comment
 
 begin_function
 name|void
 name|cp_print_value_fields
 parameter_list|(
-name|type
-parameter_list|,
-name|real_type
-parameter_list|,
-name|valaddr
-parameter_list|,
-name|offset
-parameter_list|,
-name|address
-parameter_list|,
-name|stream
-parameter_list|,
-name|format
-parameter_list|,
-name|recurse
-parameter_list|,
-name|pretty
-parameter_list|,
-name|dont_print_vb
-parameter_list|,
-name|dont_print_statmem
-parameter_list|)
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|real_type
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|valaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|offset
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|address
-decl_stmt|;
-name|GDB_FILE
+parameter_list|,
+name|struct
+name|ui_file
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|int
 name|format
-decl_stmt|;
+parameter_list|,
 name|int
 name|recurse
-decl_stmt|;
+parameter_list|,
 name|enum
 name|val_prettyprint
 name|pretty
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 modifier|*
 name|dont_print_vb
-decl_stmt|;
+parameter_list|,
 name|int
 name|dont_print_statmem
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1592,10 +1516,12 @@ name|i
 argument_list|)
 condition|)
 block|{
-name|value_ptr
+name|struct
+name|value
+modifier|*
 name|v
 decl_stmt|;
-comment|/* Bitfields require special handling, especially due to byte 		 order problems.  */
+comment|/* Bitfields require special handling, especially due to byte 	         order problems.  */
 if|if
 condition|(
 name|TYPE_FIELD_IGNORE
@@ -1703,7 +1629,9 @@ name|i
 argument_list|)
 condition|)
 block|{
-name|value_ptr
+name|struct
+name|value
+modifier|*
 name|v
 init|=
 name|value_static_field
@@ -1872,10 +1800,12 @@ literal|5
 argument_list|)
 condition|)
 block|{
-name|value_ptr
+name|struct
+name|value
+modifier|*
 name|v
 decl_stmt|;
-comment|/* First get the virtual table pointer and print it out*/
+comment|/* First get the virtual table pointer and print it out */
 if|#
 directive|if
 literal|0
@@ -1893,7 +1823,7 @@ comment|/* pai: FIXME 32x64 problem? */
 comment|/* Not sure what the best notation is in the case where there is no          baseclass name.  */
 name|v
 operator|=
-name|value_from_longest
+name|value_from_pointer
 argument_list|(
 name|lookup_pointer_type
 argument_list|(
@@ -1952,13 +1882,13 @@ name|vtblprint
 condition|)
 block|{
 comment|/* Print out function pointers in vtable. */
-comment|/* FIXME: then-clause is for non-RRBC layout of virtual            * table.  The RRBC case in the else-clause is yet to be            * implemented.  The if (1) below should be changed to a            * test for whether the executable we have was compiled            * with a version of HP aCC that doesn't have RRBC            * support. */
+comment|/* FIXME: then-clause is for non-RRBC layout of virtual 	   * table.  The RRBC case in the else-clause is yet to be 	   * implemented.  The if (1) below should be changed to a 	   * test for whether the executable we have was compiled 	   * with a version of HP aCC that doesn't have RRBC 	   * support. */
 if|if
 condition|(
 literal|1
 condition|)
 block|{
-comment|/* no RRBC support; function pointers embedded directly in vtable */
+comment|/* no RRBC support; function pointers embedded directly                  in vtable */
 name|int
 name|vfuncs
 init|=
@@ -1978,7 +1908,7 @@ comment|/* FIXME : doesn't work at present */
 if|#
 directive|if
 literal|0
-block|fprintf_filtered (stream, "%d entr%s: ", vfuncs, vfuncs == 1 ? "y" : "ies");
+block|fprintf_filtered (stream, "%d entr%s: ", vfuncs, 				vfuncs == 1 ? "y" : "ies");
 else|#
 directive|else
 name|fputs_filtered
@@ -1994,7 +1924,7 @@ comment|/* recursive function that prints all virtual function entries */
 if|#
 directive|if
 literal|0
-block|cp_print_hpacc_virtual_table_entries (real_type,&vfuncs, v, stream, format, recurse, pretty);
+block|cp_print_hpacc_virtual_table_entries (real_type,&vfuncs, v, 						    stream, format, recurse, 						    pretty);
 endif|#
 directive|endif
 name|fputs_filtered
@@ -2008,8 +1938,8 @@ block|}
 comment|/* non-RRBC case */
 else|else
 block|{
-comment|/* FIXME -- seem comments above */
-comment|/* RRBC support present; function pointers are found                * by indirection through the class segment entries. */
+comment|/* FIXME -- see comments above */
+comment|/* RRBC support present; function pointers are found 	       * by indirection through the class segment entries. */
 block|}
 comment|/* RRBC case */
 block|}
@@ -2057,66 +1987,47 @@ specifier|static
 name|void
 name|cp_print_value
 parameter_list|(
-name|type
-parameter_list|,
-name|real_type
-parameter_list|,
-name|valaddr
-parameter_list|,
-name|offset
-parameter_list|,
-name|address
-parameter_list|,
-name|stream
-parameter_list|,
-name|format
-parameter_list|,
-name|recurse
-parameter_list|,
-name|pretty
-parameter_list|,
-name|dont_print_vb
-parameter_list|)
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|real_type
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|valaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|offset
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|address
-decl_stmt|;
-name|GDB_FILE
+parameter_list|,
+name|struct
+name|ui_file
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|int
 name|format
-decl_stmt|;
+parameter_list|,
 name|int
 name|recurse
-decl_stmt|;
+parameter_list|,
 name|enum
 name|val_prettyprint
 name|pretty
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 modifier|*
 name|dont_print_vb
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|obstack
@@ -2150,6 +2061,14 @@ argument_list|(
 name|type
 argument_list|)
 decl_stmt|;
+name|int
+name|thisoffset
+decl_stmt|;
+name|struct
+name|type
+modifier|*
+name|thistype
+decl_stmt|;
 if|if
 condition|(
 name|dont_print_vb
@@ -2157,7 +2076,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* If we're at top level, carve out a completely fresh 	 chunk of the obstack and use that until this particular 	 invocation returns.  */
+comment|/* If we're at top level, carve out a completely fresh          chunk of the obstack and use that until this particular          invocation returns.  */
 name|tmp_obstack
 operator|=
 name|dont_print_vb_obstack
@@ -2291,6 +2210,14 @@ name|baseclass
 argument_list|)
 expr_stmt|;
 block|}
+name|thisoffset
+operator|=
+name|offset
+expr_stmt|;
+name|thistype
+operator|=
+name|real_type
+expr_stmt|;
 if|if
 condition|(
 name|TYPE_HAS_VTABLE
@@ -2337,7 +2264,8 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Virtual base class offset not found from vtable while printing"
+literal|"Virtual base class offset not found from vtable while"
+literal|" printing"
 argument_list|)
 expr_stmt|;
 name|base_valaddr
@@ -2398,7 +2326,7 @@ name|i
 argument_list|)
 condition|)
 block|{
-comment|/* The virtual base class pointer might have been clobbered by the 	         user program. Make sure that it still points to a valid memory 	         location.  */
+comment|/* The virtual base class pointer might have been 	         clobbered by the user program. Make sure that it 	         still points to a valid memory location.  */
 if|if
 condition|(
 name|boffset
@@ -2428,6 +2356,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
+comment|/* FIXME (alloca): unsafe if baseclass is really really large. */
 name|base_valaddr
 operator|=
 operator|(
@@ -2448,6 +2377,8 @@ name|target_read_memory
 argument_list|(
 name|address
 operator|+
+name|offset
+operator|+
 name|boffset
 argument_list|,
 name|base_valaddr
@@ -2463,6 +2394,18 @@ condition|)
 name|skip
 operator|=
 literal|1
+expr_stmt|;
+name|thisoffset
+operator|=
+literal|0
+expr_stmt|;
+name|boffset
+operator|=
+literal|0
+expr_stmt|;
+name|thistype
+operator|=
+name|baseclass
 expr_stmt|;
 block|}
 else|else
@@ -2507,7 +2450,7 @@ argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
-comment|/* Not sure what the best notation is in the case where there is no 	 baseclass name.  */
+comment|/* Not sure what the best notation is in the case where there is no          baseclass name.  */
 name|fputs_filtered
 argument_list|(
 name|basename
@@ -2544,11 +2487,11 @@ name|cp_print_value_fields
 argument_list|(
 name|baseclass
 argument_list|,
-name|real_type
+name|thistype
 argument_list|,
 name|base_valaddr
 argument_list|,
-name|offset
+name|thisoffset
 operator|+
 name|boffset
 argument_list|,
@@ -2563,6 +2506,7 @@ argument_list|,
 name|pretty
 argument_list|,
 operator|(
+operator|(
 expr|struct
 name|type
 operator|*
@@ -2573,6 +2517,7 @@ argument_list|(
 operator|&
 name|dont_print_vb_obstack
 argument_list|)
+operator|)
 argument_list|,
 literal|0
 argument_list|)
@@ -2595,7 +2540,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Free the space used to deal with the printing 	 of this type from top level.  */
+comment|/* Free the space used to deal with the printing          of this type from top level.  */
 name|obstack_free
 argument_list|(
 operator|&
@@ -2604,7 +2549,7 @@ argument_list|,
 name|last_dont_print
 argument_list|)
 expr_stmt|;
-comment|/* Reset watermark so that we can continue protecting 	 ourselves from whatever we were protecting ourselves.  */
+comment|/* Reset watermark so that we can continue protecting          ourselves from whatever we were protecting ourselves.  */
 name|dont_print_vb_obstack
 operator|=
 name|tmp_obstack
@@ -2622,40 +2567,31 @@ specifier|static
 name|void
 name|cp_print_static_field
 parameter_list|(
-name|type
-parameter_list|,
-name|val
-parameter_list|,
-name|stream
-parameter_list|,
-name|format
-parameter_list|,
-name|recurse
-parameter_list|,
-name|pretty
-parameter_list|)
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
-name|value_ptr
+parameter_list|,
+name|struct
+name|value
+modifier|*
 name|val
-decl_stmt|;
-name|GDB_FILE
+parameter_list|,
+name|struct
+name|ui_file
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|int
 name|format
-decl_stmt|;
+parameter_list|,
 name|int
 name|recurse
-decl_stmt|;
+parameter_list|,
 name|enum
 name|val_prettyprint
 name|pretty
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2723,7 +2659,8 @@ condition|)
 block|{
 name|fputs_filtered
 argument_list|(
-literal|"<same as static member of an already seen type>"
+literal|"<same as static member of an already"
+literal|" seen type>"
 argument_list|,
 name|stream
 argument_list|)
@@ -2830,31 +2767,24 @@ begin_function
 name|void
 name|cp_print_class_member
 parameter_list|(
-name|valaddr
-parameter_list|,
-name|domain
-parameter_list|,
-name|stream
-parameter_list|,
-name|prefix
-parameter_list|)
 name|char
 modifier|*
 name|valaddr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|domain
-decl_stmt|;
-name|GDB_FILE
+parameter_list|,
+name|struct
+name|ui_file
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|prefix
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* VAL is a byte offset into the structure type DOMAIN.      Find the name of the field for that offset and      print it.  */
 name|int
@@ -3075,11 +3005,16 @@ name|fprintf_filtered
 argument_list|(
 name|stream
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|val
 operator|>>
 literal|3
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3094,46 +3029,35 @@ specifier|static
 name|void
 name|cp_print_hpacc_virtual_table_entries
 parameter_list|(
-name|type
-parameter_list|,
-name|vfuncs
-parameter_list|,
-name|v
-parameter_list|,
-name|stream
-parameter_list|,
-name|format
-parameter_list|,
-name|recurse
-parameter_list|,
-name|pretty
-parameter_list|)
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|vfuncs
-decl_stmt|;
-name|value_ptr
+parameter_list|,
+name|struct
+name|value
+modifier|*
 name|v
-decl_stmt|;
-name|GDB_FILE
+parameter_list|,
+name|struct
+name|ui_file
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|int
 name|format
-decl_stmt|;
+parameter_list|,
 name|int
 name|recurse
-decl_stmt|;
+parameter_list|,
 name|enum
 name|val_prettyprint
 name|pretty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|fn
@@ -3227,10 +3151,16 @@ name|char
 modifier|*
 name|vf_name
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|field_physname
+decl_stmt|;
 comment|/* virtual function offset */
 name|int
 name|vx
 init|=
+operator|(
 name|TYPE_FN_FIELD_VOFFSET
 argument_list|(
 name|TYPE_FN_FIELDLIST1
@@ -3244,9 +3174,12 @@ name|oi
 argument_list|)
 operator|-
 literal|1
+operator|)
 decl_stmt|;
 comment|/* Get the address of the vfunction entry */
-name|value_ptr
+name|struct
+name|value
+modifier|*
 name|vf
 init|=
 name|value_copy
@@ -3269,6 +3202,7 @@ argument_list|(
 name|vf
 argument_list|)
 expr_stmt|;
+comment|/* adjust by offset */
 name|vf
 operator|->
 name|aligner
@@ -3286,7 +3220,6 @@ operator|+
 name|vx
 operator|)
 expr_stmt|;
-comment|/* adjust by offset */
 name|vf
 operator|=
 name|value_ind
@@ -3336,10 +3269,8 @@ argument_list|,
 name|pretty
 argument_list|)
 expr_stmt|;
-name|vf_name
+name|field_physname
 operator|=
-name|cplus_demangle
-argument_list|(
 name|TYPE_FN_FIELD_PHYSNAME
 argument_list|(
 name|TYPE_FN_FIELDLIST1
@@ -3351,11 +3282,17 @@ argument_list|)
 argument_list|,
 name|oi
 argument_list|)
+expr_stmt|;
+comment|/* pai: (temp) FIXME Maybe this should be DMGL_ANSI */
+name|vf_name
+operator|=
+name|cplus_demangle
+argument_list|(
+name|field_physname
 argument_list|,
 name|DMGL_ARM
 argument_list|)
 expr_stmt|;
-comment|/* pai: (temp) FIXME Maybe this should be DMGL_ANSI */
 name|fprintf_filtered
 argument_list|(
 name|stream
@@ -3389,7 +3326,9 @@ end_function
 begin_function
 name|void
 name|_initialize_cp_valprint
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|add_show_from_set
 argument_list|(
@@ -3520,7 +3459,7 @@ argument_list|)
 argument_list|,
 name|xmalloc
 argument_list|,
-name|free
+name|xfree
 argument_list|)
 expr_stmt|;
 block|}

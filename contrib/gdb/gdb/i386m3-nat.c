@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Low level interface to I386 running mach 3.0.    Copyright (C) 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Low level interface to I386 running mach 3.0.    Copyright 1992, 1993, 1994, 1996, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"floatformat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
 end_include
 
 begin_include
@@ -62,7 +68,7 @@ file|<target.h>
 end_include
 
 begin_comment
-comment|/* This mess is duplicated in bfd/i386mach3.h  *  * This is an ugly way to hack around the incorrect  * definition of UPAGES in i386/machparam.h.  *  * The definition should specify the size reserved  * for "struct user" in core files in PAGES,  * but instead it gives it in 512-byte core-clicks  * for i386 and i860.  */
+comment|/* This mess is duplicated in bfd/i386mach3.h   * This is an ugly way to hack around the incorrect  * definition of UPAGES in i386/machparam.h.  *  * The definition should specify the size reserved  * for "struct user" in core files in PAGES,  * but instead it gives it in 512-byte core-clicks  * for i386 and i860.  */
 end_comment
 
 begin_include
@@ -317,11 +323,9 @@ begin_function
 name|void
 name|fetch_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -396,7 +400,7 @@ if|#
 directive|if
 literal|0
 comment|/* It may be more effective to store validate all of them,    * since we fetched them all anyway    */
-if|else if (regno != -1)     supply_register (regno, (char *)state+reg_offset[regno]);
+if|else if (regno != -1)     supply_register (regno, (char *) state + reg_offset[regno]);
 endif|#
 directive|endif
 else|else
@@ -456,11 +460,9 @@ begin_function
 name|void
 name|store_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -547,7 +549,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* move gdb's registers to thread's state    *    * Since we save all registers anyway, save the ones    * that gdb thinks are valid (e.g. ignore the regno    * parameter)    */
+comment|/* move gdb's registers to thread's state     * Since we save all registers anyway, save the ones    * that gdb thinks are valid (e.g. ignore the regno    * parameter)    */
 if|#
 directive|if
 literal|0
@@ -633,16 +635,12 @@ begin_function
 name|CORE_ADDR
 name|register_addr
 parameter_list|(
-name|regno
-parameter_list|,
-name|blockend
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|blockend
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|addr
@@ -768,19 +766,15 @@ begin_function
 name|private
 name|print_387_status
 parameter_list|(
-name|status
-parameter_list|,
-name|ep
-parameter_list|)
 name|unsigned
 name|short
 name|status
-decl_stmt|;
+parameter_list|,
 name|struct
 name|env387
 modifier|*
 name|ep
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1274,13 +1268,11 @@ name|private
 name|boolean_t
 name|get_i387_state
 parameter_list|(
-name|fstate
-parameter_list|)
 name|struct
 name|fpstate
 modifier|*
 name|fstate
-decl_stmt|;
+parameter_list|)
 block|{
 name|kern_return_t
 name|ret
@@ -1419,13 +1411,11 @@ name|private
 name|boolean_t
 name|get_i387_core_state
 parameter_list|(
-name|fstate
-parameter_list|)
 name|struct
 name|fpstate
 modifier|*
 name|fstate
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Not implemented yet. Core files do not contain float state. */
 return|return
@@ -1441,7 +1431,9 @@ end_comment
 begin_function
 name|void
 name|i386_mach3_float_info
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|buf

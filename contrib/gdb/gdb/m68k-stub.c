@@ -922,7 +922,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* restore regs, but we dont have fsave info*/
+comment|/* restore regs, but we dont have fsave info */
 block|}
 if|#
 directive|if
@@ -937,7 +937,7 @@ name|defined
 argument_list|(
 name|mc68332
 argument_list|)
-comment|/* a 68000 cannot use the internal info pushed onto a bus error      * or address error frame when doing an RTE so don't put this info      * onto the stack or the stack will creep every time this happens.      */
+comment|/* a 68000 cannot use the internal info pushed onto a bus error    * or address error frame when doing an RTE so don't put this info    * onto the stack or the stack will creep every time this happens.    */
 name|frame
 operator|->
 name|frameSize
@@ -1089,21 +1089,50 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|char
+name|remcomInBuffer
+index|[
+name|BUFMAX
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|remcomOutBuffer
+index|[
+name|BUFMAX
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* scan for the sequence $<data>#<checksum>     */
 end_comment
 
 begin_function
-name|void
+name|unsigned
+name|char
+modifier|*
 name|getpacket
 parameter_list|(
-name|buffer
+name|void
 parameter_list|)
+block|{
+name|unsigned
 name|char
 modifier|*
 name|buffer
+init|=
+operator|&
+name|remcomInBuffer
+index|[
+literal|0
+index|]
 decl_stmt|;
-block|{
 name|unsigned
 name|char
 name|checksum
@@ -1113,15 +1142,15 @@ name|char
 name|xmitcsum
 decl_stmt|;
 name|int
-name|i
-decl_stmt|;
-name|int
 name|count
 decl_stmt|;
 name|char
 name|ch
 decl_stmt|;
-do|do
+while|while
+condition|(
+literal|1
+condition|)
 block|{
 comment|/* wait around for the start character, ignore all other characters */
 while|while
@@ -1129,17 +1158,15 @@ condition|(
 operator|(
 name|ch
 operator|=
-operator|(
 name|getDebugChar
 argument_list|()
-operator|&
-literal|0x7f
-operator|)
 operator|)
 operator|!=
 literal|'$'
 condition|)
 empty_stmt|;
+name|retry
+label|:
 name|checksum
 operator|=
 literal|0
@@ -1165,9 +1192,16 @@ name|ch
 operator|=
 name|getDebugChar
 argument_list|()
-operator|&
-literal|0x7f
 expr_stmt|;
+if|if
+condition|(
+name|ch
+operator|==
+literal|'$'
+condition|)
+goto|goto
+name|retry
+goto|;
 if|if
 condition|(
 name|ch
@@ -1209,39 +1243,42 @@ operator|==
 literal|'#'
 condition|)
 block|{
+name|ch
+operator|=
+name|getDebugChar
+argument_list|()
+expr_stmt|;
 name|xmitcsum
 operator|=
 name|hex
 argument_list|(
-name|getDebugChar
-argument_list|()
-operator|&
-literal|0x7f
+name|ch
 argument_list|)
 operator|<<
 literal|4
+expr_stmt|;
+name|ch
+operator|=
+name|getDebugChar
+argument_list|()
 expr_stmt|;
 name|xmitcsum
 operator|+=
 name|hex
 argument_list|(
-name|getDebugChar
-argument_list|()
-operator|&
-literal|0x7f
+name|ch
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|remote_debug
-operator|)
-operator|&&
-operator|(
 name|checksum
 operator|!=
 name|xmitcsum
-operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|remote_debug
 condition|)
 block|{
 name|fprintf
@@ -1258,18 +1295,13 @@ name|buffer
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|checksum
-operator|!=
-name|xmitcsum
-condition|)
 name|putDebugChar
 argument_list|(
 literal|'-'
 argument_list|)
 expr_stmt|;
 comment|/* failed checksum */
+block|}
 else|else
 block|{
 name|putDebugChar
@@ -1305,55 +1337,29 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* remove sequence chars from buffer */
-name|count
-operator|=
-name|strlen
-argument_list|(
-name|buffer
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|3
-init|;
-name|i
-operator|<=
-name|count
-condition|;
-name|i
-operator|++
-control|)
+return|return
+operator|&
 name|buffer
 index|[
-name|i
-operator|-
 literal|3
 index|]
-operator|=
+return|;
+block|}
+return|return
+operator|&
 name|buffer
 index|[
-name|i
+literal|0
 index|]
-expr_stmt|;
+return|;
 block|}
 block|}
 block|}
-block|}
-do|while
-condition|(
-name|checksum
-operator|!=
-name|xmitcsum
-condition|)
-do|;
 block|}
 end_function
 
 begin_comment
-comment|/* send the packet in buffer.  The host get's one chance to read it.      This routine does not wait for a positive acknowledge.  */
+comment|/* send the packet in buffer. */
 end_comment
 
 begin_function
@@ -1445,39 +1451,14 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-literal|1
-operator|==
-literal|0
+name|getDebugChar
+argument_list|()
+operator|!=
+literal|'+'
 condition|)
 do|;
-comment|/* (getDebugChar() != '+'); */
 block|}
 end_function
-
-begin_decl_stmt
-name|char
-name|remcomInBuffer
-index|[
-name|BUFMAX
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|remcomOutBuffer
-index|[
-name|BUFMAX
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|short
-name|error
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void
@@ -1826,7 +1807,7 @@ literal|4
 expr_stmt|;
 break|break;
 comment|/* line 1111 emulator  */
-comment|/* Coprocessor protocol violation.  Using a standard MMU or FPU 	 this cannot be triggered by software.  Call it a SIGBUS.  */
+comment|/* Coprocessor protocol violation.  Using a standard MMU or FPU          this cannot be triggered by software.  Call it a SIGBUS.  */
 case|case
 literal|13
 case|:
@@ -1853,7 +1834,7 @@ literal|5
 expr_stmt|;
 break|break;
 comment|/* breakpoint          */
-comment|/* This is a trap #8 instruction.  Apparently it is someone's software 	 convention for some sort of SIGFPE condition.  Whose?  How many 	 people are being screwed by having this code the way it is? 	 Is there a clean solution?  */
+comment|/* This is a trap #8 instruction.  Apparently it is someone's software          convention for some sort of SIGFPE condition.  Whose?  How many          people are being screwed by having this code the way it is?          Is there a clean solution?  */
 case|case
 literal|40
 case|:
@@ -1931,7 +1912,7 @@ name|sigval
 operator|=
 literal|7
 expr_stmt|;
-comment|/* "software generated"*/
+comment|/* "software generated" */
 block|}
 return|return
 operator|(
@@ -2054,6 +2035,8 @@ parameter_list|)
 block|{
 name|int
 name|sigval
+decl_stmt|,
+name|stepping
 decl_stmt|;
 name|int
 name|addr
@@ -2143,6 +2126,10 @@ argument_list|(
 name|remcomOutBuffer
 argument_list|)
 expr_stmt|;
+name|stepping
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 literal|1
@@ -2150,10 +2137,6 @@ operator|==
 literal|1
 condition|)
 block|{
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|remcomOutBuffer
 index|[
 literal|0
@@ -2161,17 +2144,16 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|ptr
+operator|=
 name|getpacket
-argument_list|(
-name|remcomInBuffer
-argument_list|)
+argument_list|()
 expr_stmt|;
 switch|switch
 condition|(
-name|remcomInBuffer
-index|[
-literal|0
-index|]
+operator|*
+name|ptr
+operator|++
 condition|)
 block|{
 case|case
@@ -2252,11 +2234,7 @@ case|:
 comment|/* set the value of the CPU registers - return OK */
 name|hex2mem
 argument_list|(
-operator|&
-name|remcomInBuffer
-index|[
-literal|1
-index|]
+name|ptr
 argument_list|,
 operator|(
 name|char
@@ -2297,14 +2275,6 @@ name|handle_buserror
 argument_list|)
 expr_stmt|;
 comment|/* TRY TO READ %x,%x.  IF SUCCEED, SET PTR = 0 */
-name|ptr
-operator|=
-operator|&
-name|remcomInBuffer
-index|[
-literal|1
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|hexToInt
@@ -2368,13 +2338,6 @@ argument_list|,
 literal|"E01"
 argument_list|)
 expr_stmt|;
-name|debug_error
-argument_list|(
-literal|"malformed read memory command: %s"
-argument_list|,
-name|remcomInBuffer
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 else|else
@@ -2430,14 +2393,6 @@ name|handle_buserror
 argument_list|)
 expr_stmt|;
 comment|/* TRY TO READ '%x,%x:'.  IF SUCCEED, SET PTR = 0 */
-name|ptr
-operator|=
-operator|&
-name|remcomInBuffer
-index|[
-literal|1
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|hexToInt
@@ -2518,13 +2473,6 @@ argument_list|,
 literal|"E02"
 argument_list|)
 expr_stmt|;
-name|debug_error
-argument_list|(
-literal|"malformed write memory command: %s"
-argument_list|,
-name|remcomInBuffer
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 else|else
@@ -2561,20 +2509,16 @@ break|break;
 comment|/* cAA..AA    Continue at address AA..AA(optional) */
 comment|/* sAA..AA   Step one instruction from AA..AA(optional) */
 case|case
-literal|'c'
-case|:
-case|case
 literal|'s'
 case|:
-comment|/* try to read optional parameter, pc unchanged if no parm */
-name|ptr
+name|stepping
 operator|=
-operator|&
-name|remcomInBuffer
-index|[
 literal|1
-index|]
 expr_stmt|;
+case|case
+literal|'c'
+case|:
+comment|/* try to read optional parameter, pc unchanged if no parm */
 if|if
 condition|(
 name|hexToInt
@@ -2611,12 +2555,7 @@ expr_stmt|;
 comment|/* set the trace bit if we're stepping */
 if|if
 condition|(
-name|remcomInBuffer
-index|[
-literal|0
-index|]
-operator|==
-literal|'s'
+name|stepping
 condition|)
 name|registers
 index|[
@@ -2625,7 +2564,7 @@ index|]
 operator||=
 literal|0x8000
 expr_stmt|;
-comment|/*            * look for newPC in the linked list of exception frames.            * if it is found, use the old frame it.  otherwise,            * fake up a dummy frame in returnFromException().            */
+comment|/* 	   * look for newPC in the linked list of exception frames. 	   * if it is found, use the old frame it.  otherwise, 	   * fake up a dummy frame in returnFromException(). 	   */
 if|if
 condition|(
 name|remote_debug
@@ -2675,7 +2614,7 @@ name|newPC
 condition|)
 break|break;
 comment|/* bingo! a match */
-comment|/*                * for a breakpoint instruction, the saved pc may                * be off by two due to re-executing the instruction                * replaced by the trap instruction.  Check for this.                */
+comment|/* 	       * for a breakpoint instruction, the saved pc may 	       * be off by two due to re-executing the instruction 	       * replaced by the trap instruction.  Check for this. 	       */
 if|if
 condition|(
 operator|(
@@ -2722,7 +2661,7 @@ operator|->
 name|previous
 expr_stmt|;
 block|}
-comment|/*            * If we found a match for the PC AND we are not returning            * as a result of a breakpoint (33),            * trace exception (9), nmi (31), jmp to            * the old exception handler as if this code never ran.            */
+comment|/* 	   * If we found a match for the PC AND we are not returning 	   * as a result of a breakpoint (33), 	   * trace exception (9), nmi (31), jmp to 	   * the old exception handler as if this code never ran. 	   */
 if|if
 condition|(
 name|frame
@@ -2755,7 +2694,7 @@ literal|33
 operator|)
 condition|)
 block|{
-comment|/*                    * invoke the previous handler.                    */
+comment|/* 		   * invoke the previous handler. 		   */
 if|if
 condition|(
 name|oldExceptionHook
@@ -2806,7 +2745,7 @@ operator|->
 name|exceptionVector
 argument_list|)
 expr_stmt|;
-comment|/* re-use the last frame, we're skipping it (longjump?)*/
+comment|/* re-use the last frame, we're skipping it (longjump?) */
 name|frame
 operator|=
 operator|(
@@ -2838,7 +2777,7 @@ name|lastFrame
 operator|-
 literal|1
 expr_stmt|;
-comment|/* by using a bunch of print commands with breakpoints,     	         it's possible for the frame stack to creep down.  If it creeps 		 too far, give up and reset it to the top.  Normal use should     	         not see this happen.     	      */
+comment|/* by using a bunch of print commands with breakpoints, 	         it's possible for the frame stack to creep down.  If it creeps 	         too far, give up and reset it to the top.  Normal use should 	         not see this happen. 	       */
 if|if
 condition|(
 call|(
@@ -2911,7 +2850,9 @@ end_function
 begin_function
 name|void
 name|initializeRemcomErrorFrame
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|lastFrame
 operator|=

@@ -10,6 +10,26 @@ name|_MSE_INT_H
 end_undef
 
 begin_comment
+comment|/* Define if your struct reg has r_fs.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STRUCT_REG_R_FS
+end_undef
+
+begin_comment
+comment|/* Define if your struct reg has r_gs.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STRUCT_REG_R_GS
+end_undef
+
+begin_comment
 comment|/* Define if pstatus_t type is available */
 end_comment
 
@@ -87,6 +107,106 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_PSADDR_T
+end_undef
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has prgregset32_t. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PRGREGSET32_T
+end_undef
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has prfpregset32_t. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PRFPREGSET32_T
+end_undef
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has prsysent_t */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PRSYSENT_T
+end_undef
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has pr_sigset_t */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PR_SIGSET_T
+end_undef
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has pr_sigaction64_t */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PR_SIGACTION64_T
+end_undef
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has pr_siginfo64_t */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PR_SIGINFO64_T
+end_undef
+
+begin_comment
+comment|/* Define if<link.h> exists and defines struct link_map which has    members with an ``l_'' prefix.  (For Solaris, SVR4, and    SVR4-like systems.) */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STRUCT_LINK_MAP_WITH_L_MEMBERS
+end_undef
+
+begin_comment
+comment|/* Define if<link.h> exists and defines struct link_map which has   members with an ``lm_'' prefix.  (For SunOS.)  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STRUCT_LINK_MAP_WITH_LM_MEMBERS
+end_undef
+
+begin_comment
+comment|/* Define if<link.h> exists and defines a struct so_map which has   members with an ``som_'' prefix.  (Found on older *BSD systems.)  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STRUCT_SO_MAP_WITH_SOM_MEMBERS
+end_undef
+
+begin_comment
+comment|/* Define if<sys/link.h> has struct link_map32 */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_STRUCT_LINK_MAP32
 end_undef
 
 begin_comment
@@ -336,13 +456,103 @@ name|HAVE_PTRACE_GETREGS
 end_undef
 
 begin_comment
-comment|/* Define if<sys/ptrace.h> defines the PTRACE_GETXFPREGS request.  */
+comment|/* Define if<sys/ptrace.h> defines the PTRACE_GETFPXREGS request.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|HAVE_PTRACE_GETXFPREGS
+name|HAVE_PTRACE_GETFPXREGS
+end_undef
+
+begin_comment
+comment|/* Define if<sys/ptrace.h> defines the PT_GETDBREGS request.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PT_GETDBREGS
+end_undef
+
+begin_comment
+comment|/* Define if<sys/ptrace.h> defines the PT_GETXMMREGS request.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PT_GETXMMREGS
+end_undef
+
+begin_comment
+comment|/* Define if gnu-regex.c included with GDB should be used. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|USE_INCLUDED_REGEX
+end_undef
+
+begin_comment
+comment|/* BFD's default architecture. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DEFAULT_BFD_ARCH
+end_undef
+
+begin_comment
+comment|/* BFD's default target vector. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DEFAULT_BFD_VEC
+end_undef
+
+begin_comment
+comment|/* Multi-arch enabled. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|GDB_MULTI_ARCH
+end_undef
+
+begin_comment
+comment|/* hostfile */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|GDB_XM_FILE
+end_undef
+
+begin_comment
+comment|/* targetfile */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|GDB_TM_FILE
+end_undef
+
+begin_comment
+comment|/* nativefile */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|GDB_NM_FILE
 end_undef
 
 end_unit

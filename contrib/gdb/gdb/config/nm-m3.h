@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Mach 3.0 common definitions and global vars.     Copyright (C) 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Mach 3.0 common definitions and global vars.     Copyright 1992, 1993, 1994, 1996 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<mach.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
 end_include
 
 begin_comment
@@ -76,7 +82,7 @@ value|mach3_prepare_to_proceed(select_it)
 end_define
 
 begin_comment
-comment|/* Try to get the privileged host port for authentication to machid  *  * If you can get this, you may debug anything on this host.  *  * If you can't, gdb gives it's own task port as the  * authentication port  */
+comment|/* Try to get the privileged host port for authentication to machid   * If you can get this, you may debug anything on this host.  *  * If you can't, gdb gives it's own task port as the  * authentication port  */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target-machine dependent code for Motorola 88000 series, for GDB.    Copyright 1988, 1990, 1991, 1994, 1995 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target-machine dependent code for Motorola 88000 series, for GDB.    Copyright 1988, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 2000,    2001 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -51,6 +51,12 @@ directive|include
 file|"value.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"regcache.h"
+end_include
+
 begin_comment
 comment|/* Size of an instruction */
 end_comment
@@ -82,6 +88,54 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* The type of a register.  */
+end_comment
+
+begin_function
+name|struct
+name|type
+modifier|*
+name|m88k_register_type
+parameter_list|(
+name|int
+name|regnum
+parameter_list|)
+block|{
+if|if
+condition|(
+name|regnum
+operator|>=
+name|XFP_REGNUM
+condition|)
+return|return
+name|builtin_type_m88110_ext
+return|;
+elseif|else
+if|if
+condition|(
+name|regnum
+operator|==
+name|PC_REGNUM
+operator|||
+name|regnum
+operator|==
+name|FP_REGNUM
+operator|||
+name|regnum
+operator|==
+name|SP_REGNUM
+condition|)
+return|return
+name|builtin_type_void_func_ptr
+return|;
+else|else
+return|return
+name|builtin_type_int32
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* The m88k kernel aligns all instructions on 4-byte boundaries.  The    kernel also uses the least significant two bits for its own hocus    pocus.  When gdb receives an address from the kernel, it needs to    preserve those right-most two bits, but gdb also needs to be careful    to realize that those two bits are not really a part of the address    of an instruction.  Shrug.  */
 end_comment
 
@@ -89,11 +143,9 @@ begin_function
 name|CORE_ADDR
 name|m88k_addr_bits_remove
 parameter_list|(
-name|addr
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -116,13 +168,11 @@ begin_function
 name|CORE_ADDR
 name|frame_chain
 parameter_list|(
-name|thisframe
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|thisframe
-decl_stmt|;
+parameter_list|)
 block|{
 name|frame_find_saved_regs
 argument_list|(
@@ -136,7 +186,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* NOTE:  this depends on frame_find_saved_regs returning the VALUE, not  	    the ADDRESS, of SP_REGNUM.  It also depends on the cache of 	    frame_find_saved_regs results.  */
+comment|/* NOTE:  this depends on frame_find_saved_regs returning the VALUE, not      the ADDRESS, of SP_REGNUM.  It also depends on the cache of      frame_find_saved_regs results.  */
 if|if
 condition|(
 name|thisframe
@@ -172,13 +222,11 @@ begin_function
 name|int
 name|frameless_function_invocation
 parameter_list|(
-name|frame
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 name|frame_find_saved_regs
 argument_list|(
@@ -192,7 +240,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* NOTE:  this depends on frame_find_saved_regs returning the VALUE, not  	    the ADDRESS, of SP_REGNUM.  It also depends on the cache of 	    frame_find_saved_regs results.  */
+comment|/* NOTE:  this depends on frame_find_saved_regs returning the VALUE, not      the ADDRESS, of SP_REGNUM.  It also depends on the cache of      frame_find_saved_regs results.  */
 if|if
 condition|(
 name|frame
@@ -220,18 +268,14 @@ begin_function
 name|void
 name|init_extra_frame_info
 parameter_list|(
-name|fromleaf
-parameter_list|,
-name|frame
-parameter_list|)
 name|int
 name|fromleaf
-decl_stmt|;
+parameter_list|,
 name|struct
 name|frame_info
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 name|frame
 operator|->
@@ -261,7 +305,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Examine an m88k function prologue, recording the addresses at which    registers are saved explicitly by the prologue code, and returning    the address of the first instruction after the prologue (but not    after the instruction at address LIMIT, as explained below).     LIMIT places an upper bound on addresses of the instructions to be    examined.  If the prologue code scan reaches LIMIT, the scan is    aborted and LIMIT is returned.  This is used, when examining the    prologue for the current frame, to keep examine_prologue () from    claiming that a given register has been saved when in fact the    instruction that saves it has not yet been executed.  LIMIT is used    at other times to stop the scan when we hit code after the true    function prologue (e.g. for the first source line) which might    otherwise be mistaken for function prologue.     The format of the function prologue matched by this routine is    derived from examination of the source to gcc 1.95, particularly    the routine output_prologue () in config/out-m88k.c.     subu r31,r31,n			# stack pointer update     (st rn,r31,offset)?			# save incoming regs    (st.d rn,r31,offset)?     (addu r30,r31,n)?			# frame pointer update     (pic sequence)?			# PIC code prologue     (or   rn,rm,0)?			# Move parameters to other regs */
+comment|/* Examine an m88k function prologue, recording the addresses at which    registers are saved explicitly by the prologue code, and returning    the address of the first instruction after the prologue (but not    after the instruction at address LIMIT, as explained below).     LIMIT places an upper bound on addresses of the instructions to be    examined.  If the prologue code scan reaches LIMIT, the scan is    aborted and LIMIT is returned.  This is used, when examining the    prologue for the current frame, to keep examine_prologue () from    claiming that a given register has been saved when in fact the    instruction that saves it has not yet been executed.  LIMIT is used    at other times to stop the scan when we hit code after the true    function prologue (e.g. for the first source line) which might    otherwise be mistaken for function prologue.     The format of the function prologue matched by this routine is    derived from examination of the source to gcc 1.95, particularly    the routine output_prologue () in config/out-m88k.c.     subu r31,r31,n                       # stack pointer update     (st rn,r31,offset)?                  # save incoming regs    (st.d rn,r31,offset)?     (addu r30,r31,n)?                    # frame pointer update     (pic sequence)?                      # PIC code prologue     (or   rn,rm,0)?                      # Move parameters to other regs  */
 end_comment
 
 begin_comment
@@ -551,18 +595,14 @@ begin_function
 name|CORE_ADDR
 name|next_insn
 parameter_list|(
+name|CORE_ADDR
 name|memaddr
 parameter_list|,
-name|pword1
-parameter_list|)
 name|unsigned
 name|long
 modifier|*
 name|pword1
-decl_stmt|;
-name|CORE_ADDR
-name|memaddr
-decl_stmt|;
+parameter_list|)
 block|{
 operator|*
 name|pword1
@@ -591,18 +631,14 @@ specifier|static
 name|int
 name|read_next_frame_reg
 parameter_list|(
-name|frame
-parameter_list|,
-name|regno
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|,
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 for|for
 control|(
@@ -674,37 +710,27 @@ specifier|static
 name|CORE_ADDR
 name|examine_prologue
 parameter_list|(
-name|ip
-parameter_list|,
-name|limit
-parameter_list|,
-name|frame_sp
-parameter_list|,
-name|fsr
-parameter_list|,
-name|fi
-parameter_list|)
 specifier|register
 name|CORE_ADDR
 name|ip
-decl_stmt|;
+parameter_list|,
 specifier|register
 name|CORE_ADDR
 name|limit
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|frame_sp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|frame_saved_regs
 modifier|*
 name|fsr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|CORE_ADDR
@@ -715,7 +741,7 @@ name|int
 name|src
 decl_stmt|;
 name|unsigned
-name|int
+name|long
 name|insn
 decl_stmt|;
 name|int
@@ -974,7 +1000,7 @@ break|break;
 case|case
 name|PIA_SKIP
 case|:
-default|default :
+default|default:
 comment|/* Do nothing */
 break|break;
 block|}
@@ -1015,7 +1041,7 @@ condition|)
 return|return
 name|ip
 return|;
-comment|/*      OK, now we have:       	sp_offset	original (before any alloca calls) displacement of SP 			(will be negative).  	fp_offset	displacement from original SP to the FP for this frame 			or -1.  	fsr->regs[0..31]	displacement from original SP to the stack 				location where reg[0..31] is stored.  	must_adjust[0..31]	set if corresponding offset was set.       If alloca has been called between the function prologue and the current      IP, then the current SP (frame_sp) will not be the original SP as set by      the function prologue.  If the current SP is not the original SP, then the      compiler will have allocated an FP for this frame, fp_offset will be set,      and we can use it to calculate the original SP.       Then, we figure out where the arguments and locals are, and relocate the      offsets in fsr->regs to absolute addresses.  */
+comment|/*      OK, now we have:       sp_offset  original (before any alloca calls) displacement of SP      (will be negative).       fp_offset  displacement from original SP to the FP for this frame      or -1.       fsr->regs[0..31]   displacement from original SP to the stack      location where reg[0..31] is stored.       must_adjust[0..31] set if corresponding offset was set.       If alloca has been called between the function prologue and the current      IP, then the current SP (frame_sp) will not be the original SP as set by      the function prologue.  If the current SP is not the original SP, then the      compiler will have allocated an FP for this frame, fp_offset will be set,      and we can use it to calculate the original SP.       Then, we figure out where the arguments and locals are, and relocate the      offsets in fsr->regs to absolute addresses.  */
 if|if
 condition|(
 name|fp_offset
@@ -1048,7 +1074,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* We have no frame pointer, therefore frame_sp is still the same value        as set by prologue.  But where is the frame itself?  */
+comment|/* We have no frame pointer, therefore frame_sp is still the same value          as set by prologue.  But where is the frame itself?  */
 if|if
 condition|(
 name|must_adjust
@@ -1057,7 +1083,7 @@ name|SRP_REGNUM
 index|]
 condition|)
 block|{
-comment|/* Function header saved SRP (r1), the return address.  Frame starts 	 4 bytes down from where it was saved.  */
+comment|/* Function header saved SRP (r1), the return address.  Frame starts 	     4 bytes down from where it was saved.  */
 name|frame_fp
 operator|=
 name|frame_sp
@@ -1080,7 +1106,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Function header didn't save SRP (r1), so we are in a leaf fn or 	 are otherwise confused.  */
+comment|/* Function header didn't save SRP (r1), so we are in a leaf fn or 	     are otherwise confused.  */
 name|frame_fp
 operator|=
 operator|-
@@ -1162,7 +1188,7 @@ name|fprintf_unfiltered
 argument_list|(
 name|gdb_stderr
 argument_list|,
-literal|"Bad saved SP value %x != %x, offset %x!\n"
+literal|"Bad saved SP value %lx != %lx, offset %x!\n"
 argument_list|,
 name|fsr
 operator|->
@@ -1201,20 +1227,13 @@ begin_comment
 comment|/* Given an ip value corresponding to the start of a function,    return the ip of the first instruction after the function     prologue.  */
 end_comment
 
-begin_function_decl
+begin_function
 name|CORE_ADDR
-name|skip_prologue
+name|m88k_skip_prologue
 parameter_list|(
+name|CORE_ADDR
 name|ip
 parameter_list|)
-function_decl|CORE_ADDR
-parameter_list|(
-name|ip
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_block
 block|{
 name|struct
 name|frame_saved_regs
@@ -1276,7 +1295,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Put here the code to store, into a struct frame_saved_regs,    the addresses of the saved registers of frame described by FRAME_INFO.    This includes special registers such as pc and fp saved in special    ways in the stack frame.  sp is even more special:    the address we return for it IS the sp for the next frame.     We cache the result of doing this in the frame_obstack, since it is    fairly expensive.  */
@@ -1286,20 +1305,16 @@ begin_function
 name|void
 name|frame_find_saved_regs
 parameter_list|(
-name|fi
-parameter_list|,
-name|fsr
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|,
 name|struct
 name|frame_saved_regs
 modifier|*
 name|fsr
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -1360,7 +1375,7 @@ name|fsr
 operator|=
 name|cache_fsr
 expr_stmt|;
-comment|/* Find the start and end of the function prologue.  If the PC 	 is in the function prologue, we only consider the part that 	 has executed already.  In the case where the PC is not in 	 the function prologue, we set limit to two instructions beyond 	 where the prologue ends in case if any of the prologue instructions 	 were moved into a delay slot of a branch instruction. */
+comment|/* Find the start and end of the function prologue.  If the PC          is in the function prologue, we only consider the part that          has executed already.  In the case where the PC is not in          the function prologue, we set limit to two instructions beyond          where the prologue ends in case if any of the prologue instructions          were moved into a delay slot of a branch instruction. */
 name|ip
 operator|=
 name|get_pc_function_start
@@ -1497,13 +1512,11 @@ begin_function
 name|CORE_ADDR
 name|frame_locals_address
 parameter_list|(
-name|fi
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|frame_saved_regs
@@ -1546,13 +1559,11 @@ begin_function
 name|CORE_ADDR
 name|frame_args_address
 parameter_list|(
-name|fi
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|frame_saved_regs
@@ -1595,13 +1606,11 @@ begin_function
 name|CORE_ADDR
 name|frame_saved_pc
 parameter_list|(
-name|frame
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|read_next_frame_reg
@@ -1626,16 +1635,12 @@ specifier|static
 name|void
 name|write_word
 parameter_list|(
-name|sp
-parameter_list|,
-name|word
-parameter_list|)
 name|CORE_ADDR
 name|sp
-decl_stmt|;
+parameter_list|,
 name|ULONGEST
 name|word
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1673,7 +1678,9 @@ end_function
 begin_function
 name|void
 name|m88k_push_dummy_frame
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|CORE_ADDR
@@ -1845,7 +1852,9 @@ end_function
 begin_function
 name|void
 name|pop_frame
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -1857,10 +1866,6 @@ name|get_current_frame
 argument_list|()
 decl_stmt|;
 specifier|register
-name|CORE_ADDR
-name|fp
-decl_stmt|;
-specifier|register
 name|int
 name|regnum
 decl_stmt|;
@@ -1868,13 +1873,6 @@ name|struct
 name|frame_saved_regs
 name|fsr
 decl_stmt|;
-name|fp
-operator|=
-name|FRAME_FP
-argument_list|(
-name|frame
-argument_list|)
-expr_stmt|;
 name|get_frame_saved_regs
 argument_list|(
 name|frame
@@ -1895,14 +1893,13 @@ argument_list|(
 name|SP_REGNUM
 argument_list|)
 argument_list|,
-name|FRAME_FP
-argument_list|(
-name|fi
-argument_list|)
+name|frame
+operator|->
+name|frame
 argument_list|)
 condition|)
 block|{
-comment|/* FIXME: I think get_frame_saved_regs should be handling this so 	 that we can deal with the saved registers properly (e.g. frame 	 1 is a call dummy, the user types "frame 2" and then "print $ps").  */
+comment|/* FIXME: I think get_frame_saved_regs should be handling this so          that we can deal with the saved registers properly (e.g. frame          1 is a call dummy, the user types "frame 2" and then "print $ps").  */
 specifier|register
 name|CORE_ADDR
 name|sp
@@ -2121,7 +2118,9 @@ end_function
 begin_function
 name|void
 name|_initialize_m88k_tdep
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tm_print_insn
 operator|=

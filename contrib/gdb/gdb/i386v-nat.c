@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Intel 386 native support for SYSV systems (pre-SVR4).    Copyright (C) 1988, 89, 91, 92, 94, 96, 1998 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Intel 386 native support for SYSV systems (pre-SVR4).     Copyright 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1998,    1999, 2000, 2002 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -126,7 +126,7 @@ file|<fcntl.h>
 end_include
 
 begin_comment
-comment|/* FIXME: The following used to be just "#include<sys/debugreg.h>", but  * the the Linux 2.1.x kernel and glibc 2.0.x are not in sync; including  *<sys/debugreg.h> will result in an error.  With luck, these losers  * will get their act together and we can trash this hack in the near future.  * --jsm 1998-10-21  */
+comment|/* FIXME: 1998-10-21/jsm: The following used to be just "#include<sys/debugreg.h>", but the the Linux kernel (version 2.1.x) and    glibc 2.0.x are not in sync; including<sys/debugreg.h> will result    in an error.  With luck, these losers will get their act together    and we can trash this hack in the near future.  */
 end_comment
 
 begin_ifdef
@@ -270,16 +270,12 @@ begin_function
 name|int
 name|i386_register_u_addr
 parameter_list|(
+name|int
 name|blockend
 parameter_list|,
+name|int
 name|regnum
 parameter_list|)
-name|int
-name|blockend
-decl_stmt|;
-name|int
-name|regnum
-decl_stmt|;
 block|{
 name|struct
 name|user
@@ -432,7 +428,9 @@ end_escape
 begin_function
 name|int
 name|kernel_u_size
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -511,47 +509,41 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|i386_insert_aligned_watchpoint
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|i386_insert_nonaligned_watchpoint
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Insert a watchpoint.  */
@@ -561,26 +553,18 @@ begin_function
 name|int
 name|i386_insert_watchpoint
 parameter_list|(
-name|pid
-parameter_list|,
-name|addr
-parameter_list|,
-name|len
-parameter_list|,
-name|rw
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|rw
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|i386_insert_aligned_watchpoint
@@ -604,31 +588,21 @@ specifier|static
 name|int
 name|i386_insert_aligned_watchpoint
 parameter_list|(
+name|int
 name|pid
 parameter_list|,
+name|CORE_ADDR
 name|waddr
 parameter_list|,
+name|CORE_ADDR
 name|addr
 parameter_list|,
+name|int
 name|len
 parameter_list|,
+name|int
 name|rw
 parameter_list|)
-name|int
-name|pid
-decl_stmt|;
-name|CORE_ADDR
-name|waddr
-decl_stmt|;
-name|CORE_ADDR
-name|addr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-name|int
-name|rw
-decl_stmt|;
 block|{
 name|int
 name|i
@@ -896,31 +870,21 @@ specifier|static
 name|int
 name|i386_insert_nonaligned_watchpoint
 parameter_list|(
+name|int
 name|pid
 parameter_list|,
+name|CORE_ADDR
 name|waddr
 parameter_list|,
+name|CORE_ADDR
 name|addr
 parameter_list|,
+name|int
 name|len
 parameter_list|,
+name|int
 name|rw
 parameter_list|)
-name|int
-name|pid
-decl_stmt|;
-name|CORE_ADDR
-name|waddr
-decl_stmt|;
-name|CORE_ADDR
-name|addr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-name|int
-name|rw
-decl_stmt|;
 block|{
 name|int
 name|align
@@ -935,9 +899,13 @@ specifier|static
 name|int
 name|size_try_array
 index|[
-literal|16
+literal|4
+index|]
+index|[
+literal|4
 index|]
 init|=
+block|{
 block|{
 literal|1
 block|,
@@ -946,8 +914,10 @@ block|,
 literal|1
 block|,
 literal|1
+block|}
 block|,
 comment|/* trying size one */
+block|{
 literal|2
 block|,
 literal|1
@@ -955,8 +925,10 @@ block|,
 literal|2
 block|,
 literal|1
+block|}
 block|,
 comment|/* trying size two */
+block|{
 literal|2
 block|,
 literal|1
@@ -964,8 +936,10 @@ block|,
 literal|2
 block|,
 literal|1
+block|}
 block|,
 comment|/* trying size three */
+block|{
 literal|4
 block|,
 literal|1
@@ -973,6 +947,7 @@ block|,
 literal|2
 block|,
 literal|1
+block|}
 comment|/* trying size four */
 block|}
 decl_stmt|;
@@ -996,26 +971,19 @@ expr_stmt|;
 comment|/* Four is the maximum length for 386.  */
 name|size
 operator|=
-operator|(
+name|size_try_array
+index|[
 name|len
 operator|>
 literal|4
-operator|)
 condition|?
 literal|3
 else|:
 name|len
 operator|-
 literal|1
-expr_stmt|;
-name|size
-operator|=
-name|size_try_array
+index|]
 index|[
-name|size
-operator|*
-literal|4
-operator|+
 name|align
 index|]
 expr_stmt|;
@@ -1075,21 +1043,15 @@ begin_function
 name|int
 name|i386_remove_watchpoint
 parameter_list|(
-name|pid
-parameter_list|,
-name|addr
-parameter_list|,
-name|len
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1205,11 +1167,9 @@ begin_function
 name|CORE_ADDR
 name|i386_stopped_by_watchpoint
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1309,70 +1269,6 @@ end_endif
 
 begin_comment
 comment|/* TARGET_HAS_HARDWARE_WATCHPOINTS */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* using FLOAT_INFO as is would be a problem.  FLOAT_INFO is called    via a command xxx and eventually calls ptrace without ever having    traversed the target vector.  This would be terribly impolite    behaviour for a sun4 hosted remote gdb.     A fix might be to move this code into the "info registers" command.    rich@cygnus.com 15 Sept 92. */
-end_comment
-
-begin_comment
-unit|i386_float_info () {   struct user u;
-comment|/* just for address computations */
-end_comment
-
-begin_comment
-unit|int i;
-comment|/* fpstate defined in<sys/user.h> */
-end_comment
-
-begin_if
-unit|struct fpstate *fpstatep;   char buf[sizeof (struct fpstate) + 2 * sizeof (int)];   unsigned int uaddr;   char fpvalid = 0;   unsigned int rounded_addr;   unsigned int rounded_size;   extern int corechan;   int skip;      uaddr = (char *)&u.u_fpvalid - (char *)&u;   if (target_has_execution)     {       unsigned int data;       unsigned int mask;              rounded_addr = uaddr& -sizeof (int);       data = ptrace (3, inferior_pid, (PTRACE_ARG3_TYPE) rounded_addr, 0);       mask = 0xff<< ((uaddr - rounded_addr) * 8);              fpvalid = ((data& mask) != 0);     }
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|else      {       if (lseek (corechan, uaddr, 0)< 0) 	perror ("seek on core file");       if (myread (corechan,&fpvalid, 1)< 0)  	perror ("read on core file");            }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* no core support yet */
-end_comment
-
-begin_if
-unit|if (fpvalid == 0)      {       printf_unfiltered ("no floating point status saved\n");       return;     }      uaddr = (char *)&U_FPSTATE(u) - (char *)&u;   if (target_has_execution)     {       int *ip;              rounded_addr = uaddr& -sizeof (int);       rounded_size = (((uaddr + sizeof (struct fpstate)) - uaddr) + 		      sizeof (int) - 1) / sizeof (int);       skip = uaddr - rounded_addr;              ip = (int *)buf;       for (i = 0; i< rounded_size; i++)  	{ 	  *ip++ = ptrace (3, inferior_pid, (PTRACE_ARG3_TYPE) rounded_addr, 0); 	  rounded_addr += sizeof (int); 	}     }
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|else      {       if (lseek (corechan, uaddr, 0)< 0) 	perror_with_name ("seek on core file");       if (myread (corechan, buf, sizeof (struct fpstate))< 0)  	perror_with_name ("read from core file");       skip = 0;     }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
-
-begin_endif
-unit|fpstatep = (struct fpstate *)(buf + skip);   print_387_status (fpstatep->status, (struct env387 *)fpstatep->state); }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* never */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for expressions stored in reversed prefix form, for GDB.    Copyright 1986, 1989, 1992, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for expressions stored in reversed prefix form, for GDB.    Copyright 1986, 1989, 1992, 1994, 2000 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -30,6 +30,16 @@ begin_comment
 comment|/* Needed for "struct block" type. */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"doublest.h"
+end_include
+
+begin_comment
+comment|/* Needed for DOUBLEST.  */
+end_comment
+
 begin_comment
 comment|/* Definitions for saved C expressions.  */
 end_comment
@@ -46,7 +56,7 @@ begin_enum
 enum|enum
 name|exp_opcode
 block|{
-comment|/* Used when it's necessary to pass an opcode which will be ignored,      or to catch uninitialized values.  */
+comment|/* Used when it's necessary to pass an opcode which will be ignored,        or to catch uninitialized values.  */
 name|OP_NULL
 block|,
 comment|/* BINOP_... operate on two values computed by following subexpressions,    replacing them by one result value.  They take no immediate arguments.  */
@@ -129,13 +139,10 @@ comment|/*<? */
 name|BINOP_MAX
 block|,
 comment|/*>? */
-name|BINOP_SCOPE
-block|,
-comment|/* :: */
-comment|/* STRUCTOP_MEMBER is used for pointer-to-member constructs.      X . * Y translates into X STRUCTOP_MEMBER Y.  */
+comment|/* STRUCTOP_MEMBER is used for pointer-to-member constructs.        X . * Y translates into X STRUCTOP_MEMBER Y.  */
 name|STRUCTOP_MEMBER
 block|,
-comment|/* STRUCTOP_MPTR is used for pointer-to-member constructs      when X is a pointer instead of an aggregate.  */
+comment|/* STRUCTOP_MPTR is used for pointer-to-member constructs        when X is a pointer instead of an aggregate.  */
 name|STRUCTOP_MPTR
 block|,
 comment|/* end of C++.  */
@@ -144,7 +151,7 @@ name|BINOP_INTDIV
 block|,
 name|BINOP_ASSIGN_MODIFY
 block|,
-comment|/* +=, -=, *=, and so on. 			   The following exp_element is another opcode, 			   a BINOP_, saying how to modify. 			   Then comes another BINOP_ASSIGN_MODIFY, 			   making three exp_elements in total.  */
+comment|/* +=, -=, *=, and so on. 				   The following exp_element is another opcode, 				   a BINOP_, saying how to modify. 				   Then comes another BINOP_ASSIGN_MODIFY, 				   making three exp_elements in total.  */
 comment|/* Modula-2 standard (binary) procedures */
 name|BINOP_VAL
 block|,
@@ -152,7 +159,7 @@ name|BINOP_INCL
 block|,
 name|BINOP_EXCL
 block|,
-comment|/* Concatenate two operands, such as character strings or bitstrings.      If the first operand is a integer expression, then it means concatenate      the second operand with itself that many times. */
+comment|/* Concatenate two operands, such as character strings or bitstrings.        If the first operand is a integer expression, then it means concatenate        the second operand with itself that many times. */
 name|BINOP_CONCAT
 block|,
 comment|/* For Chill and Pascal. */
@@ -169,59 +176,59 @@ comment|/* Operates on three values computed by following subexpressions.  */
 name|TERNOP_COND
 block|,
 comment|/* ?: */
-comment|/* A sub-string/sub-array.  Chill syntax:  OP1(OP2:OP3).      Return elements OP2 through OP3 of OP1.  */
+comment|/* A sub-string/sub-array.  Chill syntax:  OP1(OP2:OP3).        Return elements OP2 through OP3 of OP1.  */
 name|TERNOP_SLICE
 block|,
-comment|/* A sub-string/sub-array.  Chill syntax:  OP1(OP2 UP OP3).      Return OP3 elements of OP1, starting with element OP2. */
+comment|/* A sub-string/sub-array.  Chill syntax:  OP1(OP2 UP OP3).        Return OP3 elements of OP1, starting with element OP2. */
 name|TERNOP_SLICE_COUNT
 block|,
-comment|/* Multidimensional subscript operator, such as Modula-2 x[a,b,...].      The dimensionality is encoded in the operator, like the number of      function arguments in OP_FUNCALL, I.E.<OP><dimension><OP>.      The value of the first following subexpression is subscripted      by each of the next following subexpressions, one per dimension. */
+comment|/* Multidimensional subscript operator, such as Modula-2 x[a,b,...].        The dimensionality is encoded in the operator, like the number of        function arguments in OP_FUNCALL, I.E.<OP><dimension><OP>.        The value of the first following subexpression is subscripted        by each of the next following subexpressions, one per dimension. */
 name|MULTI_SUBSCRIPT
 block|,
-comment|/* The OP_... series take immediate following arguments.      After the arguments come another OP_... (the same one)      so that the grouping can be recognized from the end.  */
-comment|/* OP_LONG is followed by a type pointer in the next exp_element      and the long constant value in the following exp_element.      Then comes another OP_LONG.      Thus, the operation occupies four exp_elements.  */
+comment|/* The OP_... series take immediate following arguments.        After the arguments come another OP_... (the same one)        so that the grouping can be recognized from the end.  */
+comment|/* OP_LONG is followed by a type pointer in the next exp_element        and the long constant value in the following exp_element.        Then comes another OP_LONG.        Thus, the operation occupies four exp_elements.  */
 name|OP_LONG
 block|,
 comment|/* OP_DOUBLE is similar but takes a DOUBLEST constant instead of a long.  */
 name|OP_DOUBLE
 block|,
-comment|/* OP_VAR_VALUE takes one struct block * in the following element,      and one struct symbol * in the following exp_element, followed by      another OP_VAR_VALUE, making four exp_elements.  If the block is      non-NULL, evaluate the symbol relative to the innermost frame      executing in that block; if the block is NULL use the selected frame.  */
+comment|/* OP_VAR_VALUE takes one struct block * in the following element,        and one struct symbol * in the following exp_element, followed by        another OP_VAR_VALUE, making four exp_elements.  If the block is        non-NULL, evaluate the symbol relative to the innermost frame        executing in that block; if the block is NULL use the selected frame.  */
 name|OP_VAR_VALUE
 block|,
-comment|/* OP_LAST is followed by an integer in the next exp_element.      The integer is zero for the last value printed,      or it is the absolute number of a history element.      With another OP_LAST at the end, this makes three exp_elements.  */
+comment|/* OP_LAST is followed by an integer in the next exp_element.        The integer is zero for the last value printed,        or it is the absolute number of a history element.        With another OP_LAST at the end, this makes three exp_elements.  */
 name|OP_LAST
 block|,
-comment|/* OP_REGISTER is followed by an integer in the next exp_element.      This is the number of a register to fetch (as an int).      With another OP_REGISTER at the end, this makes three exp_elements.  */
+comment|/* OP_REGISTER is followed by an integer in the next exp_element.        This is the number of a register to fetch (as an int).        With another OP_REGISTER at the end, this makes three exp_elements.  */
 name|OP_REGISTER
 block|,
-comment|/* OP_INTERNALVAR is followed by an internalvar ptr in the next exp_element.      With another OP_INTERNALVAR at the end, this makes three exp_elements.  */
+comment|/* OP_INTERNALVAR is followed by an internalvar ptr in the next exp_element.        With another OP_INTERNALVAR at the end, this makes three exp_elements.  */
 name|OP_INTERNALVAR
 block|,
-comment|/* OP_FUNCALL is followed by an integer in the next exp_element.      The integer is the number of args to the function call.      That many plus one values from following subexpressions      are used, the first one being the function.      The integer is followed by a repeat of OP_FUNCALL,      making three exp_elements.  */
+comment|/* OP_FUNCALL is followed by an integer in the next exp_element.        The integer is the number of args to the function call.        That many plus one values from following subexpressions        are used, the first one being the function.        The integer is followed by a repeat of OP_FUNCALL,        making three exp_elements.  */
 name|OP_FUNCALL
 block|,
-comment|/* This is EXACTLY like OP_FUNCALL but is semantically different.        In F77, array subscript expressions, substring expressions      and function calls are  all exactly the same syntactically. They may       only be dismabiguated at runtime.  Thus this operator, which       indicates that we have found something of the form<name> (<stuff> ) */
+comment|/* This is EXACTLY like OP_FUNCALL but is semantically different.          In F77, array subscript expressions, substring expressions        and function calls are  all exactly the same syntactically. They may         only be dismabiguated at runtime.  Thus this operator, which         indicates that we have found something of the form<name> (<stuff> ) */
 name|OP_F77_UNDETERMINED_ARGLIST
 block|,
-comment|/* The following OP is a special one, it introduces a F77 complex      literal. It is followed by exactly two args that are doubles.  */
+comment|/* The following OP is a special one, it introduces a F77 complex        literal. It is followed by exactly two args that are doubles.  */
 name|OP_COMPLEX
 block|,
-comment|/* OP_STRING represents a string constant.      Its format is the same as that of a STRUCTOP, but the string      data is just made into a string constant when the operation      is executed.  */
+comment|/* OP_STRING represents a string constant.        Its format is the same as that of a STRUCTOP, but the string        data is just made into a string constant when the operation        is executed.  */
 name|OP_STRING
 block|,
-comment|/* OP_BITSTRING represents a packed bitstring constant.      Its format is the same as that of a STRUCTOP, but the bitstring      data is just made into a bitstring constant when the operation      is executed.  */
+comment|/* OP_BITSTRING represents a packed bitstring constant.        Its format is the same as that of a STRUCTOP, but the bitstring        data is just made into a bitstring constant when the operation        is executed.  */
 name|OP_BITSTRING
 block|,
-comment|/* OP_ARRAY creates an array constant out of the following subexpressions.      It is followed by two exp_elements, the first containing an integer      that is the lower bound of the array and the second containing another      integer that is the upper bound of the array.  The second integer is      followed by a repeat of OP_ARRAY, making four exp_elements total.      The bounds are used to compute the number of following subexpressions      to consume, as well as setting the bounds in the created array constant.      The type of the elements is taken from the type of the first subexp,      and they must all match. */
+comment|/* OP_ARRAY creates an array constant out of the following subexpressions.        It is followed by two exp_elements, the first containing an integer        that is the lower bound of the array and the second containing another        integer that is the upper bound of the array.  The second integer is        followed by a repeat of OP_ARRAY, making four exp_elements total.        The bounds are used to compute the number of following subexpressions        to consume, as well as setting the bounds in the created array constant.        The type of the elements is taken from the type of the first subexp,        and they must all match. */
 name|OP_ARRAY
 block|,
-comment|/* UNOP_CAST is followed by a type pointer in the next exp_element.      With another UNOP_CAST at the end, this makes three exp_elements.      It casts the value of the following subexpression.  */
+comment|/* UNOP_CAST is followed by a type pointer in the next exp_element.        With another UNOP_CAST at the end, this makes three exp_elements.        It casts the value of the following subexpression.  */
 name|UNOP_CAST
 block|,
-comment|/* UNOP_MEMVAL is followed by a type pointer in the next exp_element      With another UNOP_MEMVAL at the end, this makes three exp_elements.      It casts the contents of the word addressed by the value of the      following subexpression.  */
+comment|/* UNOP_MEMVAL is followed by a type pointer in the next exp_element        With another UNOP_MEMVAL at the end, this makes three exp_elements.        It casts the contents of the word addressed by the value of the        following subexpression.  */
 name|UNOP_MEMVAL
 block|,
-comment|/* UNOP_... operate on one value from a following subexpression      and replace it with a result.  They take no immediate arguments.  */
+comment|/* UNOP_... operate on one value from a following subexpression        and replace it with a result.  They take no immediate arguments.  */
 name|UNOP_NEG
 block|,
 comment|/* Unary - */
@@ -295,22 +302,22 @@ comment|/* Modula-2 builtin BOOLEAN type */
 name|OP_M2_STRING
 block|,
 comment|/* Modula-2 string constants */
-comment|/* STRUCTOP_... operate on a value from a following subexpression      by extracting a structure component specified by a string      that appears in the following exp_elements (as many as needed).      STRUCTOP_STRUCT is used for "." and STRUCTOP_PTR for "->".      They differ only in the error message given in case the value is      not suitable or the structure component specified is not found.       The length of the string follows the opcode, followed by      BYTES_TO_EXP_ELEM(length) elements containing the data of the      string, followed by the length again and the opcode again.  */
+comment|/* STRUCTOP_... operate on a value from a following subexpression        by extracting a structure component specified by a string        that appears in the following exp_elements (as many as needed).        STRUCTOP_STRUCT is used for "." and STRUCTOP_PTR for "->".        They differ only in the error message given in case the value is        not suitable or the structure component specified is not found.         The length of the string follows the opcode, followed by        BYTES_TO_EXP_ELEM(length) elements containing the data of the        string, followed by the length again and the opcode again.  */
 name|STRUCTOP_STRUCT
 block|,
 name|STRUCTOP_PTR
 block|,
 comment|/* C++ */
-comment|/* OP_THIS is just a placeholder for the class instance variable.      It just comes in a tight (OP_THIS, OP_THIS) pair.  */
+comment|/* OP_THIS is just a placeholder for the class instance variable.        It just comes in a tight (OP_THIS, OP_THIS) pair.  */
 name|OP_THIS
 block|,
-comment|/* OP_SCOPE surrounds a type name and a field name.  The type      name is encoded as one element, but the field name stays as      a string, which, of course, is variable length.  */
+comment|/* OP_SCOPE surrounds a type name and a field name.  The type        name is encoded as one element, but the field name stays as        a string, which, of course, is variable length.  */
 name|OP_SCOPE
 block|,
-comment|/* Used to represent named structure field values in brace initializers      (or tuples as they are called in Chill).      The gcc C syntax is NAME:VALUE or .NAME=VALUE, the Chill syntax is      .NAME:VALUE.  Multiple labels (as in the Chill syntax      .NAME1,.NAME2:VALUE) is represented as if it were      .NAME1:(.NAME2:VALUE) (though that is not valid Chill syntax).       The NAME is represented as for STRUCTOP_STRUCT;  VALUE follows. */
+comment|/* Used to represent named structure field values in brace initializers        (or tuples as they are called in Chill).        The gcc C syntax is NAME:VALUE or .NAME=VALUE, the Chill syntax is        .NAME:VALUE.  Multiple labels (as in the Chill syntax        .NAME1,.NAME2:VALUE) is represented as if it were        .NAME1:(.NAME2:VALUE) (though that is not valid Chill syntax).         The NAME is represented as for STRUCTOP_STRUCT;  VALUE follows. */
 name|OP_LABELED
 block|,
-comment|/* OP_TYPE is for parsing types, and used with the "ptype" command      so we can look up types that are qualified by scope, either with      the GDB "::" operator, or the Modula-2 '.' operator. */
+comment|/* OP_TYPE is for parsing types, and used with the "ptype" command        so we can look up types that are qualified by scope, either with        the GDB "::" operator, or the Modula-2 '.' operator. */
 name|OP_TYPE
 block|,
 comment|/* An un-looked-up identifier. */
@@ -341,7 +348,7 @@ decl_stmt|;
 name|DOUBLEST
 name|doubleconst
 decl_stmt|;
-comment|/* Really sizeof (union exp_element) characters (or less for the last      element of a string).  */
+comment|/* Really sizeof (union exp_element) characters (or less for the last        element of a string).  */
 name|char
 name|string
 decl_stmt|;
@@ -419,44 +426,38 @@ begin_comment
 comment|/* From parse.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|expression
 modifier|*
 name|parse_expression
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|expression
 modifier|*
 name|parse_exp_1
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
 name|block
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* The innermost context required by the stack and register variables    we've encountered so far.  To use this, set it to NULL, then call    parse_<whatever>, then look at it.  */
@@ -494,126 +495,99 @@ block|}
 enum|;
 end_enum
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|value
 modifier|*
 name|evaluate_subexp_standard
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|type
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|expression
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|,
-expr|enum
+modifier|*
+parameter_list|,
+name|enum
 name|noside
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* From expprint.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|print_expression
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|expression
-operator|*
-operator|,
-name|GDB_FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+name|struct
+name|ui_file
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|op_string
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|exp_opcode
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAINTENANCE_CMDS
-end_ifdef
-
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dump_prefix_expression
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|expression
-operator|*
-operator|,
-name|GDB_FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
+name|struct
+name|ui_file
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dump_postfix_expression
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|expression
-operator|*
-operator|,
-name|GDB_FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
+name|struct
+name|ui_file
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MAINTENANCE_CMDS */
-end_comment
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

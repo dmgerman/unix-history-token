@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent code for LynxOS.    Copyright 1993, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Native-dependent code for LynxOS.    Copyright 1993, 1994, 1995, 1996, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"regcache.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ptrace.h>
 end_include
 
@@ -51,38 +57,36 @@ directive|include
 file|<sys/fpp.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|unsigned
 name|long
 name|registers_addr
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|pid
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|fetch_core_registers
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
 define|#
 directive|define
 name|X
@@ -90,15 +94,24 @@ parameter_list|(
 name|ENTRY
 parameter_list|)
 value|(offsetof(struct econtext, ENTRY))
+end_define
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|I386
+end_ifdef
+
+begin_comment
 comment|/* Mappings from tm-i386v.h */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|regmap
 index|[]
-operator|=
+init|=
 block|{
 name|X
 argument_list|(
@@ -187,19 +200,34 @@ argument_list|)
 block|,
 comment|/* we just substitute these two in the hopes 				   that they are useful. */
 block|}
-argument_list|;
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* I386 */
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|M68K
+end_ifdef
+
+begin_comment
 comment|/* Mappings from tm-m68k.h */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|regmap
 index|[]
-operator|=
+init|=
 block|{
 name|X
 argument_list|(
@@ -490,14 +518,29 @@ argument_list|)
 block|,
 comment|/* fpflags */
 block|}
-argument_list|;
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* M68K */
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|SPARC
+end_ifdef
+
+begin_comment
 comment|/* Mappings from tm-sparc.h */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|FX
@@ -505,11 +548,14 @@ parameter_list|(
 name|ENTRY
 parameter_list|)
 value|(offsetof(struct fcontext, ENTRY))
+end_define
+
+begin_decl_stmt
 specifier|static
 name|int
 name|regmap
 index|[]
-operator|=
+init|=
 block|{
 operator|-
 literal|1
@@ -1023,18 +1069,30 @@ literal|1
 block|,
 comment|/* cpsr */
 block|}
-argument_list|;
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* SPARC */
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|rs6000
+end_ifdef
+
+begin_decl_stmt
 specifier|static
 name|int
 name|regmap
 index|[]
-operator|=
+init|=
 block|{
 name|X
 argument_list|(
@@ -1592,22 +1650,35 @@ argument|mq
 argument_list|)
 comment|/* MQ */
 block|}
-argument_list|;
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* rs6000 */
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|SPARC
+end_ifdef
+
+begin_comment
 comment|/* This routine handles some oddball cases for Sparc registers and LynxOS.    In partucular, it causes refs to G0, g5->7, and all fp regs to return zero.    It also handles knows where to find the I& L regs on the stack.  */
+end_comment
+
+begin_function
 name|void
 name|fetch_inferior_registers
-argument_list|(
-argument|regno
-argument_list|)
+parameter_list|(
 name|int
 name|regno
-argument_list|;
+parameter_list|)
 block|{
 name|int
 name|whatregs
@@ -1712,7 +1783,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_GETREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1947,7 +2021,7 @@ argument_list|(
 name|SP_REGNUM
 argument_list|)
 expr_stmt|;
-name|target_xfer_memory
+name|target_read_memory
 argument_list|(
 name|sp
 operator|+
@@ -1968,8 +2042,6 @@ name|REGISTER_RAW_SIZE
 argument_list|(
 name|I0_REGNUM
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -1992,7 +2064,7 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-name|target_xfer_memory
+name|target_read_memory
 argument_list|(
 name|sp
 operator|+
@@ -2013,8 +2085,6 @@ name|REGISTER_RAW_SIZE
 argument_list|(
 name|L0_REGNUM
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -2068,7 +2138,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_GETFPREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -2151,7 +2224,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* This routine handles storing of the I& L regs for the Sparc.  The trick    here is that they actually live on the stack.  The really tricky part is    that when changing the stack pointer, the I& L regs must be written to    where the new SP points, otherwise the regs will be incorrect when the    process is started up again.   We assume that the I& L regs are valid at    this point.  */
@@ -2161,11 +2234,9 @@ begin_function
 name|void
 name|store_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|whatregs
@@ -2363,7 +2434,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_SETREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -2426,10 +2500,16 @@ operator|+
 literal|5
 index|]
 condition|)
-name|abort
-argument_list|()
+name|internal_error
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"failed internal consistency check"
+argument_list|)
 expr_stmt|;
-name|target_xfer_memory
+name|target_write_memory
 argument_list|(
 name|sp
 operator|+
@@ -2450,11 +2530,9 @@ name|REGISTER_RAW_SIZE
 argument_list|(
 name|I0_REGNUM
 argument_list|)
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
-name|target_xfer_memory
+name|target_write_memory
 argument_list|(
 name|sp
 operator|+
@@ -2475,8 +2553,6 @@ name|REGISTER_RAW_SIZE
 argument_list|(
 name|L0_REGNUM
 argument_list|)
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2500,8 +2576,14 @@ index|[
 name|regno
 index|]
 condition|)
-name|abort
-argument_list|()
+name|internal_error
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"failed internal consistency check"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2544,7 +2626,7 @@ argument_list|)
 operator|+
 name|FRAME_SAVED_I0
 expr_stmt|;
-name|target_xfer_memory
+name|target_write_memory
 argument_list|(
 name|sp
 operator|+
@@ -2563,8 +2645,6 @@ name|REGISTER_RAW_SIZE
 argument_list|(
 name|regno
 argument_list|)
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2595,7 +2675,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_GETFPREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -2659,7 +2742,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_SETFPREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -2721,11 +2807,9 @@ name|unsigned
 name|long
 name|registers_addr
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|stblock
@@ -2819,11 +2903,9 @@ begin_function
 name|void
 name|fetch_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|reglo
@@ -2867,7 +2949,10 @@ name|ecp
 operator|=
 name|registers_addr
 argument_list|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -2945,7 +3030,10 @@ name|ptrace
 argument_list|(
 name|ptrace_fun
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 call|(
 name|PTRACE_ARG3_TYPE
@@ -3002,44 +3090,13 @@ begin_comment
 comment|/* Store our register values back into the inferior.    If REGNO is -1, do this for all registers.    Otherwise, REGNO specifies which register (so we can save time).  */
 end_comment
 
-begin_comment
-comment|/* Registers we shouldn't try to store.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|CANNOT_STORE_REGISTER
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|CANNOT_STORE_REGISTER
-parameter_list|(
-name|regno
-parameter_list|)
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|void
 name|store_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|reglo
@@ -3083,7 +3140,10 @@ name|ecp
 operator|=
 name|registers_addr
 argument_list|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -3180,7 +3240,10 @@ name|ptrace
 argument_list|(
 name|ptrace_fun
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 call|(
 name|PTRACE_ARG3_TYPE
@@ -3227,21 +3290,17 @@ comment|/* Wait for child to do something.  Return pid of child, or -1 in case  
 end_comment
 
 begin_function
-name|int
+name|ptid_t
 name|child_wait
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|ourstatus
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|struct
 name|target_waitstatus
 modifier|*
 name|ourstatus
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|save_errno
@@ -3252,6 +3311,9 @@ decl_stmt|;
 name|union
 name|wait
 name|status
+decl_stmt|;
+name|int
+name|pid
 decl_stmt|;
 while|while
 condition|(
@@ -3333,7 +3395,7 @@ name|pid
 operator|!=
 name|PIDGET
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 condition|)
 comment|/* Some other process?!? */
@@ -3345,12 +3407,12 @@ operator|.
 name|w_tid
 expr_stmt|;
 comment|/* Get thread id from status */
-comment|/* Initial thread value can only be acquired via wait, so we have to 	 resort to this hack.  */
+comment|/* Initial thread value can only be acquired via wait, so we have to          resort to this hack.  */
 if|if
 condition|(
 name|TIDGET
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 operator|==
 literal|0
@@ -3360,22 +3422,25 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|inferior_pid
+name|inferior_ptid
 operator|=
-name|BUILDPID
+name|MERGEPID
 argument_list|(
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 name|thread
 argument_list|)
 expr_stmt|;
 name|add_thread
 argument_list|(
-name|inferior_pid
+name|inferior_ptid
 argument_list|)
 expr_stmt|;
 block|}
-name|pid
+name|ptid
 operator|=
 name|BUILDPID
 argument_list|(
@@ -3391,9 +3456,9 @@ name|thread
 operator|==
 literal|0
 condition|)
-name|inferior_pid
+name|inferior_ptid
 operator|=
-name|pid
+name|ptid
 expr_stmt|;
 comment|/* Check for thread creation.  */
 if|if
@@ -3413,7 +3478,7 @@ operator|&&
 operator|!
 name|in_thread_list
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 condition|)
 block|{
@@ -3426,7 +3491,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_GETTRACESIG
 argument_list|,
-name|pid
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -3443,7 +3511,7 @@ operator|==
 name|SIGNEWTHREAD
 condition|)
 block|{
-comment|/* It's a new thread notification.  We don't want to much with 		 realsig -- the code in wait_for_inferior expects SIGTRAP. */
+comment|/* It's a new thread notification.  We don't want to much with 	         realsig -- the code in wait_for_inferior expects SIGTRAP. */
 name|ourstatus
 operator|->
 name|kind
@@ -3459,7 +3527,7 @@ operator|=
 name|TARGET_SIGNAL_0
 expr_stmt|;
 return|return
-name|pid
+name|ptid
 return|;
 block|}
 else|else
@@ -3487,7 +3555,7 @@ name|SIGTRAP
 operator|&&
 name|in_thread_list
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 condition|)
 block|{
@@ -3500,7 +3568,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_GETTRACESIG
 argument_list|,
-name|pid
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -3523,7 +3594,7 @@ name|PTRACE_CONT
 argument_list|,
 name|PIDGET
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 argument_list|,
 operator|(
@@ -3540,7 +3611,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|SPARC
-comment|/* SPARC Lynx uses an byte reversed wait status; we must use the 	 host macros to access it.  These lines just a copy of 	 store_waitstatus.  We can't use CHILD_SPECIAL_WAITSTATUS 	 because target.c can't include the Lynx<sys/wait.h>.  */
+comment|/* SPARC Lynx uses an byte reversed wait status; we must use the          host macros to access it.  These lines just a copy of          store_waitstatus.  We can't use CHILD_SPECIAL_WAITSTATUS          because target.c can't include the Lynx<sys/wait.h>.  */
 if|if
 condition|(
 name|WIFEXITED
@@ -3635,7 +3706,7 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-name|pid
+name|ptid
 return|;
 block|}
 block|}
@@ -3649,12 +3720,18 @@ begin_function
 name|int
 name|child_thread_alive
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|)
+block|{
 name|int
 name|pid
+init|=
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
 decl_stmt|;
-block|{
 comment|/* Arggh.  Apparently pthread_kill only works for threads within      the process that calls pthread_kill.       We want to avoid the lynx signal extensions as they simply don't      map well to the generic gdb interface we want to keep.       All we want to do is determine if a particular thread is alive;      it appears as if we can just make a harmless thread specific      ptrace call to do that.  */
 return|return
 operator|(
@@ -3684,25 +3761,27 @@ begin_function
 name|void
 name|child_resume
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|step
-parameter_list|,
-name|signal
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|int
 name|step
-decl_stmt|;
+parameter_list|,
 name|enum
 name|target_signal
 name|signal
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|func
+decl_stmt|;
+name|int
+name|pid
+init|=
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
 decl_stmt|;
 name|errno
 operator|=
@@ -3719,7 +3798,10 @@ condition|)
 block|{
 name|pid
 operator|=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 expr_stmt|;
 name|func
 operator|=
@@ -3776,13 +3858,11 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|lynx_pid_to_str
+name|child_pid_to_str
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 block|{
 specifier|static
 name|char
@@ -3799,12 +3879,12 @@ literal|"process %d thread %d"
 argument_list|,
 name|PIDGET
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 argument_list|,
 name|TIDGET
 argument_list|(
-name|pid
+name|ptid
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3815,7 +3895,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Extract the register values out of the core file and store    them where `read_register' will find them.     CORE_REG_SECT points to the register values themselves, read into memory.    CORE_REG_SIZE is the size of that area.    WHICH says which set of registers we are handling (0 = int, 2 = float          on machines where they are discontiguous).    REG_ADDR is the offset from u.u_ar0 to the register values relative to             core_reg_sect.  This is used with old-fashioned core files to 	    locate the registers in a large upage-plus-stack ".reg" section. 	    Original upage address X is at location core_reg_sect+x+reg_addr.  */
+comment|/* Extract the register values out of the core file and store    them where `read_register' will find them.     CORE_REG_SECT points to the register values themselves, read into memory.    CORE_REG_SIZE is the size of that area.    WHICH says which set of registers we are handling (0 = int, 2 = float    on machines where they are discontiguous).    REG_ADDR is the offset from u.u_ar0 to the register values relative to    core_reg_sect.  This is used with old-fashioned core files to    locate the registers in a large upage-plus-stack ".reg" section.    Original upage address X is at location core_reg_sect+x+reg_addr.  */
 end_comment
 
 begin_function
@@ -3823,27 +3903,19 @@ specifier|static
 name|void
 name|fetch_core_registers
 parameter_list|(
-name|core_reg_sect
-parameter_list|,
-name|core_reg_size
-parameter_list|,
-name|which
-parameter_list|,
-name|reg_addr
-parameter_list|)
 name|char
 modifier|*
 name|core_reg_sect
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|core_reg_size
-decl_stmt|;
+parameter_list|,
 name|int
 name|which
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|reg_addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|st_entry
@@ -3925,9 +3997,18 @@ init|=
 block|{
 name|bfd_target_unknown_flavour
 block|,
+comment|/* core_flavour */
+name|default_check_format
+block|,
+comment|/* check_format */
+name|default_core_sniffer
+block|,
+comment|/* core_sniffer */
 name|fetch_core_registers
 block|,
+comment|/* core_read_registers */
 name|NULL
+comment|/* next */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3935,7 +4016,9 @@ end_decl_stmt
 begin_function
 name|void
 name|_initialize_core_lynx
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|add_core_fns
 argument_list|(

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* DWARF debugging format support for GDB.    Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1998    Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.  Portions based on dbxread.c,    mipsread.c, coffread.c, and dwarfread.c from a Data General SVR4 gdb port.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* DWARF debugging format support for GDB.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002    Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.  Portions based on dbxread.c,    mipsread.c, coffread.c, and dwarfread.c from a Data General SVR4 gdb port.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*  FIXME: Do we need to generate dependencies in partial symtabs? (Perhaps we don't need to).  FIXME: Resolve minor differences between what information we put in the partial symbol table and what dbxread puts in.  For example, we don't yet put enum constants there.  And dbxread seems to invent a lot of typedefs we never see.  Use the new printpsym command to see the partial symbol table contents.  FIXME: Figure out a better way to tell gdb about the name of the function contain the user's entry point (I.E. main())  FIXME: See other FIXME's and "ifdef 0" scattered throughout the code for other things to work on, if you get bored. :-)  */
+comment|/*     FIXME: Do we need to generate dependencies in partial symtabs?    (Perhaps we don't need to).     FIXME: Resolve minor differences between what information we put in the    partial symbol table and what dbxread puts in.  For example, we don't yet    put enum constants there.  And dbxread seems to invent a lot of typedefs    we never see.  Use the new printpsym command to see the partial symbol table    contents.     FIXME: Figure out a better way to tell gdb about the name of the function    contain the user's entry point (I.E. main())     FIXME: See other FIXME's and "ifdef 0" scattered throughout the code for    other things to work on, if you get bored. :-)   */
 end_comment
 
 begin_include
@@ -526,31 +526,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Provide a default mapping from a DWARF register number to a gdb REGNUM.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DWARF_REG_TO_REGNUM
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DWARF_REG_TO_REGNUM
-parameter_list|(
-name|num
-parameter_list|)
-value|(num)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* Flags to target_to_host() that tell whether or not the data object is    expected to be signed.  Used, for example, when fetching a signed    integer in the target environment which is used as a signed integer    in the host environment, and the two environments have different sized    ints.  In this case, *somebody* has to sign extend the smaller sized    int. */
 end_comment
 
@@ -700,34 +675,7 @@ value|(0x00f0|FORM_BLOCK2)
 end_define
 
 begin_comment
-comment|/* External variables referenced. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|info_verbose
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* From main.c; nonzero => verbose */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|warning_pre_print
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* From utils.c */
-end_comment
-
-begin_comment
-comment|/* The DWARF debugging information consists of two major pieces,    one is a block of DWARF Information Entries (DIE's) and the other    is a line number table.  The "struct dieinfo" structure contains    the information for a single DIE, the one currently being processed.     In order to make it easier to randomly access the attribute fields    of the current DIE, which are specifically unordered within the DIE,    each DIE is scanned and an instance of the "struct dieinfo"    structure is initialized.     Initialization is done in two levels.  The first, done by basicdieinfo(),    just initializes those fields that are vital to deciding whether or not    to use this DIE, how to skip past it, etc.  The second, done by the    function completedieinfo(), fills in the rest of the information.     Attributes which have block forms are not interpreted at the time    the DIE is scanned, instead we just save pointers to the start    of their value fields.     Some fields have a flag<name>_p that is set when the value of the    field is valid (I.E. we found a matching attribute in the DIE).  Since    we may want to test for the presence of some attributes in the DIE,    such as AT_low_pc, without restricting the values of the field,    we need someway to note that we found such an attribute.      */
+comment|/* The DWARF debugging information consists of two major pieces,    one is a block of DWARF Information Entries (DIE's) and the other    is a line number table.  The "struct dieinfo" structure contains    the information for a single DIE, the one currently being processed.     In order to make it easier to randomly access the attribute fields    of the current DIE, which are specifically unordered within the DIE,    each DIE is scanned and an instance of the "struct dieinfo"    structure is initialized.     Initialization is done in two levels.  The first, done by basicdieinfo(),    just initializes those fields that are vital to deciding whether or not    to use this DIE, how to skip past it, etc.  The second, done by the    function completedieinfo(), fills in the rest of the information.     Attributes which have block forms are not interpreted at the time    the DIE is scanned, instead we just save pointers to the start    of their value fields.     Some fields have a flag<name>_p that is set when the value of the    field is valid (I.E. we found a matching attribute in the DIE).  Since    we may want to test for the presence of some attributes in the DIE,    such as AT_low_pc, without restricting the values of the field,    we need someway to note that we found such an attribute.   */
 end_comment
 
 begin_typedef
@@ -904,7 +852,7 @@ name|unsigned
 name|int
 name|optimized_out
 decl_stmt|;
-comment|/* Kludge to identify basereg references.      Nonzero if we have an offset relative to a basereg.  */
+comment|/* Kludge to identify basereg references.        Nonzero if we have an offset relative to a basereg.  */
 name|unsigned
 name|int
 name|offreg
@@ -1024,11 +972,11 @@ begin_struct
 struct|struct
 name|dwfinfo
 block|{
-comment|/* Always the absolute file offset to the start of the ".debug"      section for the file containing the DIE's being accessed.  */
+comment|/* Always the absolute file offset to the start of the ".debug"        section for the file containing the DIE's being accessed.  */
 name|file_ptr
 name|dbfoff
 decl_stmt|;
-comment|/* Relative offset from the start of the ".debug" section to the      first DIE to be accessed.  When building the partial symbol      table, this value will be zero since we are accessing the      entire ".debug" section.  When expanding a partial symbol      table entry, this value will be the offset to the first      DIE for the compilation unit containing the symbol that      triggers the expansion.  */
+comment|/* Relative offset from the start of the ".debug" section to the        first DIE to be accessed.  When building the partial symbol        table, this value will be zero since we are accessing the        entire ".debug" section.  When expanding a partial symbol        table entry, this value will be the offset to the first        DIE for the compilation unit containing the symbol that        triggers the expansion.  */
 name|int
 name|dbroff
 decl_stmt|;
@@ -1036,7 +984,7 @@ comment|/* The size of the chunk of DIE's being examined, in bytes.  */
 name|int
 name|dblength
 decl_stmt|;
-comment|/* The absolute file offset to the line table fragment.  Ignored      when building partial symbol tables, but used when expanding      them, and contains the absolute file offset to the fragment      of the ".line" section containing the line numbers for the      current compilation unit.  */
+comment|/* The absolute file offset to the line table fragment.  Ignored        when building partial symbol tables, but used when expanding        them, and contains the absolute file offset to the fragment        of the ".line" section containing the line numbers for the        current compilation unit.  */
 name|file_ptr
 name|lnfoff
 decl_stmt|;
@@ -1175,784 +1123,661 @@ begin_comment
 comment|/* Forward declarations of static functions so we don't have to worry    about ordering within this file.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|free_utypes
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|PTR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|attribute_size
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|CORE_ADDR
 name|target_to_host
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|add_enum_psymbol
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|handle_producer
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|read_file_scope
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|read_func_scope
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|read_lexical_block_scope
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|scan_partial_symbols
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|scan_compilation_units
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|file_ptr
-operator|,
+parameter_list|,
 name|file_ptr
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|add_partial_symbol
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|basicdieinfo
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|completedieinfo
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|dwarf_psymtab_to_symtab
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|partial_symtab
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|psymtab_to_symtab_1
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|partial_symtab
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|read_ofile_symtab
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|partial_symtab
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|process_dies
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|read_structure_scope
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|decode_array_element_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|decode_subscript_data_item
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|dwarf_read_array_type
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|read_tag_pointer_type
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
+modifier|*
 name|dip
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|read_tag_string_type
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
+modifier|*
 name|dip
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|read_subroutine_type
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|read_enumeration
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|struct_type
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|enum_type
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|decode_line_numbers
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|decode_die_type
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|decode_mod_fund_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|decode_mod_u_d_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|decode_modified_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|decode_fund_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|create_name
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|obstack
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|lookup_utype
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|DIE_REF
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|alloc_utype
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|DIE_REF
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|symbol
 modifier|*
 name|new_symbol
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|synthesize_typedef
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|type
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|locval
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|set_cu_language
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|dieinfo
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|type
 modifier|*
 name|dwarf_fundamental_type
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	dwarf_fundamental_type -- lookup or create a fundamental type  SYNOPSIS  	struct type * 	dwarf_fundamental_type (struct objfile *objfile, int typeid)  DESCRIPTION  	DWARF version 1 doesn't supply any fundamental type information, 	so gdb has to construct such types.  It has a fixed number of 	fundamental types that it knows how to construct, which is the 	union of all types that it knows how to construct for all languages 	that it knows about.  These are enumerated in gdbtypes.h.  	As an example, assume we find a DIE that references a DWARF 	fundamental type of FT_integer.  We first look in the ftypes 	array to see if we already have such a type, indexed by the 	gdb internal value of FT_INTEGER.  If so, we simply return a 	pointer to that type.  If not, then we ask an appropriate 	language dependent routine to create a type FT_INTEGER, using 	defaults reasonable for the current target machine, and install 	that type in ftypes for future reference.  RETURNS  	Pointer to a fundamental type.  */
+comment|/*     LOCAL FUNCTION     dwarf_fundamental_type -- lookup or create a fundamental type     SYNOPSIS     struct type *    dwarf_fundamental_type (struct objfile *objfile, int typeid)     DESCRIPTION     DWARF version 1 doesn't supply any fundamental type information,    so gdb has to construct such types.  It has a fixed number of    fundamental types that it knows how to construct, which is the    union of all types that it knows how to construct for all languages    that it knows about.  These are enumerated in gdbtypes.h.     As an example, assume we find a DIE that references a DWARF    fundamental type of FT_integer.  We first look in the ftypes    array to see if we already have such a type, indexed by the    gdb internal value of FT_INTEGER.  If so, we simply return a    pointer to that type.  If not, then we ask an appropriate    language dependent routine to create a type FT_INTEGER, using    defaults reasonable for the current target machine, and install    that type in ftypes for future reference.     RETURNS     Pointer to a fundamental type.   */
 end_comment
 
 begin_function
@@ -1962,18 +1787,14 @@ name|type
 modifier|*
 name|dwarf_fundamental_type
 parameter_list|(
-name|objfile
-parameter_list|,
-name|typeid
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|,
 name|int
 name|typeid
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2032,7 +1853,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	set_cu_language -- set local copy of language for compilation unit  SYNOPSIS  	void 	set_cu_language (struct dieinfo *dip)  DESCRIPTION  	Decode the language attribute for a compilation unit DIE and 	remember what the language was.  We use this at various times 	when processing DIE's for a given compilation unit.  RETURNS  	No return value.   */
+comment|/*     LOCAL FUNCTION     set_cu_language -- set local copy of language for compilation unit     SYNOPSIS     void    set_cu_language (struct dieinfo *dip)     DESCRIPTION     Decode the language attribute for a compilation unit DIE and    remember what the language was.  We use this at various times    when processing DIE's for a given compilation unit.     RETURNS     No return value.   */
 end_comment
 
 begin_function
@@ -2040,13 +1861,11 @@ specifier|static
 name|void
 name|set_cu_language
 parameter_list|(
-name|dip
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -2143,54 +1962,35 @@ block|}
 end_function
 
 begin_comment
-comment|/*  GLOBAL FUNCTION  	dwarf_build_psymtabs -- build partial symtabs from DWARF debug info  SYNOPSIS  	void dwarf_build_psymtabs (struct objfile *objfile, 	     struct section_offsets *section_offsets, 	     int mainline, file_ptr dbfoff, unsigned int dbfsize, 	     file_ptr lnoffset, unsigned int lnsize)  DESCRIPTION  	This function is called upon to build partial symtabs from files 	containing DIE's (Dwarf Information Entries) and DWARF line numbers.  	It is passed a bfd* containing the DIES 	and line number information, the corresponding filename for that 	file, a base address for relocating the symbols, a flag indicating 	whether or not this debugging information is from a "main symbol 	table" rather than a shared library or dynamically linked file, 	and file offset/size pairs for the DIE information and line number 	information.  RETURNS  	No return value.   */
+comment|/*     GLOBAL FUNCTION     dwarf_build_psymtabs -- build partial symtabs from DWARF debug info     SYNOPSIS     void dwarf_build_psymtabs (struct objfile *objfile,    int mainline, file_ptr dbfoff, unsigned int dbfsize,    file_ptr lnoffset, unsigned int lnsize)     DESCRIPTION     This function is called upon to build partial symtabs from files    containing DIE's (Dwarf Information Entries) and DWARF line numbers.     It is passed a bfd* containing the DIES    and line number information, the corresponding filename for that    file, a base address for relocating the symbols, a flag indicating    whether or not this debugging information is from a "main symbol    table" rather than a shared library or dynamically linked file,    and file offset/size pairs for the DIE information and line number    information.     RETURNS     No return value.   */
 end_comment
 
 begin_function
 name|void
 name|dwarf_build_psymtabs
 parameter_list|(
+name|struct
+name|objfile
+modifier|*
 name|objfile
 parameter_list|,
-name|section_offsets
-parameter_list|,
+name|int
 name|mainline
 parameter_list|,
+name|file_ptr
 name|dbfoff
 parameter_list|,
+name|unsigned
+name|int
 name|dbfsize
 parameter_list|,
+name|file_ptr
 name|lnoffset
 parameter_list|,
+name|unsigned
+name|int
 name|lnsize
 parameter_list|)
-name|struct
-name|objfile
-modifier|*
-name|objfile
-decl_stmt|;
-name|struct
-name|section_offsets
-modifier|*
-name|section_offsets
-decl_stmt|;
-name|int
-name|mainline
-decl_stmt|;
-name|file_ptr
-name|dbfoff
-decl_stmt|;
-name|unsigned
-name|int
-name|dbfsize
-decl_stmt|;
-name|file_ptr
-name|lnoffset
-decl_stmt|;
-name|unsigned
-name|int
-name|lnsize
-decl_stmt|;
 block|{
 name|bfd
 modifier|*
@@ -2240,13 +2040,11 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|dbbase
 argument_list|,
 name|dbsize
-argument_list|,
-literal|1
 argument_list|,
 name|abfd
 argument_list|)
@@ -2255,7 +2053,7 @@ name|dbsize
 operator|)
 condition|)
 block|{
-name|free
+name|xfree
 argument_list|(
 name|dbbase
 argument_list|)
@@ -2275,7 +2073,7 @@ name|back_to
 operator|=
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|dbbase
 argument_list|)
@@ -2285,6 +2083,7 @@ if|if
 condition|(
 name|mainline
 operator|||
+operator|(
 name|objfile
 operator|->
 name|global_psymbols
@@ -2292,7 +2091,7 @@ operator|.
 name|size
 operator|==
 literal|0
-operator|||
+operator|&&
 name|objfile
 operator|->
 name|static_psymbols
@@ -2300,6 +2099,7 @@ operator|.
 name|size
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 name|init_psymbol_list
@@ -2313,12 +2113,16 @@ block|}
 comment|/* Save the relocation factor where everybody can see it.  */
 name|base_section_offsets
 operator|=
+name|objfile
+operator|->
 name|section_offsets
 expr_stmt|;
 name|baseaddr
 operator|=
 name|ANOFFSET
 argument_list|(
+name|objfile
+operator|->
 name|section_offsets
 argument_list|,
 literal|0
@@ -2353,7 +2157,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	read_lexical_block_scope -- process all dies in a lexical block  SYNOPSIS  	static void read_lexical_block_scope (struct dieinfo *dip, 		char *thisdie, char *enddie)  DESCRIPTION  	Process all the DIES contained within a lexical block scope. 	Start a new scope, process the dies, and then close the scope.   */
+comment|/*     LOCAL FUNCTION     read_lexical_block_scope -- process all dies in a lexical block     SYNOPSIS     static void read_lexical_block_scope (struct dieinfo *dip,    char *thisdie, char *enddie)     DESCRIPTION     Process all the DIES contained within a lexical block scope.    Start a new scope, process the dies, and then close the scope.   */
 end_comment
 
 begin_function
@@ -2361,32 +2165,24 @@ specifier|static
 name|void
 name|read_lexical_block_scope
 parameter_list|(
-name|dip
-parameter_list|,
-name|thisdie
-parameter_list|,
-name|enddie
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|thisdie
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|enddie
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -2461,7 +2257,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	lookup_utype -- look up a user defined type from die reference  SYNOPSIS  	static type *lookup_utype (DIE_REF die_ref)  DESCRIPTION  	Given a DIE reference, lookup the user defined type associated with 	that DIE, if it has been registered already.  If not registered, then 	return NULL.  Alloc_utype() can be called to register an empty 	type for this reference, which will be filled in later when the 	actual referenced DIE is processed.  */
+comment|/*     LOCAL FUNCTION     lookup_utype -- look up a user defined type from die reference     SYNOPSIS     static type *lookup_utype (DIE_REF die_ref)     DESCRIPTION     Given a DIE reference, lookup the user defined type associated with    that DIE, if it has been registered already.  If not registered, then    return NULL.  Alloc_utype() can be called to register an empty    type for this reference, which will be filled in later when the    actual referenced DIE is processed.  */
 end_comment
 
 begin_function
@@ -2471,11 +2267,9 @@ name|type
 modifier|*
 name|lookup_utype
 parameter_list|(
-name|die_ref
-parameter_list|)
 name|DIE_REF
 name|die_ref
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -2544,7 +2338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	alloc_utype  -- add a user defined type for die reference  SYNOPSIS  	static type *alloc_utype (DIE_REF die_ref, struct type *utypep)  DESCRIPTION  	Given a die reference DIE_REF, and a possible pointer to a user 	defined type UTYPEP, register that this reference has a user 	defined type and either use the specified type in UTYPEP or 	make a new empty type that will be filled in later.  	We should only be called after calling lookup_utype() to verify that 	there is not currently a type registered for DIE_REF.  */
+comment|/*     LOCAL FUNCTION     alloc_utype  -- add a user defined type for die reference     SYNOPSIS     static type *alloc_utype (DIE_REF die_ref, struct type *utypep)     DESCRIPTION     Given a die reference DIE_REF, and a possible pointer to a user    defined type UTYPEP, register that this reference has a user    defined type and either use the specified type in UTYPEP or    make a new empty type that will be filled in later.     We should only be called after calling lookup_utype() to verify that    there is not currently a type registered for DIE_REF.  */
 end_comment
 
 begin_function
@@ -2554,18 +2348,14 @@ name|type
 modifier|*
 name|alloc_utype
 parameter_list|(
-name|die_ref
-parameter_list|,
-name|utypep
-parameter_list|)
 name|DIE_REF
 name|die_ref
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|utypep
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -2684,7 +2474,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	free_utypes -- free the utypes array and reset pointer& count  SYNOPSIS  	static void free_utypes (PTR dummy)  DESCRIPTION  	Called via do_cleanups to free the utypes array, reset the pointer to NULL, 	and set numutypes back to zero.  This ensures that the utypes does not get 	referenced after being freed.  */
+comment|/*     LOCAL FUNCTION     free_utypes -- free the utypes array and reset pointer& count     SYNOPSIS     static void free_utypes (PTR dummy)     DESCRIPTION     Called via do_cleanups to free the utypes array, reset the pointer to NULL,    and set numutypes back to zero.  This ensures that the utypes does not get    referenced after being freed.  */
 end_comment
 
 begin_function
@@ -2692,13 +2482,11 @@ specifier|static
 name|void
 name|free_utypes
 parameter_list|(
-name|dummy
-parameter_list|)
 name|PTR
 name|dummy
-decl_stmt|;
+parameter_list|)
 block|{
-name|free
+name|xfree
 argument_list|(
 name|utypes
 argument_list|)
@@ -2715,7 +2503,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	decode_die_type -- return a type for a specified die  SYNOPSIS  	static struct type *decode_die_type (struct dieinfo *dip)  DESCRIPTION  	Given a pointer to a die information structure DIP, decode the 	type of the die and return a pointer to the decoded type.  All 	dies without specific types default to type int.  */
+comment|/*     LOCAL FUNCTION     decode_die_type -- return a type for a specified die     SYNOPSIS     static struct type *decode_die_type (struct dieinfo *dip)     DESCRIPTION     Given a pointer to a die information structure DIP, decode the    type of the die and return a pointer to the decoded type.  All    dies without specific types default to type int.  */
 end_comment
 
 begin_function
@@ -2725,13 +2513,11 @@ name|type
 modifier|*
 name|decode_die_type
 parameter_list|(
-name|dip
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -2855,7 +2641,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	struct_type -- compute and return the type for a struct or union  SYNOPSIS  	static struct type *struct_type (struct dieinfo *dip, char *thisdie, 	    char *enddie, struct objfile *objfile)  DESCRIPTION  	Given pointer to a die information structure for a die which 	defines a union or structure (and MUST define one or the other), 	and pointers to the raw die data that define the range of dies which 	define the members, compute and return the user defined type for the 	structure or union.  */
+comment|/*     LOCAL FUNCTION     struct_type -- compute and return the type for a struct or union     SYNOPSIS     static struct type *struct_type (struct dieinfo *dip, char *thisdie,    char *enddie, struct objfile *objfile)     DESCRIPTION     Given pointer to a die information structure for a die which    defines a union or structure (and MUST define one or the other),    and pointers to the raw die data that define the range of dies which    define the members, compute and return the user defined type for the    structure or union.  */
 end_comment
 
 begin_function
@@ -2865,32 +2651,24 @@ name|type
 modifier|*
 name|struct_type
 parameter_list|(
-name|dip
-parameter_list|,
-name|thisdie
-parameter_list|,
-name|enddie
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|thisdie
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|enddie
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -3275,7 +3053,7 @@ condition|(
 name|BITS_BIG_ENDIAN
 condition|)
 block|{
-comment|/* For big endian bits, the at_bit_offset gives the 		 additional bit offset from the MSB of the containing 		 anonymous object to the MSB of the field.  We don't 		 have to do anything special since we don't need to 		 know the size of the anonymous object. */
+comment|/* For big endian bits, the at_bit_offset gives the 	         additional bit offset from the MSB of the containing 	         anonymous object to the MSB of the field.  We don't 	         have to do anything special since we don't need to 	         know the size of the anonymous object. */
 name|FIELD_BITPOS
 argument_list|(
 name|list
@@ -3290,7 +3068,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* For little endian bits, we need to have a non-zero 		 at_bit_size, so that we know we are in fact dealing 		 with a bitfield.  Compute the bit offset to the MSB 		 of the anonymous object, subtract off the number of 		 bits from the MSB of the field to the MSB of the 		 object, and then subtract off the number of bits of 		 the field itself.  The result is the bit offset of 		 the LSB of the field. */
+comment|/* For little endian bits, we need to have a non-zero 	         at_bit_size, so that we know we are in fact dealing 	         with a bitfield.  Compute the bit offset to the MSB 	         of the anonymous object, subtract off the number of 	         bits from the MSB of the field to the MSB of the 	         object, and then subtract off the number of bits of 	         the field itself.  The result is the bit offset of 	         the LSB of the field. */
 if|if
 condition|(
 name|mbr
@@ -3307,7 +3085,7 @@ operator|.
 name|has_at_byte_size
 condition|)
 block|{
-comment|/* The size of the anonymous object containing 			 the bit field is explicit, so use the 			 indicated size (in bytes). */
+comment|/* The size of the anonymous object containing 		         the bit field is explicit, so use the 		         indicated size (in bytes). */
 name|anonymous_size
 operator|=
 name|mbr
@@ -3317,7 +3095,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* The size of the anonymous object containing 			 the bit field matches the size of an object 			 of the bit field's type.  DWARF allows 			 at_byte_size to be left out in such cases, as 			 a debug information size optimization. */
+comment|/* The size of the anonymous object containing 		         the bit field matches the size of an object 		         of the bit field's type.  DWARF allows 		         at_byte_size to be left out in such cases, as 		         a debug information size optimization. */
 name|anonymous_size
 operator|=
 name|TYPE_LENGTH
@@ -3459,7 +3237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	read_structure_scope -- process all dies within struct or union  SYNOPSIS  	static void read_structure_scope (struct dieinfo *dip, 		char *thisdie, char *enddie, struct objfile *objfile)  DESCRIPTION  	Called when we find the DIE that starts a structure or union 	scope (definition) to process all dies that define the members 	of the structure or union.  DIP is a pointer to the die info 	struct for the DIE that names the structure or union.  NOTES  	Note that we need to call struct_type regardless of whether or not 	the DIE has an at_name attribute, since it might be an anonymous 	structure or union.  This gets the type entered into our set of 	user defined types.  	However, if the structure is incomplete (an opaque struct/union) 	then suppress creating a symbol table entry for it since gdb only 	wants to find the one with the complete definition.  Note that if 	it is complete, we just call new_symbol, which does it's own 	checking about whether the struct/union is anonymous or not (and 	suppresses creating a symbol table entry itself). 	  */
+comment|/*     LOCAL FUNCTION     read_structure_scope -- process all dies within struct or union     SYNOPSIS     static void read_structure_scope (struct dieinfo *dip,    char *thisdie, char *enddie, struct objfile *objfile)     DESCRIPTION     Called when we find the DIE that starts a structure or union    scope (definition) to process all dies that define the members    of the structure or union.  DIP is a pointer to the die info    struct for the DIE that names the structure or union.     NOTES     Note that we need to call struct_type regardless of whether or not    the DIE has an at_name attribute, since it might be an anonymous    structure or union.  This gets the type entered into our set of    user defined types.     However, if the structure is incomplete (an opaque struct/union)    then suppress creating a symbol table entry for it since gdb only    wants to find the one with the complete definition.  Note that if    it is complete, we just call new_symbol, which does it's own    checking about whether the struct/union is anonymous or not (and    suppresses creating a symbol table entry itself).   */
 end_comment
 
 begin_function
@@ -3467,32 +3245,24 @@ specifier|static
 name|void
 name|read_structure_scope
 parameter_list|(
-name|dip
-parameter_list|,
-name|thisdie
-parameter_list|,
-name|enddie
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|thisdie
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|enddie
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -3520,14 +3290,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-operator|(
-name|TYPE_FLAGS
+name|TYPE_STUB
 argument_list|(
 name|type
 argument_list|)
-operator|&
-name|TYPE_FLAG_STUB
-operator|)
 condition|)
 block|{
 name|sym
@@ -3576,7 +3342,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	decode_array_element_type -- decode type of the array elements  SYNOPSIS  	static struct type *decode_array_element_type (char *scan, char *end)  DESCRIPTION  	As the last step in decoding the array subscript information for an 	array DIE, we need to decode the type of the array elements.  We are 	passed a pointer to this last part of the subscript information and 	must return the appropriate type.  If the type attribute is not 	recognized, just warn about the problem and return type int.  */
+comment|/*     LOCAL FUNCTION     decode_array_element_type -- decode type of the array elements     SYNOPSIS     static struct type *decode_array_element_type (char *scan, char *end)     DESCRIPTION     As the last step in decoding the array subscript information for an    array DIE, we need to decode the type of the array elements.  We are    passed a pointer to this last part of the subscript information and    must return the appropriate type.  If the type attribute is not    recognized, just warn about the problem and return type int.  */
 end_comment
 
 begin_function
@@ -3586,12 +3352,10 @@ name|type
 modifier|*
 name|decode_array_element_type
 parameter_list|(
-name|scan
-parameter_list|)
 name|char
 modifier|*
 name|scan
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -3794,7 +3558,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	decode_subscript_data_item -- decode array subscript item  SYNOPSIS  	static struct type * 	decode_subscript_data_item (char *scan, char *end)  DESCRIPTION  	The array subscripts and the data type of the elements of an 	array are described by a list of data items, stored as a block 	of contiguous bytes.  There is a data item describing each array 	dimension, and a final data item describing the element type. 	The data items are ordered the same as their appearance in the 	source (I.E. leftmost dimension first, next to leftmost second, 	etc).  	The data items describing each array dimension consist of four 	parts: (1) a format specifier, (2) type type of the subscript 	index, (3) a description of the low bound of the array dimension, 	and (4) a description of the high bound of the array dimension.  	The last data item is the description of the type of each of 	the array elements.  	We are passed a pointer to the start of the block of bytes 	containing the remaining data items, and a pointer to the first 	byte past the data.  This function recursively decodes the 	remaining data items and returns a type.  	If we somehow fail to decode some data, we complain about it 	and return a type "array of int".  BUGS 	FIXME:  This code only implements the forms currently used 	by the AT&T and GNU C compilers.  	The end pointer is supplied for error checking, maybe we should 	use it for that...  */
+comment|/*     LOCAL FUNCTION     decode_subscript_data_item -- decode array subscript item     SYNOPSIS     static struct type *    decode_subscript_data_item (char *scan, char *end)     DESCRIPTION     The array subscripts and the data type of the elements of an    array are described by a list of data items, stored as a block    of contiguous bytes.  There is a data item describing each array    dimension, and a final data item describing the element type.    The data items are ordered the same as their appearance in the    source (I.E. leftmost dimension first, next to leftmost second,    etc).     The data items describing each array dimension consist of four    parts: (1) a format specifier, (2) type type of the subscript    index, (3) a description of the low bound of the array dimension,    and (4) a description of the high bound of the array dimension.     The last data item is the description of the type of each of    the array elements.     We are passed a pointer to the start of the block of bytes    containing the remaining data items, and a pointer to the first    byte past the data.  This function recursively decodes the    remaining data items and returns a type.     If we somehow fail to decode some data, we complain about it    and return a type "array of int".     BUGS    FIXME:  This code only implements the forms currently used    by the AT&T and GNU C compilers.     The end pointer is supplied for error checking, maybe we should    use it for that...  */
 end_comment
 
 begin_function
@@ -3804,18 +3568,14 @@ name|type
 modifier|*
 name|decode_subscript_data_item
 parameter_list|(
+name|char
+modifier|*
 name|scan
 parameter_list|,
+name|char
+modifier|*
 name|end
 parameter_list|)
-name|char
-modifier|*
-name|scan
-decl_stmt|;
-name|char
-modifier|*
-name|end
-decl_stmt|;
 block|{
 name|struct
 name|type
@@ -4178,7 +3938,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	dwarf_read_array_type -- read TAG_array_type DIE  SYNOPSIS  	static void dwarf_read_array_type (struct dieinfo *dip)  DESCRIPTION  	Extract all information from a TAG_array_type DIE and add to 	the user defined type vector.  */
+comment|/*     LOCAL FUNCTION     dwarf_read_array_type -- read TAG_array_type DIE     SYNOPSIS     static void dwarf_read_array_type (struct dieinfo *dip)     DESCRIPTION     Extract all information from a TAG_array_type DIE and add to    the user defined type vector.  */
 end_comment
 
 begin_function
@@ -4186,13 +3946,11 @@ specifier|static
 name|void
 name|dwarf_read_array_type
 parameter_list|(
-name|dip
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -4359,7 +4117,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	read_tag_pointer_type -- read TAG_pointer_type DIE  SYNOPSIS  	static void read_tag_pointer_type (struct dieinfo *dip)  DESCRIPTION  	Extract all information from a TAG_pointer_type DIE and add to 	the user defined type vector.  */
+comment|/*     LOCAL FUNCTION     read_tag_pointer_type -- read TAG_pointer_type DIE     SYNOPSIS     static void read_tag_pointer_type (struct dieinfo *dip)     DESCRIPTION     Extract all information from a TAG_pointer_type DIE and add to    the user defined type vector.  */
 end_comment
 
 begin_function
@@ -4367,13 +4125,11 @@ specifier|static
 name|void
 name|read_tag_pointer_type
 parameter_list|(
-name|dip
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -4464,7 +4220,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	read_tag_string_type -- read TAG_string_type DIE  SYNOPSIS  	static void read_tag_string_type (struct dieinfo *dip)  DESCRIPTION  	Extract all information from a TAG_string_type DIE and add to 	the user defined type vector.  It isn't really a user defined 	type, but it behaves like one, with other DIE's using an 	AT_user_def_type attribute to reference it.  */
+comment|/*     LOCAL FUNCTION     read_tag_string_type -- read TAG_string_type DIE     SYNOPSIS     static void read_tag_string_type (struct dieinfo *dip)     DESCRIPTION     Extract all information from a TAG_string_type DIE and add to    the user defined type vector.  It isn't really a user defined    type, but it behaves like one, with other DIE's using an    AT_user_def_type attribute to reference it.  */
 end_comment
 
 begin_function
@@ -4472,13 +4228,11 @@ specifier|static
 name|void
 name|read_tag_string_type
 parameter_list|(
-name|dip
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -4593,7 +4347,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Already a type in our slot due to a forward reference. Make sure it 	 is a blank one.  If not, complain and leave it alone. */
+comment|/* Already a type in our slot due to a forward reference. Make sure it          is a blank one.  If not, complain and leave it alone. */
 if|if
 condition|(
 name|TYPE_CODE
@@ -4631,7 +4385,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	read_subroutine_type -- process TAG_subroutine_type dies  SYNOPSIS  	static void read_subroutine_type (struct dieinfo *dip, char thisdie, 		char *enddie)  DESCRIPTION  	Handle DIES due to C code like:  	struct foo { 	    int (*funcp)(int a, long l);  (Generates TAG_subroutine_type DIE) 	    int b; 	};  NOTES  	The parameter DIES are currently ignored.  See if gdb has a way to 	include this info in it's type system, and decode them if so.  Is 	this what the type structure's "arg_types" field is for?  (FIXME)  */
+comment|/*     LOCAL FUNCTION     read_subroutine_type -- process TAG_subroutine_type dies     SYNOPSIS     static void read_subroutine_type (struct dieinfo *dip, char thisdie,    char *enddie)     DESCRIPTION     Handle DIES due to C code like:     struct foo {    int (*funcp)(int a, long l);  (Generates TAG_subroutine_type DIE)    int b;    };     NOTES     The parameter DIES are currently ignored.  See if gdb has a way to    include this info in it's type system, and decode them if so.  Is    this what the type structure's "arg_types" field is for?  (FIXME)  */
 end_comment
 
 begin_function
@@ -4639,25 +4393,19 @@ specifier|static
 name|void
 name|read_subroutine_type
 parameter_list|(
-name|dip
-parameter_list|,
-name|thisdie
-parameter_list|,
-name|enddie
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|thisdie
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|enddie
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -4696,7 +4444,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* This is the first reference to one of these types.  Make 	 a new one and place it in the user defined types. */
+comment|/* This is the first reference to one of these types.  Make          a new one and place it in the user defined types. */
 name|ftype
 operator|=
 name|lookup_function_type
@@ -4725,7 +4473,7 @@ operator|==
 name|TYPE_CODE_UNDEF
 condition|)
 block|{
-comment|/* We have an existing partially constructed type, so bash it 	 into the correct type. */
+comment|/* We have an existing partially constructed type, so bash it          into the correct type. */
 name|TYPE_TARGET_TYPE
 argument_list|(
 name|ftype
@@ -4765,7 +4513,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	read_enumeration -- process dies which define an enumeration  SYNOPSIS  	static void read_enumeration (struct dieinfo *dip, char *thisdie, 		char *enddie, struct objfile *objfile)  DESCRIPTION  	Given a pointer to a die which begins an enumeration, process all 	the dies that define the members of the enumeration.  NOTES  	Note that we need to call enum_type regardless of whether or not we 	have a symbol, since we might have an enum without a tag name (thus 	no symbol for the tagname).  */
+comment|/*     LOCAL FUNCTION     read_enumeration -- process dies which define an enumeration     SYNOPSIS     static void read_enumeration (struct dieinfo *dip, char *thisdie,    char *enddie, struct objfile *objfile)     DESCRIPTION     Given a pointer to a die which begins an enumeration, process all    the dies that define the members of the enumeration.     NOTES     Note that we need to call enum_type regardless of whether or not we    have a symbol, since we might have an enum without a tag name (thus    no symbol for the tagname).  */
 end_comment
 
 begin_function
@@ -4773,32 +4521,24 @@ specifier|static
 name|void
 name|read_enumeration
 parameter_list|(
-name|dip
-parameter_list|,
-name|thisdie
-parameter_list|,
-name|enddie
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|thisdie
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|enddie
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -4864,7 +4604,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	enum_type -- decode and return a type for an enumeration  SYNOPSIS  	static type *enum_type (struct dieinfo *dip, struct objfile *objfile)  DESCRIPTION  	Given a pointer to a die information structure for the die which 	starts an enumeration, process all the dies that define the members 	of the enumeration and return a type pointer for the enumeration.  	At the same time, for each member of the enumeration, create a 	symbol for it with namespace VAR_NAMESPACE and class LOC_CONST, 	and give it the type of the enumeration itself.  NOTES  	Note that the DWARF specification explicitly mandates that enum 	constants occur in reverse order from the source program order, 	for "consistency" and because this ordering is easier for many 	compilers to generate. (Draft 6, sec 3.8.5, Enumeration type 	Entries).  Because gdb wants to see the enum members in program 	source order, we have to ensure that the order gets reversed while 	we are processing them.  */
+comment|/*     LOCAL FUNCTION     enum_type -- decode and return a type for an enumeration     SYNOPSIS     static type *enum_type (struct dieinfo *dip, struct objfile *objfile)     DESCRIPTION     Given a pointer to a die information structure for the die which    starts an enumeration, process all the dies that define the members    of the enumeration and return a type pointer for the enumeration.     At the same time, for each member of the enumeration, create a    symbol for it with namespace VAR_NAMESPACE and class LOC_CONST,    and give it the type of the enumeration itself.     NOTES     Note that the DWARF specification explicitly mandates that enum    constants occur in reverse order from the source program order,    for "consistency" and because this ordering is easier for many    compilers to generate. (Draft 6, sec 3.8.5, Enumeration type    Entries).  Because gdb wants to see the enum members in program    source order, we have to ensure that the order gets reversed while    we are processing them.  */
 end_comment
 
 begin_function
@@ -4874,20 +4614,16 @@ name|type
 modifier|*
 name|enum_type
 parameter_list|(
-name|dip
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -5344,7 +5080,7 @@ name|list_in_scope
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Now create the vector of fields, and record how big it is. This is 	 where we reverse the order, by pulling the members off the list in 	 reverse order from how they were inserted.  If we have no fields 	 (this is apparently possible in C++) then skip building a field 	 vector. */
+comment|/* Now create the vector of fields, and record how big it is. This is          where we reverse the order, by pulling the members off the list in          reverse order from how they were inserted.  If we have no fields          (this is apparently possible in C++) then skip building a field          vector. */
 if|if
 condition|(
 name|nfields
@@ -5446,7 +5182,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	read_func_scope -- process all dies within a function scope  DESCRIPTION  	Process all dies within a given function scope.  We are passed 	a die information structure pointer DIP for the die which 	starts the function scope, and pointers into the raw die data 	that define the dies within the function scope.  	For now, we ignore lexical block scopes within the function. 	The problem is that AT&T cc does not define a DWARF lexical 	block scope for the function itself, while gcc defines a 	lexical block scope for the function.  We need to think about 	how to handle this difference, or if it is even a problem. 	(FIXME)  */
+comment|/*     LOCAL FUNCTION     read_func_scope -- process all dies within a function scope     DESCRIPTION     Process all dies within a given function scope.  We are passed    a die information structure pointer DIP for the die which    starts the function scope, and pointers into the raw die data    that define the dies within the function scope.     For now, we ignore lexical block scopes within the function.    The problem is that AT&T cc does not define a DWARF lexical    block scope for the function itself, while gcc defines a    lexical block scope for the function.  We need to think about    how to handle this difference, or if it is even a problem.    (FIXME)  */
 end_comment
 
 begin_function
@@ -5454,32 +5190,24 @@ specifier|static
 name|void
 name|read_func_scope
 parameter_list|(
-name|dip
-parameter_list|,
-name|thisdie
-parameter_list|,
-name|enddie
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|thisdie
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|enddie
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -5545,40 +5273,6 @@ operator|->
 name|ei
 operator|.
 name|entry_func_highpc
-operator|=
-name|dip
-operator|->
-name|at_high_pc
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|STREQ
-argument_list|(
-name|dip
-operator|->
-name|at_name
-argument_list|,
-literal|"main"
-argument_list|)
-condition|)
-comment|/* FIXME: hardwired name */
-block|{
-name|objfile
-operator|->
-name|ei
-operator|.
-name|main_func_lowpc
-operator|=
-name|dip
-operator|->
-name|at_low_pc
-expr_stmt|;
-name|objfile
-operator|->
-name|ei
-operator|.
-name|main_func_highpc
 operator|=
 name|dip
 operator|->
@@ -5664,7 +5358,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	handle_producer -- process the AT_producer attribute  DESCRIPTION  	Perform any operations that depend on finding a particular 	AT_producer attribute.   */
+comment|/*     LOCAL FUNCTION     handle_producer -- process the AT_producer attribute     DESCRIPTION     Perform any operations that depend on finding a particular    AT_producer attribute.   */
 end_comment
 
 begin_function
@@ -5672,12 +5366,10 @@ specifier|static
 name|void
 name|handle_producer
 parameter_list|(
-name|producer
-parameter_list|)
 name|char
 modifier|*
 name|producer
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* If this compilation unit was compiled with g++ or gcc, then set the      processing_gcc_compilation flag. */
 if|if
@@ -5769,11 +5461,13 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|set_demangling_style
-argument_list|(
-name|GNU_DEMANGLING_STYLE_STRING
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* For now, stay with AUTO_DEMANGLING for g++ output, as we don't 	     know whether it will use the old style or v3 mangling.  */
+block|set_demangling_style (GNU_DEMANGLING_STYLE_STRING);
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if
@@ -5802,7 +5496,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	read_file_scope -- process all dies within a file scope  DESCRIPTION  	Process all dies within a given file scope.  We are passed a 	pointer to the die information structure for the die which 	starts the file scope, and pointers into the raw die data which 	mark the range of dies within the file scope.  	When the partial symbol table is built, the file offset for the line 	number table for each compilation unit is saved in the partial symbol 	table entry for that compilation unit.  As the symbols for each 	compilation unit are read, the line number table is read into memory 	and the variable lnbase is set to point to it.  Thus all we have to 	do is use lnbase to access the line number table for the current 	compilation unit.  */
+comment|/*     LOCAL FUNCTION     read_file_scope -- process all dies within a file scope     DESCRIPTION     Process all dies within a given file scope.  We are passed a    pointer to the die information structure for the die which    starts the file scope, and pointers into the raw die data which    mark the range of dies within the file scope.     When the partial symbol table is built, the file offset for the line    number table for each compilation unit is saved in the partial symbol    table entry for that compilation unit.  As the symbols for each    compilation unit are read, the line number table is read into memory    and the variable lnbase is set to point to it.  Thus all we have to    do is use lnbase to access the line number table for the current    compilation unit.  */
 end_comment
 
 begin_function
@@ -5810,32 +5504,24 @@ specifier|static
 name|void
 name|read_file_scope
 parameter_list|(
-name|dip
-parameter_list|,
-name|thisdie
-parameter_list|,
-name|enddie
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|thisdie
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|enddie
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|cleanup
@@ -6058,7 +5744,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	process_dies -- process a range of DWARF Information Entries  SYNOPSIS  	static void process_dies (char *thisdie, char *enddie, 				  struct objfile *objfile)  DESCRIPTION  	Process all DIE's in a specified range.  May be (and almost 	certainly will be) called recursively.  */
+comment|/*     LOCAL FUNCTION     process_dies -- process a range of DWARF Information Entries     SYNOPSIS     static void process_dies (char *thisdie, char *enddie,    struct objfile *objfile)     DESCRIPTION     Process all DIE's in a specified range.  May be (and almost    certainly will be) called recursively.  */
 end_comment
 
 begin_function
@@ -6066,25 +5752,19 @@ specifier|static
 name|void
 name|process_dies
 parameter_list|(
-name|thisdie
-parameter_list|,
-name|enddie
-parameter_list|,
-name|objfile
-parameter_list|)
 name|char
 modifier|*
 name|thisdie
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|enddie
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -6182,10 +5862,11 @@ operator|.
 name|die_length
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SMASH_TEXT_ADDRESS
 comment|/* I think that these are always text, not data, addresses.  */
+name|di
+operator|.
+name|at_low_pc
+operator|=
 name|SMASH_TEXT_ADDRESS
 argument_list|(
 name|di
@@ -6193,6 +5874,10 @@ operator|.
 name|at_low_pc
 argument_list|)
 expr_stmt|;
+name|di
+operator|.
+name|at_high_pc
+operator|=
 name|SMASH_TEXT_ADDRESS
 argument_list|(
 name|di
@@ -6200,8 +5885,6 @@ operator|.
 name|at_high_pc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|di
@@ -6212,7 +5895,7 @@ block|{
 case|case
 name|TAG_compile_unit
 case|:
-comment|/* Skip Tag_compile_unit if we are already inside a compilation 		 unit, we are unable to handle nested compilation units 		 properly (FIXME).  */
+comment|/* Skip Tag_compile_unit if we are already inside a compilation 	         unit, we are unable to handle nested compilation units 	         properly (FIXME).  */
 if|if
 condition|(
 name|current_subfile
@@ -6387,7 +6070,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	decode_line_numbers -- decode a line number table fragment  SYNOPSIS  	static void decode_line_numbers (char *tblscan, char *tblend, 		long length, long base, long line, long pc)  DESCRIPTION  	Translate the DWARF line number information to gdb form.  	The ".line" section contains one or more line number tables, one for 	each ".line" section from the objects that were linked.  	The AT_stmt_list attribute for each TAG_source_file entry in the 	".debug" section contains the offset into the ".line" section for the 	start of the table for that file.  	The table itself has the following structure:<table length><base address><source statement entry> 	4 bytes       4 bytes       10 bytes  	The table length is the total size of the table, including the 4 bytes 	for the length information.  	The base address is the address of the first instruction generated 	for the source file.  	Each source statement entry has the following structure:<line number><statement position><address delta> 	4 bytes      2 bytes             4 bytes  	The line number is relative to the start of the file, starting with 	line 1.  	The statement position either -1 (0xFFFF) or the number of characters 	from the beginning of the line to the beginning of the statement.  	The address delta is the difference between the base address and 	the address of the first instruction for the statement.  	Note that we must copy the bytes from the packed table to our local 	variables before attempting to use them, to avoid alignment problems 	on some machines, particularly RISC processors.  BUGS  	Does gdb expect the line numbers to be sorted?  They are now by 	chance/luck, but are not required to be.  (FIXME)  	The line with number 0 is unused, gdb apparently can discover the 	span of the last line some other way. How?  (FIXME)  */
+comment|/*     LOCAL FUNCTION     decode_line_numbers -- decode a line number table fragment     SYNOPSIS     static void decode_line_numbers (char *tblscan, char *tblend,    long length, long base, long line, long pc)     DESCRIPTION     Translate the DWARF line number information to gdb form.     The ".line" section contains one or more line number tables, one for    each ".line" section from the objects that were linked.     The AT_stmt_list attribute for each TAG_source_file entry in the    ".debug" section contains the offset into the ".line" section for the    start of the table for that file.     The table itself has the following structure:<table length><base address><source statement entry>    4 bytes       4 bytes       10 bytes     The table length is the total size of the table, including the 4 bytes    for the length information.     The base address is the address of the first instruction generated    for the source file.     Each source statement entry has the following structure:<line number><statement position><address delta>    4 bytes      2 bytes             4 bytes     The line number is relative to the start of the file, starting with    line 1.     The statement position either -1 (0xFFFF) or the number of characters    from the beginning of the line to the beginning of the statement.     The address delta is the difference between the base address and    the address of the first instruction for the statement.     Note that we must copy the bytes from the packed table to our local    variables before attempting to use them, to avoid alignment problems    on some machines, particularly RISC processors.     BUGS     Does gdb expect the line numbers to be sorted?  They are now by    chance/luck, but are not required to be.  (FIXME)     The line with number 0 is unused, gdb apparently can discover the    span of the last line some other way. How?  (FIXME)  */
 end_comment
 
 begin_function
@@ -6395,12 +6078,10 @@ specifier|static
 name|void
 name|decode_line_numbers
 parameter_list|(
-name|linetable
-parameter_list|)
 name|char
 modifier|*
 name|linetable
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -6557,7 +6238,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	locval -- compute the value of a location attribute  SYNOPSIS  	static int locval (struct dieinfo *dip)  DESCRIPTION  	Given pointer to a string of bytes that define a location, compute 	the location and return the value. 	A location description containing no atoms indicates that the 	object is optimized out. The optimized_out flag is set for those, 	the return value is meaningless.  	When computing values involving the current value of the frame pointer, 	the value zero is used, which results in a value relative to the frame 	pointer, rather than the absolute value.  This is what GDB wants 	anyway.      	When the result is a register number, the isreg flag is set, otherwise 	it is cleared.  This is a kludge until we figure out a better 	way to handle the problem.  Gdb's design does not mesh well with the 	DWARF notion of a location computing interpreter, which is a shame 	because the flexibility goes unused.  NOTES  	Note that stack[0] is unused except as a default error return. 	Note that stack overflow is not yet handled.  */
+comment|/*     LOCAL FUNCTION     locval -- compute the value of a location attribute     SYNOPSIS     static int locval (struct dieinfo *dip)     DESCRIPTION     Given pointer to a string of bytes that define a location, compute    the location and return the value.    A location description containing no atoms indicates that the    object is optimized out. The optimized_out flag is set for those,    the return value is meaningless.     When computing values involving the current value of the frame pointer,    the value zero is used, which results in a value relative to the frame    pointer, rather than the absolute value.  This is what GDB wants    anyway.     When the result is a register number, the isreg flag is set, otherwise    it is cleared.  This is a kludge until we figure out a better    way to handle the problem.  Gdb's design does not mesh well with the    DWARF notion of a location computing interpreter, which is a shame    because the flexibility goes unused.     NOTES     Note that stack[0] is unused except as a default error return.    Note that stack overflow is not yet handled.  */
 end_comment
 
 begin_function
@@ -6565,13 +6246,11 @@ specifier|static
 name|int
 name|locval
 parameter_list|(
-name|dip
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|short
@@ -6760,7 +6439,7 @@ case|case
 name|OP_BASEREG
 case|:
 comment|/* push value of register (number) */
-comment|/* Actually, we compute the value as if register has 0, so the 	       value ends up being the offset from that register.  */
+comment|/* Actually, we compute the value as if register has 0, so the 	     value ends up being the offset from that register.  */
 name|dip
 operator|->
 name|offreg
@@ -6921,7 +6600,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	read_ofile_symtab -- build a full symtab entry from chunk of DIE's  SYNOPSIS  	static void read_ofile_symtab (struct partial_symtab *pst)  DESCRIPTION  	When expanding a partial symbol table entry to a full symbol table 	entry, this is the function that gets called to read in the symbols 	for the compilation unit.  A pointer to the newly constructed symtab, 	which is now the new first one on the objfile's symtab list, is 	stashed in the partial symbol table entry.  */
+comment|/*     LOCAL FUNCTION     read_ofile_symtab -- build a full symtab entry from chunk of DIE's     SYNOPSIS     static void read_ofile_symtab (struct partial_symtab *pst)     DESCRIPTION     When expanding a partial symbol table entry to a full symbol table    entry, this is the function that gets called to read in the symbols    for the compilation unit.  A pointer to the newly constructed symtab,    which is now the new first one on the objfile's symtab list, is    stashed in the partial symbol table entry.  */
 end_comment
 
 begin_function
@@ -6929,13 +6608,11 @@ specifier|static
 name|void
 name|read_ofile_symtab
 parameter_list|(
-name|pst
-parameter_list|)
 name|struct
 name|partial_symtab
 modifier|*
 name|pst
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|cleanup
@@ -7037,13 +6714,11 @@ name|SEEK_SET
 argument_list|)
 operator|||
 operator|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|dbbase
 argument_list|,
 name|dbsize
-argument_list|,
-literal|1
 argument_list|,
 name|abfd
 argument_list|)
@@ -7052,7 +6727,7 @@ name|dbsize
 operator|)
 condition|)
 block|{
-name|free
+name|xfree
 argument_list|(
 name|dbbase
 argument_list|)
@@ -7067,7 +6742,7 @@ name|back_to
 operator|=
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|dbbase
 argument_list|)
@@ -7100,7 +6775,7 @@ name|SEEK_SET
 argument_list|)
 operator|||
 operator|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 operator|(
 name|PTR
@@ -7111,8 +6786,6 @@ sizeof|sizeof
 argument_list|(
 name|lnsizedata
 argument_list|)
-argument_list|,
-literal|1
 argument_list|,
 name|abfd
 argument_list|)
@@ -7167,13 +6840,11 @@ name|SEEK_SET
 argument_list|)
 operator|||
 operator|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|lnbase
 argument_list|,
 name|lnsize
-argument_list|,
-literal|1
 argument_list|,
 name|abfd
 argument_list|)
@@ -7182,7 +6853,7 @@ name|lnsize
 operator|)
 condition|)
 block|{
-name|free
+name|xfree
 argument_list|(
 name|lnbase
 argument_list|)
@@ -7195,7 +6866,7 @@ expr_stmt|;
 block|}
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|lnbase
 argument_list|)
@@ -7237,7 +6908,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	psymtab_to_symtab_1 -- do grunt work for building a full symtab entry  SYNOPSIS  	static void psymtab_to_symtab_1 (struct partial_symtab *pst)  DESCRIPTION  	Called once for each partial symbol table entry that needs to be 	expanded into a full symbol table entry.  */
+comment|/*     LOCAL FUNCTION     psymtab_to_symtab_1 -- do grunt work for building a full symtab entry     SYNOPSIS     static void psymtab_to_symtab_1 (struct partial_symtab *pst)     DESCRIPTION     Called once for each partial symbol table entry that needs to be    expanded into a full symbol table entry.   */
 end_comment
 
 begin_function
@@ -7245,13 +6916,11 @@ specifier|static
 name|void
 name|psymtab_to_symtab_1
 parameter_list|(
-name|pst
-parameter_list|)
 name|struct
 name|partial_symtab
 modifier|*
 name|pst
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -7401,9 +7070,6 @@ name|old_chain
 operator|=
 name|make_cleanup
 argument_list|(
-operator|(
-name|make_cleanup_func
-operator|)
 name|really_free_pendings
 argument_list|,
 literal|0
@@ -7462,7 +7128,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	dwarf_psymtab_to_symtab -- build a full symtab entry from partial one  SYNOPSIS  	static void dwarf_psymtab_to_symtab (struct partial_symtab *pst)  DESCRIPTION  	This is the DWARF support entry point for building a full symbol 	table entry from a partial symbol table entry.  We are passed a 	pointer to the partial symbol table entry that needs to be expanded.  */
+comment|/*     LOCAL FUNCTION     dwarf_psymtab_to_symtab -- build a full symtab entry from partial one     SYNOPSIS     static void dwarf_psymtab_to_symtab (struct partial_symtab *pst)     DESCRIPTION     This is the DWARF support entry point for building a full symbol    table entry from a partial symbol table entry.  We are passed a    pointer to the partial symbol table entry that needs to be expanded.   */
 end_comment
 
 begin_function
@@ -7470,13 +7136,11 @@ specifier|static
 name|void
 name|dwarf_psymtab_to_symtab
 parameter_list|(
-name|pst
-parameter_list|)
 name|struct
 name|partial_symtab
 modifier|*
 name|pst
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7516,7 +7180,7 @@ operator|->
 name|number_of_dependencies
 condition|)
 block|{
-comment|/* Print the message now, before starting serious work, to avoid 		 disconcerting pauses.  */
+comment|/* Print the message now, before starting serious work, to avoid 	         disconcerting pauses.  */
 if|if
 condition|(
 name|info_verbose
@@ -7545,8 +7209,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* FIXME:  Check to see what dbxread is doing here and see if 		 we need to do an equivalent or is this something peculiar to 		 stabs/a.out format. 		 Match with global symbols.  This only needs to be done once, 		 after all of the symtabs and dependencies have been read in. 		 */
-block|scan_file_globals (pst -> objfile);
+comment|/* FIXME:  Check to see what dbxread is doing here and see if 				   we need to do an equivalent or is this something peculiar to 				   stabs/a.out format. 				   Match with global symbols.  This only needs to be done once, 				   after all of the symtabs and dependencies have been read in. 				 */
+block|scan_file_globals (pst->objfile);
 endif|#
 directive|endif
 comment|/* Finish up the verbose info message.  */
@@ -7573,7 +7237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	add_enum_psymbol -- add enumeration members to partial symbol table  DESCRIPTION  	Given pointer to a DIE that is known to be for an enumeration, 	extract the symbolic names of the enumeration members and add 	partial symbols for them. */
+comment|/*     LOCAL FUNCTION     add_enum_psymbol -- add enumeration members to partial symbol table     DESCRIPTION     Given pointer to a DIE that is known to be for an enumeration,    extract the symbolic names of the enumeration members and add    partial symbols for them.  */
 end_comment
 
 begin_function
@@ -7581,20 +7245,16 @@ specifier|static
 name|void
 name|add_enum_psymbol
 parameter_list|(
-name|dip
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -7728,7 +7388,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	add_partial_symbol -- add symbol to partial symbol table  DESCRIPTION  	Given a DIE, if it is one of the types that we want to 	add to a partial symbol table, finish filling in the die info 	and then add a partial symbol table entry for it.  NOTES  	The caller must ensure that the DIE has a valid name attribute. */
+comment|/*     LOCAL FUNCTION     add_partial_symbol -- add symbol to partial symbol table     DESCRIPTION     Given a DIE, if it is one of the types that we want to    add to a partial symbol table, finish filling in the die info    and then add a partial symbol table entry for it.     NOTES     The caller must ensure that the DIE has a valid name attribute.  */
 end_comment
 
 begin_function
@@ -7736,20 +7396,16 @@ specifier|static
 name|void
 name|add_partial_symbol
 parameter_list|(
-name|dip
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -8035,7 +7691,15 @@ block|}
 end_function
 
 begin_comment
+comment|/* *INDENT-OFF* */
+end_comment
+
+begin_comment
 comment|/*  LOCAL FUNCTION  	scan_partial_symbols -- scan DIE's within a single compilation unit  DESCRIPTION  	Process the DIE's within a single compilation unit, looking for 	interesting DIE's that contribute to the partial symbol table entry 	for this compilation unit.  NOTES  	There are some DIE's that may appear both at file scope and within 	the scope of a function.  We are only interested in the ones at file 	scope, and the only way to tell them apart is to keep track of the 	scope.  For example, consider the test case:  		static int i; 		main () { int j; }  	for which the relevant DWARF segment has the structure: 	 		0x51: 		0x23   global subrtn   sibling     0x9b 		                       name        main 		                       fund_type   FT_integer 		                       low_pc      0x800004cc 		                       high_pc     0x800004d4 		                             		0x74: 		0x23   local var       sibling     0x97 		                       name        j 		                       fund_type   FT_integer 		                       location    OP_BASEREG 0xe 		                                   OP_CONST 0xfffffffc 		                                   OP_ADD 		0x97: 		0x4          		 		0x9b: 		0x1d   local var       sibling     0xb8 		                       name        i 		                       fund_type   FT_integer 		                       location    OP_ADDR 0x800025dc 		                             		0xb8: 		0x4           	We want to include the symbol 'i' in the partial symbol table, but 	not the symbol 'j'.  In essence, we want to skip all the dies within 	the scope of a TAG_global_subroutine DIE.  	Don't attempt to add anonymous structures or unions since they have 	no name.  Anonymous enumerations however are processed, because we 	want to extract their member names (the check for a tag name is 	done later).  	Also, for variables and subroutines, check that this is the place 	where the actual definition occurs, rather than just a reference 	to an external.  */
+end_comment
+
+begin_comment
+comment|/* *INDENT-ON* */
 end_comment
 
 begin_function
@@ -8043,25 +7707,19 @@ specifier|static
 name|void
 name|scan_partial_symbols
 parameter_list|(
-name|thisdie
-parameter_list|,
-name|enddie
-parameter_list|,
-name|objfile
-parameter_list|)
 name|char
 modifier|*
 name|thisdie
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|enddie
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -8345,7 +8003,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	scan_compilation_units -- build a psymtab entry for each compilation  DESCRIPTION  	This is the top level dwarf parsing routine for building partial 	symbol tables.  	It scans from the beginning of the DWARF table looking for the first 	TAG_compile_unit DIE, and then follows the sibling chain to locate 	each additional TAG_compile_unit DIE.     	For each TAG_compile_unit DIE it creates a partial symtab structure, 	calls a subordinate routine to collect all the compilation unit's 	global DIE's, file scope DIEs, typedef DIEs, etc, and then links the 	new partial symtab structure into the partial symbol table.  It also 	records the appropriate information in the partial symbol table entry 	to allow the chunk of DIE's and line number table for this compilation 	unit to be located and re-read later, to generate a complete symbol 	table entry for the compilation unit.  	Thus it effectively partitions up a chunk of DIE's for multiple 	compilation units into smaller DIE chunks and line number tables, 	and associates them with a partial symbol table entry.  NOTES  	If any compilation unit has no line number table associated with 	it for some reason (a missing at_stmt_list attribute, rather than 	just one with a value of zero, which is valid) then we ensure that 	the recorded file offset is zero so that the routine which later 	reads line number table fragments knows that there is no fragment 	to read.  RETURNS  	Returns no value.   */
+comment|/*     LOCAL FUNCTION     scan_compilation_units -- build a psymtab entry for each compilation     DESCRIPTION     This is the top level dwarf parsing routine for building partial    symbol tables.     It scans from the beginning of the DWARF table looking for the first    TAG_compile_unit DIE, and then follows the sibling chain to locate    each additional TAG_compile_unit DIE.     For each TAG_compile_unit DIE it creates a partial symtab structure,    calls a subordinate routine to collect all the compilation unit's    global DIE's, file scope DIEs, typedef DIEs, etc, and then links the    new partial symtab structure into the partial symbol table.  It also    records the appropriate information in the partial symbol table entry    to allow the chunk of DIE's and line number table for this compilation    unit to be located and re-read later, to generate a complete symbol    table entry for the compilation unit.     Thus it effectively partitions up a chunk of DIE's for multiple    compilation units into smaller DIE chunks and line number tables,    and associates them with a partial symbol table entry.     NOTES     If any compilation unit has no line number table associated with    it for some reason (a missing at_stmt_list attribute, rather than    just one with a value of zero, which is valid) then we ensure that    the recorded file offset is zero so that the routine which later    reads line number table fragments knows that there is no fragment    to read.     RETURNS     Returns no value.   */
 end_comment
 
 begin_function
@@ -8353,35 +8011,25 @@ specifier|static
 name|void
 name|scan_compilation_units
 parameter_list|(
-name|thisdie
-parameter_list|,
-name|enddie
-parameter_list|,
-name|dbfoff
-parameter_list|,
-name|lnoffset
-parameter_list|,
-name|objfile
-parameter_list|)
 name|char
 modifier|*
 name|thisdie
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|enddie
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 name|dbfoff
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 name|lnoffset
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -8700,7 +8348,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	new_symbol -- make a symbol table entry for a new symbol  SYNOPSIS  	static struct symbol *new_symbol (struct dieinfo *dip, 					  struct objfile *objfile)  DESCRIPTION  	Given a pointer to a DWARF information entry, figure out if we need 	to make a symbol table entry for it, and if so, create a new entry 	and return a pointer to it.  */
+comment|/*     LOCAL FUNCTION     new_symbol -- make a symbol table entry for a new symbol     SYNOPSIS     static struct symbol *new_symbol (struct dieinfo *dip,    struct objfile *objfile)     DESCRIPTION     Given a pointer to a DWARF information entry, figure out if we need    to make a symbol table entry for it, and if so, create a new entry    and return a pointer to it.  */
 end_comment
 
 begin_function
@@ -8710,20 +8358,16 @@ name|symbol
 modifier|*
 name|new_symbol
 parameter_list|(
-name|dip
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|symbol
@@ -8825,7 +8469,7 @@ argument_list|(
 name|dip
 argument_list|)
 expr_stmt|;
-comment|/* If this symbol is from a C++ compilation, then attempt to cache the 	 demangled form for future reference.  This is a typical time versus 	 space tradeoff, that was decided in favor of time because it sped up 	 C++ symbol lookups by a factor of about 20. */
+comment|/* If this symbol is from a C++ compilation, then attempt to cache the          demangled form for future reference.  This is a typical time versus          space tradeoff, that was decided in favor of time because it sped up          C++ symbol lookups by a factor of about 20. */
 name|SYMBOL_LANGUAGE
 argument_list|(
 name|sym
@@ -9286,7 +8930,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	synthesize_typedef -- make a symbol table entry for a "fake" typedef  SYNOPSIS  	static void synthesize_typedef (struct dieinfo *dip, 					struct objfile *objfile, 					struct type *type);  DESCRIPTION  	Given a pointer to a DWARF information entry, synthesize a typedef 	for the name in the DIE, using the specified type.  	This is used for C++ class, structs, unions, and enumerations to 	set up the tag name as a type.   */
+comment|/*     LOCAL FUNCTION     synthesize_typedef -- make a symbol table entry for a "fake" typedef     SYNOPSIS     static void synthesize_typedef (struct dieinfo *dip,    struct objfile *objfile,    struct type *type);     DESCRIPTION     Given a pointer to a DWARF information entry, synthesize a typedef    for the name in the DIE, using the specified type.     This is used for C++ class, structs, unions, and enumerations to    set up the tag name as a type.   */
 end_comment
 
 begin_function
@@ -9294,27 +8938,21 @@ specifier|static
 name|void
 name|synthesize_typedef
 parameter_list|(
-name|dip
-parameter_list|,
-name|objfile
-parameter_list|,
-name|type
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|symbol
@@ -9431,7 +9069,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	decode_mod_fund_type -- decode a modified fundamental type  SYNOPSIS  	static struct type *decode_mod_fund_type (char *typedata)  DESCRIPTION  	Decode a block of data containing a modified fundamental 	type specification.  TYPEDATA is a pointer to the block, 	which starts with a length containing the size of the rest 	of the block.  At the end of the block is a fundmental type 	code value that gives the fundamental type.  Everything 	in between are type modifiers.  	We simply compute the number of modifiers and call the general 	function decode_modified_type to do the actual work. */
+comment|/*     LOCAL FUNCTION     decode_mod_fund_type -- decode a modified fundamental type     SYNOPSIS     static struct type *decode_mod_fund_type (char *typedata)     DESCRIPTION     Decode a block of data containing a modified fundamental    type specification.  TYPEDATA is a pointer to the block,    which starts with a length containing the size of the rest    of the block.  At the end of the block is a fundmental type    code value that gives the fundamental type.  Everything    in between are type modifiers.     We simply compute the number of modifiers and call the general    function decode_modified_type to do the actual work.  */
 end_comment
 
 begin_function
@@ -9441,12 +9079,10 @@ name|type
 modifier|*
 name|decode_mod_fund_type
 parameter_list|(
-name|typedata
-parameter_list|)
 name|char
 modifier|*
 name|typedata
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -9516,7 +9152,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	decode_mod_u_d_type -- decode a modified user defined type  SYNOPSIS  	static struct type *decode_mod_u_d_type (char *typedata)  DESCRIPTION  	Decode a block of data containing a modified user defined 	type specification.  TYPEDATA is a pointer to the block, 	which consists of a two byte length, containing the size 	of the rest of the block.  At the end of the block is a 	four byte value that gives a reference to a user defined type. 	Everything in between are type modifiers.  	We simply compute the number of modifiers and call the general 	function decode_modified_type to do the actual work. */
+comment|/*     LOCAL FUNCTION     decode_mod_u_d_type -- decode a modified user defined type     SYNOPSIS     static struct type *decode_mod_u_d_type (char *typedata)     DESCRIPTION     Decode a block of data containing a modified user defined    type specification.  TYPEDATA is a pointer to the block,    which consists of a two byte length, containing the size    of the rest of the block.  At the end of the block is a    four byte value that gives a reference to a user defined type.    Everything in between are type modifiers.     We simply compute the number of modifiers and call the general    function decode_modified_type to do the actual work.  */
 end_comment
 
 begin_function
@@ -9526,12 +9162,10 @@ name|type
 modifier|*
 name|decode_mod_u_d_type
 parameter_list|(
-name|typedata
-parameter_list|)
 name|char
 modifier|*
 name|typedata
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -9601,7 +9235,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	decode_modified_type -- decode modified user or fundamental type  SYNOPSIS  	static struct type *decode_modified_type (char *modifiers, 	    unsigned short modcount, int mtype)  DESCRIPTION  	Decode a modified type, either a modified fundamental type or 	a modified user defined type.  MODIFIERS is a pointer to the 	block of bytes that define MODCOUNT modifiers.  Immediately 	following the last modifier is a short containing the fundamental 	type or a long containing the reference to the user defined 	type.  Which one is determined by MTYPE, which is either 	AT_mod_fund_type or AT_mod_u_d_type to indicate what modified 	type we are generating.  	We call ourself recursively to generate each modified type,` 	until MODCOUNT reaches zero, at which point we have consumed 	all the modifiers and generate either the fundamental type or 	user defined type.  When the recursion unwinds, each modifier 	is applied in turn to generate the full modified type.  NOTES  	If we find a modifier that we don't recognize, and it is not one 	of those reserved for application specific use, then we issue a 	warning and simply ignore the modifier.  BUGS  	We currently ignore MOD_const and MOD_volatile.  (FIXME)   */
+comment|/*     LOCAL FUNCTION     decode_modified_type -- decode modified user or fundamental type     SYNOPSIS     static struct type *decode_modified_type (char *modifiers,    unsigned short modcount, int mtype)     DESCRIPTION     Decode a modified type, either a modified fundamental type or    a modified user defined type.  MODIFIERS is a pointer to the    block of bytes that define MODCOUNT modifiers.  Immediately    following the last modifier is a short containing the fundamental    type or a long containing the reference to the user defined    type.  Which one is determined by MTYPE, which is either    AT_mod_fund_type or AT_mod_u_d_type to indicate what modified    type we are generating.     We call ourself recursively to generate each modified type,`    until MODCOUNT reaches zero, at which point we have consumed    all the modifiers and generate either the fundamental type or    user defined type.  When the recursion unwinds, each modifier    is applied in turn to generate the full modified type.     NOTES     If we find a modifier that we don't recognize, and it is not one    of those reserved for application specific use, then we issue a    warning and simply ignore the modifier.     BUGS     We currently ignore MOD_const and MOD_volatile.  (FIXME)   */
 end_comment
 
 begin_function
@@ -9611,23 +9245,17 @@ name|type
 modifier|*
 name|decode_modified_type
 parameter_list|(
-name|modifiers
-parameter_list|,
-name|modcount
-parameter_list|,
-name|mtype
-parameter_list|)
 name|char
 modifier|*
 name|modifiers
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|modcount
-decl_stmt|;
+parameter_list|,
 name|int
 name|mtype
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -9890,7 +9518,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	decode_fund_type -- translate basic DWARF type to gdb base type  DESCRIPTION  	Given an integer that is one of the fundamental DWARF types, 	translate it to one of the basic internal gdb types and return 	a pointer to the appropriate gdb type (a "struct type *").  NOTES  	For robustness, if we are asked to translate a fundamental 	type that we are unprepared to deal with, we return int so 	callers can always depend upon a valid type being returned, 	and so gdb may at least do something reasonable by default. 	If the type is not in the range of those types defined as 	application specific types, we also issue a warning. */
+comment|/*     LOCAL FUNCTION     decode_fund_type -- translate basic DWARF type to gdb base type     DESCRIPTION     Given an integer that is one of the fundamental DWARF types,    translate it to one of the basic internal gdb types and return    a pointer to the appropriate gdb type (a "struct type *").     NOTES     For robustness, if we are asked to translate a fundamental    type that we are unprepared to deal with, we return int so    callers can always depend upon a valid type being returned,    and so gdb may at least do something reasonable by default.    If the type is not in the range of those types defined as    application specific types, we also issue a warning.  */
 end_comment
 
 begin_function
@@ -9900,12 +9528,10 @@ name|type
 modifier|*
 name|decode_fund_type
 parameter_list|(
-name|fundtype
-parameter_list|)
 name|unsigned
 name|int
 name|fundtype
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|type
@@ -10294,7 +9920,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	create_name -- allocate a fresh copy of a string on an obstack  DESCRIPTION  	Given a pointer to a string and a pointer to an obstack, allocates 	a fresh copy of the string on the specified obstack.  */
+comment|/*     LOCAL FUNCTION     create_name -- allocate a fresh copy of a string on an obstack     DESCRIPTION     Given a pointer to a string and a pointer to an obstack, allocates    a fresh copy of the string on the specified obstack.   */
 end_comment
 
 begin_function
@@ -10303,19 +9929,15 @@ name|char
 modifier|*
 name|create_name
 parameter_list|(
-name|name
-parameter_list|,
-name|obstackp
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|struct
 name|obstack
 modifier|*
 name|obstackp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|length
@@ -10362,7 +9984,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	basicdieinfo -- extract the minimal die info from raw die data  SYNOPSIS  	void basicdieinfo (char *diep, struct dieinfo *dip, 			   struct objfile *objfile)  DESCRIPTION  	Given a pointer to raw DIE data, and a pointer to an instance of a 	die info structure, this function extracts the basic information 	from the DIE data required to continue processing this DIE, along 	with some bookkeeping information about the DIE.  	The information we absolutely must have includes the DIE tag, 	and the DIE length.  If we need the sibling reference, then we 	will have to call completedieinfo() to process all the remaining 	DIE information.  	Note that since there is no guarantee that the data is properly 	aligned in memory for the type of access required (indirection 	through anything other than a char pointer), and there is no 	guarantee that it is in the same byte order as the gdb host, 	we call a function which deals with both alignment and byte 	swapping issues.  Possibly inefficient, but quite portable.  	We also take care of some other basic things at this point, such 	as ensuring that the instance of the die info structure starts 	out completely zero'd and that curdie is initialized for use 	in error reporting if we have a problem with the current die.  NOTES  	All DIE's must have at least a valid length, thus the minimum 	DIE size is SIZEOF_DIE_LENGTH.  In order to have a valid tag, the 	DIE size must be at least SIZEOF_DIE_TAG larger, otherwise they 	are forced to be TAG_padding DIES.  	Padding DIES must be at least SIZEOF_DIE_LENGTH in length, implying 	that if a padding DIE is used for alignment and the amount needed is 	less than SIZEOF_DIE_LENGTH, then the padding DIE has to be big 	enough to align to the next alignment boundry.  	We do some basic sanity checking here, such as verifying that the 	length of the die would not cause it to overrun the recorded end of 	the buffer holding the DIE info.  If we find a DIE that is either 	too small or too large, we force it's length to zero which should 	cause the caller to take appropriate action.  */
+comment|/*     LOCAL FUNCTION     basicdieinfo -- extract the minimal die info from raw die data     SYNOPSIS     void basicdieinfo (char *diep, struct dieinfo *dip,    struct objfile *objfile)     DESCRIPTION     Given a pointer to raw DIE data, and a pointer to an instance of a    die info structure, this function extracts the basic information    from the DIE data required to continue processing this DIE, along    with some bookkeeping information about the DIE.     The information we absolutely must have includes the DIE tag,    and the DIE length.  If we need the sibling reference, then we    will have to call completedieinfo() to process all the remaining    DIE information.     Note that since there is no guarantee that the data is properly    aligned in memory for the type of access required (indirection    through anything other than a char pointer), and there is no    guarantee that it is in the same byte order as the gdb host,    we call a function which deals with both alignment and byte    swapping issues.  Possibly inefficient, but quite portable.     We also take care of some other basic things at this point, such    as ensuring that the instance of the die info structure starts    out completely zero'd and that curdie is initialized for use    in error reporting if we have a problem with the current die.     NOTES     All DIE's must have at least a valid length, thus the minimum    DIE size is SIZEOF_DIE_LENGTH.  In order to have a valid tag, the    DIE size must be at least SIZEOF_DIE_TAG larger, otherwise they    are forced to be TAG_padding DIES.     Padding DIES must be at least SIZEOF_DIE_LENGTH in length, implying    that if a padding DIE is used for alignment and the amount needed is    less than SIZEOF_DIE_LENGTH, then the padding DIE has to be big    enough to align to the next alignment boundry.     We do some basic sanity checking here, such as verifying that the    length of the die would not cause it to overrun the recorded end of    the buffer holding the DIE info.  If we find a DIE that is either    too small or too large, we force it's length to zero which should    cause the caller to take appropriate action.  */
 end_comment
 
 begin_function
@@ -10370,26 +9992,20 @@ specifier|static
 name|void
 name|basicdieinfo
 parameter_list|(
-name|dip
-parameter_list|,
-name|diep
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|diep
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|curdie
 operator|=
@@ -10536,7 +10152,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	completedieinfo -- finish reading the information for a given DIE  SYNOPSIS  	void completedieinfo (struct dieinfo *dip, struct objfile *objfile)  DESCRIPTION  	Given a pointer to an already partially initialized die info structure, 	scan the raw DIE data and finish filling in the die info structure 	from the various attributes found.     	Note that since there is no guarantee that the data is properly 	aligned in memory for the type of access required (indirection 	through anything other than a char pointer), and there is no 	guarantee that it is in the same byte order as the gdb host, 	we call a function which deals with both alignment and byte 	swapping issues.  Possibly inefficient, but quite portable.  NOTES  	Each time we are called, we increment the diecount variable, which 	keeps an approximate count of the number of dies processed for 	each compilation unit.  This information is presented to the user 	if the info_verbose flag is set.   */
+comment|/*     LOCAL FUNCTION     completedieinfo -- finish reading the information for a given DIE     SYNOPSIS     void completedieinfo (struct dieinfo *dip, struct objfile *objfile)     DESCRIPTION     Given a pointer to an already partially initialized die info structure,    scan the raw DIE data and finish filling in the die info structure    from the various attributes found.     Note that since there is no guarantee that the data is properly    aligned in memory for the type of access required (indirection    through anything other than a char pointer), and there is no    guarantee that it is in the same byte order as the gdb host,    we call a function which deals with both alignment and byte    swapping issues.  Possibly inefficient, but quite portable.     NOTES     Each time we are called, we increment the diecount variable, which    keeps an approximate count of the number of dies processed for    each compilation unit.  This information is presented to the user    if the info_verbose flag is set.   */
 end_comment
 
 begin_function
@@ -10544,20 +10160,16 @@ specifier|static
 name|void
 name|completedieinfo
 parameter_list|(
-name|dip
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|dieinfo
 modifier|*
 name|dip
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -11291,7 +10903,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	target_to_host -- swap in target data to host  SYNOPSIS  	target_to_host (char *from, int nbytes, int signextend, 			struct objfile *objfile)  DESCRIPTION  	Given pointer to data in target format in FROM, a byte count for 	the size of the data in NBYTES, a flag indicating whether or not 	the data is signed in SIGNEXTEND, and a pointer to the current 	objfile in OBJFILE, convert the data to host format and return 	the converted value.  NOTES  	FIXME:  If we read data that is known to be signed, and expect to 	use it as signed data, then we need to explicitly sign extend the 	result until the bfd library is able to do this for us.  	FIXME: Would a 32 bit target ever need an 8 byte result?   */
+comment|/*     LOCAL FUNCTION     target_to_host -- swap in target data to host     SYNOPSIS     target_to_host (char *from, int nbytes, int signextend,    struct objfile *objfile)     DESCRIPTION     Given pointer to data in target format in FROM, a byte count for    the size of the data in NBYTES, a flag indicating whether or not    the data is signed in SIGNEXTEND, and a pointer to the current    objfile in OBJFILE, convert the data to host format and return    the converted value.     NOTES     FIXME:  If we read data that is known to be signed, and expect to    use it as signed data, then we need to explicitly sign extend the    result until the bfd library is able to do this for us.     FIXME: Would a 32 bit target ever need an 8 byte result?   */
 end_comment
 
 begin_function
@@ -11299,30 +10911,22 @@ specifier|static
 name|CORE_ADDR
 name|target_to_host
 parameter_list|(
-name|from
-parameter_list|,
-name|nbytes
-parameter_list|,
-name|signextend
-parameter_list|,
-name|objfile
-parameter_list|)
 name|char
 modifier|*
 name|from
-decl_stmt|;
+parameter_list|,
 name|int
 name|nbytes
-decl_stmt|;
+parameter_list|,
 name|int
 name|signextend
-decl_stmt|;
+parameter_list|,
 comment|/* FIXME:  Unused */
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|rtnval
@@ -11436,7 +11040,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	attribute_size -- compute size of data for a DWARF attribute  SYNOPSIS  	static int attribute_size (unsigned int attr)  DESCRIPTION  	Given a DWARF attribute in ATTR, compute the size of the first 	piece of data associated with this attribute and return that 	size.  	Returns -1 for unrecognized attributes.   */
+comment|/*     LOCAL FUNCTION     attribute_size -- compute size of data for a DWARF attribute     SYNOPSIS     static int attribute_size (unsigned int attr)     DESCRIPTION     Given a DWARF attribute in ATTR, compute the size of the first    piece of data associated with this attribute and return that    size.     Returns -1 for unrecognized attributes.   */
 end_comment
 
 begin_function
@@ -11444,12 +11048,10 @@ specifier|static
 name|int
 name|attribute_size
 parameter_list|(
-name|attr
-parameter_list|)
 name|unsigned
 name|int
 name|attr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|nbytes

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote debugging with the XLNT Designs, Inc (XDI) NetROM.    Copyright 1990, 1991, 1992, 1995 Free Software Foundation, Inc.    Contributed by: 	 Roger Moyers  	 XLNT Designs, Inc. 	 15050 Avenue of Science, Suite 106 	 San Diego, CA  92128 	 (619)487-9320 	 roger@xlnt.com    Adapted from work done at Cygnus Support in remote-nindy.c,    later merged in by Stan Shebs at Cygnus.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Remote debugging with the XLNT Designs, Inc (XDI) NetROM.    Copyright 1990, 1991, 1992, 1995, 1998, 1999, 2000    Free Software Foundation, Inc.    Contributed by:    Roger Moyers     XLNT Designs, Inc.    15050 Avenue of Science, Suite 106    San Diego, CA  92128    (619)487-9320    roger@xlnt.com    Adapted from work done at Cygnus Support in remote-nindy.c,    later merged in by Stan Shebs at Cygnus.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -45,39 +45,33 @@ name|DEFAULT_NETROM_CONTROL_PORT
 value|1237
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|nrom_close
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|quitting
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* New commands.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|nrom_passthru
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* We talk to the NetROM over these sockets.  */
@@ -85,7 +79,9 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|serial_t
+name|struct
+name|serial
+modifier|*
 name|load_desc
 init|=
 name|NULL
@@ -94,7 +90,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|serial_t
+name|struct
+name|serial
+modifier|*
 name|ctrl_desc
 init|=
 name|NULL
@@ -150,12 +148,10 @@ specifier|static
 name|int
 name|expect
 parameter_list|(
-name|string
-parameter_list|)
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -167,8 +163,7 @@ name|int
 name|c
 decl_stmt|;
 name|immediate_quit
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 while|while
 condition|(
@@ -177,7 +172,7 @@ condition|)
 block|{
 name|c
 operator|=
-name|SERIAL_READCHAR
+name|serial_readchar
 argument_list|(
 name|ctrl_desc
 argument_list|,
@@ -202,8 +197,7 @@ literal|'\0'
 condition|)
 block|{
 name|immediate_quit
-operator|=
-literal|0
+operator|--
 expr_stmt|;
 return|return
 literal|0
@@ -242,7 +236,9 @@ begin_function
 specifier|static
 name|void
 name|nrom_kill
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|nrom_close
 argument_list|(
@@ -254,20 +250,18 @@ end_function
 
 begin_function
 specifier|static
-name|serial_t
+name|struct
+name|serial
+modifier|*
 name|open_socket
 parameter_list|(
-name|name
-parameter_list|,
-name|port
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|port
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|sockname
@@ -275,7 +269,9 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-name|serial_t
+name|struct
+name|serial
+modifier|*
 name|desc
 decl_stmt|;
 name|sprintf
@@ -291,7 +287,7 @@ argument_list|)
 expr_stmt|;
 name|desc
 operator|=
-name|SERIAL_OPEN
+name|serial_open
 argument_list|(
 name|sockname
 argument_list|)
@@ -316,9 +312,11 @@ begin_function
 specifier|static
 name|void
 name|load_cleanup
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-name|SERIAL_CLOSE
+name|serial_close
 argument_list|(
 name|load_desc
 argument_list|)
@@ -339,17 +337,13 @@ specifier|static
 name|void
 name|nrom_load
 parameter_list|(
-name|args
-parameter_list|,
-name|fromtty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|fromtty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|fd
@@ -380,7 +374,7 @@ decl_stmt|;
 comment|/* Tell the netrom to get ready to download. */
 if|if
 condition|(
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|ctrl_desc
 argument_list|,
@@ -602,7 +596,7 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|load_desc
 argument_list|,
@@ -664,17 +658,13 @@ specifier|static
 name|void
 name|nrom_open
 parameter_list|(
-name|name
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|errn
@@ -759,17 +749,15 @@ specifier|static
 name|void
 name|nrom_close
 parameter_list|(
-name|quitting
-parameter_list|)
 name|int
 name|quitting
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
 name|load_desc
 condition|)
-name|SERIAL_CLOSE
+name|serial_close
 argument_list|(
 name|load_desc
 argument_list|)
@@ -778,7 +766,7 @@ if|if
 condition|(
 name|ctrl_desc
 condition|)
-name|SERIAL_CLOSE
+name|serial_close
 argument_list|(
 name|ctrl_desc
 argument_list|)
@@ -795,17 +783,13 @@ specifier|static
 name|void
 name|nrom_passthru
 parameter_list|(
-name|args
-parameter_list|,
-name|fromtty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|fromtty
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -824,7 +808,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|ctrl_desc
 argument_list|,
@@ -850,7 +834,9 @@ begin_function
 specifier|static
 name|void
 name|nrom_mourn
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|unpush_target
 argument_list|(
@@ -1197,12 +1183,6 @@ name|NULL
 expr_stmt|;
 name|nrom_ops
 operator|.
-name|to_core_file_to_sym_file
-operator|=
-name|NULL
-expr_stmt|;
-name|nrom_ops
-operator|.
 name|to_stratum
 operator|=
 name|download_stratum
@@ -1264,14 +1244,12 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function
 name|void
 name|_initialize_remote_nrom
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|init_nrom_ops
 argument_list|()

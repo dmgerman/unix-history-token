@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target-machine dependent code for the NINDY monitor running on the Intel 960    Copyright (C) 1991 Free Software Foundation, Inc.    Contributed by Intel Corporation.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target-machine dependent code for the NINDY monitor running on the Intel 960    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 2000    Free Software Foundation, Inc.    Contributed by Intel Corporation.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -39,18 +39,14 @@ begin_function
 name|int
 name|nindy_frame_chain_valid
 parameter_list|(
-name|chain
-parameter_list|,
-name|curframe
-parameter_list|)
 name|CORE_ADDR
 name|chain
-decl_stmt|;
+parameter_list|,
 name|struct
 name|frame_info
 modifier|*
 name|curframe
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|symbol
@@ -62,7 +58,7 @@ name|minimal_symbol
 modifier|*
 name|msymbol
 decl_stmt|;
-comment|/* crtnindy.o is an assembler module that is assumed to be linked 	 * first in an i80960 executable.  It contains the true entry point; 	 * it performs startup up initialization and then calls 'main'. 	 * 	 * 'sf' is the name of a variable in crtnindy.o that is set 	 *	during startup to the address of the first frame. 	 * 	 * 'a' is the address of that variable in 80960 memory. 	 */
+comment|/* crtnindy.o is an assembler module that is assumed to be linked    * first in an i80960 executable.  It contains the true entry point;    * it performs startup up initialization and then calls 'main'.    *    * 'sf' is the name of a variable in crtnindy.o that is set    *      during startup to the address of the first frame.    *    * 'a' is the address of that variable in 80960 memory.    */
 specifier|static
 name|char
 name|sf
@@ -78,7 +74,7 @@ operator|&=
 operator|~
 literal|0x3f
 expr_stmt|;
-comment|/* Zero low 6 bits because previous frame pointers 			   contain return status info in them.  */
+comment|/* Zero low 6 bits because previous frame pointers 				   contain return status info in them.  */
 if|if
 condition|(
 name|chain

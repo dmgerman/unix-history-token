@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Low level interface to ptrace, for the remote server for GDB.    Copyright (C) 1986, 1987, 1993 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Low level interface to ptrace, for the remote server for GDB.    Copyright 1986, 1987, 1993, 1994, 1995, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -147,11 +147,21 @@ file|<sys/fpp.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|char
-name|registers
+name|my_registers
 index|[
 name|REGISTER_BYTES
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|registers
+init|=
+name|my_registers
 decl_stmt|;
 end_decl_stmt
 
@@ -169,19 +179,15 @@ begin_function
 name|int
 name|create_inferior
 parameter_list|(
+name|char
+modifier|*
 name|program
 parameter_list|,
+name|char
+modifier|*
+modifier|*
 name|allargs
 parameter_list|)
-name|char
-modifier|*
-name|program
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|allargs
-decl_stmt|;
 block|{
 name|int
 name|pid
@@ -212,7 +218,7 @@ block|{
 name|int
 name|pgrp
 decl_stmt|;
-comment|/* Switch child to it's own process group so that signals won't 	 directly affect gdbserver. */
+comment|/* Switch child to it's own process group so that signals won't          directly affect gdbserver. */
 name|pgrp
 operator|=
 name|getpid
@@ -297,13 +303,34 @@ block|}
 end_function
 
 begin_comment
+comment|/* Attaching is not supported.  */
+end_comment
+
+begin_function
+name|int
+name|myattach
+parameter_list|(
+name|int
+name|pid
+parameter_list|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Kill the inferior process.  Make us have no inferior.  */
 end_comment
 
 begin_function
 name|void
 name|kill_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -343,11 +370,9 @@ begin_function
 name|int
 name|mythread_alive
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Arggh.  Apparently pthread_kill only works for threads within      the process that calls pthread_kill.       We want to avoid the lynx signal extensions as they simply don't      map well to the generic gdb interface we want to keep.       All we want to do is determine if a particular thread is alive;      it appears as if we can just make a harmless thread specific      ptrace call to do that.  */
 return|return
@@ -387,12 +412,10 @@ name|unsigned
 name|char
 name|mywait
 parameter_list|(
-name|status
-parameter_list|)
 name|char
 modifier|*
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|pid
@@ -492,7 +515,7 @@ operator|==
 name|SIGNEWTHREAD
 condition|)
 block|{
-comment|/* It's a new thread notification.  Nothing to do here since 		 the machine independent code in wait_for_inferior will 		 add the thread to the thread list and restart the thread 		 when pid != inferior_pid and pid is not in the thread list. 		 We don't even want to muck with realsig -- the code in 		 wait_for_inferior expects SIGTRAP.  */
+comment|/* It's a new thread notification.  Nothing to do here since 	         the machine independent code in wait_for_inferior will 	         add the thread to the thread list and restart the thread 	         when pid != inferior_pid and pid is not in the thread list. 	         We don't even want to muck with realsig -- the code in 	         wait_for_inferior expects SIGTRAP.  */
 empty_stmt|;
 block|}
 block|}
@@ -585,16 +608,12 @@ begin_function
 name|void
 name|myresume
 parameter_list|(
+name|int
 name|step
 parameter_list|,
+name|int
 name|signal
 parameter_list|)
-name|int
-name|step
-decl_stmt|;
-name|int
-name|signal
-decl_stmt|;
 block|{
 name|errno
 operator|=
@@ -1646,11 +1665,9 @@ begin_function
 name|void
 name|fetch_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -1670,9 +1687,9 @@ name|WHATREGS_STACK
 value|4
 block|if (regno == -1)     whatregs = WHATREGS_FLOAT | WHATREGS_GEN | WHATREGS_STACK;   else if (regno>= L0_REGNUM&& regno<= I7_REGNUM)     whatregs = WHATREGS_STACK;   else if (regno>= FP0_REGNUM&& regno< FP0_REGNUM + 32)     whatregs = WHATREGS_FLOAT;   else     whatregs = WHATREGS_GEN;    if (whatregs& WHATREGS_GEN)     {       struct econtext ec;
 comment|/* general regs */
-block|char buf[MAX_REGISTER_RAW_SIZE];       int retval;       int i;        errno = 0;       retval = ptrace (PTRACE_GETREGS, 		       BUILDPID (inferior_pid, general_thread), 		       (PTRACE_ARG3_TYPE)&ec, 		       0);       if (errno) 	perror_with_name ("Sparc fetch_inferior_registers(ptrace)");          memset (buf, 0, REGISTER_RAW_SIZE (G0_REGNUM));       supply_register (G0_REGNUM, buf);       supply_register (TBR_REGNUM, (char *)&ec.tbr);        memcpy (&registers[REGISTER_BYTE (G1_REGNUM)],&ec.g1, 	      4 * REGISTER_RAW_SIZE (G1_REGNUM));       for (i = G1_REGNUM; i<= G1_REGNUM + 3; i++) 	register_valid[i] = 1;        supply_register (PS_REGNUM, (char *)&ec.psr);       supply_register (Y_REGNUM, (char *)&ec.y);       supply_register (PC_REGNUM, (char *)&ec.pc);       supply_register (NPC_REGNUM, (char *)&ec.npc);       supply_register (WIM_REGNUM, (char *)&ec.wim);        memcpy (&registers[REGISTER_BYTE (O0_REGNUM)], ec.o, 	      8 * REGISTER_RAW_SIZE (O0_REGNUM));       for (i = O0_REGNUM; i<= O0_REGNUM + 7; i++) 	register_valid[i] = 1;     }    if (whatregs& WHATREGS_STACK)     {       CORE_ADDR sp;       int i;        sp = read_register (SP_REGNUM);        target_xfer_memory (sp + FRAME_SAVED_I0,&registers[REGISTER_BYTE(I0_REGNUM)], 			  8 * REGISTER_RAW_SIZE (I0_REGNUM), 0);       for (i = I0_REGNUM; i<= I7_REGNUM; i++) 	register_valid[i] = 1;        target_xfer_memory (sp + FRAME_SAVED_L0,&registers[REGISTER_BYTE(L0_REGNUM)], 			  8 * REGISTER_RAW_SIZE (L0_REGNUM), 0);       for (i = L0_REGNUM; i<= L0_REGNUM + 7; i++) 	register_valid[i] = 1;     }    if (whatregs& WHATREGS_FLOAT)     {       struct fcontext fc;
+block|char buf[MAX_REGISTER_RAW_SIZE];       int retval;       int i;        errno = 0;       retval = ptrace (PTRACE_GETREGS, 		       BUILDPID (inferior_pid, general_thread), 		       (PTRACE_ARG3_TYPE)& ec, 		       0);       if (errno) 	perror_with_name ("Sparc fetch_inferior_registers(ptrace)");        memset (buf, 0, REGISTER_RAW_SIZE (G0_REGNUM));       supply_register (G0_REGNUM, buf);       supply_register (TBR_REGNUM, (char *)&ec.tbr);        memcpy (&registers[REGISTER_BYTE (G1_REGNUM)],&ec.g1, 	      4 * REGISTER_RAW_SIZE (G1_REGNUM));       for (i = G1_REGNUM; i<= G1_REGNUM + 3; i++) 	register_valid[i] = 1;        supply_register (PS_REGNUM, (char *)&ec.psr);       supply_register (Y_REGNUM, (char *)&ec.y);       supply_register (PC_REGNUM, (char *)&ec.pc);       supply_register (NPC_REGNUM, (char *)&ec.npc);       supply_register (WIM_REGNUM, (char *)&ec.wim);        memcpy (&registers[REGISTER_BYTE (O0_REGNUM)], ec.o, 	      8 * REGISTER_RAW_SIZE (O0_REGNUM));       for (i = O0_REGNUM; i<= O0_REGNUM + 7; i++) 	register_valid[i] = 1;     }    if (whatregs& WHATREGS_STACK)     {       CORE_ADDR sp;       int i;        sp = read_register (SP_REGNUM);        target_xfer_memory (sp + FRAME_SAVED_I0,&registers[REGISTER_BYTE (I0_REGNUM)], 			  8 * REGISTER_RAW_SIZE (I0_REGNUM), 0);       for (i = I0_REGNUM; i<= I7_REGNUM; i++) 	register_valid[i] = 1;        target_xfer_memory (sp + FRAME_SAVED_L0,&registers[REGISTER_BYTE (L0_REGNUM)], 			  8 * REGISTER_RAW_SIZE (L0_REGNUM), 0);       for (i = L0_REGNUM; i<= L0_REGNUM + 7; i++) 	register_valid[i] = 1;     }    if (whatregs& WHATREGS_FLOAT)     {       struct fcontext fc;
 comment|/* fp regs */
-block|int retval;       int i;        errno = 0;       retval = ptrace (PTRACE_GETFPREGS, BUILDPID (inferior_pid, general_thread), (PTRACE_ARG3_TYPE)&fc, 		       0);       if (errno) 	perror_with_name ("Sparc fetch_inferior_registers(ptrace)");          memcpy (&registers[REGISTER_BYTE (FP0_REGNUM)], fc.f.fregs, 	      32 * REGISTER_RAW_SIZE (FP0_REGNUM));       for (i = FP0_REGNUM; i<= FP0_REGNUM + 31; i++) 	register_valid[i] = 1;        supply_register (FPS_REGNUM, (char *)&fc.fsr);     }
+block|int retval;       int i;        errno = 0;       retval = ptrace (PTRACE_GETFPREGS, BUILDPID (inferior_pid, general_thread), (PTRACE_ARG3_TYPE)& fc, 		       0);       if (errno) 	perror_with_name ("Sparc fetch_inferior_registers(ptrace)");        memcpy (&registers[REGISTER_BYTE (FP0_REGNUM)], fc.f.fregs, 	      32 * REGISTER_RAW_SIZE (FP0_REGNUM));       for (i = FP0_REGNUM; i<= FP0_REGNUM + 31; i++) 	register_valid[i] = 1;        supply_register (FPS_REGNUM, (char *)&fc.fsr);     }
 endif|#
 directive|endif
 block|}
@@ -1686,22 +1703,20 @@ begin_function
 name|void
 name|store_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
 literal|0
 block|int whatregs = 0;    if (regno == -1)     whatregs = WHATREGS_FLOAT | WHATREGS_GEN | WHATREGS_STACK;   else if (regno>= L0_REGNUM&& regno<= I7_REGNUM)     whatregs = WHATREGS_STACK;   else if (regno>= FP0_REGNUM&& regno< FP0_REGNUM + 32)     whatregs = WHATREGS_FLOAT;   else if (regno == SP_REGNUM)     whatregs = WHATREGS_STACK | WHATREGS_GEN;   else     whatregs = WHATREGS_GEN;    if (whatregs& WHATREGS_GEN)     {       struct econtext ec;
 comment|/* general regs */
-block|int retval;        ec.tbr = read_register (TBR_REGNUM);       memcpy (&ec.g1,&registers[REGISTER_BYTE (G1_REGNUM)], 	      4 * REGISTER_RAW_SIZE (G1_REGNUM));        ec.psr = read_register (PS_REGNUM);       ec.y = read_register (Y_REGNUM);       ec.pc = read_register (PC_REGNUM);       ec.npc = read_register (NPC_REGNUM);       ec.wim = read_register (WIM_REGNUM);        memcpy (ec.o,&registers[REGISTER_BYTE (O0_REGNUM)], 	      8 * REGISTER_RAW_SIZE (O0_REGNUM));        errno = 0;       retval = ptrace (PTRACE_SETREGS, BUILDPID (inferior_pid, general_thread), (PTRACE_ARG3_TYPE)&ec, 		       0);       if (errno) 	perror_with_name ("Sparc fetch_inferior_registers(ptrace)");     }    if (whatregs& WHATREGS_STACK)     {       int regoffset;       CORE_ADDR sp;        sp = read_register (SP_REGNUM);        if (regno == -1 || regno == SP_REGNUM) 	{ 	  if (!register_valid[L0_REGNUM+5]) 	    abort(); 	  target_xfer_memory (sp + FRAME_SAVED_I0,&registers[REGISTER_BYTE (I0_REGNUM)], 			      8 * REGISTER_RAW_SIZE (I0_REGNUM), 1);  	  target_xfer_memory (sp + FRAME_SAVED_L0,&registers[REGISTER_BYTE (L0_REGNUM)], 			      8 * REGISTER_RAW_SIZE (L0_REGNUM), 1); 	}       else if (regno>= L0_REGNUM&& regno<= I7_REGNUM) 	{ 	  if (!register_valid[regno]) 	    abort(); 	  if (regno>= L0_REGNUM&& regno<= L0_REGNUM + 7) 	    regoffset = REGISTER_BYTE (regno) - REGISTER_BYTE (L0_REGNUM) 	      + FRAME_SAVED_L0; 	  else 	    regoffset = REGISTER_BYTE (regno) - REGISTER_BYTE (I0_REGNUM) 	      + FRAME_SAVED_I0; 	  target_xfer_memory (sp + regoffset,&registers[REGISTER_BYTE (regno)], 			      REGISTER_RAW_SIZE (regno), 1); 	}     }    if (whatregs& WHATREGS_FLOAT)     {       struct fcontext fc;
+block|int retval;        ec.tbr = read_register (TBR_REGNUM);       memcpy (&ec.g1,&registers[REGISTER_BYTE (G1_REGNUM)], 	      4 * REGISTER_RAW_SIZE (G1_REGNUM));        ec.psr = read_register (PS_REGNUM);       ec.y = read_register (Y_REGNUM);       ec.pc = read_register (PC_REGNUM);       ec.npc = read_register (NPC_REGNUM);       ec.wim = read_register (WIM_REGNUM);        memcpy (ec.o,&registers[REGISTER_BYTE (O0_REGNUM)], 	      8 * REGISTER_RAW_SIZE (O0_REGNUM));        errno = 0;       retval = ptrace (PTRACE_SETREGS, BUILDPID (inferior_pid, general_thread), (PTRACE_ARG3_TYPE)& ec, 		       0);       if (errno) 	perror_with_name ("Sparc fetch_inferior_registers(ptrace)");     }    if (whatregs& WHATREGS_STACK)     {       int regoffset;       CORE_ADDR sp;        sp = read_register (SP_REGNUM);        if (regno == -1 || regno == SP_REGNUM) 	{ 	  if (!register_valid[L0_REGNUM + 5]) 	    abort (); 	  target_xfer_memory (sp + FRAME_SAVED_I0,&registers[REGISTER_BYTE (I0_REGNUM)], 			      8 * REGISTER_RAW_SIZE (I0_REGNUM), 1);  	  target_xfer_memory (sp + FRAME_SAVED_L0,&registers[REGISTER_BYTE (L0_REGNUM)], 			      8 * REGISTER_RAW_SIZE (L0_REGNUM), 1); 	}       else if (regno>= L0_REGNUM&& regno<= I7_REGNUM) 	{ 	  if (!register_valid[regno]) 	    abort (); 	  if (regno>= L0_REGNUM&& regno<= L0_REGNUM + 7) 	    regoffset = REGISTER_BYTE (regno) - REGISTER_BYTE (L0_REGNUM) 	      + FRAME_SAVED_L0; 	  else 	    regoffset = REGISTER_BYTE (regno) - REGISTER_BYTE (I0_REGNUM) 	      + FRAME_SAVED_I0; 	  target_xfer_memory (sp + regoffset,&registers[REGISTER_BYTE (regno)], 			      REGISTER_RAW_SIZE (regno), 1); 	}     }    if (whatregs& WHATREGS_FLOAT)     {       struct fcontext fc;
 comment|/* fp regs */
 block|int retval;
 comment|/* We read fcontext first so that we can get good values for fq_t... */
-block|errno = 0;       retval = ptrace (PTRACE_GETFPREGS, BUILDPID (inferior_pid, general_thread), (PTRACE_ARG3_TYPE)&fc, 		       0);       if (errno) 	perror_with_name ("Sparc fetch_inferior_registers(ptrace)");          memcpy (fc.f.fregs,&registers[REGISTER_BYTE (FP0_REGNUM)], 	      32 * REGISTER_RAW_SIZE (FP0_REGNUM));        fc.fsr = read_register (FPS_REGNUM);        errno = 0;       retval = ptrace (PTRACE_SETFPREGS, BUILDPID (inferior_pid, general_thread), (PTRACE_ARG3_TYPE)&fc, 		       0);       if (errno) 	perror_with_name ("Sparc fetch_inferior_registers(ptrace)");       }
+block|errno = 0;       retval = ptrace (PTRACE_GETFPREGS, BUILDPID (inferior_pid, general_thread), (PTRACE_ARG3_TYPE)& fc, 		       0);       if (errno) 	perror_with_name ("Sparc fetch_inferior_registers(ptrace)");        memcpy (fc.f.fregs,&registers[REGISTER_BYTE (FP0_REGNUM)], 	      32 * REGISTER_RAW_SIZE (FP0_REGNUM));        fc.fsr = read_register (FPS_REGNUM);        errno = 0;       retval = ptrace (PTRACE_SETFPREGS, BUILDPID (inferior_pid, general_thread), (PTRACE_ARG3_TYPE)& fc, 		       0);       if (errno) 	perror_with_name ("Sparc fetch_inferior_registers(ptrace)");     }
 endif|#
 directive|endif
 block|}
@@ -1731,7 +1746,9 @@ specifier|static
 name|unsigned
 name|long
 name|lynx_registers_addr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|stblock
@@ -1835,11 +1852,9 @@ begin_function
 name|void
 name|fetch_inferior_registers
 parameter_list|(
-name|ignored
-parameter_list|)
 name|int
 name|ignored
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -1961,11 +1976,9 @@ begin_function
 name|void
 name|store_inferior_registers
 parameter_list|(
-name|ignored
-parameter_list|)
 name|int
 name|ignored
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -2098,22 +2111,16 @@ begin_function
 name|void
 name|read_inferior_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -2127,6 +2134,9 @@ init|=
 name|memaddr
 operator|&
 operator|-
+operator|(
+name|CORE_ADDR
+operator|)
 sizeof|sizeof
 argument_list|(
 name|int
@@ -2263,22 +2273,16 @@ begin_function
 name|int
 name|write_inferior_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -2292,6 +2296,9 @@ init|=
 name|memaddr
 operator|&
 operator|-
+operator|(
+name|CORE_ADDR
+operator|)
 sizeof|sizeof
 argument_list|(
 name|int
@@ -2540,6 +2547,18 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_function
+name|void
+name|initialize_low
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
 end_function
 
 end_unit

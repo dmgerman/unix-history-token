@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target communications support for Macraigor Systems' On-Chip Debugging    Copyright 1996, 1997 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target communications support for Macraigor Systems' On-Chip Debugging     Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002 Free Software    Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"gdbcmd.h"
 end_include
 
@@ -79,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|"gdb-stabs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dcache.h"
 end_include
 
 begin_include
@@ -111,219 +99,186 @@ directive|include
 file|"ocd.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"regcache.h"
+end_include
+
 begin_comment
 comment|/* Prototypes for local functions */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ocd_read_bytes
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
 name|memaddr
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|myaddr
-operator|,
+parameter_list|,
 name|int
 name|len
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ocd_start_remote
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|PTR
 name|dummy
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|readchar
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|timeout
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|reset_packet
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|output_packet
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|get_quoted_char
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|timeout
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|put_quoted_char
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|c
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ocd_interrupt
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|signo
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ocd_interrupt_twice
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|signo
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|interrupt_query
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|unsigned
 name|char
 modifier|*
 name|ocd_do_command
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|cmd
-operator|,
+parameter_list|,
 name|int
-operator|*
+modifier|*
 name|statusp
-operator|,
+parameter_list|,
 name|int
-operator|*
+modifier|*
 name|lenp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ocd_put_packet
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|char
-operator|*
+modifier|*
 name|packet
-operator|,
+parameter_list|,
 name|int
 name|pktlen
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|unsigned
 name|char
 modifier|*
 name|ocd_get_packet
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|cmd
-operator|,
+parameter_list|,
 name|int
-operator|*
+modifier|*
 name|pktlen
-operator|,
+parameter_list|,
 name|int
 name|timeout
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -369,7 +324,9 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|serial_t
+name|struct
+name|serial
+modifier|*
 name|ocd_desc
 init|=
 name|NULL
@@ -383,17 +340,13 @@ begin_function
 name|void
 name|ocd_error
 parameter_list|(
-name|s
-parameter_list|,
-name|error_code
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|,
 name|int
 name|error_code
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -571,11 +524,9 @@ begin_function
 name|int
 name|ocd_thread_alive
 parameter_list|(
+name|ptid_t
 name|th
 parameter_list|)
-name|int
-name|th
-decl_stmt|;
 block|{
 return|return
 literal|1
@@ -598,17 +549,15 @@ begin_function
 name|void
 name|ocd_close
 parameter_list|(
-name|quitting
-parameter_list|)
 name|int
 name|quitting
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
 name|ocd_desc
 condition|)
-name|SERIAL_CLOSE
+name|serial_close
 argument_list|(
 name|ocd_desc
 argument_list|)
@@ -629,11 +578,9 @@ specifier|static
 name|int
 name|ocd_start_remote
 parameter_list|(
-name|dummy
-parameter_list|)
 name|PTR
 name|dummy
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -672,11 +619,10 @@ operator|)
 name|dummy
 expr_stmt|;
 name|immediate_quit
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 comment|/* Allow user to interrupt it */
-name|SERIAL_SEND_BREAK
+name|serial_send_break
 argument_list|(
 name|ocd_desc
 argument_list|)
@@ -838,7 +784,7 @@ directive|if
 literal|0
 comment|/* Reset the target */
 block|ocd_do_command (OCD_RESET_RUN,&status,&pktlen);
-comment|/*  ocd_do_command (OCD_RESET,&status,&pktlen);*/
+comment|/*  ocd_do_command (OCD_RESET,&status,&pktlen); */
 endif|#
 directive|endif
 comment|/* If processor is still running, stop it.  */
@@ -942,8 +888,7 @@ expr_stmt|;
 endif|#
 directive|endif
 name|immediate_quit
-operator|=
-literal|0
+operator|--
 expr_stmt|;
 comment|/* This is really the job of start_remote however, that makes an assumption    that the target is about to print out a status message of some sort.  That    doesn't happen here (in fact, it may not be possible to get the monitor to    send the appropriate packet).  */
 name|flush_cached_frames
@@ -1070,42 +1015,26 @@ begin_comment
 comment|/* Open a connection to a remote debugger.    NAME is the filename used for communication.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|DCACHE
-modifier|*
-name|ocd_dcache
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|ocd_open
 parameter_list|(
-name|name
-parameter_list|,
-name|from_tty
-parameter_list|,
-name|target_type
-parameter_list|,
-name|ops
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|,
 name|enum
 name|ocd_target_type
 name|target_type
-decl_stmt|;
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|ops
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -1116,9 +1045,6 @@ index|]
 decl_stmt|,
 modifier|*
 name|p
-decl_stmt|;
-name|int
-name|status
 decl_stmt|;
 name|int
 name|pktlen
@@ -1148,127 +1074,9 @@ argument_list|(
 name|current_ops
 argument_list|)
 expr_stmt|;
-name|ocd_dcache
-operator|=
-name|dcache_init
-argument_list|(
-name|ocd_read_bytes
-argument_list|,
-name|ocd_write_bytes
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|name
-argument_list|,
-literal|"wiggler"
-argument_list|,
-literal|7
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
 name|ocd_desc
 operator|=
-name|SERIAL_OPEN
-argument_list|(
-literal|"ocd"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ocd_desc
-condition|)
-name|perror_with_name
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
-name|buf
-index|[
-literal|0
-index|]
-operator|=
-name|OCD_LOG_FILE
-expr_stmt|;
-name|buf
-index|[
-literal|1
-index|]
-operator|=
-literal|1
-expr_stmt|;
-comment|/* open new or overwrite existing WIGGLERS.LOG */
-name|ocd_put_packet
-argument_list|(
-name|buf
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|p
-operator|=
-name|ocd_get_packet
-argument_list|(
-name|buf
-index|[
-literal|0
-index|]
-argument_list|,
-operator|&
-name|pktlen
-argument_list|,
-name|remote_timeout
-argument_list|)
-expr_stmt|;
-name|buf
-index|[
-literal|0
-index|]
-operator|=
-name|OCD_SET_CONNECTION
-expr_stmt|;
-name|buf
-index|[
-literal|1
-index|]
-operator|=
-literal|0x01
-expr_stmt|;
-comment|/* atoi (name[11]); */
-name|ocd_put_packet
-argument_list|(
-name|buf
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|p
-operator|=
-name|ocd_get_packet
-argument_list|(
-name|buf
-index|[
-literal|0
-index|]
-argument_list|,
-operator|&
-name|pktlen
-argument_list|,
-name|remote_timeout
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-comment|/* not using Wigglers.dll */
-block|{
-name|ocd_desc
-operator|=
-name|SERIAL_OPEN
+name|serial_open
 argument_list|(
 name|name
 argument_list|)
@@ -1283,7 +1091,6 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|baud_rate
@@ -1294,7 +1101,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|SERIAL_SETBAUDRATE
+name|serial_setbaudrate
 argument_list|(
 name|ocd_desc
 argument_list|,
@@ -1302,7 +1109,7 @@ name|baud_rate
 argument_list|)
 condition|)
 block|{
-name|SERIAL_CLOSE
+name|serial_close
 argument_list|(
 name|ocd_desc
 argument_list|)
@@ -1314,13 +1121,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|SERIAL_RAW
+name|serial_raw
 argument_list|(
 name|ocd_desc
 argument_list|)
 expr_stmt|;
 comment|/* If there is something sitting in the buffer we might take it as a      response to a command, which would be bad.  */
-name|SERIAL_FLUSH_INPUT
+name|serial_flush_input
 argument_list|(
 name|ocd_desc
 argument_list|)
@@ -1353,9 +1160,12 @@ argument_list|)
 expr_stmt|;
 comment|/* Switch to using remote target now */
 comment|/* Without this, some commands which require an active target (such as kill)      won't work.  This variable serves (at least) double duty as both the pid      of the target process (if it has such), and as a flag indicating that a      target is active.  These functions should be split out into seperate      variables, especially since GDB will someday have a notion of debugging      several processes.  */
-name|inferior_pid
+name|inferior_ptid
 operator|=
+name|pid_to_ptid
+argument_list|(
 literal|42000
+argument_list|)
 expr_stmt|;
 comment|/* Start the remote connection; if error (0), discard this target.      In particular, if the user quits, be sure to discard it      (we'd be in an inconsistent state otherwise).  */
 if|if
@@ -1394,17 +1204,13 @@ begin_function
 name|void
 name|ocd_detach
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1441,30 +1247,20 @@ begin_function
 name|void
 name|ocd_resume
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|step
-parameter_list|,
-name|siggnal
-parameter_list|)
 name|int
-name|pid
-decl_stmt|,
 name|step
-decl_stmt|;
+parameter_list|,
 name|enum
 name|target_signal
 name|siggnal
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|pktlen
 decl_stmt|;
-name|dcache_flush
-argument_list|(
-name|ocd_dcache
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|step
@@ -1501,7 +1297,9 @@ end_escape
 begin_function
 name|void
 name|ocd_stop
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|status
@@ -1554,11 +1352,9 @@ specifier|static
 name|void
 name|ocd_interrupt
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* If this doesn't work, try more severe steps.  */
 name|signal
@@ -1629,11 +1425,9 @@ specifier|static
 name|void
 name|ocd_interrupt_twice
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 name|signal
 argument_list|(
@@ -1663,7 +1457,9 @@ begin_function
 specifier|static
 name|void
 name|interrupt_query
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|target_terminal_ours
 argument_list|()
@@ -1679,7 +1475,7 @@ block|{
 name|target_mourn_inferior
 argument_list|()
 expr_stmt|;
-name|return_to_top_level
+name|throw_exception
 argument_list|(
 name|RETURN_QUIT
 argument_list|)
@@ -1709,7 +1505,9 @@ end_comment
 begin_function
 name|int
 name|ocd_wait
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -1880,22 +1678,16 @@ name|char
 modifier|*
 name|ocd_read_bdm_registers
 parameter_list|(
-name|first_bdm_regno
-parameter_list|,
-name|last_bdm_regno
-parameter_list|,
-name|reglen
-parameter_list|)
 name|int
 name|first_bdm_regno
-decl_stmt|;
+parameter_list|,
 name|int
 name|last_bdm_regno
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|reglen
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -2081,11 +1873,9 @@ begin_function
 name|CORE_ADDR
 name|ocd_read_bdm_register
 parameter_list|(
-name|bdm_regno
-parameter_list|)
 name|int
 name|bdm_regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|reglen
@@ -2129,23 +1919,17 @@ begin_function
 name|void
 name|ocd_write_bdm_registers
 parameter_list|(
-name|first_bdm_regno
-parameter_list|,
-name|regptr
-parameter_list|,
-name|reglen
-parameter_list|)
 name|int
 name|first_bdm_regno
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|regptr
-decl_stmt|;
+parameter_list|,
 name|int
 name|reglen
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -2283,16 +2067,12 @@ begin_function
 name|void
 name|ocd_write_bdm_register
 parameter_list|(
-name|bdm_regno
-parameter_list|,
-name|reg
-parameter_list|)
 name|int
 name|bdm_regno
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|reg
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -2328,7 +2108,9 @@ end_escape
 begin_function
 name|void
 name|ocd_prepare_to_store
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 
@@ -2352,22 +2134,16 @@ begin_function
 name|int
 name|ocd_write_bytes
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -2646,22 +2422,16 @@ specifier|static
 name|int
 name|ocd_read_bytes
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -2925,7 +2695,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Read or write LEN bytes from inferior memory at MEMADDR, transferring    to or from debugger address MYADDR.  Write to inferior if SHOULD_WRITE is    nonzero.  Returns length of data written or read; 0 for error.  */
+comment|/* Read or write LEN bytes from inferior memory at MEMADDR, transferring    to or from debugger address MYADDR.  Write to inferior if SHOULD_WRITE is    nonzero.  Returns length of data written or read; 0 for error.  TARGET    is ignored.  */
 end_comment
 
 begin_comment
@@ -2936,49 +2706,62 @@ begin_function
 name|int
 name|ocd_xfer_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|should_write
-parameter_list|,
-name|target
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|should_write
-decl_stmt|;
+parameter_list|,
+name|struct
+name|mem_attrib
+modifier|*
+name|attrib
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
-comment|/* ignored */
+parameter_list|)
 block|{
-return|return
-name|dcache_xfer_memory
+name|int
+name|res
+decl_stmt|;
+if|if
+condition|(
+name|should_write
+condition|)
+name|res
+operator|=
+name|ocd_write_bytes
 argument_list|(
-name|ocd_dcache
-argument_list|,
 name|memaddr
 argument_list|,
 name|myaddr
 argument_list|,
 name|len
-argument_list|,
-name|should_write
 argument_list|)
+expr_stmt|;
+else|else
+name|res
+operator|=
+name|ocd_read_bytes
+argument_list|(
+name|memaddr
+argument_list|,
+name|myaddr
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+return|return
+name|res
 return|;
 block|}
 end_function
@@ -2990,13 +2773,11 @@ begin_function
 name|void
 name|ocd_files_info
 parameter_list|(
-name|ignore
-parameter_list|)
 name|struct
 name|target_ops
 modifier|*
 name|ignore
-decl_stmt|;
+parameter_list|)
 block|{
 name|puts_filtered
 argument_list|(
@@ -3022,18 +2803,16 @@ specifier|static
 name|int
 name|readchar
 parameter_list|(
-name|timeout
-parameter_list|)
 name|int
 name|timeout
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ch
 decl_stmt|;
 name|ch
 operator|=
-name|SERIAL_READCHAR
+name|serial_readchar
 argument_list|(
 name|ocd_desc
 argument_list|,
@@ -3083,22 +2862,22 @@ comment|/* Read a character from the data stream, dequoting as necessary.  SYN i
 end_comment
 
 begin_comment
-unit|static int get_quoted_char (timeout)      int timeout; {   int ch;    ch = readchar (timeout);    switch (ch)     {     case SERIAL_TIMEOUT:       error ("Timeout in mid-packet, aborting");     case SYN:       return RAW_SYN;     case DLE:       ch = readchar (timeout);       if (ch == SYN) 	return RAW_SYN;       return ch& ~0100;     default:       return ch;     } }  static unsigned char pkt[256 * 2 + 10], *pktp;
+unit|static int get_quoted_char (int timeout) {   int ch;    ch = readchar (timeout);    switch (ch)     {     case SERIAL_TIMEOUT:       error ("Timeout in mid-packet, aborting");     case SYN:       return RAW_SYN;     case DLE:       ch = readchar (timeout);       if (ch == SYN) 	return RAW_SYN;       return ch& ~0100;     default:       return ch;     } }  static unsigned char pkt[256 * 2 + 10], *pktp;
 comment|/* Worst case */
 end_comment
 
 begin_comment
-unit|static void reset_packet () {   pktp = pkt; }  static void output_packet () {   if (SERIAL_WRITE (ocd_desc, pkt, pktp - pkt))     perror_with_name ("output_packet: write failed");    reset_packet (); }
+unit|static void reset_packet (void) {   pktp = pkt; }  static void output_packet (void) {   if (serial_write (ocd_desc, pkt, pktp - pkt))     perror_with_name ("output_packet: write failed");    reset_packet (); }
 comment|/* Output a quoted character.  SYNs and DLEs are quoted.  Everything else goes    through untouched.  */
 end_comment
 
 begin_comment
-unit|static void put_quoted_char (c)      int c; {   switch (c)     {     case SYN:     case DLE:       *pktp++ = DLE;       c |= 0100;     }    *pktp++ = c; }
+unit|static void put_quoted_char (int c) {   switch (c)     {     case SYN:     case DLE:       *pktp++ = DLE;       c |= 0100;     }    *pktp++ = c; }
 comment|/* Send a packet to the OCD device.  The packet framed by a SYN character,    a byte count and a checksum.  The byte count only counts the number of    bytes between the count and the checksum.  A count of zero actually    means 256.  Any SYNs within the packet (including the checksum and    count) must be quoted.  The quote character must be quoted as well.    Quoting is done by replacing the character with the two-character sequence    DLE, {char} | 0100.  Note that the quoting mechanism has no effect on the    byte count. */
 end_comment
 
 begin_comment
-unit|static void stu_put_packet (buf, len)      unsigned char *buf;      int len; {   unsigned char checksum;   unsigned char c;    if (len == 0 || len> 256)     abort ();
+unit|static void stu_put_packet (unsigned char *buf, int len) {   unsigned char checksum;   unsigned char c;    if (len == 0 || len> 256)     internal_error (__FILE__, __LINE__, "failed internal consistency check");
 comment|/* Can't represent 0 length packet */
 end_comment
 
@@ -3117,18 +2896,14 @@ specifier|static
 name|void
 name|ocd_put_packet
 parameter_list|(
-name|buf
-parameter_list|,
-name|len
-parameter_list|)
 name|unsigned
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -3206,7 +2981,7 @@ name|checksum
 expr_stmt|;
 if|if
 condition|(
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|ocd_desc
 argument_list|,
@@ -3237,11 +3012,11 @@ literal|0
 end_if
 
 begin_comment
-comment|/* Get a packet from the OCD device.  Timeout is only enforced for the    first byte of the packet.  Subsequent bytes are expected to arrive in    time<= remote_timeout.  Returns a pointer to a static buffer containing    the payload of the packet.  *LENP contains the length of the packet. */
+comment|/* Get a packet from the OCD device.  Timeout is only enforced for the    first byte of the packet.  Subsequent bytes are expected to arrive in    time<= remote_timeout.  Returns a pointer to a static buffer containing    the payload of the packet.  *LENP contains the length of the packet.  */
 end_comment
 
 begin_comment
-unit|static unsigned char * stu_get_packet (cmd, lenp, timeout)      unsigned char cmd;      int *lenp; {   int ch;   int len;   static unsigned char buf[256 + 10], *p;   unsigned char checksum;   find_packet:    ch = get_quoted_char (timeout);    if (ch< 0)     error ("get_packet (readchar): %d", ch);    if (ch != RAW_SYN)     goto find_packet;   found_syn:
+unit|static unsigned char * stu_get_packet (unsigned char cmd, int *lenp, int timeout) {   int ch;   int len;   static unsigned char buf[256 + 10], *p;   unsigned char checksum;  find_packet:    ch = get_quoted_char (timeout);    if (ch< 0)     error ("get_packet (readchar): %d", ch);    if (ch != RAW_SYN)     goto find_packet;  found_syn:
 comment|/* Found the start of a packet */
 end_comment
 
@@ -3257,7 +3032,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Get a packet from the OCD device.  Timeout is only enforced for the    first byte of the packet.  Subsequent bytes are expected to arrive in    time<= remote_timeout.  Returns a pointer to a static buffer containing    the payload of the packet.  *LENP contains the length of the packet. */
+comment|/* Get a packet from the OCD device.  Timeout is only enforced for the    first byte of the packet.  Subsequent bytes are expected to arrive in    time<= remote_timeout.  Returns a pointer to a static buffer containing    the payload of the packet.  *LENP contains the length of the packet.  */
 end_comment
 
 begin_function
@@ -3267,28 +3042,22 @@ name|char
 modifier|*
 name|ocd_get_packet
 parameter_list|(
-name|cmd
-parameter_list|,
-name|lenp
-parameter_list|,
-name|timeout
-parameter_list|)
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|lenp
-decl_stmt|;
+parameter_list|,
+name|int
+name|timeout
+parameter_list|)
 block|{
 name|int
 name|ch
 decl_stmt|;
 name|int
 name|len
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 specifier|static
 name|unsigned
@@ -3809,23 +3578,17 @@ name|char
 modifier|*
 name|ocd_do_command
 parameter_list|(
+name|int
 name|cmd
 parameter_list|,
+name|int
+modifier|*
 name|statusp
 parameter_list|,
+name|int
+modifier|*
 name|lenp
 parameter_list|)
-name|int
-name|cmd
-decl_stmt|;
-name|int
-modifier|*
-name|statusp
-decl_stmt|;
-name|int
-modifier|*
-name|lenp
-decl_stmt|;
 block|{
 name|unsigned
 name|char
@@ -4047,7 +3810,9 @@ end_escape
 begin_function
 name|void
 name|ocd_kill
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* For some mysterious reason, wait_for_inferior calls kill instead of      mourn after it gets TARGET_WAITKIND_SIGNALLED.  Work around it.  */
 if|if
@@ -4074,7 +3839,9 @@ end_function
 begin_function
 name|void
 name|ocd_mourn
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|unpush_target
 argument_list|(
@@ -4095,25 +3862,19 @@ begin_function
 name|void
 name|ocd_create_inferior
 parameter_list|(
-name|exec_file
-parameter_list|,
-name|args
-parameter_list|,
-name|env
-parameter_list|)
 name|char
 modifier|*
 name|exec_file
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|env
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4153,17 +3914,13 @@ begin_function
 name|void
 name|ocd_load
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|generic_load
 argument_list|(
@@ -4172,9 +3929,9 @@ argument_list|,
 name|from_tty
 argument_list|)
 expr_stmt|;
-name|inferior_pid
+name|inferior_ptid
 operator|=
-literal|0
+name|null_ptid
 expr_stmt|;
 comment|/* This is necessary because many things were based on the PC at the time that    we attached to the monitor, which is no longer valid now that we have loaded    new code (and just changed the PC).  Another way to do this might be to call    normal_stop, except that the stack may not be valid, and things would get    horribly confused... */
 name|clear_symtab_users
@@ -4232,17 +3989,13 @@ begin_function
 name|int
 name|ocd_insert_breakpoint
 parameter_list|(
-name|addr
-parameter_list|,
-name|contents_cache
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|contents_cache
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -4298,17 +4051,13 @@ begin_function
 name|int
 name|ocd_remove_breakpoint
 parameter_list|(
-name|addr
-parameter_list|,
-name|contents_cache
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|contents_cache
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -4345,17 +4094,13 @@ specifier|static
 name|void
 name|bdm_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|error
 argument_list|(
@@ -4370,17 +4115,13 @@ specifier|static
 name|void
 name|bdm_reset_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|status
@@ -4408,9 +4149,9 @@ operator|&
 name|pktlen
 argument_list|)
 expr_stmt|;
-name|dcache_flush
+name|dcache_invalidate
 argument_list|(
-name|ocd_dcache
+name|target_dcache
 argument_list|)
 expr_stmt|;
 name|registers_changed
@@ -4424,17 +4165,13 @@ specifier|static
 name|void
 name|bdm_restart_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|status
@@ -4487,11 +4224,9 @@ specifier|static
 name|void
 name|noop_store_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{ }
 end_function
 
@@ -4500,17 +4235,13 @@ specifier|static
 name|void
 name|bdm_update_flash_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|status
@@ -4523,16 +4254,14 @@ modifier|*
 name|old_chain
 decl_stmt|;
 name|void
-argument_list|(
-argument|*store_registers_tmp
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|store_registers_tmp
+function_decl|)
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 if|if
 condition|(
 operator|!
@@ -4553,7 +4282,7 @@ argument_list|(
 literal|"Must specify file containing new OCD code."
 argument_list|)
 expr_stmt|;
-comment|/*  old_chain = make_cleanup (flash_cleanup, 0);*/
+comment|/*  old_chain = make_cleanup (flash_cleanup, 0); */
 name|ocd_do_command
 argument_list|(
 name|OCD_ENTER_MON
@@ -4620,7 +4349,7 @@ operator|&
 name|pktlen
 argument_list|)
 expr_stmt|;
-comment|/*  discard_cleanups (old_chain);*/
+comment|/*  discard_cleanups (old_chain); */
 block|}
 end_function
 
@@ -4629,17 +4358,13 @@ specifier|static
 name|void
 name|bdm_read_register_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* XXX repeat should go on to the next register */
 if|if
@@ -4671,7 +4396,9 @@ end_escape
 begin_function
 name|void
 name|_initialize_remote_ocd
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|extern
 name|struct
@@ -4777,7 +4504,7 @@ operator|&
 name|ocd_cmd_list
 argument_list|)
 expr_stmt|;
-comment|/*  add_cmd ("read-register", class_obscure, bdm_read_register_command, "",&ocd_cmd_list);*/
+comment|/*  add_cmd ("read-register", class_obscure, bdm_read_register_command, "",&ocd_cmd_list); */
 block|}
 end_function
 

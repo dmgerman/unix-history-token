@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote debugging interface for Tandem ST2000 phone switch, for GDB.    Copyright 1990, 1991, 1992 Free Software Foundation, Inc.    Contributed by Cygnus Support.  Written by Jim Kingdon for Cygnus.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Remote debugging interface for Tandem ST2000 phone switch, for GDB.     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1998, 1999, 2000,    2001, 2002 Free Software Foundation, Inc.     Contributed by Cygnus Support.  Written by Jim Kingdon for Cygnus.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -28,18 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"gdb_wait.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"gdb_string.h"
 end_include
 
@@ -53,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|"serial.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
 end_include
 
 begin_decl_stmt
@@ -134,7 +128,9 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|serial_t
+name|struct
+name|serial
+modifier|*
 name|st2000_desc
 decl_stmt|;
 end_decl_stmt
@@ -187,7 +183,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|st2000_desc
 argument_list|,
@@ -203,7 +199,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"SERIAL_WRITE failed: %s\n"
+literal|"serial_write failed: %s\n"
 argument_list|,
 name|safe_strerror
 argument_list|(
@@ -223,18 +219,16 @@ specifier|static
 name|int
 name|readchar
 parameter_list|(
-name|timeout
-parameter_list|)
 name|int
 name|timeout
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
 decl_stmt|;
 name|c
 operator|=
-name|SERIAL_READCHAR
+name|serial_readchar
 argument_list|(
 name|st2000_desc
 argument_list|,
@@ -306,17 +300,13 @@ specifier|static
 name|void
 name|expect
 parameter_list|(
-name|string
-parameter_list|,
-name|discard
-parameter_list|)
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|,
 name|int
 name|discard
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -328,8 +318,7 @@ name|int
 name|c
 decl_stmt|;
 name|immediate_quit
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 while|while
 condition|(
@@ -361,8 +350,7 @@ literal|'\0'
 condition|)
 block|{
 name|immediate_quit
-operator|=
-literal|0
+operator|--
 expr_stmt|;
 return|return;
 block|}
@@ -424,11 +412,9 @@ specifier|static
 name|void
 name|expect_prompt
 parameter_list|(
-name|discard
-parameter_list|)
 name|int
 name|discard
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -463,11 +449,9 @@ specifier|static
 name|int
 name|get_hex_digit
 parameter_list|(
-name|ignore_space
-parameter_list|)
 name|int
 name|ignore_space
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ch
@@ -571,12 +555,10 @@ specifier|static
 name|void
 name|get_hex_byte
 parameter_list|(
-name|byt
-parameter_list|)
 name|char
 modifier|*
 name|byt
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|val
@@ -614,16 +596,12 @@ specifier|static
 name|void
 name|get_hex_regs
 parameter_list|(
+name|int
 name|n
 parameter_list|,
+name|int
 name|regno
 parameter_list|)
-name|int
-name|n
-decl_stmt|;
-name|int
-name|regno
-decl_stmt|;
 block|{
 name|long
 name|val
@@ -706,25 +684,19 @@ specifier|static
 name|void
 name|st2000_create_inferior
 parameter_list|(
-name|execfile
-parameter_list|,
-name|args
-parameter_list|,
-name|env
-parameter_list|)
 name|char
 modifier|*
 name|execfile
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|env
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|entry_pt
@@ -827,17 +799,13 @@ specifier|static
 name|void
 name|st2000_open
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|n
@@ -887,7 +855,7 @@ argument_list|)
 expr_stmt|;
 name|st2000_desc
 operator|=
-name|SERIAL_OPEN
+name|serial_open
 argument_list|(
 name|dev_name
 argument_list|)
@@ -902,14 +870,28 @@ argument_list|(
 name|dev_name
 argument_list|)
 expr_stmt|;
-name|SERIAL_SETBAUDRATE
+if|if
+condition|(
+name|serial_setbaudrate
 argument_list|(
 name|st2000_desc
 argument_list|,
 name|baudrate
 argument_list|)
+condition|)
+block|{
+name|serial_close
+argument_list|(
+name|dev_name
+argument_list|)
 expr_stmt|;
-name|SERIAL_RAW
+name|perror_with_name
+argument_list|(
+name|dev_name
+argument_list|)
+expr_stmt|;
+block|}
+name|serial_raw
 argument_list|(
 name|st2000_desc
 argument_list|)
@@ -985,13 +967,11 @@ specifier|static
 name|void
 name|st2000_close
 parameter_list|(
-name|quitting
-parameter_list|)
 name|int
 name|quitting
-decl_stmt|;
+parameter_list|)
 block|{
-name|SERIAL_CLOSE
+name|serial_close
 argument_list|(
 name|st2000_desc
 argument_list|)
@@ -1052,11 +1032,9 @@ specifier|static
 name|void
 name|st2000_detach
 parameter_list|(
-name|from_tty
-parameter_list|)
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|pop_target
 argument_list|()
@@ -1085,21 +1063,16 @@ specifier|static
 name|void
 name|st2000_resume
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|step
-parameter_list|,
-name|sig
-parameter_list|)
 name|int
-name|pid
-decl_stmt|,
 name|step
-decl_stmt|;
+parameter_list|,
 name|enum
 name|target_signal
 name|sig
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1145,16 +1118,17 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ptid_t
 name|st2000_wait
 parameter_list|(
-name|status
-parameter_list|)
+name|ptid_t
+name|ptid
+parameter_list|,
 name|struct
 name|target_waitstatus
 modifier|*
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|old_timeout
@@ -1205,7 +1179,7 @@ operator|=
 name|old_timeout
 expr_stmt|;
 return|return
-literal|0
+name|inferior_ptid
 return|;
 block|}
 end_function
@@ -1220,11 +1194,9 @@ name|char
 modifier|*
 name|get_reg_name
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -1290,7 +1262,9 @@ begin_function
 specifier|static
 name|void
 name|st2000_fetch_registers
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -1326,11 +1300,9 @@ specifier|static
 name|void
 name|st2000_fetch_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1399,7 +1371,9 @@ begin_function
 specifier|static
 name|void
 name|st2000_store_registers
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -1437,11 +1411,9 @@ specifier|static
 name|void
 name|st2000_store_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1487,7 +1459,9 @@ begin_function
 specifier|static
 name|void
 name|st2000_prepare_to_store
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Do nothing, since we can store individual regs */
 block|}
@@ -1497,7 +1471,9 @@ begin_function
 specifier|static
 name|void
 name|st2000_files_info
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -1520,23 +1496,17 @@ specifier|static
 name|int
 name|st2000_write_inferior_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1590,22 +1560,16 @@ specifier|static
 name|int
 name|st2000_read_inferior_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1757,7 +1721,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FIXME-someday!  Merge these two.  */
+comment|/* Transfer LEN bytes between GDB address MYADDR and target address    MEMADDR.  If WRITE is non-zero, transfer them to the target,    otherwise transfer them from the target.  TARGET is unused.     Returns the number of bytes transferred. */
 end_comment
 
 begin_function
@@ -1765,35 +1729,29 @@ specifier|static
 name|int
 name|st2000_xfer_inferior_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|,
-name|target
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|write
-decl_stmt|;
+parameter_list|,
+name|struct
+name|mem_attrib
+modifier|*
+name|attrib
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
-comment|/* ignored */
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1828,17 +1786,13 @@ specifier|static
 name|void
 name|st2000_kill
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 return|return;
 comment|/* Ignore attempts to kill target system */
@@ -1853,7 +1807,9 @@ begin_function
 specifier|static
 name|void
 name|st2000_mourn_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|remove_breakpoints
 argument_list|()
@@ -1897,17 +1853,13 @@ specifier|static
 name|int
 name|st2000_insert_breakpoint
 parameter_list|(
-name|addr
-parameter_list|,
-name|shadow
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|shadow
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2004,17 +1956,13 @@ specifier|static
 name|int
 name|st2000_remove_breakpoint
 parameter_list|(
-name|addr
-parameter_list|,
-name|shadow
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|shadow
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2089,17 +2037,13 @@ specifier|static
 name|void
 name|st2000_command
 parameter_list|(
-name|args
-parameter_list|,
-name|fromtty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|fromtty
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2148,14 +2092,16 @@ begin_function
 specifier|static
 name|void
 name|cleanup_tty
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
 literal|"\r\n[Exiting connect mode]\r\n"
 argument_list|)
 expr_stmt|;
-comment|/*  SERIAL_RESTORE(0,&ttystate); */
+comment|/*  serial_restore(0,&ttystate); */
 block|}
 end_function
 
@@ -2170,12 +2116,12 @@ comment|/* This all should now be in serial.c */
 end_comment
 
 begin_comment
-unit|static void connect_command (args, fromtty)      char *args;      int fromtty; {   fd_set readfds;   int numfds;   int c;   char cur_esc = 0;    dont_repeat ();    if (st2000_desc< 0)     error ("st2000 target not open.");    if (args)     fprintf ("This command takes no args.  They have been ignored.\n");    printf ("[Entering connect mode.  Use ~. or ~^D to escape]\n");    serial_raw (0,&ttystate);    make_cleanup (cleanup_tty, 0);    FD_ZERO (&readfds);    while (1)     {       do 	{ 	  FD_SET (0,&readfds); 	  FD_SET (DEPRECATED_SERIAL_FD (st2000_desc),&readfds); 	  numfds = select (sizeof (readfds) * 8,&readfds, 0, 0, 0); 	}       while (numfds == 0);        if (numfds< 0) 	perror_with_name ("select");        if (FD_ISSET (0,&readfds)) 	{
+unit|static void connect_command (char *args, int fromtty) {   fd_set readfds;   int numfds;   int c;   char cur_esc = 0;    dont_repeat ();    if (st2000_desc< 0)     error ("st2000 target not open.");    if (args)     fprintf ("This command takes no args.  They have been ignored.\n");    printf ("[Entering connect mode.  Use ~. or ~^D to escape]\n");    serial_raw (0,&ttystate);    make_cleanup (cleanup_tty, 0);    FD_ZERO (&readfds);    while (1)     {       do 	{ 	  FD_SET (0,&readfds); 	  FD_SET (deprecated_serial_fd (st2000_desc),&readfds); 	  numfds = select (sizeof (readfds) * 8,&readfds, 0, 0, 0); 	}       while (numfds == 0);        if (numfds< 0) 	perror_with_name ("select");        if (FD_ISSET (0,&readfds)) 	{
 comment|/* tty input, send to stdebug */
 end_comment
 
 begin_endif
-unit|c = getchar (); 	  if (c< 0) 	    perror_with_name ("connect");  	  printf_stdebug ("%c", c); 	  switch (cur_esc) 	    { 	    case 0: 	      if (c == '\r') 		cur_esc = c; 	      break; 	    case '\r': 	      if (c == '~') 		cur_esc = c; 	      else 		cur_esc = 0; 	      break; 	    case '~': 	      if (c == '.' || c == '\004') 		return; 	      else 		cur_esc = 0; 	    } 	}        if (FD_ISSET (DEPRECATED_SERIAL_FD (st2000_desc),&readfds)) 	{ 	  while (1) 	    { 	      c = readchar (0); 	      if (c< 0) 		break; 	      putchar (c); 	    } 	  fflush (stdout); 	}     } }
+unit|c = getchar (); 	  if (c< 0) 	    perror_with_name ("connect");  	  printf_stdebug ("%c", c); 	  switch (cur_esc) 	    { 	    case 0: 	      if (c == '\r') 		cur_esc = c; 	      break; 	    case '\r': 	      if (c == '~') 		cur_esc = c; 	      else 		cur_esc = 0; 	      break; 	    case '~': 	      if (c == '.' || c == '\004') 		return; 	      else 		cur_esc = 0; 	    } 	}        if (FD_ISSET (deprecated_serial_fd (st2000_desc),&readfds)) 	{ 	  while (1) 	    { 	      c = readchar (0); 	      if (c< 0) 		break; 	      putchar (c); 	    } 	  fflush (stdout); 	}     } }
 endif|#
 directive|endif
 end_endif
@@ -2523,12 +2469,6 @@ name|to_pid_to_exec_file
 operator|=
 name|NULL
 expr_stmt|;
-name|st2000_run_ops
-operator|.
-name|to_core_file_to_sym_file
-operator|=
-name|NULL
-expr_stmt|;
 name|st2000_ops
 operator|.
 name|to_stratum
@@ -2603,7 +2543,9 @@ end_empty_stmt
 begin_function
 name|void
 name|_initialize_remote_st2000
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|init_st2000_ops
 argument_list|()

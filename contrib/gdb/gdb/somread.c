@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Read HP PA/Risc object files for GDB.    Copyright 1991, 1992, 1996 Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Read HP PA/Risc object files for GDB.    Copyright 1991, 1992, 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -91,184 +91,146 @@ begin_comment
 comment|/* Various things we might complain about... */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|som_symfile_init
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|som_new_init
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|som_symfile_read
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|,
-expr|struct
-name|section_offsets
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|som_symfile_finish
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|som_symtab_read
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|,
-expr|struct
-name|section_offsets
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
+modifier|*
+parameter_list|,
 name|struct
 name|section_offsets
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|som_symfile_offsets
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|,
-name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+name|struct
+name|section_addr_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* FIXME: These should really be in a common header somewhere */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|hpread_build_psymtabs
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|,
-expr|struct
-name|section_offsets
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|hpread_symfile_finish
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|hpread_symfile_init
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|do_pxdb
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	som_symtab_read -- read the symbol table of a SOM file  SYNOPSIS  	void som_symtab_read (bfd *abfd, struct objfile *objfile, 			      struct section_offsets *section_offsets)  DESCRIPTION  	Given an open bfd, a base address to relocate symbols to, and a 	flag that specifies whether or not this bfd is for an executable 	or not (may be shared library for example), add all the global 	function and data symbols to the minimal symbol table. */
+comment|/*     LOCAL FUNCTION     som_symtab_read -- read the symbol table of a SOM file     SYNOPSIS     void som_symtab_read (bfd *abfd, struct objfile *objfile,    struct section_offsets *section_offsets)     DESCRIPTION     Given an open bfd, a base address to relocate symbols to, and a    flag that specifies whether or not this bfd is for an executable    or not (may be shared library for example), add all the global    function and data symbols to the minimal symbol table.  */
 end_comment
 
 begin_function
@@ -276,26 +238,20 @@ specifier|static
 name|void
 name|som_symtab_read
 parameter_list|(
-name|abfd
-parameter_list|,
-name|objfile
-parameter_list|,
-name|section_offsets
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|,
 name|struct
 name|section_offsets
 modifier|*
 name|section_offsets
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -369,6 +325,7 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
+comment|/* FIXME (alloca): could be quite large. */
 name|buf
 operator|=
 name|alloca
@@ -392,15 +349,13 @@ argument_list|)
 expr_stmt|;
 name|val
 operator|=
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|buf
 argument_list|,
 name|symsize
 operator|*
 name|number_of_symbols
-argument_list|,
-literal|1
 argument_list|,
 name|abfd
 argument_list|)
@@ -418,6 +373,7 @@ argument_list|(
 literal|"Couldn't read symbol dictionary!"
 argument_list|)
 expr_stmt|;
+comment|/* FIXME (alloca): could be quite large. */
 name|stringtab
 operator|=
 name|alloca
@@ -442,7 +398,7 @@ argument_list|)
 expr_stmt|;
 name|val
 operator|=
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|stringtab
 argument_list|,
@@ -450,8 +406,6 @@ name|obj_som_stringtab_size
 argument_list|(
 name|abfd
 argument_list|)
-argument_list|,
-literal|1
 argument_list|,
 name|abfd
 argument_list|)
@@ -470,7 +424,7 @@ argument_list|(
 literal|"Can't read in HP string table."
 argument_list|)
 expr_stmt|;
-comment|/* We need to determine if objfile is a dynamic executable (so we      can do the right thing for ST_ENTRY vs ST_CODE symbols).       There's nothing in the header which easily allows us to do      this.  The only reliable way I know of is to check for the      existance of a $SHLIB_INFO$ section with a non-zero size.  */
+comment|/* We need to determine if objfile is a dynamic executable (so we      can do the right thing for ST_ENTRY vs ST_CODE symbols).       There's nothing in the header which easily allows us to do      this.  The only reliable way I know of is to check for the      existence of a $SHLIB_INFO$ section with a non-zero size.  */
 comment|/* The code below is not a reliable way to check whether an    * executable is dynamic, so I commented it out - RT    * shlib_info = bfd_get_section_by_name (objfile->obfd, "$SHLIB_INFO$");    * if (shlib_info)    *   dynamic = (bfd_section_size (objfile->obfd, shlib_info) != 0);    * else    *   dynamic = 0;    */
 comment|/* I replaced the code with a simple check for text offset not being    * zero. Still not 100% reliable, but a more reliable way of asking    * "is this a dynamic executable?" than the above. RT    */
 name|dynamic
@@ -566,9 +520,10 @@ name|symbol_value
 operator|+=
 name|text_offset
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMASH_TEXT_ADDRESS
+name|bufp
+operator|->
+name|symbol_value
+operator|=
 name|SMASH_TEXT_ADDRESS
 argument_list|(
 name|bufp
@@ -576,8 +531,6 @@ operator|->
 name|symbol_value
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|ST_ENTRY
@@ -592,7 +545,7 @@ name|n_strx
 operator|+
 name|stringtab
 expr_stmt|;
-comment|/* For a dynamic executable, ST_ENTRY symbols are 		 the stubs, while the ST_CODE symbol is the real 		 function.  */
+comment|/* For a dynamic executable, ST_ENTRY symbols are 	         the stubs, while the ST_CODE symbol is the real 	         function.  */
 if|if
 condition|(
 name|dynamic
@@ -612,9 +565,10 @@ name|symbol_value
 operator|+=
 name|text_offset
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMASH_TEXT_ADDRESS
+name|bufp
+operator|->
+name|symbol_value
+operator|=
 name|SMASH_TEXT_ADDRESS
 argument_list|(
 name|bufp
@@ -622,8 +576,6 @@ operator|->
 name|symbol_value
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|ST_STUB
@@ -648,9 +600,10 @@ name|symbol_value
 operator|+=
 name|text_offset
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMASH_TEXT_ADDRESS
+name|bufp
+operator|->
+name|symbol_value
+operator|=
 name|SMASH_TEXT_ADDRESS
 argument_list|(
 name|bufp
@@ -658,8 +611,6 @@ operator|->
 name|symbol_value
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|ST_DATA
@@ -736,9 +687,10 @@ name|symbol_value
 operator|+=
 name|text_offset
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMASH_TEXT_ADDRESS
+name|bufp
+operator|->
+name|symbol_value
+operator|=
 name|SMASH_TEXT_ADDRESS
 argument_list|(
 name|bufp
@@ -746,11 +698,9 @@ operator|->
 name|symbol_value
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|check_strange_names
 label|:
-comment|/* Utah GCC 2.5, FSF GCC 2.6 and later generate correct local 		 label prefixes for stabs, constant data, etc.  So we need 		 only filter out L$ symbols which are left in due to 		 limitations in how GAS generates SOM relocations.  		 When linking in the HPUX C-library the HP linker has 		 the nasty habit of placing section symbols from the literal 		 subspaces in the middle of the program's text.  Filter 		 those out as best we can.  Check for first and last character 		 being '$'.   		 And finally, the newer HP compilers emit crud like $PIC_foo$N 		 in some circumstance (PIC code I guess).  It's also claimed 		 that they emit D$ symbols too.  What stupidity.  */
+comment|/* Utah GCC 2.5, FSF GCC 2.6 and later generate correct local 	         label prefixes for stabs, constant data, etc.  So we need 	         only filter out L$ symbols which are left in due to 	         limitations in how GAS generates SOM relocations.  	         When linking in the HPUX C-library the HP linker has 	         the nasty habit of placing section symbols from the literal 	         subspaces in the middle of the program's text.  Filter 	         those out as best we can.  Check for first and last character 	         being '$'.   	         And finally, the newer HP compilers emit crud like $PIC_foo$N 	         in some circumstance (PIC code I guess).  It's also claimed 	         that they emit D$ symbols too.  What stupidity.  */
 if|if
 condition|(
 operator|(
@@ -850,9 +800,10 @@ name|symbol_value
 operator|+=
 name|text_offset
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMASH_TEXT_ADDRESS
+name|bufp
+operator|->
+name|symbol_value
+operator|=
 name|SMASH_TEXT_ADDRESS
 argument_list|(
 name|bufp
@@ -860,8 +811,6 @@ operator|->
 name|symbol_value
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|ST_ENTRY
@@ -876,7 +825,7 @@ name|n_strx
 operator|+
 name|stringtab
 expr_stmt|;
-comment|/* For a dynamic executable, ST_ENTRY symbols are 		 the stubs, while the ST_CODE symbol is the real 		 function.  */
+comment|/* For a dynamic executable, ST_ENTRY symbols are 	         the stubs, while the ST_CODE symbol is the real 	         function.  */
 if|if
 condition|(
 name|dynamic
@@ -896,9 +845,10 @@ name|symbol_value
 operator|+=
 name|text_offset
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMASH_TEXT_ADDRESS
+name|bufp
+operator|->
+name|symbol_value
+operator|=
 name|SMASH_TEXT_ADDRESS
 argument_list|(
 name|bufp
@@ -906,8 +856,6 @@ operator|->
 name|symbol_value
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|ST_STUB
@@ -932,9 +880,10 @@ name|symbol_value
 operator|+=
 name|text_offset
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMASH_TEXT_ADDRESS
+name|bufp
+operator|->
+name|symbol_value
+operator|=
 name|SMASH_TEXT_ADDRESS
 argument_list|(
 name|bufp
@@ -942,8 +891,6 @@ operator|->
 name|symbol_value
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|ST_DATA
@@ -975,7 +922,7 @@ default|default:
 continue|continue;
 block|}
 break|break;
-comment|/* This can happen for common symbols when -E is passed to the 	   final link.  No idea _why_ that would make the linker force 	   common symbols to have an SS_UNSAT scope, but it does.  	   This also happens for weak symbols, but their type is 	   ST_DATA.  */
+comment|/* This can happen for common symbols when -E is passed to the 	     final link.  No idea _why_ that would make the linker force 	     common symbols to have an SS_UNSAT scope, but it does.  	     This also happens for weak symbols, but their type is 	     ST_DATA.  */
 case|case
 name|SS_UNSAT
 case|:
@@ -1070,25 +1017,14 @@ specifier|static
 name|void
 name|som_symfile_read
 parameter_list|(
-name|objfile
-parameter_list|,
-name|section_offsets
-parameter_list|,
-name|mainline
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
-name|struct
-name|section_offsets
-modifier|*
-name|section_offsets
-decl_stmt|;
+parameter_list|,
 name|int
 name|mainline
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd
 modifier|*
@@ -1118,15 +1054,8 @@ argument_list|()
 expr_stmt|;
 name|back_to
 operator|=
-name|make_cleanup
-argument_list|(
-operator|(
-name|make_cleanup_func
-operator|)
-name|discard_minimal_symbols
-argument_list|,
-literal|0
-argument_list|)
+name|make_cleanup_discard_minimal_symbols
+argument_list|()
 expr_stmt|;
 comment|/* Read in the import list and the export list.  Currently      the export list isn't used; the import list is used in      hp-symtab-read.c to handle static vars declared in other      shared libraries. */
 name|init_import_symbols
@@ -1162,6 +1091,8 @@ name|abfd
 argument_list|,
 name|objfile
 argument_list|,
+name|objfile
+operator|->
 name|section_offsets
 argument_list|)
 expr_stmt|;
@@ -1169,8 +1100,6 @@ comment|/* Now read information from the stabs debug sections.      This is a no
 name|stabsect_build_psymtabs
 argument_list|(
 name|objfile
-argument_list|,
-name|section_offsets
 argument_list|,
 name|mainline
 argument_list|,
@@ -1185,8 +1114,6 @@ comment|/* Now read the native debug information.       This builds the psymtab.
 name|hpread_build_psymtabs
 argument_list|(
 name|objfile
-argument_list|,
-name|section_offsets
 argument_list|,
 name|mainline
 argument_list|)
@@ -1221,13 +1148,11 @@ specifier|static
 name|void
 name|som_new_init
 parameter_list|(
-name|ignore
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|ignore
-decl_stmt|;
+parameter_list|)
 block|{
 name|stabsread_new_init
 argument_list|()
@@ -1247,13 +1172,11 @@ specifier|static
 name|void
 name|som_symfile_finish
 parameter_list|(
-name|objfile
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1264,7 +1187,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|mfree
+name|xmfree
 argument_list|(
 name|objfile
 operator|->
@@ -1293,13 +1216,11 @@ specifier|static
 name|void
 name|som_symfile_init
 parameter_list|(
-name|objfile
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* SOM objects may be reordered, so set OBJF_REORDERED.  If we      find this causes a significant slowdown in gdb then we could      set it in the debug symbol readers only when necessary.  */
 name|objfile
@@ -1322,31 +1243,25 @@ end_comment
 
 begin_function
 specifier|static
-name|struct
-name|section_offsets
-modifier|*
+name|void
 name|som_symfile_offsets
 parameter_list|(
+name|struct
+name|objfile
+modifier|*
 name|objfile
 parameter_list|,
-name|addr
+name|struct
+name|section_addr_info
+modifier|*
+name|addrs
 parameter_list|)
-name|struct
-name|objfile
-modifier|*
-name|objfile
-decl_stmt|;
-name|CORE_ADDR
-name|addr
-decl_stmt|;
 block|{
-name|struct
-name|section_offsets
-modifier|*
-name|section_offsets
-decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|CORE_ADDR
+name|text_addr
 decl_stmt|;
 name|objfile
 operator|->
@@ -1354,6 +1269,8 @@ name|num_sections
 operator|=
 name|SECT_OFF_MAX
 expr_stmt|;
+name|objfile
+operator|->
 name|section_offsets
 operator|=
 operator|(
@@ -1371,7 +1288,32 @@ argument_list|,
 name|SIZEOF_SECTION_OFFSETS
 argument_list|)
 expr_stmt|;
-comment|/* First see if we're a shared library.  If so, get the section      offsets from the library, else get them from addr.  */
+comment|/* FIXME: ezannoni 2000-04-20 The section names in SOM are not      .text, .data, etc, but $TEXT$, $DATA$,... We should initialize      SET_OFF_* from bfd. (See default_symfile_offsets()). But I don't      know the correspondence between SOM sections and GDB's idea of      section names. So for now we default to what is was before these      changes.*/
+name|objfile
+operator|->
+name|sect_index_text
+operator|=
+literal|0
+expr_stmt|;
+name|objfile
+operator|->
+name|sect_index_data
+operator|=
+literal|1
+expr_stmt|;
+name|objfile
+operator|->
+name|sect_index_bss
+operator|=
+literal|2
+expr_stmt|;
+name|objfile
+operator|->
+name|sect_index_rodata
+operator|=
+literal|3
+expr_stmt|;
+comment|/* First see if we're a shared library.  If so, get the section      offsets from the library, else get them from addrs.  */
 if|if
 condition|(
 operator|!
@@ -1379,10 +1321,65 @@ name|som_solib_section_offsets
 argument_list|(
 name|objfile
 argument_list|,
+name|objfile
+operator|->
 name|section_offsets
 argument_list|)
 condition|)
 block|{
+comment|/* Note: Here is OK to compare with ".text" because this is the          name that gdb itself gives to that section, not the SOM          name. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|SECT_OFF_MAX
+operator|&&
+name|addrs
+operator|->
+name|other
+index|[
+name|i
+index|]
+operator|.
+name|name
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|addrs
+operator|->
+name|other
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+literal|".text"
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+name|text_addr
+operator|=
+name|addrs
+operator|->
+name|other
+index|[
+name|i
+index|]
+operator|.
+name|addr
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1396,105 +1393,20 @@ condition|;
 name|i
 operator|++
 control|)
-name|ANOFFSET
-argument_list|(
+operator|(
+name|objfile
+operator|->
 name|section_offsets
-argument_list|,
+operator|)
+operator|->
+name|offsets
+index|[
 name|i
-argument_list|)
+index|]
 operator|=
-name|addr
+name|text_addr
 expr_stmt|;
 block|}
-return|return
-name|section_offsets
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Check if a given symbol NAME is in the import list    of OBJFILE.    1 => true, 0 => false    This is used in hp_symtab_read.c to deal with static variables    that are defined in a different shared library than the one    whose symbols are being processed. */
-end_comment
-
-begin_function
-name|int
-name|is_in_import_list
-parameter_list|(
-name|name
-parameter_list|,
-name|objfile
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|struct
-name|objfile
-modifier|*
-name|objfile
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|objfile
-operator|||
-operator|!
-name|name
-operator|||
-operator|!
-operator|*
-name|name
-condition|)
-return|return
-literal|0
-return|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|objfile
-operator|->
-name|import_list_size
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|objfile
-operator|->
-name|import_list
-index|[
-name|i
-index|]
-operator|&&
-name|STREQ
-argument_list|(
-name|name
-argument_list|,
-name|objfile
-operator|->
-name|import_list
-index|[
-name|i
-index|]
-argument_list|)
-condition|)
-return|return
-literal|1
-return|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -1506,13 +1418,11 @@ begin_function
 name|int
 name|init_import_symbols
 parameter_list|(
-name|objfile
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -1614,13 +1524,6 @@ name|import_list_size
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* DEBUGGING */
-block|printf ("Processing import list for %s\n", objfile->name);
-endif|#
-directive|endif
 comment|/* It doesn't work, for some reason, to read in space $TEXT$;      the subspace $SHLIB_INFO$ has to be used.  Some BFD quirk? pai/1997-08-05 */
 name|text_section
 operator|=
@@ -1911,13 +1814,6 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* DEBUGGING */
-block|printf ("Import String %d:%d (%d), type %d is %s\n", j, i, k,                   (int) buffer[i].type, objfile->import_list[k]);
-endif|#
-directive|endif
 block|}
 block|}
 comment|/* Get the leftovers */
@@ -2055,13 +1951,6 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* DEBUGGING */
-block|printf ("Import String F:%d (%d), type %d, is %s\n", i, k,               (int) buffer[i].type, objfile->import_list[k]);
-endif|#
-directive|endif
 block|}
 name|objfile
 operator|->
@@ -2069,7 +1958,7 @@ name|import_list_size
 operator|=
 name|import_list_size
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|string_buffer
 argument_list|)
@@ -2088,13 +1977,11 @@ begin_function
 name|int
 name|init_export_symbols
 parameter_list|(
-name|objfile
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -2205,13 +2092,6 @@ name|export_list_size
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* DEBUGGING */
-block|printf ("Processing export list for %s\n", objfile->name);
-endif|#
-directive|endif
 comment|/* It doesn't work, for some reason, to read in space $TEXT$;      the subspace $SHLIB_INFO$ has to be used.  Some BFD quirk? pai/1997-08-05 */
 name|text_section
 operator|=
@@ -2537,13 +2417,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* DEBUGGING */
-block|printf ("Export String %d:%d (%d), type %d is %s\n", j, i, k,                   (int) buffer[i].type, objfile->export_list[k].name);
-endif|#
-directive|endif
 block|}
 block|}
 comment|/* Get the leftovers */
@@ -2716,13 +2589,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* DEBUGGING */
-block|printf ("Export String F:%d (%d), type %d, value %x is %s\n", i, k,               (int) buffer[i].type, buffer[i].value, objfile->export_list[k].name);
-endif|#
-directive|endif
 block|}
 name|objfile
 operator|->
@@ -2730,7 +2596,7 @@ name|export_list_size
 operator|=
 name|export_list_size
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|string_buffer
 argument_list|)
@@ -2781,7 +2647,9 @@ end_decl_stmt
 begin_function
 name|void
 name|_initialize_somread
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|add_symtab_fns
 argument_list|(

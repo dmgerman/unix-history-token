@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support routines for building symbol tables in GDB's internal format.    Copyright 1986-1999 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Support routines for building symbol tables in GDB's internal format.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995,    1996, 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -64,6 +64,42 @@ include|#
 directive|include
 file|"gdb_string.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"expression.h"
+end_include
+
+begin_comment
+comment|/* For "enum exp_opcode" used by... */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"language.h"
+end_include
+
+begin_comment
+comment|/* For "longest_local_hex_string_custom" */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"bcache.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"filenames.h"
+end_include
+
+begin_comment
+comment|/* For DOSish file names */
+end_comment
 
 begin_comment
 comment|/* Ask buildsym.h to define the vars it normally declares `extern'.  */
@@ -244,7 +280,7 @@ name|complaint
 name|blockvector_complaint
 init|=
 block|{
-literal|"block at 0x%lx out of order"
+literal|"block at %s out of order"
 block|,
 literal|0
 block|,
@@ -259,6 +295,59 @@ end_escape
 begin_comment
 comment|/* maintain the lists of symbols and blocks */
 end_comment
+
+begin_comment
+comment|/* Add a pending list to free_pendings. */
+end_comment
+
+begin_function
+name|void
+name|add_free_pendings
+parameter_list|(
+name|struct
+name|pending
+modifier|*
+name|list
+parameter_list|)
+block|{
+specifier|register
+name|struct
+name|pending
+modifier|*
+name|link
+init|=
+name|list
+decl_stmt|;
+if|if
+condition|(
+name|list
+condition|)
+block|{
+while|while
+condition|(
+name|link
+operator|->
+name|next
+condition|)
+name|link
+operator|=
+name|link
+operator|->
+name|next
+expr_stmt|;
+name|link
+operator|->
+name|next
+operator|=
+name|free_pendings
+expr_stmt|;
+name|free_pendings
+operator|=
+name|list
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/* Add a symbol to one of the lists of symbols.  */
@@ -530,8 +619,8 @@ begin_function
 name|void
 name|really_free_pendings
 parameter_list|(
-name|int
-name|foo
+name|PTR
+name|dummy
 parameter_list|)
 block|{
 name|struct
@@ -561,7 +650,7 @@ name|next
 operator|->
 name|next
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 operator|(
 name|void
@@ -599,7 +688,7 @@ name|next
 operator|->
 name|next
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 operator|(
 name|void
@@ -634,7 +723,7 @@ name|next
 operator|->
 name|next
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 operator|(
 name|void
@@ -666,7 +755,7 @@ if|#
 directive|if
 literal|0
 comment|/* Now we make the links in the 				   symbol_obstack, so don't free 				   them.  */
-block|struct pending_block *bnext, *bnext1;    for (bnext = pending_blocks; bnext; bnext = bnext1)     {       bnext1 = bnext->next;       free ((void *) bnext);     }
+block|struct pending_block *bnext, *bnext1;    for (bnext = pending_blocks; bnext; bnext = bnext1)     {       bnext1 = bnext->next;       xfree ((void *) bnext);     }
 endif|#
 directive|endif
 name|pending_blocks
@@ -955,32 +1044,15 @@ name|symbol
 modifier|*
 name|sym
 decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|BLOCK_NSYMS
+name|ALL_BLOCK_SYMBOLS
 argument_list|(
-name|block
-argument_list|)
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|sym
-operator|=
-name|BLOCK_SYM
-argument_list|(
-name|block
+argument|block
 argument_list|,
-name|i
+argument|i
+argument_list|,
+argument|sym
 argument_list|)
-expr_stmt|;
+block|{
 switch|switch
 condition|(
 name|SYMBOL_CLASS
@@ -1153,6 +1225,15 @@ name|SYMBOL_TYPE
 argument_list|(
 name|sym
 argument_list|)
+expr_stmt|;
+name|TYPE_FIELD_ARTIFICIAL
+argument_list|(
+name|ftype
+argument_list|,
+name|iparams
+argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 name|iparams
 operator|++
@@ -1742,7 +1823,7 @@ directive|if
 literal|0
 comment|/* Now we make the links in the 				   obstack, so don't free them.  */
 comment|/* Now free the links of the list, and empty the list.  */
-block|for (next = pending_blocks; next; next = next1)     {       next1 = next->next;       free (next);     }
+block|for (next = pending_blocks; next; next = next1)     {       next1 = next->next;       xfree (next);     }
 endif|#
 directive|endif
 name|pending_blocks
@@ -1806,16 +1887,9 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* FIXME-32x64: loses if CORE_ADDR doesn't fit in a 	         long.  Possible solutions include a version of 	         complain which takes a callback, a 	         sprintf_address_numeric to match 	         print_address_numeric, or a way to set up a GDB_FILE 	         which causes sprintf rather than fprintf to be 	         called.  */
-name|complain
-argument_list|(
-operator|&
-name|blockvector_complaint
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
+name|CORE_ADDR
+name|start
+init|=
 name|BLOCK_START
 argument_list|(
 name|BLOCKVECTOR_BLOCK
@@ -1824,6 +1898,19 @@ name|blockvector
 argument_list|,
 name|i
 argument_list|)
+argument_list|)
+decl_stmt|;
+name|complain
+argument_list|(
+operator|&
+name|blockvector_complaint
+argument_list|,
+name|longest_local_hex_string
+argument_list|(
+operator|(
+name|LONGEST
+operator|)
+name|start
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1884,7 +1971,7 @@ control|)
 block|{
 if|if
 condition|(
-name|STREQ
+name|FILENAME_CMP
 argument_list|(
 name|subfile
 operator|->
@@ -1892,6 +1979,8 @@ name|name
 argument_list|,
 name|name
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|current_subfile
@@ -1911,6 +2000,23 @@ operator|*
 operator|)
 name|xmalloc
 argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|subfile
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|subfile
+argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2029,7 +2135,7 @@ name|debugformat
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* cfront output is a C program, so in most ways it looks like a C      program.  But to demangle we need to set the language to C++.  We      can distinguish cfront code by the fact that it has #line      directives which specify a file name ending in .C.         So if the filename of this subfile ends in .C, then change the      language of any pending subfiles from C to C++.  We also accept      any other C++ suffixes accepted by deduce_language_from_filename      (in particular, some people use .cxx with cfront).  */
+comment|/* cfront output is a C program, so in most ways it looks like a C      program.  But to demangle we need to set the language to C++.  We      can distinguish cfront code by the fact that it has #line      directives which specify a file name ending in .C.       So if the filename of this subfile ends in .C, then change the      language of any pending subfiles from C to C++.  We also accept      any other C++ suffixes accepted by deduce_language_from_filename      (in particular, some people use .cxx with cfront).  */
 comment|/* Likewise for f2c.  */
 if|if
 condition|(
@@ -2321,8 +2427,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|abort
-argument_list|()
+name|internal_error
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"failed internal consistency check"
+argument_list|)
 expr_stmt|;
 block|}
 name|tem
@@ -2364,8 +2476,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|abort
-argument_list|()
+name|internal_error
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"failed internal consistency check"
+argument_list|)
 expr_stmt|;
 block|}
 name|name
@@ -2380,7 +2498,7 @@ name|link
 operator|->
 name|next
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 operator|(
 name|void
@@ -2579,7 +2697,10 @@ name|e
 operator|->
 name|pc
 operator|=
+name|ADDR_BITS_REMOVE
+argument_list|(
 name|pc
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -3003,7 +3124,7 @@ name|swapped
 condition|)
 do|;
 block|}
-comment|/* Cleanup any undefined types that have been left hanging around      (this needs to be done before the finish_blocks so that      file_symbols is still good).         Both cleanup_undefined_types and finish_global_stabs are stabs      specific, but harmless for other symbol readers, since on gdb      startup or when finished reading stabs, the state is set so these      are no-ops.  FIXME: Is this handled right in case of QUIT?  Can      we make this cleaner?  */
+comment|/* Cleanup any undefined types that have been left hanging around      (this needs to be done before the finish_blocks so that      file_symbols is still good).       Both cleanup_undefined_types and finish_global_stabs are stabs      specific, but harmless for other symbol readers, since on gdb      startup or when finished reading stabs, the state is set so these      are no-ops.  FIXME: Is this handled right in case of QUIT?  Can      we make this cleaner?  */
 name|cleanup_undefined_types
 argument_list|()
 expr_stmt|;
@@ -3392,7 +3513,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|xfree
 argument_list|(
 operator|(
 name|void
@@ -3413,7 +3534,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|xfree
 argument_list|(
 operator|(
 name|void
@@ -3434,7 +3555,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|xfree
 argument_list|(
 operator|(
 name|void
@@ -3455,7 +3576,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|xfree
 argument_list|(
 operator|(
 name|void
@@ -3473,7 +3594,7 @@ name|subfile
 operator|->
 name|next
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 operator|(
 name|void
@@ -3646,93 +3767,17 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-specifier|register
-name|char
-modifier|*
-name|p
-init|=
-name|name
-decl_stmt|;
-specifier|register
-name|int
-name|total
-init|=
-name|p
-index|[
-literal|0
-index|]
-decl_stmt|;
-specifier|register
-name|int
-name|c
-decl_stmt|;
-name|c
-operator|=
-name|p
-index|[
-literal|1
-index|]
-expr_stmt|;
-name|total
-operator|+=
-name|c
-operator|<<
-literal|2
-expr_stmt|;
-if|if
-condition|(
-name|c
-condition|)
-block|{
-name|c
-operator|=
-name|p
-index|[
-literal|2
-index|]
-expr_stmt|;
-name|total
-operator|+=
-name|c
-operator|<<
-literal|4
-expr_stmt|;
-if|if
-condition|(
-name|c
-condition|)
-block|{
-name|total
-operator|+=
-name|p
-index|[
-literal|3
-index|]
-operator|<<
-literal|6
-expr_stmt|;
-block|}
-block|}
-comment|/* Ensure result is positive.  */
-if|if
-condition|(
-name|total
-operator|<
-literal|0
-condition|)
-block|{
-name|total
-operator|+=
-operator|(
-literal|1000
-operator|<<
-literal|6
-operator|)
-expr_stmt|;
-block|}
 return|return
 operator|(
-name|total
+name|hash
+argument_list|(
+name|name
+argument_list|,
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+argument_list|)
 operator|%
 name|HASHSIZE
 operator|)
@@ -3882,7 +3927,9 @@ end_comment
 begin_function
 name|void
 name|buildsym_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|free_pendings
 operator|=
@@ -3910,7 +3957,9 @@ end_comment
 begin_function
 name|void
 name|buildsym_new_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|buildsym_init
 argument_list|()

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote debugging interface for boot monitors, for GDB.    Copyright 1990, 1991, 1992, 1993 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Remote debugging interface for boot monitors, for GDB.     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999,    2000, 2001, 2002 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* This file was derived from remote-eb.c, which did a similar job, but for    an AMD-29K running EBMON.  That file was in turn derived from remote.c    as mentioned in the following comment (left in for comic relief):    "This is like remote.c but is for a different situation--    having a PC running os9000 hook up with a unix machine with    a serial line, and running ctty com2 on the PC. os9000 has a debug    monitor called ROMBUG running.  Not to mention that the PC    has PC/NFS, so it can access the same executables that gdb can,    over the net in real time."     In reality, this module talks to a debug monitor called 'ROMBUG', which    We communicate with ROMBUG via a direct serial line, the network version    of ROMBUG is not available yet. */
+comment|/* This file was derived from remote-eb.c, which did a similar job, but for    an AMD-29K running EBMON.  That file was in turn derived from remote.c    as mentioned in the following comment (left in for comic relief):     "This is like remote.c but is for a different situation--    having a PC running os9000 hook up with a unix machine with    a serial line, and running ctty com2 on the PC. os9000 has a debug    monitor called ROMBUG running.  Not to mention that the PC    has PC/NFS, so it can access the same executables that gdb can,    over the net in real time."     In reality, this module talks to a debug monitor called 'ROMBUG', which    We communicate with ROMBUG via a direct serial line, the network version    of ROMBUG is not available yet.  */
 end_comment
 
 begin_comment
@@ -27,46 +27,6 @@ begin_include
 include|#
 directive|include
 file|"target.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"wait.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -127,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"gdb-stabs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
 end_include
 
 begin_decl_stmt
@@ -225,7 +191,7 @@ literal|0
 end_if
 
 begin_comment
-unit|static int sr_get_debug();
+unit|static int sr_get_debug ();
 comment|/* flag set by "set remotedebug" */
 end_comment
 
@@ -318,12 +284,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Descriptor for I/O to remote machine.  Initialize it to NULL*/
+comment|/* Descriptor for I/O to remote machine.  Initialize it to NULL */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|serial_t
+name|struct
+name|serial
+modifier|*
 name|monitor_desc
 init|=
 name|NULL
@@ -365,9 +333,6 @@ end_comment
 begin_function
 specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|printf_monitor
 parameter_list|(
 name|char
@@ -376,15 +341,6 @@ name|pattern
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|printf_monitor
-parameter_list|(
-name|va_alist
-parameter_list|)
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|args
@@ -398,9 +354,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|va_start
 argument_list|(
 name|args
@@ -408,29 +361,6 @@ argument_list|,
 name|pattern
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|char
-modifier|*
-name|pattern
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|pattern
-operator|=
-name|va_arg
-argument_list|(
-name|args
-argument_list|,
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|vsprintf
 argument_list|(
 name|buf
@@ -447,7 +377,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|monitor_desc
 argument_list|,
@@ -463,7 +393,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"SERIAL_WRITE failed: %s\n"
+literal|"serial_write failed: %s\n"
 argument_list|,
 name|safe_strerror
 argument_list|(
@@ -475,7 +405,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read a character from the remote system, doing all the fancy timeout stuff*/
+comment|/* Read a character from the remote system, doing all the fancy timeout stuff */
 end_comment
 
 begin_function
@@ -483,18 +413,16 @@ specifier|static
 name|int
 name|readchar
 parameter_list|(
-name|timeout
-parameter_list|)
 name|int
 name|timeout
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
 decl_stmt|;
 name|c
 operator|=
-name|SERIAL_READCHAR
+name|serial_readchar
 argument_list|(
 name|monitor_desc
 argument_list|,
@@ -582,17 +510,13 @@ specifier|static
 name|void
 name|expect
 parameter_list|(
-name|string
-parameter_list|,
-name|discard
-parameter_list|)
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|,
 name|int
 name|discard
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -616,8 +540,7 @@ name|string
 argument_list|)
 expr_stmt|;
 name|immediate_quit
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 while|while
 condition|(
@@ -658,8 +581,7 @@ literal|'\0'
 condition|)
 block|{
 name|immediate_quit
-operator|=
-literal|0
+operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -731,17 +653,15 @@ specifier|static
 name|void
 name|expect_prompt
 parameter_list|(
-name|discard
-parameter_list|)
 name|int
 name|discard
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
 name|monitor_log
 condition|)
-comment|/* This is a convenient place to do this.  The idea is to do it often      enough that we never lose much data if we terminate abnormally.  */
+comment|/* This is a convenient place to do this.  The idea is to do it often        enough that we never lose much data if we terminate abnormally.  */
 name|fflush
 argument_list|(
 name|log_file
@@ -782,11 +702,9 @@ specifier|static
 name|int
 name|get_hex_digit
 parameter_list|(
-name|ignore_space
-parameter_list|)
 name|int
 name|ignore_space
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ch
@@ -890,12 +808,10 @@ specifier|static
 name|void
 name|get_hex_byte
 parameter_list|(
-name|byt
-parameter_list|)
 name|char
 modifier|*
 name|byt
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|val
@@ -933,16 +849,12 @@ specifier|static
 name|void
 name|get_hex_regs
 parameter_list|(
+name|int
 name|n
 parameter_list|,
+name|int
 name|regno
 parameter_list|)
-name|int
-name|n
-decl_stmt|;
-name|int
-name|regno
-decl_stmt|;
 block|{
 name|long
 name|val
@@ -999,7 +911,7 @@ if|if
 condition|(
 name|TARGET_BYTE_ORDER
 operator|==
-name|BIG_ENDIAN
+name|BFD_ENDIAN_BIG
 condition|)
 name|val
 operator|=
@@ -1053,25 +965,19 @@ specifier|static
 name|void
 name|rombug_create_inferior
 parameter_list|(
-name|execfile
-parameter_list|,
-name|args
-parameter_list|,
-name|env
-parameter_list|)
 name|char
 modifier|*
 name|execfile
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|env
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|entry_pt
@@ -1162,17 +1068,13 @@ specifier|static
 name|void
 name|rombug_open
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1209,7 +1111,7 @@ argument_list|)
 expr_stmt|;
 name|monitor_desc
 operator|=
-name|SERIAL_OPEN
+name|serial_open
 argument_list|(
 name|dev_name
 argument_list|)
@@ -1228,7 +1130,7 @@ expr_stmt|;
 comment|/* if baud rate is set by 'set remotebaud' */
 if|if
 condition|(
-name|SERIAL_SETBAUDRATE
+name|serial_setbaudrate
 argument_list|(
 name|monitor_desc
 argument_list|,
@@ -1237,7 +1139,7 @@ argument_list|()
 argument_list|)
 condition|)
 block|{
-name|SERIAL_CLOSE
+name|serial_close
 argument_list|(
 name|monitor_desc
 argument_list|)
@@ -1248,7 +1150,7 @@ literal|"RomBug"
 argument_list|)
 expr_stmt|;
 block|}
-name|SERIAL_RAW
+name|serial_raw
 argument_list|(
 name|monitor_desc
 argument_list|)
@@ -1278,7 +1180,7 @@ expr|struct
 name|hardware_ttystate
 operator|*
 operator|)
-name|SERIAL_GET_TTY_STATE
+name|serial_get_tty_state
 argument_list|(
 name|monitor_desc
 argument_list|)
@@ -1307,7 +1209,7 @@ name|c_iflag
 operator||=
 name|IXOFF
 expr_stmt|;
-name|SERIAL_SET_TTY_STATE
+name|serial_set_tty_state
 argument_list|(
 name|monitor_desc
 argument_list|,
@@ -1415,18 +1317,16 @@ specifier|static
 name|void
 name|rombug_close
 parameter_list|(
-name|quitting
-parameter_list|)
 name|int
 name|quitting
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
 name|rombug_is_open
 condition|)
 block|{
-name|SERIAL_CLOSE
+name|serial_close
 argument_list|(
 name|monitor_desc
 argument_list|)
@@ -1487,18 +1387,14 @@ begin_function
 name|int
 name|rombug_link
 parameter_list|(
-name|mod_name
-parameter_list|,
-name|text_reloc
-parameter_list|)
 name|char
 modifier|*
 name|mod_name
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 modifier|*
 name|text_reloc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1612,11 +1508,9 @@ specifier|static
 name|void
 name|rombug_detach
 parameter_list|(
-name|from_tty
-parameter_list|)
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1660,21 +1554,16 @@ specifier|static
 name|void
 name|rombug_resume
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|step
-parameter_list|,
-name|sig
-parameter_list|)
 name|int
-name|pid
-decl_stmt|,
 name|step
-decl_stmt|;
+parameter_list|,
 name|enum
 name|target_signal
 name|sig
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1705,7 +1594,7 @@ argument_list|(
 name|STEP_CMD
 argument_list|)
 expr_stmt|;
-comment|/* wait for the echo.  **       expect (STEP_CMD, 1);       */
+comment|/* wait for the echo.  **          expect (STEP_CMD, 1);        */
 block|}
 else|else
 block|{
@@ -1714,7 +1603,7 @@ argument_list|(
 name|GO_CMD
 argument_list|)
 expr_stmt|;
-comment|/* swallow the echo.  **       expect (GO_CMD, 1);       */
+comment|/* swallow the echo.  **          expect (GO_CMD, 1);        */
 block|}
 name|bufaddr
 operator|=
@@ -1733,21 +1622,18 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|ptid
+modifier|*
 name|rombug_wait
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|status
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|struct
 name|target_waitstatus
 modifier|*
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|old_timeout
@@ -1893,33 +1779,14 @@ expr_stmt|;
 name|offs
 operator|=
 operator|(
-operator|(
 expr|struct
 name|section_offsets
 operator|*
 operator|)
 name|alloca
 argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|section_offsets
+name|SIZEOF_SECTION_OFFSETS
 argument_list|)
-operator|+
-operator|(
-name|symfile_objfile
-operator|->
-name|num_sections
-operator|*
-sizeof|sizeof
-argument_list|(
-name|offs
-operator|->
-name|offsets
-argument_list|)
-operator|)
-argument_list|)
-operator|)
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -1929,43 +1796,30 @@ name|symfile_objfile
 operator|->
 name|section_offsets
 argument_list|,
-operator|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|section_offsets
+name|SIZEOF_SECTION_OFFSETS
 argument_list|)
-operator|+
-operator|(
-name|symfile_objfile
-operator|->
-name|num_sections
-operator|*
-sizeof|sizeof
-argument_list|(
+expr_stmt|;
 name|offs
 operator|->
 name|offsets
-argument_list|)
-operator|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|ANOFFSET
-argument_list|(
-name|offs
-argument_list|,
+index|[
 name|SECT_OFF_DATA
+argument_list|(
+name|symfile_objfile
 argument_list|)
+index|]
 operator|=
 name|addr
 expr_stmt|;
-name|ANOFFSET
-argument_list|(
 name|offs
-argument_list|,
+operator|->
+name|offsets
+index|[
 name|SECT_OFF_BSS
+argument_list|(
+name|symfile_objfile
 argument_list|)
+index|]
 operator|=
 name|addr
 expr_stmt|;
@@ -1978,7 +1832,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-literal|0
+name|inferior_ptid
 return|;
 block|}
 end_function
@@ -1993,11 +1847,9 @@ name|char
 modifier|*
 name|get_reg_name
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -2029,7 +1881,7 @@ operator|(
 literal|""
 operator|)
 return|;
-comment|/*   for (p = REGISTER_NAME (regno); *p; p++)     *b++ = toupper(*p);   *b = '\000'; */
+comment|/*    for (p = REGISTER_NAME (regno); *p; p++)    *b++ = toupper(*p);    *b = '\000';  */
 name|p
 operator|=
 operator|(
@@ -2044,7 +1896,7 @@ expr_stmt|;
 return|return
 name|p
 return|;
-comment|/*   return buf; */
+comment|/*    return buf;  */
 block|}
 end_function
 
@@ -2056,7 +1908,9 @@ begin_function
 specifier|static
 name|void
 name|rombug_fetch_registers
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -2207,7 +2061,7 @@ if|if
 condition|(
 name|TARGET_BYTE_ORDER
 operator|==
-name|BIG_ENDIAN
+name|BFD_ENDIAN_BIG
 condition|)
 name|val
 operator|=
@@ -2357,11 +2211,9 @@ specifier|static
 name|void
 name|rombug_fetch_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|val
@@ -2489,7 +2341,7 @@ if|if
 condition|(
 name|TARGET_BYTE_ORDER
 operator|==
-name|BIG_ENDIAN
+name|BFD_ENDIAN_BIG
 condition|)
 name|val
 operator|=
@@ -2683,7 +2535,9 @@ begin_function
 specifier|static
 name|void
 name|rombug_store_registers
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -2721,11 +2575,9 @@ specifier|static
 name|void
 name|rombug_store_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2823,7 +2675,9 @@ begin_function
 specifier|static
 name|void
 name|rombug_prepare_to_store
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Do nothing, since we can store individual regs */
 block|}
@@ -2833,7 +2687,9 @@ begin_function
 specifier|static
 name|void
 name|rombug_files_info
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -2857,23 +2713,17 @@ specifier|static
 name|int
 name|rombug_write_inferior_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -3005,22 +2855,16 @@ specifier|static
 name|int
 name|rombug_read_inferior_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -3287,7 +3131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FIXME-someday!  merge these two.  */
+comment|/* Transfer LEN bytes between GDB address MYADDR and target address    MEMADDR.  If WRITE is non-zero, transfer them to the target,    otherwise transfer them from the target.  TARGET is unused.     Returns the number of bytes transferred. */
 end_comment
 
 begin_function
@@ -3295,35 +3139,29 @@ specifier|static
 name|int
 name|rombug_xfer_inferior_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|,
-name|target
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|write
-decl_stmt|;
+parameter_list|,
+name|struct
+name|mem_attrib
+modifier|*
+name|attrib
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
-comment|/* ignored */
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3358,17 +3196,13 @@ specifier|static
 name|void
 name|rombug_kill
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 return|return;
 comment|/* ignore attempts to kill target system */
@@ -3383,7 +3217,9 @@ begin_function
 specifier|static
 name|void
 name|rombug_mourn_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|remove_breakpoints
 argument_list|()
@@ -3421,17 +3257,13 @@ specifier|static
 name|int
 name|rombug_insert_breakpoint
 parameter_list|(
-name|addr
-parameter_list|,
-name|shadow
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|shadow
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -3561,17 +3393,13 @@ specifier|static
 name|int
 name|rombug_remove_breakpoint
 parameter_list|(
-name|addr
-parameter_list|,
-name|shadow
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|shadow
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -3670,25 +3498,23 @@ specifier|static
 name|void
 name|rombug_load
 parameter_list|(
-name|arg
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* this part comment out for os9* */
 if|#
 directive|if
 literal|0
-block|FILE *download;   char buf[DOWNLOAD_LINE_SIZE];   int i, bytes_read;    if (sr_get_debug())     printf ("Loading %s to monitor\n", arg);    download = fopen (arg, "r");   if (download == NULL)     {     error (sprintf (buf, "%s Does not exist", arg));     return;   }    printf_monitor (LOAD_CMD);
+block|FILE *download;   char buf[DOWNLOAD_LINE_SIZE];   int i, bytes_read;    if (sr_get_debug ())     printf ("Loading %s to monitor\n", arg);    download = fopen (arg, "r");   if (download == NULL)     {       error (sprintf (buf, "%s Does not exist", arg));       return;     }    printf_monitor (LOAD_CMD);
 comment|/*  expect ("Waiting for S-records from host... ", 1); */
-block|while (!feof (download))     {       bytes_read = fread (buf, sizeof (char), DOWNLOAD_LINE_SIZE, download);       if (hashmark) 	{ 	  putchar ('.'); 	  fflush (stdout); 	}        if (SERIAL_WRITE(monitor_desc, buf, bytes_read)) { 	fprintf(stderr, "SERIAL_WRITE failed: (while downloading) %s\n", safe_strerror(errno)); 	break;       }       i = 0;       while (i++<=200000) {} ;
+block|while (!feof (download))     {       bytes_read = fread (buf, sizeof (char), DOWNLOAD_LINE_SIZE, download);       if (hashmark) 	{ 	  putchar ('.'); 	  fflush (stdout); 	}        if (serial_write (monitor_desc, buf, bytes_read)) 	{ 	  fprintf (stderr, "serial_write failed: (while downloading) %s\n", safe_strerror (errno)); 	  break; 	}       i = 0;       while (i++<= 200000) 	{ 	};
 comment|/* Ugly HACK, probably needs flow control */
 block|if (bytes_read< DOWNLOAD_LINE_SIZE) 	{ 	  if (!feof (download)) 	    error ("Only read %d bytes\n", bytes_read); 	  break; 	}     }    if (hashmark)     {       putchar ('\n');     }   if (!feof (download))     error ("Never got EOF while downloading");   fclose (download);
 endif|#
 directive|endif
-endif|0
+comment|/* 0 */
 block|}
 end_function
 
@@ -3701,17 +3527,13 @@ specifier|static
 name|void
 name|rombug_command
 parameter_list|(
-name|args
-parameter_list|,
-name|fromtty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|fromtty
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3773,17 +3595,17 @@ comment|/* Connect the user directly to MONITOR.  This command acts just like th
 end_comment
 
 begin_comment
-unit|static struct ttystate ttystate;  static void cleanup_tty() {  printf("\r\n[Exiting connect mode]\r\n");
-comment|/*SERIAL_RESTORE(0,&ttystate);*/
+unit|static struct ttystate ttystate;  static void cleanup_tty (void) {   printf ("\r\n[Exiting connect mode]\r\n");
+comment|/*serial_restore(0,&ttystate); */
 end_comment
 
 begin_comment
-unit|}  static void connect_command (args, fromtty)      char	*args;      int	fromtty; {   fd_set readfds;   int numfds;   int c;   char cur_esc = 0;    dont_repeat();    if (monitor_desc == NULL)     error("monitor target not open.");      if (args)     fprintf("This command takes no args.  They have been ignored.\n"); 	   printf("[Entering connect mode.  Use ~. or ~^D to escape]\n");    serial_raw(0,&ttystate);    make_cleanup(cleanup_tty, 0);    FD_ZERO(&readfds);    while (1)     {       do 	{ 	  FD_SET(0,&readfds); 	  FD_SET(monitor_desc,&readfds); 	  numfds = select(sizeof(readfds)*8,&readfds, 0, 0, 0); 	}       while (numfds == 0);        if (numfds< 0) 	perror_with_name("select");        if (FD_ISSET(0,&readfds)) 	{
+unit|}  static void connect_command (char *args, int fromtty) {   fd_set readfds;   int numfds;   int c;   char cur_esc = 0;    dont_repeat ();    if (monitor_desc == NULL)     error ("monitor target not open.");    if (args)     fprintf ("This command takes no args.  They have been ignored.\n");    printf ("[Entering connect mode.  Use ~. or ~^D to escape]\n");    serial_raw (0,&ttystate);    make_cleanup (cleanup_tty, 0);    FD_ZERO (&readfds);    while (1)     {       do 	{ 	  FD_SET (0,&readfds); 	  FD_SET (deprecated_serial_fd (monitor_desc),&readfds); 	  numfds = select (sizeof (readfds) * 8,&readfds, 0, 0, 0); 	}       while (numfds == 0);        if (numfds< 0) 	perror_with_name ("select");        if (FD_ISSET (0,&readfds)) 	{
 comment|/* tty input, send to monitor */
 end_comment
 
 begin_endif
-unit|c = getchar(); 	  if (c< 0) 	    perror_with_name("connect");  	  printf_monitor("%c", c); 	  switch (cur_esc) 	    { 	    case 0: 	      if (c == '\r') 		cur_esc = c; 	      break; 	    case '\r': 	      if (c == '~') 		cur_esc = c; 	      else 		cur_esc = 0; 	      break; 	    case '~': 	      if (c == '.' || c == '\004') 		return; 	      else 		cur_esc = 0; 	    } 	}        if (FD_ISSET(monitor_desc,&readfds)) 	{ 	  while (1) 	    { 	      c = readchar(0); 	      if (c< 0) 		break; 	      putchar(c); 	    } 	  fflush(stdout); 	}     } }
+unit|c = getchar (); 	  if (c< 0) 	    perror_with_name ("connect");  	  printf_monitor ("%c", c); 	  switch (cur_esc) 	    { 	    case 0: 	      if (c == '\r') 		cur_esc = c; 	      break; 	    case '\r': 	      if (c == '~') 		cur_esc = c; 	      else 		cur_esc = 0; 	      break; 	    case '~': 	      if (c == '.' || c == '\004') 		return; 	      else 		cur_esc = 0; 	    } 	}        if (FD_ISSET (deprecated_serial_fd (monitor_desc),&readfds)) 	{ 	  while (1) 	    { 	      c = readchar (0); 	      if (c< 0) 		break; 	      putchar (c); 	    } 	  fflush (stdout); 	}     } }
 endif|#
 directive|endif
 end_endif
@@ -4188,12 +4010,6 @@ name|NULL
 expr_stmt|;
 name|rombug_ops
 operator|.
-name|to_core_file_to_sym_file
-operator|=
-name|NULL
-expr_stmt|;
-name|rombug_ops
-operator|.
 name|to_stratum
 operator|=
 name|process_stratum
@@ -4262,7 +4078,9 @@ end_function
 begin_function
 name|void
 name|_initialize_remote_os9k
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|init_rombug_ops
 argument_list|()
@@ -4422,7 +4240,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|add_com ("connect", class_obscure, connect_command,    	   "Connect the terminal directly up to a serial based command monitor.\nUse<CR>~. or<CR>~^D to break out.");
+block|add_com ("connect", class_obscure, connect_command, 	   "Connect the terminal directly up to a serial based command monitor.\nUse<CR>~. or<CR>~^D to break out.");
 endif|#
 directive|endif
 block|}

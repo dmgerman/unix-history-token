@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Handle COFF SVR3 shared libraries for GDB, the GNU Debugger.    Copyright 1993 Free Software Foundation, Inc.     This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Handle COFF SVR3 shared libraries for GDB, the GNU Debugger.    Copyright 1993, 1994, 1998, 1999, 2000 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -33,37 +33,52 @@ directive|include
 file|"symtab.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"symfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"objfiles.h"
+end_include
+
 begin_comment
-comment|/*  GLOBAL FUNCTION  	coff_solib_add -- add a shared library files to the symtab list.  We 	examine the `.lib' section of the exec file and determine the names of 	the shared libraries.  	This function is responsible for discovering those names and 	addresses, and saving sufficient information about them to allow 	their symbols to be read at a later time.  SYNOPSIS  	void coff_solib_add (char *arg_string, int from_tty, 			     struct target_ops *target)  DESCRIPTION  */
+comment|/*     GLOBAL FUNCTION     coff_solib_add -- add a shared library files to the symtab list.  We    examine the `.lib' section of the exec file and determine the names of    the shared libraries.     This function is responsible for discovering those names and    addresses, and saving sufficient information about them to allow    their symbols to be read at a later time.     SYNOPSIS     void coff_solib_add (char *arg_string, int from_tty,    struct target_ops *target, int readsyms)     DESCRIPTION   */
 end_comment
 
 begin_function
 name|void
 name|coff_solib_add
 parameter_list|(
-name|arg_string
-parameter_list|,
-name|from_tty
-parameter_list|,
-name|target
-parameter_list|)
 name|char
 modifier|*
 name|arg_string
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
+parameter_list|,
+name|int
+name|readsyms
+parameter_list|)
 block|{
 name|asection
 modifier|*
 name|libsect
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|readsyms
+condition|)
+return|return;
 name|libsect
 operator|=
 name|bfd_get_section_by_name
@@ -221,25 +236,16 @@ name|filename
 argument_list|,
 name|from_tty
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-comment|/* addr */
+comment|/* no offsets */
 literal|0
 argument_list|,
 comment|/* not mainline */
-literal|0
-argument_list|,
-comment|/* not mapped */
-literal|0
-argument_list|,
-comment|/* Not readnow */
-literal|0
-argument_list|,
-comment|/* Not user loaded */
-literal|1
+name|OBJF_SHARED
 argument_list|)
 expr_stmt|;
-comment|/* Is a solib */
+comment|/* flags */
 name|libsize
 operator|-=
 name|len
@@ -253,7 +259,7 @@ operator|*
 literal|4
 expr_stmt|;
 block|}
-comment|/* Getting new symbols may change our opinion about what is 	 frameless.  */
+comment|/* Getting new symbols may change our opinion about what is          frameless.  */
 name|reinit_frame_cache
 argument_list|()
 expr_stmt|;
@@ -262,13 +268,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*    GLOBAL FUNCTION    	coff_solib_create_inferior_hook -- shared library startup support    SYNOPSIS    	void coff_solib_create_inferior_hook()    DESCRIPTION    	When gdb starts up the inferior, the kernel maps in the shared 	libraries.  We get here with the target stopped at it's first 	instruction, and the libraries already mapped.  At this	point, this 	function gets called via expansion of the macro 	SOLIB_CREATE_INFERIOR_HOOK.   */
+comment|/*     GLOBAL FUNCTION     coff_solib_create_inferior_hook -- shared library startup support     SYNOPSIS     void coff_solib_create_inferior_hook()     DESCRIPTION     When gdb starts up the inferior, the kernel maps in the shared    libraries.  We get here with the target stopped at it's first    instruction, and the libraries already mapped.  At this      point, this    function gets called via expansion of the macro    SOLIB_CREATE_INFERIOR_HOOK.  */
 end_comment
 
 begin_function
 name|void
 name|coff_solib_create_inferior_hook
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|coff_solib_add
 argument_list|(
@@ -286,6 +294,8 @@ name|target_ops
 operator|*
 operator|)
 literal|0
+argument_list|,
+name|auto_solib_add
 argument_list|)
 expr_stmt|;
 block|}

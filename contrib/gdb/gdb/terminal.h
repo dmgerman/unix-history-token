@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Terminal interface definitions for GDB, the GNU Debugger.    Copyright 1986, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Terminal interface definitions for GDB, the GNU Debugger.    Copyright 1986, 1989, 1990, 1991, 1992, 1993, 1995, 1996, 1999, 2000    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -23,20 +23,6 @@ end_define
 begin_comment
 comment|/* If we're using autoconf, it will define HAVE_TERMIOS_H,    HAVE_TERMIO_H and HAVE_SGTTY_H for us. One day we can rewrite    ser-unix.c and inflow.c to inspect those names instead of    HAVE_TERMIOS, HAVE_TERMIO and the implicit HAVE_SGTTY (when neither    HAVE_TERMIOS or HAVE_TERMIO is set).  Until then, make sure that    nothing has already defined the one of the names, and do the right    thing. */
 end_comment
-
-begin_comment
-comment|/* nothing works with go32, and the headers aren't complete */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__GO32__
-argument_list|)
-end_if
 
 begin_if
 if|#
@@ -159,15 +145,6 @@ begin_comment
 comment|/* !defined (HAVE_TERMIOS)&& !defined(HAVE_TERMIO)&& !defined(HAVE_SGTTY) */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! defined (__GO32__) */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -191,12 +168,6 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|__GO32__
-argument_list|)
-operator|&&
 operator|!
 name|defined
 argument_list|(
@@ -320,18 +291,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|new_tty
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Do we have job control?  Can be assumed to always be the same within    a given run of GDB.  In inflow.c.  */
@@ -348,18 +316,15 @@ begin_comment
 comment|/* Set the process group of the caller to its own pid, or do nothing if    we lack job control.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|gdb_setpgid
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

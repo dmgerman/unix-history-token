@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Print in infix form a struct expression.    Copyright (C) 1986, 1989, 1991 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Print in infix form a struct expression.    Copyright 1986, 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997,    1998, 1999, 2000 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -66,47 +66,42 @@ begin_comment
 comment|/* Prototypes for local functions */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|print_subexp
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|expression
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|,
-name|GDB_FILE
-operator|*
-operator|,
-expr|enum
+modifier|*
+parameter_list|,
+name|struct
+name|ui_file
+modifier|*
+parameter_list|,
+name|enum
 name|precedence
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
 name|print_expression
 parameter_list|(
-name|exp
-parameter_list|,
-name|stream
-parameter_list|)
 name|struct
 name|expression
 modifier|*
 name|exp
-decl_stmt|;
-name|GDB_FILE
+parameter_list|,
+name|struct
+name|ui_file
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|pc
@@ -137,33 +132,26 @@ specifier|static
 name|void
 name|print_subexp
 parameter_list|(
-name|exp
-parameter_list|,
-name|pos
-parameter_list|,
-name|stream
-parameter_list|,
-name|prec
-parameter_list|)
 specifier|register
 name|struct
 name|expression
 modifier|*
 name|exp
-decl_stmt|;
+parameter_list|,
 specifier|register
 name|int
 modifier|*
 name|pos
-decl_stmt|;
-name|GDB_FILE
+parameter_list|,
+name|struct
+name|ui_file
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|enum
 name|precedence
 name|prec
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -209,7 +197,9 @@ name|assoc
 init|=
 literal|0
 decl_stmt|;
-name|value_ptr
+name|struct
+name|value
+modifier|*
 name|val
 decl_stmt|;
 name|char
@@ -834,7 +824,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* LA_PRINT_STRING will print using the current repeat count threshold. 	 If necessary, we can temporarily set it to zero, or pass it as an 	 additional parameter to LA_PRINT_STRING.  -fnf */
+comment|/* LA_PRINT_STRING will print using the current repeat count threshold.          If necessary, we can temporarily set it to zero, or pass it as an          additional parameter to LA_PRINT_STRING.  -fnf */
 name|LA_PRINT_STRING
 argument_list|(
 name|stream
@@ -1372,7 +1362,7 @@ argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
-comment|/* Print the subexpressions, forcing parentheses 	 around any binary operations within them. 	 This is more parentheses than are strictly necessary, 	 but it looks clearer.  */
+comment|/* Print the subexpressions, forcing parentheses          around any binary operations within them.          This is more parentheses than are strictly necessary,          but it looks clearer.  */
 name|print_subexp
 argument_list|(
 name|exp
@@ -1884,7 +1874,7 @@ operator|==
 name|OP_LONG
 condition|)
 block|{
-comment|/* We have a minimal symbol fn, probably.  It's encoded 	   as a UNOP_MEMVAL (function-type) of an OP_LONG (int, address). 	   Swallow the OP_LONG (including both its opcodes); ignore 	   its type; print the value in the type of the MEMVAL.  */
+comment|/* We have a minimal symbol fn, probably.  It's encoded 	     as a UNOP_MEMVAL (function-type) of an OP_LONG (int, address). 	     Swallow the OP_LONG (including both its opcodes); ignore 	     its type; print the value in the type of the MEMVAL.  */
 operator|(
 operator|*
 name|pos
@@ -2479,7 +2469,7 @@ block|}
 else|else
 block|{
 comment|/* Binary operator.  */
-comment|/* Print left operand. 	 If operator is right-associative, 	 increment precedence for this operand.  */
+comment|/* Print left operand.          If operator is right-associative,          increment precedence for this operand.  */
 name|print_subexp
 argument_list|(
 name|exp
@@ -2545,7 +2535,7 @@ argument_list|,
 name|op_str
 argument_list|)
 expr_stmt|;
-comment|/* Print right operand. 	 If operator is left-associative, 	 increment precedence for this operand.  */
+comment|/* Print right operand.          If operator is left-associative,          increment precedence for this operand.  */
 name|print_subexp
 argument_list|(
 name|exp
@@ -2601,12 +2591,10 @@ name|char
 modifier|*
 name|op_string
 parameter_list|(
-name|op
-parameter_list|)
 name|enum
 name|exp_opcode
 name|op
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tem
@@ -2667,30 +2655,21 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAINTENANCE_CMDS
-end_ifdef
-
 begin_comment
 comment|/* Support for dumping the raw data from expressions in a human readable    form.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|op_name
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|opcode
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -2698,11 +2677,9 @@ name|char
 modifier|*
 name|op_name
 parameter_list|(
-name|opcode
-parameter_list|)
 name|int
 name|opcode
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -2898,12 +2875,6 @@ name|BINOP_MAX
 case|:
 return|return
 literal|"BINOP_MAX"
-return|;
-case|case
-name|BINOP_SCOPE
-case|:
-return|return
-literal|"BINOP_SCOPE"
 return|;
 case|case
 name|STRUCTOP_MEMBER
@@ -3255,25 +3226,20 @@ begin_function
 name|void
 name|dump_prefix_expression
 parameter_list|(
-name|exp
-parameter_list|,
-name|stream
-parameter_list|,
-name|note
-parameter_list|)
 name|struct
 name|expression
 modifier|*
 name|exp
-decl_stmt|;
-name|GDB_FILE
+parameter_list|,
+name|struct
+name|ui_file
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|note
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|elt
@@ -3296,7 +3262,7 @@ argument_list|,
 literal|"Dump of expression @ "
 argument_list|)
 expr_stmt|;
-name|gdb_print_address
+name|gdb_print_host_address
 argument_list|(
 name|exp
 argument_list|,
@@ -3344,7 +3310,7 @@ name|fprintf_filtered
 argument_list|(
 name|stream
 argument_list|,
-literal|"'\n\tLanguage %s, %d elements, %d bytes each.\n"
+literal|"'\n\tLanguage %s, %d elements, %ld bytes each.\n"
 argument_list|,
 name|exp
 operator|->
@@ -3356,6 +3322,9 @@ name|exp
 operator|->
 name|nelts
 argument_list|,
+operator|(
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|union
@@ -3518,52 +3487,45 @@ block|}
 block|}
 end_function
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|dump_subexp
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|expression
-operator|*
+modifier|*
 name|exp
-operator|,
-name|GDB_FILE
-operator|*
+parameter_list|,
+name|struct
+name|ui_file
+modifier|*
 name|stream
-operator|,
+parameter_list|,
 name|int
 name|elt
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
 name|int
 name|dump_subexp
 parameter_list|(
-name|exp
-parameter_list|,
-name|stream
-parameter_list|,
-name|elt
-parameter_list|)
 name|struct
 name|expression
 modifier|*
 name|exp
-decl_stmt|;
-name|GDB_FILE
+parameter_list|,
+name|struct
+name|ui_file
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|int
 name|elt
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -3745,9 +3707,6 @@ case|case
 name|BINOP_MAX
 case|:
 case|case
-name|BINOP_SCOPE
-case|:
-case|case
 name|BINOP_INTDIV
 case|:
 case|case
@@ -3885,8 +3844,11 @@ name|fprintf_filtered
 argument_list|(
 name|stream
 argument_list|,
-literal|"Type @0x%x ("
-argument_list|,
+literal|"Type @"
+argument_list|)
+expr_stmt|;
+name|gdb_print_host_address
+argument_list|(
 name|exp
 operator|->
 name|elts
@@ -3895,6 +3857,15 @@ name|elt
 index|]
 operator|.
 name|type
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+name|fprintf_filtered
+argument_list|(
+name|stream
+argument_list|,
+literal|" ("
 argument_list|)
 expr_stmt|;
 name|type_print
@@ -3962,8 +3933,11 @@ name|fprintf_filtered
 argument_list|(
 name|stream
 argument_list|,
-literal|"Type @0x%x ("
-argument_list|,
+literal|"Type @"
+argument_list|)
+expr_stmt|;
+name|gdb_print_host_address
+argument_list|(
 name|exp
 operator|->
 name|elts
@@ -3972,6 +3946,15 @@ name|elt
 index|]
 operator|.
 name|type
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+name|fprintf_filtered
+argument_list|(
+name|stream
+argument_list|,
+literal|" ("
 argument_list|)
 expr_stmt|;
 name|type_print
@@ -4025,8 +4008,11 @@ name|fprintf_filtered
 argument_list|(
 name|stream
 argument_list|,
-literal|"Block @0x%x, symbol @0x%x (%s)"
-argument_list|,
+literal|"Block @"
+argument_list|)
+expr_stmt|;
+name|gdb_print_host_address
+argument_list|(
 name|exp
 operator|->
 name|elts
@@ -4036,6 +4022,18 @@ index|]
 operator|.
 name|block
 argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+name|fprintf_filtered
+argument_list|(
+name|stream
+argument_list|,
+literal|", symbol @"
+argument_list|)
+expr_stmt|;
+name|gdb_print_host_address
+argument_list|(
 name|exp
 operator|->
 name|elts
@@ -4046,6 +4044,15 @@ literal|1
 index|]
 operator|.
 name|symbol
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+name|fprintf_filtered
+argument_list|(
+name|stream
+argument_list|,
+literal|" (%s)"
 argument_list|,
 name|SYMBOL_NAME
 argument_list|(
@@ -4128,8 +4135,11 @@ name|fprintf_filtered
 argument_list|(
 name|stream
 argument_list|,
-literal|"Internal var @0x%x (%s)"
-argument_list|,
+literal|"Internal var @"
+argument_list|)
+expr_stmt|;
+name|gdb_print_host_address
+argument_list|(
 name|exp
 operator|->
 name|elts
@@ -4138,6 +4148,15 @@ name|elt
 index|]
 operator|.
 name|internalvar
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+name|fprintf_filtered
+argument_list|(
+name|stream
+argument_list|,
+literal|" (%s)"
 argument_list|,
 name|exp
 operator|->
@@ -4315,8 +4334,11 @@ name|fprintf_filtered
 argument_list|(
 name|stream
 argument_list|,
-literal|"Type @0x%x ("
-argument_list|,
+literal|"Type @"
+argument_list|)
+expr_stmt|;
+name|gdb_print_host_address
+argument_list|(
 name|exp
 operator|->
 name|elts
@@ -4325,6 +4347,15 @@ name|elt
 index|]
 operator|.
 name|type
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+name|fprintf_filtered
+argument_list|(
+name|stream
+argument_list|,
+literal|" ("
 argument_list|)
 expr_stmt|;
 name|type_print
@@ -4373,8 +4404,11 @@ name|fprintf_filtered
 argument_list|(
 name|stream
 argument_list|,
-literal|"Type @0x%x ("
-argument_list|,
+literal|"Type @"
+argument_list|)
+expr_stmt|;
+name|gdb_print_host_address
+argument_list|(
 name|exp
 operator|->
 name|elts
@@ -4383,6 +4417,15 @@ name|elt
 index|]
 operator|.
 name|type
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+name|fprintf_filtered
+argument_list|(
+name|stream
+argument_list|,
+literal|" ("
 argument_list|)
 expr_stmt|;
 name|type_print
@@ -4505,8 +4548,11 @@ name|fprintf_filtered
 argument_list|(
 name|stream
 argument_list|,
-literal|"Type @0x%x ("
-argument_list|,
+literal|"Type @"
+argument_list|)
+expr_stmt|;
+name|gdb_print_host_address
+argument_list|(
 name|exp
 operator|->
 name|elts
@@ -4515,6 +4561,15 @@ name|elt
 index|]
 operator|.
 name|type
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+name|fprintf_filtered
+argument_list|(
+name|stream
+argument_list|,
+literal|" ("
 argument_list|)
 expr_stmt|;
 name|type_print
@@ -4661,25 +4716,20 @@ begin_function
 name|void
 name|dump_postfix_expression
 parameter_list|(
-name|exp
-parameter_list|,
-name|stream
-parameter_list|,
-name|note
-parameter_list|)
 name|struct
 name|expression
 modifier|*
 name|exp
-decl_stmt|;
-name|GDB_FILE
+parameter_list|,
+name|struct
+name|ui_file
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|note
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|elt
@@ -4691,7 +4741,7 @@ argument_list|,
 literal|"Dump of expression @ "
 argument_list|)
 expr_stmt|;
-name|gdb_print_address
+name|gdb_print_host_address
 argument_list|(
 name|exp
 argument_list|,
@@ -4739,7 +4789,7 @@ name|fprintf_filtered
 argument_list|(
 name|stream
 argument_list|,
-literal|"'\n\tLanguage %s, %d elements, %d bytes each.\n"
+literal|"'\n\tLanguage %s, %d elements, %ld bytes each.\n"
 argument_list|,
 name|exp
 operator|->
@@ -4751,6 +4801,9 @@ name|exp
 operator|->
 name|nelts
 argument_list|,
+operator|(
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|union
@@ -4798,15 +4851,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MAINTENANCE_CMDS */
-end_comment
 
 end_unit
 

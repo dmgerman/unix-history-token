@@ -1,8011 +1,2341 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote debugging interface for Am290*0 running MiniMON monitor, for GDB.    Copyright 1990, 1991, 1992 Free Software Foundation, Inc.    Originally written by Daniel Mann at AMD.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* OBSOLETE /* Remote debugging interface for Am290*0 running MiniMON monitor, for GDB. */
 end_comment
 
 begin_comment
-comment|/* This is like remote.c but ecpects MiniMON to be running on the Am29000     target hardware.  - David Wood (wood@lab.ultra.nyu.edu) at New York University adapted this 	file to gdb 3.95.  I was unable to get this working on sun3os4 	with termio, only with sgtty.  Because we are only attempting to 	use this module to debug our kernel, which is already loaded when 	gdb is started up, I did not code up the file downloading facilities.   	As a result this module has only the stubs to download files.  	You should get tagged at compile time if you need to make any  	changes/additions.  */
+comment|/* OBSOLETE    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"inferior.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"wait.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"value.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gdb_string.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"terminal.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"minimon.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"target.h"
-end_include
 
 begin_comment
-comment|/* Offset of member MEMBER in a struct of type TYPE.  */
+comment|/* OBSOLETE    2001 Free Software Foundation, Inc. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|offsetof
-parameter_list|(
-name|TYPE
-parameter_list|,
-name|MEMBER
-parameter_list|)
-value|((int)&((TYPE *)0)->MEMBER)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRAIN_INPUT
-parameter_list|()
-value|(msg_recv_serial((union msg_t*)0))
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|stop_soon_quietly
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
-comment|/* for wait_for_inferior */
+comment|/* OBSOLETE    Originally written by Daniel Mann at AMD. */
 end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|mm_resume
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|mm_fetch_registers
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|fetch_register
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|mm_store_registers
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|store_register
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|regnum_to_srnum
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|mm_close
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|char
-modifier|*
-name|msg_str
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|char
-modifier|*
-name|error_msg_str
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|expect_msg
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|init_target_mm
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|mm_memory_space
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|FREEZE_MODE
-value|(read_register(CPS_REGNUM)&& 0x400)
-end_define
-
-begin_define
-define|#
-directive|define
-name|USE_SHADOW_PC
-value|((processor_type == a29k_freeze_mode)&& FREEZE_MODE)
-end_define
 
 begin_comment
-comment|/* FIXME: Replace with `set remotedebug'.  */
+comment|/* OBSOLETE  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|LLOG_FILE
-value|"minimon.log"
-end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LOG_FILE
-argument_list|)
-end_if
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|log_file
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
-comment|/*    * Size of message buffers.  I couldn't get memory reads to work when  * the byte_count was larger than 512 (it may be a baud rate problem).  */
+comment|/* OBSOLETE    This file is part of GDB. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|BUFER_SIZE
-value|512
-end_define
 
 begin_comment
-comment|/*   * Size of data area in message buffer on the TARGET (remote system).  */
+comment|/* OBSOLETE  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXDATA_T
-value|(target_config.max_msg_size - \ 			offsetof(struct write_r_msg_t,data[0]))
-end_define
 
 begin_comment
-comment|/*		   * Size of data area in message buffer on the HOST (gdb).   */
+comment|/* OBSOLETE    This program is free software; you can redistribute it and/or modify */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXDATA_H
-value|(BUFER_SIZE - offsetof(struct write_r_msg_t,data[0]))
-end_define
 
 begin_comment
-comment|/*   * Defined as the minimum size of data areas of the two message buffers   */
+comment|/* OBSOLETE    it under the terms of the GNU General Public License as published by */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXDATA
-value|(MAXDATA_H< MAXDATA_T ? MAXDATA_H : MAXDATA_T)
-end_define
-
-begin_decl_stmt
-specifier|static
-name|char
-name|out_buf
-index|[
-name|BUFER_SIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|in_buf
-index|[
-name|BUFER_SIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-name|msg_recv_serial
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|msg_send_serial
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|MAX_RETRIES
-value|5000
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|target_ops
-name|mm_ops
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
-comment|/* Forward declaration */
+comment|/* OBSOLETE    the Free Software Foundation; either version 2 of the License, or */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|config_msg_t
-name|target_config
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
-comment|/* HIF needs this */
+comment|/* OBSOLETE    (at your option) any later version. */
 end_comment
 
-begin_decl_stmt
-name|union
-name|msg_t
-modifier|*
-name|out_msg_buf
-init|=
-operator|(
-expr|union
-name|msg_t
+begin_comment
+comment|/* OBSOLETE  */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    This program is distributed in the hope that it will be useful, */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    but WITHOUT ANY WARRANTY; without even the implied warranty of */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    GNU General Public License for more details. */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE  */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    You should have received a copy of the GNU General Public License */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    along with this program; if not, write to the Free Software */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    Foundation, Inc., 59 Temple Place - Suite 330, */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE    Boston, MA 02111-1307, USA.  */
+end_comment
+
+begin_expr_stmt
 operator|*
-operator|)
-name|out_buf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|union
-name|msg_t
-modifier|*
-name|in_msg_buf
-init|=
-operator|(
-expr|union
-name|msg_t
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* This is like remote.c but ecpects MiniMON to be running on the Am29000  */
+comment|/* OBSOLETE    target hardware. */
+comment|/* OBSOLETE    - David Wood (wood@lab.ultra.nyu.edu) at New York University adapted this */
+comment|/* OBSOLETE    file to gdb 3.95.  I was unable to get this working on sun3os4 */
+comment|/* OBSOLETE    with termio, only with sgtty.  Because we are only attempting to */
+comment|/* OBSOLETE    use this module to debug our kernel, which is already loaded when */
+comment|/* OBSOLETE    gdb is started up, I did not code up the file downloading facilities.   */
+comment|/* OBSOLETE    As a result this module has only the stubs to download files.  */
+comment|/* OBSOLETE    You should get tagged at compile time if you need to make any  */
+comment|/* OBSOLETE    changes/additions.  */
 operator|*
-operator|)
-name|in_buf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|timeout
-init|=
-literal|5
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Descriptor for I/O to remote machine.  Initialize it to -1 so that    mm_open knows that we don't have a file open when the program    starts.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|mm_desc
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* stream which is fdopen'd from mm_desc.  Only valid when    mm_desc != -1.  */
-end_comment
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|mm_stream
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Called when SIGALRM signal sent due to alarm() timeout.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_TERMIO
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|volatile
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|volatile
-end_define
-
-begin_comment
-comment|/**/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|volatile
-name|int
-name|n_alarms
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|mm_timer
-parameter_list|()
-block|{
-if|#
-directive|if
-literal|0
-block|if (kiodebug)     printf ("mm_timer called\n");
-endif|#
-directive|endif
-name|n_alarms
-operator|++
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_TERMIO */
-end_comment
-
-begin_comment
-comment|/* malloc'd name of the program on the remote system.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|prog_name
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number of SIGTRAPs we need to simulate.  That is, the next    NEED_ARTIFICIAL_TRAP calls to mm_wait should just return    SIGTRAP without actually waiting for anything.  */
-end_comment
-
-begin_comment
-comment|/**************************************************** REMOTE_CREATE_INFERIOR */
-end_comment
-
-begin_comment
-comment|/* This is called not only when we first attach, but also when the    user types "run" after having attached.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|mm_create_inferior
-parameter_list|(
-name|execfile
-parameter_list|,
-name|args
-parameter_list|,
-name|env
-parameter_list|)
-name|char
-modifier|*
-name|execfile
-decl_stmt|;
-name|char
-modifier|*
-name|args
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|env
-decl_stmt|;
-block|{
-define|#
-directive|define
-name|MAX_TOKENS
-value|25
-define|#
-directive|define
-name|BUFFER_SIZE
-value|256
-name|int
-name|token_count
-decl_stmt|;
-name|int
-name|result
-decl_stmt|;
-name|char
-modifier|*
-name|token
-index|[
-name|MAX_TOKENS
-index|]
-decl_stmt|;
-name|char
-name|cmd_line
-index|[
-name|BUFFER_SIZE
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|args
-operator|&&
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #include "defs.h" */
+comment|/* OBSOLETE #include "inferior.h" */
+comment|/* OBSOLETE #include "value.h" */
+comment|/* OBSOLETE #include<ctype.h> */
+comment|/* OBSOLETE #include<fcntl.h> */
+comment|/* OBSOLETE #include<signal.h> */
+comment|/* OBSOLETE #include<errno.h> */
+comment|/* OBSOLETE #include "gdb_string.h" */
+comment|/* OBSOLETE #include "terminal.h" */
+comment|/* OBSOLETE #include "minimon.h" */
+comment|/* OBSOLETE #include "target.h" */
+comment|/* OBSOLETE #include "regcache.h" */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Offset of member MEMBER in a struct of type TYPE.  */
 operator|*
-name|args
-condition|)
-name|error
-argument_list|(
-literal|"Can't pass arguments to remote mm process (yet)."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|execfile
-operator|==
-literal|0
-comment|/* || exec_bfd == 0 */
-condition|)
-name|error
-argument_list|(
-literal|"No executable file specified"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|mm_stream
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Minimon not open yet.\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* On ultra3 (NYU) we assume the kernel is already running so there is      no file to download.      FIXME: Fixed required here -> load your program, possibly with mm_load().      */
-name|printf_filtered
-argument_list|(
-literal|"\n\ Assuming you are at NYU debuging a kernel, i.e., no need to download.\n\n"
-argument_list|)
-expr_stmt|;
-comment|/* We will get a task spawn event immediately.  */
-name|init_wait_for_inferior
-argument_list|()
-expr_stmt|;
-name|clear_proceed_status
-argument_list|()
-expr_stmt|;
-name|stop_soon_quietly
-operator|=
-literal|1
-expr_stmt|;
-name|proceed
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-name|TARGET_SIGNAL_DEFAULT
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|normal_stop
-argument_list|()
-expr_stmt|;
-block|}
-end_function
+operator|/
+comment|/* OBSOLETE #define offsetof(TYPE, MEMBER) ((int)&((TYPE *)0)->MEMBER) */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #define DRAIN_INPUT()	(msg_recv_serial((union msg_t*)0)) */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE extern int stop_soon_quietly;	/* for wait_for_inferior */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void mm_resume (ptid_t ptid, int step, enum target_signal sig) */
+comment|/* OBSOLETE static void mm_fetch_registers (); */
+comment|/* OBSOLETE static int fetch_register (); */
+comment|/* OBSOLETE static void mm_store_registers (); */
+comment|/* OBSOLETE static int store_register (); */
+comment|/* OBSOLETE static int regnum_to_srnum (); */
+comment|/* OBSOLETE static void mm_close (); */
+comment|/* OBSOLETE static char *msg_str (); */
+comment|/* OBSOLETE static char *error_msg_str (); */
+comment|/* OBSOLETE static int expect_msg (); */
+comment|/* OBSOLETE static void init_target_mm (); */
+comment|/* OBSOLETE static int mm_memory_space (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #define FREEZE_MODE     (read_register(CPS_REGNUM)&& 0x400) */
+comment|/* OBSOLETE #define USE_SHADOW_PC	((processor_type == a29k_freeze_mode)&& FREEZE_MODE) */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* FIXME: Replace with `set remotedebug'.  */
+operator|*
+operator|/
+comment|/* OBSOLETE #define LLOG_FILE "minimon.log" */
+comment|/* OBSOLETE #if defined (LOG_FILE) */
+comment|/* OBSOLETE FILE *log_file; */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /*   */
+comment|/* OBSOLETE  * Size of message buffers.  I couldn't get memory reads to work when */
+comment|/* OBSOLETE  * the byte_count was larger than 512 (it may be a baud rate problem). */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE #define BUFER_SIZE  512 */
+comment|/* OBSOLETE /*  */
+comment|/* OBSOLETE  * Size of data area in message buffer on the TARGET (remote system). */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE #define MAXDATA_T  (target_config.max_msg_size - \ */
+comment|/* OBSOLETE 			offsetof(struct write_r_msg_t,data[0])) */
+comment|/* OBSOLETE /*                */
+comment|/* OBSOLETE  * Size of data area in message buffer on the HOST (gdb).  */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE #define MAXDATA_H  (BUFER_SIZE - offsetof(struct write_r_msg_t,data[0])) */
+comment|/* OBSOLETE /*  */
+comment|/* OBSOLETE  * Defined as the minimum size of data areas of the two message buffers  */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE #define MAXDATA	   (MAXDATA_H< MAXDATA_T ? MAXDATA_H : MAXDATA_T) */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static char out_buf[BUFER_SIZE]; */
+comment|/* OBSOLETE static char in_buf[BUFER_SIZE]; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE int msg_recv_serial (); */
+comment|/* OBSOLETE int msg_send_serial (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #define MAX_RETRIES 5000 */
+comment|/* OBSOLETE extern struct target_ops mm_ops;	/* Forward declaration */
+operator|*
+operator|/
+comment|/* OBSOLETE struct config_msg_t target_config;	/* HIF needs this */
+operator|*
+operator|/
+comment|/* OBSOLETE union msg_t *out_msg_buf = (union msg_t *) out_buf; */
+comment|/* OBSOLETE union msg_t *in_msg_buf = (union msg_t *) in_buf; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static int timeout = 5; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Descriptor for I/O to remote machine.  Initialize it to -1 so that */
+comment|/* OBSOLETE    mm_open knows that we don't have a file open when the program */
+comment|/* OBSOLETE    starts.  */
+operator|*
+operator|/
+comment|/* OBSOLETE int mm_desc = -1; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* stream which is fdopen'd from mm_desc.  Only valid when */
+comment|/* OBSOLETE    mm_desc != -1.  */
+operator|*
+operator|/
+comment|/* OBSOLETE FILE *mm_stream; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Called when SIGALRM signal sent due to alarm() timeout.  */
+operator|*
+operator|/
+comment|/* OBSOLETE #ifndef HAVE_TERMIO */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE volatile int n_alarms; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE mm_timer (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE #if 0 */
+comment|/* OBSOLETE   if (kiodebug) */
+comment|/* OBSOLETE     printf ("mm_timer called\n"); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE   n_alarms++; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE #endif	/* HAVE_TERMIO */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* malloc'd name of the program on the remote system.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static char *prog_name = NULL; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Number of SIGTRAPs we need to simulate.  That is, the next */
+comment|/* OBSOLETE    NEED_ARTIFICIAL_TRAP calls to mm_wait should just return */
+comment|/* OBSOLETE    SIGTRAP without actually waiting for anything.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /**************************************************** REMOTE_CREATE_INFERIOR */
+operator|*
+operator|/
+comment|/* OBSOLETE /* This is called not only when we first attach, but also when the */
+comment|/* OBSOLETE    user types "run" after having attached.  */
+operator|*
+operator|/
+end_expr_stmt
 
 begin_comment
-comment|/**************************************************** REMOTE_MOURN_INFERIOR */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|mm_mourn
-parameter_list|()
-block|{
-name|pop_target
-argument_list|()
-expr_stmt|;
-comment|/* Pop back to no-child state */
-name|generic_mourn_inferior
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/********************************************************************** damn_b */
-end_comment
-
-begin_comment
-comment|/* Translate baud rates from integers to damn B_codes.  Unix should    have outgrown this crap years ago, but even POSIX wouldn't buck it.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|B19200
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|B19200
-value|EXTA
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|B38400
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|B38400
-value|EXTB
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_struct
-specifier|static
-struct|struct
-block|{
-name|int
-name|rate
-decl_stmt|,
-name|damn_b
-decl_stmt|;
-block|}
-name|baudtab
-index|[]
-init|=
-block|{
-block|{
-literal|0
-block|,
-name|B0
-block|}
-block|,
-block|{
-literal|50
-block|,
-name|B50
-block|}
-block|,
-block|{
-literal|75
-block|,
-name|B75
-block|}
-block|,
-block|{
-literal|110
-block|,
-name|B110
-block|}
-block|,
-block|{
-literal|134
-block|,
-name|B134
-block|}
-block|,
-block|{
-literal|150
-block|,
-name|B150
-block|}
-block|,
-block|{
-literal|200
-block|,
-name|B200
-block|}
-block|,
-block|{
-literal|300
-block|,
-name|B300
-block|}
-block|,
-block|{
-literal|600
-block|,
-name|B600
-block|}
-block|,
-block|{
-literal|1200
-block|,
-name|B1200
-block|}
-block|,
-block|{
-literal|1800
-block|,
-name|B1800
-block|}
-block|,
-block|{
-literal|2400
-block|,
-name|B2400
-block|}
-block|,
-block|{
-literal|4800
-block|,
-name|B4800
-block|}
-block|,
-block|{
-literal|9600
-block|,
-name|B9600
-block|}
-block|,
-block|{
-literal|19200
-block|,
-name|B19200
-block|}
-block|,
-block|{
-literal|38400
-block|,
-name|B38400
-block|}
-block|,
-block|{
-operator|-
-literal|1
-block|,
-operator|-
-literal|1
-block|}
-block|, }
-struct|;
-end_struct
-
-begin_function
-specifier|static
-name|int
-name|damn_b
-parameter_list|(
-name|rate
-parameter_list|)
-name|int
-name|rate
-decl_stmt|;
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|baudtab
-index|[
-name|i
-index|]
-operator|.
-name|rate
-operator|!=
-operator|-
-literal|1
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|rate
-operator|==
-name|baudtab
-index|[
-name|i
-index|]
-operator|.
-name|rate
-condition|)
-return|return
-name|baudtab
-index|[
-name|i
-index|]
-operator|.
-name|damn_b
-return|;
-return|return
-name|B38400
-return|;
-comment|/* Random */
-block|}
-end_function
-
-begin_comment
-comment|/***************************************************************** REMOTE_OPEN ** Open a connection to remote minimon.    NAME is the filename used for communication, then a space,    then the baud rate.    'target adapt /dev/ttya 9600 [prognam]' for example.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|dev_name
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|baudrate
-init|=
-literal|9600
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|mm_open
-parameter_list|(
-name|name
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
-block|{
-name|TERMINAL
-name|sg
-decl_stmt|;
-name|unsigned
-name|int
-name|prl
-decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|;
-comment|/* Find the first whitespace character, it separates dev_name from      prog_name.  */
-for|for
-control|(
-name|p
-operator|=
-name|name
-init|;
-name|p
-operator|&&
-operator|*
-name|p
-operator|&&
-operator|!
-name|isspace
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|;
-name|p
-operator|++
-control|)
-empty_stmt|;
-if|if
-condition|(
-name|p
-operator|==
-literal|0
-operator|||
-operator|*
-name|p
-operator|==
-literal|'\0'
-condition|)
-name|erroid
-label|:
-name|error
-argument_list|(
-literal|"Usage :<command><serial-device><baud-rate> [progname]"
-argument_list|)
-expr_stmt|;
-name|dev_name
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
-name|p
-operator|-
-name|name
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|strncpy
-argument_list|(
-name|dev_name
-argument_list|,
-name|name
-argument_list|,
-name|p
-operator|-
-name|name
-argument_list|)
-expr_stmt|;
-name|dev_name
-index|[
-name|p
-operator|-
-name|name
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-comment|/* Skip over the whitespace after dev_name */
-for|for
-control|(
-init|;
-name|isspace
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|;
-name|p
-operator|++
-control|)
-comment|/*EMPTY*/
-empty_stmt|;
-if|if
-condition|(
-literal|1
-operator|!=
-name|sscanf
-argument_list|(
-name|p
-argument_list|,
-literal|"%d "
-argument_list|,
-operator|&
-name|baudrate
-argument_list|)
-condition|)
-goto|goto
-name|erroid
-goto|;
-comment|/* Skip the number and then the spaces */
-for|for
-control|(
-init|;
-name|isdigit
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|;
-name|p
-operator|++
-control|)
-comment|/*EMPTY*/
-empty_stmt|;
-for|for
-control|(
-init|;
-name|isspace
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|;
-name|p
-operator|++
-control|)
-comment|/*EMPTY*/
-empty_stmt|;
-if|if
-condition|(
-name|prog_name
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|prog_name
-argument_list|)
-expr_stmt|;
-name|prog_name
-operator|=
-name|savestring
-argument_list|(
-name|p
-argument_list|,
-name|strlen
-argument_list|(
-name|p
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mm_desc
-operator|>=
-literal|0
-condition|)
-name|close
-argument_list|(
-name|mm_desc
-argument_list|)
-expr_stmt|;
-name|mm_desc
-operator|=
-name|open
-argument_list|(
-name|dev_name
-argument_list|,
-name|O_RDWR
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mm_desc
-operator|<
-literal|0
-condition|)
-name|perror_with_name
-argument_list|(
-name|dev_name
-argument_list|)
-expr_stmt|;
-name|ioctl
-argument_list|(
-name|mm_desc
-argument_list|,
-name|TIOCGETP
-argument_list|,
-operator|&
-name|sg
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_TERMIO
-name|sg
-operator|.
-name|c_cc
-index|[
-name|VMIN
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* read with timeout.  */
-name|sg
-operator|.
-name|c_cc
-index|[
-name|VTIME
-index|]
-operator|=
-name|timeout
-operator|*
-literal|10
-expr_stmt|;
-name|sg
-operator|.
-name|c_lflag
-operator|&=
-operator|~
-operator|(
-name|ICANON
-operator||
-name|ECHO
-operator|)
-expr_stmt|;
-name|sg
-operator|.
-name|c_cflag
-operator|=
-operator|(
-name|sg
-operator|.
-name|c_cflag
-operator|&
-operator|~
-name|CBAUD
-operator|)
-operator||
-name|damn_b
-argument_list|(
-name|baudrate
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|sg
-operator|.
-name|sg_ispeed
-operator|=
-name|damn_b
-argument_list|(
-name|baudrate
-argument_list|)
-expr_stmt|;
-name|sg
-operator|.
-name|sg_ospeed
-operator|=
-name|damn_b
-argument_list|(
-name|baudrate
-argument_list|)
-expr_stmt|;
-name|sg
-operator|.
-name|sg_flags
-operator||=
-name|RAW
-expr_stmt|;
-name|sg
-operator|.
-name|sg_flags
-operator||=
-name|ANYP
-expr_stmt|;
-name|sg
-operator|.
-name|sg_flags
-operator|&=
-operator|~
-name|ECHO
-expr_stmt|;
-endif|#
-directive|endif
-name|ioctl
-argument_list|(
-name|mm_desc
-argument_list|,
-name|TIOCSETP
-argument_list|,
-operator|&
-name|sg
-argument_list|)
-expr_stmt|;
-name|mm_stream
-operator|=
-name|fdopen
-argument_list|(
-name|mm_desc
-argument_list|,
-literal|"r+"
-argument_list|)
-expr_stmt|;
-name|push_target
-argument_list|(
-operator|&
-name|mm_ops
-argument_list|)
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|HAVE_TERMIO
-ifndef|#
-directive|ifndef
-name|NO_SIGINTERRUPT
-comment|/* Cause SIGALRM's to make reads fail with EINTR instead of resuming      the read.  */
-if|if
-condition|(
-name|siginterrupt
-argument_list|(
-name|SIGALRM
-argument_list|,
-literal|1
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|perror
-argument_list|(
-literal|"mm_open: error in siginterrupt"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* Set up read timeout timer.  */
-if|if
-condition|(
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-operator|)
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|mm_timer
-argument_list|)
-operator|==
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-operator|)
-operator|-
-literal|1
-condition|)
-name|perror
-argument_list|(
-literal|"mm_open: error in signal"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LOG_FILE
-argument_list|)
-name|log_file
-operator|=
-name|fopen
-argument_list|(
-name|LOG_FILE
-argument_list|,
-literal|"w"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|log_file
-operator|==
-name|NULL
-condition|)
-name|perror_with_name
-argument_list|(
-name|LOG_FILE
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*    ** Initialize target configuration structure (global)    */
-name|DRAIN_INPUT
-argument_list|()
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|config_req_msg
-operator|.
-name|code
-operator|=
-name|CONFIG_REQ
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|config_req_msg
-operator|.
-name|length
-operator|=
-literal|4
-operator|*
-literal|0
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-comment|/* send config request message */
-name|expect_msg
-argument_list|(
-name|CONFIG
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|a29k_get_processor_type
-argument_list|()
-expr_stmt|;
-comment|/* Print out some stuff, letting the user now what's going on */
-name|printf_filtered
-argument_list|(
-literal|"Connected to MiniMon via %s.\n"
-argument_list|,
-name|dev_name
-argument_list|)
-expr_stmt|;
-comment|/* FIXME: can this restriction be removed? */
-name|printf_filtered
-argument_list|(
-literal|"Remote debugging using virtual addresses works only\n"
-argument_list|)
-expr_stmt|;
-name|printf_filtered
-argument_list|(
-literal|"\twhen virtual addresses map 1:1 to physical addresses.\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|processor_type
-operator|!=
-name|a29k_freeze_mode
-condition|)
-block|{
-name|fprintf_filtered
-argument_list|(
-name|gdb_stderr
-argument_list|,
-literal|"Freeze-mode debugging not available, and can only be done on an A29050.\n"
-argument_list|)
-expr_stmt|;
-block|}
-name|target_config
-operator|.
-name|code
-operator|=
-name|CONFIG
-expr_stmt|;
-name|target_config
-operator|.
-name|length
-operator|=
-literal|0
-expr_stmt|;
-name|target_config
-operator|.
-name|processor_id
-operator|=
-name|in_msg_buf
-operator|->
-name|config_msg
-operator|.
-name|processor_id
-expr_stmt|;
-name|target_config
-operator|.
-name|version
-operator|=
-name|in_msg_buf
-operator|->
-name|config_msg
-operator|.
-name|version
-expr_stmt|;
-name|target_config
-operator|.
-name|I_mem_start
-operator|=
-name|in_msg_buf
-operator|->
-name|config_msg
-operator|.
-name|I_mem_start
-expr_stmt|;
-name|target_config
-operator|.
-name|I_mem_size
-operator|=
-name|in_msg_buf
-operator|->
-name|config_msg
-operator|.
-name|I_mem_size
-expr_stmt|;
-name|target_config
-operator|.
-name|D_mem_start
-operator|=
-name|in_msg_buf
-operator|->
-name|config_msg
-operator|.
-name|D_mem_start
-expr_stmt|;
-name|target_config
-operator|.
-name|D_mem_size
-operator|=
-name|in_msg_buf
-operator|->
-name|config_msg
-operator|.
-name|D_mem_size
-expr_stmt|;
-name|target_config
-operator|.
-name|ROM_start
-operator|=
-name|in_msg_buf
-operator|->
-name|config_msg
-operator|.
-name|ROM_start
-expr_stmt|;
-name|target_config
-operator|.
-name|ROM_size
-operator|=
-name|in_msg_buf
-operator|->
-name|config_msg
-operator|.
-name|ROM_size
-expr_stmt|;
-name|target_config
-operator|.
-name|max_msg_size
-operator|=
-name|in_msg_buf
-operator|->
-name|config_msg
-operator|.
-name|max_msg_size
-expr_stmt|;
-name|target_config
-operator|.
-name|max_bkpts
-operator|=
-name|in_msg_buf
-operator|->
-name|config_msg
-operator|.
-name|max_bkpts
-expr_stmt|;
-name|target_config
-operator|.
-name|coprocessor
-operator|=
-name|in_msg_buf
-operator|->
-name|config_msg
-operator|.
-name|coprocessor
-expr_stmt|;
-name|target_config
-operator|.
-name|reserved
-operator|=
-name|in_msg_buf
-operator|->
-name|config_msg
-operator|.
-name|reserved
-expr_stmt|;
-if|if
-condition|(
-name|from_tty
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Connected to MiniMON :\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"    Debugcore version            %d.%d\n"
-argument_list|,
-literal|0x0f
-operator|&
-operator|(
-name|target_config
-operator|.
-name|version
-operator|>>
-literal|4
-operator|)
-argument_list|,
-literal|0x0f
-operator|&
-operator|(
-name|target_config
-operator|.
-name|version
-operator|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"    Configuration version        %d.%d\n"
-argument_list|,
-literal|0x0f
-operator|&
-operator|(
-name|target_config
-operator|.
-name|version
-operator|>>
-literal|12
-operator|)
-argument_list|,
-literal|0x0f
-operator|&
-operator|(
-name|target_config
-operator|.
-name|version
-operator|>>
-literal|8
-operator|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"    Message system version       %d.%d\n"
-argument_list|,
-literal|0x0f
-operator|&
-operator|(
-name|target_config
-operator|.
-name|version
-operator|>>
-literal|20
-operator|)
-argument_list|,
-literal|0x0f
-operator|&
-operator|(
-name|target_config
-operator|.
-name|version
-operator|>>
-literal|16
-operator|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"    Communication driver version %d.%d\n"
-argument_list|,
-literal|0x0f
-operator|&
-operator|(
-name|target_config
-operator|.
-name|version
-operator|>>
-literal|28
-operator|)
-argument_list|,
-literal|0x0f
-operator|&
-operator|(
-name|target_config
-operator|.
-name|version
-operator|>>
-literal|24
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Leave the target running...     * The above message stopped the target in the dbg core (MiniMon),      * so restart the target out of MiniMon,     */
-name|out_msg_buf
-operator|->
-name|go_msg
-operator|.
-name|code
-operator|=
-name|GO
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|go_msg
-operator|.
-name|length
-operator|=
-literal|0
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-comment|/* No message to expect after a GO */
-block|}
-end_function
-
-begin_comment
-comment|/**************************************************************** REMOTE_CLOSE ** Close the open connection to the minimon debugger.    Use this when you want to detach and do something else    with your gdb.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|mm_close
-parameter_list|(
-name|quitting
-parameter_list|)
-comment|/*FIXME: how is quitting used */
-name|int
-name|quitting
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|mm_desc
-operator|<
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"Can't close remote connection: not debugging remotely."
-argument_list|)
-expr_stmt|;
-comment|/* We should never get here if there isn't something valid in      mm_desc and mm_stream.         Due to a bug in Unix, fclose closes not only the stdio stream,      but also the file descriptor.  So we don't actually close      mm_desc.  */
-name|DRAIN_INPUT
-argument_list|()
-expr_stmt|;
-name|fclose
-argument_list|(
-name|mm_stream
-argument_list|)
-expr_stmt|;
-comment|/* close (mm_desc); */
-comment|/* Do not try to close mm_desc again, later in the program.  */
-name|mm_stream
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_desc
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LOG_FILE
-argument_list|)
-if|if
-condition|(
-name|ferror
-argument_list|(
-name|log_file
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"Error writing log file.\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fclose
-argument_list|(
-name|log_file
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"Error closing log file.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|printf
-argument_list|(
-literal|"Ending remote debugging\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/************************************************************* REMOTE_ATACH */
+comment|/* OBSOLETE static void */
 end_comment
 
 begin_comment
-comment|/* Attach to a program that is already loaded and running   * Upon exiting the process's execution is stopped.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|mm_attach
-parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|char
-modifier|*
-name|args
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
-block|{
-if|if
-condition|(
-operator|!
-name|mm_stream
-condition|)
-name|error
-argument_list|(
-literal|"MiniMon not opened yet, use the 'target minimon' command.\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|from_tty
-condition|)
-name|printf
-argument_list|(
-literal|"Attaching to remote program %s...\n"
-argument_list|,
-name|prog_name
-argument_list|)
-expr_stmt|;
-comment|/* Make sure the target is currently running, it is supposed to be. */
-comment|/* FIXME: is it ok to send MiniMon a BREAK if it is already stopped in     * 	the dbg core.  If so, we don't need to send this GO.    */
-name|out_msg_buf
-operator|->
-name|go_msg
-operator|.
-name|code
-operator|=
-name|GO
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|go_msg
-operator|.
-name|length
-operator|=
-literal|0
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-name|sleep
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* At the worst it will stop, receive a message, continue */
-comment|/* Send the mm a break. */
-name|out_msg_buf
-operator|->
-name|break_msg
-operator|.
-name|code
-operator|=
-name|BREAK
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|break_msg
-operator|.
-name|length
-operator|=
-literal|0
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/********************************************************** REMOTE_DETACH */
+comment|/* OBSOLETE mm_create_inferior (char *execfile, char *args, char **env) */
 end_comment
 
 begin_comment
-comment|/* Terminate the open connection to the remote debugger.    Use this when you want to detach and do something else    with your gdb.  Leave remote process running (with no breakpoints set). */
+comment|/* OBSOLETE { */
 end_comment
-
-begin_function
-specifier|static
-name|void
-name|mm_detach
-parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|char
-modifier|*
-name|args
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
-block|{
-name|remove_breakpoints
-argument_list|()
-expr_stmt|;
-comment|/* Just in case there were any left in */
-name|out_msg_buf
-operator|->
-name|go_msg
-operator|.
-name|code
-operator|=
-name|GO
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|go_msg
-operator|.
-name|length
-operator|=
-literal|0
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-name|pop_target
-argument_list|()
-expr_stmt|;
-comment|/* calls mm_close to do the real work */
-block|}
-end_function
 
 begin_comment
-comment|/*************************************************************** REMOTE_RESUME ** Tell the remote machine to resume.  */
+comment|/* OBSOLETE #define MAX_TOKENS 25 */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|mm_resume
-parameter_list|(
-name|pid
-parameter_list|,
-name|step
-parameter_list|,
-name|sig
-parameter_list|)
-name|int
-name|pid
-decl_stmt|,
-name|step
-decl_stmt|;
-name|enum
-name|target_signal
-name|sig
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|sig
-operator|!=
-name|TARGET_SIGNAL_0
-condition|)
-name|warning
-argument_list|(
-literal|"Can't send signals to a remote MiniMon system."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|step
-condition|)
-block|{
-name|out_msg_buf
-operator|->
-name|step_msg
-operator|.
-name|code
-operator|=
-name|STEP
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|step_msg
-operator|.
-name|length
-operator|=
-literal|1
+begin_comment
+comment|/* OBSOLETE #define BUFFER_SIZE 256 */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   int token_count; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   int result; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   char *token[MAX_TOKENS]; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   char cmd_line[BUFFER_SIZE]; */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE  */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   if (args&& *args) */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE     error ("Can't pass arguments to remote mm process (yet)."); */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE  */
+end_comment
+
+begin_comment
+comment|/* OBSOLETE   if (execfile == 0 /* || exec_bfd == 0 */
+end_comment
+
+begin_expr_stmt
+unit|)
 operator|*
-literal|4
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|step_msg
-operator|.
-name|count
-operator|=
-literal|1
-expr_stmt|;
-comment|/* step 1 instruction */
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|out_msg_buf
-operator|->
-name|go_msg
-operator|.
-name|code
-operator|=
-name|GO
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|go_msg
-operator|.
-name|length
-operator|=
-literal|0
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/***************************************************************** REMOTE_WAIT ** Wait until the remote machine stops, then return,    storing status in STATUS just as `wait' would.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|mm_wait
-parameter_list|(
-name|status
-parameter_list|)
-name|struct
-name|target_waitstatus
-modifier|*
-name|status
-decl_stmt|;
-block|{
-name|int
-name|i
-decl_stmt|,
-name|result
-decl_stmt|;
-name|int
-name|old_timeout
-init|=
-name|timeout
-decl_stmt|;
-name|int
-name|old_immediate_quit
-init|=
-name|immediate_quit
-decl_stmt|;
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_EXITED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|integer
-operator|=
-literal|0
-expr_stmt|;
-comment|/* wait for message to arrive. It should be: 	- A HIF service request. 	- A HIF exit service request. 	- A CHANNEL0_ACK. 	- A CHANNEL1 request. 	- a debugcore HALT message.   HIF services must be responded too, and while-looping continued.   If the target stops executing, mm_wait() should return. */
-name|timeout
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Wait indefinetly for a message */
-name|immediate_quit
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Helps ability to QUIT */
-while|while
-condition|(
-literal|1
-condition|)
-block|{
-while|while
-condition|(
-name|msg_recv_serial
-argument_list|(
-name|in_msg_buf
-argument_list|)
-condition|)
-block|{
-name|QUIT
-expr_stmt|;
-comment|/* Let user quit if they want */
-block|}
-switch|switch
-condition|(
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|code
-condition|)
-block|{
-case|case
-name|HIF_CALL
-case|:
-name|i
-operator|=
-name|in_msg_buf
-operator|->
-name|hif_call_rtn_msg
-operator|.
-name|service_number
-expr_stmt|;
-name|result
-operator|=
-name|service_HIF
-argument_list|(
-name|in_msg_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-literal|1
-condition|)
-comment|/* EXIT */
-goto|goto
-name|exit
-goto|;
-if|if
-condition|(
-name|result
-condition|)
-name|printf
-argument_list|(
-literal|"Warning: failure during HIF service %d\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CHANNEL0_ACK
-case|:
-name|service_HIF
-argument_list|(
-name|in_msg_buf
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CHANNEL1
-case|:
-name|i
-operator|=
-name|in_msg_buf
-operator|->
-name|channel1_msg
-operator|.
-name|length
-expr_stmt|;
-name|in_msg_buf
-operator|->
-name|channel1_msg
-operator|.
-name|data
-index|[
-name|i
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|in_msg_buf
-operator|->
-name|channel1_msg
-operator|.
-name|data
-argument_list|)
-expr_stmt|;
-name|gdb_flush
-argument_list|(
-name|gdb_stdout
-argument_list|)
-expr_stmt|;
-comment|/* Send CHANNEL1_ACK message */
-name|out_msg_buf
-operator|->
-name|channel1_ack_msg
-operator|.
-name|code
-operator|=
-name|CHANNEL1_ACK
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|channel1_ack_msg
-operator|.
-name|length
-operator|=
-literal|0
-expr_stmt|;
-name|result
-operator|=
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|HALT
-case|:
-goto|goto
-name|halted
-goto|;
-default|default:
-goto|goto
-name|halted
-goto|;
-block|}
-block|}
-name|halted
-label|:
-comment|/* FIXME, these printfs should not be here.  This is a source level       debugger, guys!  */
-if|if
-condition|(
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Am290*0 received vector number %d (break point)\n"
-argument_list|,
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-argument_list|)
-expr_stmt|;
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_TRAP
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-operator|==
-literal|1
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Am290*0 received vector number %d\n"
-argument_list|,
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-argument_list|)
-expr_stmt|;
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_BUS
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-operator|==
-literal|3
-operator|||
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-operator|==
-literal|4
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Am290*0 received vector number %d\n"
-argument_list|,
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-argument_list|)
-expr_stmt|;
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_FPE
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-operator|==
-literal|5
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Am290*0 received vector number %d\n"
-argument_list|,
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-argument_list|)
-expr_stmt|;
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_ILL
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-operator|>=
-literal|6
-operator|&&
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-operator|<=
-literal|11
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Am290*0 received vector number %d\n"
-argument_list|,
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-argument_list|)
-expr_stmt|;
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_SEGV
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-operator|==
-literal|12
-operator|||
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-operator|==
-literal|13
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Am290*0 received vector number %d\n"
-argument_list|,
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-argument_list|)
-expr_stmt|;
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_ILL
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-operator|==
-literal|14
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Am290*0 received vector number %d\n"
-argument_list|,
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-argument_list|)
-expr_stmt|;
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_ALRM
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-operator|==
-literal|15
-condition|)
-block|{
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_TRAP
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-operator|>=
-literal|16
-operator|&&
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-operator|<=
-literal|21
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Am290*0 received vector number %d\n"
-argument_list|,
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-argument_list|)
-expr_stmt|;
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_INT
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-operator|==
-literal|22
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Am290*0 received vector number %d\n"
-argument_list|,
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-argument_list|)
-expr_stmt|;
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_ILL
-expr_stmt|;
-block|}
-comment|/* BREAK message was sent */
-elseif|else
-if|if
-condition|(
-name|in_msg_buf
-operator|->
-name|halt_msg
-operator|.
-name|trap_number
-operator|==
-literal|75
-condition|)
-block|{
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_STOPPED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|sig
-operator|=
-name|TARGET_SIGNAL_TRAP
-expr_stmt|;
-block|}
-else|else
-name|exit
-label|:
-block|{
-name|status
-operator|->
-name|kind
-operator|=
-name|TARGET_WAITKIND_EXITED
-expr_stmt|;
-name|status
-operator|->
-name|value
-operator|.
-name|integer
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|timeout
-operator|=
-name|old_timeout
-expr_stmt|;
-comment|/* Restore original timeout value */
-name|immediate_quit
-operator|=
-name|old_immediate_quit
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/******************************************************* REMOTE_FETCH_REGISTERS  * Read a remote register 'regno'.   * If regno==-1 then read all the registers.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|mm_fetch_registers
-parameter_list|(
-name|regno
-parameter_list|)
-name|int
-name|regno
-decl_stmt|;
-block|{
-name|INT32
-modifier|*
-name|data_p
-decl_stmt|;
-if|if
-condition|(
-name|regno
-operator|>=
-literal|0
-condition|)
-block|{
-name|fetch_register
-argument_list|(
-name|regno
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* Gr1/rsp */
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
+operator|/
+comment|/* OBSOLETE     error ("No executable file specified"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (!mm_stream) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       printf ("Minimon not open yet.\n"); */
+comment|/* OBSOLETE       return; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* On ultra3 (NYU) we assume the kernel is already running so there is */
+comment|/* OBSOLETE      no file to download. */
+comment|/* OBSOLETE      FIXME: Fixed required here -> load your program, possibly with mm_load(). */
+comment|/* OBSOLETE    */
 operator|*
-literal|1
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|memory_space
-operator|=
-name|GLOBAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|address
-operator|=
-literal|1
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-name|expect_msg
-argument_list|(
-name|READ_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|data_p
-operator|=
-operator|&
-operator|(
-name|in_msg_buf
-operator|->
-name|read_r_ack_msg
-operator|.
-name|data
-index|[
-literal|0
-index|]
-operator|)
-expr_stmt|;
-name|supply_register
-argument_list|(
-name|GR1_REGNUM
-argument_list|,
-name|data_p
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|GR64_REGNUM
-argument_list|)
-comment|/* Read gr64-127 */
-comment|/* Global Registers gr64-gr95 */
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|code
-operator|=
-name|READ_REQ
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|length
-operator|=
-literal|4
+operator|/
+comment|/* OBSOLETE   printf_filtered ("\n\ */
+comment|/* OBSOLETE Assuming you are at NYU debuging a kernel, i.e., no need to download.\n\n"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* We will get a task spawn event immediately.  */
 operator|*
-literal|3
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
+operator|/
+comment|/* OBSOLETE   init_wait_for_inferior (); */
+comment|/* OBSOLETE   clear_proceed_status (); */
+comment|/* OBSOLETE   stop_soon_quietly = 1; */
+comment|/* OBSOLETE   proceed (-1, TARGET_SIGNAL_DEFAULT, 0); */
+comment|/* OBSOLETE   normal_stop (); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /**************************************************** REMOTE_MOURN_INFERIOR */
 operator|*
-literal|32
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|memory_space
-operator|=
-name|GLOBAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|address
-operator|=
-literal|64
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-name|expect_msg
-argument_list|(
-name|READ_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|data_p
-operator|=
-operator|&
-operator|(
-name|in_msg_buf
-operator|->
-name|read_r_ack_msg
-operator|.
-name|data
-index|[
-literal|0
-index|]
-operator|)
-expr_stmt|;
-for|for
-control|(
-name|regno
-operator|=
-name|GR64_REGNUM
-init|;
-name|regno
-operator|<
-name|GR64_REGNUM
-operator|+
-literal|32
-condition|;
-name|regno
-operator|++
-control|)
-block|{
-name|supply_register
-argument_list|(
-name|regno
-argument_list|,
-name|data_p
-operator|++
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/*  GR64_REGNUM */
-comment|/* Global Registers gr96-gr127 */
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|code
-operator|=
-name|READ_REQ
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|length
-operator|=
-literal|4
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE mm_mourn (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   pop_target ();		/* Pop back to no-child state */
 operator|*
-literal|3
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
+operator|/
+comment|/* OBSOLETE   generic_mourn_inferior (); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /********************************************************************** damn_b */
+comment|/* OBSOLETE */
 operator|*
-literal|32
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|memory_space
-operator|=
-name|GLOBAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|address
-operator|=
-literal|96
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-name|expect_msg
-argument_list|(
-name|READ_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|data_p
-operator|=
-operator|&
-operator|(
-name|in_msg_buf
-operator|->
-name|read_r_ack_msg
-operator|.
-name|data
-index|[
-literal|0
-index|]
-operator|)
-expr_stmt|;
-for|for
-control|(
-name|regno
-operator|=
-name|GR96_REGNUM
-init|;
-name|regno
-operator|<
-name|GR96_REGNUM
-operator|+
-literal|32
-condition|;
-name|regno
-operator|++
-control|)
-block|{
-name|supply_register
-argument_list|(
-name|regno
-argument_list|,
-name|data_p
-operator|++
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Local Registers */
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
+operator|/
+comment|/* OBSOLETE /* Translate baud rates from integers to damn B_codes.  Unix should */
+comment|/* OBSOLETE    have outgrown this crap years ago, but even POSIX wouldn't buck it.  */
 operator|*
-operator|(
-literal|128
-operator|)
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|memory_space
-operator|=
-name|LOCAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|address
-operator|=
-literal|0
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-name|expect_msg
-argument_list|(
-name|READ_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|data_p
-operator|=
-operator|&
-operator|(
-name|in_msg_buf
-operator|->
-name|read_r_ack_msg
-operator|.
-name|data
-index|[
-literal|0
-index|]
-operator|)
-expr_stmt|;
-for|for
-control|(
-name|regno
-operator|=
-name|LR0_REGNUM
-init|;
-name|regno
-operator|<
-name|LR0_REGNUM
-operator|+
-literal|128
-condition|;
-name|regno
-operator|++
-control|)
-block|{
-name|supply_register
-argument_list|(
-name|regno
-argument_list|,
-name|data_p
-operator|++
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Protected Special Registers */
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #ifndef B19200 */
+comment|/* OBSOLETE #define B19200 EXTA */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE #ifndef B38400 */
+comment|/* OBSOLETE #define B38400 EXTB */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static struct */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int rate, damn_b; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE baudtab[] = */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     0, B0 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     50, B50 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     75, B75 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     110, B110 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     134, B134 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     150, B150 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     200, B200 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     300, B300 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     600, B600 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     1200, B1200 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     1800, B1800 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     2400, B2400 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     4800, B4800 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     9600, B9600 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     19200, B19200 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     38400, B38400 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     -1, -1 */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE   , */
+comment|/* OBSOLETE }; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE damn_b (int rate) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int i; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (i = 0; baudtab[i].rate != -1; i++) */
+comment|/* OBSOLETE     if (rate == baudtab[i].rate) */
+comment|/* OBSOLETE       return baudtab[i].damn_b; */
+comment|/* OBSOLETE   return B38400;		/* Random */
 operator|*
-literal|15
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|memory_space
-operator|=
-name|SPECIAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|address
-operator|=
-literal|0
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-name|expect_msg
-argument_list|(
-name|READ_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|data_p
-operator|=
-operator|&
-operator|(
-name|in_msg_buf
-operator|->
-name|read_r_ack_msg
-operator|.
-name|data
-index|[
-literal|0
-index|]
-operator|)
-expr_stmt|;
-for|for
-control|(
-name|regno
-operator|=
-literal|0
-init|;
-name|regno
-operator|<=
-literal|14
-condition|;
-name|regno
-operator|++
-control|)
-block|{
-name|supply_register
-argument_list|(
-name|SR_REGNUM
-argument_list|(
-name|regno
-argument_list|)
-argument_list|,
-name|data_p
-operator|++
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|USE_SHADOW_PC
-condition|)
-block|{
-comment|/* Let regno_to_srnum() handle the register number */
-name|fetch_register
-argument_list|(
-name|NPC_REGNUM
-argument_list|)
-expr_stmt|;
-name|fetch_register
-argument_list|(
-name|PC_REGNUM
-argument_list|)
-expr_stmt|;
-name|fetch_register
-argument_list|(
-name|PC2_REGNUM
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Unprotected Special Registers */
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
+operator|/
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /***************************************************************** REMOTE_OPEN */
+comment|/* OBSOLETE ** Open a connection to remote minimon. */
+comment|/* OBSOLETE    NAME is the filename used for communication, then a space, */
+comment|/* OBSOLETE    then the baud rate. */
+comment|/* OBSOLETE    'target adapt /dev/ttya 9600 [prognam]' for example. */
+comment|/* OBSOLETE  */
 operator|*
-literal|8
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static char *dev_name; */
+comment|/* OBSOLETE int baudrate = 9600; */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE mm_open (char *name, int from_tty) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   TERMINAL sg; */
+comment|/* OBSOLETE   unsigned int prl; */
+comment|/* OBSOLETE   char *p; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Find the first whitespace character, it separates dev_name from */
+comment|/* OBSOLETE      prog_name.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   for (p = name; */
+comment|/* OBSOLETE        p&& *p&& !isspace (*p); p++) */
+comment|/* OBSOLETE     ; */
+comment|/* OBSOLETE   if (p == 0 || *p == '\0') */
+comment|/* OBSOLETE   erroid: */
+comment|/* OBSOLETE     error ("Usage :<command><serial-device><baud-rate> [progname]"); */
+comment|/* OBSOLETE   dev_name = (char *) xmalloc (p - name + 1); */
+comment|/* OBSOLETE   strncpy (dev_name, name, p - name); */
+comment|/* OBSOLETE   dev_name[p - name] = '\0'; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Skip over the whitespace after dev_name */
+operator|*
+operator|/
+comment|/* OBSOLETE   for (; isspace (*p); p++) */
+comment|/* OBSOLETE     /*EMPTY */
 expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|memory_space
-operator|=
-name|SPECIAL_REG
+end_expr_stmt
+
+begin_expr_stmt
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (1 != sscanf (p, "%d ",&baudrate)) */
+comment|/* OBSOLETE     goto erroid; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Skip the number and then the spaces */
+operator|*
+operator|/
+comment|/* OBSOLETE   for (; isdigit (*p); p++) */
+comment|/* OBSOLETE     /*EMPTY */
 expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|address
-operator|=
-literal|128
+end_expr_stmt
+
+begin_expr_stmt
+operator|*
+operator|/
+comment|/* OBSOLETE   for (; isspace (*p); p++) */
+comment|/* OBSOLETE     /*EMPTY */
 expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-name|expect_msg
-argument_list|(
-name|READ_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|data_p
-operator|=
-operator|&
-operator|(
-name|in_msg_buf
-operator|->
-name|read_r_ack_msg
-operator|.
-name|data
-index|[
-literal|0
-index|]
-operator|)
-expr_stmt|;
-for|for
-control|(
-name|regno
-operator|=
-literal|128
-init|;
-name|regno
-operator|<=
-literal|135
-condition|;
-name|regno
-operator|++
-control|)
-block|{
-name|supply_register
-argument_list|(
-name|SR_REGNUM
-argument_list|(
-name|regno
-argument_list|)
-argument_list|,
-name|data_p
-operator|++
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* There doesn't seem to be any way to get these.  */
-block|{
-name|int
-name|val
-init|=
-operator|-
-literal|1
-decl_stmt|;
-name|supply_register
-argument_list|(
-name|FPE_REGNUM
-argument_list|,
-operator|&
-name|val
-argument_list|)
-expr_stmt|;
-name|supply_register
-argument_list|(
-name|INTE_REGNUM
-argument_list|,
-operator|&
-name|val
-argument_list|)
-expr_stmt|;
-name|supply_register
-argument_list|(
-name|FPS_REGNUM
-argument_list|,
-operator|&
-name|val
-argument_list|)
-expr_stmt|;
-name|supply_register
-argument_list|(
-name|EXO_REGNUM
-argument_list|,
-operator|&
-name|val
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
+end_expr_stmt
+
+begin_expr_stmt
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (prog_name != NULL) */
+comment|/* OBSOLETE     xfree (prog_name); */
+comment|/* OBSOLETE   prog_name = savestring (p, strlen (p)); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (mm_desc>= 0) */
+comment|/* OBSOLETE     close (mm_desc); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   mm_desc = open (dev_name, O_RDWR); */
+comment|/* OBSOLETE   if (mm_desc< 0) */
+comment|/* OBSOLETE     perror_with_name (dev_name); */
+comment|/* OBSOLETE   ioctl (mm_desc, TIOCGETP,&sg); */
+comment|/* OBSOLETE #ifdef HAVE_TERMIO */
+comment|/* OBSOLETE   sg.c_cc[VMIN] = 0;		/* read with timeout.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   sg.c_cc[VTIME] = timeout * 10; */
+comment|/* OBSOLETE   sg.c_lflag&= ~(ICANON | ECHO); */
+comment|/* OBSOLETE   sg.c_cflag = (sg.c_cflag& ~CBAUD) | damn_b (baudrate); */
+comment|/* OBSOLETE #else */
+comment|/* OBSOLETE   sg.sg_ispeed = damn_b (baudrate); */
+comment|/* OBSOLETE   sg.sg_ospeed = damn_b (baudrate); */
+comment|/* OBSOLETE   sg.sg_flags |= RAW; */
+comment|/* OBSOLETE   sg.sg_flags |= ANYP; */
+comment|/* OBSOLETE   sg.sg_flags&= ~ECHO; */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   ioctl (mm_desc, TIOCSETP,&sg); */
+comment|/* OBSOLETE   mm_stream = fdopen (mm_desc, "r+"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   push_target (&mm_ops); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #ifndef HAVE_TERMIO */
+comment|/* OBSOLETE #ifndef NO_SIGINTERRUPT */
+comment|/* OBSOLETE   /* Cause SIGALRM's to make reads fail with EINTR instead of resuming */
+comment|/* OBSOLETE      the read.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   if (siginterrupt (SIGALRM, 1) != 0) */
+comment|/* OBSOLETE     perror ("mm_open: error in siginterrupt"); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Set up read timeout timer.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   if ((void (*)) signal (SIGALRM, mm_timer) == (void (*)) -1) */
+comment|/* OBSOLETE     perror ("mm_open: error in signal"); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #if defined (LOG_FILE) */
+comment|/* OBSOLETE   log_file = fopen (LOG_FILE, "w"); */
+comment|/* OBSOLETE   if (log_file == NULL) */
+comment|/* OBSOLETE     perror_with_name (LOG_FILE); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE   /* */
+comment|/* OBSOLETE      ** Initialize target configuration structure (global) */
+comment|/* OBSOLETE    */
+operator|*
+operator|/
+comment|/* OBSOLETE   DRAIN_INPUT (); */
+comment|/* OBSOLETE   out_msg_buf->config_req_msg.code = CONFIG_REQ; */
+comment|/* OBSOLETE   out_msg_buf->config_req_msg.length = 4 * 0; */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf);	/* send config request message */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   expect_msg (CONFIG, in_msg_buf, 1); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   a29k_get_processor_type (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Print out some stuff, letting the user now what's going on */
+operator|*
+operator|/
+comment|/* OBSOLETE   printf_filtered ("Connected to MiniMon via %s.\n", dev_name); */
+comment|/* OBSOLETE   /* FIXME: can this restriction be removed? */
+operator|*
+operator|/
+comment|/* OBSOLETE   printf_filtered ("Remote debugging using virtual addresses works only\n"); */
+comment|/* OBSOLETE   printf_filtered ("\twhen virtual addresses map 1:1 to physical addresses.\n") */
+comment|/* OBSOLETE     ; */
+comment|/* OBSOLETE   if (processor_type != a29k_freeze_mode) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       fprintf_filtered (gdb_stderr, */
+comment|/* OBSOLETE 			"Freeze-mode debugging not available, and can only be done on an A29050.\n"); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   target_config.code = CONFIG; */
+comment|/* OBSOLETE   target_config.length = 0; */
+comment|/* OBSOLETE   target_config.processor_id = in_msg_buf->config_msg.processor_id; */
+comment|/* OBSOLETE   target_config.version = in_msg_buf->config_msg.version; */
+comment|/* OBSOLETE   target_config.I_mem_start = in_msg_buf->config_msg.I_mem_start; */
+comment|/* OBSOLETE   target_config.I_mem_size = in_msg_buf->config_msg.I_mem_size; */
+comment|/* OBSOLETE   target_config.D_mem_start = in_msg_buf->config_msg.D_mem_start; */
+comment|/* OBSOLETE   target_config.D_mem_size = in_msg_buf->config_msg.D_mem_size; */
+comment|/* OBSOLETE   target_config.ROM_start = in_msg_buf->config_msg.ROM_start; */
+comment|/* OBSOLETE   target_config.ROM_size = in_msg_buf->config_msg.ROM_size; */
+comment|/* OBSOLETE   target_config.max_msg_size = in_msg_buf->config_msg.max_msg_size; */
+comment|/* OBSOLETE   target_config.max_bkpts = in_msg_buf->config_msg.max_bkpts; */
+comment|/* OBSOLETE   target_config.coprocessor = in_msg_buf->config_msg.coprocessor; */
+comment|/* OBSOLETE   target_config.reserved = in_msg_buf->config_msg.reserved; */
+comment|/* OBSOLETE   if (from_tty) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       printf ("Connected to MiniMON :\n"); */
+comment|/* OBSOLETE       printf ("    Debugcore version            %d.%d\n", */
+comment|/* OBSOLETE 	      0x0f& (target_config.version>> 4), */
+comment|/* OBSOLETE 	      0x0f& (target_config.version)); */
+comment|/* OBSOLETE       printf ("    Configuration version        %d.%d\n", */
+comment|/* OBSOLETE 	      0x0f& (target_config.version>> 12), */
+comment|/* OBSOLETE 	      0x0f& (target_config.version>> 8)); */
+comment|/* OBSOLETE       printf ("    Message system version       %d.%d\n", */
+comment|/* OBSOLETE 	      0x0f& (target_config.version>> 20), */
+comment|/* OBSOLETE 	      0x0f& (target_config.version>> 16)); */
+comment|/* OBSOLETE       printf ("    Communication driver version %d.%d\n", */
+comment|/* OBSOLETE 	      0x0f& (target_config.version>> 28), */
+comment|/* OBSOLETE 	      0x0f& (target_config.version>> 24)); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Leave the target running...  */
+comment|/* OBSOLETE    * The above message stopped the target in the dbg core (MiniMon),   */
+comment|/* OBSOLETE    * so restart the target out of MiniMon,  */
+comment|/* OBSOLETE    */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->go_msg.code = GO; */
+comment|/* OBSOLETE   out_msg_buf->go_msg.length = 0; */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   /* No message to expect after a GO */
+operator|*
+operator|/
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /**************************************************************** REMOTE_CLOSE */
+comment|/* OBSOLETE ** Close the open connection to the minimon debugger. */
+comment|/* OBSOLETE    Use this when you want to detach and do something else */
+comment|/* OBSOLETE    with your gdb.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE mm_close (			/*FIXME: how is quitting used */
+operator|*
+operator|/
+comment|/* OBSOLETE 	   int quitting) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   if (mm_desc< 0) */
+comment|/* OBSOLETE     error ("Can't close remote connection: not debugging remotely."); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* We should never get here if there isn't something valid in */
+comment|/* OBSOLETE      mm_desc and mm_stream.   */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE      Due to a bug in Unix, fclose closes not only the stdio stream, */
+comment|/* OBSOLETE      but also the file descriptor.  So we don't actually close */
+comment|/* OBSOLETE      mm_desc.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   DRAIN_INPUT (); */
+comment|/* OBSOLETE   fclose (mm_stream); */
+comment|/* OBSOLETE   /* close (mm_desc); */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Do not try to close mm_desc again, later in the program.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   mm_stream = NULL; */
+comment|/* OBSOLETE   mm_desc = -1; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #if defined (LOG_FILE) */
+comment|/* OBSOLETE   if (ferror (log_file)) */
+comment|/* OBSOLETE     printf ("Error writing log file.\n"); */
+comment|/* OBSOLETE   if (fclose (log_file) != 0) */
+comment|/* OBSOLETE     printf ("Error closing log file.\n"); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   printf ("Ending remote debugging\n"); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /************************************************************* REMOTE_ATACH */
+operator|*
+operator|/
+comment|/* OBSOLETE /* Attach to a program that is already loaded and running  */
+comment|/* OBSOLETE  * Upon exiting the process's execution is stopped. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE mm_attach (char *args, int from_tty) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (!mm_stream) */
+comment|/* OBSOLETE     error ("MiniMon not opened yet, use the 'target minimon' command.\n"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (from_tty) */
+comment|/* OBSOLETE     printf ("Attaching to remote program %s...\n", prog_name); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Make sure the target is currently running, it is supposed to be. */
+operator|*
+operator|/
+comment|/* OBSOLETE   /* FIXME: is it ok to send MiniMon a BREAK if it is already stopped in  */
+comment|/* OBSOLETE    *  the dbg core.  If so, we don't need to send this GO. */
+comment|/* OBSOLETE    */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->go_msg.code = GO; */
+comment|/* OBSOLETE   out_msg_buf->go_msg.length = 0; */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   sleep (2);			/* At the worst it will stop, receive a message, continue */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Send the mm a break. */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->break_msg.code = BREAK; */
+comment|/* OBSOLETE   out_msg_buf->break_msg.length = 0; */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /********************************************************** REMOTE_DETACH */
+operator|*
+operator|/
+comment|/* OBSOLETE /* Terminate the open connection to the remote debugger. */
+comment|/* OBSOLETE    Use this when you want to detach and do something else */
+comment|/* OBSOLETE    with your gdb.  Leave remote process running (with no breakpoints set). */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE mm_detach (char *args, int from_tty) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   remove_breakpoints ();	/* Just in case there were any left in */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->go_msg.code = GO; */
+comment|/* OBSOLETE   out_msg_buf->go_msg.length = 0; */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   pop_target ();		/* calls mm_close to do the real work */
+operator|*
+operator|/
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /*************************************************************** REMOTE_RESUME */
+comment|/* OBSOLETE ** Tell the remote machine to resume.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE mm_resume (ptid_t ptid, int step, enum target_signal sig) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   if (sig != TARGET_SIGNAL_0) */
+comment|/* OBSOLETE     warning ("Can't send signals to a remote MiniMon system."); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (step) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       out_msg_buf->step_msg.code = STEP; */
+comment|/* OBSOLETE       out_msg_buf->step_msg.length = 1 * 4; */
+comment|/* OBSOLETE       out_msg_buf->step_msg.count = 1;	/* step 1 instruction */
+operator|*
+operator|/
+comment|/* OBSOLETE       msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       out_msg_buf->go_msg.code = GO; */
+comment|/* OBSOLETE       out_msg_buf->go_msg.length = 0; */
+comment|/* OBSOLETE       msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /***************************************************************** REMOTE_WAIT */
+comment|/* OBSOLETE ** Wait until the remote machine stops, then return, */
+comment|/* OBSOLETE    storing status in STATUS just as `wait' would.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static ptid_t */
+comment|/* OBSOLETE mm_wait (ptid_t ptid, struct target_waitstatus *status) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int i, result; */
+comment|/* OBSOLETE   int old_timeout = timeout; */
+comment|/* OBSOLETE   int old_immediate_quit = immediate_quit; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   status->kind = TARGET_WAITKIND_EXITED; */
+comment|/* OBSOLETE   status->value.integer = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* wait for message to arrive. It should be: */
+comment|/* OBSOLETE    - A HIF service request. */
+comment|/* OBSOLETE    - A HIF exit service request. */
+comment|/* OBSOLETE    - A CHANNEL0_ACK. */
+comment|/* OBSOLETE    - A CHANNEL1 request. */
+comment|/* OBSOLETE    - a debugcore HALT message. */
+comment|/* OBSOLETE    HIF services must be responded too, and while-looping continued. */
+comment|/* OBSOLETE    If the target stops executing, mm_wait() should return. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE   timeout = 0;			/* Wait indefinetly for a message */
+operator|*
+operator|/
+comment|/* OBSOLETE   immediate_quit = 1;		/* Helps ability to QUIT */
+operator|*
+operator|/
+comment|/* OBSOLETE   while (1) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       while (msg_recv_serial (in_msg_buf)) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  QUIT;			/* Let user quit if they want */
+operator|*
+operator|/
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE       switch (in_msg_buf->halt_msg.code) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	case HIF_CALL: */
+comment|/* OBSOLETE 	  i = in_msg_buf->hif_call_rtn_msg.service_number; */
+comment|/* OBSOLETE 	  result = service_HIF (in_msg_buf); */
+comment|/* OBSOLETE 	  if (i == 1)		/* EXIT */
+operator|*
+operator|/
+comment|/* OBSOLETE 	    goto exit; */
+comment|/* OBSOLETE 	  if (result) */
+comment|/* OBSOLETE 	    printf ("Warning: failure during HIF service %d\n", i); */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case CHANNEL0_ACK: */
+comment|/* OBSOLETE 	  service_HIF (in_msg_buf); */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case CHANNEL1: */
+comment|/* OBSOLETE 	  i = in_msg_buf->channel1_msg.length; */
+comment|/* OBSOLETE 	  in_msg_buf->channel1_msg.data[i] = '\0'; */
+comment|/* OBSOLETE 	  printf ("%s", in_msg_buf->channel1_msg.data); */
+comment|/* OBSOLETE 	  gdb_flush (gdb_stdout); */
+comment|/* OBSOLETE 	  /* Send CHANNEL1_ACK message */
+operator|*
+operator|/
+comment|/* OBSOLETE 	  out_msg_buf->channel1_ack_msg.code = CHANNEL1_ACK; */
+comment|/* OBSOLETE 	  out_msg_buf->channel1_ack_msg.length = 0; */
+comment|/* OBSOLETE 	  result = msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	case HALT: */
+comment|/* OBSOLETE 	  goto halted; */
+comment|/* OBSOLETE 	default: */
+comment|/* OBSOLETE 	  goto halted; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE halted: */
+comment|/* OBSOLETE   /* FIXME, these printfs should not be here.  This is a source level  */
+comment|/* OBSOLETE      debugger, guys!  */
+operator|*
+operator|/
+comment|/* OBSOLETE   if (in_msg_buf->halt_msg.trap_number == 0) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       printf ("Am290*0 received vector number %d (break point)\n", */
+comment|/* OBSOLETE 	      in_msg_buf->halt_msg.trap_number); */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_TRAP; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (in_msg_buf->halt_msg.trap_number == 1) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       printf ("Am290*0 received vector number %d\n", */
+comment|/* OBSOLETE 	      in_msg_buf->halt_msg.trap_number); */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_BUS; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (in_msg_buf->halt_msg.trap_number == 3 */
+comment|/* OBSOLETE 	   || in_msg_buf->halt_msg.trap_number == 4) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       printf ("Am290*0 received vector number %d\n", */
+comment|/* OBSOLETE 	      in_msg_buf->halt_msg.trap_number); */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_FPE; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (in_msg_buf->halt_msg.trap_number == 5) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       printf ("Am290*0 received vector number %d\n", */
+comment|/* OBSOLETE 	      in_msg_buf->halt_msg.trap_number); */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_ILL; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (in_msg_buf->halt_msg.trap_number>= 6 */
+comment|/* OBSOLETE&& in_msg_buf->halt_msg.trap_number<= 11) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       printf ("Am290*0 received vector number %d\n", */
+comment|/* OBSOLETE 	      in_msg_buf->halt_msg.trap_number); */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_SEGV; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (in_msg_buf->halt_msg.trap_number == 12 */
+comment|/* OBSOLETE 	   || in_msg_buf->halt_msg.trap_number == 13) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       printf ("Am290*0 received vector number %d\n", */
+comment|/* OBSOLETE 	      in_msg_buf->halt_msg.trap_number); */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_ILL; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (in_msg_buf->halt_msg.trap_number == 14) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       printf ("Am290*0 received vector number %d\n", */
+comment|/* OBSOLETE 	      in_msg_buf->halt_msg.trap_number); */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_ALRM; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (in_msg_buf->halt_msg.trap_number == 15) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_TRAP; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (in_msg_buf->halt_msg.trap_number>= 16 */
+comment|/* OBSOLETE&& in_msg_buf->halt_msg.trap_number<= 21) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       printf ("Am290*0 received vector number %d\n", */
+comment|/* OBSOLETE 	      in_msg_buf->halt_msg.trap_number); */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_INT; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (in_msg_buf->halt_msg.trap_number == 22) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       printf ("Am290*0 received vector number %d\n", */
+comment|/* OBSOLETE 	      in_msg_buf->halt_msg.trap_number); */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_ILL; */
+comment|/* OBSOLETE     }				/* BREAK message was sent */
+operator|*
+operator|/
+comment|/* OBSOLETE   else if (in_msg_buf->halt_msg.trap_number == 75) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_STOPPED; */
+comment|/* OBSOLETE       status->value.sig = TARGET_SIGNAL_TRAP; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE   exit: */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       status->kind = TARGET_WAITKIND_EXITED; */
+comment|/* OBSOLETE       status->value.integer = 0; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   timeout = old_timeout;	/* Restore original timeout value */
+operator|*
+operator|/
+comment|/* OBSOLETE   immediate_quit = old_immediate_quit; */
+comment|/* OBSOLETE   return inferior_ptid; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /******************************************************* REMOTE_FETCH_REGISTERS */
+comment|/* OBSOLETE  * Read a remote register 'regno'.  */
+comment|/* OBSOLETE  * If regno==-1 then read all the registers. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE mm_fetch_registers (int regno) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   INT32 *data_p; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (regno>= 0) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       fetch_register (regno); */
+comment|/* OBSOLETE       return; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Gr1/rsp */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.byte_count = 4 * 1; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.memory_space = GLOBAL_REG; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.address = 1; */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   expect_msg (READ_ACK, in_msg_buf, 1); */
+comment|/* OBSOLETE   data_p =&(in_msg_buf->read_r_ack_msg.data[0]); */
+comment|/* OBSOLETE   supply_register (GR1_REGNUM, data_p); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #if defined(GR64_REGNUM)	/* Read gr64-127 */
+operator|*
+operator|/
+comment|/* OBSOLETE /* Global Registers gr64-gr95 */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.code = READ_REQ; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.length = 4 * 3; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.byte_count = 4 * 32; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.memory_space = GLOBAL_REG; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.address = 64; */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   expect_msg (READ_ACK, in_msg_buf, 1); */
+comment|/* OBSOLETE   data_p =&(in_msg_buf->read_r_ack_msg.data[0]); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (regno = GR64_REGNUM; regno< GR64_REGNUM + 32; regno++) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       supply_register (regno, data_p++); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE #endif /*  GR64_REGNUM */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Global Registers gr96-gr127 */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.code = READ_REQ; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.length = 4 * 3; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.byte_count = 4 * 32; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.memory_space = GLOBAL_REG; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.address = 96; */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   expect_msg (READ_ACK, in_msg_buf, 1); */
+comment|/* OBSOLETE   data_p =&(in_msg_buf->read_r_ack_msg.data[0]); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (regno = GR96_REGNUM; regno< GR96_REGNUM + 32; regno++) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       supply_register (regno, data_p++); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Local Registers */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.byte_count = 4 * (128); */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.memory_space = LOCAL_REG; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.address = 0; */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   expect_msg (READ_ACK, in_msg_buf, 1); */
+comment|/* OBSOLETE   data_p =&(in_msg_buf->read_r_ack_msg.data[0]); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (regno = LR0_REGNUM; regno< LR0_REGNUM + 128; regno++) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       supply_register (regno, data_p++); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Protected Special Registers */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.byte_count = 4 * 15; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.memory_space = SPECIAL_REG; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.address = 0; */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   expect_msg (READ_ACK, in_msg_buf, 1); */
+comment|/* OBSOLETE   data_p =&(in_msg_buf->read_r_ack_msg.data[0]); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (regno = 0; regno<= 14; regno++) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       supply_register (SR_REGNUM (regno), data_p++); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   if (USE_SHADOW_PC) */
+comment|/* OBSOLETE     {				/* Let regno_to_srnum() handle the register number */
+operator|*
+operator|/
+comment|/* OBSOLETE       fetch_register (NPC_REGNUM); */
+comment|/* OBSOLETE       fetch_register (PC_REGNUM); */
+comment|/* OBSOLETE       fetch_register (PC2_REGNUM); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Unprotected Special Registers */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.byte_count = 4 * 8; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.memory_space = SPECIAL_REG; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.address = 128; */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   expect_msg (READ_ACK, in_msg_buf, 1); */
+comment|/* OBSOLETE   data_p =&(in_msg_buf->read_r_ack_msg.data[0]); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (regno = 128; regno<= 135; regno++) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       supply_register (SR_REGNUM (regno), data_p++); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* There doesn't seem to be any way to get these.  */
+operator|*
+operator|/
+comment|/* OBSOLETE   { */
+comment|/* OBSOLETE     int val = -1; */
+comment|/* OBSOLETE     supply_register (FPE_REGNUM,&val); */
+comment|/* OBSOLETE     supply_register (INTE_REGNUM,&val); */
+comment|/* OBSOLETE     supply_register (FPS_REGNUM,&val); */
+comment|/* OBSOLETE     supply_register (EXO_REGNUM,&val); */
+comment|/* OBSOLETE   } */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /****************************************************** REMOTE_STORE_REGISTERS */
+comment|/* OBSOLETE  * Store register regno into the target.   */
+comment|/* OBSOLETE  * If regno==-1 then store all the registers. */
+comment|/* OBSOLETE  * Result is 0 for success, -1 for failure. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE mm_store_registers (int regno) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int result; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (regno>= 0) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       store_register (regno); */
+comment|/* OBSOLETE       return; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   result = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.code = WRITE_REQ; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Gr1/rsp */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.byte_count = 4 * 1; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.length = 3 * 4 + out_msg_buf->write_r_msg.byte_count; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.memory_space = GLOBAL_REG; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.address = 1; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.data[0] = read_register (GR1_REGNUM); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   if (!expect_msg (WRITE_ACK, in_msg_buf, 1)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       result = -1; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #if defined(GR64_REGNUM) */
+comment|/* OBSOLETE /* Global registers gr64-gr95 */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.byte_count = 4 * (32); */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.length = 3 * 4 + out_msg_buf->write_r_msg.byte_count; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.address = 64; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (regno = GR64_REGNUM; regno< GR64_REGNUM + 32; regno++) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       out_msg_buf->write_r_msg.data[regno - GR64_REGNUM] = read_register (regno); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   if (!expect_msg (WRITE_ACK, in_msg_buf, 1)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       result = -1; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE #endif /* GR64_REGNUM */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Global registers gr96-gr127 */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.byte_count = 4 * (32); */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.length = 3 * 4 + out_msg_buf->write_r_msg.byte_count; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.address = 96; */
+comment|/* OBSOLETE   for (regno = GR96_REGNUM; regno< GR96_REGNUM + 32; regno++) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       out_msg_buf->write_r_msg.data[regno - GR96_REGNUM] = read_register (regno); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   if (!expect_msg (WRITE_ACK, in_msg_buf, 1)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       result = -1; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Local Registers */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.memory_space = LOCAL_REG; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.byte_count = 4 * 128; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.length = 3 * 4 + out_msg_buf->write_r_msg.byte_count; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.address = 0; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   for (regno = LR0_REGNUM; regno< LR0_REGNUM + 128; regno++) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       out_msg_buf->write_r_msg.data[regno - LR0_REGNUM] = read_register (regno); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   if (!expect_msg (WRITE_ACK, in_msg_buf, 1)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       result = -1; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Protected Special Registers */
+operator|*
+operator|/
+comment|/* OBSOLETE   /* VAB through TMR */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.memory_space = SPECIAL_REG; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.byte_count = 4 * 10; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.length = 3 * 4 + out_msg_buf->write_r_msg.byte_count; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.address = 0; */
+comment|/* OBSOLETE   for (regno = 0; regno<= 9; regno++)	/* VAB through TMR */
+operator|*
+operator|/
+comment|/* OBSOLETE     out_msg_buf->write_r_msg.data[regno] = read_register (SR_REGNUM (regno)); */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   if (!expect_msg (WRITE_ACK, in_msg_buf, 1)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       result = -1; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* PC0, PC1, PC2 possibly as shadow registers */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.byte_count = 4 * 3; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.length = 3 * 4 + out_msg_buf->write_r_msg.byte_count; */
+comment|/* OBSOLETE   for (regno = 10; regno<= 12; regno++)	/* LRU and MMU */
+operator|*
+operator|/
+comment|/* OBSOLETE     out_msg_buf->write_r_msg.data[regno - 10] = read_register (SR_REGNUM (regno)); */
+comment|/* OBSOLETE   if (USE_SHADOW_PC) */
+comment|/* OBSOLETE     out_msg_buf->write_r_msg.address = 20;	/* SPC0 */
+operator|*
+operator|/
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     out_msg_buf->write_r_msg.address = 10;	/* PC0 */
+operator|*
+operator|/
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   if (!expect_msg (WRITE_ACK, in_msg_buf, 1)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       result = -1; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* LRU and MMU */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.byte_count = 4 * 2; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.length = 3 * 4 + out_msg_buf->write_r_msg.byte_count; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.address = 13; */
+comment|/* OBSOLETE   for (regno = 13; regno<= 14; regno++)	/* LRU and MMU */
+operator|*
+operator|/
+comment|/* OBSOLETE     out_msg_buf->write_r_msg.data[regno - 13] = read_register (SR_REGNUM (regno)); */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   if (!expect_msg (WRITE_ACK, in_msg_buf, 1)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       result = -1; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Unprotected Special Registers */
+operator|*
+operator|/
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.byte_count = 4 * 8; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.length = 3 * 4 + out_msg_buf->write_r_msg.byte_count; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.address = 128; */
+comment|/* OBSOLETE   for (regno = 128; regno<= 135; regno++) */
+comment|/* OBSOLETE     out_msg_buf->write_r_msg.data[regno - 128] = read_register (SR_REGNUM (regno)); */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   if (!expect_msg (WRITE_ACK, in_msg_buf, 1)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       result = -1; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   registers_changed (); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /*************************************************** REMOTE_PREPARE_TO_STORE */
+operator|*
+operator|/
+comment|/* OBSOLETE /* Get ready to modify the registers array.  On machines which store */
+comment|/* OBSOLETE    individual registers, this doesn't need to do anything.  On machines */
+comment|/* OBSOLETE    which store all the registers in one fell swoop, this makes sure */
+comment|/* OBSOLETE    that registers contains all the registers from the program being */
+comment|/* OBSOLETE    debugged.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE mm_prepare_to_store (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   /* Do nothing, since we can store individual regs */
+operator|*
+operator|/
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /******************************************************* REMOTE_XFER_MEMORY */
+operator|*
+operator|/
+comment|/* OBSOLETE static CORE_ADDR */
+comment|/* OBSOLETE translate_addr (CORE_ADDR addr) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE #if defined(KERNEL_DEBUGGING) */
+comment|/* OBSOLETE   /* Check for a virtual address in the kernel */
+operator|*
+operator|/
+comment|/* OBSOLETE   /* Assume physical address of ublock is in  paddr_u register */
+operator|*
+operator|/
+comment|/* OBSOLETE   /* FIXME: doesn't work for user virtual addresses */
+operator|*
+operator|/
+comment|/* OBSOLETE   if (addr>= UVADDR) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       /* PADDR_U register holds the physical address of the ublock */
+operator|*
+operator|/
+comment|/* OBSOLETE       CORE_ADDR i = (CORE_ADDR) read_register (PADDR_U_REGNUM); */
+comment|/* OBSOLETE       return (i + addr - (CORE_ADDR) UVADDR); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       return (addr); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE #else */
+comment|/* OBSOLETE   return (addr); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /******************************************************* REMOTE_FILES_INFO */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE mm_files_info (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   printf ("\tAttached to %s at %d baud and running program %s.\n", */
+comment|/* OBSOLETE 	  dev_name, baudrate, prog_name); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /************************************************* REMOTE_INSERT_BREAKPOINT */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE mm_insert_breakpoint (CORE_ADDR addr, char *contents_cache) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   out_msg_buf->bkpt_set_msg.code = BKPT_SET; */
+comment|/* OBSOLETE   out_msg_buf->bkpt_set_msg.length = 4 * 4; */
+comment|/* OBSOLETE   out_msg_buf->bkpt_set_msg.memory_space = I_MEM; */
+comment|/* OBSOLETE   out_msg_buf->bkpt_set_msg.bkpt_addr = (ADDR32) addr; */
+comment|/* OBSOLETE   out_msg_buf->bkpt_set_msg.pass_count = 1; */
+comment|/* OBSOLETE   out_msg_buf->bkpt_set_msg.bkpt_type = -1;	/* use illop for 29000 */
+operator|*
+operator|/
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   if (expect_msg (BKPT_SET_ACK, in_msg_buf, 1)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       return 0;			/* Success */
+operator|*
+operator|/
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       return 1;			/* Failure */
+operator|*
+operator|/
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /************************************************* REMOTE_DELETE_BREAKPOINT */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE mm_remove_breakpoint (CORE_ADDR addr, char *contents_cache) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   out_msg_buf->bkpt_rm_msg.code = BKPT_RM; */
+comment|/* OBSOLETE   out_msg_buf->bkpt_rm_msg.length = 4 * 3; */
+comment|/* OBSOLETE   out_msg_buf->bkpt_rm_msg.memory_space = I_MEM; */
+comment|/* OBSOLETE   out_msg_buf->bkpt_rm_msg.bkpt_addr = (ADDR32) addr; */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   if (expect_msg (BKPT_RM_ACK, in_msg_buf, 1)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       return 0;			/* Success */
+operator|*
+operator|/
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       return 1;			/* Failure */
+operator|*
+operator|/
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /******************************************************* REMOTE_KILL */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE mm_kill (char *arg, int from_tty) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   char buf[4]; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #if defined(KERNEL_DEBUGGING) */
+comment|/* OBSOLETE   /* We don't ever kill the kernel */
+operator|*
+operator|/
+comment|/* OBSOLETE   if (from_tty) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       printf ("Kernel not killed, but left in current state.\n"); */
+comment|/* OBSOLETE       printf ("Use detach to leave kernel running.\n"); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE #else */
+comment|/* OBSOLETE   out_msg_buf->break_msg.code = BREAK; */
+comment|/* OBSOLETE   out_msg_buf->bkpt_set_msg.length = 4 * 0; */
+comment|/* OBSOLETE   expect_msg (HALT, in_msg_buf, from_tty); */
+comment|/* OBSOLETE   if (from_tty) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       printf ("Target has been stopped."); */
+comment|/* OBSOLETE       printf ("Would you like to do a hardware reset (y/n) [n] "); */
+comment|/* OBSOLETE       fgets (buf, 3, stdin); */
+comment|/* OBSOLETE       if (buf[0] == 'y') */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  out_msg_buf->reset_msg.code = RESET; */
+comment|/* OBSOLETE 	  out_msg_buf->bkpt_set_msg.length = 4 * 0; */
+comment|/* OBSOLETE 	  expect_msg (RESET_ACK, in_msg_buf, from_tty); */
+comment|/* OBSOLETE 	  printf ("Target has been reset."); */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   pop_target (); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /***************************************************************************/
+operator|*
+operator|/
+comment|/* OBSOLETE /*  */
+comment|/* OBSOLETE  * Load a program into the target. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE mm_load (char *arg_string, int from_tty) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   dont_repeat (); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #if defined(KERNEL_DEBUGGING) */
+comment|/* OBSOLETE   printf ("The kernel had better be loaded already!  Loading not done.\n"); */
+comment|/* OBSOLETE #else */
+comment|/* OBSOLETE   if (arg_string == 0) */
+comment|/* OBSOLETE     error ("The load command takes a file name"); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   arg_string = tilde_expand (arg_string); */
+comment|/* OBSOLETE   make_cleanup (xfree, arg_string); */
+comment|/* OBSOLETE   QUIT; */
+comment|/* OBSOLETE   immediate_quit++; */
+comment|/* OBSOLETE   error ("File loading is not yet supported for MiniMon."); */
+comment|/* OBSOLETE   /* FIXME, code to load your file here... */
+operator|*
+operator|/
+comment|/* OBSOLETE   /* You may need to do an init_target_mm() */
+operator|*
+operator|/
+comment|/* OBSOLETE   /* init_target_mm(?,?,?,?,?,?,?,?); */
+operator|*
+operator|/
+comment|/* OBSOLETE   immediate_quit--; */
+comment|/* OBSOLETE   /* symbol_file_add (arg_string, from_tty, text_addr, 0, 0); */
+operator|*
+operator|/
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /************************************************ REMOTE_WRITE_INFERIOR_MEMORY */
+comment|/* OBSOLETE ** Copy LEN bytes of data from debugger memory at MYADDR */
+comment|/* OBSOLETE    to inferior's memory at MEMADDR.  Returns number of bytes written.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE mm_write_inferior_memory (CORE_ADDR memaddr, char *myaddr, int len) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int i, nwritten; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   out_msg_buf->write_req_msg.code = WRITE_REQ; */
+comment|/* OBSOLETE   out_msg_buf->write_req_msg.memory_space = mm_memory_space (memaddr); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   nwritten = 0; */
+comment|/* OBSOLETE   while (nwritten< len) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       int num_to_write = len - nwritten; */
+comment|/* OBSOLETE       if (num_to_write> MAXDATA) */
+comment|/* OBSOLETE 	num_to_write = MAXDATA; */
+comment|/* OBSOLETE       for (i = 0; i< num_to_write; i++) */
+comment|/* OBSOLETE 	out_msg_buf->write_req_msg.data[i] = myaddr[i + nwritten]; */
+comment|/* OBSOLETE       out_msg_buf->write_req_msg.byte_count = num_to_write; */
+comment|/* OBSOLETE       out_msg_buf->write_req_msg.length = 3 * 4 + num_to_write; */
+comment|/* OBSOLETE       out_msg_buf->write_req_msg.address = memaddr + nwritten; */
+comment|/* OBSOLETE       msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       if (expect_msg (WRITE_ACK, in_msg_buf, 1)) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  nwritten += in_msg_buf->write_ack_msg.byte_count; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE       else */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   return (nwritten); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /************************************************* REMOTE_READ_INFERIOR_MEMORY */
+comment|/* OBSOLETE ** Read LEN bytes from inferior memory at MEMADDR.  Put the result */
+comment|/* OBSOLETE    at debugger address MYADDR.  Returns number of bytes read.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE mm_read_inferior_memory (CORE_ADDR memaddr, char *myaddr, int len) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int i, nread; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.code = READ_REQ; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.memory_space = mm_memory_space (memaddr); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   nread = 0; */
+comment|/* OBSOLETE   while (nread< len) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       int num_to_read = (len - nread); */
+comment|/* OBSOLETE       if (num_to_read> MAXDATA) */
+comment|/* OBSOLETE 	num_to_read = MAXDATA; */
+comment|/* OBSOLETE       out_msg_buf->read_req_msg.byte_count = num_to_read; */
+comment|/* OBSOLETE       out_msg_buf->read_req_msg.length = 3 * 4 + num_to_read; */
+comment|/* OBSOLETE       out_msg_buf->read_req_msg.address = memaddr + nread; */
+comment|/* OBSOLETE       msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE       if (expect_msg (READ_ACK, in_msg_buf, 1)) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  for (i = 0; i< in_msg_buf->read_ack_msg.byte_count; i++) */
+comment|/* OBSOLETE 	    myaddr[i + nread] = in_msg_buf->read_ack_msg.data[i]; */
+comment|/* OBSOLETE 	  nread += in_msg_buf->read_ack_msg.byte_count; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE       else */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  break; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   return (nread); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* FIXME!  Merge these two.  */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE mm_xfer_inferior_memory (CORE_ADDR memaddr, char *myaddr, int len, int write, */
+comment|/* OBSOLETE 			 struct mem_attrib *attrib ATTRIBUTE_UNUSED, */
+comment|/* OBSOLETE 			 struct target_ops *target ATTRIBUTE_UNUSED) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   memaddr = translate_addr (memaddr); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (write) */
+comment|/* OBSOLETE     return mm_write_inferior_memory (memaddr, myaddr, len); */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     return mm_read_inferior_memory (memaddr, myaddr, len); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /********************************************************** MSG_SEND_SERIAL */
+comment|/* OBSOLETE ** This function is used to send a message over the */
+comment|/* OBSOLETE ** serial line. */
+comment|/* OBSOLETE ** */
+comment|/* OBSOLETE ** If the message is successfully sent, a zero is */
+comment|/* OBSOLETE ** returned.  If the message was not sendable, a -1 */
+comment|/* OBSOLETE ** is returned.  This function blocks.  That is, it */
+comment|/* OBSOLETE ** does not return until the message is completely */
+comment|/* OBSOLETE ** sent, or until an error is encountered. */
+comment|/* OBSOLETE ** */
+comment|/* OBSOLETE */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE int */
+comment|/* OBSOLETE msg_send_serial (union msg_t *msg_ptr) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   INT32 message_size; */
+comment|/* OBSOLETE   int byte_count; */
+comment|/* OBSOLETE   int result; */
+comment|/* OBSOLETE   char c; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Send message header */
+operator|*
+operator|/
+comment|/* OBSOLETE   byte_count = 0; */
+comment|/* OBSOLETE   message_size = msg_ptr->generic_msg.length + (2 * sizeof (INT32)); */
+comment|/* OBSOLETE   do */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       c = *((char *) msg_ptr + byte_count); */
+comment|/* OBSOLETE       result = write (mm_desc,&c, 1); */
+comment|/* OBSOLETE       if (result == 1) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  byte_count = byte_count + 1; */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   while ((byte_count< message_size)); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   return (0); */
+comment|/* OBSOLETE }				/* end msg_send_serial() */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /********************************************************** MSG_RECV_SERIAL */
+comment|/* OBSOLETE ** This function is used to receive a message over a */
+comment|/* OBSOLETE ** serial line. */
+comment|/* OBSOLETE ** */
+comment|/* OBSOLETE ** If the message is waiting in the buffer, a zero is */
+comment|/* OBSOLETE ** returned and the buffer pointed to by msg_ptr is filled */
+comment|/* OBSOLETE ** in.  If no message was available, a -1 is returned. */
+comment|/* OBSOLETE ** If timeout==0, wait indefinetly for a character. */
+comment|/* OBSOLETE ** */
+comment|/* OBSOLETE */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE int */
+comment|/* OBSOLETE msg_recv_serial (union msg_t *msg_ptr) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   static INT32 length = 0; */
+comment|/* OBSOLETE   static INT32 byte_count = 0; */
+comment|/* OBSOLETE   int result; */
+comment|/* OBSOLETE   char c; */
+comment|/* OBSOLETE   if (msg_ptr == 0)		/* re-sync request */
+operator|*
+operator|/
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       length = 0; */
+comment|/* OBSOLETE       byte_count = 0; */
+comment|/* OBSOLETE #ifdef HAVE_TERMIO */
+comment|/* OBSOLETE       /* The timeout here is the prevailing timeout set with VTIME */
+operator|*
+operator|/
+comment|/* OBSOLETE       ->"timeout==0 semantics not supported" */
+comment|/* OBSOLETE 	read (mm_desc, in_buf, BUFER_SIZE); */
+comment|/* OBSOLETE #else */
+comment|/* OBSOLETE       alarm (1); */
+comment|/* OBSOLETE       read (mm_desc, in_buf, BUFER_SIZE); */
+comment|/* OBSOLETE       alarm (0); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE       return (0); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   /* Receive message */
+operator|*
+operator|/
+comment|/* OBSOLETE #ifdef HAVE_TERMIO */
+comment|/* OBSOLETE /* Timeout==0, help support the mm_wait() routine */
+operator|*
+operator|/
+comment|/* OBSOLETE   ->"timeout==0 semantics not supported (and its nice if they are)" */
+comment|/* OBSOLETE     result = read (mm_desc,&c, 1); */
+comment|/* OBSOLETE #else */
+comment|/* OBSOLETE   alarm (timeout); */
+comment|/* OBSOLETE   result = read (mm_desc,&c, 1); */
+comment|/* OBSOLETE   alarm (0); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE   if (result< 0) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       if (errno == EINTR) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  error ("Timeout reading from remote system."); */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE       else */
+comment|/* OBSOLETE 	perror_with_name ("remote"); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (result == 1) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       *((char *) msg_ptr + byte_count) = c; */
+comment|/* OBSOLETE       byte_count = byte_count + 1; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Message header received.  Save message length. */
+operator|*
+operator|/
+comment|/* OBSOLETE   if (byte_count == (2 * sizeof (INT32))) */
+comment|/* OBSOLETE     length = msg_ptr->generic_msg.length; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (byte_count>= (length + (2 * sizeof (INT32)))) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       /* Message received */
+operator|*
+operator|/
+comment|/* OBSOLETE       byte_count = 0; */
+comment|/* OBSOLETE       return (0); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     return (-1); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE }				/* end msg_recv_serial() */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /********************************************************************* KBD_RAW */
+comment|/* OBSOLETE ** This function is used to put the keyboard in "raw" */
+comment|/* OBSOLETE ** mode for BSD Unix.  The original status is saved */
+comment|/* OBSOLETE ** so that it may be restored later. */
+comment|/* OBSOLETE */
+operator|*
+operator|/
+comment|/* OBSOLETE TERMINAL kbd_tbuf; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE int */
+comment|/* OBSOLETE kbd_raw (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int result; */
+comment|/* OBSOLETE   TERMINAL tbuf; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Get keyboard termio (to save to restore original modes) */
+operator|*
+operator|/
+comment|/* OBSOLETE #ifdef HAVE_TERMIO */
+comment|/* OBSOLETE   result = ioctl (0, TCGETA,&kbd_tbuf); */
+comment|/* OBSOLETE #else */
+comment|/* OBSOLETE   result = ioctl (0, TIOCGETP,&kbd_tbuf); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE   if (result == -1) */
+comment|/* OBSOLETE     return (errno); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Get keyboard TERMINAL (for modification) */
+operator|*
+operator|/
+comment|/* OBSOLETE #ifdef HAVE_TERMIO */
+comment|/* OBSOLETE   result = ioctl (0, TCGETA,&tbuf); */
+comment|/* OBSOLETE #else */
+comment|/* OBSOLETE   result = ioctl (0, TIOCGETP,&tbuf); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE   if (result == -1) */
+comment|/* OBSOLETE     return (errno); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Set up new parameters */
+operator|*
+operator|/
+comment|/* OBSOLETE #ifdef HAVE_TERMIO */
+comment|/* OBSOLETE   tbuf.c_iflag = tbuf.c_iflag& */
+comment|/* OBSOLETE     ~(INLCR | ICRNL | IUCLC | ISTRIP | IXON | BRKINT); */
+comment|/* OBSOLETE   tbuf.c_lflag = tbuf.c_lflag& ~(ICANON | ISIG | ECHO); */
+comment|/* OBSOLETE   tbuf.c_cc[4] = 0;		/* MIN */
+operator|*
+operator|/
+comment|/* OBSOLETE   tbuf.c_cc[5] = 0;		/* TIME */
+operator|*
+operator|/
+comment|/* OBSOLETE #else */
+comment|/* OBSOLETE   /* FIXME: not sure if this is correct (matches HAVE_TERMIO). */
+operator|*
+operator|/
+comment|/* OBSOLETE   tbuf.sg_flags |= RAW; */
+comment|/* OBSOLETE   tbuf.sg_flags |= ANYP; */
+comment|/* OBSOLETE   tbuf.sg_flags&= ~ECHO; */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Set keyboard termio to new mode (RAW) */
+operator|*
+operator|/
+comment|/* OBSOLETE #ifdef HAVE_TERMIO */
+comment|/* OBSOLETE   result = ioctl (0, TCSETAF,&tbuf); */
+comment|/* OBSOLETE #else */
+comment|/* OBSOLETE   result = ioctl (0, TIOCSETP,&tbuf); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE   if (result == -1) */
+comment|/* OBSOLETE     return (errno); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   return (0); */
+comment|/* OBSOLETE }				/* end kbd_raw() */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /***************************************************************** KBD_RESTORE */
+comment|/* OBSOLETE ** This function is used to put the keyboard back in the */
+comment|/* OBSOLETE ** mode it was in before kbk_raw was called.  Note that */
+comment|/* OBSOLETE ** kbk_raw() must have been called at least once before */
+comment|/* OBSOLETE ** kbd_restore() is called. */
+comment|/* OBSOLETE */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE int */
+comment|/* OBSOLETE kbd_restore (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int result; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   /* Set keyboard termio to original mode */
+operator|*
+operator|/
+comment|/* OBSOLETE #ifdef HAVE_TERMIO */
+comment|/* OBSOLETE   result = ioctl (0, TCSETAF,&kbd_tbuf); */
+comment|/* OBSOLETE #else */
+comment|/* OBSOLETE   result = ioctl (0, TIOCGETP,&kbd_tbuf); */
+comment|/* OBSOLETE #endif */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (result == -1) */
+comment|/* OBSOLETE     return (errno); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   return (0); */
+comment|/* OBSOLETE }				/* end kbd_cooked() */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /*****************************************************************************/
+operator|*
+operator|/
+comment|/* OBSOLETE /* Fetch a single register indicatated by 'regno'.  */
+comment|/* OBSOLETE  * Returns 0/-1 on success/failure.   */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE fetch_register (int regno) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int result; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.code = READ_REQ; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.length = 4 * 3; */
+comment|/* OBSOLETE   out_msg_buf->read_req_msg.byte_count = 4; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (regno == GR1_REGNUM) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       out_msg_buf->read_req_msg.memory_space = GLOBAL_REG; */
+comment|/* OBSOLETE       out_msg_buf->read_req_msg.address = 1; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (regno>= GR96_REGNUM&& regno< GR96_REGNUM + 32) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       out_msg_buf->read_req_msg.memory_space = GLOBAL_REG; */
+comment|/* OBSOLETE       out_msg_buf->read_req_msg.address = (regno - GR96_REGNUM) + 96; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE #if defined(GR64_REGNUM) */
+comment|/* OBSOLETE   else if (regno>= GR64_REGNUM&& regno< GR64_REGNUM + 32) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       out_msg_buf->read_req_msg.memory_space = GLOBAL_REG; */
+comment|/* OBSOLETE       out_msg_buf->read_req_msg.address = (regno - GR64_REGNUM) + 64; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE #endif /* GR64_REGNUM */
+operator|*
+operator|/
+comment|/* OBSOLETE   else if (regno>= LR0_REGNUM&& regno< LR0_REGNUM + 128) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       out_msg_buf->read_req_msg.memory_space = LOCAL_REG; */
+comment|/* OBSOLETE       out_msg_buf->read_req_msg.address = (regno - LR0_REGNUM); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (regno>= FPE_REGNUM&& regno<= EXO_REGNUM) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       int val = -1; */
+comment|/* OBSOLETE       supply_register (160 + (regno - FPE_REGNUM),&val); */
+comment|/* OBSOLETE       return 0;			/* Pretend Success */
+operator|*
+operator|/
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       out_msg_buf->read_req_msg.memory_space = SPECIAL_REG; */
+comment|/* OBSOLETE       out_msg_buf->read_req_msg.address = regnum_to_srnum (regno); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (expect_msg (READ_ACK, in_msg_buf, 1)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       supply_register (regno,&(in_msg_buf->read_r_ack_msg.data[0])); */
+comment|/* OBSOLETE       result = 0; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       result = -1; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   return result; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /*****************************************************************************/
+operator|*
+operator|/
+comment|/* OBSOLETE /* Store a single register indicated by 'regno'.  */
+comment|/* OBSOLETE  * Returns 0/-1 on success/failure.   */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE store_register (int regno) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int result; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   out_msg_buf->write_req_msg.code = WRITE_REQ; */
+comment|/* OBSOLETE   out_msg_buf->write_req_msg.length = 4 * 4; */
+comment|/* OBSOLETE   out_msg_buf->write_req_msg.byte_count = 4; */
+comment|/* OBSOLETE   out_msg_buf->write_r_msg.data[0] = read_register (regno); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (regno == GR1_REGNUM) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       out_msg_buf->write_req_msg.memory_space = GLOBAL_REG; */
+comment|/* OBSOLETE       out_msg_buf->write_req_msg.address = 1; */
+comment|/* OBSOLETE       /* Setting GR1 changes the numbers of all the locals, so invalidate the  */
+comment|/* OBSOLETE        * register cache.  Do this *after* calling read_register, because we want  */
+comment|/* OBSOLETE        * read_register to return the value that write_register has just stuffed  */
+comment|/* OBSOLETE        * into the registers array, not the value of the register fetched from  */
+comment|/* OBSOLETE        * the inferior.   */
+comment|/* OBSOLETE        */
+operator|*
+operator|/
+comment|/* OBSOLETE       registers_changed (); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE #if defined(GR64_REGNUM) */
+comment|/* OBSOLETE   else if (regno>= GR64_REGNUM&& regno< GR64_REGNUM + 32) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       out_msg_buf->write_req_msg.memory_space = GLOBAL_REG; */
+comment|/* OBSOLETE       out_msg_buf->write_req_msg.address = (regno - GR64_REGNUM) + 64; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE #endif /* GR64_REGNUM */
+operator|*
+operator|/
+comment|/* OBSOLETE   else if (regno>= GR96_REGNUM&& regno< GR96_REGNUM + 32) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       out_msg_buf->write_req_msg.memory_space = GLOBAL_REG; */
+comment|/* OBSOLETE       out_msg_buf->write_req_msg.address = (regno - GR96_REGNUM) + 96; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (regno>= LR0_REGNUM&& regno< LR0_REGNUM + 128) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       out_msg_buf->write_req_msg.memory_space = LOCAL_REG; */
+comment|/* OBSOLETE       out_msg_buf->write_req_msg.address = (regno - LR0_REGNUM); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (regno>= FPE_REGNUM&& regno<= EXO_REGNUM) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       return 0;			/* Pretend Success */
+operator|*
+operator|/
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     /* An unprotected or protected special register */
+operator|*
+operator|/
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       out_msg_buf->write_req_msg.memory_space = SPECIAL_REG; */
+comment|/* OBSOLETE       out_msg_buf->write_req_msg.address = regnum_to_srnum (regno); */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (expect_msg (WRITE_ACK, in_msg_buf, 1)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       result = 0; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       result = -1; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   return result; */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /****************************************************************************/
+operator|*
+operator|/
+comment|/* OBSOLETE /*  */
+comment|/* OBSOLETE  * Convert a gdb special register number to a 29000 special register number. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE regnum_to_srnum (int regno) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   switch (regno) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE     case VAB_REGNUM: */
+comment|/* OBSOLETE       return (0); */
+comment|/* OBSOLETE     case OPS_REGNUM: */
+comment|/* OBSOLETE       return (1); */
+comment|/* OBSOLETE     case CPS_REGNUM: */
+comment|/* OBSOLETE       return (2); */
+comment|/* OBSOLETE     case CFG_REGNUM: */
+comment|/* OBSOLETE       return (3); */
+comment|/* OBSOLETE     case CHA_REGNUM: */
+comment|/* OBSOLETE       return (4); */
+comment|/* OBSOLETE     case CHD_REGNUM: */
+comment|/* OBSOLETE       return (5); */
+comment|/* OBSOLETE     case CHC_REGNUM: */
+comment|/* OBSOLETE       return (6); */
+comment|/* OBSOLETE     case RBP_REGNUM: */
+comment|/* OBSOLETE       return (7); */
+comment|/* OBSOLETE     case TMC_REGNUM: */
+comment|/* OBSOLETE       return (8); */
+comment|/* OBSOLETE     case TMR_REGNUM: */
+comment|/* OBSOLETE       return (9); */
+comment|/* OBSOLETE     case NPC_REGNUM: */
+comment|/* OBSOLETE       return (USE_SHADOW_PC ? (20) : (10)); */
+comment|/* OBSOLETE     case PC_REGNUM: */
+comment|/* OBSOLETE       return (USE_SHADOW_PC ? (21) : (11)); */
+comment|/* OBSOLETE     case PC2_REGNUM: */
+comment|/* OBSOLETE       return (USE_SHADOW_PC ? (22) : (12)); */
+comment|/* OBSOLETE     case MMU_REGNUM: */
+comment|/* OBSOLETE       return (13); */
+comment|/* OBSOLETE     case LRU_REGNUM: */
+comment|/* OBSOLETE       return (14); */
+comment|/* OBSOLETE     case IPC_REGNUM: */
+comment|/* OBSOLETE       return (128); */
+comment|/* OBSOLETE     case IPA_REGNUM: */
+comment|/* OBSOLETE       return (129); */
+comment|/* OBSOLETE     case IPB_REGNUM: */
+comment|/* OBSOLETE       return (130); */
+comment|/* OBSOLETE     case Q_REGNUM: */
+comment|/* OBSOLETE       return (131); */
+comment|/* OBSOLETE     case ALU_REGNUM: */
+comment|/* OBSOLETE       return (132); */
+comment|/* OBSOLETE     case BP_REGNUM: */
+comment|/* OBSOLETE       return (133); */
+comment|/* OBSOLETE     case FC_REGNUM: */
+comment|/* OBSOLETE       return (134); */
+comment|/* OBSOLETE     case CR_REGNUM: */
+comment|/* OBSOLETE       return (135); */
+comment|/* OBSOLETE     case FPE_REGNUM: */
+comment|/* OBSOLETE       return (160); */
+comment|/* OBSOLETE     case INTE_REGNUM: */
+comment|/* OBSOLETE       return (161); */
+comment|/* OBSOLETE     case FPS_REGNUM: */
+comment|/* OBSOLETE       return (162); */
+comment|/* OBSOLETE     case EXO_REGNUM: */
+comment|/* OBSOLETE       return (164); */
+comment|/* OBSOLETE     default: */
+comment|/* OBSOLETE       return (255);		/* Failure ? */
+operator|*
+operator|/
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /****************************************************************************/
+operator|*
+operator|/
+comment|/* OBSOLETE /*  */
+comment|/* OBSOLETE  * Initialize the target debugger (minimon only). */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE init_target_mm (ADDR32 tstart, ADDR32 tend, ADDR32 dstart, ADDR32 dend, */
+comment|/* OBSOLETE 		ADDR32 entry, INT32 ms_size, INT32 rs_size, ADDR32 arg_start) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   out_msg_buf->init_msg.code = INIT; */
+comment|/* OBSOLETE   out_msg_buf->init_msg.length = sizeof (struct init_msg_t) - 2 * sizeof (INT32); */
+comment|/* OBSOLETE   out_msg_buf->init_msg.text_start = tstart; */
+comment|/* OBSOLETE   out_msg_buf->init_msg.text_end = tend; */
+comment|/* OBSOLETE   out_msg_buf->init_msg.data_start = dstart; */
+comment|/* OBSOLETE   out_msg_buf->init_msg.data_end = dend; */
+comment|/* OBSOLETE   out_msg_buf->init_msg.entry_point = entry; */
+comment|/* OBSOLETE   out_msg_buf->init_msg.mem_stack_size = ms_size; */
+comment|/* OBSOLETE   out_msg_buf->init_msg.reg_stack_size = rs_size; */
+comment|/* OBSOLETE   out_msg_buf->init_msg.arg_start = arg_start; */
+comment|/* OBSOLETE   msg_send_serial (out_msg_buf); */
+comment|/* OBSOLETE   expect_msg (INIT_ACK, in_msg_buf, 1); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /****************************************************************************/
+operator|*
+operator|/
+comment|/* OBSOLETE /*  */
+comment|/* OBSOLETE  * Return a pointer to a string representing the given message code. */
+comment|/* OBSOLETE  * Not all messages are represented here, only the ones that we expect */
+comment|/* OBSOLETE  * to be called with. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static char * */
+comment|/* OBSOLETE msg_str (INT32 code) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   static char cbuf[32]; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   switch (code) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE     case BKPT_SET_ACK: */
+comment|/* OBSOLETE       sprintf (cbuf, "%s (%d)", "BKPT_SET_ACK", code); */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     case BKPT_RM_ACK: */
+comment|/* OBSOLETE       sprintf (cbuf, "%s (%d)", "BKPT_RM_ACK", code); */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     case INIT_ACK: */
+comment|/* OBSOLETE       sprintf (cbuf, "%s (%d)", "INIT_ACK", code); */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     case READ_ACK: */
+comment|/* OBSOLETE       sprintf (cbuf, "%s (%d)", "READ_ACK", code); */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     case WRITE_ACK: */
+comment|/* OBSOLETE       sprintf (cbuf, "%s (%d)", "WRITE_ACK", code); */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     case ERROR: */
+comment|/* OBSOLETE       sprintf (cbuf, "%s (%d)", "ERROR", code); */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     case HALT: */
+comment|/* OBSOLETE       sprintf (cbuf, "%s (%d)", "HALT", code); */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     default: */
+comment|/* OBSOLETE       sprintf (cbuf, "UNKNOWN (%d)", code); */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   return (cbuf); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /****************************************************************************/
+operator|*
+operator|/
+comment|/* OBSOLETE /* */
+comment|/* OBSOLETE  * Selected (not all of them) error codes that we might get. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static char * */
+comment|/* OBSOLETE error_msg_str (INT32 code) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   static char cbuf[50]; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   switch (code) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE     case EMFAIL: */
+comment|/* OBSOLETE       return ("EMFAIL: unrecoverable error"); */
+comment|/* OBSOLETE     case EMBADADDR: */
+comment|/* OBSOLETE       return ("EMBADADDR: Illegal address"); */
+comment|/* OBSOLETE     case EMBADREG: */
+comment|/* OBSOLETE       return ("EMBADREG: Illegal register "); */
+comment|/* OBSOLETE     case EMACCESS: */
+comment|/* OBSOLETE       return ("EMACCESS: Could not access memory"); */
+comment|/* OBSOLETE     case EMBADMSG: */
+comment|/* OBSOLETE       return ("EMBADMSG: Unknown message type"); */
+comment|/* OBSOLETE     case EMMSG2BIG: */
+comment|/* OBSOLETE       return ("EMMSG2BIG: Message to large"); */
+comment|/* OBSOLETE     case EMNOSEND: */
+comment|/* OBSOLETE       return ("EMNOSEND: Could not send message"); */
+comment|/* OBSOLETE     case EMNORECV: */
+comment|/* OBSOLETE       return ("EMNORECV: Could not recv message"); */
+comment|/* OBSOLETE     case EMRESET: */
+comment|/* OBSOLETE       return ("EMRESET: Could not RESET target"); */
+comment|/* OBSOLETE     case EMCONFIG: */
+comment|/* OBSOLETE       return ("EMCONFIG: Could not get target CONFIG"); */
+comment|/* OBSOLETE     case EMSTATUS: */
+comment|/* OBSOLETE       return ("EMSTATUS: Could not get target STATUS"); */
+comment|/* OBSOLETE     case EMREAD: */
+comment|/* OBSOLETE       return ("EMREAD: Could not READ target memory"); */
+comment|/* OBSOLETE     case EMWRITE: */
+comment|/* OBSOLETE       return ("EMWRITE: Could not WRITE target memory"); */
+comment|/* OBSOLETE     case EMBKPTSET: */
+comment|/* OBSOLETE       return ("EMBKPTSET: Could not set breakpoint"); */
+comment|/* OBSOLETE     case EMBKPTRM: */
+comment|/* OBSOLETE       return ("EMBKPTRM: Could not remove breakpoint"); */
+comment|/* OBSOLETE     case EMBKPTSTAT: */
+comment|/* OBSOLETE       return ("EMBKPTSTAT: Could not get breakpoint status"); */
+comment|/* OBSOLETE     case EMBKPTNONE: */
+comment|/* OBSOLETE       return ("EMBKPTNONE: All breakpoints in use"); */
+comment|/* OBSOLETE     case EMBKPTUSED: */
+comment|/* OBSOLETE       return ("EMBKPTUSED: Breakpoints already in use"); */
+comment|/* OBSOLETE     case EMINIT: */
+comment|/* OBSOLETE       return ("EMINIT: Could not init target memory"); */
+comment|/* OBSOLETE     case EMGO: */
+comment|/* OBSOLETE       return ("EMGO: Could not start execution"); */
+comment|/* OBSOLETE     case EMSTEP: */
+comment|/* OBSOLETE       return ("EMSTEP: Could not single step"); */
+comment|/* OBSOLETE     case EMBREAK: */
+comment|/* OBSOLETE       return ("EMBREAK: Could not BREAK"); */
+comment|/* OBSOLETE     case EMCOMMERR: */
+comment|/* OBSOLETE       return ("EMCOMMERR: Communication error"); */
+comment|/* OBSOLETE     default: */
+comment|/* OBSOLETE       sprintf (cbuf, "error number %d", code); */
+comment|/* OBSOLETE       break; */
+comment|/* OBSOLETE     }				/* end switch */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   return (cbuf); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /****************************************************************************/
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /* Receive a message, placing it in MSG_BUF, and expect it to be of */
+comment|/* OBSOLETE    type MSGCODE.  If an error occurs, a non-zero FROM_TTY indicates */
+comment|/* OBSOLETE    that the message should be printed. */
+comment|/* OBSOLETE     */
+comment|/* OBSOLETE    Return 0 for failure, 1 for success.  */
+operator|*
+operator|/
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE expect_msg (INT32 msgcode, union msg_t *msg_buf, int from_tty) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   int retries = 0; */
+comment|/* OBSOLETE   while (msg_recv_serial (msg_buf)&& (retries++< MAX_RETRIES)); */
+comment|/* OBSOLETE   if (retries>= MAX_RETRIES) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       printf ("Expected msg %s, ", msg_str (msgcode)); */
+comment|/* OBSOLETE       printf ("no message received!\n"); */
+comment|/* OBSOLETE       return (0);		/* Failure */
+operator|*
+operator|/
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (msg_buf->generic_msg.code != msgcode) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       if (from_tty) */
+comment|/* OBSOLETE 	{ */
+comment|/* OBSOLETE 	  printf ("Expected msg %s, ", msg_str (msgcode)); */
+comment|/* OBSOLETE 	  printf ("got msg %s\n", msg_str (msg_buf->generic_msg.code)); */
+comment|/* OBSOLETE 	  if (msg_buf->generic_msg.code == ERROR) */
+comment|/* OBSOLETE 	    printf ("%s\n", error_msg_str (msg_buf->error_msg.error_code)); */
+comment|/* OBSOLETE 	} */
+comment|/* OBSOLETE       return (0);		/* Failure */
+operator|*
+operator|/
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   return (1);			/* Success */
+operator|*
+operator|/
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE /****************************************************************************/
+operator|*
+operator|/
+comment|/* OBSOLETE /* */
+comment|/* OBSOLETE  * Determine the MiniMon memory space qualifier based on the addr.  */
+comment|/* OBSOLETE  * FIXME: Can't distinguis I_ROM/D_ROM.   */
+comment|/* OBSOLETE  * FIXME: Doesn't know anything about I_CACHE/D_CACHE. */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE static int */
+comment|/* OBSOLETE mm_memory_space (CORE_ADDR *addr) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   ADDR32 tstart = target_config.I_mem_start; */
+comment|/* OBSOLETE   ADDR32 tend = tstart + target_config.I_mem_size; */
+comment|/* OBSOLETE   ADDR32 dstart = target_config.D_mem_start; */
+comment|/* OBSOLETE   ADDR32 dend = tstart + target_config.D_mem_size; */
+comment|/* OBSOLETE   ADDR32 rstart = target_config.ROM_start; */
+comment|/* OBSOLETE   ADDR32 rend = tstart + target_config.ROM_size; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE   if (((ADDR32) addr>= tstart)&& ((ADDR32) addr< tend)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       return I_MEM; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (((ADDR32) addr>= dstart)&& ((ADDR32) addr< dend)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       return D_MEM; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else if (((ADDR32) addr>= rstart)&& ((ADDR32) addr< rend)) */
+comment|/* OBSOLETE     { */
+comment|/* OBSOLETE       /* FIXME: how do we determine between D_ROM and I_ROM */
+operator|*
+operator|/
+comment|/* OBSOLETE       return D_ROM; */
+comment|/* OBSOLETE     } */
+comment|/* OBSOLETE   else				/* FIXME: what do me do now? */
+operator|*
+operator|/
+comment|/* OBSOLETE     return D_MEM;		/* Hmmm! */
+operator|*
+operator|/
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE /****************************************************************************/
+operator|*
+operator|/
+comment|/* OBSOLETE /*  */
+comment|/* OBSOLETE  *  Define the target subroutine names */
+comment|/* OBSOLETE  */
+operator|*
+operator|/
+comment|/* OBSOLETE struct target_ops mm_ops; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE static void */
+comment|/* OBSOLETE init_mm_ops (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   mm_ops.to_shortname = "minimon"; */
+comment|/* OBSOLETE   mm_ops.to_longname = "Remote AMD/Minimon target"; */
+comment|/* OBSOLETE   mm_ops.to_doc = "Remote debug an AMD 290*0 using the MiniMon dbg core on the target"; */
+comment|/* OBSOLETE   mm_ops.to_open = mm_open; */
+comment|/* OBSOLETE   mm_ops.to_close = mm_close; */
+comment|/* OBSOLETE   mm_ops.to_attach = mm_attach; */
+comment|/* OBSOLETE   mm_ops.to_post_attach = NULL; */
+comment|/* OBSOLETE   mm_ops.to_require_attach = NULL; */
+comment|/* OBSOLETE   mm_ops.to_detach = mm_detach; */
+comment|/* OBSOLETE   mm_ops.to_require_detach = NULL; */
+comment|/* OBSOLETE   mm_ops.to_resume = mm_resume; */
+comment|/* OBSOLETE   mm_ops.to_wait = mm_wait; */
+comment|/* OBSOLETE   mm_ops.to_post_wait = NULL; */
+comment|/* OBSOLETE   mm_ops.to_fetch_registers = mm_fetch_registers; */
+comment|/* OBSOLETE   mm_ops.to_store_registers = mm_store_registers; */
+comment|/* OBSOLETE   mm_ops.to_prepare_to_store = mm_prepare_to_store; */
+comment|/* OBSOLETE   mm_ops.to_xfer_memory = mm_xfer_inferior_memory; */
+comment|/* OBSOLETE   mm_ops.to_files_info = mm_files_info; */
+comment|/* OBSOLETE   mm_ops.to_insert_breakpoint = mm_insert_breakpoint; */
+comment|/* OBSOLETE   mm_ops.to_remove_breakpoint = mm_remove_breakpoint; */
+comment|/* OBSOLETE   mm_ops.to_terminal_init = 0; */
+comment|/* OBSOLETE   mm_ops.to_terminal_inferior = 0; */
+comment|/* OBSOLETE   mm_ops.to_terminal_ours_for_output = 0; */
+comment|/* OBSOLETE   mm_ops.to_terminal_ours = 0; */
+comment|/* OBSOLETE   mm_ops.to_terminal_info = 0; */
+comment|/* OBSOLETE   mm_ops.to_kill = mm_kill; */
+comment|/* OBSOLETE   mm_ops.to_load = mm_load; */
+comment|/* OBSOLETE   mm_ops.to_lookup_symbol = 0; */
+comment|/* OBSOLETE   mm_ops.to_create_inferior = mm_create_inferior; */
+comment|/* OBSOLETE   mm_ops.to_post_startup_inferior = NULL; */
+comment|/* OBSOLETE   mm_ops.to_acknowledge_created_inferior = NULL; */
+comment|/* OBSOLETE   mm_ops.to_clone_and_follow_inferior = NULL; */
+comment|/* OBSOLETE   mm_ops.to_post_follow_inferior_by_clone = NULL; */
+comment|/* OBSOLETE   mm_ops.to_insert_fork_catchpoint = NULL; */
+comment|/* OBSOLETE   mm_ops.to_remove_fork_catchpoint = NULL; */
+comment|/* OBSOLETE   mm_ops.to_insert_vfork_catchpoint = NULL; */
+comment|/* OBSOLETE   mm_ops.to_remove_vfork_catchpoint = NULL; */
+comment|/* OBSOLETE   mm_ops.to_has_forked = NULL; */
+comment|/* OBSOLETE   mm_ops.to_has_vforked = NULL; */
+comment|/* OBSOLETE   mm_ops.to_can_follow_vfork_prior_to_exec = NULL; */
+comment|/* OBSOLETE   mm_ops.to_post_follow_vfork = NULL; */
+comment|/* OBSOLETE   mm_ops.to_insert_exec_catchpoint = NULL; */
+comment|/* OBSOLETE   mm_ops.to_remove_exec_catchpoint = NULL; */
+comment|/* OBSOLETE   mm_ops.to_has_execd = NULL; */
+comment|/* OBSOLETE   mm_ops.to_reported_exec_events_per_exec_call = NULL; */
+comment|/* OBSOLETE   mm_ops.to_has_exited = NULL; */
+comment|/* OBSOLETE   mm_ops.to_mourn_inferior = mm_mourn; */
+comment|/* OBSOLETE   mm_ops.to_can_run = 0; */
+comment|/* OBSOLETE   mm_ops.to_notice_signals = 0; */
+comment|/* OBSOLETE   mm_ops.to_thread_alive = 0; */
+comment|/* OBSOLETE   mm_ops.to_stop = 0; */
+comment|/* OBSOLETE   mm_ops.to_pid_to_exec_file = NULL; */
+comment|/* OBSOLETE   mm_ops.to_stratum = process_stratum; */
+comment|/* OBSOLETE   mm_ops.DONT_USE = 0; */
+comment|/* OBSOLETE   mm_ops.to_has_all_memory = 1; */
+comment|/* OBSOLETE   mm_ops.to_has_memory = 1; */
+comment|/* OBSOLETE   mm_ops.to_has_stack = 1; */
+comment|/* OBSOLETE   mm_ops.to_has_registers = 1; */
+comment|/* OBSOLETE   mm_ops.to_has_execution = 1; */
+comment|/* OBSOLETE   mm_ops.to_sections = 0; */
+comment|/* OBSOLETE   mm_ops.to_sections_end = 0; */
+comment|/* OBSOLETE   mm_ops.to_magic = OPS_MAGIC; */
+comment|/* OBSOLETE }; */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE void */
+comment|/* OBSOLETE _initialize_remote_mm (void) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   init_mm_ops (); */
+comment|/* OBSOLETE   add_target (&mm_ops); */
+comment|/* OBSOLETE } */
+comment|/* OBSOLETE  */
+comment|/* OBSOLETE #ifdef NO_HIF_SUPPORT */
+comment|/* OBSOLETE service_HIF (union msg_t *msg) */
+comment|/* OBSOLETE { */
+comment|/* OBSOLETE   return (0);			/* Emulate a failure */
+operator|*
+operator|/
+end_expr_stmt
 
 begin_comment
-comment|/****************************************************** REMOTE_STORE_REGISTERS  * Store register regno into the target.    * If regno==-1 then store all the registers.  * Result is 0 for success, -1 for failure.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|mm_store_registers
-parameter_list|(
-name|regno
-parameter_list|)
-name|int
-name|regno
-decl_stmt|;
-block|{
-name|int
-name|result
-decl_stmt|;
-if|if
-condition|(
-name|regno
-operator|>=
-literal|0
-condition|)
-block|{
-name|store_register
-argument_list|(
-name|regno
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|result
-operator|=
-literal|0
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|code
-operator|=
-name|WRITE_REQ
-expr_stmt|;
-comment|/* Gr1/rsp */
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
-operator|*
-literal|1
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|length
-operator|=
-literal|3
-operator|*
-literal|4
-operator|+
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|memory_space
-operator|=
-name|GLOBAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|address
-operator|=
-literal|1
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|data
-index|[
-literal|0
-index|]
-operator|=
-name|read_register
-argument_list|(
-name|GR1_REGNUM
-argument_list|)
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|expect_msg
-argument_list|(
-name|WRITE_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
-name|result
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|GR64_REGNUM
-argument_list|)
-comment|/* Global registers gr64-gr95 */
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
-operator|*
-operator|(
-literal|32
-operator|)
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|length
-operator|=
-literal|3
-operator|*
-literal|4
-operator|+
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|address
-operator|=
-literal|64
-expr_stmt|;
-for|for
-control|(
-name|regno
-operator|=
-name|GR64_REGNUM
-init|;
-name|regno
-operator|<
-name|GR64_REGNUM
-operator|+
-literal|32
-condition|;
-name|regno
-operator|++
-control|)
-block|{
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|data
-index|[
-name|regno
-operator|-
-name|GR64_REGNUM
-index|]
-operator|=
-name|read_register
-argument_list|(
-name|regno
-argument_list|)
-expr_stmt|;
-block|}
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|expect_msg
-argument_list|(
-name|WRITE_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
-name|result
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* GR64_REGNUM */
-comment|/* Global registers gr96-gr127 */
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
-operator|*
-operator|(
-literal|32
-operator|)
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|length
-operator|=
-literal|3
-operator|*
-literal|4
-operator|+
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|address
-operator|=
-literal|96
-expr_stmt|;
-for|for
-control|(
-name|regno
-operator|=
-name|GR96_REGNUM
-init|;
-name|regno
-operator|<
-name|GR96_REGNUM
-operator|+
-literal|32
-condition|;
-name|regno
-operator|++
-control|)
-block|{
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|data
-index|[
-name|regno
-operator|-
-name|GR96_REGNUM
-index|]
-operator|=
-name|read_register
-argument_list|(
-name|regno
-argument_list|)
-expr_stmt|;
-block|}
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|expect_msg
-argument_list|(
-name|WRITE_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
-name|result
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-comment|/* Local Registers */
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|memory_space
-operator|=
-name|LOCAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
-operator|*
-literal|128
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|length
-operator|=
-literal|3
-operator|*
-literal|4
-operator|+
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|address
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-name|regno
-operator|=
-name|LR0_REGNUM
-init|;
-name|regno
-operator|<
-name|LR0_REGNUM
-operator|+
-literal|128
-condition|;
-name|regno
-operator|++
-control|)
-block|{
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|data
-index|[
-name|regno
-operator|-
-name|LR0_REGNUM
-index|]
-operator|=
-name|read_register
-argument_list|(
-name|regno
-argument_list|)
-expr_stmt|;
-block|}
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|expect_msg
-argument_list|(
-name|WRITE_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
-name|result
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-comment|/* Protected Special Registers */
-comment|/* VAB through TMR */
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|memory_space
-operator|=
-name|SPECIAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
-operator|*
-literal|10
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|length
-operator|=
-literal|3
-operator|*
-literal|4
-operator|+
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|address
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-name|regno
-operator|=
-literal|0
-init|;
-name|regno
-operator|<=
-literal|9
-condition|;
-name|regno
-operator|++
-control|)
-comment|/* VAB through TMR */
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|data
-index|[
-name|regno
-index|]
-operator|=
-name|read_register
-argument_list|(
-name|SR_REGNUM
-argument_list|(
-name|regno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|expect_msg
-argument_list|(
-name|WRITE_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
-name|result
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-comment|/* PC0, PC1, PC2 possibly as shadow registers */
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
-operator|*
-literal|3
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|length
-operator|=
-literal|3
-operator|*
-literal|4
-operator|+
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-expr_stmt|;
-for|for
-control|(
-name|regno
-operator|=
-literal|10
-init|;
-name|regno
-operator|<=
-literal|12
-condition|;
-name|regno
-operator|++
-control|)
-comment|/* LRU and MMU */
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|data
-index|[
-name|regno
-operator|-
-literal|10
-index|]
-operator|=
-name|read_register
-argument_list|(
-name|SR_REGNUM
-argument_list|(
-name|regno
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|USE_SHADOW_PC
-condition|)
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|address
-operator|=
-literal|20
-expr_stmt|;
-comment|/* SPC0 */
-else|else
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|address
-operator|=
-literal|10
-expr_stmt|;
-comment|/* PC0 */
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|expect_msg
-argument_list|(
-name|WRITE_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
-name|result
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-comment|/* LRU and MMU */
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
-operator|*
-literal|2
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|length
-operator|=
-literal|3
-operator|*
-literal|4
-operator|+
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|address
-operator|=
-literal|13
-expr_stmt|;
-for|for
-control|(
-name|regno
-operator|=
-literal|13
-init|;
-name|regno
-operator|<=
-literal|14
-condition|;
-name|regno
-operator|++
-control|)
-comment|/* LRU and MMU */
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|data
-index|[
-name|regno
-operator|-
-literal|13
-index|]
-operator|=
-name|read_register
-argument_list|(
-name|SR_REGNUM
-argument_list|(
-name|regno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|expect_msg
-argument_list|(
-name|WRITE_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
-name|result
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-comment|/* Unprotected Special Registers */
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
-operator|*
-literal|8
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|length
-operator|=
-literal|3
-operator|*
-literal|4
-operator|+
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|byte_count
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|address
-operator|=
-literal|128
-expr_stmt|;
-for|for
-control|(
-name|regno
-operator|=
-literal|128
-init|;
-name|regno
-operator|<=
-literal|135
-condition|;
-name|regno
-operator|++
-control|)
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|data
-index|[
-name|regno
-operator|-
-literal|128
-index|]
-operator|=
-name|read_register
-argument_list|(
-name|SR_REGNUM
-argument_list|(
-name|regno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|expect_msg
-argument_list|(
-name|WRITE_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
-name|result
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-name|registers_changed
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*************************************************** REMOTE_PREPARE_TO_STORE */
-end_comment
-
-begin_comment
-comment|/* Get ready to modify the registers array.  On machines which store    individual registers, this doesn't need to do anything.  On machines    which store all the registers in one fell swoop, this makes sure    that registers contains all the registers from the program being    debugged.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|mm_prepare_to_store
-parameter_list|()
-block|{
-comment|/* Do nothing, since we can store individual regs */
-block|}
-end_function
-
-begin_comment
-comment|/******************************************************* REMOTE_XFER_MEMORY */
-end_comment
-
-begin_function
-specifier|static
-name|CORE_ADDR
-name|translate_addr
-parameter_list|(
-name|addr
-parameter_list|)
-name|CORE_ADDR
-name|addr
-decl_stmt|;
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KERNEL_DEBUGGING
-argument_list|)
-comment|/* Check for a virtual address in the kernel */
-comment|/* Assume physical address of ublock is in  paddr_u register */
-comment|/* FIXME: doesn't work for user virtual addresses */
-if|if
-condition|(
-name|addr
-operator|>=
-name|UVADDR
-condition|)
-block|{
-comment|/* PADDR_U register holds the physical address of the ublock */
-name|CORE_ADDR
-name|i
-init|=
-operator|(
-name|CORE_ADDR
-operator|)
-name|read_register
-argument_list|(
-name|PADDR_U_REGNUM
-argument_list|)
-decl_stmt|;
-return|return
-operator|(
-name|i
-operator|+
-name|addr
-operator|-
-operator|(
-name|CORE_ADDR
-operator|)
-name|UVADDR
-operator|)
-return|;
-block|}
-else|else
-block|{
-return|return
-operator|(
-name|addr
-operator|)
-return|;
-block|}
-else|#
-directive|else
-return|return
-operator|(
-name|addr
-operator|)
-return|;
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_comment
-comment|/******************************************************* REMOTE_FILES_INFO */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|mm_files_info
-parameter_list|()
-block|{
-name|printf
-argument_list|(
-literal|"\tAttached to %s at %d baud and running program %s.\n"
-argument_list|,
-name|dev_name
-argument_list|,
-name|baudrate
-argument_list|,
-name|prog_name
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/************************************************* REMOTE_INSERT_BREAKPOINT */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|mm_insert_breakpoint
-parameter_list|(
-name|addr
-parameter_list|,
-name|contents_cache
-parameter_list|)
-name|CORE_ADDR
-name|addr
-decl_stmt|;
-name|char
-modifier|*
-name|contents_cache
-decl_stmt|;
-block|{
-name|out_msg_buf
-operator|->
-name|bkpt_set_msg
-operator|.
-name|code
-operator|=
-name|BKPT_SET
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|bkpt_set_msg
-operator|.
-name|length
-operator|=
-literal|4
-operator|*
-literal|4
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|bkpt_set_msg
-operator|.
-name|memory_space
-operator|=
-name|I_MEM
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|bkpt_set_msg
-operator|.
-name|bkpt_addr
-operator|=
-operator|(
-name|ADDR32
-operator|)
-name|addr
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|bkpt_set_msg
-operator|.
-name|pass_count
-operator|=
-literal|1
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|bkpt_set_msg
-operator|.
-name|bkpt_type
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* use illop for 29000 */
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|expect_msg
-argument_list|(
-name|BKPT_SET_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
-return|return
-literal|0
-return|;
-comment|/* Success */
-block|}
-else|else
-block|{
-return|return
-literal|1
-return|;
-comment|/* Failure */
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/************************************************* REMOTE_DELETE_BREAKPOINT */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|mm_remove_breakpoint
-parameter_list|(
-name|addr
-parameter_list|,
-name|contents_cache
-parameter_list|)
-name|CORE_ADDR
-name|addr
-decl_stmt|;
-name|char
-modifier|*
-name|contents_cache
-decl_stmt|;
-block|{
-name|out_msg_buf
-operator|->
-name|bkpt_rm_msg
-operator|.
-name|code
-operator|=
-name|BKPT_RM
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|bkpt_rm_msg
-operator|.
-name|length
-operator|=
-literal|4
-operator|*
-literal|3
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|bkpt_rm_msg
-operator|.
-name|memory_space
-operator|=
-name|I_MEM
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|bkpt_rm_msg
-operator|.
-name|bkpt_addr
-operator|=
-operator|(
-name|ADDR32
-operator|)
-name|addr
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|expect_msg
-argument_list|(
-name|BKPT_RM_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
-return|return
-literal|0
-return|;
-comment|/* Success */
-block|}
-else|else
-block|{
-return|return
-literal|1
-return|;
-comment|/* Failure */
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/******************************************************* REMOTE_KILL */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|mm_kill
-parameter_list|(
-name|arg
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|char
-modifier|*
-name|arg
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
-block|{
-name|char
-name|buf
-index|[
-literal|4
-index|]
-decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KERNEL_DEBUGGING
-argument_list|)
-comment|/* We don't ever kill the kernel */
-if|if
-condition|(
-name|from_tty
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Kernel not killed, but left in current state.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Use detach to leave kernel running.\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|#
-directive|else
-name|out_msg_buf
-operator|->
-name|break_msg
-operator|.
-name|code
-operator|=
-name|BREAK
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|bkpt_set_msg
-operator|.
-name|length
-operator|=
-literal|4
-operator|*
-literal|0
-expr_stmt|;
-name|expect_msg
-argument_list|(
-name|HALT
-argument_list|,
-name|in_msg_buf
-argument_list|,
-name|from_tty
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|from_tty
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Target has been stopped."
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Would you like to do a hardware reset (y/n) [n] "
-argument_list|)
-expr_stmt|;
-name|fgets
-argument_list|(
-name|buf
-argument_list|,
-literal|3
-argument_list|,
-name|stdin
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|buf
-index|[
-literal|0
-index|]
-operator|==
-literal|'y'
-condition|)
-block|{
-name|out_msg_buf
-operator|->
-name|reset_msg
-operator|.
-name|code
-operator|=
-name|RESET
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|bkpt_set_msg
-operator|.
-name|length
-operator|=
-literal|4
-operator|*
-literal|0
-expr_stmt|;
-name|expect_msg
-argument_list|(
-name|RESET_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-name|from_tty
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Target has been reset."
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|pop_target
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_comment
-comment|/***************************************************************************/
-end_comment
-
-begin_comment
-comment|/*   * Load a program into the target.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|mm_load
-parameter_list|(
-name|arg_string
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|char
-modifier|*
-name|arg_string
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
-block|{
-name|dont_repeat
-argument_list|()
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KERNEL_DEBUGGING
-argument_list|)
-name|printf
-argument_list|(
-literal|"The kernel had better be loaded already!  Loading not done.\n"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-name|arg_string
-operator|==
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"The load command takes a file name"
-argument_list|)
-expr_stmt|;
-name|arg_string
-operator|=
-name|tilde_expand
-argument_list|(
-name|arg_string
-argument_list|)
-expr_stmt|;
-name|make_cleanup
-argument_list|(
-name|free
-argument_list|,
-name|arg_string
-argument_list|)
-expr_stmt|;
-name|QUIT
-expr_stmt|;
-name|immediate_quit
-operator|++
-expr_stmt|;
-name|error
-argument_list|(
-literal|"File loading is not yet supported for MiniMon."
-argument_list|)
-expr_stmt|;
-comment|/* FIXME, code to load your file here... */
-comment|/* You may need to do an init_target_mm() */
-comment|/* init_target_mm(?,?,?,?,?,?,?,?); */
-name|immediate_quit
-operator|--
-expr_stmt|;
-comment|/* symbol_file_add (arg_string, from_tty, text_addr, 0, 0, 0, 0); */
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_comment
-comment|/************************************************ REMOTE_WRITE_INFERIOR_MEMORY ** Copy LEN bytes of data from debugger memory at MYADDR    to inferior's memory at MEMADDR.  Returns number of bytes written.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|mm_write_inferior_memory
-parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
-name|CORE_ADDR
-name|memaddr
-decl_stmt|;
-name|char
-modifier|*
-name|myaddr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-block|{
-name|int
-name|i
-decl_stmt|,
-name|nwritten
-decl_stmt|;
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|code
-operator|=
-name|WRITE_REQ
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|memory_space
-operator|=
-name|mm_memory_space
-argument_list|(
-name|memaddr
-argument_list|)
-expr_stmt|;
-name|nwritten
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-name|nwritten
-operator|<
-name|len
-condition|)
-block|{
-name|int
-name|num_to_write
-init|=
-name|len
-operator|-
-name|nwritten
-decl_stmt|;
-if|if
-condition|(
-name|num_to_write
-operator|>
-name|MAXDATA
-condition|)
-name|num_to_write
-operator|=
-name|MAXDATA
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|num_to_write
-condition|;
-name|i
-operator|++
-control|)
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|data
-index|[
-name|i
-index|]
-operator|=
-name|myaddr
-index|[
-name|i
-operator|+
-name|nwritten
-index|]
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|byte_count
-operator|=
-name|num_to_write
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|length
-operator|=
-literal|3
-operator|*
-literal|4
-operator|+
-name|num_to_write
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|address
-operator|=
-name|memaddr
-operator|+
-name|nwritten
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|expect_msg
-argument_list|(
-name|WRITE_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
-name|nwritten
-operator|+=
-name|in_msg_buf
-operator|->
-name|write_ack_msg
-operator|.
-name|byte_count
-expr_stmt|;
-block|}
-else|else
-block|{
-break|break;
-block|}
-block|}
-return|return
-operator|(
-name|nwritten
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/************************************************* REMOTE_READ_INFERIOR_MEMORY ** Read LEN bytes from inferior memory at MEMADDR.  Put the result    at debugger address MYADDR.  Returns number of bytes read.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|mm_read_inferior_memory
-parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|)
-name|CORE_ADDR
-name|memaddr
-decl_stmt|;
-name|char
-modifier|*
-name|myaddr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-block|{
-name|int
-name|i
-decl_stmt|,
-name|nread
-decl_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|code
-operator|=
-name|READ_REQ
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|memory_space
-operator|=
-name|mm_memory_space
-argument_list|(
-name|memaddr
-argument_list|)
-expr_stmt|;
-name|nread
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-name|nread
-operator|<
-name|len
-condition|)
-block|{
-name|int
-name|num_to_read
-init|=
-operator|(
-name|len
-operator|-
-name|nread
-operator|)
-decl_stmt|;
-if|if
-condition|(
-name|num_to_read
-operator|>
-name|MAXDATA
-condition|)
-name|num_to_read
-operator|=
-name|MAXDATA
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|byte_count
-operator|=
-name|num_to_read
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|length
-operator|=
-literal|3
-operator|*
-literal|4
-operator|+
-name|num_to_read
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|address
-operator|=
-name|memaddr
-operator|+
-name|nread
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|expect_msg
-argument_list|(
-name|READ_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|in_msg_buf
-operator|->
-name|read_ack_msg
-operator|.
-name|byte_count
-condition|;
-name|i
-operator|++
-control|)
-name|myaddr
-index|[
-name|i
-operator|+
-name|nread
-index|]
-operator|=
-name|in_msg_buf
-operator|->
-name|read_ack_msg
-operator|.
-name|data
-index|[
-name|i
-index|]
-expr_stmt|;
-name|nread
-operator|+=
-name|in_msg_buf
-operator|->
-name|read_ack_msg
-operator|.
-name|byte_count
-expr_stmt|;
-block|}
-else|else
-block|{
-break|break;
-block|}
-block|}
-return|return
-operator|(
-name|nread
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* FIXME!  Merge these two.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|mm_xfer_inferior_memory
-parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|)
-name|CORE_ADDR
-name|memaddr
-decl_stmt|;
-name|char
-modifier|*
-name|myaddr
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-name|int
-name|write
-decl_stmt|;
-block|{
-name|memaddr
-operator|=
-name|translate_addr
-argument_list|(
-name|memaddr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|write
-condition|)
-return|return
-name|mm_write_inferior_memory
-argument_list|(
-name|memaddr
-argument_list|,
-name|myaddr
-argument_list|,
-name|len
-argument_list|)
-return|;
-else|else
-return|return
-name|mm_read_inferior_memory
-argument_list|(
-name|memaddr
-argument_list|,
-name|myaddr
-argument_list|,
-name|len
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/********************************************************** MSG_SEND_SERIAL ** This function is used to send a message over the ** serial line. ** ** If the message is successfully sent, a zero is ** returned.  If the message was not sendable, a -1 ** is returned.  This function blocks.  That is, it ** does not return until the message is completely ** sent, or until an error is encountered. ** */
-end_comment
-
-begin_function
-name|int
-name|msg_send_serial
-parameter_list|(
-name|msg_ptr
-parameter_list|)
-name|union
-name|msg_t
-modifier|*
-name|msg_ptr
-decl_stmt|;
-block|{
-name|INT32
-name|message_size
-decl_stmt|;
-name|int
-name|byte_count
-decl_stmt|;
-name|int
-name|result
-decl_stmt|;
-name|char
-name|c
-decl_stmt|;
-comment|/* Send message header */
-name|byte_count
-operator|=
-literal|0
-expr_stmt|;
-name|message_size
-operator|=
-name|msg_ptr
-operator|->
-name|generic_msg
-operator|.
-name|length
-operator|+
-operator|(
-literal|2
-operator|*
-sizeof|sizeof
-argument_list|(
-name|INT32
-argument_list|)
-operator|)
-expr_stmt|;
-do|do
-block|{
-name|c
-operator|=
-operator|*
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|msg_ptr
-operator|+
-name|byte_count
-operator|)
-expr_stmt|;
-name|result
-operator|=
-name|write
-argument_list|(
-name|mm_desc
-argument_list|,
-operator|&
-name|c
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|result
-operator|==
-literal|1
-condition|)
-block|{
-name|byte_count
-operator|=
-name|byte_count
-operator|+
-literal|1
-expr_stmt|;
-block|}
-block|}
-do|while
-condition|(
-operator|(
-name|byte_count
-operator|<
-name|message_size
-operator|)
-condition|)
-do|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* end msg_send_serial() */
+comment|/* OBSOLETE } */
 end_comment
 
 begin_comment
-comment|/********************************************************** MSG_RECV_SERIAL ** This function is used to receive a message over a ** serial line. ** ** If the message is waiting in the buffer, a zero is ** returned and the buffer pointed to by msg_ptr is filled ** in.  If no message was available, a -1 is returned. ** If timeout==0, wait indefinetly for a character. ** */
+comment|/* OBSOLETE #endif */
 end_comment
-
-begin_function
-name|int
-name|msg_recv_serial
-parameter_list|(
-name|msg_ptr
-parameter_list|)
-name|union
-name|msg_t
-modifier|*
-name|msg_ptr
-decl_stmt|;
-block|{
-specifier|static
-name|INT32
-name|length
-init|=
-literal|0
-decl_stmt|;
-specifier|static
-name|INT32
-name|byte_count
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|result
-decl_stmt|;
-name|char
-name|c
-decl_stmt|;
-if|if
-condition|(
-name|msg_ptr
-operator|==
-literal|0
-condition|)
-comment|/* re-sync request */
-block|{
-name|length
-operator|=
-literal|0
-expr_stmt|;
-name|byte_count
-operator|=
-literal|0
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_TERMIO
-comment|/* The timeout here is the prevailing timeout set with VTIME */
-operator|->
-literal|"timeout==0 semantics not supported"
-name|read
-argument_list|(
-name|mm_desc
-argument_list|,
-name|in_buf
-argument_list|,
-name|BUFER_SIZE
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|alarm
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|read
-argument_list|(
-name|mm_desc
-argument_list|,
-name|in_buf
-argument_list|,
-name|BUFER_SIZE
-argument_list|)
-expr_stmt|;
-name|alarm
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-comment|/* Receive message */
-ifdef|#
-directive|ifdef
-name|HAVE_TERMIO
-comment|/* Timeout==0, help support the mm_wait() routine */
-operator|->
-literal|"timeout==0 semantics not supported (and its nice if they are)"
-name|result
-operator|=
-name|read
-argument_list|(
-name|mm_desc
-argument_list|,
-operator|&
-name|c
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|alarm
-argument_list|(
-name|timeout
-argument_list|)
-expr_stmt|;
-name|result
-operator|=
-name|read
-argument_list|(
-name|mm_desc
-argument_list|,
-operator|&
-name|c
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|alarm
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|result
-operator|<
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|errno
-operator|==
-name|EINTR
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"Timeout reading from remote system."
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|perror_with_name
-argument_list|(
-literal|"remote"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|result
-operator|==
-literal|1
-condition|)
-block|{
-operator|*
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|msg_ptr
-operator|+
-name|byte_count
-operator|)
-operator|=
-name|c
-expr_stmt|;
-name|byte_count
-operator|=
-name|byte_count
-operator|+
-literal|1
-expr_stmt|;
-block|}
-comment|/* Message header received.  Save message length. */
-if|if
-condition|(
-name|byte_count
-operator|==
-operator|(
-literal|2
-operator|*
-sizeof|sizeof
-argument_list|(
-name|INT32
-argument_list|)
-operator|)
-condition|)
-name|length
-operator|=
-name|msg_ptr
-operator|->
-name|generic_msg
-operator|.
-name|length
-expr_stmt|;
-if|if
-condition|(
-name|byte_count
-operator|>=
-operator|(
-name|length
-operator|+
-operator|(
-literal|2
-operator|*
-sizeof|sizeof
-argument_list|(
-name|INT32
-argument_list|)
-operator|)
-operator|)
-condition|)
-block|{
-comment|/* Message received */
-name|byte_count
-operator|=
-literal|0
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-else|else
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* end msg_recv_serial() */
-end_comment
-
-begin_comment
-comment|/********************************************************************* KBD_RAW ** This function is used to put the keyboard in "raw" ** mode for BSD Unix.  The original status is saved ** so that it may be restored later. */
-end_comment
-
-begin_decl_stmt
-name|TERMINAL
-name|kbd_tbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|int
-name|kbd_raw
-parameter_list|()
-block|{
-name|int
-name|result
-decl_stmt|;
-name|TERMINAL
-name|tbuf
-decl_stmt|;
-comment|/* Get keyboard termio (to save to restore original modes) */
-ifdef|#
-directive|ifdef
-name|HAVE_TERMIO
-name|result
-operator|=
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|TCGETA
-argument_list|,
-operator|&
-name|kbd_tbuf
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|result
-operator|=
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|TIOCGETP
-argument_list|,
-operator|&
-name|kbd_tbuf
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|result
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-operator|(
-name|errno
-operator|)
-return|;
-comment|/* Get keyboard TERMINAL (for modification) */
-ifdef|#
-directive|ifdef
-name|HAVE_TERMIO
-name|result
-operator|=
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|TCGETA
-argument_list|,
-operator|&
-name|tbuf
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|result
-operator|=
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|TIOCGETP
-argument_list|,
-operator|&
-name|tbuf
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|result
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-operator|(
-name|errno
-operator|)
-return|;
-comment|/* Set up new parameters */
-ifdef|#
-directive|ifdef
-name|HAVE_TERMIO
-name|tbuf
-operator|.
-name|c_iflag
-operator|=
-name|tbuf
-operator|.
-name|c_iflag
-operator|&
-operator|~
-operator|(
-name|INLCR
-operator||
-name|ICRNL
-operator||
-name|IUCLC
-operator||
-name|ISTRIP
-operator||
-name|IXON
-operator||
-name|BRKINT
-operator|)
-expr_stmt|;
-name|tbuf
-operator|.
-name|c_lflag
-operator|=
-name|tbuf
-operator|.
-name|c_lflag
-operator|&
-operator|~
-operator|(
-name|ICANON
-operator||
-name|ISIG
-operator||
-name|ECHO
-operator|)
-expr_stmt|;
-name|tbuf
-operator|.
-name|c_cc
-index|[
-literal|4
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* MIN */
-name|tbuf
-operator|.
-name|c_cc
-index|[
-literal|5
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* TIME */
-else|#
-directive|else
-comment|/* FIXME: not sure if this is correct (matches HAVE_TERMIO). */
-name|tbuf
-operator|.
-name|sg_flags
-operator||=
-name|RAW
-expr_stmt|;
-name|tbuf
-operator|.
-name|sg_flags
-operator||=
-name|ANYP
-expr_stmt|;
-name|tbuf
-operator|.
-name|sg_flags
-operator|&=
-operator|~
-name|ECHO
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* Set keyboard termio to new mode (RAW) */
-ifdef|#
-directive|ifdef
-name|HAVE_TERMIO
-name|result
-operator|=
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|TCSETAF
-argument_list|,
-operator|&
-name|tbuf
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|result
-operator|=
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|TIOCSETP
-argument_list|,
-operator|&
-name|tbuf
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|result
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-operator|(
-name|errno
-operator|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* end kbd_raw() */
-end_comment
-
-begin_comment
-comment|/***************************************************************** KBD_RESTORE ** This function is used to put the keyboard back in the ** mode it was in before kbk_raw was called.  Note that ** kbk_raw() must have been called at least once before ** kbd_restore() is called. */
-end_comment
-
-begin_function
-name|int
-name|kbd_restore
-parameter_list|()
-block|{
-name|int
-name|result
-decl_stmt|;
-comment|/* Set keyboard termio to original mode */
-ifdef|#
-directive|ifdef
-name|HAVE_TERMIO
-name|result
-operator|=
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|TCSETAF
-argument_list|,
-operator|&
-name|kbd_tbuf
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|result
-operator|=
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|TIOCGETP
-argument_list|,
-operator|&
-name|kbd_tbuf
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|result
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-operator|(
-name|errno
-operator|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* end kbd_cooked() */
-end_comment
-
-begin_comment
-comment|/*****************************************************************************/
-end_comment
-
-begin_comment
-comment|/* Fetch a single register indicatated by 'regno'.   * Returns 0/-1 on success/failure.    */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|fetch_register
-parameter_list|(
-name|regno
-parameter_list|)
-name|int
-name|regno
-decl_stmt|;
-block|{
-name|int
-name|result
-decl_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|code
-operator|=
-name|READ_REQ
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|length
-operator|=
-literal|4
-operator|*
-literal|3
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
-expr_stmt|;
-if|if
-condition|(
-name|regno
-operator|==
-name|GR1_REGNUM
-condition|)
-block|{
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|memory_space
-operator|=
-name|GLOBAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|address
-operator|=
-literal|1
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|GR96_REGNUM
-operator|&&
-name|regno
-operator|<
-name|GR96_REGNUM
-operator|+
-literal|32
-condition|)
-block|{
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|memory_space
-operator|=
-name|GLOBAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|address
-operator|=
-operator|(
-name|regno
-operator|-
-name|GR96_REGNUM
-operator|)
-operator|+
-literal|96
-expr_stmt|;
-block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|GR64_REGNUM
-argument_list|)
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|GR64_REGNUM
-operator|&&
-name|regno
-operator|<
-name|GR64_REGNUM
-operator|+
-literal|32
-condition|)
-block|{
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|memory_space
-operator|=
-name|GLOBAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|address
-operator|=
-operator|(
-name|regno
-operator|-
-name|GR64_REGNUM
-operator|)
-operator|+
-literal|64
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* GR64_REGNUM */
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|LR0_REGNUM
-operator|&&
-name|regno
-operator|<
-name|LR0_REGNUM
-operator|+
-literal|128
-condition|)
-block|{
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|memory_space
-operator|=
-name|LOCAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|address
-operator|=
-operator|(
-name|regno
-operator|-
-name|LR0_REGNUM
-operator|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|FPE_REGNUM
-operator|&&
-name|regno
-operator|<=
-name|EXO_REGNUM
-condition|)
-block|{
-name|int
-name|val
-init|=
-operator|-
-literal|1
-decl_stmt|;
-name|supply_register
-argument_list|(
-literal|160
-operator|+
-operator|(
-name|regno
-operator|-
-name|FPE_REGNUM
-operator|)
-argument_list|,
-operator|&
-name|val
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-comment|/* Pretend Success */
-block|}
-else|else
-block|{
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|memory_space
-operator|=
-name|SPECIAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|read_req_msg
-operator|.
-name|address
-operator|=
-name|regnum_to_srnum
-argument_list|(
-name|regno
-argument_list|)
-expr_stmt|;
-block|}
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|expect_msg
-argument_list|(
-name|READ_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
-name|supply_register
-argument_list|(
-name|regno
-argument_list|,
-operator|&
-operator|(
-name|in_msg_buf
-operator|->
-name|read_r_ack_msg
-operator|.
-name|data
-index|[
-literal|0
-index|]
-operator|)
-argument_list|)
-expr_stmt|;
-name|result
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-name|result
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-return|return
-name|result
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*****************************************************************************/
-end_comment
-
-begin_comment
-comment|/* Store a single register indicated by 'regno'.   * Returns 0/-1 on success/failure.    */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|store_register
-parameter_list|(
-name|regno
-parameter_list|)
-name|int
-name|regno
-decl_stmt|;
-block|{
-name|int
-name|result
-decl_stmt|;
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|code
-operator|=
-name|WRITE_REQ
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|length
-operator|=
-literal|4
-operator|*
-literal|4
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|byte_count
-operator|=
-literal|4
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_r_msg
-operator|.
-name|data
-index|[
-literal|0
-index|]
-operator|=
-name|read_register
-argument_list|(
-name|regno
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|regno
-operator|==
-name|GR1_REGNUM
-condition|)
-block|{
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|memory_space
-operator|=
-name|GLOBAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|address
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Setting GR1 changes the numbers of all the locals, so invalidate the       * register cache.  Do this *after* calling read_register, because we want       * read_register to return the value that write_register has just stuffed       * into the registers array, not the value of the register fetched from       * the inferior.        */
-name|registers_changed
-argument_list|()
-expr_stmt|;
-block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|GR64_REGNUM
-argument_list|)
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|GR64_REGNUM
-operator|&&
-name|regno
-operator|<
-name|GR64_REGNUM
-operator|+
-literal|32
-condition|)
-block|{
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|memory_space
-operator|=
-name|GLOBAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|address
-operator|=
-operator|(
-name|regno
-operator|-
-name|GR64_REGNUM
-operator|)
-operator|+
-literal|64
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* GR64_REGNUM */
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|GR96_REGNUM
-operator|&&
-name|regno
-operator|<
-name|GR96_REGNUM
-operator|+
-literal|32
-condition|)
-block|{
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|memory_space
-operator|=
-name|GLOBAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|address
-operator|=
-operator|(
-name|regno
-operator|-
-name|GR96_REGNUM
-operator|)
-operator|+
-literal|96
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|LR0_REGNUM
-operator|&&
-name|regno
-operator|<
-name|LR0_REGNUM
-operator|+
-literal|128
-condition|)
-block|{
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|memory_space
-operator|=
-name|LOCAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|address
-operator|=
-operator|(
-name|regno
-operator|-
-name|LR0_REGNUM
-operator|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|regno
-operator|>=
-name|FPE_REGNUM
-operator|&&
-name|regno
-operator|<=
-name|EXO_REGNUM
-condition|)
-block|{
-return|return
-literal|0
-return|;
-comment|/* Pretend Success */
-block|}
-else|else
-comment|/* An unprotected or protected special register */
-block|{
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|memory_space
-operator|=
-name|SPECIAL_REG
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|write_req_msg
-operator|.
-name|address
-operator|=
-name|regnum_to_srnum
-argument_list|(
-name|regno
-argument_list|)
-expr_stmt|;
-block|}
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|expect_msg
-argument_list|(
-name|WRITE_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-block|{
-name|result
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
-name|result
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-return|return
-name|result
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*   * Convert a gdb special register number to a 29000 special register number.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|regnum_to_srnum
-parameter_list|(
-name|regno
-parameter_list|)
-name|int
-name|regno
-decl_stmt|;
-block|{
-switch|switch
-condition|(
-name|regno
-condition|)
-block|{
-case|case
-name|VAB_REGNUM
-case|:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-case|case
-name|OPS_REGNUM
-case|:
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-case|case
-name|CPS_REGNUM
-case|:
-return|return
-operator|(
-literal|2
-operator|)
-return|;
-case|case
-name|CFG_REGNUM
-case|:
-return|return
-operator|(
-literal|3
-operator|)
-return|;
-case|case
-name|CHA_REGNUM
-case|:
-return|return
-operator|(
-literal|4
-operator|)
-return|;
-case|case
-name|CHD_REGNUM
-case|:
-return|return
-operator|(
-literal|5
-operator|)
-return|;
-case|case
-name|CHC_REGNUM
-case|:
-return|return
-operator|(
-literal|6
-operator|)
-return|;
-case|case
-name|RBP_REGNUM
-case|:
-return|return
-operator|(
-literal|7
-operator|)
-return|;
-case|case
-name|TMC_REGNUM
-case|:
-return|return
-operator|(
-literal|8
-operator|)
-return|;
-case|case
-name|TMR_REGNUM
-case|:
-return|return
-operator|(
-literal|9
-operator|)
-return|;
-case|case
-name|NPC_REGNUM
-case|:
-return|return
-operator|(
-name|USE_SHADOW_PC
-condition|?
-operator|(
-literal|20
-operator|)
-else|:
-operator|(
-literal|10
-operator|)
-operator|)
-return|;
-case|case
-name|PC_REGNUM
-case|:
-return|return
-operator|(
-name|USE_SHADOW_PC
-condition|?
-operator|(
-literal|21
-operator|)
-else|:
-operator|(
-literal|11
-operator|)
-operator|)
-return|;
-case|case
-name|PC2_REGNUM
-case|:
-return|return
-operator|(
-name|USE_SHADOW_PC
-condition|?
-operator|(
-literal|22
-operator|)
-else|:
-operator|(
-literal|12
-operator|)
-operator|)
-return|;
-case|case
-name|MMU_REGNUM
-case|:
-return|return
-operator|(
-literal|13
-operator|)
-return|;
-case|case
-name|LRU_REGNUM
-case|:
-return|return
-operator|(
-literal|14
-operator|)
-return|;
-case|case
-name|IPC_REGNUM
-case|:
-return|return
-operator|(
-literal|128
-operator|)
-return|;
-case|case
-name|IPA_REGNUM
-case|:
-return|return
-operator|(
-literal|129
-operator|)
-return|;
-case|case
-name|IPB_REGNUM
-case|:
-return|return
-operator|(
-literal|130
-operator|)
-return|;
-case|case
-name|Q_REGNUM
-case|:
-return|return
-operator|(
-literal|131
-operator|)
-return|;
-case|case
-name|ALU_REGNUM
-case|:
-return|return
-operator|(
-literal|132
-operator|)
-return|;
-case|case
-name|BP_REGNUM
-case|:
-return|return
-operator|(
-literal|133
-operator|)
-return|;
-case|case
-name|FC_REGNUM
-case|:
-return|return
-operator|(
-literal|134
-operator|)
-return|;
-case|case
-name|CR_REGNUM
-case|:
-return|return
-operator|(
-literal|135
-operator|)
-return|;
-case|case
-name|FPE_REGNUM
-case|:
-return|return
-operator|(
-literal|160
-operator|)
-return|;
-case|case
-name|INTE_REGNUM
-case|:
-return|return
-operator|(
-literal|161
-operator|)
-return|;
-case|case
-name|FPS_REGNUM
-case|:
-return|return
-operator|(
-literal|162
-operator|)
-return|;
-case|case
-name|EXO_REGNUM
-case|:
-return|return
-operator|(
-literal|164
-operator|)
-return|;
-default|default:
-return|return
-operator|(
-literal|255
-operator|)
-return|;
-comment|/* Failure ? */
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*   * Initialize the target debugger (minimon only).  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|init_target_mm
-parameter_list|(
-name|tstart
-parameter_list|,
-name|tend
-parameter_list|,
-name|dstart
-parameter_list|,
-name|dend
-parameter_list|,
-name|entry
-parameter_list|,
-name|ms_size
-parameter_list|,
-name|rs_size
-parameter_list|,
-name|arg_start
-parameter_list|)
-name|ADDR32
-name|tstart
-decl_stmt|,
-name|tend
-decl_stmt|,
-name|dstart
-decl_stmt|,
-name|dend
-decl_stmt|,
-name|entry
-decl_stmt|;
-name|INT32
-name|ms_size
-decl_stmt|,
-name|rs_size
-decl_stmt|;
-name|ADDR32
-name|arg_start
-decl_stmt|;
-block|{
-name|out_msg_buf
-operator|->
-name|init_msg
-operator|.
-name|code
-operator|=
-name|INIT
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|init_msg
-operator|.
-name|length
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|init_msg_t
-argument_list|)
-operator|-
-literal|2
-operator|*
-sizeof|sizeof
-argument_list|(
-name|INT32
-argument_list|)
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|init_msg
-operator|.
-name|text_start
-operator|=
-name|tstart
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|init_msg
-operator|.
-name|text_end
-operator|=
-name|tend
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|init_msg
-operator|.
-name|data_start
-operator|=
-name|dstart
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|init_msg
-operator|.
-name|data_end
-operator|=
-name|dend
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|init_msg
-operator|.
-name|entry_point
-operator|=
-name|entry
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|init_msg
-operator|.
-name|mem_stack_size
-operator|=
-name|ms_size
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|init_msg
-operator|.
-name|reg_stack_size
-operator|=
-name|rs_size
-expr_stmt|;
-name|out_msg_buf
-operator|->
-name|init_msg
-operator|.
-name|arg_start
-operator|=
-name|arg_start
-expr_stmt|;
-name|msg_send_serial
-argument_list|(
-name|out_msg_buf
-argument_list|)
-expr_stmt|;
-name|expect_msg
-argument_list|(
-name|INIT_ACK
-argument_list|,
-name|in_msg_buf
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*   * Return a pointer to a string representing the given message code.  * Not all messages are represented here, only the ones that we expect  * to be called with.  */
-end_comment
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|msg_str
-parameter_list|(
-name|code
-parameter_list|)
-name|INT32
-name|code
-decl_stmt|;
-block|{
-specifier|static
-name|char
-name|cbuf
-index|[
-literal|32
-index|]
-decl_stmt|;
-switch|switch
-condition|(
-name|code
-condition|)
-block|{
-case|case
-name|BKPT_SET_ACK
-case|:
-name|sprintf
-argument_list|(
-name|cbuf
-argument_list|,
-literal|"%s (%d)"
-argument_list|,
-literal|"BKPT_SET_ACK"
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|BKPT_RM_ACK
-case|:
-name|sprintf
-argument_list|(
-name|cbuf
-argument_list|,
-literal|"%s (%d)"
-argument_list|,
-literal|"BKPT_RM_ACK"
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|INIT_ACK
-case|:
-name|sprintf
-argument_list|(
-name|cbuf
-argument_list|,
-literal|"%s (%d)"
-argument_list|,
-literal|"INIT_ACK"
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|READ_ACK
-case|:
-name|sprintf
-argument_list|(
-name|cbuf
-argument_list|,
-literal|"%s (%d)"
-argument_list|,
-literal|"READ_ACK"
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|WRITE_ACK
-case|:
-name|sprintf
-argument_list|(
-name|cbuf
-argument_list|,
-literal|"%s (%d)"
-argument_list|,
-literal|"WRITE_ACK"
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ERROR
-case|:
-name|sprintf
-argument_list|(
-name|cbuf
-argument_list|,
-literal|"%s (%d)"
-argument_list|,
-literal|"ERROR"
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|HALT
-case|:
-name|sprintf
-argument_list|(
-name|cbuf
-argument_list|,
-literal|"%s (%d)"
-argument_list|,
-literal|"HALT"
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|sprintf
-argument_list|(
-name|cbuf
-argument_list|,
-literal|"UNKNOWN (%d)"
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-return|return
-operator|(
-name|cbuf
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*  * Selected (not all of them) error codes that we might get.  */
-end_comment
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|error_msg_str
-parameter_list|(
-name|code
-parameter_list|)
-name|INT32
-name|code
-decl_stmt|;
-block|{
-specifier|static
-name|char
-name|cbuf
-index|[
-literal|50
-index|]
-decl_stmt|;
-switch|switch
-condition|(
-name|code
-condition|)
-block|{
-case|case
-name|EMFAIL
-case|:
-return|return
-operator|(
-literal|"EMFAIL: unrecoverable error"
-operator|)
-return|;
-case|case
-name|EMBADADDR
-case|:
-return|return
-operator|(
-literal|"EMBADADDR: Illegal address"
-operator|)
-return|;
-case|case
-name|EMBADREG
-case|:
-return|return
-operator|(
-literal|"EMBADREG: Illegal register "
-operator|)
-return|;
-case|case
-name|EMACCESS
-case|:
-return|return
-operator|(
-literal|"EMACCESS: Could not access memory"
-operator|)
-return|;
-case|case
-name|EMBADMSG
-case|:
-return|return
-operator|(
-literal|"EMBADMSG: Unknown message type"
-operator|)
-return|;
-case|case
-name|EMMSG2BIG
-case|:
-return|return
-operator|(
-literal|"EMMSG2BIG: Message to large"
-operator|)
-return|;
-case|case
-name|EMNOSEND
-case|:
-return|return
-operator|(
-literal|"EMNOSEND: Could not send message"
-operator|)
-return|;
-case|case
-name|EMNORECV
-case|:
-return|return
-operator|(
-literal|"EMNORECV: Could not recv message"
-operator|)
-return|;
-case|case
-name|EMRESET
-case|:
-return|return
-operator|(
-literal|"EMRESET: Could not RESET target"
-operator|)
-return|;
-case|case
-name|EMCONFIG
-case|:
-return|return
-operator|(
-literal|"EMCONFIG: Could not get target CONFIG"
-operator|)
-return|;
-case|case
-name|EMSTATUS
-case|:
-return|return
-operator|(
-literal|"EMSTATUS: Could not get target STATUS"
-operator|)
-return|;
-case|case
-name|EMREAD
-case|:
-return|return
-operator|(
-literal|"EMREAD: Could not READ target memory"
-operator|)
-return|;
-case|case
-name|EMWRITE
-case|:
-return|return
-operator|(
-literal|"EMWRITE: Could not WRITE target memory"
-operator|)
-return|;
-case|case
-name|EMBKPTSET
-case|:
-return|return
-operator|(
-literal|"EMBKPTSET: Could not set breakpoint"
-operator|)
-return|;
-case|case
-name|EMBKPTRM
-case|:
-return|return
-operator|(
-literal|"EMBKPTRM: Could not remove breakpoint"
-operator|)
-return|;
-case|case
-name|EMBKPTSTAT
-case|:
-return|return
-operator|(
-literal|"EMBKPTSTAT: Could not get breakpoint status"
-operator|)
-return|;
-case|case
-name|EMBKPTNONE
-case|:
-return|return
-operator|(
-literal|"EMBKPTNONE: All breakpoints in use"
-operator|)
-return|;
-case|case
-name|EMBKPTUSED
-case|:
-return|return
-operator|(
-literal|"EMBKPTUSED: Breakpoints already in use"
-operator|)
-return|;
-case|case
-name|EMINIT
-case|:
-return|return
-operator|(
-literal|"EMINIT: Could not init target memory"
-operator|)
-return|;
-case|case
-name|EMGO
-case|:
-return|return
-operator|(
-literal|"EMGO: Could not start execution"
-operator|)
-return|;
-case|case
-name|EMSTEP
-case|:
-return|return
-operator|(
-literal|"EMSTEP: Could not single step"
-operator|)
-return|;
-case|case
-name|EMBREAK
-case|:
-return|return
-operator|(
-literal|"EMBREAK: Could not BREAK"
-operator|)
-return|;
-case|case
-name|EMCOMMERR
-case|:
-return|return
-operator|(
-literal|"EMCOMMERR: Communication error"
-operator|)
-return|;
-default|default:
-name|sprintf
-argument_list|(
-name|cbuf
-argument_list|,
-literal|"error number %d"
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-comment|/* end switch */
-return|return
-operator|(
-name|cbuf
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*   *  Receive a message and expect it to be of type msgcode.  *  Returns 0/1 on failure/success.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|expect_msg
-parameter_list|(
-name|msgcode
-parameter_list|,
-name|msg_buf
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|INT32
-name|msgcode
-decl_stmt|;
-comment|/* Msg code we expect */
-name|union
-name|msg_t
-modifier|*
-name|msg_buf
-decl_stmt|;
-comment|/* Where to put  the message received */
-name|int
-name|from_tty
-decl_stmt|;
-comment|/* Print message on error if non-zero */
-block|{
-name|int
-name|retries
-init|=
-literal|0
-decl_stmt|;
-while|while
-condition|(
-name|msg_recv_serial
-argument_list|(
-name|msg_buf
-argument_list|)
-operator|&&
-operator|(
-name|retries
-operator|++
-operator|<
-name|MAX_RETRIES
-operator|)
-condition|)
-empty_stmt|;
-if|if
-condition|(
-name|retries
-operator|>=
-name|MAX_RETRIES
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Expected msg %s, "
-argument_list|,
-name|msg_str
-argument_list|(
-name|msgcode
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"no message received!\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* Failure */
-block|}
-if|if
-condition|(
-name|msg_buf
-operator|->
-name|generic_msg
-operator|.
-name|code
-operator|!=
-name|msgcode
-condition|)
-block|{
-if|if
-condition|(
-name|from_tty
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Expected msg %s, "
-argument_list|,
-name|msg_str
-argument_list|(
-name|msgcode
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"got msg %s\n"
-argument_list|,
-name|msg_str
-argument_list|(
-name|msg_buf
-operator|->
-name|generic_msg
-operator|.
-name|code
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|msg_buf
-operator|->
-name|generic_msg
-operator|.
-name|code
-operator|==
-name|ERROR
-condition|)
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|error_msg_str
-argument_list|(
-name|msg_buf
-operator|->
-name|error_msg
-operator|.
-name|error_code
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* Failure */
-block|}
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-comment|/* Success */
-block|}
-end_function
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*  * Determine the MiniMon memory space qualifier based on the addr.   * FIXME: Can't distinguis I_ROM/D_ROM.    * FIXME: Doesn't know anything about I_CACHE/D_CACHE.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|mm_memory_space
-parameter_list|(
-name|addr
-parameter_list|)
-name|CORE_ADDR
-modifier|*
-name|addr
-decl_stmt|;
-block|{
-name|ADDR32
-name|tstart
-init|=
-name|target_config
-operator|.
-name|I_mem_start
-decl_stmt|;
-name|ADDR32
-name|tend
-init|=
-name|tstart
-operator|+
-name|target_config
-operator|.
-name|I_mem_size
-decl_stmt|;
-name|ADDR32
-name|dstart
-init|=
-name|target_config
-operator|.
-name|D_mem_start
-decl_stmt|;
-name|ADDR32
-name|dend
-init|=
-name|tstart
-operator|+
-name|target_config
-operator|.
-name|D_mem_size
-decl_stmt|;
-name|ADDR32
-name|rstart
-init|=
-name|target_config
-operator|.
-name|ROM_start
-decl_stmt|;
-name|ADDR32
-name|rend
-init|=
-name|tstart
-operator|+
-name|target_config
-operator|.
-name|ROM_size
-decl_stmt|;
-if|if
-condition|(
-operator|(
-operator|(
-name|ADDR32
-operator|)
-name|addr
-operator|>=
-name|tstart
-operator|)
-operator|&&
-operator|(
-operator|(
-name|ADDR32
-operator|)
-name|addr
-operator|<
-name|tend
-operator|)
-condition|)
-block|{
-return|return
-name|I_MEM
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-operator|(
-name|ADDR32
-operator|)
-name|addr
-operator|>=
-name|dstart
-operator|)
-operator|&&
-operator|(
-operator|(
-name|ADDR32
-operator|)
-name|addr
-operator|<
-name|dend
-operator|)
-condition|)
-block|{
-return|return
-name|D_MEM
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-operator|(
-name|ADDR32
-operator|)
-name|addr
-operator|>=
-name|rstart
-operator|)
-operator|&&
-operator|(
-operator|(
-name|ADDR32
-operator|)
-name|addr
-operator|<
-name|rend
-operator|)
-condition|)
-block|{
-comment|/* FIXME: how do we determine between D_ROM and I_ROM */
-return|return
-name|D_ROM
-return|;
-block|}
-else|else
-comment|/* FIXME: what do me do now? */
-return|return
-name|D_MEM
-return|;
-comment|/* Hmmm! */
-block|}
-end_function
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*   *  Define the target subroutine names  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|target_ops
-name|mm_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|init_mm_ops
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|mm_ops
-operator|.
-name|to_shortname
-operator|=
-literal|"minimon"
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_longname
-operator|=
-literal|"Remote AMD/Minimon target"
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_doc
-operator|=
-literal|"Remote debug an AMD 290*0 using the MiniMon dbg core on the target"
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_open
-operator|=
-name|mm_open
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_close
-operator|=
-name|mm_close
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_attach
-operator|=
-name|mm_attach
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_post_attach
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_require_attach
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_detach
-operator|=
-name|mm_detach
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_require_detach
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_resume
-operator|=
-name|mm_resume
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_wait
-operator|=
-name|mm_wait
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_post_wait
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_fetch_registers
-operator|=
-name|mm_fetch_registers
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_store_registers
-operator|=
-name|mm_store_registers
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_prepare_to_store
-operator|=
-name|mm_prepare_to_store
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_xfer_memory
-operator|=
-name|mm_xfer_inferior_memory
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_files_info
-operator|=
-name|mm_files_info
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_insert_breakpoint
-operator|=
-name|mm_insert_breakpoint
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_remove_breakpoint
-operator|=
-name|mm_remove_breakpoint
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_terminal_init
-operator|=
-literal|0
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_terminal_inferior
-operator|=
-literal|0
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_terminal_ours_for_output
-operator|=
-literal|0
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_terminal_ours
-operator|=
-literal|0
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_terminal_info
-operator|=
-literal|0
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_kill
-operator|=
-name|mm_kill
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_load
-operator|=
-name|mm_load
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_lookup_symbol
-operator|=
-literal|0
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_create_inferior
-operator|=
-name|mm_create_inferior
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_post_startup_inferior
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_acknowledge_created_inferior
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_clone_and_follow_inferior
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_post_follow_inferior_by_clone
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_insert_fork_catchpoint
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_remove_fork_catchpoint
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_insert_vfork_catchpoint
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_remove_vfork_catchpoint
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_has_forked
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_has_vforked
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_can_follow_vfork_prior_to_exec
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_post_follow_vfork
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_insert_exec_catchpoint
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_remove_exec_catchpoint
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_has_execd
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_reported_exec_events_per_exec_call
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_has_exited
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_mourn_inferior
-operator|=
-name|mm_mourn
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_can_run
-operator|=
-literal|0
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_notice_signals
-operator|=
-literal|0
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_thread_alive
-operator|=
-literal|0
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_stop
-operator|=
-literal|0
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_pid_to_exec_file
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_core_file_to_sym_file
-operator|=
-name|NULL
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_stratum
-operator|=
-name|process_stratum
-expr_stmt|;
-name|mm_ops
-operator|.
-name|DONT_USE
-operator|=
-literal|0
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_has_all_memory
-operator|=
-literal|1
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_has_memory
-operator|=
-literal|1
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_has_stack
-operator|=
-literal|1
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_has_registers
-operator|=
-literal|1
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_has_execution
-operator|=
-literal|1
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_sections
-operator|=
-literal|0
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_sections_end
-operator|=
-literal|0
-expr_stmt|;
-name|mm_ops
-operator|.
-name|to_magic
-operator|=
-name|OPS_MAGIC
-expr_stmt|;
-block|}
-end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_function
-name|void
-name|_initialize_remote_mm
-parameter_list|()
-block|{
-name|init_mm_ops
-argument_list|()
-expr_stmt|;
-name|add_target
-argument_list|(
-operator|&
-name|mm_ops
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NO_HIF_SUPPORT
-end_ifdef
-
-begin_macro
-name|service_HIF
-argument_list|(
-argument|msg
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|union
-name|msg_t
-modifier|*
-name|msg
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* Emulate a failure */
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MIPS-dependent portions of the RPC protocol    used with a VxWorks target   Contributed by Wind River Systems.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* MIPS-dependent portions of the RPC protocol    used with a VxWorks target      Contributed by Wind River Systems.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -31,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|"inferior.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"wait.h"
 end_include
 
 begin_include
@@ -76,6 +70,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"regcache.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"gdb_string.h"
 end_include
 
@@ -83,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -222,11 +216,9 @@ begin_function
 name|void
 name|vx_read_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|mips_greg_packet
@@ -250,7 +242,7 @@ argument_list|,
 name|PTRACE_GETREGS
 argument_list|)
 expr_stmt|;
-comment|/* this code copies the registers obtained by RPC       stored in a structure(s) like this :           	Register(s)		Offset(s)    	gp 0-31			0x00    	hi			0x80    	lo			0x84    	sr			0x88    	pc			0x8c           into a stucture like this:    	    	0x00	GP 0-31    	0x80   	SR    	0x84	LO    	0x88	HI    	0x8C	BAD    		--- Not available currently    	0x90	CAUSE    	--- Not available currently    	0x94	PC    	0x98	FP 0-31    	0x118	FCSR    	0x11C	FIR    		--- Not available currently    	0x120	FP	    	--- Not available currently          structure is 0x124 (292) bytes in length */
+comment|/* this code copies the registers obtained by RPC       stored in a structure(s) like this :       Register(s)                Offset(s)      gp 0-31                    0x00      hi                 0x80      lo                 0x84      sr                 0x88      pc                 0x8c       into a stucture like this:       0x00       GP 0-31      0x80       SR      0x84       LO      0x88       HI      0x8C       BAD             --- Not available currently      0x90       CAUSE           --- Not available currently      0x94       PC      0x98       FP 0-31      0x118      FCSR      0x11C      FIR             --- Not available currently      0x120      FP              --- Not available currently       structure is 0x124 (292) bytes in length */
 comment|/* Copy the general registers.  */
 name|bcopy
 argument_list|(
@@ -479,15 +471,9 @@ end_comment
 begin_macro
 name|vx_write_register
 argument_list|(
-argument|regno
+argument|int regno
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|regno
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{

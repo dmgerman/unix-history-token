@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* XMODEM support for GDB, the GNU debugger.    Copyright 1995 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* XMODEM support for GDB, the GNU debugger.    Copyright 1995, 2000, 2001 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -100,23 +100,21 @@ specifier|static
 name|int
 name|readchar
 parameter_list|(
+name|struct
+name|serial
+modifier|*
 name|desc
 parameter_list|,
-name|timeout
-parameter_list|)
-name|serial_t
-name|desc
-decl_stmt|;
 name|int
 name|timeout
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
 decl_stmt|;
 name|c
 operator|=
-name|SERIAL_READCHAR
+name|serial_readchar
 argument_list|(
 name|desc
 argument_list|,
@@ -133,7 +131,7 @@ name|fputc_unfiltered
 argument_list|(
 name|c
 argument_list|,
-name|gdb_stderr
+name|gdb_stdlog
 argument_list|)
 expr_stmt|;
 if|if
@@ -192,7 +190,9 @@ begin_function
 specifier|static
 name|void
 name|crcinit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -303,18 +303,14 @@ name|unsigned
 name|short
 name|docrc
 parameter_list|(
-name|p
-parameter_list|,
-name|len
-parameter_list|)
 name|unsigned
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|short
@@ -364,11 +360,11 @@ begin_function
 name|int
 name|xmodem_init_xfer
 parameter_list|(
+name|struct
+name|serial
+modifier|*
 name|desc
 parameter_list|)
-name|serial_t
-name|desc
-decl_stmt|;
 block|{
 name|int
 name|c
@@ -464,35 +460,29 @@ block|}
 end_function
 
 begin_comment
-comment|/* Take 128 bytes of data and make a packet out of it.  *  *	Each packet looks like this:  *	+-----+-------+-------+------+-----+  *	| SOH | Seq1. | Seq2. | data | SUM |  *	+-----+-------+-------+------+-----+  *	SOH  = 0x01  *	Seq1 = The sequence number.  *	Seq2 = The complement of the sequence number.  *	Data = A 128 bytes of data.  *	SUM  = Add the contents of the 128 bytes and use the low-order  *	       8 bits of the result.  *  * send_xmodem_packet fills in the XMODEM fields of PACKET and sends it to the  * remote system.  PACKET must be XMODEM_PACKETSIZE bytes long.  The data must  * start 3 bytes after the beginning of the packet to leave room for the  * XMODEM header.  LEN is the length of the data portion of the packet (and  * must be<= 128 bytes).  If it is< 128 bytes, ^Z padding will be added.  */
+comment|/* Take 128 bytes of data and make a packet out of it.   *      Each packet looks like this:  *      +-----+-------+-------+------+-----+  *      | SOH | Seq1. | Seq2. | data | SUM |  *      +-----+-------+-------+------+-----+  *      SOH  = 0x01  *      Seq1 = The sequence number.  *      Seq2 = The complement of the sequence number.  *      Data = A 128 bytes of data.  *      SUM  = Add the contents of the 128 bytes and use the low-order  *             8 bits of the result.  *  * send_xmodem_packet fills in the XMODEM fields of PACKET and sends it to the  * remote system.  PACKET must be XMODEM_PACKETSIZE bytes long.  The data must  * start 3 bytes after the beginning of the packet to leave room for the  * XMODEM header.  LEN is the length of the data portion of the packet (and  * must be<= 128 bytes).  If it is< 128 bytes, ^Z padding will be added.  */
 end_comment
 
 begin_function
 name|void
 name|xmodem_send_packet
 parameter_list|(
+name|struct
+name|serial
+modifier|*
 name|desc
 parameter_list|,
-name|packet
-parameter_list|,
-name|len
-parameter_list|,
-name|hashmark
-parameter_list|)
-name|serial_t
-name|desc
-decl_stmt|;
 name|unsigned
 name|char
 modifier|*
 name|packet
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|hashmark
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -565,8 +555,14 @@ name|XMODEM_1KDATASIZE
 expr_stmt|;
 block|}
 else|else
-name|abort
-argument_list|()
+name|internal_error
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"failed internal consistency check"
+argument_list|)
 expr_stmt|;
 comment|/* Packet way too large */
 comment|/* Add ^Z padding if packet< 128 (or 1024) bytes */
@@ -698,7 +694,7 @@ block|{
 name|int
 name|c
 decl_stmt|;
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|desc
 argument_list|,
@@ -768,7 +764,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|desc
 argument_list|,
@@ -794,11 +790,11 @@ begin_function
 name|void
 name|xmodem_finish_xfer
 parameter_list|(
+name|struct
+name|serial
+modifier|*
 name|desc
 parameter_list|)
-name|serial_t
-name|desc
-decl_stmt|;
 block|{
 name|int
 name|retries
@@ -820,7 +816,7 @@ block|{
 name|int
 name|c
 decl_stmt|;
-name|SERIAL_WRITE
+name|serial_write
 argument_list|(
 name|desc
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native dependent code for Mach 386's for GDB, the GNU debugger.    Copyright (C) 1986, 1987, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Native dependent code for Mach 386's for GDB, the GNU debugger.    Copyright 1986, 1987, 1989, 1991, 1992, 1993, 1995, 1996, 1999, 2000,    2001 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"gdbcore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
 end_include
 
 begin_include
@@ -93,36 +99,30 @@ directive|include
 file|<sys/core.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|fetch_core_registers
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
 name|fetch_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
-comment|/* Original value discarded */
+parameter_list|)
 block|{
 name|struct
 name|regs
@@ -132,11 +132,6 @@ name|struct
 name|fp_state
 name|inferior_fp_registers
 decl_stmt|;
-specifier|extern
-name|char
-name|registers
-index|[]
-decl_stmt|;
 name|registers_fetched
 argument_list|()
 expr_stmt|;
@@ -144,7 +139,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_GETREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -157,7 +155,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_GETFPREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -234,11 +235,9 @@ begin_function
 name|void
 name|store_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|regs
@@ -247,11 +246,6 @@ decl_stmt|;
 name|struct
 name|fp_state
 name|inferior_fp_registers
-decl_stmt|;
-specifier|extern
-name|char
-name|registers
-index|[]
 decl_stmt|;
 name|memcpy
 argument_list|(
@@ -344,7 +338,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_PEEKDATA
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -380,7 +377,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_SETREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -393,7 +393,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_POKEDATA
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -407,7 +410,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_SINGLESTEP
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -426,7 +432,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_POKEDATA
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -452,7 +461,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_SETREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -465,7 +477,10 @@ name|ptrace
 argument_list|(
 name|PTRACE_SETFPREGS
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -478,7 +493,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Work with core files, for GDB. */
+comment|/* Provide registers to GDB from a core file.     CORE_REG_SECT points to an array of bytes, which were obtained from    a core file which BFD thinks might contain register contents.     CORE_REG_SIZE is its size.     WHICH says which register set corelow suspects this is:      0 --- the general-purpose register set      2 --- the floating-point register set     REG_ADDR isn't used.  */
 end_comment
 
 begin_function
@@ -486,36 +501,22 @@ specifier|static
 name|void
 name|fetch_core_registers
 parameter_list|(
-name|core_reg_sect
-parameter_list|,
-name|core_reg_size
-parameter_list|,
-name|which
-parameter_list|,
-name|reg_addr
-parameter_list|)
 name|char
 modifier|*
 name|core_reg_sect
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|core_reg_size
-decl_stmt|;
+parameter_list|,
 name|int
 name|which
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|reg_addr
-decl_stmt|;
-comment|/* Unused in this version */
+parameter_list|)
 block|{
 name|int
 name|val
-decl_stmt|;
-specifier|extern
-name|char
-name|registers
-index|[]
 decl_stmt|;
 switch|switch
 condition|(
@@ -541,9 +542,6 @@ break|break;
 case|case
 literal|2
 case|:
-ifdef|#
-directive|ifdef
-name|FP0_REGNUM
 name|memcpy
 argument_list|(
 operator|&
@@ -561,8 +559,6 @@ name|core_reg_size
 argument_list|)
 expr_stmt|;
 comment|/* FIXME, probably bogus */
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|FPC_REGNUM
@@ -626,9 +622,18 @@ init|=
 block|{
 name|bfd_target_unknown_flavour
 block|,
+comment|/* core_flavour */
+name|default_check_format
+block|,
+comment|/* check_format */
+name|default_core_sniffer
+block|,
+comment|/* core_sniffer */
 name|fetch_core_registers
 block|,
+comment|/* core_read_registers */
 name|NULL
+comment|/* next */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -636,7 +641,9 @@ end_decl_stmt
 begin_function
 name|void
 name|_initialize_core_i386mach
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|add_core_fns
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Handle HP SOM shared libraries for GDB, the GNU Debugger.    Copyright 1993, 1996, 1999 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  Written by the Center for Software Science at the Univerity of Utah and by Cygnus Support.  */
+comment|/* Handle HP SOM shared libraries for GDB, the GNU Debugger.    Copyright 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.     Written by the Center for Software Science at the Univerity of Utah    and by Cygnus Support.  */
 end_comment
 
 begin_include
@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"regcache.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -147,24 +153,21 @@ begin_comment
 comment|/* This lives in hppa-tdep.c. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|unwind_table_entry
 modifier|*
 name|find_unwind_entry
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
 name|pc
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* These ought to be defined in some public interface, but aren't.  They    define the meaning of the various bits in the distinguished __dld_flags    variable that is declared in every debuggable a.out on HP-UX, and that    is shared between the debugger and the dynamic linker.    */
+comment|/* These ought to be defined in some public interface, but aren't.  They    define the meaning of the various bits in the distinguished __dld_flags    variable that is declared in every debuggable a.out on HP-UX, and that    is shared between the debugger and the dynamic linker.  */
 end_comment
 
 begin_define
@@ -226,7 +229,7 @@ comment|/* Version of this library.  */
 name|short
 name|library_version
 decl_stmt|;
-comment|/* Start of text address,    * link-time text location (length of text area),    * end of text address.  */
+comment|/* Start of text address,      * link-time text location (length of text area),      * end of text address.  */
 name|CORE_ADDR
 name|text_addr
 decl_stmt|;
@@ -256,13 +259,13 @@ name|som_solib_mapped_entry
 modifier|*
 name|next
 decl_stmt|;
-comment|/* There are other fields, but I don't have information as to what is      contained in them.  */
+comment|/* There are other fields, but I don't have information as to what is        contained in them.  */
 comment|/* For versions from HPUX-10.30 and up */
-comment|/* Address in target of offset from thread-local register of    * start of this thread's data.  I.e., the first thread-local    * variable in this shared library starts at *(tsd_start_addr)    * from that area pointed to by cr27 (mpsfu_hi).    *    * We do the indirection as soon as we read it, so from then    * on it's the offset itself.    */
+comment|/* Address in target of offset from thread-local register of      * start of this thread's data.  I.e., the first thread-local      * variable in this shared library starts at *(tsd_start_addr)      * from that area pointed to by cr27 (mpsfu_hi).      *      * We do the indirection as soon as we read it, so from then      * on it's the offset itself.      */
 name|CORE_ADDR
 name|tsd_start_addr
 decl_stmt|;
-comment|/* Following this are longwords holding:    *    * ?, ?, ?, ptr to -1, ptr to-1, ptr to lib name (leaf name),    * ptr to __data_start, ptr to __data_end    */
+comment|/* Following this are longwords holding:       * ?, ?, ?, ptr to -1, ptr to-1, ptr to lib name (leaf name),      * ptr to __data_start, ptr to __data_end      */
 block|}
 struct|;
 end_struct
@@ -298,7 +301,7 @@ name|section_table
 modifier|*
 name|sections_end
 decl_stmt|;
-comment|/* elz: added this field to store the address in target space (in the    library) of the library descriptor (handle) which we read into    som_solib_mapped_entry structure*/
+comment|/* elz: added this field to store the address in target space (in the    library) of the library descriptor (handle) which we read into    som_solib_mapped_entry structure */
 name|CORE_ADDR
 name|solib_addr
 decl_stmt|;
@@ -321,7 +324,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This is the cumulative size in bytes of the symbol tables of all    shared objects on the so_list_head list.  (When we say size, here    we mean of the information before it is brought into memory and    potentially expanded by GDB.)  When adding a new shlib, this value    is compared against the threshold size, held by auto_solib_add    (in megabytes).  If adding symbols for the new shlib would cause    the total size to exceed the threshold, then the new shlib's symbols    are not loaded.    */
+comment|/* This is the cumulative size in bytes of the symbol tables of all    shared objects on the so_list_head list.  (When we say size, here    we mean of the information before it is brought into memory and    potentially expanded by GDB.)  When adding a new shlib, this value    is compared against the threshold size, held by auto_solib_limit    (in megabytes).  If adding symbols for the new shlib would cause    the total size to exceed the threshold, then the new shlib's    symbols are not loaded.  */
 end_comment
 
 begin_decl_stmt
@@ -332,7 +335,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* When the threshold is reached for any shlib, we refuse to add    symbols for subsequent shlibs, even if those shlibs' symbols would    be small enough to fit under the threshold.  (Although this may    result in one, early large shlib preventing the loading of later,    smalller shlibs' symbols, it allows us to issue one informational    message.  The alternative, to issue a message for each shlib whose    symbols aren't loaded, could be a big annoyance where the threshold    is exceeded due to a very large number of shlibs.)    */
+comment|/* When the threshold is reached for any shlib, we refuse to add    symbols for subsequent shlibs, even if those shlibs' symbols would    be small enough to fit under the threshold.  (Although this may    result in one, early large shlib preventing the loading of later,    smalller shlibs' symbols, it allows us to issue one informational    message.  The alternative, to issue a message for each shlib whose    symbols aren't loaded, could be a big annoyance where the threshold    is exceeded due to a very large number of shlibs.)  */
 end_comment
 
 begin_decl_stmt
@@ -343,7 +346,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* These addresses should be filled in by som_solib_create_inferior_hook.    They are also used elsewhere in this module.    */
+comment|/* These addresses should be filled in by som_solib_create_inferior_hook.    They are also used elsewhere in this module.  */
 end_comment
 
 begin_typedef
@@ -400,49 +403,41 @@ name|dld_cache
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|som_sharedlibrary_info_command
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|som_solib_sharedlibrary_command
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
 name|LONGEST
 name|som_solib_sizeof_symbol_table
 parameter_list|(
-name|filename
-parameter_list|)
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd
 modifier|*
@@ -467,7 +462,7 @@ name|asection
 modifier|*
 name|sect
 decl_stmt|;
-comment|/* We believe that filename was handed to us by the dynamic linker, and      is therefore always an absolute path.      */
+comment|/* We believe that filename was handed to us by the dynamic linker, and      is therefore always an absolute path.    */
 name|desc
 operator|=
 name|openp
@@ -532,7 +527,7 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|filename
 argument_list|)
@@ -571,7 +566,7 @@ expr_stmt|;
 comment|/* This also closes desc */
 name|make_cleanup
 argument_list|(
-name|free
+name|xfree
 argument_list|,
 name|filename
 argument_list|)
@@ -649,12 +644,12 @@ name|abfd
 argument_list|)
 expr_stmt|;
 comment|/* This also closes desc */
-name|free
+name|xfree
 argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
-comment|/* Unfortunately, just summing the sizes of various debug info      sections isn't a very accurate measurement of how much heap      space the debugger will need to hold them.  It also doesn't      account for space needed by linker (aka "minimal") symbols.       Anecdotal evidence suggests that just summing the sizes of      debug-info-related sections understates the heap space needed      to represent it internally by about an order of magnitude.       Since it's not exactly brain surgery we're doing here, rather      than attempt to more accurately measure the size of a shlib's      symbol table in GDB's heap, we'll just apply a 10x fudge-      factor to the debug info sections' size-sum.  No, this doesn't      account for minimal symbols in non-debuggable shlibs.  But it      all roughly washes out in the end.      */
+comment|/* Unfortunately, just summing the sizes of various debug info      sections isn't a very accurate measurement of how much heap      space the debugger will need to hold them.  It also doesn't      account for space needed by linker (aka "minimal") symbols.       Anecdotal evidence suggests that just summing the sizes of      debug-info-related sections understates the heap space needed      to represent it internally by about an order of magnitude.       Since it's not exactly brain surgery we're doing here, rather      than attempt to more accurately measure the size of a shlib's      symbol table in GDB's heap, we'll just apply a 10x fudge-      factor to the debug info sections' size-sum.  No, this doesn't      account for minimal symbols in non-debuggable shlibs.  But it      all roughly washes out in the end.    */
 return|return
 name|st_size
 operator|*
@@ -671,33 +666,30 @@ specifier|static
 name|void
 name|som_solib_add_solib_objfile
 parameter_list|(
-name|so
-parameter_list|,
-name|name
-parameter_list|,
-name|from_tty
-parameter_list|,
-name|text_addr
-parameter_list|)
 name|struct
 name|so_list
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|text_addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|obj_private_data_t
 modifier|*
 name|obj_private
+decl_stmt|;
+name|struct
+name|obj_section
+modifier|*
+name|s
 decl_stmt|;
 name|so
 operator|->
@@ -709,17 +701,11 @@ name|name
 argument_list|,
 name|from_tty
 argument_list|,
-name|text_addr
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|1
+name|OBJF_SHARED
 argument_list|)
 expr_stmt|;
 name|so
@@ -732,6 +718,115 @@ name|objfile
 operator|->
 name|obfd
 expr_stmt|;
+comment|/* syms_from_objfile has bizarre section offset code,      so I do my own right here.  */
+for|for
+control|(
+name|s
+operator|=
+name|so
+operator|->
+name|objfile
+operator|->
+name|sections
+init|;
+name|s
+operator|<
+name|so
+operator|->
+name|objfile
+operator|->
+name|sections_end
+condition|;
+name|s
+operator|++
+control|)
+block|{
+name|flagword
+name|aflag
+init|=
+name|bfd_get_section_flags
+argument_list|(
+name|so
+operator|->
+name|abfd
+argument_list|,
+name|s
+operator|->
+name|the_bfd_section
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|aflag
+operator|&
+name|SEC_CODE
+condition|)
+block|{
+name|s
+operator|->
+name|addr
+operator|+=
+name|so
+operator|->
+name|som_solib
+operator|.
+name|text_addr
+operator|-
+name|so
+operator|->
+name|som_solib
+operator|.
+name|text_link_addr
+expr_stmt|;
+name|s
+operator|->
+name|endaddr
+operator|+=
+name|so
+operator|->
+name|som_solib
+operator|.
+name|text_addr
+operator|-
+name|so
+operator|->
+name|som_solib
+operator|.
+name|text_link_addr
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|aflag
+operator|&
+name|SEC_DATA
+condition|)
+block|{
+name|s
+operator|->
+name|addr
+operator|+=
+name|so
+operator|->
+name|som_solib
+operator|.
+name|data_start
+expr_stmt|;
+name|s
+operator|->
+name|endaddr
+operator|+=
+name|so
+operator|->
+name|som_solib
+operator|.
+name|data_start
+expr_stmt|;
+block|}
+else|else
+empty_stmt|;
+block|}
 comment|/* Mark this as a shared library and save private data.    */
 name|so
 operator|->
@@ -850,36 +945,26 @@ specifier|static
 name|void
 name|som_solib_load_symbols
 parameter_list|(
-name|so
-parameter_list|,
-name|name
-parameter_list|,
-name|from_tty
-parameter_list|,
-name|text_addr
-parameter_list|,
-name|target
-parameter_list|)
 name|struct
 name|so_list
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|text_addr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|section_table
@@ -992,6 +1077,11 @@ operator|->
 name|section_offsets
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|so
+operator|->
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -1007,6 +1097,11 @@ operator|->
 name|section_offsets
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|so
+operator|->
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1035,6 +1130,11 @@ operator|->
 name|section_offsets
 argument_list|,
 name|SECT_OFF_DATA
+argument_list|(
+name|so
+operator|->
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -1050,6 +1150,11 @@ operator|->
 name|section_offsets
 argument_list|,
 name|SECT_OFF_DATA
+argument_list|(
+name|so
+operator|->
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1078,34 +1183,6 @@ name|old
 decl_stmt|,
 name|new
 decl_stmt|;
-name|int
-name|update_coreops
-decl_stmt|;
-name|int
-name|update_execops
-decl_stmt|;
-comment|/* We must update the to_sections field in the core_ops structure          here, otherwise we dereference a potential dangling pointer          for each call to target_read/write_memory within this routine.  */
-name|update_coreops
-operator|=
-name|core_ops
-operator|.
-name|to_sections
-operator|==
-name|target
-operator|->
-name|to_sections
-expr_stmt|;
-comment|/* Ditto exec_ops (this was a bug).        */
-name|update_execops
-operator|=
-name|exec_ops
-operator|.
-name|to_sections
-operator|==
-name|target
-operator|->
-name|to_sections
-expr_stmt|;
 name|new
 operator|=
 name|so
@@ -1116,149 +1193,15 @@ name|so
 operator|->
 name|sections
 expr_stmt|;
-comment|/* Add sections from the shared library to the core target.  */
-if|if
-condition|(
-name|target
-operator|->
-name|to_sections
-condition|)
-block|{
 name|old
 operator|=
-name|target
-operator|->
-name|to_sections_end
-operator|-
-name|target
-operator|->
-name|to_sections
-expr_stmt|;
-name|target
-operator|->
-name|to_sections
-operator|=
-operator|(
-expr|struct
-name|section_table
-operator|*
-operator|)
-name|xrealloc
+name|target_resize_to_sections
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|target
-operator|->
-name|to_sections
 argument_list|,
-operator|(
-operator|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|section_table
-argument_list|)
-operator|)
-operator|*
-operator|(
-name|old
-operator|+
-name|new
-operator|)
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|old
-operator|=
-literal|0
-expr_stmt|;
-name|target
-operator|->
-name|to_sections
-operator|=
-operator|(
-expr|struct
-name|section_table
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
-operator|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|section_table
-argument_list|)
-operator|)
-operator|*
 name|new
 argument_list|)
 expr_stmt|;
-block|}
-name|target
-operator|->
-name|to_sections_end
-operator|=
-operator|(
-name|target
-operator|->
-name|to_sections
-operator|+
-name|old
-operator|+
-name|new
-operator|)
-expr_stmt|;
-comment|/* Update the to_sections field in the core_ops structure          if needed, ditto exec_ops.  */
-if|if
-condition|(
-name|update_coreops
-condition|)
-block|{
-name|core_ops
-operator|.
-name|to_sections
-operator|=
-name|target
-operator|->
-name|to_sections
-expr_stmt|;
-name|core_ops
-operator|.
-name|to_sections_end
-operator|=
-name|target
-operator|->
-name|to_sections_end
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|update_execops
-condition|)
-block|{
-name|exec_ops
-operator|.
-name|to_sections
-operator|=
-name|target
-operator|->
-name|to_sections
-expr_stmt|;
-name|exec_ops
-operator|.
-name|to_sections_end
-operator|=
-name|target
-operator|->
-name|to_sections_end
-expr_stmt|;
-block|}
 comment|/* Copy over the old data before it gets clobbered.  */
 name|memcpy
 argument_list|(
@@ -1296,31 +1239,28 @@ block|}
 end_function
 
 begin_comment
-comment|/* Add symbols from shared libraries into the symtab list, unless the    size threshold (specified by auto_solib_add, in megabytes) would    be exceeded.  */
+comment|/* Add symbols from shared libraries into the symtab list, unless the    size threshold specified by auto_solib_limit (in megabytes) would    be exceeded.  */
 end_comment
 
 begin_function
 name|void
 name|som_solib_add
 parameter_list|(
-name|arg_string
-parameter_list|,
-name|from_tty
-parameter_list|,
-name|target
-parameter_list|)
 name|char
 modifier|*
 name|arg_string
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
+parameter_list|,
+name|int
+name|readsyms
+parameter_list|)
 block|{
 name|struct
 name|minimal_symbol
@@ -1495,7 +1435,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* __dld_list may not be valid.  If not, then we punt, warning the user if      we were called as a result of the add-symfile command.      */
+comment|/* __dld_list may not be valid.  If not, then we punt, warning the user if      we were called as a result of the add-symfile command.    */
 if|if
 condition|(
 operator|(
@@ -1551,7 +1491,7 @@ operator|!
 name|msymbol
 condition|)
 block|{
-comment|/* Older crt0.o files (hpux8) don't have __dld_list as a symbol, 	 but the data is still available if you know where to look.  */
+comment|/* Older crt0.o files (hpux8) don't have __dld_list as a symbol,          but the data is still available if you know where to look.  */
 name|msymbol
 operator|=
 name|lookup_minimal_symbol
@@ -1878,7 +1818,7 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-comment|/* See if the file exists.  If not, give a warning, but don't 	 die.  */
+comment|/* See if the file exists.  If not, give a warning, but don't          die.  */
 name|status
 operator|=
 name|stat
@@ -1963,7 +1903,7 @@ operator|||
 name|is_main_program
 condition|)
 block|{
-comment|/* This is the "next" pointer in the strcuture.            */
+comment|/* This is the "next" pointer in the strcuture. 	   */
 name|status
 operator|=
 name|target_read_memory
@@ -2019,7 +1959,7 @@ operator|+=
 name|st_size
 expr_stmt|;
 block|}
-comment|/* Was this a shlib that we noted but didn't load the symbols for?              If so, were we invoked this time from the command-line, via              a 'sharedlibrary' or 'add-symbol-file' command?  If yes to              both, we'd better load the symbols this time.              */
+comment|/* Was this a shlib that we noted but didn't load the symbols for? 	     If so, were we invoked this time from the command-line, via 	     a 'sharedlibrary' or 'add-symbol-file' command?  If yes to 	     both, we'd better load the symbols this time. 	   */
 if|if
 condition|(
 name|from_tty
@@ -2232,7 +2172,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Following is "high water mark", highest version number          * seen, rather than plain version number.          */
+comment|/* Following is "high water mark", highest version number        * seen, rather than plain version number.        */
 name|new_so
 operator|->
 name|som_solib
@@ -2254,7 +2194,7 @@ name|text_addr
 operator|=
 name|text_addr
 expr_stmt|;
-comment|/* Q: What about longword at "addr + 8"?          * A: It's read above, out of order, into "text_addr".          */
+comment|/* Q: What about longword at "addr + 8"?        * A: It's read above, out of order, into "text_addr".        */
 name|status
 operator|=
 name|target_read_memory
@@ -2493,15 +2433,14 @@ name|som_solib
 operator|.
 name|next
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
+name|address_to_host_pointer
+argument_list|(
 name|extract_unsigned_integer
 argument_list|(
 name|buf
 argument_list|,
 literal|4
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Note that we don't re-set "addr" to the next pointer        * until after we've read the trailing data.        */
@@ -2736,8 +2675,8 @@ name|som_solib
 operator|.
 name|next
 expr_stmt|;
-comment|/* At this point, we have essentially hooked the shlib into the          "info share" command.  However, we haven't yet loaded its          symbol table.  We must now decide whether we ought to, i.e.,          whether doing so would exceed the symbol table size threshold.           If the threshold has just now been exceeded, then we'll issue          a warning message (which explains how to load symbols manually,          if the user so desires).           If the threshold has just now or previously been exceeded,          we'll just add the shlib to the list of object files, but won't          actually load its symbols.  (This is more useful than it might          sound, for it allows us to e.g., still load and use the shlibs'          unwind information for stack tracebacks.)          */
-comment|/* Note that we DON'T want to preclude the user from using the          add-symbol-file command!  Thus, we only worry about the threshold          when we're invoked for other reasons.          */
+comment|/* At this point, we have essentially hooked the shlib into the          "info share" command.  However, we haven't yet loaded its          symbol table.  We must now decide whether we ought to, i.e.,          whether doing so would exceed the symbol table size threshold.           If the threshold has just now been exceeded, then we'll issue          a warning message (which explains how to load symbols manually,          if the user so desires).           If the threshold has just now or previously been exceeded,          we'll just add the shlib to the list of object files, but won't          actually load its symbols.  (This is more useful than it might          sound, for it allows us to e.g., still load and use the shlibs'          unwind information for stack tracebacks.)        */
+comment|/* Note that we DON'T want to preclude the user from using the          add-symbol-file command!  Thus, we only worry about the threshold          when we're invoked for other reasons.        */
 name|st_size
 operator|=
 name|som_solib_sizeof_symbol_table
@@ -2750,6 +2689,12 @@ operator|=
 operator|!
 name|from_tty
 operator|&&
+name|auto_solib_limit
+operator|>
+literal|0
+operator|&&
+name|readsyms
+operator|&&
 operator|(
 operator|(
 name|st_size
@@ -2758,12 +2703,16 @@ name|som_solib_total_st_size
 operator|)
 operator|>
 operator|(
-name|auto_solib_add
+name|auto_solib_limit
 operator|*
-operator|(
+call|(
 name|LONGEST
-operator|)
-literal|1000000
+call|)
+argument_list|(
+literal|1024
+operator|*
+literal|1024
+argument_list|)
 operator|)
 operator|)
 expr_stmt|;
@@ -2779,14 +2728,14 @@ name|threshold_warning_given
 condition|)
 name|warning
 argument_list|(
-literal|"Symbols for some libraries have not been loaded, because\ndoing so would exceed the size threshold specified by auto-solib-add.\nTo manually load symbols, use the 'sharedlibrary' command.\nTo raise the threshold, set auto-solib-add to a larger value and rerun\nthe program.\n"
+literal|"Symbols for some libraries have not been loaded, because\ndoing so would exceed the size threshold specified by auto-solib-limit.\nTo manually load symbols, use the 'sharedlibrary' command.\nTo raise the threshold, set auto-solib-limit to a larger value and rerun\nthe program.\n"
 argument_list|)
 expr_stmt|;
 name|threshold_warning_given
 operator|=
 literal|1
 expr_stmt|;
-comment|/* We'll still make note of this shlib, even if we don't              read its symbols.  This allows us to use its unwind              information well enough to know how to e.g., correctly              do a traceback from a PC within the shlib, even if we              can't symbolize those PCs...              */
+comment|/* We'll still make note of this shlib, even if we don't 	     read its symbols.  This allows us to use its unwind 	     information well enough to know how to e.g., correctly 	     do a traceback from a PC within the shlib, even if we 	     can't symbolize those PCs... 	   */
 name|som_solib_add_solib_objfile
 argument_list|(
 name|new_so
@@ -2854,13 +2803,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* This hook gets called just before the first instruction in the    inferior process is executed.     This is our opportunity to set magic flags in the inferior so    that GDB can be notified when a shared library is mapped in and    to tell the dynamic linker that a private copy of the library is    needed (so GDB can set breakpoints in the library).     __dld_flags is the location of the magic flags; as of this implementation    there are 3 flags of interest:     bit 0 when set indicates that private copies of the libraries are needed    bit 1 when set indicates that the callback hook routine is valid    bit 2 when set indicates that the dynamic linker should maintain the          __dld_list structure when loading/unloading libraries.     Note that shared libraries are not mapped in at this time, so we have    run the inferior until the libraries are mapped in.  Typically this    means running until the "_start" is called.  */
+comment|/* This hook gets called just before the first instruction in the    inferior process is executed.     This is our opportunity to set magic flags in the inferior so    that GDB can be notified when a shared library is mapped in and    to tell the dynamic linker that a private copy of the library is    needed (so GDB can set breakpoints in the library).     __dld_flags is the location of the magic flags; as of this implementation    there are 3 flags of interest:     bit 0 when set indicates that private copies of the libraries are needed    bit 1 when set indicates that the callback hook routine is valid    bit 2 when set indicates that the dynamic linker should maintain the    __dld_list structure when loading/unloading libraries.     Note that shared libraries are not mapped in at this time, so we have    run the inferior until the libraries are mapped in.  Typically this    means running until the "_start" is called.  */
 end_comment
 
 begin_function
 name|void
 name|som_solib_create_inferior_hook
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|minimal_symbol
@@ -2941,7 +2892,7 @@ name|have_endo
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Slam the pid of the process into __d_pid; failing is only a warning!  */
+comment|/* Slam the pid of the process into __d_pid.       We used to warn when this failed, but that warning is only useful      on very old HP systems (hpux9 and older).  The warnings are an      annoyance to users of modern systems and foul up the testsuite as      well.  As a result, the warnings have been disabled.  */
 name|msymbol
 operator|=
 name|lookup_minimal_symbol
@@ -2959,26 +2910,9 @@ name|msymbol
 operator|==
 name|NULL
 condition|)
-block|{
-name|warning
-argument_list|(
-literal|"Unable to find __d_pid symbol in object file."
-argument_list|)
-expr_stmt|;
-name|warning
-argument_list|(
-literal|"Suggest linking with /opt/langtools/lib/end.o."
-argument_list|)
-expr_stmt|;
-name|warning
-argument_list|(
-literal|"GDB will be unable to track shl_load/shl_unload calls"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|keep_going
 goto|;
-block|}
 name|anaddr
 operator|=
 name|SYMBOL_VALUE_ADDRESS
@@ -2992,7 +2926,10 @@ name|buf
 argument_list|,
 literal|4
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|status
@@ -3032,7 +2969,7 @@ goto|goto
 name|keep_going
 goto|;
 block|}
-comment|/* Get the value of _DLD_HOOK (an export stub) and put it in __dld_hook;      This will force the dynamic linker to call __d_trap when significant      events occur.       Note that the above is the pre-HP-UX 9.0 behaviour.  At 9.0 and above,      the dld provides an export stub named "__d_trap" as well as the      function named "__d_trap" itself, but doesn't provide "_DLD_HOOK".      We'll look first for the old flavor and then the new.      */
+comment|/* Get the value of _DLD_HOOK (an export stub) and put it in __dld_hook;      This will force the dynamic linker to call __d_trap when significant      events occur.       Note that the above is the pre-HP-UX 9.0 behaviour.  At 9.0 and above,      the dld provides an export stub named "__d_trap" as well as the      function named "__d_trap" itself, but doesn't provide "_DLD_HOOK".      We'll look first for the old flavor and then the new.    */
 name|msymbol
 operator|=
 name|lookup_minimal_symbol
@@ -3427,7 +3364,7 @@ literal|"Unable to write __dld_flags\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Now find the address of _start and set a breakpoint there.       We still need this code for two reasons:  	* Not all sites have /opt/langtools/lib/end.o, so it's not always 	possible to track the dynamic linker's events.  	* At this time no events are triggered for shared libraries 	loaded at startup time (what a crock).  */
+comment|/* Now find the address of _start and set a breakpoint there.       We still need this code for two reasons:       * Not all sites have /opt/langtools/lib/end.o, so it's not always      possible to track the dynamic linker's events.       * At this time no events are triggered for shared libraries      loaded at startup time (what a crock).  */
 name|msymbol
 operator|=
 name|lookup_minimal_symbol
@@ -3480,7 +3417,7 @@ name|temp
 operator|=
 name|so_list_head
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|so_list_head
 argument_list|)
@@ -3498,37 +3435,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|reset_inferior_pid
-parameter_list|(
-name|saved_inferior_pid
-parameter_list|)
-name|int
-name|saved_inferior_pid
-decl_stmt|;
-block|{
-name|inferior_pid
-operator|=
-name|saved_inferior_pid
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
-comment|/* This operation removes the "hook" between GDB and the dynamic linker,    which causes the dld to notify GDB of shared library events.     After this operation completes, the dld will no longer notify GDB of    shared library events.  To resume notifications, GDB must call    som_solib_create_inferior_hook.     This operation does not remove any knowledge of shared libraries which    GDB may already have been notified of.    */
+comment|/* This operation removes the "hook" between GDB and the dynamic linker,    which causes the dld to notify GDB of shared library events.     After this operation completes, the dld will no longer notify GDB of    shared library events.  To resume notifications, GDB must call    som_solib_create_inferior_hook.     This operation does not remove any knowledge of shared libraries which    GDB may already have been notified of.  */
 end_comment
 
 begin_function
 name|void
 name|som_solib_remove_inferior_hook
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|addr
@@ -3553,29 +3470,23 @@ name|unsigned
 name|int
 name|dld_flags_value
 decl_stmt|;
-name|int
-name|saved_inferior_pid
-init|=
-name|inferior_pid
-decl_stmt|;
 name|struct
 name|cleanup
 modifier|*
 name|old_cleanups
 init|=
-name|make_cleanup
-argument_list|(
-name|reset_inferior_pid
-argument_list|,
-name|saved_inferior_pid
-argument_list|)
+name|save_inferior_ptid
+argument_list|()
 decl_stmt|;
 comment|/* Ensure that we're really operating on the specified process. */
-name|inferior_pid
+name|inferior_ptid
 operator|=
+name|pid_to_ptid
+argument_list|(
 name|pid
+argument_list|)
 expr_stmt|;
-comment|/* We won't bother to remove the solib breakpoints from this process.       In fact, on PA64 the breakpoint is hard-coded into the dld callback,      and thus we're not supposed to remove it.       Rather, we'll merely clear the dld_flags bit that enables callbacks.      */
+comment|/* We won't bother to remove the solib breakpoints from this process.       In fact, on PA64 the breakpoint is hard-coded into the dld callback,      and thus we're not supposed to remove it.       Rather, we'll merely clear the dld_flags bit that enables callbacks.    */
 name|msymbol
 operator|=
 name|lookup_minimal_symbol
@@ -3658,35 +3569,27 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function creates a breakpoint on the dynamic linker hook, which    is called when e.g., a shl_load or shl_unload call is made.  This    breakpoint will only trigger when a shl_load call is made.     If filename is NULL, then loads of any dll will be caught.  Else,    only loads of the file whose pathname is the string contained by    filename will be caught.     Undefined behaviour is guaranteed if this function is called before    som_solib_create_inferior_hook.    */
+comment|/* This function creates a breakpoint on the dynamic linker hook, which    is called when e.g., a shl_load or shl_unload call is made.  This    breakpoint will only trigger when a shl_load call is made.     If filename is NULL, then loads of any dll will be caught.  Else,    only loads of the file whose pathname is the string contained by    filename will be caught.     Undefined behaviour is guaranteed if this function is called before    som_solib_create_inferior_hook.  */
 end_comment
 
 begin_function
 name|void
 name|som_solib_create_catch_load_hook
 parameter_list|(
+name|int
 name|pid
 parameter_list|,
+name|int
 name|tempflag
 parameter_list|,
+name|char
+modifier|*
 name|filename
 parameter_list|,
+name|char
+modifier|*
 name|cond_string
 parameter_list|)
-name|int
-name|pid
-decl_stmt|;
-name|int
-name|tempflag
-decl_stmt|;
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-name|char
-modifier|*
-name|cond_string
-decl_stmt|;
 block|{
 name|create_solib_load_event_breakpoint
 argument_list|(
@@ -3703,35 +3606,27 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function creates a breakpoint on the dynamic linker hook, which    is called when e.g., a shl_load or shl_unload call is made.  This    breakpoint will only trigger when a shl_unload call is made.     If filename is NULL, then unloads of any dll will be caught.  Else,    only unloads of the file whose pathname is the string contained by    filename will be caught.     Undefined behaviour is guaranteed if this function is called before    som_solib_create_inferior_hook.    */
+comment|/* This function creates a breakpoint on the dynamic linker hook, which    is called when e.g., a shl_load or shl_unload call is made.  This    breakpoint will only trigger when a shl_unload call is made.     If filename is NULL, then unloads of any dll will be caught.  Else,    only unloads of the file whose pathname is the string contained by    filename will be caught.     Undefined behaviour is guaranteed if this function is called before    som_solib_create_inferior_hook.  */
 end_comment
 
 begin_function
 name|void
 name|som_solib_create_catch_unload_hook
 parameter_list|(
+name|int
 name|pid
 parameter_list|,
+name|int
 name|tempflag
 parameter_list|,
+name|char
+modifier|*
 name|filename
 parameter_list|,
+name|char
+modifier|*
 name|cond_string
 parameter_list|)
-name|int
-name|pid
-decl_stmt|;
-name|int
-name|tempflag
-decl_stmt|;
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-name|char
-modifier|*
-name|cond_string
-decl_stmt|;
 block|{
 name|create_solib_unload_event_breakpoint
 argument_list|(
@@ -3751,11 +3646,9 @@ begin_function
 name|int
 name|som_solib_have_load_event
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|event_kind
@@ -3781,11 +3674,9 @@ begin_function
 name|int
 name|som_solib_have_unload_event
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|event_kind
@@ -3813,11 +3704,9 @@ name|char
 modifier|*
 name|som_solib_library_pathname
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|dll_handle_address
@@ -3929,11 +3818,9 @@ name|char
 modifier|*
 name|som_solib_loaded_library_pathname
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3962,11 +3849,9 @@ name|char
 modifier|*
 name|som_solib_unloaded_library_pathname
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3994,7 +3879,9 @@ begin_function
 specifier|static
 name|void
 name|som_solib_desire_dynamic_linker_symbols
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|objfile
@@ -4011,7 +3898,7 @@ name|minimal_symbol
 modifier|*
 name|dld_msymbol
 decl_stmt|;
-comment|/* Do we already know the value of these symbols?  If so, then      we've no work to do.       (If you add clauses to this test, be sure to likewise update the      test within the loop.)      */
+comment|/* Do we already know the value of these symbols?  If so, then      we've no work to do.       (If you add clauses to this test, be sure to likewise update the      test within the loop.)    */
 if|if
 condition|(
 name|dld_cache
@@ -4192,7 +4079,7 @@ operator|.
 name|address
 argument_list|)
 expr_stmt|;
-comment|/* ??rehrauer: I'm not sure exactly what this is, but it appears              that on some HPUX 10.x versions, there's two unwind regions to              cover the body of "shl_unload", the second being 4 bytes past              the end of the first.  This is a large hack to handle that              case, but since I don't seem to have any legitimate way to              look for this thing via the symbol table...              */
+comment|/* ??rehrauer: I'm not sure exactly what this is, but it appears 	   that on some HPUX 10.x versions, there's two unwind regions to 	   cover the body of "shl_unload", the second being 4 bytes past 	   the end of the first.  This is a large hack to handle that 	   case, but since I don't seem to have any legitimate way to 	   look for this thing via the symbol table... 	 */
 if|if
 condition|(
 name|dld_cache
@@ -4336,7 +4223,7 @@ name|load
 operator|.
 name|address
 operator|!=
-name|NULL
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -4346,7 +4233,7 @@ name|load_stub
 operator|.
 name|address
 operator|!=
-name|NULL
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -4356,7 +4243,7 @@ name|unload
 operator|.
 name|address
 operator|!=
-name|NULL
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -4366,7 +4253,7 @@ name|unload_stub
 operator|.
 name|address
 operator|!=
-name|NULL
+literal|0
 operator|)
 condition|)
 block|{
@@ -4409,7 +4296,7 @@ operator|.
 name|address
 argument_list|)
 expr_stmt|;
-comment|/* We're prepared not to find some of these symbols, which is why      this function is a "desire" operation, and not a "require".      */
+comment|/* We're prepared not to find some of these symbols, which is why      this function is a "desire" operation, and not a "require".    */
 block|}
 end_function
 
@@ -4417,23 +4304,19 @@ begin_function
 name|int
 name|som_solib_in_dynamic_linker
 parameter_list|(
-name|pid
-parameter_list|,
-name|pc
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|unwind_table_entry
 modifier|*
 name|u_pc
 decl_stmt|;
-comment|/* Are we in the dld itself?       ??rehrauer: Large hack -- We'll assume that any address in a      shared text region is the dld's text.  This would obviously      fall down if the user attached to a process, whose shlibs      weren't mapped to a (writeable) private region.  However, in      that case the debugger probably isn't able to set the fundamental      breakpoint in the dld callback anyways, so this hack should be      safe.      */
+comment|/* Are we in the dld itself?       ??rehrauer: Large hack -- We'll assume that any address in a      shared text region is the dld's text.  This would obviously      fall down if the user attached to a process, whose shlibs      weren't mapped to a (writeable) private region.  However, in      that case the debugger probably isn't able to set the fundamental      breakpoint in the dld callback anyways, so this hack should be      safe.    */
 if|if
 condition|(
 operator|(
@@ -4453,7 +4336,7 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* Cache the address of some symbols that are part of the dynamic      linker, if not already known.      */
+comment|/* Cache the address of some symbols that are part of the dynamic      linker, if not already known.    */
 name|som_solib_desire_dynamic_linker_symbols
 argument_list|()
 expr_stmt|;
@@ -4570,11 +4453,9 @@ begin_function
 name|CORE_ADDR
 name|som_solib_get_got_by_pc
 parameter_list|(
-name|addr
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|so_list
@@ -4640,18 +4521,16 @@ comment|/*  elz:    Return the address of the handle of the shared library    in
 end_comment
 
 begin_comment
-comment|/* this function is used in hppa_fix_call_dummy in hppa-tdep.c*/
+comment|/* this function is used in hppa_fix_call_dummy in hppa-tdep.c */
 end_comment
 
 begin_function
 name|CORE_ADDR
 name|som_solib_get_solib_by_pc
 parameter_list|(
-name|addr
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|so_list
@@ -4713,20 +4592,16 @@ begin_function
 name|int
 name|som_solib_section_offsets
 parameter_list|(
-name|objfile
-parameter_list|,
-name|offsets
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|,
 name|struct
 name|section_offsets
 modifier|*
 name|offsets
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|so_list
@@ -4740,7 +4615,7 @@ condition|(
 name|so_list
 condition|)
 block|{
-comment|/* Oh what a pain!  We need the offsets before so_list->objfile 	 is valid.  The BFDs will never match.  Make a best guess.  */
+comment|/* Oh what a pain!  We need the offsets before so_list->objfile          is valid.  The BFDs will never match.  Make a best guess.  */
 if|if
 condition|(
 name|strstr
@@ -4762,12 +4637,15 @@ modifier|*
 name|private_section
 decl_stmt|;
 comment|/* The text offset is easy.  */
-name|ANOFFSET
-argument_list|(
 name|offsets
-argument_list|,
+operator|->
+name|offsets
+index|[
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
 argument_list|)
+index|]
 operator|=
 operator|(
 name|so_list
@@ -4783,18 +4661,24 @@ operator|.
 name|text_link_addr
 operator|)
 expr_stmt|;
-name|ANOFFSET
-argument_list|(
 name|offsets
-argument_list|,
+operator|->
+name|offsets
+index|[
 name|SECT_OFF_RODATA
+argument_list|(
+name|objfile
 argument_list|)
+index|]
 operator|=
 name|ANOFFSET
 argument_list|(
 name|offsets
 argument_list|,
 name|SECT_OFF_TEXT
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* We should look at presumed_dp in the SOM header, but 	     that's not easily available.  This should be OK though.  */
@@ -4820,21 +4704,27 @@ argument_list|(
 literal|"Unable to find $PRIVATE$ in shared library!"
 argument_list|)
 expr_stmt|;
-name|ANOFFSET
-argument_list|(
 name|offsets
-argument_list|,
+operator|->
+name|offsets
+index|[
 name|SECT_OFF_DATA
+argument_list|(
+name|objfile
 argument_list|)
+index|]
 operator|=
 literal|0
 expr_stmt|;
-name|ANOFFSET
-argument_list|(
 name|offsets
-argument_list|,
+operator|->
+name|offsets
+index|[
 name|SECT_OFF_BSS
+argument_list|(
+name|objfile
 argument_list|)
+index|]
 operator|=
 literal|0
 expr_stmt|;
@@ -4842,12 +4732,15 @@ return|return
 literal|1
 return|;
 block|}
-name|ANOFFSET
-argument_list|(
 name|offsets
-argument_list|,
+operator|->
+name|offsets
+index|[
 name|SECT_OFF_DATA
+argument_list|(
+name|objfile
 argument_list|)
+index|]
 operator|=
 operator|(
 name|so_list
@@ -4861,18 +4754,24 @@ operator|->
 name|vma
 operator|)
 expr_stmt|;
-name|ANOFFSET
-argument_list|(
 name|offsets
-argument_list|,
+operator|->
+name|offsets
+index|[
 name|SECT_OFF_BSS
+argument_list|(
+name|objfile
 argument_list|)
+index|]
 operator|=
 name|ANOFFSET
 argument_list|(
 name|offsets
 argument_list|,
 name|SECT_OFF_DATA
+argument_list|(
+name|objfile
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4901,17 +4800,13 @@ specifier|static
 name|void
 name|som_sharedlibrary_info_command
 parameter_list|(
-name|ignore
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|ignore
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|so_list
@@ -4929,7 +4824,7 @@ condition|)
 block|{
 name|printf_unfiltered
 argument_list|(
-literal|"no exec file.\n"
+literal|"No executable file.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5143,17 +5038,13 @@ specifier|static
 name|void
 name|som_solib_sharedlibrary_command
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|int
 name|from_tty
-decl_stmt|;
+parameter_list|)
 block|{
 name|dont_repeat
 argument_list|()
@@ -5170,6 +5061,8 @@ name|target_ops
 operator|*
 operator|)
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -5180,11 +5073,9 @@ name|char
 modifier|*
 name|som_solib_address
 parameter_list|(
-name|addr
-parameter_list|)
 name|CORE_ADDR
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|so_list
@@ -5198,7 +5089,7 @@ condition|(
 name|so
 condition|)
 block|{
-comment|/* Is this address within this shlib's text range?  If so,          return the shlib's name.          */
+comment|/* Is this address within this shlib's text range?  If so,          return the shlib's name.        */
 if|if
 condition|(
 operator|(
@@ -5246,7 +5137,9 @@ end_function
 begin_function
 name|void
 name|som_solib_restart
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|so_list
@@ -5255,13 +5148,13 @@ name|sl
 init|=
 name|so_list_head
 decl_stmt|;
-comment|/* Before the shlib info vanishes, use it to disable any breakpoints      that may still be active in those shlibs.      */
+comment|/* Before the shlib info vanishes, use it to disable any breakpoints      that may still be active in those shlibs.    */
 name|disable_breakpoints_in_shlibs
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Discard all the shlib descriptors.      */
+comment|/* Discard all the shlib descriptors.    */
 while|while
 condition|(
 name|sl
@@ -5276,7 +5169,7 @@ name|sl
 operator|->
 name|next
 decl_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|sl
 argument_list|)
@@ -5422,10 +5315,32 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* LOCAL FUNCTION     no_shared_libraries -- handle command to explicitly discard symbols    from shared libraries.     DESCRIPTION     Implements the command "nosharedlibrary", which discards symbols    that have been auto-loaded from shared libraries.  Symbols from    shared libraries that were added by explicit request of the user    are not discarded.  Also called from remote.c.  */
+end_comment
+
+begin_function
+name|void
+name|no_shared_libraries
+parameter_list|(
+name|char
+modifier|*
+name|ignored
+parameter_list|,
+name|int
+name|from_tty
+parameter_list|)
+block|{
+comment|/* FIXME */
+block|}
+end_function
+
 begin_function
 name|void
 name|_initialize_som_solib
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|add_com
 argument_list|(
@@ -5455,7 +5370,7 @@ literal|"auto-solib-add"
 argument_list|,
 name|class_support
 argument_list|,
-name|var_zinteger
+name|var_boolean
 argument_list|,
 operator|(
 name|char
@@ -5464,7 +5379,7 @@ operator|)
 operator|&
 name|auto_solib_add
 argument_list|,
-literal|"Set autoloading size threshold (in megabytes) of shared library symbols.\n\ If nonzero, symbols from all shared object libraries will be loaded\n\ automatically when the inferior begins execution or when the dynamic linker\n\ informs gdb that a new library has been loaded, until the symbol table\n\ of the program and libraries exceeds this threshold.\n\ Otherwise, symbols must be loaded manually, using `sharedlibrary'."
+literal|"Set autoloading of shared library symbols.\n\ If \"on\", symbols from all shared object libraries will be loaded\n\ automatically when the inferior begins execution, when the dynamic linker\n\ informs gdb that a new library has been loaded, or when attaching to the\n\ inferior.  Otherwise, symbols must be loaded manually, using `sharedlibrary'."
 argument_list|,
 operator|&
 name|setlist
@@ -5474,8 +5389,35 @@ operator|&
 name|showlist
 argument_list|)
 expr_stmt|;
-comment|/* ??rehrauer: On HP-UX, the kernel parameter MAXDSIZ limits how much      data space a process can use.  We ought to be reading MAXDSIZ and      setting auto_solib_add to some large fraction of that value.  If      not that, we maybe ought to be setting it smaller than the default      for MAXDSIZ (that being 64Mb, I believe).  However, [1] this threshold      is only crudely approximated rather than actually measured, and [2]      50 Mbytes is too small for debugging gdb itself.  Thus, the arbitrary      100 figure.      */
-name|auto_solib_add
+name|add_show_from_set
+argument_list|(
+name|add_set_cmd
+argument_list|(
+literal|"auto-solib-limit"
+argument_list|,
+name|class_support
+argument_list|,
+name|var_zinteger
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|auto_solib_limit
+argument_list|,
+literal|"Set threshold (in Mb) for autoloading shared library symbols.\n\ When shared library autoloading is enabled, new libraries will be loaded\n\ only until the total size of shared library symbols exceeds this\n\ threshold in megabytes.  Is ignored when using `sharedlibrary'."
+argument_list|,
+operator|&
+name|setlist
+argument_list|)
+argument_list|,
+operator|&
+name|showlist
+argument_list|)
+expr_stmt|;
+comment|/* ??rehrauer: On HP-UX, the kernel parameter MAXDSIZ limits how      much data space a process can use.  We ought to be reading      MAXDSIZ and setting auto_solib_limit to some large fraction of      that value.  If not that, we maybe ought to be setting it smaller      than the default for MAXDSIZ (that being 64Mb, I believe).      However, [1] this threshold is only crudely approximated rather      than actually measured, and [2] 50 Mbytes is too small for      debugging gdb itself.  Thus, the arbitrary 100 figure.  */
+name|auto_solib_limit
 operator|=
 literal|100
 expr_stmt|;
@@ -5494,13 +5436,11 @@ begin_function
 name|CORE_ADDR
 name|so_lib_thread_start_addr
 parameter_list|(
-name|so
-parameter_list|)
 name|struct
 name|so_list
 modifier|*
 name|so
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|so
