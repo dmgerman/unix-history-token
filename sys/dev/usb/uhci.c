@@ -1654,25 +1654,6 @@ name|uhci_ii_free
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USB_DEBUG
-argument_list|)
-if|if
-condition|(
-name|uhcidebug
-operator|>
-literal|2
-condition|)
-name|uhci_dumpregs
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|uhci_run
 argument_list|(
 name|sc
@@ -2157,7 +2138,6 @@ name|printf
 argument_list|(
 literal|"%s: regs: cmd=%04x, sts=%04x, intr=%04x, frnum=%04x, "
 literal|"flbase=%08x, sof=%02x, portsc1=%04x, portsc2=%04x, "
-literal|"legsup=%04x\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -2223,13 +2203,6 @@ name|sc
 argument_list|,
 name|UHCI_PORTSC2
 argument_list|)
-argument_list|,
-name|UREAD2
-argument_list|(
-name|sc
-argument_list|,
-name|UHCI_LEGSUP
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2256,7 +2229,7 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"TD(%p) at %08lx = 0x%08lx 0x%08lx 0x%08lx 0x%08lx\n"
+literal|"TD(%p) at %08lx link=0x%08lx st=0x%08lx tok=0x%08lx buf=0x%08lx\n"
 argument_list|,
 name|p
 argument_list|,

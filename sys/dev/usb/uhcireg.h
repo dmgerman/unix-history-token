@@ -62,6 +62,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_LEGSUP
+value|0xc0
+end_define
+
+begin_comment
+comment|/* Legacy Support register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_LEGSUP_USBPIRQDEN
+value|0x2000
+end_define
+
+begin_comment
+comment|/* USB PIRQ D Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_CBIO
 value|0x20
 end_define
@@ -359,13 +381,6 @@ define|#
 directive|define
 name|UHCI_PORTSC_SUSP
 value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|UHCI_LEGSUP
-value|0xc0
 end_define
 
 begin_define
