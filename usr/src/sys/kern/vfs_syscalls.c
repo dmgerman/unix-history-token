@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.66 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.67 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -686,6 +686,8 @@ operator|->
 name|data
 argument_list|,
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -782,6 +784,8 @@ argument_list|(
 name|mp
 argument_list|,
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -1012,6 +1016,8 @@ argument_list|,
 name|uap
 operator|->
 name|flags
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -1028,6 +1034,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|flags
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -1040,6 +1048,14 @@ end_expr_stmt
 begin_decl_stmt
 name|int
 name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1144,6 +1160,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|flags
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|mp
@@ -1484,6 +1502,8 @@ argument_list|,
 name|uap
 operator|->
 name|arg
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -1645,6 +1665,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|sp
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -1817,6 +1839,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|sp
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -2027,6 +2051,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|sp
+argument_list|,
+name|p
 argument_list|)
 operator|)
 condition|)
@@ -2261,6 +2287,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -2699,6 +2727,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -3435,6 +3465,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -3705,6 +3737,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -3956,6 +3990,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -4256,6 +4292,8 @@ operator|&
 name|vattr
 argument_list|,
 name|target
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|out
@@ -4482,6 +4520,8 @@ operator|=
 name|VOP_REMOVE
 argument_list|(
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -4700,6 +4740,8 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -5008,6 +5050,8 @@ argument_list|,
 name|mode
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -5169,6 +5213,8 @@ name|ni_vp
 argument_list|,
 operator|&
 name|sb
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vput
@@ -5346,6 +5392,8 @@ name|ni_vp
 argument_list|,
 operator|&
 name|sb
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vput
@@ -5595,6 +5643,12 @@ name|UIO_USERSPACE
 expr_stmt|;
 name|auio
 operator|.
+name|uio_procp
+operator|=
+name|p
+expr_stmt|;
+name|auio
+operator|.
 name|uio_resid
 operator|=
 name|uap
@@ -5814,6 +5868,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|out
@@ -5985,6 +6041,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|out
@@ -6177,6 +6235,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|out
@@ -6350,6 +6410,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|out
@@ -6551,6 +6613,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|out
@@ -6733,6 +6797,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|out
@@ -6971,6 +7037,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|out
@@ -7156,6 +7224,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 operator|)
 condition|)
@@ -7188,6 +7258,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|out
@@ -7386,6 +7458,8 @@ argument_list|,
 name|fp
 operator|->
 name|f_cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|out
@@ -7520,6 +7594,8 @@ operator|->
 name|f_cred
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -7877,6 +7953,8 @@ name|ndp
 argument_list|,
 operator|&
 name|tond
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -8171,6 +8249,8 @@ name|ndp
 argument_list|,
 operator|&
 name|vattr
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -8374,6 +8454,8 @@ operator|=
 name|VOP_RMDIR
 argument_list|(
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -8609,6 +8691,12 @@ operator|.
 name|uio_segflg
 operator|=
 name|UIO_USERSPACE
+expr_stmt|;
+name|auio
+operator|.
+name|uio_procp
+operator|=
+name|p
 expr_stmt|;
 name|auio
 operator|.
@@ -8952,6 +9040,8 @@ argument_list|,
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 goto|goto
