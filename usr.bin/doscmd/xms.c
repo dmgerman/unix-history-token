@@ -2891,7 +2891,7 @@ if|if
 condition|(
 name|dstptr
 operator|==
-name|NULL
+literal|0
 operator|||
 name|dstptr
 operator|==

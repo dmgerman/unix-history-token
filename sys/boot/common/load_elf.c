@@ -2771,7 +2771,7 @@ index|]
 operator|.
 name|d_tag
 operator|==
-name|NULL
+literal|0
 condition|)
 break|break;
 switch|switch
