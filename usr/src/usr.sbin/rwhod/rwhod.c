@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.26 (Berkeley) 84/09/04"
+literal|"@(#)rwhod.c	4.27 (Berkeley) 84/10/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -1370,6 +1370,12 @@ operator|!=
 name|utmptime
 condition|)
 block|{
+name|utmptime
+operator|=
+name|stb
+operator|.
+name|st_mtime
+expr_stmt|;
 operator|(
 name|void
 operator|)
