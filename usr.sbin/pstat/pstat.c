@@ -824,7 +824,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|SLIST_HEAD
+name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|tty
@@ -905,7 +905,7 @@ argument_list|)
 expr_stmt|;
 name|tp
 operator|=
-name|SLIST_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|tl
@@ -1034,11 +1034,12 @@ argument_list|)
 expr_stmt|;
 name|tp
 operator|=
-name|tty
-operator|.
+name|TAILQ_NEXT
+argument_list|(
+name|tp
+argument_list|,
 name|t_list
-operator|.
-name|sle_next
+argument_list|)
 expr_stmt|;
 block|}
 block|}
