@@ -8636,6 +8636,11 @@ argument_list|(
 name|off
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 name|retry_lookup
 label|:
 comment|/* 		 * Calculate the amount to transfer. Not to exceed a page, 		 * the EOF, or the passed in nbytes. 		 */
@@ -8650,6 +8655,11 @@ operator|.
 name|vnp_size
 operator|-
 name|off
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -8768,6 +8778,11 @@ goto|goto
 name|done
 goto|;
 block|}
+name|VM_OBJECT_LOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Attempt to look up the page.   		 * 		 *	Allocate if not found 		 * 		 *	Wait and loop if busy. 		 */
 name|pg
 operator|=
@@ -8805,7 +8820,17 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 name|VM_WAIT
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|obj
+argument_list|)
 expr_stmt|;
 goto|goto
 name|retry_lookup
@@ -8878,6 +8903,11 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
+argument_list|)
 expr_stmt|;
 comment|/* 			 * Get the page from backing store. 			 */
 name|bsize
@@ -9063,6 +9093,12 @@ name|done
 goto|;
 block|}
 block|}
+else|else
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
