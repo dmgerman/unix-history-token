@@ -234,7 +234,7 @@ file|<pci/if_xlreg.h>
 end_include
 
 begin_comment
-comment|/*   * TX Checksumming is disabled by default for two reasons:  * - TX Checksumming will occasionally produce corrupt packets  * - TX Checksumming seems to reduce performance  *  * Only 905B/C cards were reported to have this problem, it is possible  * that later chips _may_ be immune.  */
+comment|/*  * TX Checksumming is disabled by default for two reasons:  * - TX Checksumming will occasionally produce corrupt packets  * - TX Checksumming seems to reduce performance  *  * Only 905B/C cards were reported to have this problem, it is possible  * that later chips _may_ be immune.  */
 end_comment
 
 begin_define
@@ -1993,7 +1993,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Turn on data xmit. 	 */
+comment|/* 	 * Turn on data xmit. 	 */
 name|MII_SET
 argument_list|(
 name|XL_MII_DIR
@@ -2263,7 +2263,7 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Turn on data output. 	 */
+comment|/* 	 * Turn on data output. 	 */
 name|MII_SET
 argument_list|(
 name|XL_MII_DIR
@@ -3064,7 +3064,7 @@ parameter_list|(
 name|A
 parameter_list|)
 value|((A)& 0x003F)
-comment|/* WARNING! DANGER! 	 * It's easy to accidentally overwrite the rom content! 	 * Note: the 3c575 uses 8bit EEPROM offsets. 	 */
+comment|/* 	 * XXX: WARNING! DANGER! 	 * It's easy to accidentally overwrite the rom content! 	 * Note: the 3c575 uses 8bit EEPROM offsets. 	 */
 name|XL_SEL_WIN
 argument_list|(
 literal|0
@@ -3484,7 +3484,7 @@ operator|!=
 name|AF_LINK
 condition|)
 continue|continue;
-comment|/* 		 * Note: the 3c905B currently only supports a 64-bit hash 		 * table, which means we really only need 6 bits, but the 		 * manual indicates that future chip revisions will have a 		 * 256-bit hash table, hence the routine is set up to 		 * calculate 8 bits of position info in case we need it some 		 * day. 		 * Note II, The Sequel: _CURRENT_ versions of the 3c905B have 		 * a 256 bit hash table. This means we have to use all 8 bits 		 * regardless. On older cards, the upper 2 bits will be 		 * ignored. Grrrr....  		 */
+comment|/* 		 * Note: the 3c905B currently only supports a 64-bit hash 		 * table, which means we really only need 6 bits, but the 		 * manual indicates that future chip revisions will have a 		 * 256-bit hash table, hence the routine is set up to 		 * calculate 8 bits of position info in case we need it some 		 * day. 		 * Note II, The Sequel: _CURRENT_ versions of the 3c905B have 		 * a 256 bit hash table. This means we have to use all 8 bits 		 * regardless. On older cards, the upper 2 bits will be 		 * ignored. Grrrr.... 		 */
 name|h
 operator|=
 name|ether_crc32_be
@@ -4649,7 +4649,7 @@ name|XL_MEDIAOPT_VCO
 operator|)
 condition|)
 block|{
-comment|/* 	 	 * Check the XCVR value. If it's not in the normal range 	 	 * of values, we need to fake it up here. 	 	 */
+comment|/* 		 * Check the XCVR value. If it's not in the normal range 		 * of values, we need to fake it up here. 		 */
 if|if
 condition|(
 name|sc
@@ -6326,7 +6326,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* 	 * Figure out the card type. 3c905B adapters have the 	 * 'supportsNoTxLength' bit set in the capabilities 	 * word in the EEPROM. 	 * Note: my 3c575C cardbus card lies. It returns a value 	 * of 0x1578 for its capabilities word, which is somewhat  	 * nonsensical. Another way to distinguish a 3c90x chip 	 * from a 3c90xB/C chip is to check for the 'supportsLargePackets' 	 * bit. This will only be set for 3c90x boomerage chips. 	 */
+comment|/* 	 * Figure out the card type. 3c905B adapters have the 	 * 'supportsNoTxLength' bit set in the capabilities 	 * word in the EEPROM. 	 * Note: my 3c575C cardbus card lies. It returns a value 	 * of 0x1578 for its capabilities word, which is somewhat 	 * nonsensical. Another way to distinguish a 3c90x chip 	 * from a 3c90xB/C chip is to check for the 'supportsLargePackets' 	 * bit. This will only be set for 3c90x boomerage chips. 	 */
 name|xl_read_eeprom
 argument_list|(
 name|sc
@@ -7146,7 +7146,7 @@ operator|->
 name|xl_xcvr
 argument_list|)
 expr_stmt|;
-comment|/* 		 * This will probably be wrong, but it prevents 	 	 * the ifmedia code from panicking. 		 */
+comment|/* 		 * This will probably be wrong, but it prevents 		 * the ifmedia code from panicking. 		 */
 name|media
 operator|=
 name|IFM_ETHER
@@ -8830,7 +8830,7 @@ operator||
 name|XL_RXSTAT_OVERSIZE
 operator|)
 expr_stmt|;
-comment|/* 		 * If an error occurs, update stats, clear the 		 * status word and leave the mbuf cluster in place: 		 * it should simply get re-used next time this descriptor 	 	 * comes up in the ring. 		 */
+comment|/* 		 * If an error occurs, update stats, clear the 		 * status word and leave the mbuf cluster in place: 		 * it should simply get re-used next time this descriptor 		 * comes up in the ring. 		 */
 if|if
 condition|(
 name|rxstat
@@ -9940,7 +9940,7 @@ name|XL_CMD_DOWN_UNSTALL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Write an arbitrary byte to the TX_STATUS register 	 	 * to clear this interrupt/error and advance to the next. 		 */
+comment|/* 		 * Write an arbitrary byte to the TX_STATUS register 		 * to clear this interrupt/error and advance to the next. 		 */
 name|CSR_WRITE_1
 argument_list|(
 name|sc
@@ -10460,7 +10460,7 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
-comment|/*  	 * Start packing the mbufs in this chain into 	 * the fragment pointers. Stop when we run out  	 * of fragments or hit the end of the mbuf chain. 	 */
+comment|/* 	 * Start packing the mbufs in this chain into 	 * the fragment pointers. Stop when we run out 	 * of fragments or hit the end of the mbuf chain. 	 */
 name|error
 operator|=
 name|bus_dmamap_load_mbuf
@@ -11173,7 +11173,7 @@ name|if_timer
 operator|=
 literal|5
 expr_stmt|;
-comment|/* 	 * XXX Under certain conditions, usually on slower machines 	 * where interrupts may be dropped, it's possible for the 	 * adapter to chew up all the buffers in the receive ring 	 * and stall, without us being able to do anything about it. 	 * To guard against this, we need to make a pass over the 	 * RX queue to make sure there aren't any packets pending. 	 * Doing it here means we can flush the receive ring at the 	 * same time the chip is DMAing the transmit descriptors we 	 * just gave it.  	 * 	 * 3Com goes to some lengths to emphasize the Parallel Tasking (tm) 	 * nature of their chips in all their marketing literature; 	 * we may as well take advantage of it. :) 	 */
+comment|/* 	 * XXX Under certain conditions, usually on slower machines 	 * where interrupts may be dropped, it's possible for the 	 * adapter to chew up all the buffers in the receive ring 	 * and stall, without us being able to do anything about it. 	 * To guard against this, we need to make a pass over the 	 * RX queue to make sure there aren't any packets pending. 	 * Doing it here means we can flush the receive ring at the 	 * same time the chip is DMAing the transmit descriptors we 	 * just gave it. 	 * 	 * 3Com goes to some lengths to emphasize the Parallel Tasking (tm) 	 * nature of their chips in all their marketing literature; 	 * we may as well take advantage of it. :) 	 */
 name|xl_rxeof
 argument_list|(
 name|sc
@@ -12127,7 +12127,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If the coax transceiver is on, make sure to enable 	 * the DC-DC converter.  	 */
+comment|/* 	 * If the coax transceiver is on, make sure to enable 	 * the DC-DC converter. 	 */
 name|XL_SEL_WIN
 argument_list|(
 literal|3
