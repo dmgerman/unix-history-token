@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rm.c	4.2 (Berkeley) %G%"
+literal|"@(#)rm.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -370,7 +370,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"directory %s: "
+literal|"remove directory %s? "
 argument_list|,
 name|arg
 argument_list|)
@@ -401,7 +401,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"rm: %s: cannot read\n"
+literal|"rm: cannot read %s?\n"
 argument_list|,
 name|arg
 argument_list|)
@@ -519,7 +519,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: "
+literal|"rm: remove %s? "
 argument_list|,
 name|arg
 argument_list|)
@@ -553,15 +553,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"rm: %s %o mode "
-argument_list|,
-name|arg
+literal|"rm: override protection %o for %s? "
 argument_list|,
 name|buf
 operator|.
 name|st_mode
 operator|&
 literal|0777
+argument_list|,
+name|arg
 argument_list|)
 expr_stmt|;
 if|if
@@ -722,7 +722,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: "
+literal|"rm: remove %s? "
 argument_list|,
 name|f
 argument_list|)
