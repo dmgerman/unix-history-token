@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_icmp.c	6.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_icmp.c	6.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -617,22 +617,20 @@ begin_comment
 comment|/*  * Process a received ICMP message.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|icmp_input
 argument_list|(
-argument|m
-argument_list|,
-argument|ifp
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
 name|m
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|ifp
+argument_list|)
+specifier|register
+expr|struct
+name|mbuf
+operator|*
+name|m
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -891,7 +889,7 @@ operator|>
 name|ICMP_MAXTYPE
 condition|)
 goto|goto
-name|free
+name|raw
 goto|;
 name|icmpstat
 operator|.
@@ -1470,6 +1468,16 @@ operator|&
 name|icmpgw
 argument_list|)
 expr_stmt|;
+name|icmpsrc
+operator|.
+name|sin_addr
+operator|=
+name|icp
+operator|->
+name|icmp_ip
+operator|.
+name|ip_dst
+expr_stmt|;
 name|pfctlinput
 argument_list|(
 name|PRC_REDIRECT_NET
@@ -1558,6 +1566,8 @@ case|:
 default|default:
 break|break;
 block|}
+name|raw
+label|:
 name|icmpsrc
 operator|.
 name|sin_addr
