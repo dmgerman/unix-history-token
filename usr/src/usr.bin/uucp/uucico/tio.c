@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tio.c	4.8	(Berkeley) %G%"
+literal|"@(#)tio.c	4.9	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +42,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/machparam.h>
 end_include
 
 begin_function_decl
