@@ -873,8 +873,13 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|status
+operator|==
+literal|0
+operator|)
 return|;
+comment|/* status==1 --> exit(0),                                  status==0 --> exit(1) */
 block|}
 end_function
 
