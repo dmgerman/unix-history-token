@@ -334,6 +334,20 @@ name|GV_BIO_REBUILD
 value|0x20
 end_define
 
+begin_define
+define|#
+directive|define
+name|GV_BIO_CHECK
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|GV_BIO_PARITY
+value|0x80
+end_define
+
 begin_comment
 comment|/*  * hostname is 256 bytes long, but we don't need to shlep multiple copies in  * vinum.  We use the host name just to identify this system, and 32 bytes  * should be ample for that purpose.  */
 end_comment

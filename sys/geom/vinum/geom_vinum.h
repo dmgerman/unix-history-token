@@ -73,6 +73,21 @@ end_comment
 
 begin_function_decl
 name|void
+name|gv_parityop
+parameter_list|(
+name|struct
+name|g_geom
+modifier|*
+parameter_list|,
+name|struct
+name|gctl_req
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|gv_start_obj
 parameter_list|(
 name|struct
