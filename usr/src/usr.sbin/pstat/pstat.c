@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.20 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,7 +107,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/inode.h>
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -155,13 +161,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nlist.h>
+file|<ufs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<machine/pte.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
 end_include
 
 begin_include
@@ -1088,6 +1100,12 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
+specifier|register
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
 name|struct
 name|inode
 modifier|*
@@ -1239,15 +1257,24 @@ condition|;
 name|ip
 operator|++
 control|)
-if|if
-condition|(
+block|{
+name|vp
+operator|=
+operator|&
 name|ip
 operator|->
-name|i_count
+name|i_vnode
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_count
 condition|)
 name|nin
 operator|++
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|totflg
@@ -1296,11 +1323,18 @@ name|ip
 operator|++
 control|)
 block|{
-if|if
-condition|(
+name|vp
+operator|=
+operator|&
 name|ip
 operator|->
-name|i_count
+name|i_vnode
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_count
 operator|==
 literal|0
 condition|)
@@ -1357,31 +1391,9 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IMOUNT
-argument_list|,
-literal|'M'
-argument_list|)
-expr_stmt|;
-name|putf
-argument_list|(
-name|ip
-operator|->
-name|i_flag
-operator|&
 name|IWANT
 argument_list|,
 literal|'W'
-argument_list|)
-expr_stmt|;
-name|putf
-argument_list|(
-name|ip
-operator|->
-name|i_flag
-operator|&
-name|ITEXT
-argument_list|,
-literal|'T'
 argument_list|)
 expr_stmt|;
 name|putf
@@ -1428,13 +1440,35 @@ argument_list|,
 literal|'Z'
 argument_list|)
 expr_stmt|;
+name|putf
+argument_list|(
+name|ip
+operator|->
+name|i_flag
+operator|&
+name|IMOD
+argument_list|,
+literal|'M'
+argument_list|)
+expr_stmt|;
+name|putf
+argument_list|(
+name|ip
+operator|->
+name|i_flag
+operator|&
+name|IRENAME
+argument_list|,
+literal|'R'
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%4d"
 argument_list|,
-name|ip
+name|vp
 operator|->
-name|i_count
+name|v_count
 operator|&
 literal|0377
 argument_list|)
@@ -1462,9 +1496,9 @@ name|printf
 argument_list|(
 literal|"%4d"
 argument_list|,
-name|ip
+name|vp
 operator|->
-name|i_shlockc
+name|v_shlockc
 operator|&
 literal|0377
 argument_list|)
@@ -1473,9 +1507,9 @@ name|printf
 argument_list|(
 literal|"%4d"
 argument_list|,
-name|ip
+name|vp
 operator|->
-name|i_exlockc
+name|v_exlockc
 operator|&
 literal|0377
 argument_list|)
@@ -1840,7 +1874,7 @@ if|if
 condition|(
 name|xp
 operator|->
-name|x_iptr
+name|x_vptr
 operator|!=
 name|NULL
 condition|)
@@ -1890,7 +1924,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\    LOC   FLAGS DADDR     CADDR  RSS SIZE     IPTR   CNT CCNT      FORW     BACK\n"
+literal|"\    LOC   FLAGS DADDR     CADDR  RSS SIZE     VPTR   CNT CCNT      FORW     BACK\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1915,7 +1949,7 @@ if|if
 condition|(
 name|xp
 operator|->
-name|x_iptr
+name|x_vptr
 operator|==
 name|NULL
 condition|)
@@ -1944,7 +1978,7 @@ name|xp
 operator|->
 name|x_flag
 operator|&
-name|XPAGI
+name|XPAGV
 argument_list|,
 literal|'P'
 argument_list|)
@@ -2049,7 +2083,7 @@ literal|"%10.1x"
 argument_list|,
 name|xp
 operator|->
-name|x_iptr
+name|x_vptr
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4149,11 +4183,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"pdir %.1o\n"
+literal|"dvp vp %.1x %.1x\n"
 argument_list|,
 name|nd
 operator|->
-name|ni_pdir
+name|ni_dvp
+argument_list|,
+name|nd
+operator|->
+name|ni_vp
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4533,6 +4571,15 @@ argument_list|,
 name|U
 operator|.
 name|u_comm
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"logname %.12s\n"
+argument_list|,
+name|U
+operator|.
+name|u_logname
 argument_list|)
 expr_stmt|;
 name|printf
@@ -5872,7 +5919,7 @@ if|if
 condition|(
 name|xp
 operator|->
-name|x_iptr
+name|x_vptr
 operator|!=
 name|NULL
 condition|)
@@ -5895,7 +5942,7 @@ name|xp
 operator|->
 name|x_flag
 operator|&
-name|XPAGI
+name|XPAGV
 condition|)
 name|tused
 operator|+=
