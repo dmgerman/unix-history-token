@@ -1138,6 +1138,12 @@ if|if
 condition|(
 name|sig
 condition|)
+block|{
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|SIGDELSET
 argument_list|(
 name|p
@@ -1147,6 +1153,12 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 elseif|else
