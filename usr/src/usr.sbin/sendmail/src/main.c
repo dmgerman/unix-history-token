@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.15	%G%"
+literal|"@(#)main.c	3.16	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,6 +318,35 @@ begin_comment
 comment|/* holds From line (UNIX style header) */
 end_comment
 
+begin_decl_stmt
+name|int
+name|NextMailer
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* "free" index into Mailer struct */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mailer
+modifier|*
+name|Mailer
+index|[
+name|MAXMAILERS
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* definition of mailers */
+end_comment
+
 begin_function
 name|main
 parameter_list|(
@@ -576,7 +605,7 @@ name|NULL
 expr_stmt|;
 name|cfname
 operator|=
-literal|"/usr/lib/sendmail.cf"
+name|CONFFILE
 expr_stmt|;
 comment|/* 	** Crack argv. 	*/
 while|while
@@ -1161,6 +1190,79 @@ block|}
 endif|#
 directive|endif
 endif|V6
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|Debug
+operator|>
+literal|15
+condition|)
+block|{
+name|printrules
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAXMAILERS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+specifier|register
+name|struct
+name|mailer
+modifier|*
+name|m
+init|=
+name|Mailer
+index|[
+name|i
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+continue|continue;
+name|printf
+argument_list|(
+literal|"mailer %d: %s %s %o %s\n"
+argument_list|,
+name|i
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|,
+name|m
+operator|->
+name|m_mailer
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|,
+name|m
+operator|->
+name|m_from
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+endif|DEBUG
 comment|/* 	locname = getname(); 	if (locname == NULL || locname[0] == '\0') 	{ 		extern struct passwd *getpwuid(); 		int uid;  		uid = getuid(); # ifdef V6 		uid&= 0377; # endif 		pw = getpwuid(uid); 		if (pw == NULL) 			syserr("Who are you? (uid=%d)", uid); 		else 			p = pw->pw_name; 	} 	else 	{ 		extern struct passwd *getpwnam();  		pw = getpwnam(p); 		if (pw == NULL) 			syserr("Who are you? (name=%s)", p); 	} 	if (p == NULL || p[0] == '\0' || pw == NULL) 		finis();  	realname = p;  	/* extract full name from passwd file */
 if|if
 condition|(

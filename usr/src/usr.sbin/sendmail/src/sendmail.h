@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.21	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.22	%G% */
 end_comment
 
 begin_include
@@ -82,12 +82,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAXMAILERS
+value|10
+end_define
+
+begin_comment
+comment|/* maximum mailers known to system */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ALIASFILE
 value|"/usr/lib/aliases"
 end_define
 
 begin_comment
 comment|/* location of alias file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONFFILE
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_comment
+comment|/* configuration file */
 end_comment
 
 begin_comment
