@@ -462,7 +462,7 @@ name|pte
 parameter_list|,
 name|v
 parameter_list|)
-value|((v)?(*(int *)pte |= PG_W):(*(int *)pte&= ~PG_W))
+value|((v) ? atomic_set_int((u_int *)(pte), PG_W) : \     atomic_clear_int((u_int *)(pte), PG_W))
 end_define
 
 begin_define
