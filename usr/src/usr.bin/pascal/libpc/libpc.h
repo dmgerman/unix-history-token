@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)libpc.h 1.3 %G%"; */
+comment|/* static char sccsid[] = "@(#)libpc.h 1.4 %G%"; */
 end_comment
 
 begin_function_decl
@@ -85,26 +85,10 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|long
-name|FCALL
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|struct
 name|formalrtn
 modifier|*
 name|FSAV
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|long
-name|FRET
 parameter_list|()
 function_decl|;
 end_function_decl
