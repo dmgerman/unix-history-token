@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	srt0.c	4.5	%G%	*/
+comment|/*	srt0.c	4.6	81/03/21	*/
 end_comment
 
 begin_include
@@ -51,10 +51,6 @@ end_for
 
 begin_case
 case|case
-name|mtpr
-name|$_Scbbase
-operator|,
-name|$SCBB
 name|movl
 name|$reloc
 operator|-
@@ -62,10 +58,7 @@ literal|0x2400
 operator|,
 name|sp
 name|start
-case|:
-end_case
-
-begin_decl_stmt
+range|:
 name|movab
 name|_edata
 decl_stmt|,
@@ -100,7 +93,7 @@ name|word
 literal|0x0
 name|jmp
 name|start
-end_decl_stmt
+end_case
 
 end_unit
 
