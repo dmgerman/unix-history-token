@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)graphics2.c	1.1	%G%  *  * Line drawing and polygon fill routines for the SUN Gremlin  * picture editor.  Line drawing courtesy of dsun.c and polygon  * fill courtesy of dvar.c.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
+comment|/*  * @(#)graphics2.c	1.2	%G%  *  * Line drawing and polygon fill routines for the SUN Gremlin  * picture editor.  Line drawing courtesy of dsun.c and polygon  * fill courtesy of dvar.c.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
 end_comment
 
 begin_include
@@ -15,36 +15,6 @@ directive|include
 file|"gremlin.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|maybefaster
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|_image
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|_bytesperline
-decl_stmt|,
-name|_maxx
-decl_stmt|,
-name|_maxy
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -56,11 +26,6 @@ name|sun_y
 parameter_list|)
 value|pr_put(scratch_pr, (sun_x), (sun_y), 1)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* imports from main.c */
@@ -175,6 +140,34 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern rasterlength;
+end_extern
+
+begin_extern
+extern|extern bytesperline;
+end_extern
+
+begin_extern
+extern|extern nlines;
+end_extern
+
+begin_comment
+comment|/* scratch_pr->pr_size.x */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|fill
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* zero origin in filling buffer */
+end_comment
+
 begin_comment
 comment|/* imports from C */
 end_comment
@@ -192,36 +185,6 @@ begin_comment
 comment|/* locals */
 end_comment
 
-begin_expr_stmt
-specifier|static
-name|RASTER_LENGTH
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|BYTES_PER_LINE
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|NLINES
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|fill
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Zero origin in filling buffer */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -229,16 +192,6 @@ modifier|*
 name|stipplebits
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|pv
-parameter_list|(
-name|x
-parameter_list|)
-value|((polyvector *)x)
-end_define
 
 begin_typedef
 typedef|typedef
@@ -281,107 +234,8 @@ name|polyvector
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|maybefaster
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|bm
-index|[]
-init|=
-block|{
-literal|128
-block|,
-literal|64
-block|,
-literal|32
-block|,
-literal|16
-block|,
-literal|8
-block|,
-literal|4
-block|,
-literal|2
-block|,
-literal|1
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|point
-argument_list|(
-name|x
-argument_list|,
-name|y
-argument_list|)
-specifier|register
-name|x
-operator|,
-name|y
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-name|x
-operator|<
-literal|0
-operator|||
-name|x
-operator|>=
-name|_maxx
-operator|||
-name|y
-operator|<
-literal|0
-operator|||
-name|y
-operator|>=
-name|_maxy
-condition|)
-return|return;
-operator|*
-operator|(
-name|_image
-operator|+
-operator|(
-name|y
-operator|*
-name|_bytesperline
-operator|)
-operator|+
-operator|(
-name|x
-operator|>>
-literal|3
-operator|)
-operator|)
-operator||=
-name|bm
-index|[
-name|x
-operator|&
-literal|7
-index|]
-expr_stmt|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * Vector from (x1, y1) to (x2, y2) using global linemod and linethickness.  * Parameters in database coordinates system.  * Always write to scratch_pr.  * Stolen from dsun.  * mro 7/21/84  */
+comment|/*  * Vector from (x1, y1) to (x2, y2) using global linemod and linethickness.  * Parameters in database coordinates system.  * Always write to scratch_pr.  * Borrowed from dsun.  */
 end_comment
 
 begin_macro
@@ -1502,7 +1356,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Plots a filled (if requested) circle of the specified radius  * centered about (x, y).  * Coordinates are window relative.  * Stolen from dsun.  */
+comment|/*  * Plots a filled (if requested) circle of the specified radius  * centered about (x, y).  * Coordinates are window relative.  * Modified from dsun source.  */
 end_comment
 
 begin_expr_stmt
@@ -1791,16 +1645,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|mpr_data
-modifier|*
-name|md
-decl_stmt|;
-name|struct
-name|pixrect
-modifier|*
-name|pr
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1835,47 +1679,6 @@ name|style
 operator|-
 literal|1
 index|]
-expr_stmt|;
-name|md
-operator|=
-operator|(
-expr|struct
-name|mpr_data
-operator|*
-operator|)
-name|scratch_pr
-operator|->
-name|pr_data
-expr_stmt|;
-name|BYTES_PER_LINE
-operator|=
-name|md
-operator|->
-name|md_linebytes
-expr_stmt|;
-name|fill
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|md
-operator|->
-name|md_image
-expr_stmt|;
-name|RASTER_LENGTH
-operator|=
-name|BYTES_PER_LINE
-operator|<<
-literal|3
-expr_stmt|;
-name|NLINES
-operator|=
-name|scratch_pr
-operator|->
-name|pr_size
-operator|.
-name|x
 expr_stmt|;
 block|}
 end_block
@@ -1918,7 +1721,7 @@ comment|/* mask to pick off byte index into stipple */
 end_comment
 
 begin_comment
-comment|/*  *  Fill polygon defined by points in plist using parameters set by  *  previous call to GRSetStippleStyle().  *  *  The scan-line algorithm implemented scans from left to right   *  (low x to high x).  It also scans, within a line, from bottom to top   *  (high y to low y).  Stipple patterns MUST be a power of two bytes wide  *  and square (in fact, they must be 32 x 32 bits).  */
+comment|/*  * Fill polygon defined by points in plist using parameters set by  * previous call to GRSetStippleStyle().  *  * This routine was modified from source for the varian driver.  * Because the varian rotates everything 90 degrees before printing,  * the x and y coordinates from the window are reversed before  * computing the region.  This is just a kludge to get the code  * to work as soon as possible.  Better to change this at some point,  * but I don't have time now.  *  * The scan-line algorithm implemented scans from left to right   * (low x to high x).  It also scans, within a line, from bottom to top   * (high y to low y).  Stipple patterns MUST be a power of two bytes wide  * and square (in fact, they must be 32 x 32 bits).  */
 end_comment
 
 begin_macro
@@ -2017,7 +1820,7 @@ name|npts
 operator|=
 literal|0
 expr_stmt|;
-comment|/* convert coordinates to arrays of integers */
+comment|/*      * convert coordinates to arrays of integers exchanging x and y,      * and making origin upper right.      */
 while|while
 condition|(
 operator|!
@@ -2049,7 +1852,7 @@ index|[
 name|npts
 index|]
 operator|=
-name|RASTER_LENGTH
+name|rasterlength
 operator|-
 literal|1
 operator|-
@@ -2079,8 +1882,10 @@ condition|(
 operator|(
 name|vectptr
 operator|=
-name|pv
-argument_list|(
+operator|(
+name|polyvector
+operator|*
+operator|)
 name|calloc
 argument_list|(
 sizeof|sizeof
@@ -2092,9 +1897,12 @@ name|npts
 operator|+
 literal|6
 argument_list|)
-argument_list|)
 operator|)
 operator|==
+operator|(
+name|polyvector
+operator|*
+operator|)
 name|NULL
 condition|)
 block|{
@@ -2136,10 +1944,11 @@ operator|)
 operator|->
 name|prev
 operator|=
-name|pv
-argument_list|(
+operator|(
+name|polyvector
+operator|*
+operator|)
 name|NULL
-argument_list|)
 expr_stmt|;
 comment|/* put dummy entry at start */
 name|waitinghead
@@ -2225,72 +2034,30 @@ specifier|register
 name|int
 name|k
 decl_stmt|;
-if|if
-condition|(
-name|miny
-operator|>
-name|y
-index|[
-name|i
-index|]
-condition|)
 comment|/* remember limits */
+name|MINMAX
+argument_list|(
 name|miny
-operator|=
-name|y
-index|[
-name|i
-index|]
-expr_stmt|;
-elseif|else
-if|if
-condition|(
+argument_list|,
 name|maxy
-operator|<
+argument_list|,
 name|y
 index|[
 name|i
 index|]
-condition|)
-name|maxy
-operator|=
-name|y
-index|[
-name|i
-index|]
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|maxx
-operator|<
-name|x
-index|[
-name|i
-index|]
-condition|)
-name|maxx
-operator|=
-name|x
-index|[
-name|i
-index|]
-expr_stmt|;
-elseif|else
-if|if
-condition|(
+name|MINMAX
+argument_list|(
 name|minx
-operator|>
+argument_list|,
+name|maxx
+argument_list|,
 name|x
 index|[
 name|i
 index|]
-condition|)
-name|minx
-operator|=
-name|x
-index|[
-name|i
-index|]
+argument_list|)
 expr_stmt|;
 name|j
 operator|=
@@ -2415,6 +2182,27 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+comment|/*      * keep polygon within bounds of scratch pixrect       * width is checked when actual drawing is done      */
+if|if
+condition|(
+name|maxx
+operator|>=
+name|scratch_pr
+operator|->
+name|pr_size
+operator|.
+name|y
+condition|)
+name|maxx
+operator|=
+name|scratch_pr
+operator|->
+name|pr_size
+operator|.
+name|y
+operator|-
+literal|1
+expr_stmt|;
 comment|/* set now because we didn't know minx before */
 name|leftstipple
 operator|=
@@ -2434,7 +2222,7 @@ name|fill
 operator|+
 name|minx
 operator|*
-name|BYTES_PER_LINE
+name|bytesperline
 expr_stmt|;
 name|waitinghead
 operator|->
@@ -2474,10 +2262,11 @@ name|vectptr
 operator|->
 name|next
 operator|=
-name|pv
-argument_list|(
+operator|(
+name|polyvector
+operator|*
+operator|)
 name|NULL
-argument_list|)
 expr_stmt|;
 name|activehead
 operator|=
@@ -2597,10 +2386,11 @@ name|next
 init|;
 name|vectptr
 operator|!=
-name|pv
-argument_list|(
+operator|(
+name|polyvector
+operator|*
+operator|)
 name|NULL
-argument_list|)
 condition|;
 control|)
 block|{
@@ -2862,7 +2652,7 @@ operator|)
 name|minx
 operator|)
 operator|<
-name|NLINES
+name|nlines
 condition|)
 block|{
 name|vectptr
@@ -2903,7 +2693,7 @@ decl_stmt|;
 name|start
 operator|=
 operator|(
-name|RASTER_LENGTH
+name|rasterlength
 operator|-
 literal|1
 operator|)
@@ -2920,7 +2710,7 @@ name|next
 expr_stmt|;
 name|length
 operator|=
-name|RASTER_LENGTH
+name|rasterlength
 operator|-
 name|vectptr
 operator|->
@@ -2937,7 +2727,7 @@ if|if
 condition|(
 name|start
 operator|>=
-name|RASTER_LENGTH
+name|rasterlength
 condition|)
 break|break;
 if|if
@@ -2954,11 +2744,11 @@ if|if
 condition|(
 name|length
 operator|>
-name|RASTER_LENGTH
+name|rasterlength
 condition|)
 name|length
 operator|=
-name|RASTER_LENGTH
+name|rasterlength
 expr_stmt|;
 name|length
 operator|-=
@@ -3376,7 +3166,7 @@ expr_stmt|;
 block|}
 name|bottompage
 operator|+=
-name|BYTES_PER_LINE
+name|bytesperline
 expr_stmt|;
 block|}
 comment|/* while (minx< nextx) */

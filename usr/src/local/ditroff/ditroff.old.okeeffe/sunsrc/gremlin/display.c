@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)display.c	1.1	%G%  *  * This file contains routines to implement the higher level display  * driver routines for the SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
+comment|/*  * @(#)display.c	1.2	%G%  *  * This file contains routines to implement the higher level display  * driver routines for the SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
 end_comment
 
 begin_include
@@ -237,7 +237,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This routine displays an arbitrary element type   * using the parameters stored with the element.    * Elements are drawn by Exclusive Oring the screen.  * mro 7/13/84  */
+comment|/*  * This routine displays an arbitrary element type   * using the parameters stored with the element.    * Elements are drawn by Exclusive Oring the screen.  */
 end_comment
 
 begin_expr_stmt
@@ -319,9 +319,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* determine bounds for this element */
 name|minsunx
 operator|=
-name|minsuny
+name|maxsunx
 operator|=
 name|dbx_to_win
 argument_list|(
@@ -332,7 +333,7 @@ operator|->
 name|x
 argument_list|)
 expr_stmt|;
-name|maxsunx
+name|minsuny
 operator|=
 name|maxsuny
 operator|=
@@ -738,10 +739,15 @@ block|}
 break|break;
 block|}
 block|}
-comment|/* printf("minsunx=%d maxsunx=%d minsuny=%d maxsuny=%d\n", minsunx, maxsunx, minsuny, maxsuny); */
 name|x
 operator|=
 name|minsunx
+operator|-
+literal|8
+expr_stmt|;
+name|y
+operator|=
+name|minsuny
 operator|-
 literal|8
 expr_stmt|;
@@ -753,12 +759,6 @@ literal|8
 operator|-
 name|x
 expr_stmt|;
-name|y
-operator|=
-name|minsuny
-operator|-
-literal|8
-expr_stmt|;
 name|height
 operator|=
 name|maxsuny
@@ -767,7 +767,6 @@ literal|8
 operator|-
 name|y
 expr_stmt|;
-comment|/* printf("x=%d y=%d width=%d height=%d\n", x, y, width, height); */
 if|if
 condition|(
 name|mask
@@ -826,91 +825,6 @@ argument_list|,
 name|y
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|oldway
-if|if
-condition|(
-name|mask
-operator|&
-name|pixmask
-condition|)
-name|pw_write
-argument_list|(
-name|pix_pw
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|pix_size
-operator|.
-name|r_width
-argument_list|,
-name|pix_size
-operator|.
-name|r_height
-argument_list|,
-name|PIX_SRC
-operator|^
-name|PIX_DST
-argument_list|,
-name|scratch_pr
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mask
-operator|&
-name|csetmask
-condition|)
-name|pr_rop
-argument_list|(
-name|cset_pr
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|pix_size
-operator|.
-name|r_width
-argument_list|,
-name|pix_size
-operator|.
-name|r_height
-argument_list|,
-name|PIX_SRC
-operator|^
-name|PIX_DST
-argument_list|,
-name|scratch_pr
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-for|for
-control|(
-name|x
-operator|=
-literal|0
-init|;
-name|x
-operator|<
-literal|10000
-condition|;
-name|x
-operator|++
-control|)
-empty_stmt|;
 block|}
 end_block
 
@@ -919,7 +833,7 @@ comment|/* end DISScreenAdd */
 end_comment
 
 begin_comment
-comment|/*  * This routine erases an arbitrary element type by redrawing the   * element with XOR.  This is the same as drawing the element.  * mro 7/13/84  */
+comment|/*  * This routine erases an arbitrary element type by redrawing the   * element with XOR.  This is the same as drawing the element.  */
 end_comment
 
 begin_expr_stmt
@@ -959,7 +873,7 @@ comment|/* end ScreenErase */
 end_comment
 
 begin_comment
-comment|/*  * This routine clears the current set pixrect.  * mro 7/31/84  */
+comment|/*  * This routine clears the current set pixrect.  */
 end_comment
 
 begin_macro

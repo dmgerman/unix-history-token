@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)graphics.c	1.1	%G%  *  * Graphics routines for the SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
+comment|/*  * @(#)graphics.c	1.2	%G%  *  * Graphics routines for the SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
 end_comment
 
 begin_include
@@ -379,6 +379,51 @@ literal|128
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* data used in graphics2.c for drawing polygons */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rasterlength
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* real # horizontal bits in scratch_pr */
+end_comment
+
+begin_decl_stmt
+name|int
+name|bytesperline
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* rasterlength / 8 */
+end_comment
+
+begin_decl_stmt
+name|int
+name|nlines
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # horizontal bits defined by scratch_pr */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|fill
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pointer to scratch_pr image */
+end_comment
 
 begin_comment
 comment|/*   *  This matrix points to the DISPATCH data for each font/size pair  *  if an unsuccesful attempt is made to open a particular font/size pair,  *  its entry in this table is marked as -1.  */
@@ -4294,6 +4339,48 @@ name|free
 argument_list|(
 name|stipple_info
 argument_list|)
+expr_stmt|;
+comment|/* set up parameters for drawing polygons */
+name|mpr_data
+operator|=
+operator|(
+expr|struct
+name|mpr_data
+operator|*
+operator|)
+name|scratch_pr
+operator|->
+name|pr_data
+expr_stmt|;
+name|bytesperline
+operator|=
+name|mpr_data
+operator|->
+name|md_linebytes
+expr_stmt|;
+name|fill
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|mpr_data
+operator|->
+name|md_image
+expr_stmt|;
+name|rasterlength
+operator|=
+name|bytesperline
+operator|<<
+literal|3
+expr_stmt|;
+name|nlines
+operator|=
+name|scratch_pr
+operator|->
+name|pr_size
+operator|.
+name|x
 expr_stmt|;
 block|}
 end_block

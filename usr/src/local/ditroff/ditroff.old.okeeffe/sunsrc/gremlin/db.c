@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)db.c	1.1	%G%  *  * This file contains routines for database manipulation for the  * SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
+comment|/*  * @(#)db.c	1.2	%G%  *  * This file contains routines for database manipulation for the  * SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
 end_comment
 
 begin_include
@@ -129,39 +129,6 @@ modifier|*
 name|cset
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|oldway
-end_ifdef
-
-begin_comment
-comment|/*  * This routine returns a pointer to an initialized database element  * which would be the only element in an empty list.  */
-end_comment
-
-begin_function
-name|ELT
-modifier|*
-name|DBInit
-parameter_list|()
-block|{
-return|return
-operator|(
-operator|(
-name|ELT
-operator|*
-operator|)
-name|NULL
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * This routine creates a new element with the specified attributes and  * links it into database db.  */
