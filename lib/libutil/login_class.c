@@ -215,6 +215,14 @@ name|RLIMIT_CORE
 block|}
 block|,
 block|{
+literal|"sbsize"
+block|,
+name|login_getcapnum
+block|,
+name|RLIMIT_SBSIZE
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0

@@ -5555,6 +5555,16 @@ literal|""
 block|}
 block|,
 block|{
+name|RLIMIT_SBSIZE
+block|,
+literal|"sbsize "
+block|,
+literal|1
+block|,
+literal|"bytes"
+block|}
+block|,
+block|{
 operator|-
 literal|1
 block|,

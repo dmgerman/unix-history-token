@@ -279,6 +279,14 @@ literal|"\n"
 block|,
 literal|1
 block|}
+block|,
+block|{
+literal|"  sbsize%-4s       %8s"
+block|,
+literal|" bytes\n"
+block|,
+literal|1
+block|}
 block|}
 block|}
 block|,
@@ -362,6 +370,14 @@ block|}
 block|,
 block|{
 literal|"ulimit%s -n %s"
+block|,
+literal|";\n"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"ulimit%s -b %s"
 block|,
 literal|";\n"
 block|,
@@ -455,6 +471,14 @@ literal|";\n"
 block|,
 literal|1
 block|}
+block|,
+block|{
+literal|"limit%s sbsize %s"
+block|,
+literal|";\n"
+block|,
+literal|1
+block|}
 block|}
 block|}
 block|,
@@ -538,6 +562,14 @@ block|}
 block|,
 block|{
 literal|"ulimit%s -n %s"
+block|,
+literal|";\n"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"ulimit%s -b %s"
 block|,
 literal|";\n"
 block|,
@@ -631,6 +663,14 @@ literal|";\n"
 block|,
 literal|1
 block|}
+block|,
+block|{
+literal|"limit%s sbsize %s"
+block|,
+literal|";\n"
+block|,
+literal|1
+block|}
 block|}
 block|}
 block|,
@@ -714,6 +754,14 @@ block|}
 block|,
 block|{
 literal|"ulimit%s -n %s"
+block|,
+literal|";\n"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"ulimit%s -b %s"
 block|,
 literal|";\n"
 block|,
@@ -807,6 +855,14 @@ literal|";\n"
 block|,
 literal|1
 block|}
+block|,
+block|{
+literal|"ulimit%s -b %s"
+block|,
+literal|";\n"
+block|,
+literal|1
+block|}
 block|}
 block|}
 block|,
@@ -890,6 +946,14 @@ block|}
 block|,
 block|{
 literal|"limit%s descriptors %s"
+block|,
+literal|";\n"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"limit%s sbsize %s"
 block|,
 literal|";\n"
 block|,
@@ -985,10 +1049,16 @@ block|{
 literal|"maxproc"
 block|,
 name|login_getcapnum
-block|, }
+block|}
 block|,
 block|{
 literal|"openfiles"
+block|,
+name|login_getcapnum
+block|}
+block|,
+block|{
+literal|"sbsize"
 block|,
 name|login_getcapnum
 block|}
@@ -1004,7 +1074,7 @@ begin_define
 define|#
 directive|define
 name|RCS_STRING
-value|"tfdscmlun"
+value|"tfdscmlunb"
 end_define
 
 begin_function_decl
@@ -1291,7 +1361,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":EeC:U:BSHac:d:f:l:m:n:s:t:u:"
+literal|":EeC:U:BSHabc:d:f:l:m:n:s:t:u:"
 argument_list|)
 operator|)
 operator|!=
@@ -2567,7 +2637,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: limits [-C class|-U user] [-eaSHBE] [-cdflmnstu [val]] [[name=val ...] cmd]\n"
+literal|"usage: limits [-C class|-U user] [-eaSHBE] [-bcdflmnstu [val]] [[name=val ...] cmd]\n"
 argument_list|)
 expr_stmt|;
 name|exit
