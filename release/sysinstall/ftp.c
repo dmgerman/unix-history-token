@@ -563,7 +563,7 @@ name|punt
 goto|;
 block|}
 block|}
-comment|/* Give it a shot - can't hurt to try and zoom in if we can, unless the release is set to        __RELEASE or "none" which signifies that it's not set */
+comment|/* Give it a shot - can't hurt to try and zoom in if we can, unless the release is set to        __RELEASE or "any" which signifies that it's not set */
 name|rel
 operator|=
 name|variable_get
@@ -584,7 +584,7 @@ name|strcmp
 argument_list|(
 name|rel
 argument_list|,
-literal|"none"
+literal|"any"
 argument_list|)
 condition|)
 name|i
@@ -615,7 +615,7 @@ literal|"Warning:  Can't CD to `%s' distribution on this\n"
 literal|"FTP server.  You may need to visit a different server for\n"
 literal|"the release you're trying to fetch or go to the Options\n"
 literal|"menu and to set the release name to explicitly match what's\n"
-literal|"available on %s (or set to \"none\").\n\n"
+literal|"available on %s (or set to \"any\").\n\n"
 literal|"Would you like to select another FTP server?"
 argument_list|,
 name|rel

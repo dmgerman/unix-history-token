@@ -191,7 +191,7 @@ begin_define
 define|#
 directive|define
 name|RELNAME_PROMPT
-value|"Please specify the release you wish to load or\n\"none\" for a generic release install:"
+value|"Please specify the release you wish to load or\n\"any\" for a generic release install:"
 end_define
 
 begin_define
