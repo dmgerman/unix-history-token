@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmail.c	5.1 (Berkeley) %G%"
+literal|"@(#)rmail.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1134,6 +1134,10 @@ argument_list|,
 literal|"-f%s%s"
 argument_list|,
 name|from_path
+condition|?
+name|from_path
+else|:
+literal|""
 argument_list|,
 name|from_user
 argument_list|)
@@ -1167,6 +1171,9 @@ do|do
 block|{
 if|if
 condition|(
+operator|*
+name|argv
+operator|&&
 operator|*
 operator|*
 name|argv
