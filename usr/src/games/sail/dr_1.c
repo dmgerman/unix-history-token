@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_1.c	2.4 83/11/08"
+literal|"@(#)dr_1.c	2.5 83/12/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -468,19 +468,16 @@ name|toship
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|nat
-operator|!=
+operator|==
 name|capship
 argument_list|(
 name|to
 argument_list|)
 operator|->
 name|nationality
-condition|)
-continue|continue;
-if|if
-condition|(
-operator|!
+operator|||
 name|toughmelee
 argument_list|(
 name|sp
@@ -491,10 +488,8 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-condition|)
-continue|continue;
-if|if
-condition|(
+operator|)
+operator|&&
 name|die
 argument_list|()
 operator|<=
