@@ -796,7 +796,7 @@ if|if
 condition|(
 name|from
 operator|==
-name|UWX_REG_PFS
+name|UWX_REG_AR_PFS
 condition|)
 name|from
 operator|=
@@ -830,7 +830,7 @@ if|if
 condition|(
 name|from
 operator|==
-name|UWX_REG_RNAT
+name|UWX_REG_AR_RNAT
 condition|)
 name|from
 operator|=
@@ -847,7 +847,7 @@ if|if
 condition|(
 name|from
 operator|==
-name|UWX_REG_UNAT
+name|UWX_REG_AR_UNAT
 condition|)
 name|from
 operator|=
