@@ -4824,6 +4824,8 @@ name|N
 decl_stmt|;
 name|int
 name|abrt
+init|=
+literal|0
 decl_stmt|;
 name|ARGTOG
 argument_list|(
