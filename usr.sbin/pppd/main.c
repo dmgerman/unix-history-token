@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.16 1998/03/22 05:33:00 peter Exp $"
+literal|"$Id: main.c,v 1.17 1998/06/20 18:02:12 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2491,6 +2491,17 @@ argument_list|,
 name|ifname
 argument_list|,
 name|devnam
+argument_list|)
+expr_stmt|;
+name|stime
+operator|=
+name|time
+argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|lcp_lowerup
