@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<elf.h>
+file|<elf-hints.h>
 end_include
 
 begin_include

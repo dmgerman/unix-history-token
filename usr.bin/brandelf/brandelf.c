@@ -38,7 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<elf.h>
+file|<sys/elf_common.h>
 end_include
 
 begin_include

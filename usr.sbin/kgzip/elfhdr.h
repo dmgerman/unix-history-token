@@ -6,7 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<elf.h>
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/elf.h>
 end_include
 
 begin_include

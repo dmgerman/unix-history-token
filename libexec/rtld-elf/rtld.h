@@ -23,6 +23,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<machine/elf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -35,13 +41,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<link.h>
+file|<elf-hints.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<elf.h>
+file|<link.h>
 end_include
 
 begin_include
