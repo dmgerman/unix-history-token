@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.7.2.2 1997/06/01 14:38:17 brian Exp $  *  *  TODO:  *		o Refer loglevel for log output  *		o Better option log display  */
+comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.13 1997/06/09 03:27:21 brian Exp $  *  *  TODO:  *		o Refer loglevel for log output  *		o Better option log display  */
 end_comment
 
 begin_include
@@ -113,7 +113,7 @@ literal|"Ack-Rcvd"
 block|,
 literal|"Ack-Sent"
 block|,
-literal|"Opend"
+literal|"Opened"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -130,16 +130,13 @@ modifier|*
 name|fp
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"FsmInit\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|fp
 operator|->
 name|state
@@ -186,13 +183,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: state change %s --> %s\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"State change %s --> %s\n"
 argument_list|,
 name|StateNames
 index|[
@@ -365,16 +358,15 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|DumpBp
+name|LogDumpBp
 argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"FsmOutput"
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|HdlcOutput
 argument_list|(
 name|PRI_LINK
@@ -565,13 +557,9 @@ break|break;
 default|default:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: Oops, Up at %s\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"Oops, Up at %s\n"
 argument_list|,
 name|StateNames
 index|[
@@ -848,13 +836,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: SendTerminateReq.\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"SendTerminateReq.\n"
 argument_list|)
 expr_stmt|;
 name|FsmOutput
@@ -933,13 +917,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s:  SendConfigAck(%s)\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"SendConfigAck(%s)\n"
 argument_list|,
 name|StateNames
 index|[
@@ -1013,13 +993,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s:  SendConfigRej(%s)\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"SendConfigRej(%s)\n"
 argument_list|,
 name|StateNames
 index|[
@@ -1093,13 +1069,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s:  SendConfigNak(%s)\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"SendConfigNak(%s)\n"
 argument_list|,
 name|StateNames
 index|[
@@ -1431,9 +1403,11 @@ operator|<
 name|flen
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"** plen (%d)< flen (%d)\n"
+name|LogERROR
+argument_list|,
+literal|"FsmRecvConfigReq: plen (%d)< flen (%d)"
 argument_list|,
 name|plen
 argument_list|,
@@ -1463,13 +1437,9 @@ name|ST_STARTING
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: Oops, RCR in %s.\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"Oops, RCR in %s.\n"
 argument_list|,
 name|StateNames
 index|[
@@ -1509,9 +1479,11 @@ case|:
 case|case
 name|ST_STOPPING
 case|:
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"## state = %d\n"
+name|LogERROR
+argument_list|,
+literal|"Got ConfigReq while state = %d\n"
 argument_list|,
 name|fp
 operator|->
@@ -1981,13 +1953,9 @@ name|ST_STARTING
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: Oops, RCN in %s.\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"Oops, RCN in %s.\n"
 argument_list|,
 name|StateNames
 index|[
@@ -2157,13 +2125,9 @@ name|ST_STARTING
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: Oops, RTR in %s\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"Oops, RTR in %s\n"
 argument_list|,
 name|StateNames
 index|[
@@ -2464,13 +2428,9 @@ return|return;
 block|}
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: RecvConfigRej.\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"RecvConfigRej.\n"
 argument_list|)
 expr_stmt|;
 comment|/*    *  Check and process easy case    */
@@ -2489,13 +2449,9 @@ name|ST_STARTING
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: Oops, RCJ in %s.\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"Oops, RCJ in %s.\n"
 argument_list|,
 name|StateNames
 index|[
@@ -2651,13 +2607,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: RecvCodeRej\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"RecvCodeRej\n"
 argument_list|)
 expr_stmt|;
 name|pfree
@@ -2721,7 +2673,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"-- Protocol (%04x) was rejected.\n"
 argument_list|,
@@ -2867,8 +2819,10 @@ operator|.
 name|his_magic
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogERROR
+argument_list|,
 literal|"RecvEchoReq: his magic is bad!!\n"
 argument_list|)
 expr_stmt|;
@@ -2896,13 +2850,9 @@ expr_stmt|;
 comment|/* Insert local magic number */
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s:  SendEchoRep(%s)\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"SendEchoRep(%s)\n"
 argument_list|,
 name|StateNames
 index|[
@@ -3010,8 +2960,10 @@ operator|.
 name|want_magic
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogERROR
+argument_list|,
 literal|"RecvEchoRep: his magic is wrong! expect: %x got: %x\n"
 argument_list|,
 name|LcpInfo
@@ -3064,13 +3016,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: RecvDiscReq\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"RecvDiscReq\n"
 argument_list|)
 expr_stmt|;
 name|pfree
@@ -3109,13 +3057,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: RecvIdent\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"RecvIdent\n"
 argument_list|)
 expr_stmt|;
 name|pfree
@@ -3154,13 +3098,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: RecvTimeRemain\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"RecvTimeRemain\n"
 argument_list|)
 expr_stmt|;
 name|pfree
@@ -3199,13 +3139,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: RecvResetReq\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"RecvResetReq\n"
 argument_list|)
 expr_stmt|;
 name|CcpRecvResetReq
@@ -3215,13 +3151,9 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: SendResetAck\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"SendResetAck\n"
 argument_list|)
 expr_stmt|;
 name|FsmOutput
@@ -3275,13 +3207,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: RecvResetAck\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"RecvResetAck\n"
 argument_list|)
 expr_stmt|;
 name|fp
@@ -3523,13 +3451,9 @@ literal|1
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: Received %s (%d) state = %s (%d)\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"Received %s (%d) state = %s (%d)\n"
 argument_list|,
 name|codep
 operator|->
@@ -3551,14 +3475,16 @@ operator|->
 name|state
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
+if|if
+condition|(
+name|LogIsKept
+argument_list|(
+name|LogDEBUG
+argument_list|)
+condition|)
 name|LogMemory
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 call|(
 name|codep
 operator|->
@@ -3572,14 +3498,16 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
+if|if
+condition|(
+name|LogIsKept
+argument_list|(
+name|LogDEBUG
+argument_list|)
+condition|)
 name|LogMemory
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.9.2.2 1996/12/23 18:13:46 jkh Exp $  *  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.14 1997/06/09 03:27:36 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -33,37 +33,11 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|(
-name|BSD
-operator|>=
-literal|199306
-operator|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/kinfo.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -135,6 +109,18 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"loadalias.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vars.h"
 end_include
 
 begin_decl_stmt
@@ -237,9 +223,16 @@ name|s
 operator|<
 literal|0
 condition|)
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"socket\n"
+name|LogERROR
+argument_list|,
+literal|"socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -509,7 +502,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_TCPIP_BIT
+name|LogTCPIP
 argument_list|,
 literal|"Already set route addr dst=%x, gateway=%x\n"
 argument_list|,
@@ -523,11 +516,10 @@ name|s_addr
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"wrote %d: dst = %x, gateway = %x\n"
 argument_list|,
 name|nb
@@ -541,8 +533,6 @@ operator|.
 name|s_addr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|close
 argument_list|(
 name|s
@@ -568,6 +558,11 @@ decl_stmt|;
 name|int
 name|width
 decl_stmt|;
+block|{
+if|if
+condition|(
+name|VarTerm
+condition|)
 block|{
 specifier|register
 name|char
@@ -608,8 +603,10 @@ operator|->
 name|sin_addr
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"%-*.*s "
 argument_list|,
 name|width
@@ -619,6 +616,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -716,6 +714,11 @@ modifier|*
 name|format
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|VarTerm
+condition|)
+block|{
 name|char
 name|name
 index|[
@@ -767,13 +770,16 @@ name|flags
 operator|=
 literal|'\0'
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 name|format
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -818,28 +824,20 @@ decl_stmt|;
 name|u_long
 name|mask
 decl_stmt|;
-if|#
-directive|if
-operator|(
-name|BSD
-operator|>=
-literal|199306
-operator|)
 name|int
 name|mib
 index|[
 literal|6
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-operator|(
-name|BSD
-operator|>=
-literal|199306
-operator|)
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|1
+return|;
 name|mib
 index|[
 literal|0
@@ -903,9 +901,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"sysctl-estimate"
+name|LogERROR
+argument_list|,
+literal|"sysctl: estimate: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -914,23 +919,6 @@ literal|1
 operator|)
 return|;
 block|}
-else|#
-directive|else
-name|needed
-operator|=
-name|getkerninfo
-argument_list|(
-name|KINFO_RT_DUMP
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|needed
@@ -960,13 +948,6 @@ operator|(
 literal|1
 operator|)
 return|;
-if|#
-directive|if
-operator|(
-name|BSD
-operator|>=
-literal|199306
-operator|)
 if|if
 condition|(
 name|sysctl
@@ -988,9 +969,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"sysctl-getroute"
+name|LogERROR
+argument_list|,
+literal|"sysctl: getroute: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -1004,36 +992,6 @@ literal|1
 operator|)
 return|;
 block|}
-else|#
-directive|else
-if|if
-condition|(
-name|getkerninfo
-argument_list|(
-name|KINFO_RT_DUMP
-argument_list|,
-name|sp
-argument_list|,
-operator|&
-name|needed
-argument_list|,
-literal|0
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|free
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-endif|#
-directive|endif
 name|ep
 operator|=
 name|sp
@@ -1198,11 +1156,10 @@ operator|*
 name|lp
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|" flag = %x, rest = %d"
 argument_list|,
 name|rtm
@@ -1213,8 +1170,6 @@ operator|*
 name|lp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|wp
 operator|=
 operator|(
@@ -1287,8 +1242,10 @@ literal|8
 expr_stmt|;
 block|}
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"%08lx  "
 argument_list|,
 name|mask
@@ -1311,8 +1268,10 @@ argument_list|,
 literal|"%-6.6s "
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"(%d)\n"
 argument_list|,
 name|rtm
@@ -1327,9 +1286,7 @@ name|sp
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -1392,40 +1349,21 @@ name|u_char
 modifier|*
 name|wp
 decl_stmt|;
-if|#
-directive|if
-operator|(
-name|BSD
-operator|>=
-literal|199306
-operator|)
 name|int
 name|mib
 index|[
 literal|6
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"DeleteIfRoutes (%d)\n"
 argument_list|,
 name|IfIndex
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-operator|(
-name|BSD
-operator|>=
-literal|199306
-operator|)
 name|mib
 index|[
 literal|0
@@ -1489,30 +1427,20 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"sysctl-estimate"
+name|LogERROR
+argument_list|,
+literal|"sysctl: estimate: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-else|#
-directive|else
-name|needed
-operator|=
-name|getkerninfo
-argument_list|(
-name|KINFO_RT_DUMP
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|needed
@@ -1534,13 +1462,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-if|#
-directive|if
-operator|(
-name|BSD
-operator|>=
-literal|199306
-operator|)
 if|if
 condition|(
 name|sysctl
@@ -1562,37 +1483,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|free
+name|LogPrintf
 argument_list|(
-name|sp
+name|LogERROR
+argument_list|,
+literal|"sysctl: getroute: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-literal|"sysctl-getroute"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-else|#
-directive|else
-if|if
-condition|(
-name|getkerninfo
-argument_list|(
-name|KINFO_RT_DUMP
-argument_list|,
-name|sp
-argument_list|,
-operator|&
-name|needed
-argument_list|,
-literal|0
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
 name|free
 argument_list|(
 name|sp
@@ -1600,8 +1502,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 name|ep
 operator|=
 name|sp
@@ -1647,12 +1547,12 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"addrs: %x, index: %d, flags: %x, dstnet: %x\n"
+name|LogDEBUG
+argument_list|,
+literal|"DeleteIfRoutes: addrs: %x, index: %d, flags: %x,"
+literal|" dstnet: %x\n"
 argument_list|,
 name|rtm
 operator|->
@@ -1678,8 +1578,6 @@ operator|->
 name|sin_addr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|rtm
@@ -1823,12 +1721,11 @@ operator|*
 name|lp
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
+name|LogPrintf
 argument_list|(
-literal|" flag = %x, rest = %d"
+name|LogDEBUG
+argument_list|,
+literal|"DeleteIfRoutes: flag = %x, rest = %d"
 argument_list|,
 name|rtm
 operator|->
@@ -1838,8 +1735,6 @@ operator|*
 name|lp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|wp
 operator|=
 operator|(
@@ -1899,12 +1794,11 @@ operator|<<=
 literal|8
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"## %s "
+name|LogDEBUG
+argument_list|,
+literal|"DeleteIfRoutes: Dest: %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1912,22 +1806,29 @@ name|dstnet
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|" %s  %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"DeleteIfRoutes: Gw: %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
 name|gateway
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|LogPrintf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"DeleteIfRoutes: Index: %d\n"
 argument_list|,
 name|rtm
 operator|->
 name|rtm_index
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|dstnet
@@ -1969,9 +1870,6 @@ name|maddr
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 elseif|else
 if|if
 condition|(
@@ -1981,23 +1879,15 @@ name|rtm_index
 operator|==
 name|IfIndex
 condition|)
-block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"??? addrs: %x, flags = %x\n"
+name|LogDEBUG
 argument_list|,
-name|rtm
-operator|->
-name|rtm_addrs
+literal|"DeleteIfRoutes: Ignoring (looking for index %d)\n"
 argument_list|,
-name|rtm
-operator|->
-name|rtm_flags
+name|IfIndex
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 name|free
 argument_list|(
@@ -2074,9 +1964,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"socket"
+name|LogERROR
+argument_list|,
+literal|"socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2134,18 +2031,15 @@ name|bufsize
 argument_list|)
 expr_stmt|;
 comment|/* Make it bigger */
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"Growing buffer to %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"GetIfIndex: Growing buffer to %d\n"
 argument_list|,
 name|bufsize
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ifconfs
 operator|.
 name|ifc_len
@@ -2173,9 +2067,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"IFCONF"
+name|LogERROR
+argument_list|,
+literal|"ioctl(SIOCGIFCONF): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -2256,12 +2157,11 @@ operator|==
 name|AF_LINK
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"%d: %-*.*s, %d, %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"GetIfIndex: %d: %-*.*s, %d, %d\n"
 argument_list|,
 name|index
 argument_list|,
@@ -2282,8 +2182,6 @@ argument_list|,
 name|elen
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|strcmp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.24.2.10 1997/05/26 00:52:24 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.42 1997/06/09 03:27:30 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -31,6 +31,24 @@ begin_include
 include|#
 directive|include
 file|<sys/tty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_include
@@ -207,12 +225,6 @@ name|dev_is_modem
 decl_stmt|;
 end_decl_stmt
 
-begin_undef
-undef|#
-directive|undef
-name|QDEBUG
-end_undef
-
 begin_function
 name|void
 name|Enqueue
@@ -270,11 +282,10 @@ operator|->
 name|qlen
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QDEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"Enqueue: len = %d\n"
 argument_list|,
 name|queue
@@ -282,8 +293,6 @@ operator|->
 name|qlen
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -306,11 +315,10 @@ name|mbuf
 modifier|*
 name|bp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|QDEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"Dequeue: len = %d\n"
 argument_list|,
 name|queue
@@ -318,8 +326,6 @@ operator|->
 name|qlen
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|bp
 operator|=
 name|queue
@@ -363,26 +369,23 @@ name|queue
 operator|->
 name|top
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QDEBUG
 if|if
 condition|(
 name|queue
 operator|->
 name|qlen
 condition|)
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"!!! not zero (%d)!!!\n"
+name|LogDEBUG
+argument_list|,
+literal|"Dequeue: Not zero (%d)!!!\n"
 argument_list|,
 name|queue
 operator|->
 name|qlen
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 return|return
@@ -808,14 +811,14 @@ parameter_list|()
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Disconnected!\n"
 argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Connect time: %d secs\n"
 argument_list|,
@@ -901,7 +904,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"ioctl error (%s)!\n"
 argument_list|,
@@ -948,7 +951,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"*Connected!\n"
 argument_list|)
@@ -996,7 +999,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Connected!\n"
 argument_list|)
@@ -1180,18 +1183,12 @@ operator|==
 literal|0
 condition|)
 block|{
+return|return
 name|VarParity
 operator|=
 name|pp
 operator|->
 name|set
-expr_stmt|;
-return|return
-operator|(
-name|pp
-operator|->
-name|set
-operator|)
 return|;
 block|}
 block|}
@@ -1277,32 +1274,25 @@ operator|&
 name|rstio
 argument_list|)
 expr_stmt|;
-block|}
 return|return
-operator|(
-name|val
-operator|)
+literal|0
+return|;
+block|}
+name|LogPrintf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"ChangeParity: %s: Invalid parity\n"
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
 return|;
 block|}
 end_function
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arpa/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
 
 begin_function
 name|int
@@ -1402,9 +1392,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"unknown host: %s\n"
+name|LogWARN
+argument_list|,
+literal|"OpenConnection: unknown host: %s\n"
 argument_list|,
 name|host
 argument_list|)
@@ -1463,9 +1455,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"unknown service: %s\n"
+name|LogWARN
+argument_list|,
+literal|"OpenConnection: unknown service: %s\n"
 argument_list|,
 name|port
 argument_list|)
@@ -1480,7 +1474,7 @@ block|}
 block|}
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Connected to %s:%s\n"
 argument_list|,
@@ -1536,9 +1530,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|LogPrintf
 argument_list|(
-literal|"connection failed.\n"
+name|LogWARN
+argument_list|,
+literal|"OpenConnection: connection failed.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1636,7 +1632,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Open Failed %s\n"
 argument_list|,
@@ -1710,7 +1706,7 @@ name|UU_LOCK_INUSE
 condition|)
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Modem %s is in use\n"
 argument_list|,
@@ -1720,7 +1716,7 @@ expr_stmt|;
 else|else
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Modem %s is in use: uu_lock: %s\n"
 argument_list|,
@@ -1759,7 +1755,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Open Failed %s\n"
 argument_list|,
@@ -1875,29 +1871,6 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* This code gets around the problem of closing descriptor 0    * when it should not have been closed and closing descriptor 1    * when the telnet connection dies.  Since this program always    * opens a descriptor for the modem in auto and direct mode,    * having to dup the descriptor here is a fatal error.    *    * With the other changes I have made this should no longer happen.    * JC   */
-while|while
-condition|(
-name|modem
-operator|<
-literal|3
-condition|)
-block|{
-name|logprintf
-argument_list|(
-literal|"Duping modem fd %d\n"
-argument_list|,
-name|modem
-argument_list|)
-expr_stmt|;
-name|modem
-operator|=
-name|dup
-argument_list|(
-name|modem
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*    * If we are working on tty device, change it's mode into    * the one desired for further operation. In this implementation,    * we assume that modem is configuted to use CTS/RTS flow control.    */
 name|dev_is_modem
 operator|=
@@ -1937,19 +1910,21 @@ name|modemios
 operator|=
 name|rstio
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"## modem = %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"OpenModem: modem = %d\n"
 argument_list|,
 name|modem
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"modem (get): iflag = %x, oflag = %x, cflag = %x\n"
+name|LogDEBUG
+argument_list|,
+literal|"OpenModem: modem (get): iflag = %x, oflag = %x,"
+literal|" cflag = %x\n"
 argument_list|,
 name|rstio
 operator|.
@@ -1964,8 +1939,6 @@ operator|.
 name|c_cflag
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|cfmakeraw
 argument_list|(
 operator|&
@@ -2070,8 +2043,10 @@ operator|-
 literal|1
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogWARN
+argument_list|,
 literal|"Unable to set modem speed (modem %d to %d)\n"
 argument_list|,
 name|modem
@@ -2091,11 +2066,10 @@ operator|&
 name|rstio
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"modem (put): iflag = %x, oflag = %x, cflag = %x\n"
 argument_list|,
 name|rstio
@@ -2111,8 +2085,6 @@ operator|.
 name|c_cflag
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -2140,20 +2112,15 @@ operator|-
 literal|1
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogDEBUG
 argument_list|,
-literal|"modem control = %o\n"
+literal|"OpenModem: modem control = %o\n"
 argument_list|,
 name|mbits
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|oldflag
 operator|=
 name|fcntl
@@ -2289,12 +2256,11 @@ operator|!
 name|Online
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"mode = %d, modem = %d, mbits = %x\n"
+name|LogDEBUG
+argument_list|,
+literal|"RawModem: mode = %d, modem = %d, mbits = %x\n"
 argument_list|,
 name|mode
 argument_list|,
@@ -2303,19 +2269,6 @@ argument_list|,
 name|mbits
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|notdef
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 name|tcgetattr
 argument_list|(
@@ -2414,46 +2367,6 @@ operator||
 name|O_NONBLOCK
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|oldflag
-operator|=
-name|fcntl
-argument_list|(
-name|modem
-argument_list|,
-name|F_GETFL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|logprintf
-argument_list|(
-literal|"modem (put2): iflag = %x, oflag = %x, cflag = %x\n"
-argument_list|,
-name|rstio
-operator|.
-name|c_iflag
-argument_list|,
-name|rstio
-operator|.
-name|c_oflag
-argument_list|,
-name|rstio
-operator|.
-name|c_cflag
-argument_list|)
-expr_stmt|;
-name|logprintf
-argument_list|(
-literal|"flag = %x\n"
-argument_list|,
-name|oldflag
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -2626,8 +2539,10 @@ operator|-
 literal|1
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogWARN
+argument_list|,
 literal|"Unable to set modem to speed 0\n"
 argument_list|)
 expr_stmt|;
@@ -2649,16 +2564,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-name|mbits
-operator|&=
-operator|~
-name|TIOCM_CD
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/*    * If we are working as dedicated mode, never close it    * until we are directed to quit program.    */
 if|if
@@ -3040,14 +2945,9 @@ name|nb
 decl_stmt|,
 name|nw
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|QDEBUG
 name|int
 name|i
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|modemout
@@ -3069,15 +2969,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|QDEBUG
 name|i
 operator|=
 name|PRI_LINK
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|queue
@@ -3110,9 +3005,14 @@ argument_list|(
 name|queue
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QDEBUG
+if|if
+condition|(
+name|LogIsKept
+argument_list|(
+name|LogDEBUG
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 name|i
@@ -3133,9 +3033,12 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"output from queue %d, normal has %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"ModemStartOutput: Output from queue %d,"
+literal|" normal has %d\n"
 argument_list|,
 name|i
 argument_list|,
@@ -3145,25 +3048,21 @@ name|qlen
 argument_list|)
 expr_stmt|;
 block|}
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"Dequeue(%d): "
+name|LogDEBUG
+argument_list|,
+literal|"ModemStartOutput: Dequeued %d\n"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|QDEBUG
 name|i
 operator|--
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 if|if
@@ -3212,12 +3111,11 @@ argument_list|,
 name|nb
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QDEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"wrote: %d(%d)\n"
+name|LogDEBUG
+argument_list|,
+literal|"ModemStartOutput: wrote: %d(%d)\n"
 argument_list|,
 name|nw
 argument_list|,
@@ -3226,9 +3124,9 @@ argument_list|)
 expr_stmt|;
 name|LogDumpBuff
 argument_list|(
-name|LOG_HDLC
+name|LogDEBUG
 argument_list|,
-literal|"modem write"
+literal|"ModemStartOutput: modem write"
 argument_list|,
 name|MBUF_CTOP
 argument_list|(
@@ -3238,8 +3136,6 @@ argument_list|,
 name|nb
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|nw
@@ -3275,16 +3171,13 @@ argument_list|(
 name|modemout
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QDEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|" mbfree\n"
+name|LogDEBUG
+argument_list|,
+literal|"ModemStartOutput: mbfree\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 elseif|else
@@ -3301,9 +3194,16 @@ name|errno
 operator|!=
 name|EAGAIN
 condition|)
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"modem write"
+name|LogERROR
+argument_list|,
+literal|"modem write: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3363,21 +3263,11 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|mode
-operator|&
-operator|(
-name|MODE_INTER
-operator||
-name|MODE_AUTO
-operator|)
-operator|)
-operator|==
-name|MODE_INTER
+name|VarTerm
 condition|)
 name|fprintf
 argument_list|(
-name|stderr
+name|VarTerm
 argument_list|,
 literal|"dial OK!\n"
 argument_list|)
@@ -3408,21 +3298,11 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|mode
-operator|&
-operator|(
-name|MODE_INTER
-operator||
-name|MODE_AUTO
-operator|)
-operator|)
-operator|==
-name|MODE_INTER
+name|VarTerm
 condition|)
 name|fprintf
 argument_list|(
-name|stderr
+name|VarTerm
 argument_list|,
 literal|"login OK!\n"
 argument_list|)
@@ -3431,25 +3311,11 @@ return|return
 name|EX_DONE
 return|;
 block|}
-if|if
-condition|(
-operator|(
-name|mode
-operator|&
-operator|(
-name|MODE_INTER
-operator||
-name|MODE_AUTO
-operator|)
-operator|)
-operator|==
-name|MODE_INTER
-condition|)
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogWARN
 argument_list|,
-literal|"login failed.\n"
+literal|"DialModem: login failed.\n"
 argument_list|)
 expr_stmt|;
 name|ModemTimeout
@@ -3463,25 +3329,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-operator|(
-name|mode
-operator|&
-operator|(
-name|MODE_INTER
-operator||
-name|MODE_AUTO
-operator|)
-operator|)
-operator|==
-name|MODE_INTER
-condition|)
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogWARN
 argument_list|,
-literal|"dial failed.\n"
+literal|"DialModem: dial failed.\n"
 argument_list|)
 expr_stmt|;
 name|excode
@@ -3515,8 +3367,18 @@ name|nb
 decl_stmt|;
 endif|#
 directive|endif
-name|printf
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|1
+return|;
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"device: %s  speed: "
 argument_list|,
 name|VarDevice
@@ -3526,14 +3388,18 @@ if|if
 condition|(
 name|DEV_IS_SYNC
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"sync\n"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"%d\n"
 argument_list|,
 name|VarSpeed
@@ -3549,8 +3415,10 @@ block|{
 case|case
 name|CS7
 case|:
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"cs7, "
 argument_list|)
 expr_stmt|;
@@ -3558,8 +3426,10 @@ break|break;
 case|case
 name|CS8
 case|:
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"cs8, "
 argument_list|)
 expr_stmt|;
@@ -3578,26 +3448,34 @@ name|VarParity
 operator|&
 name|PARODD
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"odd parity, "
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"even parity, "
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"no parity, "
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"CTS/RTS %s.\n"
 argument_list|,
 operator|(
@@ -3609,11 +3487,17 @@ literal|"off"
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
+if|if
+condition|(
+name|LogIsKept
 argument_list|(
+name|LogDEBUG
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|VarTerm
+argument_list|,
 literal|"fd = %d, modem control = %o\n"
 argument_list|,
 name|modem
@@ -3621,10 +3505,10 @@ argument_list|,
 name|mbits
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"connect count: %d\n"
 argument_list|,
 name|connect_count
@@ -3647,54 +3531,64 @@ argument_list|)
 operator|>
 literal|0
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"outq: %d\n"
 argument_list|,
 name|nb
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"outq: ioctl probe failed.\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"outqlen: %d\n"
 argument_list|,
 name|ModemQlen
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"DialScript  = %s\n"
 argument_list|,
 name|VarDialScript
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"LoginScript = %s\n"
 argument_list|,
 name|VarLoginScript
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"PhoneNumber(s) = %s\n"
 argument_list|,
 name|VarPhoneList
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function

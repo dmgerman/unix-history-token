@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ip.c,v 1.9.2.8 1997/05/24 17:34:49 brian Exp $  *  *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
+comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ip.c,v 1.21 1997/06/09 03:27:23 brian Exp $  *  *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
 end_comment
 
 begin_include
@@ -81,6 +81,18 @@ directive|include
 file|"filter.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
+end_include
+
 begin_function_decl
 specifier|extern
 name|void
@@ -113,7 +125,7 @@ parameter_list|()
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Idle timer expired.\n"
 argument_list|)
@@ -185,6 +197,25 @@ name|IdleTimer
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|UpdateIdleTimer
+parameter_list|()
+block|{
+if|if
+condition|(
+name|IdleTimer
+operator|.
+name|state
+operator|==
+name|TIMER_RUNNING
+condition|)
+name|StartIdleTimer
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -595,18 +626,15 @@ name|A_PERMIT
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"rule = %d\n"
 argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -796,17 +824,16 @@ operator|&
 name|TH_ACK
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|estab
 operator|==
 literal|0
 condition|)
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"flag = %02x, sport = %d, dport = %d\n"
 argument_list|,
 name|th
@@ -818,8 +845,6 @@ argument_list|,
 name|dport
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 default|default:
 return|return
@@ -833,12 +858,12 @@ name|gotinfo
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"dir = %d, proto = %d, srcop = %d, dstop = %d, estab = %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"dir = %d, proto = %d, srcop = %d,"
+literal|" dstop = %d, estab = %d\n"
 argument_list|,
 name|direction
 argument_list|,
@@ -859,15 +884,13 @@ argument_list|,
 name|estab
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"check0: rule = %d, proto = %d, sport = %d, dport = %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"check0: rule = %d, proto = %d, sport = %d,"
+literal|" dport = %d\n"
 argument_list|,
 name|n
 argument_list|,
@@ -878,8 +901,10 @@ argument_list|,
 name|dport
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"check0: action = %d\n"
 argument_list|,
 name|fp
@@ -887,8 +912,6 @@ operator|->
 name|action
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|cproto
@@ -980,11 +1003,10 @@ block|}
 else|else
 block|{
 comment|/* Address is mached. Make a decision. */
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"check1: action = %d\n"
 argument_list|,
 name|fp
@@ -992,8 +1014,6 @@ operator|->
 name|action
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|fp
@@ -1164,15 +1184,10 @@ name|PRI_NORMAL
 decl_stmt|;
 name|logit
 operator|=
-operator|(
-name|loglevel
-operator|&
-operator|(
-literal|1
-operator|<<
-name|LOG_TCPIP
-operator|)
-operator|)
+name|LogIsKept
+argument_list|(
+name|LogTCPIP
+argument_list|)
 expr_stmt|;
 name|pip
 operator|=
@@ -1187,8 +1202,10 @@ if|if
 condition|(
 name|logit
 condition|)
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogTCPIP
+argument_list|,
 literal|"%s  "
 argument_list|,
 name|Direction
@@ -1235,8 +1252,10 @@ operator|*
 operator|)
 name|ptop
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogTCPIP
+argument_list|,
 literal|"ICMP: %s:%d ---> "
 argument_list|,
 name|inet_ntoa
@@ -1251,8 +1270,10 @@ operator|->
 name|icmp_type
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogTCPIP
+argument_list|,
 literal|"%s:%d\n"
 argument_list|,
 name|inet_ntoa
@@ -1286,8 +1307,10 @@ operator|*
 operator|)
 name|ptop
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogTCPIP
+argument_list|,
 literal|"UDP: %s:%d ---> "
 argument_list|,
 name|inet_ntoa
@@ -1305,8 +1328,10 @@ name|uh_sport
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogTCPIP
+argument_list|,
 literal|"%s:%d\n"
 argument_list|,
 name|inet_ntoa
@@ -1424,8 +1449,10 @@ operator|<<
 literal|2
 operator|)
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogTCPIP
+argument_list|,
 literal|"TCP: %s:%d ---> "
 argument_list|,
 name|inet_ntoa
@@ -1443,8 +1470,10 @@ name|th_sport
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogTCPIP
+argument_list|,
 literal|"%s:%d"
 argument_list|,
 name|inet_ntoa
@@ -1489,8 +1518,10 @@ name|th_flags
 operator|&
 name|mask
 condition|)
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogTCPIP
+argument_list|,
 literal|" %s"
 argument_list|,
 name|TcpFlags
@@ -1503,8 +1534,10 @@ name|n
 operator|++
 expr_stmt|;
 block|}
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogTCPIP
+argument_list|,
 literal|"  seq:%x  ack:%x (%d/%d)\n"
 argument_list|,
 name|ntohl
@@ -1569,8 +1602,10 @@ argument_list|)
 operator|==
 literal|0x0204
 condition|)
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogTCPIP
+argument_list|,
 literal|" MSS = %d\n"
 argument_list|,
 name|ntohs
@@ -1600,16 +1635,13 @@ name|A_DENY
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"blocked.\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|direction
@@ -1722,7 +1754,7 @@ operator|->
 name|next
 control|)
 block|{
-comment|/* Copy to continuois region */
+comment|/* Copy to contiguous region */
 name|bcopy
 argument_list|(
 name|MBUF_CTOP
@@ -1797,11 +1829,11 @@ operator|>
 name|MAX_MRU
 condition|)
 block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogERROR
 argument_list|,
-literal|"Problem with IP header length\n"
+literal|"IpInput: Problem with IP header length\n"
 argument_list|)
 expr_stmt|;
 name|pfree
@@ -1880,11 +1912,11 @@ name|nw
 operator|!=
 name|nb
 condition|)
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogERROR
 argument_list|,
-literal|"wrote %d, got %d\r\n"
+literal|"IpInput: wrote %d, got %d\n"
 argument_list|,
 name|nb
 argument_list|,
@@ -1952,11 +1984,11 @@ name|nw
 operator|!=
 name|nb
 condition|)
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogERROR
 argument_list|,
-literal|"wrote %d, got %d\r\n"
+literal|"IpInput: wrote %d, got %d\n"
 argument_list|,
 name|nb
 argument_list|,
@@ -2008,15 +2040,13 @@ name|fptr
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogALERT
 argument_list|,
-literal|"Cannot allocate memory for fragment\n"
+literal|"IpInput: Cannot allocate memory for fragment\n"
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 name|memcpy
@@ -2081,11 +2111,11 @@ name|nw
 operator|!=
 name|nb
 condition|)
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogERROR
 argument_list|,
-literal|"wrote %d, got %d\r\n"
+literal|"IpInput: wrote %d, got %d\n"
 argument_list|,
 name|nb
 argument_list|,

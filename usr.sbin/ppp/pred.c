@@ -24,7 +24,7 @@ file|"ccp.h"
 end_include
 
 begin_comment
-comment|/*  *  * $Id: pred.c,v 1.7.2.1 1997/05/10 01:24:41 brian Exp $  *  * pred.c -- Test program for Dave Rand's rendition of the  * predictor algorithm  * Updated by: iand@labtam.labtam.oz.au (Ian Donaldson)  * Updated by: Carsten Bormann<cabo@cs.tu-berlin.de>  * Original  : Dave Rand<dlr@bungi.com>/<dave_rand@novell.com>  */
+comment|/*  *  * $Id: pred.c,v 1.13 1997/06/09 23:38:37 brian Exp $  *  * pred.c -- Test program for Dave Rand's rendition of the  * predictor algorithm  * Updated by: iand@labtam.labtam.oz.au (Ian Donaldson)  * Updated by: Carsten Bormann<cabo@cs.tu-berlin.de>  * Original  : Dave Rand<dlr@bungi.com>/<dave_rand@novell.com>  */
 end_comment
 
 begin_comment
@@ -550,6 +550,8 @@ name|u_char
 name|bufp
 index|[
 name|MAX_MTU
+operator|+
+literal|2
 index|]
 decl_stmt|;
 name|u_short
@@ -679,20 +681,17 @@ argument_list|,
 name|orglen
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"orglen (%d) --> len (%d)\n"
+name|LogDEBUG
+argument_list|,
+literal|"Pred1Output: orglen (%d) --> len (%d)\n"
 argument_list|,
 name|orglen
 argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|CcpInfo
 operator|.
 name|orgout
@@ -830,6 +829,8 @@ operator|=
 name|mballoc
 argument_list|(
 name|MAX_MTU
+operator|+
+literal|2
 argument_list|,
 name|MB_IPIN
 argument_list|)
@@ -935,7 +936,7 @@ block|{
 comment|/* Error is detected. Send reset request */
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"%s: Length Error\n"
 argument_list|,
@@ -1033,18 +1034,18 @@ operator|-
 name|bufp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|fcs
 operator|!=
 name|GOODFCS
 condition|)
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"fcs = 0x%04x (%s), len = 0x%x, olen = 0x%x\n"
+name|LogDEBUG
+argument_list|,
+literal|"Pred1Input: fcs = 0x%04x (%s), len = 0x%x,"
+literal|" olen = 0x%x\n"
 argument_list|,
 name|fcs
 argument_list|,
@@ -1063,8 +1064,6 @@ argument_list|,
 name|olen
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|fcs
@@ -1156,7 +1155,7 @@ else|else
 block|{
 name|LogDumpBp
 argument_list|(
-name|LOG_HDLC
+name|LogHDLC
 argument_list|,
 literal|"Bad FCS"
 argument_list|,

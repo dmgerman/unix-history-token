@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP PAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993-94, Internet Initiative Japan, Inc.  *		     All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pap.c,v 1.7.2.2 1997/05/24 17:34:56 brian Exp $  *  *	TODO:  */
+comment|/*  *			PPP PAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993-94, Internet Initiative Japan, Inc.  *		     All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pap.c,v 1.13 1997/06/09 03:27:32 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -57,11 +57,11 @@ directive|include
 file|"auth.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PASSWDAUTH
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOPASSWDAUTH
+end_ifndef
 
 begin_include
 include|#
@@ -156,23 +156,20 @@ name|keylen
 operator|+
 literal|2
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"namelen = %d, keylen = %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"SendPapChallenge: namelen = %d, keylen = %d\n"
 argument_list|,
 name|namelen
 argument_list|,
 name|keylen
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"PAP: %s (%s)\n"
 argument_list|,
@@ -441,7 +438,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"PapOutput: %s\n"
 argument_list|,
@@ -516,12 +513,11 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"name: %s (%d), key: %s (%d)\n"
+name|LogDEBUG
+argument_list|,
+literal|"PapValidate: name %s (%d), key %s (%d)\n"
 argument_list|,
 name|name
 argument_list|,
@@ -532,11 +528,9 @@ argument_list|,
 name|klen
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|PASSWDAUTH
+ifndef|#
+directive|ifndef
+name|NOPASSWDAUTH
 if|if
 condition|(
 name|Enabled
@@ -547,7 +541,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"PasswdAuth enabled - calling\n"
 argument_list|)
@@ -563,7 +557,6 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* PASSWDAUTH */
 return|return
 operator|(
 name|AuthValidate
@@ -673,7 +666,7 @@ literal|0
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"PapInput: %s\n"
 argument_list|,
@@ -812,7 +805,7 @@ literal|0
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Received PAP_ACK (%s)\n"
 argument_list|,
@@ -885,7 +878,7 @@ literal|0
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Received PAP_NAK (%s)\n"
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.5 1996/04/11 08:14:44 davidg Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
+comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.9 1997/06/09 03:27:37 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ specifier|const
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slcompress.c,v 1.5 1996/04/11 08:14:44 davidg Exp $"
+literal|"$Id: slcompress.c,v 1.9 1997/06/09 03:27:37 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,18 @@ begin_include
 include|#
 directive|include
 file|"slcompress.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"loadalias.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vars.h"
 end_include
 
 begin_decl_stmt
@@ -405,9 +417,6 @@ init|=
 name|new_seq
 decl_stmt|;
 comment|/* 	 * Bail if this is an IP fragment or if the TCP packet isn't 	 * `compressible' (i.e., ACK isn't set or some other control bit is 	 * set).  (We assume that the caller has already made sure the 	 * packet is IP proto TCP). 	 */
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 operator|(
@@ -428,8 +437,10 @@ operator|<
 literal|40
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"??? 1 ip_off = %x, cnt = %d\n"
 argument_list|,
 name|ip
@@ -441,8 +452,12 @@ operator|->
 name|cnt
 argument_list|)
 expr_stmt|;
-name|DumpBp
+name|LogDumpBp
 argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|""
+argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
@@ -452,34 +467,6 @@ name|TYPE_IP
 operator|)
 return|;
 block|}
-else|#
-directive|else
-if|if
-condition|(
-operator|(
-name|ip
-operator|->
-name|ip_off
-operator|&
-name|htons
-argument_list|(
-literal|0x3fff
-argument_list|)
-operator|)
-operator|||
-name|m
-operator|->
-name|cnt
-operator|<
-literal|40
-condition|)
-return|return
-operator|(
-name|TYPE_IP
-operator|)
-return|;
-endif|#
-directive|endif
 name|th
 operator|=
 operator|(
@@ -499,9 +486,6 @@ index|[
 name|hlen
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 operator|(
@@ -523,8 +507,10 @@ operator|!=
 name|TH_ACK
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"??? 2 th_flags = %x\n"
 argument_list|,
 name|th
@@ -532,8 +518,12 @@ operator|->
 name|th_flags
 argument_list|)
 expr_stmt|;
-name|DumpBp
+name|LogDumpBp
 argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|""
+argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
@@ -543,35 +533,6 @@ name|TYPE_IP
 operator|)
 return|;
 block|}
-else|#
-directive|else
-if|if
-condition|(
-operator|(
-name|th
-operator|->
-name|th_flags
-operator|&
-operator|(
-name|TH_SYN
-operator||
-name|TH_FIN
-operator||
-name|TH_RST
-operator||
-name|TH_ACK
-operator|)
-operator|)
-operator|!=
-name|TH_ACK
-condition|)
-return|return
-operator|(
-name|TYPE_IP
-operator|)
-return|;
-endif|#
-directive|endif
 comment|/* 	 * Packet is compressible -- we're going to send either a 	 * COMPRESSED_TCP or UNCOMPRESSED_TCP packet.  Either way we need 	 * to locate (or create) the connection state.  Special case the 	 * most recently used connection since it's most likely to be used 	 * again& we don't have to do any reordering if it's used. 	 */
 name|INCR
 argument_list|(
@@ -1770,18 +1731,15 @@ operator|*
 name|cp
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"compressed: changes = %02x\n"
 argument_list|,
 name|changes
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|changes
@@ -2079,12 +2037,11 @@ operator|&
 name|NEW_S
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"NEW_S: %02x, %02x, %02x\r\n"
+name|LogDEBUG
+argument_list|,
+literal|"NEW_S: %02x, %02x, %02x\n"
 argument_list|,
 operator|*
 name|cp
@@ -2100,8 +2057,6 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|DECODEL
 argument_list|(
 argument|th->th_seq
@@ -2142,12 +2097,11 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"id = %04x, seq = %08x\r\n"
+name|LogDEBUG
+argument_list|,
+literal|"Uncompress: id = %04x, seq = %08x\n"
 argument_list|,
 name|cs
 operator|->
@@ -2163,8 +2117,6 @@ name|th_seq
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * At this point, cp points to the first byte of data in the 	 * packet.  If we're not aligned on a 4-byte boundary, copy the 	 * data down so the ip& tcp headers will be aligned.  Then back up 	 * cp by the tcp/ip header length to make room for the reconstructed 	 * header (we assume the packet we were handed has enough space to 	 * prepend 128 bytes of header).  Adjust the length to account for 	 * the new header& fill in the IP total length. 	 */
 name|len
 operator|-=
@@ -2394,8 +2346,18 @@ name|int
 name|ReportCompress
 parameter_list|()
 block|{
-name|printf
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|1
+return|;
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Out:  %d (compress) / %d (total)"
 argument_list|,
 name|slstat
@@ -2407,8 +2369,10 @@ operator|.
 name|sls_packets
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"  %d (miss) / %d (search)\n"
 argument_list|,
 name|slstat
@@ -2420,8 +2384,10 @@ operator|.
 name|sls_searches
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"In:  %d (compress), %d (uncompress)"
 argument_list|,
 name|slstat
@@ -2433,8 +2399,10 @@ operator|.
 name|sls_uncompressedin
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"  %d (error),  %d (tossed)\n"
 argument_list|,
 name|slstat
@@ -2447,9 +2415,7 @@ name|sls_tossed
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function

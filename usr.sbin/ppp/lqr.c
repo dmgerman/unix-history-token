@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.7.2.3 1997/05/24 17:34:53 brian Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
+comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.15 1997/06/09 03:27:27 brian Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
 end_comment
 
 begin_include
@@ -180,7 +180,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LQM_BIT
+name|LogLQM
 argument_list|,
 literal|"Send echo LQR [%d]\n"
 argument_list|,
@@ -294,7 +294,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LQM_BIT
+name|LogLQM
 argument_list|,
 literal|"Got echo LQR [%d]\n"
 argument_list|,
@@ -431,7 +431,7 @@ block|{
 comment|/*        * XXX: Should implement LQM strategy        */
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"** 1 Too many ECHO packets are lost. **\n"
 argument_list|)
@@ -498,7 +498,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"** 2 Too many ECHO packets are lost. **\n"
 argument_list|)
@@ -657,12 +657,11 @@ operator|.
 name|his_magic
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|notdef
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"*** magic %x != expecting %x\n"
+name|LogERROR
+argument_list|,
+literal|"LqrInput: magic %x != expecting %x\n"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -676,8 +675,6 @@ operator|.
 name|his_magic
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pfree
 argument_list|(
 name|bp
@@ -794,7 +791,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LQM_BIT
+name|LogLQM
 argument_list|,
 literal|"LQM method = %d\n"
 argument_list|,
@@ -866,7 +863,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LQM_BIT
+name|LogLQM
 argument_list|,
 literal|"Will send LQR every %d.%d secs\n"
 argument_list|,
@@ -884,7 +881,7 @@ else|else
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LQM_BIT
+name|LogLQM
 argument_list|,
 literal|"LQR is not activated.\n"
 argument_list|)
@@ -921,7 +918,7 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LQM_BIT
+name|LogLQM
 argument_list|,
 literal|"StopLqr method = %x\n"
 argument_list|,
@@ -936,7 +933,7 @@ name|LQM_LQR
 condition|)
 name|LogPrintf
 argument_list|(
-name|LOG_LQM_BIT
+name|LogLQM
 argument_list|,
 literal|"Stop sending LQR, Use LCP ECHO instead.\n"
 argument_list|)
@@ -949,7 +946,7 @@ name|LQM_ECHO
 condition|)
 name|LogPrintf
 argument_list|(
-name|LOG_LQM_BIT
+name|LogLQM
 argument_list|,
 literal|"Stop sending LCP ECHO.\n"
 argument_list|)
@@ -996,30 +993,25 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|loglevel
-operator|&
-operator|(
-literal|1
-operator|<<
-name|LOG_LQM
-operator|)
+name|LogIsKept
+argument_list|(
+name|LogLQM
+argument_list|)
 condition|)
 block|{
-name|LogTimeStamp
-argument_list|()
-expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"%s:\n"
+name|LogLQM
+argument_list|,
+literal|"%s:"
 argument_list|,
 name|message
 argument_list|)
 expr_stmt|;
-name|LogTimeStamp
-argument_list|()
-expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogLQM
+argument_list|,
 literal|"  Magic:          %08x   LastOutLQRs:    %08x\n"
 argument_list|,
 name|lqr
@@ -1031,11 +1023,10 @@ operator|->
 name|LastOutLQRs
 argument_list|)
 expr_stmt|;
-name|LogTimeStamp
-argument_list|()
-expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogLQM
+argument_list|,
 literal|"  LastOutPackets: %08x   LastOutOctets:  %08x\n"
 argument_list|,
 name|lqr
@@ -1047,11 +1038,10 @@ operator|->
 name|LastOutOctets
 argument_list|)
 expr_stmt|;
-name|LogTimeStamp
-argument_list|()
-expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogLQM
+argument_list|,
 literal|"  PeerInLQRs:     %08x   PeerInPackets:  %08x\n"
 argument_list|,
 name|lqr
@@ -1063,11 +1053,10 @@ operator|->
 name|PeerInPackets
 argument_list|)
 expr_stmt|;
-name|LogTimeStamp
-argument_list|()
-expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogLQM
+argument_list|,
 literal|"  PeerInDiscards: %08x   PeerInErrors:   %08x\n"
 argument_list|,
 name|lqr
@@ -1079,11 +1068,10 @@ operator|->
 name|PeerInErrors
 argument_list|)
 expr_stmt|;
-name|LogTimeStamp
-argument_list|()
-expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogLQM
+argument_list|,
 literal|"  PeerInOctets:   %08x   PeerOutLQRs:    %08x\n"
 argument_list|,
 name|lqr
@@ -1095,11 +1083,10 @@ operator|->
 name|PeerOutLQRs
 argument_list|)
 expr_stmt|;
-name|LogTimeStamp
-argument_list|()
-expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogLQM
+argument_list|,
 literal|"  PeerOutPackets: %08x   PeerOutOctets:  %08x\n"
 argument_list|,
 name|lqr

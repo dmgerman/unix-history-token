@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.11.2.7 1997/05/10 01:24:32 brian Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.26 1997/06/09 03:27:15 brian Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
 end_comment
 
 begin_include
@@ -715,21 +715,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|mode
-operator|&
-operator|(
-name|MODE_INTER
-operator||
-name|MODE_AUTO
-operator|)
-operator|)
-operator|==
-name|MODE_INTER
+name|VarTerm
 condition|)
 name|fprintf
 argument_list|(
-name|stderr
+name|VarTerm
 argument_list|,
 literal|"Phone: %s\n"
 argument_list|,
@@ -738,9 +728,9 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
-literal|"Phone: %s\n"
+literal|"Phone: %s"
 argument_list|,
 name|phone
 argument_list|)
@@ -933,18 +923,27 @@ parameter_list|()
 block|{
 if|if
 condition|(
-operator|(
-name|loglevel
-operator|&
-name|LOG_CONNECT_BIT
-operator|)
-operator|||
-operator|(
-operator|(
-name|loglevel
-operator|&
-name|LOG_CARRIER_BIT
-operator|)
+name|LogIsKept
+argument_list|(
+name|LogCONNECT
+argument_list|)
+condition|)
+name|LogPrintf
+argument_list|(
+name|LogCONNECT
+argument_list|,
+literal|"%s"
+argument_list|,
+name|logbuff
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|LogIsKept
+argument_list|(
+name|LogCARRIER
+argument_list|)
 operator|&&
 name|strstr
 argument_list|(
@@ -952,21 +951,16 @@ name|logbuff
 argument_list|,
 literal|"CARRIER"
 argument_list|)
-operator|)
 condition|)
-block|{
 name|LogPrintf
 argument_list|(
-name|LOG_CONNECT_BIT
-operator||
-name|LOG_CARRIER_BIT
+name|LogCARRIER
 argument_list|,
-literal|"Chat: %s\n"
+literal|"%s"
 argument_list|,
 name|logbuff
 argument_list|)
 expr_stmt|;
-block|}
 name|clear_log
 argument_list|()
 expr_stmt|;
@@ -1131,9 +1125,9 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"Wait for (%d): %s --> %s\n"
+literal|"Wait for (%d): %s --> %s"
 argument_list|,
 name|TimeoutSec
 argument_list|,
@@ -1171,9 +1165,9 @@ literal|0
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"Truncating String to %d character: %s\n"
+literal|"Truncating String to %d character: %s"
 argument_list|,
 name|IBSIZE
 argument_list|,
@@ -1273,9 +1267,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"select"
+name|LogERROR
+argument_list|,
+literal|"select: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1311,18 +1312,18 @@ name|inbuff
 condition|)
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"got: %s\n"
+literal|"Got: %s"
 argument_list|,
 name|inbuff
 argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"can't get (%d).\n"
+literal|"Can't get (%d)."
 argument_list|,
 name|timeout
 operator|.
@@ -1496,9 +1497,9 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"Abort: %s\n"
+literal|"Abort: %s"
 argument_list|,
 name|AbortStrings
 index|[
@@ -1544,9 +1545,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"read error"
+name|LogERROR
+argument_list|,
+literal|"read error: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1715,9 +1723,9 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"Abort: %s\n"
+literal|"Abort: %s"
 argument_list|,
 name|s1
 argument_list|)
@@ -1870,9 +1878,9 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"Too long string to ExecStr: \"%s\"\n"
+literal|"Too long string to ExecStr: \"%s\""
 argument_list|,
 name|command
 argument_list|)
@@ -1906,9 +1914,9 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"Unable to create pipe in ExecStr: %s\n"
+literal|"Unable to create pipe in ExecStr: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1993,9 +2001,9 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"dup2(fids[1], 1) in ExecStr: %s\n"
+literal|"dup2(fids[1], 1) in ExecStr: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2036,9 +2044,9 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"dup2(nb, 0) in ExecStr: %s\n"
+literal|"dup2(nb, 0) in ExecStr: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2050,9 +2058,9 @@ return|return;
 block|}
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"exec: %s\n"
+literal|"exec: %s"
 argument_list|,
 name|command
 argument_list|)
@@ -2071,9 +2079,9 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"setgid: %s\n"
+literal|"setgid: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2100,9 +2108,9 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"setuid: %s\n"
+literal|"setuid: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2127,9 +2135,9 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"execvp failed for (%d/%d): %s\n"
+literal|"execvp failed for (%d/%d): %s"
 argument_list|,
 name|pid
 argument_list|,
@@ -2389,9 +2397,9 @@ block|{
 comment|/* Do not log the password itself. */
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"sending: %s\n"
+literal|"sending: %s"
 argument_list|,
 name|str
 argument_list|)
@@ -2401,9 +2409,9 @@ else|else
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"sending: %s\n"
+literal|"sending: %s"
 argument_list|,
 name|buff
 operator|+
@@ -2516,9 +2524,9 @@ return|;
 block|}
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
-literal|"Expecting %s\n"
+literal|"Expecting %s"
 argument_list|,
 name|str
 argument_list|)
@@ -2733,14 +2741,6 @@ name|n
 decl_stmt|,
 name|state
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|int
-name|i
-decl_stmt|;
-endif|#
-directive|endif
 name|timeout_next
 operator|=
 name|abort_next
@@ -2806,41 +2806,6 @@ name|vector
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
-argument_list|(
-literal|"n = %d\n"
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n
-condition|;
-name|i
-operator|++
-control|)
-name|logprintf
-argument_list|(
-literal|"  %s\n"
-argument_list|,
-name|vector
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|argc
 operator|=
 name|n

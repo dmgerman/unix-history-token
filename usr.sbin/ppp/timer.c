@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Timer Processing Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: timer.c,v 1.5.2.3 1997/05/09 17:36:33 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Timer Processing Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: timer.c,v 1.17 1997/06/09 03:27:40 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -57,15 +57,6 @@ parameter_list|(
 name|struct
 name|pppTimer
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ShowTimers
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -183,18 +174,15 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"timer %x has 0 load!\n"
 argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sigsetmask
 argument_list|(
 name|omask
@@ -221,11 +209,10 @@ operator|->
 name|next
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"StartTimer: %x(%d):  ticks: %d, rest: %d\n"
 argument_list|,
 name|t
@@ -241,8 +228,6 @@ operator|->
 name|rest
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ticks
@@ -283,12 +268,11 @@ name|load
 operator|-
 name|ticks
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"Inserting %x before %x, rest = %d\n"
+name|LogDEBUG
+argument_list|,
+literal|"StartTimer: Inserting %x before %x, rest = %d\n"
 argument_list|,
 name|tp
 argument_list|,
@@ -299,8 +283,6 @@ operator|->
 name|rest
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Insert given *tp just before *t */
 name|tp
 operator|->
@@ -376,11 +358,10 @@ modifier|*
 name|pt
 decl_stmt|;
 comment|/*    * A Running Timer should be removing TimerList,    * But STOPPED/EXPIRED is already removing TimerList.    * So just marked as TIMER_STOPPED.    * Do not change tp->enext!! (Might be Called by expired proc)    */
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"StopTimer: %x, next = %x state=%x\n"
 argument_list|,
 name|tp
@@ -394,8 +375,6 @@ operator|->
 name|state
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|tp
@@ -504,13 +483,13 @@ name|rest
 expr_stmt|;
 block|}
 else|else
-block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogERROR
+argument_list|,
 literal|"Oops, timer not found!!\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|tp
 operator|->
 name|next
@@ -542,14 +521,16 @@ decl_stmt|,
 modifier|*
 name|wt
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
+if|if
+condition|(
+name|LogIsKept
+argument_list|(
+name|LogDEBUG
+argument_list|)
+condition|)
 name|ShowTimers
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|tp
 operator|=
 name|TimerList
@@ -602,18 +583,15 @@ name|exp
 operator|=
 name|tp
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"Add %x to exp\n"
+name|LogDEBUG
+argument_list|,
+literal|"TimerService: Add %x to exp\n"
 argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|tp
 operator|=
 name|wt
@@ -647,11 +625,10 @@ name|TermTimerService
 argument_list|()
 expr_stmt|;
 comment|/* Terminate Timer Service */
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"TimerService: next is %x(%d)\n"
 argument_list|,
 name|TimerList
@@ -665,8 +642,6 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/*        * Process all expired timers.        */
 while|while
 condition|(
@@ -724,8 +699,10 @@ name|pppTimer
 modifier|*
 name|pt
 decl_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"---- Begin of Timer Service List---\n"
 argument_list|)
 expr_stmt|;
@@ -743,8 +720,10 @@ name|pt
 operator|->
 name|next
 control|)
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"%x: load = %d, rest = %d, state =%x\n"
 argument_list|,
 name|pt
@@ -762,8 +741,10 @@ operator|->
 name|state
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"---- End of Timer Service List ---\n"
 argument_list|)
 expr_stmt|;
@@ -1171,13 +1152,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogERROR
+argument_list|,
 literal|"Unable to set itimer.\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1235,13 +1216,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogERROR
+argument_list|,
 literal|"Unable to set itimer.\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|pending_signal
 argument_list|(
 name|SIGALRM

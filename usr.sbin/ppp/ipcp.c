@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.9.2.9 1997/05/24 17:34:50 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.21 1997/06/09 03:27:24 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
 end_comment
 
 begin_include
@@ -129,11 +129,11 @@ name|DefTriggerAddress
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MSEXT
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOMSEXT
+end_ifndef
 
 begin_decl_stmt
 name|struct
@@ -155,147 +155,116 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* MSEXT */
-end_comment
-
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|IpcpSendConfigReq
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|IpcpSendTerminateAck
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|IpcpSendTerminateReq
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|IpcpDecodeConfig
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|IpcpLayerStart
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|IpcpLayerFinish
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|IpcpLayerUp
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|IpcpLayerDown
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|IpcpInitRestartCounter
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -524,8 +493,18 @@ init|=
 operator|&
 name|IpcpFsm
 decl_stmt|;
-name|printf
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|1
+return|;
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"%s [%s]\n"
 argument_list|,
 name|fp
@@ -540,8 +519,10 @@ name|state
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" his side: %s, %lx\n"
 argument_list|,
 name|inet_ntoa
@@ -556,8 +537,10 @@ operator|->
 name|his_compproto
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" my  side: %s, %lx\n"
 argument_list|,
 name|inet_ntoa
@@ -572,8 +555,10 @@ operator|->
 name|want_compproto
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"connected: %d secs, idle: %d secs\n\n"
 argument_list|,
 name|ipConnectSecs
@@ -581,13 +566,17 @@ argument_list|,
 name|ipIdleSecs
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Defaults:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" My Address:  %s/%d\n"
 argument_list|,
 name|inet_ntoa
@@ -602,8 +591,10 @@ operator|.
 name|width
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" His Address: %s/%d\n"
 argument_list|,
 name|inet_ntoa
@@ -618,8 +609,10 @@ operator|.
 name|width
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|" Negotiation: %s/%d\n"
 argument_list|,
 name|inet_ntoa
@@ -635,7 +628,7 @@ name|width
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
@@ -970,13 +963,9 @@ name|ReqBuff
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: SendConfigReq\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"IpcpSendConfigReq\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1123,13 +1112,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"  %s: SendTerminateAck\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"IpcpSendTerminateAck\n"
 argument_list|)
 expr_stmt|;
 name|FsmOutput
@@ -1166,13 +1151,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: LayerStart.\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"IpcpLayerStart.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1193,13 +1174,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: LayerFinish.\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"IpcpLayerFinish.\n"
 argument_list|)
 expr_stmt|;
 name|reconnect
@@ -1233,13 +1210,9 @@ decl_stmt|;
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: LayerDown.\n"
-argument_list|,
-name|fp
-operator|->
-name|name
+literal|"IpcpLayerDown.\n"
 argument_list|)
 expr_stmt|;
 name|StopTimer
@@ -1274,38 +1247,18 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: LayerUp(%d).\r\n"
-argument_list|,
-name|fp
-operator|->
-name|name
-argument_list|,
-name|fp
-operator|->
-name|state
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|Prompt
 argument_list|()
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
-literal|"%s: LayerUp.\n"
+literal|"IpcpLayerUp(%d).\n"
 argument_list|,
 name|fp
 operator|->
-name|name
+name|state
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -1329,9 +1282,14 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
-operator||
-name|LOG_LINK_BIT
+name|LogIsKept
+argument_list|(
+name|LogLCP
+argument_list|)
+condition|?
+name|LogLCP
+else|:
+name|LogLINK
 argument_list|,
 literal|" %s hisaddr = %s\n"
 argument_list|,
@@ -1363,9 +1321,15 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|LogPrintf
 argument_list|(
-literal|"unable to set ip address\n"
+name|LogERROR
+argument_list|,
+literal|"IpcpLayerUp: unable to set ip address\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1408,7 +1372,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"IPCP Up event!!\n"
 argument_list|)
@@ -1449,11 +1413,10 @@ name|in_addr
 name|ipaddr
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"requested = %x "
 argument_list|,
 name|htonl
@@ -1464,8 +1427,10 @@ name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"range = %x"
 argument_list|,
 name|htonl
@@ -1478,8 +1443,10 @@ name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"/%x\n"
 argument_list|,
 name|htonl
@@ -1492,8 +1459,10 @@ name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"%x, %x\n"
 argument_list|,
 name|htonl
@@ -1525,8 +1494,6 @@ name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|prange
@@ -1731,7 +1698,7 @@ name|lp
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"%s %s\n"
 argument_list|,
@@ -1853,7 +1820,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"%s --> %s\n"
 argument_list|,
@@ -1914,7 +1881,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"%s %08x\n"
 argument_list|,
@@ -1990,9 +1957,11 @@ operator|==
 name|PROTO_VJCOMP
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"** Peer is speaking RFC1172 compression protocol **\n"
+name|LogWARN
+argument_list|,
+literal|"Peer is speaking RFC1172 compression protocol !n"
 argument_list|)
 expr_stmt|;
 name|IpcpInfo
@@ -2191,7 +2160,7 @@ name|MODE_NAK
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"%s changing compproto: %08x --> %08x\n"
 argument_list|,
@@ -2271,7 +2240,7 @@ name|lp
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"%s %s, "
 argument_list|,
@@ -2285,7 +2254,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"%s\n"
 argument_list|,
@@ -2334,7 +2303,7 @@ name|MODE_NAK
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"%s changing address: %s "
 argument_list|,
@@ -2350,7 +2319,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP_BIT
+name|LogLCP
 argument_list|,
 literal|"--> %s\n"
 argument_list|,
@@ -2390,9 +2359,9 @@ break|break;
 block|}
 break|break;
 comment|/*   * MS extensions for MS's PPP    */
-ifdef|#
-directive|ifdef
-name|MSEXT
+ifndef|#
+directive|ifndef
+name|NOMSEXT
 case|case
 name|TY_PRIMARY_DNS
 case|:
@@ -2411,7 +2380,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"MS NS req - rejected - msext disabled\n"
 argument_list|)
@@ -2513,7 +2482,7 @@ expr_stmt|;
 comment|/* copy first two (type/length) */
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"MS NS req %d:%s->%s - nak\n"
 argument_list|,
@@ -2551,7 +2520,7 @@ block|}
 comment|/* 	   Otherwise they have it right (this time) so we send 	   a ack packet back confirming it... end of story 	  */
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"MS NS req %d:%s ok - ack\n"
 argument_list|,
@@ -2583,7 +2552,7 @@ case|:
 comment|/* what does this mean?? */
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"MS NS req %d - NAK??\n"
 argument_list|,
@@ -2597,7 +2566,7 @@ case|:
 comment|/* confused?? me to :) */
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"MS NS req %d - REJ??\n"
 argument_list|,
@@ -2625,7 +2594,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"MS NBNS req - rejected - msext disabled\n"
 argument_list|)
@@ -2739,7 +2708,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"MS NBNS req %d:%s->%s - nak\n"
 argument_list|,
@@ -2764,7 +2733,7 @@ break|break;
 block|}
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"MS NBNS req %d:%s ok - ack\n"
 argument_list|,
@@ -2795,7 +2764,7 @@ name|MODE_NAK
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"MS NBNS req %d - NAK??\n"
 argument_list|,
@@ -2808,7 +2777,7 @@ name|MODE_REJ
 case|:
 name|LogPrintf
 argument_list|(
-name|LOG_LCP
+name|LogLCP
 argument_list|,
 literal|"MS NBNS req %d - REJ??\n"
 argument_list|,
@@ -2820,7 +2789,6 @@ block|}
 break|break;
 endif|#
 directive|endif
-comment|/* MSEXT */
 default|default:
 name|IpcpInfo
 operator|.

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.7.2.8 1997/06/01 01:14:36 brian Exp $  *  */
+comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.22 1997/06/09 03:27:31 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -263,9 +263,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"socket"
+name|LogERROR
+argument_list|,
+literal|"socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -369,16 +376,6 @@ name|ifra_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
-argument_list|(
-literal|"DIFADDR\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ioctl
@@ -394,9 +391,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"SIOCDIFADDR"
+name|LogERROR
+argument_list|,
+literal|"ioctl(SIOCDIFADDR): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -697,12 +701,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"SIFADDR"
+name|LogERROR
+argument_list|,
+literal|"ioctl(SIFADDR): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 name|bcopy
 argument_list|(
 operator|&
@@ -736,12 +746,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"SIFDSTADDR"
+name|LogERROR
+argument_list|,
+literal|"ioctl(SIFDSTADDR): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
@@ -778,9 +794,16 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"SIFBRDADDR"
+name|LogERROR
+argument_list|,
+literal|"ioctl(SIFBRDADDR): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -802,9 +825,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"SIOCAIFADDR"
+name|LogERROR
+argument_list|,
+literal|"ioctl(SIOCAIFADDR): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -925,8 +955,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogERROR
+argument_list|,
 literal|"setuid failed\n"
 argument_list|)
 expr_stmt|;
@@ -973,7 +1005,7 @@ literal|1
 condition|)
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Parent notified of success.\n"
 argument_list|)
@@ -981,7 +1013,7 @@ expr_stmt|;
 else|else
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Failed to notify parent of success.\n"
 argument_list|)
@@ -1020,11 +1052,26 @@ argument_list|(
 name|peer_addr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|LogIsKept
+argument_list|(
+name|LogLINK
+argument_list|)
+condition|)
 name|LogPrintf
 argument_list|(
-name|LOG_LINK_BIT
-operator||
-name|LOG_LCP_BIT
+name|LogLINK
+argument_list|,
+literal|"OsLinkup: %s\n"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+else|else
+name|LogPrintf
+argument_list|(
+name|LogLCP
 argument_list|,
 literal|"OsLinkup: %s\n"
 argument_list|,
@@ -1114,11 +1161,26 @@ argument_list|(
 name|peer_addr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|LogIsKept
+argument_list|(
+name|LogLINK
+argument_list|)
+condition|)
 name|LogPrintf
 argument_list|(
-name|LOG_LINK_BIT
-operator||
-name|LOG_LCP_BIT
+name|LogLINK
+argument_list|,
+literal|"OsLinkdown: %s\n"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+else|else
+name|LogPrintf
+argument_list|(
+name|LogLCP
 argument_list|,
 literal|"OsLinkdown: %s\n"
 argument_list|,
@@ -1202,9 +1264,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"socket"
+name|LogERROR
+argument_list|,
+literal|"socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1236,9 +1305,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"SIOCSIFFLAGS"
+name|LogERROR
+argument_list|,
+literal|"ioctl(SIOCSIFFLAGS): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -1353,9 +1429,16 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"TUNSIFINFO"
+name|LogERROR
+argument_list|,
+literal|"ioctl(TUNSIFINFO): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1411,6 +1494,13 @@ name|enoentcount
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
+name|err
+operator|=
+name|ENOENT
+expr_stmt|;
 for|for
 control|(
 name|unit
@@ -1461,12 +1551,16 @@ name|errno
 operator|==
 name|ENXIO
 condition|)
+block|{
 name|unit
 operator|=
 name|MAX_TUN
-operator|+
-literal|1
 expr_stmt|;
+name|err
+operator|=
+name|errno
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1487,10 +1581,13 @@ condition|)
 name|unit
 operator|=
 name|MAX_TUN
-operator|+
-literal|1
 expr_stmt|;
 block|}
+else|else
+name|err
+operator|=
+name|errno
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1499,18 +1596,25 @@ operator|>
 name|MAX_TUN
 condition|)
 block|{
+if|if
+condition|(
+name|VarTerm
+condition|)
 name|fprintf
 argument_list|(
-name|stderr
+name|VarTerm
 argument_list|,
-literal|"No tunnel device is available.\n"
+literal|"No tunnel device is available (%s).\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 operator|*
@@ -1518,28 +1622,11 @@ name|ptun
 operator|=
 name|unit
 expr_stmt|;
-if|if
-condition|(
-name|logptr
-operator|!=
-name|NULL
-condition|)
-name|LogClose
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|LogOpen
+name|LogSetTun
 argument_list|(
 name|unit
 argument_list|)
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+expr_stmt|;
 comment|/*    * At first, name the interface.    */
 name|strncpy
 argument_list|(
@@ -1628,9 +1715,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"socket"
+name|LogERROR
+argument_list|,
+literal|"socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1656,9 +1750,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"SIOCGIFFLAGS"
+name|LogERROR
+argument_list|,
+literal|"ioctl(SIOCGIFFLAGS): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -1694,9 +1795,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"SIOCSIFFLAGS"
+name|LogERROR
+argument_list|,
+literal|"ioctl(SIOCSIFFLAGS): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -1731,11 +1839,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogERROR
 argument_list|,
-literal|"can't find ifindex.\n"
+literal|"OpenTunnel: Can't find ifindex.\n"
 argument_list|)
 expr_stmt|;
 name|close
@@ -1752,23 +1860,20 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-operator|(
-name|mode
-operator|&
-name|MODE_DIRECT
-operator|)
+name|VarTerm
 condition|)
-name|printf
+name|fprintf
 argument_list|(
-literal|"Using interface: %s\r\n"
+name|VarTerm
+argument_list|,
+literal|"Using interface: %s\n"
 argument_list|,
 name|IfDevName
 argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Using interface: %s\n"
 argument_list|,

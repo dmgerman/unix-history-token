@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sys-bsd.c - System-dependent procedures for setting up  * PPP interfaces on bsd-4.4-ish systems (including 386BSD, NetBSD, etc.)  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: arp.c,v 1.5 1996/05/11 20:48:09 phk Exp $  *  */
+comment|/*  * sys-bsd.c - System-dependent procedures for setting up  * PPP interfaces on bsd-4.4-ish systems (including 386BSD, NetBSD, etc.)  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: arp.c,v 1.12 1997/06/09 03:27:11 brian Exp $  *  */
 end_comment
 
 begin_comment
@@ -158,24 +158,21 @@ name|rtm_seq
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|get_ether_addr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|u_long
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|sockaddr_dl
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -314,9 +311,12 @@ name|hwa
 argument_list|)
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"Cannot determine ethernet address for proxy ARP\n"
+name|LogERROR
+argument_list|,
+literal|"Cannot determine ethernet address"
+literal|" for proxy ARP\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -341,9 +341,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"sifproxyarp: opening routing socket: \n"
+name|LogERROR
+argument_list|,
+literal|"sifproxyarp: opening routing socket: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -490,9 +497,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"add proxy arp entry: \n"
+name|LogERROR
+argument_list|,
+literal|"Add proxy arp entry: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -588,9 +602,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"sifproxyarp: opening routing socket: \n"
+name|LogERROR
+argument_list|,
+literal|"sifproxyarp: opening routing socket: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -616,9 +637,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"delete proxy arp entry: \n"
+name|LogERROR
+argument_list|,
+literal|"Delete proxy arp entry: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -823,11 +851,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogERROR
 argument_list|,
-literal|"ioctl(SIOCSARP): \n"
+literal|"sifproxyarp: ioctl(SIOCSARP): \n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -919,11 +947,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogERROR
 argument_list|,
-literal|"ioctl(SIOCDARP): \n"
+literal|"cifproxyarp: ioctl(SIOCDARP): \n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1044,11 +1072,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogERROR
 argument_list|,
-literal|"ioctl(SIOCGIFCONF): \n"
+literal|"get_ether_addr: ioctl(SIOCGIFCONF): \n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1286,9 +1314,9 @@ literal|0
 return|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
-literal|"found interface %s for proxy arp\n"
+literal|"Found interface %s for proxy arp\n"
 argument_list|,
 name|ifr
 operator|->
@@ -1500,12 +1528,9 @@ name|size
 condition|)
 block|{
 comment|/* XXX this duplicates kvm_read's error printout */
-operator|(
-name|void
-operator|)
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogERROR
 argument_list|,
 literal|"kvm_read %s\n"
 argument_list|,
@@ -1516,16 +1541,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function

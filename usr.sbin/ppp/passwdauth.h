@@ -15,22 +15,19 @@ directive|define
 name|_PASSWDAUTH_H_
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|PasswdAuth
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

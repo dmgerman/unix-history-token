@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.22.2.20 1997/05/29 02:30:35 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.60 1997/06/09 03:27:28 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -176,7 +176,7 @@ begin_define
 define|#
 directive|define
 name|LAUTH_M2
-value|"Warning: All manipulation is allowed by anyone in the world\n"
+value|"Warning: Manipulation is allowed by anyone\n"
 end_define
 
 begin_ifndef
@@ -844,7 +844,7 @@ literal|1
 condition|)
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Parent notified of failure.\n"
 argument_list|)
@@ -852,7 +852,7 @@ expr_stmt|;
 else|else
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Failed to notify parent of failure.\n"
 argument_list|)
@@ -868,7 +868,7 @@ expr_stmt|;
 block|}
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"PPP Terminated (%s).\n"
 argument_list|,
@@ -921,6 +921,9 @@ name|int
 name|signo
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|TRAPSEGV
 if|if
 condition|(
 name|signo
@@ -930,7 +933,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Signal %d, core dump.\n"
 argument_list|,
@@ -944,6 +947,8 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|BGPid
@@ -966,7 +971,7 @@ else|else
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Signal %d, hangup.\n"
 argument_list|,
@@ -1011,11 +1016,9 @@ name|EX_TERM
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Signal %d, terminate.\n"
 argument_list|,
@@ -1035,7 +1038,6 @@ argument_list|(
 name|EX_TERM
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1381,8 +1383,10 @@ operator||=
 name|MODE_ALIAS
 expr_stmt|;
 else|else
-name|printf
+name|LogPrintf
 argument_list|(
+name|LogWARN
+argument_list|,
 literal|"Cannot load alias library\n"
 argument_list|)
 expr_stmt|;
@@ -1465,16 +1469,24 @@ name|void
 name|Greetings
 parameter_list|()
 block|{
-name|printf
+if|if
+condition|(
+name|VarTerm
+condition|)
+block|{
+name|fprintf
 argument_list|(
-literal|"User Process PPP. Written by Toshiharu OHNO.\r\n"
+name|VarTerm
+argument_list|,
+literal|"User Process PPP. Written by Toshiharu OHNO.\n"
 argument_list|)
 expr_stmt|;
 name|fflush
 argument_list|(
-name|stdout
+name|VarTerm
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1499,6 +1511,40 @@ name|FILE
 modifier|*
 name|lockfile
 decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|VarTerm
+operator|=
+name|stdout
+expr_stmt|;
+name|name
+operator|=
+name|rindex
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+name|LogOpen
+argument_list|(
+name|name
+condition|?
+name|name
+operator|+
+literal|1
+else|:
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 name|argc
 operator|--
 expr_stmt|;
@@ -1556,16 +1602,16 @@ name|CONFFILE
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|VarTerm
 condition|)
-block|{
 name|fprintf
 argument_list|(
-name|stderr
+name|VarTerm
 argument_list|,
 literal|"Warning: No default entry is given in config file.\n"
 argument_list|)
 expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|LocalAuthInit
@@ -1577,31 +1623,21 @@ name|NOT_FOUND
 case|:
 if|if
 condition|(
-operator|!
-operator|(
-name|mode
-operator|&
-name|MODE_DIRECT
-operator|)
+name|VarTerm
 condition|)
 block|{
 name|fprintf
 argument_list|(
-name|stderr
+name|VarTerm
 argument_list|,
 name|LAUTH_M1
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
+name|VarTerm
 argument_list|,
 name|LAUTH_M2
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
 argument_list|)
 expr_stmt|;
 block|}
@@ -1628,9 +1664,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"open_tun"
+name|LogWARN
+argument_list|,
+literal|"open_tun: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1663,8 +1706,10 @@ operator|&
 name|MODE_INTER
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Interactive mode\n"
 argument_list|)
 expr_stmt|;
@@ -1681,8 +1726,10 @@ operator|&
 name|MODE_AUTO
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Automatic Dialer mode\n"
 argument_list|)
 expr_stmt|;
@@ -1693,9 +1740,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|VarTerm
+condition|)
 name|fprintf
 argument_list|(
-name|stderr
+name|VarTerm
 argument_list|,
 literal|"Destination system must be specified in"
 literal|" auto, background or ddial mode.\n"
@@ -1721,7 +1772,7 @@ name|pending_signal
 argument_list|(
 name|SIGHUP
 argument_list|,
-name|LogReOpen
+name|Hangup
 argument_list|)
 expr_stmt|;
 name|pending_signal
@@ -1747,7 +1798,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SIGSEGV
+name|TRAPSEGV
 name|signal
 argument_list|(
 name|SIGSEGV
@@ -1842,9 +1893,13 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|VarTerm
+condition|)
 name|fprintf
 argument_list|(
-name|stderr
+name|VarTerm
 argument_list|,
 literal|"Destination system not found in conf file.\n"
 argument_list|)
@@ -1872,9 +1927,13 @@ operator|==
 name|INADDR_ANY
 condition|)
 block|{
+if|if
+condition|(
+name|VarTerm
+condition|)
 name|fprintf
 argument_list|(
-name|stderr
+name|VarTerm
 argument_list|,
 literal|"Must specify dstaddr with"
 literal|" auto, background or ddial mode.\n"
@@ -1893,8 +1952,10 @@ name|mode
 operator|&
 name|MODE_DIRECT
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Packet mode enabled.\n"
 argument_list|)
 expr_stmt|;
@@ -1930,9 +1991,16 @@ name|BGFiledes
 argument_list|)
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"pipe"
+name|LogERROR
+argument_list|,
+literal|"pipe: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|Cleanup
@@ -1961,9 +2029,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"socket"
+name|LogERROR
+argument_list|,
+literal|"socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|Cleanup
@@ -2033,9 +2108,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"bind"
+name|LogERROR
+argument_list|,
+literal|"bind: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2043,10 +2125,12 @@ condition|(
 name|errno
 operator|==
 name|EADDRINUSE
+operator|&&
+name|VarTerm
 condition|)
 name|fprintf
 argument_list|(
-name|stderr
+name|VarTerm
 argument_list|,
 literal|"Wait for a while, then try again.\n"
 argument_list|)
@@ -2069,17 +2153,19 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogERROR
 argument_list|,
 literal|"Unable to listen to socket - OS overload?\n"
 argument_list|)
 expr_stmt|;
-block|}
-name|DupLog
-argument_list|()
+name|Cleanup
+argument_list|(
+name|EX_SOCK
+argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2106,9 +2192,16 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"fork"
+name|LogERROR
+argument_list|,
+literal|"fork: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|Cleanup
@@ -2165,14 +2258,16 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Child exit, no status.\n"
 argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Parent: Child exit, no status.\n"
 argument_list|)
@@ -2186,14 +2281,16 @@ operator|==
 name|EX_NORMAL
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"PPP enabled.\n"
 argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Parent: PPP enabled.\n"
 argument_list|)
@@ -2201,8 +2298,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|VarTerm
+argument_list|,
 literal|"Child failed (%s).\n"
 argument_list|,
 name|ex_desc
@@ -2216,7 +2315,7 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Parent: Child failed (%s).\n"
 argument_list|,
@@ -2321,8 +2420,10 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogALERT
+argument_list|,
 literal|"Warning: Can't create %s: %s\n"
 argument_list|,
 name|pid_filename
@@ -2387,8 +2488,10 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogALERT
+argument_list|,
 literal|"Warning: Can't create %s: %s\n"
 argument_list|,
 name|if_filename
@@ -2407,7 +2510,7 @@ literal|0
 condition|)
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Listening at %d.\n"
 argument_list|,
@@ -2427,8 +2530,6 @@ operator||
 name|MODE_DEDICATED
 operator|)
 condition|)
-block|{
-comment|/* } */
 else|#
 directive|else
 if|if
@@ -2437,87 +2538,19 @@ name|mode
 operator|&
 name|MODE_DIRECT
 condition|)
-block|{
 endif|#
 directive|endif
 name|TtyInit
 argument_list|()
 expr_stmt|;
-block|}
 else|else
-block|{
-name|int
-name|fd
-decl_stmt|;
-name|setsid
-argument_list|()
-expr_stmt|;
-comment|/* detach control tty */
-if|if
-condition|(
-operator|(
-name|fd
-operator|=
-name|open
+name|daemon
 argument_list|(
-name|_PATH_DEVNULL
-argument_list|,
-name|O_RDWR
+literal|0
 argument_list|,
 literal|0
 argument_list|)
-operator|)
-operator|!=
-operator|-
-literal|1
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|dup2
-argument_list|(
-name|fd
-argument_list|,
-name|STDIN_FILENO
-argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|dup2
-argument_list|(
-name|fd
-argument_list|,
-name|STDOUT_FILENO
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|dup2
-argument_list|(
-name|fd
-argument_list|,
-name|STDERR_FILENO
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fd
-operator|>
-literal|2
-condition|)
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 block|}
 else|else
 block|{
@@ -2532,7 +2565,7 @@ expr_stmt|;
 block|}
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"PPP Started.\n"
 argument_list|)
@@ -2554,7 +2587,13 @@ name|EX_DONE
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  *  Turn into packet mode, where we speak PPP.  */
+end_comment
+
+begin_function
 name|void
 name|PacketMode
 parameter_list|()
@@ -2569,11 +2608,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogWARN
 argument_list|,
-literal|"Not connected.\r\n"
+literal|"PacketMode: Not connected.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2621,11 +2660,16 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|VarTerm
+condition|)
+block|{
 name|fprintf
 argument_list|(
-name|stderr
+name|VarTerm
 argument_list|,
-literal|"Packet mode.\r\n"
+literal|"Packet mode.\n"
 argument_list|)
 expr_stmt|;
 name|aft_cmd
@@ -2634,6 +2678,10 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ShowHelp
@@ -2643,45 +2691,62 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"The following commands are available:\r\n"
+literal|"The following commands are available:\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" ~p\tEnter to Packet mode\r\n"
+literal|" ~p\tEnter Packet mode\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" ~-\tDecrease log level\r\n"
+literal|" ~-\tDecrease log level\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" ~+\tIncrease log level\r\n"
+literal|" ~+\tIncrease log level\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" ~.\tTerminate program\r\n"
+literal|" ~t\tShow timers (only in \"log debug\" mode)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" ~?\tThis help\r\n"
+literal|" ~m\tShow memory map (only in \"log debug\" mode)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" ~.\tTerminate program\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" ~?\tThis help\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ReadTty
@@ -2697,6 +2762,10 @@ specifier|static
 name|int
 name|ttystate
 decl_stmt|;
+name|FILE
+modifier|*
+name|oVarTerm
+decl_stmt|;
 define|#
 directive|define
 name|MAXLINESIZE
@@ -2707,11 +2776,10 @@ index|[
 name|MAXLINESIZE
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"termode = %d, netfd = %d, mode = %d\n"
 argument_list|,
 name|TermMode
@@ -2721,8 +2789,6 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -2745,10 +2811,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|aft_cmd
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|n
@@ -2756,6 +2818,10 @@ operator|>
 literal|0
 condition|)
 block|{
+name|aft_cmd
+operator|=
+literal|1
+expr_stmt|;
 name|DecodeCommand
 argument_list|(
 name|linebuff
@@ -2770,7 +2836,7 @@ else|else
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"client connection closed.\n"
 argument_list|)
@@ -2779,33 +2845,41 @@ name|VarLocalAuth
 operator|=
 name|LOCAL_NO_AUTH
 expr_stmt|;
-name|close
-argument_list|(
-name|netfd
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|dup2
-argument_list|(
-literal|2
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Have to have something here or the modem will be 1 */
-name|netfd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|mode
 operator|&=
 operator|~
 name|MODE_INTER
+expr_stmt|;
+name|oVarTerm
+operator|=
+name|VarTerm
+expr_stmt|;
+name|VarTerm
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|oVarTerm
+operator|&&
+name|oVarTerm
+operator|!=
+name|stdout
+condition|)
+name|fclose
+argument_list|(
+name|oVarTerm
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|netfd
+argument_list|)
+expr_stmt|;
+name|netfd
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 block|}
 return|return;
@@ -2815,7 +2889,10 @@ name|n
 operator|=
 name|read
 argument_list|(
-literal|0
+name|fileno
+argument_list|(
+name|VarTerm
+argument_list|)
 argument_list|,
 operator|&
 name|ch
@@ -2823,18 +2900,15 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"got %d bytes\n"
+name|LogDEBUG
+argument_list|,
+literal|"Got %d bytes (reading from the terminal)"
 argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|n
@@ -2887,58 +2961,6 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-literal|'-'
-case|:
-if|if
-condition|(
-name|loglevel
-operator|>
-literal|0
-condition|)
-block|{
-name|loglevel
-operator|--
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"New loglevel is %d\r\n"
-argument_list|,
-name|loglevel
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-case|case
-literal|'+'
-case|:
-name|loglevel
-operator|++
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"New loglevel is %d\r\n"
-argument_list|,
-name|loglevel
-argument_list|)
-expr_stmt|;
-break|break;
-ifdef|#
-directive|ifdef
-name|DEBUG
-case|case
-literal|'m'
-case|:
-name|ShowMemMap
-argument_list|()
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-case|case
 literal|'p'
 case|:
 comment|/* 	 * XXX: Should check carrier. 	 */
@@ -2960,22 +2982,14 @@ argument_list|()
 expr_stmt|;
 block|}
 break|break;
-ifdef|#
-directive|ifdef
-name|DEBUG
-case|case
-literal|'t'
-case|:
-name|ShowTimers
-argument_list|()
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 case|case
 literal|'.'
 case|:
 name|TermMode
+operator|=
+literal|1
+expr_stmt|;
+name|aft_cmd
 operator|=
 literal|1
 expr_stmt|;
@@ -2985,6 +2999,38 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'t'
+case|:
+if|if
+condition|(
+name|LogIsKept
+argument_list|(
+name|LogDEBUG
+argument_list|)
+condition|)
+block|{
+name|ShowTimers
+argument_list|()
+expr_stmt|;
+break|break;
+block|}
+case|case
+literal|'m'
+case|:
+if|if
+condition|(
+name|LogIsKept
+argument_list|(
+name|LogDEBUG
+argument_list|)
+condition|)
+block|{
+name|ShowMemMap
+argument_list|()
+expr_stmt|;
+break|break;
+block|}
 default|default:
 if|if
 condition|(
@@ -3000,11 +3046,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|fprintf
+name|LogPrintf
 argument_list|(
-name|stderr
+name|LogERROR
 argument_list|,
-literal|"err in write.\r\n"
+literal|"error writing to modem.\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3017,7 +3063,13 @@ break|break;
 block|}
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  *  Here, we'll try to detect HDLC frame  */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
@@ -3038,6 +3090,9 @@ block|,
 name|NULL
 block|, }
 decl_stmt|;
+end_decl_stmt
+
+begin_function
 name|u_char
 modifier|*
 name|HdlcDetect
@@ -3131,11 +3186,17 @@ name|ptr
 operator|)
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|pppTimer
 name|RedialTimer
 decl_stmt|;
+end_decl_stmt
+
+begin_function
 specifier|static
 name|void
 name|RedialTimeout
@@ -3149,12 +3210,15 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Redialing timer expired.\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|StartRedialTimer
@@ -3212,7 +3276,7 @@ name|SECTICKS
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Enter pause (%d) for redialing.\n"
 argument_list|,
@@ -3237,6 +3301,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|DoLoop
@@ -3322,14 +3389,9 @@ argument_list|)
 expr_stmt|;
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Packet mode enabled\n"
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
 argument_list|)
 expr_stmt|;
 name|PacketMode
@@ -3360,7 +3422,7 @@ expr_stmt|;
 block|}
 name|fflush
 argument_list|(
-name|stdout
+name|VarTerm
 argument_list|)
 expr_stmt|;
 name|timeout
@@ -3476,7 +3538,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Connection lost, re-establish (%d/%d)\n"
 argument_list|,
@@ -3503,7 +3565,7 @@ name|VarReconnectTries
 condition|)
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"Connection lost, maximum (%d) times\n"
 argument_list|,
@@ -3544,18 +3606,15 @@ operator|!=
 name|TIMER_RUNNING
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogDEBUG
+argument_list|,
 literal|"going to dial: modem = %d\n"
 argument_list|,
 name|modem
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|modem
 operator|=
 name|OpenModem
@@ -3588,7 +3647,7 @@ name|VarDialTries
 condition|)
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
 literal|"Dial attempt %u of %d\n"
 argument_list|,
@@ -3600,7 +3659,7 @@ expr_stmt|;
 else|else
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT_BIT
+name|LogCHAT
 argument_list|,
 literal|"Dial attempt %u\n"
 argument_list|,
@@ -4029,9 +4088,16 @@ argument_list|()
 expr_stmt|;
 continue|continue;
 block|}
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"select"
+name|LogERROR
+argument_list|,
+literal|"select: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4067,8 +4133,10 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LogALERT
+argument_list|,
 literal|"Exception detected.\n"
 argument_list|)
 expr_stmt|;
@@ -4091,7 +4159,7 @@ condition|)
 block|{
 name|LogPrintf
 argument_list|(
-name|LOG_PHASE_BIT
+name|LogPHASE
 argument_list|,
 literal|"connected to client.\n"
 argument_list|)
@@ -4121,9 +4189,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"accept"
+name|LogERROR
+argument_list|,
+literal|"accept: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -4156,35 +4231,15 @@ name|netfd
 operator|=
 name|wfd
 expr_stmt|;
-if|if
-condition|(
-name|dup2
+name|VarTerm
+operator|=
+name|fdopen
 argument_list|(
 name|netfd
 argument_list|,
-literal|1
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|perror
-argument_list|(
-literal|"dup2"
+literal|"a+"
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|netfd
-argument_list|)
-expr_stmt|;
-name|netfd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-continue|continue;
-block|}
 name|mode
 operator||=
 name|MODE_INTER
@@ -4201,25 +4256,31 @@ block|{
 case|case
 name|NOT_FOUND
 case|:
+if|if
+condition|(
+name|VarTerm
+condition|)
+block|{
 name|fprintf
 argument_list|(
-name|stdout
+name|VarTerm
 argument_list|,
 name|LAUTH_M1
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stdout
+name|VarTerm
 argument_list|,
 name|LAUTH_M2
 argument_list|)
 expr_stmt|;
 name|fflush
 argument_list|(
-name|stdout
+name|VarTerm
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Fall down */
 case|case
 name|VALID
@@ -4369,7 +4430,7 @@ block|}
 else|else
 name|LogDumpBuff
 argument_list|(
-name|LOG_ASYNC
+name|LogASYNC
 argument_list|,
 literal|"ReadFromModem"
 argument_list|,
@@ -4422,7 +4483,7 @@ condition|)
 block|{
 name|write
 argument_list|(
-literal|1
+name|modem
 argument_list|,
 name|rbuff
 argument_list|,
@@ -4433,7 +4494,7 @@ argument_list|)
 expr_stmt|;
 name|write
 argument_list|(
-literal|1
+name|modem
 argument_list|,
 literal|"\r\n"
 argument_list|,
@@ -4448,7 +4509,10 @@ block|}
 else|else
 name|write
 argument_list|(
-literal|1
+name|fileno
+argument_list|(
+name|VarTerm
+argument_list|)
 argument_list|,
 name|rbuff
 argument_list|,
@@ -4512,9 +4576,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|LogPrintf
 argument_list|(
-literal|"read from tun"
+name|LogERROR
+argument_list|,
+literal|"read from tun: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -4664,9 +4735,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"job done.\n"
+name|LogDEBUG
+argument_list|,
+literal|"Job (DoLoop) done.\n"
 argument_list|)
 expr_stmt|;
 block|}
