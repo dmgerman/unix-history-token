@@ -21,7 +21,7 @@ operator|)
 name|sysexits
 operator|.
 name|c
-literal|3.5
+literal|3.6
 operator|%
 name|G
 operator|%
@@ -74,7 +74,7 @@ comment|/* 74 IOERR */
 literal|"451 I/O error"
 block|,
 comment|/* 75 TEMPFAIL */
-literal|"250 Temporary failure"
+literal|"250 Deferred"
 block|,
 comment|/* 76 PROTOCOL */
 literal|"554 Remote protocol error"

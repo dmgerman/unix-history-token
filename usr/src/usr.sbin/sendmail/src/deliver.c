@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.140
+literal|3.141
 operator|%
 name|G
 operator|%
@@ -3041,16 +3041,31 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|strcpy
 argument_list|(
 name|buf
-argument_list|,
-literal|"%.3s "
 argument_list|,
 name|SysExMsg
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|!=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|": "
 argument_list|)
 expr_stmt|;
 if|if
@@ -3063,7 +3078,6 @@ name|errno
 operator|<
 name|sys_nerr
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -3077,6 +3091,26 @@ name|errno
 index|]
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|char
+name|xbuf
+index|[
+literal|30
+index|]
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|xbuf
+argument_list|,
+literal|"Error %d"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3084,21 +3118,11 @@ name|strcat
 argument_list|(
 name|buf
 argument_list|,
-literal|" [deferred]"
+name|xbuf
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|"deferred"
-argument_list|)
-expr_stmt|;
+block|}
 name|statmsg
 operator|=
 name|buf
@@ -3222,6 +3246,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_block
 
