@@ -2122,6 +2122,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|sflag
+operator|&&
 name|af
 operator|!=
 name|AF_UNSPEC

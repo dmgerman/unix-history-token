@@ -2865,7 +2865,7 @@ literal|22
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %-*.*s"
+literal|"%-*.*s "
 argument_list|,
 name|width
 argument_list|,

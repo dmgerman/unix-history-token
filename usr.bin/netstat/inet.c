@@ -993,7 +993,7 @@ name|Lflag
 condition|)
 name|printf
 argument_list|(
-literal|"%-14.14s %-21.21s\n"
+literal|"%-14.14s %-22.22s\n"
 argument_list|,
 literal|"Listen"
 argument_list|,
@@ -1111,27 +1111,17 @@ block|}
 else|else
 continue|continue;
 else|else
-name|printf
-argument_list|(
-literal|"%-3.3s%s%s %6ld %6ld "
-argument_list|,
-name|name
-argument_list|,
-operator|(
-name|inp
-operator|->
-name|inp_vflag
-operator|&
-name|INP_IPV4
-operator|)
-condition|?
-literal|"4"
-else|:
-literal|""
-argument_list|,
+block|{
+specifier|const
+name|u_char
+modifier|*
+name|vchar
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
+if|if
+condition|(
 operator|(
 name|inp
 operator|->
@@ -1139,12 +1129,55 @@ name|inp_vflag
 operator|&
 name|INP_IPV6
 operator|)
+operator|!=
+literal|0
+condition|)
+name|vchar
+operator|=
+operator|(
+operator|(
+name|inp
+operator|->
+name|inp_vflag
+operator|&
+name|INP_IPV4
+operator|)
+operator|!=
+literal|0
+operator|)
 condition|?
-literal|"6"
+literal|"46"
 else|:
+literal|"6 "
+expr_stmt|;
+else|else
 endif|#
 directive|endif
-literal|""
+name|vchar
+operator|=
+operator|(
+operator|(
+name|inp
+operator|->
+name|inp_vflag
+operator|&
+name|INP_IPV4
+operator|)
+operator|!=
+literal|0
+operator|)
+condition|?
+literal|"4 "
+else|:
+literal|"  "
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-3.3s%-2.2s %6ld %6ld  "
+argument_list|,
+name|name
+argument_list|,
+name|vchar
 argument_list|,
 name|so
 operator|->
@@ -1159,6 +1192,7 @@ operator|.
 name|sb_cc
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|nflag
@@ -3940,7 +3974,7 @@ literal|22
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %-*.*s"
+literal|"%-*.*s "
 argument_list|,
 name|width
 argument_list|,
