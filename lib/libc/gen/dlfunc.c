@@ -19,11 +19,13 @@ name|dlfunc
 parameter_list|(
 name|void
 modifier|*
+name|__restrict
 name|handle
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|symbol
 parameter_list|)
 block|{

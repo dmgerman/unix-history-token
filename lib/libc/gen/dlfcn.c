@@ -300,11 +300,13 @@ name|dlsym
 parameter_list|(
 name|void
 modifier|*
+name|__restrict
 name|handle
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|name
 parameter_list|)
 block|{
@@ -561,11 +563,13 @@ name|dlsym
 parameter_list|(
 name|void
 modifier|*
+name|__restrict
 name|handle
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|name
 parameter_list|)
 block|{
