@@ -133,6 +133,12 @@ begin_comment
 comment|/** FAST_HI */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<machine/resource.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -892,7 +898,9 @@ name|APIC_IO
 name|int
 name|rid
 decl_stmt|;
-name|bus_resource_t
+name|struct
+name|resource
+modifier|*
 name|res
 decl_stmt|;
 comment|/* try to allocate our IRQ and then free it */
