@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/atomic.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<geom/geom.h>
 end_include
 
@@ -235,6 +229,47 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Time to wait on all mirror components"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|g_mirror_idletime
+init|=
+literal|5
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.mirror.idletime"
+argument_list|,
+operator|&
+name|g_mirror_idletime
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern_geom_mirror
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|idletime
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|g_mirror_idletime
+argument_list|,
+literal|0
+argument_list|,
+literal|"Mark components as clean when idling"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7490,6 +7525,73 @@ operator|==
 name|NULL
 condition|)
 block|{
+define|#
+directive|define
+name|G_MIRROR_IS_IDLE
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc)->sc_idle ||			\ 				 ((sc)->sc_provider != NULL&&		\ 				  (sc)->sc_provider->acw == 0))
+if|if
+condition|(
+name|G_MIRROR_IS_IDLE
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
+comment|/* 				 * If we're already in idle state, sleep without 				 * a timeout. 				 */
+name|MSLEEP
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_queue_mtx
+argument_list|,
+name|PRIBIO
+operator||
+name|PDROP
+argument_list|,
+literal|"m:w1"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|G_MIRROR_DEBUG
+argument_list|(
+literal|5
+argument_list|,
+literal|"%s: I'm here 3."
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|u_int
+name|idletime
+decl_stmt|;
+name|idletime
+operator|=
+name|g_mirror_idletime
+expr_stmt|;
+if|if
+condition|(
+name|idletime
+operator|==
+literal|0
+condition|)
+name|idletime
+operator|=
+literal|1
+expr_stmt|;
+name|idletime
+operator|*=
+name|hz
+expr_stmt|;
 if|if
 condition|(
 name|msleep
@@ -7505,27 +7607,37 @@ name|PRIBIO
 operator||
 name|PDROP
 argument_list|,
-literal|"m:w1"
+literal|"m:w2"
 argument_list|,
-name|hz
-operator|*
-literal|5
+name|idletime
 argument_list|)
 operator|==
 name|EWOULDBLOCK
 condition|)
 block|{
-comment|/* 				 * No I/O requests in 5 seconds, so mark 				 * components as clean. 				 */
-if|if
-condition|(
-operator|!
-name|sc
-operator|->
-name|sc_idle
-condition|)
+name|G_MIRROR_DEBUG
+argument_list|(
+literal|5
+argument_list|,
+literal|"%s: I'm here 4."
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+comment|/* 					 * No I/O requests in 5 seconds, so mark 					 * components as clean. 					 */
 name|g_mirror_idle
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+block|}
+name|G_MIRROR_DEBUG
+argument_list|(
+literal|5
+argument_list|,
+literal|"%s: I'm here 5."
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -7599,11 +7711,7 @@ name|sleep
 label|:
 name|sps
 operator|=
-name|atomic_load_acq_int
-argument_list|(
-operator|&
 name|g_mirror_syncs_per_sec
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7616,7 +7724,7 @@ name|G_MIRROR_DEBUG
 argument_list|(
 literal|5
 argument_list|,
-literal|"%s: I'm here 5."
+literal|"%s: I'm here 6."
 argument_list|,
 name|__func__
 argument_list|)
@@ -7656,7 +7764,7 @@ name|G_MIRROR_DEBUG
 argument_list|(
 literal|5
 argument_list|,
-literal|"%s: I'm here 4."
+literal|"%s: I'm here 7."
 argument_list|,
 name|__func__
 argument_list|)
@@ -7692,7 +7800,7 @@ name|PRIBIO
 operator||
 name|PDROP
 argument_list|,
-literal|"m:w2"
+literal|"m:w3"
 argument_list|,
 name|timeout
 argument_list|)
@@ -7710,7 +7818,7 @@ name|G_MIRROR_DEBUG
 argument_list|(
 literal|5
 argument_list|,
-literal|"%s: I'm here 6."
+literal|"%s: I'm here 8."
 argument_list|,
 name|__func__
 argument_list|)
@@ -12421,11 +12529,9 @@ expr_stmt|;
 comment|/* 	 * Run timeout. 	 */
 name|timeout
 operator|=
-name|atomic_load_acq_int
-argument_list|(
-operator|&
 name|g_mirror_timeout
-argument_list|)
+operator|*
+name|hz
 expr_stmt|;
 name|callout_reset
 argument_list|(
@@ -12435,8 +12541,6 @@ operator|->
 name|sc_callout
 argument_list|,
 name|timeout
-operator|*
-name|hz
 argument_list|,
 name|g_mirror_go
 argument_list|,
