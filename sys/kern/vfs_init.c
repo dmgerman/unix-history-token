@@ -129,6 +129,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * vfs_init() will set maxvfsconf  * to the highest defined type number.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|maxvfsconf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vfsconf
+modifier|*
+name|vfsconf
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * vfs_init.c  *  * Allocate and fill in operations vectors.  *  * An undocumented feature of this approach to defining operations is that  * there can be multiple entries in vfs_opv_descs for the same operations  * vector. This allows third parties to extend the set of operations  * supported by another layer in a binary compatibile way. For example,  * assume that NFS needed to be modified to support Ficus. NFS has an entry  * (probably nfs_vnopdeop_decls) declaring all the operations NFS supports by  * default. Ficus could add another entry (ficus_nfs_vnodeop_decl_entensions)  * listing those new operations Ficus adds to NFS, all without modifying the  * NFS code. (Of couse, the OTW NFS protocol still needs to be munged, but  * that is a(whole)nother story.) This is a feature.  */
 end_comment
 
