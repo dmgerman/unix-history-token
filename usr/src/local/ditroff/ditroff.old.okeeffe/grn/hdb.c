@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hdb.c	1.4	(Berkeley) 83/07/25  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains database routines for the hard copy programs of the  * gremlin picture editor.  */
+comment|/*	hdb.c	1.5	(Berkeley) 84/03/15  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains database routines for the hard copy programs of the  * gremlin picture editor.  */
 end_comment
 
 begin_include
@@ -485,7 +485,7 @@ name|x
 operator|>=
 literal|0.0
 operator|)
-operator|&&
+operator|||
 operator|(
 name|y
 operator|>=
@@ -503,7 +503,7 @@ name|x
 operator|>=
 literal|0.0
 operator|)
-operator|&&
+operator|||
 operator|(
 name|y
 operator|>=
