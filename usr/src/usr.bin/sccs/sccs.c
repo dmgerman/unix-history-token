@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.20 %G%"
+literal|"@(#)sccs.c	1.21 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1142,6 +1142,21 @@ name|unedit
 argument_list|(
 operator|*
 name|avp
+argument_list|)
+expr_stmt|;
+name|xcommand
+argument_list|(
+operator|&
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+name|FALSE
+argument_list|,
+literal|"get"
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
