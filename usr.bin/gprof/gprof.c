@@ -243,19 +243,8 @@ literal|'c'
 case|:
 if|#
 directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-name|cflag
-operator|=
-name|TRUE
-expr_stmt|;
+literal|0
+block|cflag = TRUE;
 else|#
 directive|else
 name|errx
