@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nlist.c	5.6 (Berkeley) %G%"
+literal|"@(#)nlist.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nlist.h>
 end_include
 
@@ -74,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<kvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ps.h"
 end_include
 
 begin_ifdef
@@ -215,12 +227,10 @@ define|\
 value|kvm_read(kd, psnl[x].n_value, (char *)&v, sizeof v) != sizeof(v)
 end_define
 
-begin_macro
+begin_function
+name|int
 name|donlist
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|int
@@ -447,28 +457,26 @@ name|rval
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|nlisterr
-argument_list|(
-argument|nl
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|nl
+parameter_list|)
 name|struct
 name|nlist
 name|nl
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -505,6 +513,9 @@ name|n_value
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -519,6 +530,9 @@ operator|.
 name|n_name
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -527,7 +541,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

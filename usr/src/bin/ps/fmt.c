@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fmt.c	5.1 (Berkeley) %G%"
+literal|"@(#)fmt.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,24 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
+end_include
 
 begin_include
 include|#
@@ -51,6 +69,43 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|"ps.h"
+end_include
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|cmdpart
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|shquote
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * XXX  * This is a stub until marc does the real one.  */
@@ -262,9 +317,6 @@ name|ap
 decl_stmt|,
 modifier|*
 name|cp
-decl_stmt|,
-modifier|*
-name|arg0
 decl_stmt|;
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ps.h	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ps.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -84,7 +84,7 @@ end_define
 begin_typedef
 typedef|typedef
 struct|struct
-name|_kinfo
+name|kinfo
 block|{
 name|struct
 name|kinfo_proc
@@ -119,7 +119,27 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|_var
+name|varent
+block|{
+name|struct
+name|varent
+modifier|*
+name|next
+decl_stmt|;
+name|struct
+name|var
+modifier|*
+name|var
+decl_stmt|;
+block|}
+name|VARENT
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|var
 block|{
 name|char
 modifier|*
@@ -154,14 +174,24 @@ comment|/* needs user structure */
 name|u_int
 name|flag
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|oproc
-function_decl|)
-parameter_list|()
-function_decl|;
 comment|/* output routine */
+name|void
+argument_list|(
+argument|*oproc
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|kinfo
+operator|*
+operator|,
+expr|struct
+name|varent
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 name|short
 name|width
 decl_stmt|;
@@ -191,23 +221,6 @@ block|}
 name|VAR
 typedef|;
 end_typedef
-
-begin_struct
-struct|struct
-name|varent
-block|{
-name|VAR
-modifier|*
-name|var
-decl_stmt|;
-name|struct
-name|varent
-modifier|*
-name|next
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_include
 include|#
