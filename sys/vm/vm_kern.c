@@ -147,14 +147,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|vm_map_t
-name|clean_map
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_map_t
 name|buffer_map
 init|=
 literal|0

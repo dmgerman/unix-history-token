@@ -257,6 +257,9 @@ decl_stmt|;
 name|vm_offset_t
 name|maxaddr
 decl_stmt|;
+name|vm_map_t
+name|clean_map
+decl_stmt|;
 comment|/* 	 * Allocate space for system data structures. 	 * The first available kernel virtual address is in "v". 	 * As pages of kernel virtual memory are allocated, "v" is incremented. 	 * As pages of memory are allocated and cleared, 	 * "firstaddr" is incremented. 	 * An index into the kernel page table corresponding to the 	 * virtual memory address maintained in "v" is kept in "mapaddr". 	 */
 comment|/* 	 * Make two passes.  The first pass calculates how much memory is 	 * needed and allocates it.  The second pass assigns virtual 	 * addresses to the various data structures. 	 */
 name|firstaddr
