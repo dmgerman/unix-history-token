@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/pioctl.h>
 end_include
 

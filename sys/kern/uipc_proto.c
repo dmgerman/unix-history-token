@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/unpcb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/raw_cb.h>
 end_include
 

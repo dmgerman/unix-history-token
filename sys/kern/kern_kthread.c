@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
 end_include
 
@@ -43,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
 end_include
 
 begin_include

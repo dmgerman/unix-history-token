@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/acct.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/exec.h>
 end_include
 

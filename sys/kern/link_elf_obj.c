@@ -69,11 +69,22 @@ directive|include
 file|<vm/vm.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SPARSE_MAPPING
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<vm/vm_prot.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -86,6 +97,12 @@ include|#
 directive|include
 file|<sys/lock.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SPARSE_MAPPING
+end_ifdef
 
 begin_include
 include|#
@@ -104,6 +121,11 @@ include|#
 directive|include
 file|<vm/vm_extern.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

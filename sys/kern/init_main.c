@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/resourcevar.h>
 end_include
 

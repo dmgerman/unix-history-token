@@ -12,24 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysproto.h>
 end_include
 
@@ -49,18 +31,6 @@ begin_include
 include|#
 directive|include
 file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/linker.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_comment

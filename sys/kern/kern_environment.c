@@ -37,12 +37,6 @@ directive|include
 file|<sys/libkern.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/bootinfo.h>
-end_include
-
 begin_decl_stmt
 name|char
 modifier|*

@@ -167,12 +167,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_pager.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_pageout.h>
 end_include
 
@@ -186,12 +180,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/limits.h>
 end_include
 
 begin_function_decl
