@@ -15,6 +15,17 @@ name|device
 struct_decl|;
 end_struct_decl
 
+begin_define
+define|#
+directive|define
+name|DEF_I4BCDDELAY
+value|6
+end_define
+
+begin_comment
+comment|/* Default ``set cd'' value */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|struct

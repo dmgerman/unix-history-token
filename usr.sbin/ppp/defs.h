@@ -338,17 +338,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEF_CDDELAY
-value|1
-end_define
-
-begin_comment
-comment|/* Delay before checking for carrier */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CONFFILE
 value|"ppp.conf"
 end_define

@@ -12201,7 +12201,7 @@ name|cd
 operator|.
 name|delay
 operator|=
-name|DEF_CDDELAY
+literal|0
 expr_stmt|;
 name|cx
 operator|->
@@ -12213,7 +12213,7 @@ name|cd
 operator|.
 name|necessity
 operator|=
-name|CD_VARIABLE
+name|CD_DEFAULT
 expr_stmt|;
 block|}
 break|break;

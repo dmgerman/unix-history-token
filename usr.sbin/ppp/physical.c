@@ -1019,7 +1019,7 @@ name|cd
 operator|.
 name|necessity
 operator|=
-name|CD_VARIABLE
+name|CD_DEFAULT
 expr_stmt|;
 name|p
 operator|->
@@ -1029,8 +1029,9 @@ name|cd
 operator|.
 name|delay
 operator|=
-name|DEF_CDDELAY
+literal|0
 expr_stmt|;
+comment|/* reconfigured or device specific default */
 name|lcp_Init
 argument_list|(
 operator|&
@@ -2328,6 +2329,11 @@ name|cx
 operator|->
 name|physical
 decl_stmt|;
+name|struct
+name|cd
+modifier|*
+name|cd
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -2824,14 +2830,30 @@ argument_list|,
 literal|" CD check delay:  "
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|cd
+operator|=
+name|p
+operator|->
+name|handler
+condition|?
+operator|&
+name|p
+operator|->
+name|handler
+operator|->
+name|cd
+else|:
+operator|&
 name|p
 operator|->
 name|cfg
 operator|.
 name|cd
-operator|.
+expr_stmt|;
+if|if
+condition|(
+name|cd
+operator|->
 name|necessity
 operator|==
 name|CD_NOTREQUIRED
@@ -2845,6 +2867,30 @@ argument_list|,
 literal|"no cd"
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|p
+operator|->
+name|cfg
+operator|.
+name|cd
+operator|.
+name|necessity
+operator|==
+name|CD_DEFAULT
+condition|)
+block|{
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|"device specific"
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|prompt_Printf
