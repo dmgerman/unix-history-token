@@ -1755,26 +1755,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|bufqdisksort
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|buf_queue_head
-operator|*
-name|ap
-operator|,
-expr|struct
-name|buf
-operator|*
-name|bp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|bioqdisksort
 name|__P
 argument_list|(
