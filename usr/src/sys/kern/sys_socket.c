@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_socket.c	6.1	83/07/29	*/
+comment|/*	sys_socket.c	6.2	84/08/21	*/
 end_comment
 
 begin_include
@@ -646,15 +646,6 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|lint
-name|so
-operator|=
-name|so
-expr_stmt|;
-endif|#
-directive|endif
 name|bzero
 argument_list|(
 operator|(
@@ -669,9 +660,6 @@ name|ub
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 return|return
 operator|(
 call|(
@@ -708,13 +696,6 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-operator|)
-return|;
-endif|#
-directive|endif
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
