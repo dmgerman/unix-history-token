@@ -213,7 +213,7 @@ literal|2
 argument_list|,
 name|PTR_RV
 operator||
-name|cbn
+name|psbn
 operator|<<
 literal|8
 operator|+
@@ -557,7 +557,7 @@ name|putRV
 argument_list|(
 literal|0
 argument_list|,
-name|cbn
+name|psbn
 argument_list|,
 name|p
 operator|->
@@ -1224,7 +1224,7 @@ literal|2
 argument_list|,
 name|PTR_RV
 operator||
-name|cbn
+name|psbn
 operator|<<
 literal|8
 operator|+
@@ -1461,7 +1461,7 @@ name|putRV
 argument_list|(
 literal|0
 argument_list|,
-name|cbn
+name|psbn
 argument_list|,
 name|p
 operator|->
