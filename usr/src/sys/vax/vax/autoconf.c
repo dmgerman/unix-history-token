@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.19	81/02/28	*/
+comment|/*	autoconf.c	4.20	81/03/03	*/
 end_comment
 
 begin_comment
-comment|/*  * Configure the system for the current machine.  */
+comment|/*  * Initialize the devices for the current machine.  */
 end_comment
 
 begin_include
@@ -413,6 +413,9 @@ expr_stmt|;
 name|cold
 operator|=
 literal|0
+expr_stmt|;
+name|memenable
+argument_list|()
 expr_stmt|;
 return|return;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.19	81/03/01	*/
+comment|/*	hp.c	4.20	81/03/03	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * HP disk driver for RP0x+RM0x  *  * TODO:  *	Check out handling of spun-down drives and write lock  *	Add RM80 bad sector handling  *	Add reading of bad sector information and disk layout from sector 1  *	Add bad sector forwarding code  *	Check interaction with tape driver on same mba  *	Check multiple drive handling  */
+comment|/*  * HP disk driver for RP0x+RM0x  *  * TODO:  *	Check out handling of spun-down drives and write lock  *	Check RM80 skip sector handling, esp when ECC's occur later  *	Add reading of bad sector information and disk layout from sector 1  *	Add bad sector forwarding code  *	Check interaction with tape driver on same mba  *	Check multiple drive handling  */
 end_comment
 
 begin_include
@@ -1558,6 +1558,34 @@ name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+block|}
+elseif|else
+if|if
+condition|(
+name|hpaddr
+operator|->
+name|hper2
+operator|&
+name|HP_SSE
+condition|)
+block|{
+name|hpecc
+argument_list|(
+name|mi
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|MBD_RESTARTED
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if
@@ -1582,6 +1610,8 @@ condition|(
 name|hpecc
 argument_list|(
 name|mi
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1841,6 +1871,8 @@ begin_expr_stmt
 name|hpecc
 argument_list|(
 name|mi
+argument_list|,
+name|rm80sse
 argument_list|)
 specifier|register
 expr|struct
@@ -1849,6 +1881,12 @@ operator|*
 name|mi
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|rm80sse
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1965,6 +2003,30 @@ name|reg
 operator|=
 name|npf
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+if|if
+condition|(
+name|rm80sse
+condition|)
+block|{
+name|rp
+operator|->
+name|hpof
+operator||=
+name|HP_SSEI
+expr_stmt|;
+name|reg
+operator|--
+expr_stmt|;
+comment|/* compensate in advance for reg-- below */
+goto|goto
+name|sse
+goto|;
+block|}
+endif|#
+directive|endif
 name|o
 operator|=
 operator|(
@@ -2147,6 +2209,24 @@ return|;
 ifdef|#
 directive|ifdef
 name|notdef
+name|sse
+label|:
+if|if
+condition|(
+name|rpof
+operator|&
+name|HP_SSEI
+condition|)
+name|rp
+operator|->
+name|hpda
+operator|=
+name|rp
+operator|->
+name|hpda
+operator|+
+literal|1
+expr_stmt|;
 name|rp
 operator|->
 name|hper1
@@ -2163,6 +2243,8 @@ name|HP_GO
 expr_stmt|;
 else|#
 directive|else
+name|sse
+label|:
 name|rp
 operator|->
 name|hpcs1
@@ -2236,6 +2318,22 @@ name|st
 operator|->
 name|ntrak
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+if|if
+condition|(
+name|rp
+operator|->
+name|hpof
+operator|&
+name|SSEI
+condition|)
+name|sn
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 name|rp
 operator|->
 name|hpdc

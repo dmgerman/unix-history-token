@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.17	%G%	*/
+comment|/*	rk.c	4.18	%G%	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * RK11/RK07 disk driver  *  * This driver mimics up.c; see it for an explanation of common code.  *  * THIS DRIVER DOESN'T DEAL WITH DRIVES SPINNING DOWN AND UP  */
+comment|/*  * RK11/RK07 disk driver  *  * This driver mimics up.c; see it for an explanation of common code.  *  * TODO:  *	Correct to handle spun-down drives  *	Check write lock handling  *	Add reading of bad sector information and disk layout from sector 1  *	Add bad sector forwarding code  *	Fix drive recognition  */
 end_comment
 
 begin_define
@@ -2844,22 +2844,31 @@ name|PGOFSET
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%D "
+literal|"SOFT ECC rk%d%c bn%d\n"
+argument_list|,
+name|dkunit
+argument_list|(
+name|bp
+argument_list|)
+argument_list|,
+literal|'a'
+operator|+
+operator|(
+name|minor
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
+operator|&
+literal|07
+operator|)
 argument_list|,
 name|bp
 operator|->
 name|b_blkno
 operator|+
 name|npf
-argument_list|)
-expr_stmt|;
-name|prdev
-argument_list|(
-literal|"ECC"
-argument_list|,
-name|bp
-operator|->
-name|b_dev
 argument_list|)
 expr_stmt|;
 name|mask
@@ -3648,19 +3657,11 @@ name|unit
 operator|>=
 name|NRK
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bad unit\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENXIO
 operator|)
 return|;
-block|}
 define|#
 directive|define
 name|phys
@@ -3692,19 +3693,11 @@ name|ui_alive
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dna\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENXIO
 operator|)
 return|;
-block|}
 name|uba
 operator|=
 name|phys
@@ -3860,19 +3853,11 @@ index|]
 operator|.
 name|nblocks
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"oor\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EINVAL
 operator|)
 return|;
-block|}
 while|while
 condition|(
 name|num
@@ -4087,43 +4072,11 @@ name|rkcs1
 operator|&
 name|RK_CERR
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"rk dump dsk err: (%d,%d,%d) cs1=%x, ds=%x, er1=%x\n"
-argument_list|,
-name|cn
-argument_list|,
-name|tn
-argument_list|,
-name|sn
-argument_list|,
-name|rkaddr
-operator|->
-name|rkcs1
-operator|&
-literal|0xffff
-argument_list|,
-name|rkaddr
-operator|->
-name|rkds
-operator|&
-literal|0xffff
-argument_list|,
-name|rkaddr
-operator|->
-name|rker
-operator|&
-literal|0xffff
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EIO
 operator|)
 return|;
-block|}
 name|start
 operator|+=
 name|blk

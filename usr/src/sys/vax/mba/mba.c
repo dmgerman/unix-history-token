@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.11	81/02/28	*/
+comment|/*	mba.c	4.12	81/03/03	*/
 end_comment
 
 begin_include
@@ -18,23 +18,8 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Massbus driver; arbitrates massbusses through device driver routines  * and provides common functions.  */
+comment|/*  * Massbus driver; arbitrates massbus using device  * driver routines.  This module provides common functions.  */
 end_comment
-
-begin_decl_stmt
-name|int
-name|mbadebug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|dprintf
-value|if (mbadebug) printf
-end_define
 
 begin_include
 include|#
@@ -163,11 +148,6 @@ modifier|*
 name|mhp
 decl_stmt|;
 comment|/* header for mba device is on */
-name|dprintf
-argument_list|(
-literal|"enter mbustart\n"
-argument_list|)
-expr_stmt|;
 name|loop
 label|:
 comment|/* 	 * Get the first thing to do off device queue. 	 */
@@ -192,42 +172,6 @@ name|mi
 operator|->
 name|mi_drv
 expr_stmt|;
-comment|/* 	 * Since we clear attentions on the drive when we are 	 * finished processing it, the fact that an attention 	 * status shows indicated confusion in the hardware or our logic. 	 */
-if|if
-condition|(
-name|mdp
-operator|->
-name|mbd_as
-operator|&
-operator|(
-literal|1
-operator|<<
-name|mi
-operator|->
-name|mi_drive
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"mbustart: ata on for %d\n"
-argument_list|,
-name|mi
-operator|->
-name|mi_drive
-argument_list|)
-expr_stmt|;
-name|mdp
-operator|->
-name|mbd_as
-operator|=
-literal|1
-operator|<<
-name|mi
-operator|->
-name|mi_drive
-expr_stmt|;
-block|}
 comment|/* 	 * Let the drivers unit start routine have at it 	 * and then process the request further, per its instructions. 	 */
 switch|switch
 condition|(
@@ -248,11 +192,6 @@ case|case
 name|MBU_NEXT
 case|:
 comment|/* request is complete (e.g. ``sense'') */
-name|dprintf
-argument_list|(
-literal|"mbu_next\n"
-argument_list|)
-expr_stmt|;
 name|mi
 operator|->
 name|mi_tab
@@ -283,11 +222,6 @@ case|case
 name|MBU_DODATA
 case|:
 comment|/* all ready to do data transfer */
-name|dprintf
-argument_list|(
-literal|"mbu_dodata\n"
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Queue the device mba_info structure on the massbus 		 * mba_hd structure for processing as soon as the 		 * data path is available. 		 */
 name|mhp
 operator|=
@@ -357,11 +291,6 @@ case|case
 name|MBU_STARTED
 case|:
 comment|/* driver started a non-data transfer */
-name|dprintf
-argument_list|(
-literal|"mbu_started\n"
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Mark device busy during non-data transfer 		 * and count this as a ``seek'' on the device. 		 */
 if|if
 condition|(
@@ -392,11 +321,6 @@ case|case
 name|MBU_BUSY
 case|:
 comment|/* dual port drive busy */
-name|dprintf
-argument_list|(
-literal|"mbu_busy\n"
-argument_list|)
-expr_stmt|;
 comment|/* 		 * We mark the device structure so that when an 		 * interrupt occurs we will know to restart the unit. 		 */
 name|mi
 operator|->
@@ -453,11 +377,6 @@ name|mba_regs
 modifier|*
 name|mbp
 decl_stmt|;
-name|dprintf
-argument_list|(
-literal|"mbstart\n"
-argument_list|)
-expr_stmt|;
 name|loop
 label|:
 comment|/* 	 * Look for an operation at the front of the queue. 	 */
@@ -473,14 +392,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|dprintf
-argument_list|(
-literal|"nothing to do\n"
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 if|if
 condition|(
 operator|(
@@ -496,11 +408,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|dprintf
-argument_list|(
-literal|"nothing on actf\n"
-argument_list|)
-expr_stmt|;
 name|mhp
 operator|->
 name|mh_actf
@@ -537,15 +444,18 @@ name|MBD_MOL
 operator|)
 condition|)
 block|{
-name|dprintf
+name|printf
 argument_list|(
-literal|"not on line ds %x\n"
+literal|"%c%d not ready\n"
 argument_list|,
 name|mi
 operator|->
-name|mi_drv
-operator|->
-name|mbd_ds
+name|mi_name
+argument_list|,
+name|dkunit
+argument_list|(
+name|bp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mi
@@ -588,12 +498,6 @@ name|mi_driver
 operator|->
 name|md_start
 condition|)
-block|{
-name|dprintf
-argument_list|(
-literal|"md_start\n"
-argument_list|)
-expr_stmt|;
 call|(
 modifier|*
 name|mi
@@ -606,13 +510,7 @@ argument_list|(
 name|mi
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Setup the massbus control and map registers and start 	 * the transfer. 	 */
-name|dprintf
-argument_list|(
-literal|"start mba\n"
-argument_list|)
-expr_stmt|;
 name|mbp
 operator|=
 name|mi
@@ -784,6 +682,22 @@ name|mba_sr
 operator|=
 name|mbastat
 expr_stmt|;
+if|#
+directive|if
+name|VAX750
+if|if
+condition|(
+name|mbastat
+operator|&
+name|MBS_CBHUNG
+condition|)
+name|panic
+argument_list|(
+literal|"mba CBHUNG"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* note: the mbd_as register is shared between drives */
 name|as
 operator|=
@@ -806,15 +720,6 @@ operator|.
 name|mbd_as
 operator|=
 name|as
-expr_stmt|;
-name|dprintf
-argument_list|(
-literal|"mbintr mbastat %x as %x\n"
-argument_list|,
-name|mbastat
-argument_list|,
-name|as
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Disable interrupts from the massbus adapter 	 * for the duration of the operation of the massbus 	 * driver, so that spurious interrupts won't be generated. 	 */
 name|mbp
@@ -845,7 +750,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mbintr(%d),b_active,no DTCMP!\n"
+literal|"mb%d no DTCMP!\n"
 argument_list|,
 name|mbanum
 argument_list|)
@@ -912,11 +817,6 @@ case|case
 name|MBD_DONE
 case|:
 comment|/* all done, for better or worse */
-name|dprintf
-argument_list|(
-literal|"mbd_done\n"
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Flush request from drive queue. 			 */
 name|mi
 operator|->
@@ -946,11 +846,6 @@ case|case
 name|MBD_RETRY
 case|:
 comment|/* attempt the operation again */
-name|dprintf
-argument_list|(
-literal|"mbd_retry\n"
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Dequeue data transfer from massbus queue; 			 * if there is still a i/o request on the device 			 * queue then start the next operation on the device. 			 * (Common code for DONE and RETRY). 			 */
 name|mhp
 operator|->
@@ -991,34 +886,15 @@ break|break;
 case|case
 name|MBD_RESTARTED
 case|:
-comment|/* driver restarted op (ecc, e.g.) 			dprintf("mbd_restarted\n"); 			/* 			 * Note that mp->b_active is still on. 			 */
+comment|/* driver restarted op (ecc, e.g.) 			/* 			 * Note that mp->b_active is still on. 			 */
 break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"mbaintr"
+literal|"mbintr"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
-name|dprintf
-argument_list|(
-literal|"!dtcmp\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mbastat
-operator|&
-name|MBS_DTCMP
-condition|)
-name|printf
-argument_list|(
-literal|"mbaintr,DTCMP,!b_active\n"
-argument_list|)
-expr_stmt|;
 block|}
 name|doattn
 label|:
@@ -1049,13 +925,6 @@ name|drive
 operator|)
 condition|)
 block|{
-name|dprintf
-argument_list|(
-literal|"service as %d\n"
-argument_list|,
-name|drive
-argument_list|)
-expr_stmt|;
 name|as
 operator|&=
 operator|~
@@ -1080,13 +949,7 @@ condition|(
 name|mi
 operator|==
 name|NULL
-condition|)
-goto|goto
-name|random
-goto|;
-comment|/* no such drive */
-if|if
-condition|(
+operator|||
 name|mi
 operator|->
 name|mi_tab
@@ -1106,13 +969,7 @@ name|B_BUSY
 operator|)
 operator|==
 literal|0
-condition|)
-goto|goto
-name|random
-goto|;
-comment|/* not active */
-if|if
-condition|(
+operator|||
 operator|(
 name|bp
 operator|=
@@ -1125,21 +982,8 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* nothing doing */
-name|random
-label|:
-name|printf
-argument_list|(
-literal|"random mbaintr %d %d\n"
-argument_list|,
-name|mbanum
-argument_list|,
-name|drive
-argument_list|)
-expr_stmt|;
 continue|continue;
-block|}
+comment|/* unsolicited */
 comment|/* 			 * If this interrupt wasn't a notification that 			 * a dual ported drive is available, and if the 			 * driver has a handler for non-data transfer 			 * interrupts, give it a chance to tell us that 			 * the operation needs to be redone 			 */
 if|if
 condition|(
@@ -1188,11 +1032,6 @@ block|{
 case|case
 name|MBN_DONE
 case|:
-name|dprintf
-argument_list|(
-literal|"mbn_done\n"
-argument_list|)
-expr_stmt|;
 comment|/* 					 * Non-data transfer interrupt 					 * completed i/o request's processing. 					 */
 name|mi
 operator|->
@@ -1221,11 +1060,6 @@ comment|/* fall into... */
 case|case
 name|MBN_RETRY
 case|:
-name|dprintf
-argument_list|(
-literal|"mbn_retry\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mi
@@ -1243,7 +1077,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"mbintr ndint"
+literal|"mbintr"
 argument_list|)
 expr_stmt|;
 block|}

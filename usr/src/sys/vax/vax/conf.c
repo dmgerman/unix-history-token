@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.21	%G%	*/
+comment|/*	conf.c	4.22	%G%	*/
 end_comment
 
 begin_include
@@ -865,9 +865,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|VAX
-operator|==
-literal|780
+name|VAX780
 end_if
 
 begin_decl_stmt
@@ -1577,9 +1575,7 @@ literal|0
 block|,
 if|#
 directive|if
-name|VAX
-operator|==
-literal|780
+name|VAX780
 name|flopen
 block|,
 name|flclose
