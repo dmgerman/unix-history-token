@@ -88,7 +88,7 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|Elf_Dyn
-name|_DYNAMIC
+name|_GOT_END_
 decl_stmt|;
 end_decl_stmt
 
@@ -366,7 +366,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|_DYNAMIC
+name|_GOT_END_
 condition|)
 name|store64
 argument_list|(
@@ -2164,6 +2164,10 @@ modifier|*
 name|obj
 parameter_list|)
 block|{
+name|u_int32_t
+modifier|*
+name|pltgot
+decl_stmt|;
 if|if
 condition|(
 name|obj
@@ -2187,7 +2191,44 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* This function will be called to perform the relocation.  */
+comment|/* 		 * This function will be called to perform the relocation. 		 * Look for the ldah instruction from the old PLT format since 		 * that will tell us what format we are trying to relocate. 		 */
+name|pltgot
+operator|=
+operator|(
+name|u_int32_t
+operator|*
+operator|)
+name|obj
+operator|->
+name|pltgot
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pltgot
+index|[
+literal|8
+index|]
+operator|&
+literal|0xffff0000
+operator|)
+operator|==
+literal|0x279f0000
+condition|)
+name|obj
+operator|->
+name|pltgot
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|Elf_Addr
+operator|)
+operator|&
+name|_rtld_bind_start_old
+expr_stmt|;
+else|else
 name|obj
 operator|->
 name|pltgot

@@ -81,6 +81,19 @@ value|(((InitFunc)(target))())
 end_define
 
 begin_comment
+comment|/* Lazy binding entry point, called via PLT. */
+end_comment
+
+begin_function_decl
+name|void
+name|_rtld_bind_start_old
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Atomic operations. */
 end_comment
 
