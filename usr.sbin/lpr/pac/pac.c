@@ -767,7 +767,7 @@ argument_list|(
 operator|*
 name|cp
 argument_list|,
-literal|" t\t"
+literal|" \t"
 argument_list|)
 condition|)
 name|cp
