@@ -160,16 +160,7 @@ name|device
 operator|=
 name|DEVPSC
 expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"tbl: warning: unknown typesetter %s\n"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
+comment|/* johan doesnt want to see error messages in a context like 			TYPESETTER=1650.10 tbl files | eqn | nroff -ms 		so I removed the warning here. Besides, there is no complaint 		for an option -Tfoo either. */
 block|}
 name|tabin
 operator|=

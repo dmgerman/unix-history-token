@@ -572,10 +572,6 @@ argument_list|,
 name|LSIZE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|linsize
-condition|)
 name|printf
 argument_list|(
 literal|"\\v'-\\n(%dp/6u'"
@@ -583,26 +579,9 @@ argument_list|,
 name|LSIZE
 argument_list|)
 expr_stmt|;
-comment|/* 		 * adjustment for T450 nroff boxes 		 * 		 * Changed by JNA, the register #~ will contain in general 		 * the device dependency adjustment for vertical lines 		 */
 name|printf
 argument_list|(
-literal|"\\h'-\\n(#~u'"
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Extra corrections for double lines 		 * Works OK on the HARRIS, probably needed for all devices 		 */
-if|if
-condition|(
-name|device
-operator|==
-name|HARRIS
-operator|&&
-name|ln
-operator|==
-literal|1
-condition|)
-name|printf
-argument_list|(
-literal|"\\h'-\\n(#~u'"
+literal|"\\h'-\\n(#~n/100u'"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -674,10 +653,20 @@ argument_list|,
 name|pos
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"'"
+argument_list|)
+expr_stmt|;
 comment|/* 		 * the string #d is either "nl" or ".d" depending on diversions; 	   	 * on GCOS not the same 		 */
 name|printf
 argument_list|(
-literal|"'\\s0\\v'\\n(\\*(#du-\\n(#%cu+%s"
+literal|"\\h'-\\n(#~n/100u'"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\\s0\\v'\\n(\\*(#du-\\n(#%cu+%s"
 argument_list|,
 name|linestop
 index|[
@@ -738,10 +727,6 @@ argument_list|(
 literal|"'"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|linsize
-condition|)
 name|printf
 argument_list|(
 literal|"\\v'\\n(%dp/6u'"

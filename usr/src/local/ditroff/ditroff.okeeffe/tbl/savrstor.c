@@ -91,7 +91,7 @@ argument_list|(
 literal|".nf\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * set obx offset if useful 	 *  	printf(".nr #~ 0\n"); 	 * 	 * JNA, the offset is used to set the vertical line to the left 	 * 	 * I'll introduce register #| to offset the horizontal lines 	 * a bit up 	 */
+comment|/* #| and #~ give the offsets for hor. and vert. lines 	   (in hundredths of an n) */
 switch|switch
 condition|(
 name|device
@@ -102,12 +102,12 @@ name|HARRIS
 case|:
 name|printf
 argument_list|(
-literal|".nr #~ 0.24n\n"
+literal|".nr #~ 24\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".nr #| 0.1n\n"
+literal|".nr #| 46\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -122,9 +122,7 @@ case|:
 case|case
 name|DEVVER
 case|:
-case|case
-name|DEVPSC
-case|:
+default|default:
 name|printf
 argument_list|(
 literal|".nr #~ 0\n"
@@ -141,11 +139,30 @@ literal|".nr Tw 7.65i\n"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|DEVPSC
+case|:
+name|printf
+argument_list|(
+literal|".nr #~ 0-5\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|".nr #| 8\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|".nr Tw 7.65i\n"
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 comment|/* 	 * This is the offset for the T450 boxes see drawvert() 	 */
 name|printf
 argument_list|(
-literal|".if \\n(.T .if n .nr #~ 0.6n\n"
+literal|".if \\n(.T .if n .nr #~ 60\n"
 argument_list|)
 expr_stmt|;
 block|}
