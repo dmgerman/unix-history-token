@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.16	82/01/18	*/
+comment|/*	tcp_var.h	4.17	82/12/20	*/
 end_comment
 
 begin_comment
@@ -84,16 +84,6 @@ directive|define
 name|TF_NOOPT
 value|0x08
 comment|/* don't use tcp options */
-ifdef|#
-directive|ifdef
-name|TCPTRUEOOB
-define|#
-directive|define
-name|TF_DOOOB
-value|0x10
-comment|/* do use out of band data */
-endif|#
-directive|endif
 name|struct
 name|tcpiphdr
 modifier|*
@@ -194,35 +184,6 @@ define|#
 directive|define
 name|TCPOOB_HAVEDATA
 value|0x01
-ifdef|#
-directive|ifdef
-name|TCPTRUEOOB
-define|#
-directive|define
-name|TCPOOB_OWEACK
-value|0x02
-define|#
-directive|define
-name|TCPOOB_NEEDACK
-value|0x04
-name|u_char
-name|t_iobseq
-decl_stmt|;
-comment|/* input receive sequence number */
-name|tcp_seq
-name|t_oobmark
-decl_stmt|;
-comment|/* output mark position */
-name|char
-name|t_oobc
-decl_stmt|;
-comment|/* output character */
-name|u_char
-name|t_oobseq
-decl_stmt|;
-comment|/* output transmit sequence number */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
