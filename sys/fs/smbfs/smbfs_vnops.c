@@ -337,6 +337,11 @@ operator|=
 name|smbfs_getattr
 block|,
 operator|.
+name|vop_getextattr
+operator|=
+name|smbfs_getextattr
+block|,
+operator|.
 name|vop_getpages
 operator|=
 name|smbfs_getpages
@@ -426,6 +431,7 @@ name|vop_setattr
 operator|=
 name|smbfs_setattr
 block|,
+comment|/*	.vop_setextattr =	smbfs_setextattr,*/
 operator|.
 name|vop_strategy
 operator|=
@@ -440,14 +446,7 @@ operator|.
 name|vop_write
 operator|=
 name|smbfs_write
-block|,
-operator|.
-name|vop_getextattr
-operator|=
-name|smbfs_getextattr
-block|,
-comment|/*	.vop_setextattr =		smbfs_setextattr,*/
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
