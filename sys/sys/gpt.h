@@ -73,11 +73,10 @@ decl_stmt|;
 name|uint32_t
 name|hdr_crc_table
 decl_stmt|;
-name|char
+comment|/* 	 * The header as defined in the EFI spec is not a multiple of 8 bytes 	 * and given that the alignment requirement is on an 8 byte boundary, 	 * padding will happen. We make the padding explicit so that we can 	 * correct the value returned by sizeof() when we put the size of the 	 * header in field hdr_size, or otherwise use offsetof(). 	 */
+name|uint32_t
 name|padding
-index|[]
 decl_stmt|;
-comment|/* XXX: struct not a multiple of 8. */
 block|}
 struct|;
 end_struct
