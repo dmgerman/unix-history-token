@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mtio.h	8.1 (Berkeley) 6/2/93  * $Id: mtio.h,v 1.14 1998/12/21 22:14:02 mjacob Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mtio.h	8.1 (Berkeley) 6/2/93  * $Id: mtio.h,v 1.17 1999/02/05 07:57:26 mjacob Exp $  */
 end_comment
 
 begin_ifndef
@@ -321,6 +321,164 @@ name|MT_COMP_UNSUPP
 value|0xfffffffd
 end_define
 
+begin_comment
+comment|/*  * Values in mt_dsreg that say what the device is doing  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIO_DSREG_NIL
+value|0
+end_define
+
+begin_comment
+comment|/* Unknown */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIO_DSREG_REST
+value|1
+end_define
+
+begin_comment
+comment|/* Doing Nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIO_DSREG_RBSY
+value|2
+end_define
+
+begin_comment
+comment|/* Communicating with tape (but no motion) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIO_DSREG_WR
+value|20
+end_define
+
+begin_comment
+comment|/* Writing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIO_DSREG_FMK
+value|21
+end_define
+
+begin_comment
+comment|/* Writing Filemarks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIO_DSREG_ZER
+value|22
+end_define
+
+begin_comment
+comment|/* Erasing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIO_DSREG_RD
+value|30
+end_define
+
+begin_comment
+comment|/* Reading */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIO_DSREG_FWD
+value|40
+end_define
+
+begin_comment
+comment|/* Spacing Forward */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIO_DSREG_REV
+value|41
+end_define
+
+begin_comment
+comment|/* Spacing Reverse */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIO_DSREG_POS
+value|42
+end_define
+
+begin_comment
+comment|/* Hardware Positioning (direction unknown) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIO_DSREG_REW
+value|43
+end_define
+
+begin_comment
+comment|/* Rewinding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIO_DSREG_TEN
+value|44
+end_define
+
+begin_comment
+comment|/* Retensioning */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIO_DSREG_UNL
+value|45
+end_define
+
+begin_comment
+comment|/* Unloading */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIO_DSREG_LD
+value|46
+end_define
+
+begin_comment
+comment|/* Unloading */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -423,17 +581,17 @@ name|u_int32_t
 name|mt_comp3
 decl_stmt|;
 comment|/* compression type for mode 3 */
+comment|/* end not yet implemented */
 endif|#
 directive|endif
 name|daddr_t
 name|mt_fileno
 decl_stmt|;
-comment|/* file number of current position */
+comment|/* relative file number of current position */
 name|daddr_t
 name|mt_blkno
 decl_stmt|;
-comment|/* block number of current position */
-comment|/* end not yet implemented */
+comment|/* relative block number of current position */
 block|}
 struct|;
 end_struct
@@ -511,7 +669,7 @@ name|nbytes
 decl_stmt|;
 comment|/* total # bytes processed */
 block|}
-name|werr
+name|wterr
 struct|,
 name|rderr
 struct|;
