@@ -3618,23 +3618,11 @@ name|m_new
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"sk%d: no memory for rx list -- "
-literal|"packet dropped!\n"
-argument_list|,
-name|sc_if
-operator|->
-name|sk_unit
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENOBUFS
 operator|)
 return|;
-block|}
 comment|/* Allocate the jumbo buffer */
 name|buf
 operator|=

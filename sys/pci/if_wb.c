@@ -4900,23 +4900,11 @@ name|m_new
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"wb%d: no memory for rx "
-literal|"list -- packet dropped!\n"
-argument_list|,
-name|sc
-operator|->
-name|wb_unit
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENOBUFS
 operator|)
 return|;
-block|}
 name|m_new
 operator|->
 name|m_data
@@ -6436,22 +6424,11 @@ name|m_new
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"wb%d: no memory for tx list"
-argument_list|,
-name|sc
-operator|->
-name|wb_unit
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|m_head
@@ -6485,15 +6462,6 @@ block|{
 name|m_freem
 argument_list|(
 name|m_new
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"wb%d: no memory for tx list"
-argument_list|,
-name|sc
-operator|->
-name|wb_unit
 argument_list|)
 expr_stmt|;
 return|return
