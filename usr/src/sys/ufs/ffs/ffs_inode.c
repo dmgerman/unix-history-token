@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.48 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.49 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
 end_include
 
 begin_include
@@ -764,6 +770,8 @@ condition|)
 name|ip
 operator|->
 name|i_atime
+operator|.
+name|tv_sec
 operator|=
 name|ta
 operator|->
@@ -781,6 +789,8 @@ block|{
 name|ip
 operator|->
 name|i_mtime
+operator|.
+name|tv_sec
 operator|=
 name|tm
 operator|->
@@ -805,6 +815,8 @@ condition|)
 name|ip
 operator|->
 name|i_ctime
+operator|.
+name|tv_sec
 operator|=
 name|time
 operator|.
