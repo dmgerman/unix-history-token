@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	3.18	%G%	*/
+comment|/*	hp.c	3.19	%G%	*/
 end_comment
 
 begin_include
@@ -1110,7 +1110,7 @@ expr|struct
 name|mba_regs
 operator|*
 operator|)
-name|MBA0
+name|HPMBA
 operator|)
 operator|->
 name|mba_cr
