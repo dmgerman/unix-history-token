@@ -1591,6 +1591,11 @@ operator|++
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
