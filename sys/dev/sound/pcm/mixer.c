@@ -1270,6 +1270,13 @@ name|devname
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|snd_mtxunlock
+argument_list|(
+name|m
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|sysctl_handle_string
@@ -1288,6 +1295,13 @@ name|devname
 argument_list|)
 argument_list|,
 name|req
+argument_list|)
+expr_stmt|;
+name|snd_mtxlock
+argument_list|(
+name|m
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 if|if
