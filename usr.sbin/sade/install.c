@@ -3417,6 +3417,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|mountfailed
 decl_stmt|;
 name|Disk
 modifier|*
@@ -3815,7 +3817,7 @@ name|i
 operator|=
 name|vsystem
 argument_list|(
-literal|"fsck -y %s"
+literal|"fsck_ffs -y %s"
 argument_list|,
 name|dname
 argument_list|)
@@ -3898,6 +3900,75 @@ operator||
 name|DITEM_RESTORE
 return|;
 block|}
+comment|/* Mount devfs for other partitions to mount */
+name|Mkdir
+argument_list|(
+literal|"/mnt/dev"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Fake
+condition|)
+name|mountfailed
+operator|=
+name|mount
+argument_list|(
+literal|"devfs"
+argument_list|,
+literal|"/mnt/dev"
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mountfailed
+condition|)
+block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+name|msgNotify
+argument_list|(
+literal|"Copying initial device files.."
+argument_list|)
+expr_stmt|;
+comment|/* Copy the boot floppy's dev files */
+if|if
+condition|(
+operator|(
+name|root
+operator|->
+name|newfs
+operator|||
+name|upgrade
+operator|)
+operator|&&
+name|vsystem
+argument_list|(
+literal|"find -x /dev | cpio %s -pdum /mnt"
+argument_list|,
+name|cpioVerbosity
+argument_list|()
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Couldn't clone the /dev files!"
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+block|}
 block|}
 comment|/* Now buzz through the rest of the partitions and mount them too */
 name|devs
@@ -3973,6 +4044,11 @@ return|;
 block|}
 if|if
 condition|(
+name|mountfailed
+condition|)
+block|{
+if|if
+condition|(
 name|RunningAsInit
 operator|&&
 name|root
@@ -4020,6 +4096,7 @@ argument_list|,
 literal|"/dev"
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|c1
@@ -4155,7 +4232,7 @@ name|tmp
 operator|->
 name|mountpoint
 argument_list|,
-literal|"fsck -y %s/dev/%s"
+literal|"fsck_ffs -y %s/dev/%s"
 argument_list|,
 name|RunningAsInit
 condition|?
@@ -4363,56 +4440,26 @@ expr_stmt|;
 block|}
 block|}
 block|}
-if|if
-condition|(
-name|RunningAsInit
-condition|)
-block|{
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
-name|msgNotify
-argument_list|(
-literal|"Copying initial device files.."
-argument_list|)
-expr_stmt|;
-comment|/* Copy the boot floppy's dev files */
-if|if
-condition|(
-operator|(
-name|root
-operator|->
-name|newfs
-operator|||
-name|upgrade
-operator|)
-operator|&&
-name|vsystem
-argument_list|(
-literal|"find -x /dev | cpio %s -pdum /mnt"
-argument_list|,
-name|cpioVerbosity
-argument_list|()
-argument_list|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Couldn't clone the /dev files!"
-argument_list|)
-expr_stmt|;
-return|return
-name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
-return|;
-block|}
-block|}
 name|command_sort
 argument_list|()
 expr_stmt|;
 name|command_execute
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|mountfailed
+operator|&&
+operator|!
+name|Fake
+condition|)
+name|unmount
+argument_list|(
+literal|"/mnt/dev"
+argument_list|,
+name|MNT_FORCE
+argument_list|)
 expr_stmt|;
 name|dialog_clear_norefresh
 argument_list|()
