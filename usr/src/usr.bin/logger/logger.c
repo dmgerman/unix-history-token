@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logger.c	6.16 (Berkeley) %G%"
+literal|"@(#)logger.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -551,13 +551,25 @@ name|fac
 operator|<
 literal|0
 condition|)
-name|bailout
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"unknown facility name: "
+name|stderr
+argument_list|,
+literal|"logger: unknown facility name: %s.\n"
 argument_list|,
 name|save
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|s
 operator|++
@@ -591,13 +603,25 @@ name|lev
 operator|<
 literal|0
 condition|)
-name|bailout
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"unknown priority name: "
+name|stderr
+argument_list|,
+literal|"logger: unknown priority name: %s.\n"
 argument_list|,
 name|save
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 operator|(
@@ -704,57 +728,20 @@ block|}
 end_block
 
 begin_macro
-name|bailout
-argument_list|(
-argument|msg
-argument_list|,
-argument|arg
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|msg
-decl_stmt|,
-modifier|*
-name|arg
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"logger: %s%s\n"
-argument_list|,
-name|msg
-argument_list|,
-name|arg
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
 name|usage
 argument_list|()
 end_macro
 
 begin_block
 block|{
-name|fputs
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"logger: [-i] [-f file] [-p pri] [-t tag] [ message ... ]\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"logger: [-i] [-f file] [-p pri] [-t tag] [ message ... ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
