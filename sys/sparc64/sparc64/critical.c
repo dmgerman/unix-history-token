@@ -93,6 +93,12 @@ directive|include
 file|<sys/ucontext.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/critical.h>
+end_include
+
 begin_comment
 comment|/*  * cpu_critical_fork_exit() - cleanup after fork  */
 end_comment
