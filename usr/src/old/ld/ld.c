@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	5.16 (Berkeley) %G%"
+literal|"@(#)ld.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6664,7 +6664,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|getw
+name|getword
 parameter_list|(
 name|cp
 parameter_list|)
@@ -6712,7 +6712,7 @@ end_else
 
 begin_function
 name|short
-name|getw
+name|getword
 parameter_list|(
 name|cp
 parameter_list|)
@@ -7233,7 +7233,7 @@ case|:
 comment|/* word */
 name|tw
 operator|=
-name|getw
+name|getword
 argument_list|(
 name|cp
 argument_list|)
