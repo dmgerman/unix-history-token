@@ -88,6 +88,17 @@ begin_comment
 comment|/* SiS 7012 needs special handling */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ICH4ID
+value|0x24c58086
+end_define
+
+begin_comment
+comment|/* ICH4 needs special handling too */
+end_comment
+
 begin_comment
 comment|/* buffer descriptor */
 end_comment
@@ -2763,9 +2774,25 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* ICH4 may fail when busmastering is enabled. Continue */
+if|if
+condition|(
+name|pci_get_devid
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+operator|!=
+name|ICH4ID
+condition|)
+block|{
 return|return
 name|ENXIO
 return|;
+block|}
+block|}
 name|ich_wr
 argument_list|(
 name|sc
@@ -2995,13 +3022,13 @@ return|return
 literal|0
 return|;
 case|case
-literal|0x24c58086
+name|ICH4ID
 case|:
 name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Intel 82801DC (ICH4)"
+literal|"Intel 82801DB (ICH4)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3050,9 +3077,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|u_int32_t
-name|data
-decl_stmt|;
 name|u_int16_t
 name|extcaps
 decl_stmt|;
@@ -3156,47 +3180,40 @@ operator|=
 literal|2
 expr_stmt|;
 block|}
-name|data
-operator|=
-name|pci_read_config
+comment|/* 	 * By default, ich4 has NAMBAR and NABMBAR i/o spaces as 	 * read-only.  Need to enable "legacy support", by poking into 	 * pci config space.  The driver should use MMBAR and MBBAR, 	 * but doing so will mess things up here.  ich4 has enough new 	 * features it warrants it's own driver.  	 */
+if|if
+condition|(
+name|pci_get_devid
 argument_list|(
 name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|2
 argument_list|)
-expr_stmt|;
-name|data
-operator||=
-operator|(
-name|PCIM_CMD_PORTEN
-operator||
-name|PCIM_CMD_MEMEN
-operator||
-name|PCIM_CMD_BUSMASTEREN
-operator|)
-expr_stmt|;
+operator|==
+name|ICH4ID
+condition|)
+block|{
 name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
-name|PCIR_COMMAND
+name|PCIR_ICH_LEGACY
 argument_list|,
-name|data
+name|ICH_LEGACY_ENABLE
 argument_list|,
-literal|2
+literal|1
 argument_list|)
 expr_stmt|;
-name|data
-operator|=
-name|pci_read_config
+block|}
+name|pci_enable_io
 argument_list|(
 name|dev
 argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|2
+name|SYS_RES_IOPORT
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Enable bus master. On ich4 this may prevent the detection of 	 * the primary codec becoming ready in ich_init(). 	 */
+name|pci_enable_busmaster
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 name|sc

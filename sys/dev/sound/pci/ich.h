@@ -17,6 +17,20 @@ name|PCIR_NABMBAR
 value|0x14
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCIR_ICH_LEGACY
+value|0x41
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICH_LEGACY_ENABLE
+value|0x01
+end_define
+
 begin_comment
 comment|/* Native Audio Bus Master Control Registers */
 end_comment
