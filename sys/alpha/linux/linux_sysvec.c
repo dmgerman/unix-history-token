@@ -801,6 +801,8 @@ block|,
 name|elf_coredump
 block|,
 name|exec_linux_imgact_try
+block|,
+name|LINUX_MINSIGSTKSZ
 block|}
 decl_stmt|;
 end_decl_stmt

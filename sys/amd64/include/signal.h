@@ -42,6 +42,17 @@ name|_POSIX_SOURCE
 argument_list|)
 end_if
 
+begin_comment
+comment|/*  * Minimum signal stack size. The current signal frame  * for i386 is 408 bytes large.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MINSIGSTKSZ
+value|(512 * 4)
+end_define
+
 begin_include
 include|#
 directive|include

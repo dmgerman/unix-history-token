@@ -36,6 +36,17 @@ directive|ifndef
 name|_ANSI_SOURCE
 end_ifndef
 
+begin_comment
+comment|/*  * Minimum signal stack size. The current signal frame  * for IA-64 is 2656 bytes large.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MINSIGSTKSZ
+value|(3072 * 4)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

@@ -1065,17 +1065,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MINSIGSTKSZ
-value|8192
-end_define
-
-begin_comment
-comment|/* minimum allowable stack */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SIGSTKSZ
 value|(MINSIGSTKSZ + 32768)
 end_define

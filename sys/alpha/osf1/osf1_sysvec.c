@@ -194,7 +194,11 @@ comment|/* prepsyscall */
 literal|"OSF/1 ECOFF"
 block|,
 name|NULL
+block|,
 comment|/* we don't have an ECOFF coredump function */
+name|NULL
+block|,
+name|OSF1_MINSIGSTKSZ
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -275,6 +275,10 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+name|int
+name|sv_minsigstksz
+decl_stmt|;
+comment|/* minimum signal stack size */
 block|}
 struct|;
 end_struct

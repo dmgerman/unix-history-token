@@ -407,6 +407,10 @@ block|,
 literal|"FreeBSD ELF"
 block|,
 name|elf_coredump
+block|,
+name|NULL
+block|,
+name|MINSIGSTKSZ
 block|}
 decl_stmt|;
 end_decl_stmt
