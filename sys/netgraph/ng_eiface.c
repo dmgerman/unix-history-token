@@ -1155,7 +1155,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We simply relay the packet to the ether hook, if it is connected.  * We have been throughthe netgraph locking an are guaranteed to  * be the only code running in this node at this time.  */
+comment|/*  * We simply relay the packet to the "ether" hook, if it is connected.  * We have been through the netgraph locking and are guaranteed to  * be the only code running in this node at this time.  */
 end_comment
 
 begin_function
