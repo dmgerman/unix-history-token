@@ -102,10 +102,6 @@ parameter_list|)
 value|(GLOBALP->gd_##name = (value))
 end_define
 
-begin_comment
-comment|/*  * The following set of macros works for UP kernel as well, but for maximum  * performance we allow the global variables to be accessed directly. On the  * other hand, kernel modules should always use these macros to maintain  * portability between UP and SMP kernels.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -129,55 +125,6 @@ define|#
 directive|define
 name|curproc
 value|PCPU_GET(curproc)
-end_define
-
-begin_define
-define|#
-directive|define
-name|idleproc
-value|PCPU_GET(idleproc)
-end_define
-
-begin_define
-define|#
-directive|define
-name|curpcb
-value|PCPU_GET(curpcb)
-end_define
-
-begin_define
-define|#
-directive|define
-name|fpcurproc
-value|PCPU_GET(fpcurproc)
-end_define
-
-begin_define
-define|#
-directive|define
-name|switchtime
-value|PCPU_GET(switchtime)
-end_define
-
-begin_define
-define|#
-directive|define
-name|switchticks
-value|PCPU_GET(switchticks)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cpuid
-value|PCPU_GET(cpuno)
-end_define
-
-begin_define
-define|#
-directive|define
-name|witness_spin_check
-value|PCPU_GET(witness_spin_check)
 end_define
 
 begin_endif
