@@ -4336,7 +4336,7 @@ name|CCDB_IO
 condition|)
 name|printf
 argument_list|(
-literal|" dev %p(u%ld): cbp %p bn %lld addr %p bcnt %ld\n"
+literal|" dev %p(u%ld): cbp %p bn %jd addr %p bcnt %ld\n"
 argument_list|,
 name|ci
 operator|->
@@ -4357,8 +4357,7 @@ argument_list|,
 name|cbp
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|cbp
 operator|->
@@ -4646,7 +4645,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" dev %p(u%d), cbp %p bn %lld addr %p bcnt %ld\n"
+literal|" dev %p(u%d), cbp %p bn %jd addr %p bcnt %ld\n"
 argument_list|,
 name|cbp
 operator|->
@@ -4661,8 +4660,7 @@ argument_list|,
 name|cbp
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|cbp
 operator|->
