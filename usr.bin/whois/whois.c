@@ -752,6 +752,17 @@ name|pos
 expr_stmt|;
 if|if
 condition|(
+name|pos
+operator|<=
+name|domain
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+if|if
+condition|(
 name|isdigit
 argument_list|(
 operator|(
