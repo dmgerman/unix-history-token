@@ -5348,7 +5348,7 @@ return|return
 name|ERRKEY
 return|;
 block|}
-comment|/*  	 * If the same accent key has been hit twice, produce the accent char 	 * itself. 	 */
+comment|/* 	 * If the same accent key has been hit twice, produce the accent 	 * char itself. 	 */
 if|if
 condition|(
 name|i
@@ -5438,7 +5438,7 @@ name|accents
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  	 * If the accent key is followed by the space key, 	 * produce the accent char itself. 	 */
+comment|/* 	 * If the accent key is followed by the space key, 	 * produce the accent char itself. 	 */
 if|if
 condition|(
 name|ch
