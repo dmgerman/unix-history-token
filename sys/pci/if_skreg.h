@@ -7763,6 +7763,9 @@ name|char
 modifier|*
 name|sk_vpd_readonly
 decl_stmt|;
+name|uint16_t
+name|sk_vpd_readonly_len
+decl_stmt|;
 name|u_int32_t
 name|sk_rboff
 decl_stmt|;
