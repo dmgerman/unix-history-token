@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -1775,18 +1775,12 @@ directive|ifdef
 name|COMPAT_42
 if|if
 condition|(
-operator|(
-name|mi
-operator|->
-name|mi_type
-operator|=
 name|hpmaptype
 argument_list|(
 name|mi
 argument_list|,
 name|lp
 argument_list|)
-operator|)
 operator|==
 literal|0
 condition|)
@@ -7879,6 +7873,12 @@ name|HPDT_EAGLE
 expr_stmt|;
 break|break;
 block|}
+name|mi
+operator|->
+name|mi_type
+operator|=
+name|type
+expr_stmt|;
 block|}
 comment|/* 	 * EMULEX SC750 or SC780.  Poke the holding register. 	 */
 if|if
@@ -8150,6 +8150,12 @@ literal|0
 operator|)
 return|;
 block|}
+name|mi
+operator|->
+name|mi_type
+operator|=
+name|type
+expr_stmt|;
 block|}
 comment|/* 	 * set up minimal disk label. 	 */
 name|st
@@ -8312,7 +8318,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|type
+literal|1
 operator|)
 return|;
 block|}
