@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.6	%G%	*/
+comment|/*	vfs_vnops.c	4.7	%G%	*/
 end_comment
 
 begin_include
@@ -127,35 +127,6 @@ name|NULL
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|UCBIPC
-if|if
-condition|(
-name|u
-operator|.
-name|u_pofile
-index|[
-name|f
-index|]
-operator|&
-name|ISPORT
-condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|EISPORT
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
 return|return
 operator|(
 name|fp
@@ -997,7 +968,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Allocate a user file descriptor  * and a file structure.  * Initialize the descriptor  * to point at the file structure.  *  * no file -- if there are no available  * 	file structures.  */
+comment|/*  * Allocate a user file descriptor  * and a file structure.  * Initialize the descriptor  * to point at the file structure.  */
 end_comment
 
 begin_function
@@ -1090,9 +1061,9 @@ condition|)
 goto|goto
 name|slot
 goto|;
-name|printf
+name|tablefull
 argument_list|(
-literal|"no file\n"
+literal|"file"
 argument_list|)
 expr_stmt|;
 name|u
