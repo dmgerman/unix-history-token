@@ -40,7 +40,7 @@ comment|/* OLD_JOKE */
 end_comment
 
 begin_comment
-comment|/*-  * job.c --  *	handle the creation etc. of our child processes.  *  * Interface:  *	Job_Make  	    	Start the creation of the given target.  *  *	Job_CatchChildren   	Check for and handle the termination of any  *	    	  	    	children. This must be called reasonably  *	    	  	    	frequently to keep the whole make going at  *	    	  	    	a decent clip, since job table entries aren't  *	    	  	    	removed until their process is caught this way.  *	    	  	    	Its single argument is TRUE if the function  *	    	  	    	should block waiting for a child to terminate.  *  *	Job_CatchOutput	    	Print any output our children have produced.  *	    	  	    	Should also be called fairly frequently to  *	    	  	    	keep the user informed of what's going on.  *	    	  	    	If no output is waiting, it will block for  *	    	  	    	a time given by the SEL_* constants, below,  *	    	  	    	or until output is ready.  *  *	Job_Init  	    	Called to intialize this module. in addition,  *	    	  	    	any commands attached to the .BEGIN target  *	    	  	    	are executed before this function returns.  *	    	  	    	Hence, the makefile must have been parsed  *	    	  	    	before this function is called.  *  *	Job_Full  	    	Return TRUE if the job table is filled.  *  *	Job_Empty 	    	Return TRUE if the job table is completely  *	    	  	    	empty.  *  *	Job_ParseShell	    	Given the line following a .SHELL target, parse  *	    	  	    	the line as a shell specification. Returns  *	    	  	    	FAILURE if the spec was incorrect.  *  *	Job_Finish	  	    	Perform any final processing which needs doing.  *	    	  	    	This includes the execution of any commands  *	    	  	    	which have been/were attached to the .END  *	    	  	    	target. It should only be called when the  *	    	  	    	job table is empty.  *  *	Job_AbortAll	    	Abort all currently running jobs. It doesn't  *	    	  	    	handle output or do anything for the jobs,  *	    	  	    	just kills them. It should only be called in  *	    	  	    	an emergency, as it were.  *  *	Job_CheckCommands   	Verify that the commands for a target are  *	    	  	    	ok. Provide them if necessary and possible.  *  *	Job_Touch 	    	Update a target without really updating it.  *  *	Job_Wait  	    	Wait for all currently-running jobs to finish.  */
+comment|/*-  * job.c --  *	handle the creation etc. of our child processes.  *  * Interface:  *	Job_Make	Start the creation of the given target.  *  *	Job_CatchChildren  *			Check for and handle the termination of any children.  *			This must be called reasonably frequently to keep the  *			whole make going at a decent clip, since job table  *			entries aren't removed until their process is caught  *			this way. Its single argument is TRUE if the function  *			should block waiting for a child to terminate.  *  *	Job_CatchOutput	Print any output our children have produced. Should  *			also be called fairly frequently to keep the user  *			informed of what's going on. If no output is waiting,  *			it will block for a time given by the SEL_* constants,  *			below, or until output is ready.  *  *	Job_Init	Called to intialize this module. in addition, any  *			commands attached to the .BEGIN target are executed  *			before this function returns. Hence, the makefile must  *			have been parsed before this function is called.  *  *	Job_Full	Return TRUE if the job table is filled.  *  *	Job_Empty	Return TRUE if the job table is completely empty.  *  *	Job_ParseShell	Given the line following a .SHELL target, parse the  *			line as a shell specification. Returns FAILURE if the  *			spec was incorrect.  *  *	Job_Finish	Perform any final processing which needs doing. This  *			includes the execution of any commands which have  *			been/were attached to the .END target. It should only  *			be called when the job table is empty.  *  *	Job_AbortAll	Abort all currently running jobs. It doesn't handle  *			output or do anything for the jobs, just kills them.  *			It should only be called in an emergency, as it were.  *  *	Job_CheckCommands  *			Verify that the commands for a target are ok. Provide  *			them if necessary and possible.  *  *	Job_Touch	Update a target without really updating it.  *  *	Job_Wait	Wait for all currently-running jobs to finish.  */
 end_comment
 
 begin_include
@@ -313,7 +313,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* node containing commands to execute when 				     * everything else is done */
+comment|/*  * The number of commands actually printed for a target. Should this  * number be 0, no shell will be executed.  */
 end_comment
 
 begin_decl_stmt
@@ -322,10 +322,6 @@ name|int
 name|numCommands
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* The number of commands actually printed 				     * for a target. Should this number be 				     * 0, no shell will be executed. */
-end_comment
 
 begin_comment
 comment|/*  * Return values from JobStart.  */
@@ -409,7 +405,7 @@ name|shells
 index|[]
 operator|=
 block|{
-comment|/*      * CSH description. The csh can do echo control by playing      * with the setting of the 'echo' shell variable. Sadly,      * however, it is unable to do error control nicely.      */
+comment|/* 	 * CSH description. The csh can do echo control by playing 	 * with the setting of the 'echo' shell variable. Sadly, 	 * however, it is unable to do error control nicely. 	 */
 block|{
 literal|"csh"
 block|,
@@ -432,9 +428,9 @@ block|,
 literal|"v"
 block|,
 literal|"e"
-block|, }
+block|, 	}
 block|,
-comment|/*      * SH description. Echo control is also possible and, under      * sun UNIX anyway, one can even control error checking.      */
+comment|/* 	 * SH description. Echo control is also possible and, under 	 * sun UNIX anyway, one can even control error checking. 	 */
 block|{
 literal|"sh"
 block|,
@@ -468,9 +464,9 @@ directive|endif
 literal|"v"
 block|,
 literal|"e"
-block|, }
+block|, 	}
 block|,
-comment|/*      * KSH description. The Korn shell has a superset of      * the Bourne shell's functionality.      */
+comment|/* 	 * KSH description. The Korn shell has a superset of 	 * the Bourne shell's functionality. 	 */
 block|{
 literal|"ksh"
 block|,
@@ -493,10 +489,14 @@ block|,
 literal|"v"
 block|,
 literal|"e"
-block|, }
+block|, 	}
 block|, }
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * This is the shell to which we pass all commands in the Makefile.  * It is set by the Job_ParseShell function.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -508,18 +508,21 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* this is the shell to which we pass 					 * all commands in the Makefile. It is 					 * set by the Job_ParseShell function */
-end_comment
-
 begin_decl_stmt
 name|char
 modifier|*
 name|shellPath
 init|=
 name|NULL
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* full pathname of executable image */
+end_comment
+
+begin_decl_stmt
+name|char
 modifier|*
 name|shellName
 init|=
@@ -1014,7 +1017,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * JobCatchSignal  *  * Got a signal. Set global variables and hope that someone will  * handle it.  */
+comment|/**  * JobCatchSignal  *	Got a signal. Set global variables and hope that someone will  *	handle it.  */
 end_comment
 
 begin_function
@@ -1034,7 +1037,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobCondPassSig --  *	Pass a signal to all jobs  *  * Side Effects:  *	None, except the job may bite it.  *  *-----------------------------------------------------------------------  */
+comment|/**  * JobCondPassSig --  *	Pass a signal to all jobs  *  * Side Effects:  *	None, except the job may bite it.  */
 end_comment
 
 begin_function
@@ -1097,7 +1100,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobPassSig --  *	Pass a signal on to all local jobs if  *	USE_PGRP is defined, then die ourselves.  *  * Results:  *	None.  *  * Side Effects:  *	We die by the same signal.  *  *-----------------------------------------------------------------------  */
+comment|/**  * JobPassSig --  *	Pass a signal on to all local jobs if  *	USE_PGRP is defined, then die ourselves.  *  * Side Effects:  *	We die by the same signal.  */
 end_comment
 
 begin_function
@@ -1159,7 +1162,7 @@ argument_list|(
 name|signo
 argument_list|)
 expr_stmt|;
-comment|/*      * Deal with proper cleanup based on the signal received. We only run      * the .INTERRUPT target if the signal was in fact an interrupt. The other      * three termination signals are more of a "get out *now*" command.      */
+comment|/* 	 * Deal with proper cleanup based on the signal received. We only run 	 * the .INTERRUPT target if the signal was in fact an interrupt. 	 * The other three termination signals are more of a "get out *now*" 	 * command. 	 */
 if|if
 condition|(
 name|signo
@@ -1205,7 +1208,7 @@ name|signo
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Leave gracefully if SIGQUIT, rather than core dumping.      */
+comment|/* 	 * Leave gracefully if SIGQUIT, rather than core dumping. 	 */
 if|if
 condition|(
 name|signo
@@ -1218,7 +1221,7 @@ operator|=
 name|SIGINT
 expr_stmt|;
 block|}
-comment|/*      * Send ourselves the signal now we've given the message to everyone else.      * Note we block everything else possible while we're getting the signal.      * This ensures that all our jobs get continued when we wake up before      * we take any other signal.      * XXX this comment seems wrong.      */
+comment|/* 	 * Send ourselves the signal now we've given the message to everyone 	 * else. Note we block everything else possible while we're getting 	 * the signal. This ensures that all our jobs get continued when we 	 * wake up before we take any other signal. 	 * XXX this comment seems wrong. 	 */
 name|act
 operator|.
 name|sa_handler
@@ -1336,7 +1339,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobPrintCommand  --  *	Put out another command for the given job. If the command starts  *	with an @ or a - we process it specially. In the former case,  *	so long as the -s and -n flags weren't given to make, we stick  *	a shell-specific echoOff command in the script. In the latter,  *	we ignore errors for the entire job, unless the shell has error  *	control.  *	If the command is just "..." we take all future commands for this  *	job to be commands to be executed once the entire graph has been  *	made and return non-zero to signal that the end of the commands  *	was reached. These commands are later attached to the postCommands  *	node and executed by Job_Finish when all things are done.  *	This function is called from JobStart via LST_FOREACH.  *  * Results:  *	Always 0, unless the command was "..."  *  * Side Effects:  *	If the command begins with a '-' and the shell has no error control,  *	the JOB_IGNERR flag is set in the job descriptor.  *	If the command is "..." and we're not ignoring such things,  *	tailCmds is set to the successor node of the cmd.  *	numCommands is incremented if the command is actually printed.  *-----------------------------------------------------------------------  */
+comment|/**  * JobPrintCommand  --  *	Put out another command for the given job. If the command starts  *	with an @ or a - we process it specially. In the former case,  *	so long as the -s and -n flags weren't given to make, we stick  *	a shell-specific echoOff command in the script. In the latter,  *	we ignore errors for the entire job, unless the shell has error  *	control.  *	If the command is just "..." we take all future commands for this  *	job to be commands to be executed once the entire graph has been  *	made and return non-zero to signal that the end of the commands  *	was reached. These commands are later attached to the postCommands  *	node and executed by Job_Finish when all things are done.  *	This function is called from JobStart via LST_FOREACH.  *  * Results:  *	Always 0, unless the command was "..."  *  * Side Effects:  *	If the command begins with a '-' and the shell has no error control,  *	the JOB_IGNERR flag is set in the job descriptor.  *	If the command is "..." and we're not ignoring such things,  *	tailCmds is set to the successor node of the cmd.  *	numCommands is incremented if the command is actually printed.  */
 end_comment
 
 begin_function
@@ -1374,7 +1377,7 @@ name|char
 modifier|*
 name|cmdTemplate
 decl_stmt|;
-comment|/* Template to use when printing the 				 * command */
+comment|/* Template to use when printing the command */
 name|char
 modifier|*
 name|cmdStart
@@ -1487,12 +1490,12 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|DEBUGF(JOB, (fmt, arg));			\     fprintf(job->cmdFILE, fmt, arg);	\     fflush(job->cmdFILE);
+value|DEBUGF(JOB, (fmt, arg));		\ 	fprintf(job->cmdFILE, fmt, arg);	\ 	fflush(job->cmdFILE);
 name|numCommands
 operator|+=
 literal|1
 expr_stmt|;
-comment|/*      * For debugging, we replace each command with the result of expanding      * the variables in the command.      */
+comment|/* 	 * For debugging, we replace each command with the result of expanding 	 * the variables in the command. 	 */
 name|cmdNode
 operator|=
 name|Lst_Member
@@ -1540,7 +1543,7 @@ name|cmdTemplate
 operator|=
 literal|"%s\n"
 expr_stmt|;
-comment|/*      * Check for leading @', -' or +'s to control echoing, error checking,      * and execution on -n.      */
+comment|/* 	 * Check for leading @', -' or +'s to control echoing, error checking, 	 * and execution on -n. 	 */
 while|while
 condition|(
 operator|*
@@ -1596,7 +1599,7 @@ condition|(
 name|noSpecials
 condition|)
 block|{
-comment|/* 		 * We're not actually exececuting anything... 		 * but this one needs to be - use compat mode just for it. 		 */
+comment|/* 				 * We're not actually exececuting anything... 				 * but this one needs to be - use compat mode 				 * just for it. 				 */
 name|Compat_RunCommand
 argument_list|(
 name|cmdp
@@ -1702,7 +1705,7 @@ operator|->
 name|hasErrCtl
 condition|)
 block|{
-comment|/* 		 * we don't want the error-control commands showing 		 * up either, so we turn off echoing while executing 		 * them. We could put another field in the shell 		 * structure to tell JobDoOutput to look for this 		 * string too, but why make it any more complex than 		 * it already is? 		 */
+comment|/* 				 * We don't want the error-control commands 				 * showing up either, so we turn off echoing 				 * while executing them. We could put another 				 * field in the shell structure to tell 				 * JobDoOutput to look for this string too, 				 * but why make it any more complex than 				 * it already is? 				 */
 if|if
 condition|(
 operator|!
@@ -1780,7 +1783,7 @@ literal|'\0'
 operator|)
 condition|)
 block|{
-comment|/* 		 * The shell has no error control, so we need to be 		 * weird to get it to ignore any errors from the command. 		 * If echoing is turned on, we turn it off and use the 		 * errCheck template to echo the command. Leave echoing 		 * off so the user doesn't see the weirdness we go through 		 * to ignore errors. Set cmdTemplate to use the weirdness 		 * instead of the simple "%s\n" template. 		 */
+comment|/* 				 * The shell has no error control, so we need to 				 * be weird to get it to ignore any errors from 				 * the command. If echoing is turned on, we turn 				 * it off and use the errCheck template to echo 				 * the command. Leave echoing off so the user 				 * doesn't see the weirdness we go through to 				 * ignore errors. Set cmdTemplate to use the 				 * weirdness instead of the simple "%s\n" 				 * template. 				 */
 if|if
 condition|(
 operator|!
@@ -1829,7 +1832,7 @@ name|commandShell
 operator|->
 name|ignErr
 expr_stmt|;
-comment|/* 		 * The error ignoration (hee hee) is already taken care 		 * of by the ignErr template, so pretend error checking 		 * is still on. 		 */
+comment|/* 				 * The error ignoration (hee hee) is already 				 * taken care of by the ignErr template, so 				 * pretend error checking is still on. 				*/
 name|errOff
 operator|=
 name|FALSE
@@ -1863,7 +1866,7 @@ condition|(
 name|errOff
 condition|)
 block|{
-comment|/* 	 * If echoing is already off, there's no point in issuing the 	 * echoOff command. Otherwise we issue it and pretend it was on 	 * for the whole command... 	 */
+comment|/* 		 * If echoing is already off, there's no point in issuing the 		 * echoOff command. Otherwise we issue it and pretend it was on 		 * for the whole command... 		 */
 if|if
 condition|(
 operator|!
@@ -1931,7 +1934,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobClose --  *	Called to close both input and output pipes when a job is finished.  *  * Results:  *	Nada  *  * Side Effects:  *	The file descriptors associated with the job are closed.  *  *-----------------------------------------------------------------------  */
+comment|/**  * JobClose --  *	Called to close both input and output pipes when a job is finished.  *  * Side Effects:  *	The file descriptors associated with the job are closed.  */
 end_comment
 
 begin_function
@@ -2023,11 +2026,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobFinish  --  *	Do final processing for the given job including updating  *	parents and starting new jobs as available/necessary. Note  *	that we pay no attention to the JOB_IGNERR flag here.  *	This is because when we're called because of a noexecute flag  *	or something, jstat.w_status is 0 and when called from  *	Job_CatchChildren, the status is zeroed if it s/b ignored.  *  * Results:  *	None  *  * Side Effects:  *	Some nodes may be put on the toBeMade queue.  *	Final commands for the job are placed on postCommands.  *  *	If we got an error and are aborting (aborting == ABORT_ERROR) and  *	the job list is now empty, we are done for the day.  *	If we recognized an error (errors !=0), we set the aborting flag  *	to ABORT_ERROR so no more jobs will be started.  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
+comment|/**  * JobFinish  --  *	Do final processing for the given job including updating  *	parents and starting new jobs as available/necessary. Note  *	that we pay no attention to the JOB_IGNERR flag here.  *	This is because when we're called because of a noexecute flag  *	or something, jstat.w_status is 0 and when called from  *	Job_CatchChildren, the status is zeroed if it s/b ignored.  *  * Side Effects:  *	Some nodes may be put on the toBeMade queue.  *	Final commands for the job are placed on postCommands.  *  *	If we got an error and are aborting (aborting == ABORT_ERROR) and  *	the job list is now empty, we are done for the day.  *	If we recognized an error (errors !=0), we set the aborting flag  *	to ABORT_ERROR so no more jobs will be started.  */
 end_comment
 
 begin_function
@@ -2103,7 +2102,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 	 * If it exited non-zero and either we're doing things our 	 * way or we're not ignoring errors, the job is finished. 	 * Similarly, if the shell died because of a signal 	 * the job is also finished. In these 	 * cases, finish out the job's output before printing the exit 	 * status... 	 */
+comment|/* 		 * If it exited non-zero and either we're doing things our 		 * way or we're not ignoring errors, the job is finished. 		 * Similarly, if the shell died because of a signal 		 * the job is also finished. In these cases, finish out the 		 * job's output before printing the exit status... 		 */
 name|JobClose
 argument_list|(
 name|job
@@ -2147,7 +2146,7 @@ name|status
 argument_list|)
 condition|)
 block|{
-comment|/* 	 * Deal with ignored errors in -B mode. We need to print a message 	 * telling of the ignored error as well as setting status.w_status 	 * to 0 so the next command gets run. To do this, we set done to be 	 * TRUE if in -B mode and the job exited non-zero. 	 */
+comment|/* 		 * Deal with ignored errors in -B mode. We need to print a 		 * message telling of the ignored error as well as setting 		 * status.w_status to 0 so the next command gets run. To do 		 * this, we set done to be TRUE if in -B mode and the job 		 * exited non-zero. 		 */
 name|done
 operator|=
 name|WEXITSTATUS
@@ -2158,7 +2157,7 @@ argument_list|)
 operator|!=
 literal|0
 expr_stmt|;
-comment|/* 	 * Old comment said: "Note we don't 	 * want to close down any of the streams until we know we're at the 	 * end." 	 * But we do. Otherwise when are we going to print the rest of the 	 * stuff? 	 */
+comment|/* 		 * Old comment said: "Note we don't want to close down any of 		 * the streams until we know we're at the end." But we do. 		 * Otherwise when are we going to print the rest of the stuff? 		 */
 name|JobClose
 argument_list|(
 name|job
@@ -2167,7 +2166,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * No need to close things down or anything. 	 */
+comment|/* 		 * No need to close things down or anything. 		 */
 name|done
 operator|=
 name|FALSE
@@ -2227,7 +2226,7 @@ name|JOB_IGNERR
 operator|)
 condition|)
 block|{
-comment|/* 	     * If output is going to a file and this job is ignoring 	     * errors, arrange to have the exit status sent to the 	     * output file as well. 	     */
+comment|/* 			 * If output is going to a file and this job is ignoring 			 * errors, arrange to have the exit status sent to the 			 * output file as well. 			 */
 name|out
 operator|=
 name|fdopen
@@ -2500,7 +2499,7 @@ operator|==
 name|SIGCONT
 condition|)
 block|{
-comment|/* 	     * If the beastie has continued, shift the Job from the stopped 	     * list to the running one (or re-stop it if concurrency is 	     * exceeded) and go and get another child. 	     */
+comment|/* 			 * If the beastie has continued, shift the Job from 			 * the stopped list to the running one (or re-stop it 			 * if concurrency is exceeded) and go and get another 			 * child. 			 */
 if|if
 condition|(
 name|job
@@ -2566,7 +2565,8 @@ argument_list|(
 name|JOB
 argument_list|,
 operator|(
-literal|"Warning: process %d was not continuing.\n"
+literal|"Warning: process %d was not "
+literal|"continuing.\n"
 operator|,
 name|job
 operator|->
@@ -2577,7 +2577,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
-comment|/* 		 * We don't really want to restart a job from scratch just 		 * because it continued, especially not without killing the 		 * continuing process!  That's why this is ifdef'ed out. 		 * FD - 9/17/90 		 */
+comment|/* 				 * We don't really want to restart a job from 				 * scratch just because it continued, especially 				 * not without killing the continuing process! 				 *  That's why this is ifdef'ed out. 				 * FD - 9/17/90 				 */
 name|JobRestart
 argument_list|(
 name|job
@@ -2695,7 +2695,7 @@ name|out
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Now handle the -B-mode stuff. If the beast still isn't finished,      * try and restart the job on the next command. If JobStart says it's      * ok, it's ok. If there's an error, this puppy is done.      */
+comment|/* 	 * Now handle the -B-mode stuff. If the beast still isn't finished, 	 * try and restart the job on the next command. If JobStart says it's 	 * ok, it's ok. If there's an error, this puppy is done. 	 */
 if|if
 condition|(
 name|compatMake
@@ -2762,7 +2762,7 @@ break|break;
 case|case
 name|JOB_FINISHED
 case|:
-comment|/* 	     * If we got back a JOB_FINISHED code, JobStart has already 	     * called Make_Update and freed the job descriptor. We set 	     * done to false here to avoid fake cycles and double frees. 	     * JobStart needs to do the update so we can proceed up the 	     * graph when given the -n flag.. 	     */
+comment|/* 			 * If we got back a JOB_FINISHED code, JobStart has 			 * already called Make_Update and freed the job 			 * descriptor. We set done to false here to avoid fake 			 * cycles and double frees. JobStart needs to do the 			 * update so we can proceed up the graph when given 			 * the -n flag.. 			 */
 name|done
 operator|=
 name|FALSE
@@ -2803,7 +2803,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 	 * As long as we aren't aborting and the job didn't return a non-zero 	 * status that we shouldn't ignore, we call Make_Update to update 	 * the parents. In addition, any saved commands for the node are placed 	 * on the .END target. 	 */
+comment|/* 		 * As long as we aren't aborting and the job didn't return a 		 * non-zero status that we shouldn't ignore, we call 		 * Make_Update to update the parents. In addition, any saved 		 * commands for the node are placed on the .END target. 		 */
 for|for
 control|(
 name|ln
@@ -2895,7 +2895,7 @@ block|}
 name|JobRestartJobs
 argument_list|()
 expr_stmt|;
-comment|/*      * Set aborting if any error.      */
+comment|/* 	 * Set aborting if any error. 	 */
 if|if
 condition|(
 name|errors
@@ -2910,7 +2910,7 @@ name|ABORT_INTERRUPT
 operator|)
 condition|)
 block|{
-comment|/* 	 * If we found any errors in this batch of children and the -k flag 	 * wasn't given, we set the aborting flag so no more jobs get 	 * started. 	 */
+comment|/* 		 * If we found any errors in this batch of children and the -k 		 * flag wasn't given, we set the aborting flag so no more jobs 		 * get started. 		 */
 name|aborting
 operator|=
 name|ABORT_ERROR
@@ -2927,17 +2927,19 @@ operator|&&
 name|Job_Empty
 argument_list|()
 condition|)
-comment|/* 	 * If we are aborting and the job table is now empty, we finish. 	 */
+block|{
+comment|/* 		 * If we are aborting and the job table is now empty, we finish. 		 */
 name|Finish
 argument_list|(
 name|errors
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_Touch --  *	Touch the given target. Called by JobStart when the -t flag was  *	given.  Prints messages unless told to be silent.  *  * Results:  *	None  *  * Side Effects:  *	The data modification of the file is changed. In addition, if the  *	file did not exist, it is created.  *-----------------------------------------------------------------------  */
+comment|/**  * Job_Touch  *	Touch the given target. Called by JobStart when the -t flag was  *	given.  Prints messages unless told to be silent.  *  * Side Effects:  *	The data modification of the file is changed. In addition, if the  *	file did not exist, it is created.  */
 end_comment
 
 begin_function
@@ -2978,7 +2980,7 @@ name|OP_OPTIONAL
 operator|)
 condition|)
 block|{
-comment|/* 	 * .JOIN, .USE, .ZEROTIME and .OPTIONAL targets are "virtual" targets 	 * and, as such, shouldn't really be created. 	 */
+comment|/* 		 * .JOIN, .USE, .ZEROTIME and .OPTIONAL targets are "virtual" 		 * targets and, as such, shouldn't really be created. 		 */
 return|return;
 block|}
 if|if
@@ -3106,7 +3108,7 @@ block|{
 name|char
 name|c
 decl_stmt|;
-comment|/* 		 * Read and write a byte to the file to change the 		 * modification time, then close the file. 		 */
+comment|/* 				 * Read and write a byte to the file to change 				 * the modification time, then close the file. 				 */
 if|if
 condition|(
 name|read
@@ -3179,7 +3181,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_CheckCommands --  *	Make sure the given node has all the commands it needs.  *  * Results:  *	TRUE if the commands list is/was ok.  *  * Side Effects:  *	The node will have commands from the .DEFAULT rule added to it  *	if it needs them.  *-----------------------------------------------------------------------  */
+comment|/**  * Job_CheckCommands  *	Make sure the given node has all the commands it needs.  *  * Results:  *	TRUE if the commands list is/was ok.  *  * Side Effects:  *	The node will have commands from the .DEFAULT rule added to it  *	if it needs them.  */
 end_comment
 
 begin_function
@@ -3232,7 +3234,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	 * No commands. Look for .DEFAULT rule from which we might infer 	 * commands 	 */
+comment|/* 		 * No commands. Look for .DEFAULT rule from which we might infer 		 * commands. 		 */
 if|if
 condition|(
 operator|(
@@ -3255,7 +3257,7 @@ name|char
 modifier|*
 name|p1
 decl_stmt|;
-comment|/* 	     * Make only looks for a .DEFAULT if the node was never the 	     * target of an operator, so that's what we do too. If 	     * a .DEFAULT was given, we substitute its commands for gn's 	     * commands and set the IMPSRC variable to be the target's name 	     * The DEFAULT node acts like a transformation rule, in that 	     * gn also inherits any attributes or sources attached to 	     * .DEFAULT itself. 	     */
+comment|/* 			 * Make only looks for a .DEFAULT if the node was 			 * never the target of an operator, so that's what we 			 * do too. If a .DEFAULT was given, we substitute its 			 * commands for gn's commands and set the IMPSRC 			 * variable to be the target's name The DEFAULT node 			 * acts like a transformation rule, in that gn also 			 * inherits any attributes or sources attached to 			 * .DEFAULT itself. 			 */
 name|Make_HandleUse
 argument_list|(
 name|DEFAULT
@@ -3297,7 +3299,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	     * The node wasn't the target of an operator we have no .DEFAULT 	     * rule to go on and the target doesn't already exist. There's 	     * nothing more we can do for this branch. If the -k flag wasn't 	     * given, we stop in our tracks, otherwise we just don't update 	     * this node's parents so they never get examined. 	     */
+comment|/* 			 * The node wasn't the target of an operator we have 			 * no .DEFAULT rule to go on and the target doesn't 			 * already exist. There's nothing more we can do for 			 * this branch. If the -k flag wasn't given, we stop 			 * in our tracks, otherwise we just don't update 			 * this node's parents so they never get examined. 			 */
 specifier|static
 specifier|const
 name|char
@@ -3424,7 +3426,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobExec --  *	Execute the shell for the given job. Called from JobStart and  *	JobRestart.  *  * Results:  *	None.  *  * Side Effects:  *	A shell is executed, outputs is altered and the Job structure added  *	to the job table.  *  *-----------------------------------------------------------------------  */
+comment|/**  * JobExec  *	Execute the shell for the given job. Called from JobStart and  *	JobRestart.  *  * Side Effects:  *	A shell is executed, outputs is altered and the Job structure added  *	to the job table.  */
 end_comment
 
 begin_function
@@ -3523,7 +3525,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Some jobs produce no output and it's disconcerting to have      * no feedback of their running (since they produce no output, the      * banner with their name in it never appears). This is an attempt to      * provide that feedback, even if nothing follows it.      */
+comment|/* 	 * Some jobs produce no output and it's disconcerting to have 	 * no feedback of their running (since they produce no output, the 	 * banner with their name in it never appears). This is an attempt to 	 * provide that feedback, even if nothing follows it. 	 */
 if|if
 condition|(
 operator|(
@@ -3606,7 +3608,7 @@ argument_list|(
 name|fifoFd
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Must duplicate the input stream down to the child's input and 	 * reset it to the beginning (again). Since the stream was marked 	 * close-on-exec, we must clear that bit in the new input. 	 */
+comment|/* 		 * Must duplicate the input stream down to the child's input and 		 * reset it to the beginning (again). Since the stream was 		 * marked close-on-exec, we must clear that bit in the new 		 * input. 		 */
 if|if
 condition|(
 name|dup2
@@ -3660,7 +3662,7 @@ condition|(
 name|usePipes
 condition|)
 block|{
-comment|/* 	     * Set up the child's output to be routed through the pipe 	     * we've created for it. 	     */
+comment|/* 			 * Set up the child's output to be routed through the 			 * pipe we've created for it. 			 */
 if|if
 condition|(
 name|dup2
@@ -3688,7 +3690,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	     * We're capturing output in a file, so we duplicate the 	     * descriptor to the temporary file into the standard 	     * output. 	     */
+comment|/* 			 * We're capturing output in a file, so we duplicate the 			 * descriptor to the temporary file into the standard 			 * output. 			 */
 if|if
 condition|(
 name|dup2
@@ -3714,7 +3716,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * The output channels are marked close on exec. This bit was 	 * duplicated by the dup2 (on some systems), so we have to clear 	 * it before routing the shell's error output to the same place as 	 * its standard output. 	 */
+comment|/* 		 * The output channels are marked close on exec. This bit was 		 * duplicated by the dup2 (on some systems), so we have to clear 		 * it before routing the shell's error output to the same place 		 * as its standard output. 		 */
 name|fcntl
 argument_list|(
 literal|1
@@ -3749,7 +3751,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_PGRP
-comment|/* 	 * We want to switch the child into a different process family so 	 * we can kill it and all its descendants in one fell swoop, 	 * by killing its process family, but not commit suicide. 	 */
+comment|/* 		 * We want to switch the child into a different process family 		 * so we can kill it and all its descendants in one fell swoop, 		 * by killing its process family, but not commit suicide. 		 */
 if|#
 directive|if
 name|defined
@@ -3820,7 +3822,7 @@ name|JOB_FIRST
 operator|)
 condition|)
 block|{
-comment|/* 	     * The first time a job is run for a node, we set the current 	     * position in the buffer to the beginning and mark another 	     * stream to watch in the outputs mask 	     */
+comment|/* 			 * The first time a job is run for a node, we set the 			 * current position in the buffer to the beginning and 			 * mark another stream to watch in the outputs mask. 			 */
 ifdef|#
 directive|ifdef
 name|USE_KQUEUE
@@ -3913,7 +3915,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* kevent() will fail if the job is already finished */
+comment|/* 				 * kevent() will fail if the job is already 				 * finished 				 */
 if|if
 condition|(
 name|errno
@@ -3985,7 +3987,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Now the job is actually running, add it to the table.      */
+comment|/* 	 * Now the job is actually running, add it to the table. 	 */
 name|nJobs
 operator|+=
 literal|1
@@ -4014,7 +4016,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobMakeArgv --  *	Create the argv needed to execute the shell for a given job.  *  *  * Results:  *  * Side Effects:  *  *-----------------------------------------------------------------------  */
+comment|/**  * JobMakeArgv  *	Create the argv needed to execute the shell for a given job.  */
 end_comment
 
 begin_function
@@ -4087,7 +4089,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 	 * At least one of the flags doesn't have a minus before it, so 	 * merge them together. Have to do this because the *(&(@*#*&#$# 	 * Bourne shell thinks its second argument is a file to source. 	 * Grrrr. Note the ten-character limitation on the combined arguments. 	 */
+comment|/* 		 * At least one of the flags doesn't have a minus before it, so 		 * merge them together. Have to do this because the *(&(@*#*&#$# 		 * Bourne shell thinks its second argument is a file to source. 		 * Grrrr. Note the ten-character limitation on the combined 		 * arguments. 		 */
 name|sprintf
 argument_list|(
 name|args
@@ -4235,7 +4237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobRestart --  *	Restart a job that stopped for some reason.  *  * Results:  *	None.  *  * Side Effects:  *	jobFull will be set if the job couldn't be run.  *  *-----------------------------------------------------------------------  */
+comment|/**  * JobRestart  *	Restart a job that stopped for some reason.  *  * Side Effects:  *	jobFull will be set if the job couldn't be run.  */
 end_comment
 
 begin_function
@@ -4257,7 +4259,7 @@ operator|&
 name|JOB_RESTART
 condition|)
 block|{
-comment|/* 	 * Set up the control arguments to the shell. This is based on the 	 * flags set earlier for this job. If the JOB_IGNERR flag is clear, 	 * the 'exit' flag of the commandShell is used to cause it to exit 	 * upon receiving an error. If the JOB_SILENT flag is clear, the 	 * 'echo' flag of the commandShell is used to get it to start echoing 	 * as soon as it starts processing commands. 	 */
+comment|/* 		 * Set up the control arguments to the shell. This is based on 		 * the flags set earlier for this job. If the JOB_IGNERR flag 		 * is clear, the 'exit' flag of the commandShell is used to 		 * cause it to exit upon receiving an error. If the JOB_SILENT 		 * flag is clear, the 'echo' flag of the commandShell is used 		 * to get it to start echoing as soon as it starts 		 * processing commands. 		 */
 name|char
 modifier|*
 name|argv
@@ -4307,7 +4309,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 	     * Can't be exported and not allowed to run locally -- put it 	     * back on the hold queue and mark the table full 	     */
+comment|/* 			 * Can't be exported and not allowed to run locally -- 			 * put it back on the hold queue and mark the table full 			 */
 name|DEBUGF
 argument_list|(
 name|JOB
@@ -4346,7 +4348,7 @@ return|return;
 block|}
 else|else
 block|{
-comment|/* 	     * Job may be run locally. 	     */
+comment|/* 			 * Job may be run locally. 			 */
 name|DEBUGF
 argument_list|(
 name|JOB
@@ -4367,7 +4369,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * The job has stopped and needs to be restarted. Why it stopped, 	 * we don't know... 	 */
+comment|/* 		 * The job has stopped and needs to be restarted. 		 * Why it stopped, we don't know... 		 */
 name|DEBUGF
 argument_list|(
 name|JOB
@@ -4416,7 +4418,7 @@ name|maxJobs
 operator|)
 condition|)
 block|{
-comment|/* 	     * If we haven't reached the concurrency limit already (or the 	     * job must be run and maxJobs is 0), it's ok to resume it. 	     */
+comment|/* 			 * If we haven't reached the concurrency limit already 			 * (or the job must be run and maxJobs is 0), it's ok 			 * to resume it. 			 */
 name|Boolean
 name|error
 decl_stmt|;
@@ -4444,7 +4446,7 @@ operator|!
 name|error
 condition|)
 block|{
-comment|/* 		 * Make sure the user knows we've continued the beast and 		 * actually put the thing in the job table. 		 */
+comment|/* 				 * Make sure the user knows we've continued 				 * the beast and actually put the thing in the 				 * job table. 				 */
 name|job
 operator|->
 name|flags
@@ -4534,7 +4536,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	     * Job cannot be restarted. Mark the table as full and 	     * place the job back on the list of stopped jobs. 	     */
+comment|/* 			* Job cannot be restarted. Mark the table as full and 			* place the job back on the list of stopped jobs. 			*/
 name|DEBUGF
 argument_list|(
 name|JOB
@@ -4575,7 +4577,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobStart  --  *	Start a target-creation process going for the target described  *	by the graph node gn.  *  * Results:  *	JOB_ERROR if there was an error in the commands, JOB_FINISHED  *	if there isn't actually anything left to do for the job and  *	JOB_RUNNING if the job has been started.  *  * Side Effects:  *	A new Job node is created and added to the list of running  *	jobs. PMake is forked and a child shell created.  *-----------------------------------------------------------------------  */
+comment|/**  * JobStart  *	Start a target-creation process going for the target described  *	by the graph node gn.  *  * Results:  *	JOB_ERROR if there was an error in the commands, JOB_FINISHED  *	if there isn't actually anything left to do for the job and  *	JOB_RUNNING if the job has been started.  *  * Side Effects:  *	A new Job node is created and added to the list of running  *	jobs. PMake is forked and a child shell created.  */
 end_comment
 
 begin_function
@@ -4694,7 +4696,7 @@ name|tailCmds
 operator|=
 name|NULL
 expr_stmt|;
-comment|/*      * Set the initial value of the flags for this job based on the global      * ones and the node's attributes... Any flags supplied by the caller      * are also added to the field.      */
+comment|/* 	 * Set the initial value of the flags for this job based on the global 	 * ones and the node's attributes... Any flags supplied by the caller 	 * are also added to the field. 	 */
 name|job
 operator|->
 name|flags
@@ -4737,7 +4739,7 @@ name|flags
 operator||=
 name|flags
 expr_stmt|;
-comment|/*      * Check the commands now so any attributes from .DEFAULT have a chance      * to migrate to the node      */
+comment|/* 	 * Check the commands now so any attributes from .DEFAULT have a chance 	 * to migrate to the node. 	 */
 if|if
 condition|(
 operator|!
@@ -4767,7 +4769,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-comment|/*      * If the -n flag wasn't given, we open up OUR (not the child's)      * temporary file to stuff commands in it. The thing is rd/wr so we don't      * need to reopen it to feed it to the shell. If the -n flag *was* given,      * we just set the file to be stdout. Cute, huh?      */
+comment|/* 	 * If the -n flag wasn't given, we open up OUR (not the child's) 	 * temporary file to stuff commands in it. The thing is rd/wr so we 	 * don't need to reopen it to feed it to the shell. If the -n flag 	 * *was* given, we just set the file to be stdout. Cute, huh? 	 */
 if|if
 condition|(
 operator|(
@@ -4787,7 +4789,7 @@ name|touchFlag
 operator|)
 condition|)
 block|{
-comment|/* 	 * We're serious here, but if the commands were bogus, we're 	 * also dead... 	 */
+comment|/* 		 * We're serious here, but if the commands were bogus, we're 		 * also dead... 		 */
 if|if
 condition|(
 operator|!
@@ -4881,18 +4883,18 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Send the commands to the command file, flush all its buffers then 	 * rewind and remove the thing. 	 */
+comment|/* 		 * Send the commands to the command file, flush all its 		 * buffers then rewind and remove the thing. 		 */
 name|noExec
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* 	 * used to be backwards; replace when start doing multiple commands 	 * per shell. 	 */
+comment|/* 		 * Used to be backwards; replace when start doing multiple 		 * commands per shell. 		 */
 if|if
 condition|(
 name|compatMake
 condition|)
 block|{
-comment|/* 	     * Be compatible: If this is the first time for this node, 	     * verify its commands are ok and open the commands list for 	     * sequential access by later invocations of JobStart. 	     * Once that is done, we take the next command off the list 	     * and print it to the command file. If the command was an 	     * ellipsis, note that there's nothing more to execute. 	     */
+comment|/* 			 * Be compatible: If this is the first time for this 			 * node, verify its commands are ok and open the 			 * commands list for sequential access by later 			 * invocations of JobStart. Once that is done, we take 			 * the next command off the list and print it to the 			 * command file. If the command was an ellipsis, note 			 * that there's nothing more to execute. 			 */
 if|if
 condition|(
 name|job
@@ -4963,7 +4965,7 @@ name|JOB_FIRST
 operator|)
 condition|)
 block|{
-comment|/* 		 * If we're not going to execute anything, the job 		 * is done and we need to close down the various 		 * file descriptors we've opened for output, then 		 * call JobDoOutput to catch the final characters or 		 * send the file to the screen... Note that the i/o streams 		 * are only open if this isn't the first job. 		 * Note also that this could not be done in 		 * Job_CatchChildren b/c it wasn't clear if there were 		 * more commands to execute or not... 		 */
+comment|/* 				 * If we're not going to execute anything, the 				 * job is done and we need to close down the 				 * various file descriptors we've opened for 				 * output, then call JobDoOutput to catch the 				 * final characters or send the file to the 				 * screen... Note that the i/o streams are only 				 * open if this isn't the first job. Note also 				 * that this could not be done in 				 * Job_CatchChildren b/c it wasn't clear if 				 * there were more commands to execute or not... 				 */
 name|JobClose
 argument_list|(
 name|job
@@ -4973,7 +4975,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	     * We can do all the commands at once. hooray for sanity 	     */
+comment|/* 			 * We can do all the commands at once. hooray for sanity 			 */
 name|numCommands
 operator|=
 literal|0
@@ -4999,7 +5001,7 @@ argument_list|)
 condition|)
 break|break;
 block|}
-comment|/* 	     * If we didn't print out any commands to the shell script, 	     * there's not much point in executing the shell, is there? 	     */
+comment|/* 			 * If we didn't print out any commands to the shell 			 * script, there's not much point in executing the 			 * shell, is there? 			 */
 if|if
 condition|(
 name|numCommands
@@ -5020,7 +5022,7 @@ condition|(
 name|noExecute
 condition|)
 block|{
-comment|/* 	 * Not executing anything -- just print all the commands to stdout 	 * in one fell swoop. This will still set up job->tailCmds correctly. 	 */
+comment|/* 		 * Not executing anything -- just print all the commands to 		 * stdout in one fell swoop. This will still set up 		 * job->tailCmds correctly. 		 */
 if|if
 condition|(
 name|lastNode
@@ -5046,7 +5048,7 @@ name|cmdFILE
 operator|=
 name|stdout
 expr_stmt|;
-comment|/* 	 * Only print the commands if they're ok, but don't die if they're 	 * not -- just let the user know they're bad and keep going. It 	 * doesn't do any harm in this case and may do some good. 	 */
+comment|/* 		 * Only print the commands if they're ok, but don't die if 		 * they're not -- just let the user know they're bad and keep 		 * going. It doesn't do any harm in this case and may do 		 * some good. 		 */
 if|if
 condition|(
 name|cmdsOK
@@ -5074,7 +5076,7 @@ condition|)
 break|break;
 block|}
 block|}
-comment|/* 	 * Don't execute the shell, thank you. 	 */
+comment|/* 		* Don't execute the shell, thank you. 		*/
 name|noExec
 operator|=
 name|TRUE
@@ -5082,7 +5084,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * Just touch the target and note that no shell should be executed. 	 * Set cmdFILE to stdout to make life easier. Check the commands, too, 	 * but don't die if they're no good -- it does no harm to keep working 	 * up the graph. 	 */
+comment|/* 		 * Just touch the target and note that no shell should be 		 * executed. Set cmdFILE to stdout to make life easier. Check 		 * the commands, too, but don't die if they're no good -- it 		 * does no harm to keep working up the graph. 		 */
 name|job
 operator|->
 name|cmdFILE
@@ -5105,13 +5107,13 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-comment|/*      * If we're not supposed to execute a shell, don't.      */
+comment|/* 	 * If we're not supposed to execute a shell, don't. 	 */
 if|if
 condition|(
 name|noExec
 condition|)
 block|{
-comment|/* 	 * Unlink and close the command file if we opened one 	 */
+comment|/* 		 * Unlink and close the command file if we opened one 		 */
 if|if
 condition|(
 name|job
@@ -5145,7 +5147,7 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We only want to work our way up the graph if we aren't here because 	 * the commands for the job were no good. 	 */
+comment|/* 		 * We only want to work our way up the graph if we aren't here 		 * because the commands for the job were no good. 		*/
 if|if
 condition|(
 name|cmdsOK
@@ -5257,7 +5259,7 @@ name|cmdFILE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Set up the control arguments to the shell. This is based on the flags      * set earlier for this job.      */
+comment|/* 	 * Set up the control arguments to the shell. This is based on the flags 	 * set earlier for this job. 	 */
 name|JobMakeArgv
 argument_list|(
 name|job
@@ -5265,7 +5267,7 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/*      * If we're using pipes to catch output, create the pipe by which we'll      * get the shell's output. If we're using files, print out that we're      * starting a job and then set up its temporary-file name.      */
+comment|/* 	 * If we're using pipes to catch output, create the pipe by which we'll 	 * get the shell's output. If we're using files, print out that we're 	 * starting a job and then set up its temporary-file name. 	 */
 if|if
 condition|(
 operator|!
@@ -5444,7 +5446,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 	 * We've hit the limit of concurrency, so put the job on hold until 	 * some other job finishes. Note that the special jobs (.BEGIN, 	 * .INTERRUPT and .END) may be run even when the limit has been reached 	 * (e.g. when maxJobs == 0). 	 */
+comment|/* 		 * We've hit the limit of concurrency, so put the job on hold 		 * until some other job finishes. Note that the special jobs 		 * (.BEGIN, .INTERRUPT and .END) may be run even when the 		 * limit has been reached (e.g. when maxJobs == 0). 		 */
 name|jobFull
 operator|=
 name|TRUE
@@ -5482,7 +5484,7 @@ operator|>=
 name|maxJobs
 condition|)
 block|{
-comment|/* 	     * If we're running this job locally as a special case (see above), 	     * at least say the table is full. 	     */
+comment|/* 			 * If we're running this job locally as a special case 			 * (see above), at least say the table is full. 			 */
 name|jobFull
 operator|=
 name|TRUE
@@ -5603,7 +5605,7 @@ operator|->
 name|node
 expr_stmt|;
 block|}
-comment|/* 		 * The only way there wouldn't be a newline after 		 * this line is if it were the last in the buffer. 		 * however, since the non-printable comes after it, 		 * there must be a newline, so we don't print one. 		 */
+comment|/* 				 * The only way there wouldn't be a newline 				 * after this line is if it were the last in 				 * the buffer. However, since the non-printable 				 * comes after it, there must be a newline, so 				 * we don't print one. 				 */
 name|fprintf
 argument_list|(
 name|stdout
@@ -5634,7 +5636,7 @@ operator|!=
 name|endp
 condition|)
 block|{
-comment|/* 		 * Still more to print, look again after skipping 		 * the whitespace following the non-printable 		 * command.... 		 */
+comment|/* 				 * Still more to print, look again after 				 * skipping the whitespace following the 				 * non-printable command.... 				 */
 name|cp
 operator|++
 expr_stmt|;
@@ -5691,7 +5693,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobDoOutput  --  *	This function is called at different times depending on  *	whether the user has specified that output is to be collected  *	via pipes or temporary files. In the former case, we are called  *	whenever there is something to read on the pipe. We collect more  *	output from the given job and store it in the job's outBuf. If  *	this makes up a line, we print it tagged by the job's identifier,  *	as necessary.  *	If output has been collected in a temporary file, we open the  *	file and read it line by line, transfering it to our own  *	output channel until the file is empty. At which point we  *	remove the temporary file.  *	In both cases, however, we keep our figurative eye out for the  *	'noPrint' line for the shell from which the output came. If  *	we recognize a line, we don't print it. If the command is not  *	alone on the line (the character after it is not \0 or \n), we  *	do print whatever follows it.  *  * Results:  *	None  *  * Side Effects:  *	curPos may be shifted as may the contents of outBuf.  *-----------------------------------------------------------------------  */
+comment|/**  * JobDoOutput  *	This function is called at different times depending on  *	whether the user has specified that output is to be collected  *	via pipes or temporary files. In the former case, we are called  *	whenever there is something to read on the pipe. We collect more  *	output from the given job and store it in the job's outBuf. If  *	this makes up a line, we print it tagged by the job's identifier,  *	as necessary.  *	If output has been collected in a temporary file, we open the  *	file and read it line by line, transfering it to our own  *	output channel until the file is empty. At which point we  *	remove the temporary file.  *	In both cases, however, we keep our figurative eye out for the  *	'noPrint' line for the shell from which the output came. If  *	we recognize a line, we don't print it. If the command is not  *	alone on the line (the character after it is not \0 or \n), we  *	do print whatever follows it.  *  * Side Effects:  *	curPos may be shifted as may the contents of outBuf.  */
 end_comment
 
 begin_function
@@ -5749,7 +5751,7 @@ condition|(
 name|usePipes
 condition|)
 block|{
-comment|/* 	 * Read as many bytes as will fit in the buffer. 	 */
+comment|/* 		 * Read as many bytes as will fit in the buffer. 		 */
 name|end_loop
 label|:
 name|gotNL
@@ -5785,7 +5787,7 @@ operator|->
 name|curPos
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check for interrupt here too, because the above read may block 	 * when the child process is stopped. In this case the interrupt 	 * will unblock it (we don't use SA_RESTART). 	 */
+comment|/* 		 * Check for interrupt here too, because the above read may 		 * block when the child process is stopped. In this case the 		 * interrupt will unblock it (we don't use SA_RESTART). 		 */
 if|if
 condition|(
 name|interrupted
@@ -5823,7 +5825,7 @@ operator|=
 name|nRead
 expr_stmt|;
 block|}
-comment|/* 	 * If we hit the end-of-file (the job is dead), we must flush its 	 * remaining output, so pretend we read a newline if there's any 	 * output remaining in the buffer. 	 * Also clear the 'finish' flag so we stop looping. 	 */
+comment|/* 		 * If we hit the end-of-file (the job is dead), we must flush 		 * its remaining output, so pretend we read a newline if 		 * there's any output remaining in the buffer. 		 * Also clear the 'finish' flag so we stop looping. 		 */
 if|if
 condition|(
 operator|(
@@ -5874,7 +5876,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-comment|/* 	 * Look for the last newline in the bytes we just got. If there is 	 * one, break out of the loop with 'i' as its index and gotNL set 	 * TRUE. 	 */
+comment|/* 		 * Look for the last newline in the bytes we just got. If there 		 * is one, break out of the loop with 'i' as its index and 		 * gotNL set TRUE. 		*/
 name|max
 operator|=
 name|job
@@ -5936,7 +5938,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-comment|/* 		 * Why? 		 */
+comment|/* 				 * Why? 				 */
 name|job
 operator|->
 name|outBuf
@@ -5969,7 +5971,7 @@ operator|==
 name|JOB_BUFSIZE
 condition|)
 block|{
-comment|/* 		 * If we've run out of buffer space, we have no choice 		 * but to print the stuff. sigh. 		 */
+comment|/* 				 * If we've run out of buffer space, we have 				 * no choice but to print the stuff. sigh. 				 */
 name|fbuf
 operator|=
 name|TRUE
@@ -5989,7 +5991,7 @@ operator|||
 name|fbuf
 condition|)
 block|{
-comment|/* 	     * Need to send the output to the screen. Null terminate it 	     * first, overwriting the newline character if there was one. 	     * So long as the line isn't one we should filter (according 	     * to the shell description), we print the line, preceded 	     * by a target banner if this target isn't the same as the 	     * one for which we last printed something. 	     * The rest of the data in the buffer are then shifted down 	     * to the start of the buffer and curPos is set accordingly. 	     */
+comment|/* 			 * Need to send the output to the screen. Null terminate 			 * it first, overwriting the newline character if there 			 * was one. So long as the line isn't one we should 			 * filter (according to the shell description), we print 			 * the line, preceded by a target banner if this target 			 * isn't the same as the one for which we last printed 			 * something. The rest of the data in the buffer are 			 * then shifted down to the start of the buffer and 			 * curPos is set accordingly. 			 */
 name|job
 operator|->
 name|outBuf
@@ -6033,7 +6035,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* 		 * There's still more in that thar buffer. This time, though, 		 * we know there's no newline at the end, so we add one of 		 * our own free will. 		 */
+comment|/* 				 * There's still more in that buffer. This time, 				 * though, we know there's no newline at the 				 * end, so we add one of our own free will. 				 */
 if|if
 condition|(
 operator|*
@@ -6139,7 +6141,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * We have written everything out, so we just start over 		 * from the start of the buffer. No copying. No nothing. 		 */
+comment|/* 				 * We have written everything out, so we just 				 * start over from the start of the buffer. 				 * No copying. No nothing. 				 */
 name|job
 operator|->
 name|curPos
@@ -6153,7 +6155,7 @@ condition|(
 name|finish
 condition|)
 block|{
-comment|/* 	     * If the finish flag is true, we must loop until we hit 	     * end-of-file on the pipe. This is guaranteed to happen 	     * eventually since the other end of the pipe is now closed 	     * (we closed it explicitly and the child has exited). When 	     * we do get an EOF, finish will be set FALSE and we'll fall 	     * through and out. 	     */
+comment|/* 			 * If the finish flag is true, we must loop until we hit 			 * end-of-file on the pipe. This is guaranteed to happen 			 * eventually since the other end of the pipe is now 			 * closed (we closed it explicitly and the child has 			 * exited). When we do get an EOF, finish will be set 			 * FALSE and we'll fall through and out. 			 */
 goto|goto
 name|end_loop
 goto|;
@@ -6161,7 +6163,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	 * We've been called to retrieve the output of the job from the 	 * temporary file where it's been squirreled away. This consists of 	 * opening the file, reading the output line by line, being sure not 	 * to print the noPrint line for the shell we used, then close and 	 * remove the temporary file. Very simple. 	 * 	 * Change to read in blocks and do FindSubString type things as for 	 * pipes? That would allow for "@echo -n..." 	 */
+comment|/* 		 * We've been called to retrieve the output of the job from the 		 * temporary file where it's been squirreled away. This consists 		 * of opening the file, reading the output line by line, being 		 * sure not to print the noPrint line for the shell we used, 		 * then close and remove the temporary file. Very simple. 		 * 		 * Change to read in blocks and do FindSubString type things 		 * as for pipes? That would allow for "@echo -n..." 		 */
 name|oFILE
 operator|=
 name|fopen
@@ -6271,7 +6273,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* 		 * There's still more in that thar buffer. This time, though, 		 * we know there's no newline at the end, so we add one of 		 * our own free will. 		 */
+comment|/* 				 * There's still more in that buffer. This time, 				 * though, we know there's no newline at the 				 * end, so we add one of our own free will. 				 */
 name|fprintf
 argument_list|(
 name|stdout
@@ -6325,7 +6327,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_CatchChildren --  *	Handle the exit of a child. Called from Make_Make.  *  * Results:  *	none.  *  * Side Effects:  *	The job descriptor is removed from the list of children.  *  * Notes:  *	We do waits, blocking or not, according to the wisdom of our  *	caller, until there are no more children to report. For each  *	job, call JobFinish to finish things off. This will take care of  *	putting jobs on the stoppedJobs queue.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Job_CatchChildren  *	Handle the exit of a child. Called from Make_Make.  *  * Side Effects:  *	The job descriptor is removed from the list of children.  *  * Notes:  *	We do waits, blocking or not, according to the wisdom of our  *	caller, until there are no more children to report. For each  *	job, call JobFinish to finish things off. This will take care of  *	putting jobs on the stoppedJobs queue.  */
 end_comment
 
 begin_function
@@ -6354,7 +6356,7 @@ name|int
 name|status
 decl_stmt|;
 comment|/* Exit/termination status */
-comment|/*      * Don't even bother if we know there's no one around.      */
+comment|/* 	 * Don't even bother if we know there's no one around. 	 */
 if|if
 condition|(
 name|nJobs
@@ -6633,7 +6635,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_CatchOutput --  *	Catch the output from our children, if we're using  *	pipes do so. Otherwise just block time until we get a  *	signal(most likely a SIGCHLD) since there's no point in  *	just spinning when there's nothing to do and the reaping  *	of a child can wait for a while.  *  * Results:  *	None  *  * Side Effects:  *	Output is read from pipes if we're piping.  * -----------------------------------------------------------------------  */
+comment|/**  * Job_CatchOutput  *	Catch the output from our children, if we're using  *	pipes do so. Otherwise just block time until we get a  *	signal(most likely a SIGCHLD) since there's no point in  *	just spinning when there's nothing to do and the reaping  *	of a child can wait for a while.  *  * Side Effects:  *	Output is read from pipes if we're piping.  * -----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -6831,7 +6833,7 @@ break|break;
 case|case
 name|EVFILT_PROC
 case|:
-comment|/* Just wake up and let Job_CatchChildren() collect the 		     * terminated job. */
+comment|/* 					 * Just wake up and let 					 * Job_CatchChildren() collect the 					 * terminated job. 					 */
 break|break;
 block|}
 block|}
@@ -7006,7 +7008,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_Make --  *	Start the creation of a target. Basically a front-end for  *	JobStart used by the Make module.  *  * Results:  *	None.  *  * Side Effects:  *	Another job is started.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Job_Make  *	Start the creation of a target. Basically a front-end for  *	JobStart used by the Make module.  *  * Side Effects:  *	Another job is started.  */
 end_comment
 
 begin_function
@@ -7031,7 +7033,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * JobCopyShell:  *  * Make a new copy of the shell structure including a copy of the strings  * in it. This also defaults some fields in case they are NULL.  *  * The function returns a pointer to the new shell structure otherwise.  */
+comment|/**  * JobCopyShell  *	Make a new copy of the shell structure including a copy of the strings  *	in it. This also defaults some fields in case they are NULL.  *  * Returns:  *	The function returns a pointer to the new shell structure.  */
 end_comment
 
 begin_function
@@ -7299,7 +7301,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * JobFreeShell:  *  * Free a shell structure and all associated strings.  */
+comment|/**  * JobFreeShell  *	Free a shell structure and all associated strings.  */
 end_comment
 
 begin_function
@@ -7416,7 +7418,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * The user didn't specify a shell to use, so we are using the 	 * default one... Both the absolute path and the last component 	 * must be set. The last component is taken from the 'name' field 	 * of the default shell description pointed-to by commandShell. 	 * All default shells are located in PATH_DEFSHELLDIR. 	 */
+comment|/* 		 * The user didn't specify a shell to use, so we are using the 		 * default one... Both the absolute path and the last component 		 * must be set. The last component is taken from the 'name' 		 * field of the default shell description pointed-to by 		 * commandShell. All default shells are located in 		 * PATH_DEFSHELLDIR. 		 */
 name|shellName
 operator|=
 name|commandShell
@@ -7439,7 +7441,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_Init --  *	Initialize the process module, given a maximum number of jobs.  *  * Results:  *	none  *  * Side Effects:  *	lists and counters are initialized  *-----------------------------------------------------------------------  */
+comment|/**  * Job_Init  *	Initialize the process module, given a maximum number of jobs.  *  * Side Effects:  *	lists and counters are initialized  */
 end_comment
 
 begin_function
@@ -7487,7 +7489,7 @@ operator|>
 literal|1
 condition|)
 block|{
-comment|/* 	 * We did not find the environment variable so we are the leader. 	 * Create the fifo, open it, write one char per allowed job into 	 * the pipe. 	 */
+comment|/* 		 * We did not find the environment variable so we are the 		 * leader. Create the fifo, open it, write one char per 		 * allowed job into the pipe. 		 */
 name|mktemp
 argument_list|(
 name|fifoName
@@ -7600,7 +7602,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 	 * We had the environment variable so we are a slave. 	 * Open fifo and give ourselves a magic token which represents 	 * the token our parent make has grabbed to start his make process. 	 * Otherwise the sub-makes would gobble up tokens and the proper 	 * number of tokens to specify to -j would depend on the depth of 	 * the tree and the order of execution. 	 */
+comment|/* 		 * We had the environment variable so we are a slave. 		 * Open fifo and give ourselves a magic token which represents 		 * the token our parent make has grabbed to start his make 		 * process. Otherwise the sub-makes would gobble up tokens and 		 * the proper number of tokens to specify to -j would depend 		 * on the depth of the tree and the order of execution. 		 */
 name|fifoFd
 operator|=
 name|open
@@ -7655,7 +7657,7 @@ name|FALSE
 expr_stmt|;
 block|}
 else|else
-block|{     }
+block|{ 	}
 name|nJobs
 operator|=
 literal|0
@@ -7689,7 +7691,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	 * If only one job can run at a time, there's no need for a banner, 	 * no is there? 	 */
+comment|/* 		 * If only one job can run at a time, there's no need for a 		 * banner, no is there? 		 */
 name|targFmt
 operator|=
 literal|""
@@ -7705,7 +7707,7 @@ block|}
 name|Shell_Init
 argument_list|()
 expr_stmt|;
-comment|/*      * Catch the four signals that POSIX specifies if they aren't ignored.      * JobCatchSignal will just set global variables and hope someone      * else is going to handle the interrupt.      */
+comment|/* 	 * Catch the four signals that POSIX specifies if they aren't ignored. 	 * JobCatchSignal will just set global variables and hope someone 	 * else is going to handle the interrupt. 	 */
 name|sa
 operator|.
 name|sa_handler
@@ -7818,7 +7820,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * There are additional signals that need to be caught and passed if      * either the export system wants to be told directly of signals or if      * we're giving each job its own process group (since then it won't get      * signals from the terminal driver as we own the terminal)      */
+comment|/* 	 * There are additional signals that need to be caught and passed if 	 * either the export system wants to be told directly of signals or if 	 * we're giving each job its own process group (since then it won't get 	 * signals from the terminal driver as we own the terminal) 	 */
 if|#
 directive|if
 name|defined
@@ -8008,7 +8010,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_Full --  *	See if the job table is full. It is considered full if it is OR  *	if we are in the process of aborting OR if we have  *	reached/exceeded our local quota. This prevents any more jobs  *	from starting up.  *  * Results:  *	TRUE if the job table is full, FALSE otherwise  * Side Effects:  *	None.  *-----------------------------------------------------------------------  */
+comment|/**  * Job_Full  *	See if the job table is full. It is considered full if it is OR  *	if we are in the process of aborting OR if we have  *	reached/exceeded our local quota. This prevents any more jobs  *	from starting up.  *  * Results:  *	TRUE if the job table is full, FALSE otherwise  */
 end_comment
 
 begin_function
@@ -8079,7 +8081,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_Empty --  *	See if the job table is empty.  Because the local concurrency may  *	be set to 0, it is possible for the job table to become empty,  *	while the list of stoppedJobs remains non-empty. In such a case,  *	we want to restart as many jobs as we can.  *  * Results:  *	TRUE if it is. FALSE if it ain't.  *  * Side Effects:  *	None.  *  * -----------------------------------------------------------------------  */
+comment|/**  * Job_Empty  *	See if the job table is empty.  Because the local concurrency may  *	be set to 0, it is possible for the job table to become empty,  *	while the list of stoppedJobs remains non-empty. In such a case,  *	we want to restart as many jobs as we can.  *  * Results:  *	TRUE if it is. FALSE if it ain't.  */
 end_comment
 
 begin_function
@@ -8109,7 +8111,7 @@ operator|!
 name|aborting
 condition|)
 block|{
-comment|/* 	     * The job table is obviously not full if it has no jobs in 	     * it...Try and restart the stopped jobs. 	     */
+comment|/* 			 * The job table is obviously not full if it has no 			 * jobs in it...Try and restart the stopped jobs. 			 */
 name|jobFull
 operator|=
 name|FALSE
@@ -8144,7 +8146,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobMatchShell --  *	Find a matching shell in 'shells' given its final component.  *  * Results:  *	A pointer to a freshly allocated Shell structure with a copy  *	of the static structure or NULL if no shell with the given name  *	is found.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/**  * JobMatchShell  *	Find a matching shell in 'shells' given its final component.  *  * Results:  *	A pointer to a freshly allocated Shell structure with a copy  *	of the static structure or NULL if no shell with the given name  *	is found.  */
 end_comment
 
 begin_function
@@ -8368,7 +8370,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_ParseShell --  *	Parse a shell specification and set up commandShell, shellPath  *	and shellName appropriately.  *  * Results:  *	FAILURE if the specification was incorrect.  *  * Side Effects:  *	commandShell points to a Shell structure (either predefined or  *	created from the shell spec), shellPath is the full path of the  *	shell described by commandShell, while shellName is just the  *	final component of shellPath.  *  * Notes:  *	A shell specification consists of a .SHELL target, with dependency  *	operator, followed by a series of blank-separated words. Double  *	quotes can be used to use blanks in words. A backslash escapes  *	anything (most notably a double-quote and a space) and  *	provides the functionality it does in C. Each word consists of  *	keyword and value separated by an equal sign. There should be no  *	unnecessary spaces in the word. The keywords are as follows:  *	    name  	    Name of shell.  *	    path  	    Location of shell. Overrides "name" if given  *	    quiet 	    Command to turn off echoing.  *	    echo  	    Command to turn echoing on  *	    filter	    Result of turning off echoing that shouldn't be  *	    	  	    printed.  *	    echoFlag	    Flag to turn echoing on at the start  *	    errFlag	    Flag to turn error checking on at the start  *	    hasErrCtl	    True if shell has error checking control  *	    check 	    Command to turn on error checking if hasErrCtl  *	    	  	    is TRUE or template of command to echo a command  *	    	  	    for which error checking is off if hasErrCtl is  *	    	  	    FALSE.  *	    ignore	    Command to turn off error checking if hasErrCtl  *	    	  	    is TRUE or template of command to execute a  *	    	  	    command so as to ignore any errors it returns if  *	    	  	    hasErrCtl is FALSE.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Job_ParseShell  *	Parse a shell specification and set up commandShell, shellPath  *	and shellName appropriately.  *  * Results:  *	FAILURE if the specification was incorrect.  *  * Side Effects:  *	commandShell points to a Shell structure (either predefined or  *	created from the shell spec), shellPath is the full path of the  *	shell described by commandShell, while shellName is just the  *	final component of shellPath.  *  * Notes:  *	A shell specification consists of a .SHELL target, with dependency  *	operator, followed by a series of blank-separated words. Double  *	quotes can be used to use blanks in words. A backslash escapes  *	anything (most notably a double-quote and a space) and  *	provides the functionality it does in C. Each word consists of  *	keyword and value separated by an equal sign. There should be no  *	unnecessary spaces in the word. The keywords are as follows:  *	    name  	    Name of shell.  *	    path  	    Location of shell. Overrides "name" if given  *	    quiet 	    Command to turn off echoing.  *	    echo  	    Command to turn echoing on  *	    filter	    Result of turning off echoing that shouldn't be  *	    	  	    printed.  *	    echoFlag	    Flag to turn echoing on at the start  *	    errFlag	    Flag to turn error checking on at the start  *	    hasErrCtl	    True if shell has error checking control  *	    check 	    Command to turn on error checking if hasErrCtl  *	    	  	    is TRUE or template of command to echo a command  *	    	  	    for which error checking is off if hasErrCtl is  *	    	  	    FALSE.  *	    ignore	    Command to turn off error checking if hasErrCtl  *	    	  	    is TRUE or template of command to execute a  *	    	  	    command so as to ignore any errors it returns if  *	    	  	    hasErrCtl is FALSE.  */
 end_comment
 
 begin_function
@@ -8454,7 +8456,7 @@ name|newShell
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Parse the specification by keyword      */
+comment|/* 	 * Parse the specification by keyword 	 */
 for|for
 control|(
 name|path
@@ -8846,7 +8848,7 @@ name|TRUE
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Some checks (could be more)      */
+comment|/* 	 * Some checks (could be more) 	 */
 if|if
 condition|(
 name|fullSpec
@@ -8874,8 +8876,8 @@ name|Parse_Error
 argument_list|(
 name|PARSE_FATAL
 argument_list|,
-literal|"Shell must have either both echoOff and "
-literal|"echoOn or none of them"
+literal|"Shell must have either both "
+literal|"echoOff and echoOn or none of them"
 argument_list|)
 expr_stmt|;
 if|if
@@ -8904,7 +8906,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * If no path was given, the user wants one of the pre-defined shells, 	 * yes? So we find the one s/he wants with the help of JobMatchShell 	 * and set things up the right way. shellPath will be set up by 	 * Job_Init. 	 */
+comment|/* 		 * If no path was given, the user wants one of the pre-defined 		 * shells, yes? So we find the one s/he wants with the help of 		 * JobMatchShell and set things up the right way. shellPath 		 * will be set up by Job_Init. 		 */
 if|if
 condition|(
 name|newShell
@@ -8963,7 +8965,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	 * The user provided a path. If s/he gave nothing else (fullSpec is 	 * FALSE), try and find a matching shell in the ones we know of. 	 * Else we just take the specification at its word and copy it 	 * to a new location. In either case, we need to record the 	 * path the user gave for the shell. 	 */
+comment|/* 		 * The user provided a path. If s/he gave nothing else 		 * (fullSpec is FALSE), try and find a matching shell in the 		 * ones we know of. Else we just take the specification at its 		 * word and copy it to a new location. In either case, we need 		 * to record the path the user gave for the shell. 		 */
 name|free
 argument_list|(
 name|shellPath
@@ -9098,7 +9100,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobInterrupt --  *	Handle the receipt of an interrupt.  *  * Results:  *	None  *  * Side Effects:  *	All children are killed. Another job will be started if the  *	.INTERRUPT target was given.  *-----------------------------------------------------------------------  */
+comment|/**  * JobInterrupt  *	Handle the receipt of an interrupt.  *  * Side Effects:  *	All children are killed. Another job will be started if the  *	.INTERRUPT target was given.  */
 end_comment
 
 begin_function
@@ -9233,7 +9235,8 @@ argument_list|(
 name|JOB
 argument_list|,
 operator|(
-literal|"JobInterrupt passing signal to child %d.\n"
+literal|"JobInterrupt passing signal to child "
+literal|"%d.\n"
 operator|,
 name|job
 operator|->
@@ -9260,7 +9263,7 @@ operator|!
 name|touchFlag
 condition|)
 block|{
-comment|/* clear the interrupted flag because we would get an 	 * infinite loop otherwise */
+comment|/* 		 * clear the interrupted flag because we would get an 		 * infinite loop otherwise. 		 */
 name|interrupted
 operator|=
 literal|0
@@ -9321,7 +9324,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *-----------------------------------------------------------------------  * Job_Finish --  *	Do final processing such as the running of the commands  *	attached to the .END target.  *  * Results:  *	Number of errors reported.  *-----------------------------------------------------------------------  */
+comment|/**  * Job_Finish  *	Do final processing such as the running of the commands  *	attached to the .END target.  *  * Results:  *	Number of errors reported.  */
 end_comment
 
 begin_function
@@ -9426,7 +9429,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_Wait --  *	Waits for all running jobs to finish and returns. Sets 'aborting'  *	to ABORT_WAIT to prevent other jobs from starting.  *  * Results:  *	None.  *  * Side Effects:  *	Currently running jobs finish.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Job_Wait  *	Waits for all running jobs to finish and returns. Sets 'aborting'  *	to ABORT_WAIT to prevent other jobs from starting.  *  * Side Effects:  *	Currently running jobs finish.  */
 end_comment
 
 begin_function
@@ -9467,7 +9470,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_AbortAll --  *	Abort all currently running jobs without handling output or anything.  *	This function is to be called only in the event of a major  *	error. Most definitely NOT to be called from JobInterrupt.  *  * Results:  *	None  *  * Side Effects:  *	All children are killed, not just the firstborn  *-----------------------------------------------------------------------  */
+comment|/**  * Job_AbortAll  *	Abort all currently running jobs without handling output or anything.  *	This function is to be called only in the event of a major  *	error. Most definitely NOT to be called from JobInterrupt.  *  * Side Effects:  *	All children are killed, not just the firstborn  */
 end_comment
 
 begin_function
@@ -9528,7 +9531,7 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
-comment|/* 	     * kill the child process with increasingly drastic signals to make 	     * darn sure it's dead. 	     */
+comment|/* 			 * kill the child process with increasingly drastic 			 * signals to make darn sure it's dead. 			 */
 name|KILL
 argument_list|(
 name|job
@@ -9549,7 +9552,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Catch as many children as want to report in at first, then give up      */
+comment|/* 	 * Catch as many children as want to report in at first, then give up 	 */
 while|while
 condition|(
 name|waitpid
@@ -9573,7 +9576,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobRestartJobs --  *	Tries to restart stopped jobs if there are slots available.  *	Note that this tries to restart them regardless of pending errors.  *	It's not good to leave stopped jobs lying around!  *  * Results:  *	None.  *  * Side Effects:  *	Resumes(and possibly migrates) jobs.  *  *-----------------------------------------------------------------------  */
+comment|/**  * JobRestartJobs  *	Tries to restart stopped jobs if there are slots available.  *	Note that this tries to restart them regardless of pending errors.  *	It's not good to leave stopped jobs lying around!  *  * Side Effects:  *	Resumes(and possibly migrates) jobs.  */
 end_comment
 
 begin_function
@@ -9602,7 +9605,8 @@ argument_list|(
 name|JOB
 argument_list|,
 operator|(
-literal|"Job queue is not full. Restarting a stopped job.\n"
+literal|"Job queue is not full. "
+literal|"Restarting a stopped job.\n"
 operator|)
 argument_list|)
 expr_stmt|;
