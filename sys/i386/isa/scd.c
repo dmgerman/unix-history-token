@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.18 1996/03/28 14:28:50 scrappy Exp $ */
+comment|/* $Id: scd.c,v 1.19 1996/05/03 14:57:25 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1311,6 +1311,14 @@ operator|->
 name|audio_status
 operator|=
 name|CD_AS_AUDIO_INVALID
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|cd
+operator|->
+name|head
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef

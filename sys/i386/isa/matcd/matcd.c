@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.15 1996/03/28 14:29:52 scrappy Exp $ */
+comment|/* $Id: matcd.c,v 1.16 1996/05/03 14:58:09 phk Exp $ */
 end_comment
 
 begin_comment
@@ -5090,6 +5090,15 @@ argument_list|,
 name|nextcontroller
 argument_list|,
 name|iftype
+argument_list|)
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|request_head
+index|[
+name|nextcontroller
+index|]
 argument_list|)
 expr_stmt|;
 for|for
