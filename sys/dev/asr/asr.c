@@ -2371,6 +2371,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ASR_VERY_BROKEN
+end_ifdef
+
 begin_comment
 comment|/*  * Initialize the dynamic cdevsw hooks.  */
 end_comment
@@ -2521,12 +2527,6 @@ end_comment
 begin_comment
 comment|/* Must initialize before CAM layer picks up our HBA driver */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ASR_VERY_BROKEN
-end_ifdef
 
 begin_macro
 name|SYSINIT
