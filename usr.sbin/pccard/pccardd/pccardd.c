@@ -744,6 +744,11 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|probeonly
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|delay
 init|=
 literal|0
@@ -769,7 +774,7 @@ decl_stmt|;
 define|#
 directive|define
 name|COM_OPTS
-value|":Idvf:s:i:z"
+value|":Idf:i:s:vxz"
 name|bzero
 argument_list|(
 name|irq_arg
@@ -1044,6 +1049,9 @@ name|dodebug
 operator|&&
 operator|!
 name|delay
+operator|&&
+operator|!
+name|probeonly
 condition|)
 if|if
 condition|(
@@ -1073,6 +1081,15 @@ condition|)
 name|die
 argument_list|(
 literal|"no PC-CARD slots"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|probeonly
+condition|)
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
