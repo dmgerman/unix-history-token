@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys.c	4.3	%G%	*/
+comment|/*	sys.c	4.4	81/03/22	*/
 end_comment
 
 begin_include
@@ -1866,6 +1866,14 @@ return|;
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|openfirst
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|open
 argument_list|(
@@ -1913,18 +1921,13 @@ decl_stmt|;
 name|int
 name|fdesc
 decl_stmt|;
-specifier|static
-name|first
-operator|=
-literal|1
-expr_stmt|;
 name|long
 name|atol
 parameter_list|()
 function_decl|;
 if|if
 condition|(
-name|first
+name|openfirst
 condition|)
 block|{
 for|for
@@ -1949,7 +1952,7 @@ name|i_flgs
 operator|=
 literal|0
 expr_stmt|;
-name|first
+name|openfirst
 operator|=
 literal|0
 expr_stmt|;

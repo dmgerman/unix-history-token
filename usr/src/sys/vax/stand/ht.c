@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.4	81/03/16	*/
+comment|/*	ht.c	4.5	81/03/22	*/
 end_comment
 
 begin_comment
@@ -49,6 +49,35 @@ directive|include
 file|"savax.h"
 end_include
 
+begin_decl_stmt
+name|short
+name|httypes
+index|[]
+init|=
+block|{
+name|MBDT_TM03
+block|,
+name|MBDT_TE16
+block|,
+name|MBDT_TU45
+block|,
+name|MBDT_TU77
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MASKREG
+parameter_list|(
+name|reg
+parameter_list|)
+value|((reg)&0xffff)
+end_define
+
 begin_expr_stmt
 name|htopen
 argument_list|(
@@ -89,6 +118,45 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|httypes
+index|[
+name|i
+index|]
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|httypes
+index|[
+name|i
+index|]
+operator|==
+operator|(
+name|htaddr
+operator|->
+name|htdt
+operator|&
+name|MBDT_TYPE
+operator|)
+condition|)
+goto|goto
+name|found
+goto|;
+name|_stop
+argument_list|(
+literal|"not a tape\n"
+argument_list|)
+expr_stmt|;
+name|found
+label|:
 name|mbainit
 argument_list|(
 name|UNITTOMBA
@@ -255,6 +323,14 @@ argument_list|)
 expr_stmt|;
 name|htaddr
 operator|->
+name|htcs1
+operator|=
+name|HT_DCLR
+operator||
+name|HT_GO
+expr_stmt|;
+name|htaddr
+operator|->
 name|httc
 operator|=
 name|den
@@ -361,23 +437,27 @@ operator|&
 name|HTDS_ERR
 condition|)
 block|{
-if|if
-condition|(
-name|errcnt
-operator|==
-literal|0
-condition|)
 name|printf
 argument_list|(
-literal|"tape error: ds=%x, er=%x"
+literal|"ht error: ds=%b, er=%b\n"
 argument_list|,
+name|MASKREG
+argument_list|(
 name|htaddr
 operator|->
 name|htds
+argument_list|)
 argument_list|,
+name|HTDS_BITS
+argument_list|,
+name|MASKREG
+argument_list|(
 name|htaddr
 operator|->
 name|hter
+argument_list|)
+argument_list|,
+name|HTER_BITS
 argument_list|)
 expr_stmt|;
 name|htaddr
@@ -397,7 +477,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n"
+literal|"ht: unrecovered error\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -427,7 +507,7 @@ name|errcnt
 condition|)
 name|printf
 argument_list|(
-literal|" recovered by retry\n"
+literal|"ht: recovered by retry\n"
 argument_list|)
 expr_stmt|;
 name|fc

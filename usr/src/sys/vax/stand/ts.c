@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.2	81/03/21	*/
+comment|/*	ts.c	4.3	81/03/22	*/
 end_comment
 
 begin_comment
@@ -642,19 +642,23 @@ operator|&
 name|TS_SC
 condition|)
 block|{
-if|if
-condition|(
-name|errcnt
-operator|==
-literal|0
-condition|)
 name|printf
 argument_list|(
-literal|"ts tape error: er=%o"
+literal|"ts tape error: er=%b, xs0=%b"
 argument_list|,
 name|tsaddr
 operator|->
 name|tssr
+argument_list|,
+name|TSSR_BITS
+argument_list|,
+name|ts
+operator|.
+name|ts_sts
+operator|.
+name|s_xs0
+argument_list|,
+name|TSXS0_BITS
 argument_list|)
 expr_stmt|;
 if|if
@@ -666,7 +670,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n"
+literal|"ts: unrecovered error\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -706,7 +710,7 @@ name|errcnt
 condition|)
 name|printf
 argument_list|(
-literal|" recovered by retry\n"
+literal|"ts: recovered by retry\n"
 argument_list|)
 expr_stmt|;
 end_if

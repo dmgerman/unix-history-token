@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.2	81/03/15	*/
+comment|/*	rk.c	4.3	81/03/22	*/
 end_comment
 
 begin_comment
@@ -104,6 +104,29 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|rkdevice
+modifier|*
+name|rkaddr
+init|=
+operator|(
+expr|struct
+name|rkdevice
+operator|*
+operator|)
+name|ubamem
+argument_list|(
+name|io
+operator|->
+name|i_unit
+argument_list|,
+name|rkstd
+index|[
+literal|0
+index|]
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|rk_off
@@ -147,6 +170,17 @@ operator|*
 name|NRKSECT
 operator|*
 name|NRKTRK
+expr_stmt|;
+name|rkaddr
+operator|->
+name|rkcs2
+operator|=
+name|RKCS2_SCLR
+expr_stmt|;
+name|rkwait
+argument_list|(
+name|rkaddr
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -208,7 +242,13 @@ name|tn
 decl_stmt|;
 name|int
 name|ubinfo
+decl_stmt|,
+name|errcnt
+init|=
+literal|0
 decl_stmt|;
+name|retry
+label|:
 name|ubinfo
 operator|=
 name|ubasetup
@@ -269,6 +309,21 @@ operator|=
 name|RK_CDT
 operator||
 name|RK_PACK
+operator||
+name|RK_GO
+expr_stmt|;
+name|rkwait
+argument_list|(
+name|rkaddr
+argument_list|)
+expr_stmt|;
+name|rkaddr
+operator|->
+name|rkcs1
+operator|=
+name|RK_CDT
+operator||
+name|RK_DCLR
 operator||
 name|RK_GO
 expr_stmt|;
@@ -363,7 +418,7 @@ name|rkaddr
 operator|->
 name|rkds
 operator|&
-name|RK_SVAL
+name|RKDS_SVAL
 operator|)
 operator|==
 literal|0
@@ -387,7 +442,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"rk error: cyl %d trk %d sec %d cs1 %o cs2 %o err %o\n"
+literal|"rk error: (cyl,trk,sec)=(%d,%d,%d) cs2=%b er=%b\n"
 argument_list|,
 name|cn
 argument_list|,
@@ -397,21 +452,23 @@ name|sn
 argument_list|,
 name|rkaddr
 operator|->
-name|rkcs1
-argument_list|,
-name|rkaddr
-operator|->
 name|rkcs2
+argument_list|,
+name|RKCS2_BITS
 argument_list|,
 name|rkaddr
 operator|->
 name|rker
+argument_list|,
+name|RKER_BITS
 argument_list|)
 expr_stmt|;
 name|rkaddr
 operator|->
 name|rkcs1
 operator|=
+name|RK_CDT
+operator||
 name|RK_DCLR
 operator||
 name|RK_GO
@@ -421,6 +478,18 @@ argument_list|(
 name|rkaddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errcnt
+operator|==
+literal|10
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"rk: unrecovered error\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -428,6 +497,22 @@ literal|1
 operator|)
 return|;
 block|}
+name|errcnt
+operator|++
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
+if|if
+condition|(
+name|errcnt
+condition|)
+name|printf
+argument_list|(
+literal|"rk: recovered by retry\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|io
