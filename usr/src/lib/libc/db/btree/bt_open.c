@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.5 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1446,7 +1446,7 @@ name|DBT
 modifier|*
 name|data
 decl_stmt|;
-name|int
+name|u_long
 name|flag
 decl_stmt|;
 block|{
@@ -1634,7 +1634,7 @@ name|DBT
 modifier|*
 name|data
 decl_stmt|;
-name|int
+name|u_long
 name|flag
 decl_stmt|;
 block|{
@@ -1773,7 +1773,7 @@ name|DBT
 modifier|*
 name|key
 decl_stmt|;
-name|int
+name|u_long
 name|flags
 decl_stmt|;
 block|{
@@ -2256,7 +2256,7 @@ name|DBT
 modifier|*
 name|data
 decl_stmt|;
-name|int
+name|u_long
 name|flags
 decl_stmt|;
 block|{
