@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	4.11 (Berkeley) %G%"
+literal|"@(#)bugfiler.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -288,7 +288,7 @@ if|if
 condition|(
 name|argc
 operator|>
-literal|3
+literal|4
 condition|)
 block|{
 name|usage
@@ -481,6 +481,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|setuid
+argument_list|(
+name|pwd
+operator|->
+name|pw_uid
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
