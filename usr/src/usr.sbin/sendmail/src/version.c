@@ -4,7 +4,7 @@ name|char
 name|Version
 index|[]
 init|=
-literal|"@(#)Delivermail version 1.4 of %G%"
+literal|"@(#)Delivermail version 1.5 of %G%"
 decl_stmt|;
 end_decl_stmt
 
