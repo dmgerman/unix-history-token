@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	$Id: sys.c,v 1.11 1997/03/16 10:57:54 kato Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	$Id: sys.c,v 1.12 1997/05/28 09:23:00 kato Exp $  */
 end_comment
 
 begin_comment
@@ -1448,19 +1448,13 @@ name|dosdev
 operator|=
 name|dosdev_copy
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"dosdev= %x, biosdrive = %d, unit = %d, maj = %d\n"
-argument_list|,
-name|dosdev_copy
-argument_list|,
-name|biosdrive
-argument_list|,
-name|unit
-argument_list|,
-name|maj
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX this is useful, but misplaced. */
+block|printf("dosdev= %x, biosdrive = %d, unit = %d, maj = %d\n", 		dosdev_copy, biosdrive, unit, maj);
+endif|#
+directive|endif
 comment|/***********************************************\ 	* Now we know the disk unit and part,		* 	* Load disk info, (open the device)		* 	\***********************************************/
 if|if
 condition|(
@@ -1506,6 +1500,10 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+name|name
+operator|=
+name|cp
+expr_stmt|;
 if|if
 condition|(
 name|ret
@@ -1521,17 +1519,19 @@ name|ret
 operator|<
 literal|0
 condition|)
+block|{
+name|name
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 name|poff
 operator|=
 literal|0
-expr_stmt|;
-name|name
-operator|=
-name|cp
 expr_stmt|;
 endif|#
 directive|endif
