@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mca.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -266,19 +272,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"mca.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NMCA
-operator|>
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_MCA
+end_ifdef
 
 begin_include
 include|#
@@ -1235,11 +1233,9 @@ argument_list|,
 name|eisa_port
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NMCA
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_MCA
 if|if
 condition|(
 name|MCA_system
@@ -1409,11 +1405,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* initialize 8259's */
-if|#
-directive|if
-name|NMCA
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_MCA
 if|if
 condition|(
 name|MCA_system
@@ -1560,11 +1554,9 @@ comment|/* pri order 3-7, 0-2 (com2 first) */
 endif|#
 directive|endif
 comment|/* !PC98 */
-if|#
-directive|if
-name|NMCA
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_MCA
 if|if
 condition|(
 name|MCA_system
