@@ -1157,6 +1157,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_SOUND_MIXER_READ_RECMASK
+value|0x4dfd
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_SOUND_MIXER_READ_DEVMASK
 value|0x4dfe
 end_define
