@@ -1200,6 +1200,10 @@ expr_stmt|;
 name|argv
 operator|+=
 literal|2
+operator|,
+name|argc
+operator|-=
+literal|2
 expr_stmt|;
 for|for
 control|(
@@ -1229,6 +1233,15 @@ case|:
 case|case
 literal|'s'
 case|:
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
