@@ -612,6 +612,7 @@ operator|)
 return|;
 block|}
 else|else
+block|{
 name|printf
 argument_list|(
 literal|" shared irq with sbni%d\n"
@@ -625,6 +626,7 @@ operator|.
 name|if_unit
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_else
 
