@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	1.1 (Berkeley) %G%"
+literal|"@(#)cmds.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,20 +67,6 @@ directive|include
 file|<sys/file.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|OFF
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ON
-value|1
-end_define
-
 begin_decl_stmt
 name|int
 name|id
@@ -103,7 +89,7 @@ begin_decl_stmt
 name|char
 name|hostname
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -493,32 +479,6 @@ block|{
 name|printf
 argument_list|(
 literal|"Usage: msite\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-operator|(
-name|void
-operator|)
-name|open
-argument_list|(
-literal|"/etc/timed"
-argument_list|,
-name|O_WRONLY
-argument_list|,
-literal|01700
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errno
-operator|!=
-name|ETXTBSY
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"No timed on this machine\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -928,32 +888,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-operator|(
-name|void
-operator|)
-name|open
-argument_list|(
-literal|"/etc/timed"
-argument_list|,
-name|O_WRONLY
-argument_list|,
-literal|01700
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errno
-operator|!=
-name|ETXTBSY
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"No timed on this machine\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|srvp
 operator|=
 name|getservbyname
@@ -1258,32 +1192,6 @@ block|{
 name|printf
 argument_list|(
 literal|"Usage: tracing { on | off }\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-operator|(
-name|void
-operator|)
-name|open
-argument_list|(
-literal|"/etc/timed"
-argument_list|,
-name|O_WRONLY
-argument_list|,
-literal|01700
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errno
-operator|!=
-name|ETXTBSY
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"No timed on this machine\n"
 argument_list|)
 expr_stmt|;
 return|return;
