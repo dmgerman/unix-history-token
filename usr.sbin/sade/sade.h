@@ -146,7 +146,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_LYNX
-value|"lynx-2.6"
+value|"lynx-2.6fm"
 end_define
 
 begin_comment
