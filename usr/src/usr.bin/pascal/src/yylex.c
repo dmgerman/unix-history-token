@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yylex.c 1.2 %G%"
+literal|"@(#)yylex.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -892,6 +892,9 @@ case|:
 case|case
 literal|'`'
 case|:
+case|case
+literal|'#'
+case|:
 if|if
 condition|(
 operator|!
@@ -927,9 +930,6 @@ expr_stmt|;
 block|}
 case|case
 literal|'\''
-case|:
-case|case
-literal|'#'
 case|:
 name|delim
 operator|=
@@ -1342,12 +1342,6 @@ case|case
 literal|'-'
 case|:
 case|case
-literal|'|'
-case|:
-case|case
-literal|'&'
-case|:
-case|case
 literal|')'
 case|:
 case|case
@@ -1363,15 +1357,46 @@ case|case
 literal|'>'
 case|:
 case|case
-literal|'~'
-case|:
-case|case
 literal|'^'
 case|:
 return|return
 operator|(
 name|c
 operator|)
+return|;
+case|case
+literal|'~'
+case|:
+case|case
+literal|'|'
+case|:
+case|case
+literal|'&'
+case|:
+if|if
+condition|(
+name|opt
+argument_list|(
+literal|'s'
+argument_list|)
+condition|)
+block|{
+name|yyset
+argument_list|()
+expr_stmt|;
+name|standard
+argument_list|()
+expr_stmt|;
+name|yerror
+argument_list|(
+literal|"%c is non-standard"
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|c
 return|;
 default|default:
 switch|switch
