@@ -391,12 +391,9 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|VI_LOCK
 argument_list|(
-operator|&
 name|vp
-operator|->
-name|v_interlock
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -573,12 +570,9 @@ argument_list|(
 name|oip
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|VI_LOCK
 argument_list|(
-operator|&
 name|ovp
-operator|->
-name|v_interlock
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
