@@ -2904,6 +2904,7 @@ operator|==
 literal|0
 condition|)
 break|break;
+comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:
