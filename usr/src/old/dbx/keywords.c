@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keywords.c	5.1 (Berkeley) %G%"
+literal|"@(#)keywords.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1122,6 +1122,10 @@ operator|.
 name|alias
 operator|.
 name|expansion
+expr_stmt|;
+name|b
+operator|=
+name|true
 expr_stmt|;
 block|}
 return|return
