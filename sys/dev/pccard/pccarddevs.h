@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.62 2003/08/07 19:33:11 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.63 2003/08/14 06:26:58 imp Exp   */
 end_comment
 
 begin_comment
@@ -626,6 +626,17 @@ end_define
 
 begin_comment
 comment|/* Siemens */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_MICROSOFT
+value|0x02d2
+end_define
+
+begin_comment
+comment|/* Microsoft Corporation */
 end_comment
 
 begin_define
@@ -3024,6 +3035,31 @@ define|#
 directive|define
 name|PCMCIA_STR_MELCO_LPC3_CLX
 value|"Melco LPC3-CLX Ethernet Adapter"
+end_define
+
+begin_comment
+comment|/* Microsoft Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_MICROSOFT_MN_520
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_MICROSOFT_MN_520
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_MICROSOFT_MN_520
+value|"Microsoft MN-520 WLAN Card"
 end_define
 
 begin_comment
