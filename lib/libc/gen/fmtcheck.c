@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"namespace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -45,22 +39,18 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__weak_alias
-end_ifdef
-
 begin_expr_stmt
-name|__weak_alias
+name|__weak_reference
 argument_list|(
-name|fmtcheck
-argument_list|,
 name|__fmtcheck
+argument_list|,
+name|fmtcheck
 argument_list|)
-endif|#
-directive|endif
-expr|enum
+expr_stmt|;
+end_expr_stmt
+
+begin_enum
+enum|enum
 name|__e_fmtcheck_types
 block|{
 name|FMTCHECK_START
@@ -95,8 +85,8 @@ name|FMTCHECK_DONE
 block|,
 name|FMTCHECK_UNKNOWN
 block|}
-expr_stmt|;
-end_expr_stmt
+enum|;
+end_enum
 
 begin_typedef
 typedef|typedef
@@ -929,7 +919,7 @@ begin_function
 name|__const
 name|char
 modifier|*
-name|fmtcheck
+name|__fmtcheck
 parameter_list|(
 specifier|const
 name|char
