@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usb_quirks.h,v 1.7 1999/06/26 00:09:15 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -46,8 +46,13 @@ value|0x10
 comment|/* bad audio spec version number. */
 define|#
 directive|define
-name|UQ_SPUR_BUT_UP
+name|UQ_BUS_POWERED
 value|0x20
+comment|/* device is bus powered, despite claim */
+define|#
+directive|define
+name|UQ_SPUR_BUT_UP
+value|0x40
 comment|/* spurious mouse button up events */
 block|}
 struct|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_quirks.c,v 1.12 1999/09/05 21:22:39 augustss Exp $	*/
+comment|/*	$NetBSD: usb_quirks.c,v 1.13 1999/09/15 12:30:59 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -82,9 +82,9 @@ index|[]
 init|=
 block|{
 block|{
-name|USB_VENDOR_GENIUS
+name|USB_VENDOR_KYE
 block|,
-name|USB_PRODUCT_GENIUS_NICHE
+name|USB_PRODUCT_KYE_NICHE
 block|,
 literal|0x100
 block|,
@@ -142,9 +142,9 @@ block|}
 block|}
 block|,
 block|{
-name|USB_VENDOR_JAZZ
+name|USB_VENDOR_DALLAS
 block|,
-name|USB_PRODUCT_JAZZ_J6502
+name|USB_PRODUCT_DALLAS_J6502
 block|,
 literal|0x0a2
 block|,
@@ -156,7 +156,7 @@ block|,
 block|{
 name|USB_VENDOR_LOGITECH
 block|,
-name|USB_PRODUCT_LOGITECH_USBPS2
+name|USB_PRODUCT_LOGITECH_N48
 block|,
 literal|0x110
 block|,
@@ -168,7 +168,7 @@ block|,
 block|{
 name|USB_VENDOR_QTRONIX
 block|,
-name|USB_PRODUCT_QTRONIX_KEYB_PS2
+name|USB_PRODUCT_QTRONIX_980N
 block|,
 literal|0x110
 block|,
