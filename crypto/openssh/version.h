@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|SSH_VERSION
-value|"OpenSSH_2.3.0 green@FreeBSD.org 20030916"
+value|"OpenSSH_2.3.0 green@FreeBSD.org 20030917"
 end_define
 
 end_unit

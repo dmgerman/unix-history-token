@@ -3693,6 +3693,9 @@ modifier|*
 name|value
 parameter_list|)
 block|{
+name|u_int
+name|envsize
+decl_stmt|;
 name|unsigned
 name|int
 name|i
@@ -3779,22 +3782,21 @@ block|}
 else|else
 block|{
 comment|/* New variable.  Expand if necessary. */
+name|envsize
+operator|=
+operator|*
+name|envsizep
+expr_stmt|;
 if|if
 condition|(
 name|i
 operator|>=
-operator|(
-operator|*
-name|envsizep
-operator|)
+name|envsize
 operator|-
 literal|1
 condition|)
 block|{
-operator|(
-operator|*
-name|envsizep
-operator|)
+name|envsize
 operator|+=
 literal|50
 expr_stmt|;
@@ -3809,10 +3811,7 @@ name|xrealloc
 argument_list|(
 name|env
 argument_list|,
-operator|(
-operator|*
-name|envsizep
-operator|)
+name|envsize
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3820,6 +3819,11 @@ name|char
 operator|*
 argument_list|)
 argument_list|)
+expr_stmt|;
+operator|*
+name|envsizep
+operator|=
+name|envsize
 expr_stmt|;
 block|}
 comment|/* Need to set the NULL pointer at end of array beyond the new slot. */
