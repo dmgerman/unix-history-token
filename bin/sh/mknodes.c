@@ -347,15 +347,14 @@ end_define
 begin_function
 name|main
 parameter_list|(
+name|int
 name|argc
 parameter_list|,
-name|argv
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -363,11 +362,18 @@ name|argc
 operator|!=
 literal|3
 condition|)
+block|{
 name|error
 argument_list|(
 literal|"usage: mknodes file\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -386,6 +392,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|error
 argument_list|(
 literal|"Can't open %s"
@@ -396,6 +403,12 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 while|while
 condition|(
 name|readline
@@ -444,7 +457,9 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
