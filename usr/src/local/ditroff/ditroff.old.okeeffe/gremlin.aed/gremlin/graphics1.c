@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)graphics1.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  * This file contains primitive functions to manipulate an AED512  * color display.  *  * (Modified from software written by John Ousterhout for the caesar  *  program)  */
+comment|/* @(#)graphics1.c	1.3	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  * This file contains primitive functions to manipulate an AED512  * color display.  *  * (Modified from software written by John Ousterhout for the caesar  *  program)  */
 end_comment
 
 begin_include
@@ -1356,6 +1356,8 @@ operator||
 name|EVENP
 operator||
 name|ODDP
+operator||
+name|CRMOD
 expr_stmt|;
 name|sgttyb
 operator|.
