@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setbuffer.c	5.5 (Berkeley) %G%"
+literal|"@(#)setbuffer.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,25 +91,19 @@ begin_comment
 comment|/*  * set line buffering  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|setlinebuf
-argument_list|(
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fp
+parameter_list|)
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
+return|return
 operator|(
-name|void
-operator|)
 name|setvbuf
 argument_list|(
 name|fp
@@ -127,15 +121,10 @@ name|size_t
 operator|)
 literal|0
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
-comment|/* ??? */
 block|}
-end_block
+end_function
 
 end_unit
 
