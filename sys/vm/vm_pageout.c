@@ -5072,10 +5072,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|vm_paging_needed
 argument_list|()
-operator|<=
-literal|0
 condition|)
 name|vm_pages_needed
 operator|=
@@ -5230,7 +5229,8 @@ name|pageproc
 condition|)
 block|{
 name|vm_pages_needed
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 name|wakeup
 argument_list|(

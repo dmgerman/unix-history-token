@@ -413,7 +413,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a positive number if the pagedaemon needs to be woken up.  */
+comment|/*  * Returns TRUE if the pagedaemon needs to be woken up.  */
 end_comment
 
 begin_function
