@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getinfo.c,v 8.15 1999/10/13 16:39:16 vixie Exp $"
+literal|"$Id: getinfo.c,v 8.16 2000/07/11 04:36:26 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2984,11 +2984,15 @@ name|n
 operator|==
 literal|0
 operator|&&
+operator|(
 name|res
 operator|.
 name|options
 operator|&
 name|RES_DEFNAMES
+operator|)
+operator|!=
+literal|0
 operator|)
 operator|||
 operator|(
@@ -3002,11 +3006,15 @@ name|cp
 operator|!=
 literal|'.'
 operator|&&
+operator|(
 name|res
 operator|.
 name|options
 operator|&
 name|RES_DNSRCH
+operator|)
+operator|!=
+literal|0
 operator|)
 condition|)
 for|for
@@ -3019,6 +3027,8 @@ name|dnsrch
 init|;
 operator|*
 name|domain
+operator|!=
+name|NULL
 condition|;
 name|domain
 operator|++
