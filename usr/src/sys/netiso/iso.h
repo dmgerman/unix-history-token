@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.h	7.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -48,6 +48,28 @@ end_define
 
 begin_comment
 comment|/*  * Protocols  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISOPROTO_TCP
+value|6
+end_define
+
+begin_comment
+comment|/* IETF experiment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISOPROTO_UDP
+value|17
+end_define
+
+begin_comment
+comment|/* IETF experiment */
 end_comment
 
 begin_define
@@ -185,6 +207,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ISOPROTO_IDRP
+value|36
+end_define
+
+begin_comment
+comment|/* Interdomain Routing Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ISOPROTO_RAW
 value|255
 end_define
@@ -309,6 +342,20 @@ define|#
 directive|define
 name|ISO10589_ISIS
 value|0x83
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISO8878A_CONS
+value|0x84
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISO10747_IDRP
+value|0x85
 end_define
 
 begin_ifndef
