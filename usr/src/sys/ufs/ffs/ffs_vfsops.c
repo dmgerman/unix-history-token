@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -397,21 +397,21 @@ name|error
 operator|)
 return|;
 block|}
-name|rootfs
-operator|=
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|mountlist
+argument_list|,
 name|mp
+argument_list|,
+name|mnt_list
+argument_list|)
 expr_stmt|;
 name|mp
 operator|->
-name|mnt_next
-operator|=
-name|mp
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_prev
-operator|=
-name|mp
+name|mnt_flag
+operator||=
+name|MNT_ROOTFS
 expr_stmt|;
 name|mp
 operator|->
@@ -1567,9 +1567,13 @@ name|vp
 operator|=
 name|mountp
 operator|->
-name|mnt_mounth
+name|mnt_vnodelist
+operator|.
+name|lh_first
 init|;
 name|vp
+operator|!=
+name|NULL
 condition|;
 name|vp
 operator|=
@@ -1580,7 +1584,9 @@ name|nvp
 operator|=
 name|vp
 operator|->
-name|v_mountf
+name|v_mntvnodes
+operator|.
+name|le_next
 expr_stmt|;
 comment|/* 		 * Step 4: invalidate all inactive vnodes. 		 */
 if|if
@@ -1605,6 +1611,8 @@ condition|(
 name|vget
 argument_list|(
 name|vp
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 goto|goto
@@ -2936,8 +2944,10 @@ block|{
 if|if
 condition|(
 name|mp
-operator|==
-name|rootfs
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_ROOTFS
 condition|)
 return|return
 operator|(
@@ -3604,15 +3614,21 @@ name|vp
 operator|=
 name|mp
 operator|->
-name|mnt_mounth
+name|mnt_vnodelist
+operator|.
+name|lh_first
 init|;
 name|vp
+operator|!=
+name|NULL
 condition|;
 name|vp
 operator|=
 name|vp
 operator|->
-name|v_mountf
+name|v_mntvnodes
+operator|.
+name|le_next
 control|)
 block|{
 comment|/* 		 * If the vnode that we are about to sync is no longer 		 * associated with this mount point, start over. 		 */
@@ -3666,7 +3682,7 @@ name|vp
 operator|->
 name|v_dirtyblkhd
 operator|.
-name|le_next
+name|lh_first
 operator|==
 name|NULL
 condition|)
@@ -3676,6 +3692,8 @@ condition|(
 name|vget
 argument_list|(
 name|vp
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 goto|goto
