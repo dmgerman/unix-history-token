@@ -138,13 +138,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/ic/i82586.h>
+file|<i386/isa/icu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/icu.h>
+file|<dev/ic/i82586.h>
 end_include
 
 begin_include
