@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_bigkey.c	5.4 (Berkeley) %G%"
+literal|"@(#)hash_bigkey.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,6 +112,18 @@ specifier|extern
 name|BUFHEAD
 modifier|*
 name|__get_buf
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* dynahash.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|u_int
+name|call_hash
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -2786,7 +2798,7 @@ name|u_short
 name|addr
 decl_stmt|;
 comment|/* Address of big_keyp */
-name|int
+name|u_int
 name|obucket
 decl_stmt|;
 comment|/* Old Bucket */
@@ -2829,7 +2841,7 @@ name|key
 decl_stmt|,
 name|val
 decl_stmt|;
-name|int
+name|u_int
 name|change
 decl_stmt|;
 comment|/* Now figure out where the big key/data goes */

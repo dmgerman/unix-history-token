@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_buf.c	5.6 (Berkeley) %G%"
+literal|"@(#)hash_buf.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,7 +184,7 @@ name|prev_bp
 parameter_list|,
 name|newpage
 parameter_list|)
-name|int
+name|u_int
 name|addr
 decl_stmt|;
 name|BUFHEAD
@@ -433,7 +433,7 @@ name|addr
 parameter_list|,
 name|prev_bp
 parameter_list|)
-name|int
+name|u_int
 name|addr
 decl_stmt|;
 name|BUFHEAD
