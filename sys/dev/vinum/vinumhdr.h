@@ -8,7 +8,7 @@ comment|/* Header files used by all modules */
 end_comment
 
 begin_comment
-comment|/* $Id: vinumhdr.h,v 1.11 1998/12/30 05:11:15 grog Exp grog $ */
+comment|/* $Id: vinumhdr.h,v 1.12 1999/01/28 08:58:33 grog Exp grog $ */
 end_comment
 
 begin_ifdef
@@ -376,6 +376,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|LOCKDRIVE
+parameter_list|(
+name|d
+parameter_list|)
+value|lockdrive (d, __FILE__, __LINE__)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -399,6 +409,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|free((x), M_DEVBUF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCKDRIVE
+parameter_list|(
+name|d
+parameter_list|)
+value|lockdrive (d)
 end_define
 
 begin_endif
