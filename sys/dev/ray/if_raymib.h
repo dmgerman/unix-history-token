@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_raymib.h,v 1.3 2000/03/21 14:27:46 dmlb Exp $  *  */
+comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_raymib.h,v 1.4 2000/03/31 20:13:03 dmlb Exp $  *  */
 end_comment
 
 begin_struct
@@ -603,191 +603,6 @@ directive|define
 name|mib_test_max_chan
 value|mib_tail.mib_test_max_chan
 end_define
-
-begin_comment
-comment|/*  * IOCTL support  */
-end_comment
-
-begin_struct
-struct|struct
-name|ray_param_req
-block|{
-name|int
-name|r_failcause
-decl_stmt|;
-name|u_int8_t
-name|r_paramid
-decl_stmt|;
-name|u_int8_t
-name|r_len
-decl_stmt|;
-name|u_int8_t
-name|r_data
-index|[
-literal|256
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ray_stats_req
-block|{
-name|u_int64_t
-name|rxoverflow
-decl_stmt|;
-comment|/* Number of rx overflows	*/
-name|u_int64_t
-name|rxcksum
-decl_stmt|;
-comment|/* Number of checksum errors	*/
-name|u_int64_t
-name|rxhcksum
-decl_stmt|;
-comment|/* Number of header checksum errors */
-name|u_int8_t
-name|rxnoise
-decl_stmt|;
-comment|/* Average receiver level	*/
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|RAY_FAILCAUSE_EIDRANGE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAY_FAILCAUSE_ELENGTH
-value|2
-end_define
-
-begin_comment
-comment|/* device can possibly return up to 255 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RAY_FAILCAUSE_EDEVSTOP
-value|256
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|RAY_FAILCAUSE_WAITING
-value|257
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Get a param the data is a ray_param_req structure */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCSRAYPARAM
-value|SIOCSIFGENERIC
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIOCGRAYPARAM
-value|SIOCGIFGENERIC
-end_define
-
-begin_comment
-comment|/* Get the error counters the data is a ray_stats_req structure */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCGRAYSTATS
-value|_IOWR('i', 201, struct ifreq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIOCGRAYSIGLEV
-value|_IOWR('i', 202, struct ifreq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAY_NSIGLEVRECS
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAY_NSIGLEV
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAY_NANTENNA
-value|8
-end_define
-
-begin_struct
-struct|struct
-name|ray_siglev
-block|{
-name|u_int8_t
-name|rsl_host
-index|[
-name|ETHER_ADDR_LEN
-index|]
-decl_stmt|;
-comment|/* MAC address */
-name|u_int8_t
-name|rsl_siglevs
-index|[
-name|RAY_NSIGLEV
-index|]
-decl_stmt|;
-comment|/* levels, newest in [0] */
-name|u_int8_t
-name|rsl_antennas
-index|[
-name|RAY_NANTENNA
-index|]
-decl_stmt|;
-comment|/* best antenna */
-name|struct
-name|timeval
-name|rsl_time
-decl_stmt|;
-comment|/* time of last packet */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * MIB IDs for the update/report param commands  */
@@ -1404,11 +1219,11 @@ value|\ }
 end_define
 
 begin_comment
-comment|/*  * MIB values  *  * I've included comments as to where the numbers have originated  * from.  *  * Linux refers to ray_cs.c and rayctl.h from version 167 of the  * Linux Raylink driver.  *  * NetBSD refers to if_ray.c from version 1.12 of the NetBSD Raylink  * driver.  *  * Symb refers to numbers cleaned from the 802.11 specification,  * discussion with 802.11 knowledgable people at Symbionics (i.e. me,  * aps, ifo, hjl).  *  * V4 and V5 refer to settings for version 4 and version 5 of  * the firmware.  *  */
+comment|/*  * MIB values  *  * I've included comments as to where the numbers have originated  * from.  *  * Linux refers to ray_cs.c and rayctl.h from version 167 of the  * Linux Raylink driver.  *  * NetBSD refers to if_ray.c from version 1.12 of the NetBSD Raylink  * driver.  *  * Symb refers to numbers cleaned from the 802.11 specification,  * discussion with 802.11 knowledgable people at Symbionics or  * stuff needed by me (i.e. me, * aps, ifo, hjl).  *  * V4 and V5 refer to settings for version 4 and version 5 of  * the firmware.  *  * DOC refers to the  *	Combined Interface Requirements Specification  *	and Interface Design Document (IRS/IDD)  *	for the  *	WLAN System Interfaces Between the  *	HOST COMPUTER and the  *	PCMCIA WLAN INTERFACE CARD  *	Revision ECF 5.00  *	17 June, 1998  */
 end_comment
 
 begin_comment
-comment|/*  * ADHOC		- I've not got an access point  */
+comment|/*  * mib_net_type  *  * DOC		0x01	- Defines network type for Start and Join  *			- Network commands.  *  * Symb		0x00	- Adhoc is safer and I ain't got an AP  */
 end_comment
 
 begin_define
@@ -1433,7 +1248,7 @@ value|RAY_MIB_NET_TYPE_ADHOC
 end_define
 
 begin_comment
-comment|/*  * TERMINAL		- but we might play with using the card as an AP  */
+comment|/*  * mib_ap_status  *  * DOC		0x00	- Applicable only when Network Type is  *			- Infrastructure.  */
 end_comment
 
 begin_define
@@ -1458,7 +1273,7 @@ value|RAY_MIB_AP_STATUS_TERMINAL
 end_define
 
 begin_comment
-comment|/*  * 			- windows setting comes from the Aviator software v1.1  */
+comment|/*  * mib_ssid  *  * DOC		ESSID1	- Service Set ID. Can be any ASCII string  *			- up to 32 bytes in length. If the string is  *			- less than 32 bytes long, it must be  *			- followed by a byte of 00h.  *  * Symb			- windows setting comes from the Aviator software v1.1  */
 end_comment
 
 begin_define
@@ -1482,6 +1297,10 @@ name|RAY_MIB_SSID_DEFAULT
 value|RAY_MIB_SSID_WINDOWS
 end_define
 
+begin_comment
+comment|/*  * mib_scan_mode  *  * DOC		0x01	- Defines acquisition approach for  *			- terminals operating in either Ad Hoc or  *			- Infrastructure Networks. N/A for APs.   */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1504,7 +1323,7 @@ value|RAY_MIB_SCAN_MODE_ACTIVE
 end_define
 
 begin_comment
-comment|/*  * NONE			- power saving only works with access points  */
+comment|/*  * mib_apm_mode  *  * DOC		0x00	- Defines power management mode for  *			- stations operating in either Ad Hoc or  *			- Infrastructure Networks. Must always  *			- be 0 for APs.  */
 end_comment
 
 begin_define
@@ -1529,8 +1348,26 @@ value|RAY_MIB_APM_MODE_NONE
 end_define
 
 begin_comment
-comment|/*  * Linux.h	0x0200  * Linux.c-V4	0x7fff  * Linux.c-V5	0x7fff  * NetBSD.c	0x7fff	- disabled  * Symb		0xXXXX	- you really should fragment but getting it wrong  *			  crucifies the performance  */
+comment|/*  * mib_mac_addr  *  * DOC			- MAC Address to be used by WIC (For  *			- format see Figure 3.2.4.1.2-1, MAC  *			- Address Format). Host may echo card  *			- supplied address or use locally  *			- administered address.  */
 end_comment
+
+begin_comment
+comment|/*  * mib_frag_thresh  *  * DOC		0x7fff	- Maximum over-the-air packet size (in  *			- bytes)  *  * Symb		0xXXXX	- you really should fragment when in low signal  *			- conditions but getting it wrong  *			  crucifies the performance  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_FRAG_THRESH_MINIMUM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_FRAG_THRESH_MAXIMUM
+value|2346
+end_define
 
 begin_define
 define|#
@@ -1547,8 +1384,22 @@ value|RAY_MIB_FRAG_THRESH_DISABLE
 end_define
 
 begin_comment
-comment|/*  * Linux.h		- 16k * 2**n, n=0-4 in Kus  * Linux.c-V4	0x0200  * Linux.c-V5	0x0080	- 128 Kus  * NetBSD-V4	0x0200	- from Linux  * NetBSD-V4	0x0400	- "divined"  * NetBSD-V5	0x0080  * Symb-V4	0xXXXX	- 802.11 dwell time is XXX Kus  * Symb-V5	0xXXXX	- 802.11 dwell time is XXX Kus  * XXX			- see init_startup_params in Linux.c  */
+comment|/*  * mib_dwell_time  *  * DOC		0x0080	- Defines hop dwell time in Kusec.  *			- Required only of stations which intend  *			- to issue a Start Network command.  *			- Forward Compatible Firmware (Build  *			- 5) requires that the dwell time be one of  *			- the set 16, 32, 64, 128, and 256.  *  * Linux.h		- 16k * 2**n, n=0-4 in Kus  * Linux.c-V4	0x0200  * Linux.c-V5	0x0080	- 128 Kus  * NetBSD-V4	0x0200	- from Linux  * NetBSD-V4	0x0400	- "divined"  * NetBSD-V5	0x0080  * Symb-V4	0xXXXX	- 802.11 dwell time is XXX Kus  * Symb-V5	0xXXXX	- 802.11 dwell time is XXX Kus  *  * XXX confirm that 1024Kus is okay for windows driver - how? and see  * XXX how it is over the maximum  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DWELL_TIME_MINIMUM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DWELL_TIME_MAXIMUM
+value|390
+end_define
 
 begin_define
 define|#
@@ -1565,14 +1416,28 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/*  * Linux.h		- n * a_hop_time  in Kus  * Linux.c-V4	0x0001  * Linux.c-V5	0x0100	- 256 Kus  * NetBSD-V4	0x0001	- from Linux  * NetBSD-V4	0x0000	- "divined"  * NetBSD-V5	0x0100  * Symb-V4	0x0001	- best performance is one beacon each dwell XXX  * Symb-V5	0x0080	- best performance is one beacon each dwell XXX  * XXX			- see init_startup_params in Linux.c  */
+comment|/*  * mib_beacon_period  *  * DOC		0x0100	- Defines time between target beacon  *			- transmit times (TBTT) in Kusec.  *			- Forward Compatible Firmware (Build  *			- 5) requires that the Beacon Period be an  *			- integral multiple of the Dwell Time (not  *			- exceeding 255 hops).  *			- Required only of stations which intend  *			- to issue a Start Network command.  *  * Linux.h		- n * a_hop_time  in Kus  * Linux.c-V4	0x0001  * Linux.c-V5	0x0100	- 256 Kus  * NetBSD-V4	0x0001	- from Linux  * NetBSD-V4	0x0000	- "divined"  * NetBSD-V5	0x0100  * Symb-V4	0x0001	- best performance is one beacon each dwell XXX  * Symb-V5	0x0080	- best performance is one beacon each dwell XXX  *  * XXX V4 should probably set this to dwell_time  */
 end_comment
 
 begin_define
 define|#
 directive|define
+name|RAY_MIB_BEACON_PERIOD_MINIMUM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_BEACON_PERIOD_MAXIMUM
+value|0xffff
+end_define
+
+begin_define
+define|#
+directive|define
 name|RAY_MIB_BEACON_PERIOD_V4
-value|0x01
+value|0x0001
 end_define
 
 begin_define
@@ -1583,8 +1448,22 @@ value|RAY_MIB_DWELL_TIME_V5
 end_define
 
 begin_comment
-comment|/*  * Linux.h		- in beacons  * Linux.c	0x01  * NetBSD	0x01  * Symb		0xXX	- need to find out what DTIM is  */
+comment|/*  * mib_dtim_interval  *  * DOC		0x01	- Number of beacons per DTIM period.  *			- Only APs will use this parameter, to set  *			- the DTIM period.  *  * Linux.h		- in beacons  * Linux.c	0x01  * NetBSD	0x01  * Symb		0xXX	- need to find out what DTIM is  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DTIM_INTERVAL_MINIMUM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DTIM_INTERVAL_MAXIMUM
+value|255
+end_define
 
 begin_define
 define|#
@@ -1594,8 +1473,22 @@ value|0x01
 end_define
 
 begin_comment
-comment|/*  * Linux.c	0x07  * NetBSD	0x01	- documented default for 5/6  * NetBSD	0x07	- from Linux  * NetBSD	0x03	- "divined"  * Symb		0xXX	- 7 retries seems okay but check with APS  */
+comment|/*  * mib_max_retry  *  * DOC		31	- Number of times WIC will attempt to  *			- retransmit a failed packet.  *  * Linux.c	0x07  * NetBSD	0x01	- "documented default for 5/6"  * NetBSD	0x07	- from Linux  * NetBSD	0x03	- "divined"  * Symb		0xXX	- 7 retries seems okay but check with APS  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_MAX_RETRY_MINIMUM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_MAX_RETRY_MAXIMUM
+value|255
+end_define
 
 begin_define
 define|#
@@ -1605,8 +1498,22 @@ value|0x07
 end_define
 
 begin_comment
-comment|/*  * Linux.c	0xa3  * NetBSD	0x86	- documented default for 5/6  * NetBSD	0xa3	- from Linux  * NetBSD	0xa3	- "divined"  * Symb		0xXX	- this must be a 802.11 defined setting?  */
+comment|/*  * mib_ack_timo  *  * DOC		0x86	- Time WIC will wait after completion of  *			- a transmit before timing out anticipated  *			- ACK (2 usec steps). Should equal  *			- SIFS + constant.  *  * Linux.c	0xa3  * NetBSD	0x86	- documented default for 5/6  * NetBSD	0xa3	- from Linux  * NetBSD	0xa3	- "divined"  * Symb		0xXX	- this must be a 802.11 defined setting?  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_ACK_TIMO_MINIMUM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_ACK_TIMO_MAXIMUM
+value|255
+end_define
 
 begin_define
 define|#
@@ -1616,8 +1523,22 @@ value|0xa3
 end_define
 
 begin_comment
-comment|/*  * Linux.c	0x1d  * NetBSD	0x1c	- documented default for 5/6  * NetBSD	0x1d	- from Linux  * NetBSD	0x1d	- "divined"  * Symb		0xXX	- default SIFS for 802.11  */
+comment|/*  * mib_sifs  *  * DOC		0x1c	- SIFS time in usec.  *  * Linux.c	0x1d  * NetBSD	0x1c	- documented default for 5/6  * NetBSD	0x1d	- from Linux  * NetBSD	0x1d	- "divined"  * Symb		0xXX	- default SIFS for 802.11  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_SIFS_MINIMUM
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_SIFS_MAXIMUM
+value|62
+end_define
 
 begin_define
 define|#
@@ -1627,8 +1548,22 @@ value|0x1d
 end_define
 
 begin_comment
-comment|/*  * Linux.c	0x82  * NetBSD	0x82	- documented default for 5/6  * NetBSD	0x82	- from Linux  * Symb		0xXX	- default DIFS for 802.11  */
+comment|/*  * mib_difs  *  * DOC		0x82	- DIFS time in usec.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DIFS_MINIMUM
+value|130
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DIFS_MAXIMUM
+value|255
+end_define
 
 begin_define
 define|#
@@ -1638,8 +1573,22 @@ value|0x82
 end_define
 
 begin_comment
-comment|/*  * Linux.c-V4	0xce  * Linux.c-V5	0x4e  * NetBSD	0x00	- documented default for 5/6  * NetBSD-V4	0xce	- from Linux  * NetBSD-V5	0x4e	- from Linux  * Symb		0xXX	- default PIFS for 802.11  */
+comment|/*  * mib_pifs  *  * DOC		78	- PIFS time in usec. (Not currently  *			- implemented.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_PIFS_MINIMUM
+value|78
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_PIFS_MAXIMUM
+value|255
+end_define
 
 begin_define
 define|#
@@ -1656,8 +1605,22 @@ value|0x4e
 end_define
 
 begin_comment
-comment|/*  * Linux.c	0x7fff  * NetBSD	0x7fff	- disabled  * Symb		0xXXXX	- need to set this realistically to get CTS/RTS mode  *			  working right  */
+comment|/*  * mib_rts_thresh  *  * DOC		0x7ffff	- Threshold size in bytes below which  *			- messages will not require use of RTS  *			- Protocol.  *  * Linux.c	0x7fff  * NetBSD	0x7fff	- disabled  * Symb		0xXXXX	- need to set this realistically to get CTS/RTS mode  *			  working right  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_RTS_THRESH_MINIMUM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_RTS_THRESH_MAXIMUM
+value|2346
+end_define
 
 begin_define
 define|#
@@ -1674,8 +1637,22 @@ value|RAY_MIB_RTS_THRESH_DISABLE
 end_define
 
 begin_comment
-comment|/*  * Linux.c-V4	0xfb1e  * Linix.c-V5	0x04e2  * NetBSD-V4	0xfb1e  * NetBSD-V5	0x04e2  * Symb		0xXXXX	- this might be the time to dwell on a channel  *			  whilst scanning for the n/w. In that case it should  *			  be tied to the dwell time above.  *			  V5 numbers could be Kus,  *			    0x04e2Kus = 1250*1024us = 1.28 seconds  */
+comment|/*  * mib_scan_dwell  *  * DOC		0x04e2	- Time channel remains clear after probe  *			- transmission prior to hopping to next  *			- channel. (in 2 msec steps).  *  * Linux.c-V4	0xfb1e	- 128572us  * Linix.c-V5	0x04e2	-   2500us  * NetBSD-V4	0xfb1e  * NetBSD-V5	0x04e2  * Symb		0xXXXX	- Check that v4 h/w can do 2.5ms and default it  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_SCAN_DWELL_MINIMUM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_SCAN_DWELL_MAXIMUM
+value|65535
+end_define
 
 begin_define
 define|#
@@ -1692,8 +1669,22 @@ value|0x04e2
 end_define
 
 begin_comment
-comment|/*  * Linux.c-V4	0xc75c  * Linix.c-V5	0x38a4  * NetBSD-V4	0xc75c  * NetBSD-V5	0x38a4  * Symb		0xXXXX	- see above - this may be total time before giving up  *			  but 0x38a4 Kus is about 14 seconds  *			  i.e. not 79*SCAN_DWELL  */
+comment|/*  * mib_scan_max_dwell  *  * DOC		0x38a4	- Time to remain on a frequency channel  *			- if CCA is detected after probe  *			- transmission. (in 2 usec steps).  *  * Linux.c-V4	0xc75c	- 102072us  * Linix.c-V5	0x38a4	-  29000us  * NetBSD-V4	0xc75c  * NetBSD-V5	0x38a4  * Symb		0xXXXX	- see above - this may be total time before giving up  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_SCAN_MAX_DWELL_MINIMUM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_SCAN_MAX_DWELL_MAXIMUM
+value|65535
+end_define
 
 begin_define
 define|#
@@ -1710,8 +1701,22 @@ value|0x38a4
 end_define
 
 begin_comment
-comment|/*  * Linix.c	0x05  * NetBSD	0x05  * Symb		0xXX	- can't be in Kus too short  */
+comment|/*  * mib_assoc_timo  *  * DOC		0x05	- Time (in hops) a station waits after  *			- transmitting an Association Request  *			- Message before association attempt is  *			- considered failed. N/A for Ad Hoc  *			- Networks and for APs in Infrastructure  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_ASSOC_TIMO_MINIMUM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_ASSOC_TIMO_MAXIMUM
+value|255
+end_define
 
 begin_define
 define|#
@@ -1721,8 +1726,22 @@ value|0x05
 end_define
 
 begin_comment
-comment|/*  * Linix.c-V4	0x04  * Linux.c-V5	0x08  * NetBSD-V4	0x04	- Linux  * NetBSD-V4	0x08	- "divined"  * NetBSD-V5	0x08  * Symb		0xXX	- hmm maybe this ties in with the DWELL_SCAN above?  */
+comment|/*  * mib_adhoc_scan_cycle  *  * DOC		0x08	- Maximum number of times to cycle  *			- through frequency hopping pattern as  *			- part of scanning during Ad Hoc  *			- Acquisition.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_ADHOC_SCAN_CYCLE_MINIMUM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_ADHOC_SCAN_CYCLE_MAXIMUM
+value|255
+end_define
 
 begin_define
 define|#
@@ -1732,8 +1751,22 @@ value|0x08
 end_define
 
 begin_comment
-comment|/*  * Linix.c	0x02  * NetBSD-V4	0x02	- Linux  * NetBSD-V4	0x01	- "divined"  * NetBSD-V5	0x02  * Symb		0xXX	- hmm maybe this ties in with the DWELL_SCAN above?  */
+comment|/*  * mib_infra_scan_cycle  *  * DOC		0x02	- Number of times to cycle through  *			- frequency hopping pattern as part of  *			- scanning during Infrastructure Network  *			- Acquisition.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_INFRA_SCAN_CYCLE_MINIMUM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_INFRA_SCAN_CYCLE_MAXIMUM
+value|255
+end_define
 
 begin_define
 define|#
@@ -1743,8 +1776,22 @@ value|0x02
 end_define
 
 begin_comment
-comment|/*  * Linix.c-V4	0x04  * Linux.c-V5	0x08  * NetBSD-V4	0x04	- Linux  * NetBSD-V4	0x18	- "divined"  * NetBSD-V5	0x08  * Symb		0xXX	- hmm maybe this ties in with the DWELL_SCAN above?  */
+comment|/*  * mib_infra_super_scan_cycle  *  * DOC		0x08	- Number of times to repeat an  *			- Infrastructure scan cycle if no APs are  *			- found before indicating a failure.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_INFRA_SUPER_SCAN_CYCLE_MINIMUM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_INFRA_SUPER_SCAN_CYCLE_MAXIMUM
+value|255
+end_define
 
 begin_define
 define|#
@@ -1753,11 +1800,47 @@ name|RAY_MIB_INFRA_SUPER_SCAN_CYCLE_DEFAULT
 value|0x08
 end_define
 
+begin_comment
+comment|/*  * mib_promisc  *  * DOC		0x00	- Controls operation of WIC in  *			- promiscuous mode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_PROMISC_DISABLED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_PROMISC_ENABLED
+value|1
+end_define
+
 begin_define
 define|#
 directive|define
 name|RAY_MIB_PROMISC_DEFAULT
 value|0x00
+end_define
+
+begin_comment
+comment|/*  * mib_uniq_word  *  * DOC		0x0cdb	- Unique word pattern (Transmitted as  *			- 0CBDh per 802.11)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_UNIQ_WORD_MINIMUM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_UNIQ_WORD_MAXIMUM
+value|0xffff
 end_define
 
 begin_define
@@ -1768,8 +1851,22 @@ value|0x0cbd
 end_define
 
 begin_comment
-comment|/*  * Linux.c-V4	0x4e  * Linix.c-V5	0x32  * NetBSD-V4	0x4e	- Linux  * NetBSD-V4	0x18	- "divined"  * NetBSD-V5	0x32	- mentions spec. is 50us i.e. 0x32  * Symb		0xXX	- wtf 0x4e = 78  */
+comment|/*  * mib_slot_time  *  * DOC		0x32	- Slot time in usec  *  * Linux.c-V4	0x4e  * Linix.c-V5	0x32  * NetBSD-V4	0x4e	- Linux  * NetBSD-V4	0x18	- "divined"  * NetBSD-V5	0x32	- mentions spec. is 50us i.e. 0x32  * Symb		0xXX	- wtf 0x4e = 78  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_SLOT_TIME_MINIMUM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_SLOT_TIME_MAXIMUM
+value|128
+end_define
 
 begin_define
 define|#
@@ -1786,8 +1883,22 @@ value|0x32
 end_define
 
 begin_comment
-comment|/*  * Linux.c	0xff  * NetBSD-V4	0xff	- Linux  * NetBSD-V4	0x30	- "divined"  * NetBSD-V5	0xff	- disabled  * NetBSD.h		- if below this inc count  * Symb		0xXX	- hmm is 0xff really disabled? need this to work  */
+comment|/*  * mib_roam_low_snr_thresh  *  * DOC		0xff	- SNR Threshold for use by roaming  *			- algorithm. [Low power count is  *			- incremented when Beacon is received at  *			- SNR lower than Roaming Low SNR  *			- Threshold.] To disable, set to FFh.  *  * Linux.c	0xff  * NetBSD-V4	0xff	- Linux  * NetBSD-V4	0x30	- "divined"  * NetBSD-V5	0xff	- disabled  * NetBSD.h		- if below this inc count  * Symb		0xXX	- hmm is 0xff really disabled? need this to work  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_ROAM_LOW_SNR_THRESH_MINIMUM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_ROAM_LOW_SNR_THRESH_MAXIMUM
+value|255
+end_define
 
 begin_define
 define|#
@@ -1804,8 +1915,22 @@ value|RAY_MIB_ROAM_LOW_SNR_THRESH_DISABLED
 end_define
 
 begin_comment
-comment|/*  * Linux.c	0xff  * NetBSD	0x07	- "divined - check" and marked as disabled  * NetBSD	0xff	- disabled  * NetBSD.h		- roam after cnt below thrsh  * Symb		0xXX	- hmm is 0xff really disabled? need this to work  */
+comment|/*  * mib_low_snr_count  *  * DOC		0xff	- Threshold that number of consecutive  *			- beacons received at SNR< Roaming  *			- Low SNR Threshold must exceed  *			- before roaming processing begins. To  *			- disable, set to FFh.  *  * Linux.c	0xff  * NetBSD	0x07	- "divined - check" and marked as disabled  * NetBSD	0xff	- disabled  * NetBSD.h		- roam after cnt below thrsh  * Symb		0xXX	- hmm is 0xff really disabled? need  *			- this to work in infrastructure mode with mutliple APs  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_LOW_SNR_COUNT_MINIMUM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_LOW_SNR_COUNT_MAXIMUM
+value|255
+end_define
 
 begin_define
 define|#
@@ -1822,8 +1947,22 @@ value|RAY_MIB_LOW_SNR_COUNT_DISABLED
 end_define
 
 begin_comment
-comment|/*  * Linux.c	0x05  * NetBSD	0x02	- documented default for 5/6  * NetBSD	0x05	- Linux  * NetBSD	0x07	- "divined - check, looks fishy"  * Symb		0xXX	- 5 missed beacons is probably okay  */
+comment|/*  * mib_infra_missed_beacon_count  *  * DOC		0x02	- Threshold that number of consecutive  *			- beacons not received must exceed  *			- before roaming processing begins in an  *			- infrastructure network. To disable, set  *			- to FFh.  * Linux.c	0x05  * NetBSD	0x02	- documented default for 5/6  * NetBSD	0x05	- Linux  * NetBSD	0x07	- "divined - check, looks fishy"  * Symb		0xXX	- 5 missed beacons is probably okay  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_INFRA_MISSED_BEACON_COUNT_MINIMUM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_INFRA_MISSED_BEACON_COUNT_MAXIMUM
+value|255
+end_define
 
 begin_define
 define|#
@@ -1833,8 +1972,22 @@ value|0x05
 end_define
 
 begin_comment
-comment|/*  * Linux.c	0xff  * NetBSD	0xff  * Symb		0xXX	- so what happens in adhoc if the beacon is missed?  *			  do we create our own beacon  */
+comment|/*  * mib_adhoc_missed_beacon_count  *  * DOC		0xff	- Threshold that number of consecutive  *			- beacons transmitted by a terminal must  *			- exceed before reacquisition processing  *			- begins in Ad Hoc Network.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_ADHOC_MISSED_BEACON_COUNT_MINIMUM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_ADHOC_MISSED_BEACON_COUNT_MAXIMUM
+value|255
+end_define
 
 begin_define
 define|#
@@ -1850,74 +2003,85 @@ name|RAY_MIB_ADHOC_MISSED_BEACON_COUNT_DEFAULT
 value|RAY_MIB_ADHOC_MISSED_BEACON_COUNT_DISABLED
 end_define
 
+begin_comment
+comment|/*  * mib_country_code  *  * DOC		0x01	- Country set of hopping patterns  *			- (element value in beacon)  *			- Note: Japan Test is for a special test  *			- mode required by the Japanese  *			- regulatory authorities.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_COUNTRY_CODE_MIMIMUM
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_COUNTRY_CODE_MAXIMUM
+value|0x09
+end_define
+
 begin_define
 define|#
 directive|define
 name|RAY_MIB_COUNTRY_CODE_USA
-value|0x1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|RAY_MIB_COUNTRY_CODE_EUROPE
-value|0x2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|RAY_MIB_COUNTRY_CODE_JAPAN
-value|0x3
+value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
 name|RAY_MIB_COUNTRY_CODE_KOREA
-value|0x4
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|RAY_MIB_COUNTRY_CODE_SPAIN
-value|0x5
+value|0x05
 end_define
 
 begin_define
 define|#
 directive|define
 name|RAY_MIB_COUNTRY_CODE_FRANCE
-value|0x6
+value|0x06
 end_define
 
 begin_define
 define|#
 directive|define
 name|RAY_MIB_COUNTRY_CODE_ISRAEL
-value|0x7
+value|0x07
 end_define
 
 begin_define
 define|#
 directive|define
 name|RAY_MIB_COUNTRY_CODE_AUSTRALIA
-value|0x8
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|RAY_MIB_COUNTRY_CODE_JAPAN_TEST
-value|0x9
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAY_MIB_COUNTRY_CODE_MAX
-value|0xa
+value|0x09
 end_define
 
 begin_define
@@ -1928,8 +2092,22 @@ value|RAY_MIB_COUNTRY_CODE_USA
 end_define
 
 begin_comment
-comment|/*  * NetBSD.h		- no longer supported  */
+comment|/*  * mib_hop_seq  *  * DOC		0x0b	- Hop Pattern to use. (Currently 66  *			- US/Europe plus 12 Japanese).  *  * NetBSD.h		- no longer supported  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_HOP_SEQ_MINIMUM
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_HOP_SEQ_MAXIMUM
+value|72
+end_define
 
 begin_define
 define|#
@@ -1939,8 +2117,22 @@ value|0x0b
 end_define
 
 begin_comment
-comment|/*  * Linux.c-V4	0x4e  * Linix.c-V5	0x4f  * NetBSD-V4	0x4e  * NetBSD-V5	0x4f  * Symb		0xXX	- 0x4e = 78 so is it a cock up?  */
+comment|/*  * mib_hop_seq_len  *  * DOC		0x4f	- Number of frequency channels in  *			- hopping pattern is now set to the value  *			- defined in IEEE802.11 for the selected  *			- Current Country Code.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_HOP_SEQ_LEN_MINIMUM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_HOP_SEQ_LEN_MAXIMUM
+value|79
+end_define
 
 begin_define
 define|#
@@ -1955,6 +2147,10 @@ directive|define
 name|RAY_MIB_HOP_SEQ_LEN_V5
 value|0x4f
 end_define
+
+begin_comment
+comment|/* XXX need to update these to the spec. XXX */
+end_comment
 
 begin_comment
 comment|/*  * All from here down are the same in Linux/NetBSD and seem to be sane.  */
@@ -2149,6 +2345,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|RAY_MIB_BASIC_RATE_SET_MINIMUM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_BASIC_RATE_SET_MAXIMUM
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|RAY_MIB_BASIC_RATE_SET_500K
 value|1
 end_define
@@ -2177,16 +2387,194 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_BASIC_RATE_SET_MAX
-value|5
+name|RAY_MIB_BASIC_RATE_SET_DEFAULT
+value|RAY_MIB_BASIC_RATE_SET_2000K
+end_define
+
+begin_comment
+comment|/*  * IOCTL support  */
+end_comment
+
+begin_struct
+struct|struct
+name|ray_param_req
+block|{
+name|int
+name|r_failcause
+decl_stmt|;
+name|u_int8_t
+name|r_paramid
+decl_stmt|;
+name|u_int8_t
+name|r_len
+decl_stmt|;
+name|u_int8_t
+name|r_data
+index|[
+literal|256
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ray_stats_req
+block|{
+name|u_int64_t
+name|rxoverflow
+decl_stmt|;
+comment|/* Number of rx overflows	*/
+name|u_int64_t
+name|rxcksum
+decl_stmt|;
+comment|/* Number of checksum errors	*/
+name|u_int64_t
+name|rxhcksum
+decl_stmt|;
+comment|/* Number of header checksum errors */
+name|u_int8_t
+name|rxnoise
+decl_stmt|;
+comment|/* Average receiver level	*/
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|RAY_FAILCAUSE_EIDRANGE
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAY_MIB_BASIC_RATE_SET_DEFAULT
-value|RAY_MIB_BASIC_RATE_SET_2000K
+name|RAY_FAILCAUSE_ELENGTH
+value|2
 end_define
+
+begin_comment
+comment|/* device can possibly return up to 255 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_FAILCAUSE_EDEVSTOP
+value|256
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RAY_FAILCAUSE_WAITING
+value|257
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Get a param the data is a ray_param_req structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSRAYPARAM
+value|SIOCSIFGENERIC
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGRAYPARAM
+value|SIOCGIFGENERIC
+end_define
+
+begin_comment
+comment|/* Get the error counters the data is a ray_stats_req structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGRAYSTATS
+value|_IOWR('i', 201, struct ifreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGRAYSIGLEV
+value|_IOWR('i', 202, struct ifreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_NSIGLEVRECS
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_NSIGLEV
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_NANTENNA
+value|8
+end_define
+
+begin_struct
+struct|struct
+name|ray_siglev
+block|{
+name|u_int8_t
+name|rsl_host
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+comment|/* MAC address */
+name|u_int8_t
+name|rsl_siglevs
+index|[
+name|RAY_NSIGLEV
+index|]
+decl_stmt|;
+comment|/* levels, newest in [0] */
+name|u_int8_t
+name|rsl_antennas
+index|[
+name|RAY_NANTENNA
+index|]
+decl_stmt|;
+comment|/* best antenna */
+name|struct
+name|timeval
+name|rsl_time
+decl_stmt|;
+comment|/* time of last packet */
+block|}
+struct|;
+end_struct
 
 end_unit
 
