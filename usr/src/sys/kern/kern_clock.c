@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.20	81/04/17	*/
+comment|/*	kern_clock.c	4.21	81/04/28	*/
 end_comment
 
 begin_include
@@ -203,8 +203,6 @@ operator|->
 name|c_time
 operator|--
 expr_stmt|;
-name|out
-label|:
 comment|/* 	 * Maintain iostat and per-process cpu statistics 	 */
 if|if
 condition|(
@@ -597,9 +595,6 @@ name|struct
 name|callout
 modifier|*
 name|p1
-decl_stmt|,
-modifier|*
-name|p2
 decl_stmt|;
 specifier|register
 name|struct
