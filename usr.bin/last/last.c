@@ -352,6 +352,17 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|yflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show year */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|d_first
 decl_stmt|;
 end_decl_stmt
@@ -531,7 +542,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: last [-#] [-d [[CC]YY][MMDD]hhmm[.SS]] [-f file] [-h hostname]\n"
+literal|"usage: last [-#] [-y] [-d [[CC]YY][MMDD]hhmm[.SS]] [-f file] [-h host]\n"
 literal|"\t[-t tty] [-s|w] [user ...]\n"
 argument_list|)
 expr_stmt|;
@@ -609,7 +620,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0123456789d:f:h:st:w"
+literal|"0123456789d:f:h:st:wy"
 argument_list|)
 operator|)
 operator|!=
@@ -787,6 +798,13 @@ case|:
 name|width
 operator|=
 literal|8
+expr_stmt|;
+break|break;
+case|case
+literal|'y'
+case|:
+name|yflag
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -1649,9 +1667,21 @@ argument_list|)
 argument_list|,
 name|d_first
 condition|?
+operator|(
+name|yflag
+condition|?
+literal|"%a %e %b %Y %R"
+else|:
 literal|"%a %e %b %R"
+operator|)
+else|:
+operator|(
+name|yflag
+condition|?
+literal|"%a %b %e %Y %R"
 else|:
 literal|"%a %b %e %R"
+operator|)
 argument_list|,
 name|tm
 argument_list|)
