@@ -5895,13 +5895,11 @@ specifier|static
 name|void
 name|release_seeprom
 parameter_list|(
-name|sd
-parameter_list|)
 name|struct
 name|seeprom_descriptor
 modifier|*
 name|sd
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Release access to the memory port and the serial EEPROM. */
 name|SEEPROM_OUTB
@@ -5919,18 +5917,14 @@ specifier|static
 name|void
 name|write_brdctl
 parameter_list|(
-name|ahc
-parameter_list|,
-name|value
-parameter_list|)
 name|struct
 name|ahc_softc
 modifier|*
 name|ahc
-decl_stmt|;
+parameter_list|,
 name|u_int8_t
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_int8_t
 name|brdctl

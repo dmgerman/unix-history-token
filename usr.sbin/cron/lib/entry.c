@@ -418,14 +418,6 @@ literal|'@'
 condition|)
 block|{
 comment|/* all of these should be flagged and load-limited; i.e., 		 * instead of @hourly meaning "0 * * * *" it should mean 		 * "close to the front of every hour but not 'til the 		 * system load is low".  Problems are: how do you know 		 * what "low" means? (save me from /etc/cron.conf!) and: 		 * how to guarantee low variance (how low is low?), which 		 * means how to we run roughly every hour -- seems like 		 * we need to keep a history or let the first hour set 		 * the schedule, which means we aren't load-limited 		 * anymore.  too much for my overloaded brain. (vix, jan90) 		 * HINT 		 */
-name|Debug
-argument_list|(
-argument|DPARS
-argument_list|,
-argument|(
-literal|"load_entry()...about to test shortcuts\n"
-argument|)
-argument_list|)
 name|ch
 operator|=
 name|get_string
@@ -450,14 +442,6 @@ name|cmd
 argument_list|)
 condition|)
 block|{
-name|Debug
-argument_list|(
-argument|DPARS
-argument_list|,
-argument|(
-literal|"load_entry()...reboot shortcut\n"
-argument|)
-argument_list|)
 name|e
 operator|->
 name|flags
@@ -485,14 +469,6 @@ name|cmd
 argument_list|)
 condition|)
 block|{
-name|Debug
-argument_list|(
-argument|DPARS
-argument_list|,
-argument|(
-literal|"load_entry()...yearly shortcut\n"
-argument|)
-argument_list|)
 name|bit_set
 argument_list|(
 name|e
@@ -559,14 +535,6 @@ name|cmd
 argument_list|)
 condition|)
 block|{
-name|Debug
-argument_list|(
-argument|DPARS
-argument_list|,
-argument|(
-literal|"load_entry()...monthly shortcut\n"
-argument|)
-argument_list|)
 name|bit_set
 argument_list|(
 name|e
@@ -641,14 +609,6 @@ name|cmd
 argument_list|)
 condition|)
 block|{
-name|Debug
-argument_list|(
-argument|DPARS
-argument_list|,
-argument|(
-literal|"load_entry()...weekly shortcut\n"
-argument|)
-argument_list|)
 name|bit_set
 argument_list|(
 name|e
@@ -731,14 +691,6 @@ name|cmd
 argument_list|)
 condition|)
 block|{
-name|Debug
-argument_list|(
-argument|DPARS
-argument_list|,
-argument|(
-literal|"load_entry()...daily shortcut\n"
-argument|)
-argument_list|)
 name|bit_set
 argument_list|(
 name|e
@@ -821,14 +773,6 @@ name|cmd
 argument_list|)
 condition|)
 block|{
-name|Debug
-argument_list|(
-argument|DPARS
-argument_list|,
-argument|(
-literal|"load_entry()...hourly shortcut\n"
-argument|)
-argument_list|)
 name|bit_set
 argument_list|(
 name|e
@@ -838,13 +782,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|bit_nset
+name|bit_set
 argument_list|(
 name|e
 operator|->
 name|hour
-argument_list|,
-literal|0
 argument_list|,
 operator|(
 name|LAST_HOUR
@@ -912,29 +854,6 @@ block|{
 name|ecode
 operator|=
 name|e_timespec
-expr_stmt|;
-goto|goto
-name|eof
-goto|;
-block|}
-comment|/* Advance past whitespace between shortcut and 		 * username/command. 		 */
-name|Skip_Blanks
-argument_list|(
-name|ch
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ch
-operator|==
-name|EOF
-condition|)
-block|{
-name|ecode
-operator|=
-name|e_cmd
 expr_stmt|;
 goto|goto
 name|eof

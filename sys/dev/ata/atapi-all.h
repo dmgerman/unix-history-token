@@ -1016,12 +1016,8 @@ decl_stmt|;
 comment|/* drive flags */
 define|#
 directive|define
-name|ATAPI_F_DSC_USED
-value|0x0001
-define|#
-directive|define
 name|ATAPI_F_MEDIA_CHANGED
-value|0x0002
+value|0x0001
 block|}
 struct|;
 end_struct

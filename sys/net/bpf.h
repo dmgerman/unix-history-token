@@ -277,6 +277,20 @@ name|BIOCSHDRCMPLT
 value|_IOW('B',117, u_int)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BIOCGSEESENT
+value|_IOR('B',118, u_int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIOCSSEESENT
+value|_IOW('B',119, u_int)
+end_define
+
 begin_comment
 comment|/*  * Structure prepended to each packet.  */
 end_comment

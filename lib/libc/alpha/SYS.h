@@ -193,7 +193,7 @@ parameter_list|)
 define|\
 value|PLEAF(name,0);
 comment|/* XXX # of args? */
-value|\ 	WEAK_ALIAS(__CONCAT(_,name), __CONCAT(_thread_sys_,name));	\ 	WEAK_ALIAS(name, __CONCAT(_,name));			\ 	CALLSYS_ERROR(name)
+value|\ 	CALLSYS_ERROR(name)
 end_define
 
 begin_define
@@ -206,7 +206,7 @@ parameter_list|)
 define|\
 value|PLEAF(name,0);
 comment|/* XXX # of args? */
-value|\ 	WEAK_ALIAS(__CONCAT(_,name), __CONCAT(_thread_sys_,name));	\ 	WEAK_ALIAS(name, __CONCAT(_,name));			\ 	CALLSYS_ERROR(name)					\ 	RET;							\ PEND(name)
+value|\ 	CALLSYS_ERROR(name)					\ 	RET;							\ PEND(name)
 end_define
 
 begin_define

@@ -105,6 +105,16 @@ directive|include
 file|<termios.h>
 end_include
 
+begin_comment
+comment|/* Hack for rsaref package add, which displays interactive license.  * Used by package.c  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|_interactiveHack
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -2363,6 +2373,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|notyet
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -2386,6 +2399,10 @@ block|{
 name|dialog_clear
 argument_list|()
 expr_stmt|;
+name|_interactiveHack
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|DITEM_STATUS
@@ -2402,13 +2419,20 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"Unable to find an rsaref package on the current intallation media.\n"
-literal|"You may wish to switch media types and try again, perhaps\n"
-literal|"from an FTP server which carries this package."
+literal|"This is probably because you are installing from a CDROM which\n"
+literal|"was produced for world-wide use, in which case the RSA patent\n"
+literal|"prevents distribution of RSA code on CD.  Please change your\n"
+literal|"media device to point to an International FTP server and install\n"
+literal|"the rsaref package manually through the Packages menu."
 argument_list|)
 expr_stmt|;
 block|}
 name|dialog_clear
 argument_list|()
+expr_stmt|;
+name|_interactiveHack
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}
@@ -2441,13 +2465,19 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"Unable to find an rsaintl package on the current intallation media.\n"
-literal|"You may wish to switch media types and try again, perhaps\n"
-literal|"from an FTP server which carries this package."
+literal|"This is probably because you are installing from a CDROM which\n"
+literal|"was produced for use in the USA, in which case the RSA patent\n"
+literal|"prevents distribution of RSA code on CD.  Please change your\n"
+literal|"media device to point to an International FTP server and install\n"
+literal|"the rsaintl package manually through the Packages menu."
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* notyet */
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
