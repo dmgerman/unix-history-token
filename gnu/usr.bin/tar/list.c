@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* List a tar archive.    Copyright (C) 1988, 1992, 1993 Free Software Foundation  This file is part of GNU Tar.  GNU Tar is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Tar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Tar; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* List a tar archive.    Copyright (C) 1988, 1992, 1993 Free Software Foundation  This file is part of GNU Tar.  GNU Tar is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Tar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Tar; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.    $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<langinfo.h>
 end_include
 
 begin_ifndef
@@ -2099,6 +2105,13 @@ decl_stmt|;
 name|int
 name|pad
 decl_stmt|;
+specifier|static
+name|int
+name|d_first
+init|=
+operator|-
+literal|1
+decl_stmt|;
 name|char
 modifier|*
 name|name
@@ -2375,6 +2388,24 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Timestamp */
+if|if
+condition|(
+name|d_first
+operator|<
+literal|0
+condition|)
+name|d_first
+operator|=
+operator|(
+operator|*
+name|nl_langinfo
+argument_list|(
+name|D_MD_ORDER
+argument_list|)
+operator|==
+literal|'d'
+operator|)
+expr_stmt|;
 name|longie
 operator|=
 name|hstat
@@ -2390,7 +2421,11 @@ argument_list|(
 name|timestamp
 argument_list|)
 argument_list|,
-literal|"%c"
+name|d_first
+condition|?
+literal|"%e %b %R %Y"
+else|:
+literal|"%b %e %R %Y"
 argument_list|,
 name|localtime
 argument_list|(
@@ -2398,20 +2433,6 @@ operator|&
 name|longie
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|timestamp
-index|[
-literal|16
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|timestamp
-index|[
-literal|24
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 comment|/* User and group names */
 if|if
@@ -2662,7 +2683,7 @@ name|fprintf
 argument_list|(
 name|msg_file
 argument_list|,
-literal|"%s %s/%s %*s%s %s %s %s"
+literal|"%s %s/%s %*s%s %s %s"
 argument_list|,
 name|modes
 argument_list|,
@@ -2679,12 +2700,6 @@ argument_list|,
 name|size
 argument_list|,
 name|timestamp
-operator|+
-literal|4
-argument_list|,
-name|timestamp
-operator|+
-literal|20
 argument_list|,
 name|name
 argument_list|)
