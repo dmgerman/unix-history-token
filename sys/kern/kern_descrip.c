@@ -569,6 +569,32 @@ comment|/* mtx to protect pointers to sigio */
 end_comment
 
 begin_comment
+comment|/* A mutex to protect the association between a proc and filedesc. */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|fdesc_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|fdesc
+argument_list|,
+operator|&
+name|fdesc_mtx
+argument_list|,
+literal|"fdesc"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Find the first zero bit in the given bitmap, starting at low and not  * exceeding size - 1.  */
 end_comment
 
@@ -6992,32 +7018,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* A mutex to protect the association between a proc and filedesc. */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|mtx
-name|fdesc_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|MTX_SYSINIT
-argument_list|(
-name|fdesc
-argument_list|,
-operator|&
-name|fdesc_mtx
-argument_list|,
-literal|"fdesc"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * Release a filedesc structure.  */
