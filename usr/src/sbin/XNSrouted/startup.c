@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.9 (Berkeley) %G%"
+literal|"@(#)startup.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -335,6 +335,15 @@ name|ifr_addr
 argument_list|)
 control|)
 block|{
+name|ifr
+operator|=
+operator|(
+expr|struct
+name|ifreq
+operator|*
+operator|)
+name|cp
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
