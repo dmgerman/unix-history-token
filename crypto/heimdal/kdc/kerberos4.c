@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos4.c,v 1.26 2000/02/02 01:26:41 assar Exp $"
+literal|"$Id: kerberos4.c,v 1.27 2000/02/13 19:27:36 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1417,6 +1417,33 @@ operator|!=
 name|kvno
 condition|)
 block|{
+name|kdc_log
+argument_list|(
+literal|0
+argument_list|,
+literal|"tgs-req with old kvno %d (current %d) for "
+literal|"krbtgt.%s@%s"
+argument_list|,
+name|kvno
+argument_list|,
+name|tgt
+operator|->
+name|kvno
+argument_list|,
+name|realm
+argument_list|,
+name|v4_realm
+argument_list|)
+expr_stmt|;
+name|make_err_reply
+argument_list|(
+name|reply
+argument_list|,
+name|KDC_AUTH_EXP
+argument_list|,
+literal|"old krbtgt kvno used"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out2
 goto|;

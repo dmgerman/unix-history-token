@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: delete_sec_context.c,v 1.6 2000/01/26 00:45:46 assar Exp $"
+literal|"$Id: delete_sec_context.c,v 1.7 2000/02/11 23:00:48 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -134,6 +134,11 @@ argument_list|(
 operator|*
 name|context_handle
 argument_list|)
+expr_stmt|;
+operator|*
+name|context_handle
+operator|=
+name|GSS_C_NO_CONTEXT
 expr_stmt|;
 return|return
 name|GSS_S_COMPLETE

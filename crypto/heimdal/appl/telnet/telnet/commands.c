@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: commands.c,v 1.59 2000/01/08 08:04:16 assar Exp $"
+literal|"$Id: commands.c,v 1.60 2000/02/12 16:00:07 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10758,6 +10758,14 @@ name|defined
 argument_list|(
 name|IP_TOS
 argument_list|)
+if|if
+condition|(
+name|a
+operator|->
+name|ai_family
+operator|==
+name|AF_INET
+condition|)
 block|{
 if|#
 directive|if
