@@ -2473,6 +2473,17 @@ argument_list|(
 literal|"Lost carrier."
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ENODEV
+condition|)
+name|tipabort
+argument_list|(
+literal|"tty not available."
+argument_list|)
+expr_stmt|;
 comment|/* this is questionable */
 name|perror
 argument_list|(
