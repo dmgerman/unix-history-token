@@ -131,6 +131,8 @@ name|NULL
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 name|promcngetc
 block|,
 name|promcncheckc
@@ -356,15 +358,6 @@ name|entry_va
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|consdev
-modifier|*
-name|cn_tab
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void
