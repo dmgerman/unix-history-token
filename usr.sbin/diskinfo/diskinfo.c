@@ -81,7 +81,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: diskinfo [-tv] disk ...\n"
+literal|"usage: diskinfo [-ctv] disk ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
