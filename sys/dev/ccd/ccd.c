@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.23 1997/05/01 19:18:40 sos Exp $ */
+comment|/* $Id: ccd.c,v 1.24 1997/06/14 13:56:01 bde Exp $ */
 end_comment
 
 begin_comment
@@ -1674,21 +1674,6 @@ operator|)
 return|;
 block|}
 comment|/* 		 * Calculate the size, truncating to an interleave 		 * boundary if necessary. 		 */
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-if|if
-condition|(
-name|size
-operator|<
-literal|0
-condition|)
-name|size
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|cs
