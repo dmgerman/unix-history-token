@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.17 1998/07/14 09:19:47 jkoshy Exp $"
+literal|"$Id: main.c,v 1.18 1998/09/16 20:52:12 andreas Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2313,7 +2313,7 @@ expr_stmt|;
 else|else
 name|msg
 argument_list|(
-literal|"DUMP: %ld tape blocks on %d volumes(s)\n"
+literal|"DUMP: %ld tape blocks on %d volume%s\n"
 argument_list|,
 name|spcl
 operator|.
@@ -2322,6 +2322,18 @@ argument_list|,
 name|spcl
 operator|.
 name|c_volume
+argument_list|,
+operator|(
+name|spcl
+operator|.
+name|c_volume
+operator|==
+literal|1
+operator|)
+condition|?
+literal|""
+else|:
+literal|"s"
 argument_list|)
 expr_stmt|;
 comment|/* report dump performance, avoid division through zero */
