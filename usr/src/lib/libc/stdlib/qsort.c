@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)qsort.c	5.5 (Berkeley) %G%"
+literal|"@(#)qsort.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_comment
 comment|/*  * qsort.c:  * Our own version of the system qsort routine which is faster by an average  * of 25%, with lows and highs of 10% and 50%.  * The THRESHold below is the insertion sort threshold, and has been adjusted  * for records of size 48 bytes.  * The MTHREShold is where we stop finding a better median.  */
