@@ -6958,7 +6958,7 @@ operator|->
 name|kg_upquantum
 operator|&&
 name|ticks
-operator|>=
+operator|<
 name|kg
 operator|->
 name|kg_nextupcall
