@@ -2510,7 +2510,10 @@ literal|1
 operator|)
 operator||
 operator|(
+operator|(
+operator|!
 name|unsign
+operator|)
 operator|<<
 literal|2
 operator|)
