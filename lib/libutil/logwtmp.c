@@ -73,29 +73,33 @@ directive|include
 file|<utmp.h>
 end_include
 
-begin_macro
-name|logwtmp
-argument_list|(
-argument|line
-argument_list|,
-argument|name
-argument_list|,
-argument|host
-argument_list|)
-end_macro
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
 
-begin_decl_stmt
+begin_function
+name|void
+name|logwtmp
+parameter_list|(
+name|line
+parameter_list|,
+name|name
+parameter_list|,
+name|host
+parameter_list|)
 name|char
 modifier|*
 name|line
 decl_stmt|,
-modifier|*
+decl|*
 name|name
 decl_stmt|,
 modifier|*
 name|host
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{

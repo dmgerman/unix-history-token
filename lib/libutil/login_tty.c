@@ -49,20 +49,33 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
-begin_macro
-name|login_tty
-argument_list|(
-argument|fd
-argument_list|)
-end_macro
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
-begin_decl_stmt
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_function
+name|int
+name|login_tty
+parameter_list|(
+name|fd
+parameter_list|)
 name|int
 name|fd
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 operator|(
 name|void
@@ -144,7 +157,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
