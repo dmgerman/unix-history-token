@@ -567,7 +567,7 @@ argument_list|,
 name|op
 argument_list|,
 operator|(
-name|u_int32_t
+name|uintptr_t
 operator|)
 name|id
 argument_list|,
