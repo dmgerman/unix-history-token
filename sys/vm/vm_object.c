@@ -1752,8 +1752,19 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 				 * Collapse object into its shadow unless its 				 * shadow is dead.  In that case, object will 				 * be deallocated by the thread that is 				 * deallocating its shadow. 				 */
 if|if
 condition|(
+operator|(
+name|robject
+operator|->
+name|flags
+operator|&
+name|OBJ_DEAD
+operator|)
+operator|==
+literal|0
+operator|&&
 operator|(
 name|robject
 operator|->
@@ -2192,11 +2203,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vm_page_busy
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|p
@@ -2210,11 +2216,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|vm_page_busy
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|vm_page_remove
 argument_list|(
 name|p
@@ -4769,6 +4770,9 @@ operator|=
 name|source
 expr_stmt|;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|idx
@@ -4804,9 +4808,6 @@ name|NULL
 condition|)
 continue|continue;
 comment|/* 		 * We must wait for pending I/O to complete before we can 		 * rename the page. 		 * 		 * We do not have to VM_PROT_NONE the page as mappings should 		 * not be changed by this operation. 		 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4867,15 +4868,13 @@ argument_list|(
 name|orig_object
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 goto|goto
 name|retry
 goto|;
 block|}
-name|vm_page_busy
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|vm_page_rename
 argument_list|(
 name|m
@@ -4891,10 +4890,10 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|orig_object
@@ -5365,7 +5364,7 @@ operator|==
 name|backing_object
 argument_list|,
 operator|(
-literal|"vm_object_qcollapse(): object mismatch"
+literal|"vm_object_backing_scan: object mismatch"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5553,24 +5552,12 @@ operator|!=
 literal|1
 condition|)
 return|return;
-name|backing_object
-operator|->
-name|ref_count
-operator|+=
-literal|2
-expr_stmt|;
 name|vm_object_backing_scan
 argument_list|(
 name|object
 argument_list|,
 name|OBSC_COLLAPSE_NOWAIT
 argument_list|)
-expr_stmt|;
-name|backing_object
-operator|->
-name|ref_count
-operator|-=
-literal|2
 expr_stmt|;
 block|}
 end_function
@@ -6263,11 +6250,6 @@ name|dirty
 condition|)
 continue|continue;
 block|}
-name|vm_page_busy
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|pmap_remove_all
 argument_list|(
 name|p
