@@ -311,23 +311,36 @@ begin_define
 define|#
 directive|define
 name|PCIR_IOBASEH_1
-value|0
+value|0x30
 end_define
-
-begin_comment
-comment|/**/
-end_comment
 
 begin_define
 define|#
 directive|define
 name|PCIR_IOLIMITH_1
-value|0
+value|0x32
 end_define
 
-begin_comment
-comment|/**/
-end_comment
+begin_define
+define|#
+directive|define
+name|PCIM_BRIO_16
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_BRIO_32
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_BRIO_MASK
+value|0xf
+end_define
 
 begin_define
 define|#
@@ -361,34 +374,22 @@ begin_define
 define|#
 directive|define
 name|PCIR_PMBASEH_1
-value|0
+value|0x28
 end_define
-
-begin_comment
-comment|/**/
-end_comment
 
 begin_define
 define|#
 directive|define
 name|PCIR_PMLIMITH_1
-value|0
+value|0x2c
 end_define
-
-begin_comment
-comment|/**/
-end_comment
 
 begin_define
 define|#
 directive|define
 name|PCIR_BRIDGECTL_1
-value|0
+value|0x3e
 end_define
-
-begin_comment
-comment|/**/
-end_comment
 
 begin_define
 define|#
