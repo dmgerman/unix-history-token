@@ -3387,6 +3387,10 @@ argument_list|(
 name|targs
 argument_list|)
 expr_stmt|;
+name|outOfDate
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|Lst_Destroy
 argument_list|(
