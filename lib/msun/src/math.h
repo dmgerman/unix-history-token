@@ -4,7 +4,7 @@ comment|/*  * ====================================================  * Copyright 
 end_comment
 
 begin_comment
-comment|/*  * from: @(#)fdlibm.h 5.1 93/09/24  * $Id: math.h,v 1.4 1997/02/22 15:10:54 peter Exp $  */
+comment|/*  * from: @(#)fdlibm.h 5.1 93/09/24  * $Id: math.h,v 1.5 1997/08/31 22:12:19 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -1148,13 +1148,18 @@ begin_comment
 comment|/*  * BSD math library entry points  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|double
 name|cabs
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|double
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1918,13 +1923,18 @@ begin_comment
 comment|/*  * float versions of BSD math library entry points  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|float
 name|cabsf
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|float
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
