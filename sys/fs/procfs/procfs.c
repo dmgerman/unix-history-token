@@ -116,7 +116,6 @@ comment|/*  * Filler function for proc/pid/self  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|procfs_doprocfile
 parameter_list|(
@@ -139,9 +138,7 @@ name|vn_fullpath
 argument_list|(
 name|td
 argument_list|,
-name|td
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_textvp
 argument_list|,
@@ -185,7 +182,6 @@ comment|/*  * Filler function for proc/curproc  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|procfs_docurproc
 parameter_list|(

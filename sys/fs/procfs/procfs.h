@@ -11,6 +11,15 @@ end_ifdef
 
 begin_function_decl
 name|int
+name|procfs_docurproc
+parameter_list|(
+name|PFS_FILL_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|procfs_doproccmdline
 parameter_list|(
 name|PFS_FILL_ARGS
@@ -30,6 +39,15 @@ end_function_decl
 begin_function_decl
 name|int
 name|procfs_doprocdbregs
+parameter_list|(
+name|PFS_FILL_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|procfs_doprocfile
 parameter_list|(
 name|PFS_FILL_ARGS
 parameter_list|)
