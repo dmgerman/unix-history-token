@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tail.c	5.5 (Berkeley) %G%"
+literal|"@(#)tail.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -791,14 +791,21 @@ name|t
 operator|==
 literal|'r'
 condition|)
+block|{
 operator|*
 name|p
 operator|++
 operator|=
 operator|*
 name|t
-operator|--
 expr_stmt|;
+operator|*
+name|t
+operator|--
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 operator|*
