@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,12 @@ include|#
 directive|include
 file|"find.h"
 end_include
+
+begin_decl_stmt
+name|int
+name|relative
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|newsyntax
@@ -125,7 +131,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"df:sx"
+literal|"df:rsx"
 argument_list|)
 operator|)
 operator|!=
@@ -152,6 +158,14 @@ name|cur
 operator|++
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|relative
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.2 (Berkeley) %G%"
+literal|"@(#)misc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -484,7 +484,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: find [-dsx] -f path ... expression\n"
+literal|"usage: find [-drsx] -f path ... expression\n"
 argument_list|)
 expr_stmt|;
 name|exit

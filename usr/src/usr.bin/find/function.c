@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.8 (Berkeley) %G%"
+literal|"@(#)function.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -688,7 +688,7 @@ index|]
 argument_list|,
 name|entry
 operator|->
-name|fts_path
+name|fts_accpath
 argument_list|,
 name|plan
 operator|->
@@ -847,6 +847,10 @@ name|int
 name|isok
 decl_stmt|;
 block|{
+specifier|extern
+name|int
+name|relative
+decl_stmt|;
 name|PLAN
 modifier|*
 name|new
@@ -869,6 +873,11 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|relative
+condition|)
 name|ftsoptions
 operator||=
 name|FTS_NOCHDIR
