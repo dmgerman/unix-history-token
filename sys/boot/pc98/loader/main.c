@@ -95,25 +95,6 @@ name|initial_bootdev
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|bootinfo
-modifier|*
-name|initial_bootinfo
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -122,11 +103,6 @@ modifier|*
 name|initial_bootinfo
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
