@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ctl.c - i4b system control port driver  *	------------------------------------------  *  *	$Id: i4b_ctl.c,v 1.20 1999/04/26 10:16:54 hm Exp $  *  *	last edit-date: [Mon Apr 26 11:16:28 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ctl.c - i4b system control port driver  *	------------------------------------------  *  *	$Id: i4b_ctl.c,v 1.4 1999/05/20 10:08:56 hm Exp $  *  *	last edit-date: [Mon Apr 26 11:16:28 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -312,6 +312,25 @@ name|i4bctlpoll
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|POLLFIELD
+value|i4bctlpoll
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|POLLFIELD
+value|noselect
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -331,66 +350,66 @@ name|cdevsw
 name|i4bctl_cdevsw
 init|=
 block|{
+comment|/* open */
 name|i4bctlopen
 block|,
+comment|/* close */
 name|i4bctlclose
 block|,
+comment|/* read */
 name|noread
 block|,
+comment|/* write */
 name|nowrite
 block|,
+comment|/* ioctl */
 name|i4bctlioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
-name|nullreset
+comment|/* reset */
+name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
-ifdef|#
-directive|ifdef
-name|OS_USES_POLL
-name|i4bctlpoll
+comment|/* poll */
+name|POLLFIELD
 block|,
+comment|/* mmap */
 name|nommap
 block|,
-name|NULL
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"i4bctl"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|noselect
-operator|,
-name|nommap
-operator|,
-name|NULL
-operator|,
-literal|"i4bctl"
-operator|,
-name|NULL
-operator|,
-operator|-
-literal|1
-end_expr_stmt
-
-begin_endif
-unit|};
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -630,27 +649,10 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|dev_t
-name|dev
-decl_stmt|;
-name|dev
-operator|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|cdevsw_add
 argument_list|(
 operator|&
-name|dev
-argument_list|,
-operator|&
 name|i4bctl_cdevsw
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}

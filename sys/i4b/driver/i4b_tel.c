@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_tel.c - device driver for ISDN telephony  *	--------------------------------------------  *  *	$Id: i4b_tel.c,v 1.40 1999/05/06 08:24:45 hm Exp $  *  *	last edit-date: [Thu May  6 09:30:13 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_tel.c - device driver for ISDN telephony  *	--------------------------------------------  *  *	$Id: i4b_tel.c,v 1.3 1999/05/20 10:09:03 hm Exp $  *  *	last edit-date: [Thu May  6 09:30:13 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -875,6 +875,13 @@ name|i4btelpoll
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|POLLFIELD
+value|i4btelpoll
+end_define
+
 begin_else
 else|#
 directive|else
@@ -886,6 +893,13 @@ name|d_select_t
 name|i4btelsel
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|POLLFIELD
+value|i4btelsel
+end_define
 
 begin_endif
 endif|#
@@ -906,53 +920,63 @@ name|cdevsw
 name|i4btel_cdevsw
 init|=
 block|{
+comment|/* open */
 name|i4btelopen
 block|,
+comment|/* close */
 name|i4btelclose
 block|,
+comment|/* read */
 name|i4btelread
 block|,
+comment|/* write */
 name|i4btelwrite
 block|,
+comment|/* ioctl */
 name|i4btelioctl
 block|,
+comment|/* stop */
 name|nostop
 block|,
+comment|/* reset */
 name|noreset
 block|,
+comment|/* devtotty */
 name|nodevtotty
 block|,
-ifdef|#
-directive|ifdef
-name|OS_USES_POLL
-name|i4btelpoll
+comment|/* poll */
+name|POLLFIELD
 block|,
+comment|/* mmap */
 name|nommap
 block|,
-name|NULL
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"i4btel"
 block|,
-name|NULL
+comment|/* parms */
+name|noparms
 block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* maxio */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
-else|#
-directive|else
-name|i4btelsel
-block|,
-name|nommap
-block|,
-name|NULL
-block|,
-literal|"i4btel"
-block|,
-name|NULL
-block|,
-operator|-
-literal|1
-endif|#
-directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1008,27 +1032,10 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|dev_t
-name|dev
-decl_stmt|;
-name|dev
-operator|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|cdevsw_add
 argument_list|(
 operator|&
-name|dev
-argument_list|,
-operator|&
 name|i4btel_cdevsw
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
