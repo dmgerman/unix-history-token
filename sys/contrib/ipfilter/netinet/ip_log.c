@@ -558,6 +558,12 @@ directive|ifdef
 name|__sgi
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|_KMEMUSER
+end_define
+
 begin_include
 include|#
 directive|include

@@ -1233,6 +1233,20 @@ comment|/* Because ~1 == -2, We really need ~1 == -1 */
 value|\ 			    if ((s1)> (s2)) (s2)--; \ 			    (sd) = (s2) - (s1); \ 			    (sd) = ((sd)& 0xffff) + ((sd)>> 16); }
 end_define
 
+begin_define
+define|#
+directive|define
+name|NAT_SYSSPACE
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAT_LOCKHELD
+value|0x40000000
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|u_int

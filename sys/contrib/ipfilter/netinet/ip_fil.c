@@ -187,6 +187,12 @@ directive|ifdef
 name|__sgi
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|_KMEMUSER
+end_define
+
 begin_include
 include|#
 directive|include
@@ -12432,6 +12438,10 @@ name|left
 expr_stmt|;
 name|start
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|io
 operator|->
 name|iov_base
@@ -12442,6 +12452,10 @@ if|if
 condition|(
 name|start
 operator|>
+operator|(
+name|char
+operator|*
+operator|)
 name|io
 operator|->
 name|iov_base

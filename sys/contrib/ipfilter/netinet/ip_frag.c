@@ -2976,8 +2976,6 @@ operator|<=
 literal|0
 condition|)
 return|return;
-endif|#
-directive|endif
 name|READ_ENTER
 argument_list|(
 operator|&
@@ -2985,6 +2983,11 @@ name|ipf_solaris
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
