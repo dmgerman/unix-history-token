@@ -170,6 +170,16 @@ condition|)
 operator|++
 name|n_authors
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|va_copy
+name|va_end
+argument_list|(
+name|tmp_authors
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
