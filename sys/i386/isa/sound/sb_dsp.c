@@ -130,15 +130,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|user_speed
-init|=
-name|DSP_DEFAULT_SPEED
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|sb16
 init|=
 literal|0
@@ -839,10 +830,6 @@ operator|=
 literal|22050
 expr_stmt|;
 block|}
-name|user_speed
-operator|=
-name|speed
-expr_stmt|;
 if|if
 condition|(
 name|dsp_stereo
@@ -1022,7 +1009,7 @@ operator|=
 name|speed
 expr_stmt|;
 return|return
-name|user_speed
+name|speed
 return|;
 block|}
 end_function
@@ -1556,7 +1543,7 @@ argument_list|)
 expr_stmt|;
 name|dsp_speed
 argument_list|(
-name|user_speed
+name|dsp_current_speed
 argument_list|)
 expr_stmt|;
 comment|/* Speed must be recalculated if #channels 					   * changes */
@@ -1608,7 +1595,7 @@ argument_list|)
 expr_stmt|;
 name|dsp_speed
 argument_list|(
-name|user_speed
+name|dsp_current_speed
 argument_list|)
 expr_stmt|;
 comment|/* Speed must be recalculated if #channels 					   * changes */
@@ -1892,14 +1879,14 @@ condition|(
 name|local
 condition|)
 return|return
-name|user_speed
+name|dsp_current_speed
 return|;
 return|return
 name|IOCTL_OUT
 argument_list|(
 name|arg
 argument_list|,
-name|user_speed
+name|dsp_current_speed
 argument_list|)
 return|;
 break|break;
