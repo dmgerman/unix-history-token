@@ -2640,6 +2640,11 @@ decl_stmt|,
 modifier|*
 name|bigproc
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|vm_offset_t
 name|size
 decl_stmt|,
@@ -2661,11 +2666,6 @@ name|maxlaunder
 decl_stmt|;
 name|int
 name|s
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 name|mtx_lock
 argument_list|(
@@ -4112,7 +4112,6 @@ block|{
 name|int
 name|breakout
 decl_stmt|;
-comment|/* 			 * If this process is already locked, skip it. 			 */
 if|if
 condition|(
 name|PROC_TRYLOCK
@@ -4174,7 +4173,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * if the process is in a non-running type state, 			 * don't touch it. Check all the threads individually. 			 */
+comment|/* 			 * If the process is in a non-running type state, 			 * don't touch it.  Check all the threads individually. 			 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -5341,21 +5340,21 @@ name|vm_daemon
 parameter_list|()
 block|{
 name|struct
+name|rlimit
+name|rsslim
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
-name|int
-name|breakout
 decl_stmt|;
 name|struct
 name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|struct
-name|rlimit
-name|rsslim
+name|int
+name|breakout
 decl_stmt|;
 name|mtx_lock
 argument_list|(
@@ -5442,16 +5441,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|lim_rlimit
-argument_list|(
-name|p
-argument_list|,
-name|RLIMIT_RSS
-argument_list|,
-operator|&
-name|rsslim
-argument_list|)
-expr_stmt|;
 comment|/* 			 * if the process is in a non-running type state, 			 * don't touch it. 			 */
 name|mtx_lock_spin
 argument_list|(
@@ -5517,6 +5506,16 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 			 * get a limit 			 */
+name|lim_rlimit
+argument_list|(
+name|p
+argument_list|,
+name|RLIMIT_RSS
+argument_list|,
+operator|&
+name|rsslim
+argument_list|)
+expr_stmt|;
 name|limit
 operator|=
 name|OFF_TO_IDX
