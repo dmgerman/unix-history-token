@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -105,7 +105,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Description of a process.  * This structure contains the information needed to manage a thread  * of control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressible except for those marked "(proc only)" below,  * which might be addressible only on a processor on which the process  * is running.  */
+comment|/*  * Description of a process.  * This structure contains the information needed to manage a thread  * of control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressible except for those marked "(PROC ONLY)" below,  * which might be addressible only on a processor on which the process  * is running.  */
 end_comment
 
 begin_struct
@@ -154,7 +154,7 @@ name|pstats
 modifier|*
 name|p_stats
 decl_stmt|;
-comment|/* accounting/statistics (proc only) */
+comment|/* accounting/statistics (PROC ONLY) */
 name|struct
 name|plimit
 modifier|*
@@ -172,7 +172,7 @@ name|sigacts
 modifier|*
 name|p_sigacts
 decl_stmt|;
-comment|/* signal actions, state (proc only) */
+comment|/* signal actions, state (PROC ONLY) */
 define|#
 directive|define
 name|p_ucred
@@ -350,10 +350,12 @@ name|int
 name|p_thread
 decl_stmt|;
 comment|/* id for this "thread" (Mach glue) XXX */
-name|caddr_t
+name|struct
+name|user
+modifier|*
 name|p_addr
 decl_stmt|;
-comment|/* kernel virtual address of u-area */
+comment|/* kernel virtual addr of u-area (PROC ONLY) */
 name|swblk_t
 name|p_swaddr
 decl_stmt|;
