@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.51	82/08/01	*/
+comment|/*	hp.c	4.52	82/08/13	*/
 end_comment
 
 begin_ifdef
@@ -155,6 +155,12 @@ begin_include
 include|#
 directive|include
 file|"../h/dkio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/uio.h"
 end_include
 
 begin_include
@@ -3402,12 +3408,22 @@ begin_macro
 name|hpread
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -3452,6 +3468,8 @@ argument_list|,
 name|B_READ
 argument_list|,
 name|minphys
+argument_list|,
+name|uio
 argument_list|)
 expr_stmt|;
 block|}
@@ -3511,6 +3529,8 @@ argument_list|,
 name|B_WRITE
 argument_list|,
 name|minphys
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

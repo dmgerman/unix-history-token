@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.26	82/04/11	*/
+comment|/*	mba.c	4.27	82/08/13	*/
 end_comment
 
 begin_include
