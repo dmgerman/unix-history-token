@@ -2720,6 +2720,9 @@ name|sockaddr_in
 name|sin
 init|=
 block|{
+sizeof|sizeof
+name|sin
+block|,
 name|AF_INET
 block|}
 decl_stmt|;
@@ -4675,6 +4678,9 @@ name|sockaddr_in
 name|k_igmpsrc
 init|=
 block|{
+sizeof|sizeof
+name|k_igmpsrc
+block|,
 name|AF_INET
 block|}
 decl_stmt|;
@@ -4684,6 +4690,9 @@ name|sockaddr_in
 name|k_igmpdst
 init|=
 block|{
+sizeof|sizeof
+name|k_igmpdst
+block|,
 name|AF_INET
 block|}
 decl_stmt|;
