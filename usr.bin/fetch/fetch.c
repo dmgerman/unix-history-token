@@ -1249,6 +1249,13 @@ name|sb
 operator|.
 name|st_size
 expr_stmt|;
+else|else
+name|sb
+operator|.
+name|st_size
+operator|=
+literal|0
+expr_stmt|;
 comment|/* start the transfer */
 if|if
 condition|(
@@ -1409,9 +1416,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|url
-operator|->
-name|offset
+name|sb
+operator|.
+name|st_size
 condition|)
 block|{
 comment|/* resume mode, local file exists */
@@ -1495,7 +1502,6 @@ name|url
 operator|->
 name|offset
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|us
@@ -1542,8 +1548,8 @@ goto|goto
 name|failure
 goto|;
 block|}
-comment|/* we got through, open local file in append mode */
-comment|/* 	 * XXX there's a race condition here - the file we open is not          * necessarily the same as the one we stat()'ed earlier... 	 */
+comment|/* we got through, open local file and seek to offset */
+comment|/* 	     * XXX there's a race condition here - the file we open is not 	     * necessarily the same as the one we stat()'ed earlier... 	     */
 if|if
 condition|(
 operator|(
@@ -1562,7 +1568,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s: open()"
+literal|"%s: fopen()"
 argument_list|,
 name|path
 argument_list|)
@@ -1570,6 +1576,35 @@ expr_stmt|;
 goto|goto
 name|failure
 goto|;
+block|}
+if|if
+condition|(
+name|fseek
+argument_list|(
+name|of
+argument_list|,
+name|url
+operator|->
+name|offset
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"%s: fseek()"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failure
+goto|;
+block|}
 block|}
 block|}
 if|if
