@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: comm.c,v 8.54.2.4 2002/12/03 17:32:45 ca Exp $"
+literal|"@(#)$Id: comm.c,v 8.54.2.6 2003/01/03 22:14:40 ca Exp $"
 argument_list|)
 end_macro
 
@@ -27,13 +27,6 @@ include|#
 directive|include
 file|<sm/errstring.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|FD_Z
-value|FD_ZERO(&readset);			\ 		FD_SET((unsigned int) sd,&readset);	\ 		FD_ZERO(&excset);			\ 		FD_SET((unsigned int) sd,&excset)
-end_define
 
 begin_comment
 comment|/* **  MI_RD_CMD -- read a command ** **	Parameters: **		sd -- socket descriptor **		timeout -- maximum time to wait **		cmd -- single character command read from sd **		rlen -- pointer to length of result **		name -- name of milter ** **	Returns: **		buffer with rest of command **		(malloc()ed here, should be free()d) **		hack: encode error in cmd */
@@ -84,11 +77,13 @@ decl_stmt|;
 name|ssize_t
 name|i
 decl_stmt|;
-name|fd_set
-name|readset
-decl_stmt|,
-name|excset
-decl_stmt|;
+name|FD_RD_VAR
+argument_list|(
+name|rds
+argument_list|,
+name|excs
+argument_list|)
+expr_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -127,23 +122,24 @@ init|;
 condition|;
 control|)
 block|{
-name|FD_Z
+name|FD_RD_INIT
+argument_list|(
+name|sd
+argument_list|,
+name|rds
+argument_list|,
+name|excs
+argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|select
+name|FD_RD_READY
 argument_list|(
 name|sd
-operator|+
-literal|1
 argument_list|,
-operator|&
-name|readset
+name|rds
 argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|excset
+name|excs
 argument_list|,
 name|timeout
 argument_list|)
@@ -174,12 +170,13 @@ break|break;
 block|}
 if|if
 condition|(
-name|FD_ISSET
+name|FD_IS_RD_EXC
 argument_list|(
 name|sd
 argument_list|,
-operator|&
-name|excset
+name|rds
+argument_list|,
+name|excs
 argument_list|)
 condition|)
 block|{
@@ -454,23 +451,24 @@ init|;
 condition|;
 control|)
 block|{
-name|FD_Z
+name|FD_RD_INIT
+argument_list|(
+name|sd
+argument_list|,
+name|rds
+argument_list|,
+name|excs
+argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|select
+name|FD_RD_READY
 argument_list|(
 name|sd
-operator|+
-literal|1
 argument_list|,
-operator|&
-name|readset
+name|rds
 argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|excset
+name|excs
 argument_list|,
 name|timeout
 argument_list|)
@@ -501,12 +499,13 @@ break|break;
 block|}
 if|if
 condition|(
-name|FD_ISSET
+name|FD_IS_RD_EXC
 argument_list|(
 name|sd
 argument_list|,
-operator|&
-name|excset
+name|rds
+argument_list|,
+name|excs
 argument_list|)
 condition|)
 block|{
@@ -739,7 +738,7 @@ parameter_list|(
 name|data
 parameter_list|)
 define|\
-value|while (sl> 0)							\ 	{								\ 		FD_ZERO(&wrtset);					\ 		FD_SET((unsigned int) sd,&wrtset);			\ 		ret = select(sd + 1, NULL,&wrtset, NULL, timeout);	\ 		if (ret == 0)						\ 			return MI_FAILURE;				\ 		if (ret< 0)						\ 		{							\ 			if (errno == EINTR)				\ 				continue;				\ 			else						\ 				return MI_FAILURE;			\ 		}							\ 		l = MI_SOCK_WRITE(sd, (void *) ((data) + i), sl);	\ 		if (l< 0)						\ 		{							\ 			if (errno == EINTR)				\ 				continue;				\ 			else						\ 				return MI_FAILURE;			\ 		}							\ 		i += l;							\ 		sl -= l;						\ 	}
+value|while (sl> 0)							\ 	{								\ 		FD_WR_INIT(sd, wrs);					\ 		ret = FD_WR_READY(sd, wrs, timeout);			\ 		if (ret == 0)						\ 			return MI_FAILURE;				\ 		if (ret< 0)						\ 		{							\ 			if (errno == EINTR)				\ 				continue;				\ 			else						\ 				return MI_FAILURE;			\ 		}							\ 		l = MI_SOCK_WRITE(sd, (void *) ((data) + i), sl);	\ 		if (l< 0)						\ 		{							\ 			if (errno == EINTR)				\ 				continue;				\ 			else						\ 				return MI_FAILURE;			\ 		}							\ 		i += l;							\ 		sl -= l;						\ 	}
 end_define
 
 begin_function
@@ -789,9 +788,11 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|fd_set
-name|wrtset
-decl_stmt|;
+name|FD_WR_VAR
+argument_list|(
+name|wrs
+argument_list|)
+expr_stmt|;
 name|char
 name|data
 index|[

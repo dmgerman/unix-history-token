@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: milter.c,v 8.197.2.5 2002/11/11 23:22:28 ca Exp $"
+literal|"@(#)$Id: milter.c,v 8.197.2.6 2002/12/30 05:54:00 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1701,7 +1701,7 @@ comment|/* **  Utility functions */
 end_comment
 
 begin_comment
-comment|/* **  MILTER_OPEN -- connect to remote milter filter ** **	Parameters: **		m -- milter to connect to. **		parseonly -- parse but don't connect. **		e -- current envelope. ** **	Returns: **		connected socket if sucessful&& !parseonly, **		0 upon parse success if parseonly, **		-1 otherwise. */
+comment|/* **  MILTER_OPEN -- connect to remote milter filter ** **	Parameters: **		m -- milter to connect to. **		parseonly -- parse but don't connect. **		e -- current envelope. ** **	Returns: **		connected socket if successful&& !parseonly, **		0 upon parse success if parseonly, **		-1 otherwise. */
 end_comment
 
 begin_decl_stmt
