@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.9 81/10/23 */
+comment|/* tcp_usrreq.c 1.10 81/10/23 */
 end_comment
 
 begin_include
@@ -1194,6 +1194,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|up
+operator|->
+name|uc_rsize
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|up
@@ -1217,6 +1223,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|up
+operator|->
+name|uc_ssize
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|m
