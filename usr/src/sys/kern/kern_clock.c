@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	3.5	%H%	*/
+comment|/*	kern_clock.c	3.6	%H%	*/
 end_comment
 
 begin_include
@@ -323,6 +323,10 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * lightning bolt time-out 	 * and time of day 	 */
+name|out
+label|:
+comment|/* 	 * In order to not take input character interrupts to use 	 * the input silo on DZ's we have to guarantee to echo 	 * characters regularly.  This means that we have to 	 * call the timer routines predictably.  Since blocking 	 * in these routines is at spl5(), we have to make spl5() 	 * really spl6() blocking off the clock to put this code 	 * here.  Note also that it is critical that we run spl5() 	 * (i.e. really spl6()) in the receiver interrupt routines 	 * so we can't enter them recursively and transpose characters. 	 */
 if|if
 condition|(
 name|rcnt
@@ -338,15 +342,12 @@ argument_list|()
 expr_stmt|;
 name|rcnt
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * lightning bolt time-out 	 * and time of day 	 */
-name|out
-label|:
-operator|++
+else|else
 name|rcnt
+operator|++
 expr_stmt|;
 if|if
 condition|(
