@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_cluster.c	4.20	81/04/24	*/
+comment|/*	vfs_cluster.c	4.21	81/05/08	*/
 end_comment
 
 begin_include
@@ -3469,16 +3469,6 @@ operator|.
 name|u_count
 operator|!=
 literal|0
-operator|&&
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_ERROR
-operator|)
-operator|==
-literal|0
 condition|)
 block|{
 name|bp
@@ -3646,6 +3636,15 @@ name|u_offset
 operator|+=
 name|c
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_ERROR
+condition|)
+break|break;
 block|}
 name|bp
 operator|->
