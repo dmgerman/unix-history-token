@@ -407,9 +407,12 @@ literal|"sbni%d:<Granch SBNI12/ISA adapter> port 0x%x"
 argument_list|,
 name|next_sbni_unit
 argument_list|,
+name|rman_get_start
+argument_list|(
 name|sc
 operator|->
-name|base_addr
+name|io_res
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sc
@@ -612,6 +615,7 @@ operator|)
 return|;
 block|}
 else|else
+block|{
 name|printf
 argument_list|(
 literal|" shared irq with sbni%d\n"
@@ -625,6 +629,7 @@ operator|.
 name|if_unit
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_else
 

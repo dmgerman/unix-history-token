@@ -1305,8 +1305,8 @@ condition|(
 name|sc
 operator|->
 name|slave_sc
-comment|/* second channel present */
 operator|&&
+comment|/* second channel present */
 operator|(
 name|sbni_inb
 argument_list|(
@@ -1494,6 +1494,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 comment|/* send the marker without any data */
 name|sbni_outb
 argument_list|(
@@ -1512,6 +1513,7 @@ operator|~
 name|TR_REQ
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|sbni_outb
 argument_list|(
@@ -2090,12 +2092,14 @@ expr_stmt|;
 else|else
 block|{
 do|do
+block|{
 name|m
 operator|=
 name|m
 operator|->
 name|m_next
 expr_stmt|;
+block|}
 do|while
 condition|(
 name|m
@@ -2452,6 +2456,7 @@ name|sc
 operator|->
 name|tx_frameno
 condition|)
+block|{
 name|sc
 operator|->
 name|framelen
@@ -2471,6 +2476,7 @@ operator|->
 name|outpos
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|send_complete
