@@ -19,6 +19,20 @@ directive|define
 name|_INST_ADD_H_INCLUDE
 end_define
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|NORMAL
+block|,
+name|MASTER
+block|,
+name|SLAVE
+block|}
+name|add_mode_t
+typedef|;
+end_typedef
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -78,6 +92,21 @@ specifier|extern
 name|char
 modifier|*
 name|PkgName
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|PlayPen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|add_mode_t
+name|AddMode
 decl_stmt|;
 end_decl_stmt
 

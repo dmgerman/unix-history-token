@@ -42,7 +42,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"hvIRnp:"
+literal|"hvIRnp:SM"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,23 @@ modifier|*
 name|Directory
 init|=
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|PlayPen
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|add_mode_t
+name|AddMode
+init|=
+name|NORMAL
 decl_stmt|;
 end_decl_stmt
 
@@ -225,6 +242,30 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'t'
+case|:
+name|PlayPen
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|AddMode
+operator|=
+name|SLAVE
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+name|AddMode
+operator|=
+name|MASTER
+expr_stmt|;
+break|break;
+case|case
 literal|'h'
 case|:
 case|case
@@ -263,11 +304,20 @@ name|argv
 operator|++
 expr_stmt|;
 comment|/* If no packages, yelp */
+operator|*
+name|pkgs
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|pkgs
 operator|==
 name|start
+operator|&&
+name|AddMode
+operator|!=
+name|SLAVE
 condition|)
 name|usage
 argument_list|(
@@ -276,10 +326,40 @@ argument_list|,
 literal|"Missing package name(s)"
 argument_list|)
 expr_stmt|;
-operator|*
+elseif|else
+if|if
+condition|(
+name|start
+index|[
+literal|1
+index|]
+operator|&&
+name|AddMode
+operator|==
+name|MASTER
+condition|)
+name|usage
+argument_list|(
+name|prog_name
+argument_list|,
+literal|"Only one package name may be specified with master mode"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|pkgs
-operator|=
-name|NULL
+operator|!=
+name|start
+operator|&&
+name|AddMode
+operator|==
+name|SLAVE
+condition|)
+name|whinge
+argument_list|(
+literal|"Package names ignored in slave mode."
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -431,6 +511,27 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"-n         don't actually install, just show steps\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-t temp    use temp as template for mktemp()\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-S         run in SLAVE mode\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-M         run in MASTER mode\n"
 argument_list|)
 expr_stmt|;
 name|exit
