@@ -2155,8 +2155,6 @@ expr_stmt|;
 name|linez
 index|[
 name|len
-operator|+
-literal|1
 index|]
 operator|=
 literal|'\0'
