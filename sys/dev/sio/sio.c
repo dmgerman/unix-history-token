@@ -10146,7 +10146,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * Use a fifo trigger level low enough so that the input 		 * latency from the fifo is less than about 16 msec and 		 * the total latency is less than about 30 msec.  These 		 * latencies are reasonable for humans.  Serial comms 		 * protocols shouldn't expect anything better since modem 		 * latencies are larger. 		 */
+comment|/* 		 * Use a fifo trigger level low enough so that the input 		 * latency from the fifo is less than about 16 msec and 		 * the total latency is less than about 30 msec.  These 		 * latencies are reasonable for humans.  Serial comms 		 * protocols shouldn't expect anything better since modem 		 * latencies are larger. 		 * 		 * We have to set the FIFO trigger point such that we 		 * don't overflow it accidently if a serial interrupt 		 * is delayed.  At high speeds, FIFO_RX_HIGH does not 		 * leave enough slots free. 		 */
 name|com
 operator|->
 name|fifo_image
@@ -10161,7 +10161,7 @@ name|FIFO_ENABLE
 else|:
 name|FIFO_ENABLE
 operator||
-name|FIFO_RX_HIGH
+name|FIFO_RX_MEDH
 expr_stmt|;
 ifdef|#
 directive|ifdef
