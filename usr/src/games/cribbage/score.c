@@ -1,11 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_empty
+empty|#
+end_empty
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)score.c	1.3 (Berkeley) %G%"
+literal|"@(#)score.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1011,6 +1015,7 @@ specifier|register
 name|int
 name|score
 decl_stmt|;
+specifier|register
 name|BOOLEAN
 name|flag
 decl_stmt|;
@@ -1034,8 +1039,7 @@ literal|0
 expr_stmt|;
 name|flag
 operator|=
-operator|!
-name|crb
+name|TRUE
 expr_stmt|;
 name|k
 operator|=

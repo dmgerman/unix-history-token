@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)crib.c	1.16 (Berkeley) %G%"
+literal|"@(#)crib.c	1.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -488,60 +488,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * bye:  *	Leave the program, cleaning things up as we go.  */
-end_comment
-
-begin_macro
-name|bye
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|mvcur
-argument_list|(
-literal|0
-argument_list|,
-name|COLS
-operator|-
-literal|1
-argument_list|,
-name|LINES
-operator|-
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-name|endwin
-argument_list|()
-expr_stmt|;
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_block
 
 begin_comment
 comment|/*  * makeboard:  *	Print out the initial board on the screen  */

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)support.c	1.13 (Berkeley) %G%"
+literal|"@(#)support.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -619,6 +619,8 @@ name|s
 argument_list|,
 literal|"crib"
 argument_list|)
+operator|==
+literal|0
 argument_list|,
 name|explain
 argument_list|)
@@ -790,7 +792,14 @@ name|turnover
 argument_list|,
 name|CINHAND
 argument_list|,
-name|FALSE
+name|strcmp
+argument_list|(
+name|s
+argument_list|,
+literal|"crib"
+argument_list|)
+operator|==
+literal|0
 argument_list|,
 name|FALSE
 argument_list|)

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)io.c	1.11 (Berkeley) %G%"
+literal|"@(#)io.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -2733,6 +2739,60 @@ name|linebuf
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * bye:  *	Leave the program, cleaning things up as we go.  */
+end_comment
+
+begin_macro
+name|bye
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|mvcur
+argument_list|(
+literal|0
+argument_list|,
+name|COLS
+operator|-
+literal|1
+argument_list|,
+name|LINES
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|endwin
+argument_list|()
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
