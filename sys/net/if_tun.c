@@ -1471,6 +1471,13 @@ operator|(
 name|EBUSY
 operator|)
 return|;
+name|dev
+operator|->
+name|si_flags
+operator|&=
+operator|~
+name|SI_CHEAPCLONE
+expr_stmt|;
 name|tp
 operator|=
 name|dev
