@@ -376,6 +376,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|__vfwprintf
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+parameter_list|,
+name|__va_list
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|int
