@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic register and struct definitions for the Adaptech 154x/164x  * SCSI host adapters. Product specific probe and attach routines can  * be found in:  *      aha 1540/1542B/1542C/1542CF/1542CP	aha_isa.c  *  * Copyright (c) 1998 M. Warner Losh.  * All Rights Reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Derived from bt.c written by:  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aha.c,v 1.17 1998/12/22 18:14:50 gibbs Exp $  */
+comment|/*  * Generic register and struct definitions for the Adaptech 154x/164x  * SCSI host adapters. Product specific probe and attach routines can  * be found in:  *      aha 1540/1542B/1542C/1542CF/1542CP	aha_isa.c  *  * Copyright (c) 1998 M. Warner Losh.  * All Rights Reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Derived from bt.c written by:  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aha.c,v 1.18 1998/12/22 22:31:06 imp Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"pnp.h"
+end_include
 
 begin_include
 include|#
@@ -105,6 +111,35 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|NPNP
+operator|>
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa_device.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/pnp.h>
+end_include
+
+begin_comment
+comment|/* XXX pnp isn't x86 only */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -117,7 +152,7 @@ name|aha_softc
 modifier|*
 name|aha_softcs
 index|[
-name|NAHA
+name|NAHATOT
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -761,7 +796,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NAHA
+name|NAHATOT
 condition|)
 block|{
 name|printf
@@ -880,6 +915,18 @@ operator|->
 name|bsh
 operator|=
 name|bsh
+expr_stmt|;
+name|aha
+operator|->
+name|ccb_sg_opcode
+operator|=
+name|INITIATOR_SG_CCB_WRESID
+expr_stmt|;
+name|aha
+operator|->
+name|ccb_ccb_opcode
+operator|=
+name|INITIATOR_CCB_WRESID
 expr_stmt|;
 if|if
 condition|(
@@ -3874,7 +3921,9 @@ name|hccb
 operator|->
 name|opcode
 operator|=
-name|INITIATOR_CCB_WRESID
+name|aha
+operator|->
+name|ccb_ccb_opcode
 expr_stmt|;
 name|hccb
 operator|->
@@ -5107,7 +5156,9 @@ name|hccb
 operator|.
 name|opcode
 operator|=
-name|INITIATOR_SG_CCB_WRESID
+name|aha
+operator|->
+name|ccb_sg_opcode
 expr_stmt|;
 name|ahautoa24
 argument_list|(
@@ -6074,6 +6125,23 @@ case|case
 name|AMBI_ERROR
 case|:
 comment|/* An error occured */
+if|if
+condition|(
+name|accb
+operator|->
+name|hccb
+operator|.
+name|opcode
+operator|<
+name|INITIATOR_CCB_WRESID
+condition|)
+name|csio
+operator|->
+name|resid
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|csio
 operator|->
 name|resid
@@ -6267,9 +6335,19 @@ break|break;
 case|case
 name|AHASTAT_INVALID_OPCODE
 case|:
+if|if
+condition|(
+name|accb
+operator|->
+name|hccb
+operator|.
+name|opcode
+operator|<
+name|INITIATOR_CCB_WRESID
+condition|)
 name|panic
 argument_list|(
-literal|"%s: Invalid CCB Opcode code %x hccb = %p"
+literal|"%s: Invalid CCB Opcode %x hccb = %p"
 argument_list|,
 name|aha_name
 argument_list|(
@@ -6287,6 +6365,48 @@ name|accb
 operator|->
 name|hccb
 argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s: AHA-1540A detected, compensating\n"
+argument_list|,
+name|aha_name
+argument_list|(
+name|aha
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|aha
+operator|->
+name|ccb_sg_opcode
+operator|=
+name|INITIATOR_SG_CCB
+expr_stmt|;
+name|aha
+operator|->
+name|ccb_ccb_opcode
+operator|=
+name|INITIATOR_CCB
+expr_stmt|;
+name|xpt_freeze_devq
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|,
+comment|/*count*/
+literal|1
+argument_list|)
+expr_stmt|;
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|=
+name|CAM_REQUEUE_REQ
 expr_stmt|;
 break|break;
 case|case
@@ -6448,6 +6568,7 @@ name|AMBI_OK
 case|:
 comment|/* All completed without incident */
 comment|/* XXX DO WE NEED TO COPY SENSE BYTES HERE???? XXX */
+comment|/* I don't think so since it works???? */
 name|ccb
 operator|->
 name|ccb_h
