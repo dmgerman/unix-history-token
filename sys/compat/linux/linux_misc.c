@@ -1425,6 +1425,7 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
+comment|/* 	 * XXX: This should use vn_open() so that it is properly authorized, 	 * and to reduce code redundancy all over the place here. 	 */
 name|error
 operator|=
 name|VOP_OPEN
