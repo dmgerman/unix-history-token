@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_sl.c	5.4 (Berkeley) %G% */
+comment|/*	@(#)if_sl.c	5.5 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -1319,6 +1319,14 @@ name|t_outq
 argument_list|)
 condition|)
 break|break;
+name|len
+operator|-=
+name|n
+expr_stmt|;
+name|cp
+operator|+=
+name|n
+expr_stmt|;
 block|}
 comment|/* 				 * If there are characters left in the mbuf, 				 * the first one must be special.. 				 * Put it out in a different form. 				 */
 if|if
