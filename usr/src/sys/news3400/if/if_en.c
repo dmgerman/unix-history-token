@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: if_en.c,v 4.300 91/06/09 06:25:54 root Rel41 $ SONY  *  *	@(#)if_en.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: if_en.c,v 4.300 91/06/09 06:25:54 root Rel41 $ SONY  *  *	@(#)if_en.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -960,6 +960,9 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|IF_DEQUEUE
 argument_list|(
 operator|&
@@ -1037,6 +1040,12 @@ expr|struct
 name|ether_header
 argument_list|)
 expr_stmt|;
+name|s
+operator|=
+name|splclock
+argument_list|()
+expr_stmt|;
+comment|/* KU:XXX should be gone */
 name|en_start
 argument_list|(
 name|unit
@@ -1044,6 +1053,23 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+name|es
+operator|->
+name|es_if
+operator|.
+name|if_flags
+operator||=
+name|IFF_OACTIVE
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* KU:XXX */
 if|#
 directive|if
 name|NBPFILTER
@@ -1092,14 +1118,6 @@ block|}
 endif|#
 directive|endif
 comment|/* NBPFILTER> 0 */
-name|es
-operator|->
-name|es_if
-operator|.
-name|if_flags
-operator||=
-name|IFF_OACTIVE
-expr_stmt|;
 return|return
 operator|(
 literal|0
