@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpd.c	4.10 (Berkeley) %G%"
+literal|"@(#)lpd.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1786,6 +1786,11 @@ index|[
 literal|50
 index|]
 decl_stmt|;
+name|int
+name|first
+init|=
+literal|1
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -1893,6 +1898,13 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
+name|again
+label|:
+if|if
+condition|(
+name|hostf
+condition|)
+block|{
 while|while
 condition|(
 name|fgets
@@ -1958,6 +1970,39 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+block|}
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|hostf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|first
+operator|==
+literal|1
+condition|)
+block|{
+name|first
+operator|=
+literal|0
+expr_stmt|;
+name|hostf
+operator|=
+name|fopen
+argument_list|(
+literal|"/etc/hosts.lpd"
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|again
+goto|;
 block|}
 name|fatal
 argument_list|(
