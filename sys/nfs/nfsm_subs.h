@@ -277,7 +277,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|do { \ 		struct vnode *ttvp = (v); \ 		if ((t1 = nfs_loadattrcache(&ttvp,&md,&dpos, (a))) != 0) { \ 			error = t1; \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} \ 		(v) = ttvp; \ 	} while (0)
+value|do { \ 		struct vnode *ttvp = (v); \ 		if ((t1 = nfs_loadattrcache(&ttvp,&md,&dpos, (a), 0)) != 0) { \ 			error = t1; \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} \ 		(v) = ttvp; \ 	} while (0)
 end_define
 
 begin_define
@@ -290,7 +290,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|do { \ 		struct vnode *ttvp = (v); \ 		nfsm_dissect(tl, u_int32_t *, NFSX_UNSIGNED); \ 		if (((f) = fxdr_unsigned(int, *tl)) != 0) { \ 			if ((t1 = nfs_loadattrcache(&ttvp,&md,&dpos, \ 				(struct vattr *)0)) != 0) { \ 				error = t1; \ 				(f) = 0; \ 				m_freem(mrep); \ 				goto nfsmout; \ 			} \ 			(v) = ttvp; \ 		} \ 	} while (0)
+value|do { \ 		struct vnode *ttvp = (v); \ 		nfsm_dissect(tl, u_int32_t *, NFSX_UNSIGNED); \ 		if (((f) = fxdr_unsigned(int, *tl)) != 0) { \ 			if ((t1 = nfs_loadattrcache(&ttvp,&md,&dpos, \ 				(struct vattr *)0, 1)) != 0) { \ 				error = t1; \ 				(f) = 0; \ 				m_freem(mrep); \ 				goto nfsmout; \ 			} \ 			(v) = ttvp; \ 		} \ 	} while (0)
 end_define
 
 begin_comment
