@@ -136,6 +136,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|mbutltop
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|mclrefcnt
@@ -1029,6 +1037,10 @@ operator|(
 literal|0
 operator|)
 return|;
+name|mbutltop
+operator|+=
+name|nbytes
+expr_stmt|;
 name|nmb
 operator|=
 name|nbytes
@@ -1572,6 +1584,13 @@ literal|0
 operator|)
 return|;
 block|}
+name|mbutltop
+operator|+=
+name|ctob
+argument_list|(
+name|npg
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i

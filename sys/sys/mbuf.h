@@ -115,6 +115,16 @@ parameter_list|)
 value|((caddr_t)((uintptr_t)mbutl + \ 			    ((uintptr_t)(x)<< MCLSHIFT)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|mcl_valid
+parameter_list|(
+name|x
+parameter_list|)
+value|((uintptr_t)(x)>= (uintptr_t)mbutl&&		\ 			 (uintptr_t)(x)< (uintptr_t)mbutltop)
+end_define
+
 begin_comment
 comment|/*  * Header present at the beginning of every mbuf.  */
 end_comment
@@ -1124,7 +1134,7 @@ name|p
 parameter_list|,
 name|how
 parameter_list|)
-value|do {						\ 	caddr_t _mp;							\ 	int _mhow = (how);						\ 	int _ms = splimp();						\ 									\ 	if (mclfree == NULL)						\ 		(void)m_clalloc(1, _mhow);				\ 	_mp = (caddr_t)mclfree;						\ 	if (_mp != NULL) {						\ 		KASSERT(mclrefcnt[mtocl(_mp)] == 0,			\ 			("free cluster with refcount %d.",		\ 			mclrefcnt[mtocl(_mp)]));			\ 		mclrefcnt[mtocl(_mp)]++;				\ 		mbstat.m_clfree--;					\ 		mclfree = ((union mcluster *)_mp)->mcl_next;		\ 		(p) = _mp;						\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		if (_mhow == M_WAIT)					\ 			(p) = m_clalloc_wait();				\ 		else							\ 			(p) = NULL;					\ 	}								\ } while (0)
+value|do {						\ 	caddr_t _mp;							\ 	int _mhow = (how);						\ 	int _ms = splimp();						\ 									\ 	if (mclfree == NULL)						\ 		(void)m_clalloc(1, _mhow);				\ 	_mp = (caddr_t)mclfree;						\ 	if (_mp != NULL) {						\ 		KASSERT(mcl_valid(_mp),					\ 			("MCLALLOC junk pointer: %x< %x< %x.",	\ 			(uintptr_t)mbutl, (uintptr_t)_mp,		\ 			(uintptr_t)mbutltop));				\ 		KASSERT(mclrefcnt[mtocl(_mp)] == 0,			\ 			("free cluster with refcount %d.",		\ 			mclrefcnt[mtocl(_mp)]));			\ 		mclrefcnt[mtocl(_mp)]++;				\ 		mbstat.m_clfree--;					\ 		mclfree = ((union mcluster *)_mp)->mcl_next;		\ 		(p) = _mp;						\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		if (_mhow == M_WAIT)					\ 			(p) = m_clalloc_wait();				\ 		else							\ 			(p) = NULL;					\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1146,7 +1156,7 @@ name|MCLFREE1
 parameter_list|(
 name|p
 parameter_list|)
-value|do {						\ 	union mcluster *_mp = (union mcluster *)(p);			\ 									\ 	KASSERT(mclrefcnt[mtocl(_mp)]> 0,				\ 		("freeing free cluster, refcount: %d.",			\ 		mclrefcnt[mtocl(_mp)]));				\ 	if (--mclrefcnt[mtocl(_mp)] == 0) {				\ 		_mp->mcl_next = mclfree;				\ 		mclfree = _mp;						\ 		mbstat.m_clfree++;					\ 		MCLWAKEUP();						\ 	}								\ } while (0)
+value|do {						\ 	union mcluster *_mp = (union mcluster *)(p);			\ 									\ 	KASSERT(mcl_valid(_mp),						\ 		("MCLFREE1 junk pointer: %x< %x< %x.",		\ 		(uintptr_t)mbutl, (uintptr_t)_mp,			\ 		(uintptr_t)mbutltop));					\ 	KASSERT(mclrefcnt[mtocl(_mp)]> 0,				\ 		("freeing free cluster, refcount: %d.",			\ 		mclrefcnt[mtocl(_mp)]));				\ 	if (--mclrefcnt[mtocl(_mp)] == 0) {				\ 		_mp->mcl_next = mclfree;				\ 		mclfree = _mp;						\ 		mbstat.m_clfree++;					\ 		MCLWAKEUP();						\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1465,6 +1475,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* virtual address of mclusters */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mbuf
+modifier|*
+name|mbutltop
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* highest address of mclusters */
 end_comment
 
 begin_decl_stmt

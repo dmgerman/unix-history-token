@@ -1973,6 +1973,10 @@ name|system_map
 operator|=
 literal|1
 expr_stmt|;
+name|mbutltop
+operator|=
+name|mbutl
+expr_stmt|;
 block|}
 comment|/* 	 * Initialize callouts 	 */
 name|SLIST_INIT
