@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  * 	All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Author: Hartmut Brandt<harti@freebsd.org>  *  * $Begemot: libunimsg/netnatm/sig/sig_call.c,v 1.64 2004/07/08 08:22:19 brandt Exp $  *  * Call instance handling  *  * Note:  *	In all functions that handle messages from the user or from  *	the SAAL, commit memory allocation always at the begin of the  *	function. If allocation fails, ignore saal messages and  *	respond with an error to user messages.  */
+comment|/*  * Copyright (c) 1996-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  * 	All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Author: Hartmut Brandt<harti@freebsd.org>  *  * $Begemot: libunimsg/netnatm/sig/sig_call.c,v 1.65 2004/08/05 07:11:00 brandt Exp $  *  * Call instance handling  *  * Note:  *	In all functions that handle messages from the user or from  *	the SAAL, commit memory allocation always at the begin of the  *	function. If allocation fails, ignore saal messages and  *	respond with an error to user messages.  */
 end_comment
 
 begin_include
@@ -94,7 +94,7 @@ name|NAME
 parameter_list|,
 name|FROM
 parameter_list|)
-value|[SIG##NAME]	"SIG"#NAME,
+value|[SIG##NAME] =	"SIG"#NAME,
 end_define
 
 begin_decl_stmt
@@ -183,6 +183,7 @@ block|{
 index|[
 name|CALLST_NULL
 index|]
+operator|=
 block|{
 literal|"NU0"
 block|,
@@ -192,6 +193,7 @@ block|,
 index|[
 name|CALLST_U1
 index|]
+operator|=
 block|{
 literal|"U1"
 block|,
@@ -201,6 +203,7 @@ block|,
 index|[
 name|CALLST_U3
 index|]
+operator|=
 block|{
 literal|"U3"
 block|,
@@ -210,6 +213,7 @@ block|,
 index|[
 name|CALLST_U4
 index|]
+operator|=
 block|{
 literal|"U4"
 block|,
@@ -219,6 +223,7 @@ block|,
 index|[
 name|CALLST_U6
 index|]
+operator|=
 block|{
 literal|"U6"
 block|,
@@ -228,6 +233,7 @@ block|,
 index|[
 name|CALLST_U7
 index|]
+operator|=
 block|{
 literal|"U7"
 block|,
@@ -237,6 +243,7 @@ block|,
 index|[
 name|CALLST_U8
 index|]
+operator|=
 block|{
 literal|"U8"
 block|,
@@ -246,6 +253,7 @@ block|,
 index|[
 name|CALLST_U9
 index|]
+operator|=
 block|{
 literal|"U9"
 block|,
@@ -255,6 +263,7 @@ block|,
 index|[
 name|CALLST_U10
 index|]
+operator|=
 block|{
 literal|"U10"
 block|,
@@ -264,6 +273,7 @@ block|,
 index|[
 name|CALLST_U11
 index|]
+operator|=
 block|{
 literal|"U11"
 block|,
@@ -273,6 +283,7 @@ block|,
 index|[
 name|CALLST_U12
 index|]
+operator|=
 block|{
 literal|"U12"
 block|,
@@ -282,6 +293,7 @@ block|,
 index|[
 name|CALLST_N1
 index|]
+operator|=
 block|{
 literal|"N1"
 block|,
@@ -291,6 +303,7 @@ block|,
 index|[
 name|CALLST_N3
 index|]
+operator|=
 block|{
 literal|"N3"
 block|,
@@ -300,6 +313,7 @@ block|,
 index|[
 name|CALLST_N4
 index|]
+operator|=
 block|{
 literal|"N4"
 block|,
@@ -309,6 +323,7 @@ block|,
 index|[
 name|CALLST_N6
 index|]
+operator|=
 block|{
 literal|"N6"
 block|,
@@ -318,6 +333,7 @@ block|,
 index|[
 name|CALLST_N7
 index|]
+operator|=
 block|{
 literal|"N7"
 block|,
@@ -327,6 +343,7 @@ block|,
 index|[
 name|CALLST_N8
 index|]
+operator|=
 block|{
 literal|"N8"
 block|,
@@ -336,6 +353,7 @@ block|,
 index|[
 name|CALLST_N9
 index|]
+operator|=
 block|{
 literal|"N9"
 block|,
@@ -345,6 +363,7 @@ block|,
 index|[
 name|CALLST_N10
 index|]
+operator|=
 block|{
 literal|"N10"
 block|,
@@ -354,6 +373,7 @@ block|,
 index|[
 name|CALLST_N11
 index|]
+operator|=
 block|{
 literal|"N11"
 block|,
@@ -363,6 +383,7 @@ block|,
 index|[
 name|CALLST_N12
 index|]
+operator|=
 block|{
 literal|"N12"
 block|,
