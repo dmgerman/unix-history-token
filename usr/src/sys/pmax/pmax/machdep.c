@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -369,6 +369,9 @@ specifier|register
 name|caddr_t
 name|v
 decl_stmt|;
+name|caddr_t
+name|start
+decl_stmt|;
 specifier|extern
 name|char
 name|edata
@@ -403,7 +406,7 @@ name|pmap_attributes
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* clear BSS segment, pages for u, and proc[0] page table */
+comment|/* clear the BSS segment */
 name|v
 operator|=
 operator|(
@@ -413,12 +416,6 @@ name|pmax_round_page
 argument_list|(
 name|end
 argument_list|)
-operator|+
-literal|2
-operator|*
-name|UPAGES
-operator|*
-name|NBPG
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -485,8 +482,6 @@ directive|else
 name|boothowto
 operator|=
 name|RB_SINGLE
-operator||
-name|RB_DFLTROOT
 expr_stmt|;
 endif|#
 directive|endif
@@ -543,10 +538,6 @@ name|cp
 condition|)
 block|{
 case|case
-literal|'-'
-case|:
-continue|continue;
-case|case
 literal|'a'
 case|:
 comment|/* autoboot */
@@ -557,17 +548,30 @@ name|RB_SINGLE
 expr_stmt|;
 break|break;
 case|case
+literal|'d'
+case|:
+comment|/* use compiled in default root */
+name|boothowto
+operator||=
+name|RB_DFLTROOT
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+comment|/* mini root present in memory */
+name|boothowto
+operator||=
+name|RB_MINIROOT
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 comment|/* ask for names */
 name|boothowto
 operator||=
 name|RB_ASKNAME
-expr_stmt|;
-name|boothowto
-operator|&=
-operator|~
-name|RB_DFLTROOT
 expr_stmt|;
 break|break;
 case|case
@@ -579,24 +583,33 @@ operator|&=
 operator|~
 name|RB_ASKNAME
 expr_stmt|;
+block|}
+block|}
+block|}
+block|}
+ifdef|#
+directive|ifdef
+name|MFS
+comment|/* 	 * Check to see if a mini-root was loaded into memory. It resides 	 * at the start of the next page just after the end of BSS. 	 */
+if|if
+condition|(
 name|boothowto
-operator||=
-name|RB_DFLTROOT
+operator|&
+name|RB_MINIROOT
+condition|)
+name|v
+operator|+=
+name|mfs_initminiroot
+argument_list|(
+name|v
+argument_list|)
 expr_stmt|;
-block|}
-block|}
-block|}
-block|}
+endif|#
+directive|endif
 comment|/* 	 * Init mapping for u page(s) for proc[0], pm_tlbpid 1. 	 */
-name|firstaddr
+name|start
 operator|=
-name|MACH_CACHED_TO_PHYS
-argument_list|(
-name|pmax_round_page
-argument_list|(
-name|end
-argument_list|)
-argument_list|)
+name|v
 expr_stmt|;
 name|curproc
 operator|->
@@ -609,10 +622,7 @@ expr|struct
 name|user
 operator|*
 operator|)
-name|MACH_PHYS_TO_CACHED
-argument_list|(
-name|firstaddr
-argument_list|)
+name|v
 expr_stmt|;
 name|curproc
 operator|->
@@ -625,6 +635,13 @@ operator|->
 name|u_pcb
 operator|.
 name|pcb_regs
+expr_stmt|;
+name|firstaddr
+operator|=
+name|MACH_CACHED_TO_PHYS
+argument_list|(
+name|v
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -681,12 +698,29 @@ operator|+=
 name|NBPG
 expr_stmt|;
 block|}
+name|v
+operator|+=
+name|UPAGES
+operator|*
+name|NBPG
+expr_stmt|;
 name|MachSetPID
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * init nullproc for swtch_exit(). 	 * init mapping for u page(s), pm_tlbpid 0 	 * This could be used for an idle process. 	 */
+name|nullproc
+operator|.
+name|p_addr
+operator|=
+operator|(
+expr|struct
+name|user
+operator|*
+operator|)
+name|v
+expr_stmt|;
 name|nullproc
 operator|.
 name|p_md
@@ -699,10 +733,7 @@ expr|struct
 name|user
 operator|*
 operator|)
-name|MACH_PHYS_TO_CACHED
-argument_list|(
-name|firstaddr
-argument_list|)
+name|v
 operator|)
 operator|->
 name|u_pcb
@@ -743,6 +774,22 @@ operator|+=
 name|NBPG
 expr_stmt|;
 block|}
+name|v
+operator|+=
+name|UPAGES
+operator|*
+name|NBPG
+expr_stmt|;
+comment|/* clear pages for u areas */
+name|bzero
+argument_list|(
+name|start
+argument_list|,
+name|v
+operator|-
+name|start
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Copy down exception vector code. 	 */
 if|if
 condition|(
@@ -1105,7 +1152,7 @@ comment|/* DS5400 MIPSfair */
 default|default:
 name|printf
 argument_list|(
-literal|"Unknown Box: systype 0x%x\n"
+literal|"kernel not configured for systype 0x%x\n"
 argument_list|,
 name|i
 argument_list|)
@@ -1155,12 +1202,8 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 	 * Allocate space for system data structures. 	 * The first available kernel virtual address is in "v". 	 * As pages of kernel virtual memory are allocated, "v" is incremented. 	 * 	 * These data structures are allocated here instead of cpu_startup() 	 * because physical memory is directly addressable. We don't have 	 * to map these into virtual address space. 	 */
-name|cp
+name|start
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|v
 expr_stmt|;
 define|#
@@ -1356,17 +1399,11 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|cp
+name|start
 argument_list|,
 name|v
 operator|-
-operator|(
-name|caddr_t
-operator|)
-name|cp
+name|start
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the virtual memory system. 	 */
@@ -1999,7 +2036,7 @@ operator|==
 name|p
 condition|)
 name|machFPCurProcPtr
-operator|==
+operator|=
 operator|(
 expr|struct
 name|proc
@@ -2370,22 +2407,11 @@ name|p
 operator|==
 name|machFPCurProcPtr
 condition|)
-block|{
 name|MachSaveCurFPState
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|machFPCurProcPtr
-operator|=
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-literal|0
-expr_stmt|;
-block|}
 name|bcopy
 argument_list|(
 operator|(
