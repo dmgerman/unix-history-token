@@ -378,6 +378,9 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|u_int32_t
+name|value
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
