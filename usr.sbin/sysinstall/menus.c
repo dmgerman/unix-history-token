@@ -6579,6 +6579,26 @@ name|configXFree86
 block|}
 block|,
 block|{
+literal|"L Label"
+block|,
+literal|"The disk Label editor"
+block|,
+name|NULL
+block|,
+name|diskLabelEditor
+block|}
+block|,
+block|{
+literal|"Partition"
+block|,
+literal|"The disk Partition Editor"
+block|,
+name|NULL
+block|,
+name|diskPartitionEditor
+block|}
+block|,
+block|{
 literal|"Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
