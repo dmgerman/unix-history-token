@@ -1158,22 +1158,38 @@ name|i
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"kernfs_lookup(%x)\n"
+literal|"kernfs_lookup(%p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ap
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"kernfs_lookup(dp = %x, vpp = %x, cnp = %x)\n"
+literal|"kernfs_lookup(dp = %p, vpp = %p, cnp = %p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|dvp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|vpp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ap
 operator|->
 name|a_cnp
@@ -1320,7 +1336,7 @@ goto|;
 block|}
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"kernfs_lookup: i = %d, failed"
@@ -1441,7 +1457,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"kernfs_lookup: allocate new vnode\n"
@@ -1544,11 +1560,15 @@ name|fvp
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"kernfs_lookup: newvp = %x\n"
+literal|"kernfs_lookup: newvp = %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|fvp
 argument_list|)
 expr_stmt|;
@@ -1953,7 +1973,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"kernfs_getattr: stat rootdir\n"
@@ -2011,7 +2031,7 @@ name|nbytes
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"kernfs_getattr: stat target %s\n"
@@ -2089,7 +2109,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"kernfs_getattr: return error %d\n"
@@ -2224,7 +2244,7 @@ name|kf_kt
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"kern_read %s\n"
@@ -2605,7 +2625,7 @@ name|d
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"kernfs_readdir: i = %d\n"
@@ -2697,7 +2717,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"kernfs_readdir: name = %s, len = %d\n"
@@ -2800,11 +2820,15 @@ name|a_vp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"kernfs_inactive(%x)\n"
+literal|"kernfs_inactive(%p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|vp
 argument_list|)
 expr_stmt|;
@@ -2861,11 +2885,15 @@ name|a_vp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"kernfs_reclaim(%x)\n"
+literal|"kernfs_reclaim(%p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|vp
 argument_list|)
 expr_stmt|;

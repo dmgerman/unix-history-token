@@ -389,11 +389,15 @@ name|rvp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"kernfs_mount(mp = %x)\n"
+literal|"kernfs_mount(mp = %p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mp
 argument_list|)
 expr_stmt|;
@@ -480,11 +484,15 @@ name|VROOT
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"kernfs_mount: root vp = %x\n"
+literal|"kernfs_mount: root vp = %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|rvp
 argument_list|)
 expr_stmt|;
@@ -596,7 +604,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"kernfs_mount: at %s\n"
@@ -701,11 +709,15 @@ name|kf_root
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"kernfs_unmount(mp = %x)\n"
+literal|"kernfs_unmount(mp = %p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mp
 argument_list|)
 expr_stmt|;
@@ -737,7 +749,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"kernfs_unmount: calling vflush\n"
@@ -767,7 +779,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|vprint
 argument_list|(
 literal|"kernfs root"
@@ -848,11 +860,15 @@ name|vp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"kernfs_root(mp = %x)\n"
+literal|"kernfs_root(mp = %p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mp
 argument_list|)
 expr_stmt|;
@@ -926,11 +942,15 @@ decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
-name|KERNFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"kernfs_statfs(mp = %x)\n"
+literal|"kernfs_statfs(mp = %p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mp
 argument_list|)
 expr_stmt|;
