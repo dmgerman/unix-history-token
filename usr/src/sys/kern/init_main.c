@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -183,9 +183,6 @@ decl_stmt|;
 name|rqinit
 argument_list|()
 expr_stmt|;
-include|#
-directive|include
-file|"loop.h"
 name|startup
 argument_list|(
 name|firstaddr
@@ -607,6 +604,14 @@ expr_stmt|;
 name|cinit
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SYSVSHM
+name|shminit
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 include|#
 directive|include
 file|"sl.h"
@@ -621,6 +626,9 @@ expr_stmt|;
 comment|/* XXX */
 endif|#
 directive|endif
+include|#
+directive|include
+file|"loop.h"
 if|#
 directive|if
 name|NLOOP
@@ -860,7 +868,7 @@ name|CLSIZE
 operator|*
 name|KLMAX
 operator|+
-name|UPAGES
+name|HIGHPAGES
 argument_list|)
 argument_list|)
 expr_stmt|;
