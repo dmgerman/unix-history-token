@@ -55,12 +55,10 @@ begin_function
 name|time_t
 name|unctime
 parameter_list|(
-name|str
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|tm
