@@ -1074,7 +1074,7 @@ decl_stmt|;
 comment|/* 	 * misc goodies 	 */
 name|u_int32_t
 label|:
-literal|18
+literal|17
 operator|,
 name|wx_no_flow
 operator|:
@@ -1089,6 +1089,10 @@ operator|:
 literal|1
 operator|,
 name|wx_debug
+operator|:
+literal|1
+operator|,
+name|ane_failed
 operator|:
 literal|1
 operator|,
@@ -1337,6 +1341,17 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x - RXINCR)& (WX_MAX_RDESC - 1))
+end_define
+
+begin_comment
+comment|/*  * Link Up timeout, in milliseconds.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WX_LINK_UP_TIMEOUT
+value|500
 end_define
 
 end_unit
