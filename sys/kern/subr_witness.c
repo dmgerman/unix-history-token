@@ -4470,9 +4470,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|critical_t
-name|savecrit
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -4508,9 +4505,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * Preemption bad because we need PCPU_PTR(spinlocks) to not change. 	 */
-name|savecrit
-operator|=
-name|cpu_critical_enter
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|td
@@ -4718,10 +4713,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DDB */
-name|cpu_critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+name|critical_exit
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -6798,9 +6791,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|critical_t
-name|savecrit
-decl_stmt|;
 name|int
 name|nheld
 decl_stmt|;
@@ -6882,7 +6872,7 @@ operator|->
 name|td_sleeplocks
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We only handle spinlocks if td == curthread.  This is somewhat broken 	 * if td is currently executing on some other CPU and holds spin locks 	 * as we won't display those locks.  If we had a MI way of getting 	 * the per-cpu data for a given cpu then we could use 	 * td->td_kse->ke_oncpu to get the list of spinlocks for this thread 	 * and "fix" this. 	 */
+comment|/* 	 * We only handle spinlocks if td == curthread.  This is somewhat broken 	 * if td is currently executing on some other CPU and holds spin locks 	 * as we won't display those locks.  If we had a MI way of getting 	 * the per-cpu data for a given cpu then we could use 	 * td->td_kse->ke_oncpu to get the list of spinlocks for this thread 	 * and "fix" this. 	 * 	 * That still wouldn't really fix this unless we locked sched_lock 	 * or stopped the other CPU to make sure it wasn't changing the list 	 * out from under us.  It is probably best to just not try to handle 	 * threads on other CPU's for now. 	 */
 if|if
 condition|(
 name|td
@@ -6891,9 +6881,7 @@ name|curthread
 condition|)
 block|{
 comment|/* 		 * Preemption bad because we need PCPU_PTR(spinlocks) to not 		 * change. 		 */
-name|savecrit
-operator|=
-name|cpu_critical_enter
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|nheld
@@ -6906,10 +6894,8 @@ name|spinlocks
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cpu_critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+name|critical_exit
+argument_list|()
 expr_stmt|;
 block|}
 return|return
