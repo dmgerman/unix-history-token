@@ -188,7 +188,7 @@ name|ENXIO
 return|;
 name|scp
 operator|=
-name|sc_get_scr_stat
+name|SC_STAT
 argument_list|(
 name|tp
 operator|->

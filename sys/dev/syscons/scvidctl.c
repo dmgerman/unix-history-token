@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -2162,7 +2168,7 @@ name|s
 decl_stmt|;
 name|scp
 operator|=
-name|sc_get_scr_stat
+name|SC_STAT
 argument_list|(
 name|tp
 operator|->

@@ -172,6 +172,28 @@ parameter_list|)
 value|minor(dev)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SC_DEV
+parameter_list|(
+name|sc
+parameter_list|,
+name|vty
+parameter_list|)
+value|((sc)->dev[(vty) - (sc)->first_vty])
+end_define
+
+begin_define
+define|#
+directive|define
+name|SC_STAT
+parameter_list|(
+name|dev
+parameter_list|)
+value|((scr_stat *)(dev)->si_drv1)
+end_define
+
 begin_comment
 comment|/* printable chars */
 end_comment
@@ -781,16 +803,9 @@ decl_stmt|;
 name|int
 name|vtys
 decl_stmt|;
-name|struct
-name|tty
+name|dev_t
 modifier|*
-name|tty
-decl_stmt|;
-name|struct
-name|scr_stat
-modifier|*
-modifier|*
-name|console
+name|dev
 decl_stmt|;
 name|struct
 name|scr_stat
@@ -1791,17 +1806,6 @@ parameter_list|(
 name|scr_stat
 modifier|*
 name|scp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|scr_stat
-modifier|*
-name|sc_get_scr_stat
-parameter_list|(
-name|dev_t
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -1224,7 +1230,7 @@ case|:
 comment|/* set history size */
 name|scp
 operator|=
-name|sc_get_scr_stat
+name|SC_STAT
 argument_list|(
 name|tp
 operator|->
