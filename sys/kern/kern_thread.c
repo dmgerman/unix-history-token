@@ -4568,7 +4568,7 @@ argument_list|)
 expr_stmt|;
 name|temp
 operator|=
-name|fuword
+name|fuword32
 argument_list|(
 name|addr
 argument_list|)
@@ -4579,7 +4579,7 @@ name|td_usticks
 expr_stmt|;
 if|if
 condition|(
-name|suword
+name|suword32
 argument_list|(
 name|addr
 argument_list|,
@@ -5245,13 +5245,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|suword
+name|suword32
 argument_list|(
 name|addr
 argument_list|,
 name|uticks
 operator|+
-name|fuword
+name|fuword32
 argument_list|(
 name|addr
 argument_list|)
@@ -7034,7 +7034,7 @@ name|ku
 operator|->
 name|ku_mflags
 operator|=
-name|fuword
+name|fuword32
 argument_list|(
 operator|(
 name|void

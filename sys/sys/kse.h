@@ -89,12 +89,10 @@ modifier|*
 name|tm_udata
 decl_stmt|;
 comment|/* For use by the UTS */
-name|unsigned
-name|int
+name|uint32_t
 name|tm_uticks
 decl_stmt|;
-name|unsigned
-name|int
+name|uint32_t
 name|tm_sticks
 decl_stmt|;
 name|siginfo_t
@@ -138,8 +136,7 @@ name|sigset_t
 name|km_sigscaught
 decl_stmt|;
 comment|/* Caught signals */
-name|unsigned
-name|int
+name|uint32_t
 name|km_flags
 decl_stmt|;
 comment|/* KSE flags */
