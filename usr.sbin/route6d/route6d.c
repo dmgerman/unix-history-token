@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: route6d.c,v 1.35 2000/08/13 00:39:44 itojun Exp $	*/
+comment|/*	$KAME: route6d.c,v 1.37 2000/10/10 13:02:30 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|_rcsid
 index|[]
 init|=
-literal|"$KAME: route6d.c,v 1.35 2000/08/13 00:39:44 itojun Exp $"
+literal|"$KAME: route6d.c,v 1.37 2000/10/10 13:02:30 itojun Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -8660,10 +8660,13 @@ name|trace
 argument_list|(
 literal|1
 argument_list|,
-literal|"short read from rtsock: %d (should be> %d)\n"
+literal|"short read from rtsock: %d (should be> %lu)\n"
 argument_list|,
 name|len
 argument_list|,
+operator|(
+name|u_long
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -12484,12 +12487,15 @@ name|errmsg
 condition|)
 name|fatal
 argument_list|(
-literal|"%s (with %d retries, msize=%d)"
+literal|"%s (with %d retries, msize=%lu)"
 argument_list|,
 name|errmsg
 argument_list|,
 name|retry
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|msize
 argument_list|)
 expr_stmt|;
@@ -12657,6 +12663,45 @@ block|{
 return|return;
 comment|/* not interested in the link route */
 block|}
+comment|/* do not look at cloned routes */
+ifdef|#
+directive|ifdef
+name|RTF_WASCLONED
+if|if
+condition|(
+name|rtm
+operator|->
+name|rtm_flags
+operator|&
+name|RTF_WASCLONED
+condition|)
+return|return;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|RTF_CLONED
+if|if
+condition|(
+name|rtm
+operator|->
+name|rtm_flags
+operator|&
+name|RTF_CLONED
+condition|)
+return|return;
+endif|#
+directive|endif
+comment|/* 	 * do not look at dynamic routes. 	 * netbsd/openbsd cloned routes have UGHD. 	 */
+if|if
+condition|(
+name|rtm
+operator|->
+name|rtm_flags
+operator|&
+name|RTF_DYNAMIC
+condition|)
+return|return;
 name|rtmp
 operator|=
 operator|(
