@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vipw.c	4.6 (Berkeley) %G%"
+literal|"@(#)vipw.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -665,6 +665,8 @@ operator|++
 name|cp
 argument_list|,
 literal|"/:"
+argument_list|,
+literal|2
 argument_list|)
 condition|)
 break|break;
