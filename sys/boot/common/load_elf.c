@@ -3252,13 +3252,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"  module: %s\n"
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|s
