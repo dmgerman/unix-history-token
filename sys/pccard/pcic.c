@@ -2265,16 +2265,20 @@ argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
 if|if
 condition|(
 name|validslots
-operator|==
+operator|!=
 literal|0
 condition|)
-block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+ifdef|#
+directive|ifdef
+name|PC98
 name|sp
 operator|=
 operator|&
@@ -2374,7 +2378,13 @@ name|validslots
 operator|++
 expr_stmt|;
 comment|/* XXX Do I need to allocated the port resources? */
-block|}
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"NEC PC98 Original PCMCIA Controller"
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
