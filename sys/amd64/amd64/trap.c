@@ -1648,15 +1648,6 @@ operator|&
 name|PCB_VM86CALL
 condition|)
 break|break;
-if|if
-condition|(
-name|td
-operator|->
-name|td_intr_nesting_level
-operator|!=
-literal|0
-condition|)
-break|break;
 comment|/* 			 * Invalid %fs's and %gs's can be created using 			 * procfs or PT_SETREGS or by invalidating the 			 * underlying LDT entry.  This causes a fault 			 * in kernel mode when the kernel attempts to 			 * switch contexts.  Lose the bad context 			 * (XXX) so that we can continue, and generate 			 * a signal. 			 */
 if|if
 condition|(
@@ -1698,6 +1689,15 @@ goto|goto
 name|out
 goto|;
 block|}
+if|if
+condition|(
+name|td
+operator|->
+name|td_intr_nesting_level
+operator|!=
+literal|0
+condition|)
+break|break;
 comment|/* 			 * Invalid segment selectors and out of bounds 			 * %eip's and %esp's can be set up in user mode. 			 * This causes a fault in kernel mode when the 			 * kernel tries to return to user mode.  We want 			 * to get this fault so that we can fix the 			 * problem here and not have to check all the 			 * selectors and pointers when the user changes 			 * them. 			 */
 if|if
 condition|(
