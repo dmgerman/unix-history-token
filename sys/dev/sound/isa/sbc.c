@@ -935,7 +935,7 @@ literal|"Avance Asound 100"
 block|}
 block|,
 block|{
-literal|0x01100001
+literal|0x01100000
 block|,
 literal|"Avance Asound 110"
 block|}
