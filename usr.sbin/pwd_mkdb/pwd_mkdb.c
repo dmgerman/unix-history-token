@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pwd_mkdb.c,v 1.26 1998/06/09 20:19:59 ache Exp $"
+literal|"$Id: pwd_mkdb.c,v 1.27 1998/09/29 20:01:21 dt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1424,6 +1424,18 @@ parameter_list|(
 name|e
 parameter_list|)
 value|t = e; while ((*p++ = *t++));
+ifdef|#
+directive|ifdef
+name|PASSWD_IGNORE_COMMENTS
+if|if
+condition|(
+name|is_comment
+condition|)
+operator|--
+name|cnt
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
