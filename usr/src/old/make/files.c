@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.19 (Berkeley) 90/01/30"
+literal|"@(#)files.c	4.20 (Berkeley) 90/02/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,8 @@ block|,
 literal|"LFLAGS="
 block|,
 literal|"CC=cc"
+block|,
+literal|"CPP=cpp"
 block|,
 if|#
 directive|if
