@@ -49,6 +49,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/dkstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nlist.h>
 end_include
 
@@ -173,10 +179,10 @@ name|i386
 argument_list|)
 define|#
 directive|define
-name|X_ISA_BIO
+name|X_DK_NAMES
 value|(X_DK_WPMS+1)
 block|{
-literal|"_isa_devtab_bio"
+literal|"_dk_names"
 block|}
 block|,
 endif|#
