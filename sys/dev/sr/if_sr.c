@@ -4131,13 +4131,11 @@ directive|if
 name|BUGGY
 operator|>
 literal|0
-name|printf
+name|if_printf
 argument_list|(
-literal|"sr%d: srioctl(ifp=%08x, cmd=%08x, data=%08x)\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"srioctl(ifp=%08x, cmd=%08x, data=%08x)\n"
 argument_list|,
 name|ifp
 argument_list|,
@@ -4172,13 +4170,11 @@ directive|if
 name|BUGGY
 operator|>
 literal|1
-name|printf
+name|if_printf
 argument_list|(
-literal|"sr%d: ioctl: ifsppp.pp_flags = %08x, if_flags %08x.\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"ioctl: ifsppp.pp_flags = %08x, if_flags %08x.\n"
 argument_list|,
 operator|(
 operator|(
