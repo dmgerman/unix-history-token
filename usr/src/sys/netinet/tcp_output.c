@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_output.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_output.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1555,7 +1555,7 @@ name|tp
 operator|->
 name|snd_nxt
 expr_stmt|;
-comment|/* 		 * Set retransmit timer if not currently set, 		 * and not doing an ack or a keep-alive probe. 		 * Initial value for retransmit timer is tcp_beta*tp->t_srtt. 		 * Initialize shift counter which is used for backoff 		 * of retransmit time. 		 */
+comment|/* 		 * Set retransmit timer if not currently set, 		 * and not doing an ack or a keep-alive probe. 		 * Initial value for retransmit timer is smoothed 		 * round-trip time + 2 * round-trip time variance. 		 * Initialize shift counter which is used for backoff 		 * of retransmit time. 		 */
 if|if
 condition|(
 name|tp
@@ -1585,23 +1585,25 @@ index|[
 name|TCPT_REXMT
 index|]
 argument_list|,
-name|tcp_beta
-operator|*
+operator|(
 operator|(
 name|tp
 operator|->
 name|t_srtt
-condition|?
+operator|>>
+literal|2
+operator|)
+operator|+
 name|tp
 operator|->
-name|t_srtt
-else|:
-name|TCPTV_SRTTDFLT
+name|t_rttvar
 operator|)
+operator|>>
+literal|1
 argument_list|,
 name|TCPTV_MIN
 argument_list|,
-name|TCPTV_MAX
+name|TCPTV_REXMTMAX
 argument_list|)
 expr_stmt|;
 name|tp
@@ -1817,6 +1819,25 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|register
+name|t
+operator|=
+operator|(
+operator|(
+name|tp
+operator|->
+name|t_srtt
+operator|>>
+literal|2
+operator|)
+operator|+
+name|tp
+operator|->
+name|t_rttvar
+operator|)
+operator|>>
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -1841,22 +1862,14 @@ index|[
 name|TCPT_PERSIST
 index|]
 argument_list|,
-operator|(
-call|(
-name|int
-call|)
-argument_list|(
-name|tcp_beta
+name|t
 operator|*
-name|tp
-operator|->
-name|t_srtt
-argument_list|)
-operator|)
-operator|<<
+name|tcp_backoff
+index|[
 name|tp
 operator|->
 name|t_rxtshift
+index|]
 argument_list|,
 name|TCPTV_PERSMIN
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -123,23 +123,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPTV_KEEP
-value|( 45*PR_SLOWHZ)
-end_define
-
-begin_comment
-comment|/* keep alive - 45 secs */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TCPTV_PERSMIN
 value|(  5*PR_SLOWHZ)
 end_define
 
 begin_comment
 comment|/* retransmit persistance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPTV_PERSMAX
+value|( 60*PR_SLOWHZ)
+end_define
+
+begin_comment
+comment|/* maximum persist interval */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPTV_KEEP
+value|( 75*PR_SLOWHZ)
+end_define
+
+begin_comment
+comment|/* keep alive - 75 secs */
 end_comment
 
 begin_define
@@ -167,12 +178,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPTV_MAX
-value|( 30*PR_SLOWHZ)
+name|TCPTV_REXMTMAX
+value|( 64*PR_SLOWHZ)
 end_define
 
 begin_comment
-comment|/* maximum allowable value */
+comment|/* max allowable REXMT value */
 end_comment
 
 begin_define
@@ -227,36 +238,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Retransmission smoothing constants.  * Smoothed round trip time is updated by  *    tp->t_srtt = (tcp_alpha * tp->t_srtt) + ((1 - tcp_alpha) * tp->t_rtt)  * each time a new value of tp->t_rtt is available.  The initial  * retransmit timeout is then based on  *    tp->t_timer[TCPT_REXMT] = tcp_beta * tp->t_srtt;  * limited, however to be at least TCPTV_MIN and at most TCPTV_MAX.  */
-end_comment
-
-begin_decl_stmt
-name|float
-name|tcp_alpha
-decl_stmt|,
-name|tcp_beta
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Initial values of tcp_alpha and tcp_beta.  * These are conservative: averaging over a long  * period of time, and allowing for large individual deviations from  * tp->t_srtt.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCP_ALPHA
-value|0.9
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCP_BETA
-value|2.0
-end_define
-
-begin_comment
 comment|/*  * Force a time value to be in a certain range.  */
 end_comment
 
@@ -273,8 +254,27 @@ name|tvmin
 parameter_list|,
 name|tvmax
 parameter_list|)
-value|{ \ 	(tv) = (value); \ 	if ((tv)< (tvmin)) \ 		(tv) = (tvmin); \ 	if ((tv)> (tvmax)) \ 		(tv) = (tvmax); \ }
+value|{ \ 	(tv) = (value); \ 	if ((tv)< (tvmin)) \ 		(tv) = (tvmin); \ 	else if ((tv)> (tvmax)) \ 		(tv) = (tvmax); \ }
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_backoff
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_var.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_var.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -158,7 +158,7 @@ name|u_short
 name|snd_cwnd
 decl_stmt|;
 comment|/* congestion-controlled window */
-comment|/* transmit timing stuff */
+comment|/*  * transmit timing stuff.  * srtt and rttvar are stored as fixed point; for convenience in smoothing,  * srtt has 3 bits to the right of the binary point, rttvar has 2.  */
 name|short
 name|t_idle
 decl_stmt|;
@@ -175,10 +175,14 @@ name|tcp_seq
 name|t_rtseq
 decl_stmt|;
 comment|/* sequence number being timed */
-name|float
+name|short
 name|t_srtt
 decl_stmt|;
 comment|/* smoothed round-trip time */
+name|short
+name|t_rttvar
+decl_stmt|;
+comment|/* variance in round-trip time */
 name|u_short
 name|max_sndwnd
 decl_stmt|;
