@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.17 %G%"
+literal|"@(#)c21.c 4.18 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9844,9 +9844,15 @@ literal|0xF
 operator|)
 operator|)
 operator|||
+operator|(
 name|hdst
 operator|>=
 name|OP2
+operator|&&
+name|hdst
+operator|<=
+name|OPX
+operator|)
 condition|)
 name|hdst
 operator|=
