@@ -80,6 +80,14 @@ name|struct
 name|frauth
 name|fra
 decl_stmt|;
+name|struct
+name|frauth
+modifier|*
+name|frap
+init|=
+operator|&
+name|fra
+decl_stmt|;
 name|fr_info_t
 modifier|*
 name|fin
@@ -125,7 +133,7 @@ argument_list|,
 name|SIOCAUTHW
 argument_list|,
 operator|&
-name|fra
+name|frap
 argument_list|)
 operator|==
 literal|0
@@ -357,7 +365,7 @@ argument_list|,
 name|SIOCAUTHR
 argument_list|,
 operator|&
-name|fra
+name|frap
 argument_list|)
 operator|!=
 literal|0

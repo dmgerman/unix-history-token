@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1995-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_include
@@ -248,7 +248,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_tx.c,v 2.1 1999/08/04 17:30:05 darrenr Exp $"
+literal|"@(#)$Id: ipft_tx.c,v 2.3 2000/03/13 22:10:24 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -346,7 +346,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
-name|tcp_flagset
+name|_tcp_flagset
 index|[]
 init|=
 literal|"FSRPAU"
@@ -356,7 +356,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|u_char
-name|tcp_flags
+name|_tcp_flags
 index|[]
 init|=
 block|{
@@ -1854,12 +1854,12 @@ condition|)
 block|{
 specifier|extern
 name|char
-name|tcp_flagset
+name|_tcp_flagset
 index|[]
 decl_stmt|;
 specifier|extern
 name|u_char
-name|tcp_flags
+name|_tcp_flags
 index|[]
 decl_stmt|;
 name|char
@@ -1889,7 +1889,7 @@ name|t
 operator|=
 name|index
 argument_list|(
-name|tcp_flagset
+name|_tcp_flagset
 argument_list|,
 operator|*
 name|s
@@ -1900,11 +1900,11 @@ name|tcp
 operator|->
 name|th_flags
 operator||=
-name|tcp_flags
+name|_tcp_flags
 index|[
 name|t
 operator|-
-name|tcp_flagset
+name|_tcp_flagset
 index|]
 expr_stmt|;
 if|if

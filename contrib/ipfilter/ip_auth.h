@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-1998 by Darren Reed& Guido Van Rooij.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_auth.h,v 2.1 1999/08/04 17:29:54 darrenr Exp $  *  */
+comment|/*  * Copyright (C) 1997-2000 by Darren Reed& Guido Van Rooij.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_auth.h,v 2.3.2.1 2000/05/22 10:26:11 darrenr Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -169,6 +169,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|fr_auth_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|u_32_t
 name|fr_checkauth
 name|__P
@@ -219,45 +226,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|&&
-name|SOLARIS
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|fr_newauth
-name|__P
-argument_list|(
-operator|(
-name|mb_t
-operator|*
-operator|,
-name|fr_info_t
-operator|*
-operator|,
-name|ip_t
-operator|*
-operator|,
-name|qif_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -277,11 +245,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#

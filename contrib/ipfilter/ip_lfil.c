@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_lfil.c,v 2.1.2.1 2000/01/16 10:13:02 darrenr Exp $"
+literal|"@(#)$Id: ip_lfil.c,v 2.6 2000/03/13 22:10:21 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1048,7 +1048,9 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-name|IWCOPY
+name|error
+operator|=
+name|IWCOPYPTR
 argument_list|(
 operator|(
 name|caddr_t
@@ -1064,6 +1066,11 @@ name|fio
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
 name|bzero
 argument_list|(
 operator|(
@@ -1256,6 +1263,8 @@ case|:
 ifdef|#
 directive|ifdef
 name|IPFILTER_LOG
+name|error
+operator|=
 name|IWCOPY
 argument_list|(
 operator|(
@@ -1315,6 +1324,8 @@ name|EPERM
 expr_stmt|;
 else|else
 block|{
+name|error
+operator|=
 name|IRCOPY
 argument_list|(
 name|data
@@ -1373,6 +1384,8 @@ operator|=
 name|EPERM
 expr_stmt|;
 else|else
+name|error
+operator|=
 name|IRCOPY
 argument_list|(
 name|data
@@ -1393,6 +1406,8 @@ break|break;
 case|case
 name|SIOCGETFF
 case|:
+name|error
+operator|=
 name|IWCOPY
 argument_list|(
 operator|(
@@ -1732,7 +1747,9 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-name|IWCOPY
+name|error
+operator|=
+name|IWCOPYPTR
 argument_list|(
 operator|(
 name|caddr_t
@@ -1767,6 +1784,8 @@ operator|=
 name|EPERM
 expr_stmt|;
 else|else
+name|error
+operator|=
 name|frzerostats
 argument_list|(
 name|data
@@ -1791,6 +1810,8 @@ name|EPERM
 expr_stmt|;
 else|else
 block|{
+name|error
+operator|=
 name|IRCOPY
 argument_list|(
 name|data
@@ -1807,6 +1828,12 @@ name|tmp
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+block|{
 name|tmp
 operator|=
 name|frflush
@@ -1816,6 +1843,8 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|IWCOPY
 argument_list|(
 operator|(
@@ -1832,6 +1861,7 @@ name|tmp
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 break|break;
 ifdef|#
@@ -1873,7 +1903,9 @@ comment|/* IPFILTER_LOG */
 case|case
 name|SIOCGFRST
 case|:
-name|IWCOPY
+name|error
+operator|=
+name|IWCOPYPTR
 argument_list|(
 operator|(
 name|caddr_t
@@ -2085,7 +2117,9 @@ operator|=
 operator|&
 name|frd
 expr_stmt|;
-name|IRCOPY
+name|error
+operator|=
+name|IRCOPYPTR
 argument_list|(
 name|data
 argument_list|,
@@ -2328,6 +2362,12 @@ argument_list|(
 name|fp
 operator|->
 name|fr_ifname
+argument_list|,
+name|fp
+operator|->
+name|fr_ip
+operator|.
+name|fi_v
 argument_list|)
 expr_stmt|;
 if|if
@@ -2380,6 +2420,12 @@ argument_list|(
 name|fdp
 operator|->
 name|fd_ifname
+argument_list|,
+name|fp
+operator|->
+name|fr_ip
+operator|.
+name|fi_v
 argument_list|)
 expr_stmt|;
 if|if
@@ -2433,6 +2479,12 @@ argument_list|(
 name|fdp
 operator|->
 name|fd_ifname
+argument_list|,
+name|fp
+operator|->
+name|fr_ip
+operator|.
+name|fi_v
 argument_list|)
 expr_stmt|;
 if|if
@@ -2517,7 +2569,9 @@ condition|)
 return|return
 name|ESRCH
 return|;
-name|IWCOPY
+name|error
+operator|=
+name|IWCOPYPTR
 argument_list|(
 operator|(
 name|caddr_t
@@ -2562,43 +2616,28 @@ operator|!
 name|f
 condition|)
 block|{
+if|if
+condition|(
+name|req
+operator|==
+name|SIOCINAFR
+operator|||
+name|req
+operator|==
+name|SIOCINIFR
+condition|)
+block|{
 name|ftail
 operator|=
 name|fprev
 expr_stmt|;
 if|if
 condition|(
-name|req
-operator|!=
-name|SIOCINAFR
-operator|&&
-name|req
-operator|!=
-name|SIOCINIFR
-condition|)
-while|while
-condition|(
-operator|(
-name|f
-operator|=
-operator|*
-name|ftail
-operator|)
-condition|)
-name|ftail
-operator|=
-operator|&
-name|f
-operator|->
-name|fr_next
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|fp
 operator|->
 name|fr_hits
 condition|)
+block|{
 while|while
 condition|(
 operator|--
@@ -2613,6 +2652,7 @@ operator|*
 name|ftail
 operator|)
 condition|)
+block|{
 name|ftail
 operator|=
 operator|&
@@ -2620,6 +2660,9 @@ name|f
 operator|->
 name|fr_next
 expr_stmt|;
+block|}
+block|}
+block|}
 name|f
 operator|=
 name|NULL
@@ -2629,7 +2672,7 @@ if|if
 condition|(
 name|req
 operator|==
-name|SIOCDELFR
+name|SIOCRMAFR
 operator|||
 name|req
 operator|==
@@ -4403,6 +4446,8 @@ operator|==
 name|UIO_READ
 condition|)
 block|{
+name|error
+operator|=
 name|IWCOPY
 argument_list|(
 name|src
@@ -4426,6 +4471,8 @@ operator|==
 name|UIO_WRITE
 condition|)
 block|{
+name|error
+operator|=
 name|IRCOPY
 argument_list|(
 operator|(
@@ -4744,10 +4791,15 @@ modifier|*
 name|get_unit
 parameter_list|(
 name|name
+parameter_list|,
+name|v
 parameter_list|)
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|int
+name|v
 decl_stmt|;
 block|{
 name|struct

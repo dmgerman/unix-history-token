@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1998 by Darren Reed& Guido van Rooij.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1998-2000 by Darren Reed& Guido van Rooij.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_auth.c,v 2.1.2.2 2000/01/16 10:12:14 darrenr Exp $"
+literal|"@(#)$Id: ip_auth.c,v 2.11.2.2 2000/05/22 10:26:11 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,10 +101,17 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|KERNEL
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|)
 operator|&&
 operator|(
 name|__FreeBSD_version
@@ -173,10 +180,17 @@ end_include
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|)
 operator|&&
 operator|!
 name|defined
@@ -793,12 +807,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|fr_auth_lock
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|fr_authstat_t
 name|fr_authstats
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|frauth_t
 name|fr_auth
 index|[
@@ -818,6 +841,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fr_authstart
 init|=
@@ -834,6 +858,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|frauthent_t
 modifier|*
 name|fae_list
@@ -885,6 +910,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|fr_auth_lock
+condition|)
+return|return
+literal|0
+return|;
 name|READ_ENTER
 argument_list|(
 operator|&
@@ -1129,6 +1161,20 @@ parameter_list|,
 name|fin
 parameter_list|,
 name|ip
+parameter_list|)
+name|mb_t
+modifier|*
+name|m
+decl_stmt|;
+name|fr_info_t
+modifier|*
+name|fin
+decl_stmt|;
+name|ip_t
+modifier|*
+name|ip
+decl_stmt|;
+block|{
 if|#
 directive|if
 name|defined
@@ -1137,52 +1183,26 @@ name|_KERNEL
 argument_list|)
 operator|&&
 name|SOLARIS
-parameter_list|,
-name|qif
-parameter_list|)
 name|qif_t
 modifier|*
 name|qif
+init|=
+name|fin
+operator|->
+name|fin_qif
 decl_stmt|;
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_endif
-unit|)
 endif|#
 directive|endif
-end_endif
-
-begin_decl_stmt
-name|mb_t
-modifier|*
-name|m
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|fr_info_t
-modifier|*
-name|fin
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ip_t
-modifier|*
-name|ip
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|fr_auth_lock
+condition|)
+return|return
+literal|0
+return|;
 name|WRITE_ENTER
 argument_list|(
 operator|&
@@ -1353,6 +1373,7 @@ name|_KERNEL
 argument_list|)
 if|if
 condition|(
+operator|(
 name|ip
 operator|==
 operator|(
@@ -1362,6 +1383,15 @@ operator|)
 name|m
 operator|->
 name|b_rptr
+operator|)
+operator|&&
+operator|(
+name|ip
+operator|->
+name|ip_v
+operator|==
+literal|4
+operator|)
 condition|)
 endif|#
 directive|endif
@@ -1389,6 +1419,12 @@ if|#
 directive|if
 operator|!
 name|SOLARIS
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 comment|/* 4.4BSD converts this ip_input.c, but I don't in solaris.c */
 name|bo
 operator|=
@@ -1515,7 +1551,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -1543,6 +1579,12 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+operator|||
+operator|(
+name|FreeBSD_version
+operator|>=
+literal|300003
+operator|)
 name|u_long
 name|cmd
 decl_stmt|;
@@ -1575,8 +1617,7 @@ name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
-if|#
-directive|if
+operator|&&
 operator|!
 name|SOLARIS
 name|struct
@@ -1584,11 +1625,6 @@ name|ifqueue
 modifier|*
 name|ifq
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|frauth_t
@@ -1621,6 +1657,20 @@ name|cmd
 condition|)
 block|{
 case|case
+name|SIOCSTLCK
+case|:
+name|error
+operator|=
+name|fr_lock
+argument_list|(
+name|data
+argument_list|,
+operator|&
+name|fr_auth_lock
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|SIOCINIFR
 case|:
 case|case
@@ -1637,6 +1687,11 @@ break|break;
 case|case
 name|SIOCINAFR
 case|:
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
 case|case
 name|SIOCRMAFR
 case|:
@@ -1744,13 +1799,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|IRCOPY
+name|bcopy
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
-name|data
+name|fr
 argument_list|,
 operator|(
 name|char
@@ -1763,9 +1818,8 @@ name|fae_fr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|fae
-operator|->
-name|fae_fr
+operator|*
+name|fr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1860,7 +1914,9 @@ operator|&
 name|ipf_auth
 argument_list|)
 expr_stmt|;
-name|IWCOPY
+name|error
+operator|=
+name|IWCOPYPTR
 argument_list|(
 operator|(
 name|char
@@ -1903,7 +1959,9 @@ name|fr_authnext
 index|]
 condition|)
 block|{
-name|IWCOPY
+name|error
+operator|=
+name|IWCOPYPTR
 argument_list|(
 operator|(
 name|char
@@ -1929,6 +1987,11 @@ operator|&
 name|ipf_auth
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+break|break;
 name|WRITE_ENTER
 argument_list|(
 operator|&
@@ -2062,7 +2125,9 @@ break|break;
 case|case
 name|SIOCAUTHR
 case|:
-name|IRCOPY
+name|error
+operator|=
+name|IRCOPYPTR
 argument_list|(
 name|data
 argument_list|,
@@ -2078,6 +2143,13 @@ name|auth
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+name|error
+return|;
 name|WRITE_ENTER
 argument_list|(
 operator|&
@@ -2174,11 +2246,6 @@ name|RWLOCK_EXIT
 argument_list|(
 operator|&
 name|ipf_auth
-argument_list|)
-expr_stmt|;
-name|SPL_NET
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -2487,11 +2554,6 @@ block|}
 block|}
 endif|#
 directive|endif
-name|SPL_X
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* _KERNEL */
@@ -2679,6 +2741,11 @@ name|s
 decl_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|fr_auth_lock
+condition|)
+return|return;
 name|SPL_NET
 argument_list|(
 name|s
