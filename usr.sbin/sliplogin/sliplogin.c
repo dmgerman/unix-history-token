@@ -1288,8 +1288,9 @@ if|if
 condition|(
 name|setsid
 argument_list|()
-operator|!=
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|perror
 argument_list|(
