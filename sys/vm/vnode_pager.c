@@ -621,13 +621,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|VOP_LOCK
+name|ASSERT_VOP_LOCKED
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
-argument_list|,
-name|curthread
+literal|"vnode_destroy_vobject"
 argument_list|)
 expr_stmt|;
 name|vp
@@ -689,15 +687,6 @@ name|obj
 argument_list|)
 expr_stmt|;
 block|}
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|curthread
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
