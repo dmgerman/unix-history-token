@@ -378,25 +378,12 @@ parameter_list|)
 value|bzero (a,c)
 end_define
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|501000
-end_if
-
 begin_define
 define|#
 directive|define
 name|port_t
 value|int
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
